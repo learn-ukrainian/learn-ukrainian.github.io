@@ -1,0 +1,291 @@
+✅ Message sent to Gemini (ID: 10213) [auto-acked: self-addressed]
+✓ Message 10213 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10213...
+📨 Message #10213
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-adjective-suffixes-qualities
+   Time: 2026-02-20T20:02:59.644624+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: a2-39
+level: A2
+sequence: 39
+slug: adjective-suffixes-qualities
+version: '2.0'
+title: Adjective Suffixes — Qualities
+subtitle: Making Descriptions Richer
+content_outline:
+- section: Introduction / Вступ
+  points:
+  - 'The power of the suffix: descriptiveness without ''very'' — introduce the ''Temperature
+    Scale'' concept: Neutral (малий) → Warm (маленький) → Intense (малесенький)'
+  - Why Ukrainian adjectives are emotionally charged — explain that diminutives often
+    signal respect and intimacy (e.g., рідненька), not just physical smallness — reference
+    State Standard §4.5.1 on 'emotional-expressive lexis'
+- section: Presentation / Презентація
+  points:
+  - '''Diminutive Magic: -Еньк- and -Есеньк- (Sweetness and Precision)'' — use examples
+    like «гарненька дівчина», «тепленьке молоко»; learner error: register mismatch
+    (using diminutives in formal contexts, e.g. asking a boss for a ''підписочок'')'
+  - '''The Scale of Giants: -Енн- and -Езн- (Enormous and Intense)'' — cultural hook:
+    use «страшенний» (terrible/huge) to explain Ukrainian hyperbole in storytelling;
+    learner error: stress shift confusion with passive participles (нездійсне́нний
+    vs незді́йснений)'
+  - '''The Material Link: -Ян- and -Ов- (What it is made of)'' — reference State Standard
+    §4.3.6 on noun-to-adjective derivation (осінь – осінній)'
+  - '''Professional Identity: -Ськ- (Places and Groups)'' — content writing note:
+    focus heavily on the K/Ch/Ts -> TsK mutation rule (e.g., Прага -> празький); learner
+    error: writing «пражський» or «козакський» instead of «козацький»'
+  - '''General Relationships: The universal -Н- suffix'''
+  - '''Suffix Grammar: Does a suffix affect the case ending?'''
+- section: Practice / Практика
+  points:
+  - Suffix transformation drills — include specific drills for the K/Ch/Ts -> TsK
+    mutation rule
+  - 'Emotional re-writing: Neutral to Diminutive to Intensive'
+- section: Dialogues / Діалоги
+  points:
+  - 'On the market: Choosing between ''big'' and ''gigantic'' watermelons — use collocations
+    like «здоровенний кавун» vs «гарненький кавунчик»'
+focus: grammar
+pedagogy: PPP
+objectives:
+- Learner can use suffixes to express affection or smallness
+- Learner can use suffixes to express largeness or intensity
+- Learner can form adjectives from nouns using common suffixes
+- Learner can describe objects with emotional nuance
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Adjective Morphology
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Standards for suffixal adjective formation and emotional-expressive nuances
+    at A2
+- name: Word Formation in Ukrainian Language - Suffixes
+  url: https://uk.wikipedia.org/wiki/Словотворення_в_українській_мові
+  type: reference
+  notes: Rules for diminutive and intensive adjective suffixes
+immersion: 60-75% Ukrainian
+phase: A2.3
+persona:
+  voice: Encouraging Cultural Guide
+  role: Character Witness
+vocabulary_hints:
+  required:
+  - 'маленький (small/little) — collocations: маленька дитина, маленьке село'
+  - 'гарненький (pretty/nice - diminutive) — collocations: гарненька дівчина, гарненький
+    будиночок'
+  - 'тепленький (warm - diminutive) — collocations: тепленьке молоко, тепленька вода'
+  - 'рідненький (dear/kindred - diminutive) — cultural hook: рідненька матуся (deep
+    affection)'
+  - 'тихенький (quiet - diminutive) — collocations: тихенький голос'
+  - 'малесенький (tiny - emphatic) — collocations: малесенький котик'
+  - 'чистесенький (pure/clean - emphatic) — collocations: чистесенька вода'
+  - 'страшенний (terrible/huge - expressive) — cultural hook: страшенний вітер, страшенний
+    змій'
+  - 'здоровенний (huge/enormous - expressive) — collocations: здоровенний чоловік,
+    здоровенний собака'
+  - 'величезний (huge/gigantic) — collocations: величезний будинок'
+  - 'київський (Kyiv adjective) — collocations: київський торт'
+  - 'львівський (Lviv adjective) — collocations: львівська кава'
+  - 'український (Ukrainian) — collocations: українська мова'
+  - 'студентський (student adjective) — collocations: студентський квиток'
+  recommended:
+  - 'білесенький (white - emphatic) — collocations: білесенький сніг'
+  - 'тонесенький (thin - emphatic) — collocations: тонесенька нитка'
+  - 'довжелезний (long - emphatic) — collocations: довжелезний шлях'
+word_target: 3000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Adjective Suffixes — Qualities
+
+## State Standard Reference
+§4.5.1: "Стилістичні засоби лексики: антоніми... синоніми... епітети... метафори... [згадуються у відображенні як 'diminutives']"
+Alignment: Цей модуль безпосередньо реалізує вимогу стандарту щодо використання емоційно-забарвленої лексики (пестливі форми) та словотвору прикметників (§4.3.6: "Утворення прикметників від іменників: осінь – осінній...").
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| **-еньк-** | High (Conversational) | маленька дитина, гарненька дівчина, тепленьке молоко, рідненька матуся, тихенький голос |
+| **-есеньк-** | Medium (Emphatic) | малесенький котик, чистесенька вода, білесенький сніг, тонесенька нитка |
+| **-енн- / -езн-** | Medium (Expressive) | страшенний вітер, здоровенний чоловік, довжелезний шлях, величезний будинок |
+| **-ськ-** | High (General) | київський торт, львівська кава, українська мова, студентський квиток |
+
+## Cultural Hooks
+1. **The Language of "Sweetness"**: Ukrainian is often cited for its extensive use of diminutives (*пестливі форми*) not just for small things, but to show respect and intimacy. Calling a mother *рідненька* (dear/kindred) is a profound cultural marker of closeness that *рідна* alone doesn't capture.
+2. **Irony and Size**: The suffix *-енн-* (*страшенний*, *здоровенний*) is the emotional opposite of the diminutive. It captures the Ukrainian tendency to hyperbolize size and intensity in storytelling, often found in folk tales (*Змій Горинич* is *страшенний*).
+
+## Common Learner Errors
+1. **Register Mismatch**: Using diminutives in formal settings (e.g., asking a boss for a *підписочок* instead of *підпис*) → Teach "Contextual Appropriateness".
+2. **Suffix Confusion (-ськ- vs. -цьк-)**: Learners often miss the consonant mutation (e.g., writing *пражський* instead of *празький*, *козакський* instead of *козацький*) → Rule: К/Ч/Ц + -ськ- = -ЦЬК-.
+3. **Stress Shift in -енн-**: Confusing emphatic adjectives (*нездійсне́нний* - impossible) with passive participles (*незді́йснений* - unfulfilled) → The double 'н' and stress on the suffix mark the adjective quality.
+
+## Cross-References
+- Builds on: **a1/adjectives-basic** (basic agreement), **a2/noun-declension** (hard/soft stems).
+- Prepares for: **b1/participles** (distinguishing adjectives from verb forms), **b2/word-formation** (advanced suffixation).
+
+## Notes for Content Writing
+- **Visuals**: Create a "Temperature Scale" for suffixes: Neutral (*малий*) → Warm (*маленький*) → Hot/Intense (*малесенький*).
+- **Drill**: Focus heavily on the **K/Ch/Ts -> TsK** mutation rule as it's a high-frequency spelling error.
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "The power of the suffix: descriptiveness without 'very' — introduce the 'Temperature Scale' concept: Neutral (малий) → Warm (маленький) → Intense (малесенький)"
+  - "Ukrainian as the language of 'Sweetness' — explain that diminutives (пестливі форми) signal respect and intimacy (e.g., рідненька матуся vs. рідна мати), not just physical smallness — reference State Standard §4.5.1 on 'emotional-expressive lexis'"
+- section: "Презентація 1: Пестливість та периферія (Presentation 1: Diminutives and Precision)"
+  words: 750
+  points:
+  - "Diminutive Magic: -Еньк- and -Есеньк- (Sweetness and Precision) — focus on high-frequency conversational forms like «гарненька дівчина», «тепленьке молоко» and emphatic precision like «малесенький котик», «чистесенька вода»"
+  - "The 'Register Mismatch' Trap: Why context matters — explain the social error of using diminutives in formal settings (e.g., asking a boss for a «підписочок» instead of a «підпис») and how it affects perceived professionalism"
+- section: "Презентація 2: Гіпербола та Відношення (Presentation 2: Hyperbole and Relationships)"
+  words: 750
+  points:
+  - "The Scale of Giants: -Енн- and -Езн- (Enormous and Intense) — cultural hook: explain Ukrainian hyperbole in storytelling and folk tales using «страшенний змій» or «здоровенний чоловік»"
+  - "Stress and Spelling Alert: Distinguishing emphatic adjectives (-енний) from passive participles (-ений) — focus on the double 'н' and stress shift in pairs like «нездійсне́нний» (impossible) vs. «незді́йснений» (unfulfilled)"
+  - "The Universal Link: -Н-, -Ян-, and -Ов- (Materials and Groups) — reference State Standard §4.3.6 on noun-to-adjective derivation rules (осінь → осінній, дерево → дерев'яний)"
+- section: "Практика та орфографія (Practice and Orthography)"
+  words: 650
+  points:
+  - "Mastering the Consonant Mutation: The K/Ch/Ts + -ськ- = -ЦЬК- rule — intensive spelling drill to correct common learner errors like «пражський» (wrong) → «празький» (correct) and «козакський» (wrong) → «козацький» (correct)"
+  - "Emotional Transformation Drills: Re-writing neutral sentences into 'warm' (diminutive) and 'intense' (emphatic) versions to practice register control and suffix selection"
+- section: "Діалоги та підсумок (Dialogues and Summary)"
+  words: 450
+  points:
+  - "On the Market: Choosing between a «здоровенний кавун» (gigantic watermelon) and a «гарненький кавунчик» (nice little watermelon) — dialogue focusing on size vs. affection"
+  - "Summary: Suffixes as the key to linguistic decolonization — moving away from English-style 'very' modifiers toward authentic Ukrainian morphological depth, preparing for B1 participles"
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "маленький (small/little) — High frequency; collocations: маленька дитина, маленьке село"
+  - "гарненький (pretty/nice - diminutive) — High frequency; collocations: гарненька дівчина, гарненький будинок"
+  - "тепленький (warm - diminutive) — High frequency; collocations: тепленьке молоко, тепленька вода"
+  - "рідненький (dear/kindred - diminutive) — Cultural hook: рідненька матуся (deep affection/intimacy)"
+  - "тихенький (quiet - diminutive) — High frequency; collocations: тихенький голос"
+  - "малесенький (tiny - emphatic) — Medium frequency; collocations: малесенький котик"
+  - "чистесенький (pure/clean - emphatic) — Medium frequency; collocations: чистесенька вода"
+  - "страшенний (terrible/huge - expressive) — High frequency in storytelling; collocations: страшенний вітер, страшенний змій"
+  - "здоровенний (huge/enormous - expressive) — High frequency; collocations: здоровенний чоловік, здоровенний собака"
+  - "величезний (huge/gigantic) — High frequency; collocations: величезний будинок"
+  - "київський (Kyiv adjective) — High frequency; collocations: київський торт, київські вулиці"
+  - "львівський (Lviv adjective) — High frequency; collocations: львівська кава, львівський дворик"
+  - "український (Ukrainian) — High frequency; collocations: українська мова, українська пісня"
+  - "студентський (student adjective) — High frequency; collocations: студентський квиток, студентське життя"
+  recommended:
+  - "білесенький (white - emphatic) — collocations: білесенький сніг"
+  - "тонесенький (thin - emphatic) — collocations: тонесенька нитка"
+  - "довжелезний (long - emphatic) — collocations: довжелезний шлях"
+  - "козацький (Cossack adjective) — Note: spelling rule K+ськ=цьк; collocations: козацький драйв"
+  - "празький (Prague adjective) — Note: spelling rule G/H+ськ=зьк; collocations: празький торт"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4712 chars)
+✅ Message sent to Claude (ID: 10220)
+✓ Message 10220 acknowledged
+   Auto-acknowledged reply #10220 (stdout delivery — no inbox accumulation)
+✓ Message 10213 acknowledged

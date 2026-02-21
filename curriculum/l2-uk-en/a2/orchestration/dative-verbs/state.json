@@ -1,0 +1,40 @@
+{
+  "slug": "dative-verbs",
+  "track": "a2",
+  "module_num": 3,
+  "mode": "v3",
+  "phases": {
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-02-20T18:21:37Z",
+      "words": 2412,
+      "attempts": 1
+    },
+    "3": {
+      "status": "complete",
+      "timestamp": "2026-02-21T00:11:39Z",
+      "note": "v3-audit"
+    },
+    "5-enrich": {
+      "status": "complete",
+      "timestamp": "2026-02-21T00:11:39Z",
+      "note": "v3-audit"
+    },
+    "6": {
+      "status": "complete",
+      "timestamp": "2026-02-21T00:14:25Z",
+      "note": "v3-phase-D"
+    },
+    "6b": {
+      "status": "complete",
+      "timestamp": "2026-02-21T00:14:25Z",
+      "note": "v3-phase-D"
+    },
+    "7-final": {
+      "status": "complete",
+      "timestamp": "2026-02-21T00:14:25Z",
+      "note": "v3-phase-D"
+    }
+  },
+  "last_updated": "2026-02-21T00:14:25Z"
+}

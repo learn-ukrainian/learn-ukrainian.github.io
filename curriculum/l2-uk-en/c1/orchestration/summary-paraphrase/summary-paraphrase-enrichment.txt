@@ -1,0 +1,318 @@
+✅ Message sent to Gemini (ID: 10682) [auto-acked: self-addressed]
+✓ Message 10682 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10682...
+📨 Message #10682
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-summary-paraphrase
+   Time: 2026-02-20T21:23:09.427149+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-011
+level: C1
+sequence: 11
+slug: summary-paraphrase
+version: '2.0'
+title: Резюме та парафраз
+content_outline:
+- section: Вступ — Мистецтво переказу
+  points:
+  - Різниця між резюме і парафразом
+  - Роль у академічному письмі
+  - Етика використання джерел
+- section: Техніки резюмування
+  points:
+  - Виділення головних ідей
+  - Опущення деталей і прикладів
+  - Збереження оригінального змісту
+- section: Техніки парафразування
+  points:
+  - Використання синонімів
+  - Зміна структури речення
+  - Зміна граматичних конструкцій
+- section: Маркери парафразу
+  points:
+  - Іншими словами, ...
+  - Тобто, ...
+  - Інакше кажучи, ...
+- section: Резюме vs цитата vs парафраз
+  points:
+  - Коли використовувати кожну форму
+  - Переваги та недоліки
+  - Баланс у тексті
+- section: Плагіат та його уникнення
+  points:
+  - Що вважається плагіатом
+  - Критерії правильного парафразу
+  - Інструменти перевірки
+- section: Практика переказу
+  points:
+  - Резюмування абзацу
+  - Парафразування речень
+  - Інтеграція в академічний текст
+vocabulary_hints:
+  required:
+  - резюме (summary)
+  - парафраз (paraphrase)
+  - переказ (retelling)
+  - оригінал (original)
+  - синонім (synonym)
+  - структура (structure)
+  - плагіат (plagiarism)
+  - скорочення (abbreviation)
+  - суть (essence)
+  - передача (conveyance)
+  recommended:
+  - конспектування (note-taking)
+  - реферування (abstracting)
+  - адаптація (adaptation)
+  - трансформація (transformation)
+  - інтерпретація (interpretation)
+activity_hints:
+- type: fill-in
+  focus: Summarize a paragraph in 2-3 sentences
+  items: 10+
+- type: fill-in
+  focus: Paraphrase sentences without changing meaning
+  items: 12+
+- type: quiz
+  focus: Identify plagiarism vs proper paraphrase
+  items: 15+
+- type: match-up
+  focus: Original to acceptable paraphrase
+  items: 12+
+- type: cloze
+  focus: Paraphrase markers in context
+  items: 10+
+- type: essay-response
+  focus: Summarize article in 100 words
+focus: grammar
+prerequisites:
+- c1-07 (Citation & Reference)
+- c1-10 (Counterarguments)
+connects_to:
+- c1-12 (Research Article)
+- c1-14 (Literature Review)
+- c1-19 (Article Critique)
+module_type: grammar
+sources:
+- name: Academic Writing Skills in Ukrainian
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Paraphrasing and summarizing guidelines
+- name: Academic Integrity Resources
+  url: https://mova.info/
+  type: secondary
+  notes: Avoiding plagiarism through proper paraphrasing
+immersion: 100% Ukrainian
+phase: C1.1 Academic Ukrainian
+objectives:
+- Identify and correctly use резюме та парафраз
+- Form and apply мистецтво переказу
+- Distinguish between практика переказу
+persona:
+  voice: Senior Specialist
+  role: Референт
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Резюме та парафраз
+
+## State Standard Reference
+§1.3.1.1 (Письмо): "уживати на письмі засоби іномовлення та перефразування."
+§1.3.1.1 (Письмо): "конспектувати прочитану інформацію як структурований текст, виділяти пункти й підпункти... писати огляди та анотації до текстів із професійної чи загальнокультурної сфери."
+Alignment: This module directly addresses the C1 writing requirements for creating secondary texts (abstracts, reviews), using paraphrasing tools, and structuring summarized information.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| **резюме** | High (General/Academic) | стисле резюме, написати резюме, подати резюме (NB: often means CV, distinguish context) |
+| **парафраз** | Medium (Academic) | вдалий парафраз, зробити парафраз, техніка парафразу |
+| **переказ** | High (Education) | детальний переказ, стислий переказ, письмовий переказ |
+| **анотація** | Medium (Academic) | анотація до статті, коротка анотація, писати анотацію |
+| **плагіат** | Medium (Academic) | академічний плагіат, уникнення плагіату, перевірка на плагіат |
+| **цитування** | High (Academic) | правила цитування, пряме цитування, некоректне цитування |
+| **суть** | High (General) | передати суть, збагнути суть, суть питання |
+
+## Cultural Hooks
+1. **School Tradition**: In Ukrainian education, writing a "переказ" (retelling) is a standardized exam format. Students are trained early on to differentiate between "детальний переказ" (detailed) and "стислий переказ" (concise summary), making this a culturally familiar concept to native speakers but new to learners.
+2. **Academic Rigor**: Ukrainian academic culture places high value on "науковий стиль" (scientific style), which demands impersonality and precise paraphrasing. Direct quoting is common, but modern standards increasingly emphasize synthesis and "реферування" (abstracting).
+
+## Common Learner Errors
+1. **False Friends**: Confusing "резюме" (often CV/Resume in business context) with "summary" (abstract/synopsis). *Correction*: Use "анотація" or "підсумок" for text summary, "резюме" for CV or specific abstract types.
+2. **Patchwriting**: Changing only a few words (synonyms) but keeping the exact sentence structure. *Correction*: Change both vocabulary AND grammatical structure (active ↔ passive, verbal ↔ nominal).
+3. **Calquing English Markers**: Using "У інших словах" (calque of "In other words"). *Correction*: Use "Інакше кажучи", "Іншими словами", "Тобто".
+
+## Cross-References
+- **Builds on**: c1-07 (Citation & Reference), c1-10 (Counterarguments)
+- **Prepares for**: c1-12 (Research Article), c1-14 (Literature Review), c1-19 (Article Critique)
+
+## Notes for Content Writing
+- Explicitly distinguish between "резюме" as CV and "резюме" as summary/abstract.
+- Focus on the "State Standard" requirement of "іномовлення" (indirect speech) as a vehicle for paraphrasing.
+- Emphasize that paraphrasing is not just avoiding plagiarism, but demonstrating comprehension.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Мистецтво переказу (Introduction: The Art of Retelling)"
+  words: 500
+  points:
+  - "Linguistic distinction: Differentiating 'резюме' (summary/abstract) from the common false friend 'резюме' (CV/Resume) used in business contexts."
+  - "Cultural hook: The Ukrainian school tradition of 'переказ' (retelling) as a standardized exam format; differentiating between 'детальний' (detailed) and 'стислий' (concise) types."
+  - "Role in academic writing: Following the State Standard §1.3.1.1 for using tools of indirect speech (іномовлення) to create secondary texts."
+- section: "Техніки резюмування та анотування (Summarizing and Abstracting Techniques)"
+  words: 800
+  points:
+  - "Selection of 'головні ідеї' (main ideas): Criteria for distinguishing essential information from secondary details and examples."
+  - "The process of 'реферування' (abstracting): Structuring summarized information into a cohesive, structured text with points and subpoints."
+  - "Capturing the 'суть' (essence): How to maintain the original meaning while drastically reducing word count for an 'анотація' (abstract)."
+- section: "Парафраз та техніка іномовлення (Paraphrase and Indirect Speech Technique)"
+  words: 1000
+  points:
+  - "Fixing 'Patchwriting': Moving beyond simple synonym swaps to deep structural transformation, including active to passive voice and verbal to nominal constructions."
+  - "Learner error correction: Avoiding English calques like 'У інших словах' and replacing them with standard markers: 'Інакше кажучи', 'Іншими словами', 'Тобто'."
+  - "Demonstrating comprehension: Paraphrasing as a tool to show the reader that the source material has been fully internalized, not just copied."
+- section: "Академічна доброчесність та уникнення плагіату (Academic Integrity and Avoiding Plagiarism)"
+  words: 700
+  points:
+  - "Defining 'академічний плагіат': Understanding the boundaries between proper paraphrase, direct 'цитування' (citation), and intellectual theft."
+  - "Rules of citation: When to use direct quotes (пряме цитування) versus indirect synthesis to support an academic argument."
+  - "Tools and criteria: Self-check methods for verifying that a paraphrase is sufficiently different from the original source structure."
+- section: "Науковий стиль та синтез інформації (Scientific Style and Information Synthesis)"
+  words: 500
+  points:
+  - "Characteristics of 'науковий стиль': Maintaining impersonality, precision, and logical flow when re-stating another author's ideas."
+  - "Synthesis techniques: Combining information from multiple sources into a single coherent paragraph for a 'Literature Review' (prepares for c1-14)."
+- section: "Практика створення вторинних текстів (Practice of Creating Secondary Texts)"
+  words: 500
+  points:
+  - "Applied task: Writing a professional 'анотація' to a scientific article or cultural text, following State Standard §1.3.1.1 guidelines."
+  - "Integration check: Evaluating the balance between summary and paraphrase within a 100-word paragraph."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "резюме (summary/abstract) — High frequency; distinguish from CV (Resume) in business contexts."
+  - "парафраз (paraphrase) — Medium frequency; technical technique of rewording."
+  - "переказ (retelling) — High frequency; familiar school exam format (детальний/стислий)."
+  - "анотація (annotation/abstract) — Medium frequency; summary of a scientific or literary work."
+  - "плагіат (plagiarism) — Academic context; focus on 'уникнення плагіату' (avoiding plagiarism)."
+  - "цитування (citation/quoting) — Collocations: 'пряме цитування', 'правила цитування'."
+  - "суть (essence/core) — Collocations: 'передати суть', 'збагнути суть', 'суть питання'."
+  - "іномовлення (indirect speech/paraphrasing) — State Standard term for re-stating information."
+  - "реферування (abstracting) — Formal process of summarizing academic texts."
+  - "стислий (concise/brief) — Essential for 'стислий переказ' or 'стисле резюме'."
+  recommended:
+  - "конспектування (note-taking) — Structured recording of information from a source."
+  - "адаптація (adaptation) — Modifying a text for a specific audience or purpose."
+  - "трансформація (transformation) — Changing grammatical structure (e.g., active to passive)."
+  - "інтерпретація (interpretation) — Explaining the meaning of a source in one's own words."
+  - "науковий стиль (scientific style) — The formal register required for academic paraphrasing."
+  - "вдалий (successful/apt) — Collocation: 'вдалий парафраз'."
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4641 chars)
+✅ Message sent to Claude (ID: 10689)
+✓ Message 10689 acknowledged
+   Auto-acknowledged reply #10689 (stdout delivery — no inbox accumulation)
+✓ Message 10682 acknowledged

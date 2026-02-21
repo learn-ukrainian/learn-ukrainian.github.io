@@ -1,0 +1,317 @@
+✅ Message sent to Gemini (ID: 10675) [auto-acked: self-addressed]
+✓ Message 10675 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10675...
+📨 Message #10675
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-essay-structure
+   Time: 2026-02-20T21:22:49.185509+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-008
+level: C1
+sequence: 8
+slug: essay-structure
+version: '2.0'
+title: Структура академічного есе
+content_outline:
+- section: Вступ — Архітектура тексту
+  points:
+  - Чому структура важлива
+  - Типи академічних есе
+  - Загальна тричастинна будова
+- section: Вступна частина
+  points:
+  - Привертання уваги (hook)
+  - Контекст і передумови
+  - Формулювання тези
+- section: Основна частина — TEEL
+  points:
+  - Topic sentence (тематичне речення)
+  - Explanation (пояснення)
+  - Evidence (докази)
+  - Link (зв'язок)
+- section: Розвиток аргументів
+  points:
+  - Послідовність аргументів
+  - Логічні переходи між абзацами
+  - Баланс аргументів
+- section: Висновки
+  points:
+  - Підсумок основних тез
+  - Ширші імплікації
+  - Заключне речення
+- section: Структурна мова
+  points:
+  - Мета цієї роботи — ...
+  - У цій статті розглядається ...
+  - На завершення варто зазначити ...
+- section: Практика структурування
+  points:
+  - Планування есе
+  - Аналіз структури зразків
+  - Редагування власного тексту
+vocabulary_hints:
+  required:
+  - вступ (introduction)
+  - основна частина (body)
+  - висновки (conclusion)
+  - теза (thesis)
+  - аргумент (argument)
+  - абзац (paragraph)
+  - доказ (evidence)
+  - перехід (transition)
+  - імплікація (implication)
+  - резюмувати (to summarize)
+  recommended:
+  - гіпотеза (hypothesis)
+  - постановка проблеми (problem statement)
+  - структурування (structuring)
+  - когерентність (coherence)
+  - зв'язність (cohesion)
+activity_hints:
+- type: match-up
+  focus: Essay part to function
+  items: 12+
+- type: group-sort
+  focus: Arrange essay sections in order
+  items: 15+
+- type: cloze
+  focus: Structural phrases in context
+  items: 12+
+- type: quiz
+  focus: Identify TEEL elements in paragraphs
+  items: 12+
+- type: essay-response
+  focus: Write introduction with thesis
+- type: essay-response
+  focus: Write body paragraph using TEEL
+focus: grammar
+prerequisites:
+- c1-01 to c1-07 (Academic Foundation)
+- Logical connectors mastery
+connects_to:
+- c1-09 (Thesis Development)
+- c1-10 (Counterarguments)
+- c1-18 (Essay Writing Practice)
+module_type: grammar
+sources:
+- name: Ukrainian Academic Essay Writing Guide
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Official essay structure guidelines
+- name: Науковий стиль сучасної української мови
+  url: https://mova.info/
+  type: secondary
+  notes: Academic text organization
+immersion: 100% Ukrainian
+phase: C1.1 Academic Ukrainian
+objectives:
+- Identify and correctly use структура академічного есе
+- Form and apply архітектура тексту
+- Distinguish between практика структурування
+persona:
+  voice: Senior Specialist
+  role: Головний редактор
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Структура академічного есе
+
+## State Standard Reference
+§4.4.4: "Стилістичні засоби синтаксису: ... елементи структурування тексту: вставні слова по-перше, по-друге, по-третє, отже та ін."
+§4.4.5: "Уміння створити текст певного стилю за планом."
+§4.4.6: "Використання елементів риторики в композиції тексту."
+Alignment: Цей модуль безпосередньо реалізує вимогу стандарту щодо вміння створювати структуровані тексти (есеї) з використанням відповідних стилістичних та риторичних засобів на рівні C1.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| теза | High (Academic) | формулювати тезу, підтверджувати тезу, ключова теза |
+| аргумент | High (General/Academic) | вагомий аргумент, наводити аргумент, спростовувати аргумент |
+| когерентність | Medium (Academic) | когерентність тексту, логічна когерентність, забезпечувати когерентність |
+| зв'язність | High (Academic) | лексична зв'язність, граматична зв'язність, засоби зв'язності |
+| імплікація | Medium (Academic) | ширші імплікації, соціальні імплікації, мати імплікації |
+| абзац | High (General) | структурувати на абзаци, новий абзац, тематичне речення абзацу |
+
+## Cultural Hooks
+1. **Українська есеїстика**: Згадка про Оксану Забужко («Notre Dame d’Ukraine») або Юрія Андруховича як майстрів сучасного українського есе, які поєднують глибокий інтелектуалізм з досконалою формою.
+2. **Євген Маланюк**: Приклад "вісниківської" есеїстики — чіткої, гострої, структурованої думки (наприклад, есеї з «Книги спостережень»).
+
+## Common Learner Errors
+1. **Відсутність "Link" (Зв'язку) у TEEL**: Студенти часто наводять доказ, але не пояснюють, як він стосується тези (L).
+   * *Correct form*: Завжди закінчувати абзац реченням, що повертає до головної думки.
+2. **Слабке тематичне речення (Topic Sentence)**: Початок абзацу з факту, а не з аргументу.
+   * *Correct form*: Перше речення має бути твердженням, яке ви будете доводити.
+3. **Informal Register**: Використання розмовних фраз ("я думаю", "класно") замість академічних ("на моє переконання", "вагомим є").
+
+## Cross-References
+- Builds on: c1-01 to c1-07 (Academic Foundation)
+- Prepares for: c1-09 (Thesis Development), c1-10 (Counterarguments), c1-18 (Essay Writing Practice)
+
+## Notes for Content Writing
+- Використовувати модель **TEEL** (Topic sentence, Explanation, Evidence, Link) як основний інструмент.
+- Чітко розмежовувати "тезу" (головна ідея есе) і "тематичне речення" (головна ідея абзацу).
+- Акцентувати на різниці між англійською (більш пряма) та українською (допускає довші речення, але вимагає чіткої структури на C1) академічними традиціями.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Архітектура та традиція (Introduction: Architecture and Tradition)"
+  words: 600
+  points:
+  - "Значення структури для академічного письма рівня C1 та роль головного редактора в контролі логіки тексту."
+  - "Культурний контекст: Майстри української есеїстики — Оксана Забужко («Notre Dame d’Ukraine») та Юрій Андрухович як приклади інтелектуальної форми."
+  - "Порівняльний аналіз традицій: Прямота англійської академічної традиції проти розлогої, але чітко структурованої української традиції на рівні C1."
+- section: "Композиція та формулювання тези (Composition and Thesis Development)"
+  words: 700
+  points:
+  - "Загальна тричастинна будова: Вступ, основна частина, висновки та вимоги Держстандарту §4.4.5 щодо створення тексту за планом."
+  - "Мистецтво вступної частини: Привертання уваги (hook), контекст і точне формулювання тези (thesis statement)."
+  - "Диференціація понять: Чітке розмежування між головною 'тезою' всього есе та 'тематичним реченням' окремого абзацу."
+- section: "Анатомія абзацу — Модель TEEL (Paragraph Anatomy — The TEEL Model)"
+  words: 1000
+  points:
+  - "Детальний розбір моделі TEEL: Topic sentence (тематичне речення), Explanation (пояснення), Evidence (докази), Link (зв'язок)."
+  - "Корекція типової помилки 1: Слабке тематичне речення — перехід від викладу фактів до формулювання тверджень, які потребують доведення."
+  - "Корекція типової помилки 2: Відсутність 'Link' (зв'язку) — техніка повернення до головної тези в кінці кожного абзацу."
+  - "Історичний зразок: 'Вісниківська' есеїстика Євгена Маланюка («Книга спостережень») як приклад гострої та бездоганно структурованої думки."
+- section: "Логіка та засоби зв’язності (Logic and Cohesion Markers)"
+  words: 800
+  points:
+  - "Забезпечення когерентності (логічної цілісності) та зв'язності (граматичного та лексичного поєднання) тексту."
+  - "Стилістичні засоби синтаксису за Держстандартом §4.4.4: Використання вставних слів 'по-перше', 'по-друге', 'по-третє', 'отже'."
+  - "Логічні переходи між абзацами: Забезпечення плавного руху думки та балансу аргументів у науковому дискурсі."
+- section: "Академічний регістр та висновки (Academic Register and Conclusions)"
+  words: 900
+  points:
+  - "Контроль регістру: Усунення неформальних виразів (я думаю, класно) та вживання академічних кліше (на моє переконання, вагомим є, варто зауважити)."
+  - "Синтаксис висновків: Підсумок основних тез, перерахування ширших імплікацій (соціальних, наукових) та створення сильного заключного речення."
+  - "Використання елементів риторики (Держстандарт §4.4.6) у композиції заключної частини для посилення впливу на читача."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "теза (thesis) — формулювати тезу, підтверджувати тезу, ключова теза; висока частотність"
+  - "аргумент (argument) — наводити вагомий аргумент, спростовувати аргумент; ключова одиниця логіки"
+  - "когерентність (coherence) — логічна когерентність тексту; термін для опису смислової цілісності"
+  - "зв'язність (cohesion) — лексична та граматична зв'язність; стосується формальних засобів поєднання"
+  - "імплікація (implication) — ширші імплікації, мати соціальні імплікації; для розділу висновків"
+  - "абзац (paragraph) — структурувати на абзаци, тематичне речення абзацу; одиниця композиції"
+  - "вступ (introduction) — архітектура вступу, контекст та передумови"
+  - "доказ (evidence) — наводити переконливі докази; елемент 'E' у моделі TEEL"
+  - "перехід (transition) — логічний перехід, забезпечувати плавність викладу"
+  - "резюмувати (to summarize) — підбивати підсумки, резюмуючи вищесказане"
+  recommended:
+  - "гіпотеза (hypothesis) — висувати гіпотезу, перевірка гіпотези"
+  - "постановка проблеми (problem statement) — чітка постановка проблеми у вступі"
+  - "структурування (structuring) — логічне структурування думок"
+  - "на моє переконання (in my conviction) — академічний замінник неформального 'я думаю'"
+  - "вагомим є (it is significant) — конструкція для введення аргументів"
+  - "по-перше, по-друге, отже (firstly, secondly, therefore) — структурні маркери згідно з Держстандартом"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4194 chars)
+✅ Message sent to Claude (ID: 10680)
+✓ Message 10680 acknowledged
+   Auto-acknowledged reply #10680 (stdout delivery — no inbox accumulation)
+✓ Message 10675 acknowledged

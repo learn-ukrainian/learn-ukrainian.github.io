@@ -1,0 +1,121 @@
+module: c2-067
+level: c2
+sequence: 67
+version: '2.0'
+title: Медична українська II — Спілкування з пацієнтами
+focus: domain
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Протоколи надання медичної допомоги МОЗ
+  url: https://moz.gov.ua/protokoli
+  type: primary
+  notes: Стандарти комунікації з пацієнтами
+- name: Національна служба здоров'я — Пакети послуг
+  url: https://nszu.gov.ua/
+  type: reference
+  notes: Медичні послуги та права пацієнтів
+- name: Етичний кодекс лікаря України
+  url: https://moz.gov.ua/
+  type: reference
+  notes: Етика медичної комунікації
+content_outline:
+- section: Вступ — Комунікація в медицині
+  points:
+  - Роль комунікації в медичній практиці
+  - Права пацієнта на інформацію
+  - Інформована згода
+  - Конфіденційність
+- section: Збір анамнезу
+  points:
+  - Структура медичного інтерв'ю
+  - Відкриті та закриті питання
+  - Скарги та їх характеристика
+  - Анамнез захворювання та життя
+- section: Фізикальний огляд — комунікація
+  points:
+  - Пояснення процедури пацієнту
+  - Інструкції під час огляду
+  - Реагування на дискомфорт
+  - Підсумок огляду
+- section: Пояснення діагнозу та плану лікування
+  points:
+  - Доступна мова для пацієнтів
+  - Перевірка розуміння
+  - Відповіді на запитання
+  - Обговорення альтернатив
+- section: Складні розмови
+  points:
+  - Повідомлення поганих новин
+  - Розмови про прогноз
+  - Спілкування з родичами
+  - Емоційна підтримка
+- section: Особливі категорії пацієнтів
+  points:
+  - Діти та підлітки
+  - Люди похилого віку
+  - Пацієнти з порушеннями слуху/зору
+  - Пацієнти з іншою рідною мовою
+- section: Практикум — Симуляційні діалоги
+  points:
+  - 'Рольові ігри: збір анамнезу'
+  - 'Рольові ігри: пояснення діагнозу'
+  - Складна розмова з родичами
+vocabulary:
+  required:
+  - анамнез (medical history)
+  - скарги (complaints)
+  - огляд (examination)
+  - діагноз (diagnosis)
+  - лікування (treatment)
+  - інформована згода (informed consent)
+  - прогноз (prognosis)
+  - рекомендації (recommendations)
+  - побічні ефекти (side effects)
+  - протипоказання (contraindications)
+  recommended:
+  - консультація (consultation)
+  - направлення (referral)
+  - повторний огляд (follow-up)
+  - госпіталізація (hospitalization)
+  - амбулаторне лікування (outpatient treatment)
+  forbidden: '[]'
+activities:
+  types_required:
+  - reading
+  - quiz
+  - fill-in
+  - match-up
+  - error-correction
+  - critical-analysis
+  - essay-response
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c2-68 (Medical Ukrainian III — documentation)
+- c2-69 (Medical Ukrainian IV — clinical scenarios)
+- c2-71 (Professional Portfolio I)
+vocabulary_hints:
+  required:
+  - концепція (concept)
+  - аналіз (analysis)
+  - дискурс (discourse)
+  - методологія (methodology)
+  recommended:
+  - інтерпретація (interpretation)
+  - контекстуалізація (contextualization)
+  - синтез (synthesis)
+activity_hints:
+- type: reading
+  focus: Поглиблений аналіз тексту
+  items: 4
+- type: essay-response
+  focus: Критичне осмислення
+- type: discussion
+  focus: Дискусія та аргументація
+  items: 1
+persona:
+  voice: Senior Specialist
+  role: Attending Physician

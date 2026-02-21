@@ -1,75 +1,36 @@
-# Research Notes: Робота та професії (Work & Professions)
+# Дослідження: Work and Professions
 
-**Track**: Core A2
-**Module**: M49 (work-professions)
-**Researched**: 2026-02-08
-**Level**: A2 (High Beginner)
+## State Standard Reference
+§4.2.2.5.1: "Без прийменника: характеристика особи за професією чи статусом: Олег буде програмувальником. Микола хоче стати викладачем. Він працював менеджером."
+Alignment: Module teaches instrumental case with 'працювати' and 'бути' to describe professions, directly fulfilling this syntax/morphology requirement.
 
-## 1. Grammar: State Standard 2024 Reference
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| робота | High (General) | шукати роботу (look for work), графік роботи (work schedule), місце роботи (place of work), важка/цікава робота (hard/interesting work) |
+| лікар | High (Everyday) | сімейний лікар (family doctor), головний лікар (head doctor), викликати лікаря (call a doctor), записатися до лікаря (make appointment) |
+| вчитель | High (Education) | вчитель історії (history teacher), класний керівник (homeroom teacher), День вчителя (Teacher's Day) |
+| інженер | Med-High (Tech) | головний інженер (chief engineer), інженер-програміст (software engineer), працювати інженером (work as an engineer) |
+| колега | Med (Business) | шановний колега (dear colleague), мої колеги (my colleagues), порада колеги (colleague's advice) |
 
-The module aligns with **Державний стандарт української мови (ДСТУ 2024)**, specifically:
+## Cultural Hooks
+1. **Forms of Address**: In Ukrainian workplaces, formal address using "Pan/Pani" + First Name (or Surname in very formal settings) is standard, unlike the immediate "first-name basis" often found in the West. Academic titles (Professor, Docent) are highly respected and used as titles.
+2. **IT Sector Prominence**: "Програміст" (Programmer/Developer) is a culturally significant profession in modern Ukraine, often associated with working remotely ("віддалено") and having a flexible schedule ("гнучкий графік").
+3. **Teacher's Day**: The first Sunday of October is a major celebration where students greet teachers; being a teacher is traditionally viewed with high social respect ("вчитель" is often synonymous with a mentor/guide role).
 
-- **Thematic Catalog (Catalog B, Section 3.8):** "найпоширеніші професії і види занять; місця роботи; час роботи, вихідні дні; заробітна плата" (Lines 1130-1135).
-- **Grammatical Competence (Catalog V, Section 4.2.2.5.1):** **Орудний відмінок (Instrumental Case)** for professional status and characteristics.
+## Common Learner Errors
+1. **Case Confusion**: "Він працює лікар" (Nominative) instead of "Він працює лікарем" (Instrumental).
+   *   *Correction*: Teach that `працювати` ALWAYS triggers Instrumental.
+2. **Ending Mismatches**: Using masculine endings for feminine nouns in Instrumental (e.g., "вона працює *секретаром*" instead of "секретаркою").
+   *   *Correction*: Reinforce `-ом/-ем` (masc) vs `-ою/-ею` (fem) distinction.
+3. **"To Be" Omission**: Forgetting that "to be" is omitted in present tense ("Я лікар" - Nom) but required in past/future ("Я буду лікарем" - Instr).
+   *   *Correction*: Contrast "Я — студент" (Now, Nom) vs "Я буду студентом" (Future, Instr).
 
-> **Quote (§4.2.2.5.1):** 
-> "характеристика особи за професією чи статусом: Олег буде програмувальником. Микола хоче стати викладачем. Він працював менеджером. Вона мріє стати громадянкою України."
+## Cross-References
+- **Builds on**: `a2-48` (Emotions/Personality - adjectives to describe jobs), A1 professions vocab.
+- **Prepares for**: `a2-64` (Scheduling Interviews), B1 modules on employment history.
 
-## 2. Vocabulary Frequency & Collocations
-
-### High-Frequency Items (A2 Core)
-- **Jobs:** лікар, вчитель / вчителька, водій, менеджер, директор, продавець, кухар, офіціант.
-- **Places:** офіс, школа, лікарня, магазин, ресторан, завод / фабрика.
-- **General:** робота, зарплата, відпустка, вихідні.
-- **Verbs:** працювати (to work), шукати (to look for), заробляти (to earn), допомагати (to help).
-
-### Common Collocations
-- **працювати [Instrumental]**: працювати лікарем, працювати вчителькою.
-- **йти на роботу / бути на роботі**: (Accusative for direction, Locative for location).
-- **шукати роботу**: (Accusative).
-- **отримувати зарплату**: (Accusative).
-- **керувати [Instrumental]**: керувати відділом / компанією (to manage/lead).
-
-## 3. Cultural Hook
-
-### Femininitives (Фемінітиви)
-A crucial aspect of modern Ukrainian identity and linguistic decolonization. Since the 2019 Orthography update, the use of feminine forms for professions is actively encouraged and normalized in both speech and official documents.
-*   *Fact:* While Soviet-era Ukrainian often defaulted to masculine forms for "prestigious" jobs, modern Ukrainian restores traditional suffixes: `-ка` (директорка), `-иня` (філологиня), `-иця` (майстриня).
-
-### Ukraine as an IT Hub
-Ukraine has one of the largest and most skilled IT workforces in Europe. The profession of **програміст** (programmer) or **розробник** (developer) is highly respected and often associated with the modern, urban, and globally-connected face of Ukraine.
-
-## 4. Pedagogical Notes
-
-### The "As a" Trap
-English speakers often try to use "як" (as) to describe their profession (e.g., *I work as a doctor*). In Ukrainian, the standard way to express this is the **Instrumental case without a preposition** (Я працюю лікарем). Using "як" changes the meaning to "like" (in the manner of).
-
-### Suffixes for Professions
-The module is a perfect time to reinforce word-formation patterns (M44 knowledge):
-- `-ар / -яр`: лікар, аптекар, столяр.
-- `-ець`: продавець, підприємець.
-- `-ач`: викладач, читач.
-- `-ик`: філолог -> філологиня (but also механік, програміст).
-
-### Case Reinforcement
-- **Instrumental:** Used with verbs like *бути* (to be), *ставати* (to become), *працювати* (to work), and *керувати* (to manage).
-- **Dative:** Used with *допомагати* (to help colleagues/customers).
-
-## 5. Scope Boundaries
-
-### In Scope
-- **Grammar:** Singular forms of all cases (focusing on Instrumental and Nominative).
-- **Tenses:** Present (I work), Past (I worked), Future (I will be).
-- **Aspect:** "Я шукаю роботу" (Imp) vs "Я знайшов роботу" (Perf).
-- **Sentence Structure:** Purpose clauses ("Я працюю, щоб заробляти гроші") and relative clauses ("Компанія, в якій я працюю...").
-
-### Out of Scope
-- **Participles:** "The working man" (працююча людина) or "The managed project" are too advanced.
-- **Passive Voice:** "He was hired" (Його було найнято) should wait for B1/B2.
-- **Technical Jargon:** Specific industry terms (e.g., "front-end development", "surgical oncology") unless very basic.
-- **Plural Declension:** While students know Plural Nominative, complex plural case endings (Genitive Plural) are often saved for late A2/B1.
-
-## 6. Sources Consulted
-1.  **Державний стандарт української мови (ДСТУ 2024)**, Catalog B and V.
-2.  **Український правопис (2019)** regarding femininitives.
-3.  **Curriculum Archive:** `docs/l2-uk-en/_archive/A2-CURRICULUM-PLAN.md`.
+## Notes for Content Writing
+- **Gender**: Ensure balanced representation of male/female profession names (лікар/лікарка, вчитель/вчителька) where standard, but note that some official titles remain masculine in formal documents.
+- **Instrumental Logic**: Explain the "Instrumental = Role/Function" logic. You are *using* your profession as a tool to function in society.
+- **Meta-language**: Use the terms "Орудний відмінок" (Instrumental Case) and "Ким? Чим?" (By whom? With what?) clearly.

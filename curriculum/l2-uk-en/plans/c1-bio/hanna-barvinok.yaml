@@ -1,53 +1,45 @@
----
-module: c1-bio-041
+module: c1-bio-41
 level: C1-BIO
 sequence: 41
 slug: hanna-barvinok
 version: '2.0'
 title: 'Ганна Барвінок: Письменниця і етнографка'
 content_outline:
-- section: "Вступ — Перша з жінок української літератури"
-  words: 400
+- section: Вступ — Перша з жінок української літератури
   points:
   - Одна з перших українських письменниць
   - Дружина Пантелеймона Куліша
   - Етнографічна та просвітницька діяльність
 - section: Юність та виховання (1828-1847)
-  words: 600
   points:
   - Народження Олександри Білозерської
   - Родина та освіта
   - Вплив українського фольклору
   - Знайомство з Кулішем
 - section: Подружжя з Кулішем (1847-1860-ті)
-  words: 800
   points:
   - Шлюб і спільна діяльність
   - Участь у Кирило-Мефодіївському братстві
   - Арешт Куліша та заслання
   - Чекання та листування
 - section: Літературна діяльність (1860-ті–1890-ті)
-  words: 800
   points:
   - Псевдонім «Ганна Барвінок»
   - Оповідання про селянське життя
   - Етнографічні записи
   - Збірка «Оповідання з народних уст»
 - section: Пізній період (1890-1911)
-  words: 700
   points:
   - Вдівство та продовження праці
   - Спогади про Куліша
   - Останні твори
   - Смерть у Мотронівці
-- section: "Спадщина — Голос селянської України"
-  words: 700
+- section: Спадщина — Голос селянської України
   points:
   - Внесок в українську етнографію
   - Жіночий голос в літературі
   - Сучасне дослідження творчості
   - Барвінок як символ жіночої творчості
-word_target: 4000
 vocabulary_hints:
   required:
   - письменниця (woman writer)
@@ -73,7 +65,6 @@ activity_hints:
   items: 3 passages
 - type: essay-response
   focus: Яку роль відіграла Барвінок у збереженні українського фольклору?
-  word_target: 300
   output: Analytical essay
 focus: biography
 prerequisites:
@@ -84,11 +75,11 @@ connects_to:
 module_type: biography
 sources:
 - name: Ганна Барвінок (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Ганна_Барвінок"
+  url: https://uk.wikipedia.org/wiki/Ганна_Барвінок
   type: primary
   notes: Biography of the pioneering woman writer
 - name: Інститут літератури ім. Т.Г. Шевченка
-  url: "https://ilnan.gov.ua/"
+  url: https://ilnan.gov.ua/
   type: reference
   notes: Literary archive materials
 immersion: 100% Ukrainian
@@ -97,3 +88,6 @@ objectives:
 - 'Analyze the life and legacy of ганна барвінок: письменниця і етнографка'
 - Evaluate the contributions of перша з жінок української літератури
 - Trace the career and influence of голос селянської україни
+persona:
+  voice: Senior Biographer
+  role: Folklorist

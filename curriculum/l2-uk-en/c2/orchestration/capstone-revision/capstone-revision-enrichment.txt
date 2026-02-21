@@ -1,0 +1,314 @@
+✅ Message sent to Gemini (ID: 11350) [auto-acked: self-addressed]
+✓ Message 11350 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #11350...
+📨 Message #11350
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-capstone-revision
+   Time: 2026-02-20T22:39:42.627030+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c2-092
+level: c2
+sequence: 92
+version: '2.0'
+title: Дипломний проєкт — Редагування
+focus: practice
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Редагування наукового тексту — Практичний посібник
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Guidelines for editing academic texts
+- name: Культура наукової мови
+  url: https://lcorp.ulif.org.ua/
+  type: reference
+  notes: Scientific language culture and norms
+- name: Типові помилки в академічних текстах
+  url: https://naqa.gov.ua/
+  type: secondary
+  notes: Common errors in Ukrainian academic writing
+content_outline:
+- section: Вступ — Редагування як етап творення
+  points:
+  - Різниця між написанням і редагуванням
+  - Рівні редагування (зміст, структура, мова)
+  - Відстань від тексту перед редагуванням
+- section: Змістове редагування
+  points:
+  - Перевірка логіки аргументації
+  - Узгодженість тез і доказів
+  - Повнота розкриття теми
+  - Відповідність меті та завданням
+- section: Структурне редагування
+  points:
+  - Пропорційність розділів
+  - Логічні переходи між частинами
+  - Абзацна структура
+  - Когезія (зв'язність тексту)
+- section: Мовне редагування
+  points:
+  - Відповідність науковому стилю
+  - Термінологічна послідовність
+  - Усунення повторів і штампів
+  - Синтаксична різноманітність
+- section: Робота зі зворотним зв'язком
+  points:
+  - Отримання відгуків від рецензентів
+  - Інтерпретація критики
+  - Пріоритизація змін
+  - Обґрунтування авторських рішень
+- section: Практика — Редагування роботи
+  points:
+  - Самоперевірка за чеклістом
+  - Редагування одного розділу (повний цикл)
+  - Обмін роботами для взаємного рецензування
+  - Інтеграція зворотного зв'язку
+vocabulary:
+  required:
+  - редагування (editing/revision)
+  - змістове редагування (content editing)
+  - структурне редагування (structural editing)
+  - мовне редагування (language editing)
+  - когезія (cohesion)
+  - узгодженість (consistency)
+  - рецензування (reviewing)
+  - зворотний зв'язок (feedback)
+  - чеклист (checklist)
+  - доопрацювання (revision)
+  recommended:
+  - штамп (cliche)
+  - тавтологія (tautology)
+  - плеоназм (pleonasm)
+  - пасивний стан (passive voice)
+  - номіналізація (nominalization)
+  forbidden: '[]'
+activities:
+  types_required:
+  - match-up
+  - essay-response
+  - quiz
+  - critical-analysis
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c2-93 (Capstone Polish)
+- c2-94 (Capstone Defense)
+vocabulary_hints:
+  required:
+  - концепція (concept)
+  - аналіз (analysis)
+  - дискурс (discourse)
+  - методологія (methodology)
+  recommended:
+  - інтерпретація (interpretation)
+  - контекстуалізація (contextualization)
+  - синтез (synthesis)
+activity_hints:
+- type: reading
+  focus: Поглиблений аналіз тексту
+  items: 4
+- type: essay-response
+  focus: Критичне осмислення
+- type: discussion
+  focus: Дискусія та аргументація
+  items: 1
+persona:
+  voice: Senior Specialist
+  role: Executive Editor
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Дипломний проєкт — Редагування
+
+## State Standard Reference
+§4.3.7: "Уміння трансформувати текст з одного стилю в інший, зокрема науковий у науково-популярний, офіційний у публіцистичний тощо."
+§4.3.8: "Уміння утворювати вторинні тексти, зокрема реферати, повідомлення, довідково-інформаційні тексти."
+§4.3.3: (Стилістичні засоби лексики) — "канцеляризми: згідно з…; відповідно до…; у зв’язку з…", "тавтологія", "плеоназм".
+Alignment: Цей модуль безпосередньо реалізує вимогу стандарту щодо вміння вдосконалювати тексти (редагувати), трансформувати стилі та уникати стилістичних помилок (канцеляризмів, тавтологій) на рівні вільного володіння (C2).
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| редагування | High (Academic) | літературне редагування, наукове редагування, етапи редагування |
+| когезія | Medium (Linguistics) | лексична когезія, засоби когезії, порушення когезії |
+| узгодженість | High (General) | логічна узгодженість, узгодженість термінології, внутрішня узгодженість |
+| канцеляризми | Medium (Stylistics) | зловживання канцеляризмами, усунення канцеляризмів, стиль "мертвої мови" |
+| тавтологія | High (General) | прихована тавтологія, уникнення тавтології, лексична помилка |
+| рецензування | High (Academic) | сліпе рецензування, зовнішнє рецензування, процедура рецензування |
+
+## Cultural Hooks
+1. **Іван Франко як редактор**: Франко був не лише письменником, а й вимогливим редактором «Літературно-наукового вісника». Він власноруч правив рукописи молодих авторів, навчаючи їх лаконічності та точності слова.
+2. **Олена Курило та «Уваги до сучасної української літературної мови»**: У 1920-х роках вона заклала основи культури мови, борючись із кальками та штучними конструкціями. Її спадщина є актуальною для сучасного редагування як приклад очищення мови.
+
+## Common Learner Errors
+1. **Зловживання пасивним станом**: *Нами було проведено дослідження* (помилка) → *Ми провели дослідження* (правильно). Це наслідок впливу російської та англійської наукових традицій.
+2. **Лексичні кальки (суржик)**: *Приймати участь* (помилка) → *Брати участь* (правильно); *Вірна відповідь* (помилка) → *Правильна відповідь* (правильно).
+3. **Плеоназми**: *Вільна вакансія*, *пам'ятний сувенір*, *спускатися вниз*.
+
+## Cross-References
+- Builds on: c2-91 (Дипломний проєкт — Написання), c1-scientific-writing (modules on academic style).
+- Prepares for: c2-93 (Capstone Polish), c2-94 (Capstone Defense).
+
+## Notes for Content Writing
+- Модуль має бути максимально практичним. Теорія редагування повинна одразу ілюструватися прикладами "До" і "Після".
+- Важливо розрізняти *авторське редагування* (self-editing) і *зовнішнє редагування* (peer review).
+- Стиль має бути професійним, академічним, але живим (не сухим).
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ — Редагування як етап творення (Introduction — Editing as a Creative Stage)"
+  words: 600
+  points:
+  - "Постать Івана Франка як зразкового редактора: аналіз його досвіду в «Літературно-науковому віснику», де він власноруч правив рукописи молодих авторів, навчаючи їх лаконічності та точності слова."
+  - "Рівні редагування за Державним стандартом (§4.3.7): методологія трансформації наукового тексту в науково-популярний та публіцистичний стилі; дотримання часової дистанції перед початком правки."
+- section: "Культура наукової мови та мовна гігієна (Culture of Scientific Language and Language Hygiene)"
+  words: 1000
+  points:
+  - "Спадщина Олени Курило та її праця «Уваги до сучасної української літературної мови»: застосування принципів очищення наукової мови від кальок та штучних конструкцій 1920-х років у сучасній практиці."
+  - "Боротьба з канцеляризмами (§4.3.3): усунення конструкцій «згідно з», «відповідно до», «у зв’язку з» та заміна стилю 'мертвої мови' на живий, динамічний академічний дискурс."
+  - "Корекція лексичних кальок та суржику: системне виправлення поширених помилок в академічних текстах, зокрема заміна «приймати участь» на «брати участь» та «вірна відповідь» на «правильна відповідь»."
+- section: "Змістове та структурне редагування (Content and Structural Editing)"
+  words: 800
+  points:
+  - "Когезія та логічна узгодженість: аналіз засобів лексичної когезії, перевірка зв'язності між абзацами та усунення структурних розривів у ланцюгу наукової аргументації."
+  - "Творення вторинних текстів (§4.3.8): практична методика написання рефератів, анотацій та довідково-інформаційних повідомлень на основі результатів дипломного проєкту."
+- section: "Практикум — Синтаксична динаміка та стилістична корекція (Workshop — Syntactic Dynamics and Stylistic Correction)"
+  words: 1000
+  points:
+  - "Деколонізація наукового стилю через синтаксичні зміни: трансформація пасивного стану («нами було проведено») на активний («ми провели») для усунення імперських мовних впливів."
+  - "Діагностика та усунення плеоназмів: розбір типових помилок «вільна вакансія», «пам'ятний сувенір», «спускатися вниз» та механізмів їхнього стилістичного виправлення."
+  - "Прихована тавтологія в наукових текстах: вправи на виявлення лексичної надмірності та забезпечення суворої термінологічної послідовності й лаконічності."
+- section: "Рецензування та фіналізація проєкту (Reviewing and Finalizing the Project)"
+  words: 600
+  points:
+  - "Процедура рецензування (сліпе та зовнішнє): етичні аспекти сприйняття критики, алгоритм інтерпретації відгуків експертів та пріоритизація правок у фінальному тексті."
+  - "Обґрунтування авторських рішень: підготовка до публічного захисту (c2-94) шляхом аргументованого захисту внесених змін та структурного вдосконалення роботи."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "концепція (concept) — наукова, авторська; основа цілісного сприйняття тексту"
+  - "аналіз (analysis) — критичний, текстовий; головний інструмент наукового редактора"
+  - "дискурс (discourse) — науковий, академічний; трансформація стилів згідно з §4.3.7"
+  - "методологія (methodology) — методика редагування та рецензування; етапи роботи над текстом"
+  - "редагування (editing) — літературне, наукове; High frequency (Academic); етапи за Державним стандартом"
+  - "когезія (cohesion) — лексична когезія, засоби когезії; порушення когезії; Medium frequency (Linguistics)"
+  - "узгодженість (consistency) — логічна узгодженість, узгодженість термінології; High frequency (General)"
+  - "канцеляризми (bureaucratese) — зловживання штампами (§4.3.3); стиль 'мертвої мови'; Medium frequency"
+  recommended:
+  - "інтерпретація (interpretation) — задуму автора, критики рецензентів; контекстуалізація тез"
+  - "контекстуалізація (contextualization) — розташування доказів у межах структурних частин роботи"
+  - "синтез (synthesis) — зворотного зв'язку; інтеграція зауважень у цілісну структуру проєкту"
+  - "тавтологія (tautology) — прихована тавтологія; лексична помилка; High frequency (General)"
+  - "плеоназм (pleonasm) — мовна надмірність («вільна вакансія»); усунення стилістичних огріхів"
+  - "рецензування (reviewing) — сліпе рецензування, процедура рецензування; High frequency (Academic)"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4349 chars)
+✅ Message sent to Claude (ID: 11367)
+✓ Message 11367 acknowledged
+   Auto-acknowledged reply #11367 (stdout delivery — no inbox accumulation)
+✓ Message 11350 acknowledged

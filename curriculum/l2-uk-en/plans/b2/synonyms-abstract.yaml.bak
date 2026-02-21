@@ -1,0 +1,69 @@
+module: b2-66
+level: B2
+sequence: 66
+slug: synonyms-abstract
+version: '2.0'
+title: 'Синоніми: Абстрактні Поняття та Ідеї'
+subtitle: Synonyms - Abstract Concepts and Ideas
+content_outline:
+- section: Розминка — Думка чи ідея?
+  points:
+  - Думка vs ідея vs погляд — різні рівні абстракції
+  - Поняття vs концепція vs теорія — ступені узагальнення
+  - Академічна лексика для наукового дискурсу
+- section: Thought/Idea
+  points:
+  - думка (thought - general)
+  - ідея (idea - concept)
+  - погляд (view - perspective)
+  - точка зору (point of view)
+  - переконання (belief - conviction)
+- section: Concept/Notion
+  points:
+  - поняття (concept - understanding)
+  - уявлення (notion - mental picture)
+  - концепція (conception - framework)
+  - теорія (theory - systematic)
+  - гіпотеза (hypothesis - tentative)
+- section: Практика — абстрактна лексика
+  points:
+  - Обрати слово для опису інтелектуальної діяльності (наукова стаття vs есе)
+  - Написати вступ до дослідження з використанням концепція/теорія/гіпотеза
+  - Порівняти на моєму погляді vs на мою думку — регістрові відтінки
+  - Систематизувати синоніми M55-66 — підсумкова таблиця
+focus: phraseology
+pedagogy: CBI
+objectives:
+- Учень може розрізняти відтінки значень між синонімами на позначення інтелектуальної
+  діяльності (думка, ідея, погляд)
+- Учень вміє використовувати академічну лексику для опису наукових концепцій та теорій
+- Учень розуміє різницю між гіпотезою, припущенням та переконанням
+grammar:
+- Nuances in abstract nouns
+- Collocations with idea/thought
+immersion: 100
+register: науковий
+phase: B2.2 [Phraseology & Synonymy]
+vocabulary_hints:
+  required:
+  - синонім (synonym)
+  - вираз (expression)
+  - значення (meaning)
+  - контекст (context)
+  recommended:
+  - переносне значення (figurative meaning)
+  - стилістичне забарвлення (stylistic coloring)
+activity_hints:
+- type: reading
+  focus: Контекстне використання
+  items: 4
+- type: fill-in-the-blank
+  focus: Практичне застосування
+  items: 10
+- type: true-false
+  focus: Розуміння значень
+  items: 8
+persona:
+  voice: Professional Language Coach
+  role: Sociologist (Соціолог)
+word_target: 4000

@@ -1,88 +1,35 @@
-# Research: Discourse Markers II: Advanced Organization (B1 M57)
+# Дослідження: Дискурсивні маркери II: складна організація
 
-**Level**: B1 (Intermediate)
-**Topic**: Advanced Text Organization & Discourse Markers
-**Module**: B1-57
+## State Standard Reference
+§4.4.2 / §4.5.1: "просте речення зі вставними словами мабуть, можливо, здається" (lines 2377-2378); "Складне речення... складносурядне... складнопідрядне" (lines 2380-2431); "Офіційне й неофіційне спілкування" (lines 2435-2450).
+Alignment: This module systematically expands the "inserted words" (вставні слова) category from the basic B1 examples (мабуть) to advanced text organizers (по-перше, підсумовуючи) and aligns with the B1 requirement to distinguish between formal and informal registers.
 
-## 1. Grammar: State Standard 2024 Reference
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| по-перше / по-друге | High (GRAK/MOVA.info) | по-перше, хочу зазначити; по-друге, варто наголосити |
+| нарешті | High | нарешті ми дійшли згоди; і, нарешті, останній пункт |
+| підсумовуючи | Medium (Academic/Formal) | підсумовуючи вищесказане; підсумовуючи результати |
+| таким чином | High (Formal) | таким чином, ми бачимо; діяти таким чином |
+| з одного боку | High | з одного боку... з іншого боку (paired) |
+| передусім | Medium | передусім потрібно; це стосується передусім |
+| загалом | High | загалом кажучи; загалом це вірно |
 
-According to the **State Standard of Ukrainian as a Foreign Language (2024)**, aligned with CEFR B1+ requirements, the learner is expected to:
+## Cultural Hooks
+1. **Kyiv-Mohyla Rhetoric Tradition**: Rhetoric (риторка) was a prestige subject at the Kyiv-Mohyla Academy (17th-18th c.). Students like Theophan Prokopovych and Hryhorii Skovoroda were trained to structure arguments with precise logic and transitional phrases, viewing clear speech as a sign of wisdom.
+2. **Modern Public Speaking**: Reference the Ukrainian tradition of "viche" (віче) and modern parliamentary debate, where formal markers (шановне товариство, дозвольте зауважити) are crucial for authority.
 
-> **Text Coherence and Cohesion (Зв'язність мовлення)**:
-> "Learner can synthesize information and arguments from a number of sources. Can link a series of shorter, discrete elements into a connected, linear sequence of points. Can use a variety of linking words to mark clearly the relationships between ideas."
-> *Relevant Section*: **Morphology and Syntax of the Complex Sentence** (Syntax of Text). Use of introductory words (*вставні слова*) and constructions to organize the text logically.
+## Common Learner Errors
+1. **Register Mismatch**: Using "короче" (slang/surzhyk) instead of "словом" or "підсумовуючи" in formal contexts.
+2. **Punctuation Omission**: Forgetting commas after markers. *Error:* "По-перше я не знав." → *Correct:* "По-перше, я не знав."
+3. **Russian Interference**: Using calcques like "во-пєрвих" or confusing "накінець" (spatial end) with "нарешті" (finally/temporal).
+4. **Broken Pairs**: Using "з одного боку" without following up with "з іншого боку".
 
-At B1 level, the standard emphasizes the transition from simple conjunctions (*і, але, тому що*) to logical organizers that structure paragraphs and complex arguments (*по-перше, таким чином, отже*).
+## Cross-References
+- **Builds on**: b1-56 (Discourse Markers Basic - simple connectors like `тому що`, `але`).
+- **Prepares for**: b1-58 (Describing Changes - requires structured explanation); B2/C1 Academic Writing modules.
 
-## 2. Vocabulary Frequency & Collocations
-
-### High Frequency (Core B1)
-These are essential for any structured speech or writing at B1.
-
-*   **по-перше / по-друге** (*firstly / secondly*): Extremely high frequency in both spoken and written Ukrainian for listing points.
-    *   *Collocations*: По-перше, це важливо. По-друге, це цікаво.
-*   **наприклад** (*for example*): Universal marker.
-*   **отже** (*so, therefore, thus*): Very common for drawing conclusions in speech and writing.
-*   **нарешті** (*finally, at last*): Common for the last point or an emotional "finally!".
-*   **взагалі / загалом** (*in general / generally*): High frequency filler and summarizer.
-
-### Medium Frequency (Academic/Formal B1+)
-These elevate the register to "educated speech" or formal writing.
-
-*   **таким чином** (*thus, in this way*): Formal, used in conclusions.
-    *   *Collocations*: Таким чином, ми бачимо...
-*   **з одного боку ... з іншого боку** (*on the one hand ... on the other hand*): Classic structure for balanced arguments.
-    *   *Note*: Often shortened to just "З іншого боку" (On the other hand) to introduce a counterpoint.
-*   **крім того** (*besides, in addition*): excellent for adding arguments.
-*   **підсумовуючи** (*summarizing*): Formal, specific to presentations or essays.
-*   **власне кажучи** (*strictly speaking / actually*): Conversational but sophisticated.
-
-### Low Frequency (C1 Scope - Avoid)
-*   *ба більше* (moreover - literary)
-*   *відтак* (consequently - formal/archaic)
-*   *насамперед* (first of all - formal alternative to *передусім*)
-
-## 3. Cultural Hook
-
-*   **The "Academic Voice"**: In Ukrainian education, using specific discourse markers (*вставні слова*) is heavily drilled as a sign of "culture of speech" (*культура мовлення*). A student who uses *ну... е-е-е...* is perceived as unprepared, while one who uses *по-перше... по-друге... отже* commands respect. It's not just about clarity; it's about projecting intelligence and authority.
-*   **Directness vs. Politeness**: Ukrainian argumentation can be quite direct. Markers like *безумовно* (undoubtedly) or *очевидно* (obviously) are used more freely than in English, where hedging ("it seems that") is more common. However, *з одного боку... з іншого боку* is a beloved rhetorical device for showing objectivity, heavily used by politicians and intellectuals.
-
-## 4. Pedagogical Notes & Common Errors
-
-### Pedagogical Strategy
-1.  **Sequence**: Teach the "List" pattern first (*по-перше, по-друге, нарешті*). It's the easiest mental anchor.
-2.  **Logic**: Move to Cause-Effect (*тому, отже, таким чином*).
-3.  **Balance**: Introduce Contrast/Comparison (*з одного боку, з іншого боку, на противагу*).
-4.  **Register**: Clearly distinguish between *коротше кажучи* (informal: long story short) and *підсумовуючи* (formal: summarizing).
-
-### Common Errors
-*   **False Friends**: Using *наприкінці* (at the end of time/space) instead of *нарешті* (finally/at last) or *на закінчення* (in conclusion).
-    *   *Wrong*: Наприкінці, я хочу сказати... (At the end [of something], I want to say...)
-    *   *Right*: Насамкінець, я хочу сказати... (In conclusion...)
-*   **Comma Omission**: In Ukrainian, **ALL** these markers are introductory words (*вставні слова*) and **MUST** be separated by commas in writing.
-    *   *Error*: Отже ми йдемо.
-    *   *Correction*: Отже, ми йдемо.
-*   **Mixing Registers**: Using *таким чином* (formal academic) in a casual chat about beer.
-*   **"Also" misuse**: Overusing *також* at the start of sentences. Teach *крім того* or *до того ж* as better sentence starters for adding points.
-
-## 5. Scope Boundaries
-
-### IN Scope (B1)
-*   **Structuring**: По-перше, по-друге, по-третє.
-*   **Adding**: Крім того, до того ж, також.
-*   **Concluding**: Отже, таким чином, нарешті, загалом.
-*   **Contrasting**: З одного боку, з іншого боку, проте, однак.
-*   **Clarifying**: Тобто (that is), інакше кажучи (in other words).
-*   **Emphasizing**: Особливо, зокрема.
-
-### OUT of Scope (Save for B2/C1)
-*   **Archaic/Literary**: *Ба більше, позаяк, далебі*.
-*   **Complex Participle Transitions**: *Зважаючи на вищесказане...* (Given the above...).
-*   **Stylistic Nuance**: *Авжеж, далебі, пріч* (expressive particles).
-*   **Subjunctive Connectors**: *Якби ж то, коли б*.
-
-### Prerequisites Check
-Students must already know:
-*   Basic conjunctions (*і, а, але, бо, коли*).
-*   Basic sentence structure (SVO).
-*   Cases are not strictly required for the *markers* themselves (as most are fixed phrases), but they are needed for the content *around* the markers.
+## Notes for Content Writing
+- **Persona (Keynote Speaker)**: Use the "Keynote Speaker" voice to model these markers. The "Analysis" section can be framed as "How to win a debate" or "Structuring a winning presentation".
+- **Visuals**: Use a flowchart for choosing the right connector (Adding? → `крім того`; Contrasting? → `проте`; Concluding? → `отже`).
+- **Differentiation**: Clearly separate "Formal/Academic" (отже, таким чином) from "Conversational" (ну, знаєш, до речі).

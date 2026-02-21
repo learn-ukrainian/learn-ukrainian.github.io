@@ -1216,6 +1216,100 @@ def resolve_slug_links(content: str) -> str:
 
 
 # =============================================================================
+# MDX NORMALIZATION
+# =============================================================================
+
+def normalize_mdx(text: str) -> str:
+    """Normalize MDX output to fix common markdownlint violations.
+
+    Fixes: MD009 (trailing spaces), MD004 (list marker *->-), MD030 (list spacing),
+    MD049 (_->*), MD050 (__->**), MD012 (multiple blanks), MD022 (heading blanks),
+    MD047 (trailing newline).
+
+    Skips JSX blocks, fenced code blocks, URLs, and inline code to avoid corruption.
+    """
+    lines = text.split('\n')
+    result = []
+    in_code_fence = False
+
+    for line in lines:
+        stripped = line.strip()
+
+        # Track fenced code blocks
+        if stripped.startswith('```'):
+            in_code_fence = not in_code_fence
+            result.append(line.rstrip())
+            continue
+
+        if in_code_fence:
+            result.append(line.rstrip())
+            continue
+
+        # Skip JSX / import lines (only strip trailing whitespace)
+        if (stripped.startswith(('<', '{', '/>', '</', 'import ')) or
+                'className=' in line):
+            result.append(line.rstrip())
+            continue
+
+        # Skip table rows (pipes would cause false positives)
+        if stripped.startswith('|'):
+            result.append(line.rstrip())
+            continue
+
+        # MD009: strip trailing whitespace
+        line = line.rstrip()
+
+        # MD004: * list marker -> - (including inside blockquotes)
+        line = re.sub(r'^(\s*(?:>\s*)*)\*(?= )', r'\1-', line)
+
+        # MD030: normalize spaces after list markers to exactly 1
+        line = re.sub(r'^(\s*(?:>\s*)*(?:[-*+]|\d+\.))\s{2,}', r'\1 ', line)
+
+        # MD049/MD050: normalize emphasis markers
+        # Split on code spans AND markdown link targets to preserve URLs and code
+        if '_' in line:
+            parts = re.split(r'(\[[^\]]*\]\([^)]*\)|`[^`]+`)', line)
+            new_parts = []
+            for j, part in enumerate(parts):
+                if j % 2 == 1:  # inside link target or backticks — preserve
+                    new_parts.append(part)
+                else:
+                    # MD050: __text__ -> **text**
+                    part = re.sub(r'(?<!\w)__(?!\s)(.+?)(?<!\s)__(?!\w)', r'**\1**', part)
+                    # MD049: _text_ -> *text*
+                    part = re.sub(r'(?<!\w)_(?!\s)([^_]+?)(?<!\s)_(?!\w)', r'*\1*', part)
+                    new_parts.append(part)
+            line = ''.join(new_parts)
+
+        result.append(line)
+
+    text = '\n'.join(result)
+
+    # MD022: blank lines around headings
+    # Protect fenced code blocks from heading regex by temporarily replacing them
+    code_blocks = []
+    def _stash_code_block(match):
+        code_blocks.append(match.group(0))
+        return f'\x00CODEBLOCK{len(code_blocks) - 1}\x00'
+    text = re.sub(r'```[^\n]*\n.*?```', _stash_code_block, text, flags=re.DOTALL)
+
+    text = re.sub(r'(\S[^\n]*)\n(#{1,6} )', r'\1\n\n\2', text)
+    text = re.sub(r'(#{1,6} [^\n]+)\n(\S)', r'\1\n\n\2', text)
+
+    # Restore code blocks
+    for i, block in enumerate(code_blocks):
+        text = text.replace(f'\x00CODEBLOCK{i}\x00', block)
+
+    # MD012: collapse 3+ consecutive newlines to 2 (max 1 blank line)
+    text = re.sub(r'\n{3,}', '\n\n', text)
+
+    # MD047: ensure single trailing newline
+    text = text.rstrip('\n') + '\n'
+
+    return text
+
+
+# =============================================================================
 # MDX GENERATOR
 # =============================================================================
 
@@ -1234,9 +1328,27 @@ def generate_mdx(md_content: str, module_num: int, yaml_activities: list[Activit
     if meta_data:
         fm = meta_data
         body = md_content # MD file is already stripped if meta exists (usually)
-        # But if we are transitioning, MD might still have FM. 
+        # But if we are transitioning, MD might still have FM.
         # parse_frontmatter splits it regardless.
         _, body = parse_frontmatter(md_content)
+        # Strip inline YAML preamble when frontmatter delimiters (---) were missing.
+        # Some .md files have raw YAML meta at the top without --- delimiters,
+        # which parse_frontmatter can't detect. Strip up to first heading.
+        # Uses strict key matching to avoid false positives on prose like "Note:".
+        _YAML_META_KEYS = {
+            'module', 'level', 'sequence', 'slug', 'version', 'title', 'subtitle',
+            'content_outline', 'vocabulary_hints', 'activity_hints', 'focus',
+            'pedagogy', 'prerequisites', 'connects_to', 'objectives', 'grammar',
+            'register', 'phase', 'persona', 'word_target',
+        }
+        if body and not md_content.lstrip().startswith('---'):
+            first_line = body.lstrip().split('\n')[0]
+            first_key = first_line.split(':')[0].strip()
+            if first_key in _YAML_META_KEYS:
+                heading_match = re.search(r'^#{1,2} ', body, flags=re.MULTILINE)
+                if heading_match and heading_match.start() > 0:
+                    print(f"  ⚠️  Stripping inline YAML preamble (missing --- delimiters)")
+                    body = body[heading_match.start():]
     else:
         fm, body = parse_frontmatter(md_content)
 
@@ -1390,7 +1502,7 @@ description: "{escape_jsx(fm.get('subtitle', ''))}"
     # Build MDX
     parts = [frontmatter, imports, '', processed]
 
-    return '\n'.join(parts)
+    return normalize_mdx('\n'.join(parts))
 
 # =============================================================================
 # EXTERNAL RESOURCES
@@ -1704,11 +1816,8 @@ def main():
             output_dir.mkdir(parents=True, exist_ok=True)
 
         # Find the physical file
-        # Try slug-only first, then numbered slug (migration period)
         level_dir = CURRICULUM_DIR / lang_pair / mod.level
         md_file = level_dir / f"{mod.slug}.md"
-        if not md_file.exists():
-            md_file = level_dir / f"{mod.local_num:02d}-{mod.slug}.md"
         
         if not md_file.exists():
             print(f"  ⚠️  Physical file not found for slug '{mod.slug}' in {mod.level}")
@@ -1719,8 +1828,6 @@ def main():
         
         # Load META
         meta_file = level_dir / 'meta' / f"{mod.slug}.yaml"
-        if not meta_file.exists():
-            meta_file = level_dir / 'meta' / f"{mod.local_num:02d}-{mod.slug}.yaml"
             
         meta_data = None
         if meta_file.exists():
@@ -1732,10 +1839,7 @@ def main():
                 sys.exit(1)
 
         # Load PLAN file for title/subtitle (Architecture v2.0: title lives in plan, not meta)
-        # Try both slug-only and numbered formats
         plan_file = CURRICULUM_DIR / lang_pair / 'plans' / mod.level.lower() / f"{mod.slug}.yaml"
-        if not plan_file.exists():
-            plan_file = CURRICULUM_DIR / lang_pair / 'plans' / mod.level.lower() / f"{mod.local_num:02d}-{mod.slug}.yaml"
         if plan_file.exists():
             try:
                 with open(plan_file, 'r', encoding='utf-8') as f:
@@ -1755,8 +1859,6 @@ def main():
                 
         # Load VOCABULARY
         vocab_file = level_dir / 'vocabulary' / f"{mod.slug}.yaml"
-        if not vocab_file.exists():
-            vocab_file = level_dir / 'vocabulary' / f"{mod.local_num:02d}-{mod.slug}.yaml"
             
         vocab_items = None
         if vocab_file.exists():
@@ -1771,10 +1873,6 @@ def main():
 
         # Load ACTIVITIES
         yaml_file = level_dir / 'activities' / f"{mod.slug}.yaml"
-        if not yaml_file.exists():
-            yaml_file = level_dir / 'activities' / f"{mod.local_num:02d}-{mod.slug}.yaml"
-        if not yaml_file.exists():
-            yaml_file = level_dir / f"{mod.local_num:02d}-{mod.slug}.activities.yaml"
         
         yaml_activities = None
         if yaml_file.exists():
@@ -1791,13 +1889,8 @@ def main():
 
         mdx_content = generate_mdx(md_content, mod.local_num, yaml_activities, meta_data, vocab_items, module_resources, mod.level)
 
-        # Write output
-        # Use slug-based filenames for tracks (b2-hist, c1-bio, etc.)
-        # Use numbered format for core levels (a1-c2) for backward compatibility
-        if mod.track and mod.track != 'core':
-            output_file = output_dir / f'{mod.slug}.mdx'
-        else:
-            output_file = output_dir / f'module-{mod.local_num:02d}.mdx'
+        # Write output — all tracks use slug-based filenames
+        output_file = output_dir / f'{mod.slug}.mdx'
         output_file.write_text(mdx_content, encoding='utf-8')
 
     print('\n✅ MDX generation complete!')

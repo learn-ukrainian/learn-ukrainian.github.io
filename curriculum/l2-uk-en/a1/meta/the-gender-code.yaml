@@ -1,0 +1,52 @@
+slug: the-gender-code
+title: The Gender Code
+word_target: 2000
+content_outline:
+- section: 'Вступ: Таємний код української мови'
+  words: 300
+  points:
+  - 'Introduce the concept of gender: every noun has a ''character'' (Він, Вона, Воно).'
+  - 'Cultural Hook: Contrast ''Сонце'' (Neuter) with other languages; present it as
+    an impartial life-giver.'
+  - 'The Ending is the Key: 95% predictability based on the last letter.'
+  - 'Mnemonic Aids: Masculine = Hard/Consonant (Block), Feminine = Open (-а/-я), Neuter
+    = Round (-о/-е).'
+  - 'Bridge Note: Use English analogies carefully; emphasize that grammatical gender
+    != biological sex for objects.'
+- section: 'Презентація: Три кити роду'
+  words: 500
+  points:
+  - 'Masculine (Він): Words ending in a consonant (стіл, дім). Collocations: новий
+    дім.'
+  - 'Feminine (Вона): Words ending in -а or -я (книга, кімната). Collocations: цікава
+    книга.'
+  - 'Neuter (Воно): Words ending in -о or -е (вікно, море). Collocations: відкрите
+    вікно.'
+  - 'Agreement Introduction: Briefly introduce ''мій / моя / моє'' as the test for
+    gender (§4.2.2).'
+  - 'Mini-dialogue: Family members (мама, тато, брат, сестра) using ''мій/моя''.'
+- section: 'Практика: Чотири сім''ї та винятки'
+  words: 600
+  points:
+  - Overview of the 4 Declension Families (General concept only - §4.2.1.1).
+  - 'Family 1 Focus: Feminine (-а/-я). Exception: ''Тато'' (M) - Natural Gender Rule.'
+  - 'Family 2 Focus: Masculine (consonant) + Neuter (-о/-е). Exception: ''День'' (M)
+    ends in soft sign.'
+  - 'Family 3 Focus: Feminine nouns ending in a consonant/soft sign. Trap: ''Ніч''
+    (F) vs ''День'' (M).'
+  - 'Family 4 Focus: Neuter nouns ending in -а/-я. Trap: ''Ім''я'' is Neuter, not
+    Feminine.'
+- section: 'Продукція: Колір і форма'
+  words: 300
+  points:
+  - 'Visual Categorization: Use colors (Blue=M, Red=F, Yellow=N) to sort new words.'
+  - 'Identification Task: Identify the declension family for ''серце'' (N), ''земля''
+    (F), ''собака'' (M).'
+  - 'Algorithm for Learners: 1. Is it a person? (Natural Gender). 2. Look at the ending.
+    3. Check exceptions.'
+- section: 'Культурний контекст: Жива мова'
+  words: 300
+  points:
+  - 'Modern Hook: S.T.A.L.K.E.R. vocabulary - Артефакт (M), Зона (F), Укриття (N).'
+  - 'Home Vocabulary: чоловік, жінка, місто (§4.2.1.1).'
+  - 'Summary: Why gender matters for the future (adjectives, past tense).'

@@ -1,0 +1,13 @@
+{
+  "track": "ruth",
+  "slug": "parts-of-speech",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-20T10:47:29Z",
+      "task_id": "v3-parts-of-speech-pA",
+      "mode": "full"
+    }
+  }
+}

@@ -1,9 +1,0 @@
----
-module: 43-combined-practice
-level: A1
-version: '2.0'
-items:
-- lemma: зв'язний
-  ipa: /zʋˈjaznɪj/
-  translation: coherent, connected
-  pos: adj

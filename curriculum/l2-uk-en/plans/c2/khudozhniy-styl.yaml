@@ -1,76 +1,83 @@
----
 module: c2-006
 level: c2
 sequence: 6
 version: '2.0'
-title: "Художній стиль — Літературна творчість"
+title: Художній стиль — Літературна творчість
 focus: stylistics
 pedagogy: TTT
 objectives:
 - TBD
 sources:
 - name: Антологія української літератури
-  url: "https://litopys.org.ua/"
+  url: https://litopys.org.ua/
   type: primary
   notes: Classic and contemporary literary examples
-- name: "Письменники України — біографії та твори"
-  url: "https://ukrlib.com.ua/"
+- name: Письменники України — біографії та твори
+  url: https://ukrlib.com.ua/
   type: reference
   notes: Author styles and creative techniques
-- name: "Ukrainian State Standard 2024 — Literary style"
-  url: "https://mon.gov.ua/"
+- name: Ukrainian State Standard 2024 — Literary style
+  url: https://mon.gov.ua/
   type: reference
   notes: C2 requirements for artistic expression
 content_outline:
-- section: "Вступ — Художній стиль як мистецтво слова"
-  words: 400
-  points:
-  - Функції художнього стилю
-  - Естетична функція мови
-  - Індивідуальний стиль автора
-- section: "Оповідання — мала проза"
-  words: 700
-  points:
-  - Структура оповідання
-  - Композиційні елементи (зав'язка, кульмінація, розв'язка)
-  - Наратор та точка зору
-  - Приклади — Стефаник, Коцюбинський
-- section: "Поезія — ліричний вимір"
+- section: 'Вступ: Художній стиль як естетичний феномен (Introduction: Artistic Style
+    as an Aesthetic Phenomenon)'
   words: 600
   points:
-  - Ліричний герой
-  - Образна система
-  - Ритм і рима
-  - Сучасна українська поезія
-- section: Драматичний діалог
-  words: 600
+  - Defining the aesthetic function of language according to State Standard §4.3.1.1
+    and its role in artistic expression
+  - 'Cultural hook: Cordocentrism (''philosophy of the heart'') as a defining feature
+    of Ukrainian literary emotionality from Skovoroda to modern authors'
+  - 'Individual style vs. linguistic norms: analyzing how writers manipulate standard
+    language to create a unique authorial voice'
+- section: 'Жанрові особливості: Мала проза та наратологія (Genre Features: Short
+    Prose and Narratology)'
+  words: 850
   points:
-  - Специфіка драматичної мови
-  - Ремарки та дійові особи
-  - Конфлікт і характеротворення
-  - Українська драматургія
-- section: Літературні прийоми
-  words: 700
+  - 'Narratology in focus: distinguishing between the author and the narrator (наратор);
+    exploring academic categories like ''всезнаючий'' (omniscient) and ''ненадійний''
+    (unreliable) narrators'
+  - 'Cultural case study: Impressionism in Mykhailo Kotsiubynskyi''s ''Intermezzo''
+    as a model for psychological landscape and the musicality of Ukrainian prose'
+  - 'Structural components of the short story (оповідання): composition elements from
+    ''зав''язка'' (exposition) to ''розв''язка'' (denouement)'
+  - 'Narrative perspective: exploring the ''voice'' of the narrator and the blurring
+    of lines between lyricism and prose'
+- section: Художні засоби та образність (Artistic Devices and Imagery)
+  words: 850
   points:
-  - Метафора, порівняння, епітет
-  - Символ та алегорія
-  - Іронія та сатира
-  - Інтертекстуальність
-- section: "Хронотоп — простір і час"
-  words: 500
+  - 'In-depth study of stylistic devices per §4.3.3: metaphors (розгорнута, смілива),
+    personification, periphrasis, and metonymy'
+  - 'Learner error: Confusing epithets with simple adjectives — drill pairs like ''золотий
+    перстень'' (literal) vs ''золоті руки'' (epithet)'
+  - 'Imagery and symbolism: analyzing the ''символ волі'' and other deep national
+    archetypes in classic and contemporary texts'
+  - 'Intertextuality: how modern Ukrainian literature utilizes allusions and symbols
+    to reference the established literary canon'
+- section: Драматургія та Хронотоп (Dramaturgy and Chronotope)
+  words: 800
   points:
-  - Художній час
-  - Художній простір
-  - Атмосфера та настрій
-  - Пейзаж і портрет
-- section: "Практикум — Творче письмо"
-  words: 500
+  - 'Specifics of dramatic language: analyzing stage directions (ремарки) and characterization
+    (характеротворення) through dialogue and conflict'
+  - 'Bakhtin''s Chronotope in the Ukrainian literary context: exploring the ''хронотоп
+    дороги'' (road) and ''хронотоп міста'' (city)'
+  - Establishing atmosphere and mood through artistic space and time (хронотоп) to
+    create an immersive reader experience
+  - 'Conflict as a tool for character formation: techniques of psychological characterization
+    in modern drama'
+- section: 'Практикум: Творче письмо та стилістична корекція (Practicum: Creative
+    Writing and Stylistic Correction)'
+  words: 900
   points:
-  - Написання flash fiction (500 слів)
-  - Аналіз наративних прийомів
-  - Зміна точки зору в тексті
-  - Створення художнього опису
-word_target: 4000
+  - 'Application of §4.3.6: Creating a structured literary text based on a detailed
+    plan, maintaining consistent stylistic register'
+  - 'Learner error: Overuse of passive voice (e.g., ''Книга була написана'') — practice
+    replacing with active literary forms or idioms like ''вийшла з-під пера'''
+  - 'Eliminating stylistic dissonance: identifying and replacing bureaucratic chancery
+    (e.g., ''здійснити прогулянку'') with evocative literary verbs (e.g., ''поблукати'')'
+  - 'Creative exercise: Writing flash fiction (approx. 500 words) with a focus on
+    a specific narrative point of view or a sudden climax (кульмінація)'
 vocabulary:
   required:
   - оповідання (short story)
@@ -89,7 +96,7 @@ vocabulary:
   - розв'язка (denouement)
   - персоніфікація (personification)
   - алегорія (allegory)
-  forbidden: "[]"
+  forbidden: '[]'
 activities:
   types_required:
   - quiz
@@ -107,21 +114,45 @@ connects_to:
 - 'c2-28 (Poetics: verse analysis)'
 vocabulary_hints:
   required:
-  - концепція (concept)
-  - аналіз (analysis)
-  - дискурс (discourse)
-  - методологія (methodology)
+  - 'оповідання (short story) — high frequency; collocations: ''коротке оповідання'',
+    ''збірка оповідань'', ''писати оповідання'''
+  - 'наратор (narrator) — academic register; types: ''ненадійний наратор'' (unreliable),
+    ''всезнаючий наратор'' (omniscient)'
+  - 'кульмінація (climax) — medium frequency; collocations: ''емоційна кульмінація'',
+    ''у момент кульмінації'', ''наступила кульмінація'''
+  - 'ліричний (lyrical) — high frequency; terms: ''ліричний герой'', ''ліричний відступ'',
+    ''лірична поезія'''
+  - метафора (metaphor) — high frequency; 'розгорнута метафора' (extended), 'смілива
+    метафора', 'вживати метафору'
+  - епітет (epithet) — high frequency; 'постійний епітет' (folkloric), 'влучний епітет',
+    'постійний епітет'
+  - 'символ (symbol) — high frequency; archetypes: ''символ волі'', ''національний
+    символ'', ''глибокий символ'''
+  - 'хронотоп (chronotope) — low frequency/academic; types: ''хронотоп дороги'', ''хронотоп
+    міста'', ''поняття хронотопу'''
+  - характеротворення (characterization) — academic term; 'засоби характеротворення',
+    'психологічне характеротворення'
+  - композиція (composition) — medium frequency; 'кільцева композиція' (circular),
+    'складна композиція', 'елементи композиції'
   recommended:
-  - інтерпретація (interpretation)
-  - контекстуалізація (contextualization)
-  - синтез (synthesis)
+  - ремарка (stage direction) — essential for the analysis of dramatic texts and character
+    context
+  - зав'язка (exposition/setup) — the starting point of plot development; 'несподівана
+    зав'язка'
+  - розв'язка (denouement) — the resolution of literary conflict; 'неминуча розв'язка'
+  - персоніфікація (personification) — stylistic device where inanimate objects take
+    on human traits per §4.3.3
+  - алегорія (allegory) — complex symbolic representation often used in parables and
+    fables
 activity_hints:
 - type: reading
   focus: Поглиблений аналіз тексту
   items: 4
 - type: essay-response
   focus: Критичне осмислення
-  word_target: 400
 - type: discussion
   focus: Дискусія та аргументація
   items: 1
+persona:
+  voice: Senior Specialist
+  role: Writer-in-Residence

@@ -1,0 +1,300 @@
+✅ Message sent to Gemini (ID: 10651) [auto-acked: self-addressed]
+✓ Message 10651 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10651...
+📨 Message #10651
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-presentation-skills-advanced
+   Time: 2026-02-20T20:47:00.663369+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b2-92
+level: B2
+sequence: 92
+slug: presentation-skills-advanced
+version: '2.0'
+title: 'Презентації: Поглиблено'
+subtitle: Advanced Presentation Skills
+content_outline:
+- section: Розминка — Від базових до професійних навичок
+  points:
+  - Перехід від структури (М91) до майстерності
+  - Презентація як інструмент впливу
+  - Адаптація до різних контекстів
+- section: Адаптація до аудиторії
+  points:
+  - Аналіз аудиторії — хто вони, що знають, чого хочуть
+  - Технічна vs нетехнічна аудиторія — як спрощувати
+  - Культурні відмінності — формальність, гумор, приклади
+  - Адаптація під час виступу — читання реакцій
+- section: Storytelling та переконання
+  points:
+  - Сторітелінг — структура історії (герой, виклик, рішення)
+  - Емоційне залучення — особисті приклади, яскраві деталі
+  - Риторичні прийоми (риторичні питання, тріади, контраст)
+  - Етос, пафос, логос — три шляхи переконання
+- section: Робота з Q&A
+  points:
+  - Підготовка до питань — антиципація та заготовки
+  - Стратегії відповідей (bridging, flagging, hooking)
+  - Складні питання — як виграти час, визнати незнання
+  - Агресивні питання — як зберігати спокій та професіоналізм
+- section: Віртуальні презентації
+  points:
+  - Особливості онлайн-формату — камера, освітлення, фон
+  - Залучення аудиторії — опитування, чат, breakout rooms
+  - Технічні проблеми — як підготуватися та реагувати
+  - Гібридні презентації — виклики та рішення
+- section: Практика
+  points:
+  - 10-хвилинна презентація з Q&A
+  - Peer review за розширеними критеріями
+  - Підготовка до дискусій та дебатів (М93)
+focus: skills
+pedagogy: CBI
+objectives:
+- Learner can handle Q&A sessions and difficult questions confidently
+- Learner can adapt presentation style to different audiences
+- Learner can use storytelling and persuasive techniques in presentations
+- Learner can apply advanced visual design principles
+- Learner can deliver effective virtual presentations
+grammar:
+- Rhetorical devices
+- Persuasive language
+register: публіцистичний
+phase: B2.4
+vocabulary_hints:
+  required:
+  - термін (term)
+  - поняття (concept)
+  - процес (process)
+  - метод (method)
+  recommended:
+  - аналіз (analysis)
+  - синтез (synthesis)
+  - дослідження (research)
+activity_hints:
+- type: reading
+  focus: Аналіз тексту
+  items: 4
+- type: essay-response
+  focus: Практичне застосування
+- type: true-false
+  focus: Перевірка розуміння
+  items: 8
+persona:
+  voice: Professional Language Coach
+  role: Startup Founder (Засновник стартапу)
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Презентації: Поглиблено
+
+## State Standard Reference
+§1.1.2.1.3: "довгі презентації, виступи на конференціях; промови, виступи на нарадах, семінарах, зборах, засіданнях"
+Alignment: This module directly addresses the B2 requirement for understanding and producing long, structured presentations in professional contexts (conferences, meetings).
+
+§4.4.1.3: "Стилістичні засоби синтаксису: ... риторичні фігури ... елементи структурування тексту (вставні слова): по-перше, по-друге, по-третє, отже та ін."
+Alignment: The module teaches the specific linguistic tools (rhetorical devices, discourse markers) required to structure these complex monologues effectively.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| **презентувати** | High / Corpora | презентувати проєкт, ідею, результати, команду |
+| **переконувати** | Med-High / Corpora | переконувати аудиторію, інвесторів; переконувати у доцільності |
+| **впливати** | High / Corpora | впливати на рішення, на думку, на емоції; інструмент впливу |
+| **аудиторія** | High / Business | цільова аудиторія, залучення аудиторії, аналіз аудиторії, "тримати" аудиторію |
+| **візуалізація** | Med / Tech | якісна візуалізація, засоби візуалізації, візуалізація даних |
+| **аргумент** | High / General | вагомий аргумент, наводити аргументи, контраргумент |
+| **виступ** | High / General | публічний виступ, готувати виступ, блискучий виступ |
+| **питання** | Very High / General | каверзні питання, сесія питань та відповідей, передбачати питання |
+
+## Cultural Hooks
+1. **TEDxKyiv Legacy**: The platform has hosted iconic speeches defining modern Ukrainian intellectual discourse, such as Yaroslav Hrytsak & Yevhen Hlibovytskyi's "Про цінності українців" (Values of Ukrainians), which serves as a prime example of ethos/logos in action.
+2. **Modern Tech Pitch Culture**: Kyiv is a hub for global startups (Grammarly, MacPaw, Ajax). The "pitch" culture is distinct: less "salesy" than American style, more focused on technical excellence and "value" (цінність), but increasingly adopting storytelling techniques.
+
+## Common Learner Errors
+1. **Calques from English/Russian**: "Приймати участь" (Incorrect) → **Брати участь** (Correct); "Слідуючий слайд" (Incorrect) → **Наступний слайд** (Correct). *Cause: Direct translation.*
+2. **Overuse of Passive Voice**: "Було зроблено аналіз" (Weak) → **Ми проаналізували** (Strong). *Cause: Bureaucratic habit or Russian influence. Ukrainian favors active agency.*
+3. **Weak Structuring**: Starting with "Я хочу розповісти про..." without a hook. *Correction: Use the "Situation-Complication-Resolution" framework or a rhetorical question to start.*
+4. **Anglicisms in Morphology**: "Залончити продукт" instead of "Запустити продукт"; "Запітчити ідею" instead of "Презентувати ідею". *Note: While common in IT, B2 standard requires knowing the literary equivalents.*
+
+## Cross-References
+- **Builds on**: B2.1c (Register System - M31-40), M91 (Presentations: Basics)
+- **Prepares for**: M93 (Debates & Discussions), C1 Academic Writing/Speaking
+
+## Notes for Content Writing
+- **Persona Alignment**: The "Startup Founder" persona should use examples related to pitching a product or vision, but keep the language standard literary/professional, not slang-heavy.
+- **Rhetorical Devices**: Explicitly teach *anaphora* (repetition at start), *antithesis* (contrast), and *rhetorical questions* as tools for the "Persuasion" section.
+- **Q&A Strategy**: Focus on the *linguistic* formulas for bridging: "Це чудове питання, яке підводить нас до..." (That's a great question which brings us to...).
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Від базових навичок до майстерності (Introduction: From Basic to Advanced Skills)"
+  words: 600
+  points:
+  - "Перехід від базової структури модуля М91 до риторичної майстерності та розуміння презентації як інструменту впливу (інструмент впливу) на рішення."
+  - "Аналіз TEDxKyiv як еталону сучасного українського дискурсу: розбір виступу Я. Грицака та Є. Глібовицького «Про цінності українців» як прикладу гармонії етосу та логосу."
+  - "Визначення цілей виступу (§1.1.2.1.3): завдання переконувати (переконувати) аудиторію та презентувати результати у професійному контексті конференцій та засідань."
+- section: "Аналіз та адаптація до аудиторії (Audience Analysis and Adaptation)"
+  words: 800
+  points:
+  - "Глибокий аналіз цільової аудиторії (цільова аудиторія): визначення потреб, рівня технічних знань та очікувань інвесторів чи колег."
+  - "Стратегії дестиляції сенсу: як презентувати складні терміни (термін) та поняття (поняття) нетехнічній аудиторії без спрощення змісту."
+  - "Культурний контекст українського ІТ-сектору (Grammarly, MacPaw): адаптація глобальних стандартів пітчингу до локальних особливостей — пріоритет технічної цінності над агресивним продажем."
+  - "Читання невербальних реакцій під час виступу (виступ) та гнучка зміна темпу або глибини подачі матеріалу."
+- section: "Сторітелінг та риторика переконання (Storytelling and Persuasive Rhetoric)"
+  words: 1000
+  points:
+  - "Майстерність сторітелінгу: впровадження структури SCP (Situation-Complication-Resolution) для уникнення слабких вступів на кшталт «Я хочу розповісти про...»."
+  - "Стилістичні засоби синтаксису (§4.4.1.3): практичне застосування анафори, антитези та риторичних питань для створення емоційного зв'язку."
+  - "Боротьба за природність: виправлення типового зловживання пасивним станом («нами було проаналізовано») на користь активної суб'єктності («ми проаналізували»)."
+  - "Етос, пафос, логос: інтеграція трьох шляхів переконання у публіцистичному регістрі виступу засновника стартапу."
+- section: "Мистецтво візуалізації та технічна досконалість (Art of Visualization and Technical Excellence)"
+  words: 600
+  points:
+  - "Ефективна візуалізація (візуалізація) даних: перетворення статистики на вагомі аргументи (вагомий аргумент) та наочні образи, що підсилюють головну ідею."
+  - "Лінгвістична гігієна слайдів: виправлення типових помилок та кальк — вживання фрази «наступний слайд» замість помилкової «слідуючий слайд»."
+  - "Особливості віртуальних та гібридних виступів: робота з камерою, освітленням та інструментами інтерактиву (опитування, чат) для утримання уваги."
+  - "Термінологічний контроль: свідоме використання літературних відповідників замість професійного суржику та англіцизмів (наприклад, «запустити продукт» замість «залончити»)."
+- section: "Сесія питань та відповідей: Стратегії захисту (Q&A: Defense Strategies)"
+  words: 700
+  points:
+  - "Підготовка до каверзних питань (каверзні питання): використання техніки антиципації та розробка сценаріїв відповідей на складні зауваження."
+  - "Мовні формули «бриджингу» (bridging): опанування сталих конструкцій — «Це чудове питання, яке підводить нас до ключового аспекту нашої стратегії...»."
+  - "Управління агресією та тиском: як зберігати професійний спокій, вигравати час для роздумів та гідно визнавати межі власної компетенції."
+  - "Мистецтво контраргументації: як наводити аргументи, що нейтралізують критику, зберігаючи конструктивний тон дискусії."
+- section: "Практикум та зворотний зв'язок (Practicum and Feedback)"
+  words: 300
+  points:
+  - "Фінальна презентація (пітч) з обов'язковою сесією Q&A та відпрацюванням коректного вживання виразу «брати участь» (замість помилкового «приймати участь»)."
+  - "Peer review за критеріями B2.4: оцінка риторичної вправності, логіки структурування та здатності «тримати» аудиторію."
+  - "Підготовка до дебатів (модуль М93): трансформація навичок монологу у динамічну взаємодію під час дискусії."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "презентувати (to present) — презентувати проєкт, ідею, результати, команду; High frequency in professional contexts."
+  - "переконувати (to persuade) — переконувати аудиторію, інвесторів, у доцільності рішення; ключова дія для B2."
+  - "впливати (to influence) — впливати на рішення, на думку, на емоції; презентація як інструмент впливу."
+  - "аудиторія (audience) — цільова аудиторія, залучення аудиторії, аналіз аудиторії, «тримати» аудиторію."
+  - "візуалізація (visualization) — якісна візуалізація, засоби візуалізації даних; ключовий аспект сучасних виступів."
+  - "аргумент (argument) — вагомий аргумент, наводити аргументи, контраргумент; основа логічного переконання."
+  - "виступ (speech/presentation) — публічний виступ, готувати виступ, блискучий виступ; термін за стандартом §1.1.2.1.3."
+  - "питання (question) — каверзні питання, сесія питань та відповідей, передбачати питання; фокус на Q&A стратегіях."
+  recommended:
+  - "термін (term) — технічна та професійна термінологія виступу."
+  - "поняття (concept) — пояснення складних абстрактних понять аудиторії."
+  - "процес (process) — структурування презентації як логічного процесу."
+  - "метод (method) — методи переконання (етос, пафос, логос)."
+  - "аналіз (analysis) — аналіз аудиторії та результатів діяльності."
+  - "синтез (synthesis) — синтез ідей та аргументів у фінальних висновках."
+  - "дослідження (research) — обґрунтування аргументів даними актуальних досліджень."
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (5553 chars)
+✅ Message sent to Claude (ID: 10658)
+✓ Message 10658 acknowledged
+   Auto-acknowledged reply #10658 (stdout delivery — no inbox accumulation)
+✓ Message 10651 acknowledged

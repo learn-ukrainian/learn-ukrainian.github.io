@@ -1,0 +1,278 @@
+✅ Message sent to Gemini (ID: 11940) [auto-acked: self-addressed]
+✓ Message 11940 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #11940...
+📨 Message #11940
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-it-vocabulary-2
+   Time: 2026-02-20T23:34:41.341454+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b2-pro-17
+level: B2-PRO
+sequence: 17
+slug: it-vocabulary-2
+version: '2.0'
+title: 'ІТ-лексика II: Розробка та хмарні технології'
+subtitle: 'IT Vocabulary: Development and Cloud'
+content_outline:
+- section: Розминка — Мова українського ІТ
+  points:
+  - Англіцизми в українському ІТ — неминуче зло чи збагачення?
+  - Як правильно відмінювати запозичення (деплоїти, мерджити)
+  - Офіційна документація vs щоденне спілкування
+- section: Програмування та розробка
+  points:
+  - 'Процес: розробка, тестування, впровадження, підтримка'
+  - 'Код: вихідний код, компіляція, налагодження (дебаг), рефакторинг'
+  - 'Інструменти: середовище розробки (IDE), система контролю версій, репозиторій'
+  - 'Методології: гнучка розробка (Agile), скрам (Scrum), канбан (Kanban)'
+- section: Хмарні технології
+  points:
+  - 'Моделі: хмарні обчислення, IaaS, PaaS, SaaS'
+  - 'Послуги: хмарне сховище, хмарний сервер, хмарна платформа'
+  - 'Провайдери: AWS, Azure, Google Cloud — як говорити про них українською'
+  - 'Переваги: масштабованість, гнучкість, відмовостійкість'
+- section: Безпека та кібербезпека
+  points:
+  - 'Загрози: кібератака, шкідливе ПЗ, фішинг, витік даних'
+  - 'Захист: шифрування, двофакторна автентифікація, брандмауер'
+  - 'Процеси: аудит безпеки, тестування на проникнення, резервне копіювання'
+- section: Зразок технічного документа
+  points:
+  - Технічне завдання на розробку ПЗ
+  - Звіт про результати тестування
+  - Аналіз термінології та структури
+- section: Практика — опишіть проєкт
+  points:
+  - 'Завдання: Описати архітектуру програмного рішення'
+  - Вимоги до технічної документації
+  - Баланс між англійськими термінами та українськими відповідниками
+vocabulary_hints:
+  required:
+  - розробка програмного забезпечення (software development)
+  - система контролю версій (version control system)
+  - хмарні обчислення (cloud computing)
+  - масштабованість (scalability)
+  - шифрування (encryption)
+  - двофакторна автентифікація (two-factor authentication)
+  - тестування на проникнення (penetration testing)
+  - відмовостійкість (fault tolerance)
+  recommended:
+  - налагодження/дебаг (debugging)
+  - впровадження/деплой (deployment)
+  - гнучка розробка (Agile development)
+  - репозиторій (repository)
+  - шкідливе ПЗ (malware)
+  - резервне копіювання (backup)
+activity_hints:
+- type: document-analysis
+  focus: Проаналізувати технічне завдання — визначити терміни та структуру
+  items: 1
+- type: writing-task
+  focus: Описати архітектуру простого веб-додатку
+  items: 1
+- type: vocabulary-domain
+  focus: Підібрати українські відповідники до англійських ІТ-термінів
+  items: 15
+- type: fill-in
+  focus: Вставити правильні терміни в опис процесу розробки
+  items: 12
+- type: matching
+  focus: З'єднати термін з визначенням
+  items: 10
+- type: register-transform
+  focus: Перетворити жаргонний опис на офіційну документацію
+  items: 6
+focus: professional
+pedagogy: ESP
+prerequisites:
+- 'b2-pro-16 (ІТ-лексика I: Апаратне забезпечення)'
+connects_to:
+- b2-pro-18 (Технічна документація)
+objectives:
+- Учень знає українську термінологію програмування та розробки ПЗ
+- Учень може описувати хмарні технології правильною лексикою
+- Учень знає термінологію кібербезпеки
+- Учень може писати технічну документацію українською мовою
+grammar:
+- Дієслова ІТ-сфери (розгортати, впроваджувати, налаштовувати, тестувати)
+- Іменники з суфіксами -ість, -ація (масштабованість, автентифікація)
+- Складні терміни з дефісом (двофакторний, відмовостійкий)
+register: технічний
+phase: B2-PRO.2
+persona:
+  voice: Senior Specialist
+  role: Cloud Architect
+word_target: 2000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: ІТ-лексика II: Розробка та хмарні технології
+
+## Використані джерела
+1. [DOU.ua — Словник ІТ-жаргону](https://dou.ua/lenta/articles/it-slang-dictionary/) — база професійного сленгу та його українських відповідників.
+2. [Ucloud — Що таке хмарні технології](https://ucloud.ua/blog/shho-take-hmarni-tehnologiyi/) — термінологія хмарних моделей та послуг.
+3. [Держспецзв'язку — Глосарій кібербезпеки](https://cip.gov.ua/) — офіційні терміни щодо захисту інформації.
+4. [Zakon.rada.gov.ua — Закон України «Про хмарні послуги»](https://zakon.rada.gov.ua/laws/show/2074-20) — правове визначення хмарних термінів.
+5. [Robotdreams — Словник розробника](https://robotdreams.cc/blog/61-slovnik-programista-osnovni-it-termini) — опис процесів розробки та інструментів.
+
+## Термінологічна база
+
+| Українська (норма) | Русизм/ненорма | English | Контекст вживання |
+|--------------------|---------------|---------|-------------------|
+| Застосунок         | Приложеніє    | Application | Формальна документація, опис ПЗ |
+| Налагодження       | Дебаг         | Debugging | Процес виправлення помилок у коді |
+| Розгортання        | Деплой        | Deployment | Перенесення коду на сервер |
+| Обліковий запис    | Аккаунт       | Account | Реєстрація користувача |
+| Віддалений доступ  | Удальонка     | Remote access | Формат роботи або тип підключення |
+| Міжмережевий екран | Фаєрвол       | Firewall | Технічна специфікація безпеки |
+| Відмовостійкість   | Відказостійкість | Fault tolerance | Вимога до архітектури системи |
+| Гнучка розробка    | Агіле         | Agile | Методологія управління проєктами |
+
+## Мовні норми та стандарти
+- **ДСТУ 2850-94**: Програмні засоби ЕОМ. Поняття та визначення (базова термінологія програмування).
+- **ДСТУ ISO/IEC 12207:2017**: Процеси життєвого циклу програмного забезпечення.
+- **ДСТУ 4163:2020**: Уніфікована система організаційно-розпорядчої документації (вимоги до оформлення технічних звітів та листів).
+- **Закон України «Про хмарні послуги» (2022)**: Встановлює норму вживання термінів «хмарні обчислення», «хмарна інфраструктура», «IaaS/PaaS/SaaS» в офіційному полі.
+
+## Аутентичні приклади
+1. [Технічне завдання]: «Вимоги до **масштабованості**: система повинна підтримувати одночасну роботу до 10 000 користувачів без втрати продуктивності».
+2. [Звіт про тестування]: «Під час **налагодження** було виявлено критичну вразливість у модулі **автентифікації**, яку усунуто шляхом оновлення версії фреймворку».
+3. [Опис архітектури]: «Рішення базується на **гібридній хмарі**, де конфіденційні дані зберігаються у **приватній хмарі**, а обчислювальні ресурси масштабуються в **публічній хмарі** AWS».
+
+## Типові помилки
+1. ❌ **Опечатка** → ✅ **Друкарська помилка / Описка** — «опечатка» є калькою з російської.
+2. ❌ **Вінчестер** → ✅ **Жорсткий диск / Накопичувач** — застарілий жаргонізм, не вживається в офіційній документації.
+3. ❌ **Обновити прошивку** → ✅ **Оновити мікропрограму** — «обновити» (зробити новим) замість «оновити» (замінити на нову версію).
+4. ❌ **Скинь ссилку** → ✅ **Надішли посилання** — «ссилка» — грубий русизм.
+5. ❌ **Зайти під логіном** → ✅ **Увійти до облікового запису** — правильна дієслівна конструкція в ІТ-інтерфейсах.
+
+## Engagement Hooks (mapped to sections)
+- Section "Розминка — Мова українського ІТ": [!language-note] — Чому слово «застосунок» краще за «додаток» для ПЗ (Mobile app vs Add-on).
+- Section "Програмування та розробка": [!pro-tip] — Різниця між «компіляцією» та «інтерпретацією» в офіційній термінології ДСТУ.
+- Section "Хмарні технології": [!context] — Закон України «Про хмарні послуги»: як держава регулює перехід держсектору в хмару (Cloud First policy).
+- Section "Безпека та кібербезпека": [!common-error] — Автентифікація vs Авторизація: помилка, яку роблять навіть досвідчені розробники.
+
+## Section-Mapped Research Notes
+
+### Розминка — Мова українського ІТ
+Обговорення «англо-українського» суржику в ІТ. Правила адаптації дієслів: «деплоїти» — розгортати, «мерджити» — зливати/об'єднувати. Контраст між сленгом розробників на DOU та мовою офіційних специфікацій.
+
+### Програмування та розробка
+Життєвий цикл розробки ПЗ (SDLC) українською: аналіз вимог, проєктування, розробка (кодування), тестування, розгортання, підтримка. Термінологія Git: репозиторій, гілка (branch), коміт, запит на злиття (pull request). Методології: Agile (гнучка), Scrum (скрам — щоденні наради, спринти).
+
+### Хмарні технології
+Моделі розгортання: приватна, публічна, гібридна хмари. Сервісні моделі: інфраструктура (IaaS), платформа (PaaS), програмне забезпечення (SaaS) як послуга. Переваги: масштабованість (горизонтальна/вертикальна), відмовостійкість (fault tolerance), висока доступність.
+
+### Безпека та кібербезпека
+Класифікація загроз за Держспецзв'язку: несанкціонований доступ, шкідливе програмне забезпечення (malware), фішинг. Методи захисту: двофакторна автентифікація (2FA), шифрування даних (encryption), міжмережевий екран (брандмауер). Поняття «тестування на проникнення» (penetration testing).
+
+### Зразок технічного документа
+Структура ТЗ за стандартом: призначення, технічні вимоги, функціональні можливості, вимоги до безпеки. Офіційний стиль: використання безособових конструкцій («передбачено», «реалізовано», «забезпечується»).
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 11982)
+✓ Message 11940 acknowledged
+✓ Message 11982 acknowledged

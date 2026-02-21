@@ -1,0 +1,13 @@
+{
+  "track": "b2-hist",
+  "slug": "syntez-vytoky-1",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T12:46:02Z",
+      "task_id": "v3-syntez-vytoky-1-pA",
+      "mode": "meta-only"
+    }
+  }
+}

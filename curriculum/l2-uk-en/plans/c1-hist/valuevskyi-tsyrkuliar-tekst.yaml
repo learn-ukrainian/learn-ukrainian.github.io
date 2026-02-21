@@ -1,4 +1,3 @@
----
 module: c1-hist-031
 level: c1-hist
 sequence: 31
@@ -10,22 +9,19 @@ objectives:
 - 'Analyze the causes and consequences of валуєвський циркуляр: повний текст'
 - Evaluate the historical significance of заборона мови
 content_outline:
-- section: "Вступ — Заборона мови"
-  words: 457
+- section: Вступ — Заборона мови
   subsections:
   - 1863 рік — контекст
   - Що таке циркуляр?
   - Чому заборонили українську?
   - Значення документа
 - section: Історичний контекст
-  words: 686
   subsections:
   - Польське повстання 1863
   - Українофільство — що це?
   - Загроза для імперії
   - Валуєв — хто він
-- section: "Текст циркуляра — повний аналіз"
-  words: 914
+- section: Текст циркуляра — повний аналіз
   subsections:
   - Текст (з глосами)
   - Малоросійської мови не було, немає і бути не може
@@ -33,32 +29,27 @@ content_outline:
   - Виключення — релігійна література
   - Мова документа — бюрократична
 - section: Логіка заборони
-  words: 571
   subsections:
   - Аргументи циркуляра
   - «Наріччя» vs. мова
   - Сепаратизм — удаваний чи реальний?
   - Імперська логіка
 - section: Наслідки
-  words: 686
   subsections:
   - Як виконувався
   - Перенесення культури до Галичини
   - Опір — як обходили
   - Довготривалий вплив
 - section: Критика джерела
-  words: 343
   subsections:
   - Офіційний документ — що він відображає
   - Що за ним стоїть
   - Порівняння з Емським указом
 - section: Підсумок
-  words: 343
   subsections:
   - Від циркуляра до указу
   - Мовна політика імперії
   - Зв'язок із сучасністю
-word_target: 4000
 vocabulary:
 - циркуляр
 - заборона
@@ -79,7 +70,7 @@ activities:
 - type: reading
   focus: Full text with glosses
 - type: critical-analysis
-  focus: "How does Valuev argue that Ukrainian \"doesn't exist\"?"
+  focus: How does Valuev argue that Ukrainian "doesn't exist"?
 - type: comparative-study
   focus: Compare with colonial language policies elsewhere
 - type: critical-analysis
@@ -88,15 +79,15 @@ activities:
   focus: Чому імперія боялася української мови?
 sources:
 - name: Валуєвський циркуляр (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Валуєвський_циркуляр"
+  url: https://uk.wikipedia.org/wiki/Валуєвський_циркуляр
   type: reference
   notes: Overview
 - name: Текст циркуляра
-  url: "https://uk.wikisource.org/wiki/Циркуляр_Валуєва"
+  url: https://uk.wikisource.org/wiki/Циркуляр_Валуєва
   type: primary
   notes: Full text
 - name: Петро Валуєв
-  url: "https://uk.wikipedia.org/wiki/Валуєв_Петро_Олександрович"
+  url: https://uk.wikipedia.org/wiki/Валуєв_Петро_Олександрович
   type: reference
   notes: Author biography
 vocabulary_hints:
@@ -115,7 +106,9 @@ activity_hints:
   items: 4
 - type: essay-response
   focus: Критичний аналіз
-  word_target: 300
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Documentary Linguist

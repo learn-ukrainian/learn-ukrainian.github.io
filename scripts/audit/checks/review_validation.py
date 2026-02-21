@@ -207,45 +207,87 @@ def _extract_ukrainian_citations(content: str) -> list[str]:
     IMPORTANT: Match ALL quote pairs first, then filter by length.
     Using {10,} inside the regex causes it to skip short matches like "scary",
     making the closing quote become the opening of a huge cross-line match.
+
+    Deduplicates citations and strips markdown formatting before returning.
     """
-    citations = []
+    raw_citations = []
     min_len = 10
     # «...» angular quotes
     for match in re.findall(r'«([^»]*)»', content):
         if len(match) >= min_len and re.search(r'[а-яіїєґ]', match):
-            citations.append(match)
+            raw_citations.append(match)
     # "..." straight quotes containing Cyrillic
     for match in re.findall(r'"([^"]*)"', content):
         if len(match) >= min_len and re.search(r'[а-яіїєґ]', match):
-            citations.append(match)
+            raw_citations.append(match)
     # `...` inline code with Ukrainian (skip multi-line matches from code fences)
     for match in re.findall(r'`([^`]*)`', content):
         if len(match) >= min_len and '\n' not in match and re.search(r'[а-яіїєґ]', match):
-            citations.append(match)
-    return citations
+            raw_citations.append(match)
+
+    # Strip markdown bold/italic markers before dedup and verification
+    cleaned = []
+    seen = set()
+    for c in raw_citations:
+        stripped = re.sub(r'\*{1,2}([^*]+)\*{1,2}', r'\1', c)
+        norm_key = re.sub(r'\s+', ' ', stripped.lower().strip())
+        if norm_key not in seen:
+            seen.add(norm_key)
+            cleaned.append(stripped)
+    return cleaned
 
 
 def _verify_citations_against_source(citations: list[str], source_path: Path) -> tuple[int, int]:
     """
-    Check how many cited Ukrainian sentences actually exist in the source .md file.
+    Check how many cited Ukrainian sentences actually exist in the source module files.
+    Searches: content .md, activities YAML, and vocabulary YAML.
     Returns (verified_count, total_count).
     """
     if not source_path.exists() or not citations:
         return 0, len(citations)
 
+    # Build combined source text from all module files
+    source_parts = []
     try:
-        source_text = source_path.read_text(encoding='utf-8').lower()
+        source_parts.append(source_path.read_text(encoding='utf-8').lower())
     except Exception:
         return 0, len(citations)
+
+    # Also search activities and vocabulary YAML
+    base_dir = source_path.parent
+    slug = source_path.stem
+    for subdir in ('activities', 'vocabulary'):
+        yaml_path = base_dir / subdir / f"{slug}.yaml"
+        if yaml_path.exists():
+            try:
+                source_parts.append(yaml_path.read_text(encoding='utf-8').lower())
+            except Exception:
+                pass
+
+    source_text = '\n'.join(source_parts)
+    # Strip markdown formatting from source too (bold, italic, links)
+    source_text = re.sub(r'\*{1,2}([^*]+)\*{1,2}', r'\1', source_text)
 
     verified = 0
     for citation in citations:
         # Normalize: lowercase, collapse whitespace
         normalized = re.sub(r'\s+', ' ', citation.lower().strip())
-        # Check if a substantial substring (first 30 chars) appears in source
-        # This handles minor formatting differences
+        # Primary check: first 30 chars (handles exact copies)
         check_str = normalized[:min(30, len(normalized))]
         if check_str in source_text:
+            verified += 1
+            continue
+        # Fallback: check sliding windows of 20 chars through the citation
+        # This catches cases where the start is slightly paraphrased but
+        # the core text is verbatim (e.g., added article or reordered intro)
+        found = False
+        if len(normalized) >= 20:
+            for start in range(0, min(len(normalized) - 19, 40), 5):
+                window = normalized[start:start + 20]
+                if window in source_text:
+                    found = True
+                    break
+        if found:
             verified += 1
 
     return verified, len(citations)
@@ -412,10 +454,15 @@ def check_review_validity(file_path: str, level_code: str, module_slug: str) -> 
                     )
                 })
             elif total_cit >= 3 and (verified / total_cit) < 0.5:
-                # Less than half match — suspicious
+                # Less than half match — suspicious.
+                # When the sample is large (≥5 citations) and verification rate is low (<50%),
+                # this is conclusive evidence of fabrication, not just paraphrasing.
+                # Escalate to critical so the pipeline blocks — no prompt compliance needed.
+                is_conclusive = total_cit >= 5 and unverified >= 5
+                severity = 'critical' if is_conclusive else 'warning'
                 violations.append({
                     'type': 'UNVERIFIED_CITATIONS',
-                    'severity': 'warning',
+                    'severity': severity,
                     'message': (
                         f"Only {verified}/{total_cit} Ukrainian citations in the review "
                         f"were found in the source module. The reviewer may be quoting "

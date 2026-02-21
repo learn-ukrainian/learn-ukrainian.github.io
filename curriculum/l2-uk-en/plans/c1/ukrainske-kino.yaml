@@ -1,0 +1,78 @@
+module: c1-088
+level: C1
+sequence: 88
+slug: ukrainske-kino
+version: '2.0'
+title: Українське кіно
+subtitle: Ukrainian Cinema — Shadows and Light
+content_outline:
+- section: 'Вступ: Поетика українського кадру (Introduction: Poetics of the Ukrainian
+    Frame)'
+  words: 500
+  points:
+  - Визначення 'поетичного кіно' як унікального стилістичного явища в контексті Державного
+    стандарту (§4.4.1.1)
+  - 'Огляд базової термінології: стрічка, кадр, монтаж; робота над типовою помилкою
+    вживання дієслова ''вражати'' (вживання знахідного відмінка замість місцевого)'
+- section: Олександр Довженко — філософія 'Землі' (Oleksandr Dovzhenko — The Philosophy
+    of 'Earth')
+  words: 800
+  points:
+  - 'Аналіз фільму ''Земля'': світове визнання на виставці в Брюсселі 1958 року та
+    візуальна мова Довженка'
+  - 'Стилістичні засоби: використання метафор та алегорій (§4.4.3) для зображення
+    природи та людини; боротьба з радянською цензурою за українську агентність'
+- section: Параджанов та дисидентський кінопротест (Parajanov and the Dissident Cinema
+    Protest)
+  words: 1000
+  points:
+  - 'Феномен фільму ''Тіні забутих предків'': візуальний стиль, етнографічна автентичність
+    та символіка кадру'
+  - 'Історичний контекст протесту 1965 року: виступи В. Стуса, В. Чорновола та І.
+    Дзюби на прем''єрі як перший публічний політичний акт проти радянських арештів'
+- section: 'Від Майдану до Оскара: сучасний кінопроцес (From Maidan to the Oscars:
+    Modern Cinema Process)'
+  words: 900
+  points:
+  - 'Сучасна документалістика: ''Вавилон''13'' як літопис Революції Гідності та ''20
+    днів у Маріуполі'' М. Чернова (перший Оскар в історії України)'
+  - 'Художнє кіно незалежної України: аналіз робіт О. Сенцова, А. Лукіча та Н. Алієва;
+    динаміка прокату, касові збори та міжнародні фестивалі (§3.4)'
+- section: 'Практика: Мистецтво кінодискурсу (Practice: The Art of Cinema Discourse)'
+  words: 800
+  points:
+  - 'Написання рецензії на фільм: використання специфічної лексики художнього стилю
+    (режисерський дебют, культова стрічка, задум режисера)'
+  - 'Корекція поширених помилок: розрізнення ''грати роль'' (акторська гра) vs ''гратися''
+    (іграшками), перевага автентичної конструкції ''знімати фільм'' над калькою ''робити
+    кіно'''
+focus: fine-arts
+pedagogy: CBI
+objectives:
+- Learner explores the legacy of Oleksandr Dovzhenko and Poetic Cinema.
+- Learner understands the phenomenon of Parajanov and Shadows of Forgotten Ancestors.
+- Learner analyzes contemporary Ukrainian cinema (Sentsov, Lukich, Aliev).
+grammar:
+- Cinematic terminology
+- Discussing plot and acting
+phase: C1.5 Folk Culture & Fine Arts
+persona:
+  voice: Senior Specialist
+  role: Кінокритик
+word_target: 4000
+vocabulary_hints:
+  required:
+  - стрічка (film/tape) — художня стрічка, культова стрічка, вихід стрічки в прокат;
+    High frequency in art discourse
+  - режисер (director) — геніальний режисер, задум режисера, режисерський дебют; High
+    frequency, focus on creative agency
+  - кадр (shot/frame) — вдалий кадр, композиція кадру, за кадром (voiceover); Medium
+    frequency, specific for cinematic analysis
+  - монтаж (editing) — динамічний монтаж, особливості монтажу; Technical term for
+    discussing artistic style
+  - прокат (distribution) — вийти в прокат, широкий прокат, касові збори; Necessary
+    for discussing the film industry
+  recommended:
+  - метафора (metaphor) — ключовий засіб виразності поетичного кіно
+  - алегорія (allegory) — використання образів для передачі абстрактних ідей
+  - символізм (symbolism) — система візуальних знаків у кадрі

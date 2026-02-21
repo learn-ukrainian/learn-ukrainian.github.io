@@ -1,0 +1,117 @@
+module: a2-60
+level: A2
+sequence: 60
+slug: at-the-pharmacy
+version: '2.0'
+title: At the Pharmacy
+subtitle: Buying Medicine
+content_outline:
+- section: 'Вступ: Українські аптеки (Introduction: Ukrainian Pharmacies)'
+  words: 400
+  points:
+  - 'Cultural hook: Identifying a «чергова аптека» (duty pharmacy) open 24/7, marked
+    by the iconic green cross; explaining the infrastructure of Ukrainian pharmacies.'
+  - 'Prescription system: The transition to «е-рецепт» (electronic prescription via
+    SMS) since 2022 for antibiotics; distinguishing between «безрецептурні ліки» (OTC)
+    and prescription-only meds.'
+  - 'Learner error: Clarifying that «ліки» is pluralia tantum (always plural); correcting
+    the common mistake of treating it as singular (e.g., «Ці ліки», not «Це ліки»).'
+  - 'Linguistic purity: Identifying and avoiding the Russianism «лікарство» in favor
+    of the standard Ukrainian «ліки» (alignment with State Standard §3.12).'
+- section: 'Пошук ліків: Симптоми та запити (Asking for Medicine: Symptoms and Requests)'
+  words: 750
+  points:
+  - 'Grammar drill: Using «від» + Genitive case for ailments (State Standard §4.2.2.2);
+    correcting the error of using «для» (e.g., «ліки від кашлю» vs incorrect «ліки
+    для кашлю»).'
+  - 'Cultural hook: Ukrainian preference for «фітотерапія» (herbal remedies); discussing
+    common natural treatments like tea with «калина» (viburnum) or herbal syrups.'
+  - 'Functional language: Key phrases for describing symptoms such as «У мене болить...»
+    and «Мені потрібно щось від...» for specific conditions like cold («застуда»)
+    or headache («біль голови»).'
+  - 'Vocabulary expansion: Categorizing common OTC meds: «жарознижувальні» (antipyretics),
+    «знеболювальні» (painkillers), and «таблетки для розсмоктування» (lozenges).'
+- section: Інструкції та етикетки (Instructions and Labels)
+  words: 650
+  points:
+  - 'Standard vs Colloquial usage: Defining the formal «приймати ліки» used in labels
+    versus the colloquial «пити таблетки» found in daily speech.'
+  - 'Reading labels: Identifying key terms on packaging: «дозування» (dosage), «застосування»
+    (application), and «протипоказання» (contraindications).'
+  - 'Grammar in context: Understanding instructions using the Imperative mood (State
+    Standard §4.2.3.2) found on medicine leaflets.'
+  - 'Warning signs: Recognizing storage instructions like «зберігати в недоступному
+    для дітей місці» and expiry dates.'
+- section: Дозування та побічні ефекти (Dosage and Side Effects)
+  words: 700
+  points:
+  - 'Precision in dosage: Phrases for frequency such as «раз на день», «двічі на добу»,
+    and the specific construction «приймати по одній таблетці».'
+  - 'Meal-related instructions: Differentiating between «до їди» (before meals), «під
+    час їди» (during meals), and «після їди» (after meals).'
+  - 'Side effects and allergies: Essential vocabulary for «побічні ефекти» and «алергія»;
+    discussing interactions with other substances.'
+  - 'Medical forms: Vocabulary for different delivery methods: «капсула» (capsule),
+    «сироп» (syrup), «мазь» (ointment), and «краплі» (drops).'
+- section: 'Практика: Діалог в аптеці (Practice: Pharmacy Dialogue)'
+  words: 500
+  points:
+  - 'Roleplay: Buying medicine for a cold using the «від + Genitive» construction
+    and asking about side effects.'
+  - 'Authenticity check: A scenario where the learner asks for antibiotics and the
+    pharmacist explains the requirement for an «е-рецепт».'
+  - 'Consultation: Asking the pharmacist («фармацевт») for a recommendation between
+    a synthetic drug and a herbal alternative.'
+vocabulary_hints:
+  required:
+  - 'аптека (pharmacy) — collocations: чергова аптека (24/7), купити в аптеці; high
+    frequency'
+  - 'ліки (medicine) — always plural! Avoid Russianism ''лікарство''; collocations:
+    ліки від застуди, приймати ліки'
+  - 'таблетка (pill) — collocations: таблетка від голови, приймати по одній таблетці,
+    таблетки для розсмоктування'
+  - 'рецепт (prescription) — collocations: електронний рецепт (е-рецепт), ліки за
+    рецептом, виписати рецепт'
+  - 'біль (pain) — use with ''від'' for medicine: таблетки від болю; note gender (masculine)'
+  - 'кашель (cough) — collocations: сироп від кашлю, ліки від кашлю'
+  - 'температура (fever) — collocations: жарознижувальні (antipyretics), висока температура'
+  - приймати (to take) — standard medical verb for dosage; distinguish from colloquial
+    'пити'
+  recommended:
+  - 'сироп (syrup) — collocation: сироп від кашлю'
+  - 'мазь (ointment) — usage: наносити мазь (to apply ointment)'
+  - дозування (dosage) — note the suffix -ння
+  - побічний ефект (side effect) — high frequency in warnings
+  - протипоказання (contraindication) — technical term for labels
+  - 'алергія (allergy) — usage: алергія на (allergy to + Acc)'
+  - фармацевт (pharmacist) — the professional at the counter
+  - застосування (application/usage) — formal term on packaging
+activity_hints:
+- type: match-up
+  focus: Pharmacy vocabulary
+  items: 25
+- type: fill-in
+  focus: Complete medicine instructions
+  items: 15
+focus: practical
+pedagogy: PPP
+prerequisites:
+- a2-59 (Medical Care)
+connects_to:
+- a2-61 (Hotel Accommodation)
+objectives:
+- Learner can ask for medicine by symptoms
+- Learner can understand dosage instructions
+- Learner can read medicine labels
+- Learner can discuss side effects
+grammar:
+- Asking for specific medicine by symptoms
+- Understanding dosage instructions
+- Side effects and warnings vocabulary
+register: розмовний
+immersion: 75-90% Ukrainian
+phase: A2.6 [Practical]
+persona:
+  voice: Encouraging Cultural Guide
+  role: Experienced Pharmacist
+word_target: 3000

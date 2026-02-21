@@ -1,0 +1,307 @@
+✅ Message sent to Gemini (ID: 12368) [auto-acked: self-addressed]
+✓ Message 12368 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12368...
+📨 Message #12368
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-bukovyna-zakarpattia
+   Time: 2026-02-20T23:38:55.578709+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b2-hist-037
+level: B2-HIST
+sequence: 37
+slug: bukovyna-zakarpattia
+version: '2.0'
+title: Буковина та Закарпаття під сусідами
+content_outline:
+- section: Вступ
+  points:
+  - Географічне та стратегічне положення Буковини та Закарпаття — Закарпаття «за горами»,
+    Буковина як транзитна зона між Галичиною та Балканами
+  - Історична доля українських земель під іноземним пануванням — тривале бездержав'я
+    при збереженні етнічного ядра
+  - Особливості розвитку двох регіонів — спільна доля у складі різних імперій (Австрійської,
+    Угорської, Османської)
+- section: Буковина
+  points:
+  - Буковина під владою Молдавського князівства — входження у 1359 році, слов'янська
+    мова як офіційна; [!myth-buster] про «одвічну румунську землю»
+  - Перехід до складу Османської імперії — васальна залежність з 1514 року
+  - Австрійське панування та модернізація краю — анексія 1774 року (генерал Гаддік),
+    «золота доба» німецької культури
+  - Роль Чернівців як культурного центру — заснування університету (1875)
+- section: 'Повсякденне життя: Мульткультурний Вавилон'
+  points:
+  - Чернівці як мультикультурний центр — «Малий Відень», «корабель у морі букових
+    лісів»; [!history-bite] про толерантність
+  - Сільське життя на Закарпатті — консервативний уклад, контраст з урбаністичною
+    Буковиною
+  - Етнічна різноманітність та толерантність — співіснування українців, румунів, євреїв,
+    німців, угорців
+- section: Закарпаття
+  points:
+  - Закарпаття у складі Угорського королівства — жорстке кріпацтво, домінування угорської
+    знаті
+  - Унгурська колонізація та мадяризація населення — тиск на мову та культуру в XIX
+    ст.; терміни «Верхня Угорщина» vs «Підкарпатська Русь»
+  - Економічне становище та соціальна структура — Федір Коріятович (1396) та розбудова
+    Мукачівського замку «Паланок»; [!legacy]
+  - Роль греко-католицької церкви в збереженні ідентичності — Ужгородська унія (1646)
+    як щит проти асиміляції; [!context]
+- section: Культурний опір та збереження ідентичності
+  points:
+  - Форми культурного опору під іноземним пануванням — опришківський рух (Олекса Довбуш),
+    повстання Лук'яна Кобилиці (1843-1844)
+  - 'Роль церкви та освіти в збереженні мови — духовенство як національна еліта (Олександр
+    Духнович: «Я Русин був, єсмь і буду»)'
+  - Народні традиції як засіб консервації ідентичності — збереження обрядів та мови
+    в селах
+  - Культурні діячі Буковини та Закарпаття — «Будитилі» Закарпаття, політична діяльність
+    Кобилиці в австрійському парламенті; [!quote]
+- section: Читання
+  points:
+  - Тексти про історію регіонів — уривки про заснування Чернівецького університету
+    або Мукачівський замок
+  - Свідчення про повсякденне життя — описи багатомовного середовища Чернівців
+- section: Первинні джерела
+  points:
+  - Документи про адміністративний устрій — акти про Ужгородську унію або австрійські
+    переписи
+  - Етнографічні описи регіонів — спогади мандрівників про гуцулів та опришків
+- section: Деколонізаційний погляд
+  points:
+  - Критика колонізаційної політики сусідніх імперій — міф про «цивілізаційну місію»
+    імперій vs реальність експлуатації; [!decolonization]
+  - Стратегії збереження культурної автономії — використання імперських інструментів
+    (парламент, університети) для національного відродження
+  - Сучасне значення регіональної історії для національної пам'яті — інтеграція історії
+    «окраїн» у загальноукраїнський наратив
+- section: Потрібно більше практики?
+  points:
+  - Додаткові вправи для закріплення матеріалу
+focus: history
+pedagogy: CBI
+objectives:
+- Учень може пояснити історичну долю Буковини та Закарпаття в XIV-XVII ст.
+- Учень аналізує вплив іноземного панування на культуру регіонів
+- Учень володіє термінологією регіональної історії
+grammar:
+- Історичний наратив
+- Порівняння історичних процесів
+register: публіцистичний
+phase: B2.3a [Українська історія]
+vocabulary_hints:
+  required:
+  - регіон (region) — історичний регіон, гірський регіон
+  - панування (rule/domination) — іноземне панування, австрійське панування
+  - колонізація (colonization) — політика колонізації
+  - мадяризація (Magyarization) — примусова мадяризація, опір мадяризації
+  - ідентичність (identity) — національна ідентичність, збереження ідентичності
+  - толерантність (tolerance) — релігійна толерантність, міжнаціональна толерантність
+  - модернізація (modernization) — модернізація краю, імперська модернізація
+  - автономія (autonomy) — культурна автономія, вимагати автономії
+  - опришки (opryshky) — рух опришків, ватажок опришків (Олекса Довбуш)
+  - унія (union) — церковна унія, Ужгородська унія (1646)
+  - кріпацтво (serfdom) — скасування кріпацтва, тягар кріпацтва
+  - цісар (emperor) — австрійський цісар, вірність цісарю
+  recommended:
+  - мультикультурний (multicultural) — мультикультурне місто (Чернівці)
+  - етнічний (ethnic) — етнічний склад, етнічні землі
+  - асиміляція (assimilation) — загроза асиміляції, політика асиміляції
+  - традиція (tradition) — народна традиція, плекання традицій
+  - воєводство (voivodeship) — Руське воєводство (контекст)
+activity_hints:
+  reading:
+    count: 2
+    focus: Історичні документи про Буковину та Закарпаття, етнографічні описи
+  essay-response:
+    count: 2
+    focus: Порівняння розвитку двох регіонів, культурний опір під іноземним пануванням
+  timeline:
+    count: 1
+    focus: Зміна політичної приналежності Буковини та Закарпаття
+  true-false:
+    count: 2
+    focus: Факти про історію регіонів, мультикультурне життя
+persona:
+  voice: Senior Professor of History
+  role: Regional Ethnographer
+word_target: 5000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Буковина та Закарпаття під сусідами
+
+## Використані джерела
+1. [Енциклопедія історії України (history.org.ua)](http://resource.history.org.ua/) — Академічні статті про Буковину, Закарпаття, Лук'яна Кобилицю та Ужгородську унію.
+2. [Ізборник (litopys.org.ua)](http://litopys.org.ua/) — Тексти та цитати, пов'язані з опришківським рухом.
+3. [Енциклопедія Сучасної України (esu.com.ua)](https://esu.com.ua/) — Статті про Чернівецький університет та Федора Коріятовича.
+
+## Хронологія
+- **1359** — Заснування Молдавського князівства, до складу якого входить Буковина.
+- **1396** — Подільський князь Федір Коріятович переїжджає на Закарпаття та розбудовує Мукачівський замок.
+- **1514** — Буковина у складі Молдавії потрапляє у васальну залежність від Османської імперії.
+- **1646, 24 квітня** — Укладення Ужгородської церковної унії (Закарпаття).
+- **1774** — Австрія анексує Буковину (спочатку як військовий округ).
+- **1843-1844** — Селянські виступи на Буковині під проводом Лук'яна Кобилиці.
+- **1875, 4 жовтня** — Відкриття Чернівецького університету.
+
+## Ключові факти та цитати
+- **Лук'ян Кобилиця** (лідер гуцулів): «Всі ліси, полонини і пасовиська будуть ваші... А що, панцю, як би ми таке саме [пожежу] в наших горах зробили?».
+- **Федір Коріятович**: Перетворив Мукачівський замок «Паланок» на потужну європейську фортецю, викопавши колодязь у скелі (85 м).
+- **Ужгородська унія**: Зберегла східний обряд та церковнослов'янську мову, але підпорядкувала церкву Папі Римському, що стало щитом проти мадяризації.
+
+## Engagement Hooks (mapped to sections)
+- Section "Буковина": [!myth-buster] — Міф про "одвічну румунську землю". Факт: Слов'янське населення переважало на півночі краю ще до заснування Молдавії, а назва "Буковина" — слов'янського походження.
+- Section "Повсякденне життя: Мульткультурний Вавилон": [!history-bite] — Про "корабель у морі букових лісів" (Чернівецький університет/Резиденція митрополитів) та толерантність Чернівців, де "вихідний починався з читання газет п'ятьма мовами".
+- Section "Закарпаття": [!legacy] — Мукачівський замок "Паланок" як символ могутності подільських князів (Коріятовичів) на чужині.
+- Section "Культурний опір та збереження ідентичності": [!quote] — Лук'ян Кобилиця: «Я сам маю владу від цісаря». Наївний монархізм як форма легітимізації повстання.
+- Section "Культурний опір та збереження ідентичності": [!context] — Ужгородська унія 1646 року як інструмент виживання української ідентичності (парадоксально, але саме уніатство вберегло русинів від повного розчинення в угорському морі).
+- Section "Деколонізаційний погляд": [!decolonization] — Термін "Підкарпатська Русь" vs "Верхня Угорщина". Як назви відображають колоніальну оптику (центр у Будапешті vs українська етнічна територія).
+
+## Деколонізаційний контекст
+- **Imperial/Soviet myth**: Буковина і Закарпаття — "відсталі окраїни", які отримали культуру лише завдяки "великим імперіям" (Австрії, Угорщині) або були "визволені" СРСР.
+- **Ukrainian reality**: Ці регіони мали давню автохтонну українську традицію (Русь). Іноземне панування часто було режимом експлуатації (кріпацтво, мадяризація), а "модернізація" (залізниці, університети) слугувала насамперед імперським інтересам контролю, хоча українці майстерно використали ці інструменти для власного відродження.
+
+## Contested Terms
+| Concept | Imperial/Hostile framing | Ukrainian (decolonized) framing |
+|---------|--------------------------|---------------------------------|
+| Населення Закарпаття | Угророси, Мадярони (проугорська орієнтація) | Закарпатські українці, Русини (як частина українського етносу) |
+| Входження Буковини до Австрії | "Повернення" (австрійська риторика про спадщину Угорщини) | Анексія, окупація частини Молдавського князівства |
+| Опришки | Розбійники, бандити (криміналізація) | Народні месники, соціальні повстанці |
+
+## Section-Mapped Research Notes
+
+### Вступ
+- Географічна відокремленість Карпатами: Закарпаття "за горами" від Києва, але відкрите до Дунайської низовини. Буковина — лісисте передгір'я, транзитна зона між Галичиною та Балканами.
+- Спільна доля: тривале бездержав'я, але збереження етнічного ядра.
+
+### Буковина
+- **Молдавський період (XIV-XVIII ст.)**: Входження до складу Молдавії (1359). Слов'янська мова була офіційною в канцелярії воєвод до XVII ст.
+- **Османський вплив**: Васалітет, данина, але збереження автономії Молдавії.
+- **Австрійський період (з 1774)**: Генерал Гаддік займає край. "Золота доба" для німецької культури, але й початок українського відродження. Толерантність Габсбургів ("розділяй і володарюй"), зрівняння прав церков.
+
+### Повсякденне життя: Мульткультурний Вавилон
+- **Чернівці**: "Малий Відень". Співіснування українців, румунів, німців, євреїв, поляків. Архітектурний ансамбль Резиденції митрополитів (ЮНЕСКО) — символ синтезу культур.
+- **Закарпаття**: Сільський уклад, консервативність. Вплив угорської культури на міста (Ужгород, Мукачево), український (русинський) характер села.
+
+### Закарпаття
+- **Угорське королівство**: Домінування угорської знаті. Кріпацтво жорсткіше, ніж в інших регіонах.
+- **Федір Коріятович (кінець XIV ст.)**: Прихід подільського князя з військом і людьми. Розбудова Мукачева. Створення православного осередку.
+- **Мадяризація**: Посилення тиску на мову та культуру в XIX ст.
+
+### Культурний опір та збереження ідентичності
+- **Церква**: Ужгородська унія (1646) — компроміс заради порятунку. Греко-католицьке духовенство (О. Духнович: «Я Русин був, єсмь і буду») стає елітою нації за відсутності власної шляхти.
+- **Опришківство**: Олекса Довбуш як спільний герой для Гуцульщини (Галичина, Буковина, Закарпаття).
+- **Лук'ян Кобилиця**: Депутат австрійського парламенту (1848) і ватажок повстання. Поєднання легальної боротьби та збройного опору.
+
+### Читання / Первинні джерела / Деколонізаційний погляд
+(Матеріал інтегровано у попередні розділи: цитати Кобилиці, факти про унію та деколонізацію термінології).
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12430)
+✓ Message 12368 acknowledged
+✓ Message 12430 acknowledged

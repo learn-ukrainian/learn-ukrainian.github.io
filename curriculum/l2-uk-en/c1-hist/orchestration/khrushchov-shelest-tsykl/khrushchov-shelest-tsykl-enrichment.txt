@@ -1,0 +1,302 @@
+✅ Message sent to Gemini (ID: 12942) [auto-acked: self-addressed]
+✓ Message 12942 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12942...
+📨 Message #12942
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-khrushchov-shelest-tsykl
+   Time: 2026-02-20T23:43:22.905356+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-hist-086
+level: c1-hist
+sequence: 86
+version: '1.0'
+title: Хрущов — Шелест — Щербицький
+focus: history
+pedagogy: seminar
+objectives:
+- Analyze the causes and consequences of хрущов — шелест — щербицький
+- Evaluate the historical significance of ще один цикл
+content_outline:
+- section: Вступ — Ще один цикл
+  subsections:
+  - Після Сталіна — надія
+  - Хрущовська відлига
+  - Шелест — «свій» у владі
+  - Структура модуля
+- section: Фаза 1 — Відлига (1953-1964)
+  subsections:
+  - Десталінізація
+  - Реабілітації — частково
+  - Шістдесятники
+  - Культурне пожвавлення
+- section: Фаза 2 — Шелест при владі (1963-1972)
+  subsections:
+  - Перший секретар України
+  - Захист української мови
+  - «Україна наша радянська»
+  - Конфлікт з Москвою
+- section: Фаза 3 — Знищення відлиги
+  subsections:
+  - 1972 — арешти шістдесятників
+  - Шелеста знято
+  - «Націоналізм» — звинувачення
+  - Щербицький — русифікатор
+- section: Фаза 4 — 17 років русифікації
+  subsections:
+  - Щербицький — 1972-1989
+  - Русифікація освіти
+  - Придушення дисидентів
+  - «Зразкова республіка»
+- section: Порівняння з 1920-ми
+  subsections:
+  - Схожість — надія, розквіт, знищення
+  - Відмінності — масштаб, методи
+  - Чому цикл повторився
+- section: Підсумок
+  subsections:
+  - Шелест — кооптований, але «надто український»
+  - Цикл у партійній еліті
+  - Перехід до Януковича
+vocabulary:
+- відлига
+- Шелест
+- Щербицький
+- шістдесятники
+- русифікація
+- десталінізація
+- перший секретар
+- «націоналізм»
+- кооптація
+- цикл
+- реабілітація
+- самвидав
+- ідеологічний контроль
+- партійна еліта
+- лояльність
+activities:
+- type: critical-analysis
+  focus: Map Shelest's career through co-optation cycle
+- type: comparative-study
+  focus: 1920s vs. 1960s — same trap different packaging
+- type: critical-analysis
+  focus: Shcherbytsky's Russification — methods and results
+- type: essay-response
+  focus: What if Shelest stayed in power?
+- type: essay-response
+  focus: Чому Шелеста усунули, а Щербицького ні?
+sources:
+- name: Петро Шелест (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Петро_Шелест
+  type: reference
+  notes: Ukrainian leader
+- name: Володимир Щербицький (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Володимир_Щербицький
+  type: reference
+  notes: Successor
+- name: Десталінізація (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Десталінізація
+  type: reference
+  notes: Thaw period
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
+persona:
+  voice: Academic Historiographer
+  role: Sovietologist
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Хрущов — Шелест — Щербицький
+
+## Використані джерела
+1. [Енциклопедія історії України: Шелест Петро Юхимович](http://resource.history.org.ua/) — біографія та політична діяльність.
+2. [Літопис: Іван Дзюба "Інтернаціоналізм чи русифікація?"](http://litopys.org.ua/) — ключова праця епохи, аналіз русифікації.
+3. [Радіо Свобода: Петро Шелест і його "Україна наша Радянська"](https://www.radiosvoboda.org/) — аналіз книги та опали.
+4. [Енциклопедія Сучасної України: Шістдесятники](https://esu.com.ua/) — культурний феномен відлиги.
+5. [Спогади Петра Шелеста: "Справжній суд історії ще попереду"](http://history.org.ua/) — щоденникові записи.
+
+## Хронологія
+- **1953**: Смерть Сталіна, початок лібералізації.
+- **1956**: XX з'їзд КПРС, засудження "культу особи", початок "відлиги".
+- **1963**: Петро Шелест стає Першим секретарем ЦК КПУ.
+- **1965**: Перша хвиля арештів української інтелігенції.
+- **1968**: "Лист творчої молоді Дніпропетровська" — протест проти русифікації.
+- **1970**: Вихід книги П. Шелеста "Україна наша Радянська".
+- **Січень 1972**: "Великий погром" — масові арешти дисидентів (Стус, Чорновіл, Світличний).
+- **Травень 1972**: Усунення Шелеста з посади за "недоліки у справі інтернаціонального виховання". Призначення Володимира Щербицького.
+- **1972-1989**: Ера Щербицького, "задуха", масштабна русифікація.
+- **1989**: Відставка Щербицького.
+
+## Ключові факти та цитати
+- **Петро Шелест (щоденник)**: «Поки не визнавав ніколи угод із совістю, мораллю, і стояти на цьому буду, поки б'ється моє серце – серце українця, радянської людини, комуніста.»
+- **Олесь Гончар про Щербицького**: «Після валуєвських указів чорніших часів для мови українського народу не було. І перший нищитель мови – він, Щербицький.»
+- **Іван Дзюба ("Інтернаціоналізм чи русифікація?")**: «Маховик русифікації розкручений, він має колосальну знищувальну силу інерції.»
+- **Факт**: Щербицький першим із керівників УРСР почав виступати на партійних з'їздах виключно російською мовою (1978 рік).
+- **Факт**: Тираж книги "Україна наша Радянська" був вилучений з бібліотек і частково знищений.
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ — Ще один цикл": [!context] — Циклічність української історії: 1920-ті (Скрипник) vs 1960-ті (Шелест).
+- Section "Фаза 1 — Відлига: Десталінізація": [!history-bite] — Як смерть Сталіна відкрила "шлюзи" для української культури.
+- Section "Фаза 2 — Шелест: «Україна наша радянська»": [!quote] — Цитата з розгромної рецензії на книгу Шелеста в журналі "Комуніст України".
+- Section "Фаза 3 — Знищення відлиги: Січень 1972": [!biography] — Василь Стус як символ нескореного покоління, арештованого в 1972-му.
+- Section "Фаза 4 — Ера Щербицького": [!myth-buster] — Міф про "інтернаціоналізм" як прикриття для тотальної русифікації.
+- Section "Порівняння з 1920-ми": [!historiography] — Порівняння "націонал-комунізму" Хвильового/Скрипника та "радянського патріотизму" Шелеста/Дзюби.
+
+## Деколонізаційний контекст
+- **Imperial/Soviet Myth**: "Інтернаціоналізм" — це дружба народів і рівність мов.
+- **Ukrainian Reality**: "Інтернаціоналізм" на практиці означав домінування російської мови і культури, а будь-який прояв української ідентичності таврувався як "буржуазний націоналізм".
+- **Decolonization Step**: Показати тяглість імперської політики від Валуєва до Щербицького, де методи змінювалися, але мета (асиміляція) залишалася.
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| **Буржуазний націоналізм** | Ідеологічна диверсія, ворожість до радянської влади, зрада. | Природне прагнення до збереження національної ідентичності, мови та культури; захист від асиміляції. |
+| **Інтернаціоналізм** | Дружба народів під егідою "старшого брата", зближення націй. | Евфемізм для русифікації та уніфікації під російський зразок. |
+| **Радянський народ** | Нова історична спільнота, вища форма єдності. | Штучний конструкт для стирання національних відмінностей та створення російськомовної маси. |
+
+## Section-Mapped Research Notes
+
+### Вступ — Ще один цикл
+Аналогія між "Розстріляним відродженням" 1920-30-х та "Задушеним відродженням" 1960-70-х. Надія на лібералізацію, культурний спалах, а потім жорстока реакція метрополії.
+
+### Фаза 1 — Відлига (1953-1964)
+Смерть тирана (1953) і XX з'їзд (1956) як каталізатори. Поява "шістдесятників" (Симоненко, Костенко, Драч). Клуб творчої молоді «Сучасник». Пошук "соціалізму з людським обличчям".
+
+### Фаза 2 — Шелест при владі (1963-1972)
+Феномен Шелеста: щирий комуніст, який вірив у рівноправність УРСР. Його книга "Україна наша Радянська" — спроба легітимізувати український патріотизм в рамках радянської ідеології. Захист мови в освіті. Економічний автономізм.
+
+### Фаза 3 — Знищення відлиги
+Зміна курсу Москви (Брежнєв). Підготовка до погрому. Арешти січня 1972 року ("операція Блок"). Усунення Шелеста під приводом переходу на іншу роботу, а згодом — нищівна критика за "місництво" і "націоналізм".
+
+### Фаза 4 — 17 років русифікації
+Володимир Щербицький — ідеальний виконавець волі Москви. Чистка партійного апарату від кадрів Шелеста. Постанова 1983 року про вивчення російської мови (доплати вчителям). "Маланчуківщина" в культурі. Маргіналізація української мови.
+
+### Порівняння з 1920-ми
+Скрипник vs Шелест. Обидва намагалися поєднати комунізм і українство. Обидва зазнали поразки, бо система не допускала суб'єктності України. Різниця: Скрипник застрелився, Шелеста відправили на пенсію (м'якші методи пізнього СРСР).
+
+### Підсумок
+Цикл "лібералізація — реакція" як механізм імперського контролю. Шелест як трагічна фігура "націонал-комунізму". Щербицький як символ лояльності ціною національних інтересів.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12979)
+✓ Message 12942 acknowledged
+✓ Message 12979 acknowledged

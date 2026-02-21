@@ -1,0 +1,230 @@
+✅ Message sent to Gemini (ID: 12252) [auto-acked: self-addressed]
+✓ Message 12252 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12252...
+📨 Message #12252
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-hrytsak-history-ukraine
+   Time: 2026-02-20T23:38:06.480921+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 29
+module: lit-essay-29
+level: LIT.ESSAY
+slug: hrytsak-history-ukraine
+version: '2.0'
+title: Hrytsak History Ukraine
+subtitle: Hrytsak History Ukraine
+content_outline:
+- section: Вступ та контекст
+  points: []
+- section: Аналіз ключових творів
+  points: []
+- section: Стилістика та мова автора
+  points: []
+- section: Деколонізаційна перспектива
+  points:
+  - Як цей автор руйнує імперські міфи
+  - Українська суб'єктність у тексті
+- section: Підсумок та спадщина
+  points: []
+vocabulary_hints:
+  required:
+  - історіографія
+  - наратив
+  - суб'єктність
+  recommended:
+  - деколонізація
+activity_hints:
+- type: reading
+  focus: Аналіз першоджерела
+- type: essay-response
+  focus: Критичне есе
+- type: critical-analysis
+  focus: Деконструкція тексту
+focus: literature
+pedagogy: literature
+immersion: 100% Ukrainian
+phase: LIT Expansion
+objectives:
+- Проаналізувати творчість Hrytsak History Ukraine у контексті української літератури
+- Дослідити вплив автора на формування національної ідентичності
+persona:
+  voice: Senior Specialist
+  role: Public Historian
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Ярослав Грицак та глобальна історія України
+
+## Використані джерела
+1. [Енциклопедія Сучасної України (ЕСУ)](https://esu.com.ua/article-31767) — біографічна довідка та огляд академічного шляху історика.
+2. [Інститут історії України НАНУ](http://history.org.ua) — огляд концепції формування модерної української нації в працях Я. Грицака.
+3. [Україна Модерна](https://uamoderna.com) — аналіз есеїстики та публічної історії, закладеної Грицаком як головним редактором.
+
+## Хронологія
+- 1960: Народження Ярослава Грицака (с. Довге, Львівська область).
+- 1996: Вихід першого видання фундаментальної праці «Нарис історії України: формування модерної української нації XIX–XX ст.».
+- 1998: Співзасновник та головний редактор наукового щорічника «Україна модерна» (до 2007 року).
+- 2006: Публікація монографії «Пророк у своїй вітчизні. Франко та його спільнота» (удостоєна низки премій, зокрема премії Фундації Омеляна і Тетяни Антоновичів).
+- 2021: Вихід бестселера «Подолати минуле: глобальна історія України», де історія України розглядається крізь призму світових процесів.
+
+## Ключові факти та цитати
+- **Про модернізацію**: «Україна є не відхиленням від європейської норми, а радше перебільшеним варіантом цієї норми».
+- **Про націю**: «Нація — це щоденний референдум... це не те, що нам дано від природи чи від Бога, це те, що ми самі будуємо щодня».
+- **Про минуле**: «Історія не є вчителькою життя, вона є радше наглядачкою, яка жорстоко карає за невивчені уроки».
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ: Ярослав Грицак як публічний інтелектуал": [!context] — Пояснення ролі "публічного історика", який виходить за межі академії для комунікації з суспільством.
+- Section "Аналіз ключових творів: «Нарис історії України»": [!myth-buster] — Спростування імперського міфу про "неісторичність" української нації.
+- Section "Аналіз ключових творів: «Пророк у своїй вітчизні»": [!biography] — Аналіз постаті Івана Франка не як "каменяра" чи "революціонера-демократа", а як модерного європейського інтелектуала.
+- Section "Стилістика та мова автора": [!quote] — Аналіз цитати Грицака про те, як мова історичного есе повинна поєднувати академічну строгість і читабельність.
+- Section "Деколонізаційна перспектива: Руйнування імперських міфів": [!decolonization] — Грицак відкидає російську "парасолькову" історію, поміщаючи Україну в координати Центрально-Східної Європи.
+- Section "Аналіз ключових творів: «Подолати минуле»": [!history-bite] — Україна як "глобальний перехрестя", вплив Колумбового обміну на українські землі.
+
+## Деколонізаційний контекст
+- **Imperial/Soviet myth**: Українська історія — це бездержавна історія селянських повстань, яка є лише придатком до "великої російської" (чи польської) державного наративу. Українці та росіяни — братні народи з однієї колиски (Київської Русі).
+- **Ukrainian reality**: Ярослав Грицак деконструює ці міфи, розглядаючи українську історію через призму загальноєвропейських модернізаційних процесів. Він доводить, що формування української модерної нації було закономірним наслідком соціальних, економічних та інтелектуальних зрушень XIX-XX століть, а сама Україна має власну історичну суб'єктність у глобальному контексті.
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian (decolonized) framing |
+|---------|-----------------|-------------------------------|
+| Київська Русь | "Спільна колиска трьох братніх народів", перша російська держава | Середньовічна імперія, спадщина якої є фундаментом української ідентичності |
+| Формування нації | "Австрійська/польська інтрига" (штучний конструкт) | Природний модернізаційний європейський процес (civic and ethnic nation-building) |
+| Іван Франко | Соціаліст, радянський "революціонер-демократ" | Модерний європейський інтелектуал, творець української нації |
+
+## Section-Mapped Research Notes
+
+### Вступ: Ярослав Грицак як публічний інтелектуал
+Грицак є ключовою фігурою для розуміння сучасної української публічної історії. Його роль виходить за межі суто академічного середовища (УКУ). Він активно коментує сучасні події через історичну оптику.
+
+### Контекст: Формування історика на перетині епох
+Народився в УРСР, здобував освіту у Львівському університеті, формувався як історик на межі розпаду СРСР та здобуття незалежності. Це дало йому можливість одним з перших інтегрувати західні методології (зокрема, теорії модернізації) в українську історіографію.
+
+### Аналіз ключових творів: "Нарис історії України" (1996)
+Ця праця стала революційною для 90-х років. Замість традиційного "народницького" наративу (історія страждань народу), Грицак запропонував аналіз "модерної нації" — від селянського до індустріального суспільства. Фокус на XIX-XX століттях як ключових для націотворення.
+
+### Аналіз ключових творів: "Пророк у своїй вітчизні" (2006)
+Глибока інтелектуальна біографія Івана Франка. Грицак деміфологізує Франка, знімаючи з нього бронзу і показуючи як живу, суперечливу людину, яка свідомо конструювала "українську націю" в Галичині.
+
+### Аналіз ключових творів: "Подолати минуле: глобальна історія України" (2021)
+Спроба помістити Україну на карту світової історії. Тези про те, як відкриття Америки вплинуло на закріпачення українських селян (через глобальний ринок зерна), та як подолати історичну "колію", щоб стати сучасною інноваційною державою.
+
+### Стилістика та мова автора: Есеїзм та академічна легкість
+Грицак відрізняється від традиційних академічних істориків блискучим стилем (вплив європейської есеїстики). Він використовує метафори, літературні ремінісценції, пише доступною мовою без втрати наукової глибини.
+
+### Деколонізаційна перспектива: Руйнування імперських міфів
+Діалог з (і опонентність до) російською історіографією. Відмова від "парасолькових" концепцій російської історії. Україна розглядається не як провінція, а як самостійний суб'єкт європейської політики.
+
+### Деколонізаційна перспектива: Українська суб'єктність у тексті
+Грицак постійно підкреслює агентивність (суб'єктність) українців — вони не лише "жертви" імперій, але й активні творці своєї долі.
+
+### Підсумок та вплив: Формування модерної нації
+*Примітка: Я. Грицак є живим сучасником, тому замість "спадщини" аналізуємо його актуальний "вплив".*
+Оцінка його внеску в сучасну українську суспільно-політичну думку. Його концепція "нації-як-щоденного-референдуму" стала важливою для осмислення феномену українського опору під час повномасштабного вторгнення Росії.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12317)
+✓ Message 12252 acknowledged
+✓ Message 12317 acknowledged

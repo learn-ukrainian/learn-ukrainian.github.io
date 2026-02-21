@@ -57,9 +57,7 @@ class Module:
     @property
     def path(self) -> str:
         """URL path for this module."""
-        if self.track and self.track != 'core':
-            return f"/{self.level}/{self.slug}"
-        return f"/{self.level}/module-{self.local_num:02d}"
+        return f"/{self.level}/{self.slug}"
 
     @property
     def numbered_slug(self) -> str:
@@ -151,8 +149,12 @@ def _load_meta_file(level: str, slug: str) -> dict:
 
 
 def parse_numbered_slug(slug: str) -> tuple[Optional[int], str]:
-    """Parse a numbered slug into (number, base_slug)."""
-    match = re.match(r'^(\d+)-(.+)$', slug)
+    """Parse a numbered slug into (number, base_slug).
+
+    Only strips 1-2 digit prefixes (module ordering numbers like '01-').
+    Year-prefixed slugs like '1991-referendum' are returned as-is.
+    """
+    match = re.match(r'^(\d{1,2})-(.+)$', slug)
     if match:
         return int(match.group(1)), match.group(2)
     return None, slug
@@ -317,18 +319,10 @@ def validate_filesystem_match(level: str = None) -> list[str]:
                 _, base_slug = parse_numbered_slug(mod_slug)
                 manifest_slugs.add(base_slug)
 
-        # Get filesystem slugs
+        # Get filesystem slugs (all tracks use bare slug filenames)
         filesystem_slugs = set()
-
-        # Check for numbered files (core levels): 01-slug.md
-        for md_file in level_dir.glob('[0-9]*-*.md'):
-            match = re.match(r'^\d+-(.+)\.md$', md_file.name)
-            if match:
-                filesystem_slugs.add(match.group(1))
-
-        # Check for slug-only files (tracks): slug.md
         for md_file in level_dir.glob('*.md'):
-            if not md_file.name[0].isdigit() and not md_file.name.startswith('_'):
+            if not md_file.name.startswith('_'):
                 filesystem_slugs.add(md_file.stem)
 
         # Find mismatches

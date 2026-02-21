@@ -1,4 +1,3 @@
----
 module: c1-bio-117
 level: C1-BIO
 sequence: 117
@@ -6,48 +5,41 @@ slug: roman-shukhevych
 version: '2.0'
 title: 'Роман Шухевич: Головний командир УПА'
 content_outline:
-- section: "Вступ — Легенда УПА"
-  words: 457
+- section: Вступ — Легенда УПА
   points:
   - Шухевич як символ збройного опору
   - Від молодого активіста до головнокомандувача
   - Героїчна загибель 1950 року
 - section: Молодість і формування
-  words: 685
   points:
   - Народження у Львові (1907)
   - Гімназійні роки та перші організації
   - Вступ до УВО та ОУН
   - Ув'язнення польською владою
 - section: Друга світова війна
-  words: 800
   points:
   - Батальйон "Нахтігаль"
   - Розчарування в німцях
   - Перехід до підпілля
   - Формування УПА (1943)
 - section: Головний командир УПА
-  words: 914
   points:
   - Обрання головнокомандувачем (1943)
   - Боротьба на два фронти
   - Організація партизанської війни
   - Дипломатичні спроби
 - section: Післявоєнний опір
-  words: 685
   points:
   - Боротьба проти радянської влади
   - Підпільне життя
   - МГБ полювання на командира
   - Загибель у Білогорщі (1950)
 - section: Спадщина та визнання
-  words: 459
   points:
   - Герой України (2007)
   - Контроверсії та дискусії
   - Шухевич у сучасній пам'яті
   - Символ незламності
-word_target: 4000
 vocabulary_hints:
   required:
   - головнокомандувач (commander-in-chief)
@@ -73,7 +65,6 @@ activity_hints:
   items: 3 passages
 - type: essay-response
   focus: How did UPA fight on two fronts simultaneously?
-  word_target: 300
   output: Military strategy analysis
 focus: biography
 prerequisites:
@@ -87,15 +78,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Роман Шухевич (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Шухевич_Роман_Йосипович"
+  url: https://uk.wikipedia.org/wiki/Шухевич_Роман_Йосипович
   type: primary
   notes: Biography, UPA command, death
 - name: Українська повстанська армія
-  url: "https://uk.wikipedia.org/wiki/Українська_повстанська_армія"
+  url: https://uk.wikipedia.org/wiki/Українська_повстанська_армія
   type: reference
   notes: Organization he led
-- name: "Герой України — Шухевич"
-  url: "https://uk.wikipedia.org/wiki/Герой_України"
+- name: Герой України — Шухевич
+  url: https://uk.wikipedia.org/wiki/Герой_України
   type: reference
   notes: State recognition
 immersion: 100% Ukrainian
@@ -104,3 +95,6 @@ objectives:
 - 'Analyze the life and legacy of роман шухевич: головний командир упа'
 - Evaluate the contributions of легенда упа
 - Trace the career and influence of спадщина та визнання
+persona:
+  voice: Senior Biographer
+  role: Insurgent General

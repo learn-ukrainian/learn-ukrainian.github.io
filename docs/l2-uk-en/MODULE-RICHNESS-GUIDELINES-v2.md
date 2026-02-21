@@ -1043,6 +1043,35 @@ To ensure narratives are engaging and authentic (especially for History/Culture 
 - No "Common Mistakes" or "Usage Patterns" section
 - Only ~150 words of narrative (rest is tables)
 
+### Visual Pedagogical Aids (Grammar/Bridge Modules)
+
+Grammar and bridge modules benefit from structured visual elements that make patterns and comparisons easier to grasp than flowing prose alone.
+
+**Tables (`tables` metric)**
+
+Tables are now tracked as a separate richness metric for `grammar` and `bridge` module types (target: 2 per module). For other module types, tables contribute through the existing `visual` metric.
+
+Use tables for:
+- Part-of-speech summaries (term | function | example)
+- Conjugation/declension paradigms
+- Aspect pair comparisons (imperfective vs perfective)
+- Case function summaries (case | question | usage)
+
+**Mermaid flowcharts**
+
+Mermaid diagrams are detected and contribute to the `visual` richness score. No specific target — they're a bonus when pedagogically useful.
+
+Use mermaid for:
+- "Which aspect do I use?" decision trees
+- "Which case after this preposition?" logic flows
+- Word formation processes (prefix + root → meaning)
+
+**`NO_TABLES` dryness flag**
+
+A soft warning (`NO_TABLES`) triggers for grammar and bridge modules that contain zero markdown tables. This is a nudge, not a gate — modules without tables can still pass if richness scores are otherwise strong.
+
+**Rule of thumb:** If you're comparing 2+ patterns or explaining a sequential decision, a table or flowchart is almost always better than a paragraph. But if the explanation is simple and linear, prose is fine.
+
 ---
 
 ## Grammar-Focused Module Structure (TTT Approach)

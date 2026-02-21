@@ -1,0 +1,223 @@
+✅ Message sent to Gemini (ID: 12000) [auto-acked: self-addressed]
+✓ Message 12000 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12000...
+📨 Message #12000
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-starovyt-my-kyiv
+   Time: 2026-02-20T23:35:08.414155+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 17
+module: lit-juvenile-17
+level: LIT.JUVENILE
+slug: starovyt-my-kyiv
+version: '2.0'
+title: Starovyt My Kyiv
+subtitle: Starovyt My Kyiv
+content_outline:
+- section: Вступ та контекст
+  points: []
+- section: Аналіз ключових творів
+  points: []
+- section: Стилістика та мова автора
+  points: []
+- section: Деколонізаційна перспектива
+  points:
+  - Як цей автор руйнує імперські міфи
+  - Українська суб'єктність у тексті
+- section: Підсумок та спадщина
+  points: []
+vocabulary_hints:
+  required:
+  - історіографія
+  - наратив
+  - суб'єктність
+  recommended:
+  - деколонізація
+activity_hints:
+- type: reading
+  focus: Аналіз першоджерела
+- type: essay-response
+  focus: Критичне есе
+- type: critical-analysis
+  focus: Деконструкція тексту
+focus: literature
+pedagogy: literature
+immersion: 100% Ukrainian
+phase: LIT Expansion
+objectives:
+- Проаналізувати творчість Starovyt My Kyiv у контексті української літератури
+- Дослідити вплив автора на формування національної ідентичності
+persona:
+  voice: Senior Specialist
+  role: Kyiv Urbanist
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Starovyt My Kyiv
+
+## Використані джерела
+1. [Енциклопедія сучасної України (ЕСУ)](https://esu.com.ua) — Стаття «Київ», загальний історико-урбаністичний контекст формування міського простору.
+2. [Інститут історії України НАНУ](http://history.org.ua) — Дослідження «Київська Русь: історіографія та деколонізація наративів», аналіз формування державної ідентичності.
+3. [Ізборник](http://litopys.org.ua) — «Повість минулих літ» (Літопис Руський), первинні тексти про заснування та становлення міста, топоніміка та міфологія.
+
+## Хронологія
+- V–VI ст.: Умовне заснування Києва, виникнення базового урбаністичного міфу про полянських князів Кия, Щека, Хорива та їхню сестру Либідь.
+- 882 р.: Об'єднання Північної та Південної Русі князем Олегом, проголошення Києва столицею («Матір'ю міст руських» — метрополією).
+- 988 р.: Хрещення Русі князем Володимиром Великим, цивілізаційний європейський вибір.
+- 1037 р.: Зведення Софії Київської та Золотих Воріт за Ярослава Мудрого — утвердження Києва як культурного та архітектурного центру Східної Європи.
+- 1240 р.: Зруйнування Києва військами хана Батия, що стає трагічною межею «старовитого» періоду в історичній пам'яті.
+
+## Ключові факти та цитати
+- Київ у давнину мав чіткий просторово-соціальний поділ на сакрально-князівську Гору (адміністративний центр) та ремісничо-торговий Поділ, що створює багатий простір для розгортання літературних сюжетів.
+- «Се повісті минулих літ, звідки пішла Руська земля, і хто в ній почав спершу княжити...» — класичний літописний зачин, який слугує концептуальною базою для історичних дитячих путівників.
+- Київська держава часів Ярослава мала інтенсивні династичні зв'язки з усією Європою, що свідчить про глибоку інтеграцію в тогочасний європейський простір (наприклад, доля Анни Київської).
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ та контекст: Образ старовинного Києва у дитячій літературі": [!culture] — Значення урбаністичного міфу як основи для національної ідентичності сучасної дитини.
+- Section "Аналіз ключових творів: Від міфу до історичної реальності": [!quote] — Цитати з Літопису Руського щодо заснування міста.
+- Section "Аналіз ключових творів: Простір міста як головний герой": [!context] — Топографічний та соціальний поділ (князівська Гора vs ремісничий Поділ).
+- Section "Стилістика та мова автора: Архаїзми та урбаністичний словник": [!history-bite] — Справжня етимологія київських топонімів (Хрещатик, Золоті Ворота, Щекавиця).
+- Section "Деколонізаційна перспектива: Руйнування імперських міфів": [!myth-buster] — Спростування російської апропріації історичної спадщини Русі.
+- Section "Деколонізаційна перспектива: Українська суб'єктність та європейський контекст": [!decolonization] — Повернення європейського контексту Києва через династичні шлюби та культурні зв'язки.
+
+## Деколонізаційний контекст
+- Imperial/Soviet myth: Київська Русь трактувалася як «спільна колиска трьох братніх народів», з наративом про те, що центр влади згодом закономірно перемістився до Володимира-на-Клязьмі та Москви. Фраза «Мати міст руських» використовувалась для легітимації російських претензій на столицю України.
+- Ukrainian reality: Русь — це середньовічна українська держава. Київ був і залишається політичним, сакральним та культурним центром українського етносу. Термін «Мати міст» — це грецький кальк («метрополія»), що означає столицю власної, а не сусідньої держави.
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| Давньоруська держава | Спільна колиска трьох братніх народів | Середньовічна українська держава з політичним центром у Києві |
+| Київська Русь | Етап виключно російської історії | Русь як власна історична назва території сучасної України |
+| Мати міст руських | Легітимація претензій Росії на Київ | "Метрополія" (столиця) східнослов'янських земель |
+
+## Section-Mapped Research Notes
+
+### Вступ та контекст: Образ старовинного Києва у дитячій літературі
+Київ у сучасній дитячій літературі та путівниках постає як живий персонаж і свідок тисячоліть. Урбаністичний міф стає ефективним інструментом для ідентифікації сучасних підлітків зі своїм минулим, створюючи емоційний зв'язок між історією та сьогоденням.
+
+### Аналіз ключових творів: Від міфу до історичної реальності
+Трансформація літописних міфів про Кия, Щека, Хорива та Либідь у захопливі пригодницькі оповіді. Епоха Володимира та Ярослава Мудрого зображується через призму культурного, освітнього розквіту та масштабного державотворення, а не лише військових походів.
+
+### Аналіз ключових творів: Простір міста як головний герой
+Сакральна та повсякденна географія Києва. Поділ діє як серце ремісничого життя, Гора — як епіцентр влади. Золоті Ворота та Софія Київська функціонують у сюжетах як символічні портали, що поєднують сучасність із добою Середньовіччя.
+
+### Стилістика та мова автора: Архаїзми та урбаністичний словник
+Ефективне використання архаїзмів, історизмів та автентичних топонімів для створення ефекту повного занурення. Інтерактивна риторика путівників формує діалог з читачем, оживлюючи мертві історичні факти.
+
+### Деколонізаційна перспектива: Руйнування імперських міфів
+Літературний аналіз текстів демонструє послідовну протидію російській пропаганді. Відбувається чітке розмежування Русі та Московії, деконструюється шкідливий наратив "колиски братніх народів".
+
+### Деколонізаційна перспектива: Українська суб'єктність та європейський контекст
+Київ зображується як органічна та впливова частина середньовічної Європи. Через постать Анни Київської та Руську Правду підкреслюється цивілізаційна, правова та державницька тяглість української нації.
+
+### Підсумок та спадщина: Значення урбаністичного міфу для сучасної молоді
+Література про старовитий Київ формує у підлітків стійкий імунітет проти колоніальних візій. Вона дає відчуття глибокої закоріненості, формуючи гордість за власне місто як форпост європейської цивілізації.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12056)
+✓ Message 12000 acknowledged
+✓ Message 12056 acknowledged

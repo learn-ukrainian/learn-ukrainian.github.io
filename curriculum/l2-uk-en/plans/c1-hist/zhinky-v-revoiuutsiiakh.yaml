@@ -1,4 +1,3 @@
----
 module: c1-hist-130
 level: c1-hist
 sequence: 130
@@ -10,48 +9,41 @@ objectives:
 - 'Analyze the causes and consequences of жінки в революціях: прихована історія'
 - Evaluate the historical significance of невидимі героїні
 content_outline:
-- section: "Вступ — Невидимі героїні"
-  words: 515
+- section: Вступ — Невидимі героїні
   subsections:
   - Жінки в українській історії — де вони?
   - Прихована агентність
   - Від 1917 до 2022
   - Структура модуля
-- section: "1917-1921 — Революція і війна"
-  words: 774
+- section: 1917-1921 — Революція і війна
   subsections:
   - Жіночі організації УНР
   - Олена Теліга — символ
   - Медицина і тил
   - Чому забули
-- section: "1990 — Гранітна революція"
-  words: 645
+- section: 1990 — Гранітна революція
   subsections:
   - Студентки — половина учасників
   - Організаторки
   - Чому в історії — тільки чоловіки
   - Приклади
 - section: 2004 і 2014
-  words: 903
   subsections:
   - Помаранчева — жінки на сцені
   - Євромайдан — жінки в бою
   - «Жіноча сотня»
   - Волонтерство — переважно жіноче
-- section: "2022 — Нова видимість"
-  words: 774
+- section: 2022 — Нова видимість
   subsections:
   - Жінки в ЗСУ
   - Волонтерки
   - Політичне лідерство
   - Зміна наративу
 - section: Підсумок
-  words: 389
   subsections:
   - Жінки завжди були
   - Історію писали чоловіки
   - Перехід до 2022 мобілізації
-word_target: 4000
 vocabulary:
 - жіночий рух
 - прихована історія
@@ -74,18 +66,18 @@ activities:
 - type: critical-analysis
   focus: Why women disappeared from revolutionary history
 - type: critical-analysis
-  focus: "Women at Euromaidan — roles and recognition"
+  focus: Women at Euromaidan — roles and recognition
 - type: critical-analysis
   focus: How 2022 changed women's visibility
 - type: essay-response
   focus: Чому жінок 'забули' в українській революційній історії?
 sources:
 - name: Жіночий рух в Україні (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Жіночий_рух_в_Україні"
+  url: https://uk.wikipedia.org/wiki/Жіночий_рух_в_Україні
   type: reference
   notes: Women's movement
 - name: Євромайдан (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Євромайдан"
+  url: https://uk.wikipedia.org/wiki/Євромайдан
   type: reference
   notes: Women at Euromaidan
 vocabulary_hints:
@@ -104,7 +96,9 @@ activity_hints:
   items: 4
 - type: essay-response
   focus: Критичний аналіз
-  word_target: 300
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Gender History Scholar

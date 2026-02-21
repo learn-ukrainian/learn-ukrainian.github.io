@@ -1,4 +1,3 @@
----
 module: c1-hist-067
 level: c1-hist
 sequence: 67
@@ -10,55 +9,47 @@ objectives:
 - 'Analyze the causes and consequences of діаспорні організації: ucc, ucca, oun'
 - Evaluate the historical significance of держава в еміграції
 content_outline:
-- section: "Вступ — Держава в еміграції"
-  words: 457
+- section: Вступ — Держава в еміграції
   subsections:
   - Без держави — потреба організації
   - Функції діаспорних інституцій
   - «Замінники держави»
   - Структура модуля
 - section: Конгрес українців Канади (UCC)
-  words: 686
   subsections:
   - Заснування — 1940
   - Структура — парасолькова організація
   - Функції — представництво, лобіювання
   - Досягнення — мультикультуралізм
-- section: "UCCA — Український конгрес Америки"
-  words: 686
+- section: UCCA — Український конгрес Америки
   subsections:
   - Заснування — 1940
   - Структура і членство
   - Холодна війна — антикомуністична діяльність
   - Лобіювання в Конгресі
 - section: Світовий конгрес українців
-  words: 571
   subsections:
   - Координація діаспор
   - Міжнародне представництво
   - Зв'язок з Україною після 1991
   - Сучасна роль
-- section: "Політичні організації — ОУН в еміграції"
-  words: 686
+- section: Політичні організації — ОУН в еміграції
   subsections:
   - Бандерівці vs. мельниківці
   - Антибольшовицький блок народів (АБН)
   - Холодна війна — співпраця з Заходом
   - Контроверсії і спадщина
 - section: Церковні структури
-  words: 571
   subsections:
   - УГКЦ в діаспорі — кардинал Сліпий
   - УАПЦ — автокефалія в еміграції
   - Церква як центр громади
   - Після 1991 — зміни
 - section: Підсумок
-  words: 343
   subsections:
   - Діаспора як «держава в еміграції»
   - Політичні конфлікти
   - Роль у незалежності
-word_target: 4000
 vocabulary:
 - організація
 - конгрес
@@ -86,15 +77,15 @@ activities:
   focus: Як діаспорні організації виконували функції держави?
 sources:
 - name: Конгрес українців Канади (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Конгрес_українців_Канади"
+  url: https://uk.wikipedia.org/wiki/Конгрес_українців_Канади
   type: reference
   notes: UCC history
 - name: Український конгресовий комітет Америки (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Український_конгресовий_комітет_Америки"
+  url: https://uk.wikipedia.org/wiki/Український_конгресовий_комітет_Америки
   type: reference
   notes: UCCA history
 - name: Світовий конгрес українців (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Світовий_конгрес_українців"
+  url: https://uk.wikipedia.org/wiki/Світовий_конгрес_українців
   type: reference
   notes: World Congress
 vocabulary_hints:
@@ -113,7 +104,9 @@ activity_hints:
   items: 4
 - type: essay-response
   focus: Критичний аналіз
-  word_target: 300
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Institutional Historian

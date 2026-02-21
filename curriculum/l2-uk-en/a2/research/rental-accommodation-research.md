@@ -1,71 +1,39 @@
-# Research Notes: Rental Accommodation (A2 M62)
+# Дослідження: Rental Accommodation
 
-**Topic**: Rental Accommodation (Оренда житла)
-**Level**: A2 (High Beginner / Pre-Intermediate)
-**Researched**: February 8, 2026
+## State Standard Reference
+§3.2: "Дім, помешкання: тип житла (квартира, приватний будинок); частини будинку і назви приміщень; меблі і предмети інтер’єру; ... винаймання квартири або будинку."
+Alignment: This module directly addresses the "винаймання квартири" (renting an apartment) requirement, along with related vocabulary for housing types, rooms, and furniture explicitly listed in the standard.
 
-## 1. Grammar: State Standard 2024 Reference
-The **Державний стандарт української мови як іноземної (рівні А1-С2)**, updated in 2024, categorizes this topic under the **Соціально-побутова сфера спілкування** (Social and everyday sphere of communication).
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| **оренда** | High / Web Search | довгострокова ~, подобова ~, договір ~и, вартість ~и, здати в ~у |
+| **зняти** | High / Web Search | ~ квартиру, ~ житло, ~ кімнату, ~ без посередників |
+| **квартира** | High / Web Search | однокімнатна ~, ~ з євроремонтом, огляд ~и, жити у ~і |
+| **власник** | Med / Web Search | від ~а, я ~, дзвонити ~у |
+| **комунальні** | Med / Web Search | платити за ~, ~ послуги, плюс ~, ~ включені |
+| **депозит** | Med / Web Search | страховий ~, повернути ~, застава (synonym) |
+| **рієлтор** | Med / Web Search | комісія ~а, без ~а, послуги ~а |
+| **меблі** | High / Web Search | квартира з ~ями, без ~ів, нові ~ |
 
-**Specific Section**: § 2.2.1.2.2. "Житло (квартира, будинок, кімната, гуртожиток)".
-**Quote (Requirement)**: 
-> «Здатність запитувати та надавати інформацію про пошук та оренду житла, описувати умови проживання, меблі та побутову техніку, обговорювати вартість оренди та оплату комунальних послуг».
+## Cultural Hooks
+1. **"Євроремонт" vs. "Радянський стан"**: In Ukrainian rental ads, "євроремонт" (Euro-renovation) is a specific term denoting modern standards (plastic windows, modern tiling, laminate), distinguishing it from "радянський стан" (Soviet condition). It's a key value marker.
+2. **"Перший і останній місяць"**: It is standard practice to pay for the first month and the "last month" (security deposit) in cash immediately upon signing. Unlike in some countries, credit checks are rare; cash is king.
+3. **"Без посередників" (No middlemen)**: A very common phrase in ads. Ukrainians actively try to avoid real estate agents to save the commission fee (often 50% of the first month's rent).
 
-## 2. Vocabulary Frequency & Collocations
+## Common Learner Errors
+1. **"Здавати" vs. "Знімати"**: Learners often confuse *to rent (take)* (`знімати` / `орендувати`) with *to rent out (give)* (`здавати`).
+   *   *Error*: Я хочу здати квартиру (when meaning "I want to rent an apartment to live in").
+   *   *Correction*: Я хочу зняти/орендувати квартиру.
+2. **Case Confusion with Location vs. Motion**: Confusing where they live (Locative) with where they are moving (Accusative).
+   *   *Error*: Я переїжджаю *в новій квартирі* (Locative).
+   *   *Correction*: Я переїжджаю *в нову квартиру* (Accusative).
+3. **Assuming Utilities are Included**: In the West, "rent" often covers water/garbage. In Ukraine, the price is almost always "X грн + комунальні" (rent + utilities). Learners forget to ask `Комунальні включені?`.
 
-### High-Frequency Items (A2 Core)
-| Ukrainian | English | Priority | Note |
-|-----------|---------|----------|------|
-| **Оренда** | Rent / Lease | High | Essential for ads |
-| **Орендувати / Знімати** | To rent | High | *Знімати* is more colloquial |
-| **Власник / Господар** | Owner / Landlord | High | *Господар* is very common |
-| **Квартира (однокімнатна)** | Apartment (1-room) | High | Key for search filters |
-| **Поверх** | Floor | High | Important for Soviet blocks |
-| **Комунальні послуги** | Utilities | Medium | Often called *Комуналка* |
-| **Опалення** | Heating | Medium | Critical for winter prices |
-| **Договір** | Contract | Medium | Basic legal context |
+## Cross-References
+- **Builds on**: `a2-61` (Hotel Accommodation - basics of staying somewhere), `a2-46` (Home and Furniture - furniture vocab).
+- **Prepares for**: `a2-63` (Scheduling Appointments - arranging viewings), `a2-contracts` (future legal/business modules).
 
-### Common A2 Collocations
-*   **Здавати в оренду** — To put up for rent.
-*   **Зручне розташування** — Convenient location.
-*   **Поруч з метро** — Near the metro (Essential for cities like Kyiv/Kharkiv).
-*   **Квартира з ремонтом** — Renovated apartment.
-*   **Без посередників** — Without agents (No realtor fee).
-
-## 3. Cultural Hook: Daily Life in Ukraine
-*   **The "Komunalka" (Комуналка) Split**: In Ukraine, rent price almost always excludes utilities. Heating (*опалення*) is the most expensive part and is seasonal (Oct–Apr). A2 students must learn to ask: *"Скільки коштує комуналка взимку?"* (How much are utilities in winter?).
-*   **OLX and Telegram**: While Rieltor.ua exists, **OLX.ua** and specific Telegram channels (e.g., "Оренда без рієлтора") are the primary ways Ukrainians find housing.
-*   **The Realtor Fee (Комісія)**: It is standard for realtors to charge the tenant 50% of one month's rent. Identifying the phrase *"комісія 50%"* saves learners from financial surprises.
-*   **Floor Numbering**: Ukraine follows the system where the "1st floor" (*перший поверх*) is the ground floor. There is no "Floor 0".
-
-## 4. Pedagogical Notes
-
-### Key Differences from English
-*   **"To Rent" (Directionality)**: English uses "rent" for both taking and giving. Ukrainian distinguishes strictly: **знімати** (to take for rent) vs. **здавати** (to give for rent).
-*   **Case Transitions**: 
-    *   **Locative**: Describing the floor (*на другому поверсі*).
-    *   **Instrumental**: Features (*з меблями*, *з балконом*).
-    *   **Genitive**: Location (*біля парку*) and price/negation.
-
-### Common Learner Errors
-*   **Numbers Agreement**: Rent prices involve thousands (*тисячі*). Learners often struggle with *"21 тисяча"* (Nom. Sg.) vs. *"25 тисяч"* (Gen. Pl.).
-*   **Preposition Confusion**: Using *на* instead of *в* for apartments (*в квартирі* vs *на поверсі*).
-
-## 5. Scope Boundaries
-
-### IN Scope (Based on Prior Knowledge)
-*   **Cases**: Use of Locative (location), Genitive (possession/prices), and Instrumental (features).
-*   **Aspect**: Perfective future for agreements (*Я підпишу договір*) vs. Imperfective for searches (*Я шукаю квартиру*).
-*   **Relative Clauses**: Using *який/яка* to describe preferences (*Мені потрібна квартира, яка знаходиться біля метро*).
-*   **Modals**: *Можна* (Can/Allowed), *Треба* (Need).
-
-### OUT of Scope
-*   **Complex Legal Terminology**: Terms from the Civil Code regarding liability or force majeure.
-*   **Passive Voice**: While *"здається квартира"* is common, students should focus on active constructions (*Власник здає квартиру*).
-*   **Technical Utilities**: Advanced discussion of gas meters, voltage, or specific plumbing terminology.
-
-## 6. Suggested Teaching Sequence
-1.  **Search**: Vocabulary for ads (rooms, price, location).
-2.  **Description**: Describing the flat using Adjectives + Instrumental (*з меблями*).
-3.  **The Call**: Asking the landlord questions (Dative/Accusative/Locative).
-4.  **The Deal**: Numbers (prices) and basic contract verbs (Aspect pairs: *підписувати/підписати*).
+## Notes for Content Writing
+- **Realism**: Include the question "А комунальні?" in the dialogue practice — it's the #1 question prospective tenants ask.
+- **Distinction**: Clearly distinguish between `кімната` (room in a shared flat) and `однокімнатна квартира` (1-room apartment/studio), as this confuses English speakers.

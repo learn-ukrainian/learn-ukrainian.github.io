@@ -1,4 +1,3 @@
----
 sequence: 9
 module: oes-009
 module_number: 9
@@ -9,7 +8,6 @@ phase: 1
 phase_id: vernacular-foundations
 phase_name: Vernacular Foundations
 focus: Я, ти, мьнѣ, тобѣ in personal letters
-word_target: 4000
 content_outline:
 - section: Вступ
   description: 'Introduction to Pronouns: Self and Other'
@@ -24,3 +22,6 @@ activity_types:
 - transcription
 - etymology-trace
 - grammar-identify
+persona:
+  voice: Senior Paleographer
+  role: Philosopher

@@ -1,0 +1,13 @@
+{
+  "track": "oes",
+  "slug": "family-kinship",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-20T19:02:53Z",
+      "task_id": "v3-family-kinship-pA",
+      "mode": "full"
+    }
+  }
+}

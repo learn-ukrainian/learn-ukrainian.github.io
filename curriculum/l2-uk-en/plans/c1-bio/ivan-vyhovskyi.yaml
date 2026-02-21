@@ -1,20 +1,16 @@
----
-module: c1-bio-024
+module: c1-bio-24
 level: C1-BIO
 sequence: 24
 slug: ivan-vyhovskyi
 version: '2.0'
 title: 'Іван Виговський: Гетьман-дипломат'
-word_target: 4300
 content_outline:
-- section: "Вступ — Архітектор Гадяцької унії"
-  words: 600
+- section: Вступ — Архітектор Гадяцької унії
   points:
   - Виговський як альтернатива московському курсу
   - Значення Гадяцької угоди
   - Трагедія невикористаного шансу
 - section: Життєпис
-  words: 1600
   points:
   - Основні етапи життя гетьмана
   - Шлях до булави
@@ -23,33 +19,28 @@ content_outline:
   - Довіра Хмельницького
   - Обрання гетьманом 1657 р.
 - section: Історичний контекст
-  words: 600
   points:
   - Руїна: Початок
   - Гадяцька ідея
   - Передумови та переговори
   - Зміст угоди - Велике князівство Руське
 - section: Внесок
-  words: 400
   points:
   - Дипломатія
   - Військовий талант Виговського
   - Конотопська битва 1659 р.
 - section: Останні роки
-  words: 400
   points:
   - Падіння та загибель
   - Внутрішня опозиція
   - Зречення гетьманства
   - Трагічна смерть 1664 р.
 - section: Спадщина
-  words: 400
   points:
   - Оцінки в історіографії
   - Реабілітація образу
   - Уроки для сучасності
 - section: Підсумок
-  words: 300
   points:
   - Значення постаті Виговського
 focus: biography
@@ -70,15 +61,15 @@ grammar:
 module_type: biography
 sources:
 - name: Іван Виговський (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Іван_Виговський"
+  url: https://uk.wikipedia.org/wiki/Іван_Виговський
   type: primary
   notes: Біографія та гетьманування
 - name: Гадяцький договір (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Гадяцький_договір"
+  url: https://uk.wikipedia.org/wiki/Гадяцький_договір
   type: primary
   notes: Зміст та значення угоди
 - name: Конотопська битва (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Конотопська_битва"
+  url: https://uk.wikipedia.org/wiki/Конотопська_битва
   type: reference
   notes: Військова перемога
 immersion: 100% Ukrainian
@@ -94,3 +85,6 @@ activity_hints:
   source: Primary sources (adapted)
 - type: essay-response
   focus: Альтернативна історія
+persona:
+  voice: Senior Biographer
+  role: Grand Chancellor

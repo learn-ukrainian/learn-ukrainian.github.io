@@ -42,20 +42,28 @@ def get_module_files(project_root, level, module_num):
     level_dir = project_root / "curriculum" / "l2-uk-en" / level
     if not level_dir.exists():
         return None, None
-        
+
+    # Resolve via manifest
+    try:
+        import sys
+        sys.path.insert(0, str(project_root / "scripts"))
+        from manifest_utils import get_module_by_number
+        mod = get_module_by_number(level, module_num)
+        if mod:
+            md_file = level_dir / f"{mod.slug}.md"
+            if md_file.exists():
+                act_file = level_dir / "activities" / f"{mod.slug}.yaml"
+                return md_file, act_file if act_file.exists() else None
+    except Exception:
+        pass
+
+    # Fallback: glob
     md_files = list(level_dir.glob(f"{module_num:02d}-*.md"))
     if not md_files:
-        md_files = list(level_dir.glob(f"module-{module_num:02d}.md"))
-        
-    if not md_files:
         return None, None
-        
+
     md_file = md_files[0]
-    # Check new and legacy activity paths
     act_file = level_dir / "activities" / (md_file.stem + ".yaml")
-    if not act_file.exists():
-        act_file = level_dir / (md_file.stem + ".activities.yaml")
-        
     return md_file, act_file if act_file.exists() else None
 
 def audit_coverage():

@@ -1,0 +1,40 @@
+module: c1-090
+level: C1
+sequence: 90
+slug: praktyka-2-vysoke-mystetstvo
+version: '2.0'
+title: Практика II — Високе мистецтво
+subtitle: Practice II — Fine Arts
+content_outline:
+- section: Розминка — Огляд високого мистецтва
+  points:
+  - Від Бортнянського до Сильвестрова — музична еволюція
+  - Від ікони до авангарду — візуальне мистецтво
+  - Від Курбаса до Франка — театральна традиція
+- section: Content Areas
+  points:
+  - Review of classical music (M62-154)
+  - Review of opera and vocal arts (M65-156)
+  - Review of visual arts (M67-158)
+  - Review of ballet and theater (M69-161)
+  - Review of architecture (M72)
+- section: Практика — мистецтвознавчий аналіз
+  points:
+  - Порівняти Лисенка та Бортнянського — два покоління
+  - Проаналізувати картину Примаченко — стиль, символіка
+  - Написати рецензію на уявну оперну виставу
+  - Обговорити внесок Лифаря у світовий балет
+focus: practice
+pedagogy: Immersion & Analysis
+objectives:
+- Review and integrate knowledge of Ukrainian fine arts
+- Analyze the contribution of Ukrainian artists to world culture
+- Master high-register arts vocabulary
+grammar:
+- Integrated Stylistic Analysis
+- Comparative Art Register
+phase: C1.5 Folk Culture & Fine Arts
+persona:
+  voice: Senior Specialist
+  role: Меценат
+word_target: 4000

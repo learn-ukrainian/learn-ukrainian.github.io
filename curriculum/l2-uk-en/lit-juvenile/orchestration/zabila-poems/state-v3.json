@@ -1,0 +1,13 @@
+{
+  "track": "lit-juvenile",
+  "slug": "zabila-poems",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-20T23:14:45Z",
+      "task_id": "v3-zabila-poems-pA",
+      "mode": "full"
+    }
+  }
+}

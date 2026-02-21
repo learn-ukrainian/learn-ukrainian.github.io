@@ -1,4 +1,3 @@
----
 module: c1-hist-029
 level: c1-hist
 sequence: 29
@@ -10,57 +9,49 @@ objectives:
 - 'Analyze the causes and consequences of книги буття: шевченко та кирило-мефодіївці'
 - Evaluate the historical significance of перша політична програма
 content_outline:
-- section: "Вступ — Перша політична програма"
-  words: 457
+- section: Вступ — Перша політична програма
   subsections:
   - 1846-1847 — контекст
   - Кирило-Мефодіївське братство
   - «Книги буття» — маніфест
   - Чому важливий документ
 - section: Історичний контекст
-  words: 571
   subsections:
   - Україна під Російською імперією
   - Пробудження націй — європейський контекст
   - Київський університет — інтелектуальне середовище
   - Романтичний націоналізм
 - section: Братство і його члени
-  words: 686
   subsections:
   - Костомаров — ідеолог
   - Шевченко — поет
   - Куліш — письменник
   - Інші члени
   - Як організувалися
-- section: "«Книги буття» — зміст"
-  words: 800
+- section: «Книги буття» — зміст
   subsections:
   - Структура — біблійна форма
   - Історія слов'ян
   - Україна як месія народів
   - Федерація — політичний ідеал
   - Скасування кріпацтва
-- section: "Фрагмент — Україна як месія"
-  words: 686
+- section: Фрагмент — Україна як месія
   subsections:
   - Текст (з глосами)
   - Месіанський наратив
   - Порівняння з польським месіанізмом
   - Романтична мова
 - section: Доля братства
-  words: 457
   subsections:
   - Донос і арешти
   - Покарання — Шевченко найсуворіше
   - Чому Шевченко?
   - Довготривалий вплив
 - section: Підсумок
-  words: 343
   subsections:
   - Перша політична програма
   - Від романтизму до політики
   - Зв'язок із пізнішими рухами
-word_target: 4000
 vocabulary:
 - братство
 - маніфест
@@ -90,15 +81,15 @@ activities:
   focus: Чому Кирило-Мефодіївське братство важливе для українського руху?
 sources:
 - name: Кирило-Мефодіївське братство (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Кирило-Мефодіївське_братство"
+  url: https://uk.wikipedia.org/wiki/Кирило-Мефодіївське_братство
   type: reference
   notes: Brotherhood overview
 - name: Книги буття українського народу
-  url: "https://uk.wikipedia.org/wiki/Книги_буття_українського_народу"
+  url: https://uk.wikipedia.org/wiki/Книги_буття_українського_народу
   type: reference
   notes: Brotherhood manifesto
-- name: "Текст \"Книг буття\""
-  url: "https://uk.wikisource.org/wiki/Книга_буття_українського_народу"
+- name: Текст "Книг буття"
+  url: https://uk.wikisource.org/wiki/Книга_буття_українського_народу
   type: primary
   notes: Full text
 vocabulary_hints:
@@ -117,7 +108,9 @@ activity_hints:
   items: 4
 - type: essay-response
   focus: Критичний аналіз
-  word_target: 300
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Romantic Nationalism Scholar

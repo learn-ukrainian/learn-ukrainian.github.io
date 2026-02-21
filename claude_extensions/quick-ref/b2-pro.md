@@ -37,7 +37,7 @@
 
 | Metric         | Target | WARN  | FAIL  |
 | -------------- | ------ | ----- | ----- |
-| Word count     | 3000   | <3000 | <2800 |
+| Word count     | 4000   | <3500 | <3000 |
 | Activities     | 10     | <10   | <8    |
 | Items/activity | 14     | <14   | <10   |
 
@@ -102,7 +102,7 @@ prerequisites:
 
 | Metric            | Professional Modules | Checkpoint Modules |
 | ----------------- | -------------------- | ------------------ |
-| Core Word Count   | 3000+                | 2000+              |
+| Core Word Count   | 4000+                | 2000+              |
 | Immersion         | **100%**             | **100%**           |
 | Vocabulary (YAML) | 30+                  | 40+                |
 | Example Sentences | 24+                  | 16+                |

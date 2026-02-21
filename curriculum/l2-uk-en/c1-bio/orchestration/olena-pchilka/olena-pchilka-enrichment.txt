@@ -1,0 +1,285 @@
+✅ Message sent to Gemini (ID: 12522) [auto-acked: self-addressed]
+✓ Message 12522 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12522...
+📨 Message #12522
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-olena-pchilka
+   Time: 2026-02-20T23:40:33.539430+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-bio-49
+level: C1-BIO
+sequence: 49
+slug: olena-pchilka
+version: '2.0'
+title: 'Олена Пчілка: Письменниця і громадська діячка'
+content_outline:
+- section: Вступ — Мати українського відродження
+  points:
+  - Олена Пчілка як багатогранна постать українського руху
+  - Роль у вихованні Лесі Українки
+  - Внесок у літературу, етнографію та жіночий рух
+- section: Ранні роки та родина Косачів (1849-1868)
+  points:
+  - Народження Ольги Драгоманової в Гадячі
+  - Родина Драгоманових та її інтелектуальне середовище
+  - Брат Михайло Драгоманов та його вплив
+  - Освіта та формування національної свідомості
+- section: Шлюб та літературні початки (1868-1880)
+  points:
+  - Шлюб із Петром Косачем
+  - Народження дітей, зокрема Лесі
+  - Перші літературні твори під псевдонімом Олена Пчілка
+  - Переклади та етнографічні студії
+- section: Видавнича та просвітницька діяльність (1880-1905)
+  points:
+  - Журнал «Рідний край»
+  - Боротьба за українську мову в освіті
+  - Альманах «Перший вінок» спільно з Наталією Кобринською
+  - Дитяча література та виховання
+- section: Революційні роки та трагедії (1905-1920)
+  points:
+  - Смерть Лесі Українки (1913)
+  - Революція та громадянська війна
+  - Втрата інших дітей
+  - Продовження громадської діяльності попри все
+- section: Останні роки та спадщина (1920-1930)
+  points:
+  - Робота над спадщиною Лесі Українки
+  - Переслідування радянською владою
+  - Смерть у Києві
+  - Значення для українського національного руху
+vocabulary_hints:
+  required:
+  - письменниця (writer)
+  - етнографія (ethnography)
+  - просвітництво (enlightenment)
+  - видавець (publisher)
+  - журнал (journal/magazine)
+  - псевдонім (pseudonym)
+  - національна свідомість (national consciousness)
+  - жіночий рух (women's movement)
+  - переклад (translation)
+  - спадщина (legacy)
+  recommended:
+  - «Рідний край» (Native Land)
+  - родина Косачів (Kosach family)
+  - дитяча література (children's literature)
+  - етнографічні студії (ethnographic studies)
+  - громадська діячка (public activist)
+activity_hints:
+- type: reading
+  focus: Літературна та громадська спадщина
+  source: Уривки з творів та публіцистики
+  items: 3 passages
+- type: essay-response
+  focus: Яку роль відіграла Олена Пчілка у вихованні Лесі Українки?
+  output: Біографічне есе
+focus: biography
+prerequisites:
+- c1-bio-20 (Тарас Шевченко)
+- c1-bio-22 (Михайло Драгоманов)
+connects_to:
+- c1-bio-40 (Леся Українка)
+- c1-bio-25 (Наталія Кобринська)
+- c1-bio-28 (Іван Франко)
+module_type: biography
+sources:
+- name: Олена Пчілка (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Олена_Пчілка
+  type: primary
+  notes: Біографія, творчість, громадська діяльність
+- name: Музей Лесі Українки
+  url: https://www.lesya.lutsk.ua
+  type: reference
+  notes: Родинна історія та спадщина
+- name: Інститут літератури НАНУ
+  url: https://ilnan.gov.ua
+  type: reference
+  notes: Літературознавчі дослідження
+immersion: 100% Ukrainian
+phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of олена пчілка: письменниця і громадська діячка'
+- Evaluate the contributions of мати українського відродження
+- Trace the career and influence of останні роки та спадщина (1920-1930)
+persona:
+  voice: Senior Biographer
+  role: Cultural Matriarch
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Олена Пчілка: Письменниця і громадська діячка
+
+## Використані джерела
+1. [Енциклопедія Сучасної України (ЕСУ)](https://esu.com.ua) — фундаментальна біографічна стаття.
+2. [Інститут історії України НАНУ](http://resource.history.org.ua) — історичний контекст діяльності родини Косачів-Драгоманових.
+3. [Район.Історія](https://history.rayon.in.ua) — статті про громадську діяльність та видавничі проєкти ("Рідний край").
+4. [Український інститут національної пам'яті](https://uinp.gov.ua) — матеріали до ювілейних дат.
+5. [Читомо](https://chytomo.com) — аналіз літературної спадщини та впливу на феміністичний рух.
+
+## Хронологія
+- **1849, 17 (29) червня**: Народилася в Гадячі (Полтавщина) у родині Петра Драгоманова.
+- **1866**: Закінчила Київський зразковий пансіон шляхетних дівчат.
+- **1868**: Одружилася з Петром Косачем, переїзд до Новограда-Волинського.
+- **1876**: Вихід праці «Український народний орнамент» (Київ).
+- **1887**: Видання альманаху «Перший вінок» у Львові спільно з Н. Кобринською.
+- **1903**: Виступ українською мовою на відкритті пам'ятника І. Котляревському в Полтаві.
+- **1905**: Участь у делегації до Санкт-Петербурга з вимогою скасувати заборону українського друку.
+- **1906-1914**: Видавець і редактор журналу «Рідний край» та додатку «Молода Україна».
+- **1920**: Арешт у Гадячі за спробу прикрасити бюст Шевченка синьо-жовтим прапором.
+- **1925**: Обрана членом-кореспондентом Всеукраїнської академії наук (ВУАН).
+- **1929**: Початок переслідувань у справі СВУ, спроба арешту чекістами (не забрали через хворобу).
+- **1930, 4 жовтня**: Померла в Києві.
+
+## Ключові факти та цитати
+- **Цитата**: «Слово – то мудрості промінь, слово – то думка людська».
+- **Цитата**: «Діти – се наш дорогий скарб, се – наша надія, се – молода Україна».
+- **Факт**: Єдина жінка у складі делегації до прем'єр-міністра Вітте у 1905 році, яка вимагала скасування Емського указу.
+- **Факт**: Ввела в українську мову слова «мистецтво», «переможець», «променистий».
+- **Факт**: Свідомо виховувала дітей в українському дусі, ізолюючи їх від російських шкіл («хатня освіта»), щоб уникнути русифікації.
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ — Мати українського відродження": [!myth-buster] — Спростування міфу про те, що вона була лише "тінню" брата Михайла або "матір'ю Лесі". Вона була самодостатнім ідеологом націоналізму.
+- Section "Ранні роки та родина Косачів": [!context] — Атмосфера в домі Драгоманових: європейський лібералізм + українська традиція.
+- Section "Шлюб та літературні початки": [!culture] — Значення праці «Український народний орнамент» як першої наукової систематизації української візуальної культури.
+- Section "Видавнича та просвітницька діяльність": [!history-bite] — Історія про те, як вона возила нелегальну літературу через кордон, вшиваючи її в одяг.
+- Section "Революційні роки та трагедії": [!decolonization] — Відмінність її позиції від позиції "громадівців": вона вимагала політичної самостійності, а не культурної автономії.
+- Section "Останні роки та спадщина": [!legacy] — Як радянська влада намагалася стерти її ім'я, залишивши лише як "матір поетеси".
+
+## Деколонізаційний контекст
+- **Imperial/Soviet myth**: Олена Пчілка — "буржуазна націоналістка", "реакціонерка", яка заважала "прогресивному" (соціалістичному) розвитку Лесі Українки.
+- **Ukrainian reality**: Вона була послідовною державницею, яка розуміла загрозу російського імперіалізму (навіть у його ліберальних чи соціалістичних формах) краще, ніж більшість її сучасників-чоловіків. Її "націоналізм" був захисною реакцією на шовінізм.
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| Націоналізм | Буржуазний націоналізм, шовінізм, ворожість до "братнього народу" | Національна гідність, право на самовизначення, захист власної культури від асиміляції |
+| Виховання дітей | "Штучна ізоляція", "націоналістичний фанатизм" | Свідома педагогічна стратегія виховання української еліти, вільної від комплексу меншовартості |
+
+## Section-Mapped Research Notes
+
+### Вступ — Мати українського відродження
+Олена Пчілка як "Matriarch" української культури. Її вплив на формування цілого покоління інтелігенції (не тільки власних дітей). Поєднання фемінізму з націоналізмом.
+
+### Ранні роки та родина Косачів (1849-1868)
+Рід Драгоманових — козацька старшина з глибокими традиціями. Вплив брата Михайла, але й раннє формування власної, більш радикальної позиції. Гадяч як колиска.
+
+### Шлюб та літературні початки (1868-1880)
+Переїзд на Волинь. Звягель (Новоград-Волинський). Етнографічна діяльність: збирання узорів (писанки, вишивка). Це був не просто побутовий інтерес, а наукова фіксація коду нації. Літературний дебют: переклади та оригінальні вірші.
+
+### Видавнича та просвітницька діяльність (1880-1905)
+Альманах «Перший вінок» (1887) — маніфест жіночої творчості. Видання журналу «Рідний край» у Києві після 1905 року. Боротьба за українську школу. Виступ у Полтаві 1903 року — акт громадянської мужності.
+
+### Революційні роки та трагедії (1905-1920)
+Смерть сина Михайла (1903), чоловіка Петра (1909) і доньки Лесі (1913). Олена Пчілка залишається "залізною леді". Редакторська праця в Гадячі за часів УНР. Її ставлення до більшовиків як до нових окупантів.
+
+### Останні роки та спадщина (1920-1930)
+Життя в підрадянському Києві. Праця в комісіях ВУАН. Постійний нагляд чекістів. Антирадянські демонстрації (інцидент з прапором). Спроби арешту. Смерть і похорон. Спроби влади маргіналізувати її фігуру.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12565)
+✓ Message 12522 acknowledged
+✓ Message 12565 acknowledged

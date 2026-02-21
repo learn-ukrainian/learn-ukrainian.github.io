@@ -1,4 +1,3 @@
----
 module: b2-hist-030
 level: B2-HIST
 sequence: 30
@@ -8,44 +7,35 @@ title: Українські землі у ВКЛ
 subtitle: Регіональна автономія та магнатська влада
 content_outline:
 - section: Вступ
-  words: 720
   points:
   - Особливий статус руських земель у ВКЛ
   - Баланс між інтеграцією та самобутністю
 - section: Читання
-  words: 2103
   points:
   - Київське князівство — тінь минулої слави
   - Волинь — серце руської шляхти
   - Магнатські роди — нова еліта
 - section: Первинні джерела
-  words: 314
   points:
   - Острозька Біблія (1581)
   - Князь Василь-Костянтин Острозький як меценат
 - section: Деколонізаційний погляд
-  words: 370
   points:
   - Чи було ВКЛ "колонією" для русинів?
   - Участь у владі vs підпорядкування
 - section: Критерії оцінювання
-  words: 0
   points:
   - Інструкція для оцінювання
 - section: Зразок відповіді
-  words: 422
   points:
   - Приклад виконання завдання
-- section: "Підсумок — Напередодні Люблінської унії"
-  words: 170
+- section: Підсумок — Напередодні Люблінської унії
   points:
   - 1569 рік як переломний момент
   - Наслідки переходу до Корони Польської
 - section: Потрібно більше практики?
-  words: 224
   points:
   - Додаткові ресурси
-word_target: 4323
 focus: history
 pedagogy: CBI
 objectives:
@@ -55,7 +45,7 @@ objectives:
 grammar:
 - Administrative terminology
 - Regional descriptions
-phase: "B2.3b [Українська історія]"
+phase: B2.3b [Українська історія]
 vocabulary_hints:
   required:
   - історія (history)
@@ -77,10 +67,13 @@ activity_hints:
   items: 4
 - type: essay-response
   focus: Критичний аналіз
-  word_target: 300
 - type: critical-analysis
   focus: Аналіз причинно-наслідкових зв'язків між подіями
   items: 3
 - type: critical-analysis
   focus: Критична оцінка історичних тверджень та міфів
   items: 5
+persona:
+  voice: Senior Professor of History
+  role: Land Surveyor
+word_target: 5000

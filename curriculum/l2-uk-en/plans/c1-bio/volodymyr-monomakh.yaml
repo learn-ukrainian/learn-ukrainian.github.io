@@ -1,49 +1,40 @@
----
-module: c1-bio-006
+module: c1-bio-6
 level: C1-BIO
 sequence: 6
 slug: volodymyr-monomakh
 version: '2.0'
 title: 'Володимир Мономах: Укріплювач Русі'
-word_target: 4300
 content_outline:
-- section: "Вступ — Останній великий самодержець Києва"
-  words: 600
+- section: Вступ — Останній великий самодержець Києва
   points:
   - Мономах як ідеал руського князя
   - Успіхи у боротьбі з половцями
   - Зупинення процесу розпаду держави
 - section: Життєпис
-  words: 1600
   points:
   - Походження та ранні роки
   - Любецький з'їзд 1097 р.
   - Шлях до київського престолу
   - Правління в Києві (1113–1125)
 - section: Історичний контекст
-  words: 600
   points:
   - Феодальна роздробленість
   - Половецька загроза
   - Соціальні рухи в Києві
 - section: Внесок
-  words: 400
   points:
   - '"Повчання дітям" як етичний кодекс'
   - Реформування законодавства ("Статут")
 - section: Останні роки
-  words: 400
   points:
   - Зміцнення династичних зв'язків
   - Дипломатія з Візантією
   - Смерть та поховання
 - section: Спадщина
-  words: 400
   points:
   - Образ Мономаха в літописах
   - Символіка "Шапки Мономаха" (міфи та реальність)
 - section: Підсумок
-  words: 300
   points:
   - Значення правління для історії України
 focus: biography
@@ -64,11 +55,11 @@ grammar:
 module_type: biography
 sources:
 - name: Володимир Мономах (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Володимир_Мономах"
+  url: https://uk.wikipedia.org/wiki/Володимир_Мономах
   type: primary
   notes: Детальний життєпис
 - name: '"Повчання" Володимира Мономаха'
-  url: "http://izbornyk.org.ua/"
+  url: http://izbornyk.org.ua/
   type: primary
   notes: Оригінальний текст та коментарі
 immersion: 100% Ukrainian
@@ -80,7 +71,10 @@ vocabulary_hints:
   - статут (statute)
 activity_hints:
 - type: reading
-  focus: 'Аналіз "Повчання дітям"'
+  focus: Аналіз "Повчання дітям"
   source: Primary sources (adapted)
 - type: critical-analysis
   focus: Причини київського повстання 1113 р.
+persona:
+  voice: Senior Biographer
+  role: Instruction Writer

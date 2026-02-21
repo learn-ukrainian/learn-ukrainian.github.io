@@ -1,4 +1,3 @@
----
 module: c1-hist-023
 level: c1-hist
 sequence: 23
@@ -10,15 +9,13 @@ objectives:
 - Analyze the causes and consequences of універсали хмельницького
 - Evaluate the historical significance of голос гетьмана
 content_outline:
-- section: "Вступ — Голос гетьмана"
-  words: 457
+- section: Вступ — Голос гетьмана
   subsections:
   - Що таке універсал?
   - Хмельницький як автор
   - Політична риторика XVII ст.
   - Чому це важливе джерело
 - section: Типи універсалів
-  words: 571
   subsections:
   - Військові — заклики до повстання
   - Адміністративні — накази
@@ -26,15 +23,13 @@ content_outline:
   - Привілейні — пожалування
   - Формуляр — структура документа
 - section: Ключові універсали
-  words: 800
   subsections:
   - Перші заклики 1648 року
   - Звернення до козаків
   - Звернення до селян
   - Дипломатичні — до Москви, Варшави
   - Еволюція риторики
-- section: "Фрагмент — Універсал 1648 року"
-  words: 686
+- section: Фрагмент — Універсал 1648 року
   subsections:
   - Текст (з глосами)
   - До кого звернено
@@ -42,7 +37,6 @@ content_outline:
   - Релігійні мотиви
   - Соціальні мотиви
 - section: Політична риторика
-  words: 686
   subsections:
   - Образ ворога — поляки, євреї
   - Образ «народу руського»
@@ -50,19 +44,16 @@ content_outline:
   - Православ'я як ідентичність
   - Порівняння з польською пропагандою
 - section: Критика джерела
-  words: 457
   subsections:
   - Пропаганда vs. реальні наміри
   - Що замовчано
   - Різні аудиторії — різні меседжі
   - Як верифікувати
 - section: Підсумок
-  words: 343
   subsections:
   - Універсали як первинне джерело
   - Голос влади — критичне читання
   - Зв'язок із Переяславом
-word_target: 4000
 vocabulary:
 - універсал
 - гетьман
@@ -92,15 +83,15 @@ activities:
   focus: Як Хмельницький виправдовував повстання?
 sources:
 - name: Універсал (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Універсал_(документ)"
+  url: https://uk.wikipedia.org/wiki/Універсал_(документ)
   type: reference
   notes: Document type
 - name: Богдан Хмельницький
-  url: "https://uk.wikipedia.org/wiki/Богдан_Хмельницький"
+  url: https://uk.wikipedia.org/wiki/Богдан_Хмельницький
   type: reference
   notes: Hetman biography
 - name: Універсали Хмельницького (колекція)
-  url: "https://litopys.org.ua/"
+  url: https://litopys.org.ua/
   type: primary
   notes: Document collection
 vocabulary_hints:
@@ -119,7 +110,9 @@ activity_hints:
   items: 4
 - type: essay-response
   focus: Критичний аналіз
-  word_target: 300
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Chancellery Scribe

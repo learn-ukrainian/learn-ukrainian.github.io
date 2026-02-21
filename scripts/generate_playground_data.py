@@ -2,8 +2,13 @@
 """Generate aggregated status data for playground dashboards."""
 
 import json
+import sys
 from pathlib import Path
 from datetime import datetime
+
+# Ensure scripts/ is importable
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from audit.status_cache import read_status
 
 CURRICULUM_ROOT = Path(__file__).parent.parent / "curriculum" / "l2-uk-en"
 
@@ -65,8 +70,11 @@ def load_level_status(level_info: dict) -> dict:
     modules = []
     for status_file in sorted(status_dir.glob("*.json")):
         try:
-            with open(status_file) as f:
-                data = json.load(f)
+            # Use shared access layer (no freshness check — dashboard is informational)
+            result = read_status(status_file)
+            if result is None:
+                continue
+            data = result.data
 
             # Extract module info
             gates = data.get("gates", {})

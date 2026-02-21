@@ -1,0 +1,209 @@
+✅ Message sent to Gemini (ID: 12279) [auto-acked: self-addressed]
+✓ Message 12279 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12279...
+📨 Message #12279
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-pvl-varangians
+   Time: 2026-02-20T23:38:12.309592+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 27
+module: oes-027
+module_number: 23
+slug: pvl-varangians
+title_uk: 'ПВЛ: Варяги'
+title_en: 'PVL: The Varangians'
+phase: 1
+phase_id: vernacular-foundations
+phase_name: Vernacular Foundations
+focus: Aorist intro — "Riksha" (They said)
+content_outline:
+- section: Вступ
+  description: 'Introduction to PVL: The Varangians'
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Senior Paleographer
+  role: Trade Route Guide
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Pvl Varangians
+
+## Використані джерела
+1. [Літопис руський (за Іпатським списком)](http://litopys.org.ua/ipatlet/ipat01.htm) — Першоджерело тексту Повісті врем’яних літ.
+2. [Енциклопедія історії України: Варяги](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Variagy) — Академічний огляд ролі варягів та історіографії.
+3. [Енциклопедія історії України: Норманська проблема](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Normanska_problema) — Сучасний погляд на дискусію.
+4. [Енциклопедія Сучасної України: Аорист](https://esu.com.ua/article-43187) — Граматична довідка.
+
+## Хронологія
+- **859**: Варяги беруть данину з чуді, словен, мері, весі й кривичів («із замор’я»).
+- **862**: Вигнання варягів за море; початок міжусобиць («вста рід на рід»).
+- **862 (пізніше)**: Рада племен і рішення шукати князя («Пошукаємо самі собі князя...»).
+- **862**: Прихід трьох братів: Рюрика (Ладога/Новгород), Синеуса (Білоозеро), Трувора (Ізборськ).
+- **864**: Смерть Синеуса і Трувора; Рюрик приймає одноосібну владу.
+
+## Ключові факти та цитати
+- **Цитата 1 (Про безлад)**: «Земля наша велика і щедра, а порядку в ній нема. Приходьте княжити і володіти нами».
+- **Цитата 2 (Про ідентичність)**: «Бо так звали тих варягів — русь, як ото одні звуться свеями, а другі — норманами, англами, інші — готами, — отак і ці».
+- **Граматика (Аорист)**: Текст 862 року насичений аористом для підкреслення динаміки подій: *изъгнаша* (вигнали), *въста* (встав), *почаша* (почали), *рѣша* (сказали), *идоша* (пішли).
+- **Етимологія**: Термін «Русь» найімовірніше походить від фінського *Ruotsi* (гребці), яким називали шведів.
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ": [!context] — Паралель з англосаксонським епосом (легенда про Хенгіста і Хорсу), що натякає на "бродячий сюжет" середньовіччя.
+- Section "Основний матеріал: I — Вигнання та Поклик": [!quote] — Оригінал фрази «Земля наша велика...» церковнослов'янською мовою.
+- Section "Граматика: Аорист — Час легенд": [!paleography] — Як писарі скорочували закінчення аориста (титла).
+- Section "Основний матеріал: II — Варязька Русь": [!myth-buster] — Синеус і Трувор як результат неправильного перекладу ("sine hus" — свій рід, "thru varing" — вірна дружина), хоча це дискусійна теорія.
+- Section "Історіографія: Норманська війна": [!decolonization] — Як Російська імперія використовувала Рюрика для легітимізації самодержавства, а СРСР — заперечував все західне.
+- Section "Етимологічний екскурс": [!history-bite] — Зв'язок слова "варяг" зі словом "варрант" (присяга, порука).
+
+## Деколонізаційний контекст
+- **Імперський міф**: "Покликання варягів" як доказ нездатності слов'ян до державотворення без зовнішньої (царської) руки. Пізніше — концепція "спільної колиски" трьох народів, що починається з Рюрика.
+- **Радянський міф (Антинорманізм)**: Повне заперечення скандинавського впливу, ствердження про автохтонність держави, оголошення норманістів "ворогами народу".
+- **Українська реальність**: Київська Русь як мультиетнічний проект, де скандинавська еліта швидко асимілювалася (вже онук Рюрика Святослав має слов'янське ім'я). Держава виникла в результаті синтезу місцевих традицій і варязької військово-торговельної організації.
+
+## Contested Terms
+| Поняття | Імперське/Радянське трактування | Українське (деколонізоване) трактування |
+|---------|-----------------|-------------------|
+| Давньоруська мова | Спільна мова-предок російської, української, білоруської (моноліт) | Група діалектів, де київський койне мав виразні протоукраїнські риси |
+| Норманізм | "Буржуазна фальсифікація" або доказ російської вищості | Наукова теорія про роль скандинавів, очищена від політичних спекуляцій |
+| Рюриковичі | "Російська" династія | Династія київських правителів скандинавського походження |
+
+## Section-Mapped Research Notes
+
+### Вступ
+Легенда про покликання. Структура ПВЛ. Рік 6370 як точка відліку нової ери.
+
+### Основний матеріал: I — Вигнання та Поклик
+Текст літопису. Конфлікт між племенами. Формула "наряду нѣту".
+
+### Граматика: Аорист — Час легенд
+Що таке аорист (простий минулий час). Його функція: рух сюжету. Форми: *рѣша* (вони сказали), *поидоша* (вони пішли). Відмінність від перфекта (наш сучасний минулий).
+
+### Основний матеріал: II — Варязька Русь
+Хто такі Русь? Перелік народів: свеї, урмани, англи, готи. Прихід трьох братів. Локалізація: Ладога vs Новгород (археологічні дані на користь Ладоги/Рюрикового городища).
+
+### Історіографія: Норманська війна
+Байєр, Міллер, Шльоцер. Ломоносов як "патріотичний" фальсифікатор. Грушевський: варяги як каталізатор, а не творці.
+
+### Етимологічний екскурс
+Варяг (*váringr* — той, хто дав клятву). Русь (*Ruotsi*). Дискусія про південне походження терміну "Русь" (річка Рось) — зараз менш популярна, але варто згадати.
+
+### Підсумок
+Синтез культур. Початок династії, яка стане київською.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12332)
+✓ Message 12279 acknowledged
+✓ Message 12332 acknowledged

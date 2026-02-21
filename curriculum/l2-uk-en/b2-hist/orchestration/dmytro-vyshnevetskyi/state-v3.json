@@ -1,0 +1,13 @@
+{
+  "track": "b2-hist",
+  "slug": "dmytro-vyshnevetskyi",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T15:09:37Z",
+      "task_id": "v3-dmytro-vyshnevetskyi-pA",
+      "mode": "meta-only"
+    }
+  }
+}

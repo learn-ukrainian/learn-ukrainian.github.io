@@ -1,0 +1,227 @@
+✅ Message sent to Gemini (ID: 12669) [auto-acked: self-addressed]
+✓ Message 12669 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12669...
+📨 Message #12669
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-assault-battery
+   Time: 2026-02-20T23:41:33.267002+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 53
+module: oes-053
+module_number: 43
+slug: assault-battery
+title_uk: Побої та образи
+title_en: Assault & Battery
+phase: 2
+phase_id: literary-tradition
+phase_name: Literary Tradition
+focus: Instrumental Case review
+content_outline:
+- section: Вступ
+  description: Introduction to Assault & Battery
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Senior Paleographer
+  role: Village Elder
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Assault Battery (Побої та образи в Руській Правді)
+
+## Використані джерела
+1. **Руська Правда (Коротка та Простора редакції)** [litopys.org.ua](http://litopys.org.ua/yushkov/yu.htm) — першоджерело, тексти давньоруською та переклади.
+2. **Енциклопедія історії України: Руська Правда** [history.org.ua](http://resource.history.org.ua/) — академічний аналіз правових норм та історії кодифікації.
+3. **Енциклопедія Сучасної України: Образа** [esu.com.ua](https://esu.com.ua/article-75124) — аналіз поняття "образа" в історичному контексті.
+4. **Толочко О.П. "Коротке" і "Просторе" редакції "Правди Руської"** — сучасна історіографія питання.
+
+## Хронологія
+- **1016 рік**: Укладення "Правди Ярослава" (найдавніша частина Короткої редакції), де вперше фіксуються штрафи за побої та каліцтва як заміна кровної помсти.
+- **1072 рік**: "Правда Ярославичів" (Вишгородська нарада) — скасування кровної помсти, остаточна фіксація системи грошових штрафів (вір та продаж).
+- **Початок XII ст.**: Укладення "Просторої Правди" (за Володимира Мономаха), де деталізуються норми про "образу дією" та процесуальні питання (свідки, випробування залізом).
+
+## Ключові факти та цитати
+
+### Першоджерела (Давньоруська)
+> «Аще ли ударить мечемъ, не вынемъ его, або рукоятью, то 12 гривнъ продажи за обиду».
+> (Якщо вдарить мечем, не вийнявши його, або руків'ям, то 12 гривень штрафу за образу).
+
+> «Аще ли кто кого ударить батогомъ, любо чашею, любо рогомъ, любо тылеснемь, то 12 гривнъ».
+> (Якщо хто кого вдарить батогом, або чашею, або рогом, або тильною частиною зброї, то 12 гривень).
+
+> «Оже ли утнеть руку, і отпадеть рука, то 40 гривенъ».
+> (Якщо відрубає руку, і відпаде рука, то 40 гривень).
+
+### Лінгвістичні спостереження (Орудний відмінок)
+Тексти рясніють прикладами орудного відмінка знарядь дії (Instrumental of Instrument):
+- *мечемъ* (sword)
+- *рукоятью* (hilt)
+- *батогомъ* (whip/baton)
+- *чашею* (goblet)
+- *рогомъ* (drinking horn)
+- *жердью* (pole)
+- *ладонью* (palm)
+
+## Engagement Hooks (mapped to sections)
+- **Section "Вступ: Концепція 'Обіди'":** `[!myth-buster]` — Спростування міфу про "темні віки" та варварські тортури. Руське право було гуманнішим за сучасне йому західне чи пізніше московське, базуючись на штрафах (компенсації), а не на тілесних покараннях чи страті.
+- **Section "Типологія ударів: Граматика насилля":** `[!paleography]` — Аналіз написання літери "ять" у словах *свѣдокъ*, *лѣкару*, та орудного відмінка в рукописах.
+- **Section "Типологія ударів: Граматика насилля":** `[!history-bite]` — "Бенкетна зброя": чому закон окремо виділяє удари "чашею" або "рогом"? Це свідчить про специфіку княжих бенкетів, де сварки часто переростали в бійки підручними предметами.
+- **Section "Економіка Честі":** `[!culture]` — Вуса дорожчі за пальці. Штраф за виривання вуса/бороди (12 гривень) був у 4 рази вищим за штраф за відрубаний палець (3 гривні). Це підкреслює пріоритет честі над тілесною цілісністю.
+- **Section "Докази та Свідки":** `[!context]` — "Синяки та кров". Якщо сліди побоїв явні, свідок не потрібен ("відок"). Це раціональний підхід до доказової бази.
+
+## Деколонізаційний контекст
+- **Imperial/Soviet myth**: Радянська історіографія часто зображувала Руську Правду як інструмент "класового гноблення", акцентуючи на нерівності. Російська традиція намагалася вивести з неї витоки російського самодержавного права.
+- **Ukrainian reality**: Руська Правда демонструє глибоку інтеграцію в європейський правовий простір (подібність до Салічної правди) та відсутність інституціоналізованих тортур, характерних для пізнішої Московії (Судебники 1497/1550 рр.). Українська правова культура історично тяжіла до відновлювального правосуддя (компенсації), а не карального.
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| **Руська Правда** | "Русская Правда" (джерело права РФ) | "Руська Правда" (пам'ятка українського права, права Русі-України) |
+| **Віра (vira)** | Штраф на користь князя (державницький підхід) | Компенсація (спочатку роду, потім князю), елемент суспільного договору |
+| **Обіда (obida)** | Злочин проти держави/порядку | Кривда, порушення особистої честі та прав |
+
+## Section-Mapped Research Notes
+
+### Вступ: Концепція "Обіди"
+У давньоруському праві термін "обіда" (образа) покривав весь спектр правопорушень: від матеріальної шкоди до фізичного насилля та морального приниження. На відміну від сучасного розмежування (цивільне/кримінальне), для людини Русі це було єдине поле "кривди", що вимагало "відшкодування". Ключовий момент переходу: від "помсти" (кров за кров) до "віри" (грошової компенсації).
+
+### Типологія ударів: Граматика насилля
+Цей розділ фокусується на знаменитій статті про знаряддя побоїв. Лінгвістично це ідеальний матеріал для вивчення орудного відмінка (Instrumental Case).
+- Удар *мечем* (не оголеним) або *руків'ям* — образа честі воїна (12 грн).
+- Удар *чашею/рогом* — побутове/бенкетне насилля.
+- Удар *жердиною/палицею* — насилля у господарстві.
+Граматичний фокус: закінчення `-омъ`, `-емъ`, `-ью` (рукоятью).
+
+### Докази та Свідки: Процесуальні норми
+Розрізнення "явних" та "прихованих" слідів.
+- "Аще будеть кровав или синь надражен" (Якщо буде кривавий або синій [від синців]) — відок (свідок факту) не потрібен. Сам вигляд потерпілого є доказом.
+- Якщо слідів немає ("не будеть знамения") — потрібні свідки ("послухи").
+- Роль "випробування залізом" у складних справах (ордалії), хоча в контексті простих побоїв це рідкість.
+
+### Економіка Честі: Тіло як капітал
+Детальна шкала штрафів демонструє цінності суспільства.
+- Відрубана рука/нога/око/ніс — 20 гривень (піввіри). Це втрата працездатності.
+- Відрубаний палець — 3 гривні.
+- Удар (образа) — 12 гривень.
+- Пошкодження бороди/вуса — 12 гривень.
+Парадокс: образа честі коштує дорожче, ніж втрата пальця, і майже стільки ж, скільки втрата кінцівки (якщо врахувати додаткові виплати "лікареві"). Це свідчить про високий статус особистої гідності вільної людини.
+
+### Підсумок: Від Руської Правди до сьогодення
+Підсумовуємо еволюцію: Руська Правда -> Литовські Статути -> Гетьманське право. Тяглість традиції: українське право завжди зберігало елемент "відшкодування шкоди" та поваги до особи, на відміну від деспотичних систем Сходу. Порівняння лексики: давньоруське *каліцтво* -> сучасне *тілесне ушкодження*.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12707)
+✓ Message 12669 acknowledged
+✓ Message 12707 acknowledged

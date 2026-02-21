@@ -1,15 +1,16 @@
 {
-  "module": "03-reading-grammar-rules",
+  "module": "reading-grammar-rules",
   "level": "B1",
-  "plan_version": "1.0",
-  "last_audit": "2026-02-10T23:30:32.621592Z",
+  "plan_version": "2.0",
+  "last_audit": "2026-02-21T01:21:17.104474Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-01-27T15:24:10.349931Z",
-    "meta": "2026-02-07T10:03:51.664593Z",
-    "activities": "2026-02-07T10:03:51.708175Z",
-    "vocabulary": "2026-02-07T10:03:51.748482Z",
-    "plan": "2026-02-09T12:52:14.367203Z"
+    "md": "2026-02-21T01:19:09.298052Z",
+    "meta": "2026-02-20T01:10:55.296267Z",
+    "activities": "2026-02-21T01:19:08.452290Z",
+    "vocabulary": "2026-02-20T01:15:48.755429Z",
+    "plan": "2026-02-20T21:18:07.189152Z",
+    "research": "2026-02-20T01:10:55.291047Z"
   },
   "gates": {
     "meta": {
@@ -18,35 +19,46 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "3064/3000 (raw: 3837) | richness: 84% < 95% min (grammar)"
+      "status": "pass",
+      "violations": 0,
+      "message": "4556/4000 (raw: 4911)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "12/12"
+      "message": "7/4"
     },
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "88/20"
+      "message": "25/20"
     },
     "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "ipa": {
       "status": "pass",
       "violations": 0,
-      "message": "9/10 (High)"
+      "message": "Clean IPA"
+    },
+    "research": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Content aligned with research"
     },
     "review": {
-      "status": "skipped",
+      "status": "pass",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "fail",
+    "status": "pass",
     "blocking_issues": [],
-    "pass_count": 4,
-    "fail_count": 1
+    "pass_count": 7,
+    "fail_count": 0,
+    "deferred_count": 0
   }
 }

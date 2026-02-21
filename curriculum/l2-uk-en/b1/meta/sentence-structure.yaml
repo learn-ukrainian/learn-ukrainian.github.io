@@ -1,0 +1,71 @@
+slug: sentence-structure
+title: Структура речення
+word_target: 4000
+content_outline:
+- section: 'Вступ: Анатомія мови'
+  words: 300
+  points:
+  - 'Why we analyze sentences: seeing the skeleton of the language'
+  - 'Cultural hook: The ''Anatomy of Language'' concept in Ukrainian schools'
+  - 'English bridging: Explanation of why we are switching to Ukrainian terminology
+    for syntax'
+- section: 'Головні члени речення: Основа'
+  words: 500
+  points:
+  - 'Підмет (Subject): The actor or focus (underlined with one line)'
+  - 'Присудок (Predicate): The action or state (underlined with two lines)'
+  - 'The Grammatical Basis (Граматична основа): Subject + Predicate pair'
+  - 'Zero Subject (Pro-drop): When the ending tells the story (e.g., ''Працюю'' vs
+    ''Я працюю'')'
+- section: Другорядні члени речення
+  words: 600
+  points:
+  - 'Додаток (Object): Answering case questions (whom? what?) (dotted line)'
+  - 'Означення (Attribute): Describing qualities (which? whose?) (wavy line)'
+  - 'Обставина (Adverbial): Context of action (where? when? how?) (dot-dash line)'
+  - 'Visual guide: How to differentiate Object vs. Adverbial'
+- section: 'Типи речень: Прості та складні'
+  words: 400
+  points:
+  - 'Просте речення (Simple sentence): One grammatical basis'
+  - 'Складне речення (Complex sentence): Two or more bases'
+  - 'Common learner error: Confusing long simple sentences with complex ones'
+- section: Частини складного речення
+  words: 400
+  points:
+  - 'Головне речення (Main clause): The independent core'
+  - 'Підрядне речення (Subordinate clause): The dependent helper'
+  - 'Visualizing dependency: Parent and child relationship in syntax'
+- section: Сполучники та зв'язок
+  words: 350
+  points:
+  - 'Connecting the parts: Сполучники (Conjunctions)'
+  - Coordinating (і, а, але) vs. Subordinating (що, бо, коли)
+  - 'Usage examples: How the conjunction signals the clause type'
+- section: 'Пунктуація: Знаки зупинки'
+  words: 350
+  points:
+  - 'Кома (Comma): Separating clauses and homogeneous parts'
+  - Крапка (Period) and Знак питання (Question mark)
+  - 'Intonation cues: How punctuation reflects spoken rhythm'
+- section: 'Синтаксис у дії: Розбір'
+  words: 400
+  points:
+  - 'Step-by-step analysis: Breaking down a real B1 sentence'
+  - 'Algorithm for parsing: Find verb -> Find subject -> Find secondary parts'
+  - 'Inversion (Інверсія): When the order flips for emphasis'
+- section: 'Діалоги: Розбір польотів'
+  words: 400
+  points:
+  - 'Dialogue 1: Correcting a friend''s written mistake using terms'
+  - 'Dialogue 2: Discussing sentence variety (simple vs. complex)'
+  - 'Dialogue 3: School nostalgia - remembering the underlining rules'
+- section: Підсумок
+  words: 300
+  points:
+  - Recap of the visual system (lines/dashes)
+  - 'Self-assessment checklist: Can you identify the predicate?'
+  - 'Transition to next steps: Using this tool for complex grammar'
+naturalness:
+  score: 9.0
+  status: PASS

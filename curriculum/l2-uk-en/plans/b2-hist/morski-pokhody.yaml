@@ -1,4 +1,3 @@
----
 module: b2-hist-049
 level: B2-HIST
 sequence: 49
@@ -8,59 +7,77 @@ title: Морські походи козаків
 subtitle: Cossack Naval Expeditions
 content_outline:
 - section: 'Вступ: Чорне море як арена боротьби'
-  words: 432
   points:
-  - Ottoman dominance in the 16th-17th centuries
-  - The Black Sea as a 'Turkish Lake'
+  - Ottoman dominance in the 16th-17th centuries — control of food supply routes to
+    Istanbul
+  - The Black Sea as a 'Turkish Lake' — [!context] concept of Karadeniz as a closed
+    Ottoman internal sea
 - section: 'Козацька Чайка: Шедевр суднобудування'
-  words: 649
   points:
-  - Construction from a single trunk and reed belts
-  - Mobility, speed, and stealth
-  - Weaponry on board (falconets)
+  - Construction from a single trunk and reed belts — [!history-bite] fascines (bundles
+    of reeds) provided unsinkability and protection from bullets
+  - Mobility, speed, and stealth — low profile made them nearly invisible on water
+  - Weaponry on board (falconets) — 4-6 light cannons per boat; crew of 50-70 warrior-oarsmen
 - section: 'Стратегія та Тактика: Раптовість та зухвалість'
-  words: 649
   points:
-  - Night attacks and navigating the Dnieper rapids
-  - Open sea battles against heavy galleys
-  - Infiltration of the Bosphorus
+  - Night attacks and navigating the Dnieper rapids — use of compass and stars for
+    synchronized movement
+  - 'Open sea battles against heavy galleys — [!myth-buster] ''wolf pack'' tactics:
+    attacking from the sun to blind the enemy'
+  - Infiltration of the Bosphorus — burning suburbs of Istanbul (1615) within sight
+    of the Sultan's palace
+  - Double rudder technology — oars at bow and stern allowed instant reversal without
+    turning
 - section: 'Героїчна доба: Походи Петра Сагайдачного'
-  words: 757
   points:
-  - The taking of Caffa (1616) and freeing of captives
-  - Raids on Trebizond and Sinop
-  - Psychological shock for the Sultan
+  - The taking of Caffa (1616) and freeing of captives — destruction of the largest
+    slave market in Crimea
+  - Raids on Trebizond and Sinop — 1614 burning of the Ottoman fleet and arsenal
+  - Psychological shock for the Sultan — [!biography] Sahaidachny shifted tactics
+    from defense to preventive strikes
+  - Battle of Khotyn (1621) — naval raids distracted Ottoman fleet from supporting
+    land army
 - section: 'Життя на морі: Побут та випробування'
-  words: 432
   points:
-  - Discipline on the boat
-  - Navigation by the stars and coastlines
+  - 'Discipline on the boat — strict ban on alcohol during campaigns (penalty: thrown
+    overboard)'
+  - Navigation by the stars and coastlines — survival in storms and reliance on group
+    cohesion
 - section: 'Читання: Свідчення про козацький десант'
-  words: 324
   points:
-  - Account of the storming of an Ottoman coastal fortress
+  - Account of the storming of an Ottoman coastal fortress — focus on surprise and
+    musketry/boarding combat
+  - 'Quotes from ambassadors — [!quote] Thomas Roe (1623): ''Cossacks are more dangerous
+    than the mightiest enemies...'''
 - section: 'Первинні джерела: Листи та хроніки'
-  words: 324
   points:
-  - Excerpts from Beauplan and Ottoman chronicles
+  - Excerpts from Beauplan and Ottoman chronicles — Beauplan's 'Description of Ukraine'
+    on boat construction details
+  - Ottoman perspective — Evliya Celebi's prayers for salvation from 'Rus' wrath'
 - section: Деколонізаційний погляд
-  words: 433
   points:
-  - Ukraine as a naval power, not just a land-based one
-  - Freedom of the seas against imperial blockade
-word_target: 4000
+  - Ukraine as a naval power, not just a land-based one — [!decolonization] early
+    'thalassocracy' (sea power)
+  - Freedom of the seas against imperial blockade — Cossacks as an autonomous geopolitical
+    subject with independent foreign policy
 vocabulary_hints:
   required:
-  - чайка
-  - галера
-  - весло
-  - щогла
-  - якір
-  - десант
-  - абордаж
-  - Чорне море
-  - Кафа
-  - Стамбул
+  - чайка (seagull/boat) — [!history-bite] maneuverable landing craft, 'special forces'
+    of the sea
+  - галера (galley) — heavy Ottoman ships, vulnerable to swarm tactics
+  - весло (oar) — dual-purpose for rowing and steering
+  - щогла (mast) — collapsible for stealth
+  - якір (anchor) — essential for holding position
+  - десант (landing/descent) — surprise coastal attacks
+  - абордаж (boarding) — primary combat tactic after musket volley
+  - Чорне море (Black Sea) — contested space, formerly 'Turkish Lake'
+  - Кафа (Caffa/Feodosia) — key target in 1616, slave market
+  - Стамбул (Istanbul) — ultimate target of psychological warfare
+  recommended:
+  - фашини (fascines) — reed bundles for buoyancy and protection
+  - фальконет (falconet) — light cannon mounted on chajkas
+  - бранці (captives) — liberation of slaves as a legitimizing goal
+  - суднобудування (shipbuilding) — advanced engineering skills of Cossacks
 activity_hints:
 - type: reading
   focus: Linguistic analysis of naval descriptions
@@ -82,12 +99,16 @@ grammar:
 - Geographical descriptions and directions
 sources:
 - name: Naval Expeditions of Zaporozhian Cossacks
-  url: "https://history.org.ua/uk/lib/12345"
+  url: https://history.org.ua/uk/lib/12345
   type: academic
   notes: Detailed historical reconstruction
 - name: Guillaume de Beauplan - Description of Ukraine
-  url: "http://litopys.org.ua/boplan/bop.htm"
+  url: http://litopys.org.ua/boplan/bop.htm
   type: primary
   notes: Classic source on boat construction
 register: публіцистичний
-phase: "HIST.5 [Rise of Cossacks]"
+phase: HIST.5 [Rise of Cossacks]
+persona:
+  voice: Senior Professor of History
+  role: Chaika Captain
+word_target: 5000

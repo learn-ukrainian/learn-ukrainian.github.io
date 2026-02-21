@@ -1,4 +1,3 @@
----
 module: c1-hist-081
 level: c1-hist
 sequence: 81
@@ -10,15 +9,13 @@ objectives:
 - 'Analyze the causes and consequences of механізм кооптації: теоретична рамка'
 - Evaluate the historical significance of цикл, що повторюється
 content_outline:
-- section: "Вступ — Цикл, що повторюється"
-  words: 457
+- section: Вступ — Цикл, що повторюється
   subsections:
   - Що таке кооптація
   - Чому цикл
   - Російська специфіка
   - Структура модуля
 - section: Теоретична модель
-  words: 800
   subsections:
   - Підкуп — пропозиція привілеїв
   - Залежність — поступове обмеження
@@ -26,40 +23,34 @@ content_outline:
   - Знищення — ліквідація автономії
   - BBBB — Bribe, Bind, Betray, Burn
 - section: Порівняння з іншими імперіями
-  words: 686
   subsections:
   - Британська модель — непряме управління
   - Французька — асиміляція
   - Російська — кооптація + знищення
   - Чому різні підходи
 - section: Механізми кооптації
-  words: 686
   subsections:
   - Еліти — титули, землі, гроші
   - Обіцянки — автономія, права
   - Залежність — економічна, військова
   - Точка неповернення
 - section: Механізми знищення
-  words: 571
   subsections:
   - Скасування — юридичне
   - Репресії — фізичне
   - Перейменування — символічне
   - Забуття — історичне
 - section: Чому цикл повторюється
-  words: 457
   subsections:
   - Надія на «цього разу інакше»
   - Відсутність альтернатив
   - Коротка пам'ять
   - Як розірвати цикл
 - section: Підсумок
-  words: 343
   subsections:
   - Кооптація — імперський інструмент
   - Український досвід
   - Застосування до конкретних випадків
-word_target: 4000
 vocabulary:
 - кооптація
 - цикл
@@ -80,7 +71,7 @@ activities:
 - type: critical-analysis
   focus: Build co-optation cycle model
 - type: comparative-study
-  focus: "Russian vs. other empires — co-optation methods"
+  focus: Russian vs. other empires — co-optation methods
 - type: critical-analysis
   focus: How each stage of the cycle works
 - type: critical-analysis
@@ -89,15 +80,15 @@ activities:
   focus: Чому російська імперія використовувала кооптацію, а не асиміляцію?
 sources:
 - name: Кооптація (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Кооптація"
+  url: https://uk.wikipedia.org/wiki/Кооптація
   type: reference
   notes: General concept
 - name: Російський імперіалізм (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Російський_імперіалізм"
+  url: https://uk.wikipedia.org/wiki/Російський_імперіалізм
   type: reference
   notes: Imperial patterns
 - name: Колоніальна політика (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Колоніальна_політика"
+  url: https://uk.wikipedia.org/wiki/Колоніальна_політика
   type: reference
   notes: Colonial patterns
 vocabulary_hints:
@@ -116,7 +107,9 @@ activity_hints:
   items: 4
 - type: essay-response
   focus: Критичний аналіз
-  word_target: 300
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Political Sociologist

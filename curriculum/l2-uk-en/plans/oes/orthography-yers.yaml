@@ -1,4 +1,3 @@
----
 sequence: 3
 module: oes-003
 module_number: 3
@@ -9,7 +8,6 @@ phase: 1
 phase_id: vernacular-foundations
 phase_name: Vernacular Foundations
 focus: Why we write ъ/ь and where they went
-word_target: 4000
 content_outline:
 - section: Вступ
   description: Introduction to Orthography & The Yers
@@ -24,3 +22,6 @@ activity_types:
 - transcription
 - etymology-trace
 - grammar-identify
+persona:
+  voice: Senior Paleographer
+  role: Manuscript Restorer

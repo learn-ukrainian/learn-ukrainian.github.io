@@ -1,0 +1,273 @@
+✅ Message sent to Gemini (ID: 10591) [auto-acked: self-addressed]
+✓ Message 10591 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10591...
+📨 Message #10591
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-synonyms-place
+   Time: 2026-02-20T20:43:46.378346+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b2-62
+level: B2
+sequence: 62
+slug: synonyms-place
+version: '2.0'
+title: 'Синоніми: Місце та Простір'
+subtitle: Synonyms - Place and Space
+content_outline:
+- section: Розминка — Де і куди?
+  points:
+  - Статичне положення (тут, там) vs напрямок (туди, звідти)
+  - Зменшувальні форми (тутечки, тамтечки) — розмовний стиль
+  - Офіційні вирази місця (на цьому місці, у даному випадку)
+- section: Here
+  points:
+  - тут (here - neutral)
+  - тутечки (here - diminutive/colloquial)
+  - ось тут (right here - emphatic)
+  - на цьому місці (at this place - formal)
+- section: There
+  points:
+  - там (there - neutral)
+  - он там (over there - pointing)
+  - туди (to there - direction)
+  - звідти (from there - origin)
+- section: Практика — просторовий опис
+  points:
+  - Обрати прислівник місця відповідно до контексту
+  - Написати опис маршруту з різними просторовими словами
+  - Порівняти опис місця в офіційному та розмовному стилях
+  - Зв'язок з M35 (назви місць) — комплексний опис локації
+focus: phraseology
+pedagogy: CBI
+objectives:
+- Учень може розрізняти відтінки значень синонімів на позначення місця (тут, тутечки,
+  на цьому місці)
+- Учень вміє використовувати лексику простору для опису географічних та міських локацій
+- Учень розуміє різницю між статичним положенням та напрямком руху
+grammar:
+- Adverbs of place
+- Locative prepositions and distance
+immersion: 100
+register: публіцистичний
+phase: B2.2 [Phraseology & Synonymy]
+vocabulary_hints:
+  required:
+  - синонім (synonym)
+  - вираз (expression)
+  - значення (meaning)
+  - контекст (context)
+  recommended:
+  - переносне значення (figurative meaning)
+  - стилістичне забарвлення (stylistic coloring)
+activity_hints:
+- type: reading
+  focus: Контекстне використання
+  items: 4
+- type: fill-in-the-blank
+  focus: Практичне застосування
+  items: 10
+- type: true-false
+  focus: Розуміння значень
+  items: 8
+persona:
+  voice: Professional Language Coach
+  role: Urban Planner (Урбаніст)
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Синоніми: Місце та Простір
+
+## State Standard Reference
+§4.4.1.2: "синоніми; зменшувально-пестливі форми: вулиця – вуличка..."
+§3.15: "Місця: тип місцевості та розташування на ній об’єктів; інституції та громадські місця..."
+§4.1.2.6: "Місцевий відмінок... місце перебування особи чи розташування предмета"
+Alignment: Module expands lexical stylistics (diminutives/synonyms) for spatial description and refines Locative usage.
+
+## Vocabulary Frequency & Usage
+| Word | Nuance/Usage | Key Collocations |
+|------|--------------|------------------|
+| **Тут** | Neutral, static location (Where?) | Я тут; тут і там; саме тут |
+| **Сюди** | Dynamic direction (Where to?) | Йди сюди; давай сюди; переїхати сюди |
+| **Тутечки** | Colloquial, affectionate, cozy | Ми тутечки сидимо; ой, як гарно тутечки |
+| **Ось тут** | Emphatic, pointing (Right here) | Підпишіть ось тут; стійте ось тут |
+| **Там** | Neutral, static location (There) | Він там живе; десь там |
+| **Туди** | Dynamic direction (There/Thither) | Не йди туди; подивись туди |
+| **Тамтечки** | Colloquial, distant but specific | А ми тамтечки гуляли |
+| **Онде / Он там** | Visual pointing (Over there) | Дивись, онде ліс; он там далеко |
+
+## Cultural Hooks
+1.  **Магія порогу (The Threshold Magic)**: In Ukrainian culture, the threshold (*поріг*) is the sacred boundary between the safe "inner" world (home) and the dangerous "outer" world. It is strictly forbidden to greet, say goodbye, or pass objects across the threshold («не вітатися через поріг»), as it severs connections and invites bad luck.
+2.  **Тутешній (The Local)**: The concept of being *тутешній* (from here) implies deep belonging and connection to the land/community, contrasting with *приїжджій* (newcomer). In villages, families are remembered as *тутешні* for generations.
+
+## Common Learner Errors
+1.  **Static vs. Dynamic Confusion**: Using *тут* instead of *сюди* (e.g., *"Come here"* -> *"Йди тут"* ❌ instead of *"Йди сюди"* ✅).
+2.  **Register Mismatch**: Using *тутечки* in formal contexts (e.g., in a business document) or *на цьому місці* in casual conversation.
+3.  **Pointing vs. Location**: Using *тут* when pointing visually requires *ось тут* (right here) or *он там* (over there, visible).
+
+## Cross-References
+- Builds on: M35 (Names of Places), A1/A2 Locative Case basics.
+- Prepares for: C1 Stylistics (Spatial metaphors), C1-BIO (Descriptions of historical sites).
+
+## Notes for Content Writing
+- **Critical Addition**: The plan focuses on "Here/There", but the research confirms that differentiating **Static (*Тут/Там*)** vs **Dynamic (*Сюди/Туди*)** is the #1 learner hurdle. Ensure *Сюди* is explicitly taught alongside *Тут*, even if not in the original brief.
+- **Stylistic Contrast**: Juxtapose "Official Urban Planner" language (*розташований на цій ділянці*) with "Cozy Neighbor" language (*ми тутечки живемо*).
+- **Agency**: Ensure examples show people *interacting* with space (we built, we walked), not just static existence.
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Світ як простір (Introduction: World as Space)"
+  words: 600
+  points:
+  - "Вступне слово від імені урбаніста: як мова структурує міське середовище та межі громадського простору."
+  - "Культурний концепт «тутешній» (local) як символ глибокої приналежності до спільноти та землі, на противагу терміну «приїжджій»."
+  - "Відповідність Державному стандарту (§3.15): опис типів місцевості та розташування об’єктів за допомогою точних просторових прислівників."
+- section: "Тут чи сюди? Статика та рух (Here or Hither? Statics and Movement)"
+  words: 900
+  points:
+  - "Розмежування статичного положення (тут) та динамічного напрямку (сюди) — подолання типової помилки «Йди тут» замість правильного «Йди сюди»."
+  - "Вживання прислівника «тут» у нейтральних контекстах та офіційних виразах урбаністики (наприклад, «розташований тут»)."
+  - "Стійкі словосполучення для опису динаміки: «давай сюди», «переїхати сюди», «сюди-туди»."
+- section: "Тутечки та ось тут: Близькість і стиль (Tuitechky and Axis Tut: Proximity and Style)"
+  words: 800
+  points:
+  - "Стилістичний контраст між зменшувально-пестливим «тутечки» (розмовний стиль, затишок) та офіційним «на цьому місці» (публіцистичний/діловий стиль)."
+  - "Використання емфатичного «ось тут» для точного візуального вказування (pointing) під час підписання документів або позначення локації на мапі."
+  - "Дослідження §4.4.1.2: роль зменшувальних форм у наданні мовленню емоційного забарвлення в описі рідних місць."
+- section: "Там, туди, онде: Далечінь та орієнтири (There, Thither, Over There: Distance and Landmarks)"
+  words: 900
+  points:
+  - "Тріада далекого простору: нейтральне «там» (статичне), цілеспрямоване «туди» (динамічне) та вказівне «онде/он там» (для видимих об'єктів)."
+  - "Опис маршрутів та міської інфраструктури з використанням орієнтирів: «дивіться онде», «не йдіть туди», «він там живе»."
+  - "Відтінки значення «тамтечки» як розмовного варіанту для опису специфічного, але віддаленого місця."
+- section: "Поріг як межа: Від магії до урбаністики (Threshold as Boundary: From Magic to Urbanism)"
+  words: 800
+  points:
+  - "Культурна антропологія: «Магія порогу» як сакральної межі між безпечним «тут» (дім) та невідомим «там» (зовнішній світ)."
+  - "Заборона вітатися через поріг: зв'язок мовних табу з просторовим сприйняттям українців."
+  - "Підсумок: синтез синонімів для професійного опису міських локацій, поєднання офіційної термінології урбаніста з культурним контекстом (Ref. M35)."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "тут (here) — neutral, static location; used for general spatial presence"
+  - "сюди (here/hither) — dynamic direction; vital for verbs of movement (йди сюди)"
+  - "там (there) — static location far from the speaker; neutral register"
+  - "туди (there/thither) — movement away from the speaker; dynamic direction"
+  - "тутешній (local) — implies a person is from 'here', deeply connected to the community"
+  recommended:
+  - "тутечки (here) — colloquial/diminutive; adds coziness or affection to a location"
+  - "тамтечки (there) — colloquial; refers to a distant but specific and familiar place"
+  - "ось тут (right here) — emphatic pointing; used for precise location identification"
+  - "онде / он там (over there) — visual pointing at a distance; refers to visible objects"
+  - "поріг (threshold) — cultural boundary between domestic and external space; sacred barrier"
+  - "на цьому місці (at this place) — formal publicistic expression used in reports and official descriptions"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (3628 chars)
+✅ Message sent to Claude (ID: 10598)
+✓ Message 10598 acknowledged
+   Auto-acknowledged reply #10598 (stdout delivery — no inbox accumulation)
+✓ Message 10591 acknowledged

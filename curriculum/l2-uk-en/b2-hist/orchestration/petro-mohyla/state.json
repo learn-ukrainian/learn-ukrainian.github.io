@@ -1,0 +1,14 @@
+{
+  "slug": "petro-mohyla",
+  "track": "b2-hist",
+  "module_num": 35,
+  "mode": "e2e",
+  "phases": {
+    "0": {
+      "status": "complete",
+      "timestamp": "2026-02-19T11:22:14Z",
+      "task_id": "yw-petro-mohyla-p0"
+    }
+  },
+  "last_updated": "2026-02-19T11:22:14Z"
+}

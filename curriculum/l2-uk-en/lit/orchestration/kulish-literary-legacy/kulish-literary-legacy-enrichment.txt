@@ -1,0 +1,254 @@
+✅ Message sent to Gemini (ID: 11957) [auto-acked: self-addressed]
+✓ Message 11957 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #11957...
+📨 Message #11957
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-kulish-literary-legacy
+   Time: 2026-02-20T23:34:58.416978+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 21
+module: lit-21
+level: LIT
+slug: kulish-literary-legacy
+version: '2.0'
+title: Kulish Literary Legacy
+subtitle: Kulish Literary Legacy
+content_outline:
+- section: Вступ та контекст
+  points: []
+- section: Аналіз ключових творів
+  points: []
+- section: Стилістика та мова автора
+  points: []
+- section: Деколонізаційна перспектива
+  points:
+  - Як цей автор руйнує імперські міфи
+  - Українська суб'єктність у тексті
+- section: Підсумок та спадщина
+  points: []
+vocabulary_hints:
+  required:
+  - історіографія
+  - наратив
+  - суб'єктність
+  recommended:
+  - деколонізація
+activity_hints:
+- type: reading
+  focus: Аналіз першоджерела
+- type: essay-response
+  focus: Критичне есе
+- type: critical-analysis
+  focus: Деконструкція тексту
+focus: literature
+pedagogy: literature
+immersion: 100% Ukrainian
+phase: LIT Expansion
+objectives:
+- Проаналізувати творчість Kulish Literary Legacy у контексті української літератури
+- Дослідити вплив автора на формування національної ідентичності
+persona:
+  voice: Senior Philologist & Critic
+  role: Literary Executor
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Kulish Literary Legacy
+
+## Використані джерела
+1. [Енциклопедія історії України (history.org.ua)](http://resource.history.org.ua/cgi-bin/eiu/history.exe?Z21ID=&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Kulish_P_O) — Аналіз ролі Пантелеймона Куліша в українському національному відродженні XIX ст., еволюція його поглядів.
+2. [Енциклопедія сучасної України (esu.com.ua)](https://esu.com.ua/article-51404) — Огляд літературної, перекладацької, публіцистичної та видавничої спадщини Куліша.
+3. [Ізборник (litopys.org.ua)](http://litopys.org.ua/kulish/kul.htm) — Доступ до першоджерел, зокрема тексту "Чорної ради", поезій та історичних праць П. Куліша.
+
+## Хронологія
+- 1819: Народження Пантелеймона Куліша у містечку Вороніж на Сумщині в родині з козацьким корінням.
+- 1847: Арешт за участь у Кирило-Мефодіївському братстві (авторство "Повісті про український народ"), ув'язнення та заслання до Тули.
+- 1857: Публікація першого українського історичного роману «Чорна рада. Хроніка 1663 року».
+- 1857: Видання «Граматки», в якій вперше системно застосовано новий український фонетичний правопис — «кулішівку».
+- 1861–1862: Роль ідеолога та активна участь у виданні першого українського суспільно-політичного та літературного журналу «Основа».
+- 1897: Смерть Пантелеймона Куліша на хуторі Мотронівка (Оленівка).
+- 1903: Посмертне видання у Відні повного перекладу Біблії українською мовою (здійснено разом з І. Нечуєм-Левицьким та І. Пулюєм).
+
+## Ключові факти та цитати
+- Куліш здійснив монументальну працю: переклав українською мовою Біблію, а також твори В. Шекспіра, Дж. Байрона, Й. В. Гете. Це вивело українську мову з виключно етнографічного вжитку на європейський рівень абстрактного мислення.
+- Цитата з "Чорної ради": «Лучче нам порубатись, аніж податись!» (як вираження нескореності козацького духу та готовності до боротьби за ідеали).
+- Цитата щодо значення мови: «Слово — то мудрості промінь, слово — то думка людська».
+- У своїй "хуторянській філософії" Куліш ідеалізував патріархальне сільське життя як джерело високої моралі, індивідуалізму та антитезу бездушному імперському місту. Це стало основою раннього українського консерватизму.
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ та контекст: Формування світогляду П. Куліша": `[!history-bite]` — Пантелеймон Куліш не лише писав твори, а й самостійно розробив першу українську фонетичну абетку («кулішівку»), що лягла в основу сучасного вітчизняного правопису.
+- Section "Аналіз ключових творів: «Чорна рада» — перший історичний роман": `[!context]` — «Чорна рада» створювалась під ідейним впливом романів Вальтера Скотта, але базувалась на автентичному козацькому матеріалі, розпочавши епоху європейської історичної прози в Україні.
+- Section "Аналіз ключових творів: Перекладацька діяльність та Біблія": `[!culture]` — Переклад Біблії був не просто релігійним, а й геополітичним актом: Куліш довів, що українська мова здатна передавати найскладніші теологічні концепції.
+- Section "Деколонізаційна перспектива: Українська суб'єктність та державницький консерватизм": `[!myth-buster]` — Радянська пропаганда десятиліттями таврувала Куліша як "реакціонера" та "буржуазного націоналіста" саме через його критику руйнівних стихійних бунтів (гайдамаччини) і заклик до елітарної розбудови інституцій.
+- Section "Підсумок та спадщина: Вплив Пантелеймона Куліша на націєтворення": `[!decolonization]` — Куліш свідомо відкинув образ українця як веселого простакуватого селянина («котляревщину») і першим почав творити образ українського інтелектуала європейського зразка.
+
+## Деколонізаційний контекст
+- **Imperial/Soviet myth**: П. Куліш — це непослідовний, консервативний реакціонер, який вороже ставився до "народних мас" (бо засуджував гайдамаччину і козацькі бунти) і зраджував ідеали революційної демократії (на противагу спрощеному образу Т. Шевченка). Пізні його російськомовні історичні праці намагалися використати як доказ його москвофільства.
+- **Ukrainian reality**: Куліш був потужним фундатором модерної української ідентичності. Його консерватизм мав західноєвропейський характер: він розумів, що суб'єктна нація будується не через криваві стихійні бунти, а через системні інституції — мову, високу літературу, переклади класики та Біблії. Він заклав міцну інфраструктуру української культури, створивши фундамент для її подальшої політичної незалежності.
+
+## Contested Terms (if applicable)
+| Concept | Imperial/Soviet framing | Ukrainian (decolonized) framing |
+|---------|-----------------|-------------------------------|
+| "Чорна рада" 1663 року | Хаос і "руїна" як доказ історичної нездатності українців до самоврядування, обґрунтування необхідності російської "сильної руки". | Складна політична боротьба, де демократичні традиції зіткнулися з руйнівним соціальним популізмом (І. Брюховецький), що призвело до знищення державницької еліти (Я. Сомко). |
+| Кулішівка | Штучний "сепаратистський" правопис, покликаний розірвати "історичну єдність" малоросійського наріччя з російською мовою. | Акт мовного та культурного суверенітету; перший фонетичний правопис, що закріпив самостійність української мови. |
+| "Культурництво" Куліша | "Реакційна" позиція, відмова від класової боротьби та прогресивної соціалістичної революції. | Державницький консерватизм; глибоке розуміння, що європеїзація та культурна розбудова є передумовою виживання нації. |
+
+## Section-Mapped Research Notes
+
+### Вступ та контекст: Формування світогляду П. Куліша
+- Ранні роки на Сумщині (Вороніж), виховання в дусі козацьких переказів, що заклало інтерес до минулого.
+- Роль Київського університету та вплив Михайла Максимовича на формування історичної свідомості письменника.
+- Раннє усвідомлення необхідності переведення української культури з вузького етнографічного формату у високий інтелектуальний вимір.
+
+### Вступ та контекст: Кирило-Мефодіївське братство та арешт
+- Ідеологічна роль Куліша в Братстві (написання "Повісті про український народ" та інших програмних текстів).
+- Арешт 1847 року, важкі роки ув'язнення та заслання до Тули (де він вивчав європейські мови).
+- Світоглядна еволюція: переоцінка радикальних революційних методів боротьби на користь наполегливої, системної культурницької роботи.
+
+### Аналіз ключових творів: «Чорна рада» — перший історичний роман
+- Рецепція традицій європейського романтизму (зокрема, вплив Вальтера Скотта) та їх органічна адаптація до українських реалій.
+- Метафоричний вимір подій Ніжинської ради 1663 року: глибокий соціально-політичний конфлікт між державотворчою елітою та руйнівними масами.
+- Образ Якима Сомка як втілення державницького консерватизму та елітаризму; Іван Брюховецький як уособлення згубного соціального популізму.
+
+### Аналіз ключових творів: Поетична спадщина («Досвітки», «Дзвін»)
+- Збірки «Досвітки», «Дзвін», «Хуторна поезія» як новаторські зразки філософської та інтелектуальної лірики в українській літературі.
+- Рішучий відхід від виключно селянської тематики; фокус на універсальних філософських та етичних питаннях.
+- Формування образу поета-громадянина і мислителя, що несе моральну відповідальність за пробудження своєї нації.
+
+### Аналіз ключових творів: Перекладацька діяльність та Біблія
+- Величезне значення перекладів В. Шекспіра, Дж. Байрона, Й. В. Гете для повноцінного включення України в європейський культурний контекст.
+- Монументальна багаторічна праця над створенням першого повного україномовного перекладу Біблії (у співпраці з І. Пулюєм та І. Нечуєм-Левицьким).
+- Роль перекладу Святого Письма у сакралізації та найвищій легітимізації української мови.
+
+### Стилістика та мова автора: Кулішівка як акт мовного суверенітету
+- Розробка та впровадження першого фонетичного правопису («Граматка», 1857 рік).
+- Радикальний розрив візуального та етимологічного зв'язку українських текстів з російською мовною традицією.
+- Визначальний вплив кулішівки на подальшу стандартизацію друкованого слова і формування сучасної української абетки.
+
+### Стилістика та мова автора: Європеїзація української літературної мови
+- Цілеспрямована робота автора над збагаченням українського словника абстрактною, науковою, політичною та філософською термінологією.
+- Послідовна боротьба з «котляревщиною» як єдиним можливим (бурлескно-побутовим) стилем для українського письменства.
+- Широкий стилістичний діапазон Куліша: від тонкого розуміння фольклорної поетики до високого академічного регістру.
+
+### Деколонізаційна перспектива: Руйнування імперських міфів про «провінційність»
+- Культурна та інфраструктурна діяльність П. Куліша як прямий виклик і спротив Валуєвському циркуляру (1863) та Емському указу (1876).
+- Практичне доведення самодостатності української культури та її абсолютної рівноправності серед європейських націй.
+- Остаточне відкидання ролі безголосого «молодшого брата» в імперському літературному та історичному процесі.
+
+### Деколонізаційна перспектива: Українська суб'єктність та державницький консерватизм
+- Створення концепції «хутора» як осередку національного збереження, моральної чистоти, індивідуалізму та духовної аристократії.
+- Гостра критика гайдамаччини та стихійних повстань; свідомий вибір на користь елітарної розбудови інституцій.
+- Творення модерної політичної нації через тривале просвітництво як єдина життєздатна альтернатива руйнівному соціальному хаосу.
+
+### Підсумок та спадщина: Вплив Пантелеймона Куліша на націєтворення
+- Підсумкова об'єктивна оцінка П. Куліша як будівничого базової національної культурної та мовної інфраструктури.
+- Деконструкція радянського міфу про Куліша як «реакціонера» та його заслужене повернення до пантеону найвпливовіших українських націєтворців.
+- Висока актуальність інтелектуального, консервативного та європоцентричного підходу Куліша для сучасних процесів деколонізації.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12020)
+✓ Message 11957 acknowledged
+✓ Message 12020 acknowledged

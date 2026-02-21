@@ -1,79 +1,34 @@
-# Research: Aspect in Future Tense (B1 M09)
+# Дослідження: Вид у майбутньому часі
 
-**Module**: B1 M09 "Вид у майбутньому часі"
-**Level**: B1 (Intermediate) - *Note: Task prompt incorrectly listed A1; content aligns with B1 plan.*
+## State Standard Reference
+§4.2.3.1: "дієвідмінювання дієслів недоконаного виду в майбутньому часі – складена форма: буду боротися... синтетична форма: боротимуся... дієвідмінювання дієслів доконаного виду в майбутньому часі: скажу, закричите, поборють."
+Alignment: This module directly teaches the three mandatory forms of the future tense (compound, synthetic, perfective) required by the standard.
 
-## 1. Grammar: State Standard 2024 Reference
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| збиратися | High (Spoken) | збиратися зробити, збиратися в дорогу |
+| планувати | Medium (General) | планувати відпустку, планувати зустріч |
+| мати намір | Medium (Formal) | мати серйозний намір, мати намір вступити |
+| сподіватися | High (General) | сподіватися на краще, сподіватися, що... |
+| обіцяти | High (General) | обіцяти виконати, обіцяти підтримку |
+| гадати | Medium (Spoken) | гадати, що... (to suppose/think) |
+| майбутнє | High (General) | у майбутньому, світле майбутнє |
 
-**Source**: *Державний стандарт української мови як іноземної (Redaction 2024, Approved Aug 29, 2024).*
+## Cultural Hooks
+1. **"Не кажи гоп, поки не перескочиш"** (Don't say hop until you've jumped) — The ultimate Ukrainian proverb about future plans. Culturally, Ukrainians can be superstitious about announcing success before it happens.
+2. **"Сплюнь і постучи по дереву"** (Spit and knock on wood) — A common ritual when discussing good future plans to avoid the "evil eye" or jinxing it.
+3. **Leaving home superstitions** — If you leave to execute a plan and have to return for a forgotten item, look in a mirror to "reset" luck, otherwise the plan might fail.
 
-**Relevant Section**: **Морфологія. Дієслово.** (Morphology. Verb.)
-*   **Subsection**: Часи дієслова (Verb Tenses) -> Майбутній час (Future Tense).
-*   **Standard Requirement (B1 Level)**:
-    *   The standard explicitly requires mastery of the **aspectual system** in the future tense.
-    *   Differentiation between **Imperfective Future** (Process/Repetition) and **Perfective Future** (Result/Single Act).
-    *   Formation of Imperfective Future in two ways:
-        1.  **Analytic (Складена)**: *бути* + Infinitive (e.g., *буду читати*).
-        2.  **Synthetic (Синтетична)**: Infinitive + endings *-му, -меш, -ме* (e.g., *читатиму*).
-    *   Formation of Perfective Future: Simple conjugation (e.g., *прочитаю*).
+## Common Learner Errors
+1. **Confusing Aspect** → *Я буду прочитати* (Mixing auxiliary *буду* with perfective infinitive) — Learners try to apply the "will" logic to perfective verbs.
+2. **Ignoring Synthetic Form** → Overuse of *буду робити* and avoidance of *робитиму* — Learners find the analytic form easier, but the synthetic form is stylistically important for B1+.
+3. **Present vs Future Perfective** → Using perfective in present meaning (*Я зроблю зараз* instead of *Я роблю зараз*) — Misunderstanding that perfective non-past form *is* the future.
 
-## 2. Vocabulary Frequency
+## Cross-References
+- **Builds on**: b1-06 (Aspect intro), b1-07/08 (Past aspect patterns) — relies on understanding the perfective/imperfective split.
+- **Prepares for**: b1-10 (Negation in future), b1-11 (Imperatives) — essential for forming commands and prohibitions later.
 
-**High Frequency (Core A1/A2 Review -> B1 Usage)**:
-*   **бути** (to be) - Essential auxiliary for compound future. Top 10 frequency.
-*   **завтра** (tomorrow) - Common time marker.
-*   **скоро** (soon) - Common time marker.
-*   **потім** (then/later) - Sequencing events.
-
-**Medium Frequency (B1 Target)**:
-*   **планувати** (to plan) - Key for discussing future intentions.
-*   **мріяти** (to dream) - Often used with imperfective future.
-*   **сподіватися** (to hope) - Expressing future uncertainty.
-*   **обіцяти** (to promise) - Often uses perfective (commitment to result).
-*   **збиратися** (to be going to) - Near future intention.
-
-**Grammar Terminology (for passive understanding)**:
-*   *Майбутній час* (Future tense)
-*   *Недоконаний/Доконаний вид* (Imperfective/Perfective aspect)
-
-## 3. Cultural Hook
-
-**The "Optimistic" Synthetic Form (-тиму)**:
-*   **Fact**: The synthetic future form (e.g., *робитиму*, *житиму*) is a unique feature of Ukrainian compared to neighboring East Slavic languages (Russian lacks it entirely; Belarusian has a trace but uses it differently).
-*   **Vibe**: Stylistically, the synthetic form is often perceived as more **dynamic, poetic, and energetic** than the analytic *буду + infinitive*.
-*   **Literature**: In Ukrainian poetry and literature (e.g., Shevchenko, Franko), the synthetic form is frequently used to express **determination** or solemn promises (*Я буду* implies existence; *Я житиму* implies active living).
-*   **Usage**: While interchangeable with the analytic form in daily speech, using the synthetic form can make a speaker sound more "authentically Ukrainian" and linguistically sophisticated.
-
-## 4. Pedagogical Notes
-
-**Key Differences from English**:
-*   **Aspect is king**: English uses "will" vs "going to" vs "present continuous". Ukrainian uses Aspect. "I will read" can be *буду читати* (process) or *прочитаю* (completion).
-*   **Two Imperfectives**: English has no equivalent for the choice between *буду читати* and *читатиму*.
-    *   *Teaching Tip*: Treat them as synonyms, but encourage *budu* for beginners and *-tymu* for flow/conciseness.
-
-**Common Learner Errors**:
-*   **The "Double Future" Trap**: Trying to say "I will read" (perfective) as *буду прочитати*.
-    *   *Rule*: NEVER use *буду* with perfective verbs. *Буду* + Infinitive is ONLY for Imperfective.
-*   **Aspect Confusion**: Using *я буду дзвонити* (I will be calling) when they mean *я подзвоню* (I will call/make the call).
-*   **Conjugation of Synthetic**: Forgetting that the endings (-му, -меш) attach to the **infinitive**, not the stem. (Correct: *писа-ти-му*; Incorrect: *пиш-у-му*).
-
-**Teaching Sequence**:
-1.  Review Aspect concept (Process vs Result).
-2.  Introduce Perfective Future (Simple conjugation - link to Present tense endings).
-3.  Introduce Imperfective Analytic (*буду* + Inf - easiest for English speakers).
-4.  Introduce Imperfective Synthetic (*-тиму* - "Level Up" your Ukrainian).
-5.  Drill: *Буду робити* = *Робитиму*. *Зроблю* = Result.
-
-## 5. Scope Boundaries
-
-**IN SCOPE (B1)**:
-*   Formation of all three future types: Analytic Imperfective, Synthetic Imperfective, Simple Perfective.
-*   Basic Aspect patterns: Process vs. Result in the future.
-*   Time markers: *завтра, післязавтра, через тиждень, наступного року*.
-*   Modal verbs with future meaning: *могтиму, хотітиму*.
-
-**OUT OF SCOPE (Save for B2/C1)**:
-*   Complex conditional sentences (Future-in-the-past).
-*   Archaic/Dialect future forms.
-*   Nuanced stylistic shifts between analytic/synthetic in obscure contexts (treat as synonymous for now).
-*   Rare perfective aspects formed by stem shifting only (focus on prefixation).
+## Notes for Content Writing
+- **Stylistic Balance**: Ensure the **synthetic form** (-тиму) is presented as a fully equal alternative to the compound form, not just a "literary" variant. It is standard in modern Ukrainian.
+- **Immersion**: Explain the logic of "Perfective Future = Simple Future" carefully in Ukrainian. It's a concept shift for English speakers (Future is form, Aspect is meaning).

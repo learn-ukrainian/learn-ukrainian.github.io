@@ -1,0 +1,336 @@
+✅ Message sent to Gemini (ID: 10643) [auto-acked: self-addressed]
+✓ Message 10643 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10643...
+📨 Message #10643
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-professional-reports-advanced
+   Time: 2026-02-20T20:46:32.733176+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b2-88
+level: B2
+sequence: 88
+slug: professional-reports-advanced
+version: '2.0'
+title: 'Професійні звіти: Поглиблення'
+subtitle: Advanced analytical reports and presentation
+content_outline:
+- section: Вступ
+  points:
+  - 'Перехід від базової звітності (М87) до аналітичної роботи — content writing note:
+    будується на знаннях з М87'
+  - 'Роль аналітичних звітів у стратегічному плануванні компанії — alignment: реалізація
+    Держстандарту §1.3.2 (створення складних професійних текстів)'
+  - 'Відмінність між описовим та аналітичним звітом — content writing note: чітко
+    розмежувати «що сталося» (опис) та «чому це сталося» (аналіз)'
+  - Критичне мислення в інтерпретації даних
+  - Зв'язок звіту з презентацією результатів керівництву
+- section: Імерсивна розповідь
+  subsections:
+  - name: Багатоджерельний аналіз
+    points:
+    - 'Інтеграція даних з різних джерел: фінансові, маркетингові, операційні'
+    - Узгодження методологій при зведенні даних
+    - Виявлення протиріч між джерелами та їх пояснення
+    - 'Вагування надійності джерел: первинні vs вторинні'
+    - Тріангуляція даних для підвищення об'єктивності
+  - name: Складна візуалізація та інтерпретація
+    points:
+    - 'Поєднані графіки: dual-axis charts, комбіновані діаграми'
+    - Теплові карти та scatter plots для багатовимірних даних
+    - 'Dashboard-підхід: панель показників для керівників'
+    - 'Інтерпретація кореляцій: коли зв''язок стає причинністю'
+    - 'Візуалізація невизначеності: довірчі інтервали, похибки'
+  - name: Хеджування та обережна мова
+    points:
+    - 'Модальність у висновках: може, ймовірно, можливо'
+    - 'Обмежувальні конструкції: за наявних даних, за умови'
+    - Уникання категоричних тверджень без повних доказів
+    - Визнання альтернативних інтерпретацій
+    - Професійна відповідальність за прогнози та рекомендації
+  - name: Усна презентація звіту
+    points:
+    - 'Структура презентації: executive summary → ключові знахідки → Q&A'
+    - Адаптація складності до аудиторії (технічна vs нетехнічна)
+    - Підготовка до критичних запитань від керівництва
+    - 'Візуальна підтримка: слайди як доповнення, не заміна мовлення'
+    - 'Управління часом: 5-хв vs 30-хв презентація'
+  points: []
+- section: Аналіз
+  subsections:
+  - name: Критична оцінка звітів
+    points:
+    - Критерії якісного аналітичного звіту - чіткість, обґрунтованість, об'єктивність
+    - Виявлення логічних помилок - хибна кореляція, вибіркове використання даних
+    - Оцінка надійності методології - розмір вибірки, репрезентативність
+    - Перевірка висновків на відповідність даним у тексті
+    - Ідентифікація упереджень автора та конфліктів інтересів
+  - name: Етика звітності
+    points:
+    - Чесність у презентації несприятливих даних
+    - Уникання маніпуляцій візуалізацією (обрізання осей, селективні дані)
+    - Прозорість щодо обмежень дослідження
+    - Розкриття конфліктів інтересів та джерел фінансування
+    - Відповідальність за соціальний вплив рекомендацій
+  - name: Професійна термінологія високого рівня
+    points:
+    - 'Термінологія прогнозування: екстраполяція, сценарний аналіз, модельування'
+    - 'Статистичні терміни: кореляція, регресія, статистична значущість'
+    - 'Бізнес-аналітика: KPI, benchmark, SWOT, gap analysis'
+    - 'Якісні методи: кейс-стаді, інтерв''ю, фокус-групи'
+  points: []
+- section: Граматика
+  subsections:
+  - name: Модальні конструкції для хеджування
+    points:
+    - 'Модальні дієслова: може свідчити, ймовірно вказує, здається'
+    - 'Вставні слова: можливо, ймовірно, очевидно, на нашу думку'
+    - 'Умовні конструкції: за умови X, якщо припустити Y'
+    - 'Обмежувальні фрази: в межах даного дослідження, за наявних даних'
+  - name: Складнопідрядні речення з модальністю
+    points:
+    - Складні речення з умовою та наслідком для прогнозів
+    - Поєднання об'єктивних даних з обережними висновками
+    - Використання підрядних речень причини для обґрунтувань
+    - Контрастивні конструкції для альтернативних інтерпретацій
+  points: []
+- section: Підсумок
+  points:
+  - 'Синтез: від базової звітності (М87) до аналітичної майстерності (М88)'
+  - 'Ключові навички: багатоджерельний аналіз, складна візуалізація, хеджування, презентація'
+  - 'Підготовка до новинного аналізу (М89-90): застосування критичного мислення'
+focus: skills
+pedagogy: CBI
+objectives:
+- Learner can write complex analytical reports with multiple data sources
+- Learner can create advanced data visualizations and interpret trends
+- Learner can use hedging and tentative language appropriately
+- Learner can present report findings to stakeholders orally
+- Learner can critically evaluate existing reports for quality
+phase: B2.4 Communication Skills
+vocabulary_hints:
+  required:
+  - Звіт (report) — подати/скласти звіт, річний звіт, детальний звіт, звіт про виконання
+  - Дані (data) — обробляти дані, збирати/аналізувати дані, візуалізація даних, достовірність
+    даних
+  - Аналіз (analysis) — глибокий аналіз, порівняльний аналіз, критичний аналіз, провести
+    аналіз, результати аналізу
+  - Висновки (conclusions) — робити висновки, попередні висновки, дійти висновку
+  - Тенденція (trend) — позитивна/негативна тенденція, тенденція до зростання, виявити
+    тенденцію
+  recommended:
+  - Термін (term) — професійний термін, визначення терміну
+  - Поняття (concept) — ключове поняття, розширити поняття
+  - Процес (process) — оптимізація процесу, безперервний процес
+  - Метод (method) — ефективний метод, метод дослідження, застосувати метод
+  - Дослідження (research) — польове дослідження, обмеження дослідження
+activity_hints:
+- type: reading
+  focus: Аналіз тексту
+  items: 4
+- type: essay-response
+  focus: Практичне застосування
+- type: true-false
+  focus: Перевірка розуміння
+  items: 8
+persona:
+  voice: Professional Language Coach
+  role: Data Scientist (Дата-сайєнтист)
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Професійні звіти: Поглиблення
+
+## State Standard Reference
+§1.3.2 (Письмо. Типи текстів): "...програми, контракти, звіти; наукові та публіцистичні статті."
+Alignment: Модуль безпосередньо реалізує вимогу стандарту щодо вміння створювати складні професійні тексти, зокрема звіти, що є показником рівня В2 ("спілкування... у професійному середовищі").
+
+Додатково (Морфологія):
+§4.2.6 (Словотвір): "віддієслівні іменники на -ння, -ення, -іння (написання, вивчення, ходіння)..."
+Alignment: Використання віддієслівних іменників (номіналізація) є ключовою ознакою офіційно-ділового стилю, необхідного для написання професійних звітів.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| **Звіт** | High (Business/Academic) | подати/скласти звіт, річний звіт, фінансовий звіт, детальний звіт, звіт про виконання |
+| **Дані** | Very High (General/Tech) | обробляти дані, збирати дані, аналізувати дані, візуалізація даних, достовірність даних |
+| **Аналіз** | High (Academic/Pro) | глибокий аналіз, порівняльний аналіз, критичний аналіз, провести аналіз, результати аналізу |
+| **Висновки** | High (Academic/Pro) | робити висновки, попередні висновки, обґрунтовані висновки, дійти висновку |
+| **Тенденція** | Medium (Business) | позитивна/негативна тенденція, тенденція до зростання, виявити тенденцію |
+
+## Cultural Hooks
+1. **Fedir Shcherbyna (Федір Щербина)**: Видатний український статистик, засновник бюджетної статистики. Його роботи з вивчення селянських господарств стали основою для розвитку економічної статистики в Україні. Це приклад глибокої аналітичної традиції.
+2. **StatGPT (2025)**: Новітня ініціатива Держстату України — портал зі штучним інтелектом для роботи з відкритими даними. Це демонструє сучасність і технологічність української державної статистики, що руйнує стереотип про "паперову бюрократію".
+
+## Common Learner Errors
+1. **Calques from English/Russian**: "Приймати участь" (to take part) → Правильно: **Брати участь**. (Часта помилка в офіційному стилі).
+2. **Tautologies**: "Вільна вакансія" (free vacancy) → Правильно: **Вакансія**. "Пам'ятний сувенір" → **Сувенір**. У звітах це знижує професійність.
+3. **Wrong Prepositions**: "Звіт по результатам" (Report on results) → Правильно: **Звіт за результатами** або **про результати**. "На протязі року" → **Протягом року**.
+4. **Greeting Case**: "Доброго дня" (Genitive) замість "Добрий день" (Nominative) у листуванні/презентаціях. Хоча поширено, нормативним є називний відмінок.
+
+## Cross-References
+- Builds on: **M87** (Базова звітність)
+- Prepares for: **M89-90** (Новинний аналіз), **C1-PRO** (Стратегічне планування)
+
+## Notes for Content Writing
+- Важливо наголосити на різниці між "описом" (що сталося) і "аналізом" (чому це сталося і що це означає).
+- Використовувати "хеджування" (hedging) не як ознаку невпевненості, а як ознаку професійної обережності та точності (можливо, ймовірно, дані свідчать про...).
+- Інтегрувати тему візуалізації даних: як правильно описувати графіки українською (вісь абсцис/ординат, крива зростання, діаграма розсіювання).
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 500
+  points:
+  - "Перехід від базової звітності (М87) до аналітичної роботи з акцентом на реалізацію Держстандарту §1.3.2 щодо створення складних професійних текстів."
+  - "Культурний контекст: Федір Щербина як засновник української бюджетної статистики та приклад глибокої аналітичної традиції вивчення господарств."
+  - "Роль аналітичних звітів у стратегічному плануванні компанії та розвиток критичного мислення в інтерпретації великих масивів даних."
+- section: "Імерсивна розповідь: Сучасна аналітика (Immersive Narrative: Modern Analytics)"
+  words: 1200
+  points:
+  - "Інтеграція даних з різних джерел (фінансові, маркетингові) та вагування надійності первинних і вторинних джерел через тріангуляцію даних."
+  - "Технологічний контекст: Проєкт StatGPT від Держстату України як приклад використання ШІ та відкритих даних у сучасній звітній діяльності, що руйнує стереотипи про бюрократію."
+  - "Складна візуалізація та опис графіків: термінологія для опису осей абсцис/ординат, кривих зростання та діаграм розсіювання (scatter plots)."
+  - "Усна презентація звіту: адаптація складності до аудиторії та професійний етикет привітання (нормативний називний відмінок «Добрий день»)."
+- section: "Критичний аналіз та етика (Critical Analysis and Ethics)"
+  words: 900
+  points:
+  - "Виявлення логічних помилок (хибна кореляція, селективні дані) та оцінка надійності методології (розмір вибірки, репрезентативність)."
+  - "Етика звітності: чесність у презентації несприятливих даних та прозорість щодо обмежень дослідження для запобігання маніпуляціям."
+  - "Професійна термінологія високого рівня: екстраполяція, сценарний аналіз, регресія та бізнес-аналітика (KPI, benchmark, SWOT)."
+- section: "Граматика та офіційно-діловий стиль (Grammar and Official Business Style)"
+  words: 900
+  points:
+  - "Номіналізація: активне використання віддієслівних іменників на -ння, -ення (Стандарт §4.2.6) для досягнення лаконічності та точності в офіційному стилі."
+  - "Модальні конструкції для професійного хеджування (hedging): використання «може свідчити», «ймовірно вказує», «за наявних даних» як ознаки наукової обережності."
+  - "Корекція типових помилок: вживання «брати участь» замість кальки «приймати участь» та «протягом року» замість помилкового «на протязі»."
+  - "Усунення тавтологій та зайвих слів: редагування конструкцій типу «вільна вакансія» (тільки «вакансія») для підвищення якості тексту."
+- section: "Підсумок (Summary)"
+  words: 500
+  points:
+  - "Синтез навичок: від описової звітності до аналітичної майстерності та підготовка до новинного аналізу в наступних модулях (М89-90)."
+  - "Робота над граматичною коректністю: прийменникові конструкції «звіт за результатами» або «про результати» (замість помилкового «по результатам»)."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "Звіт (report) — подати/скласти звіт, річний звіт, звіт за результатами; висока частота в діловому стилі"
+  - "Дані (data) — обробляти дані, візуалізація даних, достовірність даних; ключовий термін аналітики"
+  - "Аналіз (analysis) — глибокий аналіз, порівняльний аналіз, критичний аналіз; академічний та професійний регістр"
+  - "Висновки (conclusions) — робити висновки, обґрунтовані висновки, дійти висновку; обов'язковий елемент структури"
+  - "Тенденція (trend) — тенденція до зростання, виявити тенденцію, позитивна/негативна тенденція"
+  recommended:
+  - "Брати участь (to take part) — нормативна конструкція, критично важлива для уникнення кальки"
+  - "Протягом (during/throughout) — часовий прийменник для звітів (напр. протягом звітного періоду)"
+  - "Ймовірно (probably/likely) — модальне слово для хеджування та обережних висновків"
+  - "Дослідження (research) — обмеження дослідження, результати дослідження, польове дослідження"
+  - "Показник (indicator) — ключовий показник ефективності (KPI), динаміка показників"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (3980 chars)
+✅ Message sent to Claude (ID: 10650)
+✓ Message 10650 acknowledged
+   Auto-acknowledged reply #10650 (stdout delivery — no inbox accumulation)
+✓ Message 10643 acknowledged

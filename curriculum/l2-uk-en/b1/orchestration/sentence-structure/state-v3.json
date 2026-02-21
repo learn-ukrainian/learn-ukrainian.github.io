@@ -1,0 +1,27 @@
+{
+  "track": "b1",
+  "slug": "sentence-structure",
+  "mode": "v3",
+  "phases": {
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-21T00:21:18Z",
+      "note": "migrated-from-v2"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-21T00:21:18Z",
+      "note": "migrated-from-v2"
+    },
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-21T00:21:19Z",
+      "note": "adopted-existing-meta"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-21T09:33:24Z",
+      "attempts": 1
+    }
+  }
+}

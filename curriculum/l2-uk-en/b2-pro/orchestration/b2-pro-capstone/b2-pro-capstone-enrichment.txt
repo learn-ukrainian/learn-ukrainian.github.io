@@ -1,0 +1,274 @@
+✅ Message sent to Gemini (ID: 12358) [auto-acked: self-addressed]
+✓ Message 12358 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12358...
+📨 Message #12358
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-b2-pro-capstone
+   Time: 2026-02-20T23:38:54.389435+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b2-pro-40
+level: B2-PRO
+sequence: 40
+slug: b2-pro-capstone
+version: '2.0'
+title: 'Підсумок: B2-PRO'
+subtitle: B2-PRO Capstone
+content_outline:
+- section: Огляд рівня B2-PRO
+  points:
+  - 'Три фази рівня: ділова комунікація, фахова мова, медіа та публічна комунікація'
+  - Здобуті компетенції за CEFR B2+ для професійних цілей
+  - Критерії оцінювання підсумкового рівня
+- section: Підсумкове завдання 1 — Ділова комунікація
+  points:
+  - 'Сценарій: Підготовка до важливих переговорів з українським партнером'
+  - 'Завдання: Лист-запит, позиційний документ, протокол зустрічі'
+  - 'Критерії: формальний регістр, структура, ввічливість'
+- section: Підсумкове завдання 2 — Фахова мова
+  points:
+  - 'Сценарій: Підготовка презентації проєкту для різних стейкхолдерів'
+  - 'Завдання: Технічний опис, фінансове обґрунтування, правова довідка'
+  - 'Критерії: точність термінології, адаптація для аудиторії'
+- section: Підсумкове завдання 3 — Медіакомунікація
+  points:
+  - 'Сценарій: Публічний виступ на професійній конференції'
+  - 'Завдання: Підготувати 5-хвилинний виступ з ключовими повідомленнями та відповіді
+    на можливі запитання'
+  - 'Критерії: структура, переконливість, робота з аудиторією'
+- section: Інтегроване підсумкове завдання
+  points:
+  - 'Комплексний сценарій: Ви — представник української компанії на міжнародному форумі'
+  - 'Завдання: Презентація компанії, нетворкінг, медіакоментар, follow-up'
+  - Демонстрація всіх навичок B2-PRO
+- section: Підсумок та сертифікація
+  points:
+  - Чек-лист компетенцій B2-PRO
+  - Рекомендації для підтримки рівня
+  - 'Що далі: C1-PRO, спеціалізовані треки, практика'
+  - Ресурси для продовження навчання
+vocabulary_hints:
+  required:
+  - підсумкове оцінювання (final assessment)
+  - компетенції (competencies)
+  - стейкхолдери (stakeholders)
+  - позиційний документ (position paper)
+  - фінансове обґрунтування (financial justification)
+  - міжнародний форум (international forum)
+  - нетворкінг (networking)
+  - follow-up (подальші дії)
+  recommended:
+  - сертифікація (certification)
+  - рівень володіння (proficiency level)
+  - підтримка рівня (level maintenance)
+  - спеціалізований трек (specialized track)
+activity_hints:
+- type: writing-task
+  focus: Підготувати комплект документів для переговорів
+  items: 1
+- type: writing-task
+  focus: Створити презентацію проєкту для різних аудиторій
+  items: 1
+- type: writing-task
+  focus: Підготувати текст 5-хвилинного виступу на конференції
+  items: 1
+- type: case-study
+  focus: Виконати інтегроване завдання — представництво на форумі
+  items: 1
+- type: self-assessment
+  focus: Заповнити підсумковий чек-лист компетенцій B2-PRO
+  items: 1
+focus: checkpoint
+pedagogy: TTT
+prerequisites:
+- 'b2-pro-39 (Інтеграція: Професійна практика)'
+connects_to:
+- Завершення B2-PRO / Перехід до C1-PRO
+objectives:
+- Учень демонструє комплексне володіння навичками ділової комунікації
+- Учень може використовувати фахову термінологію різних галузей
+- Учень може ефективно комунікувати в медіапросторі
+- Учень готовий до самостійної професійної діяльності українською мовою
+grammar:
+- Повний спектр граматичних конструкцій B2-PRO
+- Адаптація граматики до регістру та контексту
+- Складні синтаксичні конструкції професійного мовлення
+register: змішаний (офіційно-діловий, технічний, публіцистичний)
+phase: B2-PRO.3
+persona:
+  voice: Senior Specialist
+  role: Засновник стартапу
+word_target: 2000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Підсумок: B2-PRO
+
+## Використані джерела
+1. [ДСТУ 4163:2020](https://dilovodstvo.com) — Національний стандарт щодо оформлення організаційно-розпорядчої документації.
+2. [Дія.Бізнес](https://business.diia.gov.ua) — Державний портал з питань ведення бізнесу та професійної комунікації.
+3. [PMI Ukraine Chapter](https://pmiukraine.org) — Професійні терміни управління проєктами в українському контексті.
+4. [Культура мови у професійній сфері](https://buhgalter.com.ua) — Аналіз типових помилок та кальок у діловому мовленні.
+
+## Термінологічна база
+
+| Українська (норма) | Русизм/ненорма | English | Контекст вживання |
+|--------------------|---------------|---------|-------------------|
+| Стейкхолдери / Зацікавлені сторони | Стейкхолдери (іноді вважають надмірним англіцизмом) | Stakeholders | Управління проєктами, звітування |
+| Порядок денний | Повістка дня | Agenda | Протоколи зустрічей, наради |
+| Брати участь | Приймати участь | Participate | Переговори, заходи, проєкти |
+| Ухвалювати рішення | Приймати рішення | Make a decision | Управлінська діяльність, договори |
+| Протягом / Упродовж | На протязі | During / Throughout | Часові межі проєкту |
+| Стосуватися | Відноситися до | Relate to / Concern | Листування, правові норми |
+| Вживати заходів | Приймати міри | Take measures | Усунення ризиків, безпека |
+| Завдати збитків | Нанести збитки | Cause damage | Фінансове обґрунтування, право |
+
+## Мовні норми та стандарти
+- **ДСТУ 4163:2020**: Регулює оформлення реквізитів (дата, підпис, адресат). Наприклад, підпис включає посаду, власне ім'я та прізвище (не ініціали).
+- **Закон про державну мову**: Вимагає використання української мови у всіх сферах публічного та професійного життя, включаючи технічну документацію та обслуговування.
+- **Ділова ввічливість**: Використання форми «Ви» з великої літери у листуванні та відповідних звертань (Шановний пане/пані).
+
+## Аутентичні приклади
+1. [Лист-запит]: «Просимо надати інформацію щодо умов постачання обладнання згідно з попередніми домовленостями. Будемо вдячні за відповідь до кінця робочого тижня.»
+2. [Протокол зустрічі]: «СЛУХАЛИ: Про хід виконання календарного плану проєкту. ВИСТУПИВ: Керівник проєкту Олександр Мельник з аналізом поточного стану.»
+3. [Презентація]: «Наш проєкт забезпечує підвищення ефективності логістики на 15% за рахунок автоматизації складських процесів. Це ключовий показник для наших стейкхолдерів.»
+
+## Типові помилки
+1. ❌ `згідно наказу` → ✅ `згідно з наказом` (або `відповідно до наказу`) — неправильне використання прийменника.
+2. ❌ `на даний момент` → ✅ `наразі` / `зараз` — калька з російської.
+3. ❌ `задавати питання` → ✅ `ставити питання` — русизм у професійній дискусії.
+4. ❌ `рахувати за необхідне` → ✅ `вважати за необхідне` — семантична помилка.
+5. ❌ `із-за технічних причин` → ✅ `через технічні причини` — неправильний прийменник причини.
+
+## Engagement Hooks (mapped to sections)
+- Section "Ділова комунікація: Переговори та документація": [!pro-tip] — Використання "follow-up" листів після зустрічі підвищує шанси на успішне завершення переговорів на 30%.
+- Section "Фахова мова: Презентація проєкту та обґрунтування": [!language-note] — Хоча термін "стейкхолдери" є загальноприйнятим, у офіційних звітах краще вживати "зацікавлені сторони".
+- Section "Медіакомунікація: Публічний виступ": [!example] — "Я хотів би наголосити на тому, що..." — ідеальна фраза для фокусування уваги аудиторії на ключових показниках.
+- Section "Інтегроване підсумкове завдання": [!common-error] — Не використовуйте "дякую за увагу" в кінці виступу, краще сказати "буду радий відповісти на ваші запитання" для стимулювання нетворкінгу.
+
+## Section-Mapped Research Notes
+
+### Огляд рівня B2-PRO: Компетенції та критерії
+Компетенції CEFR B2+ включають здатність детально описувати складні предмети, розрізняти тонкі нюанси стилів та аргументувати власну позицію в офіційних дебатах. Огляд трьох фаз: ділова (negotiation, drafting), фахова (technical/financial focus), медіа (public engagement).
+
+### Ділова комунікація: Переговори та документація
+Фокус на ДСТУ 4163:2020. Важливо розрізняти "позиційний документ" (position paper) як інструмент аргументації та "протокол зустрічі" (minutes) як засіб фіксації рішень. Моделювання переговорів: відкриття, аргументація, поступки, закриття.
+
+### Фахова мова: Презентація проєкту та обґрунтування
+Використання термінів: КПЕ (KPI), рентабельність, правова довідка. Адаптація мови: як пояснити складні фінансові обґрунтування технічним фахівцям і навпаки. Термінологія ДСТУ 1.5:2015 для описів.
+
+### Медіакомунікація: Публічний виступ на конференції
+Структура 5-хвилинного пітчу: гачок (hook), проблема, рішення, докази, заклик до дії (call to action). Робота з запереченнями: фрази "Дякую за цікаве запитання", "Це важливий аспект, який ми врахували...".
+
+### Інтегроване підсумкове завдання: Міжнародний форум
+Синтез навичок: нетворкінг (Small talk українською у професійному контексті), презентація компанії (elevator pitch), медіакоментар (лаконічність та ключові повідомлення).
+
+### Підсумок та сертифікація
+Чек-лист: "Чи можу я скласти протокол згідно з ДСТУ?", "Чи володію я термінологією своєї галузі без русизмів?". Ресурси: словники технічної термінології та платформи для нетворкінгу.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12413)
+✓ Message 12358 acknowledged
+✓ Message 12413 acknowledged

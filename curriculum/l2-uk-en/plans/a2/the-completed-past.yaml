@@ -1,0 +1,130 @@
+module: a2-13
+level: A2
+sequence: 13
+slug: the-completed-past
+version: '2.0'
+title: The Completed Past
+subtitle: Using Perfective Aspect
+content_outline:
+- section: Вступ (Introduction)
+  words: 450
+  points:
+  - Welcome by the Museum Archivist persona; introduce the result-focused mindset
+    through the Ukrainian proverbs «Діло майстра величає» (The deed glorifies the
+    master) and «Кінець — справі вінець» (The end is the crown of the work) to highlight
+    the cultural value of completion.
+  - Overview of Ukrainian State Standard §4.3.2 regarding aspectual pairs (робити
+    – зробити) and §4.2.3.1 for past tense formation, setting the theoretical foundation
+    for A2.2 proficiency.
+- section: Творення та граматична узгодженість (Formation and Grammatical Agreement)
+  words: 750
+  points:
+  - Detailed presentation of perfective past formation using suffixes -в, -ла, -ло,
+    -ли; focus on correcting the Common Learner Error of Gender/Number Agreement (e.g.,
+    preventing «Анна написав» in favor of correct «Анна написала»).
+  - Explanation of the 'Zero Auxiliary' rule to combat the 'Double Past' error where
+    English speakers attempt to use auxiliary verbs for completed actions; emphasize
+    that aspect is built into the verb form itself.
+- section: Процес проти результату (Process vs. Result)
+  words: 800
+  points:
+  - 'Analysis of ''Aspect Drift'' errors: contrasting «я писав листа» (process/unfinished)
+    with «я написав листа» (result/finished); provide a visual decision tree logic
+    for learners: ''Was I doing it?'' vs. ''Did I finish it?''.'
+  - Drilling high-frequency perfective verbs (зробив, сказав, зрозумів) with result-oriented
+    contexts; identify how these forms function as complete units of narrative meaning
+    in the past.
+- section: Наративна послідовність у музеї (Narrative Sequencing in the Museum)
+  words: 600
+  points:
+  - Instruction on the 'Chain of Events' narrative pattern; introduce essential sequencing
+    markers «спочатку» (first), «потім» (then), and «нарешті» (finally) to link a
+    series of perfective actions.
+  - Applying narrative markers within the Archivist persona's stories; transforming
+    linear lists of museum activities into a coherent story of a completed workday
+    or historical event.
+- section: Практика та усунення помилок (Practice and Error Correction)
+  words: 400
+  points:
+  - Situation-based aspect choice practice focusing on high-frequency collocations
+    from research, such as «зробив вибір», «сказав правду», and «знайшов рішення».
+  - Final review of correction patterns for 'Aspect Drift' and 'Double Past' confusions;
+    preparation for narrative transformations in a2-26 by summarizing the result-focused
+    mindset.
+vocabulary_hints:
+  required:
+  - зробив (did/made - m) — зробив помилку, зробив висновок, зробив вибір; Very High
+    frequency (Top 100 verbs)
+  - сказав (said - m) — сказав правду, сказав чесно, сказав «так»; Very High frequency
+    (Top 50 verbs)
+  - написав (wrote - m) — написав листа, написав книгу, написав пост; High frequency
+  - прочитав (read - m) — прочитав до кінця, прочитав повідомлення; High frequency
+  - пішов (went - m) — пішов додому, пішов на прогулянку, пішов геть; Very High frequency
+  - прийшов (came - m) — прийшов вчасно, прийшов на допомогу; High frequency
+  - зрозумів (understood - m) — зрозумів ідею, зрозумів ситуацію, нарешті зрозумів;
+    High frequency
+  - забув (forgot - m) — забув пароль, забув ключі, забув про все; Medium-High frequency
+  - знайшов (found - m) — знайшов рішення, знайшов вихід, знайшов час; High frequency
+  - побачив (saw - m) — noticed a detail, saw for the first time
+  - почув (heard - m) — heard the news, caught a specific sound
+  - взяв (took - m) — took a seat, took the opportunity
+  - дав (gave - m) — gave an answer, gave back
+  - приїхав (arrived - m) — arrived by transport/vehicle
+  - почав (began - m) — started a completed action
+  - закінчив (finished - m) — reached the end of a task
+  recommended:
+  - запам'ятав (remembered - m) — fixed in memory, committed to mind
+  - загубив (lost - m) — lost an object; opposite of знайшов; Medium frequency
+  - вийшов (exited - m) — left a room or building
+  - увійшов (entered - m) — entered a defined space
+activity_hints:
+- type: fill-in
+  focus: Transform imperfective to perfective past
+  items: 12+
+- type: fill-in
+  focus: Choose aspect based on context
+  items: 15+
+- type: quiz
+  focus: Did they finish or were they doing?
+  items: 12+
+- type: fill-in
+  focus: Narrative sequencing with perfective
+  items: 10+
+- type: quiz
+  focus: Complete the story with perfective verbs
+  items: 10+
+focus: grammar
+pedagogy: PPP
+prerequisites:
+- a2-12 (Aspect introduction)
+- A1 past tense formation
+connects_to:
+- a2-14 (Future Plans and Promises)
+- a2-15 (Aspect Morphology)
+- a2-26 (Telling Stories)
+objectives:
+- Learner can form the past tense of perfective verbs
+- Learner can use perfective past to describe completed actions
+- Learner can narrate a sequence of events
+- Learner can distinguish between 'did' and 'done' contexts
+grammar:
+- perfective past tense
+- formation of past tense
+- narrative sequencing
+- result-focused actions
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Past Tense
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Perfective past tense requirements
+- name: Ukrainian Verb Conjugation
+  url: https://uk.wikipedia.org/wiki/Дієслово
+  type: reference
+  notes: Past tense formation patterns
+immersion: 50-60% Ukrainian
+phase: A2.2
+persona:
+  voice: Encouraging Cultural Guide
+  role: Museum Archivist
+word_target: 3000

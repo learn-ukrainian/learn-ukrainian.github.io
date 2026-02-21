@@ -1,0 +1,217 @@
+✅ Message sent to Gemini (ID: 12973) [auto-acked: self-addressed]
+✓ Message 12973 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12973...
+📨 Message #12973
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-orlyk-latin-comparison
+   Time: 2026-02-20T23:43:25.568304+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 90
+module: ruth-090
+module_number: 90
+slug: orlyk-latin-comparison
+title_uk: 'Орлик: Порівняння з латиною'
+title_en: Orlyk's Latin
+phase: 4
+phase_id: cossack-word
+phase_name: Cossack Word
+focus: Ruthenian vs Latin versions
+content_outline:
+- section: Вступ
+  description: Introduction to Orlyk's Latin
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Baroque Scholar
+  role: Diplomatic Translator
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Orlyk Latin Comparison (Конституція Пилипа Орлика 1710)
+
+## Використані джерела
+1. **[Ізборник: Пакти і Конституції](http://litopys.org.ua/old18/old18_07.htm)** — основний текст староукраїнською мовою (редакція) та сучасний переклад.
+2. **[Енциклопедія історії України: Конституція Пилипа Орлика](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Konstytutsiia_Pylypa_Orlyka)** — академічний аналіз структури, історії створення та віднайдення оригіналів.
+3. **[Вікіпедія: Конституція Пилипа Орлика](https://uk.wikipedia.org/wiki/Конституція_Пилипа_Орлика)** — огляд версій (латинської та староукраїнської), історія архівних знахідок 2008 року.
+4. **[Радіо Свобода: Конституція Орлика](https://www.radiosvoboda.org/)** — публіцистичні матеріали про значення "Бендерської конституції" в європейському контексті.
+
+## Хронологія
+- **1710, 5 (16) квітня**: Обрання Пилипа Орлика гетьманом у Бендерах; укладення "Пактів і Конституцій".
+- **1711**: Прутський похід — спроба реалізації Конституції на Правобережній Україні.
+- **1714**: Еміграція Орлика до Швеції; поширення латинської версії в Європі.
+- **1847**: Осип Бодянський публікує текст Конституції в "Чтениях" (перше наукове введення в обіг).
+- **2008**: Віднайдення оригіналу староукраїнського тексту (з підписом Орлика і печаткою) у Російському державному архіві давніх актів (Москва).
+- **2010**: Ввезення оригіналу Конституції в Україну для експонування (до 300-річчя).
+
+## Ключові факти та цитати
+- **Подвійна назва**: Латиною — *Pacta et Constitutiones legum libertatumque Exercitus Zaporoviensis* (Договори і Постанови прав і вольностей Війська Запорозького). Староукраїнською — *Договори і Постановлєнnя Прав і волностей Війска Запорозкого*.
+- **Титулатура**: У латинському тексті Орлик — *Dux* (вождь/князь), у староукраїнському — *Гетьман*.
+- **Націєтворення**: Латинський текст вживає термін *Gens Roxolana* (Народ Роксоланський) або *Gens Ukrainensis* для позначення політичної нації, підкреслюючи античну тяглість. Староукраїнський текст оперує поняттями *Народ Малоросійський* (у значенні "Русь властива", Київська митрополія) та *Військо Запорозьке*.
+- **Цитата (Преамбула, укр. версія)**: «...так і народ валечний стародавній Козацький, перш сього званий Хозарським, Господь Бог... понизив і смирив». (Хозарський міф як інструмент окремішності від Москви).
+- **Цитата (Ст. 6, про самоврядування)**: «А коли б про щось писали до Ясновельможного Гетьмана... то не мають ті листи бути потайки розпечатані, ані прийняті, але мають бути огалошені через Генеральну Старшину».
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ": `[!context]` — Бендери 1710 року як "політична лабораторія" української еміграції.
+- Section "Основний матеріал: I — Дві мови": `[!history-bite]` — Знахідка 2008 року: як оригінал з підписом Орлика пролежав століття в Москві під носом у цензури.
+- Section "Основний матеріал: II — Латинський фасад": `[!culture]` — Бароковий концепт *Gens Roxolana*: чому "роксолани"? (Зв'язок з сарматизмом і шляхетською демократією).
+- Section "Основний матеріал: III — Староукраїнський фундамент": `[!quote]` — Порівняння титулатури: *Dux* vs *Гетьман*.
+- Section "Практика: Аналіз преамбули": `[!myth-buster]` — "Малоросія" у 1710 році ≠ російська провінція. Це назва Київської митрополії (Malo — "мала/центральна", як Мала Греція), на противагу Московській патріархії.
+- Section "Підсумок": `[!legacy]` — Конституція Орлика vs Конституція США (1787): український пріоритет у ідеї розподілу влади (хоча й не реалізований на практиці).
+
+## Деколонізаційний контекст
+- **Імперський міф**: Конституція Орлика — це "вигадка націоналістів", "шведська інтрига" або просто "копія польських привілеїв".
+- **Україна-центрична реальність**: Це самостійний політико-правовий акт, що зафіксував суб'єктність козацької держави (*Respublica*) після Полтави. Це договір (*pacta*) між елітою і вождем, що є ознакою республіканської, а не самодержавної традиції.
+- **Мовна деколонізація**: Використання латини свідчить про включеність України в західноєвропейський інтелектуальний простір (на відміну від москвоцентричного наративу про "спільну колиску").
+
+## Contested Terms (Термінологічне мапування)
+| Поняття | Імперське/Радянське трактування | Українське (деколонізоване) трактування |
+|---------|--------------------------------|-----------------------------------------|
+| Мала Росія (Little Russia) | Провінція, частина "Великої Росії", меншовартість. | *Мала Русь* (грец. Mikra Rhosia) — первинна, материнська Русь (Київ) на противагу периферії. У 1710 — самоназва Гетьманату. |
+| Хозарський міф | Історична нісенітниця, фальсифікація. | Політична ідеологія раннього модерну: спосіб вивести родовід козаків *окремо* від Москви та Варшави. |
+| Пакти і Конституції | "Проект", що не діяв. | Чинний правовий акт для козацької еміграції та Правобережжя (до 1714). Пам'ятка правової думки. |
+
+## Section-Mapped Research Notes
+
+### Вступ: Бендерська лабораторія
+Контекст поразки під Полтавою. Необхідність легітимації влади нового гетьмана перед шведським королем (Карл XII як протектор) та Військом.
+
+### Основний матеріал: I — Дві мови, дві стратегії
+- **Латина**: Для Європи. Мета: показати Україну як суверенну державу, гідну підтримки, "Antemurale Christianitatis" (Браму християнства).
+- **Староукраїнська**: Для внутрішнього вжитку. Мета: зафіксувати права старшини, обмежити свавілля гетьмана (урок Мазепи?), гарантувати права "черні" та запорожців.
+
+### Основний матеріал: II — Латинський фасад (Gens Roxolana)
+- Термінологія міжнародного права.
+- Використання античних назв (*Roxolani*) для надання "шляхетності".
+- Поняття *Libertates* (Вольності) як привілеї шляхетського типу.
+- *Ucraina* вживається поруч з *Roxolania*.
+
+### Основний матеріал: III — Староукраїнський фундамент (Військо Запорозьке)
+- Мова: канцелярська мова Гетьманщини (суміш народної, церковнослов'янської та полонізмів).
+- Термін *Військо Запорозьке* як назва держави.
+- Специфічні реалії: *гетьман*, *генеральний обозний*, *сотники* (в латині — *duces*, *centuriones* тощо).
+
+### Основний матеріал: IV — Порівняльний аналіз (Кейс-стаді)
+- Титул Орлика: *Dux* (вождь, князь) vs *Гетьман*.
+- Назва народу: *Gens* (політична нація) vs *Народ*.
+- Поняття віри: Православ'я як державна релігія (акцент в обох версіях, але в укр. — захист від "латинської" та "московської" експансії).
+
+### Практика: Аналіз Преамбули
+- Робота з текстом вступу. Пафос бароко ("Бог, дивний і незбагненний...").
+- Аналіз "Хозарської легенди" в тексті.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12989)
+✓ Message 12973 acknowledged
+✓ Message 12989 acknowledged

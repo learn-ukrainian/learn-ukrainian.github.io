@@ -1,0 +1,432 @@
+- type: match-up
+  title: 'Знайдіть пару: Займенники'
+  instruction: 'Match the Nominative pronoun (Subject) with its Dative form (Recipient), plus question words.'
+  pairs:
+    - left: 'Я'
+      right: 'Мені'
+    - left: 'Ти'
+      right: 'Тобі'
+    - left: 'Він'
+      right: 'Йому'
+    - left: 'Вона'
+      right: 'Їй'
+    - left: 'Воно'
+      right: 'Йому'
+    - left: 'Ми'
+      right: 'Нам'
+    - left: 'Ви'
+      right: 'Вам'
+    - left: 'Вони'
+      right: 'Їм'
+    - left: 'Хто?'
+      right: 'Кому?'
+    - left: 'Що?'
+      right: 'Чому?'
+
+- type: fill-in
+  title: 'Вставте правильний займенник'
+  instruction: 'Complete the sentences with the correct Dative pronoun based on the context in parentheses.'
+  items:
+    - sentence: '___ (I) холодно сьогодні.'
+      answer: 'Мені'
+      options: ['Мені', 'Я', 'Мене', 'Мною']
+      explanation: 'For "I am cold", Ukrainian uses the Dative "To me is cold" (Мені).'
+    - sentence: '___ (You, singular) треба йти додому?'
+      answer: 'Тобі'
+      options: ['Тобі', 'Ти', 'Тебе', 'Тобою']
+      explanation: 'The structure "need to go" requires the Dative case for the person.'
+    - sentence: '___ (She) подобається ця музика.'
+      answer: 'Їй'
+      options: ['Їй', 'Вона', 'Її', 'Нею']
+      explanation: '"She likes" becomes "To her pleases" (Їй).'
+    - sentence: '___ (We) потрібно купити хліб.'
+      answer: 'Нам'
+      options: ['Нам', 'Ми', 'Нас', 'Нами']
+      explanation: 'For "We need", use Dative "Нам".'
+    - sentence: '___ (He) нудно на уроці.'
+      answer: 'Йому'
+      options: ['Йому', 'Він', 'Його', 'Ним']
+      explanation: 'States like "bored" (нудно) require the Dative case.'
+    - sentence: '___ (They) весело разом.'
+      answer: 'Їм'
+      options: ['Їм', 'Вони', 'Їх', 'Ними']
+      explanation: '"They have fun" -> "To them is fun" (Їм).'
+    - sentence: 'Що ___ (you, formal) болить?'
+      answer: 'вам'
+      options: ['вам', 'ви', 'вас', 'вами']
+      explanation: 'When asking a doctor/patient question "What hurts?", use Dative.'
+    - sentence: '___ (It) байдуже.'
+      answer: 'Йому'
+      options: ['Йому', 'Воно', 'Його', 'Ним']
+      explanation: 'Neuter pronouns (Воно) take the same Dative form as Masculine (Йому).'
+
+- type: group-sort
+  title: 'Розподіліть за особами'
+  instruction: 'Sort the phrases based on whether they refer to "Me", "You", or "Him/Her".'
+  groups:
+    - name: '1 особа (Мені/Нам)'
+      items: ['Мені холодно', 'Нам весело', 'Мені треба', 'Нам подобається']
+    - name: '2 особа (Тобі/Вам)'
+      items: ['Тобі сумно?', 'Вам зручно?', 'Тобі допомогти?', 'Вам потрібно']
+    - name: '3 особа (Йому/Їй/Їм)'
+      items: ['Їй цікаво', 'Йому боляче', 'Їм байдуже', 'Їй пасує']
+
+- type: unjumble
+  title: 'Складіть речення: Подобатися'
+  instruction: 'Arrange the words to form correct sentences using "подобатися". Remember the Subject/Object inversion!'
+  items:
+    - words: ['Мені', 'дуже', 'подобається', 'ця', 'смачна', 'гаряча', 'кава', 'зранку']
+      answer: 'Мені дуже подобається ця смачна гаряча кава зранку'
+    - words: ['Тобі', 'справді', 'подобається', 'цей', 'новий', 'цікавий', 'український', 'фільм']
+      answer: 'Тобі справді подобається цей новий цікавий український фільм'
+    - words: ['Нам', 'дуже', 'подобаються', 'ці', 'красиві', 'червоні', 'весняні', 'квіти']
+      answer: 'Нам дуже подобаються ці красиві червоні весняні квіти'
+    - words: ['Вам', 'теж', 'подобається', 'ця', 'сучасна', 'українська', 'музика']
+      answer: 'Вам теж подобається ця сучасна українська музика'
+    - words: ['На', 'жаль,', 'йому', 'зовсім', 'не', 'подобається', 'ця', 'гучна', 'музика']
+      answer: 'На жаль, йому зовсім не подобається ця гучна музика'
+    - words: ['Скажіть,', 'чи', 'вам', 'подобається', 'наше', 'старе', 'історичне', 'місто']
+      answer: 'Скажіть, чи вам подобається наше старе історичне місто'
+
+- type: error-correction
+  title: 'Виправте помилки'
+  instruction: 'Find and correct the grammatical error in each sentence.'
+  items:
+    - sentence: 'Я треба йти в магазин.'
+      error: 'Я'
+      answer: 'Мені'
+      options: ['Мені', 'Мене', 'Мною', 'Моє']
+      explanation: '"Treba" (need) requires the Dative case (Мені), not Nominative (Я).'
+    - sentence: 'Ми подобається цей парк.'
+      error: 'Ми'
+      answer: 'Нам'
+      options: ['Нам', 'Нас', 'Нами', 'Наш']
+      explanation: '"Like" requires Dative for the person: "To us pleases" (Нам).'
+    - sentence: 'Я дзвоню ти завтра.'
+      error: 'ти'
+      answer: 'тобі'
+      options: ['тобі', 'тебе', 'тобою', 'твій']
+      explanation: 'The verb "дзвонити" (to call) requires Dative (тобі).'
+    - sentence: 'Вона холодно сьогодні.'
+      error: 'Вона'
+      answer: 'Їй'
+      options: ['Їй', 'Її', 'Нею', 'Вона']
+      explanation: 'To express feeling cold, use Dative: "To her is cold" (Їй).'
+    - sentence: 'Він допомагає я.'
+      error: 'я'
+      answer: 'мені'
+      options: ['мені', 'мене', 'мною', 'моя']
+      explanation: '"To help" governs the Dative case (мені).'
+    - sentence: 'Ти сумно?'
+      error: 'Ти'
+      answer: 'Тобі'
+      options: ['Тобі', 'Тебе', 'Тобою', 'Ти']
+      explanation: 'States like "sad" require Dative (Тобі сумно?).'
+
+- type: quiz
+  title: 'Перевірка розуміння: Граматика'
+  instruction: 'Answer the questions about the grammar rules.'
+  items:
+    - question: 'У реченні "Мені подобається кава", яке слово є граматичним підметом (Subject)?'
+      explanation: 'The thing being liked ("кава") is the subject because the verb agrees with it.'
+      options:
+        - text: 'кава'
+          correct: true
+        - text: 'мені'
+          correct: false
+        - text: 'подобається'
+          correct: false
+        - text: 'немає підмета'
+          correct: false
+    - question: 'Яке питання ми ставимо до Давального відмінка?'
+      explanation: 'Dative answers "To whom?" (Кому?) and "To what?" (Чому?).'
+      options:
+        - text: 'Кому? Чому?'
+          correct: true
+        - text: 'Хто? Що?'
+          correct: false
+        - text: 'Кого? Що?'
+          correct: false
+        - text: 'Ким? Чим?'
+          correct: false
+    - question: 'Як правильно сказати "I need" українською?'
+      explanation: 'Use Dative + треба/потрібно (Мені треба).'
+      options:
+        - text: 'Мені треба'
+          correct: true
+        - text: 'Я треба'
+          correct: false
+        - text: 'Мене треба'
+          correct: false
+        - text: 'Я потрібен'
+          correct: false
+    - question: 'Якщо ми даруємо квіти живій людині, скільки їх має бути?'
+      explanation: 'Odd numbers (1, 3, 5) are for the living; even numbers are for funerals.'
+      options:
+        - text: 'Непарна кількість (1, 3, 5)'
+          correct: true
+        - text: 'Парна кількість (2, 4, 6)'
+          correct: false
+        - text: 'Тільки одна'
+          correct: false
+        - text: 'Будь-яка кількість'
+          correct: false
+    - question: 'Яке дієслово вимагає Давального відмінка?'
+      explanation: '"Допомагати" (to help) always takes Dative.'
+      options:
+        - text: 'допомагати'
+          correct: true
+        - text: 'бачити'
+          correct: false
+        - text: 'любити'
+          correct: false
+        - text: 'знати'
+          correct: false
+    - question: 'Як перекласти "I am 20 years old"?'
+      explanation: 'Use Dative: "To me is 20 years" (Мені 20 років).'
+      options:
+        - text: 'Мені 20 років'
+          correct: true
+        - text: 'Я є 20 років'
+          correct: false
+        - text: 'Я маю 20 років'
+          correct: false
+        - text: 'Мене 20 років'
+          correct: false
+    - question: 'Що означає фраза "Мені приємно"?'
+      explanation: 'It is the standard polite response to an introduction ("Nice to meet you").'
+      options:
+        - text: 'Nice to meet you'
+          correct: true
+        - text: 'I am pleasant'
+          correct: false
+        - text: 'I like it'
+          correct: false
+        - text: 'I am happy'
+          correct: false
+    - question: 'Яке закінчення правильне: "Мені потрібн__ час"?'
+      explanation: '"Час" is masculine, so we use "потрібен".'
+      options:
+        - text: 'потрібен'
+          correct: true
+        - text: 'потрібна'
+          correct: false
+        - text: 'потрібне'
+          correct: false
+        - text: 'потрібні'
+          correct: false
+
+- type: fill-in
+  title: 'Треба чи Потрібно?'
+  instruction: 'Fill in the blanks. Note that "треба" is invariable, while "потрібен/на/не" changes gender.'
+  items:
+    - sentence: 'Мені ___ (need, general) йти додому.'
+      answer: 'треба'
+      options: ['треба', 'потрібен', 'потрібна', 'потрібне']
+      explanation: 'Use "треба" or "потрібно" with infinitives.'
+    - sentence: 'Тобі ___ (need, m) цей олівець?'
+      answer: 'потрібен'
+      options: ['потрібен', 'потрібна', 'потрібне', 'треба']
+      explanation: '"Олівець" is masculine, so use "потрібен".'
+    - sentence: 'Нам ___ (need, f) твоя допомога.'
+      answer: 'потрібна'
+      options: ['потрібна', 'потрібен', 'потрібне', 'треба']
+      explanation: '"Допомога" is feminine, so use "потрібна".'
+    - sentence: 'Вам ___ (need, n) це фото?'
+      answer: 'потрібне'
+      options: ['потрібне', 'потрібен', 'потрібна', 'треба']
+      explanation: '"Фото" is neuter, so use "потрібне".'
+    - sentence: 'Їй ___ (need, general) відпочити.'
+      answer: 'потрібно'
+      options: ['потрібно', 'потрібен', 'потрібна', 'потрібні']
+      explanation: 'With verbs (відпочити), use the neuter/adverbial form "потрібно".'
+    - sentence: 'Їм ___ (need, pl) нові книги.'
+      answer: 'потрібні'
+      options: ['потрібні', 'потрібен', 'потрібна', 'потрібне']
+      explanation: '"Книги" is plural, so use "потрібні".'
+    - sentence: 'Мені терміново ___ (need, general) лікар.'
+      answer: 'треба'
+      options: ['треба', 'потрібне', 'потрібна', 'потрібні']
+      explanation: '"Треба" works with nouns too, implying generic necessity.'
+    - sentence: 'Йому ___ (need, m) хороший друг.'
+      answer: 'потрібен'
+      options: ['потрібен', 'потрібна', 'потрібне', 'потрібні']
+      explanation: '"Друг" is masculine.'
+
+- type: match-up
+  title: 'Стани та Емоції'
+  instruction: 'Match the English feeling to the Ukrainian Dative expression.'
+  pairs:
+    - left: 'I am cold'
+      right: 'Мені холодно'
+    - left: 'Are you bored?'
+      right: 'Тобі нудно?'
+    - left: 'He is in pain'
+      right: 'Йому боляче'
+    - left: 'She is having fun'
+      right: 'Їй весело'
+    - left: 'We are sad'
+      right: 'Нам сумно'
+    - left: 'They don''t care'
+      right: 'Їм байдуже'
+    - left: 'I am interested'
+      right: 'Мені цікаво'
+    - left: 'Are you comfortable?'
+      right: 'Вам зручно?'
+    - left: 'It is necessary'
+      right: 'Треба / Потрібно'
+    - left: 'It seems to me'
+      right: 'Мені здається'
+
+- type: unjumble
+  title: 'Складіть речення: Діалоги'
+  instruction: 'Reconstruct these phrases from common dialogues.'
+  items:
+    - words: ['Мені', 'дуже', 'приємно', 'познайомитися', 'з', 'вами', 'сьогодні,', 'колего']
+      answer: 'Мені дуже приємно познайомитися з вами сьогодні, колего'
+    - words: ['Скажи', 'чесно,', 'чи', 'тут', 'тобі', 'зручно', 'сидіти', 'і', 'працювати']
+      answer: 'Скажи чесно, чи тут тобі зручно сидіти і працювати'
+    - words: ['Вибачте,', 'чи', 'можу', 'я', 'вам', 'допомогти', 'знайти', 'дорогу']
+      answer: 'Вибачте, чи можу я вам допомогти знайти дорогу'
+    - words: ['Тримай,', 'це', 'маленький', 'подарунок', 'тобі', 'на', 'день', 'народження']
+      answer: 'Тримай, це маленький подарунок тобі на день народження'
+    - words: ['Мені', 'чомусь', 'здається,', 'що', 'це', 'все', 'абсолютна', 'правда']
+      answer: 'Мені чомусь здається, що це все абсолютна правда'
+    - words: ['На', 'прощання', 'бажаю', 'вам', 'всього', 'найкращого', 'та', 'успіхів']
+      answer: 'На прощання бажаю вам всього найкращого та успіхів'
+
+- type: mark-the-words
+  title: 'Знайдіть займенники в Давальному відмінку'
+  instruction: 'Highlight all pronouns in the Dative case (Recipients). Do not highlight Subject pronouns (Nominative).'
+  text: 'Привіт, як ти? Мені дуже сумно сьогодні. Я хочу піти в кіно, але йому не цікаво. Може, тобі подобається цей фільм? Нам треба відпочити. Вона каже, що їй весело, але мені здається, що це не так.'
+  answers: ['Мені', 'йому', 'тобі', 'Нам', 'їй', 'мені']
+
+- type: quiz
+  title: 'Культурний контекст'
+  instruction: 'Choose the culturally appropriate action or phrase.'
+  items:
+    - question: 'Ви прийшли в гості. Господар пропонує хліб і сіль. Що ви робите?'
+      explanation: 'Refusing bread and salt is considered an insult to the host.'
+      options:
+        - text: 'Приймаю з подякою'
+          correct: true
+        - text: 'Відмовляюся, я на дієті'
+          correct: false
+        - text: 'Прошу тільки сіль'
+          correct: false
+        - text: 'Даю гроші за це'
+          correct: false
+    - question: 'Ви даруєте подарунок другу. Де ви його передаєте?'
+      explanation: 'Never hand anything across the threshold (через поріг).'
+      options:
+        - text: 'Заходжу в кімнату, потім даю'
+          correct: true
+        - text: 'Через поріг дверей'
+          correct: false
+        - text: 'Кидаю через вікно'
+          correct: false
+        - text: 'Залишаю під дверима'
+          correct: false
+    - question: 'Вас познайомили з колегою. Що ви скажете?'
+      explanation: '"Мені приємно" is the standard polite phrase.'
+      options:
+        - text: 'Мені приємно'
+          correct: true
+        - text: 'Я приємний'
+          correct: false
+        - text: 'Мені подобається'
+          correct: false
+        - text: 'Мені треба'
+          correct: false
+    - question: 'Ви купуєте квіти на день народження. Скільки купите?'
+      explanation: 'For living people, always odd numbers (3, 5, 7...).'
+      options:
+        - text: '5 троянд'
+          correct: true
+        - text: '4 троянди'
+          correct: false
+        - text: '6 троянд'
+          correct: false
+        - text: '2 троянди'
+          correct: false
+    - question: 'Друг каже "Мені холодно". Що ви запропонуєте?'
+      explanation: 'Offering tea or a blanket is the culturally appropriate caring response.'
+      options:
+        - text: 'Чай або ковдру'
+          correct: true
+        - text: 'Морозиво'
+          correct: false
+        - text: 'Відкрити вікно'
+          correct: false
+        - text: 'Піти гуляти'
+          correct: false
+    - question: 'Що означає "Вам зручно?" в гостях?'
+      explanation: 'Hosts constantly check the guest''s comfort.'
+      options:
+        - text: 'Are you comfortable?'
+          correct: true
+        - text: 'Are you convenient?'
+          correct: false
+        - text: 'Do you like furniture?'
+          correct: false
+        - text: 'Are you rich?'
+          correct: false
+    - question: 'Коли використовують "Ви" і "Вам"?'
+      explanation: 'Plural and formal address (strangers, elders, groups).'
+      options:
+        - text: 'До старших або незнайомих'
+          correct: true
+        - text: 'До дітей'
+          correct: false
+        - text: 'До тварин'
+          correct: false
+        - text: 'Тільки до королів'
+          correct: false
+    - question: 'Як правильно українською мовою побажати комусь щастя та успіху?'
+      explanation: 'Wishes use Dative: "I wish TO YOU".'
+      options:
+        - text: 'Бажаю вам щастя'
+          correct: true
+        - text: 'Я хочу щастя'
+          correct: false
+        - text: 'Ви маєте щастя'
+          correct: false
+        - text: 'Щастя є'
+          correct: false
+
+- type: fill-in
+  title: 'Змішана практика'
+  instruction: 'Complete the sentences using the correct vocabulary and grammar.'
+  items:
+    - sentence: 'Вибачте, ___ вже треба йти додому.'
+      answer: 'мені'
+      options: ['мені', 'я', 'мене', 'моя']
+      explanation: 'Polite excuse for leaving uses Dative.'
+    - sentence: 'Цей колір ___ дуже пасує, друже.'
+      answer: 'тобі'
+      options: ['тобі', 'ти', 'тебе', 'твоє']
+      explanation: '"Пасує" (suits) takes Dative.'
+    - sentence: 'Ми слухаємо уважно, бо ___ дуже цікаво.'
+      answer: 'нам'
+      options: ['нам', 'ми', 'нас', 'нами']
+      explanation: '"We are interested" -> "To us is interesting".'
+    - sentence: 'Він чекає. Скажи ___ правду.'
+      answer: 'йому'
+      options: ['йому', 'він', 'його', 'ним']
+      explanation: '"Tell him" -> "Tell to him".'
+    - sentence: 'Мамі дуже ___ ці червоні квіти.'
+      answer: 'подобаються'
+      options: ['подобаються', 'подобається', 'подобаю', 'любить']
+      explanation: '"Flowers" is plural, so "подобаються".'
+    - sentence: 'Я бачу проблему. Чи можу я ___?'
+      answer: 'допомогти'
+      options: ['допомогти', 'помагати', 'допомога', 'поміч']
+      explanation: 'Standard phrase "Can I help?".'
+    - sentence: 'Я думаю, ні, мені навіть ___, що це помилка.'
+      answer: 'здається'
+      options: ['здається', 'здаю', 'здавалося', 'здати']
+      explanation: '"It seems to me" -> "Мені здається".'
+    - sentence: 'Він бере телефон і ___ їй щодня.'
+      answer: 'дзвонить'
+      options: ['дзвонить', 'дзвони', 'дзвонити', 'дзвінок']
+      explanation: 'He calls (present tense).'

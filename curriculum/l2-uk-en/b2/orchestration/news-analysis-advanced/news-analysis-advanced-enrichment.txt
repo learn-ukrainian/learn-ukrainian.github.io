@@ -1,0 +1,283 @@
+✅ Message sent to Gemini (ID: 10647) [auto-acked: self-addressed]
+✓ Message 10647 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10647...
+📨 Message #10647
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-news-analysis-advanced
+   Time: 2026-02-20T20:46:49.670459+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b2-90
+level: B2
+sequence: 90
+slug: news-analysis-advanced
+version: '2.0'
+title: 'Аналіз новин: Поглиблено'
+subtitle: Advanced media literacy and critical news analysis
+content_outline:
+- section: Розминка — Від базового до критичного аналізу
+  points:
+  - Перехід від структури (М89) до глибокого аналізу
+  - Інформаційна війна — чому критичний аналіз важливий
+  - Українські медіа в контексті глобальних інформаційних потоків
+- section: Упередженість та редакційна політика
+  points:
+  - Типи упередженості (selection bias, framing, omission)
+  - Редакційна політика — як власники впливають на зміст
+  - Порівняння висвітлення однієї події різними ЗМІ
+  - Ознаки пропаганди vs журналістики
+- section: Пропаганда та маніпуляції
+  points:
+  - Техніки пропаганди (демонізація, whataboutism, гіперболізація)
+  - Емоційні маніпуляції (апеляція до страху, гніву, патріотизму)
+  - Дезінформація та фейки — як розпізнати
+  - Кейс-стаді — російська пропаганда про Україну
+- section: Верифікація інформації
+  points:
+  - Перевірка джерел — CRAAP-тест (Currency, Relevance, Authority, Accuracy, Purpose)
+  - Фактчекінг — ресурси та методи (StopFake, VoxCheck)
+  - Зворотний пошук зображень
+  - Перехресна перевірка — мінімум три незалежні джерела
+- section: Фреймінг та мова
+  points:
+  - Фреймінг — як вибір слів формує сприйняття
+  - Активний vs пасивний стан — хто відповідальний
+  - Евфемізми та дисфемізми в новинах
+  - Заголовки як інструмент впливу
+- section: Підсумок та практика
+  points:
+  - Комплексний аналіз новинної статті
+  - Порівняльний аналіз — та сама подія в різних ЗМІ
+  - Письмовий відгук з обґрунтуванням
+pedagogy: CBI
+objectives:
+- Learner can identify editorial bias and political perspectives in news coverage
+- Learner can compare how different sources cover the same event
+- Learner can recognize propaganda techniques and rhetorical manipulation
+- Learner can evaluate source credibility and verify information
+- Learner can analyze framing, tone, and linguistic choices in journalism
+grammar:
+- Риторичні прийоми у ЗМІ
+- Мовні маркери упередженості
+- Конструкції хеджування та модальності
+immersion: 100
+register: публіцистичний
+phase: B2.4 Communication Skills
+vocabulary_hints:
+  required:
+  - термін (term)
+  - поняття (concept)
+  - процес (process)
+  - метод (method)
+  recommended:
+  - аналіз (analysis)
+  - синтез (synthesis)
+  - дослідження (research)
+activity_hints:
+- type: reading
+  focus: Аналіз тексту
+  items: 4
+- type: essay-response
+  focus: Практичне застосування
+- type: true-false
+  focus: Перевірка розуміння
+  items: 8
+persona:
+  voice: Professional Language Coach
+  role: Investigative Journalist (Журналіст-розслідувач)
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Аналіз новин: Поглиблено
+
+## State Standard Reference
+§3.18, §1.1.2.2.2: "Медіа й соціальні мережі: преса, радіо, телебачення, інтернет... обговорення новин і відгуки про них"
+Alignment: Цей модуль безпосередньо реалізує тематичну вимогу "Медіа" (каталог B) та комунікативну інтенцію "обговорення новин" (каталог A), фокусуючись на критичному аналізі та розпізнаванні маніпуляцій, що відповідає вимогам до рівня B2 щодо ведення дискусій.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| **Упередженість** (Bias) | Середня (публіцистика) | редакційна упередженість, політична упередженість, упереджене ставлення |
+| **Маніпуляція** | Висока (медіа) | маніпуляція свідомістю, емоційна маніпуляція, засоби маніпуляції |
+| **Пропаганда** | Висока (політика) | ворожа пропаганда, російська пропаганда, жертва пропаганди |
+| **Джерело** | Дуже висока | першоджерело, надійне джерело, перевірене джерело, посилатися на джерело |
+| **Верифікація** | Середня (спец.) | верифікація даних, методи верифікації, двоетапна верифікація |
+| **Шпальта** | Середня (преса) | на перших шпальтах, газетна шпальта |
+| **Оприлюднити** | Висока (офіц.) | оприлюднити документи, оприлюднити результати, офіційно оприлюднити |
+
+## Cultural Hooks
+1. **Реформа Суспільного (2017)**: Створення НСТУ (Національної суспільної телерадіокомпанії України) на базі державного мовлення стало ключовим кроком до незалежної журналістики, де наглядова рада обирається без втручання влади.
+2. **Феномен StopFake (2014)**: Проєкт, заснований викладачами та студентами Могилянської школи журналістики у відповідь на російську дезінформацію в Криму. Став світовим піонером фактчекінгу та боротьби з фейками.
+
+## Common Learner Errors
+1. **Калькування**: "Гарячі новини" (Hot news) → Правильно: **Свіжі новини**, **Останні новини**. "Зробити інтерв'ю" (Make interview) → Правильно: **Взяти інтерв'ю** (у когось) або **Дати інтерв'ю**.
+2. **Прийменники**: "Він був на ефірі" → Правильно: **Він був в ефірі**. "Дивлюся на телевізорі" → Правильно: **Дивлюся по телевізору** (або "на каналі").
+3. **Лексична плутанина**: "Трансляція" (процес передачі сигналу) замість "Передача" (програма). "Опублікувати" (друковані ЗМІ) vs "Оприлюднити" (зробити публічним, наприклад, документи).
+
+## Cross-References
+- Builds on: **B2-89** (Структура новин), **B2-01..10** (Пасивний стан — для аналізу відповідальності).
+- Prepares for: **B2-94** (Фінальний іспит), **C1-Media** (Академічний аналіз медіа).
+
+## Notes for Content Writing
+- Використовувати реальні приклади (без назв конкретних фейків, щоб не поширювати їх, але описувати *механіку*).
+- Чітко розмежовувати "факт" і "судження" (fact vs opinion).
+- Звернути увагу на емоційну лексику як маркер маніпуляції.
+- Ввести поняття "джинса" (прихована реклама в медіа) як специфічний український термін.
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Розминка та критичний вступ (Warm-up and Critical Introduction)"
+  words: 600
+  points:
+  - "Перехід від вивчення структури новин (М89) до глибокого деконструктивного аналізу змісту в умовах інформаційної війни"
+  - "Українські медіа в глобальному контексті: Реформа Суспільного (НСТУ) 2017 року як крок до незалежної журналістики та роль наглядової ради"
+  - "Обговорення новин та відгуків про них згідно зі стандартом B2 (§3.18, §1.1.2.2.2): фокус на інтенції аргументованої дискусії"
+- section: "Упередженість та редакційна політика (Bias and Editorial Policy)"
+  words: 800
+  points:
+  - "Аналіз типів упередженості: вибіркове висвітлення (selection bias), фреймінг (framing) та замовчування фактів (omission)"
+  - "Український медіа-феномен «джинса»: розпізнавання прихованої реклами та політичного замовлення під виглядом новин"
+  - "Порівняльний аналіз редакційної політики: як власники медіа-холдингів впливають на інтерпретацію подій"
+  - "Розмежування понять «факт» та «судження» (fact vs opinion) у новинному тексті"
+- section: "Пропаганда та емоційні маніпуляції (Propaganda and Emotional Manipulation)"
+  words: 900
+  points:
+  - "Техніки пропаганди: демонізація опонента, whataboutism як спосіб відвернення уваги та гіперболізація загроз"
+  - "Емоційна лексика як маркер маніпуляції: апеляція до страху, гніву та штучного патріотизму для зниження критичного порогу"
+  - "Механіка дезінформації: аналіз методів створення фейків на прикладі російської пропаганди про Україну (без ретрансляції самих фейків)"
+- section: "Верифікація та фактчекінг (Verification and Fact-checking)"
+  words: 900
+  points:
+  - "Методологія верифікації: застосування CRAAP-тесту (Currency, Relevance, Authority, Accuracy, Purpose) для оцінки надійності медіа"
+  - "Феномен StopFake (2014): історія проєкту Могилянської школи журналістики та його світове значення у боротьбі з дезінформацією"
+  - "Практичні інструменти: ресурси VoxCheck, зворотний пошук зображень та правило перехресної перевірки (мінімум три незалежні джерела)"
+- section: "Мовний аналіз та типові помилки (Linguistic Analysis and Common Errors)"
+  words: 800
+  points:
+  - "Фреймінг через граматику: активний vs пасивний стан для приховування або підкреслення відповідальності суб'єкта дії"
+  - "Корекція типових лексичних помилок: калькування «гарячі новини» (вживати: свіжі/останні новини) та «зробити інтерв'ю» (вживати: взяти/дати інтерв'ю)"
+  - "Стилістичні нюанси: розмежування понять «опублікувати» (для преси) та «оприлюднити» (для документів/даних); різниця між «трансляцією» та «передачею»"
+  - "Робота з прийменниками у медіа-контексті: правильне вживання «в ефірі» (не «на ефірі») та «дивитися по телевізору»"
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "упередженість (bias) — редакційна/політична упередженість; упереджене ставлення до подій"
+  - "маніпуляція (manipulation) — емоційна маніпуляція свідомістю; технічні засоби маніпуляції"
+  - "пропаганда (propaganda) — ворожа/російська пропаганда; стати жертвою пропаганди"
+  - "джерело (source) — надійне/перевірене джерело; посилатися на першоджерело"
+  recommended:
+  - "верифікація (verification) — верифікація даних; двоетапна верифікація інформації"
+  - "джинса (hidden advertising) — прихована реклама в медіа; специфічний український термін для замовних матеріалів"
+  - "шпальта (newspaper column/page) — з'явитися на перших шпальтах; газетна шпальта"
+  - "оприлюднити (to make public/disclose) — оприлюднити офіційні результати або документи (на відміну від 'опублікувати' статтю)"
+  - "свіжі новини (fresh/breaking news) — заміна кальці 'гарячі новини'; актуальна інформація"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (3738 chars)
+✅ Message sent to Claude (ID: 10652)
+✓ Message 10652 acknowledged
+   Auto-acknowledged reply #10652 (stdout delivery — no inbox accumulation)
+✓ Message 10647 acknowledged

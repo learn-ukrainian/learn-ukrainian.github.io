@@ -1,4 +1,3 @@
----
 module: c1-hist-128
 level: c1-hist
 sequence: 128
@@ -10,48 +9,41 @@ objectives:
 - Analyze the causes and consequences of гранітна революція 1990
 - Evaluate the historical significance of забута революція
 content_outline:
-- section: "Вступ — Забута революція"
-  words: 515
+- section: Вступ — Забута революція
   subsections:
   - Жовтень 1990 — студенти
   - Перша українська революція
   - Чому забули
   - Структура модуля
-- section: "Контекст — 1990 рік"
-  words: 774
+- section: Контекст — 1990 рік
   subsections:
   - СРСР ще існує
   - Декларація про суверенітет
   - Що хотіли студенти
   - Ризики — реальні
 - section: Голодування
-  words: 903
   subsections:
   - Хто голодував — імена
   - Вимоги — п'ять пунктів
   - Намет на площі
   - Реакція влади
 - section: Перемога
-  words: 774
   subsections:
   - Відставка Масола
   - Які вимоги виконали
   - Що це означало
   - Чому перемогли
 - section: Спадок
-  words: 645
   subsections:
   - Перша успішна революція
   - Модель для Майданів
   - Учасники — хто вони сьогодні
   - Пам'ять і забуття
 - section: Підсумок
-  words: 389
   subsections:
   - Гранітна — початок
   - Студенти — авангард
   - Перехід до 2004 кримської кризи
-word_target: 4000
 vocabulary:
 - Гранітна революція
 - голодування
@@ -70,22 +62,22 @@ vocabulary:
 - ненасильницький спротив
 activities:
 - type: critical-analysis
-  focus: "October 1990 — day-by-day reconstruction"
+  focus: October 1990 — day-by-day reconstruction
 - type: critical-analysis
-  focus: "Five demands — what they meant"
+  focus: Five demands — what they meant
 - type: comparative-study
-  focus: "Who were the students — where are they now"
+  focus: Who were the students — where are they now
 - type: critical-analysis
-  focus: "Granite → Orange → Dignity — continuity"
+  focus: Granite → Orange → Dignity — continuity
 - type: essay-response
   focus: Чому Гранітну революцію забули?
 sources:
 - name: Революція на граніті (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Революція_на_граніті"
+  url: https://uk.wikipedia.org/wiki/Революція_на_граніті
   type: reference
   notes: Granite Revolution
 - name: Студентське голодування 1990 (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Студентське_голодування_1990"
+  url: https://uk.wikipedia.org/wiki/Студентське_голодування_1990
   type: reference
   notes: Student hunger strike
 vocabulary_hints:
@@ -104,7 +96,9 @@ activity_hints:
   items: 4
 - type: essay-response
   focus: Критичний аналіз
-  word_target: 300
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Student Movement Historian

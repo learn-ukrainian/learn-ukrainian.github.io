@@ -1,4 +1,3 @@
----
 module: b2-hist-051
 level: B2-HIST
 sequence: 51
@@ -8,55 +7,85 @@ title: 'Хмельниччина I: причини та початок'
 subtitle: 'The Khmelnytsky Uprising: Causes and Outbreak'
 content_outline:
 - section: 'Вступ: На порозі великих змін'
-  words: 432
   points:
-  - The atmosphere in Ukraine in the mid-17th century
-  - Accumulated tensions and grievances
+  - The atmosphere in Ukraine in the mid-17th century — demographic boom and colonization
+    of the 'Wild Fields' creating a passionate free population
+  - Accumulated tensions and grievances — the 'Golden Peace' (1638-1648) as an illusion
+    or 'calm before the storm'
+  - '— include hook: [!context] World context 1648: End of Thirty Years'' War in Europe
+    vs. start of Khmelnychchyna; global ''General Crisis'''
+  - '— include hook: [!history-bite] Khmelnytsky was ~52 years old, a mature leader,
+    not a young revolutionary'
 - section: 'Соціально-економічні причини: Земля і воля'
-  words: 864
   points:
-  - Enserfment of peasants (pansshchyna)
-  - Restrictions on Cossack rights and registry
-  - Economic exploitation by magnates
+  - Enserfment of peasants (pansshchyna) — reached 3-5 days a week on the Right Bank
+  - Restrictions on Cossack rights and registry — Ordination of 1638 limited registry
+    to 6,000, turning others into serfs
+  - Economic exploitation by magnates — 'leaseholders' (orendatori) controlling church
+    rites; lack of legal protection (sva-villia)
+  - '— include hook: [!history-bite] Taxes on everything, even church rites (baptisms,
+    funerals)'
 - section: Релігійні та національне гноблення
-  words: 864
   points:
-  - The Union of Brest and religious conflict
-  - Discrimination against the Orthodox Church
-  - Polonization of the Ukrainian elite
+  - The Union of Brest and religious conflict — split society; Orthodox 'disuniats'
+    often outlawed
+  - Discrimination against the Orthodox Church — banned from guilds and magistrates
+  - Polonization of the Ukrainian elite — Vyshnevetsky/Ostrozky families converting
+    to Catholicism, leaving the people 'headless' until Cossacks took the lead
+  - '— include hook: [!culture] Baroque consciousness: religion was identity; changing
+    faith equaled betrayal'
 - section: Політична криза Речі Посполитої
-  words: 648
   points:
-  - Weakness of royal power vs. magnate anarchy
-  - Failed attempts at reform by Wladyslaw IV
-  - The 'Golden Peace' period (1638-1648)
+  - Weakness of royal power vs. magnate anarchy — King Wladyslaw IV wanted war with
+    Turkey to strengthen power vs Sejm
+  - Failed attempts at reform by Wladyslaw IV — secret talks with Cossacks (1646)
+    promised rights, then betrayed
+  - The 'Golden Peace' period (1638-1648) — described in Polish historiography as
+    'Złoty spokój', in Ukrainian as 'decade of heavies oppression'
+  - '— include hook: [!myth-buster] Myth of ''Strong Poland''; reality was ''Noble
+    Anarchy'' where the King couldn''t punish even one noble (Chaplynsky)'
+  - '— include quote: King Wladyslaw IV allegedly saying ''You have a saber at your
+    side'' (ius resistendi)'
 - section: 'Первинні джерела: Скарги та універсали'
-  words: 540
   points:
-  - Excerpts from contemporary chronicles describing oppression
-  - Early letters of Khmelnytsky stating grievances
+  - Excerpts from contemporary chronicles describing oppression — Litopys Samovydtsia
+    on treating Cossacks 'worse than Turkish slaves'
+  - Early letters of Khmelnytsky stating grievances — focus on personal tragedy (Subotiv
+    raid) resonating with general discontent ('match in a powder keg')
+  - '— include quote: Khmelnytsky''s Universals (''...intolerable wrongs to our people...'')'
 - section: 'Деколонізаційний погляд: Не бунт, а революція'
-  words: 540
   points:
-  - 'Reframing the conflict: National Liberation War vs. Civil War'
-  - Debunking myths about 'reunification' desires
+  - 'Reframing the conflict: National Liberation War vs. Civil War — organized campaign
+    with diplomacy (Crimea alliance) and state-building goals, not a chaotic peasant
+    riot (Jacquerie)'
+  - Debunking myths about 'reunification' desires — 1654 thesis back-projected to
+    1648; Khmelnytsky sought allies everywhere (Turkey, Crimea, Sweden) for survival
+  - '— include hook: [!decolonization] Imperial framing vs. Ukrainian reality of statehood'
 - section: Читання
-  words: 112
   points:
-  - Intro to reading tasks
-word_target: 4000
+  - Intro to reading tasks — adapted excerpt from Khmelnytsky's letter or Litopys
+    Samovydtsia analyzing vocabulary of oppression (kryvda, volnosti)
 vocabulary_hints:
   required:
-  - повстання
-  - гніт
-  - унія
-  - шляхта
-  - реєстр
-  - універсал
-  - союз
-  - засідка
-  - перемога
-  - воля
+  - повстання (uprising/rebellion) — often paired with 'національно-визвольне' (national
+    liberation)
+  - 'гніт (oppression) — collocations: соціальний, національний, релігійний'
+  - унія (Union) — refers specifically to the Union of Brest (1596)
+  - шляхта (nobility) — the ruling class in the Polish-Lithuanian Commonwealth
+  - реєстр (registry) — list of official Cossacks; limiting it was a major cause of
+    war
+  - універсал (universal) — manifesto or decree by the Hetman
+  - союз (alliance) — e.g., with Crimean Khanate (військово-політичний союз)
+  - засідка (ambush) — military tactic used in early battles
+  - перемога (victory) — e.g., at Zhovti Vody and Korsun
+  - 'воля (freedom/will) — dual meaning: liberty vs. willpower; core Cossack value'
+  recommended:
+  - кріпацтво (serfdom) — essential term for the social cause
+  - панщина (corvée) — labor obligation to the lord
+  - свавілля (arbitrariness) — lack of rule of law; impunity of magnates
+  - дизуніти (disuniats) — derogatory term for Orthodox believers who rejected the
+    Union
+  - посполиті (commoners) — term for peasants/townspeople vs. Cossacks/Nobles
 activity_hints:
 - type: reading
   focus: Linguistic analysis of 17th-century documents
@@ -78,12 +107,16 @@ grammar:
 - Military and political terminology
 sources:
 - name: History of Ukraine-Rus
-  url: "http://litopys.org.ua/hrushrus/iur.htm"
+  url: http://litopys.org.ua/hrushrus/iur.htm
   type: reference
   notes: Classic historical account
 - name: The Khmelnytsky Uprising
-  url: "https://encyclopediaofukraine.com"
+  url: https://encyclopediaofukraine.com
   type: academic
   notes: Modern analysis
 register: публіцистичний
-phase: "HIST.5 [Rise of Cossacks]"
+phase: HIST.5 [Rise of Cossacks]
+persona:
+  voice: Senior Professor of History
+  role: Registered Cossack
+word_target: 5000

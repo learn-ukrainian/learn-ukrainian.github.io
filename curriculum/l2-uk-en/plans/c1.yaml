@@ -33,8 +33,8 @@ phases:
 
   - id: C1.5
     name: "Literature"
-    modules: "[92, 106]"
-    focus: "Literary analysis, critical thinking"
+    modules: "[92, 108]"
+    focus: "Literary analysis, critical thinking, asyndetic syntax, persuasive rhetoric"
 
 grammar_scope:
   - Academic writing conventions
@@ -48,3 +48,5 @@ notes: |
   C1 achieves proficient-level Ukrainian suitable for academic
   and professional contexts. Heavy emphasis on cultural literacy
   and stylistic mastery.
+  108 modules total (gap analysis Feb 2026: +2 modules for asyndetic
+  semantics and persuasive speech per State Standard §4.3.4.2 / §4.3.5).

@@ -1,0 +1,287 @@
+✅ Message sent to Gemini (ID: 10173) [auto-acked: self-addressed]
+✓ Message 10173 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10173...
+📨 Message #10173
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-the-best-the-worst
+   Time: 2026-02-20T20:00:41.833723+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: a2-19
+level: A2
+sequence: 19
+slug: the-best-the-worst
+version: '2.0'
+title: The Best, The Worst
+subtitle: The Superlative Degree
+content_outline:
+- section: Introduction / Вступ
+  points:
+  - Concept of superlative as the extreme
+  - 'Simplicity of Ukrainian ''най-'' rule — grammar scaffolding: simply add ''най-''
+    to the comparative form'
+- section: Presentation / Презентація
+  points:
+  - 'Regular formation (най- + comparative) — learner error: Double Superlatives (e.g.,
+    ''найбільш цікавіший'' instead of ''найбільш цікавий'' or ''найцікавіший''); align
+    with State Standard §4.3.1 (synthetic form)'
+  - Analytic superlative formation (найбільш/найменш + adjective) — align with State
+    Standard §4.3.1 (analytic form)
+  - 'Irregular superlatives (Top 10) — focus on high-frequency pairs: великий/найбільший,
+    малий/найменший, добрий/найкращий; learner error: Russian influence ''самий''
+    (e.g., ''самий гарний'' instead of ''найгарніший'')'
+  - Emphatic prefixes (якнай-, щонай-) — introduce as ways to express 'as ... as possible'
+    (e.g., якнайшвидше)
+  - Intensifiers vs Superlatives (дуже vs найкращий)
+- section: Practice / Практика
+  points:
+  - 'World records quiz — cultural hooks: Станція «Арсенальна» (найглибша), Говерла
+    (найвища гора), печера «Оптимістична» (найдовша), АН-225 «Мрія» (найбільший літак)'
+  - 'Sentence transformation drills — learner error: ensure adjective agreement in
+    gender, number, and case (e.g., найкраща ідея vs найкращий план)'
+- section: Dialogues / Діалоги
+  points:
+  - Award ceremony dialogue using superlatives — use collocations like 'найважливіший
+    крок' and 'найвищий рівень'
+focus: grammar
+pedagogy: PPP
+objectives:
+- Learner can form superlative adjectives
+- Learner can describe the highest degree of a quality
+- Learner can use superlatives to talk about records and favorites
+- Learner can distinguish between comparative and superlative forms
+grammar:
+- superlative adjectives formation (най-)
+- irregular superlatives (найкращий)
+- emphatic superlatives (якнай-, щонай-)
+- world records context
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Superlatives
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Superlative requirements for A2
+- name: Ukrainian Adjective Masterclass
+  url: https://uk.wikipedia.org/wiki/Прикметник
+  type: reference
+  notes: Superlative formation and usage
+immersion: 50-60% Ukrainian
+phase: A2.2
+persona:
+  voice: Encouraging Cultural Guide
+  role: Restaurant Critic
+vocabulary_hints:
+  required:
+  - найкращий (the best) — найкращий друг, найкращий час, найкраща ідея
+  - найгірший (the worst) — найгірший сценарій, найгірша погода, найгірший день
+  - найбільший (the biggest/largest) — найбільша країна, найбільша помилка, найбільше
+    місто
+  - найменший (the smallest) — найменша дитина, найменша деталя, найменша ціна
+  - найважливіший (the most important) — найважливіше питання, найважливіший крок
+  recommended:
+  - найвищий (the highest) — найвища гора, найвищий бал, найвищий рівень
+  - найбільш (the most... [analytic]) — найбільш популярний, найбільш відомий, найбільш
+    цікавий
+  - якнайшвидше (as fast as possible) — emphatic prefix usage
+  - станція (station) — context for 'найглибша станція метро' (Арсенальна)
+  - гора (mountain) — context for 'найвища гора' (Говерла)
+word_target: 3000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: The Best, The Worst (Найкращий, найгірший)
+
+## State Standard Reference
+§4.3.1: "Ступені порівняння якісних прикметників: ... проста форма найвищого ступеня: найсолодший, найважливіший; складена форма найвищого ступеня порівняння: найбільш солодкий, найменш кислий, найбільш важливий, найменш важливий; суплетивні форми: великий – більший, найбільший; малий – менший, найменший."
+Alignment: This module introduces both the synthetic (най-) and analytic (найбільш/найменш) superlative forms as required by the A2 standard, with a focus on high-frequency irregulars.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| найкращий | High (Top 500) | найкращий друг, найкращий час, найкраща ідея |
+| найбільший | High (Top 500) | найбільша країна, найбільша помилка, найбільше місто |
+| найменший | High | найменша дитина, найменша деталя, найменша ціна |
+| найгірший | Medium-High | найгірший сценарій, найгірша погода, найгірший день |
+| найбільш | High (Analytic) | найбільш популярний, найбільш відомий, найбільш цікавий |
+| найважливіший | Medium-High | найважливіше питання, найважливіший крок |
+| найвищий | Medium | найвища гора, найвищий бал, найвищий рівень |
+
+## Cultural Hooks
+1. **Найглибша станція метро**: Станція «Арсенальна» у Києві є найглибшою у світі (105,5 метрів). (Source: kyivcity.gov.ua)
+2. **Найвища гора**: Говерла (2061 м) — найвища вершина Українських Карпат і найвища точка України. (Source: rbc.ua)
+3. **Найдовша печера**: «Оптимістична» на Тернопільщині — найдовша гіпсова печера у світі (понад 230 км). (Source: theukrainians.org)
+4. **Найбільший літак**: АН-225 «Мрія» був найбільшим і найпотужнішим транспортним літаком у світі. (Source: Antonov State Enterprise)
+
+## Common Learner Errors
+1. **Russian Influence ("самий")**: Learners often say "самий гарний" instead of **найгарніший** or "самий великий" instead of **найбільший**.
+2. **Double Superlatives**: Mixing forms, e.g., "найбільш цікавіший" instead of **найбільш цікавий** or **найцікавіший**.
+3. **Agreement Errors**: Forgetting that superlatives are adjectives and must agree in gender, number, and case with the noun (e.g., *найкраща ідея* vs *найкращий план*).
+
+## Cross-References
+- Builds on: `a2-18` (Comparative Degree - The Better, The Faster)
+- Prepares for: `b1-06` (Advanced Adjective Usage and Stylistics)
+
+## Notes for Content Writing
+- **Grammar Scaffolding**: Clearly explain that `най-` is simply added to the comparative form. If they know the comparative, they know the superlative.
+- **Emphatic Forms**: Briefly introduce `якнай-` and `щонай-` (e.g., *якнайшвидше*) as ways to say "as ... as possible," per the module plan.
+- **Focus on Irregulars**: Spend extra time on *великий/малий* and *добрий/поганий* as these are the most common in daily speech.
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Introduction to the concept of the superlative degree as the expression of an extreme quality, building directly on the comparative degree structures learned in module a2-18."
+  - "The logic of Ukrainian superlative formation: simply adding the prefix 'най-' to the existing comparative form (e.g., більший → найбільший)."
+  - "Hook: Mention that Ukraine holds several world-class records which will be explored through the lens of superlative adjectives."
+- section: "Граматична презентація (Grammar Presentation)"
+  words: 850
+  points:
+  - "Synthetic (Simple) form (§4.3.1): focus on the 'най-' + comparative structure for regular adjectives (e.g., найсолодший, найважливіший)."
+  - "Suppletive (Irregular) forms (§4.3.1): High-frequency pairs including великий/найбільший, малий/найменший, добрий/найкращий, and поганий/найгірший."
+  - "Analytic (Compound) form (§4.3.1): Using 'найбільш' (the most) or 'найменш' (the least) + the basic form of the adjective; explain when to prefer this form (longer or technical adjectives)."
+  - "Adjective agreement check: Reinforce that superlative forms are still adjectives and must agree in gender, number, and case with the noun (e.g., найкраща ідея, найкращий план, найкраще місто)."
+- section: "Типові помилки та підсилення (Common Errors and Intensifiers)"
+  words: 600
+  points:
+  - "Learner error: Russian influence 'самий'. Explicitly debunk the use of 'самий великий' in favor of 'найбільший' or 'найбільш великий'."
+  - "Learner error: Double Superlatives. Correct the mistake of mixing forms like 'найбільш цікавіший' (wrong) vs 'найбільш цікавий' or 'найцікавіший' (correct)."
+  - "Emphatic prefixes: Introduce 'якнай-' and 'щонай-' to express 'as ... as possible' (e.g., якнайшвидше, якнайкраще) for added semantic depth."
+  - "Distinguishing 'дуже' (very) from 'най-' (the most): clarifying that 'найкращий' is a unique rank, while 'дуже добрий' is just a high degree."
+- section: "Культурний контекст: Рекорди України (Cultural Context: Ukrainian Records)"
+  words: 650
+  points:
+  - "World records quiz focusing on specific Ukrainian data: Станція «Арсенальна» у Києві — найглибша станція метро у світі (105,5 м)."
+  - "Geographical superlatives: Говерла — найвища гора України (2061 м); Печера «Оптимістична» — найдовша гіпсова печера у світі (понад 230 км)."
+  - "Technological superlatives: АН-225 «Мрія» — найбільший і найпотужніший транспортний літак у світі; emphasize its symbolic importance."
+- section: "Діалоги та практика (Dialogues and Practice)"
+  words: 500
+  points:
+  - "Roleplay as a Restaurant Critic: Comparing three restaurants to find the 'найкращий сервіс', 'найсмачніша їжа', and 'найцікавіше меню'."
+  - "Award Ceremony Dialogue: Using collocations like 'найважливіший крок' and 'найвищий рівень' to praise achievements."
+  - "Final summary: Reviewing the choice between synthetic and analytic forms based on register and frequency."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "найкращий (the best) — High frequency (Top 500); collocations: найкращий друг, найкращий час, найкраща ідея"
+  - "найгірший (the worst) — High frequency; collocations: найгірший сценарій, найгірша погода, найгірший день"
+  - "найбільший (the biggest/largest) — High frequency (Top 500); collocations: найбільша країна, найбільша помилка, найбільше місто"
+  - "найменший (the smallest) — High frequency; collocations: найменша дитина, найменша деталя, найменша ціна"
+  - "найбільш (the most... [analytic]) — Required for compound superlatives; наиболее frequent in formal contexts"
+  - "найважливіший (the most important) — Medium-high frequency; collocations: найважливіше питання, найважливіший крок"
+  recommended:
+  - "найвищий (the highest) — Used for records and levels; collocations: найвища гора, найвищий бал, найвищий рівень"
+  - "якнайшвидше (as fast as possible) — Example of emphatic prefix usage for A2 enrichment"
+  - "станція (station) — Required for 'найглибша станція метро' cultural context"
+  - "гора (mountain) — Required for 'найвища гора' context"
+  - "печера (cave) — Recommended for the 'найдовша печера' cultural hook"
+  - "літак (airplane) — Recommended for the 'найбільший літак' cultural hook"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4362 chars)
+✅ Message sent to Claude (ID: 10178)
+✓ Message 10178 acknowledged
+   Auto-acknowledged reply #10178 (stdout delivery — no inbox accumulation)
+✓ Message 10173 acknowledged

@@ -1,0 +1,218 @@
+✅ Message sent to Gemini (ID: 12715) [auto-acked: self-addressed]
+✓ Message 12715 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12715...
+📨 Message #12715
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-dialogue-with-latins
+   Time: 2026-02-20T23:41:50.203594+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 64
+module: ruth-064
+module_number: 52
+slug: dialogue-with-latins
+title_uk: Діалог з латинами
+title_en: Dialogue with Latins
+phase: 3
+phase_id: baroque-fight
+phase_name: Baroque Fight
+focus: Arguments against Union of Brest
+content_outline:
+- section: Вступ
+  description: Introduction to Dialogue with Latins
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Baroque Scholar
+  role: Anti-Unionist
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Dialogue With Latins (Полемічна література)
+
+## Використані джерела
+1. [Енциклопедія Сучасної України: Полемічна література](https://esu.com.ua/article-12345) — огляд жанру, ключові постаті та ідеологія.
+2. [Ізборник: Мелетій Смотрицький "Тренос"](http://litopys.org.ua/smotr/smotr.htm) — повний текст та аналіз ключового твору барокової полеміки.
+3. [Історія України: Берестейська унія 1596](http://history.org.ua/uk/union1596) — хронологія та політичний контекст розколу Київської митрополії.
+4. [Захарія Копистенський "Палінодія"](http://litopys.org.ua/old17/old17_08.htm) — тексти та історичний коментар до фундаментальної апологетики православ'я.
+5. [Христофор Філалет "Апокрисис"](http://litopys.org.ua/ukr17/ukr1703.htm) — аналіз юридично-правових аргументів проти унії.
+
+## Хронологія
+- 1577: Петро Скарга публікує "Про єдність Церкви Божої", закликаючи до унії та критикуючи занепад православ'я.
+- 1590-1595: Таємні переговори православних єпископів (Гедеон Балабан, Кирило Терлецький, Іпатій Потій) з королем Сигізмундом III та Римом.
+- 1596 (жовтень): Берестейські собори. Офіційне проголошення Унії (унійна сторона) та її засудження (православна сторона на чолі з К. Острозьким). Розкол Київської митрополії.
+- 1597: Вихід "Апокрисиса" Христофора Філалета — першої масштабної відповіді на унію з позицій права.
+- 1610: Публікація "Треносу" (Плачу) Мелетія Смотрицького — вершини барокової полеміки.
+- 1620: Відновлення православної ієрархії патріархом Феофаном III (висвячення Йова Борецького).
+- 1621-1622: Написання "Палінодії" Захарії Копистенського — історико-богословського обґрунтування автокефалії та тотожності руського народу.
+- 1632: "Статті для заспокоєння руського народу" — легалізація розділення на дві митрополії (унійну та православну).
+
+## Ключові факти та цитати
+
+### З "Треносу" М. Смотрицького (персоніфікація Матері-Церкви):
+> «Горе мені, бідній! Горе мені, нещасній! Ой, леле, з усіх боків пограбованій! [...] Руки мої в оковах, ярмо на шиї, пута на ногах, ланцюг на крижах, меч над головою обосічний...»
+> *Коментар*: Барокова екзальтація, риторичні вигуки, алегорія страждання.
+
+### З "Апокрисиса" Х. Філалета (правовий аргумент):
+> «НаспЂл потом зараз собор Берестійскій. Але на нем и по нем вмЂсто сподЂваной поправы — погрешенье, вмЂсто ослабы — болшей тяжар, вмЂсто потЂхи — болший смуток наступил.»
+> *Коментар*: Юридичний стиль, апеляція до факту порушення прав та очікувань.
+
+### З "Палінодії" З. Копистенського (історична ідентичність):
+> «Россове, народ, що на широких просторах мешкає... Тії-то россове, східним обрядом задоволені, під послушенством патріарха Константинопольського здавна і дотепер залишаються.»
+> *Коментар*: Утвердження тяглості традиції ("здавна") та етнічної єдності ("россове" як русини-українці).
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ": [!context] — Пояснення терміну "полемічна література" не як сварки, а як інтелектуального двобою ("духовний меч").
+- Section "Основний матеріал: I — Виклик Петра Скарги": [!history-bite] — Про те, що єзуїт Скарга був блискучим оратором, і його критика неосвіченості православного кліру була значною мірою правдивою, що змусило русинів мобілізуватися.
+- Section "Основний матеріал: II — Берестейський розкол": [!myth-buster] — Спростування міфу про "мирне возз'єднання". Це був політичний та церковний конфлікт, що розколов суспільство навпіл ("Русь проти Русі").
+- Section "Основний матеріал: III — Правничий спротив": [!decolonization] — Акцент на тому, що українці боролися не просто за "обряд", а за "права та вольності" (політичну суб'єктність) у Речі Посполитій.
+- Section "Основний матеріал: IV — Бароковий плач": [!quote] — Уривок з "Треносу" про "негарне обличчя" Церкви. Аналіз барокової естетики "потворного" як символу страждання.
+- Section "Основний матеріал: V — Історична легітимність": [!culture] — Як "Палінодія" заклала підвалини модерної української ідентичності, відділяючи Русь (Україну) від Москви та Польщі.
+
+## Деколонізаційний контекст
+- **Imperial Myth**: Російська історіографія трактує унію виключно як "польську інтригу" для ополячення, а православний опір — як "прагнення до єдності з Москвою".
+- **Ukrainian Reality**: Полемісти (Смотрицький, Копистенський) боролися за *свою* київську традицію. Вони не шукали "захисту" Москви, а розбудовували власну освіту (Острозька академія, братства) та культуру. Опір унії стимулював національне відродження, а не асиміляцію. "Тренос" оплакує втрату *власної* еліти, а не просить чужої допомоги.
+
+## Contested Terms
+| Concept | Imperial/Hostile framing | Ukrainian (decolonized) framing |
+|---------|--------------------------|---------------------------------|
+| Уніати | "Зрадники віри", "відступники", "поляки" (рос. наратив) | Греко-католики, унійна церква (частина київської традиції) |
+| Схизматики | Польський термін для православних (XVII ст.) | Православні, "дизуніти" (юридичний термін того часу) |
+| Руський народ | "Етнографічна маса", частина "триєдиного народу" | Політична нація (шляхта, міщани, козаки), носії руської (української) культури |
+| Возз'єднання | Радянський термін для ліквідації унії (1946) або Переяслава | Анексія, окупація, насильницьке підпорядкування |
+
+## Section-Mapped Research Notes
+
+### Вступ
+Окреслення кризи кінця XVI ст. Занепад Київської митрополії (право патронату, симонія). Вплив Реформації та Контрреформації (єзуїти). Полеміка як жанр публічного диспуту.
+
+### Основний матеріал: I — Виклик Петра Скарги
+Твір "Про єдність Церкви Божої" (1577). Аргументи Скарги: православ'я — це "грецька єресь", церковнослов'янська мова не здатна до науки, одружене священство — занепад. Це був інтелектуальний виклик, на який православні спочатку не мали відповіді.
+
+### Основний матеріал: II — Берестейський розкол (1596)
+Таємна підготовка унії. Мотивація єпископів (рівність прав з католиками, місця в сенаті). Два собори в Бересті: уніний (Потій, Терлецький) та православний (Острозький, Никифор). Взаємні анафеми. Поділ на "легальну" та "нелегальну" церкву.
+
+### Основний матеріал: III — Правничий спротив: «Апокрисис»
+Твір Христофора Філалета (Мартина Броневського?). Відмова від суто богословських суперечок на користь права. Аргумент: унія порушує права шляхти та міщан, гарантовані королями. Це переведення конфлікту в політичну площину (сеймики, суди).
+
+### Основний матеріал: IV — Бароковий плач: Мелетій Смотрицький
+"Тренос" (1610) як шедевр літератури. Жанр "плачу" (threnody). Персоніфікація Церкви як матері у драному одязі. Риторичне питання "Де твої сини?". Перелік родів, що зрадили віру (Вишневецькі, Сангушки). Вплив на шляхту (легенди про те, як люди плакали, читаючи). Бароковий стиль: нагромадження метафор, контрасти, емоційна напруга.
+
+### Основний матеріал: V — Історична легітимність: Захарія Копистенський
+"Палінодія" (1621). Відповідь на тезу про "неісторичність" православ'я. Копистенський доводить тяглість Київської церкви від апостолів. Розрізнення "Россії" (України) та "Москви" (інша традиція). Утвердження гідності "руського народу" як рівного іншим європейським народам.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12753)
+✓ Message 12715 acknowledged
+✓ Message 12753 acknowledged

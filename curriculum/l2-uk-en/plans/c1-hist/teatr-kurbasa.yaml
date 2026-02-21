@@ -1,4 +1,3 @@
----
 module: c1-hist-055
 level: c1-hist
 sequence: 55
@@ -10,22 +9,19 @@ objectives:
 - 'Analyze the causes and consequences of театр курбаса: реформа і знищення'
 - Evaluate the historical significance of революціонер сцени
 content_outline:
-- section: "Вступ — Революціонер сцени"
-  words: 457
+- section: Вступ — Революціонер сцени
   subsections:
   - Курбас — хто він
   - Театральна революція
   - Чому театр — політика
   - Структура модуля
-- section: "Шлях до \"Березоля\""
-  words: 571
+- section: Шлях до "Березоля"
   subsections:
   - Ранні роки і навчання
   - «Молодий театр» — перші експерименти
   - Перша світова і революція
   - Створення «Березоля» (1922)
 - section: Театральна реформа Курбаса
-  words: 800
   subsections:
   - Проти традиційного театру
   - Система Курбаса — що нового
@@ -33,7 +29,6 @@ content_outline:
   - Синтетичний актор
   - Вплив європейського авангарду
 - section: Найважливіші постановки
-  words: 686
   subsections:
   - «Газ» Кайзера
   - Джіммі Гіггінз
@@ -41,26 +36,22 @@ content_outline:
   - Що показували — як реагували
   - Критика і успіх
 - section: Конфлікт із владою
-  words: 571
   subsections:
   - Тиск зростає — 1930-ті
   - «Формалізм» — звинувачення
   - Звільнення з театру (1933)
   - Заслання і арешт
 - section: Загибель і пам'ять
-  words: 571
   subsections:
   - Соловецький табір
   - Розстріл (1937)
   - Реабілітація — коли і як
   - Спадщина — сучасний театр
 - section: Підсумок
-  words: 344
   subsections:
   - Курбас — символ знищеного
   - Від експерименту до злочину
   - Підготовка до механізму знищення
-word_target: 4000
 vocabulary:
 - театр
 - режисер
@@ -85,20 +76,20 @@ activities:
 - type: comparative-study
   focus: Compare Kurbas with European avant-garde (Meyerhold)
 - type: comparative-study
-  focus: "How was \"formalism\" used to attack artists?"
+  focus: How was "formalism" used to attack artists?
 - type: essay-response
   focus: Чому радянська влада знищила авангардний театр?
 sources:
 - name: Лесь Курбас (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Курбас_Лесь"
+  url: https://uk.wikipedia.org/wiki/Курбас_Лесь
   type: reference
   notes: Biography
 - name: Березіль (театр)
-  url: "https://uk.wikipedia.org/wiki/Березіль_(театр)"
+  url: https://uk.wikipedia.org/wiki/Березіль_(театр)
   type: reference
   notes: Theater history
 - name: Український театральний авангард
-  url: "https://uk.wikipedia.org/wiki/Авангардизм"
+  url: https://uk.wikipedia.org/wiki/Авангардизм
   type: reference
   notes: Avant-garde context
 vocabulary_hints:
@@ -117,7 +108,9 @@ activity_hints:
   items: 4
 - type: essay-response
   focus: Критичний аналіз
-  word_target: 300
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Theater Historian

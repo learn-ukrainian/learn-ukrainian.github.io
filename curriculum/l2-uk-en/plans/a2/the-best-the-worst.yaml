@@ -1,0 +1,110 @@
+module: a2-19
+level: A2
+sequence: 19
+slug: the-best-the-worst
+version: '2.0'
+title: The Best, The Worst
+subtitle: The Superlative Degree
+content_outline:
+- section: Вступ (Introduction)
+  words: 400
+  points:
+  - Introduction to the concept of the superlative degree as the expression of an
+    extreme quality, building directly on the comparative degree structures learned
+    in module a2-18.
+  - 'The logic of Ukrainian superlative formation: simply adding the prefix ''най-''
+    to the existing comparative form (e.g., більший → найбільший).'
+  - 'Hook: Mention that Ukraine holds several world-class records which will be explored
+    through the lens of superlative adjectives.'
+- section: Граматична презентація (Grammar Presentation)
+  words: 850
+  points:
+  - 'Synthetic (Simple) form (§4.3.1): focus on the ''най-'' + comparative structure
+    for regular adjectives (e.g., найсолодший, найважливіший).'
+  - 'Suppletive (Irregular) forms (§4.3.1): High-frequency pairs including великий/найбільший,
+    малий/найменший, добрий/найкращий, and поганий/найгірший.'
+  - 'Analytic (Compound) form (§4.3.1): Using ''найбільш'' (the most) or ''найменш''
+    (the least) + the basic form of the adjective; explain when to prefer this form
+    (longer or technical adjectives).'
+  - 'Adjective agreement check: Reinforce that superlative forms are still adjectives
+    and must agree in gender, number, and case with the noun (e.g., найкраща ідея,
+    найкращий план, найкраще місто).'
+- section: Типові помилки та підсилення (Common Errors and Intensifiers)
+  words: 600
+  points:
+  - 'Learner error: Russian influence ''самий''. Explicitly debunk the use of ''самий
+    великий'' in favor of ''найбільший'' or ''найбільш великий''.'
+  - 'Learner error: Double Superlatives. Correct the mistake of mixing forms like
+    ''найбільш цікавіший'' (wrong) vs ''найбільш цікавий'' or ''найцікавіший'' (correct).'
+  - 'Emphatic prefixes: Introduce ''якнай-'' and ''щонай-'' to express ''as ... as
+    possible'' (e.g., якнайшвидше, якнайкраще) for added semantic depth.'
+  - 'Distinguishing ''дуже'' (very) from ''най-'' (the most): clarifying that ''найкращий''
+    is a unique rank, while ''дуже добрий'' is just a high degree.'
+- section: 'Культурний контекст: Рекорди України (Cultural Context: Ukrainian Records)'
+  words: 650
+  points:
+  - 'World records quiz focusing on specific Ukrainian data: Станція «Арсенальна»
+    у Києві — найглибша станція метро у світі (105,5 м).'
+  - 'Geographical superlatives: Говерла — найвища гора України (2061 м); Печера «Оптимістична»
+    — найдовша гіпсова печера у світі (понад 230 км).'
+  - 'Technological superlatives: АН-225 «Мрія» — найбільший і найпотужніший транспортний
+    літак у світі; emphasize its symbolic importance.'
+- section: Діалоги та практика (Dialogues and Practice)
+  words: 500
+  points:
+  - 'Roleplay as a Restaurant Critic: Comparing three restaurants to find the ''найкращий
+    сервіс'', ''найсмачніша їжа'', and ''найцікавіше меню''.'
+  - 'Award Ceremony Dialogue: Using collocations like ''найважливіший крок'' and ''найвищий
+    рівень'' to praise achievements.'
+  - 'Final summary: Reviewing the choice between synthetic and analytic forms based
+    on register and frequency.'
+focus: grammar
+pedagogy: PPP
+objectives:
+- Learner can form superlative adjectives
+- Learner can describe the highest degree of a quality
+- Learner can use superlatives to talk about records and favorites
+- Learner can distinguish between comparative and superlative forms
+grammar:
+- superlative adjectives formation (най-)
+- irregular superlatives (найкращий)
+- emphatic superlatives (якнай-, щонай-)
+- world records context
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Superlatives
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Superlative requirements for A2
+- name: Ukrainian Adjective Masterclass
+  url: https://uk.wikipedia.org/wiki/Прикметник
+  type: reference
+  notes: Superlative formation and usage
+immersion: 50-60% Ukrainian
+phase: A2.2
+persona:
+  voice: Encouraging Cultural Guide
+  role: Restaurant Critic
+vocabulary_hints:
+  required:
+  - 'найкращий (the best) — High frequency (Top 500); collocations: найкращий друг,
+    найкращий час, найкраща ідея'
+  - 'найгірший (the worst) — High frequency; collocations: найгірший сценарій, найгірша
+    погода, найгірший день'
+  - 'найбільший (the biggest/largest) — High frequency (Top 500); collocations: найбільша
+    країна, найбільша помилка, найбільше місто'
+  - 'найменший (the smallest) — High frequency; collocations: найменша дитина, найменша
+    деталя, найменша ціна'
+  - найбільш (the most... [analytic]) — Required for compound superlatives; наиболее
+    frequent in formal contexts
+  - 'найважливіший (the most important) — Medium-high frequency; collocations: найважливіше
+    питання, найважливіший крок'
+  recommended:
+  - 'найвищий (the highest) — Used for records and levels; collocations: найвища гора,
+    найвищий бал, найвищий рівень'
+  - якнайшвидше (as fast as possible) — Example of emphatic prefix usage for A2 enrichment
+  - станція (station) — Required for 'найглибша станція метро' cultural context
+  - гора (mountain) — Required for 'найвища гора' context
+  - печера (cave) — Recommended for the 'найдовша печера' cultural hook
+  - літак (airplane) — Recommended for the 'найбільший літак' cultural hook
+word_target: 3000

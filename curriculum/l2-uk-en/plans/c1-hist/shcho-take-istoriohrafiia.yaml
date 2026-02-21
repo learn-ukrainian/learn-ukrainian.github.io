@@ -1,4 +1,3 @@
----
 module: c1-hist-001
 level: c1-hist
 sequence: 1
@@ -10,15 +9,13 @@ objectives:
 - Analyze the difference between history and historiography
 - Evaluate the impact of bias and narrative on historical writing
 content_outline:
-- section: "Вступ — Історія vs. Історіографія"
-  words: 485
+- section: Вступ — Історія vs. Історіографія
   subsections:
   - Що таке історія? Що таке історіографія?
   - Різниця між подіями та інтерпретацією подій
   - Чому один і той самий факт описують по-різному?
   - Приклад — Переяславська рада 1654 (3 версії)
 - section: Ключові поняття історіографії
-  words: 727
   subsections:
   - Наратив (narrative) — як розповідь формує розуміння
   - Первинні джерела vs. вторинні джерела
@@ -26,15 +23,13 @@ content_outline:
   - Упередження (bias) та перспектива автора
   - Контекст створення тексту
 - section: Хто пише історію?
-  words: 606
   subsections:
   - Літописці (Chronicle writers) — середньовічна традиція
   - Академічні історики — університетська традиція
   - Держава як автор історії — офіційні наративи
   - Еміграція та діаспора — альтернативні голоси
   - Сучасність — public history, Wikipedia, соцмережі
-- section: "Українська історіографічна традиція — огляд"
-  words: 727
+- section: Українська історіографічна традиція — огляд
   subsections:
   - Від літописів до Грушевського
   - Чому українська історія довго писалася як «частина російської»
@@ -42,24 +37,20 @@ content_outline:
   - Радянські деформації
   - Відродження після 1991
 - section: Чому це важливо для вас?
-  words: 485
   subsections:
   - Критичне читання — не вірити одному джерелу
   - Розпізнавання пропаганди
   - Формування власної позиції на основі доказів
   - Україна як об'єкт інформаційної війни
 - section: Практичне застосування
-  words: 606
   subsections:
   - Як читати історичний текст критично?
   - 5 питань до кожного джерела (хто? коли? для кого? чому? що опущено?)
   - Приклад аналізу — радянський підручник vs. сучасний
 - section: Підсумок та перехід
-  words: 364
   subsections:
   - Ключові терміни модуля
   - Що далі — українська історіографічна традиція детально
-word_target: 4000
 vocabulary:
 - історіографія
 - наратив
@@ -87,15 +78,15 @@ activities:
   focus: Чому важливо знати, хто написав історію?
 sources:
 - name: Історіографія України (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Історіографія_України"
+  url: https://uk.wikipedia.org/wiki/Історіографія_України
   type: reference
   notes: Overview of Ukrainian historiographical tradition
-- name: "Грушевський — Історія України-Руси (вступ)"
-  url: "https://litopys.org.ua/hrushukr/ihu.htm"
+- name: Грушевський — Історія України-Руси (вступ)
+  url: https://litopys.org.ua/hrushukr/ihu.htm
   type: primary
   notes: Hrushevsky's methodological introduction
 - name: What is Historiography? (academic intro)
-  url: "https://www.historians.org/teaching-and-learning/teaching-resources-for-historians/teaching-and-learning-in-the-digital-age/the-history-of-the-americas/what-is-historiography"
+  url: https://www.historians.org/teaching-and-learning/teaching-resources-for-historians/teaching-and-learning-in-the-digital-age/the-history-of-the-americas/what-is-historiography
   type: reference
   notes: English reference for conceptual framework
 vocabulary_hints:
@@ -114,7 +105,9 @@ activity_hints:
   items: 4
 - type: essay-response
   focus: Критичний аналіз
-  word_target: 300
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Historical Methodologist

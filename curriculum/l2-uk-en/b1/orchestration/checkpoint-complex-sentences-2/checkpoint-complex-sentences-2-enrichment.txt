@@ -1,0 +1,322 @@
+✅ Message sent to Gemini (ID: 10360) [auto-acked: self-addressed]
+✓ Message 10360 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10360...
+📨 Message #10360
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-checkpoint-complex-sentences-2
+   Time: 2026-02-20T20:28:42.387306+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b1-41
+level: B1
+sequence: 41
+slug: checkpoint-complex-sentences-2
+version: '2.0'
+title: 'Контрольна точка: складні речення (частина 2)'
+subtitle: Checkpoint - Complex Sentences Part 2
+content_outline:
+- section: Огляд
+  points:
+  - Review B1.3b objectives
+  - Identify strengths and gaps
+- section: 'Навичка 1: Допустові речення'
+  points:
+  - Хоча + підрядне речення (Хоча йшов дощ, ми вийшли)
+  - Незважаючи на + іменник (Незважаючи на погоду)
+  - Даремно що (concessive in spite of)
+  - Самоперевірка
+- section: 'Навичка 2: Причинові та наслідкові речення'
+  points:
+  - Тому що, бо — причина (Він спізнився, бо...)
+  - Тому, отже — наслідок (...тому він спізнився)
+  - Через те, що — офіційний стиль
+  - Самоперевірка
+- section: 'Навичка 3: Часові речення'
+  points:
+  - Коли — одночасність або послідовність
+  - Поки — тривалість (Поки я чекав...)
+  - Після того як / Перед тим як
+  - Вид дієслова в часових реченнях
+- section: 'Навичка 4: Інтеграція типів підрядних речень'
+  points:
+  - Речення з 2-3 підрядними різних типів
+  - Порядок частин речення
+  - Пунктуація в складних реченнях
+- section: 'Навичка 5: Непряма мова — твердження'
+  points:
+  - Він сказав, що... (statement reporting)
+  - Зсув часів (теперішній → минулий)
+  - Зміна займенників та вказівних слів
+- section: 'Навичка 6: Непряма мова — питання'
+  points:
+  - Він запитав, чи... (yes/no questions)
+  - Він запитав, де/коли/чому... (wh-questions)
+  - Порядок слів у непрямому питанні
+- section: 'Навичка 7: Непряма мова — накази та прохання'
+  points:
+  - Він попросив, щоб... (requests)
+  - Він наказав + інфінітив (commands)
+  - Заборони в непрямій мові
+- section: Integration Challenge
+  points:
+  - Mixed transformations
+  - Complex writing
+- section: Практика
+  points:
+  - All B1.3 structures
+  - Proficiency check
+- section: Потрібно більше практики?
+  points:
+  - Additional exercises
+vocabulary_hints:
+  required:
+  - контрольна точка (checkpoint)
+  - повторення (review)
+  - оцінювання (assessment)
+  - інтеграція (integration)
+  - непряма мова (indirect speech)
+  - допустовий (concessive)
+  - причиновий (causal)
+  - часовий (temporal)
+  recommended:
+  - трансформація (transformation)
+  - прогрес (progress)
+  - рівень (level)
+  - готовність (readiness)
+activity_hints:
+- type: quiz
+  focus: B1.3b comprehensive test
+  items: 30
+- type: fill-in
+  focus: All speech type conversions
+  items: 25
+- type: fill-in
+  focus: Complete complex sentences
+  items: 20
+- type: fill-in
+  focus: Write complex paragraphs
+  items: 10
+focus: checkpoint
+pedagogy: TTT
+prerequisites:
+- b1-40 (Reported Questions Commands)
+connects_to:
+- b1-42 (Adverbial Participles Imperfective)
+objectives:
+- Learner can demonstrate mastery of concessive, causal, temporal clauses
+- Learner can use reported speech for statements, questions, and commands
+- Learner can self-assess readiness for B1.4 phase
+- Learner can integrate all B1.3 complex sentence patterns
+grammar:
+- Integration of M35-M40 grammar
+- Concessive, causal, temporal, reported speech
+- Comprehensive complex sentence mastery
+register: розмовний
+phase: B1.3b [Complex Sentences Checkpoint]
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Senior Editor
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Контрольна точка: складні речення (частина 2)
+
+## State Standard Reference
+§4.4.3: "Складне речення: складнопідрядні речення з допустовою підрядною частиною (сполучники хоч, дарма що, незважаючи на те що)... із часовою підрядною частиною (сполучне слово коли)... з підрядною частиною причини (сполучники тому що, бо, через те що)... складні речення з непрямою мовою."
+Alignment: This module directly addresses the B1 requirements for complex sentences with concessive, temporal, and causal clauses, as well as the transformation of direct to indirect speech (§4.4.3), which are key syntactic competencies for the level.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| **контрольна точка** | Medium (Technical/Edu) | проходити контрольну точку, визначення контрольних точок, ключова контрольна точка |
+| **інтеграція** | High (Political/Social) | європейська інтеграція, інтеграція в суспільство, процеси інтеграції, повна інтеграція |
+| **оцінювання** | High (Educational) | система оцінювання, критерії оцінювання, підсумкове оцінювання, самооцінювання |
+| **прогрес** | High (General) | значний прогрес, досягти прогресу, технічний прогрес, відстежувати прогрес |
+| **готовність** | Medium (General) | готовність до змін, повна готовність, перевірити готовність, висловити готовність |
+
+## Cultural Hooks
+1. **Persistence & Resilience**: "Вода камінь точить, хоча й м’яка." (Water wears away stone, though it is soft.) — Illustrates the concessive "хоча" and a key Ukrainian cultural value of persistence.
+2. **Causality & Consequence**: "Не відкладай на завтра того, що можна зробити сьогодні, тому що завтра може бути пізно." (Do not put off until tomorrow what can be done today, because tomorrow might be too late.) — Classic wisdom using causal connections.
+3. **Reasoning**: "Треба багато працювати, бо під лежачий камінь вода не тече." (One must work hard, for water does not flow under a lying stone.) — Uses "бо" to explain the necessity of effort.
+
+## Common Learner Errors
+1. **Incorrect Conjunction Choice**: Using *тому що* (causal) instead of *тому* (consequence) or vice versa.
+   * *Error*: Він не прийшов, тому що він захворів. (Correct) vs. Він захворів, тому що він не прийшов. (Incorrect logic/conjunction use).
+   * *Fix*: Clear distinction: *cause* → тому що, *result* → тому.
+2. **Word Order in Indirect Questions**: Retaining the direct question word order or intonation without proper connectors.
+   * *Error*: Він запитав, коли прийде поїзд? (Direct intonation/order).
+   * *Fix*: Він запитав, коли прийде поїзд. (Declarative word order, no question mark).
+3. **Tense Shift in Reported Speech**: Failing to adjust the tense or pronouns when shifting from direct to indirect speech (though Ukrainian is more flexible than English here, pronoun shifts are critical).
+   * *Error*: Він сказав, що я (referring to original speaker) хочу їсти.
+   * *Fix*: Він сказав, що він хоче їсти.
+
+## Cross-References
+- **Builds on**: B1.3a (Complex Sentences I - M26-34), M40 (Reported Questions/Commands)
+- **Prepares for**: B1.4 (Advanced Grammar), B1.5 (Vocabulary Expansion - deeper texts)
+
+## Notes for Content Writing
+- **Pedagogy**: Focus on *nuance* in causal connectors (бо vs. тому що vs. через те що) — "через те що" is more formal/official.
+- **Immersion**: Ensure all metalanguage instructions (e.g., "Change to indirect speech") are 100% in Ukrainian («Перетворіть на непряму мову»).
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Огляд та цілі (Review and Objectives)"
+  words: 400
+  points:
+  - "Вступ до контрольної точки: визначення цілей рівня B1.3b та важливості підсумкового оцінювання (assessment) згідно з Державним стандартом §4.4.3."
+  - "Обговорення поняття «інтеграція» (integration) у контексті поєднання різних типів підрядних речень для побудови складних висловлювань."
+  - "Самоаналіз: ідентифікація сильних сторін та прогалин у знаннях синтаксису складного речення."
+- section: "Допустові та часові зв'язки (Concessive and Temporal Links)"
+  words: 1000
+  points:
+  - "Допустові речення: використання сполучників «хоча», «дарма що», «незважаючи на те що» (State Standard §4.4.3)."
+  - "Культурний контекст: аналіз прислів'я «Вода камінь точить, хоча й м’яка» як приклад допустового зв'язку та цінності наполегливості."
+  - "Часові речення: сполучне слово «коли» (одночасність) та «поки» (тривалість). Правила вживання видів дієслова в часових структурах."
+  - "Практика: трансформація простих речень з прийменником «незважаючи на» у складнопідрядні з «хоча»."
+- section: "Причиново-наслідкова логіка (Causal-Result Logic)"
+  words: 900
+  points:
+  - "Аналіз причинових сполучників: «тому що», «бо», та офіційний варіант «через те що» (State Standard alignment)."
+  - "Типова помилка: плутанина між причиною (тому що) та наслідком (тому). Контрастний аналіз: «Він не прийшов, тому що захворів» vs. «Він захворів, тому не прийшов»."
+  - "Логіка та мудрість: розбір вислову «Не відкладай на завтра того, що можна зробити сьогодні, тому що завтра може бути пізно»."
+  - "Функціональне вживання «отже» для підбиття підсумків та формулювання висновків."
+- section: "Трансформація непрямої мови (Reported Speech Transformation)"
+  words: 1000
+  points:
+  - "Твердження в непрямій мові: заміна займенників та вказівних слів. Помилка: збереження займенника першої особи при цитуванні іншого («Він сказав, що я хочу...» замість «що він хоче»)."
+  - "Непрямі питання: використання частки «чи» для загальних питань та збереження запитальних слів (де, коли, чому) для спеціальних питань."
+  - "Синтаксична норма: відсутність знака питання та розповідна інтонація в непрямих питаннях («Він запитав, коли прийде поїзд»)."
+  - "Накази та прохання: конструкція «попросив, щоб...» (+ минулий час) та «наказав» + інфінітив. Тренування з метамовою «Перетворіть на непряму мову»."
+- section: "Комплексна практика та самоконтроль (Complex Practice and Self-Check)"
+  words: 700
+  points:
+  - "Integration Challenge: побудова речень з 2-3 підрядними частинами різних типів (напр. часове + причинове)."
+  - "Пунктуаційний практикум: коми в складних реченнях та при непрямій мові."
+  - "Оцінювання прогресу: перевірка готовності (readiness) до переходу на фазу B1.4. Фінальний Proficiency Check."
+  - "Потрібно більше практики? Рекомендації щодо додаткових вправ на основі виявлених помилок."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "контрольна точка (checkpoint) — ключова контрольна точка, проходити контрольну точку; основний етап оцінювання"
+  - "повторення (review) — систематичне повторення матеріалу; підготовка до тесту"
+  - "оцінювання (assessment) — система оцінювання, підсумкове оцінювання; вимірювання прогресу"
+  - "інтеграція (integration) — інтеграція в суспільство, процеси інтеграції; поєднання структур"
+  - "непряма мова (indirect speech) — передача непрямою мовою; трансформація прямої мови"
+  - "допустовий (concessive) — допустове речення; вираження суперечності, незважаючи на обставини"
+  - "причиновий (causal) — причиновий сполучник; вказує на підставу дії"
+  - "часовий (temporal) — часова підрядна частина; позначає час або тривалість"
+  recommended:
+  - "трансформація (transformation) — граматична трансформація; зміна структури речення"
+  - "прогрес (progress) — значний прогрес, досягти прогресу; відстеження результатів навчання"
+  - "рівень (level) — досягти рівня B1; відповідність стандартам"
+  - "готовність (readiness) — повна готовність, готовність до змін; підтвердження навичок"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4114 chars)
+✅ Message sent to Claude (ID: 10368)
+✓ Message 10368 acknowledged
+   Auto-acknowledged reply #10368 (stdout delivery — no inbox accumulation)
+✓ Message 10360 acknowledged

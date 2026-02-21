@@ -1,0 +1,106 @@
+sequence: 44
+module: a1-44
+level: A1
+slug: a1-final-exam
+version: '2.0'
+title: A1 Final Exam
+subtitle: Comprehensive Assessment
+content_outline:
+- section: Вступ та орієнтація (Introduction and Orientation)
+  words: 300
+  points:
+  - Структура фінального тесту — supportive tone to reduce stress, emphasis on celebration
+    of progress («Ви готові!», «Чудова робота!»)
+  - Як оцінюється кожна частина — alignment with communicative goals and encouragement
+    from the Patient Supportive Tutor
+  - Поради для успішного складання — focus on calm confidence and practical strategies
+    for A1 tasks
+- section: Морфологічний та синтаксичний огляд (Morphological and Syntactic Review)
+  words: 650
+  points:
+  - 'Verification of morphological competence per State Standard §4.2: core noun cases
+    (Nominative, Accusative, Locative, Vocative) and basic verb conjugation'
+  - 'Correction of Case Confusion (Accusative vs. Locative) — drill with the distinction
+    between motion and location using prepositions *в/на*: «Я йду в магазин» (Acc)
+    vs. «Я в магазині» (Loc)'
+  - 'Grammar drill on Gender Agreement — resolving the learner error of mismatching
+    adjectives/pronouns: «Моя велика машина» (Correct) vs. «Мій велика машина» (Error)'
+  - 'Conjugation mastery — clarifying the distinction between Class I (-ати) and Class
+    II (-ити) verbs: «Він читає» vs. «Він робить»'
+  - Syntactic structures per State Standard §4.3.1 — review of SVO word order, general
+    questions («Чи це наш автобус?»), and special questions using «де», «звідки»,
+    «куди», «що», «хто»
+- section: 'Культурна подорож: Київ та Львів (Cultural Journey: Kyiv and Lviv)'
+  words: 650
+  points:
+  - Thematic narrative «Trip around Ukraine» — integrating transport (§3.3), food
+    (§3.8), and home (§3.2) contexts into the assessment
+  - 'Kyiv — Heart of Ukraine: focus on cultural hooks (Dnipro River, chestnut trees/каштани)
+    and its historical status as a 5th-century foundation'
+  - 'Lviv — Cultural Capital: exploring coffee traditions, book culture, and the legacy
+    of the oldest printing house in Ukraine (based on esu.com.ua)'
+  - Functional application — using numbers, time, and basic communication phrases
+    within the travel narrative
+- section: Фінальне оцінювання та перехід до A2 (Final Assessment and Transition to
+    A2)
+  words: 400
+  points:
+  - Listening and Reading Comprehension — verifying understanding of simple sentences
+    and basic complex sentences (using «і», «а», «але») per State Standard §4.3.2
+  - Practical scenarios and role-play — oral assessment tasks focused on real-world
+    situations (buying tickets, ordering coffee, introductions)
+  - Readiness for Level A2 — setting the foundation for the upcoming Genitive and
+    Dative cases while celebrating A1 mastery
+  - Final encouraging summary — reinforcing the progress made through the 44 modules
+    and looking forward to A2-01
+vocabulary_hints:
+  required:
+  - знати (to know) — знати мову, знати відповідь, я знаю; Rank 6 / Most Used Verbs
+  - говорити (to speak) — говорити українською, говорити правду; Rank 16 / Most Used
+    Verbs
+  - слухати (to listen) — слухати музику, слухати вчителя; Rank 21 / Most Used Verbs
+  - розуміти (to understand) — добре розуміти, розуміти текст; high frequency in educational
+    context
+  - читати (to read) — reading comprehension focus per State Standard §4.3.1
+  - писати (to write) — functional writing task support
+  - відповідати (to answer) — «Студент відповідає»; classroom interaction vocabulary
+  - питати (to ask) — asking general and special questions
+  recommended:
+  - правильно (correctly) — evaluation and feedback marker
+  - помилка (mistake) — focus on common learner errors (case/gender/conjugation)
+  - завдання (task) — домашнє завдання, цікаве завдання; high frequency classroom
+    word
+  - оцінка (grade) — formal and informal assessment context
+  - каштан (chestnut) — cultural symbol of Kyiv
+  - кава (coffee) — cultural hook for Lviv context
+activity_hints:
+- type: quiz
+  focus: A1 listening comprehension
+  items: 15
+- type: quiz
+  focus: Grammar and vocabulary
+  items: 30
+- type: fill-in
+  focus: Oral assessment tasks
+  items: 10
+focus: integration
+pedagogy: TTT
+prerequisites:
+- a1-43 (Combined Practice)
+connects_to:
+- a2-01 (A2 Introduction)
+objectives:
+- Demonstrate mastery of all A1 grammar
+- Show practical communication skills
+- Handle real-world scenarios
+- Qualify for A2 level progression
+grammar:
+- All A1 grammar comprehensive review
+- All four cases
+- All verb tenses
+register: розмовний
+phase: A1.4 [Practical Scenarios]
+persona:
+  voice: Patient Supportive Tutor
+  role: Language Olympiad Judge
+word_target: 2000

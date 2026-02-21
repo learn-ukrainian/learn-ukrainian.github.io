@@ -1,70 +1,39 @@
-# Research: Travel & Geography (Foundation Level)
+# Дослідження: Подорожі та географія
 
-**Module**: B1 M67 (Applied as A1 Foundation Research)
-**Level**: A1 (Beginner)
-**Topic**: Basic Geography & Identification
+## State Standard Reference
+§3.5, §3.13, §3.14: "Подорожі: громадський транспорт; засоби пересування... туристичні принади (цікаві місця й об’єкти)... Місця: тип і розташування місцевості... Природне середовище: природні об’єкти (ліс, озеро, річка, гори, море)."
+Alignment: Module covers required vocabulary for travel planning, describing locations, and geographical features as mandated by the standard.
 
-## 1. Grammar: State Standard 2024 Reference
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| подорож | High (General) | далека подорож, вирушити в подорож, морська подорож, подорож мрії |
+| мандрівка | Medium (Literary/Adv) | піша мандрівка, незабутня мандрівка, віртуальна мандрівка |
+| географія | Medium (Academic) | вивчати географію, фізична географія, географія України |
+| регіон | High (News/Formal) | гірський регіон, південний регіон, розвиток регіону |
+| гори | High (General) | Карпатські гори, піднятися в гори, відпочинок у горах |
+| море | High (General) | Чорне море, тепле море, їхати на море, відпочивати на морі |
+| аеропорт | High (Travel) | міжнародний аеропорт, їхати в аеропорт, чекати в аеропорту |
+| бронювати | High (Service) | бронювати готель, бронювати квитки, бронювати столик |
+| курорт | Medium (Travel) | морський курорт, гірськолижний курорт, лікувальний курорт |
+| відпустка | High (General) | щорічна відпустка, йти у відпустку, бути у відпустці |
 
-According to the **State Standard of Ukrainian as a Foreign Language (2024)** (Державний стандарт з української мови як іноземної), Level A1:
+## Cultural Hooks
+1. **Geometric Center of Europe**: Located in Ukraine, near the village of Dilove in Zakarpattia (marker installed in 1887).
+2. **7 Natural Wonders of Ukraine**: Validated list includes Askania-Nova (virgin steppe), Dniester Canyon, Lake Synevyr (Sea Eye of Carpathians), Lake Svityaz (deepest lake), Podilski Tovtry, Granite-Steppe Lands of Buh, and Marble Cave (Crimea).
+3. **Geography Superlatives**: Ukraine is the largest country entirely within Europe (603,628 km²); Mount Hoverla is the highest peak (2061 m); Dnipro is the main waterway dividing the country into Right and Left Banks.
 
-> **Sociocultural Competence (Соціокультурна компетентність)**:
-> Students should be able to recognize and name key geographical entities related to Ukraine and their own country.
->
-> **Lexical Competence (Лексична компетентність)**:
-> *Proper Names (Власні назви)*: Geographical names (countries, cities) in the Nominative case.
-> *Theme*: "Place of residence and geography" (Місце проживання та географія) - identification of location.
+## Common Learner Errors
+1. **Confusing Trip Types**: Learner uses *подорож* for a short commute → Correct: *поїздка* (short/specific purpose) vs *подорож* (general/long) vs *мандрівка* (adventure/wandering).
+2. **Prepositions with Locations**: *на горах* (Wrong) → *у горах* (Correct); *в курорті* (Wrong) → *на курорті* (Correct).
+3. **Vacation Terminology**: Confusing *канікули* (school/university break) vs *відпустка* (work leave). Adults take *відпустку*, students have *канікули*.
 
-## 2. Vocabulary Frequency
+## Cross-References
+- Builds on: `b1-66` (Business Basics - implies booking/scheduling skills)
+- Prepares for: `b1-68` (Synonymy Thinking Verbs - differentiating similar concepts like trip types prepares for synonymy analysis)
 
-At this absolute beginner stage (Alphabet + Pronunciation only), vocabulary focuses on **cognates** and **high-frequency nouns** in the Nominative case.
-
-### High-Frequency (Core)
-*   **Україна** (Ukraina) - Ukraine
-*   **місто** (misto) - city
-*   **країна** (kraina) - country
-*   **карта** (karta) - map
-*   **це** (tse) - this is (demonstrative particle)
-*   **так** (tak) - yes
-*   **ні** (ni) - no
-
-### Cognates (Easy Wins)
-*   **паспорт** (pasport) - passport
-*   **аеропорт** (aeroport) - airport
-*   **турист** (turyst) - tourist
-*   **автобус** (avtobus) - bus
-*   **багаж** (bahazh) - baggage/luggage
-
-### Common Collocations (A1 - Naming structures only)
-*   **Це Україна.** (This is Ukraine.)
-*   **Київ — це місто.** (Kyiv is a city.)
-*   **Де паспорт?** (Where is the passport?)
-*   **Це карта.** (This is a map.)
-
-## 3. Cultural Hook
-
-1.  **Geographical Center of Europe**: Ukraine is the largest country entirely within Europe by area. The geographical center of Europe is often claimed to be near the Ukrainian town of **Rakhiv** (Transcarpathia), marked by a historical monument.
-2.  **Kyiv**: One of the oldest cities in Eastern Europe (founded in 482 AD), significantly older than Moscow. It is known as the "City of Domes" due to its many churches and monasteries (e.g., Saint Sophia Cathedral).
-
-## 4. Pedagogical Notes
-
-*   **Kyiv vs. Kiev**: Emphasize the Ukrainian pronunciation/spelling **Kyiv** (Київ) immediately. Explain that "Kiev" is the Russified version and is now considered outdated/offensive in independent Ukraine.
-*   **The Article Mistake**: Speakers of English often say "The Ukraine". Explicitly teach that Ukrainian has no articles (a/the), and in English, it is just "Ukraine" (like "Germany" or "France").
-*   **Pronunciation Focus**: Use cognates like *аеропорт* and *паспорт* to drill the hard Ukrainian "р" (rolled R) and pure vowels, as the meaning is already clear.
-*   **Cognate Strategy**: Use "Travel" words to build confidence. Students feel they "know" Ukrainian when they can recognize *паспорт*, *таксі*, *віза*.
-
-## 5. Scope Boundaries
-
-Based on prior knowledge (Alphabet & Pronunciation only):
-
-### ✅ IN SCOPE (Safe to use)
-*   **Nominative Case**: Naming things (*Київ*, *Львів*, *Одеса*).
-*   **"Це..." Structure**: "This is [Noun]".
-*   **Intonation Questions**: "Це паспорт?" (Is this a passport?).
-*   **Question Word "Де"**: "Де таксі?" (Where is the taxi?) - *only if expecting a pointing gesture answer, as they don't know locative prepositions yet.*
-
-### ❌ OUT OF SCOPE (Do NOT use)
-*   **Locative Case**: "In Ukraine" (В Україні), "In Kyiv" (У Києві). *Strictly forbidden.*
-*   **Direction/Motion**: "To Ukraine" (В Україну), "I go..." (Я їду...). *Requires accusative/verbs.*
-*   **Verb Conjugation**: Any verbs other than implicit "to be".
-*   **Adjective Agreement**: "Beautiful city" (Гарне місто). *Requires gender agreement.*
+## Notes for Content Writing
+- **Persona Flavor**: Use "Senior Language & Culture Specialist" voice but lean into "The Ethnographer" or "The Storyteller" when describing natural wonders (Synevyr legends).
+- **Immersion**: Ensure 100% Ukrainian prose. English only in vocab tables.
+- **Narrative Arc**: Start with planning a trip (practical), move to describing the destination (geography/nature), and end with sharing impressions (cultural context).
+- **Differentiation**: Clearly distinguish *подорож/мандрівка/поїздка* in the analysis section using examples.

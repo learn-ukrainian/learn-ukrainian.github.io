@@ -1,0 +1,134 @@
+module: b2-14
+level: B2
+sequence: 14
+slug: stylistic-connectors
+version: '2.0'
+title: Стилістичні сполучники
+content_outline:
+- section: Вступ — Сполучники як засіб зв'язку
+  points:
+  - Роль сполучників у побудові тексту — забезпечення зв'язності (cohesion) згідно
+    з вимогами CEFR B2
+  - 'Різниця між простими та стилістичними сполучниками — cultural hook: багатство
+    синонімів дозволяє уникати тавтологій'
+  - Регістр і вибір сполучників — alignment with Standard §4.4.1.3 (стилістичне використання
+    синтаксису)
+- section: Сполучники протиставлення
+  points:
+  - 'Проте, втім (however) — learner error: плутанина «проте» (сполучник) і «про те»
+    (займенник + прийменник)'
+  - Зате (but on the other hand) — виражає компенсацію («робота важка, зате цікава»)
+  - 'Натомість (instead) — learner error: вживання замість простого «але» без відтінку
+    заміщення/контрасту'
+  - Навпаки (on the contrary)
+  - Стилістичні відтінки кожного — «проте» (нейтральний/книжний) vs «втім» (розмовний/сумнів)
+- section: Сполучники приєднання
+  points:
+  - Причому (moreover/and) — додавання важливої деталі («швидко, причому без помилок»)
+  - До того ж (besides)
+  - Крім того (in addition)
+  - Тим більше (especially/all the more)
+  - Контексти вживання
+- section: Сполучники наслідку
+  points:
+  - Тому (therefore) — нейтральний універсальний варіант
+  - Отже (thus/so)
+  - 'Відтак (consequently) — learner error: стилістичний дисонанс при вживанні офіційного
+    «відтак» у побуті'
+  - Внаслідок чого (as a result of which)
+  - Формальність кожного варіанту — «відтак» і «внаслідок чого» тяжіють до офіційно-ділового
+    стилю
+- section: Допустові сполучники
+  points:
+  - Хоча (although) — Standard Alignment §4.3.4 (складнопідрядні з допустовими відношеннями)
+  - Незважаючи на те що (despite the fact that)
+  - Попри те що (despite)
+  - Дарма що (even though - colloquial) — розмовний варіант
+  - Регістрові відмінності
+- section: Вибір за регістром
+  points:
+  - Формальні варіанти (офіційний стиль) — Відтак, Внаслідок чого, Проте
+  - Нейтральні варіанти (загальне вживання) — Тому, Але, Хоча
+  - Неформальні варіанти (розмовний стиль) — Зате, Втім, Дарма що
+  - Типові помилки змішування регістрів — важливість відповідності сполучника контексту
+- section: Практика і підсумок
+  points:
+  - 'Інтеграція у власне мовлення — agency pass: використання сполучників для пояснення
+    мотивації («Ми зробили..., бо...»)'
+  - Елегантність вираження думок
+  - Підготовка до модуля 15
+vocabulary_hints:
+  required:
+  - сполучник (connector/conjunction) — граматичний термін
+  - протиставлення (contrast) — логічне відношення
+  - приєднання (addition) — логічне відношення
+  - наслідок (consequence) — логічне відношення
+  - допуст (concession) — логічне відношення
+  - проте (however) — пишеться разом; синонім «але», «однак»
+  - втім (nevertheless) — часто вживається як вставне слово для вираження сумніву
+  - причому (moreover) — пишеться разом; вводить уточнення
+  - отже (thus) — підсумовує викладене
+  - незважаючи на (despite) — вживається з прийменником «на»
+  recommended:
+  - зв'язність (cohesion) — характеристика тексту
+  - текстовий зв'язок (textual connection)
+  - логічні відношення (logical relations)
+  - елегантність (elegance)
+  - стилістичний відтінок (stylistic nuance)
+  - зате (but on the other hand) — розмовний; компенсація негативу
+  - натомість (instead) — заміщення або різкий контраст
+  - відтак (consequently) — книжний/офіційний; наслідок у часі
+activity_hints:
+- type: quiz
+  focus: Identify connector function (contrast, addition, consequence, concession)
+  items: 16+
+- type: fill-in
+  focus: Complete text with appropriate connectors
+  items: 15+
+- type: group-sort
+  focus: Sort connectors by function and register
+  items: 20+
+- type: fill-in
+  focus: Replace simple connectors with stylistic alternatives
+  items: 12+
+- type: match-up
+  focus: Connector → register level (formal/neutral/informal)
+  items: 16+
+- type: error-correction
+  focus: Fix register-inappropriate connector usage
+  items: 10+
+- type: essay-response
+  focus: Write argumentative paragraph using varied connectors
+  output: Model answer provided
+focus: grammar
+prerequisites:
+- b2-11 (Multi-clause Sentences)
+- b2-12 (Parenthetical Expressions)
+- Basic conjunctions (і, але, або)
+connects_to:
+- b2-15 (Register Introduction)
+- 'b2-22 (Register: Literary Ukrainian)'
+- b2-25 (B2.1b Checkpoint)
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Connectors
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Connector inventory for B2 level
+- name: Сучасна українська літературна мова - Сполучники
+  url: https://uk.wikipedia.org/wiki/Сполучник
+  type: secondary
+  notes: Classification of Ukrainian connectors
+- name: CEFR B2 Cohesion
+  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  type: reference
+  notes: B2 text cohesion requirements
+immersion: 100% Ukrainian
+phase: B2.1b [Participles & Register Intro]
+objectives:
+- Identify and correctly use стилістичні сполучники
+- Form and apply сполучники як засіб зв'язку
+persona:
+  voice: Professional Language Coach
+  role: Columnist (Колумніст)
+word_target: 4000

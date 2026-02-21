@@ -1,0 +1,251 @@
+✅ Message sent to Gemini (ID: 11838) [auto-acked: self-addressed]
+✓ Message 11838 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #11838...
+📨 Message #11838
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-danylo-halytskyi
+   Time: 2026-02-20T23:33:32.140274+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-bio-10
+level: C1-BIO
+sequence: 10
+slug: danylo-halytskyi
+version: '2.0'
+title: 'Данило Галицький: Король Русі'
+content_outline:
+- section: Вступ — Єдиний коронований король Русі
+  points:
+  - Унікальність постаті Данила
+  - Символ західного вектору
+- section: 'Життєпис: Шлях до влади'
+  points:
+  - Дитинство і вигнання
+  - Уроки угорського двору
+  - Братерський тандем з Васильком
+  - Битва під Ярославом 1245 р.
+- section: 'Внесок: Коронація та держава'
+  points:
+  - Візит до Орди та "лиха честь татарська"
+  - Коронація в Дорогочині 1253 р.
+  - Розбудова міст (Львів, Холм)
+  - Економічна потуга держави (сіль)
+- section: 'Останні роки: Боротьба до кінця'
+  points:
+  - Війни з Куремсою та Бурундаєм
+  - Трагедія руйнування фортець
+  - Дипломатія останніх років
+- section: 'Спадщина: Королівська традиція'
+  points:
+  - Значення титулу Rex Russiae
+  - Галицько-Волинський літопис
+  - Порівняння з Олександром Невським
+- section: Підсумок — Король без королівства?
+  points:
+  - Моральна перемога над Ордою
+  - Уроки для сучасності
+focus: biography
+pedagogy: seminar
+prerequisites:
+- c1-bio-07 (Роман Мстиславич)
+- b2-hist danylo-halytskyi module
+connects_to:
+- c1-bio-09 (Лев Данилович)
+- b2-hist mongolska-navala module
+objectives:
+- Аналізувати дипломатичні успіхи та поразки Данила
+- Оцінити значення коронації для української історії
+- Порівняти стратегії виживання в умовах монгольської навали
+grammar:
+- Дипломатична лексика
+- Військова термінологія
+module_type: biography
+sources:
+- name: Данило Галицький (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Данило_Галицький
+  type: primary
+  notes: Біографія та діяльність
+- name: Галицько-Волинський літопис (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Галицько-Волинський_літопис
+  type: primary
+  notes: Основне джерело
+immersion: 100% Ukrainian
+phase: C1-BIO
+persona:
+  voice: Senior Biographer
+  role: State Builder
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Данило Галицький: Король Русі
+
+## Використані джерела
+1. [Галицько-Волинський літопис](http://litopys.org.ua/galvol/galvol.htm) — Першоджерело, що детально описує життя та діяльність Данила.
+2. [Енциклопедія історії України: Данило Галицький](http://resource.history.org.ua/) — Академічний огляд біографії та політичної діяльності.
+3. [Дашкевич Я. Постаті: Нариси про діячів історії, політики, культури](http://history.org.ua/) — Аналіз державотворчої ролі короля Данила.
+
+## Хронологія
+- 1201: Народження Данила в Галичі в сім'ї князя Романа Мстиславича.
+- 1205: Загибель батька; втеча з матір'ю Анною на Волинь, а згодом до Угорщини (6 років при дворі Андрія II).
+- 1221: Остаточне утвердження на Волині.
+- 1238: Розгром хрестоносців під Дорогочином; відновлення влади над Галичем.
+- 1239: Зайняття Києва; призначення воєводи Дмитра для оборони від монголів.
+- 1245 (17 серпня): Битва під Ярославом — розгром об'єднаних військ угорців, поляків та бунтівних бояр.
+- 1245 (зима): Поїздка до Золотої Орди; визнання залежності від Батия («лиха честь татарська»).
+- 1253 (7 жовтня): Коронація в Дорогочині папським легатом Опізо де Меццано; прийняття титулу "Король Русі".
+- 1254: Початок військових дій проти монгольського воєводи Куремси.
+- 1259: Прихід Бурундаєм; вимушене руйнування укріплень Львова, Володимира, Луцька.
+- 1264: Смерть короля Данила в Холмі.
+
+## Ключові факти та цитати
+- **Цитата (Літопис):** «О, лихіша лиха честь татарська! Данило Романович, що був князем великим, володів із братом своїм Руською землею, Києвом, і Володимиром, і Галичем, і іншими краями, нині сидить на колінах і холопом себе називає!»
+- **Цитата (про коронацію):** Прийняв вінець «від папи Інокентія, і від усіх єпископів своїх».
+- **Міста:** Заснував Львів (на честь сина Лева), Холм (улюблена резиденція), Угровськ.
+- **Економіка:** Контроль над соляними копальнями (Коломия) та торговими шляхами забезпечував ресурси для будівництва фортець.
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ — Єдиний коронований король Русі": [!myth-buster] — Данило був не просто "князем Галицьким" (радянський термін), а першим легітимним "Королем Русі" (Rex Russiae), визнаним Європою.
+- Section "Життєпис: Шлях до влади": [!context] — Виховання при угорському дворі зробило Данила "людиною Заходу" за менталітетом, на відміну від суздальських князів.
+- Section "Внесок: Коронація та держава": [!quote] — «Лиха честь татарська» — драматизм вибору між фізичним виживанням народу та національною гідністю.
+- Section "Внесок: Коронація та держава": [!history-bite] — Коронація відбулася не в столиці, а в прикордонному Дорогочині — місті, відбитому у хрестоносців, що символізувало захист західних кордонів.
+- Section "Останні роки: Боротьба до кінця": [!military] — Тактика Данила проти Куремси (маневрена оборона) vs безвихідь проти Бурундая (ультиматум сили).
+- Section "Спадщина: Королівська традиція": [!decolonization] — Порівняння з Олександром Невським: Данило шукав союзу з Європою для опору Орді, Невський — союзу з Ордою для підкорення Русі.
+
+## Деколонізаційний контекст
+- **Імперський міф:** Російська історіографія маргіналізує Данила як "західного відступника" або локального князя, зводячи спадкоємність Русі виключно до Володимиро-Суздальської лінії (Невського).
+- **Українська реальність:** Галицько-Волинська держава була безпосереднім продовжувачем політичної та культурної традиції Київської Русі. Титул "Король Русі" фіксує цю спадкоємність на міжнародному рівні. Данило інтегрував Україну в європейський простір (династичні шлюби, коронація).
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| Титулатура | Князь Галицький (Prince of Galicia) | Король Русі (King of Rus / Rex Russiae) |
+| Держава | Галицько-Волинське князівство (уділ) | Королівство Русь (незалежна держава) |
+| Відносини з Ордою | "Зрада православ'я" (спілка з Папою) | Дипломатичний маневр заради порятунку держави |
+| 1253 рік | Малозначущий епізод | Акт міжнародного визнання суверенітету України |
+
+## Section-Mapped Research Notes
+
+### Вступ — Єдиний коронований король Русі
+Унікальність фігури: єдиний правитель, який легітимізував свою владу королівською короною від Папи, зберігаючи православну віру. Символ європейського вектору розвитку України. Концепція "Королівства Русь" як альтернативи "Московському Улусу".
+
+### Життєпис: Шлях до влади
+Дитинство у вигнанні (травма втрати батька, життя в Угорщині). Повернення "на багнетах" волинських бояр. Унікальний дуумвірат з братом Васильком (приклад ідеальної злагоди, рідкісний для Русі). Битва під Ярославом 1245 р. як кульмінація боротьби за спадщину Романа — перемога над коаліцією Ростислава Михайловича, угорців та поляків.
+
+### Внесок: Коронація та держава
+Дипломатичний геній: поїздка до Батия 1245 р. («пив чорний кумис»). Це дало передишку. Коронація 1253 р. в Дорогочині — не просто титул, а заклик до Хрестового походу проти татар (який не відбувся). Містобудування: Холм (як нова, неприступна столиця), Львів (на честь сина), укріплення міст як стратегія оборони. Сіль як "біле золото" економіки.
+
+### Останні роки: Боротьба до кінця
+Різниця між Куремсою (слабкий, Данило його перемагав партизанською тактикою) та Бурундаєм (сильний, жорстокий стратег). Трагедія 1259 року: наказ розметати укріплення. Данило не зміг протистояти силі Бурундая відкрито, щоб не знищити народ. Психологічний злам короля, але збереження держави.
+
+### Спадщина: Королівська традиція
+Титул Rex Russiae використовувався нащадками (Юрій І). Галицько-Волинський літопис як пам'ятка "династичної історії". Порівняння з Невським: Невський канонізований РПЦ за покірність Орді, Данило — символ опору і гідності. Данило зберіг західні інституції та контакти, що вплинуло на майбутнє правової культури України.
+
+### Підсумок — Король без королівства?
+Хоча Данило помер данником Орди, він виграв час і простір. Він зберіг структуру суспільства, не допустив повної асиміляції та руйнації культури (як це сталося на сході). Його "королівство" ментальне — це приналежність до Європи.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 11886)
+✓ Message 11838 acknowledged
+✓ Message 11886 acknowledged

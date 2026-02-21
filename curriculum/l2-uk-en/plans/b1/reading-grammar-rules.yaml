@@ -1,0 +1,136 @@
+module: b1-03
+level: B1
+sequence: 3
+slug: reading-grammar-rules
+version: '2.0'
+title: Читаємо граматичні правила
+subtitle: Understanding grammar explanations in Ukrainian
+content_outline:
+- section: 'Вступ: Розуміння освітнього процесу (Introduction: Understanding Educational
+    Process)'
+  words: 600
+  points:
+  - 'Importance of mastering instructional language for educational integration —
+    aligns with State Standard §3.8: Organization of educational process (understanding
+    lectures, seminars, and exams)'
+  - 'Framing the shift to full immersion by decoding textbook structures: why recognizing
+    visual patterns (bold text, tables, arrows) is the first step in comprehension'
+  - Preparation for navigating B1-level materials where instructions are exclusively
+    in Ukrainian
+- section: Шаблони граматичних пояснень (Grammar Explanation Patterns)
+  words: 850
+  points:
+  - 'High-frequency academic patterns: «X використовується, коли...» and «X означає...»
+    — mapping typical definitions in standard textbooks'
+  - 'Collocation focus: «часто використовується», «як правило використовується», «це
+    не означає, що...»'
+  - 'Visual literacy: Decoding the ''Grammar Box'' — identifying ''Rule'', ''Example'',
+    and ''Exception'' layout patterns without needing translation'
+  - 'Grammar-specific frequency: mastering the term «виняток» (exception) to navigate
+    rules — highlighting the common learner error of using the Russian calque «виключення»'
+- section: Словник інструкцій та дієслова завдань (Instruction Vocabulary and Activity
+    Verbs)
+  words: 900
+  points:
+  - 'Instructional commands: «порівняйте», «зверніть увагу», «виберіть», «знайдіть»,
+    «доповніть» — mapping the 80% rule: identifying the verb is 80% of understanding
+    the task'
+  - 'Common learner error: confusing «підкресліть» (underline) with «креслити» (draw/draft)
+    — minimal pair drills to ensure task compliance'
+  - 'The transition from general tasks to morphological ones: understanding «утворіть»
+    (form/derive) vs «зробіть» (do/make) — referencing State Standard §4.3.4 on deriving
+    nouns from verbs (читати – читання)'
+  - 'Logical connectors in instructions: «наприклад», «тобто», «отже», «на відміну
+    від»'
+- section: Аналітична термінологія та контекст (Analytical Terminology and Context)
+  words: 700
+  points:
+  - 'Mastering academic terminology: «контекст», «маркер», «частота», «аспектуальна
+    пара» — building on b1-01 and b1-02 terminology'
+  - 'Contextual clues: «зрозуміти з контексту», «широкий контекст» — strategies for
+    dealing with unknown words in grammar rules'
+  - 'Learner error warning: avoiding calques in grammar discussion — explicitly drilling
+    «брати участь» (to participate) instead of the incorrect «приймати участь»'
+- section: Стилістика та історія граматики (Stylistics and Grammar History)
+  words: 650
+  points:
+  - 'Cultural hook: Meletius Smotrytsky (1619) — the author of ''Hrammatika Slavenska''
+    who established the terminology we use today (відмінок, дієслово) and separated
+    the Locative case'
+  - 'Distinguishing registers: «розмовна мова» vs «літературна мова» — aligns with
+    State Standard §4.5.1 Stylistics'
+  - 'Cultural hook: Ivan Ohiienko (Metropolitan Ilarion) and his ''Native Language
+    Duties'' — the struggle for linguistic purity and standard language norms'
+  - 'Word structure terms: «корінь», «префікс», «суфікс», «закінчення» — understanding
+    the ''building blocks'' of Ukrainian words'
+- section: Практика та підсумок (Practice and Summary)
+  words: 300
+  points:
+  - 'Authentic text analysis: identifying instructions and explanation patterns in
+    a sample text from a Ukrainian MON-approved textbook'
+  - 'Readiness check: ensuring the learner can correctly identify 90% of task verbs
+    to prepare for M04 Sentence Structure'
+vocabulary_hints:
+  required:
+  - маркер (marker) — Analytical term
+  recommended:
+  - частота (frequency) — Academic usage
+  - аспектуальна пара (aspectual pair) — Grammar-specific term
+  - літературна мова (literary language) — Related to Ohiienko's standardization
+  - розмовна мова (colloquial language) — Stylistic marker
+  - відмінювання (declension/conjugation) — Smotrytsky's legacy
+  - утворіть (form/derive) — Morphological instruction
+activity_hints:
+- type: mark-the-words
+  focus: Find instruction patterns in grammar text
+  items: 10+
+- type: true-false
+  focus: Statements about grammar patterns
+  items: 10+
+- type: fill-in
+  focus: Complete grammar explanation passages
+  items: 8+
+- type: match-up
+  focus: Activity instruction verb → example activity (виберіть → quiz question)
+  items: 10+
+- type: quiz
+  focus: Identify analytical terms in grammar explanations (контекст, маркер, частота)
+  items: 8+
+- type: error-correction
+  focus: Correct misused style/register terms in grammar explanations
+  items: 6+
+focus: integration
+pedagogy: PPP
+prerequisites:
+- b1-01 (Basic grammar terminology)
+- b1-02 (Verb terminology)
+connects_to:
+- b1-04 (Sentence structure)
+- b1-05 (Metalanguage checkpoint)
+objectives:
+- Learner can understand standard grammar explanation patterns
+- Learner can follow Ukrainian grammar instructions
+- Learner can identify word formation components
+- Learner can recognize activity instruction verbs
+- Learner can understand analytical terminology
+- Learner can distinguish language styles and registers
+grammar:
+- Grammar explanation patterns
+- Instruction vocabulary
+- Word formation terms
+module_type: bridge
+sources:
+- name: Ukrainian Grammar Textbooks
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Standard patterns used in Ukrainian grammar instruction
+- name: Ukrainian Language Teaching Resources
+  url: https://osvita.ua/
+  type: reference
+  notes: Common instructional language in educational materials
+immersion: 70-85% Ukrainian
+phase: B1.0 Bridge
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Law Student
+word_target: 4000

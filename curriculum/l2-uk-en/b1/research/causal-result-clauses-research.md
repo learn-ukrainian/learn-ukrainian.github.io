@@ -1,85 +1,36 @@
-# Research: Causal & Result Clauses (B1 M36)
+# Дослідження: Причинові та наслідкові речення
 
-**Module:** B1 M36 "Causal & Result Clauses"
-**Topic:** Expressing Cause (Причина) and Result (Наслідок)
-**Level:** B1 (Intermediate)
+## State Standard Reference
+§4.4.3: "складнопідрядні речення з підрядною частиною причини (сполучники тому що, бо, через те що): Віктор не був на лекції, тому що він захворів"
+Alignment: The module directly implements the B1 requirement for causal clauses using the explicit conjunction list provided in the standard. It expands on this by including result clauses (naslidok), which are linguistically the flip side of the same logic and necessary for the "Complex Sentence" competency.
 
-## 1. Grammar: State Standard 2024 Reference
+## Vocabulary Frequency
+| Word | Frequency / Style | Key collocations |
+|------|-------------------|------------------|
+| **тому що** | High / Neutral | Це сталося тому, що...; Я запізнився, тому що... |
+| **бо** | High / Spoken | Не прийду, бо зайнятий; Люблю, бо гарна. |
+| **через те що** | Medium / Neutral | Через те що йшов дощ...; Захворів через те, що... |
+| **оскільки** | Medium / Formal | Оскільки ви не відповіли...; Оскільки закон вимагає... |
+| **тому** | High / Connector | Був дощ, тому ми не пішли. |
+| **отже** | Medium / Logical | Ти тут, отже ми можемо починати. |
+| **внаслідок** | Low / Formal | Внаслідок аварії...; Внаслідок того, що... |
 
-According to the **State Standard for Ukrainian as a Foreign Language (2024)**, Level B1 candidates are expected to understand and produce complex sentences expressing logical relationships.
+## Cultural Hooks
+1. **Folk Wisdom**: "Диму без вогню не буває" (There is no smoke without fire) — illustrates the deep-seated belief in causality.
+2. **Agrarian Ethos**: "Хто полю годить, тому жито родить" (He who tends the field, for him the rye grows) — direct cause-and-effect relationship between hard work and reward, central to Ukrainian worldview.
+3. **Historical Context**: The concept of "Доля" (Fate) vs. personal agency. While folklore often emphasizes fate, modern Ukrainian thought (esp. 19th-20th century literature) emphasizes *action* causing *freedom* (e.g., Franko's "Lupayte syu skalu").
 
-> **Section:** Граматична компетентність (Grammatical Competence) - B1
-> **Topic:** Складне речення (The Complex Sentence)
-> **Requirement:** "Складнопідрядні речення з підрядними причини (сполучники *бо, тому що, через те що, оскільки*) та наслідку (сполучники *тому, так що*)."
->
-> **Relevant Prepositional Usage:**
-> "Прийменники, що виражають причинові відношення: *через* (+ З.в.), *завдяки* (+ Д.в.)."
+## Common Learner Errors
+1. **Spelling**: *томущо* or *тому-що* → **тому що** (Always two words).
+2. **Punctuation**: Missing comma before *тому що* in the middle of a sentence.
+3. **Russism**: Using *тому як* (calque from 'так как') → **оскільки** or **бо**.
+4. **Stylistics**: Starting a sentence with *Тому що...* (Because...) instead of *Оскільки...* (Since...) or *Через те що...*.
 
-## 2. Vocabulary Frequency & Collocations
+## Cross-References
+- **Builds on**: b1-35 (Concessive Clauses - logical contrast)
+- **Prepares for**: b1-37 (Temporal Clauses - often overlap with cause, e.g., "when" vs "since")
 
-### High Frequency (Essential B1)
-*   **тому що** (because) - Most neutral, standard connector.
-*   **бо** (because/for) - Very high frequency in spoken language; often less formal.
-*   **тому** (that's why/therefore) - Standard result connector.
-*   **через** (+ Accusative) - "Because of" (usually negative or neutral cause).
-    *   *Collocation:* через погоду (due to weather), через затори (due to traffic).
-*   **завдяки** (+ Dative) - "Thanks to" (strictly positive cause).
-    *   *Collocation:* завдяки друзям (thanks to friends), завдяки допомозі (thanks to help).
-
-### Medium Frequency (B1 Expansion)
-*   **оскільки** (since/as) - Often used at the beginning of sentences to state a known cause.
-    *   *Usage:* "Оскільки я вже тут, я допоможу." (Since I am already here, I will help.)
-*   **так що** (so / so that) - Expresses result in a complex sentence.
-*   **отже** (thus/so) - Logical conclusion, often starts a sentence or summary.
-*   **причина** (noun) - reason/cause.
-    *   *Collocation:* головна причина (main reason), з поважної причини (for a valid reason).
-
-### Low Frequency / Passive (B2 Preview)
-*   **внаслідок** (as a consequence of) - Official/Formal.
-*   **позаяк** (inasmuch as/since) - Literary/Archaic/Dialectal.
-
-## 3. Cultural Hook
-
-### The "Fatalistic" Cause
-Ukrainians often use the phrase **"Так склалося історично"** (It happened so historically) as a humorous or resigned explanation for illogical rules, bureaucracy, or cultural quirks. It’s a universal "causal" explanation for things that cannot be changed.
-
-### Proverbs (Logic & Consequence)
-*   **"Нема диму без вогню."** (There is no smoke without fire.) — Cause is always present.
-*   **"Що посієш, те й пожнеш."** (What you sow, you shall reap.) — Direct result/consequence.
-*   **"Бачили очі, що купували — їжте, хоч повилазьте."** (Your eyes saw what they were buying — now eat it, even if your eyes pop out.) — Ultimate personal responsibility/consequence proverb.
-
-## 4. Pedagogical Notes
-
-### Key Differences from English
-1.  **"So" Ambiguity:** In English, "so" is used for both purpose ("I went *so* I could see him") and result ("It rained, *so* I stayed home").
-    *   **Ukrainian Distinction:** Purpose = *щоб* (M29-30). Result = *тому / так що*. Learners MUST NOT use *щоб* for result.
-2.  **Punctuation:** A comma is **mandatory** before causal connectors (*, тому що*, *, бо*) and result connectors (*, тому*). English speakers often omit commas before "because".
-3.  **Preposition Case Governance:**
-    *   *Через* requires **Accusative** (через *тебе*).
-    *   *Завдяки* requires **Dative** (завдяки *тобі*).
-    *   *Confusion Alert:* Learners often use Genitive by default for prepositions.
-
-### Common Learner Errors
-*   Using *для* (for) instead of *тому що* to explain reasons (e.g., "I did it for I wanted..." -> ERROR).
-*   Using *тому* (result) instead of *тому що* (cause) or vice versa.
-*   Confusing *через* (negative cause) and *завдяки* (positive help). Using *через* for positive things sounds ungrateful ("I passed the exam *because of* (blaming) the teacher").
-
-### Teaching Sequence
-1.  **Review:** *Чому?* (Why?) vs *Навіщо?* (What for?). Distinguish Cause vs Purpose.
-2.  **Basic Cause:** *Тому що* vs *Бо*.
-3.  **Prepositions:** *Через* (bad) vs *Завдяки* (good).
-4.  **Result:** *Тому* (linking two sentences).
-5.  **Fronting:** Using *Оскільки* to put the cause first.
-
-## 5. Scope Boundaries
-
-### IN Scope (B1)
-*   Connectors: *тому що, бо, тому, так що, оскільки, отже*.
-*   Prepositions: *через (+Acc), завдяки (+Dat)*.
-*   Complex sentences with indicative mood (Real situations).
-*   Distinction between "Why" (*Чому*) and "What for" (*Навіщо*).
-
-### OUT of Scope (B2/C1)
-*   **Participial Phrases:** Replacing causal clauses with adverbial participles (e.g., "Не знаючи дороги..." vs "Оскільки він не знав дороги..."). *Note: Adverbial participles are introduced in M42-43.*
-*   **Formal/Legal Connectors:** *у зв'язку з тим, що*; *з огляду на те, що*; *внаслідок*.
-*   **Subjunctive/Conditional Causes:** "If it weren't for..." (covered in Conditionals M31-33, but complex mixed forms are advanced).
+## Notes for Content Writing
+- **Distinguish Registers**: Clearly separate *бо* (casual, end of sentence) from *оскільки* (formal, start of sentence).
+- **Logic Flow**: Use Mermaid diagrams to show the reversible nature of Cause ↔ Result (A implies B, therefore B is because of A).
+- **Agency**: Use examples that show Ukrainians taking responsibility/action ("We rebuilt it because we needed it" vs "It was rebuilt").

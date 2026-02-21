@@ -1,0 +1,217 @@
+✅ Message sent to Gemini (ID: 12778) [auto-acked: self-addressed]
+✓ Message 12778 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12778...
+📨 Message #12778
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-property-boundaries
+   Time: 2026-02-20T23:42:22.828730+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 64
+module: oes-064
+module_number: 52
+slug: property-boundaries
+title_uk: Межі власності
+title_en: Property Boundaries
+phase: 3
+phase_id: legal-tradition
+phase_name: Legal Tradition
+focus: Spatial prepositions
+content_outline:
+- section: Вступ
+  description: Introduction to Property Boundaries
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Senior Paleographer
+  role: Land Surveyor
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Межі власності (Property Boundaries)
+
+## Використані джерела
+1. [Енциклопедія історії України: Руська Правда](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Ruska_Pravda) — фундаментальний аналіз правового кодексу та його редакцій.
+2. [Ізборник: Руська Правда (Тексти)](http://litopys.org.ua/oldukr2/oldukr01.htm) — оригінальні тексти Короткої та Розлогої редакцій.
+3. [Енциклопедія Сучасної України: Межа](https://esu.com.ua/search_articles.php?id=65485) — культурне та правове значення поняття "межа" в українській традиції.
+4. [Історія українського права: Земельна власність](http://litopys.org.ua/yushkov/yu05.htm) — аналіз форм власності та їх захисту в Київській Русі.
+
+## Хронологія
+- **1016 р.** — Укладення "Правди Ярослава" (найдавніша частина "Руської Правди"), перші згадки про захист власності (стаття про псування майна).
+- **1072 р.** — "Правда Ярославичів": суттєве підвищення штрафів за порушення князівської земельної власності та межових знаків.
+- **Поч. XII ст.** — Укладення Розлогої редакції "Руської Правди", де детально прописані штрафи за знищення межових знаків ("перетес").
+- **1113 р.** — "Устав" Володимира Мономаха: регулювання боргового права, що опосередковано стосувалося земельної власності (закупи).
+- **Кін. XII ст.** — Поширення практики видачі князівських земельних грамот (хоча збереглися переважно пізніші зразки XIV ст., практика фіксується раніше).
+
+## Ключові факти та цитати
+
+### Першоджерела (Руська Правда)
+1. **Про межові знаки (Коротка редакція, ст. 34):**
+   > «А иже межу переореть либо перетес, то за обиду 12 гривне».
+   *(А хто межу переоре або [знищить] зарубку на дереві, то за образу 12 гривень).*
+   *Коментар:* Величезний штраф (12 гривень — ціна стада коней) свідчить про святість приватної власності.
+
+2. **Про бортні знаки (Розлога редакція, ст. 72):**
+   > «Аже пчелу выдеруть, то 3 гривны... аже знамянья не будеть, то не платити ему ничимь».
+   *(Якщо видеруть бджіл [з вулика], то 3 гривні... а якщо знамення [власника] не буде, то не платити нічого).*
+   *Коментар:* Власність існує лише тоді, коли вона маркована (знамення).
+
+### Термінологія
+- **Перетес** — зарубка на дереві, що позначала межу володінь у лісі.
+- **Знамення (знамянья)** — особистий знак власності (тризуб, двозуб, геометричні фігури), що ставився на речах, деревах, межових каменях.
+- **Межа** — не просто лінія, а сакральний кордон; порушення межі вважалося тяжким злочином проти соціального порядку.
+
+## Engagement Hooks (mapped to sections)
+
+- Section "Вступ: Сакральність межі": **[!context]** — У народній культурі межа була місцем сили і небезпеки; на межах ховали самогубців, але й проводили магічні ритуали захисту.
+- Section "Джерела права: «Руська Правда»": **[!history-bite]** — Штраф за порушення межі (12 гривень) дорівнював штрафу за удар мечем, що не призвів до каліцтва. Власність цінувалася нарівні з честю воїна.
+- Section "Термінологія: Перетес і знамення": **[!paleography]** — Князівські знаки (тризуби) на цеглі Десятинної церкви та монетах — це теж "знамення" власності, аналог сучасного логотипу чи підпису.
+- Section "Граматика: Просторові прийменники I": **[!linguistic-note]** — Прийменник "від" (отъ) у давнину позначав не лише рух, а й походження права ("отъ діда і батька").
+- Section "Соціальний вимір": **[!myth-buster]** — Міф про "спільну власність" (общину) як основу слов'янського світу. Руська Правда захищає саме індивідуальну та сімейну (боярську) власність, а не комунальну.
+- Section "Підсумок": **[!decolonization]** — Російська історіографія часто зображує Київську Русь як "передфеодальну" або "общинну", щоб заперечити розвиток приватної власності, притаманний європейській традиції.
+
+## Деколонізаційний контекст
+- **Імперський/радянський міф:** "Община" (мир) як споконвічна слов'янська форма землеволодіння, де приватна власність була відсутня або слабка. Це використовувалося для виправдання колгоспів та заперечення європейського шляху розвитку України.
+- **Українська реальність:** Джерела (Руська Правда) фіксують чітку, жорстко захищену систему приватної власності (вотчини) з високими штрафами за порушення меж. "Верв" (громада) відповідала за вбивства, але землею володіли сім'ї та індивіди.
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| **Верв (Verv)** | Селянська община зі спільною власністю на землю (прообраз "миру"). | Територіально-адміністративна одиниця, що відповідала за "дику віру" (штраф), але не обов'язково володіла землею колективно. |
+| **Вотчина (Votchina)** | Феодальне володіння, що виникло пізніше (на Московщині). | Спадкове земельне володіння, повноцінно сформоване вже в Київській Русі X-XI ст. |
+| **Руська Правда** | "Русская Правда" (пам'ятка "спільної історії"). | Кодекс права Київської держави, основа української та литовської (Литовські статути) правової традиції. |
+
+## Section-Mapped Research Notes
+
+### Вступ: Сакральність межі
+Поняття межі виходить за рамки права. Це кордон між "своїм" і "чужим" світом. Просторові орієнтири: річки, дуби, камені.
+
+### Джерела права: «Руська Правда»
+Аналіз ст. 34 Короткої Правди та ст. 72 Розлогої Правди. Еволюція штрафів. Роль "вирника" (збирача штрафів).
+
+### Термінологія: Перетес і знамення
+Детальний розбір слів "перетес" (від "тесати", зарубка), "знамення" (знак). Археологічні приклади князівських знаків.
+
+### Граматика: Просторові прийменники (частина I)
+Прийменники, що позначають вихідну точку та мету: *отъ* (від), *до*, *у*. Приклади з текстів: "отъ межи до межи".
+
+### Граматика: Просторові прийменники (частина II)
+Прийменники руху та знаходження: *по* (вздовж), *за* (поза), *около* (навколо), *межи* (поміж). "По ріці", "за перетесом".
+
+### Соціальний вимір: Князівська vs. общинна земля
+Протиставлення "княжого двору" та селянської "верві". Як право захищало еліту (огніщанина) та як регулювало стосунки простих людей.
+
+### Судова практика: Штрафи та покарання
+Система "продаж" (штрафів на користь князя) та "уроків" (компенсації потерпілому). 12 гривень — величезна сума.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit -9): 
+✅ Message sent to Claude (ID: 12833)
+✓ Message 12778 acknowledged
+✓ Message 12833 acknowledged

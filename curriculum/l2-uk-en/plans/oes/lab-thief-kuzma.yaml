@@ -8,7 +8,6 @@ phase: 1
 phase_id: vernacular-foundations
 phase_name: Vernacular Foundations
 focus: Analysis of the curse graffiti
-word_target: 4000
 content_outline:
 - section: Вступ
   description: 'Introduction to Lab: The Thief Kuzma'
@@ -24,3 +23,6 @@ activity_types:
 - etymology-trace
 - grammar-identify
 - grammar-lab
+persona:
+  voice: Senior Paleographer
+  role: Birchbark Reader

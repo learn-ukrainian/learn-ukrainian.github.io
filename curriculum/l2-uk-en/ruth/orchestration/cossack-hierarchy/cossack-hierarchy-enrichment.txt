@@ -1,0 +1,218 @@
+✅ Message sent to Gemini (ID: 12877) [auto-acked: self-addressed]
+✓ Message 12877 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12877...
+📨 Message #12877
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-cossack-hierarchy
+   Time: 2026-02-20T23:42:50.617914+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 82
+module: ruth-082
+module_number: 82
+slug: cossack-hierarchy
+title_uk: Козацька ієрархія
+title_en: Cossack Hierarchy
+phase: 4
+phase_id: cossack-word
+phase_name: Cossack Word
+focus: Ranks and Titles — Старшина
+content_outline:
+- section: Вступ
+  description: Introduction to Cossack Hierarchy
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Baroque Scholar
+  role: Regimental Scribe
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Cossack Hierarchy (Козацька старшина)
+
+## Використані джерела
+1. [History.org.ua](http://history.org.ua) — Енциклопедія історії України: статті «Генеральна старшина», «Козацька старшина», «Генеральний писар».
+2. [Litopys.org.ua](http://litopys.org.ua) — Тексти «Пакти і Конституції» Пилипа Орлика, «Літопис гадяцького полковника Григорія Грабянки».
+3. [Esu.com.ua](http://esu.com.ua) — Енциклопедія Сучасної України: стаття «Гетьманщина».
+
+## Хронологія
+- **1572**: Утворення реєстрового козацтва, початок офіційної ієрархії (гетьман, писар, суддя, осавули).
+- **1638**: «Ординація Війська Запорозького» — скасування виборності старшини поляками, спроба обмежити автономію.
+- **1648**: Початок Національно-визвольної війни, формування повноцінного державного апарату Гетьманщини.
+- **1654**: Березневі статті — юридичне закріплення прав старшини та маєтностей.
+- **1710**: Конституція Пилипа Орлика — перша спроба конституційного обмеження влади гетьмана на користь Генеральної ради.
+- **1764**: Остаточне скасування гетьманства Катериною II.
+
+## Ключові факти та цитати
+
+**Первинні джерела:**
+1. **Пилип Орлик, «Пакти і Конституції...» (1710):**
+   > «В ім'я Отця і Сина і Святого Духа, Бога в Трійці Святій славімого. Нехай залишиться на вікопомну славу і пам'ятку Війська Запорізького і всього народу малоросійського...»
+   *Коментар*: Документ встановлює чіткий розподіл влади між гетьманом та генеральною старшиною.
+
+2. **Богдан Хмельницький, Універсал (з закликом до повстання):**
+   > «Не слухайте одного пана, не слухайте більше урядників, як невільники... Ніколи не полишимо міст і нив, лише дорогу застелемо могилами.»
+   *Коментар*: Демонструє роль гетьмана як військового та політичного лідера нації, а не просто ватажка бунту.
+
+**Факти:**
+- **Генеральний писар** не був просто секретарем, а виконував функції міністра закордонних справ (канцлер).
+- **Генеральний обозний** був другою особою після гетьмана, відав артилерією (найдорожчим родом військ) і часто був наказним гетьманом.
+- **Полковник** у Гетьманщині — це не просто військовий чин, а голова адміністративно-територіальної одиниці (полку) з повною судовою та фінансовою владою.
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ: Природа влади": [!myth-buster] — Міф про козаків як анархічну юрбу. Реальність: жорстка ієрархія та дисципліна.
+- Section "Генеральна старшина: Уряд": [!history-bite] — Генеральний писар часто мав більше реальної влади, ніж деякі гетьмани (приклад Івана Виговського).
+- Section "Полкова та сотенна адміністрація": [!context] — Полковники були «маленькими гетьманами» у своїх регіонах, поєднуючи цивільну і військову владу.
+- Section "Судівництво і канцелярія": [!culture] — Роль писарів у формуванні літературної української мови (канцелярський стиль).
+- Section "Політична культура: Вибори": [!decolonization] — Чорна рада 1663 року як приклад охлократії, яку часто використовувала Москва для розколу еліт.
+- Section "Спадщина": [!legacy] — Конституція Пилипа Орлика як попередниця європейського конституціоналізму.
+
+## Деколонізаційний контекст
+- **Imperial/Soviet myth**: Козацька старшина — це лише «класові експлуататори», які зрадили народ і перетворилися на дворянство. Також міф про «анархію» на Січі.
+- **Ukrainian reality**: Старшина була державотворчою елітою, яка будувала інституції (суди, канцелярію, школи). Перетворення на дворянство було вимушеним кроком для збереження прав, але саме нащадки старшини (Косачі, Драгоманови, Скоропадські) стали двигуном українського відродження XIX-XX ст.
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| Малоросійський народ | Етнічна група росіян | Політична нація Гетьманщини (самоназва доби бароко) |
+| Чорна рада | «Демократичне волевиявлення низів» | Охлократичний бунт, інспірований ззовні |
+| Возз'єднання | Добровільне входження в Росію | Військовий союз, який був порушений царатом |
+
+## Section-Mapped Research Notes
+
+### Вступ: Природа козацької влади
+Влада базувалася на виборності, але з часом кристалізувалася у спадкову еліту (значкове товариство). Важливо розрізняти владу на Січі (пряма демократія) і в Гетьманщині (станова республіка).
+
+### Генеральна старшина: Уряд держави
+Аналог Кабінету Міністрів.
+- **Гетьман**: Голова держави і головнокомандувач.
+- **Генеральний обозний**: Артилерія і тил (заступник).
+- **Генеральний суддя**: Вища судова інстанція (часто двоє).
+- **Генеральний писар**: Керівник Генеральної військової канцелярії (МЗС і внутрішні справи).
+- **Генеральні осавули**: Інспекція військ, особливі доручення.
+- **Генеральний підскарбій**: Фінанси (введено пізніше).
+
+### Полкова та сотенна адміністрація
+Вертикаль влади на місцях. Полковий устрій був унікальним — військовий підрозділ був одночасно адміністративним округом. Полковник судив, збирав податки і вів у бій. Сотник — на рівні міста/району. Отаман — заступник або голова городового самоврядування.
+
+### Судівництво і канцелярія
+Канцелярія (ГВК) — мозок держави. Тут формувалася політика. Судова система базувалася на Литовських статутах і звичаєвому праві («права, за якими судиться малоросійський народ»). Писарі були найосвіченішою верствою.
+
+### Політична культура: Вибори і ради
+Генеральна рада (вся старшина і козаки) vs Рада старшини (вузьке коло). Конституція Орлика намагалася закріпити роль Ради старшини як парламенту, щоб уникнути авторитаризму гетьмана. Чорна рада — залучення «черні» (посполитих) до виборів, що часто призводило до хаосу (приклад Брюховецького).
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12898)
+✓ Message 12877 acknowledged
+✓ Message 12898 acknowledged

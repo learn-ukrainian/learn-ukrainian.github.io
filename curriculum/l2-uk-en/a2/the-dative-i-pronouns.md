@@ -1,0 +1,431 @@
+<!-- SCOPE
+Covers: Dative case pronouns (forms and usage), age expressions, "to like" construction (подобатися), expressing needs (треба/потрібно), physical/emotional states (мені холодно), basic dative verbs (допомагати, дзвонити).
+Not covered:
+  - Dative nouns → a2-02
+  - Dative verbs (advanced list) → a2-03
+  - Spatial prepositions with Dative → a2-07
+Related: a1-05 (Personal Pronouns Nom), a1-10 (Basic Verbs)
+-->
+
+# The Dative I — Pronouns
+
+> **Чому це важливо?**
+>
+> **Давальний відмінок** (The Dative Case) — це ключ до вираження ваших почуттів, потреб та бажань. Without it, you cannot say "I like", "I need", "I feel cold", or even tell someone your age. Це відмінок, який перетворює вас з пасивного спостерігача на головного героя вашого життя. Вам щось потрібно або подобається.
+
+## Introduction / Вступ
+
+Сьогодні ми вивчаємо один з найважливіших відмінків в українській мові — **Давальний відмінок** (The Dative Case). Це ключ до вираження ваших почуттів та потреб.
+
+### Що таке Давальний відмінок?
+
+Imagine a situation where an action is directed **towards** someone. Like an arrow flying towards a target. The target is the Dative case. In Ukrainian grammar, this case answers the questions **Кому?** (To whom?) and **Чому?** (To what?).
+
+Це відмінок **Адресата** (The Recipient). Коли ви даєте подарунок, ви даєте його **комусь**. Коли ви допомагаєте, ви надсилаєте допомогу **комусь**. Але це лише верхівка айсберга. Давальний відмінок також використовується, щоб описати внутрішній стан людини. Коли нам холодно, весело або сумно — це все Давальний відмінок. Чому? Тому що в українській філософії мови ці відчуття "приходять" до нас. Ми не є активними творцями цього стану (як в англійському "I am cold"), ми є отримувачами цього відчуття (дослівно: «Мені холодно»).
+
+### Ключові терміни
+
+Let’s clarify some grammatical terms you will see often.
+
+1.  **Іменник** (Noun) — A word that names a person, place, or thing (e.g., *mother, Kyiv, coffee*).
+2.  **Займенник** (Pronoun) — A word that replaces a noun (e.g., *I, you, he, she*). Today we focus on how pronouns change.
+3.  **Прикметник** (Adjective) — A word that describes a noun (e.g., *good, cold, interesting*).
+4.  **Називний відмінок** (Nominative Case) — The basic form of a word found in the dictionary. It answers "Who?" or "What?". It is usually the **Subject** of the sentence (the doer).
+5.  **Давальний відмінок** (Dative Case) — The form that shows the **Recipient**. It answers "To whom?".
+
+### Роль "Отримувача"
+
+Давайте заглибимося в концепцію отримувача. В українській граматиці **суб'єкт** (subject) — це той, хто виконує дію. Але в житті ми часто є тими, хто отримує результат дії або відчуває її вплив.
+
+Наприклад, у реченні «Я читаю книгу», "Я" — це активний діяч (**Називний відмінок**). Але якщо ми скажемо «Мені потрібно читати», тут уже немає активного "Я". Є "Мені" — "to me". Акцент зміщується з дії на стан необхідності, який ви відчуваєте. Це фундаментальна зміна перспективи. Ви більше не контролюєте ситуацію активно; ситуація впливає на вас.
+
+> [!culture]
+> **Українська гостинність**
+> В українській культурі роль "отримувача" є священною. Коли ви приходите в гості, господарі кажуть: «Вам зручно?» (Is it comfortable *to you*?). Вони пропонують: «Що вам дати?» (What to give *to you*?). Being a guest means receiving care, and the language reflects this through the **Dative case**.
+
+### Вік як "Стан"
+
+Один з перших моментів, де ви зустрінете Давальний відмінок — це вік. В англійській мові ми кажемо "I am 20 years old". Ви *є* цим віком. Це ваша характеристика, як колір очей.
+
+В українській мові логіка інша. Роки — це те, що нам "дано" життям. Ми наче накопичуємо їх як скарб. Тому ми не кажемо «Я є 20 років». Ми кажемо: **«Мені 20 років»** (literally: *To me is 20 years* — not "I am 20 years old").
+
+Це прекрасний приклад того, як граматика відображає світогляд. Час плине *до* нас і крізь нас. Ми — отримувачі часу. Тому, коли ви хочете сказати про свій вік, забудьте про "I am". Переключіться на логіку "To me is".
+
+Ось кілька прикладів:
+*   **Мені** двадцять років. (I am twenty years old.)
+*   **Тобі** тридцять років? (Are you thirty years old?)
+*   **Дідусеві** вісімдесят років. (Grandfather is eighty years old.) Note: *Дідусеві* is a Dative noun, which we will study later, but here it shows the pattern.
+
+Як бачите, розуміння Давального відмінка — це не просто запам'ятовування закінчень. Це зміна способу мислення про себе і світ.
+
+## Presentation / Презентація
+
+Тепер давайте розглянемо форми та структури, які допоможуть вам вільно користуватися цим інструментом. Ми вивчимо нові форми для "Я", "Ти", "Ми" та інших осіб.
+
+### Особові займенники
+
+Щоб говорити про свої почуття та потреби, вам треба знати, як змінюються **займенники** (pronouns). You already know them in the **Nominative case** (Я, Ти, Він...). Тепер подивимося, як вони трансформуються, коли стають "отримувачами" (recipients).
+
+Погляньте на цю таблицю трансформації:
+
+| Nominative (Хто? / Subject) | Dative (Кому? / Recipient) | English Equivalent |
+| :--- | :--- | :--- |
+| **Я** (I) | **Мені** [meˈnʲi] | To me |
+| **Ти** (You) | **Тобі** [toˈbʲi] | To you (informal) |
+| **Він** (He) | **Йому** [joˈmu] | To him |
+| **Вона** (She) | **Їй** [jij] | To her |
+| **Воно** (It) | **Йому** [joˈmu] | To it |
+| **Ми** (We) | **Нам** [nɑm] | To us |
+| **Ви** (You) | **Вам** [ʋɑm] | To you (formal/plural) |
+| **Вони** (They) | **Їм** [jim] | To them |
+
+#### Перша особа: Я та Ми
+
+Форма **мені** — дуже популярна. Ви будете чути її постійно: «Мені холодно» (I am cold), «Мені треба» (I need), «Дай мені» — "give me". Зверніть увагу на м'якість у вимові — [нʲ]. Це не тверде "ні", це м'яке, ніжне звучання, як у слові "nіce".
+
+Форма **нам** дуже проста і коротка. Вона схожа на закінчення у слові "мама" або "там". «Нам весело» — "to us is fun" — це фраза, яку ви часто почуєте на вечірках.
+
+Look at these examples:
+*   Дай **мені** каву, будь ласка. (Give me coffee, please.)
+*   Скажи **мені** правду. (Tell me the truth.)
+*   **Нам** час йти додому. (It is time for us to go home.)
+
+#### Друга особа: Ти та Ви
+
+Тут ми бачимо цікаву паралель. **Ти** ("you" singular) перетворюється на **Тобі**, а **Ви** ("you" plural/formal) — на **Вам**. Логіка проста: «Тобі» — для друзів, родичів, дітей. «Вам» — для незнайомців, старших людей або групи людей.
+
+> [!tip]
+> **Ритм мови**
+> Послухайте ритм: Мені, Тобі. Вони римуються. Це допоможе вам запам'ятати їх парою. Якщо ви пам'ятаєте "мені", ви автоматично згадаєте "тобі".
+
+Examples:
+*   Я дам **тобі** книгу завтра. (I will give you the book tomorrow.)
+*   Що **вам** дати? (What shall I give you?)
+*   Бажаю **вам** щастя! (I wish you happiness!)
+
+#### Третя особа: Він, Вона, Вони
+
+Важливо не плутати роди. **Він** (He) і **Воно** (It) мають спільну форму — **Йому**. Це просто! А от **Вона** (She) стає **Їй**. Це коротке слово з двох звуків: [й] та [і]. Воно звучить дуже м'яко.
+
+Форма множини **Їм** (для "Вони") — це [йім]. Починайте із чіткого [й].
+
+Examples:
+*   **Йому** 20 років. (He is 20 years old.)
+*   **Їй** пасує ця сукня. (This dress suits her.)
+*   **Їм** байдуже. (They don't care / To them it is indifferent.)
+
+### Логіка "Подобатися"
+
+Це, мабуть, найважливіша граматична конструкція цього рівня. В англійській мові ви кажете "I like coffee". "I" — це суб'єкт, "like" — дія, "coffee" — об'єкт. Все просто і лінійно.
+
+В українській мові дієслово **подобатися** працює зовсім інакше. Воно означає "to please" або "to appeal to". Тому, коли ви хочете сказати, що вам щось подобається, ви фактично кажете: "Ця річ подобається мені" — "this thing appeals to me".
+
+#### Інверсія Суб'єкта та Об'єкта
+
+Let's break this down step-by-step. In the English sentence "I like music":
+1.  **I** is the Subject (active).
+2.  **Music** is the Object (passive).
+
+In the Ukrainian sentence «Мені подобається музика»:
+1.  What is liked (**Music**) becomes the grammatical **Subject** (in the Nominative Case).
+2.  The person who likes (**Me**) becomes the **Recipient** (in the Dative Case).
+
+Structure Comparison:
+*   **English**: Subject (Person) + Verb + Object (Thing)
+*   **Ukrainian**: Dative (Person) + Verb + Nominative (Thing) **or Infinitive**.
+
+Let's compare directly:
+*   Англійська: I like music.
+*   Українська: **Мені подобається музика**.
+
+This means the word "music" is in the **Nominative case**, as in the dictionary. Вам не потрібно його змінювати! Це чудова новина. Але вам потрібно змінити "Я" на "Мені".
+
+> [!warning]
+> **Типова помилка**
+> Ніколи не кажіть «Я подобаю музику». Це звучить неприродно і граматично неправильно в цьому контексті. Завжди використовуйте конструкцію «Мені подобається...».
+
+#### Узгодження дієслова
+
+Since "music" (or another object) is the grammatical subject, the verb **подобатися** agrees with it, not with you! The verb must match the number of the thing being liked.
+
+*   If the object is **singular**: use **подобається**.
+    *   *Мені подобається кава.* (Coffee pleases me.)
+    *   *Тобі подобається цей фільм.* (This movie pleases you.)
+*   If the object is **plural**: use **подобаються**.
+    *   *Мені подобаються квіти.* (Flowers please me.)
+    *   *Нам подобаються ці люди.* (These people please us.)
+
+Examples:
+*   **Мені подобається** цей фільм. (I like this movie.)
+*   **Тобі подобаються** ці квіти? (Do you like these flowers?)
+*   **Нам подобається** українська мова. (We like the Ukrainian language.)
+
+### Висловлення потреб: Потрібно та Треба
+
+Щоб вижити в новому мовному середовищі, ви повинні вміти говорити про свої потреби. "Мені треба води", "Нам потрібно працювати". В українській мові для цього є два дуже схожих слова: **треба** та **потрібно**.
+
+#### Треба vs Потрібно
+
+Обидва слова означають "necessary" або "need". Вони майже взаємозамінні, але є нюанси:
+*   **Треба** — більш розмовне, буденне. Ви почуєте його на вулиці, в магазині, вдома. It implies a practical necessity.
+*   **Потрібно** — трохи більш формальне, хоча теж дуже поширене. Воно звучить трохи м'якше і ввічливіше. It implies a requirement or strong need.
+
+The sentence structure is identical to "подобатися":
+**Кому?** (Dative Recipient) + **треба/потрібно** + **Що?** (Nominative Noun) or **Infinitive** (Verb).
+
+#### Потреба в дії
+
+When you need *to do* something, use the **infinitive** form of the verb (the dictionary form ending in -ти). This is the simplest construction because the word "треба" or "потрібно" never changes form here.
+
+Examples:
+*   **Мені треба** працювати. (I need to work.)
+*   **Нам потрібно** йти. (We need to go.)
+*   **Вам треба** відпочити. (You need to rest.)
+*   **Їй потрібно** спати. (She needs to sleep.)
+
+#### Потреба в предметі
+
+When you need an *object*, grammar can get a bit more complex. Technically, you should use "потрібен" (masculine), "потрібна" (feminine), or "потрібне" (neuter) to agree with the object. However, in everyday speech with the word **треба**, speakers often use a simpler structure. But let's look at the correct formal way with **потрібен**:
+
+*   **Мені потрібен** час. (I need time. *Time is masculine*)
+*   **Тобі потрібна** допомога. (You need help. *Help is feminine*)
+*   **Нам потрібне** таксі. (We need a taxi. *Taxi is neuter*)
+
+> [!context]
+> **Як сказати "I need a coffee"?**
+> Ви можете сказати: «Мені треба каву» (Using Accusative case, common in speech). Але часто українці кажуть просто: «Я хочу каву» (I want coffee). Конструкція з "треба" частіше означає об'єктивну необхідність (I *must* have coffee to wake up), ніж просто бажання.
+
+### Фізичні та емоційні стани
+
+Як ви себе почуваєте? Вам холодно? Весело? Нудно? Ukrainian describes these states impersonally, using the **Dative case**. Це не ви "є нудним" (це означало б, що ви нудна людина!), це "вам нудно" (the situation is boring *to you*).
+
+#### Безособові речення
+
+In English, you say "I am cold". You use a subject "I" and a verb "am". In Ukrainian, describing a state often involves no subject at all. The state just *is*. And it affects you. That is why we use the adverb form (ending in **-о**) and the Dative case for the person.
+
+Structure: **Dative Person** + **Adverb (State)**.
+
+#### Фізичні відчуття
+
+Ось найпоширеніші слова для опису фізичного комфорту чи дискомфорту:
+*   **Холодно** (cold) → **Мені холодно** (I am cold / literally: *To me is cold*).
+*   **Жарко** (hot) → **Тобі жарко?** (Are you hot? / To you is hot?).
+*   **Тепло** (warm) → **Нам тепло** — "we are warm".
+*   **Боляче** [ˈbɔlʲɑt͡ʃe] (painful/hurt) → **Йому боляче** — "he is in pain" / "it hurts him".
+
+Note: if you translate literally from English and say "Я холодний", it would mean your body has a low temperature (like a corpse!) or that you are an emotionally cold person. Therefore, using the Dative case here is critical for correct meaning.
+
+#### Емоційні стани
+
+The same logic applies to emotions and mood. We describe how we feel about the world around us.
+*   **Весело** (fun/merry) → **Їм весело** — "they are having fun".
+*   **Сумно** (sad) → **Їй сумно** — "she is sad".
+*   **Нудно** (boring) → **Вам нудно?** — "Are you bored?"
+*   **Цікаво** (interesting) → **Мені цікаво** — "I am interested".
+*   **Важко** (hard/difficult) → **Йому важко** — "it is hard for him".
+*   **Легко** (easy) → **Нам легко** — "it is easy for us".
+*   **Страшно** (scary) → **Мені страшно** — "I am scared".
+
+Examples:
+*   Сьогодні гарна погода, **мені весело**. (Today is good weather, I am having fun.)
+*   Цей фільм довгий, **їй нудно** — "this movie is long, she is bored".
+*   Вивчати мову — це робота, але **мені цікаво** — "learning a language is work, but I am interested".
+
+> [!culture]
+> **"Мені приємно"**
+> Коли вас знайомлять з кимось новим, стандартна ввічлива відповідь — **«Дуже приємно»** або повна фраза **«Мені дуже приємно»** — "it is very pleasant to me". Це еквівалент англійського "Nice to meet you". Використовуйте це завжди при першій зустрічі! Це показує вашу ввічливість і знання культури.
+
+### Дієслова з Давальним відмінком
+
+Окрім "подобатися", є ряд інших дієслів, які вимагають після себе Давального відмінка. Це логічно: дія спрямована *до* адресата.
+
+#### Допомагати — "to help"
+
+В англійській мові ви допомагаєте "когось" (Direct Object). В українській — ви даєте допомогу *комусь* (Indirect Object). Therefore, after the verb **допомагати**, we always use the **Dative case**.
+
+Examples:
+*   Він **допомагає мені** — "he helps me".
+*   Ми **допомагаємо їм** — "we help them".
+*   Чи можу я **вам допомогти**? — "Can I help you?" — This is a standard phrase in shops.
+
+#### Дзвонити — "to call/phone"
+
+Коли ви телефонуєте, ви також надсилаєте сигнал *комусь*.
+*   Я **дзвоню тобі** — "I am calling you".
+*   Вона **дзвонить йому** щодня — "she calls him every day".
+
+#### Писати — "to write" — і Говорити — "to speak/tell"
+
+Коли ви пишете повідомлення або говорите щось, ви адресуєте це комусь.
+*   Я **пишу вам** листа — "I am writing a letter to you".
+*   Він **каже мені** правду — "he tells me the truth".
+*   Скажи **мені**... — "Tell me..."
+
+#### Здаватися — "to seem"
+
+Це дієслово часто використовується для вираження думки або невпевненості.
+*   **Мені здається**, що... — "it seems to me that..." / "I think that...".
+*   **Їй здається**, що це гарна ідея — "it seems to her that this is a good idea".
+
+> [!myth-buster]
+> **Подарунки через поріг**
+> В Україні існує суворе табу: ніколи нічого не передавайте через поріг (across the threshold) дверей. Це вважається поганою прикметою, яка може призвести до сварки. Якщо ви хочете щось дати **гостеві** (to a guest), або запросіть його увійти, або вийдіть самі. Поріг — це межа світів, і спілкування через нього розриває зв'язок.
+
+## Practice / Практика
+
+Let's practice shifting from English logic to Ukrainian Dative logic.
+
+### Вправа 1: Трансформація займенників
+
+In this exercise, we will focus on the mental shift required. You are no longer the subject "I" (Я), you are the recipient "Me" (Мені). This is crucial for expressing needs and feelings.
+
+Imagine you are a translator. Your task is to change the Subject Pronoun to a Recipient Pronoun (Dative).
+
+1.  **Я** (I) → **Мені** — "to me"
+2.  **Ти** (You) → **Тобі** — "to you"
+3.  **Він** (He) → **Йому** — "to him"
+4.  **Вона** (She) → **Їй** — "to her"
+5.  **Воно** (It) → **Йому** — "to it"
+6.  **Ми** (We) → **Нам** — "to us"
+7.  **Ви** (You) → **Вам** — "to you"
+8.  **Вони** (They) → **Їм** — "to them"
+
+Now, try to transform whole sentences conceptually:
+*   Original concept: **I** want coffee. → Ukrainian logic: **To me** is needed coffee — **Мені** треба кава.
+*   Original concept: **You** look sad. → Ukrainian logic: **To you** is sad? — **Тобі** сумно?
+*   Original concept: **They** are working. → Ukrainian logic: **To them** is needed to work — **Їм** треба працювати.
+
+### Вправа 2: Логіка "Подобатися"
+
+Remember the formula: The object pleases the subject. If you like the house, the house is the active subject.
+
+Build sentences using the scheme: **Кому?** (Dative) + **подобається/подобаються** + **Хто/Що?** (Nominative) **або Інфінітив**.
+Remember that the verb depends on the object (Singular vs Plural)!
+
+*   (Я) + (цей будинок) → **Мені подобається цей будинок.** (Reason: *будинок* is singular).
+*   (Ти) + (ці квіти) → **Тобі подобаються ці квіти.** (Reason: *квіти* is plural).
+*   (Він) + (Україна) → **Йому подобається Україна.**
+*   (Вона) + (українські пісні) → **Їй подобаються українські пісні.**
+*   (Ми) + (читати) → **Нам подобається читати.** (Note: with verbs like *читати*, use singular *подобається*).
+*   (Ви) + (цей ресторан) → **Вам подобається цей ресторан?**
+
+### Вправа 3: Вираження станів
+
+Connect the person and the feeling using the Dative case.
+*   (Вона) + (холодно) → **Їй холодно.** (She is cold.)
+*   (Ви) + (зручно) → **Вам зручно?** (Are you comfortable?)
+*   (Я) + (цікаво) → **Мені цікаво.** (I am interested.)
+*   (Вони) + (весело) → **Їм весело.** (They are having fun.)
+*   (Він) + (сумно) → **Йому сумно.** (He is sad.)
+*   (Ми) + (страшно) → **Нам страшно.** (We are scared.)
+
+> [!culture]
+> **Квіти для живих**
+> Якщо ви даруєте квіти **жінці** (to a woman) або **другові** (to a friend) на день народження, переконайтеся, що їх **непарна кількість** (odd number: 1, 3, 5, 7). Парна кількість (2, 4, 6...) приноситься тільки на похорон. Це дуже важливе культурне правило! Помилка тут може дуже засмутити **отримувача** (the recipient).
+
+### Вправа 4: Робота з помилками
+
+Let's fix typical beginner mistakes. Understanding *why* these are wrong will help you avoid them.
+
+1.  *Incorrect:* Я треба йти.
+    *   *Why it's wrong:* "Treba" requires a Dative recipient. "I" cannot "need" in this structure; "it is necessary **to me**".
+    *   *Correct:* **Мені треба йти.** (Action is necessary *to me*).
+2.  *Incorrect:* Я подобаю цей фільм.
+    *   *Why it's wrong:* "To like" is reflexive/passive logic in Ukrainian. You cannot "like" actively here.
+    *   *Correct:* **Мені подобається цей фільм.** (This movie pleases *me*).
+3.  *Incorrect:* Я допомагаю тебе.
+    *   *Why it's wrong:* "To help" governs the Dative case, not Accusative. You give help **to** someone.
+    *   *Correct:* Я **допомагаю тобі**. (Helping *to you*).
+4.  *Incorrect:* Вона холодна.
+    *   *Why it's wrong:* This describes her physical temperature or personality trait (she is a cold person).
+    *   *Correct:* **Їй холодно.** (She feels cold).
+
+## Dialogues / Діалоги
+
+See how these phrases live in real communication. Pay attention to the highlighted words in the Dative case. We will analyze three common scenarios.
+
+### В гостях
+
+**Scenario**: You are visiting a friend. Notice how the host constantly checks your comfort using Dative forms. Ukrainian hosting culture is very attentive to the guest's needs.
+
+— Привіт! Заходь, будь ласка. **Мені** дуже приємно, що ти прийшов.
+— Привіт! Дякую за запрошення.
+— Сідай тут, на дивані. **Тобі** зручно?
+— Так, дякую, дуже зручно. Гарна квартира! **Мені** тут подобається.
+— Дякую. Може, **тобі** холодно? Я можу закрити вікно.
+— Ні, **мені** не холодно, все добре. Навіть трохи жарко.
+— Що **тобі** дати? Чай, каву, сік?
+— **Мені** потрібна лише вода, дякую. Я дуже хочу пити.
+— Ось, тримай.
+— Дякую **тобі**!
+
+**Analysis**:
+*   The phrase «Тобі зручно?» literally asks "Is it comfortable to you?". This is the standard way to check on a guest.
+*   «Мені тут подобається» means "I like it here".
+
+### Подарунок
+
+**Scenario**: Giving a birthday present. The focus is on the recipient's pleasure and the giver's hope that the gift is suitable.
+
+— З днем народження! Це **тобі**.
+— О, дякую! Що це?
+— Відкрий. Я думаю, що це **тобі** сподобається. Я довго вибирав.
+— Вау! Це ж нова книга! **Мені** дуже подобається! Дякую!
+— **Мені** приємно, що **тобі** подобається. Я знаю, що **тобі** цікава історія.
+— Так, **мені** дуже цікаво. Ти найкращий друг!
+— Бажаю **тобі** щастя і здоров'я!
+
+**Analysis**:
+*   «Мені приємно» is a very common phrase. It means "It is pleasant to me". Use it when you are glad about something, especially when someone thanks you.
+*   «Бажаю тобі...» (I wish to you...). Wishes always use the Dative case for the person receiving the wish.
+
+> [!history-bite]
+> **Хліб і сіль**
+> Традиція зустрічати гостей "хлібом і сіллю" (bread and salt) є дуже давньою. Хліб символізує багатство та життя, а сіль — захист від зла. Коли господарі виносять хліб, вони віддають шану **гостям** (to guests). Це найвищий прояв поваги. Відмовитися від хліба — значить образити господарів.
+
+### У лікаря
+
+**Scenario**: Describing physical pain or discomfort. This is a critical skill for any traveler.
+
+— Доброго дня. Що **вам** болить?
+— Доброго дня, лікарю. **Мені** болить голова і горло.
+— **Вам** холодно чи жарко?
+— **Мені** дуже жарко. Думаю, у мене температура.
+— Зрозуміло. **Вам** важко дихати?
+— Ні, дихати **мені** легко.
+— Добре. Ось рецепт. Ці ліки допоможуть **вам**.
+— Дякую **вам**, лікарю.
+
+**Analysis**:
+*   «Що вам болить?» (What hurts to you?). Pain is treated as a state or action affecting you.
+*   «Ці ліки допоможуть вам» (These medicines will help you). Remember: *help* + Dative.
+
+### Розмова по телефону
+
+**Scenario**: A phone call between friends making plans for the weekend.
+
+— Алло? Привіт! Як ти?
+— Привіт. Чесно кажучи, **мені** нудно сидіти вдома.
+— Тоді ходімо в кіно! Там є новий фільм. **Мені** здається, він цікавий.
+— Чудова ідея! **Нам** треба розважитися.
+— Добре, я **тобі** подзвоню через годину, коли звільнюся.
+— Домовилися! Чекаю дзвінка.
+— Па-па!
+
+---
+
+# Підсумок
+
+Today you made a huge step forward. You learned not just to name things, but to talk about your attitude towards them. You learned an interesting fact: In Ukrainian, the world often revolves around you. It sends you feelings, years, and duties, and you are the recipient of these experiences.
+
+The Dative case is a tool of empathy. It allows you to ask "How are you?", "Are you cold?", "Can I help you?". This is the language of care and interaction. You learned the forms of pronouns (Мені, Тобі, Йому...), figured out the logic of "to like" (подобатися) and learned to talk about needs (треба/потрібно).
+
+**Перевірте себе:**
+1. Як сказати українською "I am 25 years old"? (Підказка: використовуйте "Мені").
+2. Чому ми не кажемо "Я подобаю музику"? Яка конструкція правильна?
+3. Який займенник потрібно використати у реченні: "___ (Вона) потрібно працювати"?
+4. Як запитати друга, чи йому весело?
+5. Яке дієслово ми використовуємо, коли хочемо надати підтримку комусь, і який відмінок після нього йде?
+6. Чому не можна передавати подарунок через поріг?
+
+You did a great job! Now you can boldly talk about your desires and feelings. Practicing these forms will make your Ukrainian sound much more natural and emotional. It will be even more interesting further on!

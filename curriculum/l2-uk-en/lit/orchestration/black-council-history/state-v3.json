@@ -1,0 +1,13 @@
+{
+  "track": "lit",
+  "slug": "black-council-history",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-20T23:08:48Z",
+      "task_id": "v3-black-council-history-pA",
+      "mode": "full"
+    }
+  }
+}

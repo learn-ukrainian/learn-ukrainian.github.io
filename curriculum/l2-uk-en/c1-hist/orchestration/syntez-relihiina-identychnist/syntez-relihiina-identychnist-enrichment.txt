@@ -1,0 +1,295 @@
+✅ Message sent to Gemini (ID: 12730) [auto-acked: self-addressed]
+✓ Message 12730 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12730...
+📨 Message #12730
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-syntez-relihiina-identychnist
+   Time: 2026-02-20T23:41:54.206913+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-hist-063
+level: c1-hist
+sequence: 63
+version: '1.0'
+title: 'Синтез: Релігія і національна ідентичність'
+focus: history
+pedagogy: seminar
+objectives:
+- 'Analyze the causes and consequences of синтез: релігія і національна ідентичність'
+- Evaluate the historical significance of релігія і нація
+content_outline:
+- section: Вступ — Релігія і нація
+  subsections:
+  - Огляд модулів 58-62
+  - Як релігія формує ідентичність
+  - Українська специфіка
+  - Мета синтезу
+- section: Релігійний ландшафт України
+  subsections:
+  - ПЦУ — автокефальна
+  - УПЦ МП — московська юрисдикція
+  - УГКЦ — греко-католики
+  - Протестанти
+  - Інші — мусульмани, юдеї
+  - Карта розподілу
+- section: Церковні розколи і нація
+  subsections:
+  - 1596 — перший розкол
+  - 1686 — втрата Київської митрополії
+  - 1946 — ліквідація УГКЦ
+  - 1991-2019 — боротьба за автокефалію
+  - Томос 2019 — що змінилося
+- section: 2022 — Релігія на війні
+  subsections:
+  - УПЦ МП — криза лояльності
+  - ПЦУ — церква опору
+  - УГКЦ — капелани і допомога
+  - Релігійний вимір деколонізації
+  - Заборона УПЦ МП?
+- section: Секуляризація vs. відродження
+  subsections:
+  - Радянська спадщина — атеїзм
+  - Релігійне відродження 1990-х
+  - Молодь і релігія
+  - Майбутнє — прогнози
+- section: Уроки для розуміння України
+  subsections:
+  - Релігія — не тільки віра
+  - Церква як політичний актор
+  - Ідентичність — складна
+  - Регіональні відмінності
+- section: Підсумок
+  subsections:
+  - Релігія і нація — переплетені
+  - Від минулого до сьогодення
+  - Перехід до діаспорних студій
+vocabulary:
+- синтез
+- автокефалія
+- томос
+- ПЦУ
+- УПЦ МП
+- секуляризація
+- відродження
+- лояльність
+- юрисдикція
+- ландшафт
+- екуменізм
+- конфесія
+- капелан
+- деномінація
+- плюралізм
+activities:
+- type: essay-response
+  focus: Create religious identity evolution diagram
+- type: critical-analysis
+  focus: Analyze 2022 religious dimension of war
+- type: critical-analysis
+  focus: Map religious distribution in Ukraine
+- type: essay-response
+  focus: Як релігія впливає на українську національну ідентичність сьогодні?
+sources:
+- name: Релігія в Україні (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Релігія_в_Україні
+  type: reference
+  notes: Overview
+- name: Православна церква України
+  url: https://uk.wikipedia.org/wiki/Православна_церква_України
+  type: reference
+  notes: 2018-19 autocephaly
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
+persona:
+  voice: Academic Historiographer
+  role: Theologian-Sociologist
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Синтез: Релігія і національна ідентичність
+
+## Використані джерела
+1. [Енциклопедія Сучасної України (ЕСУ)](https://esu.com.ua) — фундаментальні статті про конфесії та історію церкви.
+2. [Інститут історії України НАНУ](http://resource.history.org.ua) — академічні дослідження про анексію Київської митрополії та ліквідацію УГКЦ.
+3. [Ізборник (Litopys.org.ua)](http://litopys.org.ua) — першоджерела та історичні розвідки (Грушевський, Огієнко).
+4. [Релігійно-інформаційна служба України (РІСУ)](https://risu.ua) — хроніка сучасних релігійних подій та аналітика.
+5. [Центр Разумкова](https://razumkov.org.ua) — соціологічні дані про релігійність українців.
+
+## Хронологія
+- 988: Хрещення Русі-України — цивілізаційний вибір на користь Візантії/Європи.
+- 1596: Берестейська унія — утворення Греко-Католицької Церкви, початок конфесійного дуалізму.
+- 1686: Анексія Київської митрополії Московським патріархатом (визнана незаконною у 2018).
+- 1921: Перший Всеукраїнський Православний Церковний Собор, створення УАПЦ (В. Липківський).
+- 1946: Львівський псевдособор — примусова ліквідація УГКЦ радянською владою.
+- 1991-1992: Відродження релігійного життя, розкол у православ'ї (УПЦ МП, УПЦ КП, УАПЦ).
+- 2018 (15 грудня): Об'єднавчий собор, створення Православної Церкви України (ПЦУ).
+- 2019 (6 січня): Отримання Томосу про автокефалію від Вселенського Патріарха.
+- 2024 (20 серпня): Прийняття Закону № 8371 про заборону релігійних організацій, пов'язаних з РФ.
+
+## Ключові факти та цитати
+- **Факт**: Україна — унікальна європейська країна, де історично склався релігійний плюралізм (православ'я, греко-католицизм, протестантизм) без державної церкви.
+- **Цитата (Митрополит Василь Липківський)**: «Визволення церкви неможливе без визволення нації».
+- **Цитата (Патріарх Варфоломій, 2019)**: «Свята Київська Церква виявилася жертвою несканонічного перевороту, коли її було передано в підпорядкування Московському патріархату».
+- **Соціологія**: Понад 60% українців ідентифікують себе як віруючі, при цьому довіра до церкви залишається однією з найвищих серед суспільних інститутів.
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ — Релігія і нація": [!context] — Релігія в Україні — це не лише про віру, а про ідентичність і політичний вибір (Європа vs «Русскій мір»).
+- Section "Релігійний ландшафт України": [!culture] — Унікальний феномен українського «пограниччя»: співіснування східного обряду і західної догматики (УГКЦ).
+- Section "Церковні розколи і нація": [!myth-buster] — Міф про «возз'єднання» 1686 року. Це була анексія, вчинена шляхом симонії (підкупу).
+- Section "2022 — Релігія на війні": [!decolonization] — Як концепція «Святої Русі» стала ідеологічним виправданням геноциду українців.
+- Section "Секуляризація vs. відродження": [!history-bite] — Феномен «віруючих, які не належать до жодної конфесії» — специфіка пострадянської ідентичності.
+- Section "Уроки для розуміння України": [!quote] — «Бог не в силі, а в правді» (Олександр Невський? Ні, це привласнена цитата, але українська ідея — «З нами Бог і Україна»).
+
+## Деколонізаційний контекст
+- **Imperial/Soviet myth**: «Єдіная каноніческая тєріторія» РПЦ, яка нібито включає Україну.
+- **Ukrainian reality**: Київська митрополія існувала за 500 років до появи Московського патріархату; її підпорядкування Москві було актом колоніального захоплення.
+- **Imperial/Soviet myth**: УГКЦ — «знаряддя Ватикану» і «ворог народу».
+- **Ukrainian reality**: УГКЦ стала «національним ковчегом» для українців Галичини, зберігши мову і культуру в умовах польського та радянського тиску.
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| 1686 | Возз'єднання Київської митрополії з Московською | Анексія / Узурпація юрисдикції |
+| 1946 | Львівський собор (повернення уніатів) | Львівський псевдособор (спецоперація НКВС) |
+| УПЦ МП | Українська Православна Церква (канонічна) | РПЦ в Україні (філія країни-агресора) |
+| Війна | «Священна війна» проти сатанізму | Оборона від неоімперської агресії |
+
+## Section-Mapped Research Notes
+
+### Вступ — Релігія і нація
+Релігія як маркер «свій-чужий». Історична роль церкви як сурогату державності в періоди бездержавності (XVII-XIX ст.).
+
+### Релігійний ландшафт України
+ПЦУ як символ духовної незалежності. УГКЦ як міст до Європи. Протестантизм (баптисти, п'ятидесятники) — «Біблійний пояс» України та їхня роль у волонтерстві.
+
+### Церковні розколи і нація
+Берестейська унія 1596: спроба модернізації чи полонізація? Вплив на освіту (Могилянська академія як відповідь). 1920-ті: УАПЦ як «церква розстріляного відродження».
+
+### 2022 — Релігія на війні
+Роль капеланів (Закон 2024 року про капеланську службу). Священники-колаборанти УПЦ МП vs священники-патріоти. Руйнування храмів російськими ракетами (понад 500 релігійних споруд).
+
+### Секуляризація vs. відродження
+Радянська травма атеїзму. Бурхливе відкриття храмів у 1990-х. Сучасна молодь: менш релігійна, але більш патріотична.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12767)
+✓ Message 12730 acknowledged
+✓ Message 12767 acknowledged

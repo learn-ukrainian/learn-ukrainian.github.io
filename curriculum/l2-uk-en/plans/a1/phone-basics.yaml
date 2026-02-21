@@ -1,0 +1,112 @@
+sequence: 41
+module: a1-41
+level: A1
+slug: phone-basics
+version: '2.0'
+title: Phone Basics
+subtitle: Making Calls and Texting
+content_outline:
+- section: Вступ та етикет (Introduction and Etiquette)
+  words: 450
+  points:
+  - 'Introduction to phone greetings: Comparing the universal «Алло!» with the professional/polite
+    «Слухаю!» (State Standard §2); explain how «Слухаю!» signals professional readiness
+    and politeness.'
+  - 'The ''Formal vs. Informal'' address: Guidance on defaulting to «Ви» for strangers
+    (couriers, receptionists) vs. «ти» for friends; addressing the learner error of
+    being overly informal too early.'
+  - 'Pronunciation workshop: Mastering the single affricate sound «дз» in «дзвонити»
+    and «дзвінок»; correcting the learner error of pronouncing it as two separate
+    sounds or just «z».'
+- section: 'Презентація: Основні структури (Presentation: Core Structures)'
+  words: 650
+  points:
+  - 'Identifying yourself: Correcting the English-influenced error «Я є Олена» to
+    the natural «Це Олена» or «Олена слухає» as per modern Ukrainian speech etiquette.'
+  - 'Asking for contact: Using simple phrases like «Чи можу я поговорити з...?» and
+    the State Standard phrase «Скажіть, будь ласка» to establish polite contact.'
+  - 'Managing the conversation: Utilizing polite imperatives (§4.2.4.2) like «Зачекайте,
+    будь ласка» and «Повторіть, будь ласка» to handle clarifications or delays.'
+  - 'Modern closings: Introducing «До зв''язку!» (Talk soon) as the modern standard
+    for ending calls and messages, bridging the gap between formal «До побачення»
+    and informal «Бувай».'
+- section: 'Практика: Життєві ситуації (Practice: Real-life Situations)'
+  words: 550
+  points:
+  - 'Wrong number scenario: Teaching «Вибачте, я помилився номером» as a fixed formulaic
+    chunk; practicing polite apologies and quick closures.'
+  - 'The Courier call: Specific focus on delivery scenarios (State Standard Catalog
+    B); practicing phrases for contact instructions like «Я буду через 5 хвилин» or
+    «Залиште біля дверей».'
+  - 'Digital messaging: Introduction to SMS/messenger collocations like «написати
+    повідомлення» and «залишити повідомлення» as alternatives to calling.'
+- section: Продукція та підсумок (Production and Summary)
+  words: 350
+  points:
+  - 'Dialogue Simulation: Formal call to a hotel/office using «Слухаю вас» and «Ви»
+    vs. informal call to a friend using «Алло» and «До зв''язку».'
+  - 'Review of high-frequency collocations: Consolidating «дзвонити мамі», «номер
+    телефону», and «лінія зайнята» to ensure learners use the most natural speech
+    patterns found in research.'
+vocabulary_hints:
+  required:
+  - телефон (phone) — номер телефону, мій телефон; very high frequency
+  - 'дзвонити (to call) — дзвонити другу/мамі; very high frequency; pronunciation
+    note: single «дз» sound'
+  - відповідати (to answer) — відповідати на дзвінок; State Standard §2 contact formula
+  - номер (number) — номер телефону, помилитися номером; high frequency
+  - повідомлення (message) — написати повідомлення, залишити повідомлення; high frequency
+    in digital contact
+  - зайнятий (busy) — лінія зайнята, я зайнятий; common status marker
+  - передзвонити (to call back) — Я передзвоню за хвилину, передзвоніть пізніше; high
+    frequency in verbal interaction
+  - алло (hello - phone) — Алло! Хто це?; informal/neutral opening
+  recommended:
+  - слухаю (I'm listening) — Так, слухаю вас; polite/professional answer; signals
+    readiness to listen
+  - хвилинка (a moment) — Зачекайте хвилинку, одну хвилинку; common softener in speech
+  - помилитися (to make a mistake) — помилитися номером; taught as a fixed formula
+    chunk
+  - передати (to pass on) — передати повідомлення, що передати?
+  - телефонувати (to phone) — телефонувати в офіс; more neutral/formal alternative
+    to «дзвонити»
+  - зачекайте (wait - imperative) — Зачекайте, будь ласка; polite request; State Standard
+    §2
+  - до зв'язку (talk soon) — modern standard sign-off for calls and messengers; high
+    frequency
+activity_hints:
+- type: fill-in
+  focus: Phone conversations
+  items: 10
+- type: quiz
+  focus: Phone call comprehension
+  items: 10
+- type: fill-in
+  focus: Making and receiving calls
+  items: 6
+- type: fill-in
+  focus: Complete phone phrases
+  items: 12
+focus: practical
+pedagogy: PPP
+prerequisites:
+- a1-07 (Questions and Negation)
+- a1-40 (Taking Transport)
+connects_to:
+- a1-42 (Emergencies)
+- a1-43 (Combined Practice)
+objectives:
+- Learner can make and receive phone calls
+- Learner can leave a message
+- Learner can handle wrong numbers
+- Learner can use basic text messaging phrases
+grammar:
+- Phone conversation formulas
+- Imperative for requests
+- Could you... (Чи могли б ви...)
+register: розмовний
+phase: A1.4 [Practical Scenarios]
+persona:
+  voice: Patient Supportive Tutor
+  role: Tech Support Specialist
+word_target: 2000

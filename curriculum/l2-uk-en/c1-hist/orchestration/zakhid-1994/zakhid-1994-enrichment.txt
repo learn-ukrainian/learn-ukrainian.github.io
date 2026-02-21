@@ -1,0 +1,306 @@
+✅ Message sent to Gemini (ID: 13061) [auto-acked: self-addressed]
+✓ Message 13061 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #13061...
+📨 Message #13061
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-zakhid-1994
+   Time: 2026-02-20T23:44:10.668850+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-hist-098
+level: c1-hist
+sequence: 98
+version: '1.0'
+title: 'Будапештський меморандум: Гарантії без гарантій'
+focus: history
+pedagogy: seminar
+objectives:
+- 'Analyze the causes and consequences of будапештський меморандум: гарантії без гарантій'
+- Evaluate the historical significance of угода без зубів
+content_outline:
+- section: Вступ — Угода без зубів
+  subsections:
+  - 1994 — Україна віддає ядерну зброю
+  - Що отримала натомість
+  - 2014 — цінність «гарантій»
+  - Структура модуля
+- section: Контекст — Третій ядерний арсенал
+  subsections:
+  - Україна після СРСР — 1700+ боєголовок
+  - Тиск на роззброєння
+  - Західні страхи — проліферація
+  - Українські сумніви
+- section: Переговори
+  subsections:
+  - Що хотіла Україна
+  - Що пропонували США, Британія, Росія
+  - Компроміс — меморандум
+  - Чому не договір
+- section: Текст меморандуму
+  subsections:
+  - «Гарантії» безпеки — які саме
+  - Зобов'язання сторін
+  - Юридична сила — жодної
+  - Що насправді підписали
+- section: 2014 — Провал
+  subsections:
+  - Росія порушує
+  - США і Британія — що зробили
+  - «Гарантії» = консультації
+  - Урок — папір без сили
+- section: Чи могла Україна інакше
+  subsections:
+  - Залишити зброю — реалістично?
+  - Тиск — надто сильний
+  - Але могла вимагати більше
+  - Уроки для переговорів
+- section: Підсумок
+  subsections:
+  - Меморандум — пастка
+  - Довіра — помилка
+  - Перехід до Чорноморського флоту
+vocabulary:
+- Будапештський меморандум
+- гарантії безпеки
+- ядерне роззброєння
+- боєголовка
+- меморандум
+- договір
+- юридична сила
+- проліферація
+- консультації
+- порушення
+- ДНЯО
+- стратегічна зброя
+- асиметрія
+- переговорна позиція
+- зобов'язання
+activities:
+- type: critical-analysis
+  focus: Close reading of Budapest Memorandum
+- type: critical-analysis
+  focus: What could Ukraine have demanded?
+- type: comparative-study
+  focus: «Guarantees» vs. actual obligations
+- type: essay-response
+  focus: Чи була Україна обдурена Будапештським меморандумом?
+sources:
+- name: Будапештський меморандум (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Будапештський_меморандум
+  type: reference
+  notes: Memorandum text and context
+- name: Ядерне роззброєння України (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Ядерне_роззброєння_України
+  type: reference
+  notes: Nuclear disarmament
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
+persona:
+  voice: Academic Historiographer
+  role: Nuclear Disarmament Analyst
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Будапештський меморандум: Гарантії без гарантій
+
+## Використані джерела
+1. [Енциклопедія історії України (ІІУ НАНУ): БУДАПЕШТСЬКИЙ МЕМОРАНДУМ 1994](http://resource.history.org.ua/cgi-bin/eiu/history.exe?Z21ID=&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Budapeshtskyj_memorandum_1994) — академічний огляд історичного контексту та підписання документа.
+2. [Енциклопедія Сучасної України (ЕСУ): Будапештський меморандум](https://esu.com.ua/search_articles.php?id=36545) — аналіз міжнародно-правового статусу та зобов'язань сторін.
+3. [Вікіпедія: Будапештський меморандум](https://uk.wikipedia.org/wiki/Будапештський_меморандум) — детальний розбір тексту меморандуму, розбіжностей у перекладі ("assurances" vs "guarantees") та наслідків 2014 року.
+
+## Хронологія
+- 24 серпня 1991: Верховна Рада ухвалює постанову «Про проголошення України без'ядерною зоною».
+- 23 травня 1992: Підписання Лісабонського протоколу — Україна, Білорусь та Казахстан визнаються сторонами Договору СНО-1.
+- 16 листопада 1994: Верховна Рада України ухвалює закон про приєднання України до Договору про нерозповсюдження ядерної зброї (ДНЯО) із застереженнями щодо надання гарантій безпеки.
+- 5 грудня 1994: Підписання «Меморандуму про гарантії безпеки у зв'язку з приєднанням України до Договору про нерозповсюдження ядерної зброї» (Будапештського меморандуму).
+- 1 червня 1996: Офіційно завершено вивезення стратегічних ядерних боєзарядів з території України до Росії.
+- 20 лютого 2014: Початок збройної агресії РФ проти України, окупація Криму — пряме й безпрецедентне порушення всіх пунктів Меморандуму.
+
+## Ключові факти та цитати
+- "Російська Федерація, Сполучене Королівство Великої Британії та Північної Ірландії і Сполучені Штати Америки підтверджують Україні своє зобов'язання згідно з принципами Заключного акта НБСЄ поважати незалежність і суверенітет та існуючі кордони України" (Стаття 1 Будапештського меморандуму).
+- "У Будапештському меморандумі англійське слово «assurances» (запевнення) було перекладене українською та російською як «гарантії», що створило хибне уявлення про характер зобов'язань" (ЕСУ).
+- Україна успадкувала 176 міжконтинентальних балістичних ракет та близько 4 тисяч тактичних і стратегічних ядерних боєзарядів — третій за потужністю арсенал у світі.
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ — Угода без зубів": `[!context]` — Україна добровільно відмовилася від третього у світі за потужністю ядерного арсеналу в обмін на документ, який не був ратифікований парламентами країн-підписантів.
+- Section "Контекст — Третій ядерний арсенал": `[!myth-buster]` — Російський і західний міф стверджує, що українська ядерна зброя була лише "купою металобрухту", якою Київ не міг керувати. Насправді технічний потенціал дозволяв перехопити управління (за висновками експертів, зокрема генерала В. Толубка), хоча це вимагало б часу та ресурсів.
+- Section "Переговори": `[!history-bite]` — Президент Франції Франсуа Міттеран попереджав Леоніда Кучму: "Юначе, вас усе одно обдурять". Франція та Китай надали власні декларації, але не підписали спільний Меморандум.
+- Section "Текст меморандуму": `[!quote]` — Цитата зі статті 6 про механізм "гарантій": "проводитимуть консультації у випадку виникнення ситуації, внаслідок якої постає питання стосовно цих зобов'язань" (єдиний реальний механізм — просто "поговорити").
+- Section "2014 — Провал": `[!decolonization]` — Росія цинічно виправдовувала агресію тим, що після Майдану в Україні нібито "виникла нова держава", з якою РФ жодних меморандумів не підписувала, демонструючи імперське знецінення української державності.
+- Section "Чи могла Україна інакше": `[!historiography]` — Дебати істориків: чи міг Київ вимагати більше? Одні вважають відмову неминучою через тотальний тиск США та економічний колапс, інші (як Володимир Василенко) стверджують, що Україна могла вимагати повноцінного оборонного союзу чи плану дій щодо членства в НАТО.
+
+## Деколонізаційний контекст
+- **Imperial/Soviet myth**: Росія була єдиним законним "спадкоємцем" радянської ядерної програми. Україна незаконно утримувала ядерну зброю, порушуючи глобальний режим нерозповсюдження, і Захід змусив її повернути зброю законному власнику (РФ).
+- **Ukrainian reality**: Україна мала повне легітимне право на владність над зброєю, розташованою на її території, оскільки радянська ядерна програма створювалася значною мірою українськими вченими та ресурсами (Південмаш). Відмова була актом безпрецедентної доброї волі молодої демократії, який Захід та Росія використали для власного геополітичного комфорту, фактично роззброївши жертву перед майбутнім агресором.
+
+## Contested Terms (if applicable)
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| Юридичний статус | «Assurances» (політичні запевнення, декларація) | «Гарантії» (безпекові зобов'язання) |
+| Передача боєголовок | "Повернення" ядерної зброї Росії | Ядерне роззброєння України |
+| Статус України (1991-1994) | Тимчасовий утримувач чужої зброї | Повноцінна ядерна держава (де-факто) |
+
+## Section-Mapped Research Notes
+
+### Вступ — Угода без зубів
+- **1994 рік**: Україна віддає ядерну зброю. Це був безпрецедентний крок.
+- **Що отримала натомість**: Папірець, що не мав статусу міжнародного договору.
+- **2014 рік**: Анексія Криму Росією показала справжню "цінність" цих гарантій.
+- Україна проміняла фізичну безпеку на політичні декларації.
+
+### Контекст — Третій ядерний арсенал
+- **Арсенал**: Україна мала 176 міжконтинентальних балістичних ракет (130 РС-18, 46 РС-22), 44 важкі бомбардувальники (Ту-160, Ту-95МС) та бл. 2000 стратегічних боєзарядів.
+- **Тиск**: Захід (особливо США під керівництвом Клінтона) боявся розповсюдження зброї масового знищення та "ядерної Югославії" на теренах колишнього СРСР.
+- **Сумніви**: Українські політики розуміли цінність арсеналу як фактора стримування, але країна перебувала в глибокій економічній кризі (гіперінфляція), а утримання арсеналу потребувало колосальних коштів.
+
+### Переговори
+- **Бажання України**: Отримати жорсткі, юридично зобов'язуючі гарантії безпеки (на зразок 5-ї статті НАТО) та значну фінансову компенсацію за вартість урану (використовується на АЕС).
+- **Позиція гігантів**: США, Велика Британія та РФ відмовилися підписувати договір, який потребував би ратифікації їхніми парламентами.
+- **Компроміс**: Формат меморандуму — політико-дипломатичного документа без механізмів примусу. Чому не договір? Бо Сенат США та Держдума РФ ніколи б не ратифікували зобов'язання воювати за Україну.
+
+### Текст меморандуму
+- **Гарантії**: Повага до незалежності, суверенітету та існуючих кордонів; утримання від загрози силою чи її застосування; утримання від економічного тиску.
+- **Зобов'язання**: Якщо Україна стане жертвою агресії, країни-гаранти зобов'язувалися... лише "домагатися негайних дій з боку Ради Безпеки ООН". Але в Радбезі Росія має право вето.
+- **Юридична сила**: Відсутня. У тексті (англ. версія) використано термін "assurances" (запевнення), а не "guarantees" (гарантії).
+- **Підписанти**: Л. Кучма (Україна), Б. Клінтон (США), Дж. Мейджор (Велика Британія), Б. Єльцин (РФ).
+
+### 2014 — Провал
+- **Порушення**: Росія окупувала Крим і розв'язала війну на Донбасі, порушивши всі фундаментальні принципи меморандуму (повага до кордонів, незастосування сили).
+- **Дії Заходу**: США та Британія обмежилися заявами про "глибоку стурбованість" та введенням м'яких санкцій. Жодної військової підтримки на початковому етапі.
+- **Консультації**: Механізм статті 6 (консультації) був скликаний у Парижі 5 березня 2014 року (Дж. Керрі, В. Хейг, А. Дещиця), але С. Лавров (міністр закордонних справ РФ) проігнорував зустріч.
+- **Урок**: Меморандум виявився папером без сили, який підірвав глобальний режим нерозповсюдження.
+
+### Чи могла Україна інакше
+- **Залишити зброю**: Малоймовірно у довгостроковій перспективі. Термін придатності багатьох боєголовок збігав наприкінці 1990-х років (1997-1998). Зберігання вимагало величезних коштів і технологій, яких Україна не мала повною мірою.
+- **Тиск**: Захід погрожував міжнародною ізоляцією та санкціями гіршими, ніж для Ірану чи КНДР.
+- **Альтернативи**: Дипломатія могла бути жорсткішою. Замість "запевнень", Україна могла наполягати на прощенні зовнішніх боргів, масштабних інвестиціях, або, щонайменше, на підписанні оборонного союзу (двостороннього договору зі США) чи ПДЧ в НАТО.
+
+### Підсумок
+- **Меморандум — пастка**: Документ зафіксував геополітичну наївність українського керівництва та цинізм великих держав.
+- **Довіра — помилка**: Відмова від зброї базувалася на хибній вірі у міжнародне право як таке, що здатне захистити слабшого.
+- **Чорноморський флот**: Паралельно Україна поступилася Росії у питанні розподілу Чорноморського флоту, дозволивши базування ВМФ РФ у Севастополі, що стало плацдармом для агресії 2014 року. Відмова від ядерної зброї і збереження російських баз — фатальна комбінація.
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 13093)
+✓ Message 13061 acknowledged
+✓ Message 13093 acknowledged

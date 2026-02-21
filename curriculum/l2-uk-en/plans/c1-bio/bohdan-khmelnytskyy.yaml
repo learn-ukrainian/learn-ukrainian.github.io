@@ -1,48 +1,39 @@
----
-module: c1-bio-022
+module: c1-bio-21
 level: C1-BIO
-sequence: 22
+sequence: 21
 slug: bohdan-khmelnytskyy
 version: '2.0'
 title: 'Богдан Хмельницький: Гетьман-державотворець'
-word_target: 4300
 content_outline:
-- section: "Вступ — Творець козацької держави"
-  words: 600
+- section: Вступ — Творець козацької держави
   points:
   - Хмельницький як символ суб'єктності
   - Унікальність поєднання воїна та дипломата
   - Значення для українського державотворення
 - section: Життєпис
-  words: 1600
   points:
   - Походження та освіта
   - Чигиринська трагедія
   - Початок Великої війни 1648 р.
   - Тріумфальні перемоги
 - section: Історичний контекст
-  words: 600
   points:
   - Європа середини XVII ст.
   - Геополітичний трикутник
 - section: Внесок
-  words: 400
   points:
   - Будівництво державних інституцій
   - Військова реформа
 - section: Останні роки
-  words: 400
   points:
   - Переяславська рада 1654 р.
   - Пошук нових союзників
   - Смерть гетьмана
 - section: Спадщина
-  words: 400
   points:
   - Образ "батька нації"
   - Історичні оцінки
 - section: Підсумок
-  words: 300
   points:
   - Уроки Хмельниччини
 focus: biography
@@ -63,11 +54,11 @@ grammar:
 module_type: biography
 sources:
 - name: Богдан Хмельницький (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Богдан_Хмельницький"
+  url: https://uk.wikipedia.org/wiki/Богдан_Хмельницький
   type: primary
   notes: Фундаментальна біографія
 - name: Документи Богдана Хмельницького
-  url: "http://izbornyk.org.ua/"
+  url: http://izbornyk.org.ua/
   type: primary
   notes: Тексти універсалів та листів
 immersion: 100% Ukrainian
@@ -83,3 +74,7 @@ activity_hints:
   source: Primary sources (adapted)
 - type: comparative-study
   focus: Хмельницький vs Кромвель
+persona:
+  voice: Senior Biographer
+  role: Rebellion Leader
+word_target: 5000

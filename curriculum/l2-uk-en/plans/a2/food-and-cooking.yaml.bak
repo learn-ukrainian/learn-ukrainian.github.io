@@ -1,0 +1,103 @@
+module: a2-45
+level: A2
+sequence: 45
+slug: food-and-cooking
+version: '2.0'
+title: Food and Cooking
+subtitle: In the Kitchen
+content_outline:
+- section: Вступ
+  points:
+  - 'Cooking culture in Ukraine — cultural hook: «Чим хата багата, тим і рада» (hospitality
+    principle)'
+  - 'Traditional dishes — cultural hook: Borshch (UNESCO heritage; note ''зажарка''
+    process) and Varenyky (versatility of fillings)'
+  - Kitchen vocabulary — aligned with State Standard §3.10 (їжа, посуд, способи приготування)
+- section: Граматика
+  points:
+  - 'Kitchen equipment (каструля, сковорода, духовка) — grammar focus: Instrumental
+    case for tools (ножем, ложкою) WITHOUT preposition ''з''; learner error: using
+    ''з'' for tools (§4.2.2.5); content note: include table comparing Nominative vs
+    Instrumental for all 3 genders (ніж->ножем, ложка->ложкою)'
+  - 'Cooking methods (варити, смажити, пекти) — learner error: confusing ''варити''
+    (boil/cook liquid) with general ''готувати'' (prepare food); usage note: you don''t
+    ''варити'' a sandwich'
+  - Meals of the day (сніданок, обід, вечеря)
+  - 'Tastes (солодкий, солоний, кислий) — cultural hook: varenyky as example of sweet
+    vs salty contrast'
+- section: Практика
+  points:
+  - 'Dialogues: cooking with grandmother — focus: using cooking verbs in context'
+  - 'Recipe practice — focus: Imperative mood (наріж, додай) for instructions (§4.2.3.2)'
+  - 'Table phrases — cultural hook: hospitality context'
+- section: Підсумок
+  points:
+  - Summary of learned vocabulary
+  - Cultural insights
+vocabulary_hints:
+  required:
+  - 'варити (to boil/cook) — collocations: варити борщ, варити суп, варити каву; note:
+    specific to boiling/cooking in liquid'
+  - 'смажити (to fry) — collocations: смажити м''ясо, смажити рибу, смажити картоплю'
+  - 'пекти (to bake) — collocations: пекти пиріг, пекти хліб, пекти печиво'
+  - 'різати (to cut) — collocations: різати ножем (Instrumental), різати овочі, дрібно
+    різати'
+  - 'каструля (pot) — usage: велика каструля, у каструлі'
+  - 'сковорода (pan) — usage: на сковороді, розігріта сковорода'
+  - 'духовка (oven) — usage: у духовці, гаряча духовка'
+  - 'рецепт (recipe) — usage: слідувати рецепту, простий рецепт'
+  recommended:
+  - 'змішувати (to mix) — usage: змішувати інгредієнти'
+  - 'додавати (to add) — usage: додавати сіль, додавати цукор'
+  - 'солодкий (sweet) — collocations: солодкий чай, солодкі вареники'
+  - 'солоний (salty) — collocations: солоний огірок, солона страва'
+  - 'інгредієнт (ingredient) — usage: свіжі інгредієнти'
+  - 'страва (dish) — usage: національна страва, смачна страва'
+activity_hints:
+- type: match-up
+  focus: Kitchen and cooking words
+  items: 12
+- type: cloze
+  focus: Complete cooking instructions
+  items: 12
+- type: quiz
+  focus: Food and cooking vocabulary
+  items: 8
+- type: unjumble
+  focus: Cooking sentences
+  items: 8
+- type: error-correction
+  focus: Kitchen mistakes
+  items: 6
+- type: group-sort
+  focus: Kitchen categories
+  items: 16
+- type: true-false
+  focus: Kitchen facts
+  items: 12
+- type: translate
+  focus: Food words
+  items: 8
+focus: vocabulary
+pedagogy: PPP
+prerequisites:
+- a2-44 (Checkpoint Word Formation)
+- a1-18 (Food and Shopping)
+connects_to:
+- a2-46 (Home and Furniture)
+objectives:
+- Learner can follow a simple recipe in Ukrainian
+- Learner can describe cooking methods
+- Learner can use kitchen vocabulary
+- Learner can give instructions using the imperative
+grammar:
+- Imperative in recipes (наріж, звари)
+- Instrumental for tools (ножем, ложкою)
+- Cooking verbs and sequences
+register: розмовний
+immersion: 60-75% Ukrainian
+phase: A2.5 [Vocabulary Expansion]
+persona:
+  voice: Encouraging Cultural Guide
+  role: Hospitable Host
+word_target: 3000

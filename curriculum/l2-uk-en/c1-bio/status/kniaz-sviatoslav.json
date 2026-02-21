@@ -2,14 +2,15 @@
   "module": "kniaz-sviatoslav",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-11T00:43:09.093455Z",
+  "last_audit": "2026-02-21T15:10:41.462784Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-09T22:34:16.743252Z",
-    "meta": "2026-02-09T21:32:53.286722Z",
-    "activities": "2026-02-09T22:34:37.333825Z",
-    "vocabulary": "2026-02-09T21:30:36.952994Z",
-    "plan": "2026-02-09T15:59:44.176548Z"
+    "md": "2026-02-19T11:10:48.510036Z",
+    "meta": "2026-02-19T11:02:01.128840Z",
+    "activities": "2026-02-19T11:03:28.419784Z",
+    "vocabulary": "2026-02-19T11:11:51.969739Z",
+    "plan": "2026-02-18T17:23:50.690905Z",
+    "research": "2026-02-18T17:22:46.681697Z"
   },
   "gates": {
     "meta": {
@@ -18,35 +19,46 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "4336/4000 (raw: 4531)"
+      "status": "fail",
+      "violations": 1,
+      "message": "5324/5000 (raw: 5741) | pedagogy: 33 violations"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "8/3"
+      "message": "4/3"
     },
     "vocabulary": {
-      "status": "pass",
+      "status": "warn",
       "violations": 0,
-      "message": "25/24"
+      "message": "15 < 24 (soft target)"
     },
     "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "ipa": {
       "status": "pass",
       "violations": 0,
-      "message": "10/10 (High)"
+      "message": "Clean IPA"
+    },
+    "research": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Content aligned with research"
     },
     "review": {
-      "status": "pass",
+      "status": "skipped",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "pass",
+    "status": "fail",
     "blocking_issues": [],
-    "pass_count": 6,
-    "fail_count": 0
+    "pass_count": 4,
+    "fail_count": 1,
+    "deferred_count": 0
   }
 }

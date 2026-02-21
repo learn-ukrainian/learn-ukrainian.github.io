@@ -1,0 +1,125 @@
+module: b1-60
+level: B1
+sequence: 60
+slug: society-politics
+version: '2.0'
+title: Суспільство та політика
+subtitle: Society & Politics
+content_outline:
+- section: Вступ (Introduction)
+  words: 500
+  points:
+  - 'Thematic alignment with State Standard §3.6 (Social Relations & State Structure):
+    Why civic literacy and state structure vocabulary are essential for B1 learners.'
+  - 'Historical Hook: Constitution of Pylyp Orlyk (1710) as one of the world''s first
+    democratic documents, establishing the separation of powers before Montesquieu
+    as evidence of early Ukrainian democratic traditions.'
+  - 'Overview of the three branches of power in modern Ukraine: legislative, executive,
+    and judicial.'
+- section: Політичні інституції та влада (Political Institutions & Power)
+  words: 800
+  points:
+  - 'Official register focus: Analyzing news headlines using passive constructions
+    and verbal nouns (e.g., ''формування уряду'', ''прийняття закону'').'
+  - 'Learner error: Confusing ''Політика'' (the sphere/policy) with ''Політик'' (the
+    person/politician) – drill stress patterns and usage context.'
+  - 'High-frequency collocations for power dynamics: ''прийти до влади'', ''органи
+    державної влади'', ''поділ влади'', and ''голова уряду''.'
+- section: Громадянське суспільство та історія (Civil Society & History)
+  words: 900
+  points:
+  - 'Engagement Hook: The Human Chain (1990) ''Українська хвиля'' – a narrative of
+    civic unity and ''соборність'' involving millions of citizens from Kyiv to Lviv.'
+  - 'Learner error: Distinguishing between ''Громадський'' (public transport/space)
+    and ''Громадянський'' (civil society/rights) to avoid root-similarity confusion
+    (Громадський транспорт vs Громадянське суспільство).'
+  - 'Vocabulary expansion: ''Громадянин'' (citizen), their rights (''права''), and
+    duties (''обов''язки'') in a democratic state.'
+- section: Демократичний процес та дискурс (Democratic Process & Discourse)
+  words: 900
+  points:
+  - 'The vocabulary of elections: ''брати участь у виборах'', ''виборча дільниця'',
+    ''день голосування'', and ''право голосу''.'
+  - 'Syntactic focus: Constructing complex causal sentences using ''тому що'' and
+    ''через те що'' for political argumentation and justification of views.'
+  - 'Register contrast: Distinguishing between the formal language of news broadcasts
+    and ''kitchen table'' political discussions among citizens.'
+- section: Право, закон та громадянські права (Law, Legislation & Civil Rights)
+  words: 700
+  points:
+  - 'Legal terminology in context: ''ухвалити закон'', ''порушувати закон'', ''згідно
+    із законом'', and ''гарант конституції''.'
+  - 'Learner error: Correcting the calque ''громадянський шлюб'' to the proper ''цивільний
+    шлюб/кодекс'' (distinguishing civil law from civic/social status).'
+  - 'Discussion of fundamental freedoms: ''свобода слова'', ''захищати права'', and
+    ''принципи демократії''.'
+- section: Підсумок (Summary)
+  words: 200
+  points:
+  - Synthesis of high-frequency civic collocations and summary of register distinctions
+    (formal vs. informal political talk).
+  - 'Practice recommendations: Encouraging learners to follow Ukrainian news to observe
+    institutional vocabulary in real-time.'
+vocabulary_hints:
+  required:
+  - уряд (government) — формування уряду, відставка уряду, голова уряду; medium frequency
+    political term
+  - держава (state) — державна влада, органи державної влади, громадянин України;
+    high frequency
+  - влада (power/authority) — виконавча влада, прийти до влади, поділ влади, органи
+    влади; high frequency
+  - вибори (elections) — брати участь у виборах, йти на вибори, виборча дільниця,
+    право голосу; medium frequency
+  - голосування (voting) — право голосу, день голосування; essential for democratic
+    process
+  - закон (law) — ухвалити закон, порушувати закон, згідно із законом, поза законом;
+    high frequency
+  - громадянин (citizen) — права громадянина, обов'язок громадянина, громадянин України;
+    high frequency social term
+  - права (rights) — захищати права, порушення прав, права людини; high frequency
+  recommended:
+  - парламент (parliament) — розпуск парламенту, сесія парламенту; institutional vocabulary
+  - конституція (constitution) — згідно з конституцією, гарант конституції, Конституція
+    Пилипа Орлика
+  - демократія (democracy) — розвиток демократії, принципи демократії; core concept
+  - свобода (freedom) — свобода слова, боротьба за свободу; essential value
+  - громадянський (civic/civil) — громадянське суспільство, громадянські права; distinguish
+    from громадський
+  - громадський (public) — громадський транспорт, громадське місце; distinguish from
+    громадянський
+  - цивільний (civil) — цивільний шлюб, цивільний кодекс; distinguish from громадянський
+  - політик (politician) — відомий політик; distinguish from політика (sphere)
+activity_hints:
+- type: match-up
+  focus: Political noun phrases
+  items: 25
+- type: fill-in
+  focus: Complete civic sentences
+  items: 20
+- type: match-up
+  focus: Match institutions and functions
+  items: 15
+- type: quiz
+  focus: Discuss civic topics
+  items: 10
+focus: vocabulary
+pedagogy: PPP
+prerequisites:
+- b1-59 (Media News)
+connects_to:
+- b1-61 (Professional Communication)
+objectives:
+- Learner can use 30 civic and political vocabulary words in context
+- Learner can discuss democratic processes and institutions
+- Learner can form natural collocations with political vocabulary
+- Learner can understand Ukrainian political discourse
+grammar:
+- Noun collocations with civic vocabulary
+- Political discourse patterns
+- Formal register expressions
+register: розмовний
+phase: B1.5 [Vocabulary Expansion I]
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Political Analyst
+word_target: 4000

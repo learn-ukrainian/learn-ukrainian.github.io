@@ -1,4 +1,3 @@
----
 sequence: 87
 module: ruth-087
 module_number: 87
@@ -9,7 +8,6 @@ phase: 4
 phase_id: cossack-word
 phase_name: Cossack Word
 focus: Limiting the Hetman's power
-word_target: 4000
 content_outline:
 - section: Вступ
   description: Introduction to Separation of Powers
@@ -24,3 +22,6 @@ activity_types:
 - transcription
 - etymology-trace
 - grammar-identify
+persona:
+  voice: Baroque Scholar
+  role: Constitutional Theorist

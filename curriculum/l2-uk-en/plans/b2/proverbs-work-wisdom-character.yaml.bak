@@ -1,0 +1,76 @@
+module: b2-45
+level: B2
+sequence: 45
+slug: proverbs-work-wisdom-character
+version: '2.0'
+title: 'Прислів''я I: Праця, мудрість і характер'
+subtitle: 'Proverbs I: Work, Wisdom & Character'
+content_outline:
+- section: Розминка — Народна мудрість про працю
+  points:
+  - Роль прислів'їв у культурі — короткі істини поколінь
+  - Теми модуля — праця, мудрість, характер
+  - Як використовувати прислів'я в мовленні — контекст та регістр
+- section: Прислів'я про працю
+  points:
+  - Без труда нема плода
+  - Хто рано встає, тому Бог дає
+  - Робота — не вовк, у ліс не втече
+  - Терпіння і труд все перетруть
+  - Де є бджола, там є мед
+- section: Прислів'я про мудрість
+  points:
+  - Сім разів відміряй, один раз відріж
+  - Хто питає, той не блудить
+  - Вік живи — вік учись
+  - Не все те золото, що блищить
+  - Краще один раз побачити, ніж сто разів почути
+- section: Прислів'я про характер
+  points:
+  - Яке дерево, такий і клин; який батько, такий і син
+  - Горда птиця не живе в стаді
+  - Слово — не горобець: вилетить — не впіймаєш
+  - Не той друг, хто медом маже, а той, хто правду каже
+- section: Практика — вживання прислів'їв
+  points:
+  - Підібрати прислів'я до ситуації
+  - Пояснити значення прислів'я та навести приклад
+  - Порівняти українське прислів'я з англійським аналогом
+  - Написати діалог з використанням 3-4 прислів'їв
+focus: phraseology
+pedagogy: CBI
+objectives:
+- Learner can recognize and interpret 16 core Ukrainian proverbs about work, wisdom,
+  and character
+- Learner can use proverbs appropriately in context to express advice, commentary,
+  or wisdom
+- Learner understands the cultural values embedded in Ukrainian folk wisdom
+grammar:
+- Fixed expressions (фразеологічні одиниці)
+- Proverb structure and variation
+immersion: 100
+register: varies
+phase: B2.2 [Phraseology & Synonymy]
+vocabulary_hints:
+  required:
+  - термін (term)
+  - поняття (concept)
+  - процес (process)
+  - метод (method)
+  recommended:
+  - аналіз (analysis)
+  - синтез (synthesis)
+  - дослідження (research)
+activity_hints:
+- type: reading
+  focus: Аналіз тексту
+  items: 4
+- type: essay-response
+  focus: Практичне застосування
+- type: true-false
+  focus: Перевірка розуміння
+  items: 8
+persona:
+  voice: Professional Language Coach
+  role: Village Elder (Старійшина)
+word_target: 4000

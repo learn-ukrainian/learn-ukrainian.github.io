@@ -1,0 +1,288 @@
+✅ Message sent to Gemini (ID: 12297) [auto-acked: self-addressed]
+✓ Message 12297 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12297...
+📨 Message #12297
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-maksym-berezovskyy
+   Time: 2026-02-20T23:38:15.857087+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-bio-34
+level: C1-BIO
+sequence: 34
+slug: maksym-berezovskyy
+version: '2.0'
+title: 'Максим Березовський: Композитор барокко'
+content_outline:
+- section: Вступ — Трагічний геній
+  points:
+  - Березовський як перший український оперний композитор
+  - Його місце в європейській музиці XVIII століття
+  - Трагедія непризнаного таланту
+- section: Молодість та музична освіта
+  points:
+  - Походження з Глухова
+  - Глухівська музична школа
+  - Придворна капела в Петербурзі
+  - Ранні твори
+- section: Італійський період
+  points:
+  - Навчання в Болонській академії
+  - Членство в Accademia Filarmonica
+  - Опера "Демофонт"
+  - Визнання в Італії
+- section: Повернення до Росії
+  points:
+  - Сподівання на кар'єру при дворі
+  - Ставлення до українських митців
+  - Невдалі спроби реалізації
+  - Конфлікти та розчарування
+- section: Духовна музика
+  points:
+  - Хорові концерти
+  - Не отвержи мене во время старості
+  - Синтез барокової традиції
+  - Вплив на церковну музику
+- section: Смерть та посмертна слава
+  points:
+  - Обставини смерті (самогубство?)
+  - Забуття за життя
+  - Відкриття у XX столітті
+  - Місце в українській музичній культурі
+- section: Підсумок — Втрачений геній
+  points:
+  - Березовський як символ імперського поглинання талантів
+  - Його спадщина для української музики
+  - Уроки його долі
+vocabulary_hints:
+  required:
+  - композитор (composer)
+  - опера (opera)
+  - бароко (baroque)
+  - хоровий концерт (choral concerto)
+  - капела (chapel/choir)
+  - партитура (score)
+  - академія (academy)
+  - меланхолія (melancholy)
+  - самогубство (suicide)
+  - спадщина (legacy)
+  recommended:
+  - ораторія (oratorio)
+  - контрапункт (counterpoint)
+  - тенор (tenor)
+  - соліст (soloist)
+  - імпровізація (improvisation)
+activity_hints:
+- type: reading
+  focus: Historical accounts of Berezovskyy's life
+  source: Adapted historical sources
+  items: 3 passages
+- type: essay-response
+  focus: Why was Berezovskyy forgotten in his time?
+  output: Analysis of imperial cultural dynamics
+- type: critical-analysis
+  focus: How does imperial context explain his tragedy?
+  output: Decolonial interpretation
+focus: biography
+prerequisites:
+- c1-bio-16 (Hryhoriy Skovoroda - same era)
+- Basic understanding of classical music
+connects_to:
+- c1-bio-18 (Dmytro Bortnyanskyy - contemporary composer)
+- c1-bio-19 (Semen Hulak-Artemovskyy - later opera)
+- c1-bio-23 (Mykola Lysenko - national music tradition)
+module_type: biography
+sources:
+- name: Максим Березовський (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Максим_Березовський
+  type: primary
+  notes: Biography, musical works, tragic death
+- name: Українське барокове мистецтво
+  url: https://uk.wikipedia.org/wiki/Українське_бароко
+  type: reference
+  notes: Cultural context
+- name: Глухівська музична школа
+  url: https://uk.wikipedia.org/wiki/Глухівська_співацька_школа
+  type: reference
+  notes: Musical education context
+immersion: 100% Ukrainian
+phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of максим березовський: композитор барокко'
+- Evaluate the contributions of трагічний геній
+persona:
+  voice: Senior Biographer
+  role: Court Composer
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Максим Березовський: Композитор барокко
+
+## Використані джерела
+1. [Енциклопедія історії України (Інститут історії України НАНУ)](http://history.org.ua/) — Академічна біографічна довідка, відомості про вплив Глухівської школи та деталі навчання в Італії.
+2. [Український інститут національної пам'яті (UINP)](https://uinp.gov.ua/) — Матеріали щодо деколонізації постаті композитора, спростування міфу про самогубство.
+3. [Вікіпедія: Максим Березовський (з посиланням на спеціалізовані музикознавчі праці)](https://uk.wikipedia.org/wiki/Максим_Березовський) — Детальний опис опери «Демофонт», хронологія Болонської академії та цитування італійської преси.
+
+## Хронологія
+- 1745 (27 жовтня): Народження в Глухові, тогочасній гетьманській столиці.
+- 1758: Від'їзд до Санкт-Петербурга, стає півчим капели великого князя Петра Федоровича (згодом Петра III).
+- 1769: Відрядження до Італії для вдосконалення музичної освіти.
+- 1771 (15 травня): Іспит у Болонській філармонічній академії в легендарного Падре Мартіні; отримання звання академіка (Accademico Filarmonico) разом із Моцартом.
+- 1773 (лютий): Прем'єра опери «Демофонт» у Ліворно під час традиційного карнавалу.
+- 1777 (22 березня): Передчасна смерть у Санкт-Петербурзі у віці 31 року.
+
+## Ключові факти та цитати
+- "Опера з музикою, написана Маестро Березовським, російським maestro di cappella на службі Його Величності Імператора усієї Росії, поєднує жвавість та добрий смак із володінням музичною наукою" — *Газета «Notizie del mondo» (Ліворно), 27 лютого 1773 року.*
+- "Імена Моцарта і Березовського викарбувані золотими літерами на мармурових скрижалях Болонської академії" — *Свідчення про визнання у Європі.*
+- Глухівська музична школа була найпотужнішим центром підготовки професійних музикантів в імперії.
+- Опера «Демофонт» (на лібрето П'єтро Метастазіо) вважається першою оперою, написаною українським композитором.
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ: Трагічний геній українського бароко": [!context] — Паралель з В.А. Моцартом: обидва генії складали іспит у Падре Мартіні в Болоньї, обидва отримали звання академіка в юному віці, але їхні подальші долі кардинально розійшлися.
+- Section "Глухівські витоки та петербурзька капела": [!history-bite] — Глухівська співацька школа була не просто хором, а справжньою "кузнею талантів", з якої імперія "викачувала" найкращі українські голоси для столичних потреб.
+- Section "Італійський тріумф: Болонья та Лівoрно": [!quote] — Цитата з італійської газети "Notizie del mondo" (1773), яка захоплено рецензує прем'єру опери «Демофонт».
+- Section "Повернення в імперську пастку": [!decolonization] — Хоча Березовський був визнаним європейським академіком, петербурзький двір вважав його лише "своїм" підлеглим і віддавав перевагу іноземцям (італійцям), створюючи непробивну скляну стелю для українця.
+- Section "Духовний заповіт: Хорова спадщина": [!culture] — Концерт "Не отвержи мене во время старості" є унікальним синтезом західної класичної поліфонії та глибинного українського кантового мелосу.
+- Section "Загадка смерті та міфи історіографії": [!myth-buster] — Поширений міф про те, що композитор "зарізав себе в нападі меланхолії", є вигадкою російського письменника Нестора Кукольника. Сучасні дослідження (зокрема Ольги Шуміліної) доводять відсутність архівних підтверджень самогубства.
+
+## Деколонізаційний контекст
+- **Imperial/Soviet myth**: Березовський — виключно "російський" композитор, емоційно нестабільна людина, яка не витримала конкуренції та покінчила життя самогубством через борги чи безумство. Його спадщина розглядалася лише як етап розвитку "вітчизняної (російської) музики".
+- **Ukrainian reality**: Березовський — український композитор європейського рівня, жертва колоніальної політики викачування мізків. Російський двір знецінював його європейський статус. Романтизований міф про самогубство був створений у XIX столітті (повість Н. Кукольника) для приховування соціальної трагедії та системного психологічного тиску імперії на українських митців.
+
+## Contested Terms (if applicable)
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| Національна приналежність | Російський композитор (русский композитор) | Український композитор європейського класицизму |
+| Обставини смерті | Романтичне самогубство з божевілля/меланхолії | Передчасна смерть внаслідок життєвих поневірянь та імперського ігнорування (міф про самогубство спростовано) |
+| Походження | "Малоросійський півчий" | Вихованець Глухівської музичної школи — європейського музичного центру Гетьманщини |
+
+## Section-Mapped Research Notes
+
+### Вступ: Трагічний геній українського бароко
+Максим Березовський — фігура світового масштабу, чия спадщина була привласнена Російською імперією. Він став першим українським автором опери та симфонії західноєвропейського зразка. Доцільно використати паралель із Моцартом (їх часто порівнюють, оскільки вони навчалися в один час у Болоньї). Березовський став жертвою колоніальної системи: його європейський тріумф контрастував із цілковитою зневагою на батьківщині після повернення. 
+
+### Глухівські витоки та петербурзька капела
+Глухів, як столиця Лівобережної України, відіграв ключову роль. Глухівська співацька школа (заснована у 1730 р.) була професійним музичним закладом. Саме звідси імперія рекрутувала талановитих дітей до Петербурга. У 1758 році 13-річний Березовський став півчим при дворі великого князя Петра Федоровича (Оранієнбаум). Його рання кар'єра була успішною: він співав сольні партії (тенор) у перших італійських операх, поставлених у Росії. Це заклало фундамент його власного оперного мислення.
+
+### Італійський тріумф: Болонья та Лівoрно
+Відрядження до Італії у 1769 році стало кульмінацією його європейської освіти. У Болоньї він навчався контрапункту у славетного францисканця Джованні Баттісти Мартіні (Падре Мартіні). Іспит 15 травня 1771 року приніс йому звання академіка (Accademico Filarmonico). У 1773 році в Ліворно відбулася прем'єра його опери «Демофонт», яка отримала схвальні відгуки місцевої преси ("Notizie del mondo"). Цей успіх довів, що український композитор на рівних конкурував з найкращими італійськими маестро. 
+
+### Повернення в імперську пастку
+Повернення до Петербурга у 1773-1774 роках стало початком його життєвої катастрофи. Незважаючи на звання Болонського академіка, йому запропонували лише рядову посаду без належного забезпечення. Імператорський двір Катерини II був орієнтований виключно на іноземних, переважно італійських, митців (як-от Бальдассаре Ґалуппі, Джованні Паїзієлло). Проєкти Березовського (включно зі спробами очолити музичні інституції або створити академію в Кременчуці) саботувалися. Він опинився в психологічній та фінансовій ізоляції.
+
+### Духовний заповіт: Хорова спадщина
+Саме після повернення з Італії Березовський створює свої найвизначніші духовні хорові концерти a cappella. Найбільш відомим є концерт «Не отвержи мене во время старості» (текст 70-го псалма). Музикознавці відзначають бездоганне поєднання італійської поліфонічної техніки, класичної форми та українського пісенного мелосу, а також партесної традиції. Цей твір звучить як глибоко особиста музична сповідь, що відображає трагічне світовідчуття композитора-вигнанця у власній країні.
+
+### Загадка смерті та міфи історіографії
+Березовський помер 22 березня (за ст. ст.) 1777 року у віці 31 року. У 1840 році російський письменник Нестор Кукольник опублікував повість «Максим Созонтович Березовський», де описав його смерть як самогубство («зарізав себе»). Цей белетристичний міф міцно закріпився в радянській і російській історіографії. Проте сучасні українські дослідниці (зокрема Ольга Шуміліна) довели, що жодних архівних чи поліцейських записів про самогубство немає; крім того, духовні твори композитора свідчать про його глибоку віру. Цей міф був зручним для імперії, аби зняти відповідальність за доведення генія до передчасної смерті. 
+
+### Підсумок: Повернення із забуття
+Максим Березовський є символом трагедії талановитого українця в лещатах імперії. У XIX столітті його музика частково заборонялася до виконання, а партитури губилися. Лише у XXI столітті, завдяки знахідкам в європейських архівах (наприклад, віднайдення його симфонії до мажор у 2002 році), його творчість поступово повертається. Відновлення пам'яті про Березовського — це акт культурної деколонізації, повернення Україні її законного місця на музичній мапі європейського класицизму.
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12343)
+✓ Message 12297 acknowledged
+✓ Message 12343 acknowledged

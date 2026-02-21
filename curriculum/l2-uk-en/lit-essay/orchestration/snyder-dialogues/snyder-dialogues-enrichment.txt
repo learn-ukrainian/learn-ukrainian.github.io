@@ -1,0 +1,234 @@
+✅ Message sent to Gemini (ID: 12404) [auto-acked: self-addressed]
+✓ Message 12404 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12404...
+📨 Message #12404
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-snyder-dialogues
+   Time: 2026-02-20T23:39:31.653961+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 37
+module: lit-essay-37
+level: LIT.ESSAY
+slug: snyder-dialogues
+version: '2.0'
+title: Snyder Dialogues
+subtitle: Snyder Dialogues
+content_outline:
+- section: Вступ та контекст
+  points: []
+- section: Аналіз ключових творів
+  points: []
+- section: Стилістика та мова автора
+  points: []
+- section: Деколонізаційна перспектива
+  points:
+  - Як цей автор руйнує імперські міфи
+  - Українська суб'єктність у тексті
+- section: Підсумок та спадщина
+  points: []
+vocabulary_hints:
+  required:
+  - історіографія
+  - наратив
+  - суб'єктність
+  recommended:
+  - деколонізація
+activity_hints:
+- type: reading
+  focus: Аналіз першоджерела
+- type: essay-response
+  focus: Критичне есе
+- type: critical-analysis
+  focus: Деконструкція тексту
+focus: literature
+pedagogy: literature
+immersion: 100% Ukrainian
+phase: LIT Expansion
+objectives:
+- Проаналізувати творчість Snyder Dialogues у контексті української літератури
+- Дослідити вплив автора на формування національної ідентичності
+persona:
+  voice: Senior Specialist
+  role: Global Dialogue Partner
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Snyder Dialogues (Тімоті Снайдер: Діалоги та есеїстика про Україну)
+
+## Використані джерела
+1. [Інститут історії України НАН України](http://history.org.ua) — аналіз впливу Тімоті Снайдера на сучасну західну та українську історіографію, деконструкція міфів.
+2. [Історична правда](https://www.istpravda.com.ua/) — публікації перекладів лекцій, есеїв та публічних виступів історика.
+3. [Енциклопедія Сучасної України (ЕСУ)](https://esu.com.ua/) — концептуальна база для термінології щодо тоталітарних режимів та колоніалізму, розроблена в працях Снайдера.
+
+## Хронологія
+- **2010**: Вихід книги «Криваві землі: Європа між Гітлером та Сталіним» (переосмислення ролі українських територій як епіцентру світових трагедій).
+- **2015**: Публікація «Чорна земля: Голокост як історія і попередження».
+- **2018**: Вихід книги «Шлях до невільництва: Росія, Європа, Америка» — глибокий аналіз зародження нового російського фашизму.
+- **Вересень 2022**: Старт курсу лекцій «The Making of Modern Ukraine» («Створення сучасної України») в Єльському університеті, який став глобальним феноменом.
+- **Листопад 2022**: Тімоті Снайдер стає амбасадором фандрейзингової платформи United24 (проєкт «Ловець шахедів»).
+
+## Ключові факти та цитати
+- Снайдер послідовно доводить, що Російська імперія та СРСР мали яскраво виражений колоніальний характер щодо України.
+- Він ввів у широкий публічний обіг концепт «рашизму» як форми сучасного фашизму.
+- **Цитата**: «Історія України — це історія Європи, і без її розуміння неможливо зрозуміти європейське минуле чи майбутнє».
+- **Цитата**: «Сьогодні Україна є центром світу. Те, що відбувається тут, визначає майбутнє глобальної демократії».
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ: Тімоті Снайдер як публічний інтелектуал": `[!context]` — Роль західного інтелектуала у формуванні нового глобального наративу під час війни.
+- Section "Аналіз ключових творів: Курс...": `[!history-bite]` — Феномен Єльського курсу, який зібрав мільйони переглядів на YouTube, радикально змінивши оптику західної аудиторії.
+- Section "Стилістика та мова: Історичні аналогії...": `[!analysis]` — Снайдер не використовує складний академічний жаргон, а пояснює путінський режим через зрозумілі західному світу категорії колоніалізму 19-го століття.
+- Section "Деколонізаційна перспектива: Руйнування імперських міфів": `[!myth-buster]` — Спростування російського наративу про «штучність» України та привласнення Росією спадщини Київської Русі.
+- Section "Деколонізаційна перспектива: Утвердження української суб'єктності": `[!decolonization]` — Україна виступає не як пасивний об'єкт імперій, а як суб'єкт з глибокою демократичною традицією, яка здатна захищати себе.
+- Section "Вплив: Інтелектуальна підтримка...": `[!quote]` — Цитати Снайдера про те, як опір українців дарує Заходу час на переосмислення власних цінностей.
+
+## Деколонізаційний контекст
+- **Імперський міф**: Росія — це єдина і законна спадкоємиця Київської Русі, а Україна є лише "окраїною" або "історичною помилкою", яка не має власної суб'єктності та політичної традиції.
+- **Українська (деколонізована) реальність, яку акцентує Снайдер**: Україна — класична європейська держава з потужними ренесансними, європейськими та демократичними традиціями. Війна Росії проти України — це типова імперська, антиколоніальна війна, де метрополія намагається знищити колишню колонію.
+
+## Contested Terms
+
+| Поняття | Імперський (російський) наратив | Український (деколонізований) наратив за Снайдером |
+|---------|-----------------|-------------------------------|
+| Русь | Давньоруська держава як колиска "триєдиного народу" з центром у Москві | Київська Русь як європейська держава зі скандинавськими та візантійськими зв'язками |
+| Статус України | "Окраїна", геополітичне непорозуміння, периферія російського світу | Повноцінний суб'єкт європейської історії, епіцентр "кривавих земель" та ключ до Європи |
+| Війна 2022 року | "Спеціальна військова операція", захист "русского мира" | Антиколоніальна війна імперії, що вмирає, геноцид української нації |
+
+## Section-Mapped Research Notes
+
+### Вступ: Тімоті Снайдер як публічний інтелектуал
+Аналіз його переходу від академічного історика-дослідника Східної Європи до одного з найвпливовіших публічних інтелектуалів сучасності. 
+
+### Історичний контекст: Від «Кривавих земель» до сучасної війни
+Концепт "Bloodlands" як базис: Снайдер змістив фокус світової історіографії з Берліна та Москви на території між ними (Україна, Польща, Білорусь), де відбувалися найбільші трагедії ХХ століття.
+
+### Аналіз ключових творів: Курс «Створення сучасної України»
+Аналіз структури 23 лекцій в Єлі. Головна теза: Україна не є історичною аномалією, вона є нормальною європейською країною, чия історія сягає віків.
+
+### Аналіз ключових творів: Есеїстика та публічні діалоги
+Фокус на текстах, що з'явилися після лютого 2022 року (напр. "Чому Україна повинна перемогти"), та публічні дискусії з українськими мислителями (Ярославом Грицаком, Сергієм Плохієм).
+
+### Стилістика та мова: Риторика глобального контексту
+Здатність Снайдера пояснювати складні процеси (наприклад, природу фашизму) доступною мовою, створюючи "мости" між європейським минулим та сучасністю.
+
+### Стилістика та мова: Історичні аналогії та їхня роль
+Порівняння дій Росії з колоніальними практиками ХІХ століття та методами Третього Рейху. 
+
+### Деколонізаційна перспектива: Руйнування імперських міфів
+Снайдер методично деконструює "історичні" есеї Путіна, висміюючи міфологію про "єдиний народ" та доводячи шизофренічну природу російського неоімперіалізму.
+
+### Деколонізаційна перспектива: Утвердження української суб'єктності
+Українське громадянське суспільство як головний рушій історії (від Майданів до спротиву армії). Україна показує Заходу, що за демократію варто боротися.
+
+### Підсумок: Нова оптика для західного світу
+Злам русоцентричної традиції в західних університетах та медіа. Україноцентричний погляд стає нормою.
+
+### Вплив: Інтелектуальна підтримка та практична солідарність
+Снайдер не лише пише історію, але й творить її, ставши амбасадором United24 та збираючи мільйони доларів для захисту неба України.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12473)
+✓ Message 12404 acknowledged
+✓ Message 12473 acknowledged

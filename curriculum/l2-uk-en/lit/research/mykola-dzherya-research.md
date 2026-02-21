@@ -1,85 +1,73 @@
-# Research Notes: Mykola Dzherya (LIT-30)
+# Дослідження: Микола Джеря: Епос Кріпацької Долі
 
 ## Використані джерела
+1. [Енциклопедія сучасної України](https://esu.com.ua/) — Стаття "Нечуй-Левицький Іван Семенович", аналіз його реалістичної прози та методів типізації соціальних характерів.
+2. [Історія української літератури (history.org.ua)](http://resource.history.org.ua/) — Контекст кріпацтва, реформи 1861 року та вплив на соціальну структуру селянства.
+3. [УкрЛіб (ukrlib.com.ua)](https://www.ukrlib.com.ua/) — Повний текст повісті "Микола Джеря", критичні матеріали щодо образної системи та сюжетних ліній.
+4. [Літопис (litopys.org.ua)](http://litopys.org.ua/) — Розвиток українського реалізму ХІХ ст. та перехід від романтизму до соціально-психологічної прози.
 
-1. [Dovidka.biz.ua - Аналіз "Микола Джеря"](https://dovidka.biz.ua/mikola-dzherya-analiz-pasport/)
-2. [UkrLib - Історія написання](https://www.ukrlib.com.ua/bio/printit.php?tid=1768)
-3. [Exlibran - Характеристика образів](https://exlibran.com/ukrainska-literature/nechuy-levytsky/mykola-dzherya/)
-4. [ZNO.if.ua - Проблематика твору](https://zno.if.ua/?p=5938)
-5. [WikiSource - Текст повісті](https://uk.wikisource.org/wiki/%D0%9C%D0%B8%D0%BA%D0%BE%D0%BB%D0%B0_%D0%94%D0%B6%D0%B5%D1%80%D1%8F)
+## Хронологія
+- **1783**: Остаточне закріпачення українських селян Катериною ІІ (історичне тло, що зумовило трагедію втраченої волі).
+- **1838**: Народження Івана Нечуя-Левицького.
+- **1840-ві – 1850-ті**: Час дії першої частини повісті — пік кріпосницького свавілля в Україні.
+- **1861, 19 лютого**: Маніфест про скасування кріпосного права (який стає гірким розчаруванням у повісті).
+- **1878**: Написання повісті "Микола Джеря".
+- **1882**: Перша публікація твору (в альманасі "Рада").
 
-## 0. Historiographical Mapping / Contested Terms
+## Ключові факти та цитати
+- **Бунтарство**: Микола має непокірну вдачу: «Микола був палкий і скорий. Він не стерпів і кинувся на осавулу…».
+- **Символіка фіналу**: Повернення старого Миколи до Вербівки: «Ті хрести нагадували йому про Нимидору, про матір...».
+- **Бурлакування**: Опис важкої праці на цукроварнях та втечі на південь як альтернативи кріпацтву, але зіткнення з капіталістичним визиском.
+- **Опис кріпацтва**: Нечуй порівнює панщину зі стихійним лихом: «...наче та хмара, насувалась на село панщина».
 
-| Concept            | Enemy framing (Russian/Soviet)     | Neighbor framing (Polish)      | Ukrainian (decolonized)                                  |
-| ------------------ | ---------------------------------- | ------------------------------ | -------------------------------------------------------- |
-| Кріпацтво          | "Крепостное право" (правова норма) | "Pańszczyzna" (обов'язок)      | Кріпацтво (форма рабства, соціальне лихо)                |
-| Втеча селян        | "Беглые крестьяне" (злочинці)      | "Zbiegostwo" (порушення права) | Пошук волі (природне прагнення свободи)                  |
-| Чумакування (сіль) | "Промысел" (економіка)             | —                              | Чумацький шлях (символ свободи, альтернативна економіка) |
-| Бурлакування       | "Бродяжничество" (маргінальність)  | —                              | Бурлацтво (соціальний протест, вимушений стан)           |
+## Engagement Hooks (mapped to sections)
+- Section "Вступ — Тема кріпацтва в літературі: Історичний контекст": [!context] — Пояснення того, як кріпацтво було штучно впроваджено на українських землях у 1783 році, зламавши вільну козацьку традицію.
+- Section "Образ Миколи: Зовнішність і бунтарський характер": [!myth-buster] — Спростування радянського міфу про Миколу як виключно "борця класів". Він — носій національного духу вільнолюбства, нащадок козаків.
+- Section "Образ Миколи: Серп як символ соціального спротиву": [!quote] — Цитати, що змальовують перетворення мирного сільськогосподарського знаряддя на зброю самозахисту від наглядача.
+- Section "Сюжет як одіссея: Втеча з Вербівки та бурлакування": [!history-bite] — Феномен бурлакування в Україні XIX століття. Втеча від пана часто означала потрапляння у жорна перших цукроварень — від феодальної до ранньокапіталістичної експлуатації.
+- Section "Реформа 1861 року: Ілюзія визволення та ціна свободи": [!decolonization] — Розвінчання міфу про "царя-визволителя". "Воля" супроводжувалася викупними платежами, що залишали селян економічними рабами імперії.
+- Section "Підсумок — Від Енея до Джері: Еволюція українського героя": [!culture] — Трансформація українського літературного героя від вітального бурлеску Котляревського до глибокого соціального трагізму Нечуя-Левицького.
 
-## I. Початок шляху: Кріпацтво
+## Деколонізаційний контекст
+- **Imperial/Soviet myth**: Повість розглядалася переважно як ілюстрація марксистської тези про класову боротьбу селянства проти поміщиків у рамках спільної для всієї імперії соціальної проблеми, нівелюючи національний вимір твору.
+- **Ukrainian reality**: "Микола Джеря" — це глибоко національний епос. Кріпацтво для українців було не природним історичним станом, а колоніальним ярмом, накинутим на колись вільний народ. Бунт Миколи — це відкидання російської імперської моделі життя гострою селянською натурою.
 
-- **Context:** Written in 1876, published 1878. Dedicated to Mykola Lysenko.
-- **Plot:** Village of Verbivka. Mykola is a talented, handsome, proud serf.
-- **Conflict:** Refusal to submit to Pan Brzhozovsky. The injustice of forced labor (panschyna).
-- **Quote:** Nechuy-Levytsky described the novella as a "mirror of Ukrainian life."
-- **Fact:** Typical socio-domestic novella (соціально-побутова повість).
+## Contested Terms
 
-## II. Бунт і Втеча
+| Concept | Imperial/Soviet framing | Ukrainian (decolonized) framing |
+|---------|-----------------|-------------------------------|
+| Бурлакування | Декласація, маргіналізація простолюду в пошуках заробітку | Форма активного соціального та національного спротиву, втеча до свободи |
+| Кріпацтво | Закономірний етап феодалізму в Російській імперії | Штучно нав'язане рабство вільному українському народу (з 1783 р.) |
+| Визволення 1861 р. | Велика гуманістична реформа Олександра ІІ ("царя-визволителя") | Заміна феодального рабства на економічний зашморг (викупні платежі), глибоке розчарування |
 
-- **Trigger:** Threat of being sold into the army (rekrutchyna) or punished.
-- **Decision:** Mykola chooses freedom over family stability. A difficult moral choice.
-- **Action:** Flees with Petro Kavun. Leaves Nymydora and daughter Lyubka.
-- **Symbolism:** The "road" as a path to unknown freedom.
+## Section-Mapped Research Notes
 
-## III. Степами до Волі
+### Вступ — Тема кріпацтва в літературі: Історичний контекст
+Фокус на 1840–1861 роках. Запровадження кріпацтва Катериною ІІ та його руйнівний вплив на українську націю. Кріпацтво як форма інституціоналізованого насильства. Село Вербівка як мікромодель колоніального простору.
 
-- **Setting:** The vast Ukrainian steppe. Contrast between the cramped village and open space.
-- **Companions:** Encounter with other runaways. The "Brotherhood of the Steppe."
-- **Hardships:** Hunger, cold, fear of capture.
-- **Atmosphere:** Romanticized view of freedom vs. harsh reality.
+### Вступ — Тема кріпацтва в літературі: Від Шевченка до Нечуя
+Порівняння двох підходів. Шевченко ("Гайдамаки", "Сліпий") звертався до романтичного, емоційного осмислення бунту. Нечуй-Левицький використовує інструменти реалізму та соціально-психологічного епосу, препаруючи самі механізми системи та буденність життя кріпака.
 
-## IV. Бурлаки на Лимані
+### Образ Миколи: Зовнішність і бунтарський характер
+Детальний аналіз головного героя. Його "палка" вдача, фізична сила та внутрішня гідність. Відмова бути покірною жертвою системи. Микола Джеря як уособлення непокірного українського духу та козацького гена волі.
 
-- **Location:** Bessarabia, the Black Sea coast (Liman).
-- **Work:** Fishing artel. Extremely hard labor.
-- **New Oppression:** The "Otaman" Kovbanenko is just as exploitative as the Pan.
-- **Realization:** "Freedom" in a capitalist/industrial sense is also slavery, just paid (poorly).
-- **Identity:** Mykola changes his name to hide.
+### Образ Миколи: Серп як символ соціального спротиву
+Розбір кульмінаційної сцени з осавулою. Серп, який традиційно є сакральним символом хліборобської праці, в умовах екстремального приниження стає знаряддям захисту гідності. Символічний перехід межі покірності.
 
-## V. Втрачений Рай
+### Сюжет як одіссея: Втеча з Вербівки та бурлакування
+Шлях Миколи на Південь. Дослідження явища бурлакування. Життя на цукроварнях та в степах. Зіткнення з раннім капіталізмом. Мотив мандрів (одіссеї) як пошук ілюзорної волі, що обертається новими поневіряннями.
 
-- **Emotional Arc:** Deep longing (tuha) for his homeland and family.
-- **Nymydora's Fate:** She waits faithfully, suffers poverty and loneliness, dies of grief.
-- **Contrast:** While Mykola "lives" a free life, his family pays the price back home.
-- **Key Theme:** The tragic cost of personal freedom.
+### Сюжет як одіссея: Повернення до хрестів
+Символічний фінал повісті. Повернення старого та зламаного фізично (але не духовно) Миколи до рідного села. Сцена на цвинтарі. Хрести як мовчазні свідки знищених людських доль та цілої епохи.
 
-## VI. Повернення Блудного Батька
+### Жіночі образи: Нимидора як символ вірного кохання
+Образ Нимидори. Її абсолютна відданість і трагічне багаторічне очікування чоловіка. Руйнування інституту сім'ї кріпосницькою та капіталістичною системами. Нимидора як втілення страждань української жінки.
 
-- **Event:** Abolition of serfdom (1861). Mykola can finally return.
-- **Return:** He is an old man. No one recognizes him.
-- **Tragedy:** Nymydora is dead. His daughter Lyubka is married, has her own life, and is rightfully resentful/distant.
-- **House:** His old house is gone/ruined. He has no physical home.
+### Жіночі образи: Трагедія матері та очікування
+Аналіз образу матері Джері. Її біль і покірність обставинам. Тема подвійної віктимізації жінок (від пана і від соціальних умов). Психологічна глибина Нечуєвого зображення материнського горя.
 
-## VII. Вічний Бунтар
+### Реформа 1861 року: Ілюзія визволення та ціна свободи
+Як Нечуй-Левицький зображує скасування кріпацтва. Реакція селян на маніфест. Осмислення викупних платежів, які залишили селян без землі та обдуреними. Гостра авторська іронія щодо "милості" імперії.
 
-- **Character:** Mykola does not give up. He becomes a community leader (hromadskyi diyach).
-- **Conflict:** Fights against the new "pans" (rich peasants, corruption).
-- **Outcome:** He sues the local authorities for justice.
-- **Message:** The spirit of resistance is eternal. The fight for justice never ends.
-
-## VIII. Реалізм і Народ
-
-- **Style:** Nechuy-Levytsky's mastery of landscape (nechuyivskyi peizazh).
-- **Language:** Rich, vernacular, authentic.
-- **Impact:** Ivan Franko called it "one of the best pearls of our narrative literature."
-- **Legacy:** A foundational text for Ukrainian realism.
-
-## Engagement Callouts Plan
-
-1. **[!history-bite]** (Section I): Brief history of serfdom in Ukraine (introduced by Catherine II, abolished 1861).
-2. **[!biography]** (Section I): Why dedicated to Mykola Lysenko? (Both were "voices" of the nation).
-3. **[!cultural]** (Section III): The "Chumak" tradition and its romanticization in folklore vs. reality.
-4. **[!myth-buster]** (Section IV): Myth: "Running to the Sich/Steppe was pure freedom." Reality: It was often starvation and hard labor in fish/salt industries.
-5. **[!reflection]** (Section V): The moral dilemma: Was Mykola selfish to leave his family? Or was it the only way to preserve his dignity?
-6. **[!quote]** (Section VIII): Ivan Franko's assessment of the novella.
+### Підсумок — Від Енея до Джері: Еволюція українського героя
+Підведення підсумків еволюції протагоніста в українській літературі ХІХ ст. Від безтурботного, життєрадісного Енея до похмурого, загартованого жорстоким життям Миколи Джері. Становлення зрілого реалізму та анонсування тем для літератури наступного століття.

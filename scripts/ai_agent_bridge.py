@@ -49,6 +49,7 @@ GEMINI_CLI = shutil.which("gemini") or "gemini"
 # Set GEMINI_SESSION so .bashrc disables hostile aliases (eza, bat, zoxide)
 _PARENT_ENV = os.environ.copy()
 _PARENT_ENV["GEMINI_SESSION"] = "1"
+_PARENT_ENV["LEARN_UKRAINIAN_PIPELINE"] = "1"  # Suppress inbox hooks during pipeline runs
 
 
 def _git_status_snapshot() -> set[str]:
@@ -168,6 +169,78 @@ def _remove_pid_file(agent: str, task_id: str):
     pid_file.unlink(missing_ok=True)
 
 
+def broker_cleanup(max_age_hours: int = 24, dry_run: bool = False):
+    """Clean up stuck broker state: stale PIDs, ancient unacked messages, orphaned locks.
+
+    Args:
+        max_age_hours: Messages older than this that are still unacknowledged get force-acked.
+        dry_run: If True, report what would be cleaned but don't do it.
+    """
+    action = "Would clean" if dry_run else "Cleaning"
+    cleaned = 0
+
+    # 1. Clean stale PID files
+    if PID_DIR.exists():
+        for pid_file in PID_DIR.glob("*.json"):
+            try:
+                data = json.loads(pid_file.read_text())
+                pid = data.get("pid", 0)
+                try:
+                    os.kill(pid, 0)
+                    # Process alive — check age
+                    started = data.get("started", "")
+                    if started:
+                        start_time = datetime.fromisoformat(started)
+                        age_h = (datetime.now(timezone.utc) - start_time).total_seconds() / 3600
+                        if age_h > max_age_hours:
+                            print(f"  {action} stale PID: {pid_file.name} (alive but {age_h:.1f}h old)")
+                            if not dry_run:
+                                pid_file.unlink(missing_ok=True)
+                            cleaned += 1
+                except (ProcessLookupError, PermissionError):
+                    # Process dead
+                    print(f"  {action} dead PID: {pid_file.name} (process gone)")
+                    if not dry_run:
+                        pid_file.unlink(missing_ok=True)
+                    cleaned += 1
+            except Exception:
+                print(f"  {action} corrupt PID: {pid_file.name}")
+                if not dry_run:
+                    pid_file.unlink(missing_ok=True)
+                cleaned += 1
+
+    # 2. Force-ack ancient unacknowledged messages
+    if DB_PATH.exists():
+        db = sqlite3.connect(str(DB_PATH))
+        db.row_factory = sqlite3.Row
+        cutoff = datetime.now(timezone.utc).isoformat()
+        rows = db.execute(
+            "SELECT id, task_id, from_llm, to_llm, timestamp FROM messages WHERE acknowledged=0"
+        ).fetchall()
+        for row in rows:
+            try:
+                ts = datetime.fromisoformat(row["timestamp"].replace("Z", "+00:00"))
+                age_h = (datetime.now(timezone.utc) - ts).total_seconds() / 3600
+                if age_h > max_age_hours:
+                    print(f"  {action} stuck msg #{row['id']}: {row['from_llm']}→{row['to_llm']} "
+                          f"task={row['task_id']} ({age_h:.1f}h old)")
+                    if not dry_run:
+                        db.execute("UPDATE messages SET acknowledged=1 WHERE id=?", (row["id"],))
+                    cleaned += 1
+            except (ValueError, TypeError):
+                pass
+        if not dry_run:
+            db.commit()
+        db.close()
+
+    # 3. Summary
+    mode = " (DRY RUN)" if dry_run else ""
+    if cleaned == 0:
+        print(f"✅ Broker is clean — nothing to do{mode}")
+    else:
+        print(f"\n🧹 {cleaned} items cleaned{mode}")
+
+
 def bridge_status():
     """Show status of all running bridge processes."""
     if not PID_DIR.exists():
@@ -253,32 +326,36 @@ def init_db():
     return conn
 
 def get_db():
-    """Get database connection."""
+    """Get database connection with auto-migration (#604)."""
     if not DB_PATH.exists():
         return init_db()
     conn = sqlite3.connect(DB_PATH)
-    
-    # Check for missing columns (migration for existing DBs)
-    cursor = conn.cursor()
-    cursor.execute("PRAGMA table_info(messages)")
-    columns = [row[1] for row in cursor.fetchall()]
-    
-    if "status" not in columns:
-        print("🔧 Migrating database: adding 'status' column to 'messages' table")
-        conn.execute("ALTER TABLE messages ADD COLUMN status TEXT DEFAULT 'pending'")
+    conn.execute("PRAGMA busy_timeout=5000")
+
+    try:
+        # Check for missing columns (migration for existing DBs)
+        cursor = conn.cursor()
+        cursor.execute("PRAGMA table_info(messages)")
+        columns = [row[1] for row in cursor.fetchall()]
+
+        if "status" not in columns:
+            print("🔧 Migrating database: adding 'status' column to 'messages' table")
+            conn.execute("ALTER TABLE messages ADD COLUMN status TEXT DEFAULT 'pending'")
+
+        # Ensure sessions table exists
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS sessions (
+                task_id TEXT PRIMARY KEY,
+                claude_session_id TEXT,
+                gemini_session_id TEXT,
+                created_at TEXT NOT NULL,
+                updated_at TEXT NOT NULL
+            )
+        """)
         conn.commit()
-        
-    # Ensure sessions table exists
-    conn.execute("""
-        CREATE TABLE IF NOT EXISTS sessions (
-            task_id TEXT PRIMARY KEY,
-            claude_session_id TEXT,
-            gemini_session_id TEXT,
-            created_at TEXT NOT NULL,
-            updated_at TEXT NOT NULL
-        )
-    """)
-    conn.commit()
+    except Exception:
+        conn.rollback()
+        raise
     return conn
 
 
@@ -434,10 +511,15 @@ def send_message(content: str, task_id: str = None, msg_type: str = "response", 
     """, (task_id, from_llm, to_llm, msg_type, content, data_json, timestamp))
 
     msg_id = cursor.lastrowid
+
+    # Auto-ack self-addressed messages (agent dispatching to itself via CLI, not broker)
+    if from_llm == to_llm:
+        cursor.execute("UPDATE messages SET acknowledged = 1 WHERE id = ?", (msg_id,))
+
     conn.commit()
     conn.close()
 
-    print(f"✅ Message sent to {to_llm.title()} (ID: {msg_id})")
+    print(f"✅ Message sent to {to_llm.title()} (ID: {msg_id}){' [auto-acked: self-addressed]' if from_llm == to_llm else ''}")
 
     # Trigger macOS notification to alert human
     try:
@@ -470,12 +552,86 @@ def ask_claude(content: str, task_id: str = None, msg_type: str = "query", data:
     return msg_id
 
 
+def detect_sender() -> str:
+    """Detect if the current process is running as Gemini or Claude."""
+    # Check for Gemini environment markers
+    if (os.environ.get("GEMINI_SESSION") or 
+        os.environ.get("GOOGLE_API_KEY") or 
+        Path(".gemini").exists()):
+        return "gemini"
+    return "claude"
+
+
 def send_to_gemini(content: str, task_id: str = None, msg_type: str = "query", data: str = None, from_model: str = None, to_model: str = None):
-    """Send a message from Claude to Gemini."""
-    return send_message(content, task_id, msg_type, data, from_llm="claude", to_llm="gemini", from_model=from_model, to_model=to_model)
+    """Send a message to Gemini with auto-detected sender."""
+    return send_message(content, task_id, msg_type, data, from_llm=detect_sender(), to_llm="gemini", from_model=from_model, to_model=to_model)
 
 
-def ask_gemini(content: str, task_id: str = None, msg_type: str = "query", data: str = None, model: str = "gemini-3-flash-preview", from_model: str = None, async_mode: bool = False, stdout_only: bool = False, output_path: str = None, extract_tags: list = None):
+# Model availability cache: {model: (available: bool, timestamp: float)}
+# Avoids burning API quota on repeated checks within the same session.
+_MODEL_CACHE: dict[str, tuple[bool, float]] = {}
+_MODEL_CACHE_TTL = 3600  # 1 hour — re-check after this
+
+
+def check_model(model: str, timeout: int = 15, force: bool = False) -> bool:
+    """Check if a Gemini model is available by sending a trivial prompt.
+
+    Results are cached for 1 hour to avoid burning API quota.
+    Returns True if the model responds, False if unavailable or errors.
+    """
+    import time as _time
+
+    # Check cache first (saves an API call)
+    if not force and model in _MODEL_CACHE:
+        available, cached_at = _MODEL_CACHE[model]
+        age = _time.time() - cached_at
+        if age < _MODEL_CACHE_TTL:
+            status = "available" if available else "NOT available"
+            print(f"🔍 Model '{model}': {status} (cached {int(age)}s ago)")
+            return available
+
+    try:
+        result = subprocess.run(
+            [GEMINI_CLI, "-m", model, "-p", "Reply with exactly: MODEL_OK"],
+            capture_output=True, text=True, timeout=timeout,
+            cwd=str(Path(__file__).parent.parent),
+            env=_PARENT_ENV,
+        )
+        if result.returncode == 0 and "MODEL_OK" in result.stdout:
+            _MODEL_CACHE[model] = (True, _time.time())
+            return True
+        # Model responded but not as expected
+        stderr = result.stderr or ""
+        if "not found" in stderr.lower() or "not available" in stderr.lower() or "invalid model" in stderr.lower():
+            print(f"❌ Model '{model}' is not available on this account.")
+        elif "exhausted" in stderr.lower() or "429" in stderr or "quota" in stderr.lower():
+            print(f"⚠️  Model '{model}' exists but quota is exhausted.")
+        else:
+            print(f"⚠️  Model '{model}' check failed (exit {result.returncode}): {stderr[:200]}")
+        _MODEL_CACHE[model] = (False, _time.time())
+        return False
+    except subprocess.TimeoutExpired:
+        print(f"⚠️  Model '{model}' check timed out after {timeout}s.")
+        _MODEL_CACHE[model] = (False, _time.time())
+        return False
+    except FileNotFoundError:
+        print(f"❌ Gemini CLI not found at: {GEMINI_CLI}")
+        return False
+
+
+def _detect_model_error(stderr: str, model: str) -> str | None:
+    """Detect model-specific errors from Gemini CLI stderr.
+
+    Returns a user-friendly error message, or None if not a model error.
+    """
+    s = stderr.lower()
+    if "not found" in s or "not available" in s or "invalid model" in s:
+        _MODEL_CACHE[model] = (False, __import__("time").time())
+        return f"Model '{model}' is not available on this account. Switch accounts or use a different model."
+    return None
+
+
+def ask_gemini(content: str, task_id: str = None, msg_type: str = "query", data: str = None, model: str = "gemini-3-flash-preview", from_model: str = None, async_mode: bool = False, stdout_only: bool = False, output_path: str = None, extract_tags: list = None, skip_model_check: bool = False, allow_write: bool = False, delimiters: str = None):
     """Send message to Gemini AND optionally invoke Gemini to process it.
 
     Args:
@@ -490,7 +646,27 @@ def ask_gemini(content: str, task_id: str = None, msg_type: str = "query", data:
                     Enables -y mode with post-validation (only this file may be written).
         extract_tags: If set, extract delimited content from output after Gemini finishes.
                      Empty list = auto-detect all complete pairs. Discards thinking tokens.
+        skip_model_check: If True, ignore cached model unavailability (retry anyway).
+        allow_write: If True, grant Gemini full bash + write access (for phases that need
+                    to run scripts like audit_module.sh, generate_mdx.py, apply fixes).
+                    Only Otaman should use this flag.
+        delimiters: Comma-separated delimiter names for --allow-write mode.
+                   E.g., "FINAL_REVIEW,FRICTION" → ===FINAL_REVIEW_START/END=== + ===FRICTION_START/END===
     """
+    # Model availability is detected from actual request errors (no pre-flight probe).
+    # If a previous request failed with model-not-available, the cache prevents retrying.
+    if skip_model_check and model in _MODEL_CACHE:
+        del _MODEL_CACHE[model]  # Clear cache — user wants to retry
+    elif not async_mode and model in _MODEL_CACHE:
+        available, cached_at = _MODEL_CACHE[model]
+        if not available:
+            import time as _time
+            age = _time.time() - cached_at
+            if age < _MODEL_CACHE_TTL:
+                print(f"❌ Model '{model}' was unavailable {int(age)}s ago (cached). Skipping.")
+                print(f"💡 To switch accounts: run 'gemini auth login' or ask the user to switch.")
+                print(f"   To retry: --skip-model-check (clears cache)")
+                return None
     # Auto-enable async for handoff type (complex tasks shouldn't expect immediate response)
     if msg_type == "handoff":
         async_mode = True
@@ -530,7 +706,7 @@ def ask_gemini(content: str, task_id: str = None, msg_type: str = "query", data:
         print(f"   To trigger manually: .venv/bin/python scripts/ai_agent_bridge.py process {msg_id}")
     else:
         print(f"\n🚀 Invoking Gemini to process message #{msg_id}...")
-        response = process_and_respond(msg_id, model, stdout_only=stdout_only, output_path=output_path)
+        response = process_and_respond(msg_id, model, stdout_only=stdout_only, output_path=output_path, allow_write=allow_write, delimiters=delimiters)
 
         # Post-process: extract delimited content if --extract was used
         if extract_tags is not None and response:
@@ -643,7 +819,7 @@ def get_conversation(task_id: str):
             print(f"\n... [{len(content) - 500} more characters]")
         print()
 
-def process_and_respond(message_id: int, model: str = "gemini-3-flash-preview", fire_and_forget: bool = False, no_timeout: bool = False, stdout_only: bool = False, output_path: str = None):
+def process_and_respond(message_id: int, model: str = "gemini-3-flash-preview", fire_and_forget: bool = False, no_timeout: bool = False, stdout_only: bool = False, output_path: str = None, allow_write: bool = False, delimiters: str = None):
     """Read message, process with Gemini CLI, send response.
 
     Runs in sync mode by default (15 min timeout). On any failure, sends an
@@ -657,13 +833,60 @@ def process_and_respond(message_id: int, model: str = "gemini-3-flash-preview", 
             Used by fire-and-forget to re-invoke the bridge as a background process.
         output_path: If set, Gemini writes output to this file. Uses -y mode with
             post-validation instead of --approval-mode plan.
+        allow_write: If True, use FULL-EXECUTION prompt instead of READ-ONLY.
+            Grants bash + file write access. Used by Otaman for phases that need
+            to run audit scripts, apply fixes, and regenerate MDX.
+        delimiters: Comma-separated delimiter names (e.g., "FINAL_REVIEW,FRICTION").
+            Injected into system prompt so model knows exact output tags.
     """
     msg = read_message(message_id)
     if not msg:
         return
 
     # Prepare prompt for Gemini
-    if stdout_only or output_path:
+    if allow_write:
+        # FULL-EXECUTION MODE: Gemini has bash + write access.
+        # Used by Otaman for phases that need to run scripts (audit, MDX generation)
+        # and apply fixes to content/activity/vocabulary files.
+        # Build delimiter instruction from --delimiters arg or use generic fallback
+        if delimiters:
+            tag_list = [t.strip() for t in delimiters.split(",")]
+            delimiter_lines = "\n".join(
+                f"  - ==={tag}_START=== ... ==={tag}_END===" for tag in tag_list
+            )
+            delimiter_instruction = f"Your ONLY text output must be between these exact delimiters:\n{delimiter_lines}"
+        else:
+            delimiter_instruction = "Your ONLY text output must be between the ===TAG_START=== / ===TAG_END=== delimiters defined in your task."
+
+        prompt = f"""ROLE: You are a SILENT EXECUTION AGENT with FULL read-write access.
+
+TOOLS YOU MUST USE (not simulate):
+- run_shell_command: scripts/audit_module.sh, .venv/bin/python scripts/*.py, grep, wc
+- read_file / write_file: Read content, apply fixes directly
+
+SILENCE PROTOCOL (CRITICAL):
+- DO NOT narrate. DO NOT say "I will..." or "Let me..." or "First, I need to..."
+- DO NOT describe what you are about to do. Just invoke the tool.
+- Between tool calls, emit ZERO text. No commentary. No summaries. No reasoning.
+- {delimiter_instruction}
+- Every word you write that is NOT a tool call or the final delimited output is a WASTED TOKEN that risks timeout.
+
+PRIVATE SCRATCHPAD (allowed):
+- If you need to reason through complex logic (case endings, dates, IPA), use XML comments: <!-- thinking: your reasoning here -->
+- Scratchpad comments do NOT count as narration — they are your private workspace.
+- Keep scratchpad brief. Do NOT use it for narration or status updates.
+
+RULES:
+1. NO MESSAGES. Never use send_message, message broker, or any communication tool.
+2. NO EXPLORATION. Do not check GitHub, inbox, or broker. Stay on task.
+3. NO DELEGATION. Never say "Claude should..." or request skills/commands.
+4. NO SIMULATION. You MUST run_shell_command for every check. Never "remember" file contents — always read from disk. If you skip a bash command and guess the result, the review is INVALID.
+5. ALWAYS FINISH. Always produce output between the required delimiters, even on errors.
+
+TASK:
+{msg['content']}
+"""
+    elif stdout_only or output_path:
         # ORCHESTRATED MODE: Ultra-restrictive prompt for Gemini Pro/Flash.
         # Gemini Pro is especially prone to going off-script (editing files, sending broker
         # messages, running shell commands). This prompt must be explicit about every prohibition.
@@ -765,6 +988,8 @@ Format your response clearly.
                 env=_PARENT_ENV,  # Inherit PATH so CLI tools are found
                 start_new_session=True  # Survive parent exit
             )
+            # Close the log fd in the parent — child inherited it (#604)
+            lf.close()
             print(f"   PID: {proc.pid}")
 
             # Write PID file for the CHILD process so lock checks work
@@ -809,15 +1034,12 @@ Format your response clearly.
             for attempt in range(max_retries):
                 try:
                     # Stream stdout line-by-line so the log file updates in real-time
-                    # Mode selection:
-                    # - stdout_only (no output_path): --approval-mode plan (READ-ONLY)
-                    # - output_path: -y (needs write access) with post-validation
-                    # - standard: -y (YOLO, auto-approve all tools)
+                    # Mode selection: always -y (auto-approve all tools).
+                    # Gemini needs tool access for web search (Phase 0 research)
+                    # and local file reads. stdout_only controls output routing,
+                    # NOT Gemini's tool permissions.
                     gemini_cmd = [GEMINI_CLI, "-m", model]
-                    if stdout_only and not output_path:
-                        gemini_cmd += ["--approval-mode", "plan"]
-                    else:
-                        gemini_cmd += ["-y"]
+                    gemini_cmd += ["-y"]
                     gemini_cmd += ["-p", prompt]
 
                     # Snapshot for post-validation when output_path is set
@@ -834,18 +1056,51 @@ Format your response clearly.
                         env=_PARENT_ENV
                     )
 
+                    # Watchdog: kill process if it exceeds timeout (#604)
+                    _timed_out = False
+                    _watchdog_timer = None
+                    if timeout_val:
+                        def _kill_on_timeout():
+                            nonlocal _timed_out
+                            _timed_out = True
+                            print(f"\n⏰ Gemini CLI timed out after {timeout_val}s — killing process")
+                            sys.stdout.flush()
+                            try:
+                                proc.kill()
+                            except OSError:
+                                pass
+                        import threading
+                        _watchdog_timer = threading.Timer(timeout_val, _kill_on_timeout)
+                        _watchdog_timer.daemon = True
+                        _watchdog_timer.start()
+
                     # Read stdout in real-time, collect for response routing
                     output_lines = []
-                    for line in proc.stdout:
-                        print(line, end='')  # Real-time to log file
-                        sys.stdout.flush()
-                        output_lines.append(line)
+                    try:
+                        for line in proc.stdout:
+                            print(line, end='')  # Real-time to log file
+                            sys.stdout.flush()
+                            output_lines.append(line)
+                    except (IOError, ValueError):
+                        pass  # Pipe broken after kill
 
                     # Wait for process to finish, get stderr
                     proc.wait()
+                    if _watchdog_timer:
+                        _watchdog_timer.cancel()
                     stderr = proc.stderr.read() if proc.stderr else ""
 
+                    if _timed_out:
+                        stderr += f"\n[bridge] Process killed after {timeout_val}s timeout"
+                        proc.returncode = -9  # Signal killed
+
                     if proc.returncode != 0:
+                        # Detect model unavailability (fail fast, no retry)
+                        model_err = _detect_model_error(stderr, model)
+                        if model_err:
+                            print(f"\n❌ {model_err}")
+                            print(f"💡 To switch accounts: run 'gemini auth login'")
+                            return
                         # Detect quota/rate limit errors
                         if "exhausted your capacity" in stderr or "429" in stderr or "quota" in stderr.lower():
                             delay = base_delay * (2 ** attempt)  # 30s, 60s, 120s, 240s, 480s
@@ -890,7 +1145,7 @@ Format your response clearly.
                     elif stdout_only:
                         # Stdout-only mode: broker gets SHORT summary only
                         summary = f"[stdout-only] Gemini finished. {len(response)} chars output to stdout."
-                        send_message(
+                        reply_id = send_message(
                             content=summary,
                             task_id=msg['task_id'],
                             msg_type="response",
@@ -899,9 +1154,13 @@ Format your response clearly.
                             from_model=model,
                             to_model=None
                         )
+                        # Claude is reading this from stdout right now — auto-ack to prevent accumulation
+                        acknowledge(reply_id)
+                        print(f"   Auto-acknowledged reply #{reply_id} (stdout delivery — no inbox accumulation)")
                     else:
                         # Standard mode: full response through broker
-                        send_message(
+                        # Auto-ack immediately: Claude reads this from stdout, broker record is redundant
+                        reply_id = send_message(
                             content=response,
                             task_id=msg['task_id'],
                             msg_type="response",
@@ -910,6 +1169,8 @@ Format your response clearly.
                             from_model=model,
                             to_model=None
                         )
+                        acknowledge(reply_id)
+                        print(f"   Auto-acknowledged reply #{reply_id} (stdout delivery — no inbox accumulation)")
                     _response_sent = True
 
                     # Acknowledge original message
@@ -927,7 +1188,7 @@ Format your response clearly.
             # Always clean up PID file, and send error if no response was routed
             if not _response_sent:
                 try:
-                    send_message(
+                    err_id = send_message(
                         content=f"[Bridge Error] Gemini process failed for message #{message_id}. Check logs.",
                         task_id=msg['task_id'],
                         msg_type="error",
@@ -936,6 +1197,8 @@ Format your response clearly.
                         from_model="gemini-bridge-error"
                     )
                     acknowledge(message_id)
+                    # Auto-ack the error message itself — it's a dead-end notification
+                    acknowledge(err_id)
                 except Exception:
                     pass  # Best-effort error reporting
             _remove_pid_file("gemini", task_key)
@@ -1064,6 +1327,8 @@ Do NOT use MCP tools to send your response - just output your response directly.
                 env=_PARENT_ENV,  # Inherit PATH so CLI tools are found
                 start_new_session=True  # Survive parent exit
             )
+            # Close the log fd in the parent — child inherited it (#604)
+            lf.close()
             print(f"   PID: {proc.pid}")
 
             # Write PID file for the CHILD process so lock checks work
@@ -1109,21 +1374,48 @@ Do NOT use MCP tools to send your response - just output your response directly.
                 env=_PARENT_ENV
             )
 
+            # Watchdog: kill process if it exceeds timeout (#604)
+            _timed_out = False
+            _watchdog_timer = None
+            if timeout_val:
+                def _kill_on_timeout():
+                    nonlocal _timed_out
+                    _timed_out = True
+                    print(f"\n⏰ Claude CLI timed out after {timeout_val}s — killing process")
+                    sys.stdout.flush()
+                    try:
+                        proc.kill()
+                    except OSError:
+                        pass
+                import threading
+                _watchdog_timer = threading.Timer(timeout_val, _kill_on_timeout)
+                _watchdog_timer.daemon = True
+                _watchdog_timer.start()
+
             output_lines = []
-            for line in proc.stdout:
-                print(line, end='')
-                sys.stdout.flush()
-                output_lines.append(line)
+            try:
+                for line in proc.stdout:
+                    print(line, end='')
+                    sys.stdout.flush()
+                    output_lines.append(line)
+            except (IOError, ValueError):
+                pass  # Pipe broken after kill
 
             proc.wait()
+            if _watchdog_timer:
+                _watchdog_timer.cancel()
             stderr = proc.stderr.read() if proc.stderr else ""
+
+            if _timed_out:
+                stderr += f"\n[bridge] Process killed after {timeout_val}s timeout"
+                proc.returncode = -9
 
             if proc.returncode != 0:
                 error_msg = stderr.strip() or "Unknown error"
                 print(f"\n❌ Claude CLI error: {error_msg[:500]}")
                 sys.stdout.flush()
 
-                send_message(
+                err_id = send_message(
                     content=f"[Bridge Error] Claude CLI failed:\n{error_msg[:500]}",
                     task_id=msg['task_id'],
                     msg_type="error",
@@ -1133,6 +1425,8 @@ Do NOT use MCP tools to send your response - just output your response directly.
                 )
                 _response_sent = True
                 acknowledge(message_id)
+                # Auto-ack the error message — dead-end notification
+                acknowledge(err_id)
                 return
 
             response = ''.join(output_lines).strip()
@@ -1141,7 +1435,7 @@ Do NOT use MCP tools to send your response - just output your response directly.
             print(f"✅ Claude finished ({len(response)} chars)")
             sys.stdout.flush()
 
-            send_message(
+            reply_id = send_message(
                 content=response,
                 task_id=msg['task_id'],
                 msg_type="response",
@@ -1153,12 +1447,14 @@ Do NOT use MCP tools to send your response - just output your response directly.
             _response_sent = True
 
             acknowledge(message_id)
+            # Auto-ack reply — Claude reads from stdout, broker record is for audit trail only
+            acknowledge(reply_id)
 
         except subprocess.TimeoutExpired:
             proc.kill()
             timeout_mins = timeout_val // 60 if timeout_val else "?"
             print(f"\n❌ Claude CLI timed out ({timeout_mins} min sync limit)")
-            send_message(
+            err_id = send_message(
                 content=f"[Bridge Error] Claude CLI timed out after {timeout_mins} minutes. Consider using --async flag for long tasks.",
                 task_id=msg['task_id'],
                 msg_type="error",
@@ -1168,9 +1464,10 @@ Do NOT use MCP tools to send your response - just output your response directly.
             )
             _response_sent = True
             acknowledge(message_id)
+            acknowledge(err_id)
         except FileNotFoundError:
             print("❌ claude CLI not found. Is it installed?")
-            send_message(
+            err_id = send_message(
                 content="[Bridge Error] Claude CLI not found on system",
                 task_id=msg['task_id'],
                 msg_type="error",
@@ -1179,11 +1476,12 @@ Do NOT use MCP tools to send your response - just output your response directly.
                 from_model="claude-bridge-not-found"
             )
             _response_sent = True
+            acknowledge(err_id)
         finally:
             # Always clean up PID file, and send error if no response was routed
             if not _response_sent:
                 try:
-                    send_message(
+                    err_id = send_message(
                         content=f"[Bridge Error] Claude process failed unexpectedly for message #{message_id}. Check logs.",
                         task_id=msg['task_id'],
                         msg_type="error",
@@ -1192,6 +1490,7 @@ Do NOT use MCP tools to send your response - just output your response directly.
                         from_model="claude-bridge-error"
                     )
                     acknowledge(message_id)
+                    acknowledge(err_id)
                 except Exception:
                     pass  # Best-effort error reporting
             _remove_pid_file("claude", task_key)
@@ -1412,6 +1711,14 @@ def main():
     ask_gemini_parser.add_argument("--extract", nargs="*", metavar="TAG",
                                    help="Extract delimited content from output. Tags: CONTENT, ACTIVITIES, VOCABULARY, etc. "
                                         "Discards thinking tokens. No args = auto-detect all complete pairs.")
+    ask_gemini_parser.add_argument("--skip-model-check", dest="skip_model_check", action="store_true",
+                                   help="Skip the model availability pre-flight check.")
+    ask_gemini_parser.add_argument("--allow-write", dest="allow_write", action="store_true",
+                                   help="Grant Gemini full bash + write access (for phases that run audit, apply fixes, generate MDX). Only Otaman should use this.")
+    ask_gemini_parser.add_argument("--delimiters", dest="delimiters",
+                                   help="Comma-separated delimiter names for --allow-write mode. "
+                                        "E.g., 'FINAL_REVIEW,FRICTION' → ===FINAL_REVIEW_START/END===. "
+                                        "Injected into system prompt so model knows exact output tags.")
 
     # process-all (batch process all unread for Gemini)
     proc_all_parser = subparsers.add_parser("process-all", help="Process ALL unread messages with Gemini")
@@ -1421,6 +1728,15 @@ def main():
     proc_claude_all_parser = subparsers.add_parser("process-claude-all", help="Process ALL unread messages with Claude")
     proc_claude_all_parser.add_argument("--new-session", dest="new_session", action="store_true",
                                         help="Force new sessions for each message")
+
+    # check-model (pre-flight model availability test)
+    check_model_parser = subparsers.add_parser("check-model", help="Check if a Gemini model is available")
+    check_model_parser.add_argument("model", help="Model name (e.g., gemini-3-pro-preview)")
+
+    # cleanup
+    cleanup_parser = subparsers.add_parser("cleanup", help="Clean stuck broker state (stale PIDs, ancient messages)")
+    cleanup_parser.add_argument("--max-age", type=int, default=24, help="Force-ack messages older than N hours (default: 24)")
+    cleanup_parser.add_argument("--dry-run", action="store_true", help="Report what would be cleaned without doing it")
 
     # status
     subparsers.add_parser("status", help="Show running bridge processes")
@@ -1458,11 +1774,16 @@ def main():
         data = None
         if args.data:
             data = Path(args.data).read_text()
-        ask_gemini(args.content, args.task_id, args.type, data, args.model, getattr(args, 'from_model', None), getattr(args, 'async_mode', False), getattr(args, 'stdout_only', False), getattr(args, 'output_path', None), getattr(args, 'extract', None))
+        ask_gemini(args.content, args.task_id, args.type, data, args.model, getattr(args, 'from_model', None), getattr(args, 'async_mode', False), getattr(args, 'stdout_only', False), getattr(args, 'output_path', None), getattr(args, 'extract', None), getattr(args, 'skip_model_check', False), getattr(args, 'allow_write', False), getattr(args, 'delimiters', None))
     elif args.command == "process-all":
         process_all_gemini(args.model)
     elif args.command == "process-claude-all":
         process_all_claude(args.new_session)
+    elif args.command == "check-model":
+        ok = check_model(args.model, force=True)
+        sys.exit(0 if ok else 1)
+    elif args.command == "cleanup":
+        broker_cleanup(args.max_age, args.dry_run)
     elif args.command == "status":
         bridge_status()
     elif args.command == "interactive":

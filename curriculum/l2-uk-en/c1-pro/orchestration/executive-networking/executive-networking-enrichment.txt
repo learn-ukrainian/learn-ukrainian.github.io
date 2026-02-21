@@ -1,0 +1,274 @@
+✅ Message sent to Gemini (ID: 11861) [auto-acked: self-addressed]
+✓ Message 11861 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #11861...
+📨 Message #11861
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-executive-networking
+   Time: 2026-02-20T23:34:08.500735+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-pro-11
+level: C1-PRO
+sequence: 11
+slug: executive-networking
+version: '2.0'
+title: Виконавчий нетворкінг
+subtitle: Executive Networking
+content_outline:
+- section: Розминка — Нетворкінг на рівні топ-менеджменту
+  points:
+  - Чим нетворкінг C-level відрізняється від звичайного
+  - Стратегічна цінність зв'язків для організації
+  - Українське бізнес-середовище — формальні та неформальні зв'язки
+- section: Стратегія виконавчого нетворкінгу
+  points:
+  - 'Картографування контактів: хто потрібен, навіщо'
+  - 'Платформи для нетворкінгу: форуми, конференції, клуби, ради'
+  - 'Довгострокові відносини: від знайомства до партнерства'
+  - 'Взаємність: що ви можете запропонувати'
+- section: Комунікація з топ-менеджерами
+  points:
+  - 'Перше знайомство: elevator pitch, презентація себе та компанії'
+  - 'Підтримка контакту: листи, запрошення, поздоровлення'
+  - 'Запит на зустріч: як просити про час у зайнятих людей'
+  - 'Ділова розмова: small talk на високому рівні — економіка, тренди, галузь'
+- section: Виконавчі заходи
+  points:
+  - 'Конференції та форуми: як максимізувати користь'
+  - 'Ділові вечері та прийоми: етикет, теми для розмов'
+  - 'Закриті клуби та ради: як потрапити, як поводитися'
+  - 'Онлайн-нетворкінг: LinkedIn для C-level, закриті групи'
+- section: Зразки виконавчої комунікації
+  points:
+  - Зразок листа-знайомства до потенційного партнера
+  - Зразок follow-up після конференції
+  - Типові помилки в нетворкінгу на високому рівні
+- section: Практика — Виконавчий нетворкінг
+  points:
+  - 'Завдання: Підготувати elevator pitch та лист-знайомство'
+  - 'Вимоги: презентація цінності, запит на зустріч, професійний тон'
+  - Критерії оцінювання
+vocabulary_hints:
+  required:
+  - виконавчий нетворкінг (executive networking)
+  - elevator pitch (коротка презентація)
+  - follow-up (подальші дії)
+  - стратегічне партнерство (strategic partnership)
+  - бізнес-форум (business forum)
+  - ділова репутація (business reputation)
+  - взаємовигідна співпраця (mutually beneficial cooperation)
+  - рекомендація (referral/recommendation)
+  recommended:
+  - бізнес-клуб (business club)
+  - галузева асоціація (industry association)
+  - thought leadership (лідерство думки)
+  - особистий бренд (personal brand)
+  - нетворкінг-подія (networking event)
+  - cold outreach (холодний контакт)
+activity_hints:
+- type: writing-task
+  focus: Написати elevator pitch для представлення компанії
+  items: 1
+- type: writing-task
+  focus: Підготувати лист-знайомство до потенційного партнера
+  items: 1
+- type: role-play
+  focus: Провести знайомство на бізнес-форумі
+  items: 2
+- type: fill-in
+  focus: Вставити правильні фрази для small talk на високому рівні
+  items: 10
+- type: case-study
+  focus: Розробити стратегію нетворкінгу для виходу на новий ринок
+  items: 1
+focus: professional
+pedagogy: ESP
+prerequisites:
+- c1-pro-10 (Менторство та коучинг)
+connects_to:
+- c1-pro-12 (Робота з медіа)
+objectives:
+- Учень може розробляти стратегію виконавчого нетворкінгу
+- Учень може ефективно представляти себе та компанію на високому рівні
+- Учень може підтримувати довгострокові ділові відносини
+- Учень може комунікувати з топ-менеджерами у формальному та неформальному контексті
+grammar:
+- Конструкції для представлення (Дозвольте представитися... / Моя компанія спеціалізується
+  на...)
+- Конструкції для запитів (Чи могли б ми домовитися про зустріч...?)
+- Конструкції для підтримки контакту (Був радий познайомитися... / Хотів би продовжити
+  нашу розмову...)
+register: офіційно-діловий
+phase: C1-PRO.1
+persona:
+  voice: Senior Specialist
+  role: Президент бізнес-клубу
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Виконавчий нетворкінг (Executive Networking)
+
+## Використані джерела
+1. [ДСТУ 4163:2020](https://zakon.rada.gov.ua/) — Державний стандарт України щодо оформлення документів та ділового листування.
+2. [Дія.Бізнес](https://business.diia.gov.ua/) — Рекомендації щодо нетворкінгу та побудови бізнес-зв'язків в Україні.
+3. [CEO Club Ukraine](https://ceoclub.com.ua/) — Огляд стандартів етикету та комунікації в закритих бізнес-спільнотах.
+4. [EBA (European Business Association)](https://eba.com.ua/) — Матеріали щодо професійного розвитку та мережі контактів топ-менеджменту.
+
+## Термінологічна база
+
+| Українська (норма) | Русизм/ненорма | English | Контекст вживання |
+|--------------------|---------------|---------|-------------------|
+| Виконавчий нетворкінг | Виконавчий нетворкінг | Executive networking | Стратегічна розбудова зв'язків C-level |
+| Бліц-презентація | Елевейтор пітч | Elevator pitch | Коротка самопрезентація (до 60 сек) |
+| Подальші дії / Супровід | Фоллоу-ап | Follow-up | Лист або контакт після першої зустрічі |
+| Стратегічне партнерство | Стратегічне партнерство | Strategic partnership | Довгострокова взаємовигідна співпраця |
+| Світська бесіда | Смол ток | Small talk | Невимушена розмова на загальні плани |
+| Соціальний капітал | Соціальний капітал | Social capital | Ресурс у вигляді мережі знайомств |
+| Топ-менеджмент | Топ-менеджмент | C-level / Executives | Керівництво найвищої ланки |
+| Точки дотику | Точки соприкосновєнія | Common ground | Спільні інтереси для співпраці |
+| Пропозиція цінності | Велью пропозішн | Value proposition | Те, що ви пропонуєте партнеру |
+
+## Мовні норми та стандарти
+- **ДСТУ 4163:2020**: Основний стандарт для ділової документації.
+- **Підпис**: У реквізиті "Підпис" зазначається Власне ім'я та ПРІЗВИЩЕ (наприклад, Сергій ВАСИЛЕНКО).
+- **Шрифт**: Офіційно-діловий стиль передбачає використання гарнітури Times New Roman (кегль 12-14).
+- **Звернення**: Використання кличного відмінка (Пане Сергію, Пані Олено) є обов'язковим для професійної комунікації високого рівня.
+
+## Аутентичні приклади
+1. [Small Talk]: «Чи вдалося Вам відвідати панельну дискусію щодо цифрової трансформації? Дуже цікаві тези від колег з IT-сектору».
+2. [Follow-up]: «Дякую за змістовну розмову під час ділової вечері. Ваші думки щодо ринкових трендів були надзвичайно цінними».
+3. [Meeting Request]: «Пропоную організувати коротку зустріч для обговорення потенційної синергії між нашими проєктами. Як виглядає Ваш графік на наступний вівторок?»
+
+## Типові помилки
+1. ❌ **Приймати участь** → ✅ **Брати участь** — калька з російської мови.
+2. ❌ **Давайте познайомимось** → ✅ **Познайоммося / Дозвольте представитися** — помилка у формі наказового способу.
+3. ❌ **Взаємовигодний** → ✅ **Взаємовигідний** — лексична помилка (від "вигода", а не "вигода").
+4. ❌ **По замовчуванню** → ✅ **За замовчуванням / Типово** — некоректне вживання прийменника.
+5. ❌ **Визитна картка** → ✅ **Візитна картка** — фонетична помилка, вплив російської.
+
+## Engagement Hooks (mapped to sections)
+- Section "Розминка — Нетворкінг на рівні топ-менеджменту": [!pro-tip] — Різниця між транзакційним нетворкінгом (що я можу отримати зараз) та стратегічним (як ми можемо рости разом).
+- Section "Комунікація з топ-менеджерами": [!language-note] — Використання кличного відмінка у зверненні до C-level керівників як маркер високого культурного рівня.
+- Section "Виконавчі заходи": [!context] — Особливості нетворкінгу в закритих клубах (CEO Club, Board), де довіра є валютою номер один.
+- Section "Зразки виконавчої комунікації": [!common-error] — Насилання шаблонних листів без персоналізації — найшвидший шлях до ігнорування з боку топ-менеджменту.
+
+## Section-Mapped Research Notes
+
+### Розминка — Нетворкінг на рівні топ-менеджменту
+Нетворкінг C-level (CEO, CFO, COO) базується на обміні соціальним капіталом. В Україні це поєднання формальних інститутів (асоціації) та неформальних зв'язків (особисті рекомендації).
+
+### Стратегія виконавчого нетворкінгу
+Картографування контактів передбачає аналіз "кола впливу". Взаємність (reciprocity) є ключовою: керівник має чітко артикулювати свою цінність для партнера ще до висунення запиту.
+
+### Комунікація з топ-менеджерами
+Elevator pitch на C-рівні має фокусуватися на бізнес-результатах та візії, а не на деталях продукту. Small talk вимагає обізнаності в глобальних трендах та економіці.
+
+### Виконавчі заходи
+Етикет ділових вечерь включає вибір нейтральних тем. LinkedIn в Україні є головним майданчиком для "cold outreach" (холодного контакту), але вимагає високого рівня персоналізації профілю.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 11901)
+✓ Message 11861 acknowledged
+✓ Message 11901 acknowledged

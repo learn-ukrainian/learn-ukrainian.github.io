@@ -1,4 +1,3 @@
----
 module: c1-hist-047
 level: c1-hist
 sequence: 47
@@ -10,15 +9,13 @@ objectives:
 - 'Analyze the causes and consequences of механізми голодомору ii: чорні дошки'
 - Evaluate the historical significance of механізм знищення
 content_outline:
-- section: "Вступ — Механізм знищення"
-  words: 457
+- section: Вступ — Механізм знищення
   subsections:
   - Від колективізації до активного терору
   - «Чорні дошки» — що це
   - Чому це доказ наміру
   - Структура модуля
 - section: Система чорних дошок
-  words: 800
   subsections:
   - Як село потрапляло на дошку
   - Наслідки — припинення торгівлі
@@ -26,7 +23,6 @@ content_outline:
   - Оточення села
   - Скільки сіл — статистика
 - section: Натуральні штрафи
-  words: 686
   subsections:
   - Постанова 1932 року
   - Вилучення м'яса, картоплі
@@ -34,7 +30,6 @@ content_outline:
   - Буксирні бригади
   - Голод як покарання
 - section: Блокада сіл і паспортизація
-  words: 800
   subsections:
   - Заборона виїзду — 1932
   - Паспортна система — село без паспортів
@@ -42,26 +37,22 @@ content_outline:
   - Порівняння з концтаборами
   - Унікальність української ситуації
 - section: Документальні свідчення
-  words: 571
   subsections:
   - Накази і постанови
   - Телеграми Сталіна і Молотова
   - Що показують документи
   - Доказ навмисності
 - section: Чому це геноцид
-  words: 457
   subsections:
   - Конвенція ООН про геноцид
   - Як механізми відповідають критеріям
   - Контр-аргументи і відповіді
   - Правова кваліфікація
 - section: Підсумок
-  words: 229
   subsections:
   - Механізми як докази
   - Від як до де
   - Підготовка до географії
-word_target: 4000
 vocabulary:
 - чорна дошка
 - натуральні штрафи
@@ -82,24 +73,24 @@ activities:
 - type: critical-analysis
   focus: Create detailed diagram of blacklist system
 - type: critical-analysis
-  focus: "Analyze a \"black board\" decree"
+  focus: Analyze a "black board" decree
 - type: critical-analysis
   focus: Match mechanisms to genocide convention criteria
 - type: comparative-study
-  focus: "Compare with other genocides — mechanism parallels"
+  focus: Compare with other genocides — mechanism parallels
 - type: essay-response
   focus: Чому система чорних дошок є доказом навмисності?
 sources:
 - name: Чорні дошки (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Чорні_дошки"
+  url: https://uk.wikipedia.org/wiki/Чорні_дошки
   type: reference
   notes: Blacklist system
 - name: Постанова про натуральні штрафи
-  url: "https://uk.wikipedia.org/wiki/Постанова_ЦК_КП(б)У_про_натуральні_штрафи"
+  url: https://uk.wikipedia.org/wiki/Постанова_ЦК_КП(б)У_про_натуральні_штрафи
   type: reference
   notes: Natural penalties decree
 - name: Блокада сіл (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Блокада_українських_сіл_1932—1933"
+  url: https://uk.wikipedia.org/wiki/Блокада_українських_сіл_1932—1933
   type: reference
   notes: Village blockades
 vocabulary_hints:
@@ -118,7 +109,9 @@ activity_hints:
   items: 4
 - type: essay-response
   focus: Критичний аналіз
-  word_target: 300
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Archive Detective

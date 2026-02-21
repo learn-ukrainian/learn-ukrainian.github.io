@@ -1,123 +1,883 @@
 # Ukrainian State Standard 2024 - Module Compliance Mapping
 # Reference: docs/l2-uk-en/UKRAINIAN-STATE-STANDARD-2024.txt
+#
+# Structure per level:
+#   Section 1: Speech activities (listening, reading, writing, speaking)
+#   Section 2: Catalogue A — Communicative intentions
+#   Section 3: Catalogue B — Thematic catalogue
+#   Section 4: Catalogue C — Linguistic competence (morphology, syntax, stylistics)
+#
+# For curriculum modules, Section 4 (linguistic competence) is the primary reference.
+# Line numbers refer to UKRAINIAN-STATE-STANDARD-2024.txt
 
-# This file maps State Standard 2024 requirements to specific modules
-# Used by scripts/audit/checks/state_standard_compliance.py
-
+# ============================================================
+# A1 — Початковий рівень першого ступеня (lines 221-747)
+# ============================================================
 a1:
-  # Reflexive verbs (§4.2.4.1, lines 704-709)
-  reflexive_verbs:
-    module: 9
-    title: "Reflexive Verbs (-ся)"
-    required_patterns:
-      - "називатися"
-      - "дивитися"
-      - "сміятися"
-    required_explanation: "-ся/-сь"
-    reference: "§4.2.4.1"
-    description: "Must teach reflexive verb formation and common reflexive verbs"
+  level_lines: [221, 747]
 
-  # Cases - required coverage
+  # --- Phonetics & Graphics (§4.1) ---
+  phonetics:
+    alphabet:
+      reference: "§4.1.1"
+      lines: [571, 572]
+      description: "Ukrainian alphabet"
+    apostrophe:
+      reference: "§4.1.2"
+      lines: [574, 574]
+      description: "Apostrophe usage"
+    soft_sign:
+      reference: "§4.1.3"
+      lines: [575, 575]
+      description: "Soft sign (м'який знак)"
+    vowels_consonants:
+      reference: "§4.1.4"
+      lines: [577, 584]
+      description: "Vowel and consonant sounds"
+    stress:
+      reference: "§4.1.5"
+      lines: [586, 586]
+      description: "Word stress"
+    euphony:
+      reference: "§4.1.7"
+      lines: [590, 594]
+      description: "Euphony devices (у/в, і/й, з/із/зі)"
+    intonation:
+      reference: "§4.1.8"
+      lines: [596, 596]
+      description: "Basic intonation patterns"
+
+  # --- Morphology (§4.2) ---
+  morphology:
+    noun_declension:
+      reference: "§4.2.1.1"
+      lines: [603, 631]
+      description: "Noun case form formation — singular/plural, all 4 declensions basic"
+    adjective_declension:
+      reference: "§4.2.1.2"
+      lines: [633, 650]
+      description: "Adjective declension — hard/soft groups, gender agreement"
+    numeral:
+      reference: "§4.2.1.3"
+      lines: [652, 654]
+      description: "Cardinal and ordinal numerals — basic forms"
+    pronoun:
+      reference: "§4.2.1.4"
+      lines: [656, 657]
+      description: "Personal pronouns — basic declension"
+    pronoun_gender_number:
+      reference: "§4.2.2"
+      lines: [659, 667]
+      description: "Pronoun gender and number forms"
+
+  # --- Case Usage (§4.2.3) ---
   cases:
     nominative:
+      reference: "§4.2.3.1"
+      lines: [672, 676]
+      description: "Nominative case — subject, predicate nominative"
       first_module: 1
-      reference: "§4.2.3"
       required: true
     accusative:
-      first_module: 11
       reference: "§4.2.3.2"
+      lines: [678, 688]
+      description: "Accusative — direct object, with prepositions (в/у, на, за, через, про)"
+      first_module: 11
       required: true
     locative:
-      first_module: 13
       reference: "§4.2.3.3"
+      lines: [690, 695]
+      description: "Locative case — location (в/у, на), topic (по)"
+      first_module: 13
       required: true
-    genitive:
-      first_module: 16
+    vocative:
       reference: "§4.2.3.4"
-      required: true
+      lines: [697, 699]
+      description: "Vocative case — address forms"
     dative:
-      allowed: false  # A2 topic
+      allowed: false
       reference: "A2 requirement"
     instrumental:
-      allowed: false  # A2 topic
+      allowed: false
       reference: "A2 requirement"
 
-  # Imperative - 2nd person only at A1
-  imperative:
-    first_module: 8
-    allowed_forms: ["2nd_person"]
-    forbidden_forms: ["1st_person_plural", "3rd_person"]
-    reference: "§4.2.4.2"
+  # --- Verb Forms (§4.2.4) ---
+  verbs:
+    indicative:
+      reference: "§4.2.4.1"
+      lines: [703, 719]
+      description: "Indicative mood — present, past, future tenses; conjugation I/II; reflexive verbs (-ся/-сь)"
+    imperative:
+      reference: "§4.2.4.2"
+      lines: [721, 725]
+      description: "Imperative mood — 2nd person only at A1"
+      allowed_forms: ["2nd_person"]
+      forbidden_forms: ["1st_person_plural", "3rd_person"]
 
+  # --- Syntax (§4.3) ---
+  syntax:
+    simple_sentence:
+      reference: "§4.3.1"
+      lines: [729, 739]
+      description: "Simple sentences — SVO, questions (хто? що? де? коли?), negation (не, ні)"
+    complex_sentence:
+      reference: "§4.3.2"
+      lines: [741, 747]
+      description: "Basic complex sentences — і, а, але, бо, що, коли, де"
+
+  # --- Thematic Areas (§3) ---
+  themes:
+    reference: "§3"
+    lines: [479, 556]
+    topics: ["людина", "дім", "місто", "побут", "діяльність", "дозвілля", "подорожі", "купівля", "ресторан", "здоров'я", "природа", "традиції"]
+
+# ============================================================
+# A2 — Початковий рівень другого ступеня (lines 749-1432)
+# ============================================================
 a2:
-  # Complete Imperative (§4.2.3.2 for 3rd person)
-  imperative_complete:
-    module: 23
-    title: "Complete Imperative"
-    required_patterns:
-      - "хай"
-      - "нехай"
-    required_forms:
-      - "1st_person_plural"  # читаймо, ходімо
-      - "3rd_person"  # хай читає, нехай буде
-    reference: "§4.2.3.2"
-    description: "Must teach 1st person plural and 3rd person imperative forms"
+  level_lines: [749, 1432]
 
-  # Cases - complete coverage required
+  # --- Phonetics (§4.1) ---
+  phonetics:
+    vowels_consonants:
+      reference: "§4.1.1"
+      lines: [1176, 1181]
+      description: "Expanded phonetics — consonant assimilation, voiced/voiceless"
+    stress:
+      reference: "§4.1.2"
+      lines: [1183, 1188]
+      description: "Stress patterns in verb forms, noun declension"
+    euphony:
+      reference: "§4.1.3"
+      lines: [1190, 1195]
+      description: "Expanded euphony — у/в alternation in complex contexts"
+    intonation:
+      reference: "§4.1.4"
+      lines: [1197, 1197]
+      description: "Intonation in complex sentences"
+
+  # --- Morphology (§4.2) ---
+  morphology:
+    noun_declension:
+      reference: "§4.2.1.1"
+      lines: [1204, 1221]
+      description: "Expanded noun declension — all cases, irregular forms"
+    adjective_declension:
+      reference: "§4.2.1.2"
+      lines: [1223, 1233]
+      description: "Adjective declension — full paradigm"
+    numeral:
+      reference: "§4.2.1.3"
+      lines: [1235, 1242]
+      description: "Numerals — declension of cardinals and ordinals"
+    pronoun:
+      reference: "§4.2.1.4"
+      lines: [1244, 1254]
+      description: "Expanded pronouns — possessive, demonstrative, interrogative"
+
+  # --- Case Usage (§4.2.2) — ALL 7 cases ---
   cases:
+    nominative:
+      reference: "§4.2.2.1"
+      lines: [1258, 1263]
+      description: "Nominative — expanded: subject in passive, comparative constructions"
+    genitive:
+      reference: "§4.2.2.2"
+      lines: [1265, 1285]
+      description: "Genitive — without preposition + with prepositions (без, від, для, до, з/із, після, біля, коло)"
     dative:
+      reference: "§4.2.2.3"
+      lines: [1287, 1291]
+      description: "Dative — indirect object, impersonal constructions (мені холодно)"
       first_module: 1
-      reference: "§4.2.3"
       required: true
+    accusative:
+      reference: "§4.2.2.4"
+      lines: [1293, 1302]
+      description: "Accusative — expanded prepositions (під, над, між — with motion)"
     instrumental:
+      reference: "§4.2.2.5"
+      lines: [1304, 1322]
+      description: "Instrumental — means, manner, agent; with prepositions (з/із, за, між, над, перед, під)"
       first_module: 4
-      reference: "§4.2.3"
       required: true
+    locative:
+      reference: "§4.2.2.6"
+      lines: [1324, 1332]
+      description: "Locative — expanded location contexts"
+    vocative:
+      reference: "§4.2.2.6"  # numbering error in source
+      lines: [1334, 1337]
+      description: "Vocative — expanded address forms"
 
-  # Aspect system (§4.2.4.1)
-  aspect:
-    introduction_module: 12
-    mastery_module: 16
-    reference: "§4.2.4.1"
-    description: "Progressive introduction across A2.2 phase"
+  # --- Verb Forms (§4.2.3) ---
+  verbs:
+    indicative:
+      reference: "§4.2.3.1"
+      lines: [1341, 1359]
+      description: "Indicative — expanded: aspect pairs (доконаний/недоконаний), motion verbs (їхати/ходити)"
+    imperative:
+      reference: "§4.2.3.2"
+      lines: [1361, 1365]
+      description: "Complete imperative — 1st person plural (читаймо), 3rd person (хай/нехай)"
+      required_patterns: ["хай", "нехай"]
 
+  # --- Word Formation (§4.3) ---
+  word_formation:
+    adjective_comparison:
+      reference: "§4.3.1"
+      lines: [1369, 1378]
+      description: "Comparative and superlative adjectives"
+    aspect_pairs:
+      reference: "§4.3.2"
+      lines: [1380, 1381]
+      description: "Aspectual verb pairs — formation patterns"
+
+  # --- Syntax (§4.4) ---
+  syntax:
+    declarative:
+      reference: "§4.4.1.1"
+      lines: [1387, 1389]
+      description: "Declarative sentences — expanded word order"
+    interrogative:
+      reference: "§4.4.1.2"
+      lines: [1391, 1398]
+      description: "Questions — чи, expanded question words (скільки, чому, який)"
+    imperative_sentence:
+      reference: "§4.4.1.3"
+      lines: [1400, 1401]
+      description: "Imperative sentences"
+    complex_sentence:
+      reference: "§4.4.2"
+      lines: [1403, 1416]
+      description: "Complex sentences — тому що, для того щоб, якщо, хоча, який/яка/яке"
+
+  # --- Stylistics (§4.5) ---
+  stylistics:
+    lexical:
+      reference: "§4.5.1"
+      lines: [1420, 1425]
+      description: "Synonyms, antonyms, diminutives, colloquial variants"
+    syntactic:
+      reference: "§4.5.2"
+      lines: [1427, 1432]
+      description: "Word order variation for emphasis"
+
+  themes:
+    reference: "§3"
+    lines: [1072, 1163]
+    topics: ["людина", "дім", "щоденне життя", "дозвілля", "середовище", "подорожі", "навчання", "робота", "купівля", "їжа", "послуги", "здоров'я", "природа", "традиції"]
+
+# ============================================================
+# B1 — Середній рівень першого ступеня (lines 1434-2450)
+# ============================================================
 b1:
-  # Full immersion required (except metalanguage modules M01-M05)
+  level_lines: [1434, 2450]
+
   immersion:
     metalanguage_bridge: [1, 2, 3, 4, 5]
     full_immersion_start: 6
     target_percentage: 90.0
     reference: "Curriculum design decision"
-    description: "B1.1 metalanguage bridge, then 100% Ukrainian immersion"
 
+  # --- Phonetics (§4.1) ---
+  phonetics:
+    vowels_consonants:
+      reference: "§4.1.1"
+      lines: [1992, 2013]
+      description: "Consonant clusters, assimilation, simplification; alternations (о/і, е/і, о/е)"
+    stress:
+      reference: "§4.1.2"
+      lines: [2015, 2020]
+      description: "Stress in noun/verb paradigms — mobile stress patterns"
+    euphony:
+      reference: "§4.1.3"
+      lines: [2022, 2026]
+      description: "Advanced euphony — все/усе, вже/уже contexts"
+    abbreviations:
+      reference: "§4.1.5"
+      lines: [2030, 2034]
+      description: "Abbreviations and graphic compression (т.д., ін., проф.)"
+
+  # --- Morphology (§4.2) ---
+  morphology:
+    noun_declension:
+      reference: "§4.2.1.1"
+      lines: [2041, 2073]
+      description: "Full noun paradigms — all 4 declensions, soft/hard, exceptions, fleeting vowels"
+    adjective_declension:
+      reference: "§4.2.1.2"
+      lines: [2075, 2083]
+      description: "Adjective paradigm — short forms, possessive adjectives (батьків, материн)"
+    numeral:
+      reference: "§4.2.1.3"
+      lines: [2085, 2093]
+      description: "Numeral declension — collective numerals (двоє, п'ятеро), fractions"
+    pronoun:
+      reference: "§4.2.1.4"
+      lines: [2095, 2113]
+      description: "Expanded pronouns — indefinite (хтось, щось, дехто), negative (ніхто, ніщо), relative (який, що, хто)"
+
+  # --- Case Usage (§4.2.2) — nuanced meanings ---
+  cases:
+    nominative:
+      reference: "§4.2.2.1"
+      lines: [2118, 2133]
+      description: "Nominative — subject types, apposition, compound subjects"
+    genitive:
+      reference: "§4.2.2.2"
+      lines: [2135, 2181]
+      description: "Genitive — partitive, possession, comparison, negation, temporal; 15+ prepositions"
+    dative:
+      reference: "§4.2.2.3"
+      lines: [2183, 2192]
+      description: "Dative — recipient, experiencer, impersonal (мені потрібно), purpose"
+    accusative:
+      reference: "§4.2.2.4"
+      lines: [2194, 2217]
+      description: "Accusative — direction, duration, measure; expanded prepositions"
+    instrumental:
+      reference: "§4.2.2.5"
+      lines: [2219, 2244]
+      description: "Instrumental — agent, instrument, manner, comparison; 8+ prepositions"
+    locative:
+      reference: "§4.2.2.6"
+      lines: [2246, 2256]
+      description: "Locative — location, topic, time; expanded preposition usage"
+    vocative:
+      reference: "§4.2.2.7"
+      lines: [2258, 2265]
+      description: "Vocative — formal/informal, profession + name address"
+
+  # --- Verb Forms (§4.2.3) ---
+  verbs:
+    indicative:
+      reference: "§4.2.3.1"
+      lines: [2269, 2291]
+      description: "Indicative — full conjugation, aspect in all tenses, participles (дієприкметник), gerunds (дієприслівник)"
+    imperative:
+      reference: "§4.2.3.2"
+      lines: [2293, 2295]
+      description: "Imperative — perfective/imperfective distinction"
+    conditional:
+      reference: "§4.2.3.3"
+      lines: [2297, 2298]
+      description: "Conditional mood — якби + past tense"
+
+  # --- Word Formation (§4.3) ---
+  word_formation:
+    adjective_comparison:
+      reference: "§4.3.1"
+      lines: [2302, 2310]
+      description: "Comparative/superlative — synthetic (найкращий) and analytic (більш цікавий)"
+    adverb_comparison:
+      reference: "§4.3.2"
+      lines: [2312, 2318]
+      description: "Adverb comparison — швидше, найшвидше"
+    person_names:
+      reference: "§4.3.3"
+      lines: [2320, 2321]
+      description: "Agent nouns — -тель, -ник, -ар, -іст"
+    deverbal_nouns:
+      reference: "§4.3.4"
+      lines: [2323, 2324]
+      description: "Verbal nouns — -ння/-ення (читання, навчання)"
+    place_names:
+      reference: "§4.3.5"
+      lines: [2326, 2327]
+      description: "Place nouns — -ня, -ище (пекарня, кладовище)"
+    denominal_adjectives:
+      reference: "§4.3.6"
+      lines: [2330, 2331]
+      description: "Adjectives from nouns — -ний, -ський, -зький"
+    deadjectival_adverbs:
+      reference: "§4.3.7"
+      lines: [2333, 2334]
+      description: "Adverbs from adjectives — -о, -е (добре, гарно)"
+    prefixed_motion_verbs:
+      reference: "§4.3.8"
+      lines: [2336, 2338]
+      description: "Prefixed motion verbs — ви-, при-, за-, від-"
+
+  # --- Syntax (§4.4) ---
+  syntax:
+    declarative:
+      reference: "§4.4.1.1"
+      lines: [2344, 2352]
+      description: "Declarative — expanded word order, topic-comment structure"
+    interrogative:
+      reference: "§4.4.1.2"
+      lines: [2354, 2361]
+      description: "Questions — indirect questions, rhetorical questions"
+    complex_simple:
+      reference: "§4.4.2"
+      lines: [2367, 2378]
+      description: "Complex simple sentences — participial phrases, homogeneous members, introductory words"
+    complex_sentence:
+      reference: "§4.4.3"
+      lines: [2380, 2431]
+      description: "Complex sentences — 10+ conjunction types, relative clauses, temporal/causal/conditional/concessive"
+
+  # --- Stylistics (§4.5) ---
+  stylistics:
+    formal_informal:
+      reference: "§4.5.1"
+      lines: [2435, 2450]
+      description: "Register distinction — formal vs informal, lexical and syntactic markers"
+
+  themes:
+    reference: "§3"
+    lines: [1853, 1979]
+    topics: ["людина", "дім", "щоденне життя", "дозвілля", "подорожі", "суспільні відносини", "здоров'я", "освіта", "робота", "купівля", "ресторан", "послуги", "місця", "природа", "традиції"]
+
+# ============================================================
+# B2 — Середній рівень другого ступеня (lines 2452-3479)
+# ============================================================
 b2:
-  # Full immersion required
+  level_lines: [2452, 3479]
+
   immersion:
     target_percentage: 90.0
     reference: "Curriculum design decision"
-    description: "100% Ukrainian immersion throughout B2"
 
-  # Passive voice required
-  passive_voice:
-    first_module: 1
-    reference: "§4.2.4 (advanced morphology)"
-    description: "Passive constructions and participles"
+  # --- Morphology (§4.1) ---
+  morphology:
+    noun_declension:
+      reference: "§4.1.1.1"
+      lines: [3084, 3114]
+      description: "Advanced noun declension — rare forms, archaic endings, foreign noun adaptation"
+    adjective_declension:
+      reference: "§4.1.1.2"
+      lines: [3116, 3129]
+      description: "Advanced adjective forms — participle-adjectives, compound adjectives"
+    numeral:
+      reference: "§4.1.1.3"
+      lines: [3131, 3149]
+      description: "Full numeral paradigm — compound, collective, fractional with case agreement"
+    pronoun:
+      reference: "§4.1.1.4"
+      lines: [3151, 3165]
+      description: "Full pronoun system — reflexive, reciprocal, definitive (сам, самий, весь, кожний)"
 
+  # --- Case Usage (§4.1.2) — advanced meanings ---
+  cases:
+    nominative:
+      reference: "§4.1.2.1"
+      lines: [3170, 3178]
+      description: "Nominative — predicate nominative, vocative function, appositive"
+    genitive:
+      reference: "§4.1.2.2"
+      lines: [3180, 3215]
+      description: "Genitive — partitive genitive, subjective/objective genitive, 18+ prepositions including замість, крім, навколо"
+    dative:
+      reference: "§4.1.2.3"
+      lines: [3217, 3223]
+      description: "Dative — purpose, advantage/disadvantage, ethical dative"
+    accusative:
+      reference: "§4.1.2.4"
+      lines: [3225, 3247]
+      description: "Accusative — abstract objects, emotional states, expanded preposition usage"
+    instrumental:
+      reference: "§4.1.2.5"
+      lines: [3249, 3271]
+      description: "Instrumental — comparison, accompaniment, concession; all prepositions"
+    locative:
+      reference: "§4.1.2.6"
+      lines: [3273, 3284]
+      description: "Locative — expanded with abstract nouns (на основі, в умовах)"
+    vocative:
+      reference: "§4.1.2.7"
+      lines: [3286, 3293]
+      description: "Vocative — stylistic usage, archaic forms, literary vocative"
+
+  # --- Verb Forms (§4.1.3) ---
+  verbs:
+    indicative:
+      reference: "§4.1.3.1"
+      lines: [3297, 3317]
+      description: "Indicative — complex aspect usage, passive voice (participles), pluperfect (давноминулий)"
+    imperative:
+      reference: "§4.1.3.2"
+      lines: [3319, 3321]
+      description: "Imperative — softened forms, aspect choice in commands"
+    conditional:
+      reference: "§4.1.3.3"
+      lines: [3323, 3324]
+      description: "Conditional — complex conditionals, counterfactuals"
+
+  # --- Word Formation (§4.2) ---
+  word_formation:
+    adjective_comparison:
+      reference: "§4.2.1"
+      lines: [3328, 3336]
+      description: "Expanded comparison — irregular forms, stylistic choices"
+    adverb_comparison:
+      reference: "§4.2.2"
+      lines: [3338, 3346]
+      description: "Adverb comparison — irregular, compound forms"
+    aspect_pairs:
+      reference: "§4.2.3"
+      lines: [3348, 3350]
+      description: "Aspect pairs — prefix-based, suffix-based, suppletive"
+    prefixed_motion:
+      reference: "§4.2.4"
+      lines: [3352, 3354]
+      description: "Prefixed motion verbs — full system with all prefixes"
+    agent_nouns:
+      reference: "§4.2.5"
+      lines: [3356, 3357]
+      description: "Agent nouns — professional and casual"
+    deverbal_nouns_nnja:
+      reference: "§4.2.6"
+      lines: [3359, 3361]
+      description: "Verbal nouns (-ння/-ення) — nominalization in formal register"
+    deverbal_nouns_zero:
+      reference: "§4.2.7"
+      lines: [3363, 3364]
+      description: "Zero-suffix deverbal nouns (переїзд, розгляд)"
+    place_names:
+      reference: "§4.2.8"
+      lines: [3366, 3367]
+      description: "Place nouns — expanded"
+    denominal_adjectives:
+      reference: "§4.2.9"
+      lines: [3369, 3370]
+      description: "Adjectives from nouns — expanded suffixes"
+    deadjectival_adverbs:
+      reference: "§4.2.10"
+      lines: [3372, 3373]
+      description: "Adverbs from adjectives — expanded"
+
+  # --- Syntax (§4.3) ---
+  syntax:
+    declarative:
+      reference: "§4.3.1.1"
+      lines: [3379, 3381]
+      description: "Declarative — thematic/rhematic structure, stylistic inversion"
+    interrogative:
+      reference: "§4.3.1.2"
+      lines: [3383, 3389]
+      description: "Questions — deliberative, rhetorical, embedded"
+    complex_simple:
+      reference: "§4.3.2"
+      lines: [3395, 3407]
+      description: "Complex simple — detached members, apposition, inserted constructions"
+    one_member:
+      reference: "§4.3.3"
+      lines: [3409, 3418]
+      description: "One-member sentences — impersonal, infinitive, nominative"
+    complex_sentence:
+      reference: "§4.3.4"
+      lines: [3420, 3445]
+      description: "Complex sentences — attributive, explanatory, temporal, causal, conditional, concessive clauses"
+    direct_indirect_speech:
+      reference: "§4.3.5"
+      lines: [3446, 3449]
+      description: "Direct and indirect speech — transformation rules"
+
+  # --- Stylistics (§4.4) ---
+  stylistics:
+    phonetic:
+      reference: "§4.4.1.1"
+      lines: [3453, 3458]
+      description: "Stylistic phonetic devices — alliteration, assonance, onomatopoeia"
+    lexical:
+      reference: "§4.4.1.2"
+      lines: [3459, 3469]
+      description: "Stylistic lexical devices — metaphor, metonymy, synecdoche, epithet, oxymoron"
+    syntactic:
+      reference: "§4.4.1.3"
+      lines: [3470, 3479]
+      description: "Stylistic syntactic devices — anaphora, parallelism, ellipsis, rhetorical question"
+
+  themes:
+    reference: "§3"
+    lines: [2874, 3064]
+    topics: ["людина", "дім", "побут", "культурне дозвілля", "спорт", "подорожі", "суспільні відносини", "економіка", "здоров'я", "освіта", "робота", "купівля", "харчування", "послуги", "місця", "природа", "наука і техніка", "медіа", "традиції"]
+
+# ============================================================
+# C1 — Рівень вільного володіння першого ступеня (lines 3481-4601)
+# ============================================================
 c1:
-  # Full immersion required
+  level_lines: [3481, 4601]
+
   immersion:
     target_percentage: 90.0
     reference: "Curriculum design decision"
-    description: "100% Ukrainian immersion throughout C1"
 
+  # --- Morphology (§4.1) ---
+  morphology:
+    noun_declension:
+      reference: "§4.1.1.1"
+      lines: [4158, 4177]
+      description: "Mastery noun declension — all exceptions, archaic/dialectal forms, professional terminology"
+    adjective_declension:
+      reference: "§4.1.1.2"
+      lines: [4179, 4191]
+      description: "Advanced adjective — participial, compound, stylistic short forms"
+    numeral:
+      reference: "§4.1.1.3"
+      lines: [4193, 4215]
+      description: "Full numeral mastery — compound cardinals in all cases, fractions, approximate"
+    pronoun:
+      reference: "§4.1.1.4"
+      lines: [4217, 4256]
+      description: "Complete pronoun paradigm — indefinite (будь-хто, хто-небудь), negative (ніякий, жодний), definitive (увесь, кожний, інший, сам)"
+
+  # --- Case Usage (§4.1.2) — full mastery ---
+  cases:
+    nominative:
+      reference: "§4.1.2.1"
+      lines: [4261, 4271]
+      description: "Nominative — all syntactic functions, stylistic inversion"
+    genitive:
+      reference: "§4.1.2.2"
+      lines: [4273, 4309]
+      description: "Genitive — complete: subjective, objective, partitive, qualitative; 20+ prepositions"
+    dative:
+      reference: "§4.1.2.3"
+      lines: [4311, 4320]
+      description: "Dative — all meanings including ethical, possessive (мені болить), purpose"
+    accusative:
+      reference: "§4.1.2.4"
+      lines: [4322, 4353]
+      description: "Accusative — complete with all prepositions and abstract usage"
+    instrumental:
+      reference: "§4.1.2.5"
+      lines: [4355, 4374]
+      description: "Instrumental — all semantic roles including metaphorical use"
+    locative:
+      reference: "§4.1.2.6"
+      lines: [4376, 4389]
+      description: "Locative — abstract, literary, professional contexts"
+    vocative:
+      reference: "§4.1.2.7"
+      lines: [4391, 4399]
+      description: "Vocative — rhetorical, literary, official, intimate"
+
+  # --- Verb Forms (§4.1.3) ---
+  verbs:
+    indicative:
+      reference: "§4.1.3.1"
+      lines: [4403, 4423]
+      description: "Indicative — aspectual subtleties, narrative present, historical present"
+    imperative:
+      reference: "§4.1.3.2"
+      lines: [4425, 4427]
+      description: "Imperative — all forms including let-constructions, hortative"
+    conditional:
+      reference: "§4.1.3.3"
+      lines: [4429, 4430]
+      description: "Conditional — irrealis, hypothetical reasoning"
+
+  # --- Word Formation (§4.2) ---
+  word_formation:
+    comparison:
+      reference: "§4.2.1"
+      lines: [4434, 4445]
+      description: "Comparison — adjectives and adverbs, irregular, stylistic alternation"
+    aspect_pairs:
+      reference: "§4.2.2"
+      lines: [4447, 4448]
+      description: "Aspect pairs — systematic, including rare/literary"
+    agent_nouns:
+      reference: "§4.2.3"
+      lines: [4450, 4451]
+      description: "Agent nouns — professional and institutional"
+    deverbal_nouns:
+      reference: "§4.2.4-4.2.6"
+      lines: [4453, 4460]
+      description: "Deverbal nouns — -ння/-ення, zero suffix, -ок- suffix"
+    abstract_nouns:
+      reference: "§4.2.7"
+      lines: [4462, 4464]
+      description: "Abstract nouns — -ість (людяність, справедливість)"
+    denominal_adjectives:
+      reference: "§4.2.8"
+      lines: [4466, 4467]
+      description: "Adjectives from nouns — academic/professional vocabulary"
+    deadjectival_adverbs:
+      reference: "§4.2.9"
+      lines: [4469, 4470]
+      description: "Adverbs from adjectives — professional register"
+
+  # --- Syntax (§4.3) ---
+  syntax:
+    simple_sentence:
+      reference: "§4.3.1"
+      lines: [4474, 4486]
+      description: "Simple sentence — all types, stylistic variation, emphasis patterns"
+    complex_simple:
+      reference: "§4.3.2"
+      lines: [4488, 4500]
+      description: "Complex simple — participial constructions, absolute, detached members"
+    one_member:
+      reference: "§4.3.3"
+      lines: [4502, 4512]
+      description: "One-member sentences — impersonal, generalized personal, infinitive, nominative"
+    complex_conjunctive:
+      reference: "§4.3.4.1"
+      lines: [4516, 4539]
+      description: "Complex conjunctive — all clause types, multi-clause, nested"
+    complex_asyndetic:
+      reference: "§4.3.4.2"
+      lines: [4541, 4545]
+      description: "Asyndetic complex sentences — semantic relations without conjunctions"
+
+  # --- Stylistics (§4.4) ---
+  stylistics:
+    styles:
+      reference: "§4.4.1.1"
+      lines: [4551, 4559]
+      description: "Ukrainian language styles — artistic, scientific, official, publicistic, conversational"
+    phonetic:
+      reference: "§4.4.2"
+      lines: [4561, 4567]
+      description: "Stylistic phonetics — euphony, rhythm, sound symbolism"
+    lexical:
+      reference: "§4.4.3"
+      lines: [4569, 4583]
+      description: "Stylistic lexicon — tropes, figures, periphrasis, gradation, litotes"
+    syntactic:
+      reference: "§4.4.4"
+      lines: [4585, 4596]
+      description: "Stylistic syntax — period, antithesis, chiasmus, asyndeton, polysyndeton"
+    rhetoric:
+      reference: "§4.4.6"
+      lines: [4600, 4600]
+      description: "Rhetoric elements in oral/written communication"
+
+  themes:
+    reference: "§3"
+    lines: [3916, 4135]
+    topics: ["людина", "дім", "побут", "культурне дозвілля", "спорт", "подорожі", "суспільні відносини", "внутрішня політика", "зовнішня політика", "економіка", "здоров'я", "освіта", "робота", "купівля", "харчування", "послуги", "місця", "природа", "наука і техніка", "медіа", "традиції"]
+
+# ============================================================
+# C2 — Рівень вільного володіння другого ступеня (lines 4602-5740)
+# ============================================================
 c2:
-  # Full immersion required
+  level_lines: [4602, 5740]
+
   immersion:
     target_percentage: 90.0
     reference: "Curriculum design decision"
-    description: "100% Ukrainian immersion throughout C2"
 
+  # --- Morphology (§4.1) ---
+  morphology:
+    noun_declension:
+      reference: "§4.1.1.1"
+      lines: [5326, 5348]
+      description: "Complete noun mastery — archaic, dialectal, neologisms, professional terminology, foreign adaptation"
+    adjective_declension:
+      reference: "§4.1.1.2"
+      lines: [5350, 5358]
+      description: "Complete adjective mastery — all forms including archaic, compound, rare"
+    numeral:
+      reference: "§4.1.1.3"
+      lines: [5360, 5382]
+      description: "Complete numeral mastery — all types in all cases, including archaic (двоє-троє)"
+    pronoun:
+      reference: "§4.1.1.4"
+      lines: [5384, 5423]
+      description: "Complete pronoun mastery — all categories, archaic forms, stylistic variation"
+
+  # --- Case Usage (§4.1.2) — complete mastery ---
+  cases:
+    nominative:
+      reference: "§4.1.2.1"
+      lines: [5428, 5440]
+      description: "Nominative — complete: all syntactic functions, stylistic, literary"
+    genitive:
+      reference: "§4.1.2.2"
+      lines: [5442, 5488]
+      description: "Genitive — complete mastery: all meanings, all prepositions (25+), literary usage"
+    dative:
+      reference: "§4.1.2.3"
+      lines: [5490, 5502]
+      description: "Dative — complete: ethical, possessive, archaic, literary"
+    accusative:
+      reference: "§4.1.2.4"
+      lines: [5504, 5540]
+      description: "Accusative — complete mastery with all prepositions and abstract/literary usage"
+    instrumental:
+      reference: "§4.1.2.5"
+      lines: [5542, 5559]
+      description: "Instrumental — complete: all semantic roles, literary, archaic"
+    locative:
+      reference: "§4.1.2.6"
+      lines: [5561, 5573]
+      description: "Locative — complete mastery including literary and archaic usage"
+    vocative:
+      reference: "§4.1.2.7"
+      lines: [5575, 5584]
+      description: "Vocative — complete: all stylistic registers, literary, rhetorical"
+
+  # --- Syntax (§4.2) ---
+  syntax:
+    simple_sentence:
+      reference: "§4.2.1"
+      lines: [5588, 5600]
+      description: "Simple sentence — full mastery, stylistic manipulation"
+    complex_simple:
+      reference: "§4.2.2"
+      lines: [5602, 5615]
+      description: "Complex simple — all types of detachment, insertion, apposition"
+    one_member:
+      reference: "§4.2.3"
+      lines: [5617, 5628]
+      description: "One-member sentences — stylistic use, literary device"
+    complex_conjunctive:
+      reference: "§4.2.4.1"
+      lines: [5632, 5654]
+      description: "Complex conjunctive — all types, multi-level nesting, period sentence"
+    complex_asyndetic:
+      reference: "§4.2.5"
+      lines: [5656, 5660]
+      description: "Asyndetic complex — all semantic relations, stylistic function"
+
+  # --- Stylistics (§4.3) — C2 peak ---
+  stylistics:
+    styles:
+      reference: "§4.3.1.1"
+      lines: [5666, 5673]
+      description: "Complete style system — all functional styles with substyles"
+    phonetic:
+      reference: "§4.3.2"
+      lines: [5675, 5680]
+      description: "Phonetic stylistics — versification, prose rhythm, intonation as literary device"
+    lexical:
+      reference: "§4.3.3"
+      lines: [5682, 5712]
+      description: "Complete lexical stylistics — all tropes and figures, authorial neologisms, wordplay"
+    syntactic:
+      reference: "§4.3.4"
+      lines: [5714, 5729]
+      description: "Complete syntactic stylistics — all figures, stream of consciousness, modernist syntax"
+    rhetoric:
+      reference: "§4.3.5"
+      lines: [5731, 5731]
+      description: "Rhetoric — argumentation, persuasion, public speaking"
+    style_creation:
+      reference: "§4.3.6"
+      lines: [5733, 5733]
+      description: "Ability to create text in any functional style"
+    style_transformation:
+      reference: "§4.3.7"
+      lines: [5735, 5736]
+      description: "Ability to transform text between styles"
+    secondary_texts:
+      reference: "§4.3.8"
+      lines: [5738, 5739]
+      description: "Ability to create secondary texts (annotation, abstract, review, précis)"
+
+  themes:
+    reference: "§3"
+    lines: [5070, 5299]
+    topics: ["людина", "дім", "побут", "культурне дозвілля", "спорт", "подорожі", "суспільні відносини", "внутрішня політика", "зовнішня політика", "економіка", "здоров'я", "освіта", "робота", "купівля", "харчування", "послуги", "місця", "природа", "наука і техніка", "медіа", "традиції"]
+
+# ============================================================
 # Vocabulary targets per level (from State Standard 2024)
+# ============================================================
 vocabulary_targets:
   a1:
     total: 750

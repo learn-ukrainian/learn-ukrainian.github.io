@@ -927,7 +927,7 @@ resources:
       url: https://www.ukrainianlessons.com/fmu28/
       relevance: high
       match_reason: 'Level-aligned topic match: weather'
-  a1-30-prepositions-iii:
+  a1-30-prepositions-direction-origin:
     articles:
     - title: Location vs Destination
       url: https://www.ukrainianlessons.com/location-destination-prepositions/
@@ -1963,7 +1963,7 @@ resources:
       url: https://www.ukrainianlessons.com/lesson/117/
       relevance: medium
       match_reason: 'Challenge listening (B1): clauses'
-  a2-34-at-the-doctor:
+  a2-34-health-basics:
     youtube:
     - title: Doctors Vocabulary and questions in Ukrainian - Learn doctor vocab and...
       url: https://www.youtube.com/watch?v=OnO697z9iPM
@@ -2164,7 +2164,7 @@ resources:
       url: https://opentext.ku.edu/dobraforma/chapter/16-1/
       relevance: high
       source: University of Kansas
-  a2-40-adj-suffixes:
+  a2-40-adjective-suffixes-types:
     websites:
     - title: 'Dobra Forma 16-1: Adjectives (Gender and Number)'
       url: https://opentext.ku.edu/dobraforma/chapter/16-1/
@@ -2514,7 +2514,7 @@ resources:
       url: https://www.ukrainianlessons.com/fmu25/
       relevance: medium
       match_reason: 'Listening review (A1): sports'
-  a2-55-health-body:
+  a2-55-health-wellness:
     youtube:
     - title: 'UKRAINIAN VOCABULARY: body parts and organs'
       url: https://www.youtube.com/watch?v=JZGl3Qo25Yc

@@ -1,0 +1,90 @@
+module: a1-04
+level: A1
+sequence: 4
+slug: this-is-i-am
+version: '2.0'
+title: This Is / I Am
+subtitle: Zero Copula and Personal Pronouns
+content_outline:
+- section: Warm-up
+  points:
+  - 'Ukrainian skips "am/is/are" in present tense (zero copula) — learner error: The
+    Phantom "Is" (using "є" unnecessarily)'
+  - 'Pattern: Я студент (I student = I am a student) — contrast English "to be" with
+    Ukrainian Zero Copula using visual gaps'
+  - Pro-drop language family inheritance from Proto-Slavic
+- section: Presentation
+  points:
+  - Personal pronouns (я, ти, він, вона, воно, ми, ви, вони) — aligns with State Standard
+    §4.2.1.4 (nominative case usage)
+  - 'Formal vs informal: Ви vs ти — when to use each — cultural hook: The "Vi" Safety
+    Net (addressing strangers)'
+  - 'Zero copula pattern: Subject + Predicate (no verb) — aligns with State Standard
+    §4.2.3.1 (simple identification sentences)'
+  - 'Examples: Я студент, Він українець, Це книга — learner error: The "It" Trap (referring
+    to all objects as "воно" instead of gendered pronouns)'
+  - Linking verb є exists but rarely used in speech
+- section: Practice
+  points:
+  - 'Transformation exercises with personal pronouns — drill focus: "Ivan is a student
+    -> He is a student" transformation pattern'
+  - 'Формальність — choosing Ви vs ти in scenarios — learner error: Register Mix-up
+    (using "ти" with elders/strangers)'
+- section: Production
+  points:
+  - Self-introduction without "to be" verb
+  - Describing people and objects using zero copula
+- section: Cultural Insight
+  points:
+  - Modern Ukraine — young people often use ти immediately
+  - 'When in doubt, start with Ви — always safer — cultural hook: The "Bruderschaft"
+    Moment (social transition from Ви to ти)'
+vocabulary_hints:
+  required:
+  - 'це (this is) — collocations: це (noun), хто це?, що це?'
+  - 'я (I) — collocations: я студент, я тут, я (name)'
+  - 'ти (you) — collocations: ти хто?, ти де?, ти студент?'
+  - 'він (he) — collocations: він там, він українець'
+  - 'вона (she) — collocations: вона тут, вона вчителька'
+  - хто (who)
+  - що (what)
+  - студент (student)
+  recommended:
+  - українець (Ukrainian m.)
+  - українка (Ukrainian f.)
+  - вчитель (teacher m.)
+  - вчителька (teacher f.)
+  - ми (we)
+  - вони (they)
+activity_hints:
+- type: fill-in
+  focus: Self-introduction practice
+  items: 6
+- type: fill-in
+  focus: Complete sentences with pronouns
+  items: 15
+- type: fill-in
+  focus: Meeting someone new
+  items: 4
+focus: grammar
+pedagogy: PPP
+prerequisites:
+- a1-03 (The Gender Code)
+connects_to:
+- a1-05 (My World - Objects)
+- a1-14 (Mine and Yours)
+objectives:
+- Learner can use personal pronouns (я, ти, він, вона, etc.)
+- Learner can form identity statements without 'to be' (zero copula)
+- Learner can use це to point out people and objects
+- Learner can distinguish masculine/feminine nationality forms
+grammar:
+- Personal pronouns
+- Zero copula construction
+- Demonstrative це
+register: розмовний
+phase: A1.1 [First Contact]
+persona:
+  voice: Patient Supportive Tutor
+  role: Passport Officer
+word_target: 2000

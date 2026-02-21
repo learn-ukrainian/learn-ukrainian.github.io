@@ -1,0 +1,313 @@
+✅ Message sent to Gemini (ID: 12149) [auto-acked: self-addressed]
+✓ Message 12149 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12149...
+📨 Message #12149
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-ivan-mazepa
+   Time: 2026-02-20T23:36:27.825912+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-bio-27
+level: C1-BIO
+sequence: 27
+slug: ivan-mazepa
+version: '2.0'
+title: 'Іван Мазепа: Меценат і трагічний герой'
+content_outline:
+- section: Вступ — Між зрадою та героїзмом
+  points:
+  - Суперечливість постаті Мазепи
+  - Його місце в українській та російській історіографії
+  - Значення його вибору 1708 року
+- section: Молодість та шлях до влади
+  points:
+  - Шляхетське походження
+  - Освіта та служба при дворах
+  - Козацька кар'єра
+  - Обрання гетьманом 1687 року
+- section: 'Гетьманування: успіхи'
+  points:
+  - Внутрішня політика та реформи
+  - Військові походи з Петром I
+  - Культурний розквіт — мазепинське бароко
+  - Меценатство та будівництво
+- section: Шлях до розриву з Москвою
+  points:
+  - Наростання суперечностей
+  - Обмеження автономії
+  - Північна війна та її тягар
+  - Переговори з Карлом XII
+- section: Полтава та вигнання
+  points:
+  - Відкритий виступ 1708 року
+  - Руйнування Батурина
+  - Полтавська катастрофа
+  - Втеча до Бендер
+  - Смерть та анафема
+- section: Спадщина та реабілітація
+  points:
+  - Образ Мазепи в літературі
+  - Байрон, Пушкін, Словацький
+  - Реабілітація в незалежній Україні
+  - Мазепа на банкноті
+- section: Підсумок — Трагічний вибір
+  points:
+  - Мазепа як символ боротьби за незалежність
+  - Уроки його історії
+  - Актуальність сьогодні
+vocabulary_hints:
+  required:
+  - гетьман (hetman)
+  - меценат (patron)
+  - бароко (baroque)
+  - анафема (anathema)
+  - зрада (treason - in Russian narrative)
+  - автономія (autonomy)
+  - союз (alliance)
+  - вигнання (exile)
+  - універсал (decree)
+  - резиденція (residence)
+  recommended:
+  - клейноди (regalia)
+  - старшина (officer class)
+  - гетьманщина (Hetmanate)
+  - протекторат (protectorate)
+  - капітуляція (capitulation)
+activity_hints:
+- type: reading
+  focus: Mazepa's manifesto and correspondence
+  source: Primary sources (adapted)
+  items: 3 passages
+- type: essay-response
+  focus: Was Mazepa a traitor or a patriot?
+  output: Analysis of competing narratives
+- type: critical-analysis
+  focus: Analyze Mazepa in Ukrainian vs. Russian historiography
+  output: Comparative historiography
+focus: biography
+prerequisites:
+- c1-bio-10 (Bohdan Khmelnytskyi - earlier hetman)
+- c1-bio-11 (Yuriy Nemyrych - European orientation)
+connects_to:
+- c1-bio-13 (Kost Hordiyenko - ally)
+- c1-bio-14 (Pylyp Orlyk - successor)
+- c1-bio-15 (Petro Kalnyshevskyy - end of autonomy)
+module_type: biography
+sources:
+- name: Іван Мазепа (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Іван_Мазепа
+  type: primary
+  notes: Biography, hetmanate, Poltava
+- name: Полтавська битва (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Полтавська_битва
+  type: reference
+  notes: Military context and consequences
+- name: Мазепинське бароко
+  url: https://uk.wikipedia.org/wiki/Мазепинське_бароко
+  type: reference
+  notes: Cultural patronage
+immersion: 100% Ukrainian
+phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of іван мазепа: меценат і трагічний герой'
+- Evaluate the contributions of між зрадою та героїзмом
+persona:
+  voice: Senior Biographer
+  role: Patron of Arts
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Іван Мазепа: Меценат і трагічний герой
+
+## Використані джерела
+1. [Енциклопедія Сучасної України](https://esu.com.ua/article-60312) — Біографія та оцінка діяльності.
+2. [Інститут історії України НАНУ](http://resource.history.org.ua/) — Політична діяльність та союзи.
+3. [Ізборник](http://litopys.org.ua/) — Тексти дум та універсалів.
+4. [Вікіпедія (Українська)](https://uk.wikipedia.org/wiki/Іван_Мазепа) — Загальна хронологія та культурний внесок.
+
+## Хронологія
+- **1639**: Народження в с. Мазепинці (Білоцерківщина) у шляхетській родині.
+- **1687**: Обрання гетьманом на Коломацькій раді (після скинення Самойловича).
+- **1704**: Об'єднання Правобережної та Лівобережної України під булавою Мазепи (після повстання Палія).
+- **1708 (жовтень)**: Відкритий перехід на бік Карла XII (союз зі Швецією).
+- **1708 (листопад)**: Зруйнування Батурина російськими військами Олександра Меншикова.
+- **1708 (12 листопада)**: Проголошення анафеми Мазепі Російською православною церквою.
+- **1709 (27 червня)**: Поразка у Полтавській битві.
+- **1709 (21 вересня)**: Смерть у с. Варниця (поблизу Бендер, Молдова).
+
+## Ключові факти та цитати
+
+### Цитати
+> «Всі покою щиро прагнуть, / А не в один гуж тягнуть... / Жалься, Боже, з України, / Що не вкупі має сини!» — *Іван Мазепа, «Дума» (c. 1698)*.
+
+> «Же през шаблю маєм права!» — *Іван Мазепа, «Дума»*.
+
+> «Братія, прийшла наша пора; скористаємось цим випадком: помстимося москалям за їх тривале насилля над нами, за всі скоєні ними жорстокості й несправедливості...» — *Промова до козаків перед переходом Десни (за «Історією Русів»)*.
+
+### Факти
+- **Освіта**: Києво-Могилянський колегіум, єзуїтська колегія у Варшаві, студії в Голландії, Італії, Франції, Німеччині. Поліглот.
+- **Мазепинське бароко**: Фундатор/реставратор соборів: Софійський та Михайлівський Золотоверхий у Києві, Троїцький та Борисоглібський у Чернігові.
+- **Меценатство**: Надав Києво-Могилянській колегії статус академії (1701), збудував новий корпус.
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ — Між зрадою та героїзмом": [!myth-buster] — "Зрадник" чи рятівник? (Деконструкція імперського міфу про "Мазепинців").
+- Section "Молодість та шлях до влади": [!history-bite] — "Легенда про коня" (як Мазепу прив'язали до коня — романтичний міф Байрона vs реальність).
+- Section "Гетьманування: успіхи": [!culture] — "Мазепинське бароко" як візуальний код української державності.
+- Section "Шлях до розриву з Москвою": [!context] — Велика Північна війна: Україна як заручник геополітики.
+- Section "Полтава та вигнання": [!tragic-hero] — Батуринська різанина як попередження про сутність імперії.
+- Section "Спадщина та реабілітація": [!decolonization] — "Анафема" як політичний інструмент (знята Вселенським патріархатом, але не РПЦ).
+
+## Деколонізаційний контекст
+- **Міф**: Мазепа — "Юда", що зрадив царя заради особистої вигоди.
+- **Реальність**: Мазепа діяв як суверенний володар, який розірвав васальну угоду (протекторат) через порушення її умов сюзереном (Петром I), що не захистив Україну від шведів і планував ліквідувати козацький устрій.
+- **Інструменталізація церкви**: Анафема була суто політичним актом, що не мала канонічного підґрунтя (визнано Константинополем).
+
+## Contested Terms
+
+| Concept | Imperial/Soviet framing | Ukrainian (decolonized) framing |
+|---------|------------------------|-------------------------------|
+| **Зрада** (Treason) | Порушення вірності "законному" царю, віроломство. | **Чин** (The Deed). Спроба врятувати автономію та державність. Легітимний розрив васалітету. |
+| **Мазепинці** | Тавро зрадників, сепаратистів. | Почесна назва борців за незалежність (як "петлюрівці", "бандерівці"). |
+| **Полтавська битва** | "Тріумф російської зброї", "Слава русского оружия". | Трагедія українського народу, початок колоніального поневолення. |
+
+## Section-Mapped Research Notes
+
+### Вступ — Між зрадою та героїзмом
+- Постать-символ: для росіян — архетип зрадника, для українців — символ опору.
+- Парадокс сприйняття: найдовше правлячий гетьман (22 роки), який зробив для імперії більше, ніж будь-хто, але став її головним ворогом.
+
+### Молодість та шлях до влади
+- Європейський вектор: освіта, служба при дворі Яна Казимира.
+- Служба у Дорошенка (правобережна орієнтація) та Самойловича.
+- Коломацькі статті 1687: обмеження, але збереження системи.
+
+### Гетьманування: успіхи
+- Економічний розквіт: стабільність, розвиток торгівлі, "золота доба".
+- Культурна експансія: будівництво церков, підтримка освіти, гравюри (Мигури, Щирського) прославляють Мазепу.
+- Військова міць: участь у походах на Азов, Правобережжя.
+
+### Шлях до розриву з Москвою
+- 1706-1708: Криза довіри. Петро I вимагає реформ козацтва (перетворення на драгунів).
+- Відмова Петра захищати Україну від шведів («Ни десятка человек не дам...»).
+- Таємні переговори з Карлом XII та Станіславом Лещинським.
+
+### Полтава та вигнання
+- Трагічний перехід: лише частина козаків пішла за гетьманом (страх репресій, пропаганда).
+- Батурин: знищення столиці як акт терору.
+- Полтава: катастрофа, втеча, смерть у вигнанні.
+
+### Спадщина та реабілітація
+- Романтичний герой: Байрон, Гюго, Ліст, Словацький, Пушкін (поема «Полтава» як імперська відповідь).
+- Повернення в національну пам'ять: 1991 рік, 10 гривень, пам'ятники.
+- Зняття анафеми (де-факто Вселенським патріархатом).
+
+### Підсумок — Трагічний вибір
+- Мазепа як попередник модерного націоналізму.
+- Урок: неможливість рівноправного союзу з імперією.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12200)
+✓ Message 12149 acknowledged
+✓ Message 12200 acknowledged

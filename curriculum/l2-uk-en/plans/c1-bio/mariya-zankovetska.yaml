@@ -1,53 +1,45 @@
----
-module: c1-bio-050
+module: c1-bio-51
 level: C1-BIO
-sequence: 50
+sequence: 51
 slug: mariya-zankovetska
 version: '2.0'
 title: 'Марія Заньковецька: Перша леді сцени'
 content_outline:
-- section: "Вступ — Королева українського театру"
-  words: 400
+- section: Вступ — Королева українського театру
   points:
   - Марія Заньковецька — найвидатніша українська актриса XIX століття
   - Від провінційної сцени до всеросійської слави
   - Символ українського театрального відродження
 - section: Дитинство та юність (1854-1875)
-  words: 600
   points:
   - Народження в селі Заньки на Чернігівщині
   - Справжнє ім'я — Марія Адасовська
   - Музична освіта та перші аматорські вистави
   - Вплив народної культури на формування таланту
 - section: Початок кар'єри (1875-1885)
-  words: 700
   points:
   - Дебют у трупі Михайла Старицького
   - Роботи з Марком Кропивницьким
   - Перші великі ролі — Наталка Полтавка, Катерина
   - Формування неповторного стилю гри
 - section: Зоряні роки (1885-1900)
-  words: 800
   points:
   - Гастролі імперією та європейські турне
   - Запрошення до імператорських театрів
   - Відмова залишити український театр
   - Ролі Марусі Богуславки, Олесі, Галі
 - section: Пізній період та УНР (1900-1920)
-  words: 700
   points:
   - Робота в театрі Миколи Садовського
   - Участь у культурному житті УНР
   - Присвоєння звання народної артистки
   - Останні вистави та відхід від сцени
 - section: Спадщина та пам'ять
-  words: 800
   points:
   - Смерть у 1934 році
   - Вплив на українську акторську школу
   - Театр імені Заньковецької у Львові
   - Заньковецька як символ українського мистецтва
-word_target: 4000
 vocabulary_hints:
   required:
   - актриса (actress)
@@ -73,7 +65,6 @@ activity_hints:
   items: 3 passages
 - type: essay-response
   focus: Чому Заньковецька відмовилась від кар'єри в імператорських театрах?
-  word_target: 300
   output: Cultural analysis
 focus: biography
 prerequisites:
@@ -84,15 +75,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Марія Заньковецька (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Марія_Заньковецька"
+  url: https://uk.wikipedia.org/wiki/Марія_Заньковецька
   type: primary
   notes: Біографія, театральна кар'єра, вплив на культуру
 - name: Театр корифеїв
-  url: "https://uk.wikipedia.org/wiki/Театр_корифеїв"
+  url: https://uk.wikipedia.org/wiki/Театр_корифеїв
   type: reference
   notes: Український театр XIX століття
 - name: Микола Садовський
-  url: "https://uk.wikipedia.org/wiki/Микола_Садовський"
+  url: https://uk.wikipedia.org/wiki/Микола_Садовський
   type: reference
   notes: Партнер по сцені та засновник театру
 immersion: 100% Ukrainian
@@ -101,3 +92,6 @@ objectives:
 - 'Analyze the life and legacy of марія заньковецька: перша леді сцени'
 - Evaluate the contributions of королева українського театру
 - Trace the career and influence of спадщина та пам'ять
+persona:
+  voice: Senior Biographer
+  role: Stage Diva

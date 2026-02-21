@@ -1,0 +1,305 @@
+✅ Message sent to Gemini (ID: 10098) [auto-acked: self-addressed]
+✓ Message 10098 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10098...
+📨 Message #10098
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-describing-things-adjectives
+   Time: 2026-02-20T19:41:12.343856+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: a1-26
+level: A1
+sequence: 26
+slug: describing-things-adjectives
+version: '2.0'
+title: Describing Things - Adjectives
+subtitle: Adjective Agreement in Gender and Number
+content_outline:
+- section: Warm-up
+  points:
+  - Опис предметів навколо — start with simple, tangible objects in the immediate
+    environment
+  - Питання Який? Яка? Яке? — reinforce the connection to gender questions from A1-03
+- section: Presentation
+  points:
+  - 'Тверда група (-ий/-а/-е/-і) — State Standard §4.2.1.2: focus on Nominative case
+    forms'
+  - 'Приклади (новий дім, нова книга, нове вікно) — use collocations: «новий будинок»,
+    «новий рік»'
+  - 'Узгодження з родом іменника — learner error: Gender Mismatch (e.g., «новий машина»
+    instead of «нова машина»)'
+- section: Presentation 2
+  points:
+  - 'Закінчення -ій/-я/-є/-і — learner error: Hard/Soft Stem Confusion (e.g., «синий»
+    instead of «синій»)'
+  - 'Приклади (синій, синя, синє, сині) — content note: focus primarily on «синій»
+    to keep soft stem introduction manageable at A1'
+- section: Presentation 3
+  points:
+  - Прикметник перед іменником (гарний день) — use collocation «гарна погода»
+  - Прикметник після бути (День гарний) — contrast predicative position
+- section: Presentation 4
+  points:
+  - 'Великий ↔ малий, новий ↔ старий — cultural hook: describe St. Sophia''s Cathedral
+    (Софійський собор) as «великий» and «старий» symbol of Kyivan Rus'' architecture'
+  - Добрий ↔ поганий, дорогий ↔ дешевий — use collocations «добрий день», «погана
+    погода»
+- section: Presentation 5
+  points:
+  - Опис кімнати (велика кімната, біле вікно) — practice gender agreement with physical
+    spaces
+  - 'Опис людей (молода жінка, добрий чоловік) — cultural hook: use folklore figure
+    «Мавка» to practice «молода», «гарна», «цікава»'
+- section: Practice
+  points:
+  - Діалог про новий телефон — practice «новий» with masculine noun
+  - Діалог про квартиру — practice «новий», «великий», «старий» with feminine noun
+- section: Practice 2
+  points:
+  - Опис свого дому/кімнати — synthesize all forms in a coherent description
+vocabulary_hints:
+  required:
+  - 'новий (new) — collocations: новий будинок, новий рік, новий друг'
+  - 'старий (old) — collocations: старий будинок, старий друг, стара книга'
+  - 'гарний (beautiful, nice) — collocations: гарна погода, гарний день, гарна квітка'
+  - 'великий (big) — collocations: велике місто, велика родина, великий дім'
+  - 'малий (small) — collocations: малий будинок, мала дитина, мале вікно'
+  - 'добрий (good, kind) — collocations: добрий день, добра людина, добрий ранок'
+  - 'поганий (bad) — collocations: погана погода, поганий настрій'
+  - 'цікавий (interesting) — collocations: цікава книга, цікавий фільм, цікава людина'
+  recommended:
+  - синій (blue) — primary example for soft stem adjectives
+  - червоний (red) — common hard stem adjective
+  - молодий (young) — useful for describing people (Mavka)
+  - дорогий (expensive) — useful for shopping context
+  - дешевий (cheap) — useful for shopping context
+  - смачний (tasty) — useful for food context
+activity_hints:
+- type: fill-in
+  focus: Change adjective gender
+  items: 25
+- type: fill-in
+  focus: Complete with correct adjective form
+  items: 20
+- type: match-up
+  focus: Match adjectives to nouns
+  items: 15
+- type: fill-in
+  focus: Describe pictures using adjectives
+  items: 8
+focus: grammar
+pedagogy: PPP
+prerequisites:
+- a1-03 (The Gender Code)
+- a1-25 (My Daily Routine)
+connects_to:
+- a1-27 (Colors and Clothing)
+- a1-28 (Description - Adverbs)
+objectives:
+- Learner can use correct adjective endings for masculine nouns
+- Learner can use correct adjective endings for feminine nouns
+- Learner can use correct adjective endings for neuter nouns
+- Learner can form plural adjective forms
+grammar:
+- Adjective endings for gender (m/f/n)
+- Hard stem adjectives (-ий/-а/-е/-і)
+- Soft stem adjectives (-ій/-я/-є/-і)
+register: розмовний
+phase: A1.3 [Consolidation]
+persona:
+  voice: Patient Supportive Tutor
+  role: Real Estate Agent
+word_target: 2000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Describing Things - Adjectives
+
+## State Standard Reference
+§4.2.1.2: "форми називного відмінка однини прикметників чоловічого, жіночого, середнього роду; узгодження прикметників з іменниками в роді й числі"
+Alignment: This module directly addresses the formation of nominative singular adjectives and their agreement with nouns, which is the foundational requirement for A1 morphology.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| новий | High (Top 100 adjectives) | новий рік, новий день, нове життя |
+| гарний | High | гарна погода, гарний день, гарна дівчина |
+| великий | Very High | велике місто, велика родина, великий привіт |
+| малий | High | малий бізнес, мале дитя |
+| добрий | High | добрий день, добрий вечір, добра людина |
+| синій | Medium | синє небо, синє море, сині очі |
+| цікавий | High | цікава книжка, цікаве питання |
+
+## Cultural Hooks
+1. **St. Sophia's Cathedral (Софійський собор)**: Symbol of Kyivan Rus'. Perfect for "старий" (old/ancient) and "великий" (grand/big). Built in the 11th century.
+2. **Mavka (Мавка)**: From Lesya Ukrainka's "Forest Song" (and the recent movie). Ideal for "молода" (young), "гарна" (beautiful), "цікава" (interesting), "зелена" (associated with nature/forest).
+3. **Kyiv Metro**: "Синій" (blue) tokens or lines can be a practical anchor for the soft group colors.
+
+## Common Learner Errors
+1. **Gender Mismatch**: Using the masculine dictionary form for all genders (e.g., *«новий машина»* instead of *«нова машина»*). Cause: L1 interference (English adjectives don't change).
+2. **Hard/Soft Stem Confusion**: Writing *«синий»* instead of *«синій»*. Cause: Phonetic confusion or Russian interference where spelling rules differ.
+3. **Plural Mismatch**: Forgetting that plural adjectives also have specific endings (-і) regardless of gender (mostly). e.g., *«гарний люди»* instead of *«гарні люди»*.
+
+## Cross-References
+- **Builds on**: `a1-03` (The Gender Code - establishing noun gender), `a1-25` (Daily Routine).
+- **Prepares for**: `a1-27` (Colors and Clothing - more adjectives), `a1-28` (Adverbs - comparing *гарний* vs *гарно*).
+
+## Notes for Content Writing
+- **Immersion**: This is an A1 module. Use English for all grammar explanations.
+- **Scaffolding**: Visual tables for endings are crucial. Use color coding (Blue = Masc, Red = Fem, Yellow = Neut, Green = Plural) if possible in text descriptions.
+- **Tone**: Patient, supportive. Don't rush the soft stem rules; focus on *синій* as the primary example to avoid overwhelming the learner.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Світ прикметників (Introduction: The World of Adjectives)"
+  words: 400
+  points:
+  - "Warm-up activity: Asking questions 'Який? Яка? Яке? Які?' to describe classroom objects, reinforcing State Standard §4.2.1.2 requirements for adjective agreement in the Nominative case."
+  - "Cultural Hook: Introduce St. Sophia's Cathedral (Софійський собор) as the 'старий' (ancient) and 'великий' (grand) heart of Kyiv, establishing the need for descriptive language in historical contexts."
+  - "Bridge to A1-03: Quick review of the 'Gender Code' (masculine, feminine, neuter nouns) as the mandatory foundation for adjective agreement rules."
+- section: "Презентація: Тверда група (Presentation: Hard Stem Adjectives)"
+  words: 600
+  points:
+  - "Introduction to Hard Stem endings (-ий, -а, -е, -і) using high-frequency vocabulary like 'новий' and 'гарний'; include visual scaffolding with color-coded gender markers (Blue/Red/Yellow/Green)."
+  - "Explaining Adjective Placement: Contrast attributive position ('гарна погода') with predicative position after 'бути' ('Погода гарна'), emphasizing that gender endings remain consistent."
+  - "Correction of Gender Mismatch: Explicitly address the common error of using masculine dictionary forms for all nouns (e.g., correcting *'новий машина'* to *'нова машина'*) with focused minimal pair drills."
+  - "Expanding the Descriptive Toolkit: Introduction of high-frequency opposites like 'великий/малий' and 'добрий/поганий' as identified in frequency research."
+- section: "Презентація 2: М'яка група та Специфіка (Presentation 2: Soft Stem and Nuances)"
+  words: 500
+  points:
+  - "Introduction to Soft Stem endings (-ій, -я, -є, -і) focusing on 'синій' as the primary example; use the Kyiv Metro 'синя лінія' (Blue Line) as a practical mnemonic anchor for A1 learners."
+  - "Targeting Hard/Soft Stem Confusion: Correcting the learner error of writing *'синий'* (influenced by phonetic patterns) vs. the correct Ukrainian orthography *'синій'*."
+  - "Plural Consistency: Highlight that plural adjectives take the ending '-і' regardless of gender (e.g., 'гарні дні', 'гарні дівчата', 'гарні вікна') to prevent the common error of using singular forms for plural nouns."
+- section: "Практика та Культурний контекст (Practice and Cultural Context)"
+  words: 500
+  points:
+  - "Cultural Portrait: Describe the folklore figure Mavka (Мавка) from Lesya Ukrainka's 'Forest Song' using 'молода', 'гарна', 'цікава', and 'зелена' to practice feminine adjective agreement."
+  - "Real Estate Persona Practice: Roleplay describing a 'нова квартира' or 'великий будинок' using vocabulary from A1-25 (Daily Routine) to solidify functional usage in physical descriptions."
+  - "Final Synthesis: A summary of the 'Який?' question-answer pattern for all three genders and plural, preparing learners for the upcoming color vocabulary in A1-27."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "новий (new) — Collocations: новий рік, новий день, нове життя; Top 100 high-frequency adjective."
+  - "старий (old/ancient) — Collocations: старий будинок, стара книга; used for describing St. Sophia's Cathedral."
+  - "гарний (beautiful/nice) — Collocations: гарна погода, гарний день, гарна дівчина; high-frequency social descriptor."
+  - "великий (big/grand) — Collocations: велике місто, велика родина, великий привіт; essential for scale."
+  - "малий (small) — Collocations: малий бізнес, мале вікно, мале дитя; high-frequency antonym."
+  - "добрий (good/kind) — Collocations: добрий день, добрий вечір, добра людина; essential for greetings and character."
+  - "поганий (bad) — Collocations: погана погода, поганий настрій; primary descriptor for negative states."
+  - "цікавий (interesting) — Collocations: цікава книга, цікаве питання, цікава людина; essential for personal expression."
+  recommended:
+  - "синій (blue) — Primary example for soft stem (-ій); practical anchor: Kyiv Metro tokens/lines."
+  - "червоний (red) — Common hard stem adjective for color contrast."
+  - "молодий (young) — Useful for describing people and folklore figures like Mavka."
+  - "дорогий (expensive) — High frequency in shopping and real estate contexts."
+  - "дешевий (cheap) — Essential antonym for shopping scenarios."
+  - "смачний (tasty) — High-frequency descriptor for food and hospitality."
+  - "зелений (green) — Cultural descriptor for nature and Mavka's forest context."
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4515 chars)
+✅ Message sent to Claude (ID: 10103)
+✓ Message 10103 acknowledged
+   Auto-acknowledged reply #10103 (stdout delivery — no inbox accumulation)
+✓ Message 10098 acknowledged

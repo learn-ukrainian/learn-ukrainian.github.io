@@ -1,0 +1,212 @@
+✅ Message sent to Gemini (ID: 11758) [auto-acked: self-addressed]
+✓ Message 11758 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #11758...
+📨 Message #11758
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-courts-basic
+   Time: 2026-02-20T23:30:16.574565+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 7
+module: ruth-007
+module_number: 7
+slug: courts-basic
+title_uk: 'Суди: Основи'
+title_en: The Courts
+phase: 1
+phase_id: chancery-legal
+phase_name: Chancery & Legal
+focus: Суд, Судія — Basic procedure
+content_outline:
+- section: Вступ
+  description: Introduction to The Courts
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Baroque Scholar
+  role: Tribunal Clerk
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Courts Basic (Суди: Основи)
+
+## Використані джерела
+1. [Енциклопедія історії України: Гродський суд](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Grodskyj_sud) — детальний опис компетенції та складу гродських судів.
+2. [Енциклопедія історії України: Земський суд](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Zemskyj_sud) — аналіз виборності та незалежності земських судів після реформи 1564-1566 рр.
+3. [Ізборник: Статут Великого князівства Литовського 1588 року](http://litopys.org.ua/statut/statut88.htm) — першоджерело для аналізу термінології та судових процедур.
+4. [Енциклопедія історії України: Возний](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Voznyj) — опис функцій судового виконавця.
+
+## Хронологія
+- 1529: Перший Литовський Статут — кодифікація права, але збереження домінування великокнязівського суду.
+- 1564: Більський привілей — початок масштабної судової реформи, створення шляхетських судів.
+- 1566: Другий Литовський Статут — остаточне оформлення системи гродських, земських та підкоморських судів.
+- 1588: Третій Литовський Статут — розширення прав шляхти та уточнення судових процедур.
+- 1782: Скасування гродських судів на підросійській Україні (введення російської системи).
+
+## Ключові факти та цитати
+- **Цитата (Статут 1588, Розділ 4, Артикул 1)**: «А писар земський має по-руськи літерами і словами руськими всі листи, виписи і позви писати, а не іншою мовою».
+- **Цитата (Статут 1566)**: «Суддя має бути обираний з шляхти осілої, в праві добрий відом, цнотливий і богобоязливий».
+- **Факт**: Земський суд був першим в історії України виборним судовим органом, незалежним від адміністрації (старости/воєводи).
+- **Термін**: «Возний» — унікальна фігура судового виконавця, який вручав «позов» (виклик до суду) і мав статус свідка злочину («виж»).
+
+## Engagement Hooks (mapped to sections)
+- Section "Судова реформа 1564-1566 років": [!context] — Пояснити, що ця реформа наблизила українські землі до європейської моделі "Rule of Law", де закон вищий за волю монарха.
+- Section "Земський суд: Голос шляхти": [!myth-buster] — Спростування міфу про "безправ'я" в Речі Посполитій. Шляхта мала право обирати своїх суддів, чого не було в Московському царстві.
+- Section "Гродський суд: Меч закону": [!history-bite] — Про "замкові книги" (актові книги), які є основним джерелом нашої історії сьогодні. Вони збереглися саме завдяки гродським судам.
+- Section "Підкоморський суд: Межі та земля": [!culture] — Сакральність межі (кордону) в українській культурі та роль підкоморія як арбітра.
+- Section "Урядники суду: Суддя, Підсудок, Писар": [!quote] — Цитата про "писаря руського", що закріплювала статус староукраїнської мови.
+- Section "Возний: Очі та вуха правосуддя": [!history-bite] — Порівняння возного з шерифом або детективом: він оглядав місце злочину ("робив візію") і вручав повістки.
+
+## Деколонізаційний контекст
+- **Imperial Myth**: Російська історіографія часто трактує Литовські Статути як "чуже" право або "польський вплив", ігноруючи їхнє коріння в "Руській Правді".
+- **Ukrainian Reality**: Судова система ВКЛ на українських землях була еволюцією давньоруського права. Статути писалися староукраїнською мовою ("руською"), а судочинство велося нею ж до кінця XVII ст.
+- **Agency**: Українська шляхта активно вимагала цих судів і брала участь у їх формуванні (вибори суддів), що свідчить про високу правову культуру.
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| Литовський Статут | "Литовский/Западнорусский" кодекс | Кодекс українського та білоруського права, спадкоємець Руської Правди |
+| Руська мова (XVI ст.) | "Западнорусский язык" (діалект російської) | Староукраїнська ділова мова (державна мова ВКЛ) |
+| Шляхетська демократія | "Анархія", "безлад" | Рання форма республіканізму та виборного правосуддя |
+
+## Section-Mapped Research Notes
+
+### Вступ
+Контекст правової культури XVI ст. Відмінність від московської деспотичної моделі. Суд як місце вирішення конфліктів, а не лише покарання.
+
+### Судова реформа 1564-1566 років
+Перехід від єдиного суду Великого князя (патримоніального) до станового судочинства. Вплив Люблінської унії та вимог шляхти. Розмежування виконавчої (староста) та судової влади.
+
+### Земський суд
+Компетенція: цивільні справи шляхти. Склад: суддя, підсудок, писар. Виборність: шляхта повіту обирала 4 кандидатів, король затверджував. Сесії ("роки земські") — тричі на рік.
+
+### Гродський суд
+Компетенція: кримінальні справи ("справи кгвалтовні": наїзд, підпал, вбивство, розбій). Головував староста (або підстароста). Працював постійно (щомісяця). Виконавча сила вироків.
+
+### Підкоморський суд
+Спеціалізація: земельні межові суперечки ("справи о межи"). Суддя-підкоморій виїжджав на місце конфлікту. Процедура "обводу границь".
+
+### Урядники суду
+Вимоги до судді: осілість (маєтність), знання права ("в праві добрий відом"), моральність. Роль писаря: ведення книг, фіксація судового процесу мовою ("по-руськи").
+
+### Возний
+Ключова фігура процесу. Функції: вручення позову ("позва"), огляд місця злочину ("візія"), свідчення в суді ("реляція"). Відповідальність за неправдиві свідчення.
+
+### Мова та процедура
+Староукраїнська мова як єдина легітимна мова суду. Документи: "позов" (виклик), "виписка" (рішення/копія), "декрет" (вирок). Формалізм процедури.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 11846)
+✓ Message 11758 acknowledged
+✓ Message 11846 acknowledged

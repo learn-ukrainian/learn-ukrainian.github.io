@@ -1,0 +1,13 @@
+{
+  "track": "ruth",
+  "slug": "intro-to-ruth",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-20T00:14:09Z",
+      "task_id": "v3-intro-to-ruth-pA",
+      "mode": "full"
+    }
+  }
+}

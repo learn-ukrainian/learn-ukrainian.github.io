@@ -1,88 +1,34 @@
-# Research: Aspect in Past: Single vs Repeated (B1 M07)
+# Дослідження: Вид у минулому: одного разу vs щодня
 
-**Module:** B1 M07 "Вид у минулому: одного разу vs щодня"
-**Topic:** Verbal Aspect (Imperfective vs Perfective) in the Past Tense focusing on the Single vs. Repeated distinction.
-**Level:** B1 (Intermediate)
-*Note: The prompt indicated A1, but this is a B1 grammar topic. Research reflects B1 requirements.*
+## State Standard Reference
+§4.2.3.1: "утворення форм роду і числа дієслів минулого часу недоконаного і доконаного виду: хотів, хотіла, хотіло, хотіли; побачив, побачила, побачило, побачили"
+Alignment: This module explicitly teaches the semantic distinction between these forms (imperfective vs perfective) in past tense contexts, ensuring learners can correctly form and select them based on time markers as required by the standard.
 
-## 1. Grammar: State Standard 2024 Reference
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| одного разу | High (Narrative) | одного разу вранці/вночі, одного разу він вирішив, як одного разу |
+| щодня | High (General) | робити щодня, щодня бачити, майже щодня, кожного дня (synonym) |
+| часто | Very High | дуже часто, досить часто, як часто |
+| іноді | High | тільки іноді, іноді навіть, іноді буває |
+| зазвичай | High | як зазвичай, зазвичай ми, він зазвичай |
+| того разу | Medium (Specific) | саме того разу, пам'ятаю того разу |
+| завжди | Very High | назавжди (forever), завжди був, завжди казав |
 
-According to the **State Standard of Ukrainian as a Foreign Language (2024)**, aligned with CEFR standards for Level B1:
+## Cultural Hooks
+1. **"Одного разу..." (Once upon a time)**: This is the canonical opening for Ukrainian folk tales (казки), immediately signaling a shift from reality to narrative space. It carries a specific "storytelling mode" weight in the culture, distinct from casual conversation.
+2. **Habitual Hospitality**: The concept of "щонеділі" (every Sunday) or "на свята" (on holidays) often triggers specific imperfective verb associations in Ukrainian culture: gathering families, visiting grandparents, making varenyky. This contrasts with the specific "event" of a guest arriving unexpectedly ("одного разу прийшов гість").
 
-> **Linguistic Competence - Morphology - The Verb:**
-> The student understands and uses the category of aspect (доконаний/недоконаний вид) to express:
-> *   Repetitive actions vs. single completed actions in the past.
-> *   Simultaneous actions vs. sequential actions.
-> *   Process vs. Result.
+## Common Learner Errors
+1. **Perfective for Habitual Actions**: *Він прочитав книгу щодня.* → *Він читав книгу щодня.* — Learners mistake the "completeness" of reading a book for the perfective aspect, ignoring the repetition marker "щодня".
+2. **Imperfective for Single Achievements**: *Я складав іспит вчора.* (meaning "I passed") → *Я склав іспит вчора.* — Learners use the process verb (took the exam) when they mean the result (passed the exam).
+3. **"Used to" Confusion**: English speakers try to translate "used to" literally. In Ukrainian, this is simply the **past imperfective** (*Він курив* = He used to smoke / He smoked). Learners often look for a separate "used to" structure that doesn't exist.
 
-This specifically relates to the section on **Lexical-Grammatical Competence (B1)**:
-*   *Section 3.2.1:* Usage of Imperfective Aspect (*недоконаний вид*) for habitual, repeated actions (*звична, повторювана дія*).
-*   *Section 3.2.2:* Usage of Perfective Aspect (*доконаний вид*) for single, completed actions (*одноразова, результативна дія*).
+## Cross-References
+- **Builds on**: `b1-06` (Aspect complete system) — relies on the basic concept of Imp/Perf pairs.
+- **Prepares for**: `b1-08` (Aspect in past - result vs process) — sets the stage for more nuanced distinctions beyond simple frequency.
+- **Prepares for**: `b1-14` (Aspect integration practice) — feeds into the broader narrative skills.
 
-## 2. Vocabulary Frequency
-
-At the B1 level, the distinction is heavily reliant on **temporal adverbs** (signal words) rather than just the verb forms themselves.
-
-**High Frequency (Must Know):**
-*   **Imperfective Signals (Repeated/Process):**
-    *   *завжди* (always)
-    *   *зазвичай* (usually)
-    *   *часто* (often)
-    *   *іноді* / *інколи* (sometimes)
-    *   *рідко* (rarely)
-    *   *щодня* / *кожного дня* (every day)
-    *   *довго* (for a long time)
-*   **Perfective Signals (Single/Result):**
-    *   *вчора* (yesterday - *can be both, but often specific event*)
-    *   *раптом* (suddenly)
-    *   *одного разу* (once / one day)
-    *   *нарешті* (finally)
-    *   *відразу* (immediately)
-
-**Common Verb Pairs (B1):**
-*   *робити — зробити* (to do)
-*   *читати — прочитати* (to read)
-*   *писати — написати* (to write)
-*   *говорити — сказати* (to speak/say)
-*   *брати — взяти* (to take)
-*   *купувати — купити* (to buy)
-
-## 3. Cultural Hook
-
-**The Ukrainian Storytelling Style:**
-In Ukrainian culture, recounting events often places a heavy emphasis on the *process* and the *state* of being, not just the result. When Ukrainians tell stories (e.g., "Як я провів літо" - How I spent my summer), they frequently switch between aspect to create rhythm:
-*   **Imperfective:** Sets the scene, describes routines (*Ми гуляли, їли морозиво...* - We were walking, eating ice cream...).
-*   **Perfective:** Punctuates the story with key events (*Раптом пішов дощ* - Suddenly it started raining).
-Understanding this rhythm is key to sounding "natural" and not just "informative."
-
-## 4. Pedagogical Notes
-
-**Key Differences from English:**
-*   **English Ambiguity:** English "I ate" is ambiguous (Could be "I was eating" or "I finished eating"). Ukrainian strictly forces a choice: *я їв* (process) vs *я з'їв* (result).
-*   **"Used to":** The English structure "used to + verb" is almost always the Ukrainian **Imperfective Past**.
-    *   *I used to smoke.* -> *Я курив.* (Imperfective).
-
-**Teaching Sequence:**
-1.  **Review Past Tense:** Ensure student knows gender endings (-в, -ла, -ло, -ли).
-2.  **The Concept:** Introduce the binary: Camera (Process/Video) vs. Photo (Snapshot/Result).
-3.  **Signal Words:** Drill the adverbs first. If you see "щодня", it MUST be imperfective.
-4.  **Pairs:** Introduce clear pairs (*читав/прочитав*).
-5.  **Context:** Practice answering "Що ти робив вчора?" (General activity) vs "Що ти зробив вчора?" (Achievements).
-
-**Common Errors:**
-*   Using Perfective for repeated actions (*Я прочитав книгу щодня* - Incorrect).
-*   Overthinking the "result" aspect for general questions (Answering "Did you read this book?" with *Прочитав* when the asker implies general familiarity *Читав*).
-
-## 5. Scope Boundaries
-
-**IN SCOPE (B1 Module 07):**
-*   **Past Tense Only:** Focus strictly on past tense forms.
-*   **Basic Pairs:** Standard suffix pairs (-ува-/-и-, etc.) and high-frequency suppletive pairs (брати/взяти).
-*   **Signal Words:** The adverbs listed in section 2.
-*   **Sentence Structure:** Simple sentences (Subject + Adverb + Verb).
-
-**OUT OF SCOPE (Save for B2/C1):**
-*   **Future Aspect:** Distinction between *буду читати* vs *прочитаю*.
-*   **Figurative Meanings:** Idiomatic uses of aspect.
-*   **Complex Prefixes:** Nuances between *дописати*, *переписати*, *підписати* (Focus only on the pure aspect pair *писати/написати*).
-*   **Motion Verbs:** Detailed aspect of motion (*ходити/йти*) is complex and treated separately.
+## Notes for Content Writing
+- **Visuals**: A timeline visualization is crucial. "Dots on a line" (repeated) vs "One big X" (single event).
+- **Immersion**: Ensure no English "used to" explanations in the main text. Show, don't tell, via the timeline and context.

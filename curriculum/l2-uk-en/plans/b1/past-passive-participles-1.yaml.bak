@@ -1,0 +1,97 @@
+module: b1-45
+level: B1
+sequence: 45
+slug: past-passive-participles-1
+version: '2.0'
+title: Пасивні дієприкметники минулого часу I
+subtitle: Past Passive Participles I (-ний/-тий)
+content_outline:
+- section: Вступний тест
+  points:
+  - 'What passive means — intro aligned with State Standard §4.2.3.1 (Дійсний спосіб:
+    дієприкметник)'
+  - Participle vs verb form
+- section: Теоретичне пояснення
+  points:
+  - 'Formation -ний/-тий suffixes — emphasize logic: -ний (most common), -ений (consonant
+    stems), -тий (monosyllabic + vowels: мити -> митий)'
+  - 'Agreement patterns — Euphony & Alternation: садити → саджений [д//дж], носити
+    → ношений [с//ш]'
+- section: Практика
+  points:
+  - Form participles from verbs
+  - 'Agree with nouns — learner error: Agreement Failures (Лист [чол.] написана [жін.])'
+- section: Приклади використання
+  points:
+  - 'Attributive vs predicative use — Agency Rule: active voice (''Я написав'') often
+    more natural than passive (''Книга написана мною'') in spoken Ukrainian'
+  - Word order effects
+- section: Пасивні дієприкметники у формальному листуванні
+  points:
+  - Formal register usage — focus on 'виконаний' (виконане завдання, виконаний план)
+- section: Пасивні дієприкметники в українській культурі та літературі
+  points:
+  - 'Cultural and literary examples — The ''-но/-то'' Phenomenon: impersonal forms
+    emphasizing result without agent'
+  - 'learner error: The ''-мий'' Trap (Russian Interference) — avoid ''любимий'',
+    use ''улюблений'''
+- section: Порівняння з активними конструкціями
+  points:
+  - 'Active vs passive comparison — learner error: Active vs Passive Confusion (avoid
+    reflexive participles like ''читаючася'', use ''прочитана'')'
+- section: Практичні поради для запам'ятовування
+  points:
+  - Memorization tips
+- section: Потрібно більше практики?
+  points:
+  - Additional exercises
+vocabulary_hints:
+  required:
+  - пасивний (passive)
+  - дієприкметник (participle)
+  - написаний (written) — написана книга, написаний лист, написана картина
+  - прочитаний (read) — прочитана стаття, прочитане повідомлення
+  - зроблений (done/made) — зроблена робота, зроблений вибір, зроблено в Україні
+  - відкритий (opened) — відкриті двері, відкрите питання, відкритий урок
+  - закритий (closed) — закрите вікно, закрита тема, закритий клуб
+  - узгодження (agreement)
+  recommended:
+  - перехідне дієслово (transitive verb)
+  - атрибутивний (attributive)
+  - предикативний (predicative)
+  - основа дієслова (verb stem)
+  - виконаний (executed/fulfilled) — виконане завдання, виконаний план, виконана обіцянка
+activity_hints:
+- type: fill-in
+  focus: Verb to passive participle
+  items: 25
+- type: fill-in
+  focus: Complete with correct form
+  items: 20
+- type: fill-in
+  focus: Match participle to noun
+  items: 15
+- type: error-correction
+  focus: Fix agreement errors
+  items: 10
+focus: grammar
+pedagogy: TTT
+prerequisites:
+- b1-44 (Active Participles Phrases)
+connects_to:
+- b1-46 (Past Passive Participles 2)
+objectives:
+- Learner can form past passive participles using -ний/-тий suffixes
+- Learner can agree participles with nouns in gender, number, and case
+- Learner can use passive participles attributively and predicatively
+- Learner understands suffix selection rules
+grammar:
+- Пасивні дієприкметники минулого часу
+- Суфікси -ний/-тий selection
+- Узгодження з іменником
+register: розмовний
+phase: B1.4a [Participles]
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Museum Archivist
+word_target: 4000

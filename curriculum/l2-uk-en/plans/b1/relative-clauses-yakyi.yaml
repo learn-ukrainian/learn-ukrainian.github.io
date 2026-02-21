@@ -1,0 +1,106 @@
+module: b1-26
+level: B1
+sequence: 26
+slug: relative-clauses-yakyi
+version: '2.0'
+title: 'Підрядні означальні: який'
+subtitle: Relative Clauses with який
+content_outline:
+- section: Тест (Diagnostic Test)
+  words: 800
+  points:
+  - Вступний тест для перевірки початкових знань про складні речення — виявлення інтуїтивного
+    розуміння зв'язку між головним та підрядним реченнями (TTT-підхід)
+  - Завдання на поєднання двох простих речень в одне складне — тестування здатності
+    учня самостійно обрати форму 'який' без попередніх інструкцій
+- section: Презентація та теорія (Presentation & Theory)
+  words: 1000
+  points:
+  - 'Пояснення ''Алгоритму узгодження'' (The Agreement Algorithm): 1) Погляд НАЗАД
+    для визначення роду/числа антецедента; 2) Погляд ВПЕРЕД для визначення відмінка
+    за функцією у підрядному реченні'
+  - Парадигма відмінювання 'який' у всіх семи відмінках згідно з Держстандартом §4.4.3
+    — аналіз прикладів з 'Пані, яку зустріли' та 'Будинки, які належать до ЮНЕСКО'
+  - 'Стилістичне розмежування: якісний аспект ''який'' проти вибіркового ''котрий''
+    — пояснення тенденції до домінування ''який'' у сучасній стандартній українській
+    мові'
+- section: 'Поглиблення: Культурний код (Deepening: Cultural Code)'
+  words: 800
+  points:
+  - 'Культурний гачок: Фольклорна модель ''Визначення героя'' у думах та баладах —
+    використання відносних речень для створення епічного образу (наприклад: ''Козак,
+    який мав шаблю...'')'
+  - Поняття 'Антецедента' (слово, яке ми описуємо) — розширене пояснення важливості
+    близького розташування підрядного речення до іменника для уникнення двозначності
+    (Ambiguous Antecedent)
+- section: Практика та аналіз помилок (Practice & Error Analysis)
+  words: 800
+  points:
+  - 'Аналіз ''Пастки ролі'' (Case Logic Failure): розбір помилок, де учень копіює
+    відмінок антецедента (наприклад: ''Я бачу дівчину, яку стоїть...'' замість правильного
+    ''яка'')'
+  - Дрилі на виправлення 'Гендерного дисонансу' (Gender/Number Discord) та розпізнавання
+    помилок у складних ланцюжках іменників у родовому відмінку
+  - Критика надмірного вживання 'що' — вправи на заміну інваріантного 'що' на точний
+    та стилістично вишуканий займенник 'який' у формальному контексті
+- section: Діалоги та синтез (Dialogues & Synthesis)
+  words: 600
+  points:
+  - 'П''ять ситуативних діалогів (Колега, Подорож, Книга, Навчання, Ресторан) з використанням
+    сталих конструкцій: ''людина, яка...'', ''місто, в якому...'', ''той, який...'''
+  - Підсумкове творче завдання на побудову складних дескрипцій — використання 'який'
+    для опису професійних якостей, ідеального міста чи культурних пам'яток
+vocabulary_hints:
+  required:
+  - 'який (which/that/who) — Top 50; collocations: людина, яка...; місто, в якому...;
+    той, який...'
+  - яка (which - feminine) — agreement with feminine antecedent
+  - яке (which - neuter) — agreement with neuter antecedent
+  - які (which - plural) — agreement with plural antecedent
+  - 'підрядний (subordinate) — grammar term: підрядне речення, підрядна частина; low
+    frequency'
+  - 'означальний (attributive) — grammar term: означальне речення; targets descriptive
+    function'
+  - 'речення (sentence) — High frequency: головне речення, складне речення'
+  - 'антецедент (antecedent) — academic: ''слово, яке ми описуємо''; crucial for agreement
+    logic'
+  recommended:
+  - 'узгодження (agreement) — Medium frequency: принцип узгодження, повне узгодження'
+  - 'відмінок (case) — Medium frequency: у називному відмінку, непрямі відмінки'
+  - сполучник (conjunction) — grammar context; identifies the link between clauses
+  - головне речення (main clause) — the base sentence that the relative clause modifies
+activity_hints:
+- type: fill-in
+  focus: який case selection
+  items: 25
+- type: error-correction
+  focus: Combine sentences with який
+  items: 20
+- type: error-correction
+  focus: Fix agreement errors
+  items: 15
+- type: translate
+  focus: English to Ukrainian
+  items: 15
+focus: grammar
+pedagogy: TTT
+prerequisites:
+- b1-25 (Checkpoint Aspect Integration)
+connects_to:
+- b1-27 (Relative Clauses де/куди/звідки)
+- b1-28 (Relative Clauses коли/що)
+objectives:
+- Learner understands який agreement patterns
+- Learner can use який in all seven cases
+- Learner can combine sentences using який
+- Learner can identify antecedent and relative clause role
+grammar:
+- який/яка/яке/які forms and agreement
+- Case selection based on role in subordinate clause
+- Agreement with antecedent in gender and number
+register: розмовний
+phase: B1.3a [Complex Sentences]
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Portrait Photographer
+word_target: 4000

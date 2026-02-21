@@ -1,0 +1,325 @@
+✅ Message sent to Gemini (ID: 10698) [auto-acked: self-addressed]
+✓ Message 10698 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10698...
+📨 Message #10698
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-practice-ii-article-critique
+   Time: 2026-02-20T21:24:03.666197+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-019
+level: C1
+sequence: 19
+slug: practice-ii-article-critique
+version: '2.0'
+title: Практика II — Критика статті
+content_outline:
+- section: Вступ — Критичне читання
+  points:
+  - Різниця між читанням і критичним аналізом
+  - Роль рецензії в науці
+  - Структура критичного відгуку
+- section: Оцінка методології
+  points:
+  - Чи адекватні методи меті?
+  - Репрезентативність вибірки
+  - Обмеження дослідження
+- section: Оцінка аргументації
+  points:
+  - Логічність і послідовність
+  - Достатність доказів
+  - Альтернативні інтерпретації
+- section: Мова критичного аналізу
+  points:
+  - Автор переконливо доводить ...
+  - Слабким місцем роботи є ...
+  - Варто було б детальніше розглянути ...
+- section: Сильні та слабкі сторони
+  points:
+  - Як формулювати позитивні коментарі
+  - Як конструктивно критикувати
+  - Баланс похвали і критики
+- section: Структура рецензії
+  points:
+  - Загальна характеристика роботи
+  - Детальний аналіз
+  - Підсумкова оцінка
+- section: Практичне завдання
+  points:
+  - Стаття для аналізу
+  - Написання рецензії
+  - Взаємне рецензування
+vocabulary_hints:
+  required:
+  - рецензія (review)
+  - критика (critique)
+  - методологія (methodology)
+  - вибірка (sample)
+  - обмеження (limitation)
+  - аргументація (argumentation)
+  - доказ (evidence)
+  - інтерпретація (interpretation)
+  - оцінка (evaluation)
+  - конструктивний (constructive)
+  recommended:
+  - переконливий (convincing)
+  - недолік (shortcoming)
+  - перевага (advantage)
+  - обґрунтованість (validity)
+  - релевантність (relevance)
+activity_hints:
+- type: essay-response
+  focus: Write article review
+- type: quiz
+  focus: Identify strengths/weaknesses in research
+  items: 15+
+- type: cloze
+  focus: Critical analysis phrases
+  items: 12+
+- type: match-up
+  focus: Critique type to appropriate language
+  items: 12+
+- type: fill-in
+  focus: Complete critique sentences
+  items: 10+
+- type: group-sort
+  focus: Classify comments as positive/negative/neutral
+  items: 12+
+focus: practice
+prerequisites:
+- c1-14 (Literature Review)
+- c1-18 (Essay Writing Practice)
+connects_to:
+- c1-20 (C1.1 Checkpoint)
+- c1-33 (Case Studies)
+module_type: practice
+sources:
+- name: Academic Review Writing
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Standards for article reviews
+- name: Critical Analysis Methodology
+  url: https://mova.info/
+  type: secondary
+  notes: Techniques for evaluating research
+immersion: 100% Ukrainian
+phase: C1.1 Academic Ukrainian
+objectives:
+- Understand and apply практика ii — критика статті
+- Analyze and evaluate критичне читання
+- Identify key concepts of практичне завдання
+persona:
+  voice: Senior Specialist
+  role: Науковий опонент
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Практика II — Критика статті
+
+## State Standard Reference
+§4.4.5: "Уміння створити текст певного стилю за планом."
+§4.4.6: "Використання елементів риторики в композиції тексту."
+Alignment: Модуль розвиває навички написання наукової рецензії (науковий стиль) та використання аргументації (риторика), що відповідає вимогам стандарту до рівня С1.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| рецензія | High (Academic) | наукова рецензія, писати рецензію, об'єктивна рецензія |
+| критика | High (General/Acad) | конструктивна критика, літературна критика, фахова критика |
+| методологія | Medium (Scientific) | методологія дослідження, обґрунтована методологія, недоліки методології |
+| вибірка | Medium (Statistics) | репрезентативна вибірка, обсяг вибірки, формування вибірки |
+| аргументація | High (Rhetoric) | переконлива аргументація, слабка аргументація, логіка аргументації |
+| доказ | High (General) | неспростовний доказ, наводити докази, емпіричні докази |
+| інтерпретація | Medium (Academic) | альтернативна інтерпретація, хибна інтерпретація, інтерпретація даних |
+| конструктивний | High (Professional) | конструктивний підхід, конструктивна пропозиція, конструктивний діалог |
+| обґрунтованість | Medium (Scientific) | наукова обґрунтованість, недостатня обґрунтованість, перевірка обґрунтованості |
+| релевантність | Medium (Academic) | релевантність джерел, висока релевантність, втрата релевантності |
+
+## Cultural Hooks
+1. **Наукове товариство імені Шевченка (НТШ)**: Засноване 1873 року, стало першою українською "академією наук", де формувалася культура української наукової критики та дискусії.
+2. **"Літературно-науковий вісник"**: Часопис (ред. Іван Франко), що задавав високі стандарти наукової та літературної критики на зламі XIX-XX століть.
+3. **Репресована термінологія**: У 1930-х роках радянська влада штучно "зближувала" українську наукову термінологію з російською, знищуючи питомі українські терміни Інституту української наукової мови.
+
+## Common Learner Errors
+1. **Переказ замість аналізу**: Студенти часто просто резюмують зміст статті ("Author says X"), замість того щоб оцінювати його ("Author argues X, but fails to account for Y").
+   *   *Correction*: Використовувати оціночні дієслова (аналізує, нехтує, перебільшує) замість описових.
+2. **Суб'єктивність (Emotionality)**: Використання емоційних суджень ("This article is bad") замість об'єктивних критеріїв.
+   *   *Correction*: "Методологія дослідження має певні обмеження..." замість "Дослідження слабке".
+3. **Фамільярність**: Звертання до автора на ім'я або використання неналежного тону.
+   *   *Correction*: Використовувати безособові конструкції ("У роботі зазначено...") або прізвище ("Автор стверджує...").
+
+## Cross-References
+- Builds on: c1-14 (Literature Review), c1-18 (Essay Writing Practice)
+- Prepares for: c1-20 (C1.1 Checkpoint), c1-33 (Case Studies)
+
+## Notes for Content Writing
+- Акцентувати на різниці між **науковою рецензією** (для журналу) та **учнівським відгуком**.
+- Використовувати безособові конструкції, характерні для українського наукового стилю (вважається, доведено, встановлено).
+- Включити шаблони ("кліше") для кожної частини рецензії, щоб студенти мали "конструктор" для письма.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Традиції української наукової критики (Introduction: Traditions of Ukrainian Scientific Critique)"
+  words: 500
+  points:
+  - "Historical hook: The role of the Shevchenko Scientific Society (НТШ, 1873) in establishing the standards of Ukrainian academic discourse and peer review."
+  - "The influence of Ivan Franko's 'Literary-Scientific Bulletin' as a benchmark for high-level critical analysis and scientific discussion."
+  - "Defining the goal of critical reading according to State Standard §4.4.5: transition from comprehension to stylistic production."
+- section: "Від переказу до аналізу: Дієслова оцінки (From Summary to Analysis: Evaluation Verbs)"
+  words: 700
+  points:
+  - "Learner error: Avoiding the 'Author says X' summary trap; introducing evaluation verbs like 'аналізує', 'нехтує', 'перебільшує', 'акцентує'."
+  - "Implementing rhetoric elements (§4.4.6) to build a logical progression from content overview to critical evaluation."
+  - "Distinction between a scientific review (journal standard) and a student's opinion; the necessity of 'фахова критика'."
+- section: "Оцінка методології та аргументації (Evaluating Methodology and Argumentation)"
+  words: 800
+  points:
+  - "Evaluating sampling: Using concepts like 'репрезентативна вибірка' and 'обсяг вибірки' to challenge research validity."
+  - "Analyzing the logic of argumentation: 'переконлива аргументація' versus 'недостатня обґрунтованість' in scientific claims."
+  - "Discussing alternative interpretations ('альтернативна інтерпретація') as a sign of deep analytical engagement with the text."
+- section: "Об'єктивність та безособовий стиль (Objectivity and Impersonal Style)"
+  words: 700
+  points:
+  - "Learner error: Replacing emotional judgments ('The study is bad') with objective criteria ('The methodology has certain limitations')."
+  - "Mastering the impersonal constructions typical of Ukrainian academic style: 'вважається', 'доведено', 'встановлено', 'у роботі зазначено'."
+  - "Correction of familiarity issues: Using the third person ('Автор стверджує') and formal surnames instead of first names to maintain academic distance."
+- section: "Мовна палітра та шаблони рецензента (Linguistic Palette and Reviewer Templates)"
+  words: 600
+  points:
+  - "Providing a 'Review Constructor': Sentence templates for evaluating strengths ('безперечна перевага') and constructive criticism ('варто було б детальніше розглянути')."
+  - "The decolonization context: Awareness of 'repressed terminology' (1930s) and prioritizing authentic academic terms over Soviet-era borrowings."
+  - "The concept of 'релевантність джерел' and its role in determining the scientific value of an article critique."
+- section: "Практичне застосування та підсумок (Practical Application and Summary)"
+  words: 700
+  points:
+  - "Writing workshop: Drafting a review using the provided templates, ensuring 'наукова обґрунтованість' of every critical remark."
+  - "Mutual reviewing (Peer Review): Practicing 'конструктивна критика' and 'конструктивний діалог' between classmates."
+  - "Final reflection on the balance of praise and critique to ensure a professional and fair 'підсумкова оцінка'."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "рецензія (review) — наукова рецензія, писати рецензію, об'єктивна рецензія; High frequency in academic contexts."
+  - "критика (critique) — конструктивна критика, фахова критика, літературна критика."
+  - "методологія (methodology) — методологія дослідження, обґрунтована методологія, недоліки методології."
+  - "вибірка (sample) — репрезентативна вибірка, обсяг вибірки, формування вибірки."
+  - "обмеження (limitation) — дослідження має певні обмеження; used for objective academic tone."
+  - "аргументація (argumentation) — переконлива аргументація, слабка аргументація, логіка аргументації."
+  - "доказ (evidence) — неспростовний доказ, наводити докази, емпіричні докази."
+  - "інтерпретація (interpretation) — альтернативна інтерпретація, хибна інтерпретація, інтерпретація даних."
+  - "оцінка (evaluation) — підсумкова оцінка, давати оцінку, об'єктивна оцінка."
+  - "конструктивний (constructive) — конструктивний підхід, конструктивна пропозиція, конструктивний діалог."
+  recommended:
+  - "переконливий (convincing) — переконливі аргументи, переконливе спростування."
+  - "недолік (shortcoming) — виявляти недоліки, суттєвий недолік."
+  - "перевага (advantage) — безперечна перевага, конкурентна перевага."
+  - "обґрунтованість (validity) — наукова обґрунтованість, недостатня обґрунтованість."
+  - "релевантність (relevance) — релевантність джерел, висока релевантність."
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4720 chars)
+✅ Message sent to Claude (ID: 10707)
+✓ Message 10707 acknowledged
+   Auto-acknowledged reply #10707 (stdout delivery — no inbox accumulation)
+✓ Message 10698 acknowledged

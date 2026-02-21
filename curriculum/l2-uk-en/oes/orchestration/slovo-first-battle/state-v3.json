@@ -1,0 +1,13 @@
+{
+  "track": "oes",
+  "slug": "slovo-first-battle",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-20T11:42:51Z",
+      "task_id": "v3-slovo-first-battle-pA",
+      "mode": "full"
+    }
+  }
+}

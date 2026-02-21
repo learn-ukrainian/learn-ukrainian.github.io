@@ -1,4 +1,3 @@
----
 module: c1-hist-109
 level: c1-hist
 sequence: 109
@@ -10,55 +9,47 @@ objectives:
 - 'Analyze the causes and consequences of радянська пропаганда: механізми'
 - Evaluate the historical significance of машина переписування
 content_outline:
-- section: "Вступ — Машина переписування"
-  words: 457
+- section: Вступ — Машина переписування
   subsections:
   - Радянська пропаганда — система
   - Не брехня, а реальність
   - Механізми впливу
   - Структура модуля
 - section: «Дружба народів»
-  words: 800
   subsections:
   - Ідеологема — як працювала
   - Приховування конфліктів
   - «Старший брат»
   - Ієрархія всередині «рівності»
 - section: Заборонені теми
-  words: 686
   subsections:
   - Голодомор — табу
   - Депортації — мовчання
   - УПА — тільки «бандерівці»
   - Що не можна було говорити
 - section: Переписування історії
-  words: 686
   subsections:
   - Підручники — як змінювались
   - «Воссоєдиненіє» 1654
   - Київська Русь — «спільна колиска»
   - Фальсифікація як система
 - section: Контроль над мовою
-  words: 571
   subsections:
   - Двомовність — формальна рівність
   - Престиж мов
   - «Мова міжнаціонального спілкування»
   - Мовна русифікація
 - section: Спадок
-  words: 457
   subsections:
   - Що залишилось у свідомості
   - Ностальгія за СРСР
   - Як це використовує Росія
   - Деконструкція спадку
 - section: Підсумок
-  words: 343
   subsections:
   - Пропаганда — не минуле
   - Інструменти живуть далі
   - Перехід до сучасної дезінформації
-word_target: 4000
 vocabulary:
 - пропаганда
 - «дружба народів»
@@ -77,22 +68,22 @@ vocabulary:
 - спадок
 activities:
 - type: critical-analysis
-  focus: "How \"friendship of peoples\" ideology worked"
+  focus: How "friendship of peoples" ideology worked
 - type: comparative-study
-  focus: "Soviet textbooks — how history was rewritten"
+  focus: Soviet textbooks — how history was rewritten
 - type: critical-analysis
-  focus: "What couldn't be discussed — mapping silences"
+  focus: What couldn't be discussed — mapping silences
 - type: critical-analysis
   focus: Soviet propaganda tropes that survive today
 - type: essay-response
   focus: Чи 'дружба народів' була рівною?
 sources:
 - name: Пропаганда в СРСР (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Пропаганда_в_СРСР"
+  url: https://uk.wikipedia.org/wiki/Пропаганда_в_СРСР
   type: reference
   notes: Soviet propaganda
 - name: «Дружба народів» (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Дружба_народів_(ідеологема)"
+  url: https://uk.wikipedia.org/wiki/Дружба_народів_(ідеологема)
   type: reference
   notes: Friendship of peoples ideology
 vocabulary_hints:
@@ -111,7 +102,9 @@ activity_hints:
   items: 4
 - type: essay-response
   focus: Критичний аналіз
-  word_target: 300
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Propaganda Mechanism Analyst

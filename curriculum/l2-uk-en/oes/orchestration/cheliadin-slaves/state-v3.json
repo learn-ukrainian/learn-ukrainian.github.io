@@ -1,0 +1,13 @@
+{
+  "track": "oes",
+  "slug": "cheliadin-slaves",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-20T10:36:03Z",
+      "task_id": "v3-cheliadin-slaves-pA",
+      "mode": "full"
+    }
+  }
+}

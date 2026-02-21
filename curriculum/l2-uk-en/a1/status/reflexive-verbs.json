@@ -1,0 +1,64 @@
+{
+  "module": "reflexive-verbs",
+  "level": "A1",
+  "plan_version": "2.0",
+  "last_audit": "2026-02-21T00:46:33.289254Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-02-20T22:18:41.347122Z",
+    "meta": "2026-02-19T17:50:24.955428Z",
+    "activities": "2026-02-20T22:18:41.347960Z",
+    "vocabulary": "2026-02-19T18:06:11.205694Z",
+    "plan": "2026-02-20T20:39:34.937381Z",
+    "research": "2026-02-19T17:50:24.947357Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "2701/2000 (raw: 3356)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "10/8"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "23/1"
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "ipa": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Clean IPA"
+    },
+    "research": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Content aligned with research"
+    },
+    "review": {
+      "status": "pass",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 7,
+    "fail_count": 0,
+    "deferred_count": 0
+  }
+}

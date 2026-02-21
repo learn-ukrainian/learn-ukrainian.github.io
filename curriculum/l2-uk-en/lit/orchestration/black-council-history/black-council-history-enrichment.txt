@@ -1,0 +1,292 @@
+✅ Message sent to Gemini (ID: 11967) [auto-acked: self-addressed]
+✓ Message 11967 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #11967...
+📨 Message #11967
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-black-council-history
+   Time: 2026-02-20T23:35:00.713707+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 22
+module: lit-22
+level: LIT
+slug: black-council-history
+version: '2.0'
+title: 'Чорна рада: Історичний контекст'
+subtitle: 'The Black Council: Historical Context'
+content_outline:
+- section: Вступ — Що таке \"Руїна\"?
+  points:
+  - Період 1657-1687 років
+  - Розкол України на Лівобережну і Правобережну
+  - Чому цей період називають "Руїною"
+- section: Чорна рада 1663 року
+  points:
+  - Що таке "чорна рада" (загальна козацька рада)
+  - Конфлікт Сомка і Брюховецького
+  - Результат ради і наслідки
+- section: Політичні сили епохи
+  points:
+  - Козацька старшина vs голота
+  - Московський вплив
+  - Польський фактор
+- section: Охлократія як проблема
+  points:
+  - Що таке охлократія (влада натовпу)
+  - Чорна рада як приклад
+  - Куліш і його погляд на "народ"
+- section: Історичні постаті
+  points:
+  - Яким Сомко — трагічний герой
+  - Іван Брюховецький — демагог
+  - Василь Золотаренко
+- section: Підсумок — Від історії до роману
+  points:
+  - Як Куліш використав історію
+  - Художня правда vs документальна
+  - Перехід до аналізу роману
+vocabulary_hints:
+  required:
+  - руїна (ruin/the Ruin period)
+  - чорна рада (black council)
+  - гетьман (hetman)
+  - охлократія (ochlocracy/mob rule)
+  - старшина (officer class)
+  - голота (poor Cossacks)
+  - демагог (demagogue)
+  - лівобережжя (Left Bank)
+  - правобережжя (Right Bank)
+  - розкол (split/schism)
+  recommended:
+  - генеральний писар (general scribe)
+  - московський протекторат (Muscovite protectorate)
+  - переяславська угода (Pereiaslav Agreement)
+  - автономія (autonomy)
+  - васал (vassal)
+activity_hints:
+- type: reading
+  focus: Історичні джерела про Чорну раду
+  source: Wikipedia and historical sources
+  items: 4+
+- type: essay-response
+  focus: Чи була Чорна рада "демократією" чи "охлократією"?
+  output: Історичне есе
+focus: history
+pedagogy: Immersion
+prerequisites:
+- lit-21 (Panteleimon Kulish biography)
+- Basic knowledge of Ukrainian history
+connects_to:
+- lit-23 (Black Council Plot — аналіз роману)
+- lit-13 (Haidamaky — інший історичний період)
+- c1-hist (Historical modules)
+objectives:
+- Understand the historical context of "The Ruin" (1657-1687) and the Black Council
+  of 1663.
+- Contrast the political models of Somko (elite/law) and Briukhovetsky (populism/mob
+  rule).
+- Analyze the consequences of internal discord for Ukrainian statehood.
+grammar:
+- Historical terminology
+module_type: history
+sources:
+- name: Чорна рада 1663 — історія
+  url: https://uk.wikipedia.org/wiki/Чорна_рада_(1663)
+  type: primary
+  notes: Історичний контекст події
+- name: Руїна — історія
+  url: https://uk.wikipedia.org/wiki/Руїна_(історія_України)
+  type: primary
+  notes: Ширший історичний контекст
+- name: Чорна рада — роман
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=263
+  type: secondary
+  notes: Для порівняння з історією
+immersion: 100% Ukrainian
+phase: LIT.4 The Intellectuals (Kulish & Kostomarov)
+persona:
+  voice: Senior Philologist & Critic
+  role: History Professor
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Чорна рада: Історичний контекст
+
+## Використані джерела
+1. [Енциклопедія історії України (Історичний інститут НАНУ)](http://history.org.ua) — стаття «Чорна рада 1663», аналіз передумов та наслідків Ніжинської ради.
+2. [Літопис Самовидця (Ізборник)](http://litopys.org.ua) — першоджерело, свідоцтва очевидця подій про соціальний вибух та перебіг ради.
+3. [Енциклопедія сучасної України](https://esu.com.ua) — концепт «Руїна», соціально-політичний розкол суспільства.
+
+## Хронологія
+- **1657**: Смерть Богдана Хмельницького, що стала каталізатором внутрішніх конфліктів та початком доби «Руїни».
+- **1658**: Гадяцька угода Івана Виговського, спроба переорієнтації на Річ Посполиту.
+- **1660**: Чуднівська кампанія, після якої Юрій Хмельницький перейшов на бік Польщі, що спричинило фактичний розкол Гетьманщини.
+- **Квітень 1662**: Козацька рада в Козельці, де наказним гетьманом Лівобережжя обрано Якима Сомка.
+- **17-18 червня 1663**: «Чорна рада» під Ніжином. Обрання гетьманом Івана Брюховецького за підтримки Запорозької Січі та московських послів.
+- **Вересень 1663**: Страта Якима Сомка та Василя Золотаренка в Борзні за наказом Брюховецького.
+
+## Ключові факти та цитати
+- **З Літопису Самовидця про раду**: «І так зараз почали раду радити... а запорожці, як шалені, на старшину кинулися, і так Сомка і Золотаренка, і иных многих старшин забрали и Брюховецкому отдали».
+- **З Літопису Граб'янки про обрання**: Брюховецький переміг завдяки обіцянкам соціальної рівності, здобувши прихильність «черні» (незаможного козацтва та міщан).
+- **Пантелеймон Куліш про події**: У своєму романі автор відобразив глибоку відразу до некерованого натовпу, бачачи в «чорній раді» прояв руйнівної охлократії.
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ: Концепт «Руїни» в українській історіографії": [!context] — Пояснення терміну «Руїна» не просто як хаосу, а як глибокої системної кризи української державності, спричиненої відсутністю легітимного спадкоємця влади.
+- Section "Чорна рада 1663 року: Інститут загальної козацької ради": [!myth-buster] — Спростування міфу про «чорну раду» як прояв справжньої демократії. Насправді це була маніпуляція натовпом, яка порушувала традиційні правові механізми Гетьманщини.
+- Section "Політичні сили епохи: Соціальна поляризація": [!history-bite] — Золотаренко та Сомко також були суперниками між собою, що послабило табір старшини і дозволило Брюховецькому зіграти на їхніх суперечностях.
+- Section "Охлократія як проблема: Влада натовпу в політичній теорії": [!quote] — Цитата з Літопису Самовидця про те, як натовп розірвав намети старшини під час Ніжинської ради.
+- Section "Історичні постаті: Іван Брюховецький як феномен популізму": [!decolonization] — Російська історіографія часто виправдовувала Брюховецького як «борця за права бідних», тоді як він був першим гетьманом, який поїхав до Москви "бити чолом" царю і отримав титул московського боярина, свідомо здаючи суверенітет заради особистої влади.
+- Section "Від історії до роману: Трансформація факту в художню правду": [!culture] — Як роман Куліша став першим україномовним історичним романом, заклавши основу для осмислення власної історії через літературу.
+
+## Деколонізаційний контекст
+- **Imperial/Soviet myth**: Чорна рада 1663 року інтерпретувалася в радянській історіографії як прогресивна «класова боротьба» пригноблених мас (черні) проти експлуататорів (козацької старшини). Це виправдовувало перемогу проросійського Брюховецького.
+- **Ukrainian reality**: Ніжинська рада була класичним прикладом руйнівної охлократії та популізму. Московська держава цілеспрямовано розпалювала соціальний конфлікт, використовуючи Брюховецького для знищення державотворчої еліти (Сомка) та посилення свого контролю над Лівобережжям.
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian (decolonized) framing |
+|---------|-----------------|-------------------------------|
+| Чорна рада | Класова боротьба, перемога демократичних низів | Охлократія, маніпуляція натовпом, інспірована ззовні |
+| Брюховецький | Захисник простого люду, вірний союзник Москви | Демагог-популіст, колаборант, який здав український суверенітет |
+| Козацька старшина | Експлуататори, зрадники інтересів народу | Державотворча еліта, носії ідеї політичної автономії |
+
+## Section-Mapped Research Notes
+
+### Вступ: Концепт «Руїни» в українській історіографії
+Термін «Руїна» охоплює період від смерті Хмельницького (1657) до обрання Мазепи (1687). Це час громадянських воєн, розколу держави по Дніпру та іноземних інтервенцій. Руїна — це не просто фізична розруха, а глибока криза легітимності та втрата політичного консенсусу всередині суспільства.
+
+### Вступ: Передумови розколу (1657–1663 роки)
+Після Чуднівської кампанії 1660 року Юрій Хмельницький уклав Слободищенський трактат із Польщею. Лівобережні полки відмовилися підкорятися, що призвело до фактичного поділу Гетьманщини на Правобережну (під впливом Речі Посполитої) та Лівобережну (під впливом Московії). Виник вакуум влади, в якому розгорнулася боротьба за булаву.
+
+### Чорна рада 1663 року: Інститут загальної козацької ради
+«Чорна рада» означала присутність «черні» — нереєстрового козацтва, міщан, селян та запорожців, а не лише старшини (як на старшинській раді). Хоча формально це виглядало як розширена демократія, фактично такий формат унеможливлював раціональне обговорення і перетворювався на інструмент силового тиску натовпу.
+
+### Чорна рада 1663 року: Ніжинський собор та кульмінація конфлікту
+Рада відбулася 17-18 червня 1663 року в урочищі Романівський Кут під Ніжином. Присутність московських військ і представника царя Данила Великогагіна легітимізувала процес на користь Брюховецького. Завершилася масовими заворушеннями, вбивствами представників старшини та арештом Сомка.
+
+### Політичні сили епохи: Соціальна поляризація
+Суспільство розкололося на багату і заможну «кармазинну» старшину, яка прагнула закріпити свої привілеї та збудувати станову державу, і «голоту» (чернь, запорожців), яка вимагала рівності та скасування соціальних бар'єрів. Цей конфлікт знищив єдність нації.
+
+### Політичні сили епохи: Геополітичний вимір
+Московія була прямо зацікавлена в перемозі слабкого і залежного Брюховецького, який міг триматися при владі лише завдяки царським військам. Сильний і самостійний Сомко становив загрозу для імперських планів. Польща та Кримське ханство також розігрували власні карти в цьому хаосі.
+
+### Охлократія як проблема: Влада натовпу в політичній теорії
+Охлократія — вироджена форма демократії, де домінує демагогія, емоції та насильство. Ніжинська рада показала, як некерований натовп руйнує правові інститути. Замість закону діє право сили та гучного крику.
+
+### Охлократія як проблема: Популізм та соціальний вибух
+Брюховецький використав класичні інструменти популізму: обіцянки забрати багатства у старшини і роздати їх бідним, розпалювання ненависті до еліт. Це призвело до того, що натовп власноруч знищив тих діячів, які могли реально захистити інтереси української автономії.
+
+### Історичні постаті: Яким Сомко та Василь Золотаренко
+Яким Сомко (шурин Б. Хмельницького) — представник інтересів старшини, прагнув до твердої влади і незалежності від Московії. Трагічний герой, який став жертвою власної жорсткості та зради. Василь Золотаренко — ніжинський полковник, також претендував на булаву, що розпорошило сили консервативного табору. Обидва були страчені в Борзні.
+
+### Історичні постаті: Іван Брюховецький як феномен популізму
+Перший кошовий отаман Запорозької Січі, який став гетьманом Лівобережжя. Заради збереження влади підписав Батуринські та Московські статті, які суттєво обмежили права Гетьманщини. Брюховецький став символом демагогії, що продає національні інтереси заради особистої амбіції.
+
+### Від історії до роману: Трансформація факту в художню правду
+Пантелеймон Куліш ретельно вивчав літописи Самовидця та Граб'янки для написання роману. Проте він створив не просто хроніку, а художнє полотно, де історичні постаті (Сомко, Брюховецький) стають архетипами. Куліш використав минуле як пересторогу для сучасників щодо небезпеки соціального розколу та популізму.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12027)
+✓ Message 11967 acknowledged
+✓ Message 12027 acknowledged

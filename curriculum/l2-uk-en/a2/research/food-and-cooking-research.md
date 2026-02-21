@@ -1,76 +1,43 @@
-# Research Notes: Їжа та готування (Food and Cooking)
+# Дослідження: Food and Cooking
 
-**Track**: Core A (A2)
-**Module**: M45
-**Level**: A2 (High Beginner / Pre-Intermediate)
-**Researched**: 2026-02-08
+## State Standard Reference
+**§3.10 Їжа і напої**: "страви; напої; посуд і столові прибори; заклади харчування; способи приготування їжі."
+**§4.2.2.5 Орудний відмінок**: "знаряддя і засіб дії: Студент пише новою ручкою... із прийменниками: з, із, зі (ознака предмета): Люблю чай із лимоном."
+**§4.2.3.2 Наказовий спосіб**: "Форми 2-ї і 3-ї особи однини і множини... мрій, мрійте..." (Targeting 2nd person for recipes: наріж, додай).
 
-## 1. Grammar: State Standard 2024 Reference
-According to the **Державний стандарт української мови (2024)**, this module falls under the A2 level requirements (Початковий рівень другого ступеня).
+Alignment: The module directly addresses §3.10 by teaching cooking methods (*способи приготування*) and tools (*посуд*). It fulfills the A2 requirement for Instrumental case in its "instrument/tool" function (§4.2.2.5) and Imperative mood for instructions (§4.2.3.2).
 
-**Thematic Catalog (Каталог Б, 2.4.2.3):**
-> §3.10. **Їжа і напої**: страви; напої; посуд і столові прибори; заклади харчування; способи приготування їжі.
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| **варити** | High / Core Verb | варити борщ, варити суп, варити картоплю, варити каву |
+| **смажити** | High / Core Verb | смажити м'ясо, смажити рибу, смажити яйця, смажити картоплю |
+| **пекти** | Med-High / Core Verb | пекти пиріг, пекти хліб, пекти торт, пекти печиво |
+| **різати** | High / Core Verb | різати ножем, різати хліб, різати овочі, дрібно різати |
+| **каструля** | High / Household | велика каструля, у каструлі |
+| **сковорода** | High / Household | на сковороді, розігріта сковорода |
+| **духовка** | Med / Household | у духовці, гаряча духовка |
 
-**Grammar Competency (Каталог В, 2.4.2.4):**
-For A2, the standard emphasizes the use of the **Instrumental Case** for ingredients and accompaniments:
-> §4.2.2.5.2. Із прийменниками: з, із, зі (ознака предмета): Люблю чай із лимоном. Скуштуйте салат із крабів. Компот зі свіжих фруктів.
+## Cultural Hooks
+1.  **"Чим хата багата, тим і рада"** (What the house is rich in, it is glad to offer): The core principle of Ukrainian hospitality. Guests are offered everything available, often starting with bread and salt (хліб-сіль).
+2.  **Borshch Culture**: Listed as UNESCO Intangible Cultural Heritage. It's not just a soup but a process involving specific steps (зажарка) and ingredients (beets, cabbage). Every family has a unique recipe.
+3.  **Varenyky Versatility**: Can be a main dish (potato, cabbage, meat) or dessert (cherries, cottage cheese), illustrating the sweet/salty (*солодкий/солоний*) contrast perfectly.
 
-It also targets the **Imperative Mood** for giving instructions (recipes):
-> §4.2.3.2. Наказовий спосіб: пити (пий, пийте), їсти (їж, їжте - implied in context of cooking).
+## Common Learner Errors
+1.  **Instrumental with Preposition**: Using *з* for tools.
+    *   *Error*: Я ріжу з ножем.
+    *   *Correct*: Я ріжу **ножем**.
+    *   *Reason*: L1 interference (English "with a knife"). "With" as accompaniment uses *з* (кава з молоком), but "with" as instrument uses pure Instrumental case.
+2.  **Case Endings Confusion**: Mixing up gender endings in Instrumental.
+    *   *Error*: ложком (masc. ending for fem. noun).
+    *   *Correct*: **ложкою**.
+3.  **Cooking Verbs Nuance**: Confusing *варити* (boil/cook liquid) with general *готувати* (prepare food).
+    *   *Context*: You don't "варити" a sandwich or salad; you "готувати" or "робити" them.
 
-## 2. Vocabulary Frequency
-The following items are high-priority for the A2 level, moving beyond basic nouns to functional verbs and descriptive adjectives.
+## Cross-References
+- **Builds on**: `a1-18` (Food and Shopping - basic food items), `a2-44` (Word Formation - helps with understanding derived cooking terms).
+- **Prepares for**: `a2-46` (Home and Furniture - expanding on household items), B1 modules on recipes and traditions.
 
-### High-Frequency Nouns
-*   **General**: їжа (food), страва (dish), меню (menu), рахунок (bill), замовлення (order), кухня (cuisine/kitchen).
-*   **Meals**: сніданок (breakfast), обід (lunch/dinner), вечеря (supper).
-*   **Products**: м’ясо (meat), риба (fish), овочі (vegetables), фрукти (fruits), хліб (bread), сир (cheese/cottage cheese), цукор (sugar), сіль (salt).
-*   **Drinks**: вода (water), сік (juice), чай (tea), кава (coffee), вишневий компот (cherry compote).
-
-### Essential Verbs (Aspect Pairs)
-*   **їсти / з’їсти** (to eat)
-*   **пити / випити** (to drink)
-*   **готувати / приготувати** (to cook/prepare)
-*   **замовляти / замовити** (to order)
-*   **різати / порізати** (to cut)
-*   **варити / зварити** (to boil/cook)
-*   **смажити / посмажити** (to fry)
-
-### Common Collocations
-*   **Брати замовлення** (to take an order)
-*   **Платити карткою/готівкою** (to pay by card/cash)
-*   **Залишати чайові** (to leave a tip)
-*   **Смачного!** (Enjoy your meal / Bon appétit!)
-
-## 3. Cultural Hook
-1.  **UNESCO Recognition of Borscht**: In 2022, Ukrainian Borscht was inscribed on the UNESCO List of Intangible Cultural Heritage in Need of Urgent Safeguarding. It is not just a soup but a symbol of national identity, with hundreds of regional variations (e.g., Poltava-style with galushky, or Green borscht with sorrel).
-2.  **The Ritual of Varenyky**: Unlike simple dumplings, *varenyky* are traditionally associated with the moon and fertility. They were often served to women after childbirth and are a staple of the "Holy Supper" (Святвечір). Common fillings at A2 level: картопля (potato), гриби (mushrooms), сир (cottage cheese), вишні (cherries).
-3.  **Kompot vs. Uzvar**: Students often confuse these. *Kompot* is made from fresh berries/fruits boiled in water with sugar, while *Uzvar* is a specific ritual drink made from dried fruits (smoked pears, apples, plums), typically served at Christmas.
-
-## 4. Pedagogical Notes
-*   **The Partitive Genitive**: Ukrainian uses the Genitive case to express "some" of something. 
-    *   *Дайте мені води* (Give me [some] water) vs *Дайте мені воду* (Give me [the specific] water).
-*   **Noun Agreement with Numbers**: Crucial for ordering.
-    *   1 кава (Nom. Sing.)
-    *   2, 3, 4 кав**и** (Gen. Sing.)
-    *   5+ кав (Gen. Plur.)
-*   **Instrumental Accompaniment**: Focus on "з + Instrumental" for toppings and sides.
-    *   *Кава з молоком* (Coffee with milk).
-    *   *Вареники зі сметаною* (Varenyky with sour cream).
-*   **False Friend**: *Сметана* (sour cream) is a staple, but students often confuse it with "cream" (вершки).
-
-## 5. Scope Boundaries
-Based on the student's prior knowledge (M01-M44), the following boundaries apply:
-
-### In-Scope (Student knows these)
-*   **All Cases**: Student can handle complex agreement (e.g., "Я купую велику рибу для вечері").
-*   **Imperative**: For recipes (e.g., "Поріжте овочі", "Додайте сіль").
-*   **Verbal Aspect**: Using perfective past/future for completed actions ("Я вже з'їв обід").
-*   **Comparison**: Comparing dishes ("Цей борщ смачніший").
-*   **Reflexive Verbs**: "Мені подобається ця страва".
-
-### Out-of-Scope (Do NOT use these)
-*   **Participles**: Avoid "приготована їжа" (cooked food). Use "їжа, яку ми приготували" or simply "страва".
-*   **Gerunds**: Avoid "готуючи обід" (while cooking lunch). Use "коли я готував обід".
-*   **Passive Voice**: Avoid "страва готується" (the dish is being cooked). Use active voice.
-*   **Advanced Prefixes**: Avoid highly nuanced cooking prefixes (e.g., *присмажити*, *переварити*). Stick to basic *з-* and *по-*.
+## Notes for Content Writing
+- **Grammar Scaffolding**: Ensure the distinction between "Instrumental for tools" (NO preposition) and "Instrumental for ingredients" (WITH preposition *з*) is explicitly taught to prevent the common error.
+- **Visuals**: Use a clear table comparing `називний` vs `орудний` for the 3 genders (ніж -> ножем, ложка -> ложкою, масло -> маслом).

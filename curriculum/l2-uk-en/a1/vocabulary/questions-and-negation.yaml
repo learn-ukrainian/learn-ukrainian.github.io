@@ -1,0 +1,98 @@
+- ipa: '[t͡ʃɪ]'
+  lemma: чи
+  pos: particle
+  translation: whether / (question particle)
+- ipa: '[nɛ]'
+  lemma: не
+  pos: particle
+  translation: not
+- ipa: '[nʲi]'
+  lemma: ні
+  pos: particle
+  translation: 'no'
+- ipa: '[tɑk]'
+  lemma: так
+  pos: particle
+  translation: 'yes'
+- ipa: '[xtɔ]'
+  lemma: хто
+  pos: pronoun
+  translation: who
+- ipa: '[ʃt͡ʃɔ]'
+  lemma: що
+  notes: 'Spoken variant: шо [ʃɔ]'
+  pos: pronoun
+  translation: what
+- ipa: '[dɛ]'
+  lemma: де
+  pos: adverb
+  translation: where
+- ipa: '[kɔˈlɪ]'
+  lemma: коли
+  pos: adverb
+  translation: when
+- ipa: '[t͡ʃɔˈmu]'
+  lemma: чому
+  pos: adverb
+  translation: why
+- ipa: '[jɑk]'
+  lemma: як
+  pos: adverb
+  translation: how
+- ipa: '[ˈskʲilʲkɪ]'
+  lemma: скільки
+  pos: adverb
+  translation: how much / how many
+- ipa: '[kuˈdɪ]'
+  lemma: куди
+  pos: adverb
+  translation: where to
+- ipa: '[zɑu̯ˈʒdɪ]'
+  lemma: завжди
+  pos: adverb
+  translation: always
+- ipa: '[nʲiˈkɔ.lɪ]'
+  lemma: ніколи
+  pos: adverb
+  translation: never
+- ipa: '[zɑ.zʋɪˈt͡ʃɑi̯]'
+  lemma: зазвичай
+  pos: adverb
+  translation: usually
+- ipa: '[ˈznɑ.tɪ]'
+  lemma: знати
+  pos: verb
+  translation: to know
+- ipa: '[rɔ.zuˈmʲi.tɪ]'
+  lemma: розуміти
+  pos: verb
+  translation: to understand
+- ipa: '[ˈsɪr.nɪk]'
+  lemma: сирник
+  pos: noun
+  translation: cottage cheese pancake (syrnyk)
+- ipa: '[ˈsmɑt͡ʃ.nɔ]'
+  lemma: смачно
+  pos: adverb
+  translation: tasty / deliciously
+- ipa: '[zʋɪˈt͡ʃɑi̯.nɔ]'
+  lemma: звичайно
+  pos: adverb
+  translation: of course / certainly
+- ipa: '[dʲi.jɛˈslɔ.ʋɔ]'
+  lemma: дієслово
+  pos: noun
+  translation: verb
+- ipa: '[ˈzʋʲidkɪ]'
+  lemma: звідки
+  pos: adverb
+  translation: where from
+- ipa: '[ˈt͡ʃɑstɔ]'
+  lemma: часто
+  pos: adverb
+  translation: often
+- ipa: '[iˈnɔdʲi]'
+  lemma: іноді
+  pos: adverb
+  translation: sometimes
+

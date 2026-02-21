@@ -1,89 +1,38 @@
-# Research Notes: Aspect Mastery — Pairs
+# Дослідження: Aspect Mastery — Pairs
 
-**Track**: a2
-**Module**: aspect-mastery-pairs
-**Researched**: 2026-02-08
-**Level**: A2 (Elementary)
+## State Standard Reference
+§4.3.2: "Видові пари дієслів: робити – зробити, ділити – поділити, писати – написати, виходити – вийти, забувати – забути."
+§4.2.3.1: "утворення складеної форми майбутнього часу дієслів недоконаного виду... майбутній час дієслів доконаного виду: скажу, закричите, поборють."
+Alignment: This module focuses on the automation of aspectual pairs through systematic drilling, moving beyond the initial recognition (A2.1) to high-frequency application (A2.2).
 
-## 1. Grammar: State Standard 2024 Reference
-According to the **Державний стандарт української мови як іноземної (2024)**, level **A2 (Початковий рівень другого ступеня)**, the mastery of aspectual pairs and their functional use in different tenses is a key requirement for narrative competence.
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| готувати/приготувати | High / General | ~ вечерю, ~ страву, ~ уроки (prepare lessons) |
+| мити/помити | High / Household | ~ посуд, ~ руки, ~ підлогу, ~ вікна |
+| купувати/купити | Very High / Daily | ~ продукти, ~ квиток, ~ подарунок, ~ квартиру |
+| дзвонити/подзвонити | High / Social | ~ мамі, ~ другові, ~ у двері, ~ за номером |
+| питати/запитати | High / Basic | ~ дорогу, ~ ціну, ~ про здоров'я |
+| відповідати/відповісти| High / Logic | ~ на питання, ~ на лист, ~ за вчинки (be responsible) |
+| платити/заплатити | High / Finance | ~ карткою, ~ готівкою, ~ за каву, ~ рахунок |
+| знаходити/знайти | High / General | ~ ключі, ~ рішення, ~ роботу, ~ спільну мову |
+| забувати/забути | High / Mental | ~ ім'я, ~ пароль, ~ номер телефону, ~ вдома |
+| будувати/побудувати | Medium-High / General| ~ дім, ~ плани, ~ стосунки (build relationships) |
 
-**Catalog V (Language Competence), Section 4.3.2 (A2):**
-> «Видові пари дієслів: робити – зробити, ділити – поділити, писати – написати, виходити – вийти, забувати – забути.»
+## Cultural Hooks
+1. **Хата-мазанка (Mazanka house)**: Traditional Ukrainian building process ("побудувати хату") was a communal effort called *toloka*. Choosing the site involved rituals like leaving grain overnight to check for "clean" energy (source: authenticukraine.com.ua).
+2. **Борщ — культурна спадщина**: The act of cooking ("приготувати борщ") is so central to identity that UNESCO recognized it as intangible heritage. There are over 100 regional variations (source: UNESCO/Ministry of Culture).
 
-**Catalog V (Language Competence), Section 4.2.3.1 (Indicative Mood - A2):**
-The standard emphasizes the ability to use both aspects in the future and past tenses to distinguish between process and completion:
-> - «утворення складеної форми майбутнього часу дієслів недоконаного виду: буду боротися, будеш пити, буде кричати...»
-> - «майбутній час дієслів доконаного виду: скажу, закричите, поборють.»
-> - «утворення форм роду і числа дієслів минулого часу недоконаного і доконаного виду...»
+## Common Learner Errors
+1. **Present-Perfective Trap** → Attempting to use a perfective verb in the present tense (e.g., *Я напишу листа зараз* to mean "I am writing now") instead of the imperfective *Я пишу листа*. — Happens because learners associate prefixes with "action started."
+2. **Process/Result Confusion** → Using *Я купив молоко дві години* instead of *Я купував молоко...* (process/duration) or *Я мию посуд* (process) vs *Я помив посуд* (done). — Lack of "result" focus vs "process" focus in English "I washed."
+3. **Prefix Overgeneralization** → Using *з-* for all perfectives (e.g., *зробити*) instead of learning specific prefixes like *по-* (*помити*) or *на-* (*намалювати*).
 
-## 2. Vocabulary Frequency
-The core vocabulary for this module focuses on the most frequent daily actions that require clear aspectual distinction. These are grouped by their morphological relationship.
+## Cross-References
+- Builds on: `a2-12` (Aspect: Intro), `a2-13` (Past Tense), `a2-14` (Future Tense), `a2-15` (Imperative Intro)
+- Prepares for: `a2-17` (Possessive Sviy), `a2-22` (Conditional "If I Were"), `a2-25` (Checkpoint)
 
-### Tier 1: Pure Prefixation (High Frequency)
-These pairs are the most regular and common.
-- **робити / зробити** (to do/make) - The most basic pair.
-- **писати / написати** (to write) - Essential for messages/homework.
-- **читати / прочитати** (to read) - Fundamental for learning.
-- **готувати / приготувати** (to cook/prepare) - Daily routine.
-- **дзвонити / подзвонити** (to call) - Common communication.
-- **пити / випити** (to drink) - Basic need.
-- **їсти / з'їсти** (to eat) - Basic need.
-
-### Tier 2: Suffixation & Suffix Changes
-Common in verbs describing transactions or transfers.
-- **купувати / купити** (to buy) - Essential for shopping.
-- **забувати / забути** (to forget) - High frequency in conversation.
-- **відповідати / відповісти** (to answer) - Basic communication.
-- **питати / запитати** (to ask) - Basic communication.
-- **прибирати / прибрати** (to clean up) - Household chore.
-
-### Tier 3: Suppletion & Irregular Patterns
-Essential but require memorization.
-- **говорити / сказати** (to speak / to say) - Crucial distinction.
-- **брати / взяти** (to take) - Extremely high frequency.
-- **знаходити / знайти** (to find) - Common daily life.
-- **губити / загубити** (to lose) - Common daily life.
-
-## 3. Cultural Hook
-### The "Mirror Check" (Забобони)
-In Ukrainian culture, the perfective verb **забути** (to forget) is linked to a well-known superstition. If you have already left your house but realize you have forgotten something and must return, it is considered bad luck. To "cancel" the bad luck, you must look in a mirror before leaving again. This provides a memorable context for the *result* of forgetting.
-
-### "Зробив діло — гуляй сміло"
-This famous Ukrainian proverb (literally: "Done the deed—play boldly") perfectly illustrates the perfective past (**зробив**). It reflects a cultural value placed on completing tasks before enjoying leisure. It serves as a great mnemonic for the "Result" function of the perfective aspect.
-
-### "Не кажи «гоп», поки не перескочиш"
-This idiom (Don't say "hop" until you've jumped over) uses the perfective future/present form (**перескочиш**). It cautions against celebrating a result before it is actually achieved, reinforcing the idea that the perfective is about the final, successful completion of an action.
-
-## 4. Pedagogical Notes
-### Concept Over Translation
-English speakers often struggle because English lacks a direct equivalent to aspect. The primary challenge is moving them away from "Continuous = Imperfective" and "Simple = Perfective."
-- **The "Result" Focus:** At A2, the most effective explanation is: "Did you finish it?" (Perfective) vs. "Were you doing it?" or "Do you do it often?" (Imperfective).
-
-### The Aspect Decision Tree for A2 Learners:
-1. **Is it a one-time completed result?** -> **Perfective** (написав, купив).
-2. **Is it a habit or regular action?** -> **Imperfective** (писав щодня, купував часто).
-3. **Is it a process in progress?** -> **Imperfective** (я писав годину).
-4. **Are you just naming the action (fact)?** -> **Imperfective** (я читав цю книгу — I've read it, I'm familiar with it).
-
-### Common Learner Errors
-- **The Present Tense Trap:** Learners often try to use perfective verbs to describe what they are doing "now." The rule **"Perfective has NO present tense"** must be automated. "Я зроблю" is "I will do," not "I am doing."
-- **Mixing Aspects in a Sequence:** Students often fail to use perfective verbs for a sequence of completed actions (e.g., "I woke up, drank coffee, and left").
-
-## 5. Scope Boundaries
-Based on the prior knowledge of A1 and early A2 (Cases, basic Tenses), the scope for this module is strictly defined.
-
-### In Scope
-- **Core 30 Pairs:** Focus on the verbs listed in Section 2.
-- **Past and Future Tenses:** Using pairs correctly in the tenses the student already knows.
-- **Basic Narrative Sequencing:** Using perfective verbs to list a chain of events (First X, then Y, then Z).
-- **Suffix Change Patterns:** Specifically `-увати` -> `-ити`.
-
-### Out of Scope
-- **Secondary Imperfectives:** Complex re-imperfectivization (e.g., *переписати* -> *переписувати*) is too complex for this stage.
-- **Nuances of Motion Verbs:** The interaction of aspect with unidirectional/multidirectional motion verbs is reserved for later.
-- **Aspect in Infinitives:** The complex choice of aspect after verbs like "want" or "can" (e.g., *хочу читати* vs *хочу прочитати*) is briefly introduced but not a mastery goal here.
-- **Participles and Gerunds:** Students have not learned these forms yet.
-
-### Student Progress Marker
-The student has already passing the initial aspect introduction (M12-15). This module (M16) is the "Mastery" bridge where they stop learning *what* aspect is and start *automating* the choice between common pairs.
+## Notes for Content Writing
+- **The "Decision Tree"**: Use a Mermaid diagram to help learners choose between "process/habit/general" (imperfective) and "one-time/result/sequence" (perfective).
+- **Automation Drilling**: Focus on the *rhythm* of the pairs. Use Tiers to group them (Prefixation, Suffixation, Suppletive).
+- **Immersion**: Keep theory in English (Band 1: 50-60%) but push the drill items and instructions into Ukrainian.

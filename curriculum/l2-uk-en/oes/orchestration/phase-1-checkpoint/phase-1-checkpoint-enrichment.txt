@@ -1,0 +1,215 @@
+✅ Message sent to Gemini (ID: 12263) [auto-acked: self-addressed]
+✓ Message 12263 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12263...
+📨 Message #12263
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-phase-1-checkpoint
+   Time: 2026-02-20T23:38:11.513343+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 25
+module: oes-025
+module_number: 21
+slug: phase-1-checkpoint
+title_uk: Контрольна точка фази 1
+title_en: Phase 1 Checkpoint
+phase: 1
+phase_id: vernacular-foundations
+phase_name: Vernacular Foundations
+focus: Synthesis of Vernacular Foundations
+content_outline:
+- section: Вступ
+  description: Introduction to Phase 1 Checkpoint
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Senior Paleographer
+  role: Senior Scribe
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Phase 1 Checkpoint
+
+## Використані джерела
+1.  **Німчук В. В. Історія української мови. Хрестоматія X-XIII ст.** (litopys.org.ua) — Фундаментальна праця з аналізу ранніх пам'яток, зокрема берестяних грамот та графіті.
+2.  **Висоцький С. О. Давньоруські написи Софії Київської** (litopys.org.ua) — Детальне дослідження епіграфіки Софійського собору, мовний аналіз написів.
+3.  **Енциклопедія Сучасної України: Берестяні грамоти** (esu.com.ua) — Огляд знахідок берестяних грамот в Україні (Звенигород), їх мовні особливості та значення.
+4.  **Шевельов Ю. Історична фонологія української мови** (litopys.org.ua) — Класична праця про розвиток фонетичної системи від праслов'янської до української, аналіз занепаду єрів та повноголосся.
+
+## Хронологія
+- **1037**: Будівництво Софії Київської, початок формування комплексу графіті на її стінах.
+- **1056-1057**: Створення Остромирового Євангелія — церковнослов'янський текст з численними русизмами (повноголосся, змішування єрів).
+- **1110-1137**: Період написання Звенигородських берестяних грамот (знахідки 1988-1989 рр.), що фіксують живу розмовну мову Галичини.
+- **1144**: Галицьке Євангеліє — одна з найдавніших пам'яток Галицько-Волинської Русі з виразними діалектними рисами.
+- **1187**: Перша писемна згадка назви «Україна» (в Іпатіївському літописі) у зв'язку зі смертю переяславського князя Володимира Глібовича.
+
+## Ключові факти та цитати
+- **Звенигородська грамота №2**: Лист від вдови Говінової до Ніженця з вимогою повернути борг (60 кун). Текст: «от говѣновоє : ко Нѣжьньцю дає 60 дєсят коуно... а попъ пс-лъ» (Від Говінової до Ніженця. Дай 60 кун... а піп записав).
+- **Графіті Софії**: Написи часто містять формулу «Господи, помози рабу своєму...» (наприклад, графіті про смерть Ярослава Мудрого 1054 р.). Це не вандалізм, а молитва.
+- **Двоїна**: Жива категорія в ХІ-ХІІІ ст. («дві сестрі», «очі», «уші»), яка зникла в більшості слов'янських мов, але залишила слід в українській (форми на -а в називному відмінку множини для іменників твердої групи: два брата -> брати).
+
+## Engagement Hooks (mapped to sections)
+- Section "Основний матеріал: I — Диглосія та мовна ситуація": [!myth-buster] — Спростування міфу про єдину «давньоруську мову». Існувала диглосія: книжна церковнослов'янська (високий стиль) і народно-розмовна (низький стиль), які взаємодіяли, але були різними системами.
+- Section "Основний матеріал: II — Епіграфічні пам'ятки": [!history-bite] — Звенигородська грамота №2 — це фактично колекторський лист ХІІ століття. Вдова погрожує прийти з князівським отроком (судовим виконавцем), якщо борг не повернуть.
+- Section "Основний матеріал: II — Епіграфічні пам'ятки": [!context] — Писала (стилоси) знаходять у великій кількості в Києві та інших містах, що свідчить про масову грамотність не лише духовенства, а й міщан, жінок і дітей.
+- Section "Основний матеріал: III — Фонетичні маркери": [!paleography] — Як писарі боролися з єрами (ъ, ь). Коли слабкі єри зникли, це викликало «падіння редукованих» — найбільшу катастрофу в історії слов'янської фонетики, що змінило складову будову мови.
+- Section "Основний матеріал: IV — Морфологічні архаїзми": [!decolonization] — Кличний відмінок — це не «зіпсований називний», а прадавня слов'янська форма, яка збереглася в українській мові («княже», «брате»), тоді як російська її втратила.
+- Section "Основний матеріал: V — Лексика та ідентичність": [!culture] — Термінологія «Руської Правди» (вира, головник, послух) відображає унікальну правову свідомість Русі, відмінну від візантійської.
+
+## Деколонізаційний контекст
+- **Imperial Myth**: Радянська наука постулювала існування єдиної «давньоруської народності» і єдиної розмовної мови, яка розпалася лише в XIV-XV ст.
+- **Ukrainian Reality**: Діалектні відмінності існували вже в ХІ ст. (полянський, сіверський, древлянський, волинський говори). Українська мова є прямим спадкоємцем південних говорів Русі (Київ, Галичина, Волинь), а не відгалуженням від пізнього «спільного предка». Термін «давньоруська мова» слід розуміти як сукупність діалектів, а не моноліт.
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| Давньоруська мова | Єдина розмовна мова-предок («общерусский язык») | Літературно-писемна мова (койне) на основі церковнослов'янської з нашаруванням місцевих діалектів; сукупність східнослов'янських діалектів |
+| Берестяні грамоти | Переважно новгородський феномен (російська спадщина) | Загальноруський феномен; знахідки у Звенигороді підтверджують поширення грамотності і в Україні |
+| Графіті | Побутові написи, «псування стін» | Важливі історичні джерела, молитви, документи, що фіксують живу мову киян |
+
+## Section-Mapped Research Notes
+
+### Вступ
+Огляд пройденого шляху. Фаза 1 заклала фундамент розуміння мови Русі: від азбуки до побутової лексики.
+
+### Основний матеріал: I — Диглосія та мовна ситуація
+Розмежування книжної (церковнослов'янської української редакції) та живої народної мови. Взаємовплив: русифікація церковних текстів (помилки писарів) і книжні запозичення в народній мові. Жанровий розподіл: високі жанри (богослужіння) vs низькі (ділове листування, побут).
+
+### Основний матеріал: II — Епіграфічні пам'ятки: Графіті та береста
+Берестяні грамоти як джерело чистого вернакуляру. Звенигородські знахідки. Графіті Софії Київської — «кам'яний архів». Відсутність цензури та редактури в цих текстах дозволяє побачити реальну фонетику та морфологію.
+
+### Основний матеріал: III — Фонетичні маркери давньоруської мови
+Систематизація вивченого:
+1. Повноголосся (-оро-, -оло-, -ере-, -еле-) як головна ознака східнослов'янських мов (город, молоко).
+2. Доля єрів (ъ, ь): занепад слабких (сон, день) і вокалізація сильних.
+3. «Ять» (ѣ): його вимова в південних діалектах (як і/іе), що дало сучасне українське «і» (дід, ліс).
+
+### Основний матеріал: IV — Морфологічні архаїзми та інновації
+1. Двоїна: жива категорія для парних предметів.
+2. Кличний відмінок: активне вживання в звертаннях.
+3. Часи дієслова: співіснування аориста/імперфекта (книжні форми) та перфекта на -л- (який став основним минулим часом).
+
+### Основний матеріал: V — Лексика та ідентичність
+Побутова лексика (сім'я, дім, торгівля). Власні назви (слов'янські двоосновні імена vs християнські імена). Правова термінологія. Етноніми: Русь, русини.
+
+### Практика
+Аналіз тексту (фрагмент грамоти або графіті) на наявність вивчених маркерів (повноголосся, єри, закінчення).
+
+### Підсумок
+Зв'язок мови Русі з сучасною українською. Теза про безперервність розвитку.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12318)
+✓ Message 12263 acknowledged
+✓ Message 12318 acknowledged

@@ -1,4 +1,3 @@
----
 sequence: 61
 module: ruth-061
 module_number: 49
@@ -9,7 +8,6 @@ phase: 2
 phase_id: sacred-word
 phase_name: Sacred Word
 focus: Monastic context — Rejection of the World
-word_target: 4000
 content_outline:
 - section: Вступ
   description: Introduction to The Holy Mountain
@@ -24,3 +22,6 @@ activity_types:
 - transcription
 - etymology-trace
 - grammar-identify
+persona:
+  voice: Baroque Scholar
+  role: Athonite Pilgrim

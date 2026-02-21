@@ -1,0 +1,13 @@
+{
+  "track": "b2-pro",
+  "slug": "media-checkpoint",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-20T01:19:07Z",
+      "task_id": "v3-media-checkpoint-pA",
+      "mode": "full"
+    }
+  }
+}

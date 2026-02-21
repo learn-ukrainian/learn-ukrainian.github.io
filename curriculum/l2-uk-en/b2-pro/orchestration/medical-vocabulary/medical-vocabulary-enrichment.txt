@@ -1,0 +1,280 @@
+✅ Message sent to Gemini (ID: 12051) [auto-acked: self-addressed]
+✓ Message 12051 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12051...
+📨 Message #12051
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-medical-vocabulary
+   Time: 2026-02-20T23:35:37.513558+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b2-pro-23
+level: B2-PRO
+sequence: 23
+slug: medical-vocabulary
+version: '2.0'
+title: Медична лексика
+subtitle: Medical Vocabulary
+content_outline:
+- section: Розминка — Медична українська для бізнесу
+  points:
+  - Чому медична лексика важлива для кожного професіонала
+  - Українська система охорони здоров'я — основи
+  - Приватна vs державна медицина
+- section: Частини тіла та системи організму
+  points:
+  - 'Основні частини тіла: голова, тулуб, кінцівки'
+  - 'Внутрішні органи: серце, легені, печінка, нирки, шлунок'
+  - 'Системи: серцево-судинна, дихальна, травна, нервова'
+- section: Симптоми та скарги
+  points:
+  - 'Біль: гострий, тупий, пульсуючий, ниючий'
+  - 'Загальні симптоми: температура, головний біль, запаморочення, нудота'
+  - 'Опис стану: мене турбує..., у мене болить..., я відчуваю...'
+  - Як описати тривалість та інтенсивність симптомів
+- section: У лікаря
+  points:
+  - 'Запис на прийом: записатися до лікаря, черга, талон'
+  - 'На прийомі: огляд, аналізи, діагноз, призначення'
+  - 'Лікування: рецепт, ліки, таблетки, мазь, уколи'
+  - 'Документи: медична картка, направлення, лікарняний'
+- section: Зразок діалогу з лікарем
+  points:
+  - Реалістичний діалог пацієнта та лікаря
+  - Опис симптомів та отримання рекомендацій
+  - Аналіз медичної лексики
+- section: Практика — опишіть симптоми
+  points:
+  - 'Завдання: Описати симптоми захворювання лікарю'
+  - Рольова гра — пацієнт і лікар
+  - Читання рецепта та призначень
+vocabulary_hints:
+  required:
+  - мене турбує (I am troubled by)
+  - у мене болить (I have pain in)
+  - записатися до лікаря (to make an appointment)
+  - поставити діагноз (to diagnose)
+  - виписати рецепт (to write a prescription)
+  - прийняти ліки (to take medicine)
+  - здати аналізи (to take tests)
+  - лікарняний лист (sick leave certificate)
+  recommended:
+  - гострий біль (acute pain)
+  - хронічне захворювання (chronic disease)
+  - побічні ефекти (side effects)
+  - медичне страхування (health insurance)
+  - направлення до спеціаліста (referral to specialist)
+  - курс лікування (course of treatment)
+activity_hints:
+- type: document-analysis
+  focus: Проаналізувати рецепт та призначення лікаря
+  items: 1
+- type: role-play
+  focus: Провести діалог пацієнта з лікарем
+  items: 1
+- type: vocabulary-domain
+  focus: Підібрати визначення до медичних термінів
+  items: 15
+- type: fill-in
+  focus: Вставити правильні слова для опису симптомів
+  items: 12
+- type: matching
+  focus: З'єднати симптом з частиною тіла
+  items: 10
+- type: listening-comprehension
+  focus: Прослухати рекомендації лікаря та відповісти на питання
+  items: 6
+focus: professional
+pedagogy: ESP
+prerequisites:
+- b2-pro-22 (Читання договорів)
+connects_to:
+- b2-pro-24 (Медичні консультації)
+objectives:
+- Учень може описати симптоми та стан здоров'я українською
+- Учень знає основну термінологію медичних закладів
+- Учень може зрозуміти рецепт та призначення лікаря
+- Учень може записатися на прийом та спілкуватися з медперсоналом
+grammar:
+- Дієслова з давальним відмінком (мені болить, мені зле, мені краще)
+- Безособові конструкції для опису стану (нудить, паморочиться)
+- Наказовий спосіб у медичному контексті (приймайте, уникайте, зверніться)
+register: напівформальний
+phase: B2-PRO.2
+persona:
+  voice: Senior Specialist
+  role: Студент-медик
+word_target: 2000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Медична лексика
+
+## Використані джерела
+1. [Міністерство охорони здоров'я України (МОЗ)](https://moz.gov.ua/) — Офіційні протоколи, номенклатура хвороб та класифікатори (МКХ-10-АМ, НК 026:2021).
+2. [Національна служба здоров'я України (НСЗУ)](https://nszu.gov.ua/) — Роз'яснення щодо електронних направлень та прав пацієнтів.
+3. [Державне підприємство «Український науково-дослідний і навчальний центр проблем стандартизації, сертифікації та якості» (ДП «УкрНДНЦ»)](http://uas.gov.ua/) — ДСТУ 4163:2020 щодо оформлення документів (у т.ч. медичних).
+4. Словник русизмів у мові медиків (Я. Ганіткевич) — База типових помилок та кальок у професійному середовищі.
+
+## Термінологічна база
+
+| Українська (норма) | Русизм/ненорма | English | Контекст вживання |
+|--------------------|---------------|---------|-------------------|
+| Лікарня            | Больниця      | Hospital| Заклад охорони здоров'я |
+| Скарги             | Жалоби        | Complaints | Анамнез, розмова з лікарем |
+| Відчуття           | Чувство       | Sensation/Feeling | Опис суб'єктивного стану |
+| Вживати ліки       | Приймати лікарства | Take medicine | Призначення, рецепт |
+| Направлення        | Направлення   | Referral | Отримання спец. допомоги |
+| Виразкова хвороба  | Язвена хвороба | Peptic ulcer disease | Діагноз |
+| Запаморочення      | Головокружіння | Dizziness | Опис симптомів |
+| Запобігати хворобі | Попереджувати хворобу | Prevent disease | Профілактика |
+
+## Мовні норми та стандарти
+- **ДСТУ 4163:2020**: Визначає правила оформлення медичних документів (протоколи, довідки, звіти).
+- **МКХ-10-АМ**: Міжнародна класифікація хвороб (адаптована), обов'язкова для кодування діагнозів в Україні.
+- **НК 026:2021**: Національний класифікатор медичних інтервенцій.
+- **Правило давального відмінка**: Для опису стану використовуємо безособові конструкції: *мені болить, пацієнту зле, дитині паморочиться*.
+
+## Аутентичні приклади
+1. [Clinical Record]: «Об'єктивно: стан середнього ступеня важкості. Пацієнт скаржиться на гострий біль у ділянці епігастрію, що посилюється після їди».
+2. [Prescription Instructions]: «Приймати по 1 таблетці тричі на добу за 30 хвилин до їди. Курс лікування — 7 днів».
+3. [Registration Desk]: «Запис до сімейного лікаря здійснюється через систему Helsi або за номером реєстратури. У вас є активна декларація?»
+
+## Типові помилки
+1. ❌ Жалоби на болі → ✅ Скарги на біль — "Жалоби" є калькою з рос. "жалобы".
+2. ❌ Визивати лікаря → ✅ Викликати лікаря — Дієслово "визивати" не відповідає нормам у цьому контексті.
+3. ❌ Почувати себе → ✅ Почуватися — В українській мові зворотні дієслова часто замінюють конструкції з "себе".
+4. ❌ Лікарняний лист → ✅ Листок непрацездатності (офіційно) / Лікарняний — Офіційна назва документа.
+5. ❌ Приймати міри → ✅ Вживати заходів — Стала професійна помилка.
+
+## Engagement Hooks (mapped to sections)
+- Section "Розминка — Медична українська для бізнесу": [!pro-tip] — Знання медичної лексики необхідне для оформлення страхування та листків непрацездатності (лікарняних).
+- Section "Частини тіла та системи організму": [!context] — Більшість назв внутрішніх органів мають праслов'янське коріння, що полегшує розуміння, але вимагає точності у наголосах.
+- Section "Симптоми та скарги": [!language-note] — Для опису болю використовуйте точні прикметники: *гострий* (acute), *ниючий* (aching), *тупий* (dull), *пульсуючий* (throbbing).
+- Section "У лікаря": [!common-error] — Не кажіть "приймати лікарства", використовуйте "вживати ліки" або "приймати препарати".
+
+## Section-Mapped Research Notes
+
+### Розминка — Медична українська для бізнесу
+Фокус на системі Семашка vs сучасна реформа (НСЗУ, Helsi). Роль медичного страхування в корпоративному секторі. Терміни: *декларація, сімейний лікар, первинна ланка*.
+
+### Частини тіла та системи організму
+Анатомічна номенклатура. Важливість розрізнення *живіт* (abdomen) та *шлунок* (stomach) — часто плутають у розмові. Системи: *ендокринна, імунна, опорно-рухова*.
+
+### Симптоми та скарги
+Опис локалізації болю: *у ділянці серця, під лопаткою, у попереку*. Стан: *лихоманка, озноб, висип, набряк*. Використання дієслів: *нудить, тисне, пече*.
+
+### У лікаря
+Процедура: *анамнез, пальпація, перкусія, аускультація*. Документи: *направлення (referral), рецепт (prescription), виписка (discharge summary)*. Коректне вживання: *записатися на прийом* (not "на зустріч").
+
+### Зразок діалогу з лікарем
+Етикет: звернення на "Ви", уточнювальні запитання лікаря (*Чи є у Вас алергія на ліки?*), інструкції лікаря (*Зробіть глибокий вдих*).
+
+### Практика — опишіть симптоми
+Кейси: харчове отруєння, ГРВІ, розтягнення зв'язок. Практика заповнення "скарг" у медичній картці.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12124)
+✓ Message 12051 acknowledged
+✓ Message 12124 acknowledged

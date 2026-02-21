@@ -1,0 +1,199 @@
+✅ Message sent to Gemini (ID: 12366) [auto-acked: self-addressed]
+✓ Message 12366 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12366...
+📨 Message #12366
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-prophets-isaiah
+   Time: 2026-02-20T23:38:55.035473+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 39
+module: ruth-039
+module_number: 39
+slug: prophets-isaiah
+title_uk: 'Пророки: Ісая'
+title_en: 'Prophets: Isaiah'
+phase: 2
+phase_id: sacred-word
+phase_name: Sacred Word
+focus: Rhetorical complexity — Greek calques
+content_outline:
+- section: Вступ
+  description: 'Introduction to Prophets: Isaiah'
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Baroque Scholar
+  role: Old Testament Prophet
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Prophets Isaiah (Книга пророка Ісаї)
+
+## Використані джерела
+1. [Острозька Біблія](http://litopys.org.ua/ukr17/ukr17_02.htm) — аналіз текстологічних особливостей та джерельної бази (Септуагінта).
+2. [Іван Вишенський: Твори](http://litopys.org.ua/vyshen/vysh.htm) — дослідження цитування пророчих текстів у полемічній літературі.
+3. [Тарас Шевченко: Кобзар](http://litopys.org.ua/shevchenko/shev2117.htm) — «Ісаія. Глава 35» як рецепція пророчого тексту в українській класиці.
+4. [Енциклопедія Сучасної України: Турконяк Рафаїл](https://esu.com.ua/) — інформація про сучасний переклад Острозької Біблії.
+5. [Історія української культури. Том 2](http://litopys.org.ua/istkult2/istk2_44.htm) — переклади Святого Письма в XVI ст.
+
+## Хронологія
+- 1517-1519: Франциск Скорина видає «Біблію Руську» у Празі, закладаючи традицію руських перекладів (хоча Ісая не входив до першого тому, стиль вплинув на наступників).
+- 1581: Вихід Острозької Біблії — першого повного церковнослов’янського видання, де книга Ісаї перекладена з грецької Септуагінти.
+- 1590-ті: Активне цитування Ісаї Іваном Вишенським у посланнях (тема соціальної справедливості).
+- 1751/1758: Єлизаветинська Біблія (редакція Острозької) — стає стандартом для Російської імперії, приховуючи українське походження тексту.
+- 1859: Тарас Шевченко пише переспів «Ісаія. Глава 35» («Радуйся, ниво неполитая!»).
+- 2006: Вихід повного перекладу Острозької Біблії сучасною українською мовою (Р. Турконяк).
+
+## Ключові факти та цитати
+- **Статус**: Ісая — «Євангеліст Старого Завіту», найбільш цитований пророк у Новому Завіті.
+- **Текстологія**: Острозький текст Ісаї суттєво відрізняється від латинської Вульгати, оскільки слідує за грецьким текстом Септуагінти (LXX).
+- **Цитата (Вишенський)**: «Горе вам, що долучаєте дім до дому і село до села, щоб ближнього погубити!» (Іс. 5:8) — використано проти магнатів і владик.
+- **Цитата (Шевченко)**: «Оживуть степи, озера, / І не верстовії, / А скрізь шляхи святії / Простеляться...» (переспів Іс. 35).
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ: Пророк-Поет": [!context] — Ісая як аристократ духу, його стиль — вершина єврейської поезії, яку намагалися відтворити руські книжники.
+- Section "Текстологія: Острозька версія": [!myth-buster] — «Московська Біблія» 1663 року є передруком Острозької Біблії 1581 року. Російська синодальна традиція базується на українській праці.
+- Section "Мовна тканина: Еллінізми": [!note] — Використання грецьких кальок (hellenisms) як ознака «високого стилю» в Острозі на противагу «простій мові».
+- Section "Риторика: Полемічний меч": [!quote] — Гнівні інвективи Вишенського, що наслідують стиль Ісаї.
+- Section "Спадщина": [!culture] — «Ісаія. Глава 35» Шевченка як неофіційний гімн вільної України.
+
+## Деколонізаційний контекст
+- **Imperial Myth**: Російська біблійна традиція є самостійною і давньою.
+- **Ukrainian Reality**: Вся церковнослов’янська біблійна традиція Східної Європи (включно з Росією) базується на Острозькій Біблії (1581), створеній на Волині. Єлизаветинська Біблія — це лише редакція Острозької.
+- **Contested Terms**:
+    - «Западнорусский язык» (імперське) vs «Проста мова / Староукраїнська мова» (наукове).
+    - «Общерусское наследие» vs «Українська редакція церковнослов’янської мови».
+
+## Section-Mapped Research Notes
+
+### Вступ: Пророк-Поет
+Ісая (Єша'ягу) — «порятунок Господній». Його книга — це «Біблія в мініатюрі» (66 розділів). В українській традиції сприймався як пророк-державник і пророк-викривач соціальної несправедливості.
+
+### Текстологія: Острозька версія
+Острозька Біблія (1581) постала як відповідь на католицьку та протестантську експансію. Переклад Ісаї робився з грецької (LXX), що було принциповою позицією Острозького гуртка (орієнтація на Візантію, а не Рим). Це створило текст, відмінний від польських (Берестейська Біблія) та латинських версій.
+
+### Мовна тканина: Еллінізми та Риторика
+Острозькі книжники свідомо зберігали грецький синтаксис та лексичні кальки, щоб підкреслити сакральність тексту. Це створювало ефект «темного стилю» (dark style), який вимагав інтелектуальної напруги від читача. Порівняння з «простою мовою» Пересопницького Євангелія показує два вектори розвитку староукраїнської культури: сакрально-елітарний (Острог) і народно-навчальний (Пересопниця).
+
+### Риторика: Полемічний меч
+Полемісти (Вишенський, Смотрицький) використовували пророцтва Ісаї як зброю. Ісая викривав юдейську еліту — полемісти викривали руську шляхту і владик, що прийняли унію. Це пряме перенесення біблійної парадигми на український ґрунт XVI-XVII ст.
+
+### Спадщина
+Шевченко геніально відчув ритміку Ісаї. Його переспів 35-ї глави — це не просто переклад, це актуалізація пророцтва для України XIX ст. Рафаїл Турконяк у XXI ст. повернув нам розуміння того, ЩО саме читали наші предки, переклавши Острозький текст сучасною мовою.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12412)
+✓ Message 12366 acknowledged
+✓ Message 12412 acknowledged

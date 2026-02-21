@@ -1,0 +1,272 @@
+✅ Message sent to Gemini (ID: 10589) [auto-acked: self-addressed]
+✓ Message 10589 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10589...
+📨 Message #10589
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-synonyms-time
+   Time: 2026-02-20T20:43:33.638827+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b2-61
+level: B2
+sequence: 61
+slug: synonyms-time
+version: '2.0'
+title: 'Синоніми: Час та Періоди'
+subtitle: Synonyms - Time and Periods
+content_outline:
+- section: Розминка — Нюанси часу
+  points:
+  - Зараз vs тепер vs нині — різниця у вживанні
+  - Давно vs колись vs недавно — минуле з різною перспективою
+  - Офіційні vs розмовні часові слова (наразі vs зараз)
+- section: Now
+  points:
+  - зараз (now - current moment)
+  - тепер (now - current period)
+  - нині (nowadays - formal)
+  - сьогодні (today - this day)
+  - наразі (at present - official)
+- section: Before
+  points:
+  - раніше (earlier - general)
+  - колись (once/sometime - past)
+  - давно (long ago)
+  - недавно (recently)
+  - щойно (just now)
+- section: Практика — часові вирази в контексті
+  points:
+  - Обрати часовий прислівник відповідно до регістру (офіційний лист vs розмова)
+  - Переписати текст, змінивши часову перспективу
+  - Написати історичний огляд з використанням різних часових слів
+  - Порівняти українські та англійські часові вирази
+focus: phraseology
+pedagogy: CBI
+objectives:
+- Учень може розрізняти відтінки значень синонімів на позначення поточного моменту
+  (зараз, тепер, наразі)
+- Учень вміє використовувати лексику часових періодів для опису історичних та особистих
+  подій
+- Учень розуміє концепцію вічності та миті в українській мові
+grammar:
+- Adverbs of time
+- Temporal nouns and intensity
+immersion: 100
+register: публіцистичний
+phase: B2.2 [Phraseology & Synonymy]
+vocabulary_hints:
+  required:
+  - синонім (synonym)
+  - вираз (expression)
+  - значення (meaning)
+  - контекст (context)
+  recommended:
+  - переносне значення (figurative meaning)
+  - стилістичне забарвлення (stylistic coloring)
+activity_hints:
+- type: reading
+  focus: Контекстне використання
+  items: 4
+- type: fill-in-the-blank
+  focus: Практичне застосування
+  items: 10
+- type: true-false
+  focus: Розуміння значень
+  items: 8
+persona:
+  voice: Professional Language Coach
+  role: Archeologist (Археолог)
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Синоніми: Час та Періоди
+
+## State Standard Reference
+§4.4.1.2: "Стилістичні засоби лексики: синоніми... епітети... метафори..."
+Alignment: This module directly addresses the B2 requirement for lexical stylistics by distinguishing synonymous time adverbs (*зараз/тепер/нині*) and developing precision in temporal description as required in the "Daily Life" thematic section (§3.3 "окреслення часу і простору").
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| **зараз** | High (Spoken/General) | зараз роблю, прямо зараз, саме зараз |
+| **тепер** | High (General/Written) | тепер ми знаємо, а тепер, відтепер |
+| **нині** | Medium (Formal/Publicistic) | нині відомо, станом на нині, до нині |
+| **наразі** | Medium (Official/Business) | наразі невідомо, наразі триває, наразі все |
+| **колись** | High (Narrative) | колись давно, як колись, колись-то |
+| **щойно** | Medium (Spoken/News) | щойно повернувся, щойно отримали |
+
+## Cultural Hooks
+1. **Philosophical Depth**: Hryhorii Skovoroda's maxim "З усіх утрат утрата часу найтяжча" (Of all losses, loss of time is the heaviest). This anchors the concept of time not just as a resource but as a spiritual value.
+2. **Literary Resonance**: Lina Kostenko's line "Єдиний, хто не втомлюється, — час" (The only one who doesn't get tired is time). Use this to illustrate the personification of time in Ukrainian worldview.
+3. **Folk Wisdom**: "Всякому овочу свій час" (Every vegetable has its time) — equivalent to "Everything in its season," emphasizing patience and natural order.
+
+## Common Learner Errors
+1. **Зараз vs Тепер**: Learners often use *зараз* for general present states (Error: *Зараз я живу в Києві* vs Correct: *Тепер я живу в Києві*). *Зараз* = immediate moment; *Тепер* = current period/epoch.
+2. **Наразі usage**: Misusing *наразі* as a direct synonym for *зараз*. *Наразі* implies a temporary state ("for the time being", "as of now") rather than an action in progress. (Error: *Наразі йде дощ* vs Correct: *Зараз йде дощ*).
+3. **Calques**: Using *в даний момент* (clumsy calque from Russian/English) instead of the natural Ukrainian *зараз*, *тепер*, or *наразі*.
+
+## Cross-References
+- **Builds on**: A1/A2 basic time adverbs (*сьогодні, вчора, завтра*), B1 Aspect (imperfective usage for duration).
+- **Prepares for**: C1 Stylistics (archaic time terms like *древле*, *поки*, *допіру*).
+
+## Notes for Content Writing
+- **Persona Flavor**: Use the **Archeologist** persona to contrast "deep time" (*колись давно*, *у давнину*) with the fleeting "now" (*щойно*, *зараз*).
+- **Stylistic Register**: Clearly distinguish *нині* (elevated/journalistic) from *сьогодні* (neutral).
+- **Nuance**: Emphasize that *щойно* is stricter than "just" — it's immediate past (moments ago).
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Філософія та духовна цінність часу (Introduction: Philosophy and Spiritual Value of Time)"
+  words: 600
+  points:
+  - "Вступне слово про час як духовну категорію через максиму Г. Сковороди: «З усіх утрат утрата часу найтяжча»."
+  - "Уособлення та невтомність часу в українській світогляді на прикладі поезії Ліни Костенко: «Єдиний, хто не втомлюється, — час»."
+  - "Обговорення фольклорного принципу природного порядку та терпіння: «Всякому овочу свій час»."
+- section: "Мить чи епоха: Диференціація «зараз» та «тепер» (Moment or Epoch: Differentiating 'Zaraz' and 'Teper')"
+  words: 900
+  points:
+  - "Аналіз лексичної точності (§4.4.1.2): «зараз» для позначення поточної миті vs «тепер» для тривалого періоду чи епохи."
+  - "Робота над типовою помилкою перенесення значення: чому вираз «зараз я живу в Києві» є некоректним порівняно з «тепер я живу в Києві»."
+  - "Практичні вправи на розрізнення відтінків значення у реченнях про професійну діяльність та особисті зміни."
+- section: "Офіційний та публіцистичний регістр: «наразі» та «нині» (Official and Publicistic Register: 'Narazi' and 'Nyni')"
+  words: 900
+  points:
+  - "Вживання слова «наразі» в офіційно-діловому контексті як ознаки тимчасовості («наразі триває», «наразі невідомо»)."
+  - "Стилістичне забарвлення прислівника «нині» в публіцистиці та його порівняння з нейтральним «сьогодні»."
+  - "Боротьба з мовними кальками: заміна незграбної конструкції «в даний момент» на природні українські синоніми залежно від контексту."
+- section: "Погляд Археолога: Від «щойно» до «колись давно» (Archeologist's View: From 'Just Now' to 'Once Upon a Time')"
+  words: 800
+  points:
+  - "Дослідження «глибокого часу» через наративні маркери «колись», «давно», «у давнину» та специфіку частки «колись-то»."
+  - "Точність вживання слова «щойно» як маркера негайного минулого (immediate past) та його роль у новинному та розмовному стилях."
+  - "Використання археологічної метафори для опису часових шарів в історії України (від Київської Русі до сучасності)."
+- section: "Синтез: Часові вирази в історичному та діловому контекстах (Synthesis: Time Expressions in Historical and Business Contexts)"
+  words: 800
+  points:
+  - "Створення історичного огляду з використанням градації часових прислівників від давнини до сьогоднішнього дня."
+  - "Трансформація тексту: переписування неформальної розповіді про події в офіційний звіт зі зміною часових маркерів (наразі, відтепер)."
+  - "Підсумкова дискусія про концепцію вічності та миті, спираючись на вивчені синонімічні ряди."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "зараз (now) — колок.: зараз роблю, саме зараз; вживається для негайної дії в момент мовлення."
+  - "тепер (now/currently) — колок.: тепер ми знаємо, відтепер; позначає теперішній період, етап життя чи епоху."
+  - "нині (nowadays/today) — колок.: нині відомо, станом на нині; піднесений, публіцистичний стиль."
+  - "наразі (at present/for now) — колок.: наразі невідомо, наразі триває; офіційно-діловий стиль, акцент на тимчасовості."
+  - "колись (once/sometime) — колок.: колись давно, як колись; використання у розповідях про минуле без точної дати."
+  - "щойно (just now) — колок.: щойно повернувся, щойно отримали; позначає дію, що відбулася мить тому."
+  recommended:
+  - "відтепер (from now on) — вказує на початок нового часового відрізку."
+  - "давнина (ancient times) — іменник для позначення дуже віддаленого минулого."
+  - "сьогодення (present days) — абстрактне поняття поточної реальності."
+  - "наступного разу (next time) — вираз для майбутньої перспективи."
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (3677 chars)
+✅ Message sent to Claude (ID: 10596)
+✓ Message 10596 acknowledged
+   Auto-acknowledged reply #10596 (stdout delivery — no inbox accumulation)
+✓ Message 10589 acknowledged

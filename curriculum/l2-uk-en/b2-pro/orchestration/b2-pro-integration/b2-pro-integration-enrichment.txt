@@ -1,0 +1,276 @@
+✅ Message sent to Gemini (ID: 12327) [auto-acked: self-addressed]
+✓ Message 12327 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12327...
+📨 Message #12327
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-b2-pro-integration
+   Time: 2026-02-20T23:38:50.764479+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b2-pro-39
+level: B2-PRO
+sequence: 39
+slug: b2-pro-integration
+version: '2.0'
+title: 'Інтеграція: Професійна практика'
+subtitle: B2-PRO Integration
+content_outline:
+- section: Розминка — Від навчання до практики
+  points:
+  - Як об'єднати всі навички B2-PRO в реальній роботі
+  - Типові професійні ситуації, що вимагають комплексних навичок
+  - Від ізольованих вправ до реальних проєктів
+- section: Комплексний сценарій 1 — Запуск продукту
+  points:
+  - 'Контекст: Компанія готує запуск нового продукту на українському ринку'
+  - 'Завдання: Внутрішня документація (звіт, протокол) + зовнішня комунікація (прес-реліз,
+    виступ)'
+  - Інтеграція ділової та медіакомунікації
+  - Адаптація регістру для різних аудиторій
+- section: Комплексний сценарій 2 — Кризовий менеджмент
+  points:
+  - 'Контекст: Компанія зіткнулася з негативною публікацією в медіа'
+  - 'Завдання: Аналіз ситуації (критичне читання) + внутрішня комунікація (записка)
+    + зовнішня відповідь (заява, інтерв''ю)'
+  - Робота з репутаційними ризиками
+  - Координація різних каналів комунікації
+- section: Комплексний сценарій 3 — Міжнародний проєкт
+  points:
+  - 'Контекст: Участь у міжнародному тендері з українськими партнерами'
+  - 'Завдання: Технічна документація + фінансова пропозиція + юридичний супровід +
+    презентація'
+  - Інтеграція фахової термінології різних галузей
+  - Робота в умовах дедлайну
+- section: Рефлексія та самооцінка
+  points:
+  - Що вдалося найкраще?
+  - Які навички потребують розвитку?
+  - План подальшого професійного розвитку українською
+  - Ресурси для самонавчання (медіа, курси, спільноти)
+- section: Підготовка до підсумкового модуля
+  points:
+  - Формат підсумкового оцінювання B2-PRO
+  - Критерії успішного завершення рівня
+  - Що далі — C1-PRO або інші напрямки
+vocabulary_hints:
+  required:
+  - комплексний сценарій (complex scenario)
+  - запуск продукту (product launch)
+  - кризовий менеджмент (crisis management)
+  - репутаційні ризики (reputational risks)
+  - міжнародний тендер (international tender)
+  - координація комунікації (communication coordination)
+  - професійний розвиток (professional development)
+  - самооцінка (self-assessment)
+  recommended:
+  - багатоканальна комунікація (multi-channel communication)
+  - стейкхолдери (stakeholders)
+  - дедлайн (deadline)
+  - робота в команді (teamwork)
+  - адаптація регістру (register adaptation)
+  - ресурси для самонавчання (self-study resources)
+activity_hints:
+- type: case-study
+  focus: Виконати комплексний сценарій «Запуск продукту» — документація + медіа
+  items: 1
+- type: case-study
+  focus: Виконати комплексний сценарій «Кризовий менеджмент» — аналіз + відповідь
+  items: 1
+- type: writing-task
+  focus: Підготувати комплект документів для міжнародного тендера
+  items: 1
+- type: self-assessment
+  focus: Провести рефлексію та скласти план розвитку
+  items: 1
+- type: vocabulary-domain
+  focus: Створити персональний глосарій B2-PRO
+  items: 30
+focus: professional
+pedagogy: ESP
+prerequisites:
+- 'b2-pro-38 (Контрольна точка: Медіа)'
+connects_to:
+- 'b2-pro-40 (Підсумок: B2-PRO)'
+objectives:
+- Учень може інтегрувати навички ділової комунікації, фахової мови та медіа
+- Учень може адаптувати комунікацію для різних аудиторій та каналів
+- Учень може працювати над комплексними проєктами українською мовою
+- Учень має стратегії для подальшого професійного розвитку українською
+grammar:
+- Комплексні складнопідрядні речення професійного стилю
+- Перемикання регістрів (офіційний/напівформальний/публіцистичний)
+- Зв'язкові конструкції для великих документів
+register: змішаний (залежно від контексту)
+phase: B2-PRO.3
+persona:
+  voice: Senior Specialist
+  role: Регіональний директор
+word_target: 2000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Інтеграція: Професійна практика
+
+## Використані джерела
+1. [Дія.Бізнес: Запуск продукту](https://business.diia.gov.ua/handbook/marketing/zapusk-novogo-produktu) — Алгоритм виведення продукту на ринок, від MVP до масштабування.
+2. [Zakon.rada.gov.ua: ДСТУ 4163:2020](https://zakon.rada.gov.ua/rada/show/v0144731-20) — Національний стандарт щодо оформлення організаційно-розпорядчої документації.
+3. [Prozorro.gov.ua: Міжнародні тендери](https://prozorro.gov.ua/news/mizhnarodni-zakupivli-gpa) — Інструкції щодо участі в закупівлях за угодою GPA.
+4. [Happy Monday: Кризова комунікація](https://happymonday.ua/kryzova-komunikatsiya/) — Практичні поради щодо управління репутацією під час криз.
+
+## Термінологічна база
+
+| Українська (норма) | Русизм/ненорма | English | Контекст вживання |
+|--------------------|---------------|---------|-------------------|
+| Надіслати запит | Скинути запрос | Send a request | Ділове листування |
+| Порядок денний | Повєстка дня | Agenda | Збори, наради, протоколи |
+| Протягом дня | На протязі дня | During the day | Планування та дедлайни |
+| Відповідно до | Згідно... (без "до") | According to | Офіційна документація |
+| Взяти до уваги | Прийняти во внимание | Take into account | Резолюції, звіти |
+| Чинне законодавство | Діюче законодавство | Current legislation | Юридичні зауваження |
+| Граничний термін | Дедлайн (англомовне) | Deadline | Управління проєктами |
+| Унікальна ціннісна пропозиція | Унікальна торгова... | UVP | Маркетингова стратегія |
+| Запобігати ризикам | Предупреждати ризики | Prevent risks | Кризовий менеджмент |
+
+## Мовні норми та стандарти
+- **ДСТУ 4163:2020**: Встановлює склад реквізитів документів (32 реквізити) та вимоги до їх оформлення (наприклад, написання прізвища ВЕЛИКИМИ літерами у підписах).
+- **ДСТУ 2732:2023**: Оновлені терміни діловодства (вживання "документування" замість "документація" у певних контекстах).
+- **Правила 1000/5**: Вимоги до реєстрації та зберігання документів, що є критичним для "Комплексних сценаріїв" (протоколювання рішень).
+
+## Аутентичні приклади
+1. **[Запуск продукту - Email]**: «Шановні колеги! Раді повідомити про старт маркетингової кампанії для нашого нового продукту [Назва]. Просимо ознайомитися з медіа-китом та графіком публікацій за посиланням.»
+2. **[Кризовий менеджмент - Протокол]**: «За результатами засідання антикризового комітету ухвалено рішення щодо тимчасового призупинення рекламної активності в соцмережах до з'ясування обставин інциденту.»
+3. **[Тендерна пропозиція]**: «ТОВ "Техно-Світ" висловлює зацікавленість в участі у тендері на постачання ІТ-обладнання та підтверджує відповідність усім кваліфікаційним критеріям замовника.»
+
+## Типові помилки
+1. ❌ **"Згідно наказу"** → ✅ **"Згідно з наказом"** — Прийменник "згідно з" вимагає орудного відмінка.
+2. ❌ **"Приймати участь"** → ✅ **"Брати участь"** — Прямий калька з російської "принимать участие".
+3. ❌ **"Самий кращий варіант"** → ✅ **"Найкращий варіант"** — Ступенювання прикметників без слова "самий".
+4. ❌ **"Ввести в дію"** → ✅ **"Увести в дію"** — Дотримання правил милозвучності (чергування у/в).
+5. ❌ **"Рахуємо необхідним"** → ✅ **"Вважаємо за необхідне"** — Дієслово "рахувати" вживається для лічби, а не для висловлення думки.
+
+## Engagement Hooks (mapped to sections)
+- Section "Розминка — Від навчання до практики": [!pro-tip] — Професійне вигорання часто пов'язане з відсутністю планування розвитку. Складання річного плану навчання (IDP) допомагає структурувати прогрес.
+- Section "Комплексний сценарій 1 — Запуск продукту": [!language-note] — Використовуйте "Унікальна ціннісна пропозиція" (UVP) замість застарілого "Унікальна торгова пропозиція" (USP) для підкреслення цінності для клієнта.
+- Section "Комплексний сценарій 2 — Кризовий менеджмент": [!example] — У кризових ситуаціях перше офіційне повідомлення (holding statement) має бути опубліковане протягом 1 години після виявлення проблеми.
+- Section "Комплексний сценарій 3 — Міжнародний проєкт": [!context] — Угода СОТ про державні закупівлі (GPA) відкриває для українських експортерів ринки 48 країн світу.
+
+## Section-Mapped Research Notes
+
+### Розминка — Від навчання до практики
+Акцент на переході від теорії B2-PRO до реальних кейсів. Використання терміна "синергія навичок" та аналіз типових професійних середовищ (Open space vs Remote).
+
+### Комплексний сценарій 1 — Запуск продукту
+Документація за ДСТУ 4163:2020. Створення наказу про запуск та прес-релізу. Ключова лексика: "цільова аудиторія", "канали дистрибуції", "ринкова ніша".
+
+### Комплексний сценарій 2 — Кризовий менеджмент
+Аналіз негативу в медіа (джинса, чорний піар). Підготовка "заяви для ЗМІ" та "службової записки". Використання модальних конструкцій для виправдання або спростування.
+
+### Комплексний сценарій 3 — Міжнародний проєкт
+Робота з тендерною документацією (GPA, Prozorro). Фінансова термінологія: "бюджетування", "кошторис", "пропозиція". Технічні специфікації українською мовою без русизмів.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12393)
+✓ Message 12327 acknowledged
+✓ Message 12393 acknowledged

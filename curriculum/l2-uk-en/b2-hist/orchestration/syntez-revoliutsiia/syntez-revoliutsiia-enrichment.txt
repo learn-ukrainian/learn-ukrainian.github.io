@@ -1,0 +1,321 @@
+✅ Message sent to Gemini (ID: 13041) [auto-acked: self-addressed]
+✓ Message 13041 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #13041...
+📨 Message #13041
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-syntez-revoliutsiia
+   Time: 2026-02-20T23:43:59.571695+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b2-hist-097
+level: B2-HIST
+sequence: 97
+slug: syntez-revoliutsiia
+version: '2.0'
+title: 'Синтез: Українська революція'
+subtitle: 'Synthesis: The Ukrainian Revolution'
+content_outline:
+- section: 'Вступ: Втрачена незалежність'
+  points:
+  - '1917-1921: чотири роки боротьби — це не був «хаос», а відчайдушна спроба побудувати
+    дім під час землетрусу; key dates: 17 березня 1917 (УЦР) — листопад 1921 (Другий
+    Зимовий похід)'
+  - Чому важлива революція — вперше за століття Україна заявила про себе як суб'єкт,
+    а не об'єкт історії
+  - 'Уроки для сьогодення — головний урок: єдність еліти та нації важливіша за ідеологічні
+    розбіжності; [!history-bite] «Читати з бромом» (Винниченко) — цитата з «Відродження
+    нації» про розпач від внутрішніх чвар'
+- section: Етапи революції
+  points:
+  - 'Центральна Рада (березень 1917 — квітень 1918) — Романтики (Грушевський, Винниченко);
+    акцент на автономії та культурі; помилка: запізніле створення армії; [!context]
+    Три кольори революції: соціалістична, консервативна, республіканська'
+  - 'Гетьманат (29 квітня — 14 грудня 1918) — Прагматики (Скоропадський); акцент на
+    порядку та власності; відкриття Академії наук; помилка: залежність від німців
+    та відчуження селянства'
+  - 'Директорія (грудень 1918 — 1920) — Воїни (Петлюра); повстання проти Гетьмана;
+    війна на кілька фронтів; гірка іронія: «У вагоні Директорія, під вагоном територія»'
+  - ЗУНР та Акт Злуки — висока організація (УГА); Злука 22 січня 1919 як символічна
+    вершина революції — об'єднання Наддніпрянщини та Галичини
+- section: Причини поразки
+  points:
+  - 'Внутрішні конфлікти — соціалісти ненавиділи консерваторів; галичани не завжди
+    розуміли наддніпрянців; reference: Липинський «Листи до братів-хліборобів» про
+    брак власної держави'
+  - Соціальні проблеми — селяни хотіли землі негайно; більшовицький популізм (обіцянки
+    всього) проти легальних реформ УНР
+  - 'Зовнішні вороги — «Чотирикутник смерті»: Червона Росія, Біла Росія (Денікін),
+    Польща, Румунія/Антанта; [!myth-buster] Міф про «Громадянську війну» — це була
+    Українсько-російська війна'
+  - Слабкість армії — брак зброї та амуніції; епідемія тифу («Тіфозна зима»), що викосила
+    ряди УГА
+  - Чому більшовики перемогли — тотальна мобілізація, терор та необмежений популізм;
+    [!analysis] Отаманщина як прокляття (отамани Зелений, Ангел)
+- section: Первинні джерела в синтезі
+  points:
+  - Порівняння урядів — Універсали УЦР (поетичні, декларативні) vs Грамоти Скоропадського
+    (сухі, наказові)
+  - 'Документи епохи — IV Універсал (незалежність 22 січня 1918): «Однині Українська
+    Народна Республіка стає самостійною...» та Акт Злуки (єдність)'
+  - Спогади учасників — Винниченко («Відродження нації» — самовиправдання) vs Скоропадський
+    («Спогади» — погляд аристократа); include quote from Винниченко
+- section: Деколонізаційний погляд
+  points:
+  - 'Радянський наратив: «буржуазія» — трактування національної війни як класової
+    боротьби; міф про Петлюру-погромника vs реальність його наказів проти погромів'
+  - 'Реальність: національно-визвольний рух — повноцінний процес державотворення,
+    знищений зовнішньою агресією; [!decolonization] Термінологія має значення (не
+    «банди», а повстанські загони; не «петлюрівці», а Армія УНР)'
+  - 'Революція в українській пам''яті — тяглість: уряд в екзилі передав клейноди Україні
+    у 1992 році (Плав''юк — Кравчуку)'
+- section: 'Підсумок: Спадщина'
+  points:
+  - Що залишилось — державні символи (Тризуб, Гімн, Прапор) та кордони (Берестейський
+    мир)
+  - Від 1921 до 1991 — Герої Крут, Базар та Зимові походи як міф, на якому виросло
+    покоління УПА і шістдесятників
+  - Революція та сучасна Україна — сучасна війна як продовження боротьби 1917-1921;
+    [!legacy] Без 1917 року не було б 1991 — УРСР мусила зберігати атрибути державності
+    через силу спротиву УНР
+vocabulary_hints:
+  required:
+  - синтез (synthesis) — історичний синтез, узагальнення подій
+  - революція (revolution) — Українська революція 1917–1921, доба визвольних змагань
+  - незалежність (independence) — проголошена IV Універсалом, відновлена у 1991
+  - 'поразка (defeat) — причини поразки: внутрішні чвари та зовнішня агресія'
+  - боротьба (struggle) — визвольна боротьба за державність, збройний опір
+  - визвольні змагання (liberation struggle) — термін замість імперського «Громадянська
+    війна»
+  - уряд (government) — УЦР, Гетьманат, Директорія, екзильний уряд
+  - армія (army) — Армія УНР, УГА (Українська Галицька Армія), повстанські загони
+  recommended:
+  - конфлікт (conflict) — внутрішній соціальний та національний конфлікт
+  - більшовики (Bolsheviks) — червона загроза, популізм, російська окупація
+  - інтервенція (intervention) — військова агресія Росії, «Чотирикутник смерті»
+  - еміграція (emigration) — політична еміграція, уряд в екзилі (exile)
+  - спадщина (legacy) — символи (Тризуб), ідея державності, історична тяглість
+  - пам'ять (memory) — історична пам'ять, політика пам'яті, герої Крут
+activity_hints:
+- type: reading
+  focus: Порівняльний аналіз урядів революції
+  source: Історичні документи
+  items: 4
+- type: essay-response
+  focus: Чому Українська революція 1917-1921 зазнала поразки?
+focus: history
+pedagogy: CBI
+prerequisites:
+- b2-hist-97 (Кінець визвольних змагань)
+connects_to:
+- b2-hist-99 (Радянська Україна)
+- b2-hist-100 (Механізм терору)
+objectives:
+- Учень може синтезувати знання про Українську революцію 1917-1921
+- Учень може пояснити причини поразки визвольних змагань
+- Учень може проаналізувати досягнення та помилки
+- Учень може оцінити спадщину революції для сучасності
+grammar:
+- Аналітичний стиль
+- Причинно-наслідкові конструкції
+- Складнопідрядні речення
+register: публіцистичний
+phase: HIST.9 [WWI & Revolution]
+persona:
+  voice: Senior Professor of History
+  role: Archive Keeper
+word_target: 5000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Синтез: Українська революція
+
+## Використані джерела
+1. [Енциклопедія Сучасної України (ЕСУ) — Українська революція](https://esu.com.ua) — фундаментальний огляд подій та етапів.
+2. [Інститут історії України НАНУ — Нариси історії Української революції](http://history.org.ua) — академічний аналіз причин поразки.
+3. [Літопис — IV Універсал УЦР](http://litopys.org.ua) — першоджерело тексту проголошення незалежності.
+4. [В. Винниченко — Відродження нації](http://litopys.org.ua) — мемуари та політичний аналіз.
+5. [В. Липинський — Листи до братів-хліборобів](http://litopys.org.ua) — консервативна критика революції.
+
+## Хронологія
+- 17 березня 1917: Створення Української Центральної Ради (УЦР).
+- 22 січня 1918: IV Універсал проголошує повну незалежність УНР.
+- 29 квітня 1918: Гетьманський переворот, прихід до влади Павла Скоропадського.
+- 14 грудня 1918: Антигетьманське повстання, відновлення УНР (Директорія).
+- 22 січня 1919: Акт Злуки УНР і ЗУНР.
+- листопад 1921: Другий Зимовий похід, остаточна військова поразка регулярної армії УНР.
+
+## Ключові факти та цитати
+
+### IV Універсал (22 січня 1918)
+> «Однині Українська Народна Республіка стає самостійною, ні від кого незалежною, вільною, суверенною Державою Українського Народу».
+
+### Володимир Винниченко ("Відродження нації")
+> «Читати українську історію треба з бромом, — до того це одна з нещасних, безглуздих, безпорадних історій...»
+(Цитата ілюструє розпач учасників подій від внутрішніх чвар та зовнішнього тиску).
+
+### В'ячеслав Липинський ("Листи до братів-хліборобів")
+> «Без власної держави нема й не може бути нації української».
+(Критика демократичного хаосу та необхідність сильної влади).
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ: Втрачена незалежність": [!history-bite] — "Читати з бромом". Винниченко написав це у щоденнику в розпал подій, коли зрозумів масштаб трагедії.
+- Section "Етапи революції": [!context] — Три кольори революції: соціалістична (УЦР), консервативна (Гетьманат), республіканська (Директорія).
+- Section "Причини поразки": [!myth-buster] — Міф про "Громадянську війну". Реальність: Це була війна на захист незалежності проти зовнішніх агресорів (Більшовицької та Білої Росії, Польщі).
+- Section "Причини поразки": [!analysis] — Отаманщина як прокляття. Як локальні ватажки (Зелений, Ангел) підривали єдиний фронт.
+- Section "Деколонізаційний погляд": [!decolonization] — Термінологія має значення. Не "петлюрівці", а "Армія УНР". Не "банди", а "повстанські загони".
+- Section "Підсумок: Спадщина": [!legacy] — Без 1917 року не було б 1991. УРСР була змушена (формально) зберігати атрибути державності саме через силу спротиву УНР.
+
+## Деколонізаційний контекст
+- **Imperial/Soviet myth**: "Українська революція — це анархія, погроми і бандитизм". Більшовики принесли "порядок".
+- **Ukrainian reality**: Це був повноцінний процес державотворення з парламентом, урядом, дипломатією та армією, який був знищений зовнішньою військовою агресією.
+- **Imperial/Soviet myth**: "Петлюра — погромник".
+- **Ukrainian reality**: Петлюра видавав накази про розстріл погромників, але часто не контролював отаманів на місцях. Радянська пропаганда використала це для демонізації всього руху.
+
+## Contested Terms
+| Concept | Imperial/Soviet framing | Ukrainian (decolonized) framing |
+|---------|-------------------------|---------------------------------|
+| Війна 1917-1921 | Громадянська війна | Українсько-російська війна / Визвольні змагання |
+| Війська УНР | Петлюрівські банди | Армія Української Народної Республіки |
+| Влада 1918 р. | Маріонетковий режим німців | Українська Держава (Гетьманат) |
+| Повстанці | Бандити, куркулі | Борці за незалежність, повстанський рух |
+
+## Section-Mapped Research Notes
+
+### Вступ: Втрачена незалежність
+- **1917-1921: чотири роки боротьби**. Це не був "хаос", це була відчайдушна спроба побудувати дім під час землетрусу.
+- **Чому важлива революція**. Вперше за століття Україна заявила про себе як суб'єкт, а не об'єкт історії.
+- **Уроки**. Головний урок: єдність еліти та нації важливіша за ідеологічні розбіжності (соціалісти vs консерватори).
+
+### Етапи революції
+- **Центральна Рада (Романтики)**. Грушевський, Винниченко. Акцент на автономії (спочатку), культурі, землі. Помилка: запізніле створення армії.
+- **Гетьманат (Прагматики)**. Скоропадський. Акцент на порядку, власності, армії, дипломатії. Відкриття Академії наук, університетів. Помилка: залежність від німців, відчуження селянства.
+- **Директорія (Воїни)**. Петлюра. Акцент на національній ідеї, повстання проти Гетьмана, війна на кілька фронтів. "У вагоні Директорія, під вагоном територія" — гірка іронія, але армія боролася до кінця.
+- **ЗУНР**. Петрушевич. Висока організація, "Українська Галицька Армія" (УГА). Злука 22 січня 1919 — символічна вершина революції.
+
+### Причини поразки
+- **Внутрішні конфлікти**. Соціалісти (УЦР/Директорія) ненавиділи консерваторів (Гетьманат). УГА (галичани) не завжди розуміли Наддніпрянців.
+- **Соціальні проблеми**. Селяни хотіли землі негайно. Більшовики обіцяли все і одразу (популізм), УНР намагалася робити реформи легально.
+- **Зовнішні вороги**. "Чотирикутник смерті": Червона Росія, Біла Росія (Денікін), Польща, Румунія/Антанта.
+- **Слабкість армії**. Брак зброї, амуніції, епідемія тифу («Тіфозна зима»), що викосила ряди УГА та Армії УНР.
+
+### Первинні джерела в синтезі
+- **Порівняння**. Універсали УЦР (поетичні, декларативні) vs Грамоти Скоропадського (сухі, наказові).
+- **Спогади**. Винниченко ("Відродження нації") — спроба виправдатись. Скоропадський ("Спогади") — погляд аристократа на "бунт".
+- **Документи**. Варшавський договір 1920 (союз Петлюри з Пілсудським) — суперечливий документ: порятунок державності ціною втрати Галичини.
+
+### Деколонізаційний погляд
+- **Буржуазія vs Нація**. СРСР трактував це як класову боротьбу. Насправді це була національно-визвольна війна.
+- **Тяглість**. УНР не зникла, уряд пішов у вигнання (екзил) і передав клейноди Україні у 1992 році. Це доказ безперервності.
+
+### Підсумок: Спадщина
+- **Що залишилось**. Герб (Тризуб), Гімн, Прапор — затверджені саме тоді. Кордони (окреслені в Берестейському мирі).
+- **Пам'ять**. Герої Крут, Базар, Зимові походи — міф, на якому виросло покоління УПА і шістдесятників.
+- **Революція та сучасна Україна**. Сучасна війна — це продовження тієї війни, яку не завершили у 1921.
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 13065)
+✓ Message 13041 acknowledged
+✓ Message 13065 acknowledged

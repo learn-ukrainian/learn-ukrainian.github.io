@@ -1,0 +1,331 @@
+✅ Message sent to Gemini (ID: 10171) [auto-acked: self-addressed]
+✓ Message 10171 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10171...
+📨 Message #10171
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-bigger-better-stronger
+   Time: 2026-02-20T20:00:32.093833+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: a2-18
+level: A2
+sequence: 18
+slug: bigger-better-stronger
+version: '2.0'
+title: Bigger, Better, Stronger
+subtitle: The Comparative Degree
+content_outline:
+- section: Introduction / Вступ
+  points:
+  - Concept of comparison in daily life — proverbs like «Добре слово краще, ніж готові
+    гроші»
+  - 'English vs Ukrainian comparative logic — learner error: avoiding double comparatives
+    like «більш кращий» (more better); correct analytic form «більш хороший» or synthetic
+    «кращий»'
+- section: Presentation / Презентація
+  points:
+  - 'Regular formation (-іший/-ший) — note stem alternations: г→ж (дорогий→дорожчий),
+    к→ч (близький→ближчий), х→ш (тихий→тихіший); learner error: neglecting these mandatory
+    changes'
+  - 'Irregular comparatives (The Big 10) — focus on suppletive forms: великий–більший,
+    малий–менший per State Standard §4.3.1'
+  - 'Comparison structures: ніж vs за — learner error: using Nominative instead of
+    Accusative after «за» (Він вищий за мене)'
+  - 'Intensifiers (набагато, трохи) — use with comparatives: «набагато дорожчий»,
+    «трохи дешевший»'
+- section: Practice / Практика
+  points:
+  - Transformation drills — focus on stem alternations (г→ж, к→ч, х→ш)
+  - 'Situational comparisons (Shopping/Family) — cultural hook: Kyiv TV Tower (385m)
+    vs Eiffel Tower (324m); Motherland Monument (102m) as European landmark'
+- section: Dialogues / Діалоги
+  points:
+  - Market dialogue comparing prices and quality — use collocations like «дорожчий
+    товар» and «дешевший варіант»; proverb «Краще один раз побачити...»
+vocabulary_hints:
+  required:
+  - більший (bigger) — більший розмір (larger size), більша кількість (larger quantity)
+  - менший (smaller) — менший розмір (smaller size), менша кількість (smaller quantity)
+  - кращий (better) — кращий результат (better result), краща якість (better quality)
+  - гірший (worse) — use with context of quality
+  - вищий (taller) — вищий на зріст (taller), вищий за мене (taller than me)
+  - нижчий (shorter) — physical height
+  - довший (longer) — physical length or duration
+  - коротший (shorter) — physical length or duration
+  - ширший (wider) — physical dimension
+  - вужчий (narrower) — physical dimension
+  - дорожчий (more expensive) — дорожчий товар (more expensive item), набагато дорожчий
+    (much more expensive)
+  - дешевший (cheaper) — дешевший варіант (cheaper option), трохи дешевший (a little
+    cheaper)
+  - старший (older) — старший брат (older brother), старший за віком (older by age);
+    proverb «Чим старіший, тим мудріший»
+  - молодший (younger) — family or age context
+  - ніж (than) — followed by Nominative
+  recommended:
+  - 'за (than + Acc) — requires Accusative case (за мене, за нього); learner error:
+    using Nominative'
+  - набагато (much) — intensifier for comparatives
+  - трохи (a little) — intensifier for comparatives
+  - значно (significantly) — formal intensifier
+  - швидший (faster) — speed comparison
+activity_hints:
+- type: fill-in
+  focus: Transform positive to comparative
+  items: 15+
+- type: fill-in
+  focus: Comparison sentences with ніж/за
+  items: 12+
+- type: quiz
+  focus: Which is bigger/better/etc.?
+  items: 12+
+- type: match-up
+  focus: Adjective + comparative form
+  items: 12+
+- type: fill-in
+  focus: Irregular comparative forms
+  items: 10+
+focus: grammar
+pedagogy: PPP
+prerequisites:
+- A1 adjective agreement
+- a2-17 (Possessive sviy)
+- Basic sentence structure
+connects_to:
+- a2-19 (The Best, The Worst)
+- a2-20 (Preferences and Choices)
+- a2-24 (Smart Shopping)
+objectives:
+- Learner can form comparative adjectives
+- Learner can compare two objects using 'ніж' and 'за'
+- Learner can identify and use irregular comparative forms
+- Learner can describe differences in quality and quantity
+grammar:
+- comparative adjectives formation
+- regular comparatives (-іший)
+- irregular comparatives (кращий, більший)
+- comparison structures (ніж, за)
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Comparison
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Comparative adjective requirements for A2
+- name: Ukrainian Adjective Reference
+  url: https://uk.wikipedia.org/wiki/Прикметник
+  type: reference
+  notes: Complete comparison paradigms
+immersion: 50-60% Ukrainian
+phase: A2.2
+persona:
+  voice: Encouraging Cultural Guide
+  role: Sports Commentator
+word_target: 3000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Bigger, Better, Stronger
+
+## State Standard Reference
+§4.3.1: "Ступені порівняння якісних прикметників: проста форма вищого ступеня: солодший, важливіший; ... суплетивні форми: великий – більший, найбільший; малий – менший, найменший."
+Alignment: This module addresses the A2 requirement for forming and using simple comparative adjectives (synthetic forms) and the most common irregular (suppletive) forms.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| більший | High / Corpus-based | більший розмір (larger size), більша кількість (larger quantity), більша частина (greater part) |
+| кращий | High / Corpus-based | кращий результат (better result), краща якість (better quality), кращий спосіб (better way) |
+| менший | High / Corpus-based | менший розмір (smaller size), менша кількість (smaller quantity) |
+| вищий | Medium-High | вищий на зріст (taller), вищий за мене (taller than me) |
+| дорожчий | Medium (Retail) | дорожчий товар (more expensive item), набагато дорожчий (much more expensive) |
+| дешевший | Medium (Retail) | дешевший варіант (cheaper option), трохи дешевший (a little cheaper) |
+| старший | High (Social) | старший брат (older brother), старший за віком (older by age) |
+
+## Cultural Hooks
+1. **Tallest structures in Ukraine**: The Kyiv TV Tower (Київська телевежа) is 385 meters high, which is 60 meters taller (вищий) than the Eiffel Tower. The Motherland Monument (Батьківщина-Мати) is 102 meters high, one of the tallest in Europe. These provide excellent "Bigger/Taller" comparison points.
+2. **Ukrainian Proverbs**: 
+   - «Добре слово краще, ніж готові гроші» (A kind word is better than ready money) — highlights quality comparison.
+   - «Краще один раз побачити, ніж сто разів почути» (Better to see once than to hear a hundred times) — classic comparison structure.
+   - «Чим старіший, тим мудріший» (The older, the wiser) — dual comparative structure.
+
+## Common Learner Errors
+1. **Case Confusion after "за"**: Learners often use Nominative after "за" (e.g., *за він*) instead of the required Accusative (*за нього*). Correct: *Він вищий за мене* (Accusative).
+2. **Stem Alternation Neglect**: Forgetting the mandatory consonant changes in the stem before *-ший*: *г → ж* (*дорогий → дорожчий*), *к → ч* (*близький → ближчий*), *х → ш* (*тихий → тихіший*).
+3. **Double Comparatives**: Influenced by English "more better," learners often say *більш кращий*. Correct: *більш хороший* (analytic) or *кращий* (synthetic).
+
+## Cross-References
+- Builds on: A1 adjective agreement, a2-17 (Possessive sviy)
+- Prepares for: a2-19 (The Best, The Worst), a2-20 (Preferences and Choices), a2-24 (Smart Shopping)
+
+## Notes for Content Writing
+- **Pedagogical Scaffolding**: Use clear tables to separate regular *-іший* forms from *-ший* forms that trigger consonant shifts. 
+- **Comparison Logic**: Explicitly contrast the `ніж + Nominative` vs `за + Accusative` structures, as this is a frequent source of A2 errors.
+- **Immersion**: Maintain 50-60% immersion. Ensure all grammar terms (вищий ступінь, прикметник) are introduced and reinforced.
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction: The Arena of Comparison)"
+  words: 500
+  points:
+  - "Introduction of the 'Sports Commentator' persona: setting the stage for comparing athletes, landmarks, and daily items using Ukrainian comparatives."
+  - "Philosophical and cultural concept of comparison through proverbs: «Добре слово краще, ніж готові гроші» (quality comparison) and «Краще один раз побачити, ніж сто разів почути» (classic structure)."
+  - "English vs Ukrainian comparative logic: explicitly addressing the common learner error of double comparatives like «більш кращий» (more better) and teaching the correct synthetic («кращий») or analytic («більш хороший») forms."
+- section: "Презентація: Творення ступенів (Presentation: Forming the Comparative)"
+  words: 800
+  points:
+  - "Regular formation using suffixes -іший and -ший: guided discovery of when to use each, aligned with State Standard §4.3.1 requirements for A2."
+  - "Deep dive into mandatory stem alternations (г→ж, к→ч, х→ш): specific focus on 'дорогий→дорожчий', 'близький→ближчий', and 'тихий→тихіший' to preempt the 'alternation neglect' error."
+  - "Irregular (suppletive) comparatives: 'The Big 10' master list, prioritizing high-frequency pairs like 'великий–більший', 'малий–менший', 'гарний–кращий', and 'поганий–гірший'."
+  - "Phonetic focus: training the 'Sports Commentator' voice to emphasize the doubled consonants or shifts in stressed syllables during rapid comparison."
+- section: "Структури порівняння: ніж vs за (Comparison Structures)"
+  words: 700
+  points:
+  - "Contrastive analysis of 'ніж' (than) vs 'за' (than): explaining that 'ніж' is followed by the Nominative case while 'за' requires the Accusative case."
+  - "Error Correction Lab: focusing on the 'Case Confusion after за' error (e.g., correcting *за він* to 'за нього' and *за я* to 'за мене')."
+  - "Using intensifiers for nuanced commentary: 'набагато' (much), 'трохи' (a little), and 'значно' (significantly) to modify comparisons (e.g., 'набагато дорожчий', 'трохи дешевший')."
+  - "The dual comparative structure through the proverb «Чим старіший, тим мудріший» (The older, the wiser)."
+- section: "Практика: Рекорди України (Practice: Ukrainian Records)"
+  words: 600
+  points:
+  - "Situational drills comparing Ukrainian landmarks: 'Київська телевежа' (385m) is 60m taller ('вища') than the Eiffel Tower; 'Батьківщина-Мати' (102m) vs other European monuments."
+  - "Retail and quality comparison drills: using frequency-based collocations like 'більший розмір' (larger size), 'краща якість' (better quality), and 'дорожчий товар' (more expensive item)."
+  - "Transformation drills: converting positive adjectives into comparative forms with a focus on stem-shifting words found in sports (e.g., 'швидкий→швидший', 'дужий→дужчий')."
+- section: "Діалоги та Висновки (Dialogues and Summary)"
+  words: 400
+  points:
+  - "Market commentary dialogue: comparing prices, quality, and quantity between different stalls using 'кращий спосіб' and 'менша кількість'."
+  - "Family and age context: using 'старший за віком' (older by age) and 'молодший брат' in natural conversation."
+  - "Final review of the 'Consonant Shift' checklist and a summary of 'ніж/за' case requirements to ensure A2 competency."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "більший (bigger) — більший розмір (larger size), більша частина (greater part); high frequency"
+  - "менший (smaller) — менша кількість (smaller quantity), менший розмір (smaller size)"
+  - "кращий (better) — кращий результат (better result), краща якість (better quality), кращий спосіб (better way)"
+  - "гірший (worse) — focus on quality and outcomes"
+  - "вищий (taller/higher) — вищий на зріст (taller), вищий за мене (taller than me); use for buildings/people"
+  - "нижчий (lower/shorter) — physical height or level"
+  - "дорожчий (more expensive) — дорожчий товар (more expensive item), набагато дорожчий (much more expensive); note stem shift г→ж"
+  - "дешевший (cheaper) — дешевший варіант (cheaper option), трохи дешевший (a little cheaper)"
+  - "старший (older) — старший брат (older brother), старший за віком (older by age)"
+  - "молодший (younger) — family and social context"
+  - "довший (longer) — duration or physical length"
+  - "коротший (shorter) — duration or physical length"
+  - "ширший (wider) — physical dimensions"
+  - "вужчий (narrower) — physical dimensions; note stem shift зк→жч"
+  - "ніж (than) — comparison particle followed by Nominative case"
+  recommended:
+  - "за (than) — preposition requiring Accusative case (за мене, за нього); critical learner error point"
+  - "набагато (much/far) — intensifier for comparative adjectives"
+  - "трохи (a little) — intensifier for comparative adjectives"
+  - "значно (significantly) — formal/analytical intensifier"
+  - "швидший (faster) — high relevance for sports persona; note к→ш shift"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4978 chars)
+✅ Message sent to Claude (ID: 10174)
+✓ Message 10174 acknowledged
+   Auto-acknowledged reply #10174 (stdout delivery — no inbox accumulation)
+✓ Message 10171 acknowledged

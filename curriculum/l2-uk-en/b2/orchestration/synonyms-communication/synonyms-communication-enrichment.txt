@@ -1,0 +1,279 @@
+✅ Message sent to Gemini (ID: 10585) [auto-acked: self-addressed]
+✓ Message 10585 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10585...
+📨 Message #10585
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-synonyms-communication
+   Time: 2026-02-20T20:43:29.999599+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b2-59
+level: B2
+sequence: 59
+slug: synonyms-communication
+version: '2.0'
+title: 'Синоніми: Комунікація та Мовлення'
+subtitle: Synonyms - Communication and Speech
+content_outline:
+- section: Розминка — Як сказати \"сказати\"
+  points:
+  - Казати vs говорити vs розповідати — різниця у вживанні
+  - Офіційне мовлення (повідомляти, заявляти, стверджувати)
+  - Різні способи запитувати (питати, цікавитися, допитувати)
+- section: Say
+  points:
+  - казати (say - neutral)
+  - говорити (speak/talk - general)
+  - розповідати (tell/narrate - story)
+  - повідомляти (inform - official)
+  - заявляти (declare - formal)
+- section: Ask
+  points:
+  - питати (ask - general)
+  - запитувати (ask - formal)
+  - цікавитися (be interested/inquire)
+  - розпитувати (question - detailed)
+  - допитувати (interrogate - intense)
+- section: Практика — дієслова мовлення
+  points:
+  - Обрати дієслово мовлення відповідно до контексту (інтерв'ю, суд, дружня розмова)
+  - Переписати пряму мову в непряму з правильним вибором дієслова
+  - Написати діалог з різними дієсловами мовлення (5+ синонімів)
+  - Порівняти українські та англійські дієслова мовлення в перекладі
+focus: phraseology
+pedagogy: CBI
+objectives:
+- Учень може розрізняти відтінки значень дієслів мовлення (казати, повідомляти, заявляти)
+- Учень вміє обирати точне дієслово для запиту інформації залежно від контексту (питати,
+  цікавитися, допитувати)
+- Учень розуміє стилістичні відмінності між офіційним та розмовним мовленням
+grammar:
+- Nuances in verbs of speech
+- Reporting and dialogue structure
+immersion: 100
+register: публіцистичний
+phase: B2.2 [Phraseology & Synonymy]
+vocabulary_hints:
+  required:
+  - синонім (synonym)
+  - вираз (expression)
+  - значення (meaning)
+  - контекст (context)
+  recommended:
+  - переносне значення (figurative meaning)
+  - стилістичне забарвлення (stylistic coloring)
+activity_hints:
+- type: reading
+  focus: Контекстне використання
+  items: 4
+- type: fill-in-the-blank
+  focus: Практичне застосування
+  items: 10
+- type: true-false
+  focus: Розуміння значень
+  items: 8
+persona:
+  voice: Professional Language Coach
+  role: Negotiator (Перемовник)
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Синоніми: Комунікація та Мовлення
+
+## State Standard Reference
+§4.3.5: "Пряма і непряма мова (сполучники що, щоб, частка чи в разі заміни прямої мови непрямою): Студент відповів: «Я пропустив заняття через хворобу». – Студент відповів, що пропустив заняття через хворобу. Викладач запитав: «Усі готові до заліку?» – Викладач запитав, чи всі готові до заліку."
+
+§4.4.1.2: "Стилістичні засоби лексики: ... синоніми: говорити, розмовляти, спілкуватися..."
+
+Alignment: Module focuses on distinguishing synonyms for speech verbs (*казати, говорити, повідомляти*) and their use in direct/indirect speech transformations, directly addressing the stylistic and syntactic requirements of B2.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key Collocations |
+|------|-------------------|------------------|
+| **казати** | High (Conversational) | казати правду, казати «ні», як кажуть (as they say) |
+| **говорити** | High (General) | говорити українською, говорити про погоду, говорити з другом |
+| **розповідати** | Medium (Narrative) | розповідати історію, розповідати казки, розповідати про себе |
+| **повідомляти** | Medium (Official/Media) | повідомляти новини, офіційно повідомляти, повідомляти про зміни |
+| **заявляти** | Low (Formal/Official) | заявляти протест, заявляти про права, офіційно заявляти |
+| **питати** | High (General) | питати дозволу, питати дорогу |
+| **запитувати** | Medium (Formal) | запитувати інформацію, запитувати про здоров'я |
+| **цікавитися** | Medium | цікавитися думкою, цікавитися справами |
+| **допитувати** | Low (Specific context) | допитувати свідка, допитувати підозрюваного |
+
+## Cultural Hooks
+1. **High-Context Communication**: Ukrainian culture is "high-context," meaning meaning is often conveyed through intonation, silence, and shared background rather than just explicit words. Verbs like *мовити* or *промовити* (utter) carry poetic weight, while *базікати* (chatter) implies idle talk.
+2. **The Art of Silence**: The proverb «Слово — срібло, а мовчання — золото» (Speech is silver, silence is gold) reflects a cultural value on weighing words carefully.
+3. **Address Etiquette**: The choice of verb often depends on the relationship (High vs Low power distance). One would *запитувати* a professor but *питати* a friend.
+
+## Common Learner Errors
+1. **Register Mismatch**: Using *говорити* or *казати* in formal contexts where *повідомляти* or *зазначати* is required (e.g., in a news summary).
+2. **Aspect Confusion**: Confusing *говорити* (process, imperfective) with *сказати* (result, perfective). *Error*: «Я хотів сказати з тобою» (I wanted to say with you) → *Correct*: «Я хотів поговорити з тобою» (I wanted to speak with you).
+3. **"Ask" Translation**: Using *питати* for "ask for a favor" (request). *Error*: «Я питаю тебе допомогти» → *Correct*: «Я прошу тебе допомогти». *Питати* is only for information.
+
+## Cross-References
+- **Builds on**: B1 verbs of speech (basic usage of *казати/говорити*).
+- **Prepares for**: B2-PRO (Negotiations, Business Communication), C1 Stylistics (nuanced registers).
+
+## Notes for Content Writing
+- **Persona**: Negotiator/Language Coach. Focus on *precision* in communication. "Words matter."
+- **Direct/Indirect Speech**: This is the grammatical engine of the module. Use the synonym differentiation to drive exercises on reporting speech (e.g., "He *stated* that..." vs "He *chatted* about...").
+- **Visuals**: A spectrum or "intensity scale" for the *Ask* verbs (from polite *цікавитися* to aggressive *допитувати*) would be effective.
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Вага слова (Introduction: The Weight of Words)"
+  words: 500
+  points:
+  - "Negotiator persona: Explaining why precision in verbs of speech is critical for professional credibility and 'precision-targeted' communication."
+  - "Cultural hook: Introduction to 'high-context' communication in Ukraine — how meaning is conveyed through register, intonation, and silence."
+  - "The Art of Silence: Discussing the proverb «Слово — срібло, а мовчання — золото» as a cultural value in professional speech."
+- section: "Мистецтво вибору — Дієслова «Say» (The Art of Choice — 'Say' Verbs)"
+  words: 950
+  points:
+  - "Spectrum of 'saying': Differentiating neutral 'казати' and general 'говорити' from official 'повідомляти' and formal 'заявляти' (State Standard §4.4.1.2)."
+  - "Learner error: Aspect confusion between «говорити» (process, imperfective) and «сказати» (result, perfective). Correcting the common error «Я хотів сказати з тобою» to «Я хотів поговорити з тобою»."
+  - "Frequency and Collocations: Practice with high-frequency pairs like «казати правду» vs. official media-style «повідомляти новини» or «заявляти про права»."
+- section: "Градація запиту — Дієслова «Ask» (Gradation of Inquiring — 'Ask' Verbs)"
+  words: 950
+  points:
+  - "Intensity Scale: Mapping a hierarchy from polite 'цікавитися' (be interested) to neutral 'питати/запитувати' to aggressive 'допитувати' (interrogate a suspect)."
+  - "Address Etiquette: Power distance in language — when to use 'запитувати' (formal/superiors) vs. 'питати' (casual/peers)."
+  - "Learner error: The 'Ask for' translation trap. Distinguishing «питати» (seeking information) from «просити» (requesting a favor/help), e.g., 'Я прошу тебе допомогти' instead of 'Я питаю тебе допомогти'."
+- section: "Граматичний двигун: Пряма та непряма мова (Grammar Engine: Direct and Indirect Speech)"
+  words: 850
+  points:
+  - "Syntactic transformations: Converting direct speech using conjunctions 'що', 'щоб', and the particle 'чи' for questions (State Standard §4.3.5)."
+  - "Negotiator practice: Reporting a witness's statement using synonyms that imply different levels of certainty (e.g., 'Свідок заявив, що...' vs. 'Друг розповідав, що...')."
+- section: "Практика та синтез: Переговори (Practice and Synthesis: Negotiations)"
+  words: 750
+  points:
+  - "Narrative Arc: A simulation of a high-stakes negotiation where the student must choose verbs based on the evolving register (from polite inquiry to formal declaration)."
+  - "Register Mismatch Drill: Identifying and correcting 'socially awkward' use of informal speech verbs in professional reports or news summaries."
+  - "Summary: Reviewing the stylistic coloring of speech verbs and their impact on the listener's perception."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "казати (say) — high frequency, neutral; collocations: казати правду, як кажуть (as they say)"
+  - "говорити (speak/talk) — high frequency, process-oriented; collocations: говорити українською, говорити про справу"
+  - "повідомляти (inform/report) — medium frequency, official register; collocations: повідомляти новини, офіційно повідомляти"
+  - "заявляти (declare/state) — low frequency, formal; collocations: заявляти про права, заявляти протест"
+  - "питати (ask) — high frequency, general information; collocation: питати дозволу. Note: not for requests/favors"
+  - "запитувати (inquire/ask) — formal register; used in high-power distance contexts or official settings"
+  - "цікавитися (be interested/inquire) — polite, low intensity; collocation: цікавитися думкою"
+  - "допитувати (interrogate) — high intensity, legal/conflict context; collocations: допитувати свідка, допитувати підозрюваного"
+  recommended:
+  - "просити (ask for/request) — used for favors or actions, distinguished from 'питати'"
+  - "зазначати (note/point out) — formal, used in summaries and reports"
+  - "висловлювати (express) — collocations: висловлювати думку, висловлювати подяку"
+  - "стилістичне забарвлення (stylistic coloring) — essential for B2 synonym analysis"
+  - "контекст (context) — the primary driver for speech verb selection"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4234 chars)
+✅ Message sent to Claude (ID: 10592)
+✓ Message 10592 acknowledged
+   Auto-acknowledged reply #10592 (stdout delivery — no inbox accumulation)
+✓ Message 10585 acknowledged

@@ -8,7 +8,6 @@ phase: 3
 phase_id: baroque-fight
 phase_name: Baroque Fight
 focus: Writing a short Baroque panegyric or lament
-word_target: 4000
 content_outline:
 - section: Вступ
   description: Introduction to RUTH-3 Capstone
@@ -24,3 +23,6 @@ activity_types:
 - etymology-trace
 - grammar-identify
 - historical-writing
+persona:
+  voice: Baroque Scholar
+  role: Philosopher-King

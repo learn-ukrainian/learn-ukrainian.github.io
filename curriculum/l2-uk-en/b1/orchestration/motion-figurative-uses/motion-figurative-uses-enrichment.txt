@@ -1,0 +1,332 @@
+✅ Message sent to Gemini (ID: 10319) [auto-acked: self-addressed]
+✓ Message 10319 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10319...
+📨 Message #10319
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-motion-figurative-uses
+   Time: 2026-02-20T20:19:57.293355+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b1-21
+level: B1
+sequence: 21
+slug: motion-figurative-uses
+version: '2.0'
+title: Переносні значення дієслів руху
+subtitle: Figurative uses of motion verbs
+content_outline:
+- section: Тест
+  points: []
+- section: Пояснення
+  points:
+  - 'Логіка переносних значень — фокус на префіксах: «До-» (результат/ліміт: дійти
+    висновку), «Ви-» (вихід зі стану: вийти з кризи), «Пере-» (зміна стану: перейти
+    до справи); стандарт §4.3.8'
+  - 'Детальний розбір ідіом — розрізнення нейтральних метафор (час іде) та фразеологізмів
+    (водити за ніс); cultural hook: «Гоголем ходити» (поважно, як птах) та «П''ятами
+    накивати» (втекти)'
+  - Реальні приклади використання — вийти на новий рівень (маркетинг), зайти в глухий
+    кут (новини), перейти до справи (бізнес)
+- section: Практика
+  points:
+  - 'Як розрізняти значення? — контекстний аналіз: буквальний рух vs абстрактний процес'
+  - 'Типові помилки та як їх уникнути — learner error: «прийти до висновку» замість
+    «дійти» (prefix mismatch); «йти божевільним» замість «зійти з розуму» (literal
+    translation); «проблема йде» замість «виникає»'
+  - 'Діалог: Культурні плани — використання ідіоми «вискочити як Пилип з конопель»
+    у контексті несподіваних змін планів'
+- section: 'Читання: Метафори в нашому житті'
+  points: []
+- section: Потрібно більше практики?
+  points:
+  - Інтеграція знань — поєднання з матеріалом модулів b1-16–20
+  - Реальне застосування — аналіз заголовків новин на наявність метафор руху
+  - Онлайн-ресурси — посилання на словники фразеологізмів (Slovnyk.UA)
+vocabulary_hints:
+  required:
+  - виходить, що (it turns out that) — виходить, що так; з цього виходить; як не крути,
+    а виходить
+  - 'дійти до висновку (reach a conclusion) — дійти до логічного/невтішного висновку;
+    learner error: use «прийти» instead of «дійти»'
+  - зайти занадто далеко (go too far) — жарт зайшов занадто далеко; ми зайшли занадто
+    далеко
+  - відійти від теми (digress) — трохи відійти від теми; дозвольте відійти від теми
+  - підійти до питання (approach a question) — серйозно підійти до питання; комплексно
+    підійти до проблеми
+  - обійтися без (do without) — не можу обійтися без кави; обійтися без допомоги
+  - перейти до справи (get down to business) — одразу перейти до справи; досить розмов,
+    переходьмо до справи
+  - пройти через (go through - experience) — пройти через пекло; пройти через випробування
+  - вийти з ситуації (get out of a situation) — гідно вийти з ситуації; сухим із води
+    вийти (ідіома)
+  - зайти в глухий кут (reach a dead end) — переговори/розслідування зайшло в глухий
+    кут
+  recommended:
+  - до мене дійшло (it dawned on me) — нарешті до мене дійшло; тільки зараз дійшло
+  - вийти на новий рівень (reach a new level) — вийти на якісно новий рівень; стосунки
+    вийшли на новий рівень
+  - переносне значення (figurative meaning) — термін для пояснення метафор (стандарт
+    §4.5.1.1)
+  - буквальний зміст (literal meaning) — протиставлення переносним значенням
+  - 'фразеологізм (phraseological unit) — cultural hook: сталі вирази як «накивати
+    п''ятами»'
+activity_hints:
+- type: match-up
+  focus: Expression -> meaning
+  items: 15+
+- type: fill-in
+  focus: Use figurative expressions in context
+  items: 12+
+- type: quiz
+  focus: Literal vs figurative motion
+  items: 15+
+- type: fill-in
+  focus: Dialogue with figurative expressions
+  items: 12+
+- type: true-false
+  focus: Literal motion vs figurative expression
+  items: 14+
+focus: grammar
+pedagogy: TTT
+prerequisites:
+- b1-16 (Motion verbs full system)
+- b1-17 (Motion - coming & going)
+- b1-18 (Motion - passing & crossing)
+- b1-19 (Motion - starting & returning)
+- b1-20 (Motion - approaching & departing)
+connects_to:
+- b1-22 (Motion full prefix integration)
+- b1-25 (Checkpoint - motion verbs)
+objectives:
+- Learner can recognize figurative uses of motion verbs
+- Learner can use common idiomatic expressions with motion verbs
+- Learner understands the metaphorical extensions of motion prefixes
+grammar:
+- Idiomatic expressions with motion verbs
+- Figurative vs literal motion
+- Abstract movement vocabulary
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Figurative Language
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Official guidance on idiomatic expressions
+- name: Ukrainian Idioms with Motion Verbs
+  url: https://uk.wikipedia.org/wiki/Фразеологізми
+  type: reference
+  notes: Common figurative expressions with motion verbs
+- name: Slovnyk.UA - Motion Verb Idioms
+  url: https://slovnyk.ua/
+  type: reference
+  notes: Dictionary entries with figurative meanings
+immersion: 100% Ukrainian
+phase: B1.2 Motion
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Lviv Poet
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Переносні значення дієслів руху
+
+## State Standard Reference
+§4.3.8: "Утворення префіксальних дієслів руху: іти – прийти, перейти, дійти, відійти, зайти, вийти..."
+§4.5.1.1: "Стилістичні засоби лексики: ... метафори: прийшла осінь, місто спить."
+Alignment: Модуль розкриває переносні значення префіксальних дієслів руху (за §4.3.8) та їх метафоричне вживання (за §4.5.1.1), що є ключовим для досягнення рівня B1 у розумінні абстрактних понять та ідіоматики.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| **виходить, що** | High (Spoken/Logic) | виходить, що так; з цього виходить; як не крути, а виходить |
+| **дійти до висновку** | High (Academic/Formal) | дійти до логічного висновку; дійти до невтішного висновку; врешті-решт дійти до висновку |
+| **зайти занадто далеко** | Medium (Conflict/Drama) | жарт зайшов занадто далеко; ми зайшли занадто далеко; зайти в глухий кут |
+| **відійти від теми** | High (Discourse) | трохи відійти від теми; дозвольте відійти від теми; не будемо відходити від суті |
+| **підійти до питання** | High (Professional) | серйозно підійти до питання; комплексно підійти до проблеми; з іншого боку підійти |
+| **обійтися без** | High (Daily) | не можу обійтися без кави; обійтися без допомоги; це обійдеться вам дорого (інше знач.) |
+| **перейти до справи** | High (Business) | одразу перейти до справи; перейдемо до суті; досить розмов, переходьмо до справи |
+| **пройти через** | Medium (Emotional) | пройти через пекло; пройти через випробування; ми через це вже проходили |
+| **вийти з ситуації** | High (Problem solving) | гідно вийти з ситуації; знайти спосіб вийти з кризи; сухим із води вийти (ідіома) |
+| **зайти в глухий кут** | Medium (News/Debate) | переговори зайшли в глухий кут; розслідування зайшло в глухий кут |
+| **до мене дійшло** | High (Colloquial) | нарешті до мене дійшло; тільки зараз дійшло; до нього довго доходить |
+| **вийти на новий рівень** | High (Marketing/Growth) | вийти на якісно новий рівень; стосунки вийшли на новий рівень |
+
+## Cultural Hooks
+1. **"Гоголем ходити"**: Ходити поважно, гордовито, задерши голову. Походить від назви птаха гоголя (дикої качки), який плаває, випнувши груди.
+2. **"П'ятами накивати"**: Втекти. Образний вислів, що описує швидкий біг, коли видно лише п'яти, що миготять (накивають).
+3. **"Вискочити як Пилип з конопель"**: Зробити щось недоречно або несподівано. Народний жарт про селянина, який сховався в коноплях і зненацька вискочив.
+
+## Common Learner Errors
+1. **Confusion of Directionality in Abstracts**: Learners use unidirectional *йти* for recurring abstract states (e.g., *Час йде* instead of *Час іде/летить* - though specific metaphors have fixed verbs, general recurrence often confuses aspects).
+   *   *Error*: "Ця проблема йде часто." → *Correction*: "Ця проблема виникає часто." (Use of motion verbs where non-motion exists).
+2. **Literal Translation of "Go"**: Translating "go crazy" as *йти божевільним*.
+   *   *Correction*: *Збожеволіти* or *зійти з розуму* (specifically *зійти* - to go off/down).
+3. **Prefix Mismatch**: Using *прийти* (arrive) for abstract "reaching" where *дійти* is required.
+   *   *Error*: "Я прийшов до висновку." → *Correction*: "Я дійшов до висновку." (*Дійти* implies the process of reaching a limit/end).
+
+## Cross-References
+- Builds on: b1-16 (Motion verbs system), b1-20 (Prefixes basic)
+- Prepares for: b1-22 (Full prefix integration), b1-55 (Abstract concepts vocabulary)
+
+## Notes for Content Writing
+- Focus heavily on the **logic of the prefix**: *До-* always implies a limit/result (дійти висновку), *Ви-* implies exiting a state/container (вийти з кризи), *Пере-* implies changing state (перейти до діла).
+- Differentiate between **Neutral Metaphors** (час іде, сонце сходить) and **Idioms** (водити за ніс, накивати п'ятами). The module should cover both but distinguish them.
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Тест (Initial Test: Literal vs Figurative)"
+  words: 400
+  points:
+  - "Діагностика знань: розрізнення буквального та переносного значення дієслів руху через короткі контексти для визначення рівня володіння метафоричною мовою."
+  - "Самооцінка: перевірка розуміння базових метафор (напр., «час іде», «сонце сходить») перед зануренням у складніші ідіоми та префіксальні конструкції."
+- section: "Пояснення: Логіка префіксів та культурний код (Explanation: Prefix Logic and Cultural Code)"
+  words: 1000
+  points:
+  - "Метафорична логіка за Стандартом §4.3.8: розгляд префікса «До-» як досягнення мети або межі (дійти висновку), префікса «Ви-» як виходу зі стану або кризи (вийти з ситуації) та «Пере-» як переходу до нової діяльності (перейти до справи)."
+  - "Диференціація лексики за §4.5.1.1: розрізнення нейтральних метафор (напр., «прийшла осінь») та фразеологічних одиниць («водити за ніс»), що потребують специфічного культурного контексту."
+  - "Культурні гачки: етимологія та вживання ідіом «Гоголем ходити» (гордовита постава як у птаха), «П'ятами накивати» (швидка втеча) та «Вискочити як Пилип з конопель» (недоречна або несподівана поява)."
+- section: "Аналіз помилок: Пастки переносних значень (Error Analysis: Figurative Traps)"
+  words: 800
+  points:
+  - "Prefix Mismatch: розбір типової помилки «прийти до висновку» (arrival) та заміна на правильне «дійти до висновку» (reaching a limit/result)."
+  - "Пастка буквального перекладу: чому не можна казати «йти божевільним» (go crazy) і як правильно вживати «зійти з розуму» (off the track) або «збожеволіти»."
+  - "Вживання дієслів руху vs прямі дієслова: корекція помилки «ця проблема йде часто» на «ця проблема виникає часто», пояснення меж метафоричного вживання."
+- section: "Практика: Метафори в контексті (Practice: Metaphors in Context)"
+  words: 1000
+  points:
+  - "Ситуативне моделювання: вживання професійної лексики (підійти до питання, перейти до справи) та повсякденних виразів (до мене дійшло, обійтися без) у діалогах."
+  - "Тренування колокацій: вправи на поєднання частотних виразів з обставинами (дійти до логічного висновку, вийти на якісно новий рівень, трохи відійти від теми)."
+  - "Логіка подолання перешкод: використання виразів «пройти через випробування» та «знайти спосіб вийти з кризи» для опису складних життєвих ситуацій."
+- section: "Читання та рефлексія (Reading and Reflection)"
+  words: 800
+  points:
+  - "Аналіз тексту: опрацювання статті «Метафори в нашому житті» з фокусом на виявлення абстрактних значень дієслів руху та їх стилістичної ролі."
+  - "Рефлексія та медіа-аналіз: пошук та аналіз заголовків новин («переговори зайшли в глухий кут», «стосунки вийшли на новий рівень») для закріплення зв'язку з реальним вживанням."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "виходить, що (it turns out that) — виходить, що так; з цього виходить; як не крути, а виходить; High frequency in logical discourse"
+  - "дійти до висновку (reach a conclusion) — дійти до логічного/невтішного висновку; врешті-решт дійти до висновку; Learner error: avoid «прийти»"
+  - "зайти занадто далеко (go too far) — жарт зайшов занадто далеко; ми зайшли занадто далеко; Medium frequency in conflict/drama contexts"
+  - "відійти від теми (digress) — трохи відійти від теми; дозвольте відійти від теми; не будемо відходити від суті; High frequency in formal discussions"
+  - "підійти до питання (approach a question) — серйозно підійти до питання; комплексно підійти до проблеми; з іншого боку підійти; Professional register"
+  - "обійтися без (do without) — не можу обійтися без кави; обійтися без допомоги; обійдеться вам дорого (price variation); Daily use"
+  - "перейти до справи (get down to business) — одразу перейти до справи; перейдемо до суті; досить розмов, переходьмо до справи; High frequency in business"
+  - "пройти через (go through - experience) — пройти через пекло; пройти через випробування; ми через це вже проходили; Emotional register"
+  - "вийти з ситуації (get out of a situation) — гідно вийти з ситуації; знайти спосіб вийти з кризи; сухим із води вийти (idiom)"
+  - "зайти в глухий кут (reach a dead end) — переговори зайшли в глухий кут; розслідування зайшло в глухий кут; Common in news/debates"
+  recommended:
+  - "до мене дійшло (it dawned on me) — нарешті до мене дійшло; тільки зараз дійшло; до нього довго доходить; Colloquial high frequency"
+  - "вийти на новий рівень (reach a new level) — вийти на якісно новий рівень; стосунки вийшли на новий рівень; Marketing/Growth contexts"
+  - "переносне значення (figurative meaning) — термін для пояснення метафор (Стандарт §4.5.1.1)"
+  - "буквальний зміст (literal meaning) — протиставлення переносним значенням для контекстного аналізу"
+  - "фразеологізм (phraseological unit) — сталі вирази як «накивати п'ятами», «Гоголем ходити», «вискочити як Пилип з конопель»"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4951 chars)
+✅ Message sent to Claude (ID: 10326)
+✓ Message 10326 acknowledged
+   Auto-acknowledged reply #10326 (stdout delivery — no inbox accumulation)
+✓ Message 10319 acknowledged

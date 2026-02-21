@@ -1,0 +1,311 @@
+✅ Message sent to Gemini (ID: 10451) [auto-acked: self-addressed]
+✓ Message 10451 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10451...
+📨 Message #10451
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-ukrainski-sviata-ta-festyvali
+   Time: 2026-02-20T20:33:46.973911+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b1-86
+level: B1
+sequence: 86
+slug: ukrainski-sviata-ta-festyvali
+version: '2.0'
+title: Українські свята та фестивалі
+subtitle: Ukrainian Holidays and Festivals
+content_outline:
+- section: Вступ
+  points:
+  - Українські свята — вступ
+- section: Історія та культура
+  points:
+  - Різдво і традиції
+  - Колядки і щедрівки
+  - Великдень — писанки і паска
+  - Народні свята — Масляна, Івана Купала
+- section: Сучасність
+  points:
+  - Державні свята (День Незалежності)
+  - Музичні фестивалі
+- section: Практика
+  points:
+  - Вітання зі святами
+- section: Продукція
+  points:
+  - Діалоги про свята та фестивалі
+- section: Підсумок — Як святкують українці
+  points:
+  - Як привітати українською
+- section: 'Міні-чекпоінт: Культура B1.7'
+  points:
+  - Самооцінка знань про сучасну Україну
+  - Тест на регіони (M72-75)
+  - Тест на культуру та спорт (M76-86)
+- section: Потрібно більше практики?
+vocabulary_hints:
+  required:
+  - свято (holiday)
+  - фестиваль (festival)
+  - Різдво (Christmas)
+  - Великдень (Easter)
+  - традиція (tradition)
+  - святкувати (to celebrate)
+  - колядки (carols)
+  - писанки (pysanky)
+  recommended:
+  - День Незалежності (Independence Day)
+  - вертеп (nativity play)
+  - кошик (Easter basket)
+  - обряд (ritual)
+activity_hints:
+- type: reading
+  focus: Holiday descriptions and traditions
+  items: 15
+- type: match-up
+  focus: Match holidays to traditions
+  items: 20
+- type: fill-in
+  focus: Complete celebration descriptions
+  items: 15
+- type: quiz
+  focus: Compare cultural traditions
+  items: 10
+- type: checkpoint-culture
+  focus: Test cultural knowledge from M72-86
+  items: 30
+focus: culture
+pedagogy: CBI
+prerequisites:
+- b1-85 (Ukrainian Cuisine)
+connects_to:
+- b1-87 (News Reading)
+objectives:
+- Learner can discuss Ukrainian holidays and festivals in context
+- Learner can understand authentic texts about Ukrainian celebrations
+- Learner can use celebration-related vocabulary in communicative contexts
+- Learner can compare Ukrainian festivals with their own cultural traditions
+grammar:
+- Holiday and celebration vocabulary
+- Traditions and customs language
+- Calendar and date expressions
+register: розмовний
+phase: B1.7 [Contemporary Ukraine]
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Ethno-Festival Organizer
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Українські свята та фестивалі
+
+## State Standard Reference
+§3.15: "Традиції, звичаї, свята: державні й релігійні свята; день народження, весілля; побажання і подарунки; українські звичаї і традиції."
+§3.4: "Дозвілля, відпочинок: ... фестиваль."
+Alignment: This module directly addresses the required thematic competence for "Traditions, customs, holidays" and "Leisure (festivals)" as mandated by the State Standard for B1 level (lines 1978 and 1891 in source).
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| **свято** | High (Top 500) | державне свято, релігійне свято, сімейне свято, влаштувати свято, вітати зі святом |
+| **Різдво** | High (Seasonal) | святкувати Різдво, на Різдво, щасливого Різдва, католицьке/православне Різдво |
+| **Великдень** | High (Seasonal) | пекти паску, фарбувати яйця, йти до церкви, "Христос Воскрес!" |
+| **традиція** | Medium | народна традиція, давня традиція, за традицією, зберігати традиції |
+| **фестиваль** | Medium | музичний фестиваль, кінофестиваль, міжнародний фестиваль, проводити фестиваль |
+| **святкувати** | High | святкувати вдома, святкувати з друзями, як ви святкуєте? |
+
+## Cultural Hooks
+1.  **Didukh vs. Christmas Tree**: Before the Christmas tree (yalynka) became popular, the central decoration in Ukrainian homes was the **Didukh** (дідух) — a sheaf of wheat symbolizing the spirit of ancestors and the harvest. It is believed to bring prosperity and protection to the family.
+2.  **Malanka Carnival**: On "Old New Year" (Jan 13-14), Ukrainians celebrate **Malanka**, a folk carnival featuring costumed characters like the Goat (Koza), Malanka (a man dressed as a woman), and the Gypsy. It involves skits, pranks, and caroling, distinct from the solemnity of Christmas.
+3.  **Modern Scale**: **Atlas Festival** (formerly Atlas Weekend) in Kyiv is one of the largest music festivals in Eastern Europe, showing that Ukrainian "festivals" are not just folk traditions but massive modern events with international headliners.
+
+## Common Learner Errors
+1.  **Case Error in Greetings**: Learners often translate "Happy [Holiday]" literally or use Nominative.
+    *   *Error*: "Вітаю з свято!" / "З Новий рік!"
+    *   *Correct*: "Вітаю зі **святом**!" / "З **Новим роком**!" (Must use **Instrumental** case with preposition **з/зі**).
+2.  **Greeting Specificity**: Using generic greetings when specific ones are required.
+    *   *Context*: On Christmas, the greeting is "Христос народився!" (Response: "Славімо його!"). On Easter: "Христос Воскрес!" (Response: "Воістину Воскрес!"). Using "Привіт" or just "Вітаю" can seem culturally unaware in these specific religious contexts.
+3.  **Date Confusion**: Mixing up the "Old" (Julian) and "New" (Gregorian) dates. While Ukraine officially moved to Dec 25 for Christmas in 2023, learners often confuse the "Old New Year" (Jan 14) concept, which is culturally celebrated but not an official state holiday.
+
+## Cross-References
+- **Builds on**:
+    - `b1-85` (Ukrainian Cuisine) — essential for mentioning traditional holiday foods like kutia (Christmas) and paska (Easter).
+    - `a2` cultural modules — expands on basic holiday vocab.
+- **Prepares for**:
+    - `b1-87` (News Reading) — festivals are common news topics.
+    - `b1-89` (Communication Channels) — greeting cards and messages.
+
+## Notes for Content Writing
+- **Modern Context**: Ensure the module reflects the 2023 calendar reform (Christmas on Dec 25).
+- **Immersion**: Use the correct cultural terms (`кутя`, `писанка`, `вертеп`) without translating them, explaining them through context or simple Ukrainian definitions.
+- **Balance**: Mix the solemn/religious (Christmas/Easter) with the dynamic/modern (Atlas Festival/Odesa Film Festival) to show Ukraine is not just a "museum" culture.
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Українські свята та календарна реформа (Introduction: Ukrainian Holidays and Calendar Reform)"
+  words: 500
+  points:
+  - "Вступ до поняття «свято»: розмежування державних, релігійних та сімейних свят згідно з частотністю (Top 500)."
+  - "Пояснення календарної реформи 2023 року: перехід на новоюліанський календар (Різдво 25 грудня) та культурний контекст «старого Нового року»."
+- section: "Зимовий та весняний цикли: Різдво та Великдень (Winter and Spring Cycles: Christmas and Easter)"
+  words: 1000
+  points:
+  - "Різдво: порівняння традиції Дідуха (символ духу предків) та сучасної ялинки; вертеп як театралізоване дійство."
+  - "Кулінарний зв'язок (builds on B1-85): значення куті на Різдво та випікання паски на Великдень."
+  - "Великдень: символіка писанок та крашанок; обряд освячення кошика в церкві."
+  - "Специфічні вітання-відповіді: «Христос народився! — Славімо Його!» та «Христос Воскрес! — Воістину Воскрес!»."
+- section: "Народна обрядовість: Маланка та Івана Купала (Folk Rituals: Malanka and Ivana Kupala)"
+  words: 800
+  points:
+  - "Маланка (Щедрий вечір): опис народного карнавалу з костюмованими персонажами (Коза, Циган, Маланка) та традиція щедрування."
+  - "Літній цикл: Івана Купала, магічні обряди з вінками та вогнем; роль традицій у збереженні ідентичності."
+- section: "Сучасна Україна: Державні свята та масштабні фестивалі (Modern Ukraine: State Holidays and Large-scale Festivals)"
+  words: 900
+  points:
+  - "День Незалежності України: як змінилося сприйняття свята в сучасному контексті; офіційні заходи та народні гуляння."
+  - "Фестивальна культура: Atlas Festival як приклад сучасного міжнародного музичного заходу в Києві; Одеський кінофестиваль."
+  - "STEM-ready context: Організація фестивалів (етно-фестивалі) як частина культурного менеджменту."
+- section: "Мовна практика: Етикет вітань та запобігання помилкам (Language Practice: Greeting Etiquette and Error Prevention)"
+  words: 800
+  points:
+  - "Робота над помилкою: використання орудного відмінка після прийменника з/зі у вітаннях (З Новим роком!, Зі святом!)."
+  - "Корекція типової помилки: «Вітаю з свято!» (Nom) -> «Вітаю зі святом!» (Instr)."
+  - "Продукція: написання святкової листівки або повідомлення з використанням кліше «Бажаю успіхів...», «Нехай збуваються мрії...»."
+- section: "Міні-чекпоінт: Культура B1.7 (Mini-checkpoint: Culture B1.7)"
+  words: 0
+  points:
+  - "Самооцінка знань про сучасну Україну (M72-86)."
+  - "Тест на знання традицій, регіональних особливостей та сучасної культури."
+- section: "Потрібно більше практики? (Need More Practice?)"
+  words: 0
+  points:
+  - "Додаткові читання про регіональні фестивалі (Львівський фестиваль кави, свято вина на Закарпатті)."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "свято (holiday) — державне, релігійне, сімейне; вітати зі святом"
+  - "Різдво (Christmas) — святкувати Різдво; на Різдво"
+  - "Великдень (Easter) — пекти паску, фарбувати яйця"
+  - "традиція (tradition) — за традицією, зберігати традиції"
+  - "святкувати (to celebrate) — святкувати в колі сім'ї; як ви святкуєте?"
+  - "фестиваль (festival) — музичний фестиваль; проводити фестиваль"
+  - "кутя (kutia) — traditional Christmas grain pudding; context: B1-85"
+  - "паска (paska) — Easter bread; essential for Easter vocabulary"
+  recommended:
+  - "дідух (didukh) — traditional wheat sheaf decoration symbolizing ancestors"
+  - "вертеп (nativity play/scene) — can refer to the puppet theater or live performance"
+  - "писанка (pysanka) — decorated Easter egg using wax-resist method"
+  - "колядки / щедрівки (carols) — specific types of songs for Christmas vs. New Year/Epiphany"
+  - "обряд (ritual) — used in the context of folk celebrations"
+  - "Маланка (Malanka) — Ukrainian folk holiday celebrated on Jan 13; folk carnival"
+  - "вітати (to greet/congratulate) — requires Instrumental case: вітати зі святом"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (3986 chars)
+✅ Message sent to Claude (ID: 10456)
+✓ Message 10456 acknowledged
+   Auto-acknowledged reply #10456 (stdout delivery — no inbox accumulation)
+✓ Message 10451 acknowledged

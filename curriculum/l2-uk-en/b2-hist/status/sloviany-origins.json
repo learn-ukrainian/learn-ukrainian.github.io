@@ -1,15 +1,16 @@
 {
   "module": "sloviany-origins",
   "level": "B2",
-  "plan_version": "2.0",
-  "last_audit": "2026-02-07T11:39:38.713970Z",
+  "plan_version": "0.0.1",
+  "last_audit": "2026-02-21T15:10:38.412899Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-07T11:38:26.473300Z",
-    "meta": "2026-02-07T10:03:51.231825Z",
-    "activities": "2026-02-07T10:03:51.308772Z",
-    "vocabulary": "2026-02-07T10:03:51.367306Z",
-    "plan": null
+    "md": "2026-02-19T11:02:07.764603Z",
+    "meta": "2026-02-19T09:50:25.141490Z",
+    "activities": "2026-02-19T10:57:46.720153Z",
+    "vocabulary": "2026-02-18T19:18:58.648643Z",
+    "plan": "2026-02-18T19:04:01.613163Z",
+    "research": "2026-02-18T00:18:37.001930Z"
   },
   "gates": {
     "meta": {
@@ -18,30 +19,46 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "5563/4000 (raw: 5684)"
+      "status": "fail",
+      "violations": 1,
+      "message": "5120/5000 (raw: 5368) | pedagogy: 17 violations"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "6/3"
+      "message": "5/3"
     },
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "35/20"
+      "message": "25/20"
     },
     "naturalness": {
       "status": "pass",
       "violations": 0,
       "message": "10/10 (High)"
+    },
+    "ipa": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Clean IPA"
+    },
+    "research": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Content aligned with research"
+    },
+    "review": {
+      "status": "skipped",
+      "violations": 0,
+      "message": ""
     }
   },
   "overall": {
-    "status": "pass",
+    "status": "fail",
     "blocking_issues": [],
-    "pass_count": 5,
-    "fail_count": 0
+    "pass_count": 6,
+    "fail_count": 1,
+    "deferred_count": 0
   }
 }

@@ -1,0 +1,301 @@
+✅ Message sent to Gemini (ID: 12048) [auto-acked: self-addressed]
+✓ Message 12048 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12048...
+📨 Message #12048
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-kozatski-litopysy-ohliad
+   Time: 2026-02-20T23:35:37.264818+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-hist-019
+level: c1-hist
+sequence: 19
+version: '1.0'
+title: 'Козацькі літописи: Огляд традиції'
+focus: history
+pedagogy: seminar
+objectives:
+- 'Analyze the causes and consequences of козацькі літописи: огляд традиції'
+- Evaluate the historical significance of козацька історіографія
+content_outline:
+- section: Вступ — Козацька історіографія
+  subsections:
+  - Новий тип літописання
+  - Від монастиря до канцелярії
+  - Три головні літописи
+  - Чому важливо вивчати разом
+- section: Історичний контекст
+  subsections:
+  - Козацька держава — Гетьманщина
+  - Освічена еліта — хто писав історію?
+  - Кінець XVII — поч. XVIII ст.
+  - Криза автономії — мотив писати
+- section: Три літописи — порівняння
+  subsections:
+  - Самовидець — очевидець, стислий
+  - Грабянка — патріотичний, барочний
+  - Величко — найповніший, документальний
+  - Хронологія і охоплення
+  - Таблиця порівняння
+- section: Спільні риси
+  subsections:
+  - Козацький патріотизм
+  - Легітимація автономії
+  - Критика Переяслава (непрямо)
+  - Образ Хмельницького
+  - Елітарна перспектива — старшина
+- section: Відмінності
+  subsections:
+  - Стиль — простий vs. барочний
+  - Джерела — спогади vs. документи
+  - Політична позиція — різні фракції
+  - Відношення до Москви
+- section: Як читати козацькі літописи
+  subsections:
+  - Упередження авторів
+  - Що вони хотіли довести?
+  - Критичний підхід
+  - Порівняння з іншими джерелами
+- section: Підсумок
+  subsections:
+  - Три перспективи однієї доби
+  - Підготовка до детального вивчення
+  - План наступних модулів
+vocabulary:
+- козацький літопис
+- Гетьманщина
+- старшина
+- автономія
+- легітимація
+- барокова історіографія
+- канцелярія
+- самовидець
+- документальний
+- патріотизм
+- компіляція
+- апологетика
+- провіденціалізм
+- риторика
+- хроніка
+activities:
+- type: comparative-study
+  focus: Create comparison table of three chronicles
+- type: reading
+  focus: Opening passages of each chronicle — first impressions
+- type: critical-analysis
+  focus: What is the purpose of each chronicle? Who benefits?
+- type: essay-response
+  focus: Чому козацька старшина відчувала потребу писати історію?
+sources:
+- name: Козацькі літописи (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Козацькі_літописи
+  type: reference
+  notes: Overview of Cossack chronicles
+- name: Літопис Самовидця
+  url: https://uk.wikipedia.org/wiki/Літопис_Самовидця
+  type: reference
+  notes: Eyewitness chronicle
+- name: Літопис Григорія Граб'янки
+  url: https://uk.wikipedia.org/wiki/Літопис_Григорія_Граб'янки
+  type: reference
+  notes: Hrabianka chronicle
+- name: Літопис Самійла Величка
+  url: https://uk.wikipedia.org/wiki/Літопис_Самійла_Величка
+  type: reference
+  notes: Velychko chronicle
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
+persona:
+  voice: Academic Historiographer
+  role: Baroque Literature Specialist
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Козацькі літописи: Огляд традиції
+
+## Використані джерела
+1. [Ізборник (Litopys.org.ua)](http://litopys.org.ua/) — Базовий корпус текстів козацьких літописів (Самовидець, Граб'янка, Величко) та аналітичні статті.
+2. [Енциклопедія історії України (history.org.ua)](http://resource.history.org.ua/) — Статті «Козацькі літописи», «Літопис Самовидця», «Літопис Граб'янки», «Літопис Величка».
+3. [Франк Сисин. "The Cossack Chronicles and the Development of Modern Ukrainian Nation"](https://books.google.com/) — Аналіз ролі літописів у формуванні національної ідентичності.
+4. [Наталя Яковенко. "Нарис історії України з найдавніших часів до кінця XVIII століття"](https://yakovenko.org/) — Розділ про козацьке бароко та історичну свідомість старшини.
+
+## Хронологія
+- **1648**: Початок Хмельниччини — головна подія, яку описують усі літописи.
+- **1672**: Ймовірна дата початку написання Літопису Самовидця (описує події 1648–1702).
+- **1710**: Складання Літопису Григорія Граб'янки (описує події до 1709).
+- **1720**: Завершення (перша редакція) Літопису Самійла Величка (найбільш монументальний твір, події до 1700, з документами до 1720).
+- **1846**: Перше видання Літопису Самовидця Пантелеймоном Кулішем, що дало поштовх романтичній історіографії.
+
+## Ключові факти та цитати
+- **Самовидець**: «Початок і причина войни Хмельницького єсть єдине од ляхів на православ’я гоніння і козакам отягощеніє». (Акцент на релігійному та соціальному гніті).
+- **Величко**: «Цікавому норову людському не може нічого бути сподобнішого, ласкавий читальнику, як читати книги й дізнаватися про давні людські діяння...». (Бароковий вступ, звернення до читача).
+- **Граб'янка**: «Історія презельной брані» (Назва підкреслює епічний характер війни).
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ — Козацька історіографія": `[!context]` — Козацькі літописи — це не просто хроніки подій, це політичні маніфести, які обґрунтовували право козацької еліти (старшини) на владу та автономію.
+- Section "Історичний контекст": `[!history-bite]` — Автори літописів були не монахами (як у Київській Русі), а військовими канцеляристами та вищими урядовцями. Історія вийшла з келії на поле битви та в кабінет дипломата.
+- Section "Літопис Самовидця": `[!myth-buster]` — "Самовидець" не означає, що автор бачив *все* на власні очі. Це літературна маска, хоча автор (ймовірно, Роман Ракушка-Романовський) справді був учасником багатьох подій.
+- Section "Літопис Григорія Граб'янки": `[!culture]` — Цей літопис став настільки популярним серед козацької старшини, що зберігся у понад 50 списках. Це був "бестселер" XVIII століття.
+- Section "Літопис Самійла Величка": `[!quote]` — Величко першим в українській історіографії використав документи як доказову базу, цитуючи універсали та листи повністю.
+- Section "Спільні риси": `[!decolonization]` — Усі три літописи розглядають Хмельниччину як акт відновлення *давніх прав і вольностей*, а не як створення чогось нового чи "возз'єднання" з кимось.
+
+## Деколонізаційний контекст
+- **Imperial/Soviet myth**: Козацькі літописи часто трактувалися як "наївна" література або як доказ "віковічного прагнення до возз'єднання з Росією" (особливо через пізніші редакції).
+- **Ukrainian reality**: Це були тексти державної еліти (Geist der Staatlichkeit), які формулювали концепцію "Малоросії" не як провінції, а як окремого політичного тіла (Patria) зі своєю історією, правами та ієрархією. Вони конструювали ідентичність, відмінну від польської та російської.
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| **Війна 1648–1657** | Громадянська війна в Речі Посполитій / Визвольна війна за возз'єднання | Національно-визвольна революція / Війна за суверенітет Козацької держави |
+| **Малоросія** | Принизлива назва, що позначає провінційність та меншовартість щодо "Великої Росії" | У XVIII ст. — політичний термін, що позначав автономну Гетьманщину (за аналогією з Малою Грецією — ядром цивілізації); самоназва козацької держави |
+| **Козацький народ** | Соціальний стан (сословіє) | Політична нація, носій суверенітету (шляхта козацька) |
+
+## Section-Mapped Research Notes
+
+### Вступ — Козацька історіографія
+Козацькі літописи XVII–XVIII ст. — унікальне явище, що поєднує середньовічну хронікальність з бароковим історичним мисленням. Це перехід від провіденціалізму (все від Бога) до прагматизму (аналіз причин і наслідків).
+
+### Історичний контекст
+Період Руїни та відновлення Мазепинської доби. Формування нової еліти — козацької старшини, яка потребувала легітимації свого статусу (рівного шляхті) та своєї держави. Канцеляристи як інтелектуальна еліта.
+
+### Літопис Самовидця
+Найдавніший з "великої трійки". Авторство приписується Роману Ракушці-Романовському. Стиль лаконічний, близький до фахової мови урядовця. Цінний фактажем, особливо щодо подій Руїни, які автор описує з боку правобережного, а потім лівобережного козацтва.
+
+### Літопис Григорія Граб'янки
+Створений у Гадячі. Яскравий зразок барокового стилю: пишна мова, складні метафори, віршовані вставки. Головна ідея — героїзація козацтва. Вплив західних джерел (Пуфендорф, польські хроніки). Концепція "хозарського" походження козаків.
+
+### Літопис Самійла Величка
+Найбільш монументальний твір (4 томи). Автор — канцелярист Генеральної Військової Канцелярії. Використання широкого кола джерел: документів, листів, іноземних хронік. Критичне ставлення до джерел, спроба верифікації. Патріотичний пафос і водночас песимізм щодо сучасного стану Гетьманщини.
+
+### Спільні риси
+Спільна ідеологічна база: козаки — політичний народ; Хмельницький — "Мойсей", що вивів народ з "лядської неволі"; православ'я як маркер ідентичності. Ідея окремішності України як політичного суб'єкта.
+
+### Відмінності
+Самовидець — фактографічний, "сухий". Граб'янка — літературний, патетичний. Величко — науково-дослідницький, аналітичний. Різне бачення причин Руїни: Самовидець звинувачує "чернь", Величко шукає причини в незгоді старшини.
+
+### Як читати козацькі літописи
+Потрібно враховувати упередженість авторів (старшинська перспектива), вплив цензури (у пізніших списках), барокову риторику (гіперболізація). Це не об'єктивна фіксація подій, а *інтерпретація* історії з метою творення національного міфу.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12129)
+✓ Message 12048 acknowledged
+✓ Message 12129 acknowledged

@@ -1,0 +1,276 @@
+✅ Message sent to Gemini (ID: 10179) [auto-acked: self-addressed]
+✓ Message 10179 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10179...
+📨 Message #10179
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-if-i-were
+   Time: 2026-02-20T20:01:05.303815+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: a2-22
+level: A2
+sequence: 22
+slug: if-i-were
+version: '2.0'
+title: If I Were
+subtitle: The Conditional Mood
+content_outline:
+- section: Introduction / Вступ
+  points:
+  - Concept of the 'World of Dreams' — introduction to the conditional mood (Past
+    Tense + б/би) aligned with State Standard §4.2.3.3
+  - Difference between realization and imagination — establishing the core distinction
+    between real conditions (якщо) and hypothetical/unreal conditions (якби)
+- section: Presentation / Презентація
+  points:
+  - 'Formation: Past Tense + б/би — learner error: using ''би'' everywhere; rule:
+    ''б'' after vowels (Я б...), ''би'' after consonants (Він би...)'
+  - 'Comparison: Якщо (Real) vs Якби (Unreal) — essential visual table needed; learner
+    error: using ''якщо'' for unreal conditions (e.g., ''Якщо я був королем...'' ->
+    ''Якби я був королем...'')'
+  - 'Structure Warning — learner error: forgetting to attach ''би'' to ''як'' (Як
+    я був би -> Якби я був); ''якби'' is a single conjunction unit'
+  - Polite requests (Мені б хотілося) — emphasize 'Я б хотів...' as a softer, more
+    polite alternative to 'Я хочу' in service settings
+  - 'Proverbial usage of conditions — cultural hook: ''Якби та аби, та виросли в роті
+    гриби'' (If and maybe, then mushrooms would grow in the mouth)'
+- section: Practice / Практика
+  points:
+  - Dreaming about the lottery/future — context for using collocations like 'виграти
+    в лотерею', 'здійснити мрію'
+  - Transformation drills (Real to Unreal) — focused practice on switching conjunctions
+    and verb forms (Якщо я маю -> Якби я мав)
+- section: Dialogues / Діалоги
+  points:
+  - Planning a dream vacation or career — integrating vocabulary 'планувати подорож',
+    'мріяти про' into natural conversation
+focus: grammar
+pedagogy: PPP
+objectives:
+- Learner can form the conditional mood using the particle б/би
+- Learner can distinguish between real (якщо) and unreal (якби) conditions
+- Learner can express wishes and dreams
+- Learner can make polite requests using the conditional
+grammar:
+- conditional mood formation (б/би)
+- real condition (якщо)
+- unreal condition (якби)
+- polite requests (я б хотів)
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Conditional
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Conditional mood requirements for A2
+- name: Functional Grammar of Ukrainian - Modality
+  url: https://uk.wikipedia.org/wiki/Умовний_спосіб
+  type: reference
+  notes: Deep dive into hypothetical vs real conditions
+immersion: 60-75% Ukrainian
+phase: A2.2
+persona:
+  voice: Encouraging Cultural Guide
+  role: Lviv Coffeehouse Philosopher
+vocabulary_hints:
+  required:
+  - 'якби (if - unreal) — collocations: якби я був, якби ми мали; note: triggers conditional
+    mood'
+  - 'якщо (if - real) — collocations: якщо буде час, якщо хочете; note: triggers indicative
+    mood (contrast with якби)'
+  - 'хотіти (to want) — polite forms: я б хотів (I would like), хотілося б (one would
+    like)'
+  - 'мрія (dream) — collocations: здійснити мрію (to fulfill a dream), мріяти про
+    (to dream about)'
+  recommended:
+  - 'виграти (to win) — collocations: виграти в лотерею, виграти приз'
+  - 'подорож (trip/journey) — collocations: планувати подорож, вирушити в подорож'
+word_target: 3000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: If I Were
+
+## State Standard Reference
+§4.4.2: "складнопідрядні речення зі сполучниками ... якщо, ..." (Lines 1403, 1416)
+§4.2.3.3: "Conditional mood — якби + past tense" (Note: Although listed in B1 mapping, A2 level requires distinguishing real (якщо) vs unreal (якби) conditions per the plan and communicative competence requirements for hypothetical situations).
+Alignment: This module introduces the structural formation of the conditional mood (Past Tense + б/би) and the semantic distinction between real conditions (якщо) and hypothetical/unreal conditions (якби) at an A2-appropriate complexity level.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| якби | High (Core hypothetical) | якби я був, якби ми мали |
+| якщо | Very High (Core real) | якщо буде час, якщо хочете |
+| хотіти | Very High | я б хотів (політес), хотілося б |
+| мрія | High | здійснити мрію, мріяти про |
+| виграти | Medium | виграти в лотерею, виграти приз |
+| подорож | High | планувати подорож, вирушити в |
+
+## Cultural Hooks
+1. **The "Hrybi" Proverb**: "Якби та аби, та виросли в роті гриби" (If and maybe, then mushrooms would grow in the mouth). A classic Ukrainian idiom used to gently mock someone who indulges in too many "what ifs" or empty dreams without action.
+
+## Common Learner Errors
+1. **Particle choice (б vs би)**: Learners often use "би" everywhere. 
+   *   Rule: **б** after vowels (Я б...), **би** after consonants (Він би...).
+   *   Error: *Я би хотів* → Correct: **Я б хотів**.
+2. **Mixed Real/Unreal**: Learners confuse *якщо* (if - real) with *якби* (if - unreal).
+   *   Error: *Якщо я був королем...* → Correct: **Якби я був королем...**
+   *   Why: In English, "if" covers both. In Ukrainian, the choice of conjunction determines the reality of the situation.
+3. **Double 'би'**: Sometimes learners forget to add 'би' to the 'як' conjunction itself.
+   *   Error: *Як я був би...* → Correct: **Якби я був...**
+
+## Cross-References
+- Builds on: `past-tense` (formation requires past tense verbs), `want-need` (polite requests).
+- Prepares for: `complex-sentences` (B1), `future-plans` (A2.3).
+
+## Notes for Content Writing
+- **Grammar Visuals**: A simple table comparing **якщо** + present/future (Real) vs **якби** + past (Unreal) is essential.
+- **Politeness**: Emphasize "Я б хотів..." as a softer, more polite alternative to "Я хочу" in service settings.
+- **Word Target Strategy**: To reach the 1000-word target while maintaining A2 simplicity, expand on the "Dreams and Wishes" section with varied examples (travel, profession, social change) and use the "Proverbial usage" section to explain the cultural context of the "Mushrooms" proverb.
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 500
+  points:
+  - "Concept of the 'World of Dreams' — introduction to the conditional mood (Past Tense + б/би) aligned with State Standard §4.2.3.3 and §4.4.2 requirements for hypothetical situations."
+  - "Semantic distinction: The Real World (якщо) vs. the World of Imagination (якби) — establishing the core distinction between potential real-world outcomes and pure fantasy."
+- section: "Презентація граматики (Grammar Presentation)"
+  words: 800
+  points:
+  - "Formation mechanics: Past Tense + particle б/би. Explicit rule for the phonological variation: 'б' after vowels (Я б...) and 'би' after consonants (Він би...) to correct the common error of using 'би' everywhere."
+  - "The 'Jakby' Unit: Addressing the learner error of splitting the conjunction (e.g., correcting 'Як я був би...' to the unified 'Якби я був...')."
+  - "Visual Contrast Table: Real Condition (Якщо + Present/Future) vs Unreal Condition (Якби + Past). Emphasize that while English uses 'if' for both, the Ukrainian conjunction choice determines the reality of the premise."
+- section: "Культурний контекст (Cultural Context)"
+  words: 500
+  points:
+  - "The 'Hrybi' Proverb: 'Якби та аби, та виросли в роті гриби' (If and maybe, then mushrooms would grow in the mouth). Explanation of its use to mock empty 'what ifs' and passive dreaming."
+  - "Lviv Coffeehouse Philosophy: A narrative exploration of dreams and hypothetical scenarios ('Я б хотів...'), utilizing the persona of an encouraging guide to introduce modal hedging markers."
+- section: "Практика та аналіз помилок (Practice and Error Analysis)"
+  words: 700
+  points:
+  - "Transformation drills: Converting real situations (якщо) into unreal ones (якби), focusing on the mandatory shift to Past Tense forms (e.g., 'Якщо я маю гроші...' -> 'Якби я мав гроші...')."
+  - "Politeness Lab: Practicing 'Я б хотів...' and 'Мені б хотілося' as softer, more polite alternatives to 'Я хочу' in service settings, connecting to the 'want-need' prerequisite and social register."
+- section: "Діалоги та застосування (Dialogues and Application)"
+  words: 500
+  points:
+  - "Scenario: The Lottery Win. Integrating vocabulary 'виграти в лотерею' and 'здійснити мрію' into a conversation about hypothetical life changes and priorities."
+  - "Planning a Dream Trip: Using 'планувати подорож' and 'вирушити в подорож' to practice conditional questions ('Що б ти побачив, якби поїхав до Львова?')."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "якби (if - unreal) — High frequency; triggers conditional mood (якби + past tense); collocations: якби я був, якби ми мали"
+  - "якщо (if - real) — Very high frequency; triggers indicative mood; collocations: якщо буде час, якщо хочете"
+  - "хотіти (to want) — Focus on polite forms: я б хотів (masc.), я б хотіла (fem.), хотілося б (impersonal)"
+  - "мрія (dream) — High frequency; collocations: здійснити мрію (to fulfill a dream), мріяти про (to dream about)"
+  recommended:
+  - "виграти (to win) — Medium frequency; collocations: виграти в лотерею, виграти приз"
+  - "подорож (trip/journey) — High frequency; collocations: планувати подорож, вирушити в подорож"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (3290 chars)
+✅ Message sent to Claude (ID: 10186)
+✓ Message 10186 acknowledged
+   Auto-acknowledged reply #10186 (stdout delivery — no inbox accumulation)
+✓ Message 10179 acknowledged

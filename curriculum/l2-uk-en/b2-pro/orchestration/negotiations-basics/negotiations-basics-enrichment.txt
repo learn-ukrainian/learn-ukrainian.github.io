@@ -1,0 +1,276 @@
+✅ Message sent to Gemini (ID: 11826) [auto-acked: self-addressed]
+✓ Message 11826 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #11826...
+📨 Message #11826
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-negotiations-basics
+   Time: 2026-02-20T23:33:26.125768+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b2-pro-10
+level: B2-PRO
+sequence: 10
+slug: negotiations-basics
+version: '2.0'
+title: 'Переговори: Основи'
+subtitle: Negotiation Basics
+content_outline:
+- section: Розминка — Культура переговорів в Україні
+  points:
+  - Українська специфіка — важливість відносин та довіри
+  - Роль неформального спілкування до та після переговорів
+  - Чому "ні" на початку не означає остаточну відмову
+- section: Підготовка до переговорів
+  points:
+  - 'Визначення позиції: Чого ми хочемо досягти?'
+  - 'Визначення інтересів: Чому це важливо для нас?'
+  - 'Альтернатива: Що робитимемо, якщо переговори провалюються?'
+  - Збір інформації про іншу сторону
+- section: Відкриття переговорів
+  points:
+  - 'Привітання та налагодження контакту: Раді вас бачити... / Дякуємо, що знайшли
+    час...'
+  - 'Представлення мети: Сьогодні ми зібралися, щоб... / Мета нашої зустрічі —...'
+  - 'Уточнення порядку денного: Пропоную обговорити такі питання...'
+  - 'Регламент: Маємо [час]. Чи достатньо?'
+- section: Виклад позицій
+  points:
+  - 'Представлення позиції: Наша позиція полягає в тому, що... / Ми пропонуємо...'
+  - 'Обґрунтування: Це обумовлено тим, що... / Причина в тому, що...'
+  - 'Уточнення позиції іншої сторони: Чи правильно я розумію, що ви...? / Поясніть,
+    будь ласка...'
+  - Активне слухання та перефразування
+- section: Зразок діалогу — відкриття переговорів
+  points:
+  - Реалістичний діалог двох сторін
+  - Аналіз мовних засобів
+  - Альтернативні формулювання
+- section: Практика — підготовка та відкриття
+  points:
+  - 'Завдання: Підготувати відкриття переговорів за заданим сценарієм'
+  - Рольова гра — відкриття та виклад позицій
+  - Зворотній зв'язок
+vocabulary_hints:
+  required:
+  - наша позиція полягає в (our position is)
+  - ми пропонуємо (we propose)
+  - чи правильно я розумію (do I understand correctly)
+  - це обумовлено тим (this is due to)
+  - мета нашої зустрічі (the purpose of our meeting)
+  - раді вас бачити (glad to see you)
+  - пропоную обговорити (I suggest we discuss)
+  - інтереси сторін (interests of the parties)
+  recommended:
+  - альтернатива (alternative)
+  - очікування (expectations)
+  - спільна мета (common goal)
+  - компроміс (compromise)
+  - поступка (concession)
+  - домовленість (agreement)
+activity_hints:
+- type: document-analysis
+  focus: Проаналізувати діалог відкриття переговорів — визначити стратегії сторін
+  items: 1
+- type: role-play
+  focus: Провести відкриття переговорів за заданим сценарієм
+  items: 1
+- type: writing-task
+  focus: Підготувати письмову позицію для переговорів
+  items: 1
+- type: register-transform
+  focus: Перетворити агресивні формулювання на дипломатичні
+  items: 6
+- type: fill-in
+  focus: Вставити правильні фрази для відкриття та викладу позиції
+  items: 10
+- type: matching
+  focus: З'єднати ситуацію з відповідною тактикою
+  items: 8
+focus: professional
+pedagogy: ESP
+prerequisites:
+- 'b2-pro-09 (Презентації: Виступ)'
+connects_to:
+- 'b2-pro-11 (Переговори: Тактика)'
+objectives:
+- Учень може підготуватися до переговорів — визначити позицію, інтереси, альтернативу
+- Учень може професійно відкрити переговори та налагодити контакт
+- Учень може чітко викласти свою позицію та вислухати іншу сторону
+- Учень розуміє українську культуру переговорів (відносини, довіра, гнучкість)
+grammar:
+- Умовні конструкції для гіпотез (Якщо ми..., то ви...)
+- Непряма мова для перефразування (Ви сказали, що... / Я правильно зрозумів, що...)
+- Дієслова з префіксом до- для досягнення результату (домовитися, досягти, дійти згоди)
+register: офіційно-діловий
+phase: B2-PRO.1
+persona:
+  voice: Senior Specialist
+  role: Менеджер із закупівель
+word_target: 2000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Переговори: Основи
+
+## Використані джерела
+1. [ДСТУ 4163:2020](https://uk.wikipedia.org/wiki/%D0%94%D0%A1%D0%A2%D1%83_4163:2020) — "Уніфікована система організаційно-розпорядчої документації". Національний стандарт, що регулює правила оформлення ділових документів та протоколів.
+2. [Дія.Бізнес: Гід з комунікацій](https://business.diia.gov.ua/) — Державний портал для підприємців, що містить рекомендації щодо професійної етики та стратегій переговорів.
+3. [Школа бізнесу Нова пошта: Правила успішних переговорів](https://novaposhta.education/) — Професійний ресурс з вивчення етапів та тактик бізнес-комунікації в Україні.
+4. [IMFU: Стратегічні переговори та BATNA](https://imfu.com.ua/) — Матеріали щодо підготовки альтернатив (НАОУ) та аналізу інтересів сторін.
+
+## Термінологічна база
+
+| Українська (норма) | Русизм/ненорма | English | Контекст вживання |
+|--------------------|---------------|---------|-------------------|
+| Порядок денний | Повестка дня | Agenda | Офіційне відкриття зустрічі |
+| Укласти договір | Заключити договір | To conclude a contract | Фіналізація домовленостей |
+| НАОУ | БАТНА | BATNA | Стратегічна підготовка |
+| Викласти позицію | Озвучити позицію | To state a position | Презентація своїх вимог |
+| Досягти згоди | Прийти до згоди | To reach an agreement | Успішне завершення раунду |
+| Порушити питання | Підняти питання | To raise a question | Ініціація обговорення |
+| Брати участь | Приймати участь | To participate | Участь у процесі переговорів |
+| Згідно з контрактом | Згідно контракту | In accordance with the contract | Посилання на умови угоди |
+
+## Мовні норми та стандарти
+- **ДСТУ 4163:2020**: Визначає вимоги до оформлення протоколів засідань та листів-запрошень, включаючи формат дати, підписів та назв організацій.
+- **Активна агентність**: У професійній українській мові замість пасивних зворотів («Нами було розглянуто пропозицію») слід використовувати активні конструкції («Ми розглянули вашу пропозицію»), що підкреслює суб'єктність та відповідальність сторін.
+- **Діловий етикет**: Обов'язкове використання «Ви»-форми та чітке дотримання регламенту часу, погодженого на початку зустрічі.
+
+## Аутентичні приклади
+1. [Відкриття]: «Раді вітати вас на нашій зустрічі. Пропоную розпочати з погодження порядку денного та регламенту нашої роботи.»
+2. [Представлення мети]: «Сьогодні ми зібралися, щоб обговорити ключові пункти нашої майбутньої співпраці та знайти взаємовигідні рішення щодо логістики.»
+3. [Виклад позиції]: «Наша позиція ґрунтується на детальному аналізі поточних ринкових умов та стратегічних цілях нашого департаменту на цей рік.»
+
+## Типові помилки
+1. ❌ повестка дня → ✅ порядок денний — грубий русизм, що видає низьку мовну культуру.
+2. ❌ приймати участь → ✅ брати участь — поширена калька, замість якої слід вживати питомо український вислів.
+3. ❌ підняти питання → ✅ порушити питання — у діловому мовленні «піднімають» фізичні об'єкти, а питання — «порушують».
+4. ❌ згідно контракту → ✅ згідно з контрактом — типова граматична помилка (згідно + з + орудний відмінок).
+5. ❌ заключити угоду → ✅ укласти угоду — стійке словосполучення офіційно-ділового стилю.
+
+## Engagement Hooks (mapped to sections)
+- Section "Розминка — Культура переговорів в Україні": [!context] — В українському бізнесі критично важливим є етап «налагодження контакту», де особиста довіра часто передує обговоренню цифр.
+- Section "Підготовка до переговорів": [!pro-tip] — Завжди розробляйте свою НАОУ (BATNA) перед початком, щоб мати чіткий план дій на випадок, якщо переговори зайдуть у глухий кут.
+- Section "Відкриття переговорів": [!language-note] — Використання терміна «порядок денний» замість кальки «повестка дня» — це маркер високого професіоналізму та поваги до мови.
+- Section "Виклад позицій": [!common-error] — Не кажіть «ми озвучуємо позицію», використовуйте більш точне «ми викладаємо нашу позицію» або «ми представляємо наше бачення».
+
+## Section-Mapped Research Notes
+
+### Розминка — Культура переговорів в Україні
+Українська ділова культура характеризується високим рівнем емоційного інтелекту. Переговори часто починаються з неформального спілкування (small talk) про новини, галузеві події чи спільні контакти. Важливо розуміти, що первинна відмова («ні») часто є запрошенням до діалогу та пошуку гнучких варіантів, а не фіналом.
+
+### Підготовка до переговорів
+Професійна підготовка включає розрізнення «позицій» (що ми просимо) та «інтересів» (чому нам це потрібно). На етапі підготовки важливо зібрати інформацію про повноваження осіб, що приймають рішення на іншій стороні. Використання матриці SWOT для аналізу власної позиції.
+
+### Відкриття переговорів
+Етап встановлення регламенту та порядку денного. Важливо отримати підтвердження від іншої сторони, що запропонований план зустрічі їм підходить. Використання ввічливих дієслів («Дякуємо, що знайшли час», «Ми цінуємо можливість діалогу»).
+
+### Виклад позицій
+Основний етап, де застосовуються техніки активного слухання та перефразування для уточнення позиції партнера («Чи правильно я розумію, що вашим головним занепокоєнням є терміни поставки?»). Використання аргументації, побудованої на фактах, а не на емоціях.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 11871)
+✓ Message 11826 acknowledged
+✓ Message 11871 acknowledged

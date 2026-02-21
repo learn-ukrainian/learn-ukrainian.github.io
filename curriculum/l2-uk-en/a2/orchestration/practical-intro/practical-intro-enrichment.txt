@@ -1,0 +1,298 @@
+✅ Message sent to Gemini (ID: 10249) [auto-acked: self-addressed]
+✓ Message 10249 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10249...
+📨 Message #10249
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-practical-intro
+   Time: 2026-02-20T20:04:55.881722+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: a2-57
+level: A2
+sequence: 57
+slug: practical-intro
+version: '2.0'
+title: Practical Intro
+subtitle: Real World Ukrainian
+content_outline:
+- section: Огляд
+  points:
+  - From theory to practice — State Standard §4.2.2 alignment (applying grammatical
+    norms in speech)
+  - 'Real-world communication — cultural hook: Surzhyk as a transitional stage, ''mistakes''
+    as stepping stones to standard Ukrainian'
+- section: 'Skill 1: The 7 Cases (Сім відмінків)'
+  points:
+  - All cases overview — focus on functional usage over rote memorization (State Standard
+    §4.2.2)
+  - 'When to use each case — cultural hook: The Vocative case (Кличний) as a critical
+    marker of respect (Пане Юрію vs. Юра)'
+- section: 'Skill 2: Verb Aspect (Вид дієслова)'
+  points:
+  - Perfective vs imperfective — State Standard §4.2.3.1 (differentiation of aspect
+    pairs)
+  - 'Aspect in context — learner error: using Perfective for Present tense (я напишу
+    = future, not present)'
+- section: 'Skill 3: Complex Sentences (Складні речення)'
+  points:
+  - Conjunctions and connectors — State Standard §4.4.2 (complex sentences with тому
+    що, бо, щоб, якщо)
+  - Building complex sentences — moving beyond simple subject-verb-object structures
+- section: 'Skill 4: Common Mistakes (Типові помилки)'
+  points:
+  - 'Case confusion — learner error: Accusative instead of Genitive for negation (я
+    не бачу книгу vs. книги)'
+  - 'Aspect errors — learner error: Motion verb confusion (йти vs. їхати)'
+- section: Інтеграційне завдання
+  points:
+  - 'Integration challenge — scenario: writing a message to a friend or boss (requires
+    cases + aspect)'
+  - Apply all skills — synthesizing grammar rules into coherent communication
+- section: Підсумок
+  points:
+  - Summary and next steps — preparing for B1.1 metalanguage transition
+vocabulary_hints:
+  required:
+  - 'речення (sentence) — collocations: скласти речення, просте/складне речення, член
+    речення'
+  - 'слово (word) — collocations: нове слово, значення слова, іншомовне слово, чесне
+    слово'
+  - 'граматика (grammar) — collocations: вивчати граматику, правила граматики'
+  - 'правило (rule) — collocations: запам''ятати правило, за правилом, виняток з правила'
+  - 'помилка (mistake) — collocations: зробити помилку, виправити помилку, груба/типова
+    помилка'
+  - 'правильно (correctly) — usage: як правильно сказати?'
+  - 'неправильно (incorrectly) — context: це граматично неправильно'
+  - 'контекст (context) — collocations: у контексті, зрозуміти з контексту'
+  recommended:
+  - 'відмінок (case) — context: визначити відмінок'
+  - 'вид (aspect) — context: доконаний/недоконаний вид'
+  - 'сполучник (conjunction) — context: поєднати частини речення'
+  - 'порядок (order) — collocations: порядок слів'
+activity_hints:
+- type: fill-in
+  focus: Case selection in context
+  items: 20
+- type: error-correction
+  focus: Fix grammar mistakes
+  items: 20
+- type: unjumble
+  focus: Build complex sentences
+  items: 15
+- type: quiz
+  focus: Grammar rules review
+  items: 15
+focus: practical
+pedagogy: PPP
+prerequisites:
+- a2-56 (Checkpoint Full Grammar)
+connects_to:
+- a2-58 (Practical Warm-up)
+objectives:
+- Learner can identify all 7 cases in context
+- Learner can choose correct verb aspect
+- Learner can fix common grammar mistakes
+- Learner can build complex sentences
+grammar:
+- Case system review in practical contexts
+- Verb aspect review for real situations
+- Sentence structure and common errors
+register: розмовний
+immersion: 75-90% Ukrainian
+phase: A2.6 [Practical]
+persona:
+  voice: Encouraging Cultural Guide
+  role: Camp Counselor
+word_target: 3000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Practical Intro
+
+## State Standard Reference
+§4.2.2: "Уживання відмінкових форм в однині та множині. Основні значення відмінків: Називний... Родовий... Давальний... Знахідний... Орудний... Місцевий... Кличний"
+§4.2.3.1: "Дійсний спосіб... утворення форм роду і числа дієслів минулого часу... майбутній час... видові пари дієслів"
+§4.4.2: "Складне речення... складносурядні речення... складнопідрядні речення зі сполучниками тому що, бо... щоб... якщо"
+Alignment: This module directly addresses the A2 requirement to master the usage of all 7 cases in context, differentiate aspect pairs in narrative, and construct complex sentences for reasoning (тому що) and condition (якщо), moving beyond simple sentences.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| речення | High / Litopys | скласти речення, просте речення, складне речення, член речення |
+| слово | Very High / Litopys | нове слово, значення слова, іншомовне слово, чесне слово |
+| граматика | Med / Litopys | вивчати граматику, правила граматики, граматична помилка |
+| помилка | High / Web | зробити помилку, виправити помилку, груба помилка, типова помилка |
+| правило | High / Web | запам'ятати правило, за правилом, виняток з правила |
+| контекст | Med / Web | у контексті, зрозуміти з контексту, залежить від контексту |
+
+## Cultural Hooks
+1. **Surzhyk as a Stepping Stone**: Surzhyk (a mix of Ukrainian and Russian) is often a transitional stage for speakers switching to Ukrainian. A "mistake" is often just a step towards the standard language. (Source: Wilson Center, Wikipedia)
+2. **Politeness & The Vocative**: Using the Vocative case (*Пане Юрію, Олено*) and the formal *Ви* is not just "grammar" but a critical cultural marker of respect in Ukrainian society, distinguishing it from more casual or rude speech patterns. (Source: TalkPal, SpeakUA)
+
+## Common Learner Errors
+1. **Perfective Present Tense**: Using a perfective verb in the present tense (e.g., *я напишу* meaning "I will write", not "I am writing") → Use imperfective for present (*я пишу*).
+2. **Case Confusion (Genitive vs. Accusative)**: Using Accusative for objects of negation (*я не бачу книгу*) instead of Genitive (*я не бачу книги*).
+3. **Motion Verb Confusion**: Mixing up *йти* (on foot) and *їхати* (by vehicle), or determinate/indeterminate pairs.
+
+## Cross-References
+- Builds on: a2-56 (Checkpoint Full Grammar)
+- Prepares for: a2-58 (Practical Warm-up), B1.1 (Metalanguage transition)
+
+## Notes for Content Writing
+- Use the "Surzhyk" concept gently – as a sign of trying, but point towards the standard form.
+- The "Integration Task" should be a real-world scenario (e.g., writing a message to a friend or boss) that naturally forces the use of cases and aspect.
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Від теорії до практики (Introduction: From Theory to Practice)"
+  words: 450
+  points:
+  - "Bridge from A2 grammar to functional usage (State Standard §4.2.2 alignment) — focus on applying norms in spontaneous speech"
+  - "Cultural hook: Surzhyk as a transitional stage — viewing 'mistakes' as stepping stones for speakers switching to Ukrainian; the concept of 'trying' as a value"
+- section: "Сім відмінків у дії (The 7 Cases in Action)"
+  words: 750
+  points:
+  - "Functional overview of all 7 cases (State Standard §4.2.2) — choosing cases based on communicative purpose rather than memorized paradigms"
+  - "The Vocative case (Кличний) as a cultural marker of respect: contrasting casual 'Юра' with formal 'Пане Юрію' or 'Олено' — etiquette rules for addressing different social roles"
+  - "Common case confusion: Drill the Genitive vs. Accusative distinction for negation (я не бачу книгу [Acc] vs. книги [Gen])"
+- section: "Вид дієслова в контексті (Verb Aspect in Context)"
+  words: 650
+  points:
+  - "Differentiating aspect pairs (State Standard §4.2.3.1) — Perfective (result) vs. Imperfective (process/habit) in narrative storytelling"
+  - "Learner error alert: The 'Perfective Present' trap — explaining why 'я напишу' equals future result, while 'я пишу' describes the current moment; practice with 5 minimal pairs"
+  - "Motion verb nuances: Revisiting 'йти' vs. 'їхати' — vehicle vs. foot travel in real-world scenarios"
+- section: "Складні речення та пояснення (Complex Sentences and Reasoning)"
+  words: 650
+  points:
+  - "Constructing complex sentences using conjunctions 'тому що', 'бо' (reason), 'щоб' (purpose), and 'якщо' (condition) per State Standard §4.4.2"
+  - "Moving beyond simple SVO structures — building multi-clause sentences to express logic and situational conditions in professional and personal contexts"
+- section: "Типові помилки та інтеграція (Common Mistakes and Integration)"
+  words: 500
+  points:
+  - "Diagnostic drill: Identifying and fixing common errors in case selection and aspect usage in a mixed-input text"
+  - "Scenario: Integration challenge — writing a formal/semi-formal message to a boss or friend (applying cases, aspect, and complex sentence connectors for reasoning)"
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "речення (sentence) — High frequency; collocations: скласти речення, просте/складне речення, член речення"
+  - "слово (word) — Very High frequency; collocations: нове слово, значення слова, іншомовне слово, чесне слово"
+  - "граматика (grammar) — collocations: вивчати граматику, правила граматики, граматична помилка"
+  - "правило (rule) — High frequency; collocations: запам'ятати правило, за правилом, виняток з правила"
+  - "помилка (mistake) — High frequency; collocations: зробити помилку, виправити помилку, груба/типова помилка"
+  - "правильно (correctly) — usage: як правильно сказати?; register: neutral/formal"
+  - "неправильно (incorrectly) — context: це граматично неправильно; register: neutral/formal"
+  - "контекст (context) — collocations: у контексті, зрозуміти з контексту, залежить від контексту"
+  recommended:
+  - "відмінок (case) — metalanguage; context: визначити відмінок"
+  - "вид (aspect) — metalanguage; context: доконаний/недоконаний вид"
+  - "сполучник (conjunction) — context: поєднати частини речення"
+  - "порядок (order) — collocations: порядок слів"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (3489 chars)
+✅ Message sent to Claude (ID: 10252)
+✓ Message 10252 acknowledged
+   Auto-acknowledged reply #10252 (stdout delivery — no inbox accumulation)
+✓ Message 10249 acknowledged

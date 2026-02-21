@@ -890,7 +890,7 @@ resources:
       url: https://www.ukrainianlessons.com/fmu28/
       relevance: high
       match_reason: 'Level-aligned topic match: weather'
-  a1-30-prepositions-iii:
+  a1-30-prepositions-direction-origin:
     articles:
     - title: Location vs Destination
       url: https://www.ukrainianlessons.com/location-destination-prepositions/
@@ -1526,7 +1526,7 @@ resources:
       url: https://talkukrainian.com/
       relevance: high
       source: Practice exercises
-  a2-33-at-the-doctor:
+  a2-33-health-basics:
     youtube:
     - title: Doctors Vocabulary and questions in Ukrainian - Learn doctor vocab and...
       url: https://www.youtube.com/watch?v=OnO697z9iPM
@@ -2049,7 +2049,7 @@ resources:
       url: https://www.ukrainianlessons.com/fmu25/
       relevance: medium
       match_reason: 'Listening review (A1): sports'
-  a2-54-health-body:
+  a2-54-health-wellness:
     youtube:
     - title: 'UKRAINIAN VOCABULARY: body parts and organs'
       url: https://www.youtube.com/watch?v=JZGl3Qo25Yc

@@ -1,0 +1,91 @@
+module: b1-80
+level: B1
+sequence: 80
+slug: active-lifestyle
+version: '2.0'
+title: Активний відпочинок
+subtitle: Active Lifestyle and Outdoor Recreation
+content_outline:
+- section: Вступ
+  points:
+  - 'Культура активного відпочинку в Україні — відповідність стандарту: способи проведення
+    вільного часу, хобі та зацікавлення'
+  - Від фізкультури до фітнесу — еволюція термінології та підходів
+- section: Історія та культура
+  points:
+  - Традиції активного відпочинку — Карпатський туризм, піші походи (хайкінг) маршрутами
+    Чорногори та Ґорґан
+  - 'Фітнес і спортзали в Україні — cultural hook: «Качалка» в Гідропарку як феномен
+    народного тренажерного залу просто неба'
+  - Здоровий спосіб життя — акцент на самопочутті та регулярності тренувань
+- section: Сучасність
+  points:
+  - На свіжому повітрі — доступність спорту для всіх
+  - Активний туризм — поєднання спорту із зануренням у традиції
+  - 'Парки, велодоріжки, воркаут-майданчики — learner error: використання прийменників
+    (на стадіон, на майданчик vs в спортзал)'
+- section: Практика
+  points:
+  - 'Ключові концепції — граматичний фокус: конструкція «займатися + Орудний відмінок»
+    (спортом, йогою)'
+  - 'Таблиці активностей — розрізнення дієслів руху: йти (зараз) vs ходити (регулярно)
+    на тренування'
+- section: Продукція
+  points:
+  - Діалоги про активний спосіб життя
+- section: Підсумок — Будь активним!
+  points:
+  - Як почати активне життя — мотивація та малі кроки
+- section: Потрібно більше практики?
+  points: []
+vocabulary_hints:
+  required:
+  - активний (active) — активний відпочинок, форми активного відпочинку, обирати активний
+    відпочинок
+  - відпочинок (recreation) — переваги активного відпочинку, дозвілля
+  - тренування (training) — ранкове тренування, інтенсивне тренування, йти на тренування
+  - 'спортзал (gym) — ходити в спортзал, абонемент у спортзал; learner error: preposition
+    ''в'' not ''на'''
+  - біг (running) — займатися бігом
+  - плавання (swimming) — басейн, плавати
+  - велосипед (bicycle) — їздити на велосипеді, велодоріжки
+  - похід (hike) — йти в похід, гірський похід, спорядження для походу
+  recommended:
+  - йога (yoga) — займатися йогою
+  - фітнес (fitness) — займатися фітнесом
+  - здоровий спосіб життя (healthy lifestyle) — самопочуття, корисні звички
+  - на свіжому повітрі (outdoors) — спортмайданчики, воркаут
+activity_hints:
+- type: reading
+  focus: Fitness and outdoor activity texts
+  items: 15
+- type: match-up
+  focus: Match activities to equipment
+  items: 20
+- type: fill-in
+  focus: Complete activity descriptions
+  items: 15
+- type: quiz
+  focus: Share fitness routines
+  items: 10
+focus: culture
+pedagogy: CBI
+prerequisites:
+- b1-79 (Sports in Ukraine)
+connects_to:
+- b1-81 (Running in Ukraine)
+objectives:
+- Learner can discuss active lifestyle habits in Ukrainian
+- Learner can understand texts about fitness and outdoor activities
+- Learner can use vocabulary for diverse physical activities
+- Learner can compare active leisure traditions in Ukraine and abroad
+grammar:
+- Activity and fitness vocabulary
+- Describing habits and routines
+- Discussing preferences
+register: розмовний
+phase: B1.7 [Contemporary Ukraine]
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Wellness Coach
+word_target: 4000

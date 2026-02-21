@@ -1,0 +1,315 @@
+✅ Message sent to Gemini (ID: 12928) [auto-acked: self-addressed]
+✓ Message 12928 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12928...
+📨 Message #12928
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-franko-lesia-hrinchenko
+   Time: 2026-02-20T23:43:08.155839+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b2-hist-085
+level: B2-HIST
+sequence: 85
+slug: franko-lesia-hrinchenko
+version: '2.0'
+title: Франко, Леся, Грінченко
+subtitle: 'Franko, Lesia Ukrainka, Hrinchenko: Titans of Ukrainian Modernism'
+content_outline:
+- section: 'Вступ: Три титани'
+  points:
+  - 'Кінець XIX — початок XX століття: розквіт — час, коли культура взяла на себе
+    функції держави та інструменти націєтворення'
+  - Література як інструмент національного пробудження — перехід від «етнографічної
+    розваги» (котляревщина) до високої модерної культури
+  - Чому ці троє? — Франко (Галичина), Леся (Волинь/Київ), Грінченко (Слобожанщина/Київ)
+    як архітектори єдиного культурного простору (Соборність)
+  - 'Спільна місія — «зшивання» підавстрійської та підросійської України; cultural
+    hook: [!context]'
+- section: Іван Франко (1856-1916)
+  points:
+  - 'Універсальний геній: поет, прозаїк, науковець — «Академія наук в одній особі»,
+    автор понад 6000 творів'
+  - '«Каменярі» та інші твори — імперський міф про «революціонера» vs реальність тяжкої
+    праці націєтворення; include quote: «Народе мій, замучений, розбитий...»'
+  - 'Політична діяльність у Галичині — еволюція від соціалістичного федералізму до
+    ідеї повної політичної самостійності («Не пора...»); engagement hook: [!decolonization]'
+  - Конфлікт із Драгомановим — розрив через усвідомлення загрози асиміляції та відмова
+    від ідеї федерації з Росією
+- section: Леся Українка (1871-1913)
+  points:
+  - Від Лариси Косач до Лесі Українки — високоосвічена аристократка духу, феміністичний
+    аспект сильних жіночих образів
+  - Драматургія світового рівня — переосмислення античних сюжетів («Кассандра», «Оргія»)
+    та кидання виклику світовій класиці («Камінний господар» vs Дон Жуан)
+  - '«Лісова пісня» та філософські драми — неоромантизм, конфлікт мрії та буденності;
+    include quote: «Ні, я жива! Я буду вічно жити!»'
+  - 'Хвороба та творчість — «Contra spem spero» як маніфест волі, хвороба як стимул,
+    а не слабкість; engagement hook: [!myth-buster]'
+  - 'Історичний факт — ув''язнення 1907 року разом із сестрою Ольгою (сусідня камера
+    з Грінченком); engagement hook: [!history-bite]'
+- section: Борис Грінченко (1863-1910)
+  points:
+  - Педагог та лексикограф — автор підручників («Рідне слово») в умовах заборон, принципова
+    відмова від російської мови навіть з чиновниками
+  - '«Словник української мови» (1907-1909) — 4 томи, 68 тис. слів, «паспорт» мови
+    та доказ її окремішності; engagement hook: [!fact]'
+  - Просвітницька діяльність — лідер «Просвіти», організатор видавничої справи, виховання
+    доньки Насті виключно українською мовою
+- section: Первинні джерела
+  points:
+  - Фрагменти творів Франка — уривок з прологу до поеми «Мойсей» або стаття «Що таке
+    поступ?»
+  - Поезії Лесі Українки — діалог Мавки і Лукаша («Лісова пісня») або монолог Оксани
+    з «Боярині» (про чужину в Москві)
+  - Статті Грінченка — передмова до Словника або вірш «Землякам, що раз на рік збираються
+    на роковини Шевченка»
+- section: 'Підсумок: Спадщина титанів'
+  points:
+  - Вплив на XX століття — підготовка ґрунту для Визвольних змагань 1917-1921 років,
+    європеїзація української культури оминаючи Росію
+  - Канонізація та деканонізація — радянські міфи («вічний революціонер», «друг робітників»)
+    vs реальні творці елітарної культури
+  - 'Сучасне прочитання — актуальність як приклад культурного спротиву імперії та
+    утвердження суб''єктності; engagement hook: [!analysis]'
+vocabulary_hints:
+  required:
+  - модернізм (modernism) — контекст європейської культури кінця XIX ст.
+  - драматургія (dramaturgy) — новаторство Лесі Українки (драма ідей)
+  - лексикограф (lexicographer) — роль Грінченка у впорядкуванні мови
+  - просвітництво (enlightenment) — діяльність «Просвіти» та Грінченка
+  - поет (poet) — Франко як Каменяр та лірик
+  - прозаїк (prose writer) — реалістична проза Франка
+  - канон (canon) — формування літературного канону цими авторами
+  - шедевр (masterpiece) — «Лісова пісня», «Мойсей»
+  - соборність (unity/sobornist) — ідея єднання українських земель через культуру
+  - словник (dictionary) — Словник Грінченка як національний здобуток
+  recommended:
+  - символізм (symbolism) — елементи у творчості ранніх модерністів
+  - неоромантизм (neo-romanticism) — стиль «Лісової пісні»
+  - антологія (anthology) — видання творів
+  - класик (classic author) — статус Франка, Лесі, Грінченка
+  - спадщина (legacy) — те, що залишили нащадкам
+  - асиміляція (assimilation) — загроза, проти якої боролися титани
+  - суб'єктність (agency/subjectivity) — українці як творці власної історії
+  - інтелігенція (intelligentsia) — роль освіченої еліти
+activity_hints:
+- type: reading
+  focus: Фрагменти творів Франка, Лесі, Грінченка
+  source: Літературні твори
+  items: 4
+- type: essay-response
+  focus: Як література кінця XIX століття сприяла національному пробудженню?
+focus: history
+pedagogy: CBI
+prerequisites:
+- b2-hist-84 (Драгоманов)
+connects_to:
+- b2-hist-86 (Синтез: Імперська доба)
+- b2-hist-87 (Грушевський)
+objectives:
+- Учень може описати внесок Франка, Лесі Українки та Грінченка в українську культуру
+- Учень може пояснити концепцію модернізму в українській літературі
+- Учень може проаналізувати взаємозв'язок літератури та національного руху
+- Учень може порівняти підходи трьох титанів до питання українства
+grammar:
+- Минулий час в біографічному наративі
+- Цитати та пряма мова
+- Літературознавча термінологія
+register: публіцистичний
+phase: HIST.8 [Imperial Era]
+persona:
+  voice: Senior Professor of History
+  role: Literary Salon Host
+word_target: 5000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Франко, Леся, Грінченко
+
+## Використані джерела
+1. [Енциклопедія Сучасної України: Іван Франко](https://esu.com.ua/search_articles.php?id=Франко+Іван) — біографія та аналіз творчості.
+2. [Енциклопедія Сучасної України: Леся Українка](https://esu.com.ua/search_articles.php?id=Леся+Українка) — детальний огляд життя і доробку.
+3. [Енциклопедія Сучасної України: Борис Грінченко](https://esu.com.ua/search_articles.php?id=Грінченко+Борис) — стаття про лексикографічну та громадську діяльність.
+4. [Ізборник](http://litopys.org.ua/) — тексти першоджерел та історичні розвідки.
+5. [History.org.ua](http://resource.history.org.ua/) — матеріали Інституту історії України НАНУ.
+
+## Хронологія
+- 1856: Народження Івана Франка в Нагуєвичах.
+- 1863: Народження Бориса Грінченка на Харківщині.
+- 1871: Народження Лесі Українки (Лариси Косач) у Новограді-Волинському.
+- 1877: Перший арешт Івана Франка ("соціалістичний процес").
+- 1893: Вихід першої збірки Лесі Українки "На крилах пісень" у Львові (за сприяння Франка).
+- 1904: Грінченко стає співзасновником Української радикальної партії.
+- 1907-1909: Видання 4-томного "Словаря української мови" за редакцією Грінченка.
+- 1910: Смерть Бориса Грінченка.
+- 1911: Написання драми-феєрії "Лісова пісня" Лесею Українкою.
+- 1913: Смерть Лесі Українки в Сурамі.
+- 1916: Смерть Івана Франка у Львові.
+
+## Ключові факти та цитати
+- **Іван Франко**: «Ми мусимо навчитися чути себе українцями – не галицькими, не буковинськими українцями, а українцями без офіційних кордонів.»
+- **Леся Українка**: «Хто визволиться сам, той буде вільний, Хто визволить кого, в неволю візьме.» (з драми "Осіння казка").
+- **Леся Українка**: «Ні, я жива! Я буду вічно жити! Я в серці маю те, що не вмирає.» ("Лісова пісня").
+- **Борис Грінченко**: «...кожен, хто приносить хоть крихту обмоскалення в наш народ... робить йому шкоду, бо відбиває його від національного ґрунту.»
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ: Три титани": [!context] — Пояснити, що ці троє діяли не ізольовано, а як архітектори єдиного культурного простору, який "зшив" підавстрійську та підросійську Україну.
+- Section "Іван Франко (1856-1916)": [!decolonization] — Франко еволюціонував від соціалістичного федералізму (під впливом Драгоманова) до ідеї повної політичної самостійності ("Не пора...").
+- Section "Леся Українка (1871-1913)": [!myth-buster] — Радянський міф про "співачку досвітніх огнів" (революціонерку) приховував її глибокий інтелектуалізм та європейський модернізм. Вона не "плакала", а кидала виклик світовій класиці ("Камінний господар" vs Дон Жуан).
+- Section "Леся Українка (1871-1913)": [!history-bite] — У 1907 році Леся разом із сестрою Ольгою потрапила до тюрми, де в сусідній камері сидів Борис Грінченко.
+- Section "Борис Грінченко (1863-1910)": [!fact] — Грінченко відмовлявся відповідати російською мовою навіть чиновникам, принципово утверджуючи статус української мови як повноцінної.
+- Section "Підсумок: Спадщина титанів": [!analysis] — Якби не словник Грінченка та модернізація мови Франком/Лесею, українська мова могла б залишитися "хатнім діалектом".
+
+## Деколонізаційний контекст
+- **Imperial/Soviet myth**: Франко — "вічний революціонер"-соціаліст; Леся Українка — "друг робітничого класу"; Грінченко — "народник-просвітянин". Усі троє розглядалися як "менші брати" російських класиків.
+- **Ukrainian reality**: Це були творці високої, елітарної культури, які інтегрували Україну в європейський контекст *оминаючи* Росію. Франко перекладав світову класику і писав наукові праці; Леся переосмислювала античні та біблійні сюжети; Грінченко створив наукову базу мови. Вони утверджували суб'єктність українців як модерної нації, а не етнографічного релікту.
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| Каменяр (про Франка) | Революціонер, що руйнує старий світ | Будівничий нації, що прокладає шлях крізь скелю байдужості та рабства |
+| Інтернаціоналізм | Єднання з "братнім" російським народом | Входження в коло європейських народів як рівний з рівними |
+| Народна мова | Діалект для домашнього вжитку | База для створення повноцінної літературної та наукової мови |
+
+## Section-Mapped Research Notes
+
+### Вступ: Три титани
+- Кінець XIX – поч. XX ст. — час, коли культура взяла на себе функції держави.
+- Франко (Галичина), Леся Українка (Волинь/Київ), Грінченко (Слобожанщина/Київ) символізують соборність.
+- Вони перетворили літературу з "етнографічної розваги" (котляревщина) на інструмент націєтворення.
+
+### Іван Франко (1856-1916)
+- "Академія наук в одній особі": 6000 творів.
+- Політична еволюція: розрив з москвофільством, критика марксизму (стаття "Що таке поступ?"), ідеал самостійної України.
+- "Каменярі" — не про соціалізм, а про тяжку працю націєтворення.
+- Конфлікт із Драгомановим: Франко відійшов від ідеї федерації з Росією, зрозумівши загрозу асиміляції.
+
+### Леся Українка (1871-1913)
+- Справжнє ім'я — Лариса Косач. Високоосвічена аристократка духу.
+- Драматургія: "Кассандра" (проблема пророка в поневоленій нації), "Бояриня" (трагедія асиміляції в Москві — твір був заборонений в СРСР), "Лісова пісня" (неоромантизм, конфлікт мрії та буденності).
+- Хвороба як стимул до творчості ("Contra spem spero"), а не причина слабкості.
+- Феміністичний аспект: сильні жіночі образи, що перевершують чоловіків волею.
+
+### Борис Грінченко (1863-1910)
+- "Словарь української мови" (1907-1909): 68 тис. слів. Це був паспорт української мови, доказ її багатства та окремішності.
+- Принципова позиція: у родині Грінченків говорили лише українською (донька Настя ніколи не чула від батьків російської, що було викликом для Харкова/Києва того часу).
+- Педагог: писав підручники ("Рідне слово") в умовах заборон.
+- Лідер "Просвіти", організатор.
+
+### Первинні джерела
+- Франко: уривок з прологу до "Мойсея" ("Народе мій, замучений, розбитий...").
+- Леся Українка: діалог Мавки і Лукаша або монолог Оксани з "Боярині" (про "чужину" в Москві).
+- Грінченко: передмова до Словника або вірш "Землякам, що раз на рік збираються на роковини Шевченка".
+
+### Підсумок: Спадщина титанів
+- Вони підготували ґрунт для Визвольних змагань 1917-1921 років.
+- Європеїзація культури: українська література стала частиною світового процесу.
+- Сучасне прочитання: вони актуальні як приклад культурного спротиву імперії.
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12947)
+✓ Message 12928 acknowledged
+✓ Message 12947 acknowledged

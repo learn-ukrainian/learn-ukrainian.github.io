@@ -1,0 +1,282 @@
+✅ Message sent to Gemini (ID: 12675) [auto-acked: self-addressed]
+✓ Message 12675 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12675...
+📨 Message #12675
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-sofiya-okunevska
+   Time: 2026-02-20T23:41:33.613702+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-bio-62
+level: C1-BIO
+sequence: 62
+slug: sofiya-okunevska
+version: '2.0'
+title: 'Софія Окуневська: Перша жінка-лікар'
+content_outline:
+- section: Вступ — Першопрохідниця медицини
+  points:
+  - Окуневська як перша українка з медичним дипломом
+  - Подолання бар'єрів для жінок у професії
+  - Поєднання медицини та громадської діяльності
+- section: Ранні роки та освіта (1865-1887)
+  points:
+  - Народження в сім'ї священика на Галичині
+  - Прагнення до освіти в часи обмежень
+  - Боротьба за право навчатися
+  - Вибір медицини як покликання
+- section: Навчання за кордоном (1887-1895)
+  points:
+  - Вступ до Цюрихського університету
+  - Труднощі навчання жінки в медицині
+  - Отримання диплому лікаря
+  - Повернення на Батьківщину
+- section: Медична практика (1895-1920)
+  points:
+  - Відкриття практики у Львові
+  - Лікування жінок та дітей
+  - Боротьба з упередженнями
+  - Безкоштовна допомога бідним
+- section: Громадська діяльність
+  points:
+  - Участь у жіночому русі
+  - Співпраця з Наталією Кобринською
+  - Боротьба за права жінок у освіті
+  - Публіцистична діяльність
+- section: Останні роки та спадщина (1920-1926)
+  points:
+  - Продовження практики в складних умовах
+  - Смерть у Львові
+  - Значення для українського жіночого руху
+  - Пам'ять та вшанування
+vocabulary_hints:
+  required:
+  - лікар (doctor/physician)
+  - медицина (medicine)
+  - диплом (diploma/degree)
+  - практика (medical practice)
+  - гінекологія (gynecology)
+  - педіатрія (pediatrics)
+  - бар'єр (barrier)
+  - упередження (prejudice)
+  - жіночий рух (women's movement)
+  - емансипація (emancipation)
+  recommended:
+  - Цюрихський університет (University of Zurich)
+  - безкоштовна допомога (free assistance)
+  - медична освіта (medical education)
+  - Галичина (Galicia)
+  - священик (priest)
+activity_hints:
+- type: reading
+  focus: Біографія та медична діяльність
+  source: Історичні дослідження та мемуари
+  items: 3 passages
+- type: essay-response
+  focus: Чому жінкам було важко здобути освіту в XIX столітті?
+  output: Історичне есе
+focus: biography
+prerequisites:
+- c1-bio-25 (Наталія Кобринська)
+connects_to:
+- c1-bio-24 (Олена Пчілка)
+- c1-bio-31 (Ольга Кобилянська)
+- c1-bio-60 (Берта Рапопорт)
+module_type: biography
+sources:
+- name: Софія Окуневська (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Окуневська-Морачевська_Софія_Афанасіївна
+  type: primary
+  notes: Біографія, медична кар'єра, громадська діяльність
+- name: Львівський медичний університет
+  url: https://meduniv.lviv.ua
+  type: reference
+  notes: Історія жінок у медицині
+- name: Архів жіночого руху
+  url: https://uma.lvivcenter.org
+  type: reference
+  notes: Жіночий рух на Галичині
+immersion: 100% Ukrainian
+phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of софія окуневська: перша жінка-лікар'
+- Evaluate the contributions of першопрохідниця медицини
+- Trace the career and influence of останні роки та спадщина (1920-1926)
+persona:
+  voice: Senior Biographer
+  role: Medical Pioneer
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Софія Окуневська: Перша жінка-лікар
+
+## Використані джерела
+1. [Енциклопедія Сучасної України](https://esu.com.ua) — стаття "Окуневська-Морачевська Софія"
+2. [Локальна Історія](https://localhistory.org.ua) — "Софія Окуневська: перша лікарка Австро-Угорщини"
+3. [Збруч](https://zbruc.eu) — матеріали про феміністичний рух Галичини
+4. [Українки](https://ukrainky.com.ua) — біографічний нарис
+5. [Ізборник](http://litopys.org.ua) — історія медицини в Україні
+
+## Хронологія
+- **12 травня 1865**: Народилася у с. Довжанка (нині Тернопільський район) у сім’ї священика Атанасія Окуневського.
+- **1870**: Смерть матері Кароліни; виховання у тітки Теофілії Окуневської-Озаркевич.
+- **1886**: Сенсаційно складає іспити на атестат зрілості у Львівській академічній гімназії (дозволено лише хлопцям).
+- **1887**: Вступ на медичний факультет Цюрихського університету.
+- **1890**: Одруження з Вацлавом Морачевським у Цюриху.
+- **1896**: Захист докторської дисертації про анемію крові; стає першою жінкою-лікарем в Австро-Угорщині.
+- **1898**: Народження доньки Єви; початок лікарської практики у Львові (неофіційно, до нострифікації).
+- **1903**: Початок роботи у "Народній лічниці" (Львів) на благодійних засадах; очолює гінекологічний відділ.
+- **Перша світова війна**: Лікарська робота в таборах для українських біженців у Гмінді та Святобожицях (Моравія).
+- **24 лютого 1926**: Померла у Львові від гнійного апендициту; похована на Личаківському цвинтарі.
+
+## Ключові факти та цитати
+- **Цитата (С. Окуневська про музику/народну пісню):** «Як заграю пісеньку народну, буде людям здаватися, що походжають вони по різнобарвних квітах... Така то буде пісня, що всі стануть добрі і веселі».
+- **Цитата (О. Кобилянська про вплив Софії):** «Вона заговорила до мене українською мовою, переконуючи мене, що мені треба писати не по-німецьки, а для власного народу — по-українськи... Від неї пішло мені те світло, за яким я так тужила».
+- **Медичний прорив:** Першою в Галичині почала використовувати променеву терапію (метод Марії Кюрі) для лікування раку шийки матки.
+- **Термінологія:** Співавторка першого "Словника української медичної термінології" (разом з Є. Озаркевичем).
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ — Першопрохідниця медицини": [!history-bite] — В Австро-Угорщині жінкам забороняли вступати до університетів, а гімназійний іспит Софії став "скандалом" у пресі.
+- Section "Навчання за кордоном": [!context] — Цюрих як "острів свободи" для жінок-інтелектуалок Європи кінця XIX ст.
+- Section "Медична практика": [!myth-buster] — Міф про те, що "радянська влада дала жінкам професію". Окуневська стала доктором медицини за 20 років до більшовицького перевороту.
+- Section "Медична практика": [!culture] — Застосування методу Кюрі у провінційному Львові — рівень європейської науки.
+- Section "Громадська діяльність": [!quote] — Слова Ольги Кобилянської про вирішальний вплив Софії на її українізацію.
+- Section "Останні роки та спадщина": [!legacy] — Трагедія особистого життя (самогубство доньки, зрада чоловіка) на фоні професійного тріумфу.
+
+## Деколонізаційний контекст
+- **Imperial Myth:** Жінка в Австро-Угорській (і Російській) імперії — це "Kinder, Küche, Kirche". Освіта — привілей чоловіків.
+- **Ukrainian Reality:** Українська інтелігенція (зокрема родина Озаркевичів) підтримувала жіночу емансипацію як частину національного відродження. Окуневська не була "винятком-сиротою", вона була продуктом прогресивного українського середовища.
+- **Anti-Soviet:** Спростування наративу про "відсталість" домедичної Галичини. Українські лікарі створювали професійні асоціації та термінологію ще в XIX столітті.
+
+## Contested Terms (if applicable)
+| Concept | Imperial/Polish framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| Вацлав Морачевський | Польський вчений, хімік | Українофіл (у ранні роки), чоловік Окуневської, чия полонізація пізніше стала причиною сімейної драми |
+| Галичина | Kresy Wschodnie (польська провінція) | Центр українського інтелектуального відродження та європейської інтеграції |
+
+## Section-Mapped Research Notes
+
+### Вступ
+Фокус на унікальності постаті: перша жінка-лікар в імперії. Контраст між офіційною забороною та її досягненням.
+
+### Ранні роки та освіта
+Родина Озаркевичів як "кузня талантів". Тітка Теофілія замінила матір. Вплив батька Атанасія (священик, який підтримав освіту доньки). Скандал в академічній гімназії 1886 року — єдина дівчина серед 13 хлопців.
+
+### Навчання за кордоном
+Цюрих як мекка для емансипованих жінок. Знайомство з Вацлавом Морачевським. Студентське життя, "Плеяда". Захист дисертації про анемію (1896) — науковий внесок, який цитували європейські вчені.
+
+### Медична практика
+Повернення до Львова, але диплом не визнають (нострифікація лише в 1903 р. в Кракові, бо Львівський університет відмовив). Робота в "Народній лічниці". Впровадження радіології (лікування раку). Благодійність — лікувала бідних безкоштовно.
+
+### Громадська діяльність
+Дружба з Кобилянською та Кобринською. "Другий вінок". Складання медичного словника — мовне будівництво. Окуневська як "агент українізації" для свого оточення (навіть для чоловіка-поляка спочатку).
+
+### Останні роки та спадщина
+Робота під час Першої світової (табори Гмінд). Особиста драма: розрив з Морачевським, самогубство доньки Єви (перша жінка-архітектор, яка не витримала розлучення батьків). Смерть від апендициту. Могила на Личакові.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12711)
+✓ Message 12675 acknowledged
+✓ Message 12711 acknowledged

@@ -1,53 +1,45 @@
----
-module: c1-bio-095
+module: c1-bio-94
 level: C1-BIO
-sequence: 95
+sequence: 94
 slug: milena-rudnytska
 version: '2.0'
 title: 'Мілена Рудницька: Голос українського фемінізму'
 content_outline:
-- section: "Вступ — Піонерка жіночого руху"
-  words: 470
+- section: Вступ — Піонерка жіночого руху
   points:
   - Рудницька як перша жінка-посол у польському сеймі від українців
   - Лідерка Союзу українок
   - Борець за права жінок і національне визволення
 - section: Молодість і освіта
-  words: 588
   points:
   - Народження у Збаражі (1892)
   - Навчання у Відні
   - Вплив європейського фемінізму
   - Повернення до Галичини
 - section: Політична кар'єра
-  words: 823
   points:
   - Депутатка польського сейму (1928-1935)
   - Захист прав української меншини
   - Боротьба за освіту українською мовою
   - Протести проти пацифікації
 - section: Союз українок
-  words: 823
   points:
   - Очолення найбільшої жіночої організації
   - Програма економічної самодопомоги
   - Освітня діяльність
   - Міжнародні зв'язки
 - section: Війна та еміграція
-  words: 705
   points:
   - Радянська окупація 1939
   - Втеча на Захід
   - Діяльність в еміграції
   - Документування радянських злочинів
 - section: Спадщина та визнання
-  words: 591
   points:
   - Смерть у Мюнхені (1976)
   - Вплив на український фемінізм
   - Перевидання праць в незалежній Україні
   - Рудницька як взірець жінки-політика
-word_target: 4000
 vocabulary_hints:
   required:
   - фемінізм (feminism)
@@ -73,7 +65,6 @@ activity_hints:
   items: 3 passages
 - type: essay-response
   focus: How did Rudnytska combine feminism with national liberation?
-  word_target: 300
   output: Analysis of intersectional activism
 focus: biography
 prerequisites:
@@ -87,15 +78,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Мілена Рудницька (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Рудницька_Мілена_Іванівна"
+  url: https://uk.wikipedia.org/wiki/Рудницька_Мілена_Іванівна
   type: primary
   notes: Biography, activism, political career
 - name: Союз українок
-  url: "https://uk.wikipedia.org/wiki/Союз_українок"
+  url: https://uk.wikipedia.org/wiki/Союз_українок
   type: reference
   notes: Organization she led
 - name: УНДО
-  url: "https://uk.wikipedia.org/wiki/Українське_національно-демократичне_об%27єднання"
+  url: https://uk.wikipedia.org/wiki/Українське_національно-демократичне_об%27єднання
   type: reference
   notes: Political party she represented
 immersion: 100% Ukrainian
@@ -104,3 +95,6 @@ objectives:
 - 'Analyze the life and legacy of мілена рудницька: голос українського фемінізму'
 - Evaluate the contributions of піонерка жіночого руху
 - Trace the career and influence of спадщина та визнання
+persona:
+  voice: Senior Biographer
+  role: Parliamentary Delegate

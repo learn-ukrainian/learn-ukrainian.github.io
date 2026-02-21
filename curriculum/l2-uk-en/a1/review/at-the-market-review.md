@@ -1,87 +1,69 @@
-# Рецензія: At the Market
+# Review: At the Market (A1)
 
-**Level:** A1 | **Module:** 37
-**Overall Score:** 9.9/10
-**Status:** PASS
-**Reviewed:** 2026-02-09
+> **Reviewer:** Gemini (Tier 1 Audit)
+> **Date:** 2026-02-20
+> **Version:** 1.0
 
-## Plan Verification
+## 1. Lesson Experience Audit
 
-Plan-Content Alignment: [PASS]
-- Sections: [all present]
-- Vocabulary: [8/8 from required plan used, 6/6 recommended also used/covered]
-- Grammar scope: [clean / compliant with A1.4]
-- Objectives: [all covered]
+### The "Would I Continue?" Test
 
-## Scores
+| Question | Pass/Fail | Comment |
+|----------|-----------|---------|
+| Did I feel overwhelmed? | PASS | Pacing is comfortable, concepts introduced gradually. |
+| Were instructions clear? | PASS | English scaffolding is solid. |
+| Did I get quick wins? | PASS | "Kilogram pattern" is easy to grasp immediately. |
+| Was Ukrainian scary? | PASS | Introduced with clear translations and IPA. |
+| Would I come back tomorrow? | PASS | The cultural context (Pryvoz/Bessarabka) makes it interesting. |
 
-| # | Dimension | Score | Auto-fail | Evidence |
-|---|-----------|-------|-----------|----------|
-| 1 | Experience Quality | 10/10 | <7 | Clear flow, engaging cultural context (Pryvoz, tasting). |
-| 2 | Coherence | 10/10 | <7 | Logical progression from vocabulary to dialogues to narrative. |
-| 3 | Relevance | 10/10 | <7 | Highly practical skills (buying food, weights). |
-| 4 | Educational | 10/10 | <7 | Objectives clearly met; vocab drills are effective. |
-| 5 | Language | 10/10 | <8 | Natural Ukrainian phrases ("Скільки з мене?", "Можна спробувати?"). |
-| 6 | Pedagogy | 10/10 | <7 | PPP structure is well-executed. |
-| 7 | Immersion | 10/10 | <6 | Estimated ~30% Ukrainian text, fits 15-35% target. |
-| 8 | Activities | 10/10 | <7 | 8 activities, no errors, varied types (quiz, fill-in, unjumble). |
-| 9 | Richness | 9/10 | <6 | Good cultural callouts (Myth-buster, History-bite). |
-| 10 | Beginner Safety | 10/10 | <7 | "Would I Continue?" 5/5. Clear, not overwhelming. |
-| 11 | LLM Fingerprint | 10/10 | <7 | Narrative and dialogues feel handcrafted and authentic. |
-| 12 | Linguistic Accuracy | 10/10 | <9 | Grammar (Genitive, Accusative) is accurate. |
+**Score:** 5/5 (Pass) → **Lesson Quality: 10/10**
 
-**Weighted Overall:** (15 + 10 + 10 + 12 + 11 + 12 + 10 + 13 + 8.1 + 13 + 10 + 15) / 14.0 = **9.93/10**
+### Emotional Safety & Pacing
 
-## Auto-Fail Checklist Results
+- **Welcome/Orientation:** ✅ "For a student, the market is a school." - Good framing.
+- **Curiosity Trigger:** ✅ "Ry-nok vs Ba-zar" - engaging cultural nuance.
+- **Quick Wins:** ✅ "Memorize the chunk" tips are helpful.
+- **Encouragement:** ✅ "Be brave!", "Don't be afraid to speak Ukrainian."
+- **Progress Marker:** ✅ "You now know how to..." summary is clear.
 
-- Russianisms: [CLEAN] (Uses "решта" instead of colloquial "здача", correct "протягом", "найкращий").
-- Calques: [CLEAN]
-- Grammar scope: [CLEAN] (Future tense "буде готувати" is appropriate for late A1).
-- Activity errors: [CLEAN] (Verified all 8 activities).
-- Beginner safety: 5/5
+---
 
-## Critical Issues Found
+## 2. Scores & Assessment
 
-None. The module is in excellent shape.
+| Dimension | Score | Assessment |
+|-----------|-------|------------|
+| **Immersion** | 10/10 | ~35% target hit. Good balance of English support and Ukrainian exposure. |
+| **Language** | 10/10 | Simple sentences, correct A1 grammar (Genitive intro). |
+| **Activity** | 10/10 | Good variety (match-up, quiz, fill-in). Item counts sufficient. |
+| **Richness** | 10/10 | Strong cultural grounding (Kyiv vs Odesa). |
+| **Warmth** | 10/10 | Friendly, encouraging tone ("Seller wants to please you"). |
 
-## Ukrainian Language Issues
+---
 
-| Line | Current | Corrected | Type |
-|------|---------|-----------|------|
-| - | - | - | [CLEAN] |
+## 3. Issues & Critique
 
-## Beginner Safety Audit
+| Location | Issue | Fix Applied |
+|----------|-------|-------------|
+| **Grammar** | Subordinate clauses ("Бо там...") | Simplified to SVO sentences. |
+| **Grammar** | Dative/Perfective usage | Changed to Present Imperfective. |
+| **Activities** | Low item counts (6 items) | Increased all to 8+ items. |
+| **Immersion** | Initial ratio ~17% | Boosted to ~35% by translating narratives and instructions. |
 
-"Would I Continue?" Test: 5/5
-- Overwhelmed? [Pass] - No, chunks are manageable.
-- Instructions clear? [Pass] - Yes.
-- Quick wins? [Pass] - Yes, useful phrases immediately.
-- Ukrainian scary? [Pass] - No.
-- Come back tomorrow? [Pass] - Yes.
+---
 
-Emotional beats: 5 found
-- Welcome: "If you want to experience the 'soul'..."
-- Curiosity: Myth-buster about markets being trendy.
-- Quick wins: 5 cognates in Weights table (Кілограм, Літр).
-- Encouragement: "Try Before You Buy!" tip.
-- Progress: Summary "You have mastered the basics..."
+## 4. Final Verdict
 
-## Strengths
-- **Authenticity:** The dialogue lines like "Можна спробувати?" and "Скільки з мене?" are exactly what a learner needs to sound natural, not robotic.
-- **Cultural Depth:** The mention of "Pryvoz" and the custom of tasting food adds great flavor.
-- **Pedagogical Precision:** The use of "Решта" (change) in the vocabulary and activities establishes the standard term effectively.
+**Status:** ✅ **PASS**
 
-## Verification Summary
+The module is now a strong A1 lesson. It balances the practical need for market vocabulary with deep cultural context about Ukrainian market life. The "Kilogram Pattern" is taught effectively as a chunk rather than dry grammar. Immersion is at the right level for late A1, pushing the learner slightly but providing safety.
 
-- Content lines read: ~140
-- Activity items checked: 63
-- Ukrainian sentences verified: ~45
-- IPA transcriptions checked: 15
-- Issues found: 0
-- Naturalness score recommendation: 10/10
+**Strengths:**
+- **Cultural Depth:** The comparison of Bessarabskyi and Pryvoz adds flavor.
+- **Practicality:** The "Kilogram pattern" is immediately useful.
+- **Encouragement:** The lesson actively combats the fear of speaking.
 
-## Verdict
+**Weaknesses (Addressed):**
+- Initial draft was too English-heavy.
+- Some grammar explanations were too complex for A1.
 
-**PASS**
-
-The module is structurally sound, linguistically accurate, and culturally engaging. It meets all A1 criteria and provides high-value practical skills. No changes required.
+**Ready for deployment.**

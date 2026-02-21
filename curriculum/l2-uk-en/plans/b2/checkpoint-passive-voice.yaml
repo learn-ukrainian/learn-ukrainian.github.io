@@ -1,0 +1,160 @@
+module: b2-10
+level: B2
+sequence: 10
+slug: checkpoint-passive-voice
+version: '2.0'
+title: Контрольний модуль B2.1a — Система пасивного стану
+content_outline:
+- section: Вступ — Що ми вивчили (Introduction — What We Have Learned)
+  words: 400
+  points:
+  - 'Огляд модулів B2.1a (01-09): консолідація знань про пасивні конструкції та активні
+    дієприкметники.'
+  - 'Принцип «Агентності» в українській мові: чому ми віддаємо перевагу активним формам
+    («Ми вирішили») над пасивними («Було вирішено») у повсякденні.'
+  - Критерії оцінювання за Державним стандартом 2024 (§4.3.3.1) та дескрипторами CEFR
+    B2.
+- section: Огляд — Чотири форми пасиву (Review — Four Passive Forms)
+  words: 800
+  points:
+  - 'Пасивні дієприкметники на -ний/-тий: правила узгодження та семантичні нюанси
+    (Держстандарт §4.1.1.2).'
+  - 'Безособові конструкції на -но/-то: використання для вираження результативності
+    та об’єктивності («Закон прийнято»).'
+  - 'Зворотний пасив на -ся: аналіз помилки «самодіяльних об''єктів» (напр., «дім
+    будується» vs «дім будують»).'
+  - Третя особа множини як функціональний еквівалент пасиву для уникнення штучних
+    конструкцій.
+  - 'Проблема агенса в орудному відмінку: чому «Робота написана студентом» звучить
+    неорганічно порівняно з активом.'
+- section: Огляд — Вибір форми за регістром (Review — Register-Based Selection)
+  words: 800
+  points:
+  - 'Офіційно-діловий регістр: панування форм на -но/-то як ознаки державної ваги
+    та «бюрократичної об’єктивності».'
+  - 'Науковий стиль: функціонування пасивних дієприкметників та форм на -ся для опису
+    процесів.'
+  - 'Літературний та публіцистичний стилі: стилістична гнучкість між пасивом та активом
+    залежно від фокусу на дії чи об’єкті.'
+  - 'Розмовний регістр: повне домінування активних конструкцій та неозначено-особових
+    речень (уникання «канцеляризмів»).'
+- section: Огляд — Активні дієприкметники та русизми (Review — Active Participles
+    and Russisms)
+  words: 800
+  points:
+  - 'Деконструкція «активної пастки»: чому форми на -учий/-ючий є нетиповими для української
+    мови (помилкові «бажаючі», «виступаючі»).'
+  - 'Трансформація русизмів: «бажаючі» → «охочі», «виступаючий» → «доповідач», «працюючий»
+    → «той, що працює».'
+  - 'Дієприкметники минулого часу на -лий: лексикалізовані форми (пожовклий, зів’ялий)
+    та їх вживання.'
+  - 'Заміна дієприкметників підрядними реченнями: практика стилістичного редагування
+    текстів.'
+- section: Діагностичні завдання (Diagnostic Tasks)
+  words: 400
+  points:
+  - 'Комплексний тест на ідентифікацію: розпізнавання чотирьох типів пасиву в автентичних
+    текстах.'
+  - 'Вправи на трансформацію: перетворення активу в пасив відповідного регістру (напр.,
+    перетворення звіту на наказ).'
+  - 'Редагування «канцеляризмів»: виправлення невдалого вживання пасиву та активних
+    дієприкметників у розмовній мові.'
+- section: Самооцінка і план (Self-Assessment and Planning)
+  words: 400
+  points:
+  - 'Діагностика знань: виявлення прогалин у вживанні форм на -но/-то та відмінюванні
+    дієприкметників.'
+  - 'Чек-лист умінь: «Я можу змінити регістр повідомлення, використовуючи різні форми
+    пасиву».'
+  - 'План переходу до фази B2.1b: зв''язок пасиву зі складними реченнями та подальшим
+    поглибленням у стилістику.'
+- section: Підсумок (Summary)
+  words: 400
+  points:
+  - 'Систематизація вивченого: пасив як інструмент стилістики, а не лише граматики.'
+  - Рефлексія над «голосом держави» (-но/-то) та «голосом людини» (актив).
+vocabulary_hints:
+  required:
+  - оцінювання (assessment) — критерії оцінювання, система оцінювання; High frequency
+    in educational context
+  - діагностика (diagnostics) — провести діагностику знань, результати діагностики;
+    Medium frequency
+  - прогалина (gap) — заповнити прогалину в знаннях, виявити прогалини; High relevance
+    for learning
+  - уміння (skill) — набувати умінь, практичні уміння, знання та уміння; High frequency
+  - регістр (register) — зміна регістру, офіційний регістр, стилістичний регістр;
+    Linguistic terminology
+  - трансформація (transformation) — граматична трансформація, трансформація речень;
+    Academic usage
+  - ідентифікація (identification) — ідентифікація форм, процес ідентифікації; Formal
+    usage
+  - самооцінка (self-assessment) — адекватна самооцінка, лист самооцінки; Pedagogical
+    focus
+  - критерій (criterion) — відповідати критеріям, основний критерій; High frequency
+    in assessment
+  - контрольний модуль (checkpoint module) — структура контрольного модуля; Specific
+    curriculum term
+  recommended:
+  - консолідація (consolidation) — консолідація знань та навичок
+  - систематизація (systematization) — систематизація граматичного матеріалу
+  - рефлексія (reflection) — здатність до рефлексії, мовна рефлексія
+  - компетенція (competence) — мовна компетенція, рівень компетенції
+  - рівень володіння (proficiency level) — досягти рівня володіння B2
+  - канцеляризм (bureaucratese) — уникати канцеляризмів у розмовній мові
+  - об'єктивність (objectivity) — вираження об'єктивності через пасив
+activity_hints:
+- type: quiz
+  focus: Identify all 4 passive voice types
+  items: 20+
+- type: quiz
+  focus: Form past passive participles with correct agreement
+  items: 15+
+- type: fill-in
+  focus: Active → appropriate passive form by register
+  items: 12+
+- type: fill-in
+  focus: Complete official documents with -но/-то
+  items: 10+
+- type: quiz
+  focus: Select appropriate passive form by register
+  items: 15+
+- type: fill-in
+  focus: Active participles → relative clauses
+  items: 10+
+- type: error-correction
+  focus: Fix register-inappropriate passive usage
+  items: 12+
+- type: essay-response
+  focus: Diagnostic writing — use all 4 passive forms
+  output: Self-evaluate against rubric
+focus: checkpoint
+prerequisites:
+- b2-01 through b2-09 (all passive voice modules)
+connects_to:
+- b2-11 (Multi-clause Sentences)
+- b2-15 (Register Introduction)
+- b2-25 (B2.1b Checkpoint)
+module_type: checkpoint
+sources:
+- name: Ukrainian State Standard 2024 - B2 Assessment
+  url: https://mon.gov.ua/
+  type: reference
+  notes: B2 assessment criteria for passive voice
+- name: CEFR B2 Can-Do Statements
+  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  type: reference
+  notes: B2 grammar proficiency descriptors
+- name: B2 Checkpoint Module Template
+  url: docs/l2-uk-en/templates/b2-checkpoint-module-template.md
+  type: reference
+  notes: Checkpoint structure and requirements
+immersion: 100% Ukrainian
+phase: B2.1a [Passive Voice]
+objectives:
+- Understand and apply контрольний модуль b2.1a — система пасивного стану
+- Analyze and evaluate що ми вивчили
+- Identify key concepts of самооцінка і план
+persona:
+  voice: Professional Language Coach
+  role: Auditor (Аудитор)
+word_target: 4000

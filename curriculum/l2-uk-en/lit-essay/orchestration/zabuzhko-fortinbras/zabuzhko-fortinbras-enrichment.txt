@@ -1,0 +1,220 @@
+✅ Message sent to Gemini (ID: 12163) [auto-acked: self-addressed]
+✓ Message 12163 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12163...
+📨 Message #12163
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-zabuzhko-fortinbras
+   Time: 2026-02-20T23:37:00.541963+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 25
+module: lit-essay-25
+level: LIT.ESSAY
+slug: zabuzhko-fortinbras
+version: '2.0'
+title: Zabuzhko Fortinbras
+subtitle: Zabuzhko Fortinbras
+content_outline:
+- section: Вступ та контекст
+  points: []
+- section: Аналіз ключових творів
+  points: []
+- section: Стилістика та мова автора
+  points: []
+- section: Деколонізаційна перспектива
+  points:
+  - Як цей автор руйнує імперські міфи
+  - Українська суб'єктність у тексті
+- section: Підсумок та спадщина
+  points: []
+vocabulary_hints:
+  required:
+  - історіографія
+  - наратив
+  - суб'єктність
+  recommended:
+  - деколонізація
+activity_hints:
+- type: reading
+  focus: Аналіз першоджерела
+- type: essay-response
+  focus: Критичне есе
+- type: critical-analysis
+  focus: Деконструкція тексту
+focus: literature
+pedagogy: literature
+immersion: 100% Ukrainian
+phase: LIT Expansion
+objectives:
+- Проаналізувати творчість Zabuzhko Fortinbras у контексті української літератури
+- Дослідити вплив автора на формування національної ідентичності
+persona:
+  voice: Senior Specialist
+  role: Westernizing Intellectual
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Оксана Забужко «Хроніки від Фортінбраса»
+
+## Використані джерела
+1. [Енциклопедія Сучасної України (ЕСУ)](https://esu.com.ua/article-15021) — стаття про Оксану Забужко, огляд її есеїстики та філософських концепцій.
+2. [Журнал «Критика»](https://krytyka.com/ua) — рецензії та аналітичні статті 1990-2000-х років, присвячені постколоніальному дискурсу в есеїстиці Забужко.
+3. [ЛітАкцент (LitAkcent)](http://litakcent.com/) — літературознавчі розвідки щодо стилістики та ролі Забужко у формуванні українського інтелектуального простору періоду Незалежності.
+
+## Хронологія
+- 1996: Публікація роману «Польові дослідження з українського сексу», який створює тло для подальшої рецепції есеїстики авторки як провокативної та постколоніальної.
+- 1999: Вихід друком збірки есеїв «Хроніки від Фортінбраса. Вибрана есеїстика 90-х».
+- 2001: Присудження збірці премії імені Олександра Білецького (за найкращу літературно-критичну працю).
+- 2011: Перевидання «Хронік від Фортінбраса», що підтвердило актуальність текстів через десятиліття після їх написання.
+- 2014-2022: Концепт «Фортінбраса» (відбудовника після трагедії) набуває нового резонансу в умовах Революції Гідності та війни з Росією.
+
+## Ключові факти та цитати
+- **Метафора Фортінбраса**: Забужко запозичує образ норвезького принца з шекспірівського «Гамлета». Якщо Гамлет уособлює трагедію і розпад (тоталітарне минуле), то Фортінбрас — це той, хто приходить на встелену трупами сцену, щоб навести лад, поховати мертвих і збудувати нову державу. Це метафора українського інтелектуала 90-х.
+- **Постколоніальний синдром**: Збірка є одним із перших і найважливіших текстів української літератури, що послідовно застосовує інструментарій постколоніальних студій до української реальності.
+- **Цитата**: «...Ми, покоління Фортінбрасів, приречені прибирати трупи після гамлетівської трагедії...»
+- **Цитата**: «Культура — це не те, що ми читаємо чи дивимося, це те, як ми дихаємо».
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ та контекст": [!context] — Пояснення атмосфери 1990-х років в Україні: ідеологічний вакуум, економічна криза та пошук нової національної ідентичності після краху СРСР.
+- Section "Аналіз ключових есеїв: Метафора Фортінбраса": [!myth-buster] — Спростування міфу про "вічно страждаючу" українську літературу. Фортінбрас — це діяч, а не жертва.
+- Section "Аналіз ключових есеїв: Ідентичність та травма": [!history-bite] — Зв'язок між персональною пам'яттю (родинними історіями дисидентів) та колективною травмою нації.
+- Section "Стилістика та мова автора": [!quote] — Аналіз фірмового «забужківського» синтаксису: довгих, багатоскладових речень (періодів), які відображають складність мислення.
+- Section "Деколонізаційна перспектива": [!decolonization] — Як Забужко демонструє, що вихід з тіні Росії можливий лише через набуття власного повноцінного голосу і суб'єктності, а не через просте заперечення.
+- Section "Підсумок та вплив": [!culture] — Вплив «Хронік...» на формування цілого покоління українських публічних інтелектуалів та розвиток есеїстики як жанру в сучасній Україні.
+
+## Деколонізаційний контекст
+- **Imperial/Soviet myth**: Українська культура є провінційною, "меншвартісною", виключно сільською ("шароварною"), нездатною на глибокий філософський та інтелектуальний самоаналіз.
+- **Ukrainian reality**: Есеїстика Забужко доводить приналежність української думки до європейського інтелектуального простору. Вона деконструює колоніальні комплекси, пропонуючи високоінтелектуальний, урбаністичний та філософський погляд на націю.
+
+## Contested Terms
+
+| Concept | Imperial framing | Ukrainian (decolonized) framing |
+|---------|-----------------|-------------------------------|
+| Пострадянський простір | Спільний культурний котел «братніх народів» | Зона подолання травми тоталітаризму та колоніалізму; простір емансипації |
+| Роль інтелектуала | Обслуговування ідеології (радянський письменник) | Відповідальність за переосмислення минулого і конструювання смислів держави (Фортінбрас) |
+| Національна культура | Етнографічний додаток до «великої російської» | Самодостатня європейська традиція, що зазнала системного нищення |
+
+## Section-Mapped Research Notes
+
+### Вступ та контекст
+Культурно-історичне тло 1990-х років. Вихід України з тоталітарної системи. Роль публічного інтелектуала у час трансформації. Значення Оксани Забужко як голосу нової епохи, що поєднує феміністичний та постколоніальний дискурси. Публікація «Хронік від Фортінбраса» у 1999 році як підсумок першого десятиліття Незалежності.
+
+### Аналіз ключових есеїв: Метафора Фортінбраса
+Походження шекспірівської метафори. Гамлет (покоління шістдесятників, дисидентів, жертв системи) мертвий. Прихід Фортінбраса — це не романтика, а прагматична, важка робота "прибирання трупів" (подолання наслідків Голодомору, Розстріляного Відродження, Чорнобиля). Перехід від віктимності (жертви) до відповідальності (суб'єкта).
+
+### Аналіз ключових есеїв: Ідентичність та травма
+Як Забужко препарує посттоталітарну травму українського суспільства. Теми втраченої пам'яті, розриву поколінь, мовної шизофренії постколоніального суб'єкта. Есеї як спроба терапії через проговорювання болючих історичних досвідів і повернення «вкраденої історії».
+
+### Стилістика та мова автора
+Забужківський стиль: інтелектуальна напруга, бароковий синтаксис (довгі періоди з безліччю підрядних речень та вставних конструкцій), пристрасна риторика. Поєднання високого академічного стилю з публіцистичною гостротою. Створення нової мови для опису складних філософських концептів українською.
+
+### Деколонізаційна перспектива
+Як Забужко руйнує імперські міфи про "молодшого брата". Аналіз російського імперіалізму не як зовнішнього політичного фактора, а як хвороби, що вразила українське суспільство зсередини. Набуття української суб'єктності через текст: Україна як центр власної історії, а не периферія чужої.
+
+### Підсумок та вплив
+(Оскільки Оксана Забужко — жива авторка, використовуємо термін "вплив" та "сучасне значення"). Рецепція збірки у 2000-х та її пророчий характер у світлі подій 2014 та 2022 років. «Хроніки від Фортінбраса» як класика сучасної української есеїстики, обов'язковий текст для розуміння українського постколоніалізму.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12235)

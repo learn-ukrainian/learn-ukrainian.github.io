@@ -22,8 +22,9 @@ Examples:
     npm run audit -- c1-bio shevchenko,franko   # Audit specific C1-BIO modules
 
 Options:
-    --fix       Automatically fix YAML schema violations
-    --verbose   Show detailed output for each module
+    --fix              Automatically fix YAML schema violations
+    --verbose          Show detailed output for each module
+    --skip-activities  Content-only audit: defer activity/vocab gates (otaman stage 1)
 """
 
 import argparse
@@ -97,13 +98,9 @@ def parse_module_filter(filter_str: str) -> list[int]:
 def find_module_files(level: str, module_filter: str | None = None) -> tuple[list[Path], list[str]]:
     """Find module markdown files for the given level and optional filter.
 
-    Supports two patterns:
-    - Numbered modules: 01-slug.md, 02-slug.md (A1, A2, B1, B2, C1, C2)
-    - Slug-only modules: slug.md (B2-HIST, C1-BIO, LIT, etc.)
+    All tracks use bare slug filenames (slug.md).
+    Filter can be: numeric (5, 1-10, 1,3,5) for positional access, or slug name/glob.
 
-    For numbered modules, filter can be: 5, 1-10, 1,3,5
-    For slug-only modules, filter can be: slug name or glob pattern
-    
     Returns (found_files, missing_slugs)
     """
     base_path = Path(f"curriculum/l2-uk-en/{level}")
@@ -113,42 +110,6 @@ def find_module_files(level: str, module_filter: str | None = None) -> tuple[lis
         print(f"Error: Level directory not found: {base_path}")
         sys.exit(1)
 
-    # Try numbered pattern first (e.g., 01-slug.md)
-    numbered_pattern = str(base_path / "[0-9]*-*.md")
-    numbered_files = sorted(glob.glob(numbered_pattern))
-
-    if numbered_files:
-        # Numbered modules - use numeric filtering
-        if module_filter is None:
-            # Check for missing numbered files if curriculum.yaml exists
-            canonical = get_module_order_from_curriculum(level)
-            if canonical:
-                for slug in canonical:
-                    # Find any file starting with [0-9]*-slug.md
-                    found = list(base_path.glob(f"[0-9]*-{slug}.md"))
-                    if not found:
-                        # Try exact slug.md just in case
-                        if not (base_path / f"{slug}.md").exists():
-                            missing_slugs.append(slug)
-            return [Path(f) for f in numbered_files], missing_slugs
-
-        # Parse numeric filter
-        module_nums = parse_module_filter(module_filter)
-        if not module_nums:
-            print(f"Error: No valid module numbers found in filter: {module_filter}")
-            sys.exit(1)
-
-        filtered_files = []
-        for file_path in numbered_files:
-            filename = Path(file_path).name
-            match = re.match(r'^(\d+)-', filename)
-            if match:
-                num = int(match.group(1))
-                if num in module_nums:
-                    filtered_files.append(Path(file_path))
-        return filtered_files, []
-
-    # Try slug-only pattern (e.g., slug.md - no number prefix)
     # Get canonical order from curriculum.yaml
     canonical_order = get_module_order_from_curriculum(level)
 
@@ -224,7 +185,7 @@ def _extract_slug(file_path: Path) -> str:
     return file_path.stem
 
 
-def run_audit(files: list[Path], fix: bool = False, verbose: bool = False) -> tuple[int, int, list[str], dict[str, str]]:
+def run_audit(files: list[Path], fix: bool = False, verbose: bool = False, skip_activities: bool = False) -> tuple[int, int, list[str], dict[str, str]]:
     """Run audit on the given files. Returns (passed, failed, failed_modules, slug_results)."""
     passed = 0
     failed = 0
@@ -250,6 +211,8 @@ def run_audit(files: list[Path], fix: bool = False, verbose: bool = False) -> tu
         cmd = [".venv/bin/python", "scripts/audit_module.py", str(file_path)]
         if fix:
             cmd.append("--fix")
+        if skip_activities:
+            cmd.append("--skip-activities")
 
         # Run audit
         if verbose:
@@ -351,6 +314,7 @@ def main():
     parser.add_argument("--verbose", "-v", action="store_true", help="Show detailed output for each module")
     parser.add_argument("--check-missing", action="store_true", help="Report missing content files listed in curriculum.yaml")
     parser.add_argument("--no-sync", action="store_true", help="Don't sync batch state file after audit")
+    parser.add_argument("--skip-activities", action="store_true", help="Content-only audit: defer activity/vocab gates")
 
     args = parser.parse_args()
 
@@ -368,11 +332,12 @@ def main():
 
     # Header
     level_upper = args.level.upper()
+    mode = "Content-Only Audit" if args.skip_activities else "Audit"
     print("═" * 64)
     if args.modules:
-        print(f"  {level_upper} Audit: {len(files)} module(s)")
+        print(f"  {level_upper} {mode}: {len(files)} module(s)")
     else:
-        print(f"  {level_upper} Full Level Audit: {total_planned} modules")
+        print(f"  {level_upper} Full Level {mode}: {total_planned} modules")
 
     if missing and args.check_missing:
         print(f"  (Warning: {len(missing)} modules are missing content files)")
@@ -381,7 +346,7 @@ def main():
     print()
 
     # Run audit
-    passed, failed, failed_modules, slug_results = run_audit(files, fix=args.fix, verbose=args.verbose)
+    passed, failed, failed_modules, slug_results = run_audit(files, fix=args.fix, verbose=args.verbose, skip_activities=args.skip_activities)
 
     # Sync batch state (unless --no-sync or auditing a subset)
     if not args.no_sync and slug_results:

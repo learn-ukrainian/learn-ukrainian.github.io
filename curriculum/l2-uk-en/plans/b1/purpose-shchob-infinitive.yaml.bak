@@ -1,0 +1,91 @@
+module: b1-29
+level: B1
+sequence: 29
+slug: purpose-shchob-infinitive
+version: '2.0'
+title: 'Підрядні речення мети: щоб + інфінітив'
+subtitle: Purpose Clauses - Same Subject
+content_outline:
+- section: Тест
+  points:
+  - '[]'
+- section: Граматика
+  points:
+  - 'Правило однакового підмета — State Standard §4.4.3 alignment: focus on same-subject
+    construction (e.g., «Ми ходимо в музеї, щоб знати...»)'
+  - Альтернативні вирази мети — usage of «для того, щоб» (formal/written) vs «аби»
+    (literary/spoken)
+- section: Поглиблення
+  points:
+  - 'Типові дієслова з щоб + інфінітив — connection with motion verbs (b1-16): «Я
+    йду, щоб купити...»'
+  - Інфінітив доконаного і недоконаного виду
+  - Позиція щоб-речення
+  - 'Типові помилки та як їх уникнути — learner error: conjugated verb instead of
+    infinitive («щоб я допоміг» vs «щоб допомогти»); subject mismatch checks; confusing
+    «щоб» vs «що»'
+  - 'Заперечні конструкції — cultural hook: Lesya Ukrainka''s «Щоб не плакать, я сміялась»
+    (resilience)'
+- section: Практика
+  points:
+  - 'Діалог 1: На роботі — cultural hook: proverb «Щоб рибу їсти, треба у воду лізти»
+    (work ethic)'
+  - 'Діалог 2: Про навчання — focus on «аби» in literary context'
+  - 'Діалог 3: Про спорт — focus on «поставити ціль / досягти мети»'
+  - 'Діалог 4: Про подорож — context: Lviv Museums (National Museum, Arsenal) per
+    State Standard example'
+  - 'Діалог 5: Про покупки'
+- section: Потрібно більше практики?
+  points:
+  - Інтеграція знань
+  - Реальне застосування
+  - Онлайн-ресурси
+vocabulary_hints:
+  required:
+  - щоб (in order to) — зробити все, щоб...; для того, щоб...
+  - мета (purpose/goal) — головна мета; досягти мети; з метою
+  - інфінітив (infinitive)
+  - для того щоб (in order to) — ...для того, щоб забезпечити... (Formal/Written)
+  - аби (in order to - literary) — аби знати; аби вижити; роблю це, аби... (Literary/Spoken)
+  - ціль (aim) — поставити ціль; йти до цілі
+  - намір (intention) — мати намір; серйозні наміри
+  - причина (reason)
+  recommended:
+  - задля (for the sake of)
+  - заради (for)
+  - цілеспрямований (purposeful)
+  - навмисно (intentionally)
+activity_hints:
+- type: fill-in
+  focus: Purpose clause completion
+  items: 25
+- type: error-correction
+  focus: Combine with purpose clauses
+  items: 20
+- type: error-correction
+  focus: Fix purpose clause errors
+  items: 15
+- type: translate
+  focus: English to Ukrainian
+  items: 15
+focus: grammar
+pedagogy: TTT
+prerequisites:
+- b1-28 (Relative Clauses коли/що)
+connects_to:
+- b1-30 (Purpose Clauses щоб + past form)
+objectives:
+- Learner understands when to use щоб + infinitive
+- Learner can form same-subject purpose clauses
+- Learner can use alternative purpose expressions
+- Learner can distinguish purpose from other clause types
+grammar:
+- щоб + infinitive for same-subject purpose
+- Alternative expressions (для того щоб, аби)
+- When щоб + infinitive is required
+register: розмовний
+phase: B1.3a [Complex Sentences]
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Project Lead
+word_target: 4000

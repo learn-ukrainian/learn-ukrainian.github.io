@@ -1,0 +1,136 @@
+module: b1-10
+level: B1
+sequence: 10
+slug: aspect-negation
+version: '2.0'
+title: Вид у запереченні
+subtitle: 'Aspect in Negation: How ''не'' Changes Aspect Selection'
+content_outline:
+- section: Вступ (Introduction)
+  words: 500
+  points:
+  - 'Categorization of negation: Distinguishing between general denial, specific refusal,
+    and strict prohibition as the basis for aspect choice.'
+  - 'Intuition check: Diagnostic questions designed to reveal learner assumptions
+    about aspect in negative contexts versus affirmative ones.'
+  - 'State Standard §4.2.2.2.1: Introduction to the Genitive case trigger for direct
+    objects under negation (Не зрозумів слова), establishing the morphological foundation
+    for B1 syntax.'
+- section: Пояснення граматики (Grammar Explanation)
+  words: 1100
+  points:
+  - 'General negation preference: Explaining the default rule for using the Imperfective
+    aspect for facts and general statements of non-action (Я не читав книги).'
+  - 'The ''Not yet'' exception: Analyzing how ''ще не'' (not yet) triggers the Perfective
+    aspect due to the expectation of a completed result (Я ще не прочитав).'
+  - 'Negative Imperatives: Contrasting general prohibitions (Imperfective - Не роби
+    цього!) with specific warnings intended to prevent a result (Perfective).'
+  - 'Contrastive semantics: Deep dive into the difference between ''Я не читав'' (statement
+    of fact) and ''Я не прочитав'' (failed attempt or specific missed result).'
+- section: Практика та аналіз помилок (Practice and Error Analysis)
+  words: 1000
+  points:
+  - 'Decision algorithm: A flowchart-based approach for selecting aspect — Is it a
+    general fact? Is it ''not yet''? Is it a warning or prohibition?'
+  - 'Double Negation drill: Correcting the common learner error of omitting the ''не''
+    particle before the verb when negative pronouns (ніколи, нікого, ніщо) are present.'
+  - 'Prohibition correction: Analyzing the pedagogical error of using the Perfective
+    ''Не зроби'' for general orders and reinforcing the Imperfective ''Не роби цього''.'
+  - 'Genitive Case practice: Exercises converting affirmative Accusative objects into
+    negative Genitive objects to satisfy Ukrainian syntax requirements.'
+- section: Культура та діалоги (Culture and Dialogues)
+  words: 1000
+  points:
+  - 'The ''Polite Refusal'' Ritual: Cultural insight into Ukrainian hospitality, where
+    an initial ''ні'' is often softened by repetition and gratitude (''Дякую, але
+    я не можу'').'
+  - 'Softening the ''No'': Practical use of ''На жаль, ні'' (Unfortunately, no) and
+    ''Я б з радістю, але...'' to maintain social harmony in refusals.'
+  - 'Scenario: Bookstore discussion focusing on Genitive object triggers (немає книги,
+    не бачив словника) and usage of ''взагалі не''.'
+  - 'Scenario: Academic excuses and work updates utilizing ''ще не'' to signal expected
+    completion of tasks.'
+- section: Підсумок (Summary)
+  words: 400
+  points:
+  - 'Aspect usage matrix: A summary table correlating negation types (prohibition,
+    fact, expectation) with correct aspect selection.'
+  - 'Syntactic checklist: Verifying the mastery of the Genitive case trigger for direct
+    objects and the ''ще не'' + Perfective exception.'
+vocabulary_hints:
+  required:
+  - не (not) — не знаю, не можу, не треба; high frequency particle
+  - ще не (not yet) — ще не готовий, ще не зробив; high frequency, triggers Perfective
+    aspect
+  - ніколи (never) — ніколи не бачив, ніколи не пізно; requires double negation
+  - взагалі (in general / at all) — взагалі не, взагалі-то; medium-high frequency
+  - заборона (prohibition) — сувора заборона, заборона в'їзду; usually uses Imperfective
+    aspect
+  - попередження (warning) — останнє попередження, штормове попередження; can trigger
+    Perfective aspect
+  - Я не читав цієї книги (I didn't read this book) — Genitive trigger example; follows
+    Standard §4.2.2.2.1
+  - заперечення (negation) — граматична категорія; основне поняття уроку
+  - 'відмова (refusal) — cultural hook: polite refusal requires repetition and gratitude'
+  - очікувана дія (expected action) — pedagogical context for 'ще не' + Perfective
+  - загальне заперечення (general negation) — context for default Imperfective aspect
+    usage
+  recommended:
+  - нікуди (nowhere) — double negation required (нікуди не йду)
+  - ніяк (in no way) — double negation required (ніяк не можу)
+  - ніщо (nothing) — double negation required (ніщо не заважає)
+  - випадково (accidentally) — used to contrast unintentional vs intentional negative
+    actions
+  - навмисне (on purpose) — used to clarify intent in negative contexts
+  - На жаль, ні (Unfortunately, no) — essential conversational softener for polite
+    refusals
+  - Я б з радістю, але... (I would with joy, but...) — advanced polite refusal pattern
+activity_hints:
+- type: quiz
+  focus: Which aspect in negation?
+  items: 15
+- type: fill-in
+  focus: ще не + perfective patterns
+  items: 12
+- type: fill-in
+  focus: Affirmative → negative with correct aspect
+  items: 10
+- type: match-up
+  focus: Negation type → aspect
+  items: 12
+focus: grammar
+pedagogy: TTT
+prerequisites:
+- b1-06 (Aspect complete system)
+- b1-07 (Aspect past)
+- b1-08 (Aspect past)
+- b1-09 (Aspect future)
+connects_to:
+- b1-11 (Aspect in imperatives)
+- b1-14 (Aspect integration practice)
+objectives:
+- Learner understands why negation favors imperfective aspect
+- Learner can distinguish 'ще не' + perfective vs 'не' + imperfective
+- Learner can form negative imperatives with correct aspect
+- Learner recognizes exceptions to imperfective preference
+grammar:
+- Imperfective preference with не
+- ще не + perfective - expected completion
+- не + imperfective - general negation
+- Negative imperatives - наказові форми
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Negation and Aspect
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Official rules for aspect in negative contexts
+- name: Ukrainian Negation Patterns
+  url: https://uk.wikipedia.org/wiki/Заперечення_(мовознавство)
+  type: reference
+  notes: Negation with aspect selection
+immersion: 100% Ukrainian
+phase: B1.1 Aspect
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Defense Lawyer
+word_target: 4000

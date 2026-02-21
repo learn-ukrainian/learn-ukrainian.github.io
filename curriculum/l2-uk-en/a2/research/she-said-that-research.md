@@ -1,84 +1,40 @@
-# Research Notes: Вона сказала, що...: Непряма мова (She Said That...)
+# Дослідження: She Said That...
 
-**Track**: Core A (Ukrainian for English Speakers)
-**Module**: A2 M28
-**Researched**: 2026-02-08
-**Level**: A2 (Mid-Beginner)
+## State Standard Reference
+§4.4.2: "складнопідрядні речення зі сполучником що: Викладач сказав, що я маю багато працювати... складнопідрядні реченні зі сполучником щоб для вираження мети певної дії суб’єкта... просте питальне загальне речення: Чи ви прочитали цей текст?"
+Alignment: Module teaches the core mechanisms (conjunctions *що*, *щоб*, *чи*) required to form these complex sentences defined in the A2 Syntax standard.
 
-## 1. Grammar: State Standard 2024 Reference
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| **казати** | High (Top 100 verbs) | казати правду (tell the truth), він каже, що... (he says that...), так би мовити (so to speak) |
+| **говорити** | High (Top 100 verbs) | говорити українською (speak Ukrainian), говорити про... (talk about...), говорити з... (speak with...) |
+| **питати** | High | питати дозволу (ask permission), питати дорогу (ask for directions) |
+| **відповідати** | High | відповідати на питання (answer a question), відповідати за... (be responsible for...) |
 
-According to the **Державний стандарт української мови як іноземної (ДСТУ 2024)**, the topic of Reported Speech is covered in the Syntax section.
+## Cultural Hooks
+1. **Слово не горобець — вилетить не впіймаєш.** (A word is not a sparrow—you can't catch it once it has flown.) — Emphasizes the weight of spoken words and gossip.
+2. **Зіпсований телефон** (Broken telephone) — The Ukrainian name for the children's "whisper game," perfect for the "Practice" section to demonstrate how reported speech distorts information.
+3. **«На лавці» culture** — The stereotype of grandmothers (бабусі) sitting on benches discussing neighbors is a culturally recognizable trope for "reporting" information (gossip).
 
-**Section**: §4.3.5 Пряма і непряма мова (Direct and Indirect Speech).
+## Common Learner Errors
+1. **The "Backshift" Trap** → Learners apply English "past-to-past" rules (He said he *was* busy).
+   *Correct:* Він сказав, що він *зайнятий* (He said he *is* busy).
+   *Why:* Ukrainian retains the original tense of the direct speech.
+2. **Pronoun Persistence** → Forgetting to shift perspective.
+   *Error:* Він сказав: «Я хочу їсти» → Він сказав, що *я* хочу їсти.
+   *Correct:* Він сказав, що *він* хоче їсти.
+3. **Question Word Order** → Keeping the question intonation/inversion in reported questions.
+   *Error:* Я не знаю, *де є* вокзал?
+   *Correct:* Я не знаю, *де* вокзал. (Declarative word order).
+4. **"If" vs "Whether"** → Using *якщо* (conditional if) instead of *чи* (whether) for reported yes/no questions.
+   *Error:* Він питав, *якщо* я прийду.
+   *Correct:* Він питав, *чи* я прийду.
 
-**Specific Requirement (A2 level context)**:
-The standard requires learners to be able to transform direct speech into indirect speech using basic conjunctions.
-> «Трансформація прямої мови в непряму за допомогою сполучників **що**, **щоб** та частки **чи**.»
+## Cross-References
+- Builds on: `a1-09-present-tense` (Verb conjugation), `a2-25-future-tense` (Tenses foundation)
+- Prepares for: `b1-reported-speech-advanced` (Nuanced reporting verbs), `b2-direct-indirect-speech` (Stylistic transformation)
 
-**Example from Standard Guidance**:
-- Пряма мова: Студент відповів: «Я пропустив заняття через хворобу».
-- Непряма мова: **Студент відповів, що пропустив заняття через хворобу.**
-
-## 2. Vocabulary Frequency & Collocations
-
-The module relies on "Verbs of Communication and Cognition" (Дієслова мовлення та мислення).
-
-### High-Frequency Verbs (Essential for A2)
-- **казати / сказати** (to say/tell) — *Most frequent.*
-- **говорити** (to speak/talk)
-- **питати / запитати** (to ask)
-- **відповідати / відповісти** (to answer)
-- **думати** (to think)
-- **знати** (to know)
-- **просити / попросити** (to ask/request — for commands)
-
-### Common A2 Collocations
-- **Він каже, що...** (He says that...)
-- **Вона сказала, що...** (She said that...)
-- **Я думаю, що...** (I think that...)
-- **Він запитав, чи...** (He asked if/whether...)
-- **Вона попросила, щоб...** (She asked [someone] to...)
-
-## 3. Cultural Hook: The "Lavka" and Oral News
-
-**The Bench Culture (Культура призьби/лавки):**
-In Ukrainian villages and traditional urban neighborhoods, the "lavka" (bench) outside a house or apartment building is the traditional hub for social interaction. Reporting what neighbors or relatives said ("Баба Галя казала, що...") is the primary method of local news distribution. This "social reporting" is often jokingly called **"сарафанне радіо"** (sundress radio/word-of-mouth).
-
-**Storytelling Tradition:**
-Ukrainian culture places high value on narrative and "retelling" (переказ). Folklore often begins with "Кажуть, що..." (They say that...) or "Старі люди говорили, що..." (Old people said that...), grounding the lesson in authentic storytelling registers.
-
-## 4. Pedagogical Notes & Learner Challenges
-
-### The "No-Backshift" Rule (Crucial for English Speakers)
-English requires a tense shift: "He said: 'I **am** happy'" → "He said he **was** happy."
-**Ukrainian does NOT shift tenses.** The tense in the indirect clause remains exactly what it was in the direct speech.
-- *Він сказав: «Я **щасливий**»* (Present)
-- *Він сказав, що він **щасливий**.* (Still Present)
-Learners will instinctively try to use the past tense here; instructors must emphasize that Ukrainian tense logic is "fair" to the original speaker's perspective.
-
-### The Comma Rule
-In Ukrainian, a comma **must** precede the conjunctions *що*, *чи*, and *щоб*.
-- Wrong: *Я знаю що він прийде.*
-- Right: *Я знаю**, що** він прийде.*
-
-### Reported Commands (The 'щоб' + Past Tense Trap)
-When reporting a command, Ukrainian uses *щоб* + Past Tense (agreeing with the subject of the reported action).
-- Direct: «Принеси воду!» (Bring water!)
-- Indirect: *Він попросив, щоб я **приніс** воду.* (He asked that I [past-m] brought water).
-This is a complex structure for beginners and should be introduced with simple model sentences.
-
-## 5. Scope Boundaries
-
-### IN Scope
-- **Reporting Statements**: Using *що* (that).
-- **Reporting Questions**: Using *чи* (whether/if).
-- **Reporting Commands**: Basic use of *щоб* (that/to).
-- **Pronoun Shifts**: Changing "I" to "he/she" and "my" to "his/her" (using *свій* where appropriate, which the student already knows from M17).
-- **Tense Retention**: Keeping the original tense in the sub-clause.
-
-### OUT Scope
-- **Complex Subordinate Clauses**: Nested reporting (He said that she said that...).
-- **Advanced Conjunctions**: Using *ніби*, *мов*, *наче* (as if/as though) for doubtful reporting.
-- **Backshifting Pitfalls**: Avoid comparing to English "Sequence of Tenses" unless for contrast; focus on the Ukrainian "Absolute Tense" rule.
-- **Reported Speech with Conditional**: Using *якби* in reported speech (too complex for M28).
-- **Infinitive reporting for commands**: While common (*Він попросив принести*), the focus here is on the *щоб* clause to build syntactic flexibility.
+## Notes for Content Writing
+- **Tense Logic**: Explicitly frame the Ukrainian system as "Fair" or "Honest" — we report exactly what we heard, without changing the time.
+- **Differentiation**: Clearly distinguish *казати* (message content, introduces *що*) vs *говорити* (act of speaking).

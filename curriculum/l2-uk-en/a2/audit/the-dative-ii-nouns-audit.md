@@ -1,12 +1,11 @@
-# Audit Report: M02 — 02-the-dative-ii-nouns.md
-**Level:** A2 | **Module:** M02 | **Phase:** A2.1 | **Pedagogy:** PPP | **Target:** 1000
-**Naturalness:** 9/10 (PASS)
+# Audit Report: M02 — the-dative-ii-nouns.md
+**Level:** A2 | **Module:** M02 | **Phase:** A2.1 | **Pedagogy:** PPP | **Target:** 3000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-10 19:11:04
+**Generated:** 2026-02-21 01:07:32
 
 ## Configuration
 **Type:** A2-grammar
-**Word Target:** 1000 words
+**Word Target:** 3000 words
 **Activities:** 10-14 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
@@ -20,48 +19,55 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | match-up | Nominative to Dative | 12 | 8 | ✅ |
-| 2 | fill-in | Dative Noun Forms | 12 | 8 | ✅ |
-| 3 | quiz | Dative or Not? | 12 | 8 | ✅ |
-| 4 | true-false | Dative Rules | 12 | 8 | ✅ |
-| 5 | group-sort | Noun Genders in Dative | 12 | 12 | ✅ |
-| 6 | unjumble | Dative Sentences | 6 | 6 | ✅ |
-| 7 | error-correction | Fix the Dative | 6 | 6 | ✅ |
-| 8 | cloze | Complete the Dialogue | 12 | 12 | ✅ |
-| 9 | mark-the-words | Find Dative Nouns | 10 | 6 | ✅ |
-| 10 | translate | English to Ukrainian | 6 | 6 | ✅ |
+| 1 | group-sort | Сортування за закінченнями | 18 | 12 | ✅ |
+| 2 | match-up | Знайдіть пару: Дія та Адресат | 10 | 8 | ✅ |
+| 3 | quiz | Оберіть правильну форму | 8 | 8 | ✅ |
+| 4 | fill-in | Чоловічий рід: кому? | 8 | 8 | ✅ |
+| 5 | fill-in | Жіночий рід: магія чергування | 8 | 8 | ✅ |
+| 6 | fill-in | Множина: щедрість для всіх | 8 | 8 | ✅ |
+| 7 | unjumble | Складіть речення | 6 | 6 | ✅ |
+| 8 | error-correction | Виправте помилки | 6 | 6 | ✅ |
+| 9 | mark-the-words | Знайдіть слова у Давальному відмінку | 6 | 6 | ✅ |
+| 10 | translate | Переклад фраз | 6 | 6 | ✅ |
+| 11 | cloze | День народження | 12 | 12 | ✅ |
+| 12 | select | Культурний контекст | 6 | 6 | ✅ |
 
 **Summary:**
-- Total activities: 10 (target: 10-14) ✅
+- Total activities: 12 (target: 10-14) ✅
 - Unique types: 10 (minimum: 4) ✅
 - Priority types used: 3/3 (error-correction, fill-in, unjumble) ✅
 - Required types used: 3/3 (fill-in, match-up, quiz) ✅
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1303/1000 (raw: 1591)
-- **Activities:** ✅ 10/10
+- **Words:** ✅ 3689/3000 (raw: 4021)
+- **Activities:** ✅ 12/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 10/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 4/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 107/1
+- **Vocab:** ✅ 26/1
 - **Structure:** ✅ Valid Structure
+- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 42.3% (target 40-50% (A2.1))
+- **Immersion:** 🇺🇦 56.9% (target 50-60% (A2.1))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ✅ 9/10 (High)
+- **Naturalness:** ℹ️ PENDING — awaiting review
+- **Research:** ✅ Content aligned with research
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Introduction / Вступ** | ✅ | 268 | Included in Core |
-| **Presentation / Презентація** | ✅ | 582 | Included in Core |
-| **Practice / Практика** | ⚪️ | 288 | Skipped |
-| **Dialogues / Діалоги** | ✅ | 43 | Included in Core |
-| **Summary / Підсумок** | ✅ | 79 | Included in Core |
-| **Need More Practice?** | ⚪️ | 43 | Skipped |
+| **The Dative II — Nouns** | ✅ | 44 | Included in Core |
+| **Вступ: Концепція адресата** | ✅ | 545 | Included in Core |
+| **Чоловічий та середній рід: -ові/-у** | ✅ | 678 | Included in Core |
+| **Жіночий рід та чергування приголосних** | ✅ | 575 | Included in Core |
+| **Plural: Даруємо всім!** | ✅ | 406 | Included in Core |
+| **Ключові дієслова та керування** | ✅ | 541 | Included in Core |
+| **Практика: Етикет подарунків** | ✅ | 370 | Included in Core |
+| **Діалоги: День Ангела** | ✅ | 318 | Included in Core |
+| **Підсумок** | ✅ | 212 | Included in Core |

@@ -1,0 +1,277 @@
+✅ Message sent to Gemini (ID: 12089) [auto-acked: self-addressed]
+✓ Message 12089 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12089...
+📨 Message #12089
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-job-applications
+   Time: 2026-02-20T23:36:03.787812+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b2-pro-26
+level: B2-PRO
+sequence: 26
+slug: job-applications
+version: '2.0'
+title: Працевлаштування
+subtitle: Job Applications
+content_outline:
+- section: Розминка — Пошук роботи в Україні
+  points:
+  - Особливості українського ринку праці
+  - Де шукати роботу (робота.юа, work.ua, LinkedIn)
+  - Чого очікують українські роботодавці
+- section: Резюме (CV) українською
+  points:
+  - 'Структура: особисті дані, мета, досвід, освіта, навички'
+  - 'Формулювання досвіду: дієслова досягнення (розробив, впровадив, збільшив)'
+  - 'Навички: hard skills vs soft skills'
+  - Типові помилки та як їх уникнути
+  - Фото — так чи ні?
+- section: Супровідний лист
+  points:
+  - 'Структура: привітання, вступ, основна частина, завершення'
+  - 'Вступ: Звертаюся з приводу вакансії... / Зацікавила вакансія...'
+  - 'Чому я: Маю досвід у... / Моя кваліфікація відповідає...'
+  - 'Завершення: Буду радий(-а) обговорити... / Готовий(-а) до співбесіди'
+  - Персоналізація vs шаблон
+- section: Співбесіда українською
+  points:
+  - 'Типові питання: Розкажіть про себе / Чому хочете працювати у нас? / Ваші сильні
+    сторони?'
+  - 'Відповіді: структура STAR (ситуація, завдання, дія, результат)'
+  - 'Ваші питання роботодавцю: Які очікування? / Яка структура команди?'
+  - Salary talk — як обговорювати зарплату
+- section: Зразки документів
+  points:
+  - Приклад резюме з аналізом
+  - Приклад супровідного листа
+  - Діалог зі співбесіди
+- section: Практика — підготовка до працевлаштування
+  points:
+  - 'Завдання 1: Написати резюме на конкретну вакансію'
+  - 'Завдання 2: Написати супровідний лист'
+  - 'Завдання 3: Рольова гра — співбесіда'
+vocabulary_hints:
+  required:
+  - звертаюся з приводу вакансії (I am applying for the position)
+  - маю досвід у (I have experience in)
+  - моя кваліфікація відповідає (my qualifications match)
+  - готовий до співбесіди (ready for an interview)
+  - розкажіть про себе (tell me about yourself)
+  - ваші сильні/слабкі сторони (your strengths/weaknesses)
+  - очікування по зарплаті (salary expectations)
+  - коли можете приступити (when can you start)
+  recommended:
+  - досягнення (achievements)
+  - впровадив/розробив (implemented/developed)
+  - збільшив продуктивність (increased productivity)
+  - командна робота (teamwork)
+  - зацікавила вакансія (I was interested in the position)
+  - умови праці (working conditions)
+activity_hints:
+- type: document-analysis
+  focus: Проаналізувати резюме та супровідний лист — визначити сильні та слабкі сторони
+  items: 2
+- type: writing-task
+  focus: Написати резюме на задану вакансію
+  items: 1
+- type: writing-task
+  focus: Написати супровідний лист
+  items: 1
+- type: role-play
+  focus: Провести співбесіду (питання та відповіді)
+  items: 1
+- type: fill-in
+  focus: Вставити правильні дієслова досягнення в резюме
+  items: 10
+- type: matching
+  focus: З'єднати питання співбесіди з типом відповіді
+  items: 8
+focus: professional
+pedagogy: ESP
+prerequisites:
+- b2-pro-25 (HR-лексика)
+connects_to:
+- b2-pro-27 (Основи наукового письма)
+objectives:
+- Учень може написати резюме українською з правильною структурою
+- Учень може написати персоналізований супровідний лист
+- Учень може відповідати на типові питання співбесіди
+- Учень може обговорювати умови праці та зарплату
+grammar:
+- Дієслова досягнення в минулому часі (розробив, впровадив, збільшив)
+- Конструкції для опису навичок (вмію, маю досвід у, володію)
+- Умовні конструкції для зарплатних переговорів (якщо можливо, хотів би)
+register: офіційно-діловий
+phase: B2-PRO.2
+persona:
+  voice: Senior Specialist
+  role: Кар'єрний консультант
+word_target: 2000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Працевлаштування (b2-pro)
+
+## Використані джерела
+1. [Work.ua: Як написати супровідний лист](https://www.work.ua/articles/jobseeker/1557/) — поради щодо структури та змісту супровідних листів.
+2. [Robota.ua: Типові помилки в резюме](https://blog.robota.ua/shho-ne-tak-iz-vashim-rezyume-tipovi-pomilki/) — аналіз мовних та структурних хиб.
+3. [Happy Monday: Резюме, яке читають](https://happymonday.ua/rezyume-yak-napisati-shhob-jogo-prochitali/) — сучасні тренди оформлення CV в Україні.
+4. [ДСТУ 4163:2020: Вимоги до оформлення документів](https://zakon.rada.gov.ua/rada/show/v0144773-20) — державний стандарт щодо реквізитів та підписів.
+
+## Термінологічна база
+
+| Українська (норма) | Русизм/ненорма | English | Контекст вживання |
+|--------------------|---------------|---------|-------------------|
+| Супровідний лист   | Покривний лист | Cover letter | Офіційна переписка |
+| Здобути освіту     | Отримати освіту| To get education | Розділ "Освіта" в CV |
+| Стати до роботи    | Приступити до роботи | To start working | Співбесіда, офер |
+| За спеціальністю   | По спеціальності | By specialty | Кваліфікація |
+| Брав участь        | Приймав участь | Participated | Опис досвіду |
+| Очікування щодо ЗП | Очікування по ЗП | Salary expectations | Обговорення умов |
+| Згідно з (чимось)  | Згідно (чогось) | According to | Посилання на норми |
+| Посада             | Пост           | Position/Job title | Назва ролі |
+
+## Мовні норми та стандарти
+- **ДСТУ 4163:2020**: Основний стандарт для діловодства в Україні.
+- **Правило підпису**: Замість ініціалів (І.І. Іванов) тепер обов'язково вказувати "Власне ім'я ПРІЗВИЩЕ" (наприклад, Олександр ВАСИЛЬЧУК) в офіційних бланках та заявах.
+- **Датування**: Цифровий спосіб (20.02.2026) або словесно-цифровий (20 лютого 2026 р.).
+
+## Аутентичні приклади
+1. [Вступ супровідного листа]: «Мене зацікавила вакансія [назва], опублікована на Вашому сайті. Вважаю, що мій досвід у сфері [галузь] дозволить мені стати цінним членом Вашої команди.»
+2. [Опис досягнень]: «Впровадив систему автоматизації звітності, що дозволило скоротити час підготовки документів на 15%.»
+3. [Питання на співбесіді]: «Яким Ви бачите свій професійний розвиток у межах нашої компанії через 2-3 роки?»
+
+## Типові помилки
+1. ❌ **"Приймати участь"** → ✅ **"Брати участь"** — типова калька з російської.
+2. ❌ **"Являтися фахівцем"** → ✅ **"Бути фахівцем"** — зловживання дієсловом-зв'язкою.
+3. ❌ **"На протязі навчання"** → ✅ **"Протягом/впродовж навчання"** — "на протязі" означає фізичний протяг повітря.
+4. ❌ **"Виконати по плану"** → ✅ **"Виконати за планом"** — невірний прийменник.
+5. ❌ **"ВУЗ"** → ✅ **"ВНЗ / ЗВО"** — (Заклад вищої освіти) — сучасна українська абревіатура.
+
+## Engagement Hooks (mapped to sections)
+- Section "Резюме (CV) українською": [!pro-tip] — Використовуйте дієслова доконаного виду (розробив, впровадив), щоб підкреслити результат, а не процес.
+- Section "Супровідний лист": [!language-note] — Термін "супровідний лист" є нормативним, тоді як "покривний" — помилкове калькування англійського cover letter.
+- Section "Співбесіда українською": [!example] — Приклад відповіді за технікою STAR для підтвердження навички командної роботи.
+- Section "Зразки документів": [!context] — В Україні часто обговорюють зарплату "на руки" (netto), але в офіційних оферах сума може вказуватися "брутто".
+
+## Section-Mapped Research Notes
+
+### Розминка — Пошук роботи в Україні
+Огляд платформ: Work.ua та Robota.ua як лідери ринку, LinkedIn для IT та менеджменту. Акцент на "прихованому" ринку праці через нетворкинг.
+
+### Резюме (CV) українською
+Акцент на лаконічності (1-2 сторінки). Дотримання ДСТУ 4163:2020 в оформленні контактних даних. Важливість розділу "Досягнення" з використанням сильних дієслів.
+
+### Супровідний лист
+Відмінність між шаблоном і персоналізованим листом. Вступні фрази («Пишу Вам, щоб висловити зацікавленість...»), аргументація («Чому саме я?») та заклик до дії.
+
+### Співбесіда українською
+Типові питання в українському контексті (мотивація, конфліктні ситуації). Алгоритм STAR (Ситуація, Завдання, Дія, Результат) як стандарт для B2-PRO.
+
+### Зразки документів
+Аналіз реального резюме менеджера з продажу: розбір помилок у термінології та форматуванні.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/

@@ -1,4 +1,3 @@
----
 sequence: 29
 module: ruth-029
 module_number: 29
@@ -9,7 +8,6 @@ phase: 2
 phase_id: sacred-word
 phase_name: Sacred Word
 focus: Abstract vocabulary — Блаженні vs Щасливі
-word_target: 4000
 content_outline:
 - section: Вступ
   description: Introduction to The Beatitudes
@@ -24,3 +22,6 @@ activity_types:
 - transcription
 - etymology-trace
 - grammar-identify
+persona:
+  voice: Baroque Scholar
+  role: Sermon Rhetorician

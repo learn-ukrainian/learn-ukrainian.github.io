@@ -1,4 +1,3 @@
----
 module: c2-041
 level: c2
 sequence: 41
@@ -10,66 +9,63 @@ objectives:
 - TBD
 sources:
 - name: Літературне життя України
-  url: "https://uk.wikipedia.org/wiki/Українська_література"
+  url: https://uk.wikipedia.org/wiki/Українська_література
   type: reference
   notes: Overview of Ukrainian literary life
 - name: Спілка письменників України
-  url: "https://uk.wikipedia.org/wiki/Спілка_письменників_України"
+  url: https://uk.wikipedia.org/wiki/Спілка_письменників_України
   type: reference
   notes: Writers' union and professional organizations
 - name: Книжковий Арсенал
-  url: "https://artarsenal.in.ua/"
+  url: https://artarsenal.in.ua/
   type: primary
   notes: Major literary festival
 content_outline:
-- section: "Вступ — Літературне поле"
+- section: 'Вступ: Літературне поле (Introduction: The Literary Field)'
   words: 500
   points:
-  - Бурдьє і поняття поля
-  - Актори літературного поля
-  - Капітал символічний і економічний
-- section: Письменницькі організації
+  - 'Теорія П''єра Бурдьє: поняття літературного поля, габітусу та гравців у культурному
+    просторі.'
+  - 'Боротьба за капітал: розрізнення символічного капіталу (престиж, визнання) та
+    економічного капіталу (продажі, гонорари).'
+- section: Професійні об'єднання та ПЕН Україна (Professional Unions and PEN Ukraine)
   words: 700
   points:
-  - Спілка письменників — історія і сьогодення
-  - PEN Україна
-  - Незалежні об'єднання
-  - Переваги і недоліки членства
-- section: Літературні заходи
-  words: 600
-  points:
-  - Книжковий Арсенал
-  - Форум видавців у Львові
-  - Авторські читання
-  - Літературні резиденції
-- section: Видавнича індустрія
+  - 'Порівняльний аналіз інституцій: Національна спілка письменників (трансформація
+    радянського спадку) vs. незалежні об''єднання.'
+  - 'Роль ПЕН Україна: захист свободи слова, прав авторів та документація злочинів
+    проти культури під час війни.'
+- section: Фестивалі та Книжковий Арсенал (Festivals and Book Arsenal)
   words: 700
   points:
-  - Великі і малі видавництва
-  - Роль редактора
-  - Агенти і агенції
-  - Шлях до публікації
-- section: Критика і медіа
+  - 'Книжковий Арсенал у Києві: найбільший інтелектуальний фестиваль та його роль
+    у формуванні щорічних трендів.'
+  - 'Міжнародне визнання: аналіз успіху фестивалю (нагорода London Book Fair 2019)
+    як кейс ефективного культурного менеджменту.'
+- section: Видавнича індустрія та BookTok (Publishing Industry and BookTok)
+  words: 700
+  points:
+  - 'Видавничий цикл: шлях рукопису від подання та редакційного опрацювання до тиражування
+    й промоції.'
+  - 'Цифровізація літпроцесу: вплив соціальних мереж (Facebook, Instagram, BookTok)
+    на популярність авторів та продажі.'
+- section: Критика, медіа та рецензування (Criticism, Media and Reviewing)
+  words: 800
+  points:
+  - 'Літературна критика в медіа: незалежність оглядачів та формування читацького
+    канону.'
+  - 'Вторинні тексти: практика написання рецензій та анотацій згідно з компетенціями
+    §4.3.8 Державного стандарту.'
+  - 'Культурна дипломатія: роль літературних журналів у представленні українського
+    голосу на міжнародній арені.'
+- section: Практичний вхід та подолання помилок (Practical Entry and Overcoming Errors)
   words: 600
   points:
-  - Літературні журнали
-  - Критики та оглядачі
-  - Літературні програми на радіо/ТБ
-  - Онлайн-спільноти
-- section: Практичний вхід у спільноту
-  words: 500
-  points:
-  - З чого почати
-  - Нетворкінг для інтровертів
-  - Подання рукопису
-  - Побудова репутації
-- section: Підсумок
-  words: 400
-  points:
-  - Література як спільна справа
-  - Баланс творчості і спільноти
-  - Довгострокова стратегія
-word_target: 4000
+  - 'Професійний нетворкінг для авторів: побудова репутації та навички пітчингу рукопису.'
+  - 'Типові помилки: розрізнення «роман» vs «новела» (калька novel) та вживання «видавати»
+    (книги) vs «публікувати» (статті).'
+  - 'Граматичне керування: вживання «рецензія на книгу» як професійного стандарту
+    на противагу варіативному «відгуку про».'
 vocabulary:
   required:
   - спільнота (community)
@@ -88,7 +84,7 @@ vocabulary:
   - роялті (royalty)
   - контракт (contract)
   - дебют (debut)
-  forbidden: "[]"
+  forbidden: '[]'
 activities:
   types_required:
   - quiz
@@ -105,21 +101,43 @@ connects_to:
 - c2-45 (C2.2 Checkpoint)
 vocabulary_hints:
   required:
-  - концепція (concept)
-  - аналіз (analysis)
-  - дискурс (discourse)
-  - методологія (methodology)
+  - 'спільнота (community) — High frequency; collocations: літературна спільнота,
+    професійна спільнота'
+  - 'поле (field) — Medium frequency; register: academic (concept of the literary
+    field by Bourdieu)'
+  - 'видавництво (publishing house) — High frequency; collocations: незалежне видавництво,
+    політика видавництва'
+  - 'рукопис (manuscript) — Medium frequency; usage: professional (to submit, edit,
+    or reject a manuscript)'
+  - 'нетворкінг (networking) — Neologism; usage: professional context for authors
+    and cultural managers'
+  - 'концепція (concept) — Usage: analysis of literary trends and methodology'
+  - аналіз (analysis) — High frequency; critical evaluation of texts
+  - 'дискурс (discourse) — Usage: academic/literary discussion of cultural phenomena'
+  - 'методологія (methodology) — Usage: structural approach to reviewing or researching
+    literature'
   recommended:
-  - інтерпретація (interpretation)
-  - контекстуалізація (contextualization)
-  - синтез (synthesis)
+  - символічний капітал (symbolic capital) — Key term from research; status/prestige
+    in the literary field
+  - роман (novel) — Professional register; correction of the common error confusing
+    it with 'новела'
+  - 'рецензія на (review of) — Usage note: specific management (рецензія на книгу)
+    for professional reviews'
+  - 'видавати / публікувати — Register marker: books are ''видані'' while articles/posts
+    are ''публіковані'''
+  - інтерпретація (interpretation) — Deep analysis of authorial intent
+  - контекстуалізація (contextualization) — Placing a work within historical/social
+    fields
+  - синтез (synthesis) — Combining critical findings into a coherent secondary text
 activity_hints:
 - type: reading
   focus: Поглиблений аналіз тексту
   items: 4
 - type: essay-response
   focus: Критичне осмислення
-  word_target: 400
 - type: discussion
   focus: Дискусія та аргументація
   items: 1
+persona:
+  voice: Senior Specialist
+  role: Salon Host

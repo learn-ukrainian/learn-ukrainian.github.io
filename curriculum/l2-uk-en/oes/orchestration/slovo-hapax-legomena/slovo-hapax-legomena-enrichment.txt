@@ -1,0 +1,207 @@
+✅ Message sent to Gemini (ID: 13007) [auto-acked: self-addressed]
+✓ Message 13007 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #13007...
+📨 Message #13007
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-slovo-hapax-legomena
+   Time: 2026-02-20T23:43:43.335370+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 87
+module: oes-087
+module_number: 87
+slug: slovo-hapax-legomena
+title_uk: 'Слово: Унікальні слова'
+title_en: 'Slovo: Hapax Legomena'
+phase: 4
+phase_id: literary-art
+phase_name: Literary Art
+focus: Striltsy, Shereshiry, Karnu/Zhylya
+content_outline:
+- section: Вступ
+  description: 'Introduction to Slovo: Hapax Legomena'
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Senior Paleographer
+  role: Lexicographer
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Slovo Hapax Legomena (Унікальна лексика "Слова о полку Ігоревім")
+
+## Використані джерела
+1. [Енциклопедія Сучасної України (ЕСУ)](https://esu.com.ua) — статті про "Слово о полку Ігоревім", лексику та міфологію.
+2. [Ізборник (litopys.org.ua)](http://litopys.org.ua) — тексти "Слова", коментарі Л. Махновця, праці М. Грушевського та І. Огієнка.
+3. [Інститут історії України НАН України](http://history.org.ua) — дослідження з військової історії Русі (щодо шереширів та харалугу).
+4. [Вікіпедія (uk.wikipedia.org)](https://uk.wikipedia.org) — оглядові статті про Карну, Жлю та гапакси.
+
+## Хронологія
+- **Кінець XII ст. (1185-1187)**: Створення "Слова о полку Ігоревім". Фіксація живої розмовної та військової лексики того часу.
+- **1790-ті**: Відкриття рукопису Мусіним-Пушкіним. Перші спроби тлумачення "темних місць".
+- **1800**: Перше видання "Слова". Багато слів залишаються незрозумілими або трактуються помилково.
+- **XIX ст.**: Романтичні реконструкції. "Шерешири" часто тлумачаться як "широкі шаровари" або інші фантастичні речі.
+- **XX ст.**: Науковий етимологічний аналіз. Встановлення перських та тюркських коренів (шерешири, харалуг) та зв'язку з українськими діалектами.
+
+## Ключові факти та цитати
+- **Шерешири**: «Сами скачють, акы сѣрыи влъци в полѣ, ищучи себе чти, а князю славѣ». Перед цим: «Тіи бо без щитовь, съ засапожникы, кликомъ плъкы побѣждають, звонячи въ прадѣднюю славу». (Контекст: Глібовичі).
+- **Карна і Жля**: «За нимъ кликну Карна, и Жля поскочи по Руской земли, смагу людемъ мычючи въ пламянѣ розѣ».
+- **Тєлєги/Стрільці**: «А половци неготовами дорогами побѣгоша къ Дону Великому; крычатъ тѣлѣгы полунощы, рци, лебеди розпущени».
+- **Харалуг**: «Тіи бо два храбрая Святъславлича... уже тресну та слава, померкоша синіи молніи, погасоша лунци (сонця), упустиста харалужніи мечі».
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ": [!history-bite] — Про те, що "Слово" містить слова, які зустрічаються лише ОДИН раз у всій збереженій літературі Русі.
+- Section "Шерешири": [!myth-buster] — Це не "штани" і не "широкі ряди", а грізна зброя ("грецький вогонь" або катапульти).
+- Section "Карна і Жля": [!culture] — Зв'язок із плакальницями та поховальними обрядами (карити — оплакувати).
+- Section "Харалуг": [!context] — Зв'язок Київської Русі з імперією Каролінгів (Frankish steel).
+- Section "Деколонізація": [!decolonization] — Російські переписувачі XVI ст. не розуміли руської (давньоукраїнської) лексики, перетворюючи її на "нісенітницю", яку потім оголошували "зіпсованим текстом".
+
+## Деколонізаційний контекст
+- **Imperial Myth**: "Темні місця" (obscura loca) — це доказ того, що текст "зіпсований" або підроблений, бо "русскій чітатєль" його не розуміє.
+- **Ukrainian Reality**: Більшість "темних місць" прояснюються через українські діалекти (наприклад, *смага* — спека/вогонь, *яруга* — яр) або через запозичення, які були органічними для мультикультурного Києва (тюркізми, грецизми), але чужими для Московії. Унікальна лексика — це маркер автентичності києво-руського походження.
+
+## Contested Terms (if applicable)
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| Шерешири | Часто ігнорується або перекладається як абстрактна "зброя" | Конкретний термін для "грецького вогню" або метальних снарядів (від перськ. *tir-i-čärx*), що свідчить про високу військову культуру Русі |
+| Карна і Жля | Абстрактні "горе і туга" | Персоніфіковані архаїчні божества/сутності поховального обряду; паралелі з українським фольклором (плакальниці) |
+
+## Section-Mapped Research Notes
+
+### Вступ: Феномен Hapax Legomena
+Hapax legomena (від грец. "сказане один раз") у "Слові" — це слова, що не зустрічаються в інших пам'ятках. Вони є найбільшим викликом для перекладачів і найбільшим скарбом для лінгвістів.
+
+### Шерешири: Вогняні стріли чи катапульти?
+Слово зустрічається лише тут. Гіпотези:
+1.  Від перського *tir-i-čärx* (снаряд, кругла куля, петарда).
+2.  "Живі шерешири" — можливо, метафора воїнів, що самі є як вогняні снаряди.
+3.  Свідчить про контакти з Тмутараканню та Кавказом/Іраном.
+
+### Карна і Жля: Міфологія скорботи
+Карна — від *карити* (оплакувати, дорікати). Жля — від *жаль* (скорбота, могила - "жальник").
+Це міфологічні образи, що "мичуть смагу" (розкидають жар/вогонь) у полум'яному розі — натяк на кремацію або поховальне вогнище. Архаїчний пласт слов'янської міфології, збережений лише тут.
+
+### Тєлєги чи Стрільці? Загадка тексту
+Фраза "кричать тєлєги" часто вважається зіпсованою. Деякі дослідники пропонують читати "кричать стрільці" (бо лебеді "розпущени" — як стріли з лука). Але "тєлєги" (вози) теж можуть скрипіти ("кричати"). Проблема текстології: чи ми виправляємо автора, чи намагаємося зрозуміти метафору?
+
+### Харалуг: Сталь Каролінгів
+"Харалужні мечі" = сталеві, загартовані. Етимологія: від "Каролінг" (Karl -> Carolingian -> Kral -> Kharaluh). Франкські мечі цінувалися надзвичайно високо. Це свідчить про інтеграцію Русі в європейський ринок зброї.
+
+### Підсумок: Мозаїка автентичності
+Ці слова доводять, що автор був воїном і ерудитом свого часу, знайомим з діалектами, військовим жаргоном та іноземними термінами. Для нас це — вікно у живу мову XII століття.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 13030)
+✓ Message 13007 acknowledged
+✓ Message 13030 acknowledged

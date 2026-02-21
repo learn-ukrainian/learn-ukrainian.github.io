@@ -1,0 +1,85 @@
+module: b1-40
+level: B1
+sequence: 40
+slug: reported-questions-commands
+version: '2.0'
+title: Непрямі питання та накази
+subtitle: Reported Questions & Commands
+content_outline:
+- section: Тест
+  points:
+  - Diagnostic quiz on indirect questions/commands — check for common 'що' vs 'чи'
+    confusion and 'ask to do' mistranslations
+  - Self-assessment questions
+- section: Пояснення
+  points:
+  - 'Yes/No Questions (Він запитав, чи...) — learner error: using ''що'' instead of
+    ''чи'' for indirect yes/no questions'
+  - 'Wh-Questions (Вона запитала, що/де/коли...) — emphasize falling narrative intonation
+    and removal of question mark; learner error: forgetting pronoun shifts (I -> he/she)'
+  - Reported Commands (Він сказав, щоб я...) — highlight 'щоб' + past tense structure
+    despite present/future meaning; contrast register of 'наказати' (strong/military)
+    vs 'просити' (polite) vs 'вимагати' (demanding)
+  - 'Reported Requests (просити, щоб) — learner error: translating ''ask to action''
+    as ''питати'' instead of ''просити''; cultural hook: preference for indirect politeness
+    (''Чи не могли б ви...?'')'
+- section: Практика
+  points:
+  - Report questions and commands — practice transforming direct imperatives into
+    polite indirect requests
+  - Mixed transformation
+- section: Діалоги
+  points:
+  - Indirect questions/commands in conversation — highlight 'Ty' vs 'Vy' dynamics
+    in reporting requests (friend vs formal)
+  - Everyday scenarios
+vocabulary_hints:
+  required:
+  - питання (question) — поставити питання, вирішити питання, спірне питання
+  - наказ (command) — віддати наказ, виконати наказ, видати наказ
+  - прохання (request) — звернутися з проханням, ввічливе прохання, настійливе прохання
+  - чи (whether) — mandatory for Yes/No indirect questions (avoiding 'що')
+  - запитати (to ask) — запитати дозволу, запитати дорогу, запитати пораду
+  - наказати (to order) — наказати зробити, суворо наказати
+  - просити (to request) — просити допомоги, просити пробачення, просити слова
+  - щоб (that - subjunctive) — used in reported commands/requests with past tense
+    verb (сказав, щоб я зробив)
+  recommended:
+  - поцікавитися (to wonder) — polite alternative to 'запитати' in indirect speech
+  - вимагати (to demand) — stronger than 'просити', often implies authority or urgency
+  - умовляти (to persuade) — trying to convince someone to act
+  - заборонити (to forbid) — often used in negative reported commands
+activity_hints:
+- type: fill-in
+  focus: Questions and commands to indirect
+  items: 25
+- type: fill-in
+  focus: Complete reported questions/commands
+  items: 20
+- type: error-correction
+  focus: Fix indirect speech errors
+  items: 15
+- type: fill-in
+  focus: Report conversations
+  items: 10
+focus: grammar
+pedagogy: TTT
+prerequisites:
+- b1-39 (Reported Statements)
+connects_to:
+- b1-41 (Checkpoint Complex Sentences 2)
+objectives:
+- Learner can report questions using indirect speech
+- Learner can report commands and requests using щоб
+- Learner can choose appropriate structures for different speech acts
+- Learner can transform all speech types
+grammar:
+- Reported questions with чи, що, хто, де, коли
+- Reported commands with щоб + past form
+- Reported requests with просити, щоб
+register: розмовний
+phase: B1.3b [Complex Sentences]
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Executive Assistant
+word_target: 4000

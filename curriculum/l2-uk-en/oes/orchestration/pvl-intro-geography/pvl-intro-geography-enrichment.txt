@@ -1,0 +1,218 @@
+✅ Message sent to Gemini (ID: 12265) [auto-acked: self-addressed]
+✓ Message 12265 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12265...
+📨 Message #12265
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-pvl-intro-geography
+   Time: 2026-02-20T23:38:11.702142+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 26
+module: oes-026
+module_number: 22
+slug: pvl-intro-geography
+title_uk: 'ПВЛ: Вступ та географія'
+title_en: 'PVL: Intro & Geography'
+phase: 1
+phase_id: vernacular-foundations
+phase_name: Vernacular Foundations
+focus: Imperfect tense — describing tribal customs
+content_outline:
+- section: Вступ
+  description: 'Introduction to PVL: Intro & Geography'
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Senior Paleographer
+  role: Cartographer of Rus'
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: PVL Intro Geography
+
+## Використані джерела
+1. **[Litopys.org.ua](http://litopys.org.ua/ipatlet/ipat01.htm)** — "Літопис Руський" (Іпатіївський список), оригінальний текст та переклад Л. Махновця. Основне джерело тексту.
+2. **[Енциклопедія Сучасної України (esu.com.ua)](https://esu.com.ua/article-8815)** — стаття "Київська Русь", аналіз державного устрою та історіографії.
+3. **[History.org.ua](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Povist_mynulyh)** — Енциклопедія історії України, стаття про "Повість минулих літ", джерелознавчий аналіз.
+
+## Хронологія
+- **~2350 до н.е.** (біблійна хронологія) — Потоп і поділ землі між синами Ноя (Сим, Хам, Яфет). Символічний початок історії в ПВЛ.
+- **VI-VII ст.** — Активне розселення слов'янських племен на території України (згідно з археологією та ПВЛ).
+- **860-ті рр.** — Перша чітка історична прив'язка в ПВЛ (похід на Царгород), що завершує "вступну" частину.
+- **~1113 р.** — Укладання першої редакції "Повісті минулих літ" (Нестор Літописець).
+- **1377 р.** — Лаврентіївський список (найдавніший збережений, що містить ПВЛ).
+
+## Ключові факти та цитати
+
+### Біблійний розподіл
+- Русь (Слов'яни) віднесені до "частини Яфетової" (північні та західні країни). Це легітимізує їх як частину європейського/біблійного світу.
+- **Цитата**: «В Яфетовій же частині сидять русь, чудь і всякі народи...»
+
+### Шлях із варягів у греки
+- Головна геополітична вісь. Опис шляху йде знизу вгору (від гирла Дніпра) або навпаки, деталізуючи волоки.
+- **Цитата**: «Бѣ путь из Варягъ въ Греки, і изъ Грекъ по Днѣпру, и вѣрхъ Днѣпра волокъ до Ловоти...»
+
+### Імперфект (Граматика звичаїв)
+- Використовується для опису *стану* або *звичаю*, що тривав у минулому.
+- Контраст між полянами (мирні звичаї) та древлянами (дикі звичаї).
+- **Цитата**: «Древляне живяху звѣриньскимъ образомъ... убиваху... ядяху...» (Древляни жили по-звіриному... вбивали... їли...).
+- **Цитата**: «Поляне бо своїх отець звичаї імяху тих і кроток» (Поляни ж мали звичай своїх батьків, тихий і лагідний).
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ": **[!context]** — Чому літописець починає з Ноя? (Інтеграція Русі в сакральну історію спасіння).
+- Section "Основний матеріал: I — Шлях із варягів у греки": **[!history-bite]** — Логістика волоків: як перетягували кораблі і скільки це коштувало.
+- Section "Основний матеріал: II — Етнографія племен": **[!myth-buster]** — Міф про "єдиний давньоруський народ". ПВЛ чітко розрізняє племена за звичаями і законами.
+- Section "Основний матеріал: III — Граматика (Імперфект)": **[!paleography]** — Як розпізнати імперфект у рукописі (суфікси -ах-, -яхоу-).
+- Section "Основний матеріал: IV — Легенда про Київ": **[!decolonization]** — Київ як сакральний центр, "Новий Єрусалим" vs імперська теза про "колиску трьох народів".
+
+## Деколонізаційний контекст
+- **Імперський міф**: "Київ — мати міст руських" (у значенні російських/спільних). "Колиска трьох братніх народів".
+- **Українська реальність**: Київ — центр саме *руської* (читай: києво-руської, протоукраїнської) державності. ПВЛ фіксує унікальні звичаї полян як ядра майбутнього етносу. Північні племена (майбутня Московія) згадуються як периферичні данники.
+- **Термінологія**: Чітке розмежування "Русь" (Київщина, Переяславщина, Чернігівщина) і "Залісся" (пізніша Суздальщина).
+
+## Contested Terms Table
+| Concept | Imperial/Soviet framing | Ukrainian (decolonized) framing |
+|---------|-------------------------|--------------------------------|
+| Руська земля | "Древнерусское государство" (спільне коріння) | Держава зі столицею в Києві, політичне ядро сучасної України |
+| Племена | Складові єдиного етносу | Окремі етнополітичні утворення (славінії) з власними звичаями |
+| "Мати міст руських" | Обґрунтування влади Москви над Києвом | Грецька калька "метрополія" (mother-city), що підкреслює столичний статус Києва |
+
+## Section-Mapped Research Notes
+
+### Вступ
+- Структура літопису. Нестор як компілятор та автор.
+- Сакральна географія: світ після Потопу.
+
+### Основний матеріал: I — Шлях із варягів у греки
+- Детальний маршрут. Гідроніми (Дніпро, Ловать, Ільмень, Нево).
+- Економічне значення шляху для становлення Русі.
+- Зв'язок Балтики (Варязьке море) і Чорного моря (Руське море).
+
+### Основний матеріал: II — Етнографія племен
+- Поляни: "мужі мудрі і смислені". Культурний герой Кий.
+- Древляни, радимичі, в'ятичі, сіверяни.
+- "Звірині" звичаї сусідів як спосіб підкреслити цивілізованість полян (християнський погляд літописця).
+
+### Основний матеріал: III — Граматика (Імперфект)
+- Морфологія: основа інфінітива + суфікси (-ах-, -яч-, -ѣ-) + особові закінчення.
+- Функція: тло подій, звичаї, повторюваність.
+- Порівняння: *бяше* (імперфект) vs *був* (сучасний минулий).
+
+### Підсумок
+- Географія як доля. Центральне положення Києва на перехресті шляхів.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12314)
+✓ Message 12265 acknowledged
+✓ Message 12314 acknowledged

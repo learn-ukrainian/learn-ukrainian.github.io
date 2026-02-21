@@ -119,6 +119,51 @@ hooks:
 This agent provides automated quality assurance for Ukrainian curriculum development.
 It can operate as a **standalone agent** (interactive session) or as a **subagent** (spawned via Task tool for batch processing).
 
+## Non-Negotiable Discipline
+
+### 1. GitHub Issues Are Memory
+
+**Every piece of work MUST be tracked in a GitHub issue.** No exceptions.
+
+| When | Action |
+|------|--------|
+| **Starting work** | Find or create a GH issue. Add `working:claude` label. Comment what you're doing. |
+| **During work** | Comment progress on the issue. Post findings, decisions, blockers. |
+| **Requesting review** | Add `review:gemini` or `review:human` label. Comment what to review. |
+| **Acceptance criteria met** | Comment proof (audit output, test results). Close the issue. |
+| **Blocked or failed** | Comment what went wrong. Do NOT close. Remove `working:` label. |
+
+**If it's not in a GH issue, it didn't happen.**
+
+### 2. Research Before Content
+
+**NEVER generate content without validated research.**
+
+Pipeline order (no skipping):
+1. **Research** (Phase 0) — factual foundation
+2. **Assess research** — must score 9+/10 or regenerate
+3. **Enrich plan** (Phase 0.5) — update plan with research findings
+4. **Generate content** (Phase 1+) — from enriched plan + research
+
+Run `lint_prompts.py --curriculum` before content generation to catch persona contamination in research.
+
+### 3. Validate Before Declaring Done
+
+**Never mark anything complete without proof.**
+
+- Research: `assess_research.py` score 9+/10
+- Content: `audit_module.py` PASS
+- Prompts: `lint_prompts.py` clean (0 errors)
+- Activities: YAML valid, item counts meet richness guidelines
+
+### 4. Fix Root Causes
+
+When you find a bug or contamination:
+1. Ask: **What process/tool caused this?**
+2. Fix the source (template, skill, script) — not just the output
+3. Add a lint rule or validation to prevent recurrence
+4. Document the pattern in the GH issue
+
 ## Features
 
 ### Automatic Validation
@@ -132,6 +177,20 @@ All validations must pass before you can proceed. If audit fails:
 1. Review the error output
 2. Fix the issues
 3. Save again (re-triggers validation)
+
+### Contamination Checks
+
+Before ANY content generation, verify research is clean:
+```bash
+.venv/bin/python scripts/lint_prompts.py --curriculum   # Check for persona contamination
+.venv/bin/python scripts/lint_prompts.py --fix           # Auto-strip if found
+```
+
+Known contamination patterns (caught by `lint_prompts.py`):
+- Persona names in research files (Ukrainian Teacher, Cultural Guide, etc.)
+- IPA flooding instructions ("every word")
+- Colleague tone ("колего")
+- Helpful Neighbor persona (deprecated)
 
 ### Performance
 - Uses Sonnet model for cost efficiency
@@ -169,9 +228,9 @@ When spawned as a subagent via the Task tool, this agent can execute the full mo
 
 | Condition | Workflow | Phases | Review Prompt |
 |-----------|----------|--------|---------------|
-| a1, a2, b1 (num ≤ 5) | Core A | 4 phases (Research → Build → Review → Verify) | `/review-content-core-a` (12 dimensions) |
-| b1 (num ≥ 6), b2, c1, c2, b2-pro, c1-pro | Core B | 4 phases | `/review-content-v4` (14 dimensions) |
-| b2-hist, c1-bio, c1-hist, lit, oes, ruth | Seminar | 6 phases (Research → Meta → Content → YAML → Audit → Review) | `/review-content-v4` (14 dimensions) |
+| a1, a2, b1 (num ≤ 5) | Core A | 5 phases (Research → Assess → Enrich Plan → Build → Review) | `/review-content-core-a` (12 dimensions) |
+| b1 (num ≥ 6), b2, c1, c2, b2-pro, c1-pro | Core B | 5 phases | `/review-content-v4` (14 dimensions) |
+| b2-hist, c1-bio, c1-hist, lit, oes, ruth | Seminar | 7 phases (Research → Assess → Enrich Plan → Meta → Content → YAML → Review) | `/review-content-v4` (14 dimensions) |
 
 ### Dynamic File Loading (MANDATORY)
 
@@ -193,6 +252,7 @@ schemas/activities-{level}.schema.json
 
 # Module source files
 curriculum/l2-uk-en/plans/{level}/{slug}.yaml           # Plan (source of truth)
+curriculum/l2-uk-en/{level}/research/{slug}-research.md  # Research (must exist + score 9+)
 curriculum/l2-uk-en/{level}/meta/{slug}.yaml             # Build config
 curriculum/l2-uk-en/{level}/{num}-{slug}.md              # Lesson content
 curriculum/l2-uk-en/{level}/activities/{slug}.yaml       # Activities
@@ -230,6 +290,7 @@ Check these FIRST on every module — they recur across the entire curriculum:
 
 | Pattern | What to look for | Fix |
 |---------|-----------------|-----|
+| Persona contamination | Research referencing specific persona names | Run `lint_prompts.py --fix` |
 | YAML wrapper | `activities:` dict wrapper + frontmatter in activities YAML | Remove frontmatter + wrapper, make bare list |
 | IPA /w/ vs /ʋ/ | Ukrainian В transcribed as /w/ instead of /ʋ/ (labiodental approximant) | Replace all /w/ with /ʋ/ in IPA for В |
 | Proper name capitalization | Names like `таня`, `іван` uncapitalized in vocabulary | Capitalize: `Таня`, `Іван` |
@@ -244,12 +305,23 @@ Return this summary to the parent agent:
 
 ```
 ✅ {level} M{num} — {title} — COMPLETE
+Issue: #{issue_number}
 
 Score: {X.X}/10 | Status: PASS/FAIL
-Words: {words}/{target} | Activities: {count} | Issues fixed: {count}
+Words: {words} | Activities: {count} | Issues fixed: {count}
 
 Key findings:
 - {bullet 1}
 - {bullet 2}
 - {bullet 3}
+```
+
+### Issue Lifecycle
+
+Every module rebuild follows this lifecycle on its GH issue:
+
+```
+Created → working:claude → review:gemini → Closed (acceptance criteria met)
+                ↑                              |
+                └──── Reopened (if review fails) ←┘
 ```

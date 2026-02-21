@@ -1,87 +1,44 @@
-# Research: Describing Changes (B1 M58)
+# Дослідження: Опис змін
 
-**Level Note**: This module is part of the **B1** curriculum. The prompt erroneously listed it as A1 with "alphabet only" knowledge. The research below reflects the actual **B1** requirements (Instrumental case, Past tense, Aspect) necessary to discuss "Changes" in Ukrainian.
+## State Standard Reference
+§3.14: "Природне середовище: погода, пори року, клімат; природні об’єкти..."
+§3.6: "Суспільні відносини: суспільні проблеми... суспільно-політичні події."
+§4.3.2: "Ступені порівняння якісно-означальних прислівників: ...більш сучасно, менш холодно..."
+Alignment: Модуль забезпечує лексичний інструментарій для опису динамічних процесів у природі (зміни клімату), економіці (зростання цін) та суспільстві (трансформація міст), що відповідає тематичним та граматичним вимогам стандарту B1.
 
-## 1. Grammar: State Standard 2024 Reference
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| **Зростати** | High (News/Econ) | попит зростає, економіка зростає, ціни зростають, стрімко зростати, напруга зростає |
+| **Зменшуватися** | High (General) | кількість зменшується, відстань зменшується, ризик зменшується, поступово зменшуватися |
+| **Змінюватися** | Very High | погода змінюється, ситуація змінилася, часи змінюються, світ змінюється |
+| **Перетворюватися** | Medium | перетворюватися на (щось), місто перетворюється |
+| **Стрімко** | Medium/High | стрімко розвиватися, стрімко зростати, стрімко падати |
+| **Поступово** | High | поступово змінюватися, поступово звикати, поступово відновлюватися |
 
-The topic covers **verbs of change of state** (formation, transformation) and their case governance.
+## Cultural Hooks
+1. **Трансформація Києва**: Київ отримав статус "UNESCO City of Music" (2025) та активно проводить дерусифікацію (перейменування вулиць, демонтаж пам'ятників), що є ідеальним контекстом для дієслів *змінюватися*, *перетворюватися*, *відмовлятися* (від минулого).
+2. **Цифрова держава**: Україна стрімко (*стрімко розвивається*) цифровізується через "Дію", змінюючи спосіб взаємодії громадян з державою (зникнення паперової бюрократії).
 
-> **Державний стандарт української мови як іноземної (2024)**
->
-> **Додаток В. Граматична компетентність (рівень B1)**
->
-> **2. Морфологія. Дієслово.**
-> "Вживання дієслів доконаного і недоконаного виду в основних значеннях... Дієслова, що позначають зміну стану (*ставати/стати*, *змінюватися/змінитися*)."
->
-> **3. Синтаксис. Просте речення.**
-> "Присудок. Складений іменний присудок. Зв’язка *бути, ставати, робитися* + іменник/прикметник в Орудному відмінку (*Він став лікарем*, *Погода стала кращою*)."
+## Common Learner Errors
+1. **Змінювати vs Змінюватися**:
+   - *Error*: "Погода змінює." (Weather changes [something]).
+   - *Correction*: "Погода змінюється." (Weather changes [itself]).
+   - *Reason*: Confusion between transitive (active agent) and intransitive/reflexive forms.
+2. **Рости vs Зростати**:
+   - *Error*: "Економіка росте." (Colloquial/Physical).
+   - *Correction*: "Економіка зростає." (Abstract/Statistical).
+   - *Reason*: *Рости* is often physical (plants, kids); *Зростати* is preferred for abstract quantitative increase.
+3. **Case Governance**:
+   - *Error*: "Це змінює до плану." (Changes to the plan).
+   - *Correction*: "Це змінює план." (Accusative).
+   - *Reason*: Influence of English structure "changes to".
 
-## 2. Vocabulary Frequency
+## Cross-References
+- Builds on: `b1-57` (Discourse Markers Advanced - logic flow)
+- Prepares for: `b1-59` (Media News - analyzing reports on economic/social trends)
 
-**High Frequency (Core B1):**
-- **ставати / стати** (to become) — The absolute core verb.
-- **змінюватися / змінитися** (to change [intransitive])
-- **змінювати / змінити** (to change [transitive])
-- **рости / вирости** (to grow)
-- **падати / впасти** (to fall/drop - e.g., prices, temperature)
-
-**Medium Frequency (Thematic):**
-- **покращуватися / покращитися** (to improve)
-- **погіршуватися / погіршитися** (to get worse)
-- **збільшуватися / збільшитися** (to increase)
-- **зменшуватися / зменшитися** (to decrease)
-- **перетворюватися (на) / перетворитися (на)** (to turn into + Acc)
-- **розвиток** (development)
-- **ріст** (growth)
-
-**Collocations:**
-- *стати відомим* (to become famous)
-- *стати кращим* (to become better)
-- *ціни зросли* (prices increased)
-- *ситуація змінилася* (the situation has changed)
-- *світ змінився* (the world has changed)
-
-## 3. Cultural Hook
-
-**The Changing Face of Ukraine (Decolonization)**
-A highly relevant cultural context for "describing changes" is the massive renaming of streets and cities in Ukraine since 2014 and especially after 2022.
-*   **Fact**: Ukraine has renamed thousands of streets and even cities (e.g., *Дніпропетровськ* became *Дніпро*) to remove Soviet and Russian imperial markers. This is a perfect context for sentences like: *"Вулиця Пушкіна стала вулицею Лесі Українки"* (Pushkin Street became Lesya Ukrainka Street).
-
-**The Seasons (Nature)**
-Ukrainians are deeply connected to the agricultural cycle. Describing nature's changes is a common conversation starter.
-*   **Fact**: The transition from winter to spring is culturally significant, symbolized by *Masliuna* (end of winter) and *Velykden* (Easter). *"Дні стають довшими"* (Days are becoming longer).
-
-## 4. Pedagogical Notes
-
-**Common Learner Errors:**
-1.  **Case Error**: Using Nominative instead of Instrumental after *стати*.
-    *   *Wrong*: *Він став лікар.* (Nominative)
-    *   *Correct*: *Він став лікарем.* (Instrumental)
-2.  **Adjective vs. Adverb**: Confusing "It became cold" (impersonal) with "The tea became cold".
-    *   *Impersonal*: *Стало холодно.* (Adverb)
-    *   *Attributive*: *Чай став холодним.* (Adjective in Instr.)
-3.  **Transitive vs. Intransitive**: Confusing *змінювати* (to change something) and *змінюватися* (to change oneself/itself).
-    *   *Student says*: *Я змінив.* (I changed [something]).
-    *   *Intended*: *Я змінився.* (I have changed [as a person]).
-
-**Teaching Sequence:**
-1.  Review **Instrumental Case** (nouns and adjectives).
-2.  Introduce **ставати / стати** + Instrumental.
-3.  Introduce **Impersonal structures** (*стало холодно/сумно*).
-4.  Expand to specific verbs of change (*зростати, падати*) usually with subjects like *ціни, температура, курс валют*.
-
-## 5. Scope Boundaries
-
-**IN SCOPE (B1 requirements):**
-- **Instrumental Case**: Essential for *ставати*.
-- **Past Tense**: Most changes are described in the past (*став, змінився*).
-- **Aspect**: Contrast between Process (*ставав*) and Result (*став*).
-- **Comparatives**: *кращий, більший, цікавіший* (often used with changes).
-
-**OUT OF SCOPE (for this specific module introduction):**
-- **Passive Participles**: *змінений* (changed). Keep to active verbs.
-- **Complex "Conversion" Verbs**: *обертатися на* (archaic/literary "turn into"). Stick to *перетворюватися на*.
-- **Highly abstract scientific nouns**: *трансформація, модифікація*. Stick to general vocabulary.
-
-**Note on Prompt Constraints:**
-The prompt specified "Level: A1" and "Prior knowledge: Alphabet only". This is **impossible** for the topic "Describing Changes" (B1 M58). One cannot describe changes with only the alphabet. This research assumes the student has completed A1 and A2 and is effectively at the B1 level.
+## Notes for Content Writing
+- **Tone**: The "Climate Scientist" persona matches perfectly with describing environmental changes (*клімат змінюється*, *температура підвищується*). Use this frame for the main text.
+- **Focus**: Distinguish clearly between *gradual* (*поступово*) and *sudden* (*різко/стрімко*) change, as this nuance is critical for B1 proficiency.
+- **Contexts**: Use "De-russification of street names" as a concrete example of *змінювати* (active) vs *змінюватися* (passive/state).

@@ -1,76 +1,32 @@
-# Research: Вид у запереченні (Aspect in Negation)
+# Дослідження: Вид у запереченні
 
-**Module:** B1 M10
-**Level:** B1 (Intermediate)
-**Topic:** Aspect usage in negative sentences
+## State Standard Reference
+§4.2.2.2.1: "Родовий відмінок без прийменника: об’єкт дії під час заперечення: Не зрозумів слóва. Не побачив друзів"
+Alignment: This module explicitly teaches the correlation between negation, imperfective aspect preference, and the genitive case for direct objects, strictly following the standard's syntax and morphological requirements.
 
-## 1. Grammar: State Standard 2024 Reference
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| не | High (Top 10) | не знаю, не можу, не треба |
+| ще не | High | ще не готовий, ще не час, ще не зробив |
+| ніколи | High | ніколи не бачив, ніколи не пізно |
+| взагалі | Medium-High | взагалі не, взагалі-то |
+| заборона | Medium | сувора заборона, заборона в'їзду |
+| попередження | Medium | останнє попередження, штормове попередження |
 
-According to the **State Standard of Ukrainian as a Foreign Language (2024)**, proficiency level B1 requires mastery of verbal aspect nuances in negative contexts. Specifically:
+## Cultural Hooks
+1. **The "Polite Refusal" Ritual**: In Ukrainian hospitality culture, it is customary to politely refuse an offer (food, drink, gift) the first time it is made, expecting the host to insist. A single "ні" is often not treated as final. To refuse truly, one must repeat the refusal with gratitude ("Дякую, але я не можу").
+2. **Softening the "No"**: Direct refusals can be perceived as abrupt. Ukrainians often use softeners like "На жаль, ні" (Unfortunately, no) or "Я б з радістю, але..." (I would with joy, but...) to maintain social harmony.
 
-> **Section: Morphology. The Verb. Category of Aspect.**
-> "The student distinguishes between the meanings of imperfective and perfective aspects in negative sentences:
-> *   **Imperfective (Недоконаний вид):** Used for the negation of the action itself (general negation), absence of action in the past, or prohibition (imperative). Example: *«Я не читав цієї книги»* (I haven't read this book - stating a fact).
-> *   **Perfective (Доконаний вид):** Used to express the failure to achieve a result, often with *«ще»* (not yet), or a warning against an accidental action. Example: *«Я ще не прочитав цієї книги»* (I haven't finished reading this book yet)."
+## Common Learner Errors
+1. **Perfective in General Negation**: Learner says "Я не прочитав книги" (I didn't read the book - implies failed attempt/result) instead of "Я не читав книги" (I didn't read the book - general statement of fact). → *Correction*: Use Imperfective for general absence of action.
+2. **Missing Double Negation**: Learner says "Я бачив нікого" (literal English translation) instead of "Я **не** бачив **нікого**". → *Correction*: Ukrainian requires the particle "не" before the verb even if a negative pronoun is present.
+3. **Wrong Aspect in Prohibition**: Learner says "Не зроби це!" (Don't do it - Perfective) instead of "Не роби цього!" (Don't do it - Imperfective). → *Correction*: Prohibitions ("Don't do X") almost always use the Imperfective aspect.
 
-## 2. Vocabulary Frequency
+## Cross-References
+- Builds on: b1-06 (Aspect complete system), b1-07 (Aspect past), b1-09 (Aspect future)
+- Prepares for: b1-11 (Aspect in imperatives), b1-14 (Aspect integration practice)
 
-For this topic, vocabulary is structural rather than thematic. The focus is on markers that trigger specific aspects.
-
-### High Frequency (A1-A2 Review, Essential for B1)
-*   **не** (not) + Imperfective (Default negation)
-*   **ніколи** (never) + Imperfective (General negation)
-*   **ні** (no/neither)
-*   **заборонено** (forbidden)
-
-### Key Collocations & Triggers (B1 Target)
-*   **ще не** (not yet) + **Perfective** (High Frequency trigger)
-    *   *ще не зробив* (haven't done it yet)
-    *   *ще не прийшов* (hasn't arrived yet)
-*   **не треба** (don't need to) + **Imperfective**
-    *   *не треба говорити* (no need to speak)
-*   **не можна** (not allowed) + **Imperfective**
-*   **дивись не...** (watch out, don't...) + **Perfective** (Warning)
-    *   *дивись не впади* (watch out, don't fall)
-*   **випадково не...** (accidentally didn't...) + **Perfective**
-
-## 3. Cultural Hook
-
-### The "Superstitious Prohibition" (Warning vs. Command)
-Ukrainian culture often distinguishes clearly between "Don't do this (it's forbidden)" and "Don't do this (accidental danger)."
-*   **Fact:** In daily life, parents often use the **Perfective** imperative with *«не»* to warn children about accidents, often starting with *«гляди»* or *«дивись»* (watch out).
-    *   *«Не впади!»* (Don't fall!) - implies accidental result.
-    *   *«Не падай!»* (Don't fall!) - sounds like the child is falling on purpose repeatedly.
-*   **Proverb:** *«Не кажи "гоп", поки не перескочиш»* (Don't say "hop" until you've jumped). This illustrates the aspect logic: *Не кажи* (Imperfective - general prohibition) vs. *не перескочиш* (Perfective - result).
-
-## 4. Pedagogical Notes
-
-### Key Differences from English
-*   **The "I didn't" Ambiguity:** In English, "I didn't write the letter" is ambiguous. In Ukrainian, you must choose:
-    *   *Я не писав листа* (Imperfective: I didn't engage in the activity of writing it).
-    *   *Я не написав листа* (Perfective: I failed to complete it).
-*   **The "Not Yet" Rule:** English learners often default to imperfective with "not yet". Ukrainian strictly prefers **Perfective** with *«ще не»* because the result is expected.
-
-### Common Learner Errors
-1.  **Overusing Perfective in Negation:** Learners often translate "I didn't buy bread" as *«Я не купив хліба»* (failed to buy), whereas the neutral statement of fact *«Я не купував хліба»* (didn't do the shopping) is often more appropriate for general context.
-2.  **"Stop doing" errors:** Using Perfective for "Stop doing X". *«Не роби цього»* (Imperfective) is correct for stopping/forbidding.
-
-### Teaching Sequence
-1.  **Review:** Affirmative aspect pairs (read vs. finish reading).
-2.  **The Golden Rule:** Negation usually flips the preference back to **Imperfective** (General Fact).
-3.  **The Exception:** Teach *«ще не»* + **Perfective** as a rigid formula.
-4.  **The Nuance:** Warnings (*не забудь* - don't forget) vs. Prohibitions (*не забувай* - don't be a forgetful person).
-
-## 5. Scope Boundaries
-
-### IN Scope (B1 Level)
-*   **Past Tense:** Distinction between "didn't do" (Imp) and "didn't manage to do/haven't done yet" (Perf).
-*   **Imperative Mood:** Prohibition (Imp) vs. Warning (Perf).
-*   **Future Tense:** "I won't do it" (refusal - Imp) vs. "I won't get it done" (inability - Perf).
-*   **Infinitive Constructions:** *не треба / не можна* + Imperfective.
-
-### OUT of Scope (Save for B2/C1)
-*   **Abstract/Stylistic Nuances:** Subtle usage in poetry or ironic contexts.
-*   **Double Negation Logic:** Complex philosophical debates on negation.
-*   **Oblique Moods:** Subjunctive with negation (unless basic conditionals).
-*   **Complex Participle Negation:** *непрочитаний* vs *не прочитаний* (spelling rules are B2).
+## Notes for Content Writing
+- **Genitive Trigger**: Emphasize that *negation* often triggers the *Genitive case* for the object (не читав *книги*, not *книгу*). This is a crucial A2/B1 bridge skill.
+- **"Ще не" Exception**: Highlight that "ще не" (not yet) is the major exception that *allows* Perfective aspect (Я ще не прочитав = I haven't finished reading yet), contrasting with general "не" + Imperfective.

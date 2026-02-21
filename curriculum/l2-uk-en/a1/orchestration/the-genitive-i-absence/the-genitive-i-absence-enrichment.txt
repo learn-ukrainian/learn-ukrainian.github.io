@@ -1,0 +1,278 @@
+✅ Message sent to Gemini (ID: 10076) [auto-acked: self-addressed]
+✓ Message 10076 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10076...
+📨 Message #10076
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-the-genitive-i-absence
+   Time: 2026-02-20T19:40:09.668510+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: a1-16
+level: A1
+sequence: 16
+slug: the-genitive-i-absence
+version: '2.0'
+title: 'The Genitive I: Absence'
+subtitle: Talking About What You Don't Have
+content_outline:
+- section: Warm-up
+  points:
+  - 'Ситуація відсутності (У мене немає...) — learner error: using Nominative after
+    немає (e.g., *У мене немає квиток*)'
+  - Контраст є vs немає — focus on ready-made communicative models per State Standard
+    §4.0
+- section: Presentation
+  points:
+  - Конструкція немає + родовий (Немає часу) — include fixed formulaic phrases 'немає
+    часу', 'немає грошей' (plural exception)
+  - 'Закінчення: -а/-я для чоловічого, -и/-і для жіночого — learner error: confusing
+    masculine endings -а (concrete) vs -у (abstract like ''часу'')'
+  - 'Прийменник без + родовий (кава без цукру) — key collocations: без цукру, без
+    молока, без квитка'
+  - 'Заперечення: не маю + родовий — learner error: confusing ''немає'' (absence)
+    with particle ''не'' (negation)'
+- section: Practice
+  points:
+  - Трансформація називний → родовий — use a simple Visual Mapping table (Nom → Gen)
+    like хліб → хліба, вода → води
+  - Речення з немає та без — focus on high frequency items (цукор, квиток, час)
+  - Діалоги "У тебе є...? — Ні, немає" — use softened refusals context
+- section: Cultural Insight
+  points:
+  - Типові вирази з немає (Немає проблем!) — ubiquitous phrase reflecting helpful/flexible
+    attitude; include proverb 'Немає диму без вогню'
+  - Ввічливі відмови в українській культурі — using factual 'немає' to soften a direct
+    refusal (e.g., 'Вибачте, хліба немає')
+vocabulary_hints:
+  required:
+  - немає (there is no) — немає часу, немає проблем, немає грошей
+  - без (without) — без цукру, без молока, без квитка
+  - 'час (time) — немає часу (Gen: часу)'
+  - 'гроші (money) — немає грошей (Gen: грошей)'
+  - молоко (milk) — без молока
+  - 'цукор (sugar) — без цукру, немає цукру (Gen: цукру)'
+  - вода (water) — води немає
+  - хліб (bread) — хліба немає
+  recommended:
+  - проблема (problem) — немає проблем (Gen pl.)
+  - 'квиток (ticket) — немає квитка, без квитка (Gen: квитка)'
+  - ключ (key) — немає ключа
+  - телефон (phone) — немає телефону
+activity_hints:
+- type: fill-in
+  focus: Change nouns to genitive
+  items: 25
+- type: fill-in
+  focus: Complete немає sentences
+  items: 20
+- type: fill-in
+  focus: I don't have... conversations
+  items: 6
+focus: grammar
+pedagogy: PPP
+prerequisites:
+- a1-15 (Around the City)
+connects_to:
+- a1-17 (Numbers and Money)
+- a1-18 (Food and Shopping)
+objectives:
+- Learner can express absence using немає + genitive
+- Learner can use genitive case for negation
+- Learner can say what they don't have (немає часу)
+- Learner can use без + genitive (without)
+grammar:
+- Genitive case for absence
+- Genitive endings
+- Немає + genitive
+register: розмовний
+phase: A1.2 [Navigation]
+persona:
+  voice: Patient Supportive Tutor
+  role: Inventory Specialist
+word_target: 2000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: The Genitive I: Absence
+
+## State Standard Reference
+§2, §3.8: "Каталог А. Перелік комунікативних намірів: просити надати інформацію / підтвердити інформацію / заперечити її."
+§4.0: "Знання з граматики української мови мають спорадичний характер, базуються на відтворенні готових комунікативних моделей."
+Alignment: Although Genitive case declension is explicitly an A2 requirement (§4.2.2.2), A1 learners must handle communicative situations like "Shopping" (§3.8) and "Restaurant" (§3.9) where expressing absence or lack of an item (using ready-made models like *немає хліба*, *без цукру*) is essential.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| немає | High (Core A1) | немає часу, немає грошей, немає проблем |
+| без | High (Preposition) | без цукру, без молока, без газу, без квитка |
+| час | High | вільного часу, немає часу |
+| гроші | High | готівкові гроші, немає грошей |
+| квиток | Medium | вхідний квиток, їхати без квитка |
+
+## Cultural Hooks
+1. **"Немає проблем!"** — A ubiquitous phrase in modern Ukraine reflecting a flexible, helpful attitude (similar to "No worries").
+2. **Polite Refusals** — Ukrainians often use "немає" to soften a refusal (e.g., *На жаль, квитків немає* instead of a blunt *Ні*).
+3. **Proverb**: "Немає диму без вогню" (There is no smoke without fire) — illustrates the structure perfectly.
+
+## Common Learner Errors
+1. **Case Neglect**: Using Nominative after *немає* (*У мене немає квиток* instead of *квитка*).
+2. **Negation Confusion**: Confusing *немає* (absence of existence) with particle *не* (negation of action/quality). E.g., *Я не студент* (correct) vs *Я немає студент* (incorrect).
+3. **Masculine Endings**: Confusing the specific Genitive ending *-а* (concrete/living) vs *-у* (abstract/uncountable) for masculine nouns (e.g., *стола* vs *часу*).
+
+## Cross-References
+- Builds on: a1-15 (Around the City - context for *квиток*), a1-13 (Possession - *У мене є*).
+- Prepares for: a1-17 (Numbers and Money - *грошей*), a1-18 (Food and Shopping - *хліба, молока*).
+
+## Notes for Content Writing
+- **Immersion Constraints**: A1 level requires English explanations for all grammar. Use Ukrainian only for examples, dialogues, and fixed phrases.
+- **Pedagogy**: Focus on "ready-made models" rather than abstract declension tables. Teach *немає часу/грошей* as chunks first.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Контраст конструкцій «є» (possession from a1-13) vs «немає» (absence) — State Standard §4.0: акцент на відтворенні готових моделей у ситуаціях «Покупки» (§3.8) та «Ресторан» (§3.9)."
+  - "Подолання Learner Error: розрізнення граматичного заперечення якості/стану «не» (Я не студент) та заперечення існування/наявності «немає» (У мене немає квитка)."
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "Граматична основа: конструкція немає + родовий відмінок — State Standard §4.2.2.2: формування навички на базі сталих сполук «немає часу», «немає грошей» (Gen. pl. exception)."
+  - "Прийменник без + родовий відмінок — ключові колокації для повсякденного вжитку: «кава без цукру», «вода без газу», «їхати без квитка»."
+  - "Систематизація закінчень чоловічого роду: конкретні предмети на -а/-я (хліба, квитка) проти абстрактних та речовинних на -у/-ю (часу, цукру) — фокус на Learner Error 3."
+- section: "Практика (Practice)"
+  words: 600
+  points:
+  - "Корекція типової помилки (Case Neglect): використання називного відмінка замість родового після «немає» — дрил на мінімальних парах «є квиток» vs «немає квитка»."
+  - "Трансформаційні вправи за схемою Nom → Gen — візуалізація змін закінчень: -а/-я для чоловічого (конкретне) та -и/-і для жіночого (вода → води)."
+  - "Рольова гра «У ресторані/магазині»: замовлення напоїв «без цукру/молока» та ввічливі запити про наявність товарів."
+- section: "Культурний контекст (Cultural Context)"
+  words: 400
+  points:
+  - "Культурний код: вживання фрази «Немає проблем!» як вияву гнучкості та ввічлива відмова через «немає» («На жаль, квитків немає») для пом'якшення прямого «Ні»."
+  - "Лінгвокраїнознавство: розбір прислів'я «Немає диму без вогню» як ілюстрації структури заперечення та вживання прийменника з родовим відмінком."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "немає (there is no) — High frequency core word; used in ready-made models: «немає часу», «немає грошей»"
+  - "без (without) — High frequency preposition + Genitive; collocations: «без цукру», «без молока», «без газу»"
+  - "час (time) — Gen: часу; abstract noun requiring ending -у; State Standard high-frequency item"
+  - "гроші (money) — Gen pl: грошей; irregular plural; essential for financial context (§3.8)"
+  - "молоко (milk) — Gen: молока; regular feminine-to-genitive shift"
+  - "цукор (sugar) — Gen: цукру; uncountable substance requiring ending -у; key for restaurant dialogues"
+  - "вода (water) — Gen: води; contrast «вода з газом» vs «вода без газу»"
+  - "хліб (bread) — Gen: хліба; concrete object requiring ending -а; context: grocery shopping"
+  recommended:
+  - "проблема (problem) — Gen pl: проблем; used in the ubiquitous phrase «Немає проблем!»"
+  - "квиток (ticket) — Gen: квитка; concrete object (ending -а); Learner Error: common neglect of case after «без»"
+  - "ключ (key) — Gen: ключа; concrete object focus"
+  - "телефон (phone) — Gen: телефону; abstract/device focus for ending -у"
+  - "газ (gas/sparkling) — Gen: газу; used in the essential collocation «без газу» for ordering water"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (3228 chars)
+✅ Message sent to Claude (ID: 10083)
+✓ Message 10083 acknowledged
+   Auto-acknowledged reply #10083 (stdout delivery — no inbox accumulation)
+✓ Message 10076 acknowledged

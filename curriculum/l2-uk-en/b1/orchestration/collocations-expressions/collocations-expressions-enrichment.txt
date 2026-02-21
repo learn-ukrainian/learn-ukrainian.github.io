@@ -1,0 +1,306 @@
+✅ Message sent to Gemini (ID: 10419) [auto-acked: self-addressed]
+✓ Message 10419 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10419...
+📨 Message #10419
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-collocations-expressions
+   Time: 2026-02-20T20:31:55.869336+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b1-70
+level: B1
+sequence: 70
+slug: collocations-expressions
+version: '2.0'
+title: Колокації та вирази
+subtitle: Collocations and Expressions
+content_outline:
+- section: Вступ
+  points:
+  - What are collocations — defined as stylistic means per State Standard §4.5.1.1;
+    vocabulary is not just words, but connections
+  - 'Natural vs unnatural combinations — contrast literal translation vs. natural
+    Ukrainian usage; cultural hook: ''Surzhyk'' often stems from calquing Russian/English
+    collocations'
+  - Learning strategies — focus on synonym richness (e.g., 'горизонт' has 10+ synonyms)
+    and choosing the culturally precise word
+- section: Читання
+  points:
+  - Collocation texts — narrative texts using 'час' (проводити vs. гаяти vs. витрачати)
+    and 'досвід' (набувати vs. ділитися)
+  - 'Natural combinations — explicit instruction on correct forms: ''приймати рішення''
+    (not робити), ''брати участь'' (not приймати), ''звертати увагу'' (pay attention)'
+- section: Діалоги
+  points:
+  - 'Build natural collocations — scenarios involving expressing opinions (''думка'':
+    висловити, поділяти, змінити) and making impressions (''враження'': справляти)'
+  - 'Avoid calques — fix common errors: ''вірна'' vs. ''правильна'' (correct), ''відкривати''
+    vs. ''розплющувати'' (eyes), ''рахувати'' vs. ''вважати'' (think); address ''False
+    Friends'' (make/do)'
+vocabulary_hints:
+  required:
+  - колокація (collocation) — стале сполучення слів
+  - вираз (expression) — сталий вираз
+  - 'приймати рішення (to make a decision) — learner error: робити рішення (calque
+    from English)'
+  - 'брати участь (to participate) — learner error: приймати участь (calque from Russian)'
+  - 'мати право (to have the right) — collocations: законне право, повне право'
+  - 'робити вибір (to make a choice) — collocations: правильний вибір, складний вибір'
+  - 'звертати увагу (to pay attention) — collocations: приділяти увагу (devote), заслуговувати
+    на увагу'
+  - 'досягати успіху (to achieve success) — collocations: значний успіх, бажаний успіх'
+  recommended:
+  - 'встановлювати контакт (to establish contact) — collocations: тісний контакт,
+    зоровий контакт'
+  - 'виконувати обов''язки (to fulfill duties) — collocations: службові обов''язки'
+  - 'набувати досвіду (to gain experience) — collocations: життєвий досвід, обмін
+    досвідом, гіркий досвід'
+  - 'зберігати спокій (to keep calm) — collocations: повний спокій'
+  - 'справляти враження (to make an impression) — collocations: незабутнє враження,
+    гарне враження'
+  - 'висловлювати думку (to express an opinion) — collocations: поділяти думку, на
+    мою думку'
+  - 'дотримувати слова (to keep one''s word) — collocations: дати слово, чесне слово'
+  - 'проводити час (to spend time) — learner error: тратити час (waste); collocations:
+    вільний час, гаяти час'
+  - 'розплющувати очі (to open one''s eyes) — learner error: відкривати очі (open
+    a door/bottle)'
+activity_hints:
+- type: match-up
+  focus: Match verb to noun
+  items: 25
+- type: fill-in
+  focus: Complete collocations
+  items: 20
+- type: error-correction
+  focus: Fix unnatural collocations
+  items: 15
+- type: fill-in
+  focus: Use collocations in context
+  items: 10
+focus: vocabulary
+pedagogy: PPP
+prerequisites:
+- b1-69 (Synonymy Speaking Verbs)
+connects_to:
+- b1-71 (Emotional Intelligence)
+objectives:
+- Learner can use 25 common verb-noun collocations naturally
+- Learner can distinguish between similar verbs in collocations
+- Learner can form natural word combinations in professional and everyday contexts
+- Learner can recognize and avoid unnatural collocations
+grammar:
+- Verb-noun collocations
+- Adjective-noun collocations
+- Fixed and semi-fixed expressions
+register: розмовний
+phase: B1.6 [Vocabulary Expansion II]
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Literary Translator
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Колокації та вирази
+
+## State Standard Reference
+§4.5.1.1: "Стилістичні засоби лексики: антоніми, синоніми, епітети, метафори"
+Alignment: Цей модуль розвиває лексичну компетенцію через вивчення сталевих сполучень слів (колокацій), що є основою природного мовлення та стилістичної точності, визначеної у стандарті. Також спирається на §4.2.2 (Вживання відмінків) для граматичної правильності керування дієслів.
+
+## Vocabulary Frequency
+| Word/Phrase | Frequency / Source | Key collocations |
+|-------------|-------------------|------------------|
+| **Рішення** | High (General) | приймати рішення (not *робити*), важливе рішення, остаточне рішення, скасувати рішення |
+| **Участь** | High (General) | брати участь (not *приймати*), активна участь, відмовитися від участі |
+| **Увага** | High (General) | звертати увагу (pay attention), приділяти увагу (devote attention), заслуговувати на увагу, центр уваги |
+| **Досвід** | High (Business/Edu) | набувати досвіду (gain), мати досвід, обмін досвідом, життєвий досвід, гіркий досвід |
+| **Думка** | High (General) | на мою думку, висловити думку, поділяти думку, громадська думка, змінити думку |
+| **Враження** | Medium (Descriptive) | справляти враження (make an impression), ділитися враженнями, незабутнє враження |
+| **Слово** | High (General) | дотримувати слова (keep word), дати слово, чесне слово, вільне слово |
+| **Час** | Very High | проводити час (spend time - enjoy), витрачати час (waste/spend), гаяти час (waste), вільний час |
+
+## Cultural Hooks
+1. **Багатство синонімів**: Українська мова славиться своєю синонімією (наприклад, слово "горизонт" має понад 10 синонімів: *обрій, небокрай, видноколо, небосхил* тощо). Вибір правильного слова у колокації є ознакою високої культури мовлення.
+2. **"Суржик" як проблема колокацій**: Багато помилок виникають через прямий переклад (калькування) з російської або англійської, що створює неприродні конструкції (наприклад, *приймати участь* замість *брати участь*). Чиста мова — це правильні колокації.
+
+## Common Learner Errors
+1. **Приймати участь** → **Брати участь** (To participate) — калькування з рос. *принимать участие*.
+2. **Робити рішення** → **Приймати / Ухвалювати рішення** (To make a decision) — калькування з англ. *make a decision*.
+3. **Вірна відповідь** → **Правильна відповідь** (Correct answer) — *вірний* означає "loyal" (вірний друг, вірний пес), а не "correct".
+4. **Відкривати очі** → **Розплющувати очі** (To open eyes) — *відкривати* можна двері, Америку або пляшку; очі ми *розплющуємо* (фізично).
+5. **Рахувати, що...** → **Вважати, що...** (To think/consider) — *рахувати* означає лічити гроші або предмети (1, 2, 3); думку ми *вважаємо*.
+6. **Тратити час** → **Проводити час** (To spend time) — *тратити* має відтінок "витрачати даремно" або "використовувати ресурс"; коли йдеться про дозвілля, краще *проводити час*.
+
+## Cross-References
+- **Builds on**: b1-69 (Synonymy Speaking Verbs) — розуміння нюансів дієслів.
+- **Prepares for**: b1-71 (Emotional Intelligence) — точне вираження емоцій через сталі вирази; b1-89 (Communication Channels) — офіційні колокації.
+
+## Notes for Content Writing
+- Focus on the distinction between **Literal** translation vs. **Natural** collocation.
+- Use the "Correct/Incorrect" (Правильно/Неправильно) table format extensively to fight calques.
+- Emphasize that *vocabulary is not just words, but how they connect*.
+- Include a specific section on "False Friends of Translator" regarding collocations (make vs do vs have).
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ та теоретична основа (Introduction and Theoretical Foundation)"
+  words: 600
+  points:
+  - "Definition of collocations (сталі словосполучення) as stylistic means per State Standard §4.5.1.1; focus on lexical competence and semantic precision."
+  - "Cultural hook: The richness of Ukrainian synonymy as a tool for precise collocations (e.g., the word 'горизонт' and its 10+ synonyms like 'обрій', 'небокрай', 'видноколо')."
+  - "The concept of 'Natural vs. Unnatural' combinations: contrast literal translation (calquing) with authentic usage patterns."
+- section: "Основні дієслівні колокації (Core Verb-Noun Collocations)"
+  words: 1000
+  points:
+  - "High-frequency clusters for 'Рішення' (приймати, ухвалювати, остаточне, скасувати) and 'Участь' (брати, активна, відмовитися від)."
+  - "Collocations for 'Увага': the distinction between 'звертати увагу' (pay attention) and 'приділяти увагу' (devote/allocate attention), plus 'заслуговувати на увагу'."
+  - "Professional and educational collocations for 'Досвід': 'набувати досвіду' (gain), 'ділитися досвідом' (share), and 'життєвий досвід' vs 'гіркий досвід'."
+  - "Usage of 'Слово': 'дотримувати слова' (keep), 'дати слово', and the fixed expression 'чесне слово'."
+- section: "Культура мовлення та боротьба з кальками (Speech Culture and Fighting Calques)"
+  words: 900
+  points:
+  - "The problem of 'Surzhyk' arising from literal translation (calquing) of Russian and English structures; emphasis on linguistic decolonization."
+  - "Correcting common errors: 'Правильна відповідь' (not вірна - loyal), 'Вважати, що...' (not рахувати - count), and 'Розплющувати очі' (not відкривати - door/bottle)."
+  - "Functional distinction in time verbs: 'проводити час' (leisure), 'витрачати час' (resource/spend), and 'гаяти час' (waste/idle away)."
+  - "Case government awareness per State Standard §4.2.2: ensuring correct endings in complex collocations (e.g., 'набувати досвіду' with Genitive)."
+- section: "Читання: Колокації в контексті (Reading: Collocations in Context)"
+  words: 800
+  points:
+  - "Narrative text analyzing 'False Friends of the Translator': comparing 'make/do' in English with the varied Ukrainian equivalents ('робити вибір' vs 'приймати рішення')."
+  - "Analysis of descriptive collocations in literature: using 'справляти враження' (make an impression) and 'ділитися враженнями' within a narrative arc."
+  - "Identifying collocations in social scenarios: scenarios involving 'висловлювати думку' (express) and 'поділяти думку' (share/agree)."
+- section: "Практика та комунікативна продукція (Practice and Communicative Production)"
+  words: 700
+  points:
+  - "Interactive exercise: 'Correct/Incorrect' (Правильно/Неправильно) table drills focused on the 6 most frequent learner errors identified in research."
+  - "Scenario-based production: forming natural word combinations for business (contact establishment) and daily life (keeping calm/keeping words)."
+  - "Summary: 'Vocabulary is not just words, but how they connect' — final reflection on choosing the culturally precise word for stylistic elegance."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "приймати рішення (to make a decision) — collocations: ухвалювати рішення (official), остаточне рішення; learner error: робити рішення"
+  - "брати участь (to participate) — collocations: активна участь, відмовитися від участі; frequency: high; learner error: приймати участь"
+  - "звертати увагу (to pay attention) — collocations: приділяти увагу (devote), заслуговувати на увагу; center of attention (у центрі уваги)"
+  - "набувати досвіду (to gain experience) — collocations: життєвий досвід, обмін досвідом, гіркий досвід; context: education and career"
+  - "правильна відповідь (correct answer) — note: 'вірний' is loyal/faithful (вірний друг), not for correctness"
+  - "розплющувати очі (to open one's eyes) — note: physical action of opening eyes; 'відкривати' is for doors, bottles, or discoveries"
+  - "вважати (to consider/think) — usage: to express an opinion; note: 'рахувати' is for counting items (1, 2, 3)"
+  - "проводити час (to spend time) — context: leisure/enjoyment; collocations: вільний час; contrast with 'гаяти час' (waste)"
+  recommended:
+  - "висловлювати думку (to express an opinion) — collocations: поділяти думку, на мою думку, громадська думка"
+  - "справляти враження (to make an impression) — collocations: незабутнє враження, ділитися враженнями"
+  - "дотримувати слова (to keep one's word) — collocations: дати слово, чесне слово"
+  - "гаяти час (to waste time) — usage: negative connotation of idling away time"
+  - "обрій (horizon) — synonyms: горизонт, небокрай, видноколо; used to demonstrate synonym richness"
+  - "витрачати час (to spend/waste time) — usage: spending time as a resource; 'витрачати зусилля' (spend effort)"
+  - "встановлювати контакт (to establish contact) — collocations: тісний контакт, зоровий контакт"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (5026 chars)
+✅ Message sent to Claude (ID: 10426)
+✓ Message 10426 acknowledged
+   Auto-acknowledged reply #10426 (stdout delivery — no inbox accumulation)
+✓ Message 10419 acknowledged

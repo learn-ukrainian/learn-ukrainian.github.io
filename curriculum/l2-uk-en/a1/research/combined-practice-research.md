@@ -1,76 +1,36 @@
-# Research Notes: A1 M43 "Combined Practice"
+# Дослідження: Combined Practice
 
-**Level**: A1 (Absolute Beginner)
-**Module**: M43
-**Topic**: Review of Practical Skills (Synthesis of A1 Scenarios)
-**Researched**: 2026-02-08
+## State Standard Reference
+§4.3.2: "Складне речення: складні (складносурядні) речення зі сполучниками і (й), але: Ми сіли в кафе за столик, і офіціант приніс меню. Олена зателефонувала Вікторові, але він не відповів; складні (складнопідрядні) речення з підрядною частиною причини (сполучники тому що, бо): Віктор не може говорити, тому що він хворий."
+Alignment: This module directly addresses the A1 requirement to build complex sentences using basic coordinating (і, але) and subordinating causal (тому що, бо) conjunctions to connect simple statements into a cohesive narrative.
 
-## 1. Grammar: State Standard 2024 Reference
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| спочатку | High (A1) | спочатку я, спочатку треба |
+| потім | High (A1) | а потім, потім ми |
+| нарешті | Med-High (A1) | нарешті ми, і нарешті |
+| тому що | High (A1) | тому що я, тому що немає |
+| бо | Very High (Spoken A1) | бо я, бо там |
+| якщо | High (A1) | якщо ви, якщо є |
+| але | High (A1) | але потім, але не |
+| також | High (A1) | я також, також є |
+| разом | High (A1) | разом з, ходімо разом |
 
-The **Державний стандарт української мови як іноземної (ДСТУ 2024)** defines the culmination of the A1 level as the ability to synthesize basic grammatical structures for concrete communicative tasks.
+## Cultural Hooks
+1. "На каву" (For coffee): In Ukrainian culture, particularly in cities like Lviv but true nationwide, "going for coffee" is the universal premise for meetings, planning, discussing business, or catching up. It is the ritualistic starting point of the day's narrative.
+2. The "Базар" (Bazar/Market): The traditional market remains a vital hub for fresh produce and social interaction in Ukraine, serving as a dynamic, unpredictable environment perfect for practicing negotiation, questions, and handling unexpected changes in plans.
 
-**Section 2.4.1.4 (Каталог В. Зміст мовної компетентності):**
-> «Особа вміє розпізнавати та використовувати граматично правильні мовні форми для вираження власних намірів у межах тем, зазначених у Каталозі Б... Розуміння деяких мовних особливостей української мови (родові форми слів, відмінювання, дієвідмінювання, часи, узгодження форм між собою і т. д.) особа показує під час застосування мови для реалізації комунікативних потреб, зазначених у Каталозі А.» (p. 15)
+## Common Learner Errors
+1. The "Потім" loop → «Спочатку... потім... нарешті» — English speakers often string together events with repetitive "then... then... then", lacking narrative structure.
+2. End-of-sentence "також" → «Я також хочу каву» (Correct) vs. «Я хочу каву також» (Incorrect) — Direct translation from English "too/also" at the end of the sentence disrupts natural Ukrainian word order.
+3. Overusing "тому що" in casual speech → Native speakers heavily favor "бо" in everyday conversation; learners should recognize "бо" as the natural spoken equivalent of the standard "тому що".
 
-The "Combined Practice" module specifically addresses the **Communicative Intentions (Каталог А)** requirements:
-- "вступити в контакт, підтримати його або завершити" (p. 13)
-- "попросити про допомогу, інформацію, послугу" (p. 13)
-- "здійснити покупку, замовити страву чи квиток" (p. 13)
+## Cross-References
+- Builds on: a1-35 (At the Café Practical), a1-42 (Emergencies)
+- Prepares for: a1-44 (A1 Final Exam)
 
-## 2. Vocabulary Frequency
-
-This module synthesizes high-frequency items from the previous practical blocks (M35–M42).
-
-### High-Frequency (Survival Essentials)
-- **Transactional**: Скільки коштує? (How much does it cost?), Рахунок, будь ласка (Bill, please), Карткою (By card), Дайте... (Give...).
-- **Navigational**: Де...? (Where is...?), Прямо (Straight), Направо (Right), Наліво (Left), Зупинка (Stop/Station), Квиток (Ticket).
-- **Social**: Перепрошую / Вибачте (Excuse me), Будь ласка (Please/You're welcome), Дякую (Thank you), Привіт / Добрий день (Hello).
-- **Urgent**: Допоможіть! (Help!), Лікар (Doctor), Аптека (Pharmacy), Проблема (Problem).
-
-### Medium-Frequency (Context Enrichment)
-- **Nouns**: Готівка (Cash), Решта (Change), Знижка (Discount), Розклад (Schedule), Потяг (Train), Маршрутка (Minibus).
-- **Verbs**: Платити (To pay), Купувати (To buy), Чекати (To wait), Розуміти (To understand).
-
-### Common A1 Collocations
-- **Мені, будь ласка...** (For me, please...)
-- **Можна рахунок?** (Can I have the bill?)
-- **Де найближча аптека?** (Where is the nearest pharmacy?)
-- **Я не розмовляю українською дуже добре.** (I don't speak Ukrainian very well.)
-
-## 3. Cultural Hook
-
-**1. The "Contactless" Culture:**
-Ukraine is a global leader in contactless payments and digital public services. In any urban "Combined Practice" scenario (café, transport, store), students should expect to use NFC (Apple Pay/Google Pay). Asking *"Можна карткою?"* (Can I pay by card?) is more common than using cash, even in small kiosks. This digital integration is a point of pride in modern Ukrainian urban life.
-
-**2. The Politeness of "Ви" (Vy):**
-While English uses "you" for everyone, the practical "Combined Practice" in Ukraine requires strict adherence to the formal *Ви*. Using *Ти* with a shopkeeper, waiter, or bus driver is a major cultural faux pas. In practical scenarios, *Ви* acts as a social lubricant that ensures helpfulness and mutual respect.
-
-## 4. Pedagogical Notes
-
-### Key Differences from English
-- **The Zero-Copula Trap**: In "Combined Practice," students often try to insert a verb for "to be" in sentences like "Where is the station?" (*Де зупинка?*). Reiterate that at A1, "is/am/are" is usually invisible in the present tense.
-- **Gendered Requests**: Unlike the neutral English "Give me a ticket," the Ukrainian request depends on the gender of the object (Квиток - Masc, Вода - Fem). Learners must synthesize gender recognition with the Accusative case endings (-у for feminine).
-
-### Common Learner Errors
-- **Cognitive Overload**: When combining scenarios (e.g., buying a ticket then finding a platform), students often revert to Nominative instead of Accusative for destinations (*Я їду Київ* instead of *Я їду в Київ*).
-- **"Будь ласка" Overuse**: English speakers use "please" at the end of every sentence. While polite, in Ukrainian, *будь ласка* can also mean "you're welcome" or "here you go."
-
-### Teaching Sequence Recommendations
-1. Warm-up with rapid-fire "Survival Phrases."
-2. Multi-step roleplays (e.g., at the station: check schedule -> buy ticket -> find platform).
-3. "Repair Strategies": Practicing what to say when you don't understand the answer (*Повторіть, будь ласка*).
-
-## 5. Scope Boundaries
-
-### IN Scope (Synthesis Targets)
-- **All A1 Cases**: Nominative (subjects), Accusative (objects/destination), Locative (location), Genitive (absence/possession).
-- **Tenses**: Present, Past, Future (compound).
-- **Modals**: Хочу, можу, мушу.
-- **Imperatives**: Дайте, скажіть, покажіть.
-- **Numbers (1–100)**: For prices, times, and platform numbers.
-
-### OUT Scope (Avoid)
-- **Dative Case**: Do not ask students to handle "Give *to me*" or "I like" (Dative structures) unless treated as fixed chunks.
-- **Instrumental Case**: Accompaniment (*з ким*) or means (*чим*) should be avoided in complex exercises.
-- **Verbal Aspect Pairs**: Don't require students to choose between *купувати* and *купити* based on aspectual logic; use high-frequency defaults.
-- **Subjunctive/Conditional**: "I would like" (*Я б хотів*) is still considered out of scope for pure A1 production.
+## Notes for Content Writing
+- Remember the immersion band (35-40%). Provide English translations and scaffolding for grammar rules, but keep dialogues and basic examples in Ukrainian.
+- Define every term before it is used.
+- Frame Ukrainian grammar independently (e.g., focus on the rhythm and colloquial nature of «бо» vs «тому що» rather than just translating "because").

@@ -1,0 +1,251 @@
+✅ Message sent to Gemini (ID: 10869) [auto-acked: self-addressed]
+✓ Message 10869 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10869...
+📨 Message #10869
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-literaturoznavcha-terminolohiia
+   Time: 2026-02-20T21:33:06.691593+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-103
+level: C1
+sequence: 103
+slug: literaturoznavcha-terminolohiia
+version: '2.0'
+title: Літературознавча термінологія
+subtitle: Literary Analysis Terminology
+content_outline:
+- section: Розминка — Мова літературознавства
+  points:
+  - Сюжет vs фабула — ключова відмінність
+  - Метафора, метонімія, символ — образність
+  - Роман, повість, новела — жанрові поняття
+- section: Content Areas
+  points:
+  - 'Наративні терміни: сюжет, фабула, оповідач, фокалізація'
+  - 'Образність: метафора, метонімія, символ, алегорія'
+  - 'Жанрові поняття: роман, повість, новела, драма'
+  - 'Аналітичні категорії: тема, мотив, ідея, конфлікт'
+  - 'Стилістичні прийоми: іронія, гротеск, парадокс'
+- section: Практика — термінологічний аналіз
+  points:
+  - Визначити тип оповідача та фокалізацію в уривку
+  - Проаналізувати образність твору — метафори, символи
+  - Класифікувати жанр твору з аргументацією
+  - Виявити тему, мотив та ідею короткого тексту
+focus: analysis
+pedagogy: Academic
+objectives:
+- Learner can define and use key literary terms (сюжет, фабула, метафора, алегорія).
+- Learner can distinguish between narrative modes and focalization.
+- Learner can apply academic register in literary criticism.
+grammar:
+- Academic register syntax
+- Abstract noun derivation
+phase: C1.6 Literature
+persona:
+  voice: Senior Specialist
+  role: Укладач енциклопедії
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Літературознавча термінологія
+
+## State Standard Reference
+§1.2.1.1 (Читання): "Особа розуміє: висловлену непрямо інформацію, зокрема натяки, іронію, жарти; ставлення автора до описуваних подій, виражене безпосередньо чи приховано."
+§1.2.2 (Типи текстів): "уривки оригінальних прозових художніх текстів, наприклад новел, оповідань, повістей, романів."
+§4.4.3 (Стилістичні засоби лексики): "метафори, епітети, синоніми, антоніми..."
+Alignment: Модуль надає інструментарій (метамова) для виконання вимог стандарту щодо аналізу художніх текстів та розуміння імпліцитної інформації (іронія, підтекст).
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| сюжет | High (Academic/Lit) | розгортання сюжету, динамічний сюжет, сюжетна лінія |
+| фабула | Medium (Specialized) | фабульна основа, хронологічна фабула, відмінність від сюжету |
+| метафора | High (General/Lit) | розгорнута метафора, смілива метафора, метафоричне мислення |
+| метонімія | Medium (Academic) | метонімічне перенесення, вживання метонімії |
+| алегорія | Medium (Academic) | алегоричний образ, прозора алегорія, алегоричний зміст |
+| наратив | High (Academic) | наративна стратегія, зміна наративу, наратор |
+| фокалізація | Low (Specialized) | внутрішня фокалізація, зміна фокалізації, нульова фокалізація |
+
+## Cultural Hooks
+1. **Сюжет vs Фабула**: Українські формалісти 1920-х (Майк Йогансен) активно розробляли теорію "як будується оповідання", наголошуючи на важливості "зробленості" (construction) тексту.
+2. **Іронія та Гротеск**: "Енеїда" Котляревського — класичний приклад бурлеску та травестії, де іронія є структуротворчим елементом. Гротеск у творах Гоголя чи раннього Тичини.
+3. **Новела**: Василь Стефаник як майстер української експресіоністичної новели — ідеальний приклад для аналізу жанрових ознак (стислість, психологізм, драматизм).
+
+## Common Learner Errors
+1. **Novel vs Novella**: Англомовні студенти плутають *novel* (роман) та *novella* (повість/новела). *Roman* is the false friend of *Romance*, but actually means *Novel*. *Novela* in Ukrainian is specifically a short story with a twist, closer to Poe's definition.
+2. **Sujet vs Fabula**: Learners often treat them as synonyms (plot). Must clarify: Fabula = chronological events; Sujet = artistic arrangement.
+3. **Theme vs Idea**: Confusing the topic (what it's about) with the main idea (what the author wants to say).
+
+## Cross-References
+- Builds on: B1/B2 Reading modules (implicit understanding of plot).
+- Prepares for: C1 Literature modules (M86-105), specifically analysis of Khvylovy, Stefanyk, Yanovskyi.
+
+## Notes for Content Writing
+- Maintain academic register but ensure definitions are accessible.
+- Use distinct examples for Metaphor vs Metonymy (e.g., "gold of hair" vs "reading Shevchenko").
+- Distinguish clearly between *Roman* (large form), *Povist* (medium form, typical for UA lit), and *Novela* (short dynamic form).
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Метамова літературознавства (Introduction: The Metalanguage of Literary Criticism)"
+  words: 500
+  points:
+  - "Обґрунтування термінології як інструменту для розуміння імпліцитної інформації (натяків, іронії) згідно з Державним стандартом §1.2.1.1."
+  - "Persona Setup: Роль укладача енциклопедії у систематизації літературознавчих понять для академічного аналізу."
+  - "Learner Error: Розмежування понять 'тема' (про що твір) та 'ідея' (головна думка/посил автора) для уникнення логічних помилок в аналізі."
+- section: "Наратологія: Сюжет, фабула та стратегії оповіді (Narratology: Plot, Fabula, and Narrative Strategies)"
+  words: 1000
+  points:
+  - "Глибокий аналіз опозиції 'сюжет' vs 'фабула': хронологічна послідовність подій проти їх художнього розташування в тексті."
+  - "Cultural Hook: Теорія 'зробленості' тексту українських формалістів 1920-х років (Майк Йогансен) та розгортання сюжетних ліній."
+  - "Наративна піраміда: категорії 'автор', 'наратор' (наративна стратегія) та 'оповідач'; визначення внутрішньої та зовнішньої фокалізації."
+  - "Learner Error: Уточнення значення терміна 'Роман' (Novel) як великої форми, що часто плутається з англійським 'Romance'."
+- section: "Тропіка та образність: Від метафори до алегорії (Tropes and Imagery: From Metaphor to Allegory)"
+  words: 900
+  points:
+  - "Механізм метафори (схожість) проти метонімії (суміжність): аналіз прикладів 'золото волосся' та 'читати Шевченка'."
+  - "Функціонування алегорії як розгорнутого символічного образу з прозорим змістом в академічному контексті."
+  - "Cultural Hook: Іронія та бурлеск як структуротворчі елементи в 'Енеїді' І. Котляревського; використання гротеску в українському модернізмі."
+  - "Стилістичні прийоми: парадокс та підтекст як засоби вираження авторської позиції згідно зі стандартом §4.4.3."
+- section: "Жанрова типологія в українському контексті (Genre Typology in the Ukrainian Context)"
+  words: 800
+  points:
+  - "Класифікація прозових жанрів за стандартом §1.2.2: відмінності між романом (велика форма) та повістю (середня форма, домінантна в УкрЛит)."
+  - "Специфіка жанру 'Новела': лаконізм, психологізм та обов'язковий сюжетний поворот (пуант) на прикладі експресіонізму Василя Стефаника."
+  - "Академічна дискусія: трансформація класичних жанрів у сучасній літературі та зміна наративних парадигм."
+- section: "Синтез: Методологія академічного аналізу (Synthesis: Methodology of Academic Analysis)"
+  words: 800
+  points:
+  - "Практичний алгоритм аналізу художнього тексту: від виявлення мотивів до формулювання цілісної ідеї твору."
+  - "Адаптація академічного регістру: використання абстрактних іменників та специфічного синтаксису для літературної критики."
+  - "Production: Підготовка критичного відгуку на уривок тексту з коректним вживанням термінів 'фабула', 'фокалізація' та 'підтекст'."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "сюжет (plot) — розгортання сюжету, динамічний сюжет, сюжетна лінія; High frequency"
+  - "фабула (fabula/story) — фабульна основа, відмінність від сюжету, хронологічна фабула; Medium frequency, Specialized"
+  - "метафора (metaphor) — розгорнута метафора, метафоричне мислення, вживання метафори; High frequency"
+  - "наратив (narrative) — наративна стратегія, зміна наративу, домінантний наратив; High Academic"
+  - "роман (novel) — історичний роман, жанрова специфіка роману; False friend alert (not Romance)"
+  - "повість (novella/long short story) — пригодницька повість; Central genre in Ukrainian literature"
+  - "новела (short story/novella) — психологічна новела, жанрові ознаки новели; Specific short form with a twist"
+  recommended:
+  - "метонімія (metonymy) — метонімічне перенесення, вживання метонімії; Academic register"
+  - "алегорія (allegory) — алегоричний образ, прозора алегорія; Specialized"
+  - "фокалізація (focalization) — внутрішня фокалізація, зміна фокалізації; Low frequency, highly specialized"
+  - "наратор (narrator) — ненадійний наратор, позиція наратора; Academic term"
+  - "бурлеск (burlesque) — бурлескний стиль, традиції бурлеску; Cultural reference (Kotlyarevsky)"
+  - "травестія (travesty) — комічна травестія; Linked to Eneida"
+  - "гротеск (grotesque) — елементи гротеску, гротескний образ; Medium frequency"
+  - "підтекст (subtext/undercurrent) — глибокий підтекст, розуміння підтексту; Key for C1 analysis"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4443 chars)
+✅ Message sent to Claude (ID: 10880)
+✓ Message 10880 acknowledged
+   Auto-acknowledged reply #10880 (stdout delivery — no inbox accumulation)
+✓ Message 10869 acknowledged

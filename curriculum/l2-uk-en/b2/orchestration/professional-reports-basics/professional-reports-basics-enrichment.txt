@@ -1,0 +1,344 @@
+✅ Message sent to Gemini (ID: 10641) [auto-acked: self-addressed]
+✓ Message 10641 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10641...
+📨 Message #10641
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-professional-reports-basics
+   Time: 2026-02-20T20:46:26.580758+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b2-87
+level: B2
+sequence: 87
+slug: professional-reports-basics
+version: '2.0'
+title: 'Професійні звіти: Основи'
+subtitle: Basic report structure and writing
+content_outline:
+- section: Вступ
+  points:
+  - 'Роль професійних звітів у бізнесі та академічному середовищі — cultural hook:
+    historical roots in Cossack Hetmanate General Military Chancellery vs. modern
+    global standards'
+  - 'Відмінність звіту від листа - структура, об"єктивність, формальність — State
+    Standard §3.11: Офіційно-діловий стиль'
+  - Типи звітів - аналітичні, технічні, фінансові, прогресу проєкту
+  - Цільова аудиторія звіту - керівництво, клієнти, партнери, регулятори
+  - Перехід від електронної пошти (М85-86) до структурованої звітності — builds on
+    previous module M85-86
+- section: Імерсивна розповідь
+  subsections:
+  - name: Структура базового звіту
+    points:
+    - 'Титульна сторінка: назва, автор, дата, адресат'
+    - 'Резюме (executive summary): ключові висновки та рекомендації'
+    - 'Вступ: контекст, мета, методологія'
+    - 'Основна частина: результати, дані, аналіз'
+    - 'Висновки та рекомендації: підсумки, практичні поради'
+    - 'Додатки: графіки, таблиці, довідкові матеріали'
+  - name: Резюме та вступна частина
+    points:
+    - 'Функція резюме: дати читачеві швидке розуміння основних результатів'
+    - Писати резюме останнім, але розміщувати на початку
+    - 'Структура вступу: мета дослідження, обґрунтування актуальності'
+    - 'Обмеження дослідження: що не входить у звіт'
+    - 'Методологія у вступі: як збиралися дані'
+  - name: Презентація даних
+    points:
+    - 'Вибір формату візуалізації: таблиці, графіки, діаграми'
+    - 'Коли використовувати таблиці: детальні числові дані'
+    - 'Коли використовувати графіки: тенденції та порівняння'
+    - 'Підписи до візуалізацій: нумерація, описи, джерела'
+    - 'Інтеграція візуалізацій у текст: посилання, коментарі'
+  - name: Висновки та рекомендації
+    points:
+    - Відмінність між висновками та резюме
+    - Висновки базуються на даних з основної частини
+    - Рекомендації мають бути конкретними та практичними
+    - 'Пріоритизація рекомендацій: термінові, важливі, довгострокові'
+    - Уникайте нових даних у висновках
+  points: []
+- section: Аналіз
+  subsections:
+  - name: Формальний регістр звітності
+    points:
+    - Офіційно-діловий стиль - нейтральність, безособовість, чіткість
+    - Уникайте емоційних оцінок та суб'єктивних суджень
+    - Термінологія vs загальновживані слова
+    - Стандартні формули звітності - згідно з даними, як показано на графіку
+  - name: Організація інформації
+    points:
+    - 'Логічна послідовність: від загального до конкретного'
+    - Використання заголовків та підзаголовків для навігації
+    - 'Нумерація розділів: арабські vs римські цифри'
+    - 'Параграфи: одна думка на параграф'
+    - 'Маркери та списки: коли доречні, як форматувати'
+  - name: Мова даних та показників
+    points:
+    - 'Опис тенденцій: зростання, зниження, стабільність'
+    - 'Порівняння даних: більший/менший, вищий/нижчий'
+    - 'Відсотки та пропорції: як формулювати'
+    - 'Точність vs округлення: коли наближені значення прийнятні'
+    - Опис кореляцій та причинно-наслідкових зв'язків
+  points: []
+- section: Граматика в контексті
+  subsections:
+  - name: Безособові конструкції у звітах
+    points:
+    - 'Безособові дієслова: виявлено, зазначено, встановлено'
+    - 'Конструкції з "було": було проведено, було виявлено'
+    - Уникайте "я" та "ми" на користь безособових форм
+    - 'Приклади трансформації: "Я дослідив" → "Було досліджено"'
+  - name: Пасивний стан для об'єктивності
+    points:
+    - 'Пасивні дієприкметники: проаналізований, обстежений, опублікований'
+    - Пасив підкреслює результат, а не виконавця
+    - 'Коли пасив доречний: фокус на об''єкті дослідження'
+    - Баланс між активом та пасивом у тексті
+  points: []
+- section: Підсумок
+  points:
+  - 'Синтез навичок: від листування (М85-86) до структурованої звітності — learner
+    error: «підводити підсумки» → «підбивати підсумки»'
+  - 'Ключові принципи звіту: структура, об''єктивність, формальність, візуалізація'
+  - 'Перехід до поглибленої звітності (М88): складні звіти, аналітика, презентації'
+focus: skills
+pedagogy: CBI
+objectives:
+- Learner can structure a basic professional report with clear sections
+- Learner can write executive summaries and introductions
+- Learner can present data and findings objectively
+- Learner can use appropriate formal register for report writing
+- Learner can organize information logically in report format
+phase: B2.4 Communication Skills
+vocabulary_hints:
+  required:
+  - термін (term)
+  - поняття (concept)
+  - процес (process)
+  - метод (method)
+  - звіт (report) — складати звіт, річний звіт, звіт про виконану роботу
+  - висновок (conclusion) — дійти висновку, зробити висновки, попередні висновки
+  - аналіз (analysis) — проводити аналіз, глибокий аналіз, на основі аналізу
+  - підсумок (summary/result) — підбивати підсумки (NOT підводити!), у підсумку
+  - дослідження (research) — об'єкт дослідження, методи дослідження, результати дослідження
+  recommended:
+  - аналіз (analysis) — duplicates required list, removed
+  - синтез (synthesis)
+  - дослідження (research) — duplicates required list, removed
+activity_hints:
+- type: reading
+  focus: Аналіз тексту
+  items: 4
+- type: essay-response
+  focus: Практичне застосування
+- type: true-false
+  focus: Перевірка розуміння
+  items: 8
+persona:
+  voice: Professional Language Coach
+  role: Junior Analyst (Молодший аналітик)
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Професійні звіти: Основи
+
+## State Standard Reference
+§3.11: "Робота: ...ділові переговори; укладання ділових угод і контрактів."
+§4.3.3.1: "Односкладні речення з головним членом – дієсловом: ...безособові речення: Було приємно дивитися... Там усе правильно записано."
+§4.2.6: "Утворення іменників – назв дії (суфікси -ння, -ення): читання, сполучання, креслення..."
+Alignment: Module teaches the "Official-Business Style" (Офіційно-діловий стиль) required for the "Work" theme, focusing on impersonal constructions (State Standard §4.3.3.1) and verbal nouns (§4.2.6) to achieve the necessary formal register.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| **звіт** | High (Business/Academic) | складати звіт, річний звіт, фінансовий звіт, схвалити звіт, звіт про виконану роботу |
+| **висновок** | High (General/Academic) | дійти висновку, зробити висновки, головний висновок, попередні висновки |
+| **аналіз** | High (Academic/Pro) | проводити аналіз, глибокий аналіз, порівняльний аналіз, на основі аналізу |
+| **підсумок** | Medium (General) | підбивати підсумки (NOT підводити!), у підсумку, загальний підсумок |
+| **дослідження** | High (Academic) | об'єкт дослідження, методи дослідження, результати дослідження |
+
+## Cultural Hooks
+1. **Historical Roots**: Unlike the stereotype of Ukrainian being a "peasant language", Ukraine has a deep tradition of administrative language dating back to the **General Military Chancellery** (Генеральна військова канцелярія) of the Cossack Hetmanate (17th century). They developed unique record-keeping practices distinct from Polish or Muscovite models, proving that Ukrainian has been a language of statecraft for centuries.
+2. **Modern Shift**: Contemporary Ukrainian business reporting is shifting away from Soviet-style "kantseliaryzm" (wordy, passive, bureaucratic) towards "Western/Global" standards (concise, analytical, action-oriented), yet maintaining the specific grammar of the official style (like *згідно з* + Instr).
+
+## Common Learner Errors
+1. **Calques from English/Russian**: *Приймати участь* (Incorrect) → **Брати участь** (Correct) — "To take part".
+2. **Preposition Errors**: *Згідно інструкції* (Incorrect) → **Згідно з інструкцією** (Correct) — "According to".
+3. **Wrong Verb for "Summarize"**: *Підводити підсумки* (Calque from Russian "подводить итоги") → **Підбивати підсумки** (Correct).
+4. **Pleonasms**: *Пам'ятний сувенір*, *Вільна вакансія*, *Своя автобіографія* — using redundant adjectives is a marker of poor style in reports.
+
+## Cross-References
+- Builds on: **M85-86** (Professional Email) — moves from short messages to long-form documents.
+- Prepares for: **M88** (Advanced Reports) and **M94** (Final Exam).
+
+## Notes for Content Writing
+- **Tone**: Formal but modern. Avoid "dry" Soviet bureaucracy, but maintain distance (impersonal).
+- **Structure**: Emphasize the "Executive Summary" (Резюме) concept — distinct from a CV (also "резюме" in Ukrainian, context matters).
+- **Grammar focus**: Push heavy on **verbal nouns** (-ння/-ення) as they are the hallmark of this style (*виконання* замість *ми виконали*, *забезпечення* замість *ми забезпечили*).
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 600
+  points:
+  - "Historical roots of Ukrainian statecraft: The General Military Chancellery (Генеральна військова канцелярія) of the Cossack Hetmanate as a precursor to modern administrative reporting and record-keeping."
+  - "State Standard §3.11: Defining the Official-Business Style (Офіційно-діловий стиль) and its specific role in modern professional agreements, contracts, and internal reporting."
+  - "Transitioning from short-form professional communication (M85-86 Professional Emails) to the structured, analytical requirements of long-form reports."
+  - "The modern shift: Moving away from wordy Soviet 'kantseliaryzm' (bureaucratese) toward concise, action-oriented global standards while maintaining Ukrainian grammatical integrity."
+- section: "Імерсивна розповідь: Структура та компоненти (Narrative: Structure and Components)"
+  words: 1000
+  points:
+  - "The 'Executive Summary' (Резюме) strategy: Identifying why it must be written last but placed first to provide immediate clarity for decision-makers."
+  - "Full structural breakdown of a professional report: From the Title Page (Титульна сторінка) to the critical Appendices (Додатки) containing raw data and charts."
+  - "Introduction and Methodology: Defining research context, constraints (обмеження), and data collection methods according to academic and professional standards."
+  - "Narrative arc: Following a junior analyst (молодший аналітик) preparing a first project progress report, balancing technical results with practical recommendations."
+- section: "Аналіз та візуалізація даних (Analysis and Data Visualization)"
+  words: 1000
+  points:
+  - "Logical organization: Ensuring a flow from general findings to specific conclusions using a clear hierarchy of headers and logical paragraphing (one thought per paragraph)."
+  - "Language of data: Describing trends (зростання, зниження, стабілізація) and correlations with neutral, objective terminology."
+  - "Integrating visualizations: Guidelines for using tables for granular numbers and graphs for trends, including mandatory numbering and source citations."
+  - "Register check: Maintaining 'neutrality' by avoiding emotional evaluations and subjective judgments in the analytical body of the report."
+- section: "Граматика: Безособовість та стиль (Grammar: Impersonality and Style)"
+  words: 800
+  points:
+  - "State Standard §4.2.6: The hallmark of official style — utilizing verbal nouns with suffixes -ння and -ення (виконання, забезпечення) to formalize actions into nouns."
+  - "State Standard §4.3.3.1: Mastering impersonal constructions (виявлено, зазначено, встановлено) and 'було' + past participle forms to emphasize results over actors."
+  - "Passive voice for objectivity: Using passive participles (проаналізований, обстежений) to create formal distance and technical precision."
+  - "Standard formulaic expressions for reporting: 'Згідно з даними', 'Як показано на графіку', 'З огляду на вищезазначене'."
+- section: "Підсумок та усунення помилок (Summary and Error Correction)"
+  words: 600
+  points:
+  - "Correcting common calques: Drill on 'брати участь' (correct) vs. 'приймати участь' (incorrect) and the essential 'підбивати підсумки' vs. 'підводити підсумки'."
+  - "Prepositional mastery: Enforcing the use of 'згідно з' + Instrumental case (згідно з інструкцією) as a key marker of high-level professional literacy."
+  - "Eliminating pleonasms: Identifying and removing redundant phrasing such as 'вільна вакансія' or 'своя автобіографія' to meet B2+ conciseness requirements."
+  - "Synthesizing skills: Reviewing the balance between structure, visualization, and formal grammar in preparation for Advanced Reports (M88) and the Final Exam (M94)."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "звіт (report) — складати звіт, річний звіт, фінансовий звіт, звіт про виконану роботу; High frequency"
+  - "висновок (conclusion) — дійти висновку, зробити висновки, попередні висновки; Essential for reporting"
+  - "аналіз (analysis) — проводити аналіз, глибокий аналіз, порівняльний аналіз, на основі аналізу; High frequency"
+  - "підсумок (summary/result) — підбивати підсумки (NOT підводити!), у підсумку, загальний підсумок"
+  - "дослідження (research) — об'єкт дослідження, методи дослідження, результати дослідження; Formal academic/pro context"
+  - "термін (term) — професійна термінологія, у визначений термін"
+  - "поняття (concept) — ключове поняття, визначення поняття"
+  - "процес (process) — процес виконання, оптимізація процесу"
+  - "метод (method) — метод аналізу, інноваційні методи"
+  recommended:
+  - "синтез (synthesis) — синтез отриманих даних"
+  - "згідно з (according to) — згідно з інструкцією, згідно з розпорядженням; Essential prepositional phrase (+ Instr)"
+  - "брати участь (to take part) — брати участь у проекті; Correction for common calque 'приймати'"
+  - "виконання (execution/fulfillment) — забезпечення виконання, термін виконання; Verbal noun from §4.2.6"
+  - "забезпечення (provision/ensuring) — програмне забезпечення, забезпечення якості; High-register verbal noun"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (5220 chars)
+✅ Message sent to Claude (ID: 10648)
+✓ Message 10648 acknowledged
+   Auto-acknowledged reply #10648 (stdout delivery — no inbox accumulation)
+✓ Message 10641 acknowledged

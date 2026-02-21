@@ -1,0 +1,321 @@
+✅ Message sent to Gemini (ID: 10716) [auto-acked: self-addressed]
+✓ Message 10716 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10716...
+📨 Message #10716
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-global-context
+   Time: 2026-02-20T21:25:00.012909+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-027
+level: C1
+sequence: 27
+slug: global-context
+version: '2.0'
+title: 'Глобальний контекст: Україна, ЄС та НАТО'
+content_outline:
+- section: Вступ — Україна у світовому контексті
+  points:
+  - Геополітичне положення
+  - Зовнішня політика
+  - Міжнародні відносини
+- section: Європейський Союз
+  points:
+  - Структура ЄС
+  - Кандидатство України
+  - Угода про асоціацію
+- section: НАТО
+  points:
+  - Структура НАТО
+  - Шлях України до членства
+  - Співпраця з альянсом
+- section: Інші міжнародні організації
+  points:
+  - ООН
+  - МВФ та Світовий банк
+  - Рада Європи
+- section: Дипломатичний регістр
+  points:
+  - Пасивний стан в документах
+  - Офіційно-ділова лексика
+  - Кліше дипломатичного мовлення
+- section: Виклики та перспективи
+  points:
+  - Умови членства
+  - Реформи для інтеграції
+  - Геополітичні виклики
+- section: Практичне завдання
+  points:
+  - Аналіз офіційних документів
+  - Дискусія про євроінтеграцію
+  - Написання аналітичної записки
+vocabulary_hints:
+  required:
+  - Європейський Союз (European Union)
+  - НАТО (NATO)
+  - інтеграція (integration)
+  - кандидат (candidate)
+  - членство (membership)
+  - переговори (negotiations)
+  - угода (agreement)
+  - реформа (reform)
+  - дипломатія (diplomacy)
+  - зовнішня політика (foreign policy)
+  recommended:
+  - євроатлантичний (Euro-Atlantic)
+  - імплементація (implementation)
+  - гармонізація (harmonization)
+  - ратифікація (ratification)
+  - безвіз (visa-free regime)
+activity_hints:
+- type: quiz
+  focus: EU/NATO integration process
+  items: 15+
+- type: match-up
+  focus: Organization → function
+  items: 15+
+- type: fill-in
+  focus: Diplomatic document phrases
+  items: 12+
+- type: cloze
+  focus: International relations vocabulary
+  items: 10+
+- type: group-sort
+  focus: Organizations by type
+  items: 12+
+- type: essay-response
+  focus: Ukraine's European path
+focus: communication
+prerequisites:
+- c1-25 (Political System)
+- c1-26 (Media Landscape)
+connects_to:
+- c1-28 (Dialects)
+- c1-33 (Case Studies)
+- c1-35 (C1.2 Checkpoint)
+module_type: cultural
+sources:
+- name: Європейська правда
+  url: https://www.eurointegration.com.ua/
+  type: reference
+  notes: EU integration news and analysis
+- name: МЗС України
+  url: https://mfa.gov.ua/
+  type: primary
+  notes: Official foreign policy information
+immersion: 100% Ukrainian
+phase: C1.2 Professional Communication
+objectives:
+- 'Understand and apply глобальний контекст: україна, єс та нато'
+- Analyze and evaluate україна у світовому контексті
+- Identify key concepts of практичне завдання
+persona:
+  voice: Senior Specialist
+  role: Дипломатичний радник
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Глобальний контекст: Україна, ЄС та НАТО
+
+## State Standard Reference
+§3.9: "напрями зовнішньої політики України (Україна і ЄС, Україна і США, Україна і НАТО); дипломатичні відносини України."
+Alignment: Цей модуль безпосередньо реалізує вимогу стандарту щодо вивчення зовнішньополітичних векторів (ЄС, НАТО) та дипломатичної термінології.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| **Євроінтеграція** | High (Political/Media) | курс на євроінтеграцію, поглиблення євроінтеграції, євроінтеграційні процеси |
+| **Набуття членства** | Med (Formal/Legal) | набуття членства в ЄС/НАТО, перспектива набуття членства, критерії набуття членства |
+| **Ратифікація** | Med (Legal/Diplomatic) | ратифікація угоди, процес ратифікації парламентом, документ підлягає ратифікації |
+| **Імплементація** | Med (Formal) | імплементація законодавства, імплементація реформ, план імплементації |
+| **Співробітництво** | High (General/Formal) | тісне співробітництво, міжнародне співробітництво, поглиблення співробітництва |
+
+## Cultural Hooks
+1. **Революція Гідності (Євромайдан)**: Почалася саме через відмову влади підписати Угоду про асоціацію з ЄС у листопаді 2013 року. Це не просто "політика", а екзистенційний вибір українського народу.
+2. **Конституційне закріплення**: У 2019 році до Конституції України внесено зміни, що закріпили стратегічний курс держави на набуття повноправного членства в ЄС та НАТО, зробивши цей курс незворотним.
+
+## Common Learner Errors
+1. **Приймати участь** → **Брати участь**: Калька з російської. Правильно: *Україна бере участь у саміті*.
+2. **Вступати в ЄС** → **Вступати до ЄС / Приєднуватися до ЄС**: Стилістично краще вживати прийменник "до" з організаціями у формальному контексті.
+3. **Відношення** → **Відносини**: У контексті дипломатії вживається виключно слово "відносини" (міжнародні відносини, дипломатичні відносини). "Відношення" — це ставлення (attitude) або математичний термін.
+
+## Cross-References
+- **Builds on**: c1-25 (Political System) — розуміння державного устрою необхідне для теми зовнішньої політики.
+- **Prepares for**: c1-33 (Case Studies) — аналіз конкретних кейсів базуватиметься на загальному контексті.
+
+## Notes for Content Writing
+- Уникати застарілої інформації. Чітко розрізняти статус "кандидат" і "член".
+- Акцентувати на суб'єктності України: не "Україну приймають", а "Україна виборює/інтегрується".
+- Дипломатичний регістр має бути насичений пасивними конструкціями (але помірно, згідно з правилами C1) та безособовими реченнями.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ — Україна у світовому контексті (Introduction — Ukraine in Global Context)"
+  words: 500
+  points:
+  - "Геополітичне положення та суб'єктність України: акцент на ролі держави як активного суб'єкта («виборює/інтегрується»), а не просто об'єкта міжнародної політики згідно з вимогами стандарту §3.9."
+  - "Зовнішня політика та Конституційне закріплення: аналіз змін до Конституції 2019 року, що закріпили стратегічний курс на ЄС та НАТО як незворотний екзистенційний вибір."
+  - "Дипломатична культура мовлення: розрізнення понять «відносини» (diplomatic relations) та «відношення» (attitude/math) — виправлення типової помилки у професійному контексті."
+- section: "Європейський Союз (European Union)"
+  words: 700
+  points:
+  - "Структура ЄС та статус України: чітке розмежування категорій «кандидат» та «член», аналіз Копенгагенських критеріїв та етапів набуття членства."
+  - "Історичний вибір: Революція Гідності (Євромайдан) 2013 року як відправна точка сучасної інтеграції через відмову від підписання Угоди про асоціацію."
+  - "Угода про асоціацію та імплементація законодавства: процес приведення українських норм у відповідність до європейських стандартів."
+- section: "НАТО — Північноатлантичний Альянс (NATO — North Atlantic Alliance)"
+  words: 700
+  points:
+  - "Структура НАТО та євроатлантичний курс: обговорення стандартів взаємосумісності та процедури набуття повноправного членства в Альянсі."
+  - "Шлях України до Альянсу: еволюція від партнерства до конституційно закріпленої мети, аналіз безпекових гарантій."
+  - "Співробітництво та модернізація: спільні навчання, реформування сектору безпеки та поглиблення міжнародного співробітництва у сфері оборони."
+- section: "Міжнародні організації та норми дипломатії (International Organizations and Diplomatic Norms)"
+  words: 600
+  points:
+  - "Взаємодія з ООН, МВФ, Світовим банком та Радою Європи: роль міжнародних інституцій у підтримці українських реформ та демократії."
+  - "Юридичний вимір: процес ратифікації міжнародних угод парламентом та набуття ними чинності у внутрішньому правовому полі."
+  - "Культура професійного спілкування: правильне вживання нормативного вислову «брати участь» замість поширеної помилки «приймати участь»."
+- section: "Дипломатичний регістр (Diplomatic Register)"
+  words: 600
+  points:
+  - "Офіційно-діловий стиль: використання пасивних конструкцій та безособових речень для забезпечення об'єктивності, характерної для дипломатичних документів."
+  - "Дипломатичні кліше та термінологія: опрацювання сталих виразів «курс на євроінтеграцію», «гармонізація стандартів», «висловити глибоке занепокоєння»."
+  - "Граматика офіційних звернень: правильне вживання прийменника «до» у формальних контекстах (наприклад, «вступати до ЄС»)."
+- section: "Виклики, реформи та перспективи (Challenges, Reforms, and Perspectives)"
+  words: 500
+  points:
+  - "Умови членства та реформи: аналіз необхідних кроків для повної інтеграції — від антикорупційних заходів до судової реформи."
+  - "Геополітичні виклики: роль України у новій архітектурі безпеки Європи та протидія зовнішній агресії як чинник прискорення інтеграції."
+  - "Динаміка євроінтеграційних процесів: перспективи розширення та стратегічне значення України для європейської спільноти."
+- section: "Практичне завдання та аналіз (Practical Task and Analysis)"
+  words: 400
+  points:
+  - "Аналіз офіційних комюніке МЗС України та ресурсів «Європейської правди»: виявлення ключових термінів та синтаксичних структур дипломатичного стилю."
+  - "Моделювання дипломатичної дискусії: аргументація позиції України щодо євроатлантичного курсу з використанням вивченої лексики."
+  - "Написання фрагмента аналітичної записки щодо імплементації конкретної угоди з використанням пасивних конструкцій."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "євроінтеграція (European integration) — курс на євроінтеграцію, поглиблення євроінтеграції; High frequency in political discourse"
+  - "набуття членства (acquiring membership) — набуття членства в ЄС/НАТО, перспектива набуття членства; Formal/Legal usage"
+  - "ратифікація (ratification) — ратифікація угоди, процес ратифікації парламентом; Specific to legislative approval"
+  - "імплементація (implementation) — імплементація законодавства, план імплементації реформ; Formal register"
+  - "співробітництво (cooperation) — міжнародне співробітництво, поглиблення співробітництва; Preferred in formal documents over «співпраця»"
+  - "брати участь (to participate) — standard form; avoid the common Russian calque «приймати участь»"
+  - "відносини (relations) — дипломатичні відносини, міжнародні відносини; always plural, distinguish from «відношення» (attitude)"
+  - "курс на (course towards) — стратегічний курс на інтеграцію; collocation"
+  recommended:
+  - "євроатлантичний (Euro-Atlantic) — євроатлантичний вектор, євроатлантичні прагнення"
+  - "гармонізація (harmonization) — гармонізація стандартів, гармонізація законодавства"
+  - "ратифікувати (to ratify) — Верховна Рада ратифікувала документ"
+  - "безвіз (visa-free regime) — high cultural relevance, shorthand for travel facilitation"
+  - "суб'єктність (agency/subjectivity) — міжнародна суб'єктність України; focus on active role"
+  - "вступати до (to join/enter) — correctly used with preposition «до» for organizations"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (5400 chars)
+✅ Message sent to Claude (ID: 10724)
+✓ Message 10724 acknowledged
+   Auto-acknowledged reply #10724 (stdout delivery — no inbox accumulation)
+✓ Message 10716 acknowledged

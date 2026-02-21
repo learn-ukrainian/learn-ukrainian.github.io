@@ -1,0 +1,13 @@
+{
+  "track": "lit",
+  "slug": "the-artist",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-20T23:00:49Z",
+      "task_id": "v3-the-artist-pA",
+      "mode": "full"
+    }
+  }
+}

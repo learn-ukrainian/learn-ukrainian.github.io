@@ -1,0 +1,185 @@
+✅ Message sent to Gemini (ID: 12548) [auto-acked: self-addressed]
+✓ Message 12548 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12548...
+📨 Message #12548
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-need-for-norms
+   Time: 2026-02-20T23:40:34.834791+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 51
+module: ruth-051
+module_number: 41
+slug: need-for-norms
+title_uk: Потреба норм
+title_en: The Need for Norms
+phase: 2
+phase_id: sacred-word
+phase_name: Sacred Word
+focus: Why codify? The Latin challenge
+content_outline:
+- section: Вступ
+  description: Introduction to The Need for Norms
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Baroque Scholar
+  role: Language Standardizer
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Need For Norms (Потреба норм)
+
+## Використані джерела
+1. [litopys.org.ua](http://litopys.org.ua/ukrmova/um.htm) — *Енциклопедія "Українська мова"*. Фундаментальні статті про староукраїнську мову, граматики Зизанія та Смотрицького.
+2. [esu.com.ua](https://esu.com.ua/article-11111) — *Енциклопедія Сучасної України*. Статті про "Адельфотес", Памво Беринду, Мелетія Смотрицького.
+3. [history.org.ua](http://resource.history.org.ua/) — *Інститут історії України НАНУ*. Дослідження про полемічну літературу та мовну ситуацію XVI-XVII ст.
+4. *Німчук В. В.* Історія української мови. Граматика М. Смотрицького — критичне видання.
+
+## Хронологія
+- **1586**: Заснування Львівської братської школи.
+- **1591**: Видання "Адельфотес" (Adelphotes) у Львові — першої граматики грецької та церковнослов'янської мов.
+- **1596**: Берестейська унія. Видання Лаврентієм Зизанієм "Лексиса" та "Граматики словенської" у Вільні.
+- **1619**: Вихід у світ "Грамматіки Словенския" Мелетія Смотрицького у Єв'ї.
+- **1627**: Видання "Лексикона славенороського" Памви Беринди у Києві.
+
+## Ключові факти та цитати
+- **Петро Скарга (єзуїтська критика):** Стверджував, що церковнослов'янська мова ("словенська") не може бути мовою науки та теології, бо "не має правил" (граматики) і є хаотичною порівняно з латиною та грецькою.
+- **Відповідь русинів:** Створення граматик мало на меті довести, що слов'янська мова є "рівночесною" (гідною) і має структуру.
+- **Лаврентій Зизаній:** У "Лексисі" вперше застосував диференційний метод — тлумачив лише ті церковнослов'янські слова, які були незрозумілі носіям живої мови.
+- **Мелетій Смотрицький:** Встановив норму (канон). Виділив 8 частин мови, ввів літеру "ґ", унормував вживання "є" / "ѣ".
+- **Памво Беринда:** "Велика темність слів міститься" — мотивація створення словника для розуміння Святого Письма.
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ": [!context] — The "Language Question" was not academic; it was existential. Without a grammar, the Orthodox faith was deemed "barbaric" by Catholic polemicists.
+- Section "Основний матеріал: I — Латинський виклик": [!quote] — Петро Скарга: "Зі слов'янської мови ніхто ніколи не буде вченим... бо вона не має правил".
+- Section "Основний матеріал: II — Перші відповіді": [!culture] — "Адельфотес" як символ братства (Adelphotes = Brotherhood) і білінгвальної освіти.
+- Section "Основний матеріал: III — Лаврентій Зизаній": [!decolonization] — Зизаній не просто "копіював" грецькі взірці, а адаптував їх до живої руської вимови.
+- Section "Основний матеріал: IV — Мелетій Смотрицький": [!history-bite] — Граматика Смотрицького була основним підручником понад 200 років, навіть Ломоносов вчився за нею (хоча Росія привласнює цей спадок).
+- Section "Основний матеріал: V — Лексикографічний вибух": [!myth-buster] — Міф: "Стара мова була мертвою". Реальність: Словники Беринди показують живий обмін між "словенською" і "простою" мовами.
+
+## Деколонізаційний контекст
+- **Imperial/Soviet myth:** Російська історіографія розглядає граматику Смотрицького як "предтечу російської граматики", ігноруючи її питомо український (руський) контекст створення та фонетичні особливості української редакції церковнослов'янської мови.
+- **Ukrainian reality:** Ці праці були відповіддю на виклики саме українсько-білоруського культурного простору (Речі Посполитої). "Славенороська" мова — це книжна українська мова того часу, а не "російська" в сучасному розумінні.
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| "Славенороська мова" | Російська мова (або її діалект) | Книжна мова українців та білорусів (українська редакція церковнослов'янської) |
+| "Руський" (у XVI ст.) | "Русский" (ідентично з Московським) | Український/Білоруський (Русь-Україна) |
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12578)
+✓ Message 12548 acknowledged
+✓ Message 12578 acknowledged

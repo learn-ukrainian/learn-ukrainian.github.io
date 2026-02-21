@@ -1,0 +1,286 @@
+✅ Message sent to Gemini (ID: 12805) [auto-acked: self-addressed]
+✓ Message 12805 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12805...
+📨 Message #12805
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-oleksandr-hrekiv
+   Time: 2026-02-20T23:42:25.457258+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-bio-74
+level: C1-BIO
+sequence: 74
+slug: oleksandr-hrekiv
+version: '2.0'
+title: 'Олександр Греків: Полководець УНР'
+content_outline:
+- section: Вступ — Генерал української незалежності
+  points:
+  - Греків як один із провідних військових діячів УНР
+  - Роль у формуванні української армії
+  - Трагедія поразки та еміграція
+- section: Ранні роки та військова освіта (1875-1914)
+  points:
+  - Народження в Полтавській губернії
+  - Навчання в Київському військовому училищі
+  - Служба в російській армії
+  - Участь у російсько-японській війні
+- section: Перша світова війна (1914-1917)
+  points:
+  - Командування на фронтах Першої світової
+  - Відзнаки та підвищення
+  - Формування національної свідомості
+  - Зустріч з українським рухом
+- section: Українська революція (1917-1918)
+  points:
+  - Перехід на бік УНР
+  - Командування українськими частинами
+  - Бої за Київ та Лівобережжя
+  - Протистояння з більшовиками та білогвардійцями
+- section: Головний командувач Армії УНР (1919)
+  points:
+  - Призначення на вищу військову посаду
+  - Реорганізація армії
+  - Зимовий похід
+  - Складні відносини з політичним керівництвом
+- section: Еміграція та спадщина (1920-1958)
+  points:
+  - Відступ до Польщі та інтернування
+  - Життя в еміграції в Чехословаччині та Німеччині
+  - Мемуари та військово-історичні праці
+  - Смерть у Німеччині та пам'ять про генерала
+vocabulary_hints:
+  required:
+  - генерал (general)
+  - полководець (military commander)
+  - головнокомандувач (commander-in-chief)
+  - армія УНР (UNR Army)
+  - штаб (headquarters)
+  - наступ (offensive)
+  - відступ (retreat)
+  - інтернування (internment)
+  - еміграція (emigration)
+  - військова доктрина (military doctrine)
+  recommended:
+  - Перша світова (World War I)
+  - більшовики (Bolsheviks)
+  - білогвардійці (White Guards)
+  - Зимовий похід (Winter Campaign)
+  - мемуари (memoirs)
+activity_hints:
+- type: reading
+  focus: Військова біографія
+  source: Уривки з мемуарів та історичних досліджень
+  items: 3 passages
+- type: essay-response
+  focus: Чому українська армія програла війну за незалежність?
+  output: Аналітичне есе
+focus: biography
+prerequisites:
+- c1-bio-44 (Симон Петлюра)
+connects_to:
+- c1-bio-53 (Петро Болбочан)
+- c1-bio-51 (В'ячеслав Липинський)
+- c1-bio-35 (Михайло Грушевський)
+module_type: biography
+sources:
+- name: Олександр Греків (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Греків_Олександр_Петрович
+  type: primary
+  notes: Біографія, військова кар'єра, еміграція
+- name: Інститут історії України НАНУ
+  url: https://www.history.org.ua
+  type: reference
+  notes: Дослідження Української революції
+- name: Музей визвольної боротьби України
+  url: https://mvbu.org.ua
+  type: reference
+  notes: Військова історія УНР
+immersion: 100% Ukrainian
+phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of олександр греків: полководець унр'
+- Evaluate the contributions of генерал української незалежності
+- Trace the career and influence of еміграція та спадщина (1920-1958)
+persona:
+  voice: Senior Biographer
+  role: Army General
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Олександр Греків: Полководець УНР
+
+## Використані джерела
+1. [Енциклопедія Сучасної України (ЕСУ)](https://esu.com.ua/article-26955) — академічна біографічна стаття.
+2. [Історія України (History.org.ua)](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Grekiv_O) — стаття Інституту історії України НАНУ.
+3. [АрміяInform](https://armyinform.com.ua/2025/12/03/oleksandr-grekiv-general-dvoh-armij-ta-arhitektor-chortkivskoyi-ofenzyvy/) — детальний огляд військової кар'єри та Чортківської офензиви.
+4. [UAHistory](https://uain.press/history/oleksandr-grekiv-1030090) — публіцистичні матеріали та контекст еміграції.
+5. [Відкритий список (OpenList)](https://ua.openlist.wiki/Греків_Олександр_Петрович_(1875)) — дані про репресії та ув'язнення в ГУЛАГу.
+
+## Хронологія
+- **21 листопада 1875**: Народився в с. Сопич на Чернігівщині (дворянський рід).
+- **1905**: Закінчив Миколаївську академію Генштабу.
+- **1917**: Отримав звання генерал-майора російської армії; перейшов на службу УНР.
+- **Листопад 1918**: Сформував Сердюцьку дивізію, яка підтримала повстання Директорії проти Скоропадського.
+- **Січень 1919**: Призначений військовим міністром УНР.
+- **9 червня 1919**: Очолив Українську Галицьку Армію (УГА); початок Чортківської офензиви.
+- **Липень 1919**: Відставка через конфлікт з Петрушевичем; виїзд до Відня.
+- **21 вересня 1948**: Викрадений агентами СМЕРШ у Відні.
+- **1949**: Засуджений до 25 років таборів; етапований до Озерлагу (Сибір).
+- **1956**: Звільнений за амністією, повернувся до Відня.
+- **2 грудня 1959**: Помер у Відні, похований на цвинтарі Калькзбург.
+
+## Ключові факти та цитати
+- **Цитата 1**: «Мені довелося вести технічну відбудову української армії, всього складного апарату військового міністерства... Здоровий будівничий настрій захопив усіх». (Зі спогадів)
+- **Цитата 2**: «За служіння Україні я розплатився роками неволі і втраченим здоров'ям, але аж ніяк не шкодую про це і готовий вкотре пройти цим шляхом».
+- **Факт**: Єдиний генерал, який командував і Дієвою Армією УНР, і Українською Галицькою Армією (УГА).
+- **Факт**: Виховав Сердюцьку дивізію, яка стала елітою армії Гетьманату, але перейшла на бік Директорії заради національної ідеї.
+- **Репресії**: У віці 73 років був викрадений радянськими спецслужбами в центрі Європи і провів 8 років у ГУЛАГу.
+
+## Engagement Hooks
+- Section "Вступ": [!history-bite] — Про генерала, якого "вкрали" з Відня через 30 років після війни.
+- Section "Ранні роки": [!context] — Походження роду Грекових (від грека, що прибув з Софією Палеолог) — спростування російського міфу про "исконно русских".
+- Section "Українська революція": [!myth-buster] — Міф про "безлад" в армії УНР vs. реальна робота Грекова над структурою міністерства.
+- Section "Чортківська офензива": [!military] — Тактика "ударного кулака", яку застосував Греків, попри брак амуніції.
+- Section "Еміграція": [!culture] — Його роль у житті української громади Відня (співпраця з ОУН, мемуари).
+- Section "ГУЛАГ": [!biography] — Стійкість 73-річного генерала в Озерлагу серед кримінальних злочинців та політичних в'язнів.
+
+## Деколонізаційний контекст
+- **Імперський наратив**: Зображення Грекова як "царського генерала", що "випадково" потрапив до петлюрівців. Акцент на його російській освіті та службі.
+- **Українська реальність**: Свідомий вибір української ідентичності. Греків відмовився від кар'єри в "Білій армії" заради побудови армії УНР. Він був не просто "воєнспецом", а ідейним державником, який конфліктував з соціалістами в уряді (Винниченко, Порш) через їхнє нерозуміння важливості регулярної армії.
+
+## Contested Terms
+| Concept | Imperial/Soviet framing | Ukrainian framing |
+|---------|-------------------------|-------------------|
+| Перехід на бік УНР | "Зрада присязі", "Бонапартизм" | Свідомий вибір нації, державотворення |
+| Чортківська офензива | "Тимчасовий успіх банд" | Блискуча військова операція, "останній злет" УГА |
+| Арешт у Відні | "Покарання зрадника" | Державний тероризм СРСР, викрадення людини |
+
+## Section-Mapped Research Notes
+
+### Вступ: Генерал двох армій
+Греків як символ єдності УНР і ЗУНР (командував обома арміями). Унікальна доля: від імперського генерала до в'язня ГУЛАГу.
+
+### Ранні роки: Формування військового інтелектуала
+Навчання в Москві, дисертація з військової історії (рідкісний випадок — генерал-наковець). Служба в елітних полках, але збереження зв'язку з українським корінням.
+
+### Перша світова війна: Досвід великої стратегії
+Начальник штабу 6-го корпусу. Досвід позиційної війни, який він пізніше намагався адаптувати для УНР, хоча умови вимагали маневреної війни.
+
+### Українська революція: Вибір на користь нації
+1917 рік — запрошення Грушевського. Формування українських частин. 1918 рік — Сердюцька дивізія. Ключовий момент: перехід Сердюків на бік Директорії під час Антигетьманського повстання — це заслуга авторитету Грекова.
+
+### Військовий міністр УНР: Організація оборони
+Зима 1919. Критична ситуація. Конфлікт з "політиками" (Винниченко), які боялися "мілітаризму". Греків намагався створити регулярну армію замість отаманських загонів. Його відставка як протест проти втручання політики в стратегію.
+
+### Чортківська офензива: Тріумф стратегії
+Червень 1919. Призначення командувачем УГА. План прориву. Блискучі перемоги під Чортковом, Тернополем. Чому зупинилися? Брак набоїв і зброї, а не помилки командування. Конфлікт з Петрушевичем (політичні розбіжності щодо Антанти).
+
+### Еміграція: Життя та діяльність у Відні
+1920-1948. Активна участь у діаспорі. Написання мемуарів. Відмова співпрацювати з нацистами. Отримання австрійського громадянства.
+
+### У пазурах СМЕРШу: ГУЛАГ і останні роки
+1948 рік — викрадення. Це показує, що СРСР боявся навіть 73-річних символів УНР. 25 років таборів. Перебування в Озерлагу. Повернення у 1956 році зламаним фізично, але не морально. Смерть у Відні.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit -9): 
+✅ Message sent to Claude (ID: 12834)
+✓ Message 12805 acknowledged
+✓ Message 12834 acknowledged

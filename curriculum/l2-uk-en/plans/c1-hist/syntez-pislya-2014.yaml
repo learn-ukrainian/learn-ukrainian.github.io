@@ -1,4 +1,3 @@
----
 module: c1-hist-125
 level: c1-hist
 sequence: 125
@@ -10,48 +9,41 @@ objectives:
 - 'Analyze the causes and consequences of синтез: після 2014 і 2022'
 - Evaluate the historical significance of новий цикл
 content_outline:
-- section: "Вступ — Новий цикл"
-  words: 515
+- section: Вступ — Новий цикл
   subsections:
   - Огляд модулів 122-124
   - 2014 — початок деколонізації
   - 2022 — прискорення
   - Мета синтезу
-- section: "Пост-2014 — Декомунізація"
-  words: 903
+- section: Пост-2014 — Декомунізація
   subsections:
   - Закони 2015 року
   - Перейменування
   - Що це означало
   - Критика і підтримка
 - section: Мовний зсув
-  words: 774
   subsections:
   - Закон про мову 2019
   - Практика vs закон
   - Російськомовні українці
   - Добровільний перехід
-- section: "2022 — Культурний вибух"
-  words: 774
+- section: 2022 — Культурний вибух
   subsections:
   - Війна і культура
   - Нові митці
   - Міжнародний прорив
   - Культура як зброя
 - section: Чи це останній цикл?
-  words: 645
   subsections:
   - Структурні зміни
   - Що відрізняє від попередніх
   - Ризики — що може зупинити
   - Умови успіху
 - section: Підсумок
-  words: 389
   subsections:
   - Цикл продовжується — чи завершується?
   - Українська культура — наступ
   - Перехід до агентності
-word_target: 4000
 vocabulary:
 - синтез
 - декомунізація
@@ -72,24 +64,24 @@ activities:
 - type: essay-response
   focus: Map cultural cycles from Ems to 2022
 - type: critical-analysis
-  focus: "2015 laws — impact assessment"
+  focus: 2015 laws — impact assessment
 - type: critical-analysis
   focus: Document post-2022 language shift
 - type: critical-analysis
   focus: How 2022 differs from previous cycles
 - type: essay-response
-  focus: "Чи 2022 — кінець циклу пригнічень?"
+  focus: Чи 2022 — кінець циклу пригнічень?
 sources:
 - name: Декомунізація в Україні (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Декомунізація_в_Україні"
+  url: https://uk.wikipedia.org/wiki/Декомунізація_в_Україні
   type: reference
   notes: Decommunization
 - name: Мовна політика України (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Мовна_політика_України"
+  url: https://uk.wikipedia.org/wiki/Мовна_політика_України
   type: reference
   notes: Language policy
 - name: Культура України під час війни (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Культура_України"
+  url: https://uk.wikipedia.org/wiki/Культура_України
   type: reference
   notes: Wartime culture
 vocabulary_hints:
@@ -108,7 +100,9 @@ activity_hints:
   items: 4
 - type: essay-response
   focus: Критичний аналіз
-  word_target: 300
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Modern Conflict Researcher

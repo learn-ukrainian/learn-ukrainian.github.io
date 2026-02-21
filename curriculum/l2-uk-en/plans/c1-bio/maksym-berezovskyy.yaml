@@ -1,59 +1,50 @@
----
-module: c1-bio-034
+module: c1-bio-34
 level: C1-BIO
 sequence: 34
 slug: maksym-berezovskyy
 version: '2.0'
 title: 'Максим Березовський: Композитор барокко'
 content_outline:
-- section: "Вступ — Трагічний геній"
-  words: 400
+- section: Вступ — Трагічний геній
   points:
   - Березовський як перший український оперний композитор
   - Його місце в європейській музиці XVIII століття
   - Трагедія непризнаного таланту
 - section: Молодість та музична освіта
-  words: 600
   points:
   - Походження з Глухова
   - Глухівська музична школа
   - Придворна капела в Петербурзі
   - Ранні твори
 - section: Італійський період
-  words: 700
   points:
   - Навчання в Болонській академії
   - Членство в Accademia Filarmonica
   - Опера "Демофонт"
   - Визнання в Італії
 - section: Повернення до Росії
-  words: 700
   points:
   - Сподівання на кар'єру при дворі
   - Ставлення до українських митців
   - Невдалі спроби реалізації
   - Конфлікти та розчарування
 - section: Духовна музика
-  words: 700
   points:
   - Хорові концерти
   - Не отвержи мене во время старості
   - Синтез барокової традиції
   - Вплив на церковну музику
 - section: Смерть та посмертна слава
-  words: 600
   points:
   - Обставини смерті (самогубство?)
   - Забуття за життя
   - Відкриття у XX столітті
   - Місце в українській музичній культурі
-- section: "Підсумок — Втрачений геній"
-  words: 300
+- section: Підсумок — Втрачений геній
   points:
   - Березовський як символ імперського поглинання талантів
   - Його спадщина для української музики
   - Уроки його долі
-word_target: 4000
 vocabulary_hints:
   required:
   - композитор (composer)
@@ -79,7 +70,6 @@ activity_hints:
   items: 3 passages
 - type: essay-response
   focus: Why was Berezovskyy forgotten in his time?
-  word_target: 250
   output: Analysis of imperial cultural dynamics
 - type: critical-analysis
   focus: How does imperial context explain his tragedy?
@@ -95,15 +85,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Максим Березовський (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Максим_Березовський"
+  url: https://uk.wikipedia.org/wiki/Максим_Березовський
   type: primary
   notes: Biography, musical works, tragic death
 - name: Українське барокове мистецтво
-  url: "https://uk.wikipedia.org/wiki/Українське_бароко"
+  url: https://uk.wikipedia.org/wiki/Українське_бароко
   type: reference
   notes: Cultural context
 - name: Глухівська музична школа
-  url: "https://uk.wikipedia.org/wiki/Глухівська_співацька_школа"
+  url: https://uk.wikipedia.org/wiki/Глухівська_співацька_школа
   type: reference
   notes: Musical education context
 immersion: 100% Ukrainian
@@ -111,3 +101,6 @@ phase: C1-BIO
 objectives:
 - 'Analyze the life and legacy of максим березовський: композитор барокко'
 - Evaluate the contributions of трагічний геній
+persona:
+  voice: Senior Biographer
+  role: Court Composer

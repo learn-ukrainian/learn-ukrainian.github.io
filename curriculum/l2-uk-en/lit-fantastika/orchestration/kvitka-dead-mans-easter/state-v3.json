@@ -1,0 +1,13 @@
+{
+  "track": "lit-fantastika",
+  "slug": "kvitka-dead-mans-easter",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-20T22:42:18Z",
+      "task_id": "v3-kvitka-dead-mans-easter-pA",
+      "mode": "full"
+    }
+  }
+}

@@ -1,0 +1,201 @@
+✅ Message sent to Gemini (ID: 12301) [auto-acked: self-addressed]
+✓ Message 12301 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12301...
+📨 Message #12301
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-the-resurrection
+   Time: 2026-02-20T23:38:15.911195+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 34
+module: ruth-034
+module_number: 28
+slug: the-resurrection
+title_uk: Воскресіння
+title_en: The Resurrection
+phase: 2
+phase_id: sacred-word
+phase_name: Sacred Word
+focus: '"High" moments in vernacular'
+content_outline:
+- section: Вступ
+  description: Introduction to The Resurrection
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Baroque Scholar
+  role: Paschal Homilist
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: The Resurrection (Воскресіння)
+
+## Використані джерела
+1. [Іоаникій Ґалятовський. Ключ розуміння (1659)](http://litopys.org.ua/old17/old17_06.htm) — аналіз проповідей, риторичних фігур та використання апокрифічних джерел (сивіли).
+2. [Кирило Транквіліон-Ставровецький](http://litopys.org.ua/old17/old17_03.htm) — біографія, огляд «Євангелія Учительного», конфлікт з Москвою.
+3. [Українська література XVII ст. (Ізборник)](http://litopys.org.ua/old17/old17_01.htm) — огляд барокової проповіді, шкільної драми та поезії.
+4. [Енциклопедія Сучасної України: Бароко](https://esu.com.ua/article-40614) — загальний контекст епохи, світоглядні засади.
+
+## Хронологія
+- 1619: Вихід друком «Євангелія Учительного» Кирила Транквіліона-Ставровецького у Рохманові.
+- 1627: Указ царя Михаїла Федоровича про спалення «Євангелія Учительного» та інших українських книг у Москві.
+- 1646: Видання «Требника» Петра Могили, що кодифікував, зокрема, й великодні чини.
+- 1659: Публікація «Ключа розуміння» Іоаникія Ґалятовського у Києві (Лаврська друкарня).
+- 1676: Видання збірки проповідей «Огородок Марії Богородиці» Антонія Радивиловського.
+
+## Ключові факти та цитати
+- **Цитата 1 (Ґалятовський, про сивіл та Воскресіння):** «Третєго дня, кгды з мертвых Он повстанет. и свЂтлость єго науки настанет,. До небесного вознесется кгмаху. на оболоках, до горнєго даху.» (приклад барокового віршування в проповіді).
+- **Цитата 2 (Транквіліон-Ставровецький, загальна характеристика стилю):** Поєднання «простої мови» з високим богословським змістом, що робило складні догмати доступними для шляхти та міщанства.
+- **Символіка:** Використання природних метафор (весна, квіти, фенікс) для пояснення Воскресіння (Лазар Баранович, Антоній Радивиловський).
+- **Драма:** Шкільні драми (наприклад, пізніша «Воскресіння мертвих» Кониського) використовували алегоричні фігури (Віра, Надія, Любов) для театралізації догмату.
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ": [!context] — Бароковий оптимізм: Воскресіння як центральна подія, що перемагає страх смерті (vanitas), перетворюючи його на тріумф життя.
+- Section "Основний матеріал: I": [!decolonization] — Спалення книг Ставровецького у Москві як доказ богословської прірви між Києвом та Москвою.
+- Section "Основний матеріал: II": [!quote] — Цитування пророцтва сивіл у Ґалятовського як приклад ренесансного гуманізму та широкої ерудиції київських книжників.
+- Section "Основний матеріал: III": [!culture] — «Сад» Радивиловського: як українське бароко інтегрувало природу в богослов'я (на відміну від аскетичної візантійської традиції).
+- Section "Практика": [!history-bite] — Великодні вірші-орації, які спудеї читали по хатах (витоки вертепу).
+
+## Деколонізаційний контекст
+- **Imperial/Soviet myth:** «Спільна православна традиція» без розбіжностей; українська література XVII ст. як «схоластична» та «відірвана від життя».
+- **Ukrainian reality:** Київське християнство було відкритим до західної науки (латина, риторика, античні джерела), тоді як Московське православ'я було ізоляціоністським та ворожим до освіти (вважало київські книги «єретичними»). Спалення «Євангелія Учительного» у 1627 році — прямий доказ культурної війни.
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| «Євангеліє Учительне» | «Литовская ересь», небезпечна книга | Пам'ятка української богословської думки, що наближала Євангеліє до народу через живу мову. |
+| Барокова проповідь | «Схоластика», «католицький вплив» | Високе мистецтво риторики, синтез європейської освіченості та київської традиції. |
+| Проста мова в церкві | «Зіпсована» церковнослов'янська | Літературна мова, що формувала національну ідентичність та робила релігію зрозумілою. |
+
+## Section-Mapped Research Notes
+
+### Вступ: Воскресіння як тріумф українського бароко
+Центральне місце свята Великодня. Оптимістичний характер українського бароко. Концепція «світла» і «перемоги».
+
+### Основний матеріал: I — Кирило Транквіліон-Ставровецький: Слово і Вогонь
+Аналіз «Євангелія Учительного» (1619). Його структура. Конфлікт з консервативними колами та Москвою (1627). Значення живої мови.
+
+### Основний матеріал: II — Іоаникій Ґалятовський: Риторика «Ключа розуміння»
+Аналіз проповіді на Воскресіння з «Ключа розуміння» (1659). Структура проповіді (exordium, narratio). Використання світських джерел (сивіли, античні автори) для підтвердження догмату.
+
+### Основний матеріал: III — Антоній Радивиловський: Сад метафор
+Збірка «Огородок Марії Богородиці» (1676). Природна символіка Воскресіння (весна, пробудження землі). Гуманістичний вимір проповіді.
+
+### Основний матеріал: IV — Драма та візуальність: Театр смерті і життя
+Шкільна драма (згадка про «Воскресіння мертвих»). Гравюри (Ілія, стародруки) як візуальний коментар до текстів. Великодні вірші.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12353)
+✓ Message 12301 acknowledged
+✓ Message 12353 acknowledged

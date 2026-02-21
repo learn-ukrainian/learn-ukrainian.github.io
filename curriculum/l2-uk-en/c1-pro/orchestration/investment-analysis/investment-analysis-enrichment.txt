@@ -1,0 +1,272 @@
+✅ Message sent to Gemini (ID: 12330) [auto-acked: self-addressed]
+✓ Message 12330 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12330...
+📨 Message #12330
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-investment-analysis
+   Time: 2026-02-20T23:38:51.028780+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-pro-34
+level: C1-PRO
+sequence: 34
+slug: investment-analysis
+version: '2.0'
+title: Інвестиційний аналіз
+subtitle: Investment Analysis
+content_outline:
+- section: Розминка — Інвестиційна діяльність в Україні
+  points:
+  - Інвестиційний клімат та можливості
+  - 'Типи інвесторів: стратегічні, фінансові, венчурні'
+  - Роль інвестиційного аналітика
+- section: Due diligence
+  points:
+  - 'Фінансовий due diligence: аналіз звітності, показників'
+  - 'Юридичний due diligence: перевірка документів, ризиків'
+  - 'Операційний due diligence: бізнес-процеси, команда'
+  - Структура звіту due diligence
+- section: Оцінка вартості компанії
+  points:
+  - 'DCF (дисконтований грошовий потік): методологія'
+  - 'Порівняльний аналіз: мультиплікатори, компаніі-аналоги'
+  - 'Метод чистих активів: коли застосовувати'
+  - Премії та дисконти при оцінці
+- section: Інвестиційна комунікація
+  points:
+  - Investment memorandum — структура та зміст
+  - Презентація для інвесторів (pitch deck)
+  - Term sheet — ключові умови угоди
+  - Комунікація під час переговорів
+- section: Зразки інвестиційних документів
+  points:
+  - Зразок executive summary для investment memo
+  - Структура pitch deck
+  - Типові формулювання для інвестиційних переговорів
+- section: Практика — Інвестиційний аналіз
+  points:
+  - 'Завдання: Підготувати investment memorandum для компанії'
+  - 'Вимоги: опис бізнесу, фінансові показники, оцінка, ризики'
+  - Критерії оцінювання
+vocabulary_hints:
+  required:
+  - due diligence (комплексна перевірка)
+  - оцінка вартості (valuation)
+  - DCF (дисконтований грошовий потік)
+  - мультиплікатор (multiple)
+  - EBITDA
+  - term sheet (умови угоди)
+  - investment memorandum (інвестиційний меморандум)
+  - pitch deck (презентація для інвесторів)
+  recommended:
+  - IRR (внутрішня норма дохідності)
+  - NPV (чиста приведена вартість)
+  - exit strategy (стратегія виходу)
+  - runway (запас коштів)
+  - cap table (таблиця капіталізації)
+  - dilution (розмивання частки)
+activity_hints:
+- type: document-analysis
+  focus: Проаналізувати investment memorandum — оцінити структуру та повноту
+  items: 2
+- type: writing-task
+  focus: Написати executive summary для інвестиційного меморандуму
+  items: 1
+- type: fill-in
+  focus: Вставити правильну інвестиційну термінологію
+  items: 10
+- type: case-study
+  focus: Провести базову оцінку вартості компанії та обґрунтувати
+  items: 1
+- type: role-play
+  focus: Презентувати інвестиційну можливість потенційному інвестору
+  items: 1
+focus: professional
+pedagogy: ESP
+prerequisites:
+- c1-pro-33 (Фінтех та банківництво)
+connects_to:
+- c1-pro-35 (Корпоративне право)
+objectives:
+- Учень може використовувати інвестиційну термінологію у професійному контексті
+- Учень може готувати інвестиційні документи (memo, pitch deck)
+- Учень розуміє методи оцінки вартості компаній
+- Учень може комунікувати з інвесторами та партнерами
+grammar:
+- Конструкції для фінансового аналізу (За результатами аналізу... / Показник свідчить
+  про...)
+- Конструкції для оцінки (Справедлива вартість оцінюється в... / З урахуванням премії...)
+- Умовні конструкції для прогнозів (За умови зростання ринку... / У разі успішного
+  виходу...)
+register: офіційно-діловий
+phase: C1-PRO.3
+persona:
+  voice: Senior Specialist
+  role: Венчурний аналітик
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Інвестиційний аналіз
+
+## Використані джерела
+1. [Закон України «Про інвестиційну діяльність»](https://zakon.rada.gov.ua/laws/show/1560-12) — Основний нормативний акт, що визначає правові та економічні засади інвестиційної діяльності.
+2. [Дія.Бізнес — Гід з інвестицій](https://business.diia.gov.ua/) — Практичні поради щодо залучення фінансування, типів інвесторів та підготовки Pitch Deck.
+3. [ДСТУ 4163:2020](https://zakon.rada.gov.ua/rada/show/v0144774-20) — Державний стандарт України щодо оформлення організаційно-розпорядчої документації, обов'язковий для професійного діловодства.
+4. [Pro-Consulting: Структура інвестиційного меморандуму](https://pro-consulting.ua/ua/invest-memorandum) — Професійні вимоги до структури та змісту Investment Memo в українських реаліях.
+
+## Термінологічна база
+
+| Українська (норма) | Русизм/ненорма | English | Контекст вживання |
+|--------------------|---------------|---------|-------------------|
+| Комплексна перевірка | Дью-ділідженс | Due Diligence | Формальний звіт або етап угоди |
+| Оцінка вартості | Оцінка компанії | Valuation | Фінансове моделювання |
+| Перелік умов угоди | Терм-шит | Term Sheet | Передконтрактна документація |
+| Дисконтований грошовий потік | Дисконтований кеш-фло | DCF (Discounted Cash Flow) | Метод оцінки вартості |
+| Чиста приведена вартість | Чиста дисконтована вартість | NPV (Net Present Value) | Показник ефективності проекту |
+| Внутрішня норма дохідності | Внутрішня ставка рентабельності | IRR (Internal Rate of Return) | Аналіз прибутковості |
+| Розмивання частки | Дилюція | Dilution | Зміна капіталізації (Cap Table) |
+| Стратегія виходу | Екзит-стратегія | Exit Strategy | Планування завершення інвестиції |
+
+## Мовні норми та стандарти
+- **ДСТУ 4163:2020**: Визначає правила написання дат, реквізитів та підписів у ділових документах (наприклад, Pitch Deck або Investment Memo).
+- **Закон про інвестиційну діяльність**: Встановлює використання терміну «об'єкт інвестування» замість «інвестиційний проект» у юридичному контексті.
+- **Економічна граматика**: Використання конструкцій з прийменником «щодо» (звіт щодо перевірки) замість «по» (звіт по перевірці).
+
+## Аутентичні приклади
+1. [Investment Memo]: «Метою залучення інвестицій є масштабування операційної діяльності та вихід на ринки ЄС. Прогнозний обсяг капітальних вкладень становить...»
+2. [Term Sheet]: «Цей документ не створює юридичних зобов'язань для Сторін, за винятком положень про конфіденційність (Confidentiality) та виключне право на переговори (Exclusivity).»
+3. [Financial Review]: «За результатами фінансової перевірки (Due Diligence) не було виявлено критичних податкових обтяжень, проте існують ризики щодо дебіторської заборгованості.»
+
+## Типові помилки
+1. ❌ **неустойка** → ✅ **забезпека / штрафні санкції** — в українському фінансовому праві термін «неустойка» вважається застарілим росіянізмом.
+2. ❌ **діючий закон** → ✅ **чинний закон** — активні дієприкметники теперішнього часу на -учий/-ючий не є нормативними.
+3. ❌ **приймати міри** → ✅ **вживати заходів** — лексична помилка, калькована з російської мови.
+4. ❌ **рахувати за доцільне** → ✅ **вважати за доцільне** — дієслово «рахувати» вживається лише для обчислень.
+5. ❌ **по результатам аналізу** → ✅ **за результатами аналізу** — неправильне вживання прийменника.
+
+## Engagement Hooks (mapped to sections)
+- Section "Розминка — Інвестиційна діяльність в Україні": [!pro-tip] — Різниця між стратегічним інвестором (націленим на ринок) та фінансовим (націленим на прибуток).
+- Section "Due diligence": [!common-error] — Не плутайте Due Diligence (комплексну перевірку) з аудитом (перевіркою звітності).
+- Section "Оцінка вартості компанії": [!language-note] — Використання терміну «справедлива вартість» (fair value) замість «ринкова ціна» у звітах оцінки.
+- Section "Інвестиційна комунікація": [!context] — Особливості українських стартапів у переговорах з іноземними венчурними фондами.
+
+## Section-Mapped Research Notes
+
+### Розминка — Інвестиційна діяльність в Україні
+Акцент на інвестиційному кліматі (investment climate), який в Україні визначається ризиками безпеки та можливостями деривативів. Аналітик (investment analyst) має володіти навичками декомпозиції ризиків.
+
+### Due diligence
+Вивчення трьох китів: Financial (фінансова стійкість), Legal (право власності, інтелектуальна власність), та Operational (ефективність процесів). В Україні особлива увага приділяється юридичній перевірці бенефіціарів (UBO).
+
+### Оцінка вартості компанії
+Методи: DCF (Discounted Cash Flow), Multiples (аналіз за аналогами), Asset-based approach (метод чистих активів). Важливо враховувати Country Risk Premium для України при дисконтуванні.
+
+### Інвестиційна комунікація
+Pitch Deck має бути лаконічним (до 15 слайдів). Investment Memorandum — це детальний фоліо (30+ сторінок). Term Sheet — це "дорожня карта" угоди.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12391)
+✓ Message 12330 acknowledged
+✓ Message 12391 acknowledged

@@ -1,0 +1,27 @@
+{
+  "track": "b2-hist",
+  "slug": "greeks-crimea-olbia",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T10:52:10Z",
+      "task_id": "v3-greeks-crimea-olbia-pA",
+      "mode": "meta-only"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-19T10:52:10Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-19T10:52:11Z",
+      "note": "adopted-existing"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-19T10:52:12Z",
+      "attempts": 1
+    }
+  }
+}

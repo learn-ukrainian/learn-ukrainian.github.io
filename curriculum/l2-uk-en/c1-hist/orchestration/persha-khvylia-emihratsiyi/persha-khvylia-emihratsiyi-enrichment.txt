@@ -1,0 +1,311 @@
+✅ Message sent to Gemini (ID: 12734) [auto-acked: self-addressed]
+✓ Message 12734 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12734...
+📨 Message #12734
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-persha-khvylia-emihratsiyi
+   Time: 2026-02-20T23:41:55.874463+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-hist-064
+level: c1-hist
+sequence: 64
+version: '1.0'
+title: 'Перша хвиля еміграції: Трудова (1880-1914)'
+focus: history
+pedagogy: seminar
+objectives:
+- 'Analyze the causes and consequences of перша хвиля еміграції: трудова (1880-1914)'
+- Evaluate the historical significance of чому виїжджали?
+content_outline:
+- section: Вступ — Чому виїжджали?
+  subsections:
+  - Економічні причини — земельний голод
+  - Перенаселення Галичини
+  - Тиск імперій
+  - Структура модуля
+- section: Галицькі селяни в дорозі
+  subsections:
+  - Хто виїжджав — соціальний портрет
+  - Маршрути — порти, кораблі
+  - Агенти еміграції — реклама «нового світу»
+  - Ілюзії і реальність
+- section: Канада — «безкрайні прерії»
+  subsections:
+  - Сіфтон і «чоловіки в кожухах»
+  - Заселення прерій
+  - Блокові поселення
+  - Важке життя — землянки, холод
+  - Перші церкви і школи
+- section: США — вугільні копальні
+  subsections:
+  - Пенсільванія — шахтарські містечка
+  - Важка праця — умови
+  - Робітничий рух
+  - Міські громади — Нью-Йорк, Чикаго
+- section: Південна Америка
+  subsections:
+  - Бразилія — кавові плантації
+  - Аргентина — пампаси
+  - Менші хвилі — Парагвай, Уругвай
+  - Збереження vs. асиміляція
+- section: Формування громад
+  subsections:
+  - Церква як центр
+  - Читальні та «Просвіти»
+  - Преса — перші газети
+  - Мова — збереження чи втрата?
+- section: Підсумок
+  subsections:
+  - Масштаби — скільки виїхало
+  - Закладення фундаменту
+  - Підготовка до політичної хвилі
+vocabulary:
+- еміграція
+- діаспора
+- трудова міграція
+- поселення
+- громада
+- асиміляція
+- прерії
+- землянка
+- шахтар
+- читальня
+- агент еміграції
+- блокове поселення
+- етнічна ідентичність
+- репатріація
+- тимчасова міграція
+activities:
+- type: critical-analysis
+  focus: Map emigration from specific Galician regions
+- type: comparative-study
+  focus: Compare Canadian vs. American settlement patterns
+- type: critical-analysis
+  focus: Analyze emigrant letters home
+- type: critical-analysis
+  focus: How Ukrainian institutions formed in diaspora
+- type: essay-response
+  focus: Чому саме галичани становили більшість першої хвилі?
+sources:
+- name: Українська діаспора (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Українська_діаспора
+  type: reference
+  notes: General overview
+- name: Українці в Канаді (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Українці_в_Канаді
+  type: reference
+  notes: Canadian settlement
+- name: Українці в США (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Українці_в_США
+  type: reference
+  notes: American settlement
+- name: Еміграція з України (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Еміграція_з_України
+  type: reference
+  notes: Emigration waves
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
+persona:
+  voice: Academic Historiographer
+  role: Migration Studies Scholar
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Перша хвиля еміграції: Трудова (1880-1914)
+
+## Використані джерела
+1. [Енциклопедія Сучасної України (ЕСУ) — Еміграція](https://esu.com.ua/article-17822) — Академічний огляд хвиль та причин.
+2. [Історична Правда — "Як русини стали канадійцями"](https://www.istpravda.com.ua/articles/2011/09/7/54238/) — Деталі про Пилипіва, Єлиняка та перші кроки.
+3. [Збруч — "Листи з Бразилії"](https://zbruc.eu/node/40543) — Першоджерела та аналіз "бразильської гарячки".
+4. [Локальна Історія — Йосип Олеськів](https://localhistory.org.ua/) — Роль Олеськіва в перенаправленні потоку до Канади.
+5. [Diasporiana — Про вільні землі](https://diasporiana.org.ua/) — Тексти брошур Олеськіва.
+
+## Хронологія
+- **1877**: Початок масової еміграції до США (шахтарі Пенсільванії).
+- **1891 (7 вересня)**: Прибуття Івана Пилипіва та Василя Єлиняка до Канади (порт Квебек/Монреаль, потім Альберта).
+- **1893 (15 вересня)**: Вихід першого номера газети «Свобода» в Джерсі-Сіті (США).
+- **1895 (липень)**: Поїздка Йосипа Олеськіва до Канади для інспекції земель.
+- **1895-1896**: Пік "бразильської гарячки" (виїзд ~11,000 селян, висока смертність).
+- **1896**: Публікація брошур Олеськіва «Про вільні землі» та «О еміграції».
+- **1897**: Будівництво першої української церкви в Канаді (теребовлянці в місцевості "Зірка", Альберта).
+- **1899**: Прибуття Кирила Геника до Вінніпега, де він стає імміграційним агентом.
+- **1912**: Призначення Никити Будки першим греко-католицьким єпископом у Канаді.
+
+## Ключові факти та цитати
+- **Іван Пилипів (лист додому)**: "Лишай гори і доли і ходи сюди... Буду мати тамки хліб, вмію писати і читати... Зараз поїду".
+- **Кліффорд Сіфтон (міністр внутрішніх справ Канади)**: "Я думаю, що витривалий селянин у кожусі, народжений на землі, чиї прадіди були фермерами протягом десяти поколінь, з гладкою дружиною і півдюжиною дітей — це саме та якість, яка нам потрібна".
+- **Йосип Олеськів (з брошури "Про вільні землі")**: Заклик не їхати до Бразилії, де "люди гинуть як мухи", а обирати Канаду, де клімат і земля подібні до рідних.
+- **Іван Франко ("Лист із Бразилії")**: Опис трагедії емігрантів: "По морі ми плили без злих пригод / Лиш хорував погано весь народ / На морі вмерло дев'ять душ народу / Їх замість погребу метали в воду".
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ — Чому виїжджали?": [!context] — Аграрне перенаселення Галичини: на 1 кв. км припадало понад 100 осіб, "клаптикові" господарства по 1-2 морги.
+- Section "Галицькі селяни в дорозі": [!myth-buster] — Міф про "темних селян": Пилипів та інші мали освіту і свідомо шукали інформацію, це був раціональний вибір, а не сліпа втеча.
+- Section "Канада — «безкрайні прерії»": [!quote] — Цитата Кліффорда Сіфтона про "селян у кожухах" (stalwart peasant in a sheep-skin coat) — як расистський стереотип став символом витривалості.
+- Section "США — вугільні копальні": [!history-bite] — Українці в Пенсільванії часто міняли прізвища на "Smith" або "Miller", щоб отримати кращу роботу на шахті, але в церкві залишалися українцями.
+- Section "Південна Америка": [!warning] — "Бразильська гарячка": агенти обіцяли "золоті гори", а висаджували людей у джунглях без інструментів; смертність дітей сягала 50%.
+- Section "Формування громад": [!culture] — "Народні доми" та "Читальні" будувалися раніше за власні хати — пріоритет духовної спільноти над матеріальним комфортом.
+
+## Деколонізаційний контекст
+- **Imperial Myth**: Українці виїжджали, бо були "нездатні" господарювати або були "надлишком" імперії.
+- **Ukrainian Reality**: Еміграція була актом **агентності**. Селяни відмовлялися пролетаризуватися (ставати наймитами в містах імперії) і їхали за океан, щоб **залишитися господарями на власній землі**. Вони експортували свою ідентичність і соціальну структуру (церква, громада), створюючи "екстериторіальну Україну".
+
+## Contested Terms
+| Concept | Imperial/Polish framing | Ukrainian framing |
+|---------|-------------------------|-------------------|
+| Назва народу | "Ruthenians" (русини), "Little Russians" (малороси), "Austrians" (в документах) | **Українці** (термін утверджується саме в діаспорі через пресу і церкву на поч. XX ст.) |
+| Статус емігрантів | Дешева робоча сила, "Bydło" (у польській оптиці), "Sheepskins" (Канада) | **Піонери**, будівничі нації, фермери-власники |
+| Причина виїзду | Бідність, неграмотність | **Земельний голод** через колоніальну політику імперій (латифундії польської шляхти) |
+
+## Section-Mapped Research Notes
+
+### Вступ — Чому виїжджали?
+- **Економіка**: Дроблення господарств (наслідок скасування панщини 1848 р. без достатнього наділення землею). 80% селян мали менше 5 га землі. Лихварство (експлуатація).
+- **Політика**: Відсутність політичних прав у Австро-Угорщині, домінування польської адміністрації в Галичині.
+
+### Галицькі селяни в дорозі
+- **Соціальний портрет**: Переважно молоді чоловіки спочатку, потім сім'ї. Висока релігійність.
+- **Агенти**: Роль пароплавних агентів (Гамбург, Бремен), які вербували людей, часто обманюючи. Ціна квитка — продаж всього майна (корова, поле).
+
+### Канада — «безкрайні прерії»
+- **Йосип Олеськів**: Ключова фігура. Його візит 1895 р. і домовленості з урядом Канади. Брошура "Про вільні землі" як "біблія" емігранта.
+- **Блокові поселення**: Українці селилися "гніздами" (block settlements) у лісостеповій зоні (Альберта, Саскачеван, Манітоба), відтворюючи українське село. Це дозволило зберегти мову.
+- **Землянки (burdeis)**: Перше житло в преріях. Виживання взимку.
+
+### США — вугільні копальні
+- **Специфіка**: Індустріальна еміграція. Пенсільванія (антрацит). Робота важча, ніж на землі, але "живі гроші".
+- **Тимчасовість**: Багато планували заробити і повернутися купити землю вдома (на відміну від Канади, де їхали назавжди).
+- **Організації**: Український Народний Союз (1894) — перша карат-допомогова організація ("братство").
+
+### Південна Америка
+- **Бразилія**: Штат Парана. Кліматичний шок. Відсутність інфраструктури. "Прудентополіс" — український центр.
+- **Аргентина**: Провінція Місьйонес. Більш сприятливі умови, ніж у Бразилії, але все одно важке освоєння джунглів.
+
+### Формування громад
+- **Церква**: Конфлікт з римо-католицькою ієрархією (США, Канада), яка не визнавала одружених священників. Зародження УГКЦ в діаспорі.
+- **Читальні**: Роль "Просвіти". Боротьба з алкоголізмом і неграмотністю.
+- **Школа**: Боротьба за двомовні школи (Манітобське шкільне питання).
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12771)
+✓ Message 12734 acknowledged
+✓ Message 12771 acknowledged

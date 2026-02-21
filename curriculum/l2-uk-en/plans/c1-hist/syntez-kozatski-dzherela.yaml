@@ -1,4 +1,3 @@
----
 module: c1-hist-028
 level: c1-hist
 sequence: 28
@@ -10,22 +9,19 @@ objectives:
 - 'Analyze the causes and consequences of синтез: голоси козацької доби'
 - Evaluate the historical significance of що ми вивчили
 content_outline:
-- section: "Вступ — Що ми вивчили"
-  words: 457
+- section: Вступ — Що ми вивчили
   subsections:
   - Огляд модулів 19-27
   - Різноманітність козацьких джерел
   - Мета синтезу — системний погляд
 - section: Типологія козацьких джерел
-  words: 686
   subsections:
   - Літописи — три головні
   - Документи — універсали, статті
   - Листування — дипломатичне, приватне
   - Правові документи — Конституція, суди
   - Таблиця порівняння
-- section: "Голоси епохи — хто говорить?"
-  words: 800
+- section: Голоси епохи — хто говорить?
   subsections:
   - Старшина — домінуючий голос
   - Рядові козаки — де їхній голос?
@@ -33,7 +29,6 @@ content_outline:
   - Жінки — відсутні
   - Інші — поляки, росіяни
 - section: Що джерела кажуть vs. що замовчують
-  words: 686
   subsections:
   - Героїзація vs. критика
   - Внутрішні конфлікти — приховані
@@ -41,27 +36,23 @@ content_outline:
   - Соціальні протиріччя
   - Реконструкція замовчаного
 - section: Методологічні уроки
-  words: 571
   subsections:
   - Порівняння джерел — ключ до правди
   - Критика упередженості
   - Польські джерела — альтернатива
   - Російські джерела — інша перспектива
   - Комплексний підхід
-- section: "Практикум — комплексний аналіз"
-  words: 571
+- section: Практикум — комплексний аналіз
   subsections:
   - Одна подія — кілька джерел
   - 'Наприклад: Полтава в різних джерелах'
   - Що збігається, що суперечить
   - Реконструкція події
 - section: Підсумок
-  words: 229
   subsections:
   - Від середньовіччя до модерну
   - Чек-ліст для козацьких джерел
   - Підготовка до XIX-XX ст.
-word_target: 4000
 vocabulary:
 - синтез
 - типологія
@@ -82,18 +73,18 @@ activities:
 - type: essay-response
   focus: Create comprehensive source matrix for modules 19-27
 - type: critical-analysis
-  focus: "One event from 4+ sources — compare"
+  focus: One event from 4+ sources — compare
 - type: critical-analysis
   focus: What social groups are missing from sources?
 - type: essay-response
   focus: Чий голос домінує в козацьких джерелах і чому?
 sources:
 - name: Козацькі літописи (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Козацькі_літописи"
+  url: https://uk.wikipedia.org/wiki/Козацькі_літописи
   type: reference
   notes: Overview
 - name: Джерелознавство
-  url: "https://uk.wikipedia.org/wiki/Джерелознавство"
+  url: https://uk.wikipedia.org/wiki/Джерелознавство
   type: reference
   notes: Source studies
 vocabulary_hints:
@@ -112,7 +103,9 @@ activity_hints:
   items: 4
 - type: essay-response
   focus: Критичний аналіз
-  word_target: 300
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Hetmanate Source Specialist

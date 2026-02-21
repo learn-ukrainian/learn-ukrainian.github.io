@@ -1,0 +1,83 @@
+module: a2-27
+level: A2
+sequence: 27
+slug: because-and-although
+version: '2.0'
+title: Because and Although
+subtitle: Linking Ideas Logically
+content_outline:
+- section: Introduction / Вступ
+  points:
+  - Moving from simple to complex logic — aligning with State Standard §4.4.2 requirements
+    for causal (тому що, бо) and adversarial (але) sentences — State Standard lines
+    1403-1416
+  - The 'Glue' of language — moving beyond simple sentences to connected speech
+- section: Presentation / Презентація
+  points:
+  - '''Cause: neutral (тому що), informal (бо), formal (оскільки)'' — distinguish
+    registers clearly; note word order preference for main clause first with ''тому
+    що'' (e.g., ''Я не прийшов, тому що хворів'') — learner error: ''Because I was
+    sick...'' -> ''Тому що я хворів...'''
+  - '''Concession: хоча, незважаючи на'' — ''Хоча'' introduces a counter-expectation
+    (e.g., ''Хоча я втомився, я піду'')'
+  - '''Subtle Causes: завдяки (positive) vs через (negative)'' — learner error: using
+    ''через'' for positive outcomes (like ''thanks to''); cultural hook: using ''завдяки''
+    for negative events sounds sarcastic — Fix: Positive = Завдяки, Negative = Через'
+  - 'Punctuation: The Mandatory Comma — learner error: ''Comma Phobia''; fix: drill
+    the comma as an inseparable part of the conjunction ('', тому що'', '', бо'')
+    — Clauses MUST be separated by commas'
+  - 'Logic of ''Why?'' in different registers — folk wisdom: ''І трясця не бере без
+    причини'' (Even the fever doesn''t strike without a reason)'
+- section: Practice / Практика
+  points:
+  - Causal chain exercises — practice linking events with 'через' (negative) and 'завдяки'
+    (positive) — use collocations 'через погоду', 'завдяки підтримці'
+  - 'Argument building drills — using ''бо'' for quick spoken reasons and ''оскільки''
+    for formal arguments — example: ''Не йди туди, бо там холодно'' vs ''Оскільки
+    ви тут...'''
+- section: Dialogues / Діалоги
+  points:
+  - Explaining a missing meeting or surprising result — contrast excuses ('через затори')
+    with achievements ('завдяки допомозі') — incorporate phrase 'Я запізнився, тому
+    що...'
+focus: grammar
+pedagogy: PPP
+objectives:
+- Learner can connect ideas using causal conjunctions
+- Learner can express contrast using 'хоча' and 'але'
+- Learner can build complex sentences
+- Learner can explain reasons and consequences
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Conjunctions
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Functional logic and conjunction requirements for A2
+- name: Syntax of Modern Ukrainian - Complex Sentences
+  url: https://uk.wikipedia.org/wiki/Складне_речення
+  type: reference
+  notes: Rules for causal and concessive clauses
+immersion: 60-75% Ukrainian
+phase: A2.2
+persona:
+  voice: Encouraging Cultural Guide
+  role: Investigative Journalist
+vocabulary_hints:
+  required:
+  - 'тому що (because) — High frequency, neutral; Collocation: ''Це сталося, тому
+    що...'', ''Я запізнився, тому що...'''
+  - 'бо (because/for) — Spoken/Casual; Collocation: ''Не йди туди, бо там холодно'',
+    ''Я їм, бо голодний'''
+  - 'через (because of/due to) — Preposition for negative/neutral causes; Collocation:
+    ''Через погоду'', ''через помилку'''
+  - 'завдяки (thanks to) — Preposition for positive causes; Collocation: ''Завдяки
+    тобі'', ''завдяки підтримці'''
+  - 'хоча (although) — Concession; Collocation: ''Хоча я втомився, я піду'', ''Хоча
+    це дорого...'''
+  - але (but) — Standard adversarial conjunction (State Standard §4.4.2)
+  recommended:
+  - 'оскільки (since/as) — Formal/Written; Collocation: ''Оскільки ви тут...'', ''Оскільки
+    це важливо...'''
+  - 'причина (reason) — Key noun for logic; idiomatic: ''без причини'' (folk wisdom)'
+  - наслідок (consequence) — Useful for explaining results
+word_target: 3000

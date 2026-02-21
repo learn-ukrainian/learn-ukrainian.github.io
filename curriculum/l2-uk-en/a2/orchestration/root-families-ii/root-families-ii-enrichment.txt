@@ -1,0 +1,296 @@
+✅ Message sent to Gemini (ID: 10219) [auto-acked: self-addressed]
+✓ Message 10219 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10219...
+📨 Message #10219
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-root-families-ii
+   Time: 2026-02-20T20:03:20.109543+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: a2-42
+level: A2
+sequence: 42
+slug: root-families-ii
+version: '2.0'
+title: Root Families II
+subtitle: Communication and Thought
+content_outline:
+- section: Introduction / Вступ
+  points:
+  - 'The Language of the Mind: Roots of thought and speech — alignment with State
+    Standard §2 (Expressing thoughts/beliefs) and §4.5.1 (Synonyms)'
+  - 'The 4 Mind-Roots: дум-, говор-, мов-, слух- — foundational cognitive verbs for
+    A2 communication'
+- section: Presentation / Презентація
+  points:
+  - 'The дум- Family: Thoughts, diaries, and logic — collocations: «на мою думку»,
+    «я думаю, що...»'
+  - 'The говор-/мов- Family: The art of speech and conversation — cultural hook: «мова»
+    (language) vs «язик» (tongue/organ); learner error: confusing «говорити» (process)
+    vs «казати» (content)'
+  - 'The слух- Family: Listening, hearing, and obeying — cultural hook: etymological
+    link between «слухати» (to listen) and «слухняний» (obedient); learner error:
+    «слухати» (active) vs «чути» (passive)'
+  - 'Semantic Shifts: How "мова" becomes "розмова" — visual connection between roots
+    (гово-ри-ти vs роз-мов-ля-ти); «роз-» prefix as exchange (conversation)'
+  - 'Prefix Power: How "від-" changes "мов-" to "відмова" — etymology: «від-» (away/back)
+    + «мова» (speech) = refusal (speaking back)'
+- section: Practice / Практика
+  points:
+  - Root family sorting — focus on distinguishing synonyms like «говорити»/«розмовляти»
+    and avoid confusion with «казати»
+  - '''Build the Thought'' derivative challenge — deriving nouns from verbs (e.g.,
+    дум- → думка)'
+- section: Dialogues / Діалоги
+  points:
+  - 'A deep conversation: Discussing thoughts and opinions — use of cognitive verbs
+    «я думаю», «я вважаю» and reaction phrases «цікава думка»'
+focus: grammar
+pedagogy: PPP
+objectives:
+- Learner can identify communication and thought root families
+- Learner can derive verbs and nouns from abstract roots
+- Learner can understand the difference between 'мова' and 'розмова' roots
+- Learner can build a network of communication vocabulary
+grammar:
+- common roots (дум-, говор-, мов-, слух-)
+- secondary prefix + root combinations
+- identifying semantic clusters
+module_type: word-formation
+sources:
+- name: Ukrainian Word Formation - Communication
+  url: https://uk.wikipedia.org/wiki/Словотворення_в_українській_мові
+  type: reference
+  notes: Focus on communicative root expansion
+immersion: 60-75% Ukrainian
+phase: A2.4
+persona:
+  voice: Encouraging Cultural Guide
+  role: Genealogist
+vocabulary_hints:
+  required:
+  - 'думати (to think) — collocations: думати про (+ Acc), я думаю, що...'
+  - 'думка (thought/opinion) — collocations: цікава думка, на мою думку'
+  - 'говорити (to speak) — usage: говорити українською (no prep), говорити про (+
+    Acc)'
+  - 'розмовляти (to converse) — collocations: розмовляти телефоном, ми розмовляли
+    про...'
+  - 'мова (language) — cultural note: never use «язик» for language'
+  - 'слухати (to listen) — collocations: слухати музику, уважно слухати'
+  - 'слухняний (obedient) — mnemonic: he who listens'
+  - 'відмова (refusal) — etymology: speaking back/away'
+  recommended:
+  - 'мовчання (silence) — proverb: «Слово – срібло, мовчання – золото»'
+  - вважати (to consider/believe) — synonym for «думати» in opinions
+word_target: 3000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Root Families II
+
+## State Standard Reference
+§4.5.1: "Стилістичні засоби лексики: антоніми (говорити – мовчати), синоніми (казати, говорити, розповідати)."
+§2 (Каталог А): "Виражати свої думки й переконання: Я думаю / вважаю..."
+Alignment: This module directly addresses the A2 requirement to distinguish synonyms (*говорити/казати*) and use basic cognitive verbs (*думати*), while expanding vocabulary through root families as a memory aid for the required lexical growth.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| **думати** (to think) | High (Core A1/A2) | думати про (+ Acc), я думаю, що... |
+| **думка** (thought/opinion) | High | цікава думка, на мою думку, гарна думка |
+| **говорити** (to speak) | High | говорити українською, говорити про (+ Acc), говорити з (+ Instr) |
+| **розмовляти** (to converse) | High | розмовляти телефоном, ми розмовляли про... |
+| **мова** (language) | Very High | українська мова, рідна мова, іноземна мова |
+| **слухати** (to listen) | High | слухати музику, слухати маму, уважно слухати |
+| **слухняний** (obedient) | Medium (A2) | слухняна дитина, слухняний пес (Connect: "he who listens") |
+| **відмова** (refusal) | Medium (B1 bridge) | отримати відмову (Etymology: "speaking away/back") |
+
+## Cultural Hooks
+1. **Silence is Golden**: The proverb *"Слово – срібло, мовчання – золото"* parallels English but is very active in Ukrainian culture.
+2. **"Mova" vs "Yazyk"**: A critical cultural distinction. *Язик* is ONLY the physical organ (tongue). *Мова* is the language. Confusing them (e.g., "український язик") is a major error and sounds disrespectful or uneducated (surzhyk).
+3. **The Obedient Listener**: The etymological link between *слухати* (to listen) and *слухняний* (obedient) reflects a cultural value: to be good is to "hear" your elders.
+
+## Common Learner Errors
+1. **Говорити vs. Казати**:
+    *   Error: *Він казав по-українськи.* (He said in Ukrainian).
+    *   Correction: *Він говорив українською.*
+    *   Rule: *Говорити* = process/ability (speak/talk); *Казати* = content/message (say/tell).
+2. **Слухати vs. Чути**:
+    *   Error: *Я не слухав тебе.* (When meaning "I didn't hear you").
+    *   Correction: *Я не чув тебе.*
+    *   Rule: *Слухати* = active (listen); *Чути* = passive (hear).
+3. **Language Name**:
+    *   Error: *Я люблю український язик.*
+    *   Correction: *Я люблю українську мову.*
+    *   Why: *Язик* is the body part (beef tongue).
+
+## Cross-References
+- **Builds on**: A1 basic verbs (*читати, писати*), A2 Cases (Instrumental for *з ким?*, Accusative for *про що?*).
+- **Prepares for**: B1 Word Formation (deverbal nouns *-ння*), B1 Communication topics.
+- **Connects to**: *B1.1-5 Metalanguage Bridge* (using *мова* roots to explain grammar terms like *іменник* vs *дієслово* is not relevant here, but general linguistic awareness is).
+
+## Notes for Content Writing
+- **The "Mo" Bridge**: Highlight the visual connection: *гово-ри-ти* vs *роз-мов-ля-ти*. They look different but share the "speech" function.
+- **Prefix Logic**: Keep it simple. *Роз-* = apart/exchange (conversation is exchanging words). *Від-* = away/back (refusal is speaking back/away).
+- **Listening/Obedience**: Use the *слухняний* example to show how "roots contain logic" – this is a huge "aha!" moment for learners.
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 450
+  points:
+  - "The Language of the Mind: Introduction to cognitive root families — alignment with State Standard §2 (Expressing thoughts/beliefs) and §4.5.1 (Synonyms)."
+  - "Overview of the 4 core Mind-Roots: дум- (thought), говор- (speech), мов- (language/speech), and слух- (hearing/listening) as foundational networks for A2 communication."
+  - "Motivation: Explaining how 'roots contain logic' through the connection between 'listening' and 'obedience' as a cultural memory aid."
+- section: "Презентація (Presentation)"
+  words: 900
+  points:
+  - "The дум- Family: Focus on 'думати' (process) vs 'вважати' (opinion). Key collocations: «на мою думку», «я думаю, що...», and «гарна думка»."
+  - "The говор-/мов- Family: The 'Mo' Bridge — visual connection between 'говорити' and 'розмовляти'. Explanation of prefix «роз-» as exchange (conversation as an exchange of words)."
+  - "The слух- Family: Focus on the active nature of 'слухати' (to listen) and the cultural etymology of 'слухняний' (obedient/he who listens)."
+  - "Prefix Logic: How «від-» changes «мов-» to «відмова» — literal meaning 'speaking away/back' as a refusal."
+  - "Secondary derivatives: Introduction to 'мова' (language) as a central concept in the 'мов-' family."
+- section: "Культурний контекст та лексичні нюанси (Cultural Context and Lexical Nuances)"
+  words: 700
+  points:
+  - "The 'Mova' vs 'Yazyk' Distinction: Critical cultural rule — 'язик' is ONLY the physical organ (body part), whereas 'мова' is the language. Error alert: 'український язик' sounds like a food item (beef tongue)."
+  - "Proverb Analysis: «Слово – срібло, мовчання – золото» (Speech is silver, silence is gold) — exploring the 'мовчання' derivative in the 'мов-' family."
+  - "Process vs. Result: Distinction between 'говорити' (the process of speaking/ability) and 'казати' (the content/delivery of a message), aligned with Standard §4.5.1."
+- section: "Практика та корекція помилок (Practice and Error Correction)"
+  words: 600
+  points:
+  - "Root Family Sorting: Distinguishing semantic clusters of 'thought' vs 'speech' vs 'listening'. Drill for synonyms mentioned in research (казати, говорити, розповідати)."
+  - "Error Correction Lab: Identifying and fixing common learner slips: 'Він казав по-українськи' vs 'Він говорив українською'; 'Я не слухав тебе' vs 'Я не чув тебе' (active vs passive)."
+  - "'Build the Thought' Challenge: Deriving nouns from verbs (дум- → думка, мов- → розмова, від-мов- → відмова) to reinforce word-formation patterns."
+- section: "Діалоги та підсумок (Dialogues and Summary)"
+  words: 350
+  points:
+  - "A Deep Conversation: Dialogues discussing thoughts and opinions using cognitive verbs 'я думаю', 'я вважаю' and reaction phrases 'цікава думка'."
+  - "Refusal Scenario: Roleplay involving a polite 'відмова' (refusal) using 'мова' roots, integrating the instrumental case (з ким?) and accusative (про що?)."
+  - "Summary: Reviewing how root families serve as memory anchors for A2 lexical growth."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "думати (to think) — high frequency; collocations: думати про (+ Acc), я думаю, що..."
+  - "думка (thought/opinion) — high frequency; collocations: цікава думка, на мою думку, гарна думка"
+  - "говорити (to speak) — focus on process/ability; usage: говорити українською (no prep), говорити про (+ Acc)"
+  - "розмовляти (to converse) — 'роз-' prefix implies exchange; collocations: розмовляти телефоном, ми розмовляли про..."
+  - "мова (language) — cultural note: never use 'язик' for language; collocations: рідна мова, іноземна мова"
+  - "слухати (to listen) — active process; collocations: слухати музику, слухати маму, уважно слухати"
+  - "слухняний (obedient) — mnemonic: 'he who listens'; collocations: слухняна дитина"
+  - "відмова (refusal) — etymology: 'speaking back/away'; collocation: отримати відмову"
+  - "казати (to say/tell) — focus on content/message; used for reporting speech"
+  recommended:
+  - "мовчання (silence) — derivative of 'мов-'; proverb: «Слово – срібло, мовчання – золото»"
+  - "вважати (to consider/believe) — high frequency for expressing formal opinions; synonym for 'думати'"
+  - "чути (to hear) — passive counterpart to 'слухати'; common source of learner confusion"
+  - "розмова (conversation) — noun derived from 'розмовляти'; focus on 'роз-' prefix logic"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4492 chars)
+✅ Message sent to Claude (ID: 10226)
+✓ Message 10226 acknowledged
+   Auto-acknowledged reply #10226 (stdout delivery — no inbox accumulation)
+✓ Message 10219 acknowledged

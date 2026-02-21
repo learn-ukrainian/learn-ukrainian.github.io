@@ -1,4 +1,3 @@
----
 module: c1-hist-092
 level: c1-hist
 sequence: 92
@@ -10,15 +9,13 @@ objectives:
 - 'Analyze the causes and consequences of 1991: чому 90% сказали «так»?'
 - Evaluate the historical significance of неймовірний результат
 content_outline:
-- section: "Вступ — Неймовірний результат"
-  words: 457
+- section: Вступ — Неймовірний результат
   subsections:
   - 90.32% за незалежність
   - Навіть Крим — 54%
   - Чому такий результат
   - Структура модуля
 - section: Що означала незалежність
-  words: 686
   subsections:
   - Для національно свідомих
   - Для партійної еліти
@@ -26,21 +23,18 @@ content_outline:
   - Для селян
   - Різні мотивації — один результат
 - section: Економічний аргумент
-  words: 686
   subsections:
   - «Годі годувати Москву»
   - Багата Україна — бідний СРСР
   - Сподівання на процвітання
   - Що реально було
 - section: Демократичний аргумент
-  words: 571
   subsections:
   - СРСР — не демократія
   - Незалежність = свобода
   - Європейський вибір — навіть тоді
   - Рух і перебудова
 - section: Регіональний аналіз
-  words: 686
   subsections:
   - Захід — 95%+
   - Центр — 90%+
@@ -48,18 +42,15 @@ content_outline:
   - Крим — 54%
   - Чому різниця, але скрізь «так»
 - section: Що пішло не так після
-  words: 571
   subsections:
   - Економічна криза 1990-х
   - Невиправдані очікування
   - Але незалежність — зберегли
 - section: Підсумок
-  words: 343
   subsections:
   - 1991 — поворотний момент
   - Легітимність незалежності
   - Перехід до порівняння революцій
-word_target: 4000
 vocabulary:
 - референдум
 - незалежність
@@ -78,7 +69,7 @@ vocabulary:
 - консенсус
 activities:
 - type: critical-analysis
-  focus: "Different groups, different reasons for \"yes\""
+  focus: Different groups, different reasons for "yes"
 - type: critical-analysis
   focus: Map and analyze regional voting patterns
 - type: critical-analysis
@@ -89,15 +80,15 @@ activities:
   focus: Чому навіть Крим проголосував за незалежність у 1991?
 sources:
 - name: Всеукраїнський референдум 1991 (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Всеукраїнський_референдум_(1991)"
+  url: https://uk.wikipedia.org/wiki/Всеукраїнський_референдум_(1991)
   type: reference
   notes: Referendum data
 - name: Акт проголошення незалежності (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Акт_проголошення_незалежності_України"
+  url: https://uk.wikipedia.org/wiki/Акт_проголошення_незалежності_України
   type: reference
   notes: Declaration context
 - name: Розпад СРСР (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Розпад_СРСР"
+  url: https://uk.wikipedia.org/wiki/Розпад_СРСР
   type: reference
   notes: USSR collapse
 vocabulary_hints:
@@ -116,7 +107,9 @@ activity_hints:
   items: 4
 - type: essay-response
   focus: Критичний аналіз
-  word_target: 300
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Political Science Analyst

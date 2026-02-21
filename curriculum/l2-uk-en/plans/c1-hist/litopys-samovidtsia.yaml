@@ -1,4 +1,3 @@
----
 module: c1-hist-020
 level: c1-hist
 sequence: 20
@@ -10,22 +9,19 @@ objectives:
 - 'Analyze the causes and consequences of літопис самовидця: голос очевидця'
 - Evaluate the historical significance of найстаріший козацький літопис
 content_outline:
-- section: "Вступ — Найстаріший козацький літопис"
-  words: 457
+- section: Вступ — Найстаріший козацький літопис
   subsections:
   - Чому «Самовидець» — очевидець
   - Найменш стилізований з трьох
   - Цінність безпосередності
   - Хронологія — 1648-1702
 - section: Питання авторства
-  words: 571
   subsections:
   - Анонімність — хто написав?
   - Гіпотези — Роман Ракушка-Романовський?
   - Внутрішні свідчення тексту
   - Чому важко встановити
 - section: Зміст і структура
-  words: 686
   subsections:
   - Від 1648 до 1702 року
   - Хмельницький — детально
@@ -33,33 +29,28 @@ content_outline:
   - Останні гетьмани
   - Що охоплено, що пропущено
 - section: Особливості стилю
-  words: 571
   subsections:
   - Простий, діловий стиль
   - Мінімум риторики
   - Фактографічність
   - Мова — українська канцелярська
-- section: "Фрагмент — Початок повстання 1648"
-  words: 800
+- section: Фрагмент — Початок повстання 1648
   subsections:
   - Текст (з глосами)
   - Як описано Хмельницького
   - Перші перемоги
   - Позиція автора — за чи проти?
 - section: Критика джерела
-  words: 571
   subsections:
   - Очевидець — але з якої позиції?
   - Що автор міг знати, чого не міг
   - Пізніші редакції — що додано?
   - Порівняння з іншими джерелами
 - section: Підсумок
-  words: 344
   subsections:
   - Найближче до «первинного» джерела
   - Цінність для історика
   - Зв'язок із наступними літописами
-word_target: 4000
 vocabulary:
 - самовидець
 - анонімний
@@ -89,15 +80,15 @@ activities:
   focus: Чи означає 'очевидець' об'єктивність?
 sources:
 - name: Літопис Самовидця (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Літопис_Самовидця"
+  url: https://uk.wikipedia.org/wiki/Літопис_Самовидця
   type: reference
   notes: Overview
 - name: Літопис Самовидця (текст)
-  url: "https://litopys.org.ua/samovyd/sam.htm"
+  url: https://litopys.org.ua/samovyd/sam.htm
   type: primary
   notes: Full text
 - name: Хмельниччина
-  url: "https://uk.wikipedia.org/wiki/Хмельниччина"
+  url: https://uk.wikipedia.org/wiki/Хмельниччина
   type: reference
   notes: Historical context
 vocabulary_hints:
@@ -116,7 +107,9 @@ activity_hints:
   items: 4
 - type: essay-response
   focus: Критичний аналіз
-  word_target: 300
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Eyewitness Chronicler

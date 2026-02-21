@@ -1,53 +1,44 @@
----
-module: c1-bio-148
+module: c1-bio-155
 level: C1-BIO
-sequence: 148
+sequence: 155
 slug: yaroslav-hrytsak
 version: '2.0'
 title: 'Ярослав Грицак: Публічний історик'
 content_outline:
-- section: "Вступ — Історик, який говорить з людьми"
-  words: 400
+- section: Вступ — Історик, який говорить з людьми
   points:
   - Грицак як найвпливовіший публічний історик України
   - Від академічної науки до широкої аудиторії
   - Роль у формуванні історичної свідомості
 - section: Львівське дитинство та освіта
-  words: 600
   points:
   - Народження у Львові (1960)
   - Навчання та академічне становлення
   - Вплив львівської інтелектуальної традиції
 - section: Академічна кариєра
-  words: 700
   points:
   - Дослідження української історії
   - Біографія Франка як ключова праця
   - Міжнародне визнання
 - section: Подолання минулого
-  words: 800
   points:
   - Концепція подолання минулого
   - Критика націоналістичних міфів
   - Європейський контекст української історії
 - section: Публічна історія
-  words: 700
   points:
   - Лекції та публічні виступи
   - Роль в УКУ
   - Історія для широкої аудиторії
 - section: Війна та сучасність
-  words: 600
   points:
   - Реакція на російську агресію
   - Переосмислення деяких позицій
   - Роль інтелектуала під час війни
-- section: "Дискусія — Обов'язок історика"
-  words: 200
+- section: Дискусія — Обов'язок історика
   points:
   - Об'єктивність vs громадянська позиція
   - Як говорити неприємну правду
-word_target: 4000
 vocabulary_hints:
   required:
   - публічна історія (public history)
@@ -73,7 +64,6 @@ activity_hints:
   items: 3 passages
 - type: essay-response
   focus: Чи повинен історик бути обєктивним?
-  word_target: 300
   output: Аргументований есей
 focus: biography
 prerequisites:
@@ -85,15 +75,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Ярослав Грицак (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Грицак_Ярослав_Йосипович"
+  url: https://uk.wikipedia.org/wiki/Грицак_Ярослав_Йосипович
   type: primary
   notes: Основна біографічна інформація
 - name: Український католицький університет
-  url: "https://ucu.edu.ua/"
+  url: https://ucu.edu.ua/
   type: reference
   notes: Академічна діяльність
 - name: Книги та публікації
-  url: "https://krytyka.com/"
+  url: https://krytyka.com/
   type: reference
   notes: Наукові праці
 immersion: 100% Ukrainian
@@ -102,3 +92,6 @@ objectives:
 - 'Analyze the life and legacy of ярослав грицак: публічний історик'
 - Evaluate the contributions of історик, який говорить з людьми
 - Trace the career and influence of обов'язок історика
+persona:
+  voice: Senior Biographer
+  role: Public Historian

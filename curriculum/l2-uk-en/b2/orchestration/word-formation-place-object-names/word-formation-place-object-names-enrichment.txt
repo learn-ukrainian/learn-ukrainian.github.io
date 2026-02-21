@@ -1,0 +1,279 @@
+✅ Message sent to Gemini (ID: 10537) [auto-acked: self-addressed]
+✓ Message 10537 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10537...
+📨 Message #10537
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-word-formation-place-object-names
+   Time: 2026-02-20T20:40:43.809664+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b2-35
+level: B2
+sequence: 35
+slug: word-formation-place-object-names
+version: '2.0'
+title: 'Словотворення: назви місць та об''єктів'
+subtitle: 'Word Formation: Place and Object Names'
+content_outline:
+- section: Розминка — Як утворюються назви місць
+  points:
+  - Чому місце дії має спеціальну назву (їсти → їдальня)
+  - Три основні суфікси для місць (-ня, -ище, -арня)
+  - Зв'язок із назвами осіб (лікар → лікарня)
+- section: Suffix -ня (place of activity)
+  points:
+  - читати → читальня (reading room)
+  - спати → спальня (bedroom)
+  - їсти → їдальня (canteen)
+  - варити → варильня (brewery)
+- section: Suffix -ище (place/area)
+  points:
+  - клад → кладовище (cemetery)
+  - ховати → сховище (storage)
+  - пасти → пасовище (pasture)
+  - жити → житло + -ище → жи́тлище (dwelling)
+- section: Suffix -арня (workshop/establishment)
+  points:
+  - лікар → лікарня (hospital)
+  - друкар → друкарня (printing house)
+  - пекар → пекарня (bakery)
+  - перукар → перукарня (hair salon)
+- section: Практика — утворення назв місць
+  points:
+  - Утворити назви місць від заданих дієслів (зберігати → ?)
+  - Визначити суфікс і твірне слово (кав'ярня ← кава)
+  - Аналіз тексту — знайти всі назви місць та їхнє походження
+  - Описати свій район, використовуючи назви закладів
+focus: grammar
+pedagogy: TTT
+objectives:
+- Learner can identify suffixes that form place and object names in Ukrainian
+- Learner can derive place names from verbs and nouns using appropriate suffixes
+- Learner can distinguish between -ня, -ище, and -арня formations
+- Learner can use place vocabulary appropriately in context
+grammar:
+- Suffix -ня (place of activity)
+- Suffix -ище (place/area)
+- Suffix -арня (workshop/establishment)
+- Derivational morphology for place names
+immersion: 100
+register: науковий
+phase: B2.1c [Grammar Completion]
+vocabulary_hints:
+  required:
+  - термін (term)
+  - поняття (concept)
+  - процес (process)
+  - метод (method)
+  recommended:
+  - аналіз (analysis)
+  - синтез (synthesis)
+  - дослідження (research)
+activity_hints:
+- type: reading
+  focus: Аналіз тексту
+  items: 4
+- type: essay-response
+  focus: Практичне застосування
+- type: true-false
+  focus: Перевірка розуміння
+  items: 8
+persona:
+  voice: Professional Language Coach
+  role: Cartographer (Картограф)
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Словотворення: назви місць та об'єктів
+
+## State Standard Reference
+§4.2.8: "Утворення іменників – назв місць за виконуваною дією: спати – спальня, приймати – приймальня, читати – читальня, лікувати – лікарня."
+Alignment: This module directly addresses the B2 requirement for derivational morphology of place names, extending the basic -ня model to include -ище and -арня variants, and connecting them to agent nouns (§4.2.5).
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| **-ня** (suffix) | High productivity | читальня, їдальня, спальня, вітальня, вбиральня |
+| **-ище** (suffix) | Medium productivity | сховище, кладовище, родовище, горище, звалище |
+| **-арня** (suffix) | Medium productivity (agent-based) | лікарня, друкарня, пекарня, перукарня, кав'ярня, книгарня |
+| **читальня** | Historical/Cultural | хата-читальня, товариство "Просвіта" |
+| **кав'ярня** | High (Modern Urban) | затишна кав'ярня, львівська кав'ярня, сидіти в кав'ярні |
+
+## Cultural Hooks
+1. **The "Prosvita" Movement**: In the late 19th/early 20th century, the "Prosvita" society established network of **«хати-читальні»** (reading houses) across Ukraine. These weren't just libraries but hubs of national rebirth, literacy, and community organization, often functioning as the village's cultural heart.
+2. **Lviv Coffee Culture**: The word **«кав'ярня»** is iconic to Lviv's identity (unlike the Russified «кафе»). Modern Lviv revives the "reading room" tradition with hybrid **«книгарні-кав'ярні»** (bookstore-cafes), blending intellectualism with leisure.
+
+## Common Learner Errors
+1. **Gender of -ище words**: Learners often treat all -ище words as neuter.
+   *   *Correction*: Place names (**сховище**, **кладовище**) are **neuter**. Augmentatives (**вітрище**, **вовчище**) retain the gender of the base word (masculine).
+2. **Confusion of -льня vs -альня**: Learners struggle with the vowel insertion.
+   *   *Rule*: Depends on the verb stem (чита-ти → чита-льня, but вбир-а-ти → вбир-а-льня).
+3. **Overgeneralization**: Applying -ня to every verb (e.g., "робільня" instead of "майстерня" or "цех").
+
+## Cross-References
+- **Builds on**: A2 Verb stems (identifying the base for derivation), A2 Professions (agent nouns like лікар, пекар).
+- **Prepares for**: C1 Professional Terminology (institutional names), C1 Stylistics (augmentative/diminutive suffixes).
+
+## Notes for Content Writing
+- **Agency**: Emphasize that places are defined by *human activity* (reading, baking, healing).
+- **Nuance**: Highlight that **-ище** often implies a larger area or open space (кладовище, пасовище), whereas **-ня** implies an enclosed room or building.
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Логіка назв місць в українській мові (Introduction: The Logic of Place Names in Ukrainian)"
+  words: 500
+  points:
+  - "Огляд антропоцентричного підходу до словотворення: як назва місця визначається людською діяльністю (їсти → їдальня, лікувати → лікарня)"
+  - "Зв'язок між назвами осіб (агентивами) та назвами установ: як суфікси взаємодіють із професійними назвами (пекар → пекарня)"
+  - "Відповідність Державному стандарту (§4.2.8): компетенції щодо дериваційної морфології іменників на позначення місць за виконуваною дією"
+- section: "Суфікс -ня: Від кімнати до хати-читальні (Suffix -ня: From a Room to a Reading House)"
+  words: 950
+  points:
+  - "Продуктивність суфікса -ня для внутрішніх приміщень: читальня, спальня, їдальня, вітальня, вбиральня"
+  - "Граматична пастка: розрізнення варіантів -льня та -альня залежно від дієслівної основи (чита-ти → читальня vs вбир-а-ти → вбиральня)"
+  - "Культурний контекст: рух «Просвіта» та мережа «хат-читалень» як осередків національного відродження та ліквідації неписьменності"
+  - "Аналіз семантики: чому -ня зазвичай позначає закрите приміщення або обмежений простір для конкретної активності"
+- section: "Суфікс -ище: Ландшафт, простір та питання роду (Suffix -ище: Landscape, Space, and the Gender Issue)"
+  words: 850
+  points:
+  - "Семантична специфіка -ище: позначення відкритих територій, природних об'єктів або великих площ (пасовище, кладовище, родовище, звалище)"
+  - "Критична помилка: розмежування середнього роду назв місць (сховище, горище) та граматичного роду аугментативів (вітрище — чол. р., бо вітер)"
+  - "Функціональне використання: архітектурні та технічні назви (житлище, сховище) у науковому та офіційно-діловому регістрах"
+- section: "Суфікс -арня: Майстерні та культура кавування (Suffix -арня: Workshops and Coffee Culture)"
+  words: 900
+  points:
+  - "Утворення назв закладів від назв професій: пекарня, перукарня, друкарня, лікарня як центри професійної діяльності"
+  - "Урбаністичний символ: історія слова «кав'ярня» як питомої назви львівського типу закладу (на противагу запозиченому «кафе»)"
+  - "Сучасні гібридні формати: книгарня-кав'ярня як поєднання інтелектуального дозвілля та традиції читальних залів"
+- section: "Практичний практикум та корекція (Practical Workshop and Correction)"
+  words: 800
+  points:
+  - "Аналіз та запобігання гіпергенералізації: чому не кожне дієслово приймає суфікс -ня (корекція помилок на кшталт «робільня» замість «майстерня»)"
+  - "Творча вправа: дериваційний ланцюжок «дія → особа → місце» (лікувати → лікар → лікарня) для закріплення морфологічних зв'язків"
+  - "Стилістичний аналіз: доречність використання конкретних суфіксів у науковому описі інфраструктури та міського простору"
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "термін (term) — наукова назва поняття; часто вживається з дієсловом 'визначати'"
+  - "поняття (concept) — абстрактна одиниця мислення; ключове для граматичного аналізу"
+  - "процес (process) — перебіг подій або дій; наприклад, процес словотворення"
+  - "метод (method) — спосіб досягнення мети; дериваційний метод"
+  - "читальня (reading room) — приміщення для читання; історичне 'хата-читальня'"
+  - "кав'ярня (coffee house) — питомо українська назва закладу; 'затишна кав'ярня'"
+  recommended:
+  - "аналіз (analysis) — розклад цілого на частини; морфемний аналіз слова"
+  - "синтез (synthesis) — поєднання частин у ціле; словотвірний синтез"
+  - "дослідження (research) — наукове вивчення явища; дослідження мовних одиниць"
+  - "сховище (storage/shelter) — місце для зберігання; 'надійне сховище'"
+  - "книгарня-кав'ярня (bookstore-cafe) — сучасний культурний формат; поєднання читання та кавування"
+  - "кладовище (cemetery) — місце поховання; суфікс -ище позначає велику територію"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (3874 chars)
+✅ Message sent to Claude (ID: 10542)
+✓ Message 10542 acknowledged
+   Auto-acknowledged reply #10542 (stdout delivery — no inbox accumulation)
+✓ Message 10537 acknowledged

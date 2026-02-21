@@ -1,0 +1,218 @@
+✅ Message sent to Gemini (ID: 12624) [auto-acked: self-addressed]
+✓ Message 12624 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12624...
+📨 Message #12624
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-syntax-complex
+   Time: 2026-02-20T23:41:15.457295+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 56
+module: ruth-056
+module_number: 46
+slug: syntax-complex
+title_uk: 'Синтаксис II: Складні речення'
+title_en: Syntax II
+phase: 2
+phase_id: sacred-word
+phase_name: Sacred Word
+focus: Subordinate clauses — Greek influence
+content_outline:
+- section: Вступ
+  description: Introduction to Syntax II
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Baroque Scholar
+  role: Master of Eloquence
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Syntax Complex (Складний синтаксис та грецький вплив)
+
+## Використані джерела
+1. [Ізборник — Мелетій Смотрицький "Граматика"](http://litopys.org.ua/smotr/smotr.htm) — Першоджерело для аналізу теоретичних засад синтаксису XVII ст.
+2. [Історія української культури — Полемічна література](http://litopys.org.ua/istkult/ikult.htm) — Контекст розвитку складних синтаксичних конструкцій у полемічних творах.
+3. [Іван Вишенський — Твори](http://litopys.org.ua/old16_17/vysh.htm) — Джерело для аналізу риторичного синтаксису та гіпотаксису.
+4. [Енциклопедія Сучасної України — Староукраїнська мова](https://esu.com.ua/article-10275) — Загальний огляд мовних норм та впливів.
+
+## Хронологія
+- 1598: Послання Івана Вишенського до князя Василя Острозького — вершина риторичного стилю та емоційного синтаксису.
+- 1619: Видання "Грамматіки СлавєнскиА правилноє Сvнтаґма" Мелетія Смотрицького — кодифікація синтаксичних норм під впливом грецьких зразків.
+- 1627: Памво Беринда видає "Лексикон словенороський", фіксуючи лексичні та частково синтаксичні відповідники.
+- 1646: Петро Могила видає "Требник", закріплюючи "високий стиль" з латинізованим порядком слів у богослужбовій літературі.
+- 1674: Видання "Синопсиса" — приклад історичного наративу з усталеними складними конструкціями.
+
+## Ключові факти та цитати
+
+### Теоретичні засади (Смотрицький)
+- Мелетій Смотрицький у своїй "Граматиці" (1619) вперше системно виклав синтаксис церковнослов'янської мови, спираючись на грецькі (Ласкаріс) та латинські (Меланхтон) зразки.
+- Він розрізняв "простий" і "фігурний" (риторичний) синтаксис, навчаючи "як складні речення творити".
+- **Цитата (Смотрицький про синтаксис):** "Синтаксис єсть частина граматики, яка вчить про з'єднання частин мови між собою для вираження думки". (Перефраз з латини/грецької).
+
+### Практика (Вишенський та полемісти)
+- Полемічна література характеризується домінуванням **гіпотаксису** (підрядності) над паратаксисом. Це вплив грецької риторики та прагнення до логічної аргументації.
+- **Цитата (Вишенський):** "Понеж нЂсть незбожнЂйшее, хулнЂйшее, и несправедлившее, и нечистшее землЂ ни в поганьствЂ, як же ваша земля. Прото, молю вас, спасайтеся образом Лота, избЂгша из Содомы во Сигор..." (Приклад складного періоду з причинно-наслідковим зв'язком).
+- Використання **дієприкметникових зворотів** (calque from Greek participial phrases) як засобу конденсації думки.
+
+### Латинський вплив
+- У "високому стилі" (проповіді, панегірики) спостерігається тенденція ставити присудок у кінці речення (вплив латинського синтаксису через польську мову).
+- Розвиток **періоду** — розгорнутої синтаксичної конструкції з чіткою ритмікою та інтонаційним оформленням.
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ": [!history-bite] — Як одна кома могла змінити богословський зміст і призвести до єресі (приклад з перекладів).
+- Section "Основний матеріал": [!quote] — Уривок з "Грамматіки" Смотрицького про структуру речення (оригінал + переклад).
+- Section "Основний матеріал": [!myth-buster] — Міф про "нерозвиненість" староукраїнського синтаксису порівняно з латиною. Насправді він був гнучким і багатим.
+- Section "Основний матеріал": [!context] — Освіта в Острозькій та Києво-Могилянській академіях: риторика як основа синтаксису.
+- Section "Практика": [!culture] — Мистецтво барокового плетіння слів ("words weaving") як візуальний аналог складного синтаксису.
+- Section "Підсумок": [!decolonization] — Українська (руська) мова як мова високої культури і науки, здатна виражати найскладніші філософські ідеї, на відміну від московської "приказної мови" того часу.
+
+## Деколонізаційний контекст
+- **Імперський міф:** Староукраїнська мова була "зіпсованою полонізмами" версією "общерусского языка". Складний синтаксис — це просто запозичення.
+- **Українська реальність:** Руська (староукраїнська) мова розвивалася в контексті європейського Бароко, синтезуючи візантійську (грецьку) та латинську традиції. Складний синтаксис був ознакою високої інтелектуальної культури, яка значно випереджала московську, де домінував простий паратаксис "ділового стилю". Смотрицький кодифікував саме українсько-білоруську редакцію церковнослов'янської, а не "спільну східнослов'янську".
+
+## Contested Terms
+| Concept | Imperial/Soviet framing | Ukrainian (decolonized) framing |
+|---------|-------------------------|---------------------------------|
+| Слов'янська граматика | Спільне надбання "трьох братніх народів", початок російської лінгвістики. | Пам'ятка української філологічної думки, кодифікація української редакції церковнослов'янської мови. |
+| Латинізми в синтаксисі | Ознака "польського поневолення" та втрати чистоти мови. | Ознака приналежності до європейського культурного простору, інструмент інтелектуалізації мови. |
+| Грецький вплив | Лише церковний аспект. | Джерело високого риторичного стилю та філософської термінології. |
+
+## Section-Mapped Research Notes
+
+### Вступ
+Огляд ролі складного синтаксису як інструменту інтелектуальної еліти. Риторика як "цариця наук".
+
+### Основний матеріал: I — Граматична теорія Мелетія Смотрицького
+Аналіз розділу "Синтаксис" у "Грамматіці" 1619 року. Визначення речення, роль дієслова, порядок слів.
+
+### Основний матеріал: II — Грецький вплив: Гіпотаксис і підрядність
+Вплив перекладів (Біблія, отці церкви) на структуру підрядних речень. Сполучники підрядності (понеже, яко, ібо). Абсолютні конструкції (дальний самостійний як калька з грецького genetivus absolutus, хоча це спірне питання - скоріше розвиток слов'янського давального самостійного під впливом грецьких текстів).
+
+### Основний матеріал: III — Латинський вплив: Період і порядок слів
+Вплив шкільної латини та польської мови. Інверсія, постпозиція присудка, розгорнуті періоди з чіткою структурою (protasis/apodosis).
+
+### Основний матеріал: IV — "Проста мова": Живий подих у синтаксисі
+Як розмовна стихія проникала в книжний синтаксис. Спрощення конструкцій у інтермедіях та віршах.
+
+### Основний матеріал: V — Аналіз тексту: Риторика Івана Вишенського
+Детальний розбір уривка з послання. Виявлення риторичних фігур, нагромадження епітетів, складних підрядних зв'язків.
+
+### Практика (всі підрозділи)
+Вправи на ідентифікацію типів зв'язку, реконструкцію речень за зразком Смотрицького, переклад барокових конструкцій сучасною мовою.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12665)
+✓ Message 12624 acknowledged
+✓ Message 12665 acknowledged

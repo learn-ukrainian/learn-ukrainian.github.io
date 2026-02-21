@@ -1,0 +1,32 @@
+{
+  "track": "a2",
+  "slug": "the-dative-i-pronouns",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-20T23:55:02Z",
+      "note": "migrated-from-v2"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-20T23:55:02Z",
+      "note": "migrated-from-v2"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-20T23:55:02Z",
+      "note": "migrated-from-v2"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-20T23:55:02Z",
+      "note": "migrated-from-v2"
+    },
+    "v3-D": {
+      "status": "complete",
+      "ts": "2026-02-20T23:55:02Z",
+      "note": "migrated-from-v2"
+    }
+  }
+}

@@ -1,0 +1,74 @@
+{
+  "slug": "the-cyrillic-code-i",
+  "track": "a1",
+  "module_num": 1,
+  "mode": "v3",
+  "phases": {
+    "0": {
+      "status": "complete",
+      "timestamp": "2026-02-18T11:11:48Z",
+      "note": "adopted-existing-research"
+    },
+    "0.5": {
+      "status": "complete",
+      "timestamp": "2026-02-18T11:11:48Z",
+      "note": "already-enriched"
+    },
+    "1": {
+      "status": "complete",
+      "timestamp": "2026-02-18T11:12:32Z",
+      "task_id": "yw-the-cyrillic-code-i-p1"
+    },
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-02-18T11:12:32Z",
+      "note": "adopted-existing-prose",
+      "words": 2506
+    },
+    "3": {
+      "status": "complete",
+      "timestamp": "2026-02-20T17:06:20Z",
+      "note": "v3-audit-escalation"
+    },
+    "3a": {
+      "status": "complete",
+      "timestamp": "2026-02-18T11:17:09Z",
+      "note": "adopted-existing"
+    },
+    "3b": {
+      "status": "complete",
+      "timestamp": "2026-02-18T11:17:09Z",
+      "note": "adopted-existing"
+    },
+    "6": {
+      "status": "complete",
+      "timestamp": "2026-02-20T17:08:09Z",
+      "note": "v3-phase-D"
+    },
+    "6b": {
+      "status": "complete",
+      "timestamp": "2026-02-20T17:08:09Z",
+      "note": "v3-phase-D"
+    },
+    "5-enrich": {
+      "status": "complete",
+      "timestamp": "2026-02-20T17:06:20Z",
+      "note": "v3-audit-escalation"
+    },
+    "7-final": {
+      "status": "complete",
+      "timestamp": "2026-02-20T17:08:09Z",
+      "note": "v3-phase-D"
+    },
+    "9-final-review": {
+      "status": "complete",
+      "timestamp": "2026-02-20T20:27:43Z",
+      "verdict": "APPROVE"
+    },
+    "8": {
+      "status": "complete",
+      "timestamp": "2026-02-20T20:28:57Z"
+    }
+  },
+  "last_updated": "2026-02-20T20:28:57Z"
+}

@@ -1,0 +1,312 @@
+✅ Message sent to Gemini (ID: 11220) [auto-acked: self-addressed]
+✓ Message 11220 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #11220...
+📨 Message #11220
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-reading-professional-texts-i
+   Time: 2026-02-20T22:31:13.094199+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c2-049
+level: c2
+sequence: 49
+version: '2.0'
+title: Читання фахових текстів I — Стратегії розуміння
+focus: grammar
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Наукова періодика України — база НБУВ
+  url: https://nbuv.gov.ua/
+  type: reference
+  notes: Database of Ukrainian scientific periodicals for text examples
+- name: Українські наукові журнали — платформа
+  url: https://usj.org.ua/
+  type: reference
+  notes: Open access Ukrainian academic journals across fields
+- name: ДСТУ 3017:2015 — Видання
+  url: https://dnaop.com/
+  type: reference
+  notes: Ukrainian standards for academic publication structure
+content_outline:
+- section: Вступ — Читання як активний процес
+  points:
+  - Відмінність між читанням для задоволення та фаховим читанням
+  - Типи читання (skimming, scanning, intensive, extensive)
+  - Когнітивні стратегії читання
+- section: Структура фахових текстів
+  points:
+  - Типові структури наукових статей (IMRAD)
+  - Структура технічних документів
+  - Навігація за допомогою заголовків та підзаголовків
+- section: Скімінг — Швидкий огляд
+  points:
+  - Техніка швидкого огляду тексту
+  - Ідентифікація основної ідеї
+  - Оцінка релевантності тексту
+- section: Сканінг — Пошук інформації
+  points:
+  - Техніка цілеспрямованого пошуку
+  - Робота з індексами та змістом
+  - Використання ключових слів
+- section: Робота з незнайомою лексикою
+  points:
+  - Стратегії без звернення до словника
+  - Коли варто шукати значення
+  - Контекстуальна інференція (зв'язок з М47)
+- section: Практичні вправи
+  points:
+  - Застосування стратегій на реальних текстах
+  - Різні галузі (технічні, гуманітарні, природничі)
+  - Самооцінка розуміння
+vocabulary:
+  required:
+  - скімінг (skimming)
+  - сканінг (scanning)
+  - інтенсивне читання (intensive reading)
+  - екстенсивне читання (extensive reading)
+  - стратегія читання (reading strategy)
+  - структура тексту (text structure)
+  - заголовок (heading)
+  - підзаголовок (subheading)
+  - зміст (table of contents)
+  - ключове слово (keyword)
+  recommended:
+  - когнітивний (cognitive)
+  - релевантність (relevance)
+  - навігація (navigation)
+  - анотація (annotation)
+  - абстракт (abstract)
+  forbidden: '[]'
+activities:
+  types_required:
+  - quiz
+  - fill-in
+  - match-up
+  - critical-analysis
+  - essay-response
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c2-50 (Reading Professional Texts II — Critical analysis)
+- c2-51 (Professional Document Types)
+- c2-59 (Professional Research Skills)
+vocabulary_hints:
+  required:
+  - концепція (concept)
+  - аналіз (analysis)
+  - дискурс (discourse)
+  - методологія (methodology)
+  recommended:
+  - інтерпретація (interpretation)
+  - контекстуалізація (contextualization)
+  - синтез (synthesis)
+activity_hints:
+- type: reading
+  focus: Поглиблений аналіз тексту
+  items: 4
+- type: essay-response
+  focus: Критичне осмислення
+- type: discussion
+  focus: Дискусія та аргументація
+  items: 1
+persona:
+  voice: Senior Specialist
+  role: Information Broker
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Читання фахових текстів I — Стратегії розуміння
+
+## State Standard Reference
+§1.2.1.2: "Особа вміє: переглянути довгий текст, щоб з’ясувати, чи наявна в ньому потрібна інформація, потрібні деталі; знайти, переглядаючи текст на відому тему, усю інформацію про одну чи кілька деталей; швидко ідентифікувати загальний зміст тексту, повідомлення за заголовком чи підзаголовком... критично оцінити прочитану інформацію."
+Alignment: This module directly targets the explicit skills of skimming ("переглянути довгий текст") and scanning ("знайти... інформацію про одну чи кілька деталей") mandated for C2 proficiency.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| **стратегія** | High (Academic) | *когнітивна стратегія, стратегія читання, вибір стратегії* |
+| **контекст** | High (General/Academic) | *фаховий контекст, у контексті дослідження, контекстуальна здогадка* |
+| **теза** | Medium (Academic) | *основна теза, аргументувати тезу, ключова теза статті* |
+| **релевантність** | Medium (Scientific) | *релевантність джерела, оцінка релевантності, висока релевантність* |
+| **анотація** | High (Scientific) | *прочитати анотацію, стисла анотація, структура анотації* |
+
+## Cultural Hooks
+1. **Vernadsky National Library (NBUV):** The central hub of Ukrainian science. Mention the hierarchy of catalogues and the specialized "Scientific Periodicals of Ukraine" portal as the gold standard for professional texts.
+2. **Ivan Puliui & Terminology:** Historical context of how Ukrainian scientific terminology was forged (often in parallel or opposition to Russian imperial standards), emphasizing the precision of Ukrainian nomenclature in physics and engineering.
+
+## Common Learner Errors
+1. **Linear Processing:** Reading every word from A to Z instead of using structure (abstract -> headers -> conclusion) to assess relevance first.
+2. **Dictionary Dependence:** Stopping at every unknown technical term instead of inferring meaning from context or morphology (e.g., recognizing international roots or standard suffixes like *-ння*).
+3. **Confusing Skimming/Scanning:** Using skimming techniques when specific data is needed (leading to missed details) or scanning techniques when trying to grasp the main argument (leading to fragmentation).
+
+## Cross-References
+- **Builds on:** C1 Academic Reading modules (general structure).
+- **Prepares for:** c2-50 (Critical Analysis), c2-59 (Professional Research Skills).
+
+## Notes for Content Writing
+- **Terminology:** Use standard Ukrainian pedagogical terms: *переглядове читання* (skimming), *пошукове/вибіркове читання* (scanning), *вивчальне читання* (intensive).
+- **Differentiation:** Clearly distinguish between "reading for information" (professional) and "reading for pleasure" (literary). Professional reading is ruthless and goal-oriented.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ — Читання як активний процес (Introduction — Reading as an Active Process)"
+  words: 500
+  points:
+  - "Принципова відмінність між читанням для задоволення та фаховим читанням: перехід від лінійності до прагматичного, цілеспрямованого пошуку знань."
+  - "Відповідність Державному стандарту (§1.2.1.2): аналіз когнітивних стратегій для швидкої ідентифікації загального змісту та оцінки релевантності повідомлення за заголовком."
+- section: "Структура фахових текстів та навігація (Structure of Professional Texts and Navigation)"
+  words: 700
+  points:
+  - "Типова архітектура наукових статей (IMRAD) та технічної документації: роль анотації (абстракту) як первинного фільтра інформації."
+  - "Помилка студента: лінійна обробка тексту (читання 'від А до Я'). Стратегія 'Abstract -> Headers -> Conclusion' для швидкої оцінки доцільності повного прочитання."
+  - "ДСТУ 3017:2015 та навігація за допомогою заголовків та підзаголовків: використання метаданих для побудови ментальної мапи тексту."
+- section: "Переглядове та пошукове читання (Skimming and Scanning Strategies)"
+  words: 900
+  points:
+  - "Техніка 'Переглядового читання' (Skimming): швидке охоплення основної тези та ідентифікація аргументації без заглиблення в деталі."
+  - "Техніка 'Пошукового/вибіркового читання' (Scanning): цілеспрямований пошук конкретних фактів, цифр або термінів за допомогою ключових слів."
+  - "Помилка студента: плутанина між технікамі скімінгу та сканінгу (використання сканінгу для пошуку головної ідеї), що призводить до фрагментарності розуміння."
+- section: "Робота з лексикою та контекстуальна інференція (Working with Vocabulary and Contextual Inference)"
+  words: 800
+  points:
+  - "Подолання 'словникової залежності': стратегії розуміння фахового тексту без звернення до словника через морфологічний аналіз (суфікси -ння, -ість)."
+  - "Розвиток контекстуальної здогадки: використання фахового контексту та міжнародних коренів для визначення значень вузькоспеціалізованих термінів."
+  - "Коли варто шукати значення: критерії критичності терміна для розуміння основної тези (зв'язок з М47)."
+- section: "Культурний контекст: Науковий простір України (Cultural Context: Ukrainian Scientific Space)"
+  words: 600
+  points:
+  - "Національна бібліотека України імені В. І. Вернадського (НБУВ): ієрархія каталогів та портал 'Наукова періодика України' як золотий стандарт джерел."
+  - "Історичний внесок Івана Пулюя у формування української наукової термінології: боротьба за точність номенклатури у фізиці та інженерії на противагу імперським стандартам."
+- section: "Практичний аналіз та критична оцінка (Practical Analysis and Critical Evaluation)"
+  words: 500
+  points:
+  - "Застосування комбінованих стратегій на реальних текстах з платформи USJ: відбір релевантних джерел за ключовими словами та анотаціями."
+  - "Критична оцінка прочитаного: перевірка аргументації на відповідність висунутій тезі та підготовка до поглибленого аналізу в М50."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "переглядове читання (skimming) — когнітивна стратегія для виявлення основної тези; висока частотність у науковому стилі"
+  - "пошукове / вибіркове читання (scanning) — цілеспрямований пошук деталей; знайти інформацію про одну чи кілька деталей"
+  - "вивчальне / інтенсивне читання (intensive reading) — поглиблена робота з текстом; аналіз кожного логічного блоку"
+  - "стратегія читання (reading strategy) — когнітивна стратегія, вибір стратегії; свідомий підхід до обробки тексту"
+  - "релевантність (relevance) — релевантність джерела, оцінка релевантності; відповідність інформаційному запиту"
+  - "анотація (annotation/abstract) — структура анотації, стисла анотація; перший етап переглядового читання"
+  - "теза (thesis/main point) — основна теза, аргументувати тезу; головне твердження автора"
+  - "контекстуальна здогадка (contextual inference) — розуміння значення через фаховий контекст; подолання словникової залежності"
+  recommended:
+  - "когнітивний (cognitive) — когнітивні стратегії обробки інформації; ментальні процеси під час читання"
+  - "навігація (navigation) — навігація за допомогою заголовків; орієнтація у структурі документа"
+  - "абстракт (abstract) — синонім анотації; широко вживається у міжнародних наукових виданнях"
+  - "номенклатура (nomenclature) — система назв у певній галузі; спадщина Івана Пулюя у термінології"
+  - "інференція (inference) — логічний висновок на основі наявних даних; видобування прихованого змісту"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4575 chars)
+✅ Message sent to Claude (ID: 11225)
+✓ Message 11225 acknowledged
+   Auto-acknowledged reply #11225 (stdout delivery — no inbox accumulation)
+✓ Message 11220 acknowledged

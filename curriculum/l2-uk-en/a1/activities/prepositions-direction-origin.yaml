@@ -1,0 +1,391 @@
+- type: group-sort
+  title: "Де, Куди чи Звідки?"
+  instruction: "Визначте, до якої категорії належить кожна фраза: місце (Де?), напрямок (Куди?) або походження (Звідки?)."
+  groups:
+    - name: "Де? (Location)"
+      items:
+        - "у парку"
+        - "на роботі"
+        - "вдома"
+        - "у школі"
+    - name: "Куди? (Direction)"
+      items:
+        - "у парк"
+        - "на роботу"
+        - "додому"
+        - "до лікаря"
+    - name: "Звідки? (Origin)"
+      items:
+        - "з парку"
+        - "з роботи"
+        - "з дому"
+        - "від лікаря"
+
+- type: match-up
+  title: "Питання та відповіді"
+  instruction: "З'єднайте питання з логічною відповіддю."
+  pairs:
+    - left: "Де ти?"
+      right: "Я вдома."
+    - left: "Куди ти йдеш?"
+      right: "Я йду в магазин."
+    - left: "Звідки ти йдеш?"
+      right: "Я йду з роботи."
+    - left: "Куди їде цей автобус?"
+      right: "На вокзал."
+    - left: "Де твій телефон?"
+      right: "На столі."
+    - left: "Звідки ти приїхав?"
+      right: "З України."
+    - left: "Де діти?"
+      right: "У школі."
+    - left: "Куди йдуть діти?"
+      right: "У школу."
+
+- type: quiz
+  title: "Оберіть правильний прийменник"
+  instruction: "Оберіть правильний прийменник для кожного речення."
+  items:
+    - question: "Я зараз йду ... магазин, щоб купити свіжий хліб."
+      explanation: "Магазин — це будівля (контейнер), тому для напрямку використовуємо 'в'."
+      options:
+        - text: "в"
+          correct: true
+        - text: "з"
+          correct: false
+        - text: "на"
+          correct: false
+        - text: "до"
+          correct: false
+    - question: "Ми сьогодні йдемо ... лікаря, бо у нас запис."
+      explanation: "Коли ми йдемо до людини, ми завжди використовуємо прийменник 'до'."
+      options:
+        - text: "до"
+          correct: true
+        - text: "в"
+          correct: false
+        - text: "на"
+          correct: false
+        - text: "з"
+          correct: false
+    - question: "Моя нова цікава книга лежить ... великому столі."
+      explanation: "Поверхня вимагає прийменника 'на'."
+      options:
+        - text: "на"
+          correct: true
+        - text: "у"
+          correct: false
+        - text: "до"
+          correct: false
+        - text: "від"
+          correct: false
+    - question: "У неділю я завжди йду ... парк гуляти з собакою."
+      explanation: "Парк — це 'контейнер', тому для напрямку ми використовуємо 'в'."
+      options:
+        - text: "в"
+          correct: true
+        - text: "на"
+          correct: false
+        - text: "з"
+          correct: false
+        - text: "від"
+          correct: false
+    - question: "Я вже йду ... парку додому, бо холодно."
+      explanation: "Якщо ми були 'в' парку, то ми йдемо 'з' парку."
+      options:
+        - text: "з"
+          correct: true
+        - text: "в"
+          correct: false
+        - text: "на"
+          correct: false
+        - text: "до"
+          correct: false
+    - question: "Вона зараз йде ... концерту класичної музики."
+      explanation: "Концерт — це подія (на концерті), тому повертаємося ми 'з' концерту."
+      options:
+        - text: "з"
+          correct: true
+        - text: "від"
+          correct: false
+        - text: "у"
+          correct: false
+        - text: "на"
+          correct: false
+    - question: "Він вже йде ... пошти, він відправив листа."
+      explanation: "Пошта — це установа, тому 'з' пошти."
+      options:
+        - text: "з"
+          correct: true
+        - text: "в"
+          correct: false
+        - text: "на"
+          correct: false
+        - text: "до"
+          correct: false
+    - question: "Я зараз йду ... центру міста пішки додому."
+      explanation: "Центр міста — це відкритий простір, тому 'з' центру."
+      options:
+        - text: "з"
+          correct: true
+        - text: "в"
+          correct: false
+        - text: "на"
+          correct: false
+        - text: "до"
+          correct: false
+
+- type: fill-in
+  title: "Вставте пропущене слово"
+  instruction: "Оберіть правильне слово, щоб доповнити речення."
+  items:
+    - sentence: "Я живу ... Україні."
+      answer: "в"
+      options: ["в", "на", "до", "з"]
+      explanation: "Україна — це країна (контейнер), тому 'в'."
+    - sentence: "Я йду ... роботу."
+      answer: "на"
+      options: ["на", "в", "з", "від"]
+      explanation: "Робота — це активність, тому ми використовуємо 'на'."
+    - sentence: "Ми їдемо ... Київ."
+      answer: "в"
+      options: ["в", "на", "до", "з"]
+      explanation: "Київ — це місто (контейнер), рух у місто = 'в Київ'."
+    - sentence: "Я повертаюся ... офісу."
+      answer: "з"
+      options: ["з", "в", "на", "до"]
+      explanation: "Повернення з будівлі — це прийменник 'з'."
+    - sentence: "Я йду ... мами."
+      answer: "від"
+      options: ["від", "з", "на", "в"]
+      explanation: "Повернення від людини вимагає прийменника 'від'."
+    - sentence: "Студенти зараз ... університеті."
+      answer: "в"
+      options: ["в", "на", "до", "з"]
+      explanation: "Місцезнаходження всередині закладу — 'в'."
+    - sentence: "Ми йдемо ... друга у гості."
+      answer: "до"
+      options: ["до", "на", "в", "з"]
+      explanation: "Рух до людини вимагає прийменника 'до' + Родовий відмінок."
+    - sentence: "Вона зараз ... школі."
+      answer: "у"
+      options: ["у", "на", "до", "з"]
+      explanation: "Всередині будівлі."
+
+- type: unjumble
+  title: "Складіть речення"
+  instruction: "Розташуйте слова у правильному порядку, щоб утворити речення."
+  items:
+    - words: ["Я", "йду", "додому"]
+      answer: "Я йду додому"
+    - words: ["Ми", "їдемо", "в", "Київ"]
+      answer: "Ми їдемо в Київ"
+    - words: ["Він", "йде", "з", "роботи"]
+      answer: "Він йде з роботи"
+    - words: ["Книга", "лежить", "на", "столі"]
+      answer: "Книга лежить на столі"
+    - words: ["Вони", "йдуть", "до", "лікаря"]
+      answer: "Вони йдуть до лікаря"
+    - words: ["Я", "повертаюся", "з", "України"]
+      answer: "Я повертаюся з України"
+
+- type: group-sort
+  title: "В чи На?"
+  instruction: "Розподіліть слова залежно від того, який прийменник вони використовують для місця (Де?)."
+  groups:
+    - name: "В (У)"
+      items:
+        - "парк"
+        - "школа"
+        - "магазин"
+        - "кімната"
+        - "Київ"
+        - "банк"
+    - name: "На"
+      items:
+        - "робота"
+        - "вулиця"
+        - "концерт"
+        - "стіл"
+        - "пошта"
+        - "вокзал"
+
+- type: true-false
+  title: "Логіка руху"
+  instruction: "Визначте, чи правильне це твердження."
+  items:
+    - statement: "Якщо я йду 'до лікаря', я заходжу всередину людини."
+      correct: false
+      explanation: "Ні, 'до' означає напрямок до особи, а не всередину."
+    - statement: "Питання 'Де?' описує рух."
+      correct: false
+      explanation: "'Де?' описує статику (місцезнаходження)."
+    - statement: "Якщо я був 'на концерті', я йду 'з концерту'."
+      correct: true
+      explanation: "Так, пара 'на' - 'з' працює дзеркально."
+    - statement: "'Вдома' відповідає на питання 'Куди?'."
+      correct: false
+      explanation: "'Вдома' відповідає на питання 'Де?'. Напрямок — 'додому'."
+    - statement: "Ми кажемо 'на офісі'."
+      correct: false
+      explanation: "Офіс — це будівля/кімната, тому ми кажемо 'в офісі'."
+    - statement: "'Звідки' вимагає Родового відмінка."
+      correct: true
+      explanation: "Так, питання походження завжди вимагає Родового відмінка."
+    - statement: "'Йти' — це рух транспортом."
+      correct: false
+      explanation: "'Йти' — це рух пішки."
+    - statement: "Питання 'Куди?' вимагає Місцевого відмінка."
+      correct: false
+      explanation: "'Куди?' вимагає Знахідного відмінка."
+
+- type: match-up
+  title: "Антоніми руху"
+  instruction: "Знайдіть протилежну дію (Вхід — Вихід, Туди — Назад)."
+  pairs:
+    - left: "в школу"
+      right: "зі школи"
+    - left: "в магазин"
+      right: "з магазину"
+    - left: "на роботу"
+      right: "з роботи"
+    - left: "до лікаря"
+      right: "від лікаря"
+    - left: "додому"
+      right: "з дому"
+    - left: "в Україну"
+      right: "з України"
+    - left: "в парк"
+      right: "з парку"
+    - left: "на пошту"
+      right: "з пошти"
+
+- type: quiz
+  title: "Йти чи Їхати?"
+  instruction: "Оберіть правильне дієслово руху."
+  items:
+    - question: "Сьогодні чудова погода, тому я ... в парк пішки."
+      explanation: "Для руху пішки ми використовуємо 'йти'."
+      options:
+        - text: "йду"
+          correct: true
+        - text: "їду"
+          correct: false
+        - text: "стою"
+          correct: false
+        - text: "сиджу"
+          correct: false
+    - question: "Ми ... в Київ машиною, тому що це швидко."
+      explanation: "Для руху транспортом ми використовуємо 'їхати'."
+      options:
+        - text: "їдемо"
+          correct: true
+        - text: "йдемо"
+          correct: false
+        - text: "живемо"
+          correct: false
+        - text: "є"
+          correct: false
+    - question: "Цей жовтий автобус швидко ... у центр міста."
+      explanation: "Автобус — це транспорт, він 'їде'."
+      options:
+        - text: "їде"
+          correct: true
+        - text: "йде"
+          correct: false
+        - text: "стоїть"
+          correct: false
+        - text: "лежить"
+          correct: false
+    - question: "Вранці всі студенти ... до школи на уроки."
+      explanation: "Зазвичай студенти йдуть пішки (або контекст загального руху)."
+      options:
+        - text: "йдуть"
+          correct: true
+        - text: "їдуть"
+          correct: false
+        - text: "читають"
+          correct: false
+        - text: "пишуть"
+          correct: false
+    - question: "Швидкий нічний поїзд ... до Львова через Київ."
+      explanation: "Поїзд — це транспорт."
+      options:
+        - text: "їде"
+          correct: true
+        - text: "йде"
+          correct: false
+        - text: "спить"
+          correct: false
+        - text: "знає"
+          correct: false
+    - question: "Ти зараз ... додому пішки через парк?"
+      explanation: "'Пішки' означає рух ногами, тому вживаємо 'йти' — 'ти йдеш'."
+      options:
+        - text: "йдеш"
+          correct: true
+        - text: "їдеш"
+          correct: false
+        - text: "п'єш"
+          correct: false
+        - text: "знаєш"
+          correct: false
+    - question: "Кожного ранку ми ... на роботу на метро."
+      explanation: "Метро — це транспорт."
+      options:
+        - text: "їдемо"
+          correct: true
+        - text: "йдемо"
+          correct: false
+        - text: "стоїмо"
+          correct: false
+        - text: "лежимо"
+          correct: false
+    - question: "Вона любить спорт, тому вона ... пішки в центр."
+      explanation: "Пішки означає 'йти'."
+      options:
+        - text: "йде"
+          correct: true
+        - text: "їде"
+          correct: false
+        - text: "спить"
+          correct: false
+        - text: "знає"
+          correct: false
+
+- type: fill-in
+  title: "Закінчіть речення"
+  instruction: "Оберіть правильне закінчення слова."
+  items:
+    - sentence: "Я йду до мам..."
+      answer: "мами"
+      options: ["мами", "мама", "маму", "мамі"]
+      explanation: "'До' вимагає Родового відмінка (мама -> мами)."
+    - sentence: "Він йде в парк..."
+      answer: "парк"
+      options: ["парк", "парку", "парка", "парком"]
+      explanation: "Напрямок 'в' + неістота (чоловічий рід) = Знахідний відмінок (як Називний)."
+    - sentence: "Ми йдемо зі школ..."
+      answer: "школи"
+      options: ["школи", "школа", "школу", "школі"]
+      explanation: "'З' (походження) вимагає Родового відмінка (школа -> школи)."
+    - sentence: "Я йду на робот..."
+      answer: "роботу"
+      options: ["роботу", "робота", "роботи", "роботі"]
+      explanation: "Напрямок 'на' + жін. рід = Знахідний відмінок (робота -> роботу)."
+    - sentence: "Вона в офіс..."
+      answer: "офісі"
+      options: ["офісі", "офіс", "офісу", "офісом"]
+      explanation: "Місце 'в' = Місцевий відмінок (офіс -> офісі)."
+    - sentence: "Я повертаюся від лікар..."
+      answer: "лікаря"
+      options: ["лікаря", "лікар", "лікарю", "лікарем"]
+      explanation: "'Від' вимагає Родового відмінка (лікар -> лікаря)."
+    - sentence: "Я йду в кімнат..."
+      answer: "кімнату"
+      options: ["кімнату", "кімната", "кімнати", "кімнаті"]
+      explanation: "Напрямок 'в' + жін. рід = Знахідний (-у)."
+    - sentence: "Він був на пошт..."
+      answer: "пошті"
+      options: ["пошті", "пошта", "пошту", "пошти"]
+      explanation: "Місце 'на' = Місцевий (-і)."

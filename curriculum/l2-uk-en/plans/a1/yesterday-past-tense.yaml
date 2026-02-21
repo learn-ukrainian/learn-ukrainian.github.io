@@ -1,0 +1,101 @@
+module: a1-21
+level: A1
+sequence: 21
+slug: yesterday-past-tense
+version: '2.0'
+title: Yesterday - Past Tense
+subtitle: Talking About What Happened
+content_outline:
+- section: 'Вступ: Що було вчора? (Introduction: What Happened Yesterday?)'
+  words: 400
+  points:
+  - 'Контраст теперішнього і минулого часу через культурний контекст: подія 15 лютого
+    1574 року, коли Іван Федоров «надрукував» першу книгу (Апостол) у Львові.'
+  - 'Часові вирази для минулого: вчора, минулого тижня, минулого місяця, минулого
+    року. Важливе граматичне зауваження: вживання ''минулого'' без прийменника ''в''.'
+  - 'Мотиваційний блок: як розповісти про свій день та історичні події, використовуючи
+    лише один час.'
+- section: 'Основи минулого часу (Grammar: Past Tense Formation)'
+  words: 650
+  points:
+  - 'Правила утворення форм за Державним стандартом §4.2.4.1: основа інфінітива +
+    суфікси -в, -ла, -ло, -ли. Використання таблиць для наочності закінчень.'
+  - 'Узгодження за родом: він читав / вона читала / воно читало. Акцент на закінченні
+    -ла для жіночого роду (він читав vs вона читала).'
+  - 'Типова помилка: порушення родового узгодження. Корекція фрази ''я писав'', якщо
+    говорить жінка, на правильну форму ''я писала''.'
+  - 'Застереження щодо кальки з англійської: пояснення, що ''I was working'' перекладається
+    як ''Я працював'', а форма ''Я був працював'' є помилковою.'
+- section: Складні випадки та практика (Irregular Verbs and Practice)
+  words: 600
+  points:
+  - 'Неправильні дієслова та суплетивізм: їсти (їв/їла), йти (ішов/ішла/ішли). Опрацювання
+    чергування голосних у корені дієслів руху.'
+  - 'Практика в контексті музею: опис експонатів та подій. Культурний гачок: закон
+    ЗУНР про державну мову від 15 лютого 1919 року (''ЗУНР прийняла закон'').'
+  - 'Дрилі на розрізнення форм: він пив / вона пила, він ішов / вона йшла. Автоматизація
+    навичок вживання дієслів бути, робити, читати.'
+- section: 'Підсумок: Мій день (Summary and Production)'
+  words: 350
+  points:
+  - 'Продуктивне завдання: розповідь про вчорашній день з використанням вивчених колокацій
+    (робити каву, ішов додому, ходила в магазин).'
+  - 'Діалогічна практика: запитання ''Що ти робив вчора?'' та відповіді про дозвілля
+    (дивитися фільм, читати новини).'
+  - 'Фінальний чек: повторення правил узгодження за родом та числом для запобігання
+    типовим помилкам (він був / вона була / вони були).'
+vocabulary_hints:
+  required:
+  - вчора (yesterday) — вчора ввечері, вчора зранку, тільки вчора; High frequency
+    adverb (Top 100)
+  - бути (to be) — був удома, була на роботі, було цікаво; Very High frequency (Top
+    10)
+  - робити (to do) — робити каву, робити уроки, що ти робив?; Very High frequency
+    (Top 20)
+  - їсти (to eat) — їв обід, вона їла яблуко, ми їли в ресторані; irregular forms
+    їв/їла
+  - пити (to drink) — пив воду, вона пила чай; High frequency verb
+  - читати (to read) — читав книгу, читала новини; High frequency (Top 50)
+  - дивитися (to watch) — дивився фільм, дивилася телевізор; reflexive -ся endings
+  - ходити (to go) — ходила в магазин, ішов додому; distinction between ішов/ходила
+  recommended:
+  - минулий (last, past) — минулого тижня, минулого року, минулої ночі; note usage
+    without 'в'; High frequency adj
+  - раніше (earlier) — adverb of time; common time expression
+  - тиждень (week) — masculine noun; context 'минулого тижня'
+  - місяць (month) — masculine noun; context 'минулого місяця'
+  - спати (to sleep) — спав довго, вона спала; past tense endings drill
+  - працювати (to work) — працював у офісі, вона працювала; conjugation in the past
+    tense
+activity_hints:
+- type: fill-in
+  focus: Change verbs to past tense
+  items: 25
+- type: fill-in
+  focus: Complete with correct gender ending
+  items: 20
+- type: fill-in
+  focus: What did you do yesterday?
+  items: 6
+focus: grammar
+pedagogy: PPP
+prerequisites:
+- a1-20 (Checkpoint Navigation)
+connects_to:
+- a1-22 (Tomorrow - Future Tense)
+- a1-25 (My Daily Routine)
+objectives:
+- Learner can form past tense using L-participle
+- Learner can use correct gender ending (-в/-ла/-ло/-ли)
+- Learner can describe past events using time expressions
+- Learner can talk about what they did yesterday
+grammar:
+- Past tense formation with L-participle
+- Gender agreement in past tense
+- Time expressions for past events
+register: розмовний
+phase: A1.3 [Consolidation]
+persona:
+  voice: Patient Supportive Tutor
+  role: Museum Curator
+word_target: 2000

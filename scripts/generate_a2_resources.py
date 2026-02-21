@@ -50,13 +50,13 @@ A2_DOBRA_FORMA_MAPPING = {
     'a2-31-in-order-to': [],  # Purpose clauses
     'a2-32-which-one': [],  # Relative clauses
     'a2-33-time-clauses': [],  # Temporal clauses
-    'a2-34-at-the-doctor': [],  # Vocabulary
+    'a2-34-health-basics': [],  # Vocabulary
     'a2-35-checkpoint': [],  # Review
     'a2-36-basic-motion-prefixes': ['28-3'],  # Motion verbs with prefixes
     'a2-37-advanced-motion-prefixes': ['28-3'],  # More motion prefixes
     'a2-38-action-verb-prefixes': ['27-1'],  # Perfective prefixes
     'a2-39-adjective-suffixes-qualities': ['16-1'],  # Adjectives
-    'a2-40-adj-suffixes': ['16-1', '16-2'],  # More adjectives
+    'a2-40-adjective-suffixes-types': ['16-1', '16-2'],  # More adjectives
     'a2-41-root-families-i': [],  # Word formation (advanced)
     'a2-42-root-families-ii': [],  # Word formation
     'a2-43-wf-mastery': [],  # Word formation mastery
@@ -71,7 +71,7 @@ A2_DOBRA_FORMA_MAPPING = {
     'a2-52-education-learning': [],  # Vocabulary
     'a2-53-shopping-services': [],  # Vocabulary
     'a2-54-sports-fitness': [],  # Vocabulary
-    'a2-55-health-body': [],  # Vocabulary
+    'a2-55-health-wellness': [],  # Vocabulary
     'a2-56-checkpoint-vocabulary': [],  # Review
     'a2-57-grammar-review': [],  # Review
     'a2-58-final-review': [],  # Review

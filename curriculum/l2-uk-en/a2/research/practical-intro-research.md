@@ -1,77 +1,34 @@
-# Research Notes: Practical Intro (Real World Ukrainian)
+# Дослідження: Practical Intro
 
-**Track**: Core A
-**Module**: A2 M57 "Practical Intro"
-**Researched**: 2026-02-08
-**Level**: A2 (Elementary II)
+## State Standard Reference
+§4.2.2: "Уживання відмінкових форм в однині та множині. Основні значення відмінків: Називний... Родовий... Давальний... Знахідний... Орудний... Місцевий... Кличний"
+§4.2.3.1: "Дійсний спосіб... утворення форм роду і числа дієслів минулого часу... майбутній час... видові пари дієслів"
+§4.4.2: "Складне речення... складносурядні речення... складнопідрядні речення зі сполучниками тому що, бо... щоб... якщо"
+Alignment: This module directly addresses the A2 requirement to master the usage of all 7 cases in context, differentiate aspect pairs in narrative, and construct complex sentences for reasoning (тому що) and condition (якщо), moving beyond simple sentences.
 
-## 1. Grammar: State Standard 2024 Reference
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| речення | High / Litopys | скласти речення, просте речення, складне речення, член речення |
+| слово | Very High / Litopys | нове слово, значення слова, іншомовне слово, чесне слово |
+| граматика | Med / Litopys | вивчати граматику, правила граматики, граматична помилка |
+| помилка | High / Web | зробити помилку, виправити помилку, груба помилка, типова помилка |
+| правило | High / Web | запам'ятати правило, за правилом, виняток з правила |
+| контекст | Med / Web | у контексті, зрозуміти з контексту, залежить від контексту |
 
-This module serves as a consolidation and "bridge" from theoretical grammar (A2.1-A2.5) to practical application (A2.6). It aligns with the **Державний стандарт української мови як іноземної (2024)** for the **Elementary Level II (A2)** (Початковий рівень другого ступеня).
+## Cultural Hooks
+1. **Surzhyk as a Stepping Stone**: Surzhyk (a mix of Ukrainian and Russian) is often a transitional stage for speakers switching to Ukrainian. A "mistake" is often just a step towards the standard language. (Source: Wilson Center, Wikipedia)
+2. **Politeness & The Vocative**: Using the Vocative case (*Пане Юрію, Олено*) and the formal *Ви* is not just "grammar" but a critical cultural marker of respect in Ukrainian society, distinguishing it from more casual or rude speech patterns. (Source: TalkPal, SpeakUA)
 
-### Relevant Sections:
-- **§ 4.2.2. Уживання відмінкових форм іменників**: Covers the functional use of all 7 cases (Nominative to Vocative) in practical contexts like identification, location, and object relations.
-- **§ 4.3.2. Видові пари дієслів**: Focuses on the functional distinction between imperfective and perfective aspects in real situations (making, doing vs. finished/result).
-- **§ 4.4.2. Складне речення**: Requirements for complex sentences using conjunctions: *і, але, що, тому що, бо, щоб*.
+## Common Learner Errors
+1. **Perfective Present Tense**: Using a perfective verb in the present tense (e.g., *я напишу* meaning "I will write", not "I am writing") → Use imperfective for present (*я пишу*).
+2. **Case Confusion (Genitive vs. Accusative)**: Using Accusative for objects of negation (*я не бачу книгу*) instead of Genitive (*я не бачу книги*).
+3. **Motion Verb Confusion**: Mixing up *йти* (on foot) and *їхати* (by vehicle), or determinate/indeterminate pairs.
 
-**Quote (ДСТУ 2024, Section 4, Level A2):**
-> "Обсяг граматичних умінь рівня А2 охоплює усі аспекти, що перелічені на рівні А1, але з розширенням лексичного матеріалу, зростанням діапазону синтаксичних структур та ситуацій комунікації."
-> *(The scope of A2 grammar skills covers all A1 aspects but with expanded lexical material, a wider range of syntactic structures, and communication situations.)*
+## Cross-References
+- Builds on: a2-56 (Checkpoint Full Grammar)
+- Prepares for: a2-58 (Practical Warm-up), B1.1 (Metalanguage transition)
 
-## 2. Vocabulary Frequency
-
-At this stage, the student needs "metalinguistic" vocabulary to discuss their own learning and common practical words for communication.
-
-### High-Frequency "Grammar & Practice" Words:
-- **речення** (sentence) — *Essential for following instructions.*
-- **слово** (word) — *High frequency.*
-- **правило** (rule) — *Common in learning contexts.*
-- **помилка** (mistake) — *High frequency in feedback.*
-- **правильно/неправильно** (correct/incorrect) — *Core adverbs.*
-- **відмінок** (case) — *Technical but necessary for A2 review.*
-- **вид** (aspect) — *Technical.*
-
-### Practical "Real World" Connectors (High Frequency):
-- **сполучник** (conjunction) — *Used to explain complex sentences.*
-- **контекст** (context) — *Crucial for shifting from drills to usage.*
-- **значить** (it means) — *Conversational filler and clarification tool.*
-- **наприклад** (for example) — *Universal frequency.*
-
-## 3. Cultural Hook: Politeness and Register in Modern Ukraine
-
-### The "Доброго дня" vs "Добрий день" Debate:
-While the standard grammar suggests **"Добрий день"** (Nominative) as the primary greeting, the Genitive form **"Доброго дня"** is ubiquitously used in modern service industries (cafes, shops, emails) as a "politeness marker." Introducing students to the fact that "natural" Ukrainian often includes these variations helps them transition to the "Real World" subtitle of this module.
-
-### "Ви" vs "Ти" in Service:
-In Ukraine, even young people in service positions will strictly use **"Ви"** (the formal you) with customers. A common "practical" error for English speakers is defaulting to the informal "ти" because they feel friendly. This module emphasizes the formal register (**розмовний офіційний**) for the upcoming "Practical" phase (doctor, hotel, etc.).
-
-## 4. Pedagogical Notes
-
-### Shifting from Drills to Intuition:
-Students have just passed a massive grammar checkpoint (M56). They likely feel "overloaded" with rules. 
-- **The "Rule of 70%":** At this stage, learners often know the rules intellectually but only apply them correctly 70% of the time in spontaneous speech. The goal here is "Harmonization"—recognizing the *rhythm* of the cases rather than just the charts.
-- **Common Error: Case Attrition.** Under pressure, students often "lose" the Accusative or Genitive endings and default to the Nominative.
-- **Common Error: Aspectual Tunnel Vision.** Using perfective verbs for every past action because they want to show "result," even when describing a process.
-
-### Teaching Sequence:
-1. **Diagnosis:** Use error-correction activities to see which of the 7 cases is weakest.
-2. **Expansion:** Move from simple sentences (*Я бачу парк*) to complex ones (*Я бачу парк, який мені подобається*).
-3. **Feedback:** Focus on "global" errors (meaning-breaking) before "local" errors (small ending mistakes).
-
-## 5. Scope Boundaries
-
-### IN Scope (A2 Mastery):
-- **Cases:** All 7 cases (singular/plural) for basic nouns and pronouns.
-- **Aspect:** Basic prefixes (*про-*, *на-*, *по-*) and suffixes (*-ува-*, *-а-*).
-- **Sentence Structure:** Coordination (*і, але*) and Subordination (*що, бо, тому що, щоб, який*).
-- **Register:** Distinction between formal and informal "you."
-
-### OUT of Scope (B1+):
-- **Participles & Gerunds:** *читаючий, прочитавши* (strictly B2).
-- **Passive Voice:** *будинок будується* (B1/B2 focus).
-- **Complex Numerals:** Agreement with numbers above 5 in indirect cases (*п'яти студентів*) is still too complex; keep to Nominative/Accusative.
-- **Subjunctive Mood beyond basic "якби":** Keep conditionals simple.
-
----
-**Data Source:** docs/l2-uk-en/UKRAINIAN-STATE-STANDARD-2024.txt
-**Track:** A2.6 [Practical]
+## Notes for Content Writing
+- Use the "Surzhyk" concept gently – as a sign of trying, but point towards the standard form.
+- The "Integration Task" should be a real-world scenario (e.g., writing a message to a friend or boss) that naturally forces the use of cases and aspect.

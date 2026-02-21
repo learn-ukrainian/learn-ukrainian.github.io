@@ -1,0 +1,234 @@
+✅ Message sent to Gemini (ID: 12062) [auto-acked: self-addressed]
+✓ Message 12062 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12062...
+📨 Message #12062
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-dziuba-internationalism
+   Time: 2026-02-20T23:35:40.742282+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 20
+module: lit-essay-20
+level: LIT.ESSAY
+slug: dziuba-internationalism
+version: '2.0'
+title: Dziuba Internationalism
+subtitle: Dziuba Internationalism
+content_outline:
+- section: Вступ та контекст
+  points: []
+- section: Аналіз ключових творів
+  points: []
+- section: Стилістика та мова автора
+  points: []
+- section: Деколонізаційна перспектива
+  points:
+  - Як цей автор руйнує імперські міфи
+  - Українська суб'єктність у тексті
+- section: Підсумок та спадщина
+  points: []
+vocabulary_hints:
+  required:
+  - історіографія
+  - наратив
+  - суб'єктність
+  recommended:
+  - деколонізація
+activity_hints:
+- type: reading
+  focus: Аналіз першоджерела
+- type: essay-response
+  focus: Критичне есе
+- type: critical-analysis
+  focus: Деконструкція тексту
+focus: literature
+pedagogy: literature
+immersion: 100% Ukrainian
+phase: LIT Expansion
+objectives:
+- Проаналізувати творчість Dziuba Internationalism у контексті української літератури
+- Дослідити вплив автора на формування національної ідентичності
+persona:
+  voice: Senior Specialist
+  role: Anti-Colonial Marxist
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Dziuba Internationalism
+
+## Використані джерела
+1. [Енциклопедія Сучасної України (ЕСУ)](https://esu.com.ua/) — Стаття "Дзюба Іван Михайлович", огляд життєвого шляху та впливу на дисидентський рух.
+2. [Інститут історії України НАНУ](http://history.org.ua/) — Аналіз праці "Інтернаціоналізм чи русифікація?", історичний контекст створення тексту та його значення для українського руху опору.
+3. [Ізборник (Історія України IX-XVIII ст. та сучасність)](http://litopys.org.ua/) — Електронна бібліотека, тексти шістдесятників та першоджерела для аналізу стилістики та аргументації І. Дзюби.
+
+## Хронологія
+- 1965 (вересень-грудень): Іван Дзюба пише працю "Інтернаціоналізм чи русифікація?" під враженням від першої масової хвилі арештів української інтелігенції.
+- 1965 (грудень): Дзюба надсилає лист з текстом праці першому секретарю ЦК КПУ П. Шелесту та голові Ради Міністрів УРСР В. Щербицькому.
+- 1968: Перше публічне видання книги за кордоном (видавництво "Сучасність", Мюнхен). Текст активно поширюється самвидавом в Україні.
+- 1972: Виключення І. Дзюби зі Спілки письменників України в рамках нової хвилі репресій (так званий "покіс").
+- 1973: Київський обласний суд засуджує Дзюбу до 5 років ув'язнення та 5 років заслання за антирадянську пропаганду (згодом помилуваний).
+- 1998: Вихід першого легального та повного видання праці в незалежній Україні з авторськими коментарями.
+
+## Ключові факти та цитати
+- Праця була написана як розгорнутий меморандум до партійного керівництва з використанням марксистсько-ленінської термінології для доведення відхилення партії від "ленінської національної політики".
+- "Національна несправедливість не може не супроводжуватися несправедливістю соціальною."
+- "Загроза українській культурі йде від російського великодержавного шовінізму, який маскується під інтернаціоналізм."
+- Дзюба ґрунтовно доводив, що в СРСР відбувається цілеспрямована політика русифікації, яка загрожує самому існуванню української нації, її мови та культури.
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ: Історичний контекст створення праці": [!history-bite] — Праця писалася як офіційне звернення до вищого керівництва УРСР (П. Шелеста) з позицій ідеалістичного марксиста, але стала "бомбою" і найпотужнішим маніфестом антиколоніального опору.
+- Section "Аналіз ключових творів: Марксистська методологія": [!context] — Використання цитат Леніна та Маркса як "щита" для легальної критики режиму — поширений прийом дисидентів, який Дзюба довів до абсолютної досконалості.
+- Section "Аналіз ключових творів: Культурний та мовний виміри": [!quote] — Включення прямої цитати Дзюби про те, як русифікація маскується під "об'єктивний процес зближення націй".
+- Section "Деколонізаційна перспектива: Деконструкція міфу": [!myth-buster] — Спростування радянського міфу про "добровільне злиття націй". Дзюба документально доводить примусовий, штучний та насильницький характер асиміляції українців.
+- Section "Деколонізаційна перспектива: Українська суб'єктність": [!decolonization] — Текст руйнує парадигму "меншого брата". Дзюба вимагає не просто "дозволу" на існування української мови, а повноцінного державного і соціального статусу для української нації.
+- Section "Підсумок та спадщина: Реакція влади і самвидав": [!culture] — Значення "самвидаву". Текст переписували від руки, передруковували на машинках у тисячах примірників, що свідчить про колосальний суспільний запит на правду.
+
+## Деколонізаційний контекст
+- Imperial/Soviet myth: Радянський Союз — це ідеальна "сім'я рівних народів", де російська мова добровільно та закономірно виконує роль мови міжнаціонального спілкування, а "інтернаціоналізм" означає відмову від "вузького націоналізму".
+- Ukrainian reality: Так званий радянський "інтернаціоналізм" був лише ідеологічною вивіскою для класичного російського великодержавного шовінізму та колоніалізму. Русифікація була інструментом поневолення та знищення ідентичності.
+
+## Contested Terms (if applicable)
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| Інтернаціоналізм | Прогресивне злиття націй навколо "великої російської культури" | Прикриття для російського великодержавного імперіалізму |
+| Русифікація | Природний процес культурного збагачення та цивілізаційного поступу | Штучна колоніальна політика етноциду та асиміляції |
+| Націоналізм | Будь-який прояв української самосвідомості як "буржуазний" злочин | Природне прагнення нації до збереження своєї мови та суб'єктності |
+
+## Section-Mapped Research Notes
+
+### Вступ: Постать Івана Дзюби та феномен шістдесятництва
+Іван Дзюба (1931-2022) — літературознавець, критик, одна з центральних фігур покоління шістдесятників. У вересні 1965 року, під час знаменитої прем'єри фільму "Тіні забутих предків" у кінотеатрі "Україна", він разом із В. Стусом та В. Чорноволом публічно виступив проти арештів української інтелігенції.
+
+### Вступ: Історичний контекст створення праці
+Праця стала інтелектуальною відповіддю на арешти 1965 року. Дзюба вирішив діяти легально: він написав ґрунтовний аналітичний меморандум і надіслав його керівництву КПУ, сподіваючись на діалог та виправлення "помилок". Це був безпрецедентний акт громадянської сміливості.
+
+### Аналіз ключових творів: Марксистська методологія
+Текст побудований на глибокому аналізі праць Маркса, Енгельса та Леніна. Дзюба використовував офіційну ідеологію режиму, щоб довести, що сучасна радянська політика в Україні є зрадою марксистських принципів самовизначення націй. Цей риторичний хід робив працю надзвичайно важкою для спростування офіційними ідеологами.
+
+### Аналіз ключових творів: Культурний та мовний виміри
+Основна частина праці містить нищівну критику витіснення української мови зі сфери освіти, науки, книговидання та партійного діловодства. Дзюба навів убивчу статистику, яка свідчила про непропорційно малу кількість українськомовних шкіл та видань навіть в УРСР.
+
+### Аналіз ключових творів: Економічна дискримінація
+Окрім культурного аспекту, Дзюба підняв питання економічної експлуатації України. Він доводив, що надцентралізація економіки в Москві позбавляє республіку контролю над власними ресурсами, що є класичною ознакою колоніального становища.
+
+### Стилістика та мова автора: Полемічна майстерність
+Стиль Дзюби — це поєднання жорсткої академічної логіки, скрупульозної роботи зі статистикою та пристрасного публіцистичного пафосу. Він блискуче використовував іронію, викриваючи лицемірство партійних гасел.
+
+### Деколонізаційна перспектива: Деконструкція міфу
+Найбільший концептуальний прорив Дзюби полягав у тому, що він зірвав маску "інтернаціоналізму" з російського імперіалізму. Він показав пряму тяглість між русифікаторською політикою Російської імперії (царату) та діями радянської бюрократії.
+
+### Деколонізаційна перспектива: Українська суб'єктність
+У тексті Україна виступає не як пасивна жертва, а як нація, що має невід'ємне право на повноцінне життя. Дзюба відкидає нав'язаний комплекс меншовартості та формулює засади української інтелектуальної суб'єктності.
+
+### Підсумок та спадщина: Реакція влади і самвидав
+Керівництво УРСР зустріло працю вороже (спеціальна рецензія Б. Станчука обізвала її "пасквілем"). Проте текст миттєво став найпопулярнішим твором українського самвидаву і маніфестом опору. У 1972 році це стало формальним приводом для репресій проти самого Дзюби.
+
+### Підсумок та спадщина: Значення для націєтворення
+"Інтернаціоналізм чи русифікація?" вважається найважливішим політичним і культурним текстом українського дисидентського руху. Його аргументи щодо прихованого російського імперіалізму залишаються абсолютно актуальними в контексті сучасної російсько-української війни та боротьби за культурну деколонізацію.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12134)
+✓ Message 12062 acknowledged
+✓ Message 12134 acknowledged

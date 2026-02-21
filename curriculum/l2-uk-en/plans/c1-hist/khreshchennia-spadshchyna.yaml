@@ -1,4 +1,3 @@
----
 module: c1-hist-058
 level: c1-hist
 sequence: 58
@@ -10,22 +9,19 @@ objectives:
 - 'Analyze the causes and consequences of спадщина хрещення: візантійська традиція'
 - Evaluate the historical significance of релігія і нація
 content_outline:
-- section: "Вступ — Релігія і нація"
-  words: 457
+- section: Вступ — Релігія і нація
   subsections:
   - Чому релігійна ідентичність важлива
   - Хрещення 988 — початок
   - Візантійський вибір — наслідки
   - Структура фази
-- section: "Хрещення Русі — факти і міфи"
-  words: 686
+- section: Хрещення Русі — факти і міфи
   subsections:
   - Володимир і вибір віри — легенда
   - Політичні мотиви
   - Візантійський союз
   - Що насправді сталося
 - section: Візантійська спадщина
-  words: 800
   subsections:
   - Літургія церковнослов'янською
   - Архітектура — Софія Київська
@@ -33,33 +29,28 @@ content_outline:
   - Література — перекладна
   - Мистецтво — ікони
 - section: Церква і держава
-  words: 571
   subsections:
   - Візантійська модель — симфонія
   - Митрополія Київська
   - Залежність від Константинополя
   - Князі і церква
 - section: Дебати про спадщину
-  words: 686
   subsections:
   - Чия спадщина — України, Росії, Білорусі?
   - Московська претензія
   - Українська позиція
   - Сучасні церковні конфлікти
 - section: Спадщина для ідентичності
-  words: 457
   subsections:
   - Православ'я як ідентичність
   - Але не тільки православ'я
   - Різноманітність — УГКЦ, протестанти
   - Секуляризація
 - section: Підсумок
-  words: 343
   subsections:
   - Хрещення — початок історії
   - Від Візантії до сьогодення
   - Підготовка до Берестейської унії
-word_target: 4000
 vocabulary:
 - Хрещення Русі
 - Візантія
@@ -78,7 +69,7 @@ vocabulary:
 - обряд
 activities:
 - type: critical-analysis
-  focus: "PVL baptism narrative — separate fact from legend"
+  focus: PVL baptism narrative — separate fact from legend
 - type: essay-response
   focus: Whose heritage is Kyivan Christianity?
 - type: critical-analysis
@@ -89,15 +80,15 @@ activities:
   focus: Як візантійська традиція сформувала українську ідентичність?
 sources:
 - name: Хрещення Русі (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Хрещення_Русі"
+  url: https://uk.wikipedia.org/wiki/Хрещення_Русі
   type: reference
   notes: Baptism of Rus
 - name: Візантійський обряд
-  url: "https://uk.wikipedia.org/wiki/Візантійський_обряд"
+  url: https://uk.wikipedia.org/wiki/Візантійський_обряд
   type: reference
   notes: Byzantine rite
 - name: Православ'я в Україні
-  url: "https://uk.wikipedia.org/wiki/Православ'я_в_Україні"
+  url: https://uk.wikipedia.org/wiki/Православ'я_в_Україні
   type: reference
   notes: Orthodoxy overview
 vocabulary_hints:
@@ -116,7 +107,9 @@ activity_hints:
   items: 4
 - type: essay-response
   focus: Критичний аналіз
-  word_target: 300
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Byzantinist

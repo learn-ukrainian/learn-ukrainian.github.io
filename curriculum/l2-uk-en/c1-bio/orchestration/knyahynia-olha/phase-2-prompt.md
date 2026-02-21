@@ -1,575 +1,271 @@
-# Phase 2: Content Writing
+# Phase 2: Write the Lesson Content
 
-> **You are Gemini, executing Phase 2 of an orchestrated rebuild.**
-> **Your ONLY task: Write the lesson prose. Overshoot to 1.5x the word target.**
+> **Persona reminder:** You are Professor of Ukrainian Arts (biography). Write in the voice of Senior Biographer. Maintain this persona throughout — do not drift into generic AI tone.
 
-## Your Input
+> **Your #1 job: Write 7500 words of rich, structured Ukrainian content.**
+> Every concept gets dedicated depth. Every H3 gets 80-100+ words. This is how you hit the target.
 
-Read these files from disk:
+## Files to Read
 
-**Research notes** (your factual foundation — use exhaustively):
-```
-# Дослідження: Княгиня Ольга: Дипломатія та реформи
+| File | Purpose |
+|------|---------|
+| `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/c1-bio/research/knyahynia-olha-research.md` | Factual foundation — use exhaustively |
+| `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/c1-bio/meta/knyahynia-olha.yaml` | Content outline with section word allocations |
+| `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/c1-bio/knyahynia-olha.yaml` | Objectives, vocabulary_hints (use ONLY these words) |
+| `/Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/C1-BIO.md` | Level constraints, immersion %, engagement minimums |
 
-## Використані джерела
-1. [Княгиня Ольга (Енциклопедія історії України)](http://www.history.org.ua/?termin=Olga) — Академічне джерело, що описує державотворчу роль Ольги та її реформи.
-2. [Повість минулих літ (Ізборник)](http://izbornyk.org.ua/pvls/pvls03.htm) — Первинне літописне джерело з цитатами про помсту та візит до Константинополя.
-3. [Котляр М. Ф. "Дипломатія Давньої Русі"](http://history.org.ua/LiberUA/966-02-1749-7/966-02-1749-7.pdf) — Аналіз міжнародних відносин Русі за часів Ольги.
-4. [Михайло Грушевський "Історія України-Руси", Том I](http://izbornyk.org.ua/hrushrus/iur1.htm) — Фундаментальна праця про формування державної структури.
-
-## Хронологія
-- **945**: Вбивство князя Ігоря деревлянами; початок регентства Ольги.
-- **945–946**: Чотири помсти деревлянам, що завершилися спаленням Іскоростеня.
-- **946**: Проведення податкової та адміністративної реформ (встановлення «уставів», «уроків» та «погостів»).
-- **957**: Дипломатична місія до Константинополя, зустріч з імператором Костянтином Багрянородним, прийняття християнства.
-- **959**: Посольство до німецького короля (майбутнього імператора) Оттона I з проханням про встановлення церковних зв'язків.
-- **961**: Прибуття на Русь місії єпископа Адальберта (завершилася безрезультатно).
-- **969**: Смерть княгині Ольги в Києві.
-
-## Ключові факти та цитати
-- **Походження**: Існує три основні версії: Псковська (традиційна), Болгарська (Плесков як Плиска) та Скандинавська (ім'я Helga як етимологічна основа).
-- **Цитата про помсту**: «Мужа свойого мені вже не воскресити, а вас хочу я завтра вшанувати перед людьми своїми...» (Літопис, розмова з послами деревлян).
-- **Дипломатичний статус**: У візантійському протоколі Ольга згадується як «Елга, архонтиса Росії», вона отримала рідкісний привілей сидіти під час аудієнції з імператором.
-- **Символізм**: Помста Ольги в літописі — це не просто жорстокість, а ритуальне відновлення честі династії та юридичне покарання за порушення «ряду» (договору).
-
-## Engagement Hooks (mapped to sections)
-- **Section "Вступ — Мудра володарка Києва"**: [!decolonization] — Ольга — перша правителька, яка перевела Русь від «держави-екстрактора» (набіги за даниною) до «регулярної держави» (закон і податки).
-- **Section "Життєпис"**: [!history-bite] — Загадка Плескова: чи була Ольга болгарською принцесою з Плиски, чи скандинавкою з Пскова? Аналіз лінгвістичних та археологічних доказів.
-- **Section "Історичний контекст"**: [!context] — Світ 950-х років: Поки Європа поринала у феодальну роздробленість, Ольга будувала централізовану вертикаль влади в Києві.
-- **Section "Внесок"**: [!myth-buster] — Погости — це не цвинтарі (сучасне значення), а перші адміністративні центри та логістичні вузли Русі.
-- **Section "Останні роки"**: [!quote] — «Я согрішила, будучи язичницею...» — Ольга як ідеолог християнського вибору ще за 30 років до Володимира.
-- **Section "Спадщина"**: [!culture] — Образ Ольги в мистецтві: від суворого літопису до ікони «Рівноапостольної».
-
-## Деколонізаційний контекст
-- **Imperial/Soviet myth**: Ольга як «перша російська свята» (привласнення спадщини Києва Москвою).
-- **Ukrainian reality**: Ольга — архітекторка правового та територіального простору України-Руси. Її реформи заклали фундамент європейської моделі управління, орієнтованої на закон, а не на ординське свавілля.
-
-## Contested Terms (if applicable)
-| Concept | Imperial framing | Ukrainian framing |
-|---------|-----------------|-------------------|
-| **Походження Ольги** | Доказ «єдності трьох братніх народів» через Псков. | Скандинавський або Болгарський слід як доказ включеності Русі в загальноєвропейський контекст. |
-| **Погости** | Примітивні зупинки для збору данини. | Прообрази місцевого самоврядування та судової системи. |
-| **Дипломатія з Візантією** | «Смирення перед старшим братом». | Тверде обстоювання рівноправного статусу (сидіння перед імператором, вимога почестей). |
-
-## Section-Mapped Research Notes
-
-### Вступ — Мудра володарка Києва
-Ольга постає як постать перехідного періоду: від героїчного епосу воїнів до прагматичного державного будівництва. Вона — перша жінка-реформатор, яка довела, що інтелект і дипломатія ефективніші за меч.
-
-### Життєпис
-Детальний розгляд трагедії 945 року. Вбивство Ігоря як криза старої системи полюддя. Помста Ольги — юридичний акт легітимізації влади жінки-регента. Розгляд теорій походження: Helga (скандинавська), Псков (руська), Плиска (болгарська).
-
-### Історичний контекст
-Русь між «молотом і ковадлом»: Візантія на півдні та Хазарія на сході. Потреба в єдиній податковій базі для утримання професійної армії та захисту кордонів.
-
-### Внесок
-Аналіз реформи:
-- **Уроки**: фіксований розмір данини (кінець свавіллю князів).
-- **Устави**: правила збору та поведінки дружини.
-- **Погости**: мережа опорних пунктів, де сидів представник князя. Це перша в історії Східної Європи адміністративна реформа.
-
-### Останні роки / Дипломатія та віра
-Візит до Константинополя (957 р.) як найвища точка дипломатії. Костянтин Багрянородний у праці «Про церемонії» детально описує прийом Ольги. Хрещення як засіб підвищення державного престижу. Спроба балансування між Візантією та Імперією Оттона I.
-
-### Спадщина
-Формування ідеї християнської держави. Ольга не змогла охрестити Русь через опір сина Святослава та язичницької еліти, але підготувала ґрунт для Володимира. Вплив її образу на подальшу літературну традицію («Повість минулих літ»).
-
-### Порівняльний аналіз: Моделі управління
-Ігор — «князь-воїн», чия влада трималася на особистій силі та поборах. Ольга — «княгиня-менеджер», яка створила інституції, що пережили її саму. Це перехід від вождівства до ранньої феодальної держави.
-```
-
-**Meta file** (content_outline with word allocations):
-```
----
-module: c1-bio-001
-level: C1-BIO
-slug: knyahynia-olha
-version: '2.0'
-id: c1-bio-001
-title: "Княгиня Ольга: Архітекторка державної волі"
-naturalness:
-  score: 10
-  status: PASS
-duration: 120
-transliteration: none
-tags:
-- history
-- biography
-- politics
-- diplomacy
-- Kievan-Rus
-content_outline:
-- section: "Вступ: Мудра володарка Києва"
-  words: 600
-  points:
-  - "Ольга як символ державної мудрості та незламності"
-  - "Перехід від епохи завоювань до епохи впорядкування"
-  - "Роль у зміцненні внутрішнього ладу"
-- section: "Життєпис: Від таємниць походження до регентства"
-  words: 1600
-  points:
-  - "Походження (легенди про Псков, болгарське коріння та скандинавський слід)"
-  - "Шлюб з Ігорем та входження у владну еліту"
-  - "Трагедія 945 р. та приборкання древлян: політика через ритуал"
-  - "Регентство при Святославі: втримання імперії Рюриковичів"
-- section: "Історичний контекст: Русь на роздоріжжі X століття"
-  words: 600
-  points:
-  - "Геополітична ситуація: Хазарський каганат, Візантія та Європа"
-  - "Внутрішні виклики: сепаратизм племен та потреба в центрі"
-- section: "Внесок: Перша реформаторка Східної Європи"
-  words: 400
-  points:
-  - "Податкова реформа: устави, уроки та система погостів"
-  - "Встановлення перших державних кордонів та адміністративних одиниць"
-- section: "Дипломатія та віра: Місія до Константинополя"
-  words: 400
-  points:
-  - "Візит 957 р.: етикет, хрещення та державний престиж"
-  - "Стосунки з Оттоном I та баланс між Сходом і Заходом"
-- section: "Спадщина: Світло після темряви"
-  words: 400
-  points:
-  - "Ольга як передвісниця Хрещення Русі"
-  - "Образ у літописах та мистецтві"
-  - "Канонізація та тяглість державної традиції"
-- section: "Порівняльний аналіз: Моделі управління (Ігор та Ольга)"
-  words: 300
-  points:
-  - "Зіставлення експансивної та інституційної моделей"
-  - "Перехід від вождівства до регулярної держави"
-- section: "Критичне мислення"
-  words: 200
-  points:
-  - "Питання для глибокого аналізу реформ та дипломатії"
-- section: "Есе"
-  words: 500
-  points:
-  - "Тема та вимоги до аналітичного есе про деколонізацію простору"
-- section: "Зразок відповіді"
-  words: 400
-  points:
-  - "Приклад есе високого рівня для аналізу"
-- section: "Підсумок: Засновниця регулярної держави"
-  words: 300
-  points:
-  - "Ольга як архітекторка правового поля України-Руси"
-  - "Урок політичного реалізму та візіонерства"
-word_target: 5000
-vital_status: deceased
-build:
-  last_modified: '2026-02-05T15:30:00Z'
-
-```
-
-**Plan file** (objectives, vocabulary_hints — use ONLY these words):
-```
----
-module: c1-bio-001
-level: C1-BIO
-sequence: 1
-slug: knyahynia-olha
-version: '2.0'
-title: 'Княгиня Ольга: Дипломатія та реформи'
-word_target: 4300
-content_outline:
-- section: "Вступ — Мудра володарка Києва"
-  words: 600
-  points:
-  - Ольга як символ державної мудрості
-  - Поєднання язичницької сили та християнського вибору
-  - Роль у зміцненні внутрішнього ладу
-- section: Життєпис
-  words: 1600
-  points:
-  - Походження (легенди про Псков та болгарське коріння)
-  - Шлюб з Ігорем
-  - Трагедія 945 р. та помста древлянам
-  - Регентство при Святославі
-- section: Історичний контекст
-  words: 600
-  points:
-  - Стан Русі в середині X ст.
-  - Стосунки з Візантією та Священною Римською імперією
-- section: Внесок
-  words: 400
-  points:
-  - Податкова реформа (устави, уроки, погости)
-  - Встановлення перших державних кордонів
-- section: Останні роки
-  words: 400
-  points:
-  - Дипломатична місія до Константинополя 957 р.
-  - Прийняття християнства
-  - Смерть та канонізація
-- section: Спадщина
-  words: 400
-  points:
-  - Ольга як "передвісниця" Хрещення Русі
-  - Образ у літописах та мистецтві
-- section: Підсумок
-  words: 300
-  points:
-  - Ольга як архітекторка регулярної держави
-focus: biography
-pedagogy: seminar
-prerequisites:
-- c1-bio-01 (Олег Віщий)
-- b2-hist knyahynia-olha module
-connects_to:
-- c1-bio-03 (Святослав Хоробрий)
-- b2-hist hrystyianstvo module
-objectives:
-- Проаналізувати адміністративні реформи Ольги
-- Оцінити дипломатичні успіхи у відносинах з Візантією
-- Дослідити причини та наслідки прийняття християнства
-grammar:
-- Архаїзми в літописному контексті
-- Офіційний регістр (опис реформ)
-module_type: biography
-sources:
-- name: Княгиня Ольга (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Княгиня_Ольга"
-  type: primary
-  notes: Основне джерело фактів
-- name: Повість минулих літ
-  url: "http://izbornyk.org.ua/"
-  type: primary
-  notes: Літописні легенди
-immersion: 100% Ukrainian
-phase: C1-BIO
-vocabulary_hints:
-  required:
-  - регент (regent)
-  - погост (pohost - administrative center)
-  - урок (urok - fixed tax)
-activity_hints:
-- type: reading
-  focus: Аналіз літописної розповіді про помсту
-  source: Повість минулих літ (адаптовано)
-- type: critical-analysis
-  focus: Сутність податкової реформи
-```
-
-**Level quick-ref** (constraints, immersion %, engagement minimums):
-```
-# C1-BIO Quick Reference (Ukrainian Biographies Track)
-
-## Track Overview
-
-**Modules:** 101 (M01-101)
-**Prerequisite:** B2-HIST Track (recommended) or B2 Core minimum
-**Pedagogy:** CBI (Content-Based Instruction) with biographical narrative
-**Immersion:** 95-100% Ukrainian
-
-> This track was relocated from C1 M36-131. Biography content is now optional, separate from core academic path.
-
-## Workflow Integration
-
-**C1-BIO uses the 9-phase track workflow:**
-
-1. **Meta** → Generate module metadata (hydrated content outline)
-2. **Meta-QA** → Validate metadata and word targets
-3. **Lesson** → Write lesson content following meta outline
-4. **Lesson-QA** → Validate lesson against requirements
-5. **Act** → Generate activities from lesson content
-6. **Act-QA** → Validate activities quality and coverage
-7. **Integrate** → Deploy to website (MDX generation)
-8. **Vocab** → Extract vocabulary from lesson
-9. **Vocab-QA** → Validate vocabulary schema and uniqueness
-
-**Commands:**
-
-- Start: `/module c1-bio {num}`
-- Resume: `/module c1-bio {num} --from={phase}` (phase: meta, lesson, act, vocab)
-- Status: `/module c1-bio {num} --check`
-
-**Reference:** `docs/SCRIPTS.md` for full 9-phase documentation.
-
----
-
-## Audit Limits (per config.py)
-
-| Metric           | Value   | Source              |
-| ---------------- | ------- | ------------------- |
-| Word count       | 4000    | target_words        |
-| Min activities   | 3       | min_activities      |
-| Max activities   | 9       | max_activities      |
-| Items/activity   | 1+      | min_items_per_activity |
-| Unique types     | 3+      | min_types_unique    |
-| Required types   | reading, essay-response, critical-analysis | required_types |
-| Priority types   | reading, essay-response, critical-analysis, comparative-study, authorial-intent, quiz | priority_types |
-| Forbidden types  | match-up, fill-in, cloze, group-sort, unjumble, anagram, mark-the-words | forbidden_types |
-| Essay word range | 250-400 | essay_min/max_words |
-| Immersion        | 95-100% | min/max_immersion   |
-| Engagement       | 5+      | min_engagement      |
-| Vocab            | 24+     | min_vocab           |
-
-**Note:** C1-BIO uses pure seminar-style activities. Traditional drill activities are FORBIDDEN.
-
----
-
-## Templates
-
-**Before writing any C1-BIO module, read:**
-
-- **Biography modules (AI)** → `docs/l2-uk-en/templates/ai/c1-biography-module-template.md`
-- **Checkpoint** (M101) → `docs/l2-uk-en/templates/c1-checkpoint-module-template.md`
-
-> **Full documentation:** See `docs/l2-uk-en/templates/c1-biography-module-template.md` for complete reference.
-
----
-
-## Phase Structure (101 Modules)
-
-| Phase  | Modules | Focus                      | Notable Figures          |
-| ------ | ------- | -------------------------- | ------------------------ |
-| BIO.1  | M01-06  | Medieval Founders          | Olha, Yaroslav           |
-| BIO.2  | M07-15  | Early Modern Era           | Roksolana, Mazepa        |
-| BIO.3  | M16-19  | Enlightenment & Baroque    | Skovoroda                |
-| BIO.4  | M20-35  | National Awakening         | Shevchenko, Franko       |
-| BIO.5  | M36-53  | Revolutionary Era          | Lesya Ukrainka, Petliura |
-| BIO.6  | M54-69  | Soviet Era Tragedy         | Kurbas, Khvylovyi        |
-| BIO.7  | M70-82  | Resistance & Diaspora      | Shukhevych, Bandera      |
-| BIO.8  | M83-91  | Late Soviet & Independence | Stus, Chornovil          |
-| BIO.9  | M92-98  | Contemporary Ukraine       | Activists, Artists       |
-| BIO.10 | M99-100 | Academy Founders           | Vernadskyi, Krymskyi     |
-| BIO.11 | M101    | **Checkpoint**             | Comprehensive review     |
-
----
-
-## Pre-flight Checklist
-
-Before writing, confirm:
-
-- [ ] Read module plan from `curriculum/l2-uk-en/plans/c1-bio/{slug}.yaml` for content outline + vocabulary hints
-- [ ] **Read the biography template** (`c1-biography-module-template.md`)
-- [ ] Research the historical figure thoroughly (use reliable Ukrainian sources)
-- [ ] All metadata YAML fields ready
-- [ ] Activity plan: 3-9 seminar-style activities (must include reading + essay-response + critical-analysis)
-- [ ] Essay in YAML only (250-400 words) — NO essay section in markdown
-- [ ] NO traditional drill activities (fill-in, match-up, unjumble, etc. are FORBIDDEN)
-- [ ] Immersion target: **95-100%** Ukrainian
-
-## Metadata YAML Template (`meta/{slug}.yaml`)
-
-```yaml
-module: c1-bio-XX
-slug: '{slug}'
-title: '{Name}: {Epithet}'
-subtitle: '{English subtitle}'
-version: '1.0'
-phase: 'C1-BIO.X'
-pedagogy: 'CBI'
-duration: 90
-transliteration: 'none'
-tags: ['biography', 'era-tag', 'field-tag']
-grammar: ['biographical-vocabulary', 'narrative-structures']
-objectives:
-  - 'Learner can understand biographical narrative about...'
-  - 'Learner can use vocabulary of achievements and legacy...'
-prerequisites:
-  - c1-bio-XX # Previous module
-naturalness:
-  score: 0
-  status: PENDING
-  checked: null
-```
-
-## Content Requirements
-
-| Metric            | Biography Modules | Checkpoint |
-| ----------------- | ----------------- | ---------- |
-| Core Word Count   | 4000+             | 2500+      |
-| Immersion         | **95-100%**       | **95-100%** |
-| Vocabulary (YAML) | 20-25             | 50-55      |
-| Engagement Boxes  | 6+                | 4+         |
-| Primary Sources   | 1+ quote          | Multiple   |
-
-## Activity Requirements (per config.py)
-
-**C1-BIO uses pure seminar-style pedagogy:**
-
-| Requirement        | Biography | Checkpoint |
-| ------------------ | --------- | ---------- |
-| Total Activities   | 3-9       | 14+        |
-| Items per Activity | 1+        | 14+        |
-| Unique Types       | 3+        | 6+         |
-
-### Required Activity Types
-
-**Every module MUST include:**
-- `reading` - External reading assignments with linguistic analysis
-- `essay-response` - 250-400 word essay task (NO model answer in markdown)
-- `critical-analysis` - Deep analytical questions about sources/legacy
-
-**Optional activity types:**
-- `comparative-study` - Cross-figure or cross-era comparisons
-- `authorial-intent` - Analysis of the figure's own writings
-- `quiz` - ONLY for conceptual questions (per config.py, quiz is allowed)
-
-### FORBIDDEN Activity Types (per config.py)
-
-**These traditional drill activities are NOT ALLOWED in C1-BIO:**
-- match-up
-- fill-in
-- cloze
-- group-sort
-- unjumble
-- anagram
-- mark-the-words
-- dialog (dialogs are inappropriate for seminar/academic content)
-- role-play (no conversational practice in biography modules)
-
-### Essay Activities
-
-Essays are defined ONLY in `activities/{slug}.yaml`, NOT in markdown:
-
-```yaml
-- type: essay-response
-  id: c1-bio-XX-essay-01
-  title: 'Есе: Порівняльний аналіз'
-  prompt: |
-    Напишіть порівняльне есе (250-400 слів)...
-  rubric:
-    - criterion: Мовна якість
-      weight: 40
-```
-
-**Word range:** 250-400 (per config.py essay_min/max_words)
-
----
-
-## Golden Rule for Biography Modules
-
-**"Can the learner answer without reading the Ukrainian text?"**
-
-- If YES → Rewrite (tests biographical facts, not language)
-- If NO → Keep (tests Ukrainian comprehension)
-
-### Forbidden Patterns (Tests Content Recall)
-
-- "У якому році народився..." (birth dates)
-- "Хто був..." (who was)
-- "Що символізує..." (without text reference)
-
-### Required Patterns (Tests Ukrainian Language)
-
-- "Згідно з текстом, як автор аналізує..."
-- "У тексті модуля автор інтерпретує..."
-- "Яку стилістичну функцію виконує..."
-
----
-
-## Biography Module Structure
-
-### Required Sections
-
-1. **Вступ** - Hook and context (why this person matters)
-2. **Життєпис** - Biographical narrative (chronological)
-3. **Досягнення** - Achievements and contributions
-4. **Спадщина** - Legacy and modern relevance
-5. **Підсумок** - Summary
-
-### Required Elements
-
-- **Primary source quote** - At least one quote from the person or contemporaries
-- **Timeline table** - Key dates and events
-- **Cultural references** - Ukrainian place names, institutions, works
-- **Engagement boxes** - 💡, 🇺🇦, 🌍 types for cultural depth
-
----
-
-## Richness Requirements
-
-Biography modules must achieve **95%+ richness score**:
-
-| Component        | Weight | Target                  |
-| ---------------- | ------ | ----------------------- |
-| Primary sources  | 15%    | 1+ quote                |
-| Engagement boxes | 15%    | 6+ boxes                |
-| Quotes           | 10%    | 2+ quotes               |
-| Cultural refs    | 10%    | 4+ Ukrainian references |
-| Visual elements  | 10%    | 2+ tables               |
-| Source analysis  | 10%    | 1+ primary source block |
-
----
-
-## Naturalness Requirements
-
-All biography modules must pass naturalness check:
-
-- **Score:** 8/10 minimum (10/10 preferred)
-- **Status:** PASS required before merge
-- **Checker:** Use MCP `check_naturalness` tool
-
-Update meta YAML after validation:
-
-```yaml
-naturalness:
-  score: 10
-  status: PASS
-  checked: 2026-01-16
-```
-
----
-
-## Gender & Era Balance
-
-The track maintains diversity:
-
-- **Gender:** ~30% women figures across all eras
-- **Era:** Coverage from 10th century to present
-- **Fields:** Politics, arts, science, literature, activism, military
-- **Regions:** Kyiv, Galicia, Slobozhanshchyna, diaspora
-
----
-
-## Related Documentation
-
-- **C1-BIO Level Plan:** `curriculum/l2-uk-en/plans/c1-bio.yaml`
-- **C1-BIO Module Plans:** `curriculum/l2-uk-en/plans/c1-bio/{slug}.yaml`
-- **Generated Plan (Readable):** `docs/l2-uk-en/C1-BIO-PLAN-GENERATED.md`
-- **Biography Template (AI):** `docs/l2-uk-en/templates/ai/c1-biography-module-template.md`
-- **Biography Template (Full):** `docs/l2-uk-en/templates/c1-biography-module-template.md`
-- **Checkpoint Template:** `docs/l2-uk-en/templates/c1-checkpoint-module-template.md`
-- **Activity Reference:** `docs/ACTIVITY-YAML-REFERENCE.md`
-- **Richness Guidelines:** `docs/l2-uk-en/MODULE-RICHNESS-GUIDELINES-v2.md`
-
-```
+Read ALL four files before writing anything.
 
 ## Your Task
 
-Write the full lesson prose for **Княгиня Ольга: Дипломатія та реформи** (c1-bio track, word target: 4300).
+Write the full lesson prose for **Княгиня Ольга: Дипломатія та реформи** (c1-bio track).
 
-### Critical Rules
+- **Total minimum**: 5000 words
+- **Write at least**: 7500 words (1.5x — aim for depth, not padding)
+- **Immersion**: Full Ukrainian immersion. No English except technical terminology. Sentences max 35 words.
+- **Engagement callouts**: 4+ across sections, at least 4 different types
+- **Example sentences**: 8+ in varied formats (inline, standalone, tables, dialogues)
 
-1. **OVERSHOOT**: Write to **1.5x the word_target** (6450 words). Trimming is cheap; expanding is expensive.
-2. **Section-by-section**: Follow `content_outline` exactly. Every section must appear as an H2 heading.
-3. **Research-driven**: Use research notes exhaustively. Every fact, date, quote, and source should appear in the prose.
-4. **Vocabulary discipline**: Use ONLY vocabulary from the plan's `vocabulary_hints`. Do NOT invent new terms.
-5. **Engagement boxes**: Include 5+ engagement callouts (`[!tip]`, `[!myth-buster]`, `[!quote]`, `[!history-bite]`, `[!context]`, `[!decolonization]`, `[!culture]`, `[!warning]`).
-6. **Example sentences**: Include 24+ example sentences formatted as `_Приклад:_ «...»`
-7. **Immersion**: 100% Ukrainian immersion. No English except for specific terminology comparisons if needed.
-8. **Ukrainian quotes**: Use angular quotes `«...»`, not straight quotes
-9. **No frontmatter**: Content starts with `<!-- SCOPE ... -->` comment, then `# Title`
+## Section Word Budgets
 
-### Anti-Patterns (DO NOT)
+**The global word target is the hard gate. Section budgets are guidance** — aim for each section's target, but natural variation (±30%) between sections is fine as long as no section is starved (<50% of its budget) and the total meets the global minimum.
 
-- **Robotic transitions**: "Тепер розглянемо...", "Далі ми побачимо..." — use natural connectors instead
-- **Russianisms**: кушати→їсти, приймати участь→брати участь, слідуючий→наступний
-- **Calques**: робити сенс→мати сенс, брати місце→відбуватися
-- **Template repetition**: Don't start 3+ sentences the same way
-- **Dry exposition**: Use storytelling, not textbook listing
-- **Fact duplication**: Each date/quote/statistic appears in ONE section only. Cross-reference with "Як зазначалося вище..." if needed.
+| Section | Target | Write Minimum (1.5x) |
+|---------|--------|---------------------|
+| Вступ — Мудра володарка Києва | 400 | 600 |
+| Життєпис | 1000 | 1500 |
+| Історичний контекст | 600 | 900 |
+| Внесок | 1000 | 1500 |
+| Останні роки | 1000 | 1500 |
+| Спадщина | 600 | 900 |
+| Підсумок | 400 | 600 |
+| **Total** | **5000** | **7500** |
 
-### Section Word Buffer
+---
 
-The audit counts ~100-150 fewer words than raw `wc -w` due to excluding blockquote/callout markup. For a section with 600-word allocation, write 700-750 raw words.
+## MANDATORY Content Structure Rules
 
-### Output Format
+**These rules determine whether your output passes or fails audit. Read each one.**
 
-Return the full lesson content as markdown:
+### Rule 1: Every Concept Gets Dedicated Depth (CRITICAL — #1 word count lever)
+
+When an H2 section teaches multiple items in a category, each item (or logical group of closely related items) MUST get its own `### H3` subsection with dedicated depth.
+
+**Grouping rule:** Closely related items that form a single system (e.g., masculine/feminine/neuter endings of the same paradigm) MAY share one H3 — but that H3 must then cover ALL items with equal depth. Independent concepts MUST get separate H3s.
+
+**Count the items from the plan/outline.** Each concept without dedicated depth = ~100 missing words.
+
+```markdown
+❌ WRONG (compressed):
+## Частини мови
+Іменник та дієслово — найважливіші...
+(multiple concepts crammed into one paragraph)
+
+✅ RIGHT (each concept = dedicated depth):
+## Частини мови
+### Іменник
+{Definition, questions, 2+ examples, usage note — 80-100 words}
+### Дієслово
+{Same depth and pattern — 80-100 words}
+### Прикметник
+{Same depth and pattern — 80-100 words}
+
+✅ ALSO RIGHT (logical group with equal coverage):
+## Рід іменників
+### Закінчення за родами
+{Covers -а/-я (fem), consonant (masc), -о/-е (neut) as unified system — 200+ words}
+```
+
+### Rule 2: Depth Over Compression
+
+Each H3 concept block MUST contain ALL of these:
+
+1. **Definition/explanation** (2+ sentences)
+2. **How it works** (formation rules, patterns, grammatical function)
+3. **2+ example sentences** in context (not isolated words)
+4. **Usage note** — when/why a speaker uses this form
+
+Minimum **80-100 words per H3 block**. A 20-word table row is NOT a lesson.
+
+### Rule 3: Presentation Consistency
+
+All items in a category: SAME format, SAME depth (±20%), SAME example count (±1).
+
+❌ Item A gets 150 words, Item B gets 40 words for equal-weight concepts
+✅ All items follow identical pattern: definition → formation → examples → usage note
+
+### Rule 4: Example Variety
+
+FORBIDDEN: 5+ consecutive `_Приклад:_` lines. Mix these formats across sections:
+- Standalone examples with context (max 3-4 consecutive)
+- **Comparison tables** (paradigms, aspect pairs, case usage)
+- Inline examples woven into prose
+- **Mini-dialogues** showing real usage
+- Callout boxes with examples
+
+### Rule 5: Callout Type Variety
+
+Use at least **4 DIFFERENT** callout types across the module:
+- `[!tip]` — practical advice
+- `[!warning]` — common mistakes, Russianisms to avoid
+- `[!observe]` or `[!context]` — pause and think
+- `[!quote]` — literary/cultural quote
+- `[!myth-buster]` — debunk misconception
+- `[!culture]` or `[!history-bite]` — cultural hook
+- `[!fact]` — interesting linguistic/cultural fact
+- `[!decolonization]` — decolonial perspective on language
+
+❌ 8 callouts all `[!tip]`
+✅ Mix of tip, warning, observe, quote, culture
+
+### Rule 6: Self-Check Questions in Summary
+
+The Підсумок section MUST include 4-6 self-assessment questions:
+
+```markdown
+**Перевірте себе:**
+1. {question testing core concept 1}
+2. {question testing core concept 2}
+3. {question requiring application, not recall}
+...
+```
+
+### Rule 7: Cultural Anchoring
+
+Connect 2-3 grammar or vocabulary points to Ukrainian cultural context:
+- Прислів'я (proverbs) that illustrate the grammar point
+- Literary quotes (Шевченко, Леся Українка, Франко, Стус, Костенко)
+- Real-world Ukrainian contexts (news, social media, academic discourse)
+
+### Rule 8: Anti-Robotic Writing
+
+- No 3+ sentences starting with the same phrase
+- Vary sentence openers across sections
+- No mechanical transitions («Далі ми побачимо...», «Тепер розглянемо...»)
+- Use storytelling and real-world scenarios, not dry textbook listing
+- Each section should have its own narrative arc, not repeat the same skeleton
+
+---
+
+## How to Hit 7500 Words (Expansion Method)
+
+**Don't just write more — write deeper.** For EVERY concept you introduce:
+
+1. **Define it** (2+ sentences explaining what it is)
+2. **Show how it works** (pattern, rule, formation)
+3. **Give 2+ examples** in full sentences with context
+4. **Add a comparison** (table, before/after, correct vs incorrect)
+5. **Connect to real life** (when would a Ukrainian speaker use this?)
+
+**If a section is still under its Write Minimum after this, add:**
+- A `[!warning]` with a common mistake and correct alternative
+- A `[!culture]` or `[!quote]` connecting to Ukrainian culture
+- A mini-dialogue showing the concept in conversation
+- A comparison table or mermaid flowchart
+
+**The math:** If your H2 teaches 5 concepts × 100 words each = 500 words. Add an intro paragraph (50w) + 2 callouts (60w each) + a comparison table (80w) = **750 words** for that section. This is how you hit big targets.
+
+---
+
+## Language Quality Rules
+
+### No English Inside Ukrainian Sentences (HARD FAIL)
+
+**ABSOLUTELY NO English words inside Ukrainian sentence structures.** English may ONLY appear in parenthetical equivalents after Ukrainian terms on first introduction.
+
+```markdown
+❌ WRONG (English verbs/pronouns leaked into Ukrainian):
+"Тепер we переходимо до наступної теми."
+"Коли ми розглядаємо дієслово, we analyze три терміни."
+"Коли we talk про заперечення, ми маємо на увазі..."
+
+✅ RIGHT (Ukrainian sentence, English only in parenthetical equivalents):
+"Тепер ми переходимо до наступної теми."
+"**Вид** (aspect) — це граматична категорія."
+"Цей термін означає **заперечення** (negation)."
+```
+
+This is the #1 generation error from previous rebuilds. Scan EVERY sentence before submitting. If you find ANY English word that is not inside parentheses `()` as a translation, fix it immediately.
+
+### Russianisms (Pre-Output Scan — HARD FAIL if found)
+
+Before submitting, scan your ENTIRE output for these. They cause automatic audit failure:
+
+| Russicism | Correct Ukrainian |
+|-----------|-------------------|
+| кушати | їсти |
+| приймати участь | брати участь |
+| получати | отримувати |
+| самий кращий | найкращий |
+| відноситися | стосуватися |
+| слідуючий | наступний |
+| любий (= будь-який) | будь-який |
+| на то, що | на те, що |
+
+Also scan for Russian characters: **ы, э, ё, ъ** — these must NEVER appear in Ukrainian text.
+
+### Pronunciation: IPA Only (HARD FAIL if Latin transliteration found)
+
+**Level-gated IPA rules:**
+- **A1–A2**: IPA allowed ONLY on the **first occurrence** of each new vocabulary word when it is introduced. NEVER transcribe full sentences, example phrases, or words the student has already seen in earlier modules. The goal is a pronunciation hint on unfamiliar words, not a phonetics textbook.
+- **B1+**: Do NOT include inline IPA `[...]` transcriptions in the content markdown. IPA belongs ONLY in the vocabulary YAML file. Students at B1+ can read Cyrillic — cluttering prose with `[tʃɪˈtɑu̯]` breaks immersion and readability.
+
+**When IPA IS used (A1–A2 content, or any vocabulary file):**
+- ALL pronunciation MUST use IPA symbols. Latin transliterations are BANNED.
+- Maximum ~15-25 IPA annotations per module (one per new word). If you have more, you are over-annotating.
+
+```markdown
+❌ WRONG (Latin transliteration):
+"Х sounds like 'kh' in Scottish 'loch'"
+"хліб (khlib)"
+
+✅ RIGHT (IPA with English approximation):
+"**Х** — [x], like the «ch» in Scottish «loch»"
+"**хліб** — [xlʲib]"
+```
+
+**IPA Rules:**
+- Use IPA symbols in square brackets: `[x]`, `[ʃ]`, `[tʃ]`, `[ʒ]`, `[ts]`, `[dʒ]`
+- Add English approximation for accessibility: `[ʃ] — like «sh» in «shoe»`
+- Mark palatalization: `[lʲ]`, `[dʲ]`, `[nʲ]`, `[tʲ]` (NOT just `[l]`, `[d]`)
+- Mark the soft Л correctly: `[lʲ]` vs hard `[l]`
+- Use `[ʋ]` for Ukrainian В (NOT `[v]` or `[w]` — it's a labiodental approximant)
+- Use `/u/` for Ukrainian у (NOT `/ʊ/` — Ukrainian has no lax /ʊ/ phoneme)
+- NEVER use Latin shortcuts: kh, sh, ch, zh, ts, ya, yu, ye, shch
+
+### Typography
+
+- **ALWAYS** use Ukrainian angular quotes: «...» (never straight quotes "...")
+- Use ONLY vocabulary from the plan's `vocabulary_hints` — do NOT invent new terms
+
+---
+
+## LLM Writing Patterns to Avoid (auto-rejection triggers)
+
+1. **"Це не просто X, а Y"** — max ONE in entire module
+2. **Grandiose openers** — don't inflate every topic. Mix: questions, examples, scenarios, direct statements
+3. **Purple prose** — no "багатогранний діамант", "хірургічного аналізу", "будівельний блок свідомості"
+4. **Duplicate greetings** — "Ласкаво просимо" ONCE (intro only)
+5. **Stacked identical callouts** — same title max twice, vary types
+
+### Structural Variety
+
+Sections must NOT follow the same skeleton. Use at least 3 different approaches:
+- Dialogue-led, example-first, question-led, comparison, scenario-based, direct explanation
+
+### Opener Rotation (H3 subsections in categories)
+
+Rotate openers: definition-first, question-led, scenario-led, function-first. No pattern 3+ times.
+
+### Visual Aids (Grammar Modules)
+
+Use tables for comparing patterns/paradigms/categories. Use mermaid flowcharts for decision logic (aspect choice, case selection). Don't force — use when pedagogically clearer than prose.
+
+---
+
+## Output Format
+
+> **Content outside delimiters is discarded by extraction.**
 
 ```
 ===CONTENT_START===
@@ -589,13 +285,17 @@ Related: {connected slugs}
 
 ## {Section 1 from content_outline}
 
-{Content: aim for 1.5x the section word allocation}
+### {Concept 1}
+{80-100+ words: definition, how it works, examples, usage}
 
-{Engagement boxes woven in naturally}
+### {Concept 2}
+{80-100+ words: same depth}
+
+{comparison table or callout}
 
 ## {Section 2}
 
-{Content...}
+{Content — hit the Write Minimum for this section}
 
 ...
 
@@ -603,120 +303,42 @@ Related: {connected slugs}
 
 # Підсумок
 
-{3-4 paragraph summary, ~150-200 words}
+{Summary + 4-6 self-check questions (~200 words)}
 
 ---
 
 ===CONTENT_END===
 ```
 
-After the content block, report word counts:
+After the content block, report word counts per section:
 
 ```
 ===WORD_COUNTS===
-Section "{name}": {count} words (target: {allocation})
+Section "{name}": {count} words (minimum: {allocation})
 ...
-Total: {total} words (target: 4300, ratio: {total/WORD_TARGET}x)
+Total: {total} words (target: 5000, ratio: {total/WORD_TARGET}x)
 ===WORD_COUNTS===
+```
+
+## Friction Report (MANDATORY)
+
+```
+===FRICTION_START===
+**Phase**: Phase 2: Content
+**Step**: {what you were doing}
+**Friction Type**: YAML_SCHEMA_VIOLATION | TOKEN_LIMIT_TRUNCATION | TOOL_REDUNDANCY | NONE
+**Raw Error**: {actual error or "None"}
+**Self-Correction**: {what you changed, or "N/A"}
+**Proposed Tooling Fix**: {if applicable, or "N/A"}
+===FRICTION_END===
 ```
 
 ## Boundaries
 
-- Do NOT generate activities, exercises, or vocabulary tables — those are Phase 3
+- Do NOT generate activities, exercises, or vocabulary tables (Phase 3 handles these)
 - Do NOT add vocabulary outside the plan's vocabulary_hints
 - Do NOT skip sections from the content_outline
-- Do NOT write fewer than 4300 words total
+- Do NOT write fewer than 5000 words total
 - Do NOT request skills or delegate to Claude
-- If you cannot find enough material for a section, write what you can and add:
-  `NEEDS_HELP: Insufficient material for section "{name}". Need additional research on {topic}.`
-  `HELP_TYPE: research`
-
-
-## FIX PREVIOUS ERRORS
-Your previous attempt failed validation with these errors:
-
-```
-Auditing: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/c1-bio/knyahynia-olha.md
-Saving log to: curriculum/l2-uk-en/krisztiankoos/audit/knyahynia-olha-audit.log
-
-
-========================================
-  📋 Loaded Plan from: plans/c1-bio/knyahynia-olha.yaml
-  📋 Loaded Metadata from YAML sidecar
-
-📋 Auditing: C1-BIO M01 — Княгиня Ольга: Архітекторка державної волі
-   File: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/c1-bio/knyahynia-olha.md | Target: 5000 words
-  🕵️  Review Validation: 1 critical, 0 warnings
-     ❌ [RUBBER_STAMP_REVIEW] Review scores 12/12 dimensions as 10/10 but cites ZERO Ukrainian sentences as evidence. A perfect score requires justification — quote the specific text that earns each 10. REDO: DELETE the existing review file and regenerate from scratch. Run /review-content-v4 using claude_extensions/commands/review-tiers/tier-3-seminar.md. Do NOT patch the existing review — start fresh. You MUST: (1) read every line of the .md and activities .yaml, (2) cite specific Ukrainian sentences with issues (quote them with «»), (3) apply the 'Would I Stay?' test from the tier-3 seminar guide, (4) score each of 12 dimensions honestly — if giving 10/10, justify with a specific quote from the content, (5) list at least 1 real issue (no module is perfect), (6) check decolonization perspective and primary sources.
-  📋 Required activity types from meta: critical-analysis, reading
-  📋 Template: docs/l2-uk-en/templates/c1-biography-module-template.md (pedagogy: Immersion)
-  ⚠️  Outline compliance: 7 errors, 3 warnings
-     ❌ [SECTION_LENGTH_MISMATCH] Section 'Вступ: Мудра володарка Києва' is under target word count.
-     ❌ [SECTION_LENGTH_MISMATCH] Section 'Життєпис: Від таємниць походження до регентства' is under target word count.
-     ❌ [SECTION_LENGTH_MISMATCH] Section 'Історичний контекст: Русь на роздоріжжі X століття' is under target word count.
-
-  ⚠️ HYDRATION NOTE: Outline sums to 5700, exceeding word_target 5000
-     Additional 700 words (allowed for content depth)
-
-  📊 Section Word Analysis:
-     Вступ: Мудра володарка Києва                             353 /  600  ❌ (-247)
-     Життєпис: Від таємниць походження до регентства          455 / 1600  ❌ (-1145)
-     Історичний контекст: Русь на роздоріжжі X століття       343 /  600  ❌ (-257)
-     Внесок: Перша реформаторка Східної Європи                311 /  400  ❌ (-89)
-     Дипломатія та віра: Місія до Константинополя             322 /  400  ⚠️ (-78)
-     Спадщина: Світло після темряви                           326 /  400  ⚠️ (-74)
-     Порівняльний аналіз: Моделі управління (Ігор та Ольга)   257 /  300  ⚠️ (-43)
-     Критичне мислення                                        153 /  200  ❌ (-47)
-     Есе                                                      130 /  500  ❌ (-370)
-     Зразок відповіді                                         254 /  400  ❌ (-146)
-     Підсумок: Засновниця регулярної держави                  167 /  300  ❌ (-133)
-     ───────────────────────────────────────────────────────────────────────────────
-     TOTAL                                                   3071 / 5700  ❌ (-2629)
-
-📋 Auditing: C1-BIO M01 — Княгиня Ольга: Архітекторка державної волі
-   File: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/c1-bio/knyahynia-olha.md | Target: 5000 words
-
-  📋 Found YAML activities file (5 activities)
-  > Княгиня Ольга: Помста як державна стратегія: 2 items (min 1)
-  > Аналіз адміністративної агентності: 1 items (min 1)
-  > Есе: Дипломатичний геній Ольги: 1 items (min 1)
-  > Факти про правління Ольги: 10 items (min 5)
-  > Порівняння моделей управління: Ігор та Ольга: 1 items (min 1)
-
-⚠️  Richness below threshold (71% < 95% min)
-   Dryness flags:
-     - NO_ENGAGEMENT
-
---- STRICT GATES (Level C1) ---
-Words        ❌ 3116/5000 (raw: 3230)
-Activities   ✅ 5/3
-Density      ✅ All > 1
-Unique_types ✅ 5/3 types
-Priority     ✅ Priority types used
-Engagement   ❌ 0/5
-Audio        ℹ️ No audio
-Vocab        ✅ 25/24
-Structure    ✅ Valid Structure
-Lint         ✅ Clean Format
-Pedagogy     ✅ Level-appropriate
-Content_heavy ✅ Content-heavy OK (5 activities)
-Grammar      ℹ️ N/A (covered by naturalness)
-Naturalness  ✅ 10/10 (High)
-Activity_quality 📋 Quality validation available (optional)
-Immersion    🇺🇦 99.5% (target 95-100% (biography))
-Richness     ❌ 71% < 95% min (biography)
-
-Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/c1-bio/audit/knyahynia-olha-audit-report.md
-Status: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/c1-bio/status/knyahynia-olha.json
-
-❌ AUDIT FAILED. Correct errors before proceeding.
-
-Critical Failures:
-  • Review scores 12/12 dimensions as 10/10 but cites ZERO Ukrainian sentences as evidence. A perfect score requires justification — quote the specific text that earns each 10. REDO: DELETE the existing review file and regenerate from scratch. Run /review-content-v4 using claude_extensions/commands/review-tiers/tier-3-seminar.md. Do NOT patch the existing review — start fresh. You MUST: (1) read every line of the .md and activities .yaml, (2) cite specific Ukrainian sentences with issues (quote them with «»), (3) apply the 'Would I Stay?' test from the tier-3 seminar guide, (4) score each of 12 dimensions honestly — if giving 10/10, justify with a specific quote from the content, (5) list at least 1 real issue (no module is perfect), (6) check decolonization perspective and primary sources.
-  • 7 Outline Compliance Errors
-
-❌ AUDIT FAILED (see curriculum/l2-uk-en/krisztiankoos/audit/knyahynia-olha-audit.log for details)
-
-```
-
-Please fix these issues and regenerate the content.
+- Do NOT fabricate quotes, dates, or historical facts
+- Do NOT use straight quotes "..." — always «...»

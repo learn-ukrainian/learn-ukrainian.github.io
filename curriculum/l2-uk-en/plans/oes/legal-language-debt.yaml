@@ -1,41 +1,27 @@
----
-# Module Plan: "Legal Language: Debt & Duty"
-# Track: OES
-# Module: 014
-# Source: Gemini Research (ISSUE-501)
-# Generated: 2026-02-04
 sequence: 16
 module: oes-016
-
 module_number: 14
 slug: legal-language-debt
-title_uk: "Юридична мова: Борги"
-title_en: "Legal Language: Debt & Duty"
-
+title_uk: 'Юридична мова: Борги'
+title_en: 'Legal Language: Debt & Duty'
 phase: 1
 phase_id: vernacular-foundations
-phase_name: "Vernacular Foundations"
-
-focus: 'Conditional "Оли..." in Zvenyhorod letters'
-
-word_target: 4000
-
-# Content outline to be expanded during content generation
+phase_name: Vernacular Foundations
+focus: Conditional "Оли..." in Zvenyhorod letters
 content_outline:
-  - section: "Вступ"
-    description: "Introduction to Legal Language: Debt & Duty"
-  - section: "Основний матеріал"
-    description: "Primary source analysis and grammar focus"
-  - section: "Практика"
-    description: "Exercises and activities"
-  - section: "Підсумок"
-    description: "Summary and connection to next module"
-
-# Vocabulary hints (to be populated during content generation)
-vocabulary_hints: "[]"
-
-# Activity types appropriate for this module
+- section: Вступ
+  description: 'Introduction to Legal Language: Debt & Duty'
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
 activity_types:
-  - transcription
-  - etymology-trace
-  - grammar-identify
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Senior Paleographer
+  role: Money Changer

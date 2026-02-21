@@ -1,0 +1,99 @@
+- ipa: '[neˈmɑje]'
+  lemma: немає
+  pos: predicative
+  translation: there is no / there are no
+- ipa: '[bɛz]'
+  lemma: без
+  pos: preposition
+  translation: without
+- ipa: '[t͡ʃɑs]'
+  lemma: час
+  notes: Abstract concept → Genitive ending -у (часу)
+  pos: noun (masc.)
+  translation: time
+- ipa: '[ˈt͡sukɔr]'
+  lemma: цукор
+  notes: Substance → Genitive ending -у (цукру)
+  pos: noun (masc.)
+  translation: sugar
+- ipa: '[t͡ʃɑi̯]'
+  lemma: чай
+  notes: Substance → Genitive ending -ю (чаю)
+  pos: noun (masc.)
+  translation: tea
+- ipa: '[kʋɪˈtɔk]'
+  lemma: квиток
+  notes: Concrete object → Genitive ending -а (квитка)
+  pos: noun (masc.)
+  translation: ticket
+- ipa: '[ˈpɑspɔrt]'
+  lemma: паспорт
+  notes: Concrete object → Genitive ending -а (паспорта)
+  pos: noun (masc.)
+  translation: passport
+- ipa: '[tɛlɛˈfɔn]'
+  lemma: телефон
+  notes: Device/technology → Genitive ending -у (телефону)
+  pos: noun (masc.)
+  translation: phone
+- ipa: '[ʋoˈdɑ]'
+  lemma: вода
+  notes: Hard ending -а → Genitive -и (води)
+  pos: noun (fem.)
+  translation: water
+- ipa: '[ˈkɑʋɑ]'
+  lemma: кава
+  notes: Hard ending -а → Genitive -и (кави)
+  pos: noun (fem.)
+  translation: coffee
+- ipa: '[proˈblɛmɑ]'
+  lemma: проблема
+  notes: Hard ending -а → Genitive -и (проблеми)
+  pos: noun (fem.)
+  translation: problem
+- ipa: '[ˈkuxnʲɑ]'
+  lemma: кухня
+  notes: Soft ending -я → Genitive -і (кухні)
+  pos: noun (fem.)
+  translation: kitchen
+- ipa: '[sʲiˈmjɑ]'
+  lemma: сім'я
+  notes: Soft ending -я → Genitive -ї (сім'ї)
+  pos: noun (fem.)
+  translation: family
+- ipa: '[moloˈkɔ]'
+  lemma: молоко
+  notes: Ending -о → Genitive -а (молока)
+  pos: noun (neut.)
+  translation: milk
+- ipa: '[ˈmjɑso]'
+  lemma: м'ясо
+  notes: Ending -о → Genitive -а (м'яса)
+  pos: noun (neut.)
+  translation: meat
+- ipa: '[xlʲib]'
+  lemma: хліб
+  notes: Concrete object → Genitive ending -а (хліба)
+  pos: noun (masc.)
+  translation: bread
+- ipa: '[ˈɦrɔʃi]'
+  lemma: гроші
+  notes: 'Plural only. Genitive: грошей'
+  pos: noun (plural)
+  translation: money
+- ipa: '[ʋoˈɦɔnʲ]'
+  lemma: вогонь
+  notes: 'Genitive: вогню'
+  pos: noun (masc.)
+  translation: fire
+- ipa: '[dɪm]'
+  lemma: дим
+  notes: 'Genitive: диму'
+  pos: noun (masc.)
+  translation: smoke
+- ipa: '[ʒɑlʲ]'
+  lemma: жаль
+  notes: Used in 'На жаль' (Unfortunately)
+  pos: noun (masc.)
+  translation: pity / sorrow
+

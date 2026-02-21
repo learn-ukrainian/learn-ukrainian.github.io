@@ -1,4 +1,3 @@
----
 module: c1-hist-085
 level: c1-hist
 sequence: 85
@@ -10,55 +9,47 @@ objectives:
 - 'Analyze the causes and consequences of радянська українізація: пастка 1920-х'
 - Evaluate the historical significance of підступна обіцянка
 content_outline:
-- section: "Вступ — Підступна обіцянка"
-  words: 457
+- section: Вступ — Підступна обіцянка
   subsections:
   - 1920-ті — «золота доба»?
   - Чому Москва дозволила
   - Пастка — як це працювало
   - Структура модуля
-- section: "Фаза 1 — Обіцянка (1923-1928)"
-  words: 800
+- section: Фаза 1 — Обіцянка (1923-1928)
   subsections:
   - Коренізація — загальна політика
   - Українізація — конкретика
   - Мова в школах, пресі, адміністрації
   - Культурний розквіт
-- section: "Фаза 2 — Залежність (1928-1932)"
-  words: 686
+- section: Фаза 2 — Залежність (1928-1932)
   subsections:
   - Інтелігенція — вийшла з підпілля
   - Кадри — створені, відомі
   - Інституції — під контролем партії
   - Списки готові
-- section: "Фаза 3 — Зрада (1932-1933)"
-  words: 686
+- section: Фаза 3 — Зрада (1932-1933)
   subsections:
   - Постанова проти українізації
   - «Націоналістичний ухил»
   - Голодомор — одночасно
   - Зв'язок культурного і фізичного терору
-- section: "Фаза 4 — Знищення (1933-1937)"
-  words: 571
+- section: Фаза 4 — Знищення (1933-1937)
   subsections:
   - Розстріляне відродження
   - Масштаби репресій
   - Хто загинув — списки
   - Культурний геноцид
 - section: Чому пастка спрацювала
-  words: 457
   subsections:
   - Надія на «новий порядок»
   - Віра в соціалізм
   - Створення видимих цілей
   - Урок для майбутнього
 - section: Підсумок
-  words: 343
   subsections:
   - Українізація — класична пастка
   - Кооптація через надію
   - Перехід до Хрущова-Шелеста
-word_target: 4000
 vocabulary:
 - українізація
 - коренізація
@@ -81,22 +72,22 @@ activities:
 - type: critical-analysis
   focus: Why did Moscow allow Ukrainization?
 - type: critical-analysis
-  focus: "How the trap worked — step by step"
+  focus: How the trap worked — step by step
 - type: comparative-study
-  focus: "Ukrainization vs. Pereiaslav — same pattern?"
+  focus: Ukrainization vs. Pereiaslav — same pattern?
 - type: essay-response
   focus: Чи можна було скористатися українізацією без наслідків?
 sources:
 - name: Українізація (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Українізація"
+  url: https://uk.wikipedia.org/wiki/Українізація
   type: reference
   notes: Ukrainization policy
 - name: Коренізація (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Коренізація"
+  url: https://uk.wikipedia.org/wiki/Коренізація
   type: reference
   notes: Broader policy
 - name: Розстріляне відродження (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Розстріляне_відродження"
+  url: https://uk.wikipedia.org/wiki/Розстріляне_відродження
   type: reference
   notes: Cultural outcome
 vocabulary_hints:
@@ -115,7 +106,9 @@ activity_hints:
   items: 4
 - type: essay-response
   focus: Критичний аналіз
-  word_target: 300
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: 1920s Policy Analyst

@@ -1,0 +1,221 @@
+✅ Message sent to Gemini (ID: 12637) [auto-acked: self-addressed]
+✓ Message 12637 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12637...
+📨 Message #12637
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-pedagogy-brotherhood
+   Time: 2026-02-20T23:41:16.594965+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 59
+module: ruth-059
+module_number: 59
+slug: pedagogy-brotherhood
+title_uk: Педагогіка
+title_en: Pedagogy
+phase: 3
+phase_id: baroque-fight
+phase_name: Baroque Fight
+focus: How grammar was taught in brotherhood schools
+content_outline:
+- section: Вступ
+  description: Introduction to Pedagogy
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Baroque Scholar
+  role: Brotherhood Rector
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Pedagogy Brotherhood (Братські школи та педагогіка)
+
+## Використані джерела
+1. [Енциклопедія Сучасної України (esu.com.ua)](https://esu.com.ua) — статті "Братські школи", "Адельфотес", "Смотрицький Мелетій".
+2. [Ізборник (litopys.org.ua)](http://litopys.org.ua) — тексти "Порядок шкільний" (Статут Львівської братської школи), фрагменти граматик.
+3. [Інститут історії України (history.org.ua)](http://history.org.ua) — дослідження з історії освіти в Україні XVI-XVII ст.
+4. [Вікіпедія (uk.wikipedia.org)](https://uk.wikipedia.org) — базові дати та біографічні довідки (перевірені за академічними джерелами).
+
+## Хронологія
+- **1586**: Затвердження Статуту Львівської братської школи ("Порядок шкільний"). Початок систематичної братської освіти.
+- **1591**: Видання "Адельфотес" (Adelphotes) у Львівській братській друкарні — першої грецько-слов'янської граматики.
+- **1596**: Вихід "Граматики словенської" та "Лексиса" Лаврентія Зизанія у Вільні.
+- **1615**: Заснування Київської братської школи на Подолі (влилася у Києво-Могилянський колегіум у 1632).
+- **1619**: Публікація "Грамматіки" Мелетія Смотрицького у Єв'ї — кодифікація церковнослов'янської мови східнослов'янської редакції.
+- **1632**: Об'єднання Київської братської та Лаврської шкіл у Києво-Могилянський колегіум (реформа Петра Могили).
+
+## Ключові факти та цитати
+
+**Про демократизм освіти (Статут 1586):**
+> "Богатий над убогим в школі нічим вишшим не має бити, тільки самою наукою... Навчати і любити дітей має дидаскал всіх зарівно: як синів багатих, так і сиріт убогих." — *Порядок шкільний*.
+
+**Про вчителя (Дидаскала):**
+> "Дидаскал, або учитель, сього діла, має бити благочестив, розумний, смиренномудрий, кроткий, не п'яниця, не блудник, не хабарник, не сріблолюбець..." — *Порядок шкільний*.
+
+**Про "Адельфотес":**
+Це підручник "доброглаголиваго еллинословенскаго языка", що демонстрував рівноправність слов'янської мови з грецькою. Структура базувалася на граматиці Костянтина Ласкаріса.
+
+**Про Граматику Смотрицького:**
+Вона встановила норми: ввела букву "ґ" (для розрізнення g/h), узаконила орудний відмінок (якого не було в старих граматиках), виділила дієприслівник.
+
+## Engagement Hooks (mapped to sections)
+- **Section "Вступ"**: `[!context]` — Освіта як поле битви. Єзуїтські колегіуми пропонували блискучу латину і кар'єру, братства мусили дати альтернативу, щоб зберегти ідентичність.
+- **Section "Львівська школа"**: `[!myth-buster]` — Міф про "темне" православне духовенство. Реальність: Статут 1586 року запроваджував передові європейські педагогічні норми (рівність учнів, заборона хабарництва, шкільне самоврядування).
+- **Section "Навчальна програма"**: `[!culture]` — "Сім вільних мистецтв" (septem artes liberales) у православній школі. Як Trivium (граматика, риторика, діалектика) адаптували до церковнослов'янської традиції.
+- **Section "Адельфотес"**: `[!quote]` — Цитата з передмови про "ключ до пізнання".
+- **Section "Граматика Смотрицького"**: `[!history-bite]` — Підручник Смотрицького залишався стандартом понад 150 років, навіть Михайло Ломоносов вчився за ним, назвавши його "вратами вченості".
+- **Section "Шкільна драма"**: `[!decolonization]` — Українська барокова література і театр виникли не під "впливом Москви", а як органічна частина шкільної освіти, яку потім експортували на північ.
+
+## Деколонізаційний контекст
+- **Imperial Myth**: Російська імперія принесла "просвіту" в "малоросійські" землі.
+- **Ukrainian Reality**: Навпаки, українські вчені (Смотрицький, Зизаній, випускники Києво-Могилянської академії) створили граматичну та освітню базу для Московії/Росії у XVII-XVIII ст. Граматика Смотрицького стала взірцем для російських граматик.
+- **Imperial Myth**: Церковнослов'янська мова — це "спільна російська спадщина".
+- **Ukrainian Reality**: Українська редакція церковнослов'янської мови (зі своїм "іканням", "ґ", лексикою) була окремим, живим явищем, яке Смотрицький кодифікував.
+
+## Section-Mapped Research Notes
+
+### Вступ: Освітня війна XVI століття
+Контекст Реформації та Контрреформації. Поява єзуїтських колегіумів (Вільно, Ярослав, Львів) з високим рівнем освіти. Загроза денаціоналізації української еліти. Братства як відповідь міщанства.
+
+### Львівська школа і Статут 1586 року
+Перша школа європейського типу. "Порядок шкільний" — унікальна пам'ятка педагогічної думки. Принципи: демократизм (багатий/бідний рівні), моральний ценз для вчителя, систематичність (уроки, домашні завдання, іспити по суботах). Роль патріарха Єремії II.
+
+### Навчальна програма: Сім вільних мистецтв
+Адаптація західної моделі. Тривіум (граматика, риторика, діалектика) — основа. Квадривіум (арифметика, геометрія, астрономія, музика) — вищий рівень. Музика (партесний спів) як важливий елемент культури.
+
+### Мовне питання: Грецька vs Латина
+Початкова орієнтація на грецьку ("греко-слов'янські школи") як джерело православ'я. Поступове усвідомлення необхідності латини для полеміки та науки ("латино-греко-слов'янські школи"). Дискусії навколо мови навчання.
+
+### Підручник «Адельфотес» (1591)
+"Братство" (Adelphotes). Двомовний підручник (грецька/слов'янська). Арсеній Еласонський та студенти. Структура: 4 частини (орфографія, просодія, етимологія, синтаксис). Значення для філології: утвердження граматичної термінології.
+
+### Граматика Лаврентія Зизанія (1596)
+Перехідна ланка. Додаток "Лексис" — перший друкований церковнослов'янсько-український словник. Пояснення складних книжних слів "простою мовою".
+
+### Граматика Мелетія Смотрицького (1619)
+Вершина староукраїнського мовознавства. Кодифікація норм. Введення літери "ґ", правила наголосу, синтаксису. Вплив на всю Slavia Orthodoxa. Порівняння з сучасними відмінками (орудний).
+
+### Шкільна драма і риторика
+Навчання через дію. Декламації, діалоги, панегірики. Вертепна драма. Риторика як мистецтво переконання (важливо для полеміки). Твори Йоаникія Волятовського, Феофана Прокоповича.
+
+### Від школи до академії: Київський колегіум
+1615 — Київська братська школа. 1632 — Реформа Могили. Перетворення на академію західного зразка, але на православній основі. Експорт кадрів.
+
+### Підсумок: Спадщина братської педагогіки
+Братські школи зберегли національну ідентичність, створили власну інтелектуальну еліту, розвинули мову і літературу. Україна стала освітнім донором Східної Європи.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12679)
+✓ Message 12637 acknowledged
+✓ Message 12679 acknowledged

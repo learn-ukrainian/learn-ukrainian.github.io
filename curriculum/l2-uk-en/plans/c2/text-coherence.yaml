@@ -1,76 +1,75 @@
----
 module: c2-016
 level: c2
 sequence: 16
 version: '2.0'
-title: "Когерентність тексту — Бездоганний плин"
+title: Когерентність тексту — Бездоганний плин
 focus: stylistics
 pedagogy: TTT
 objectives:
 - TBD
 sources:
-- name: "Лінгвістика тексту — дискурсознавство"
-  url: "https://www.nbuv.gov.ua/"
+- name: Лінгвістика тексту — дискурсознавство
+  url: https://www.nbuv.gov.ua/
   type: primary
   notes: Academic discourse analysis resources
-- name: "Halliday & Hasan — Cohesion in English (Ukrainian adaptation)"
-  url: "https://mon.gov.ua/"
+- name: Halliday & Hasan — Cohesion in English (Ukrainian adaptation)
+  url: https://mon.gov.ua/
   type: reference
   notes: Theoretical framework for text cohesion
-- name: "Ukrainian State Standard 2024 — Text organization"
-  url: "https://mon.gov.ua/"
+- name: Ukrainian State Standard 2024 — Text organization
+  url: https://mon.gov.ua/
   type: reference
   notes: C2 requirements for seamless text flow
 content_outline:
-- section: "Вступ — Когерентність vs когезія"
-  words: 400
-  points:
-  - Визначення термінів
-  - Логічна vs граматична зв'язність
-  - Чому тексти "розпадаються"
-- section: Тематична прогресія
-  words: 600
-  points:
-  - Модель теми-реми
-  - Лінійна прогресія
-  - Константна тема
-  - Розгалужена прогресія
-- section: Засоби когезії
-  words: 700
-  points:
-  - Референція (займенники, вказівні слова)
-  - Заміщення та еліпсис
-  - Лексична когезія (повтор, синоніми)
-  - Граматична когезія
-- section: Конектори та сполучники
-  words: 700
-  points:
-  - Типи логічних зв'язків
-  - Часові конектори
-  - Причинно-наслідкові
-  - Протиставні та приєднувальні
-- section: Абзацна структура
-  words: 600
-  points:
-  - Тема абзацу
-  - Перехідні речення
-  - Мости між абзацами
-  - Логіка секціонування
-- section: Наративний momentum
+- section: 'Вступ: Когерентність vs когезія (Introduction: Coherence vs Cohesion)'
   words: 500
   points:
-  - Інформаційний потік
-  - Given-new principle
-  - Передбачуваність vs сюрприз
-  - Темп і напруга
-- section: "Практикум — Створення плинних текстів"
-  words: 500
+  - 'Диференціація понять: когезія як видима граматична/лексична зв''язність та когерентність
+    як невидима логічна модель тексту'
+  - Аналіз причин розпаду тексту на рівні смислів та граматики крізь призму Державного
+    стандарту §4.3.4 щодо елементів структурування
+- section: Тематична прогресія та актуальне членування (Thematic Progression and Information
+    Structure)
+  words: 800
   points:
-  - Аналіз когезійних засобів у професійному тексті
-  - Редагування слабкого тексту для плинності
-  - Написання когерентного есею
-  - Peer review на зв'язність
-word_target: 4000
+  - Застосування принципу 'Дане — Нове' (Given-New principle) для керування інформаційним
+    потоком у реченні
+  - 'Learner error: Порушення актуального членування речення (Rheme-Theme misalignment)
+    — помилкове винесення нової інформації на початок речення, що руйнує плинність'
+  - 'Мапування типів прогресії: лінійна, константна та розгалужена теми як каркас
+    логічної наступності'
+- section: Граматичні та лексичні засоби когезії (Grammatical and Lexical Means of
+    Cohesion)
+  words: 800
+  points:
+  - Глибокий аналіз референції, заміщення та еліпсису як засобів уникнення тавтології
+    та підтримки динаміки
+  - 'Learner error: ''Пастка і/потім'' (The ''And Then'' trap) — зловживання елементарними
+    сполучниками; корекція через використання конекторів ''водночас'', ''натомість'',
+    ''згодом'''
+  - Стилістичні функції лексичного повтору та синонімічної деривації для зміцнення
+    текстової тканини
+- section: Риторична спадщина та художній плин (Rhetorical Heritage and Artistic Flow)
+  words: 700
+  points:
+  - 'Барокова традиція Києво-Могилянської риторики (Теофан Прокопович): концепції
+    ''ornatus'' та логічної переконливості як витоки сучасної когерентності'
+  - 'Аналіз ''імпресіоністичного плину'' Михайла Коцюбинського (на прикладі ''Intermezzo''):
+    синтаксична когезія як засіб створення безперервного сенсорного досвіду'
+- section: Логіка абзацу та архітектоніка тексту (Paragraph Logic and Text Architectonics)
+  words: 600
+  points:
+  - 'Робота з мікротемами: абзац як завершена смислова одиниця з тезою та перехідними
+    містками'
+  - 'Learner error: Фрагментація параграфів — випадкові розриви замість логічного
+    секціонування; відпрацювання ''речень-мостів'' між секціями тексту'
+- section: 'Практикум: Редагування та синтез (Practicum: Editing and Synthesis)'
+  words: 600
+  points:
+  - 'Критичний аналіз когерентності в академічному дискурсі: виявлення логічних лакун
+    та слабких конекторів'
+  - Редагування 'переривчастих' текстів (choppy text) для досягнення стилістичного
+    ідеалу плинності та наступності
 vocabulary:
   required:
   - когерентність (coherence)
@@ -89,7 +88,7 @@ vocabulary:
   - momentum (momentum)
   - секціонування (sectioning)
   - перехід (transition)
-  forbidden: "[]"
+  forbidden: '[]'
 activities:
   types_required:
   - quiz
@@ -107,21 +106,31 @@ connects_to:
 - c2-52 (Professional documents need flow)
 vocabulary_hints:
   required:
-  - концепція (concept)
-  - аналіз (analysis)
-  - дискурс (discourse)
-  - методологія (methodology)
+  - когерентність (coherence) — логічна когерентність, когерентність викладу; academic
+    register
+  - когезія (cohesion) — засоби когезії, лексична когезія; linguistics focus
+  - плинність (flow) — забезпечити плинність думок, плинність мови; high stylistic
+    value
+  - референція (reference) — анафорична/катафорична референція; functional tool
+  - конектор (connector) — логічний конектор, варіативність конекторів; structuring
+    element
+  - рема (rheme) — актуальне членування, фокус нової інформації; technical syntax
+    term
   recommended:
-  - інтерпретація (interpretation)
-  - контекстуалізація (contextualization)
-  - синтез (synthesis)
+  - наступність (continuity) — логічна наступність, принцип наступності; formal register
+  - актуальне членування (information structure) — тема-рематична структура речення
+  - дискурс (discourse) — науковий дискурс, аналіз дискурсу; context marker
+  - анафора (anaphora) — засіб референції до попереднього контексту
+  - катафора (cataphora) — підготовка сприйняття наступної інформації
 activity_hints:
 - type: reading
   focus: Поглиблений аналіз тексту
   items: 4
 - type: essay-response
   focus: Критичне осмислення
-  word_target: 400
 - type: discussion
   focus: Дискусія та аргументація
   items: 1
+persona:
+  voice: Senior Specialist
+  role: Logic Auditor

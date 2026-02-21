@@ -1,0 +1,311 @@
+✅ Message sent to Gemini (ID: 10289) [auto-acked: self-addressed]
+✓ Message 10289 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10289...
+📨 Message #10289
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-aspect-complete-system
+   Time: 2026-02-20T20:18:07.227349+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b1-06
+level: B1
+sequence: 6
+slug: aspect-complete-system
+version: '2.0'
+title: 'Вид дієслова: повна система'
+subtitle: Perfective vs Imperfective - The complete picture
+content_outline:
+- section: Розминка
+  points:
+  - 'Порівняння НДВ/ДВ: "Я писав листа" vs "Я написав листа" — ensure diagnostic test
+    traps the "General Factual" error early'
+  - 'Метафора режисера: вид як вибір об''єктива (відео vs фото) — "Video mode" (Imperfective/Process)
+    vs "Photo mode" (Perfective/Result)'
+  - 'Тест на інтуїцію: "Ти пекла торт?" vs "Ти спекла торт?"'
+  - Філософія сприйняття реальності через вид — distinction between *being* in a state
+    (Impf) and *changing* reality (Perf)
+- section: Граматика
+  points:
+  - 'НДВ функції: процес, тривалість, повторення, звичка, загальне твердження — focus
+    on "General Factual" usage (e.g., «Ти читав "Кобзар"?» as experience)'
+  - 'ДВ функції: результат, завершеність, одноразовість, послідовність — cultural
+    hook: "Зробив діло — гуляй сміло" (Result leads to freedom)'
+  - 'Нюанси: спроба vs успіх (здавати/здати), стукати vs стукнути'
+  - 'Початок дії (Ingressive): любити → полюбити, бігти → побігти — clarify prefix
+    `по-` marks start of state/action, not just generic perfective'
+  - 'Культурний контекст: Параджанов "Тіні забутих предків", Шевченко — contrast static
+    painting-like frames (Perf) vs swirling dynamic camera (Impf)'
+- section: Практика
+  points:
+  - 'Алгоритм вибору виду: 4 ключові питання'
+  - 'Порівняння у ситуаціях: домашнє завдання, книга, зустріч'
+  - 'Маркери часу: тривалість → НДВ, завершення → ДВ'
+  - 'Типові помилки: ДВ для звичок, НДВ для результату — learner error: Analytic Future
+    with Perfective («буду написати»); learner error: using Perfective for simple
+    denial of fact'
+- section: Діалоги
+  points:
+  - Діалоги з чергуванням НДВ/ДВ у розповіді
+  - 'Фон (НДВ): "Я йшов, думав..." — cultural hook: "Вік живи — вік учись" (Impf)'
+  - 'Ключові події (ДВ): "побачив, зупинився, привітався"'
+vocabulary_hints:
+  required:
+  - доконаний вид (perfective aspect)
+  - недоконаний вид (imperfective aspect)
+  - процес (process) — *у процесі*, *навчальний процес*, *тривалий процес*, *контролювати
+    процес*
+  - результат (result) — *досягти результату*, *кінцевий результат*, *позитивний результат*,
+    *у результаті*
+  - тривалість (duration) — *тривалість дії*, *середня тривалість*, *тривалість життя*
+  - повторення (repetition)
+  - контекст (context)
+  - маркер (marker)
+  - завершення (completion) — *після завершення*, *успішне завершення*, *стадія завершення*
+  - одноразова дія (single action)
+  recommended:
+  - фокус (focus)
+  - намір (intention) — *мати намір*, *серйозні наміри*, *з наміром*
+  - послідовність (sequence)
+  - обмежений час (bounded time)
+  - загальне твердження (general statement)
+activity_hints:
+- type: quiz
+  focus: Identify aspect pairs
+  items: 12+
+- type: match-up
+  focus: Context → aspect choice
+  items: 15+
+- type: fill-in
+  focus: Choose correct aspect
+  items: 12+
+- type: true-false
+  focus: Sort contexts by aspect (process vs result vs repetition)
+  items: 15+
+- type: fill-in
+  focus: Change aspect and explain meaning difference
+  items: 8+
+focus: grammar
+pedagogy: TTT
+prerequisites:
+- b1-05 (Metalanguage checkpoint)
+- A2 aspect basics (impf/pf recognition)
+connects_to:
+- b1-07 (Aspect in past - single vs repeated)
+- b1-08 (Aspect in past - result vs process)
+- b1-15 (Aspect mastery checkpoint)
+objectives:
+- Learner understands the complete aspectual system
+- Learner can identify aspect from context clues
+- Learner can choose appropriate aspect for different situations
+grammar:
+- Perfective vs Imperfective aspect - complete overview
+- Aspect selection based on context
+- Process vs result vs repetition
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Verbal Aspect
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Official aspect selection rules and contexts
+- name: Ukrainian Verb Aspect (Wikipedia)
+  url: https://uk.wikipedia.org/wiki/Вид_дієслова
+  type: reference
+  notes: Overview of aspectual system with examples
+immersion: 100% Ukrainian
+phase: B1.1 Aspect
+persona:
+  voice: Senior Language & Culture Specialist
+  role: System Analyst
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Вид дієслова: повна система
+
+## State Standard Reference
+§4.2.3.1: "утворення форм роду і числа дієслів минулого часу недоконаного і доконаного виду: хотів, хотіла, хотіло, хотіли; побачив, побачила, побачило, побачили; ... дієвідмінювання дієслів недоконаного виду в майбутньому часі... дієвідмінювання дієслів доконаного виду в майбутньому часі: скажу, закричите, поборють."
+Alignment: This module systematically covers the formation and usage of aspect pairs in past and future tenses as explicitly required by the standard for B1 level (lines 2269-2291).
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| **процес** | High (General/Academic) | *у процесі*, *навчальний процес*, *тривалий процес*, *контролювати процес* |
+| **результат** | High (General) | *досягти результату*, *кінцевий результат*, *позитивний результат*, *у результаті* |
+| **тривалість** | Med (General/Formal) | *тривалість дії*, *середня тривалість*, *тривалість життя* |
+| **завершення** | Med (Formal) | *після завершення*, *успішне завершення*, *стадія завершення* |
+| **намір** | High (General) | *мати намір*, *серйозні наміри*, *з наміром* |
+
+## Cultural Hooks
+1. **Сергій Параджанов "Тіні забутих предків"**: The film's visual language alternates between static, painting-like frames (Perfective/Result) and swirling, dynamic camera movement (Imperfective/Process). This artistic dichotomy perfectly illustrates the "Director's Lens" metaphor for aspect.
+2. **Folk Wisdom**: "Зробив діло — гуляй сміло" (Perfective: Result leads to freedom) vs. "Вік живи — вік учись" (Imperfective: Life and learning are continuous processes).
+3. **Philosophical Distinction**: The Ukrainian worldview distinguishes clearly between *being* in a state (переживати - Impf) and *changing* reality (зробити - Perf).
+
+## Common Learner Errors
+1. **Analytic Future with Perfective**: *«Я буду написати»* → *«Я напишу»* (Perfective future is synthetic) OR *«Я буду писати»* (Imperfective future). Cause: Overgeneralization of English "will + verb" structure.
+2. **Negation Aspect**: *«Я не прочитав цей фільм»* → *«Я не читав/не бачив цей фільм»*. Cause: Learners use Perfective for single past events even under negation, whereas Ukrainian often prefers Imperfective to deny the *fact* of the action.
+3. **General Factual Confusion**: *«Ти прочитав "Кобзар"?»* (focus on finishing) vs *«Ти читав "Кобзар"?»* (focus on experience). Cause: Learners default to Perfective for completed past actions, missing the "General Factual" usage of Imperfective.
+
+## Cross-References
+- Builds on: A2 aspect basics (recognition of pairs), B1-05 (Metalanguage).
+- Prepares for: B1-07 (Aspect in Past), B1-08 (Result vs Process), B1-15 (Checkpoint).
+
+## Notes for Content Writing
+- **Visuals**: Use the camera lens metaphor consistently. "Video mode" = Imperfective (zoom in on process). "Photo mode" = Perfective (snapshot of result).
+- **Ingressive Aspect**: When introducing `полюбити` or `побігти`, clarify that the prefix `по-` here marks the *start* of the state/action, not just a generic perfective.
+- **TTT Structure**: Ensure the diagnostic test traps the "General Factual" error early to create a "teachable moment".
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Розминка та Контекст (Warm-up & Context)"
+  words: 600
+  points:
+  - "Метафора режисерського об'єктива: вид як вибір кута зору. Візуальна мова Сергія Параджанова у фільмі «Тіні забутих предків» як ілюстрація — динамічна камера (НДВ) проти статичних живописних кадрів (ДВ)."
+  - "Тест на інтуїцію та філософська диференціація: порівняння «Ти пекла торт?» (участь у стані) та «Ти спекла торт?» (зміна реальності). Визначення концепту «Video mode» (процес) проти «Photo mode» (результат)."
+- section: "Граматична Система: Форми та Функції (Grammatical System: Forms & Functions)"
+  words: 1000
+  points:
+  - "Відповідність Державному стандарту §4.2.3.1: утворення видових пар у минулому та майбутньому часах. Детальний розбір дієвідмінювання майбутнього часу: синтетична форма ДВ (скажу, поборють) проти аналітичної та синтетичної форм НДВ (буду казати, казатиму)."
+  - "Інгресивний вид (початок дії): роль префікса «по-» як маркера початку стану або руху (любити → полюбити, бігти → побігти). Уточнення, що в цьому контексті «по-» не є просто загальним показником результативності."
+- section: "Глибинна Семантика: Процес vs Результат (Deep Semantics: Process vs Result)"
+  words: 800
+  points:
+  - "Загальнофактичне значення НДВ: розбір складної для рівня B1 помилки — використання НДВ для позначення досвіду (напр., «Ти читав Кобзар?») проти ДВ для акценту на завершенні («Ти прочитав Кобзар?»)."
+  - "Народна мудрість як лінгвістичний якір: аналіз прислів'їв «Зробив діло — гуляй сміло» (ДВ: результат веде до свободи) та «Вік живи — вік учись» (НДВ: життя як безперервний процес)."
+- section: "Аналіз Помилок та Тонкощі (Error Analysis & Nuances)"
+  words: 800
+  points:
+  - "Пастка аналітичного майбутнього часу: виправлення типової помилки овергенералізації «буду + ДВ» (неправильно: «Я буду написати»; правильно: «Я напишу» або «Я буду писати»)."
+  - "Логіка заперечення: пояснення, чому українська мова часто віддає перевагу НДВ для заперечення самого факту дії (напр., «Я не бачив цей фільм»), замість очікуваного учнями ДВ для одноразових подій."
+  - "Лексичні нюанси вибору: опозиція «спроба vs успіх» (здавати іспит vs здати іспит) та семельфактивні дії (стукати vs стукнути)."
+- section: "Практика та Мовленнєві Ситуації (Practice & Speech Situations)"
+  words: 800
+  points:
+  - "Нарративна архітектура: використання виду для структурування розповіді. НДВ для створення фону («Я йшов, думав...») проти ДВ для позначення ключових подій («побачив, зупинився, привітався»)."
+  - "Алгоритм вибору виду: застосування 4 ключових питань у реальних ситуаціях (домашнє завдання, зустрічі, читання). Мапування часових маркерів: тривалість (НДВ) проти стадії завершення (ДВ)."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "доконаний вид (perfective aspect) — фокус на результаті та завершеності дії."
+  - "недоконаний вид (imperfective aspect) — фокус на процесі, тривалості та повторенні."
+  - "процес (process) — *у процесі*, *навчальний процес*, *тривалий процес*, *контролювати процес*; висока частотність."
+  - "результат (result) — *досягти результату*, *кінцевий результат*, *позитивний результат*, *у результаті*; висока частотність."
+  - "тривалість (duration) — *тривалість дії*, *середня тривалість*, *тривалість життя*; вживається у формальному контексті."
+  - "завершення (completion) — *після завершення*, *успішне завершення*, *стадія завершення*; середньочастотне, офіційне."
+  - "намір (intention) — *мати намір*, *серйозні наміри*, *з наміром*; вказує на заплановану дію."
+  - "одноразова дія (single action) — характеристика доконаного виду."
+  - "повторення (repetition) — характеристика недоконаного виду."
+  recommended:
+  - "фокус (focus) — когнітивний центр уваги при виборі виду."
+  - "послідовність (sequence) — ланцюжок подій у доконаному виді."
+  - "загальне твердження (general statement) — функція недоконаного виду."
+  - "обмежений час (bounded time) — контекст для доконаного виду."
+  - "маркер (marker) — часові слова-підказки (завжди, часто, раптом, нарешті)."
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4122 chars)
+✅ Message sent to Claude (ID: 10296)
+✓ Message 10296 acknowledged
+   Auto-acknowledged reply #10296 (stdout delivery — no inbox accumulation)
+✓ Message 10289 acknowledged

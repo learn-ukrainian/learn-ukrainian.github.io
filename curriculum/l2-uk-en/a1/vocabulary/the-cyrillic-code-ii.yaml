@@ -1,0 +1,81 @@
+- ipa: '[t͡sɛntr]'
+  lemma: центр
+  pos: noun
+  translation: center
+- ipa: '[t͡ʃɑi̯]'
+  lemma: чай
+  pos: noun
+  translation: tea
+- ipa: '[ˈʃkɔlɑ]'
+  lemma: школа
+  pos: noun
+  translation: school
+- ipa: '[ˈɦɑrnɪi̯]'
+  lemma: гарний
+  pos: adj
+  translation: beautiful
+- ipa: '[ˈʒɪtɪ]'
+  lemma: жити
+  pos: verb
+  translation: to live
+- ipa: '[dɛnʲ]'
+  lemma: день
+  pos: noun
+  translation: day
+- ipa: '[jɛu̯ˈrɔpɑ]'
+  lemma: Європа
+  pos: noun
+  translation: Europe
+- ipa: '[ˈjɑblukɔ]'
+  lemma: яблуко
+  pos: noun
+  translation: apple
+- ipa: '[ʃt͡ʃɛ]'
+  lemma: ще
+  pos: adv
+  translation: still, more
+- ipa: '[ˈɡɑnɔk]'
+  lemma: ґанок
+  pos: noun
+  translation: porch
+- ipa: '[ˈjiʒɑ]'
+  lemma: їжа
+  pos: noun
+  translation: food
+- ipa: '[juˈnɑk]'
+  lemma: юнак
+  pos: noun
+  translation: young man
+- ipa: '[sʲimˈjɑ]'
+  lemma: сім'я
+  pos: noun
+  translation: family
+- ipa: '[ˈlʲitɔ]'
+  lemma: літо
+  pos: noun
+  translation: summer
+- ipa: '[mɪ]'
+  lemma: ми
+  pos: pronoun
+  translation: we
+- ipa: '[mij]'
+  lemma: мій
+  pos: pronoun
+  translation: my
+- ipa: '[sʲilʲ]'
+  lemma: сіль
+  pos: noun
+  translation: salt
+- ipa: '[tʲinʲ]'
+  lemma: тінь
+  pos: noun
+  translation: shadow
+- ipa: '[ˈpɪtɪ]'
+  lemma: пити
+  pos: verb
+  translation: to drink
+- ipa: '[ˈdʲitɪ]'
+  lemma: діти
+  pos: noun
+  translation: children
+

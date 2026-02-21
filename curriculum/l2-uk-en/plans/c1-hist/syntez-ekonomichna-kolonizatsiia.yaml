@@ -1,4 +1,3 @@
----
 module: c1-hist-107
 level: c1-hist
 sequence: 107
@@ -10,48 +9,41 @@ objectives:
 - 'Analyze the causes and consequences of синтез: економічна деколонізація'
 - Evaluate the historical significance of від колонії до суб'єкта
 content_outline:
-- section: "Вступ — Від колонії до суб'єкта"
-  words: 515
+- section: Вступ — Від колонії до суб'єкта
   subsections:
   - Огляд модулів 103-106
   - Економічна колонізація — 300 років
   - Деколонізація — що це означає
   - Мета синтезу
 - section: Еволюція експлуатації
-  words: 774
   subsections:
   - Імперський період — зерно
   - Радянський — промисловість
   - Пострадянський — газ
   - Спільне — ресурси йдуть з України
 - section: Механізми залежності
-  words: 774
   subsections:
   - Торговельні зв'язки
   - Технологічна залежність
   - Фінансова залежність
   - Як кожен працював
 - section: Розрив зв'язків
-  words: 903
   subsections:
   - 2014 — початок
   - Торговельна переорієнтація
   - Енергетична незалежність
   - 2022 — повний розрив
-- section: "ЄС — нова залежність чи партнерство?"
-  words: 645
+- section: ЄС — нова залежність чи партнерство?
   subsections:
   - Угода про асоціацію
   - Відмінності від Росії
   - Ризики і можливості
   - Умови успіху
 - section: Підсумок
-  words: 389
   subsections:
   - Економічна деколонізація — процес
   - Не завершено
   - Перехід до інформаційної війни
-word_target: 4000
 vocabulary:
 - синтез
 - економічна деколонізація
@@ -76,16 +68,16 @@ activities:
 - type: critical-analysis
   focus: How far has economic decolonization gone?
 - type: critical-analysis
-  focus: "EU integration — risks and opportunities"
+  focus: EU integration — risks and opportunities
 - type: essay-response
   focus: Чи завершила Україна економічну деколонізацію?
 sources:
 - name: Економіка України (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Економіка_України"
+  url: https://uk.wikipedia.org/wiki/Економіка_України
   type: reference
   notes: Economic overview
 - name: Угода про асоціацію (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Угода_про_асоціацію_між_Україною_та_ЄС"
+  url: https://uk.wikipedia.org/wiki/Угода_про_асоціацію_між_Україною_та_ЄС
   type: reference
   notes: EU integration
 vocabulary_hints:
@@ -104,7 +96,9 @@ activity_hints:
   items: 4
 - type: essay-response
   focus: Критичний аналіз
-  word_target: 300
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Decolonial Economist

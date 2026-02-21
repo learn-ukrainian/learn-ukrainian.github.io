@@ -1,0 +1,103 @@
+sequence: 36
+module: a1-36
+level: A1
+slug: at-the-restaurant
+version: '2.0'
+title: At the Restaurant
+subtitle: Dining Out in Ukraine
+content_outline:
+- section: Вступ та культурний контекст (Introduction & Cultural Context)
+  words: 450
+  points:
+  - 'State Standard §3.9: Introduction to restaurant and cafe settings. Focus on the
+    traditional tripartite Ukrainian menu structure: «Перше» (soups/borshch), «Друге»
+    (main dishes), and «Третє» (dessert/drinks/uzvar).'
+  - 'Cultural Hook: Distinguishing between «ресторан» (formal/celebratory) and «кафе»
+    (casual/daily) registers. Tipping etiquette («чайові»): 10% standard, with a note
+    that cash is still preferred by staff despite the rise of scan-to-pay options.'
+- section: 'Презентація: Мова замовлення (Presentation: Ordering Language)'
+  words: 650
+  points:
+  - 'Grammar §4.2.4.1: Implementation of Future Tense with the verb «бути» (буду,
+    будеш, буде) for ordering. Focus on the standard structure «Я буду...» (I''ll
+    have...) as the most natural way to order.'
+  - 'Grammar §4.2.3.2.1: Accusative Case (Знахідний відмінок) for direct objects.
+    Crucial learner error correction: fixing the mismatch where learners use Nominative
+    instead of Accusative (e.g., «Я буду кава» ❌ → «Я буду каву» ✅).'
+  - 'Verb Usage: Distinguish between the collocations «бронювати» (specifically for
+    booking tables/reservations) and «замовити» (universal high-frequency verb for
+    ordering specific dishes and drinks).'
+- section: 'Практика: Типові ситуації (Practice: Typical Situations)'
+  words: 500
+  points:
+  - 'Interacting with the «офіціант» (waiter). Polite collocations from research:
+    «дати меню» (give the menu), «запитати офіціанта» (ask the waiter), and «зробити
+    замовлення» (place an order).'
+  - 'Learner Error Fix: Combatting Russian interference. Explicitly drill the use
+    of «рахунок» (bill) instead of the common Russianism «счёт». Practical phrases:
+    «рахунок, будь ласка» and «оплатити рахунок».'
+  - 'Modern Dining: Addressing dietary needs using modern phrases like «без м''яса»
+    (vegetarian) and «без глютену» (gluten-free), noting their high recognition in
+    modern Ukrainian urban dining environments.'
+- section: Підсумок та етикет (Summary & Etiquette)
+  words: 400
+  points:
+  - 'Cultural Hook: The universal Ukrainian toast «Будьмо!» (Let us be!) and the rhythmic
+    response «Гей!». Explain its usage across different beverage types and social
+    settings (from juice to horilka).'
+  - 'Politeness and Closures: Emphasize the shift to customer-focused service culture
+    with essential markers: «смачного» (bon appetit), «дякую» (thank you), and maintaining
+    polite intonation with «будь ласка».'
+vocabulary_hints:
+  required:
+  - замовити (to order) — замовити страву, замовити столик (High frequency §3.9)
+  - 'рахунок (bill) — попросити рахунок, оплатити рахунок; learner error: avoid Russian
+    ''счёт'''
+  - страва (dish) — перша страва, друга страва, національна страва
+  - офіціант (waiter) — покликати офіціанта; нашому офіціантові (Dat)
+  - 'бути (to be) — буду, будеш (Future Tense §4.2.4.1); ordering structure: «Я буду...»'
+  - перше (first course) — focus on traditional soups and borshch
+  - друге (main course) — meat or fish with a side dish (гарнір)
+  - столик (table) — замовити столик, столик на двох, вільний столик
+  recommended:
+  - будьмо (let's be) — universal toast (§4.2.4.1 context); often followed by «Гей!»
+  - 'чайові (tip) — 10% standard; cultural note: cash is preferred'
+  - гарнір (side dish) — standard component of the 'друге' course
+  - без м'яса (without meat) — essential for vegetarian ordering
+  - без глютену (gluten-free) — common modern dietary request
+  - меню (menu) — подивитися меню, дати меню, в меню є...
+activity_hints:
+- type: fill-in
+  focus: Full restaurant experience
+  items: 12
+- type: fill-in
+  focus: Waiter and customer
+  items: 6
+- type: match-up
+  focus: Menu item names
+  items: 20
+- type: quiz
+  focus: Restaurant conversations
+  items: 10
+focus: practical
+pedagogy: PPP
+prerequisites:
+- a1-35 (At the Café Practical)
+connects_to:
+- a1-37 (At the Market)
+- a1-38 (At the Store)
+objectives:
+- Learner can make a reservation
+- Learner can order a full meal
+- Learner can handle restaurant situations
+- Learner can communicate dietary needs
+grammar:
+- Practical usage of A1 cases
+- Polite requests and questions
+- Future tense for ordering
+register: розмовний
+phase: A1.4 [Practical Scenarios]
+persona:
+  voice: Patient Supportive Tutor
+  role: Maître d'hôtel
+word_target: 2000

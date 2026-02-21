@@ -1,0 +1,315 @@
+✅ Message sent to Gemini (ID: 11105) [auto-acked: self-addressed]
+✓ Message 11105 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #11105...
+📨 Message #11105
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-c1-bridge-assessment
+   Time: 2026-02-20T22:24:12.804499+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c2-001
+level: c2
+sequence: 1
+version: '2.0'
+title: Перехідний модуль C1→C2 та діагностика
+focus: checkpoint
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Ukrainian State Standard C2 (2024)
+  url: https://mon.gov.ua/
+  type: reference
+  notes: C2 proficiency descriptors and requirements
+- name: CEFR C2 Descriptors
+  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  type: reference
+  notes: General C2 level descriptors for comparison
+content_outline:
+- section: Вступ — Що означає рівень C2?
+  points:
+  - Різниця між C1 і C2
+  - Ключові компетенції рівня C2
+  - Самооцінка готовності до C2
+- section: Діагностика граматичних компетенцій
+  points:
+  - Усі 7 відмінків з повною парадигмою
+  - Складні синтаксичні конструкції
+  - Дієприкметники та дієприслівники
+  - Рідкісні форми та винятки
+- section: Діагностика стилістичних компетенцій
+  points:
+  - Розпізнавання всіх функціональних стилів
+  - Регістрові переключення
+  - Стилістичні засоби та їх ефект
+- section: Діагностика літературних компетенцій
+  points:
+  - Глибокий аналіз тексту
+  - Інтертекстуальні зв'язки
+  - Авторський стиль та голос
+- section: Виявлення прогалин
+  points:
+  - Індивідуальний профіль сильних сторін
+  - Зони для вдосконалення
+  - Персональний план навчання на C2
+- section: Підсумок та шлях уперед
+  points:
+  - Структура рівня C2 (100 модулів)
+  - Очікування та методи роботи
+  - Перші кроки
+vocabulary:
+  required:
+  - діагностика (diagnostics)
+  - компетенція (competency)
+  - прогалина (gap)
+  - самооцінка (self-assessment)
+  - профіль (profile)
+  - досконалість (perfection/mastery)
+  - стилістика (stylistics)
+  - регістр (register)
+  - синтаксис (syntax)
+  - парадигма (paradigm)
+  recommended:
+  - критерій (criterion)
+  - показник (indicator)
+  - еталон (standard/benchmark)
+  - рефлексія (reflection)
+  - траєкторія (trajectory)
+  forbidden: '[]'
+activities:
+  types_required:
+  - essay-response
+  - quiz
+  - critical-analysis
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c2-02 (Euphonic system mastery)
+- c2-19 (C2.1 Review)
+vocabulary_hints:
+  required:
+  - концепція (concept)
+  - аналіз (analysis)
+  - дискурс (discourse)
+  - методологія (methodology)
+  recommended:
+  - інтерпретація (interpretation)
+  - контекстуалізація (contextualization)
+  - синтез (synthesis)
+activity_hints:
+- type: reading
+  focus: Поглиблений аналіз тексту
+  items: 4
+- type: essay-response
+  focus: Критичне осмислення
+- type: discussion
+  focus: Дискусія та аргументація
+  items: 1
+persona:
+  voice: Senior Specialist
+  role: Placement Officer
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Перехідний модуль C1→C2 та діагностика
+
+## State Standard Reference
+§4.3.7: "Уміння трансформувати текст з одного стилю в інший, зокрема науковий у науково-популярний, офіційний у публіцистичний тощо."
+Alignment: Цей модуль безпосередньо діагностує здатність студента оперувати стилістичними регістрами, що є ключовою компетенцією рівня C2 на відміну від C1.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| діагностика | High (Academic/Med) | рання діагностика, диференційна діагностика, методи діагностики, діагностика компетенцій |
+| компетенція | High (Official/Pro) | фахова компетенція, мовна компетенція, розширювати компетенцію, у межах компетенції |
+| прогалина | Med (General/Acad) | заповнити прогалину, суттєва прогалина, прогалина в знаннях, законодавча прогалина |
+| самооцінка | Med (Psych/Edu) | адекватна самооцінка, завищена самооцінка, шкала самооцінки, критична самооцінка |
+| стилістика | Med (Ling/Acad) | практична стилістика, функціональна стилістика, стилістика мовлення, закони стилістики |
+
+## Cultural Hooks
+1. **ЗНО/НМТ (Зовнішнє незалежне оцінювання / Національний мультипредметний тест)**: Українська система стандартизованого тестування як культурний феномен, що визначає мовну норму для покоління.
+2. **Юрій Шевельов і "синтетичність" мови**: Посилання на ідею Шевельова про те, що українська мова поєднує риси різних мовних систем, вимагаючи гнучкості від носія (цитата про "всебічність" української культури).
+
+## Common Learner Errors
+1. **Калькування англійських академічних конструкцій** (Passive voice overuse): *"Було вирішено"* замість *"Ми вирішили"* або *"Рішення ухвалено"*.
+2. **Змішування регістрів (Stylistic mismatch)**: Використання розмовної лексики (напр., *"класний"*, *"супер"*) в есе або офіційному листі, або навпаки — канцеляризмів у приватній розмові.
+3. **Неправильне керування прийменників в абстрактних поняттях**: *"Враження про"* замість *"Враження від"*, *"характерний для"* (correct) vs *"типовий для"* (correct) but nuance differences.
+
+## Cross-References
+- Builds on: C1-100 (C1 Capstone), C1 Stylistics modules
+- Prepares for: C2-01 (Stylistics), C2-20 (Lit mastery)
+
+## Notes for Content Writing
+- Модуль має бути "жорстким" і чесним. Це не "теплий душ", а "холодний душ" перед C2.
+- Використати метафору "Архітектора мови" — на рівні C2 ми не просто будуємо речення, ми проектуємо комунікацію.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Філософія рівня C2 та «Архітектор мови» (Introduction: C2 Philosophy and the Language Architect)"
+  words: 400
+  points:
+  - "Порівняння компетенцій C1 та C2: від вільного володіння до абсолютної точності та усвідомленого естетичного вибору."
+  - "Метафора «Архітектора мови» — проектування комунікації замість механічного будування речень."
+  - "Концепція «холодного душу»: чесна діагностика як необхідний етап перед зануренням у найвищий рівень майстерності."
+- section: "Діагностика граматичних компетенцій та типові помилки (Grammar Competence Diagnostics and Common Errors)"
+  words: 800
+  points:
+  - "Аналіз складного синтаксису: перевірка вживання дієприслівникових зворотів та повної парадигми 7 відмінків у рідкісних формах."
+  - "Learner error: калькування англійських пасивних конструкцій (Passive voice overuse) — вправа на трансформацію «Було вирішено» у активні форми «Ми вирішили» або безособові «Рішення ухвалено»."
+  - "Діагностика прийменникового керування в абстрактних поняттях: розрізнення правильного «Враження від» (correct) та помилкового «Враження про»."
+  - "Аналіз типових помилок у керуванні дієслів: «характерний для» проти нюансів використання «типовий для»."
+- section: "Стилістичні регістри та трансформація за Стандартом (Stylistic Registers and Transformation by Standard)"
+  words: 1000
+  points:
+  - "Діагностика за Державним стандартом C2 (§4.3.7): уміння трансформувати науковий текст у науково-популярний та офіційний у публіцистичний."
+  - "Learner error: Stylistic mismatch — виявлення недоречного використання сленгу («класний», «супер») в академічному або офіційному дискурсі."
+  - "Регістрові переключення: вправи на миттєву зміну тональності повідомлення залежно від соціального контексту та аудиторії."
+  - "Аналіз стилістичних засобів та їхнього прагматичного ефекту в текстах високої складності."
+- section: "Культурний контекст: ЗНО та синтетичність Шевельова (Cultural Context: ZNO and Shevelov's Syntheticity)"
+  words: 800
+  points:
+  - "ЗНО/НМТ як культурний феномен: обговорення системи стандартизованого тестування як механізму формування сучасної мовної норми."
+  - "Концепція Юрія Шевельова про «синтетичність» української мови: гнучкість носія як здатність синтезувати різні мовні пласти."
+  - "Глибокий аналіз цитати про «всебічність» української культури як виклик для інтелектуального зростання на рівні C2."
+- section: "Аналіз прогалин та критична самооцінка (Gap Analysis and Critical Self-Assessment)"
+  words: 600
+  points:
+  - "Критерії оцінювання: використання шкал адекватної та критичної самооцінки для виявлення зон росту."
+  - "Побудова індивідуального профілю сильних сторін на основі результатів діагностичного тестування."
+  - "Заповнення прогалин: методи самостійної роботи з лінгвістичними джерелами для усунення «плато C1»."
+- section: "Підсумок: Траєкторія досконалості (Summary: Trajectory of Mastery)"
+  words: 400
+  points:
+  - "Структура рівня C2 (100 модулів): огляд майбутніх тем від евфонії до літературного аналізу."
+  - "Формування персонального плану навчання: перехід від діагностики до систематичного вдосконалення стилю."
+  - "Очікування від рівня C2: шлях до статусу нативного або освіченого носія-експерта."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "діагностика (diagnostics) — методи діагностики, диференційна діагностика; High frequency (Academic/Med)"
+  - "компетенція (competency) — фахова компетенція, мовна компетенція, у межах компетенції; High frequency (Official/Pro)"
+  - "прогалина (gap) — заповнити прогалину, суттєва прогалина, прогалина в знаннях; Med frequency (General/Academic)"
+  - "самооцінка (self-assessment) — адекватна самооцінка, критична самооцінка, шкала самооцінки; Med frequency (Psych/Edu)"
+  - "стилістика (stylistics) — функціональна стилістика, практична стилістика, закони стилістики; Med frequency (Ling/Acad)"
+  - "регістр (register) — зміна регістру, офіційний регістр, стилістичний регістр; Specific usage (Ling)"
+  - "профіль (profile) — індивідуальний профіль, профіль компетенцій; High frequency (HR/Pro)"
+  - "досконалість (perfection/mastery) — прагнути досконалості, технічна досконалість; High frequency (General)"
+  - "синтаксис (syntax) — складний синтаксис, правила синтаксису; Specific usage (Academic)"
+  - "парадигма (paradigm) — зміна парадигми, повна парадигма відмінювання; High frequency (Academic/General)"
+  recommended:
+  - "критерій (criterion) — критерій оцінювання, чіткий критерій; High frequency (Official/Academic)"
+  - "показник (indicator) — ключовий показник, кількісний показник; High frequency (Academic/Pro)"
+  - "еталон (standard/benchmark) — культурний еталон, мовний еталон; Med frequency (Arts/General)"
+  - "рефлексія (reflection) — здатність до рефлексії, критична рефлексія; High frequency (Academic/Psych)"
+  - "траєкторія (trajectory) — освітня траєкторія, траєкторія розвитку; High frequency (General/Academic)"
+  - "трансформація (transformation) — стилістична трансформація тексту; High frequency (Academic/General)"
+  - "калькування (calquing) — помилкове калькування, уникати калькування; Specific usage (Ling/Academic)"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (5235 chars)
+✅ Message sent to Claude (ID: 11111)
+✓ Message 11111 acknowledged
+   Auto-acknowledged reply #11111 (stdout delivery — no inbox accumulation)
+✓ Message 11105 acknowledged

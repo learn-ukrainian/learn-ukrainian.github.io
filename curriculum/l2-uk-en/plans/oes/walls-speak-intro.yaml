@@ -8,35 +8,25 @@ phase: 1
 phase_id: vernacular-foundations
 phase_name: Vernacular Foundations
 focus: Intro to epigraphy, graffiti as historical source
-word_target: 4000
 content_outline:
 - section: Вступ
   description: Introduction to graffiti as linguistic archaeology
-  words: 351
 - section: Текст
   description: Primary source excerpts with glosses
-  words: 351
 - section: Що таке епіграфіка?
   description: Definition and types of epigraphic inscriptions
-  words: 351
 - section: Мовний аналіз
   description: 'Grammatical analysis: dative, perfect, vocative'
-  words: 842
 - section: Історичний контекст
   description: St. Sophia Cathedral, who wrote graffiti, dating methods
-  words: 632
 - section: 'Диглосія: два регістри однієї мови'
   description: 'Diglossia model: literary vs vernacular'
-  words: 421
 - section: Зв'язок із сучасною мовою
   description: What survived in modern Ukrainian
-  words: 421
 - section: 'Методологія: як читати давні тексти'
   description: Step-by-step reading methodology
-  words: 351
 - section: Підсумок
   description: Summary and vocabulary table
-  words: 280
 vocabulary_hints:
 - графіті
 - тать
@@ -51,3 +41,6 @@ activity_types:
 - transcription
 - etymology-trace
 - grammar-identify
+persona:
+  voice: Senior Paleographer
+  role: Epigrapher

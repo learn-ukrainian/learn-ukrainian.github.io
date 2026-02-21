@@ -443,8 +443,8 @@ mappings:
     url: https://www.ukrainianlessons.com/fmu28/
     match_reason: 'Level-aligned topic match: weather'
     relevance: high
-- module_id: a1-30-prepositions-iii
-  module_title: 30 Prepositions Iii
+- module_id: a1-30-prepositions-direction-origin
+  module_title: 30 Prepositions Direction Origin
   level: A1
   recommended_episodes:
   - episode_id: ULP-057
@@ -1023,8 +1023,8 @@ mappings:
     url: https://www.ukrainianlessons.com/lesson/117/
     match_reason: 'Challenge listening (B1): clauses'
     relevance: medium
-- module_id: a2-33-at-the-doctor
-  module_title: 33 At The Doctor
+- module_id: a2-33-health-basics
+  module_title: 33 Health Basics
   level: A2
   recommended_episodes:
   - episode_id: ULP-102
@@ -1341,8 +1341,8 @@ mappings:
     url: https://www.ukrainianlessons.com/fmu25/
     match_reason: 'Listening review (A1): sports'
     relevance: medium
-- module_id: a2-54-health-body
-  module_title: 54 Health Body
+- module_id: a2-54-health-wellness
+  module_title: 54 Health Wellness
   level: A2
   recommended_episodes:
   - episode_id: ULP-102

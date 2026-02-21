@@ -1,0 +1,142 @@
+module: b2-18
+level: B2
+sequence: 18
+slug: register-academic-ukrainian
+version: '2.0'
+title: Науковий стиль української мови
+content_outline:
+- section: 'Вступ: Науковий стиль та його історія (Introduction: Scientific Style
+    and its History)'
+  words: 600
+  points:
+  - 'Характерні риси наукового стилю: об''єктивність, точність, логічність та доказовість
+    як фундамент академічного тексту.'
+  - 'Cultural hook: The ''Executed Renaissance'' (1920s-30s) and the VUAN Institute
+    of Scientific Language. Contrast pure Ukrainian terms like ''тяжіння'' (gravity)
+    with forced Soviet russification and ''гравітація''.'
+  - 'State Standard §1.2.1.1: Transitioning from understanding popular science to
+    active analysis and production of academic texts at the B2 level.'
+- section: Лексичні особливості та термінологія (Lexical Features and Terminology)
+  words: 900
+  points:
+  - 'Загальнонаукова лексика vs вузькоспеціальна термінологія. High-frequency collocations:
+    ''обґрунтувати актуальність теми'' та ''визначити об''єкт дослідження''.'
+  - 'Cultural hook: Ivan Puliui as a creator of Ukrainian physical terminology (pre-dating
+    Röntgen) and translator of the Bible, showcasing the linguistic agency of scientists.'
+  - Role of Agathangel Krymsky in shaping the early 20th-century academic style through
+    polyglot influence.
+  - 'Stylistic contrast: Explicitly contrast a ''Kitchen Table Explanation'' vs ''Academic
+    Definition'' of the same concept (e.g., Water as ''wet stuff'' vs ''chemical compound
+    H2O'').'
+- section: Граматика та типові помилки (Grammar and Common Errors)
+  words: 1000
+  points:
+  - 'Learner error: ''Passive'' Voice Abuse. Contrast clunky Russian-influenced ''Робота
+    була зроблена студентом'' with active ''Студент виконав роботу'' or impersonal
+    ''Роботу виконано''.'
+  - 'Learner error: Active Participle Calques from Russian. Replace non-normative
+    ''домінуючий фактор'' or ''слідуючий приклад'' with ''панівний фактор'' and ''наступний
+    приклад''.'
+  - 'Syntactic complexity: Managing the ''chain of genitives'' (ланцюжок родових відмінків),
+    e.g., ''аналіз методів розв''язання проблем розвитку'', as a hallmark of the scientific
+    register.'
+  - 'Common collocation errors: Correcting ''приймати участь'' to ''брати участь''
+    and ''підводити підсумки'' to ''підбивати підсумки''.'
+- section: Мовне хеджування та етика (Language Hedging and Ethics)
+  words: 800
+  points:
+  - 'The concept of hedging (мовне хеджування): avoiding categorical statements to
+    appear more scientific and objective.'
+  - 'Markers of uncertainty: strategic use of ''можливо'', ''ймовірно'', ''припускаємо'',
+    ''на наш погляд'' to soften claims.'
+  - 'Content note: Emphasize that categorical statements without hedging look ''unscientific''
+    or unprofessional in a Ukrainian academic context.'
+- section: Структура наукового тексту та цитування (Text Structure and Citation)
+  words: 700
+  points:
+  - 'Standard components of a research paper: Abstract (анотація), Introduction (вступ),
+    Body (основна частина), Conclusions (висновки).'
+  - 'Formulas for citation and referencing: ''згідно з'', ''на підставі'', ''як зазначає
+    автор''. Collocation: ''робити посилання'' (to make a reference).'
+  - 'Practice: Analysis of real academic abstracts and converting informal text into
+    the formal scientific register.'
+vocabulary_hints:
+  required:
+  - науковий стиль (scientific style) — specific register for academic work; non-emotional
+  - термін (term) — note on 1920s 'Executed Renaissance' and pure terms like 'тяжіння'
+  - 'дослідження (research) — collocations: проводити ~, ґрунтовне ~, результати ~;
+    high frequency'
+  - 'висновок (conclusion) — collocations: дійти ~у, робити ~, на підставі ~ів; high
+    frequency'
+  - 'аналіз (analysis) — collocations: здійснювати ~, глибокий ~, порівняльний ~;
+    high frequency'
+  - 'гіпотеза (hypothesis) — collocations: висувати ~у, підтвердити ~у, спростувати
+    ~у'
+  - 'методологія (methodology) — collocations: наукова ~, застосування ~ї, ~ дослідження'
+  - 'посилання (reference) — collocations: робити ~, згідно з ~м, навести ~; high
+    frequency'
+  recommended:
+  - 'актуальність (relevance) — collocations: ~ теми, втрачати ~, обґрунтувати ~;
+    high frequency'
+  - 'об''єкт (object) — collocations: ~ дослідження, визначити ~; high frequency'
+  - 'предмет (subject) — collocations: ~ дослідження; distinct from object'
+  - 'хеджування (hedging) — markers: можливо, ймовірно, припускаємо; avoiding categorical
+    claims'
+  - анотація (abstract) — summary of scientific work for B2 competence
+  - брати участь (to participate) — correct form; avoids learner error 'приймати участь'
+  - підбивати підсумки (to summarize/conclude) — correct form; avoids learner error
+    'підводити підсумки'
+activity_hints:
+- type: fill-in
+  focus: Convert colloquial text to academic style
+  items: 10+
+- type: quiz
+  focus: Identify academic style markers
+  items: 15+
+- type: fill-in
+  focus: Complete academic text with hedging expressions
+  items: 12+
+- type: match-up
+  focus: Colloquial expression → academic equivalent
+  items: 16+
+- type: reading
+  focus: Analyze structure of academic texts
+  items: 3 texts
+- type: error-correction
+  focus: Fix inappropriate register in academic context
+  items: 12+
+- type: essay-response
+  focus: Write academic paragraph with proper hedging
+  output: Model answer with style analysis
+focus: style
+prerequisites:
+- b2-15 (Register Introduction)
+- b2-03 (Impersonal -но/-то)
+- Complex sentence formation
+connects_to:
+- 'b2-19 (Register: Official-Legal)'
+- 'b2-22 (Register: Literary Ukrainian)'
+- b2-25 (B2.1b Checkpoint)
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Academic Writing
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Academic writing standards for B2
+- name: Науковий стиль української мови
+  url: https://uk.wikipedia.org/wiki/Науковий_стиль
+  type: secondary
+  notes: Scientific writing conventions
+- name: CEFR B2 Academic Skills
+  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  type: reference
+  notes: B2 academic reading and writing
+immersion: 100% Ukrainian
+phase: B2.1b [Participles & Register Intro]
+objectives:
+- Understand and apply науковий стиль української мови
+- Analyze and evaluate науковий стиль
+persona:
+  voice: Professional Language Coach
+  role: Professor (Професор)
+word_target: 4000

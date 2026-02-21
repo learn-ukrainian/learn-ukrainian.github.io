@@ -1,4 +1,3 @@
----
 module: b2-hist-062
 level: B2-HIST
 sequence: 62
@@ -7,83 +6,105 @@ version: '2.0'
 title: 'Синтез: Козацька революція'
 content_outline:
 - section: 'Вступ: Вибух, що змінив усе'
-  words: 400
   points:
-  - The definition of the Khmelnytsky Uprising as a revolution
-  - 'The scale of changes: social, political, geopolitical'
+  - The definition of the Khmelnytsky Uprising as a revolution — change of social
+    order, not just a rebellion; [!context] — Хмельниччина відбувалася одночасно з
+    Англійською революцією Кромвеля (1640-1660)
+  - 'The scale of changes: social, political, geopolitical — emergence of a new player
+    on the European map; parallels with Westphalian Peace (1648)'
 - section: 'Причини революції: Чому вибухнуло?'
-  words: 500
   points:
-  - Social oppression (serfdom)
-  - Religious discrimination (Uniate Church)
-  - Political lack of rights for Cossacks
-  - Personal tragedy of Khmelnytsky
+  - 'Social oppression (serfdom) — [!quote] — Гійом ле Вассер де Боплан про гноблення
+    селян: «Вони живуть у гіршому рабстві, ніж галерники»'
+  - Religious discrimination (Uniate Church) — friction from Union of Brest; Ordinance
+    of 1638 liquidating Cossack rights
+  - Political lack of rights for Cossacks — attempt to turn Cossacks into peasants;
+    «Золотий спокій» was an illusion
+  - Personal tragedy of Khmelnytsky — raid on Subotiv as the spark
 - section: 'Етапи боротьби: Від тріумфу до компромісу'
-  words: 1000
   points:
-  - Initial victories (Yellow Waters, Korsun)
-  - The Treaty of Zboriv (1649) and statehood
-  - Defeats (Berestechko) and the Treaty of Bila Tserkva
-  - The Pereiaslav Council (1654) and the alliance with Moscow
-  - The death of Khmelnytsky and the start of the Ruin
+  - Initial victories (Yellow Waters, Korsun) — spring-autumn 1648; Battle of Pyliavtsi
+  - The Treaty of Zboriv (1649) and statehood — recognition of autonomy; Register
+    set at 40,000
+  - Defeats (Berestechko) and the Treaty of Bila Tserkva — June 1651; betrayal by
+    Tatars; Register reduced to 20,000; [!history-bite] — Битва під Берестечком була
+    однією з найбільших битв Європи XVII ст. (до 300 тис. учасників)
+  - The Pereiaslav Council (1654) and the alliance with Moscow — military alliance
+    against three fronts; choice of «lesser evil»
+  - The death of Khmelnytsky and the start of the Ruin — 1657; struggle for power
+    begins
 - section: 'Соціальні трансформації: Народження нації'
-  words: 600
   points:
-  - Liquidation of serfdom
-  - Formation of the Cossack starshyna as a new elite
-  - The role of the Orthodox Church
+  - 'Liquidation of serfdom — de facto freedom on controlled territories; [!culture]
+    — «Покозачення»: масовий перехід селян у козацький стан як спосіб здобути свободу'
+  - Formation of the Cossack starshyna as a new elite — merger of former nobility
+    and meritorious Cossacks
+  - The role of the Orthodox Church — increased influence and consolidation
 - section: 'Читання: Аналіз історичних документів'
-  words: 400
   points:
-  - Analysis of the Zboriv Treaty
-  - Analysis of the March Articles
+  - Analysis of the Zboriv Treaty — defined three voivodeships (Kyiv, Chernihiv, Bratslav);
+    amnesty and expulsion of Jesuits/Jews
+  - Analysis of the March Articles — 11 (or 23) points; rights to foreign policy (except
+    Poland/Turkey); confederative model or protectorate
 - section: Первинні джерела
-  words: 400
   points:
-  - Eyewitness accounts (Paul of Aleppo, etc.)
-  - Khmelnytsky's universals
+  - 'Eyewitness accounts (Paul of Aleppo, etc.) — [!quote] — Павло Алеппський: «Ми
+    помітили в цьому благословенному народі набожність, богобоязливість і благочестя»;
+    notes on high literacy rate'
+  - Khmelnytsky's universals — instrument of executive power; calls to uprising and
+    protection decrees
 - section: Деколонізаційний погляд
-  words: 700
   points:
-  - Debunking the myth of 'reunification'
-  - Ukraine as a subject of international law
-  - The European context of the revolution
-  - 'Legacy: The birth of the modern Ukrainian state tradition'
-word_target: 4000
+  - 'Debunking the myth of ''reunification'' — [!myth-buster] — Міф про «возз''єднання»:
+    Переяславська рада була військовим союзом, а не злиттям держав; Soviet concept
+    of «вікове прагнення»'
+  - Ukraine as a subject of international law — independent diplomatic relations (Turkey,
+    Sweden)
+  - The European context of the revolution — betrayal by Moscow in Vilna Truce (1656);
+    pragmatism over «brotherhood»
+  - 'Legacy: The birth of the modern Ukrainian state tradition — idea of Cossack statehood
+    persisted until late 18th century'
 focus: history
 pedagogy: CBI
-prerequisites: "[]"
-learning_outcomes: "[]"
-phase: "HIST.6 [Khmelnytsky & Cossack State]"
+prerequisites: '[]'
+learning_outcomes: '[]'
+phase: HIST.6 [Khmelnytsky & Cossack State]
 objectives:
 - 'Analyze the causes and consequences of синтез: козацька революція'
 - Evaluate the historical significance of вибух, що змінив усе
 - Trace the development of деколонізаційний погляд
 vocabulary_hints:
   required:
-  - історія (history)
-  - держава (state)
-  - народ (people)
-  - влада (power)
-  - період (period)
-  - подія (event)
-  - джерело (source)
-  - спадщина (heritage)
+  - історія (history) — [!collocation] творити історію; переписувати історію
+  - держава (state) — [!collocation] будувати державу; козацька держава; суверенна
+    держава
+  - народ (people) — [!collocation] український народ; воля народу; Paul of Aleppo
+    quote regarding «благословенний народ»
+  - влада (power) — [!collocation] гетьманська влада; виконавча влада; боротьба за
+    владу
+  - період (period) — [!collocation] період Руїни; перехідний період
+  - подія (event) — [!collocation] історична подія; трагічні події
+  - джерело (source) — [!collocation] первинне джерело; історичні джерела; згідно
+    з джерелами
+  - спадщина (heritage) — [!collocation] козацька спадщина; культурна спадщина
   recommended:
-  - аналіз (analysis)
-  - контекст (context)
-  - вплив (influence)
-  - наслідки (consequences)
+  - аналіз (analysis) — [!collocation] критичний аналіз; аналіз договору
+  - контекст (context) — [!collocation] європейський контекст; історичний контекст
+  - вплив (influence) — [!collocation] вплив церкви; політичний вплив
+  - наслідки (consequences) — [!collocation] далекосяжні наслідки; трагічні наслідки
 activity_hints:
 - type: reading
   focus: Первинні джерела
   items: 4
 - type: essay-response
   focus: Критичний аналіз
-  word_target: 300
 - type: critical-analysis
   focus: Аналіз причинно-наслідкових зв'язків між подіями
   items: 3
 - type: critical-analysis
   focus: Критична оцінка історичних тверджень та міфів
   items: 5
+persona:
+  voice: Senior Professor of History
+  role: Military Chronicler
+word_target: 5000

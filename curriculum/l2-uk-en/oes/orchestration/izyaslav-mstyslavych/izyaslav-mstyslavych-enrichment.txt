@@ -1,0 +1,216 @@
+✅ Message sent to Gemini (ID: 12544) [auto-acked: self-addressed]
+✓ Message 12544 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12544...
+📨 Message #12544
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-izyaslav-mstyslavych
+   Time: 2026-02-20T23:40:34.647744+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 42
+module: oes-042
+module_number: 34
+slug: izyaslav-mstyslavych
+title_uk: Ізяслав Мстиславич
+title_en: Izyaslav Mstyslavych
+phase: 2
+phase_id: literary-tradition
+phase_name: Literary Tradition
+focus: The "Honor" code of princes
+content_outline:
+- section: Вступ
+  description: Introduction to Izyaslav Mstyslavych
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Senior Paleographer
+  role: Princely Strategist
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Ізяслав Мстиславич
+
+## Використані джерела
+1. [Енциклопедія Сучасної України: Ізяслав Мстиславич](https://esu.com.ua/article-13837) — академічна біографія, політична діяльність.
+2. [Літопис Руський (за Іпатським списком)](http://litopys.org.ua/ipatlet/ipat.htm) — першоджерело, "Повість про Ізяслава".
+3. [ArmyInform: Як київський князь Ізяслав Мстиславич Юрія Долгорукого до миру примушував](https://armyinform.com.ua/2021/05/17/yak-kyyivskyj-knyaz-izyaslav-mstyslavych-yuriya-dolgorukogo-do-myru-prymushuvav/) — аналіз військових кампаній та геополітичного контексту.
+4. [Ізборник: Київський літопис](http://litopys.org.ua/oldukr2/oldukr39.htm) — тексти та переклади фрагментів про боротьбу за Київ.
+
+## Хронологія
+- **1097 (бл.)**: Народження Ізяслава Мстиславича.
+- **1146**: Початок великого княжіння в Києві після смерті Всеволода Ольговича; утвердження за підтримки киян.
+- **1147**: Обрання Клима Смолятича митрополитом русичів без санкції Константинополя (спроба автокефалії).
+- **1149**: Битва під Переяславом; поразка від Юрія Долгорукого, втрата Києва.
+- **1151**: Битва на річці Рута (Перепетове поле); вирішальна перемога над Юрієм Долгоруким, повернення Києва.
+- **1154**: Смерть Ізяслава Мстиславича; поховання у монастирі святого Феодора у Києві.
+
+## Ключові факти та цитати
+
+### Підтримка киян (унікальний суспільний договір)
+- Кияни: «Ізяславе! Ти наш князь!», «Ми за тебе голови свої складемо і дітей своїх!» (Літопис Руський).
+- Ізяслав до киян (перед битвою 1151): «Осе, браття, ви всі, і половці, і русь. Тож глядіть, як ми битимемось, та й ви так учиніть! Не побіжіть од полків, а стійте кріпко».
+
+### Кодекс честі ("Слава" і "Сором")
+- «Ліпше мені тут, на своїй землі, лягти кістьми, аніж, утікши, жити в соромі!» (Типова формула лицарського етосу, приписувана Ізяславу).
+- «Або голову свою покладу, або честь свою візьму».
+
+### Церковна незалежність
+- Ізяслав ініціював обрання Клима Смолятича (русина, філософа) митрополитом, ігноруючи волю Константинополя, що стало прецедентом церковної незалежності.
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ": [!history-bite] — Ізяслав Мстиславич був єдиним князем, якого кияни кликали на престол, виганяли ворогів і фінансували його походи. Це прообраз конституційної монархії.
+- Section "Основний матеріал: I — Політичний портрет": [!context] — Порівняння європейської орієнтації Ізяслава (зв'язки з Угорщиною, Польщею, Чехією) та євразійської моделі Юрія Долгорукого (Суздаль).
+- Section "Основний матеріал: II — Військова справа": [!quote] — Цитата з опису битви на Руті 1151 року як зразок лицарської прози.
+- Section "Основний матеріал: III — Церковна політика": [!decolonization] — Спроба автокефалії 1147 року як перший акт духовної незалежності від імперських центрів (Візантії).
+- Section "Основний матеріал: IV — Літературна спадщина": [!paleography] — Аналіз стилю "Повісті про Ізяслава" (динамізм, діалоги, емоційність) на противагу сухим хронікам.
+- Section "Підсумок": [!legacy] — Ізяслав як родоначальник волинської династії, що дала Україні Данила Галицького.
+
+## Деколонізаційний контекст
+- **Imperial/Soviet myth**: Зображення "міжусобиць" як хаосу та занепаду Русі. Юрій Долгорукий часто героїзувався як "збирач земель" (через заснування Москви).
+- **Ukrainian reality**: Конфлікт Ізяслава та Юрія — це цивілізаційне зіткнення. Київ (Ізяслав) — це віче, договір з громадою, західні союзи. Суздаль (Юрій) — це авторитаризм і загарбання. Ізяслав захищав руську (українську) політичну традицію від північно-східної деспотії.
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| Юрій Долгорукий | "Основатель Москвы", мудрий правитель | Загарбник, узурпатор, представник ворожої (суздальської) політичної культури |
+| Міжусобиця 1146-1154 | Хаотична феодальна війна | Боротьба за київську спадщину та європейський вектор розвитку Русі |
+| "Руська земля" | Загальноросійський простір | Власне Київщина, Чернігівщина, Переяславщина (етнічні українські землі) |
+
+## Section-Mapped Research Notes
+
+### Вступ
+Ізяслав Мстиславич — одна з найяскравіших постатей XII ст., онук Мономаха, син Мстислава Великого. Його правління — це апогей київського лицарства та унікальний союз князя з громадою (віче).
+
+### Основний матеріал: I — Політичний портрет: Князь і Віче
+Ізяслав спирався не лише на дружину, а й на "чорних клобуків" та київське ополчення. Кияни активно втручалися в політику, вимагаючи від князя захисту та справедливості. Це контрастує з абсолютною владою суздальських князів.
+
+### Основний матеріал: II — Військова справа: Лицарський етос
+Війни з Юрієм Долгоруким (1149-1151). Битва на Руті — тактичний шедевр (використання річкового флоту, піхоти і кінноти). Особиста хоробрість: Ізяслав був поранений, його ледь не вбили свої ж, не впізнавши ("Я князь ваш!"). Кодекс честі: вірність слову, захист роду.
+
+### Основний матеріал: III — Церковна політика: Клим Смолятич
+1147 рік — собор єпископів у Києві. Обрання Клима Смолятича ("книжника і філософа") без санкції патріарха. Аргумент Ізяслава: "Головою святого Климента (папи Римського) ставимо". Це спроба унезалежнення Київської митрополії в умовах кризи Візантії.
+
+### Основний матеріал: IV — Літературна спадщина: "Повість про Ізяслава"
+Київський літопис містить окрему повість (1146-1154), написану, ймовірно, боярином Петром Бориславичем. Особливості мови: багато прямої мови, детальні описи баталій, емоційні оцінки, термінологія честі ("сром", "слава", "хрест цілувати").
+
+### Практика
+Аналіз уривків літопису (палеографія, лексика). Вправи на реконструкцію історичного контексту. Порівняння літописного стилю з епічним.
+
+### Підсумок
+Смерть Ізяслава (1154) як кінець стабільності. Його нащадки (Мстислав Ізяславич, Роман Мстиславич) продовжили державотворчу традицію на Волині та в Галичі. Ізяслав — символ "Русі-України" на противагу "Заліссю".
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12576)
+✓ Message 12544 acknowledged
+✓ Message 12576 acknowledged

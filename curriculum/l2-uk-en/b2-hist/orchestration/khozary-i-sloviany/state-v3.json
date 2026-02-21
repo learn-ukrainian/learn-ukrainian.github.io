@@ -1,0 +1,13 @@
+{
+  "track": "b2-hist",
+  "slug": "khozary-i-sloviany",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T12:45:00Z",
+      "task_id": "v3-khozary-i-sloviany-pA",
+      "mode": "meta-only"
+    }
+  }
+}

@@ -62,6 +62,32 @@ HISTORICAL_TRACKS = {'oes', 'ruth', 'lit', 'b2-hist', 'c1-bio', 'c1-hist'}
 # These tracks explicitly analyze historical Cyrillic (including Russian-like forms)
 LINGUISTIC_ANALYSIS_TRACKS = {'oes', 'ruth'}
 
+# =============================================================================
+# Academic Latin Allowlist (Issue #557)
+# =============================================================================
+# Latin acronyms that are legitimate in academic/historiographic context.
+# These should NOT trigger transliteration warnings in HISTORICAL_TRACKS.
+ACADEMIC_LATIN_ALLOWLIST = {
+    # Research institutions
+    'HURI', 'CIUS', 'UNWLA', 'HREC', 'IISG',
+    # International organizations
+    'UNESCO', 'NATO', 'OSCE', 'EU', 'UN',
+    # Historical organizations (using established Latin abbreviations)
+    'NKVD', 'KGB', 'OUN', 'UPA', 'UNR', 'ZUNR', 'MAP',
+    # Academic standards
+    'IPA', 'ISBN', 'DOI', 'ISSN',
+}
+
+# Section headings that indicate a bibliography/references block
+# Latin is freely allowed in these sections (Issue #557)
+BIBLIOGRAPHY_HEADINGS = {
+    'джерела', 'бібліографія', 'література', 'посилання',
+    'references', 'bibliography', 'sources',
+}
+
+# Callouts where Latin is freely allowed (Issue #557)
+ACADEMIC_CALLOUTS = {'[!bibliography]', '[!reference]', '[!sources]'}
+
 
 def is_inside_quoted_string(line: str, char_pos: int) -> bool:
     """
@@ -135,6 +161,9 @@ def is_historical_context_block(lines: list[str], line_idx: int) -> bool:
         '[!primary-source]',
         '[!chronicle]',
         '[!historical]',
+        '[!bibliography]',
+        '[!reference]',
+        '[!sources]',
         '**первинне джерело',
         '**джерело:',
     ]
@@ -179,6 +208,90 @@ def detect_track_from_path(file_path: str) -> str | None:
             return track
 
     return None
+
+
+def is_in_bibliography_section(lines: list[str], line_idx: int) -> bool:
+    """Check if a line is within a bibliography/references section (Issue #557)."""
+    for i in range(line_idx, -1, -1):
+        line = lines[i].strip().lower()
+        # Match ## Джерела, ## Бібліографія, etc.
+        if line.startswith('#'):
+            heading_text = line.lstrip('#').strip()
+            for bib_heading in BIBLIOGRAPHY_HEADINGS:
+                if bib_heading in heading_text:
+                    return True
+            return False  # Found a heading but not a bibliography one
+    return False
+
+
+def is_in_academic_callout_block(lines: list[str], line_idx: int) -> bool:
+    """Check if a line is inside a [!bibliography]/[!reference]/[!sources] callout (Issue #557)."""
+    current_line = lines[line_idx].strip()
+    if not current_line.startswith('>'):
+        return False
+
+    # Check current line for callout marker
+    content_lower = current_line[1:].strip().lower()
+    for callout in ACADEMIC_CALLOUTS:
+        if callout in content_lower:
+            return True
+
+    # Look backwards for callout start
+    for i in range(line_idx - 1, -1, -1):
+        prev_line = lines[i].strip()
+        if not prev_line.startswith('>'):
+            break
+        prev_content = prev_line[1:].strip().lower()
+        for callout in ACADEMIC_CALLOUTS:
+            if callout in prev_content:
+                return True
+
+    return False
+
+
+def contains_only_allowlisted_latin(text: str) -> bool:
+    """Check if all Latin words in text are in the academic allowlist (Issue #557)."""
+    latin_words = re.findall(r'[A-Za-z]+', text)
+    for word in latin_words:
+        if word.upper() not in ACADEMIC_LATIN_ALLOWLIST:
+            return False
+    return True
+
+
+def is_academic_latin_context(line: str, lines: list[str], line_idx: int, track: str | None) -> bool:
+    """
+    Check if Latin characters in this line are in a legitimate academic context (Issue #557).
+
+    Returns True if Latin should be allowed on this line.
+    """
+    # Only apply relaxed rules in historical/academic tracks
+    if track not in HISTORICAL_TRACKS:
+        return False
+
+    # 1. Line is in a bibliography section
+    if is_in_bibliography_section(lines, line_idx):
+        return True
+
+    # 2. Line is in an academic callout block
+    if is_in_academic_callout_block(lines, line_idx):
+        return True
+
+    # 3. Line is a blockquote (primary source may cite Latin titles)
+    stripped = line.strip()
+    if stripped.startswith('>'):
+        return True
+
+    # 4. All Latin on this line is from the allowlist
+    if contains_only_allowlisted_latin(line):
+        return True
+
+    # 5. Latin in parentheses follows a proper noun pattern (capitalized)
+    #    e.g., Тімоті Снайдер (Timothy Snyder) — standard academic name citation
+    paren_matches = re.findall(r'\(([A-Z][A-Za-z\s\.\-]+)\)', line)
+    if paren_matches:
+        return True
+
+    return False
 
 
 # YAML fields that allow historical characters

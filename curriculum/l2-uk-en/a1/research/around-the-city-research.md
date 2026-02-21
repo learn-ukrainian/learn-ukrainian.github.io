@@ -1,75 +1,34 @@
-# Research Notes: Around the City (M15)
+# Дослідження: Around the City (A1)
 
-**Track**: Core A
-**Module**: Around the City (A1 M15)
-**Level**: A1 (Beginner)
-**Researched**: Sunday, February 8, 2026
+## State Standard Reference
+§4.2.3.3: "Місцевий відмінок: у, в, на (позначення місця): Студент працює в новій лабораторії. Гроші лежать на столі."
+§4.2.3.2.2: "Знахідний відмінок: Із прийменниками: в, у, на (указівка на кінцевий пункт руху або переміщення): Степан заходить у кімнату."
+Alignment: This module directly addresses the distinction between static location (Locative) and motion towards a destination (Accusative), which is a core A1 competency.
 
-## 1. Grammar: State Standard 2024 Reference
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| вулиця | High (Top 100 nouns) | на вулиці (Loc), йти по вулиці (Loc/Dat variant often used by learners, though Instr is correct later) |
+| площа | High | на площі, Майдан Незалежності |
+| зупинка | Medium-High | на зупинці, автобусна зупинка |
+| аптека | High | в аптеці, цілодобова аптека |
+| прямо | High | йти прямо, їхати прямо |
+| ліворуч/праворуч | Medium (More formal than наліво/направо) | поверніть ліворуч, подивіться праворуч |
 
-This module aligns with the **Державний стандарт української мови (ДСТУ 2024)** for level A1, specifically regarding the use of cases for spatial orientation and the thematic vocabulary of urban environments.
+## Cultural Hooks
+1. **Marshrutka Etiquette**: In Ukraine, passengers must often shout "На зупинці, будь ласка!" (At the stop, please!) to get the driver to stop, unlike in many Western countries with fixed stops.
+2. **Maidan vs Ploshcha**: The central square is the heart of any Ukrainian city. "Майдан" implies a large, open space often associated with public gatherings (e.g., Maidan Nezalezhnosti), while "Площа" is the general term. Landmarks are used more than street names for directions.
 
-**Relevant Sections:**
-*   **§2.4.1.3 Catalog B (Thematic Catalog), Subsection 3.3. City (institutions, transport, and places):**
-    > "3.3. Місто (заклади, транспорт і місця): основні освітні заклади (школа, інститут, університет); основні заклади культури (театр, кінотеатр, музей, бібліотека) і культові споруди (церква, синагога, мечеть); громадські заклади (ресторан, кафе, ринок, перукарня, готель, лікарня, банк, пункт обміну валют, пошта); громадський транспорт; таксі; організація міського простору (вулиця, парк, площа, проспект)."
+## Common Learner Errors
+1. **Case Confusion (Prepositions)**: Using Nominative after `біля` or `навпроти`. *Error:* "Біля аптека." → *Correct:* "Біля аптеки." (Learners need these as fixed chunks).
+2. **Preposition Confusion (В vs НА)**: Applying logical "in" to open spaces. *Error:* "В площі." → *Correct:* "На площі." (Also "на пошті", "на зупинці").
+3. **Question Word Confusion**: Using "Де" for destination. *Error:* "Де ти йдеш?" → *Correct:* "Куди ти йдеш?"
 
-*   **§4.2.3.2 Accusative Case (Знахідний відмінок):**
-    > "4.2.3.2.2. Із прийменниками: в, у, на (указівка на кінцевий пункт руху або переміщення): Степан заходить у кімнату. Я кладу книжку на твій стіл."
+## Cross-References
+- **Builds on**: `a1-13` (The Locative - basic forms), `a1-14` (Mine and Yours - possessives).
+- **Prepares for**: `a1-40` (Taking Transport - more complex travel scenarios).
 
-*   **§4.2.3.3 Locative Case (Місцевий відмінок):**
-    > "4.2.3.3. Місцевий відмінок: у, в, на (позначення місця): Спортивний костюм у великій сумці. Студент працює в новій лабораторії. Гроші лежать на столі."
-
-## 2. Vocabulary Frequency
-
-At the A1 level, focus is on high-utility nouns for navigation and survival in a city.
-
-### High-Frequency Items (Essential):
-*   **Locations:** вулиця (street), площа (square), парк (park), центр (center), магазин (shop), аптека (pharmacy), пошта (post office), банк (bank), готель (hotel), вокзал (station), зупинка (stop).
-*   **Social/Cultural:** університет (university), школа (school), ресторан (restaurant), кафе (cafe), музей (museum), театр (theater), церква (church).
-*   **Transport:** автобус (bus), трамвай (tram), метро (metro), таксі (taxi), машина (car/vehicle).
-*   **Navigation:** де (where), куди (where to), тут (here), там (there), поруч/біля (nearby/next to), направо (to the right), наліво (to the left), прямо (straight).
-
-### Common Collocations at A1:
-*   **Locative (Position):** на вулиці, у центрі, у парку, на площі, біля банку.
-*   **Accusative (Direction):** у центр, на площу, в університет, на зупинку.
-*   **Verbs of Motion:** йти (на роботу/в магазин), їхати (на таксі/в центр).
-
-## 3. Cultural Hook
-
-1.  **Kyiv Metro Depth:** Kyiv is home to **Arsenalna station**, which at 105.5 meters (346 ft) deep, was for a long time the deepest metro station in the world. This is a great context for practicing "куди" (down) and "де" (deep underground).
-2.  **Lviv's Coffee Culture:** Lviv is famous for having a cafe (кав'ярня) on almost every corner in the old town. This provides an excellent scenario for practicing directions and the Locative case (e.g., "Кафе у центрі").
-3.  **The "Marshrutka" (Маршрутка):** A unique Ukrainian cultural phenomenon—the yellow minibuses that act as a middle ground between a bus and a taxi. Understanding how to ask for a stop ("На зупинці, будь ласка!") is a vital survival skill.
-
-## 4. Pedagogical Notes
-
-### Key Differences from English:
-*   **Motion vs. Location:** English often uses "to" for direction and "at/in" for location. Ukrainian uses the *same* prepositions (в/на) but changes the *case ending* of the noun (Accusative for direction, Locative for location).
-*   **Mandatory Motion Distinction:** English uses "I go" for both walking and driving. Ukrainian strictly distinguishes between **йти** (walking) and **їхати** (by vehicle). Beginners often make the mistake of using "йти" for everything.
-*   **Preposition Logic (в vs. на):** Students must memorize which locations take "на" (open spaces like streets, squares, or stations) vs. "в" (enclosed buildings).
-
-### Common Learner Errors:
-*   **Case Confusion:** Using Locative endings for direction (e.g., "Я йду в парку" instead of "в парк").
-*   **Gender Neglect:** Forgetting that feminine nouns ending in **-а** change to **-у** in the Accusative (вулиця -> вулицю).
-*   **Verb Overgeneralization:** Using "йти" when talking about taking the bus.
-
-### Teaching Sequence:
-1.  Review **де** (location) with Locative.
-2.  Introduce **куди** (direction) with Accusative.
-3.  Contrast **в/на** for common city locations.
-4.  Differentiate **йти** vs. **їхати**.
-5.  Roleplay: Asking for directions and choosing the right transport.
-
-## 5. Scope Boundaries
-
-### IN Scope:
-*   **Cases:** Locative (location) and Accusative (direction/destination).
-*   **Verbs:** Present tense of *йти* and *їхати* (and other Group 1/2 verbs like *працювати*, *бачити*).
-*   **Adverbs:** Simple direction adverbs (прямо, направо, наліво).
-*   **Nouns:** Urban landmarks and common institutions mentioned in the State Standard.
-
-### OUT Scope:
-*   **Genitive Case:** Origin (звідки - "from where") is not taught until M16. Avoid phrases like "Я йду з магазину."
-*   **Instrumental/Dative Cases:** Avoid "next to" phrases that require these (e.g., "перед/за/над"). Stick to "біля" + Locative (wait, "біля" takes Genitive... actually "поруч з" takes Instrumental).
-    *   *Correction for A1*: Use **біля** sparingly if Genitive isn't known, or focus on simple position (тут/там). Actually, Genitive is M16, so strictly avoid Genitive prepositions. Focus on **в** and **на**.
-*   **Perfective Aspect:** Use only imperfective present tense (*я йду*, *він їде*). No future/past perfective (e.g., *я пішов*).
-*   **Complex Subordination:** Avoid "the building that is next to..." Stick to simple sentences like "Це банк. Банк тут."
+## Notes for Content Writing
+- Focus heavily on the "Де" (Locative) vs "Куди" (Accusative) distinction as it's a fundamental concept often missed.
+- Use visual descriptions for `ліворуч` / `праворуч` to help memorisation.
+- Keep the `біля` + Genitive explanation very simple ("lexical chunk") to avoid overwhelming A1 learners with full Genitive rules.

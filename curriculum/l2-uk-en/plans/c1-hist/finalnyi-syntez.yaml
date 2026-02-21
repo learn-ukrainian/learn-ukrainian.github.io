@@ -1,4 +1,3 @@
----
 module: c1-hist-135
 level: c1-hist
 sequence: 135
@@ -10,48 +9,41 @@ objectives:
 - 'Analyze the causes and consequences of фінальний синтез: що ми дізналися'
 - Evaluate the historical significance of кінець курсу, початок розуміння
 content_outline:
-- section: "Вступ — Кінець курсу, початок розуміння"
-  words: 515
+- section: Вступ — Кінець курсу, початок розуміння
   subsections:
   - 135 модулів — що ми пройшли
   - Не факти — методи
   - Як думати про історію
   - Структура модуля
 - section: Методологічні уроки
-  words: 903
   subsections:
   - Джерелознавство — чому важливе
   - Множинність інтерпретацій
   - Критичне мислення
   - Як оцінювати історичні твердження
 - section: Тематичні уроки
-  words: 774
   subsections:
   - Імперські механізми — як розпізнавати
   - Культурна резистенція — як працює
   - Агентність — чому ключова
   - Пам'ять — як формується
 - section: Практичні уроки
-  words: 774
   subsections:
   - Як читати джерела
   - Як оцінювати аргументи
   - Як писати про історію
   - Як розпізнавати пропаганду
 - section: Відкриті питання
-  words: 645
   subsections:
   - Що залишається невідомим
   - Де потрібні дослідження
   - Нові джерела — нові інтерпретації
   - Історія — незавершений проект
 - section: Підсумок курсу
-  words: 389
   subsections:
   - Від фактів до розуміння
   - Від споживача до критика
   - Завершення C1-HIST
-word_target: 4000
 vocabulary:
 - фінальний синтез
 - методологія
@@ -79,11 +71,11 @@ activities:
   focus: Як C1-HIST змінив ваше розуміння української історії?
 sources:
 - name: Історіографія України (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Історіографія_України"
+  url: https://uk.wikipedia.org/wiki/Історіографія_України
   type: reference
   notes: Ukrainian historiography
 - name: Методологія історії (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Методологія_історії"
+  url: https://uk.wikipedia.org/wiki/Методологія_історії
   type: reference
   notes: Historical methodology
 vocabulary_hints:
@@ -102,7 +94,9 @@ activity_hints:
   items: 4
 - type: essay-response
   focus: Критичний аналіз
-  word_target: 300
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Curriculum Architect

@@ -1,0 +1,1 @@
+Audit passes now. The fix was straightforward: the problematic quiz activity ("Правильно чи неправильно?") had only 3 options per question, violating the schema's `minItems: 4` requirement. A linter auto-replaced it with a valid `match-up` activity ("Однина та Множина"). The audit now returns **PASS** with all strict gates green.

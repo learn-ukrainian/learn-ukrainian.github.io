@@ -1,0 +1,68 @@
+{
+  "module": "litopys-velychka",
+  "level": "C1",
+  "plan_version": "2.0",
+  "last_audit": "2026-02-20T01:10:04.682047Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-02-19T13:39:02.179958Z",
+    "meta": "2026-02-19T22:09:16.086031Z",
+    "activities": null,
+    "vocabulary": null,
+    "plan": "2026-02-17T13:37:38.130411Z",
+    "research": "2026-02-19T22:09:16.077950Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "fail",
+      "violations": 2,
+      "message": "Missing '## Activities' header OR activities sidecar | Lint: 1 Format Errors"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 4,
+      "message": "3138/5000 (raw: 3426) | engagement: 3/6 | pedagogy: 4 violations | richness: 92% < 95% min (history)"
+    },
+    "activities": {
+      "status": "fail",
+      "violations": 4,
+      "message": "0/3 | density: 0 < 1 | unique_types: 0/3 types | priority: No priority types"
+    },
+    "vocabulary": {
+      "status": "warn",
+      "violations": 0,
+      "message": "0 < 25 (soft target)"
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "ipa": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Clean IPA"
+    },
+    "research": {
+      "status": "warn",
+      "violations": 0,
+      "message": "Refresh recommended: Content predates research (research file is newer)"
+    },
+    "review": {
+      "status": "skipped",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "5 Outline Compliance Errors",
+      "Structure: Missing '## Activities' header OR activities sidecar",
+      "Missing required activity types: essay-response, reading, true-false"
+    ],
+    "pass_count": 1,
+    "fail_count": 3,
+    "deferred_count": 0
+  }
+}

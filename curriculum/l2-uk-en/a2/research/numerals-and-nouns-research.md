@@ -1,86 +1,34 @@
-# Research Notes: Числа та речі: Один, два, п'ять (Numerals and Nouns)
+# Дослідження: Numerals and Nouns
 
-**Track**: Core A
-**Module**: A2 M21
-**Researched**: 2026-02-08
-**Level**: A1 (Beginner) / Early A2
+## State Standard Reference
+§4.2.1.3 & §4.2.2.2: "позначення кількості та міри в поєднанні з кількісними числівниками: Ми маємо вісімдесят гривень. ... суб’єкт кількісної вікової ознаки: Дідусеві вісімдесят років."
+Alignment: This module systematically addresses the morphological agreement and case usage requirements for A2 learners, specifically focusing on the cardinal numeral paradigms and their interaction with noun cases (Nominative and Genitive).
 
-## 1. Grammar: State Standard 2024 Reference
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| один / одна / одне | Very High (Core) | один долар, одна година, одне вікно |
+| два / дві | Very High (Core) | два квитки, дві гривні, дві пляшки |
+| три, чотири | High (Core) | три дні, чотири роки, три гривні |
+| п'ять, десять, двадцять | High (Core) | п'ять гривень, десять євро, двадцять хвилин |
+| гривня | High (Market context) | три гривні, п'ять гривень, десять гривень |
+| долар / євро | High (Travel/Finance) | один долар, три долари, п'ять доларів |
 
-The module aligns with the requirements for levels A1 and A2 regarding the expression of quantity and numeral-noun agreement.
+## Cultural Hooks
+1. **The Dual Legacy (Двоїна)**: Historically, Ukrainian had a dual number (separate from singular and plural). While it officially disappeared, it left a "trace" in the modern agreement of numerals 2, 3, and 4. In standard Ukrainian, these take the Nominative Plural, but with a specific stress pattern that often echoes the old dual (e.g., дві кни́ги). (Source: Wikipedia - Двоїна в українській мові)
+2. **Kyivan Rus Currency**: The "Gryvnia" (гривня) isn't just modern money; it was a unit of weight and currency in Kyivan Rus (IX-XIII centuries). Using it for counting drills connects learners to a millennium of history. (Source: National Bank of Ukraine - History of the Hryvnia)
 
-**A1 Reference (§4.2.2.2.1):**
-> "позначення кількості та міри в поєднанні з кількісними числівниками: Ми маємо вісімдесят гривень. Треба їсти багато фруктів."
+## Common Learner Errors
+1. **L1 Interference (Russian)**: Learners with Russian background often use Genitive Singular for 2, 3, 4 (e.g., *два стола* instead of *два столи*). Ukrainian requires the Nominative Plural in these zones.
+2. **Gender Agreement Failure**: Forgetting that numerals '1' and '2' must agree with the noun's gender (e.g., *два пляшки* instead of *дві пляшки*).
+3. **The "11-14" Trap**: Learners often apply the "Last Digit Rule" (1, 2-4 zones) to 11, 12, 13, 14, forgetting that these "teens" belong entirely to the Genitive Plural zone (Zone 3).
 
-**A2 Reference (§4.2.1.3):**
-> "кількісні числівники один (одна, одне, одні), два (дві), три, чотири: один, одного, двох, двом, на трьох, чотирьох, чотирма..."
+## Cross-References
+- Builds on: `a1-01` (Nominative), `a1-11` (Accusative), `a1-12` (Basic Numerals 1-20).
+- Prepares for: `b1-numerals-declension` (Full declension in all cases), `b2-business-ukrainian` (Complex financial counting).
 
-**Grammatical Logic for this Module:**
-*   **One (1):** Agreement in gender/number/case. (один стіл, одна книга, одне вікно).
-*   **Two, Three, Four (2, 3, 4):** Agreement with the Nominative Plural (in A1/A2 pedagogy, though historically the paucal Genitive Singular). (два столи, три книги, чотири вікна).
-*   **Five and above (5+):** Agreement with the Genitive Plural. (п'ять столів, шість книг, десять вікон).
-
-## 2. Vocabulary Frequency
-
-Focus on high-frequency nouns from the A1/A2 Thematic Catalog (Каталог Б):
-
-*   **Money (Гроші):** гривня, копійка, долар, євро.
-*   **Groceries (Закупи):** яблуко, банан, яйце, хліб, пляшка (води/соку), пакет (молока).
-*   **Time (Час):** година, хвилина, день, тиждень, місяць, рік.
-*   **People (Людина):** студент, викладач, друг, дитина (noting irregular plural 'діти').
-*   **Objects (Побут):** стіл, стілець, ручка, олівець, вікно.
-
-**Frequency Analysis:**
-*   *High:* гривня, година, день, студент, книга.
-*   *Medium:* пляшка, яблуко, олівець.
-
-## 3. Cultural Hook
-
-**The Flower Rule (Правило квітів):**
-In Ukrainian culture, numbers carry significant symbolic weight, especially when giving gifts.
-*   **Odd numbers (1, 3, 5, 7, 9...):** Always used for celebrations, birthdays, and dates. It symbolizes life and growth.
-*   **Even numbers (2, 4, 6...):** Strictly reserved for funerals and mourning. Giving an even number of flowers to a living person is considered a serious faux pas or a bad omen.
-
-**Superstitions (Забобони):**
-*   **Three (3):** Often used in folklore (three wishes, three trials). It is common to "spit three times over the left shoulder" to avoid the evil eye.
-*   **Thirteen (13):** Generally considered unlucky (чортова дюжина), though less emphasized than in Western culture.
-
-## 4. Pedagogical Notes
-
-**Key Differences from English:**
-*   English has a binary system: Singular (1) vs. Plural (2+).
-*   Ukrainian has a tripartite system for counts:
-    1.  **Singular:** for number 1.
-    2.  **"Paucal" Plural:** for numbers 2, 3, 4 (Nom. Plural endings).
-    3.  **Genitive Plural:** for numbers 5-20.
-
-**Common Learner Errors:**
-*   Using Genitive Plural for 2, 3, 4 (e.g., *два книг* instead of *дві книги*).
-*   Forgetting gender agreement for 'one' (один/одна/одне) and 'two' (два/дві).
-*   Confusing the 'teen' endings (-надцять) with the 'ty' endings (-десят).
-
-**Teaching Sequence:**
-1.  Review 'один' agreement (gender).
-2.  Introduce '5+' logic (Genitive Plural) as it is consistent for a large block of numbers (5-20).
-3.  Introduce '2, 3, 4' as the special group requiring Nominative Plural.
-
-## 5. Scope Boundaries
-
-**In Scope:**
-*   Numerals 1-20.
-*   Direct Object (Accusative Inanimate) and Subject (Nominative) positions.
-*   Gender agreement for *один/одна/одне* and *два/дві*.
-*   Basic nouns with regular plural/genitive patterns.
-
-**Out of Scope:**
-*   Compound numbers (21, 22...) - reserved for a later module to avoid overloading.
-*   Oblique cases for numerals (Dative, Instrumental, etc.).
-*   Agreement with Adjectives (e.g., *два великі столи* vs *п'ять великих столів*) - this is B1 level complexity.
-*   Collective numerals (двоє, троє).
-*   Large numbers (100+).
-
-## 6. Primary Sources Consulted
-
-1.  Державний стандарт української мови (2024), Рівні А1-А2.
-2.  Thematic Catalog B (A1/A2), State Standard.
-3.  Pedagogical observation of common "Case Trap" patterns in Slavic L2 acquisition.
+## Notes for Content Writing
+- **The "Zone" Concept**: Use the "Zone" mental model (Zone 1: '1'; Zone 2: '2,3,4'; Zone 3: '5-20') as it simplifies the logic for A2 learners better than listing 20 individual rules.
+- **Last Digit Rule**: Emphasize that for compound numbers (21, 54, etc.), only the *last word* determines the agreement zone.
+- **Market Context**: Use the market (ринок) as the primary setting for examples. It allows for natural repetition of counting currency (гривні) and products (яблука, пляшки, кілограми).
+- **Animacy**: Briefly touch upon the Accusative case distinction: "Бачу два столи" (inanimate = Nom) vs "Бачу двох друзів" (animate = Gen-like form), as per the plan objectives.

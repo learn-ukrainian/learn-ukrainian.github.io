@@ -1,0 +1,111 @@
+module: b1-90
+level: B1
+sequence: 90
+slug: presentations-visuals
+version: '1.0'
+title: Презентації та візуалізація
+subtitle: Presentations & Describing Visual Information
+content_outline:
+- section: Вступ — Навіщо презентувати?
+  points:
+  - 'Презентації в навчанні, на роботі, в житті — cultural hook: contrast modern TEDxKyiv
+    style with traditional academic reading from paper'
+  - Структура цього модуля
+- section: Структура презентації
+  points:
+  - 'Початок (привітання, тема, план) — cultural hook: importance of formal address
+    «шановні колеги», «панство» in academic settings'
+  - Основна частина (пункти, переходи)
+  - Завершення (підсумок, запитання)
+  - 'Фрази для кожної частини — register: semi-formal «Дозвольте представити», «Зверніть
+    увагу»'
+- section: Опис візуальної інформації
+  points:
+  - 'Графіки (зростає, падає, стабільний) — learner error: confusion between «графік»
+    (line/trend) vs «діаграма» (parts) vs «розклад» (schedule)'
+  - 'Діаграми (частка, відсоток, порівняння) — types: «кругова» (pie), «стовпчаста»
+    (bar)'
+  - Таблиці (рядки, стовпці, дані)
+  - Фотографії та ілюстрації (на зображенні ми бачимо...)
+  - 'Distinction: «зрости на 10%» (by amount) vs «зрости до 10%» (to level) — critical
+    visual description nuance'
+- section: Мовні засоби презентатора
+  points:
+  - Привернення уваги (Зверніть увагу на...)
+  - Пояснення (Це означає, що...)
+  - Наголошення (Особливо важливо...)
+  - Переходи (Тепер перейдемо до...)
+- section: Узагальнення та резюмування
+  points:
+  - Як узагальнювати інформацію (Загалом..., Підсумовуючи...)
+  - 'Резюмування з різних джерел (За даними..., Згідно з...) — learner error: «Згідно
+    графіку» (wrong) -> «Згідно з графіком» / «Відповідно до графіка»'
+  - Ключові фрази для висновків (Отже..., Таким чином...)
+  - 'CEFR B1 skill - summarize information from different sources — learner error:
+    dangling participles «Аналізуючи діаграму, стає зрозуміло» (bad) -> «Аналізуючи
+    діаграму, ми бачимо» (good)'
+- section: Практика — Міні-презентація
+  points:
+  - '3-хвилинна презентація з візуальним матеріалом — persona: act as a Creative Director
+    rehearsal'
+  - Чекліст самооцінки
+  - Поширені помилки та як їх уникнути
+vocabulary_hints:
+  required:
+  - презентація (presentation) — робити/проводити презентацію, успішна презентація
+  - слайд (slide) — готувати слайди
+  - графік (graph/chart) — графік показує, лінійний графік; NOT schedule (розклад)
+  - діаграма (diagram) — кругова діаграма, стовпчаста діаграма, частка на діаграмі
+  - таблиця (table) — рядки та стовпці
+  - дані (data) — за даними...
+  - зростати (to grow/increase) — стрімко/поступово зростати, зрости на X%
+  - падати (to fall/decrease) — різко падати, тенденція до спадання
+  recommended:
+  - аудиторія (audience) — тримати увагу аудиторії
+  - висновок (conclusion) — робити висновки
+  - наочний (visual) — наочний матеріал, наочність
+  - тенденція (trend) — позитивна/негативна тенденція, тенденція до зростання
+  - показник (indicator) — зростання показників
+  - частка (share/portion) — значна частка
+  - узагальнювати (to summarize/generalize) — узагальнюючи сказане
+  - резюмувати (to summarize) — коротко резюмувати
+  - джерело (source) — з різних джерел
+  - згідно з (according to) — згідно з графіком (Instrumental case)
+activity_hints:
+- type: fill-in
+  focus: Complete presentation phrases
+  items: 15
+- type: match-up
+  focus: Match visual description to graph type
+  items: 12
+- type: quiz
+  focus: Choose correct phrase for situation
+  items: 15
+- type: fill-in
+  focus: Fill in presentation and summarizing phrases
+  items: 12
+- type: error-correction
+  focus: Reorder presentation sentences
+  items: 8
+focus: practical
+pedagogy: PPP
+prerequisites:
+- b1-89 (Communication Channels)
+connects_to:
+- b1-91 (Feedback & Negotiation)
+objectives:
+- Learner can structure a 3-5 minute presentation in Ukrainian
+- Learner can describe graphs, charts, and tables accurately
+- Learner can use appropriate transition phrases
+- Learner can engage audience with visual materials
+- Learner can summarize information from different sources (CEFR B1)
+grammar:
+- Presentation phrases (Дозвольте представити..., Як бачимо...)
+- Describing trends (зростає на X%, падає вдвічі)
+- Comparison structures (порівняно з..., на відміну від...)
+register: напівформальний
+phase: B1.9 [Communication Skills]
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Creative Director
+word_target: 4000

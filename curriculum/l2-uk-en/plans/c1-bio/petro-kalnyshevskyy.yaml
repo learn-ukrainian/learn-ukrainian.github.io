@@ -1,60 +1,51 @@
----
-module: c1-bio-032
+module: c1-bio-32
 level: C1-BIO
 sequence: 32
 slug: petro-kalnyshevskyy
 version: '2.0'
 title: 'Петро Калнишевський: Останній кошовий'
 content_outline:
-- section: "Вступ — Останній лицар степу"
-  words: 400
+- section: Вступ — Останній лицар степу
   points:
   - Калнишевський як символ кінця козацької епохи
   - Трагедія ліквідації Січі
   - Його мученицька доля
 - section: Шлях до кошового отаманства
-  words: 600
   points:
   - Походження та молодість
   - Козацька кар'єра
   - Обрання кошовим 1762 року
   - Характер та лідерські якості
 - section: Розквіт Нової Січі
-  words: 700
   points:
   - Економічний розвиток
   - Адміністративні реформи
   - Церковне будівництво
   - Відносини з Російською імперією
 - section: Наростання загрози
-  words: 700
   points:
   - Імперська політика Катерини II
   - Обмеження козацьких свобод
   - Спроби дипломатичного опору
   - Потьомкін і плани щодо Січі
 - section: Ліквідація Січі 1775 року
-  words: 800
   points:
   - Військова операція
   - Зречення Калнишевського клейнодів
   - Арешт старшини
   - Кінець козацької автономії
 - section: Ув'язнення та смерть
-  words: 500
   points:
   - Соловецький монастир
   - 25 років в одиночній камері
   - Умови ув'язнення
   - Смерть у 112 років (?)
   - Канонізація
-- section: "Підсумок — Мученик за волю"
-  words: 300
+- section: Підсумок — Мученик за волю
   points:
   - Калнишевський як символ опору імперії
   - Кінець козацької України
   - Пам'ять про останнього кошового
-word_target: 4000
 vocabulary_hints:
   required:
   - кошовий (koshovyi)
@@ -80,7 +71,6 @@ activity_hints:
   items: 3 passages
 - type: essay-response
   focus: Why did the Empire destroy the Sich?
-  word_target: 250
   output: Analysis of imperial motivations
 - type: critical-analysis
   focus: Evaluate the claim that he lived to 112
@@ -97,15 +87,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Петро Калнишевський (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Петро_Калнишевський"
+  url: https://uk.wikipedia.org/wiki/Петро_Калнишевський
   type: primary
   notes: Biography, last koshovyi, imprisonment
 - name: Знищення Запорозької Січі
-  url: "https://uk.wikipedia.org/wiki/Знищення_Запорозької_Січі"
+  url: https://uk.wikipedia.org/wiki/Знищення_Запорозької_Січі
   type: primary
   notes: Events of 1775
 - name: Соловецький монастир
-  url: "https://uk.wikipedia.org/wiki/Соловецький_монастир"
+  url: https://uk.wikipedia.org/wiki/Соловецький_монастир
   type: reference
   notes: Place of imprisonment
 immersion: 100% Ukrainian
@@ -113,3 +103,6 @@ phase: C1-BIO
 objectives:
 - 'Analyze the life and legacy of петро калнишевський: останній кошовий'
 - Evaluate the contributions of останній лицар степу
+persona:
+  voice: Senior Biographer
+  role: Solovky Exile

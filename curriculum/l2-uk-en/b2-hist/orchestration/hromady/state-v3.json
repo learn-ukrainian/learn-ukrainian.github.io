@@ -1,0 +1,13 @@
+{
+  "track": "b2-hist",
+  "slug": "hromady",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T16:34:17Z",
+      "task_id": "v3-hromady-pA",
+      "mode": "meta-only"
+    }
+  }
+}

@@ -1,0 +1,104 @@
+module: b2-53
+level: B2
+sequence: 53
+slug: idioms-animals-ii
+version: '2.0'
+title: 'Фразеологізми: Тварини II (Птахи, Риби, Комахи)'
+content_outline:
+- section: 'Вступ: Метафоричний світ природи (Introduction: The Metaphorical World
+    of Nature)'
+  words: 600
+  points:
+  - Introduction to animal metaphors in Ukrainian lexical stylistics (§4.4.1.2), focusing
+    on expressive enrichment at the B2 level.
+  - 'General associations: Birds (freedom/dreams), Fish (silence/coldness), and Insects
+    (diligence/annoyance).'
+  - 'Cultural Hook: The Stork (Лелека) as a sacred bird in Ukraine, symbol of family
+    happiness and loyalty, nesting on houses as a sign of luck.'
+- section: 'Птахи: Від досвіду до винятковості (Birds: From Experience to Uniqueness)'
+  words: 1000
+  points:
+  - Analysis of the high-frequency proverb 'Гарна пташка своїм пір'ям, а людина знанням'
+    — shifting focus from appearance to substance.
+  - 'The dichotomy of certainty: ''Синиця в руках краще, ніж журавель у небі'' — usage
+    patterns and collocations like ''тримати синицю''.'
+  - 'Experienced personas: ''Стріляний горобець'' vs ''Рання пташка'' (contrasting
+    literal translations of English ''Early bird'').'
+  - 'Social dynamics: ''Біла ворона'' (outcast/unique) and ''Ворона в павичевому пір''ї''
+    (pretense) — highlighting the fem. gender requirement for ''Біла ворона''.'
+- section: 'Риби та комахи: Символи мовчання та праці (Fish and Insects: Symbols of
+    Silence and Labor)'
+  words: 950
+  points:
+  - 'Communication metaphors: ''Мовчати як риба'' (and the variation ''німий як риба'')
+    vs the indecisive ''ні риба ні м’ясо''.'
+  - 'The virtue of labor: ''Працювати як бджола'' and its cultural link to Ukrainian
+    beekeeping history (Petro Prokopovych and the 1814 beehive invention).'
+  - 'Hyperbole and annoyance: ''Робити з мухи слона'' (very high frequency) and ''Лізти
+    межи очі як муха'' (replacement for rarer dialectisms).'
+  - 'Physical idioms: ''Мурашки по спині бігають'' — describing sensations of fear,
+    cold, or excitement to ensure authentic insect-related vocabulary.'
+- section: 'Практикум: Стилістичні відтінки (Practice: Stylistic Shades)'
+  words: 750
+  points:
+  - 'Categorization exercise: Sorting idioms by register (colloquial vs literary)
+    and semantic theme (Diligence, Silence, Ambition).'
+  - 'Error Correction: Identifying and fixing gender mismatches (e.g., ''Він був білим
+    вороном'') and avoiding Russian calques like ''грати значення''.'
+  - 'Translation workshop: Comparing Ukrainian bird metaphors with English counterparts
+    (e.g., ''Early bird'' vs ''Рання пташка'' vs ''Хто рано встає...'').'
+- section: Творче застосування та підсумок (Creative Application and Summary)
+  words: 700
+  points:
+  - 'Guided production: Writing a descriptive character profile of a ''white crow''
+    or a ''busy bee'' in a professional or social context.'
+  - 'Reflection on metaphorical motivation: Why does Ukrainian culture link silence
+    to fish and ambition to insects?'
+  - 'Final summary: Integrating animal idioms into broader B2.2 goals of synonymy
+    and stylistic flexibility.'
+focus: phraseology
+pedagogy: CBI
+objectives:
+- Вивчити 8 ключових фразеологізмів про птахів, риб та комах
+- Розуміти значення метафор перебільшення та неуважності
+- Вміти вживати ідіоми про стихії (вода, повітря) у переносному значенні
+grammar:
+- Fixed expressions
+- Idiom structure and variation
+register: varies
+phase: B2.2 [Phraseology & Synonymy]
+vocabulary_hints:
+  required:
+  - 'синиця в руках (tomtit in hand) — high frequency; meaning: better a small certainty
+    than a big hope'
+  - 'стріляний горобець (experienced sparrow) — collocation: ''старий стріляний горобець'';
+    experienced person'
+  - 'біла ворона (white crow) — note: always feminine gender regardless of subject;
+    means an outcast or exception'
+  - 'мовчати як риба (silent as a fish) — high frequency; collocation: ''німий як
+    риба'' (mute as a fish)'
+  - робити з мухи слона (make an elephant out of a fly) — very high frequency; means
+    to exaggerate
+  - 'працювати як бджола (work like a bee) — usage: extreme diligence/hardworking'
+  recommended:
+  - лелека (stork) — sacred bird; symbol of family and luck
+  - мурашки по спині (shivers down the back) — physical sensation from fear or cold
+  - лізе межи очі як муха (gets into the eyes like a fly) — annoying/persistent person
+  - ворона в павичевому пір’ї (crow in peacock feathers) — literary; someone pretending
+    to be who they aren't
+  - переносне значення (figurative meaning) — essential metalanguage for discussing
+    idioms
+activity_hints:
+- type: reading
+  focus: Контекстне використання
+  items: 4
+- type: fill-in-the-blank
+  focus: Практичне застосування
+  items: 10
+- type: true-false
+  focus: Розуміння значень
+  items: 8
+persona:
+  voice: Professional Language Coach
+  role: Ornithologist (Орнітолог)
+word_target: 4000

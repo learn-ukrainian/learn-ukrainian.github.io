@@ -1,0 +1,119 @@
+module: b1-86
+level: B1
+sequence: 86
+slug: ukrainski-sviata-ta-festyvali
+version: '2.0'
+title: Українські свята та фестивалі
+subtitle: Ukrainian Holidays and Festivals
+content_outline:
+- section: 'Вступ: Українські свята та календарна реформа (Introduction: Ukrainian
+    Holidays and Calendar Reform)'
+  words: 500
+  points:
+  - 'Вступ до поняття «свято»: розмежування державних, релігійних та сімейних свят
+    згідно з частотністю (Top 500).'
+  - 'Пояснення календарної реформи 2023 року: перехід на новоюліанський календар (Різдво
+    25 грудня) та культурний контекст «старого Нового року».'
+- section: 'Зимовий та весняний цикли: Різдво та Великдень (Winter and Spring Cycles:
+    Christmas and Easter)'
+  words: 1000
+  points:
+  - 'Різдво: порівняння традиції Дідуха (символ духу предків) та сучасної ялинки;
+    вертеп як театралізоване дійство.'
+  - 'Кулінарний зв''язок (builds on B1-85): значення куті на Різдво та випікання паски
+    на Великдень.'
+  - 'Великдень: символіка писанок та крашанок; обряд освячення кошика в церкві.'
+  - 'Специфічні вітання-відповіді: «Христос народився! — Славімо Його!» та «Христос
+    Воскрес! — Воістину Воскрес!».'
+- section: 'Народна обрядовість: Маланка та Івана Купала (Folk Rituals: Malanka and
+    Ivana Kupala)'
+  words: 800
+  points:
+  - 'Маланка (Щедрий вечір): опис народного карнавалу з костюмованими персонажами
+    (Коза, Циган, Маланка) та традиція щедрування.'
+  - 'Літній цикл: Івана Купала, магічні обряди з вінками та вогнем; роль традицій
+    у збереженні ідентичності.'
+- section: 'Сучасна Україна: Державні свята та масштабні фестивалі (Modern Ukraine:
+    State Holidays and Large-scale Festivals)'
+  words: 900
+  points:
+  - 'День Незалежності України: як змінилося сприйняття свята в сучасному контексті;
+    офіційні заходи та народні гуляння.'
+  - 'Фестивальна культура: Atlas Festival як приклад сучасного міжнародного музичного
+    заходу в Києві; Одеський кінофестиваль.'
+  - 'STEM-ready context: Організація фестивалів (етно-фестивалі) як частина культурного
+    менеджменту.'
+- section: 'Мовна практика: Етикет вітань та запобігання помилкам (Language Practice:
+    Greeting Etiquette and Error Prevention)'
+  words: 800
+  points:
+  - 'Робота над помилкою: використання орудного відмінка після прийменника з/зі у
+    вітаннях (З Новим роком!, Зі святом!).'
+  - 'Корекція типової помилки: «Вітаю з свято!» (Nom) -> «Вітаю зі святом!» (Instr).'
+  - 'Продукція: написання святкової листівки або повідомлення з використанням кліше
+    «Бажаю успіхів...», «Нехай збуваються мрії...».'
+- section: 'Міні-чекпоінт: Культура B1.7 (Mini-checkpoint: Culture B1.7)'
+  words: 0
+  points:
+  - Самооцінка знань про сучасну Україну (M72-86).
+  - Тест на знання традицій, регіональних особливостей та сучасної культури.
+- section: Потрібно більше практики? (Need More Practice?)
+  words: 0
+  points:
+  - Додаткові читання про регіональні фестивалі (Львівський фестиваль кави, свято
+    вина на Закарпатті).
+vocabulary_hints:
+  required:
+  - свято (holiday) — державне, релігійне, сімейне; вітати зі святом
+  - Різдво (Christmas) — святкувати Різдво; на Різдво
+  - Великдень (Easter) — пекти паску, фарбувати яйця
+  - традиція (tradition) — за традицією, зберігати традиції
+  - святкувати (to celebrate) — святкувати в колі сім'ї; як ви святкуєте?
+  - фестиваль (festival) — музичний фестиваль; проводити фестиваль
+  - 'кутя (kutia) — traditional Christmas grain pudding; context: B1-85'
+  - паска (paska) — Easter bread; essential for Easter vocabulary
+  recommended:
+  - дідух (didukh) — traditional wheat sheaf decoration symbolizing ancestors
+  - вертеп (nativity play/scene) — can refer to the puppet theater or live performance
+  - писанка (pysanka) — decorated Easter egg using wax-resist method
+  - колядки / щедрівки (carols) — specific types of songs for Christmas vs. New Year/Epiphany
+  - обряд (ritual) — used in the context of folk celebrations
+  - Маланка (Malanka) — Ukrainian folk holiday celebrated on Jan 13; folk carnival
+  - 'вітати (to greet/congratulate) — requires Instrumental case: вітати зі святом'
+activity_hints:
+- type: reading
+  focus: Holiday descriptions and traditions
+  items: 15
+- type: match-up
+  focus: Match holidays to traditions
+  items: 20
+- type: fill-in
+  focus: Complete celebration descriptions
+  items: 15
+- type: quiz
+  focus: Compare cultural traditions
+  items: 10
+- type: checkpoint-culture
+  focus: Test cultural knowledge from M72-86
+  items: 30
+focus: culture
+pedagogy: CBI
+prerequisites:
+- b1-85 (Ukrainian Cuisine)
+connects_to:
+- b1-87 (News Reading)
+objectives:
+- Learner can discuss Ukrainian holidays and festivals in context
+- Learner can understand authentic texts about Ukrainian celebrations
+- Learner can use celebration-related vocabulary in communicative contexts
+- Learner can compare Ukrainian festivals with their own cultural traditions
+grammar:
+- Holiday and celebration vocabulary
+- Traditions and customs language
+- Calendar and date expressions
+register: розмовний
+phase: B1.7 [Contemporary Ukraine]
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Ethno-Festival Organizer
+word_target: 4000

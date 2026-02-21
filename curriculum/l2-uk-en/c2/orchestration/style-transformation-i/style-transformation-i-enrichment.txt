@@ -1,0 +1,331 @@
+✅ Message sent to Gemini (ID: 11124) [auto-acked: self-addressed]
+✓ Message 11124 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #11124...
+📨 Message #11124
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-style-transformation-i
+   Time: 2026-02-20T22:25:28.218086+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c2-010
+level: c2
+sequence: 10
+version: '2.0'
+title: Трансформація стилю I — Науковий → Популярний
+focus: stylistics
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Науково-популярні видання України
+  url: https://www.nbuv.gov.ua/
+  type: reference
+  notes: Examples of academic-to-popular transformation
+- name: Science popularization methodology
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Strategies for accessible science writing
+- name: Ukrainian State Standard 2024 — Style transformation
+  url: https://mon.gov.ua/
+  type: reference
+  notes: C2 requirements for register shifting
+content_outline:
+- section: Вступ — Навіщо популяризувати науку?
+  points:
+  - Роль науково-популярного стилю
+  - Аудиторії популяризації
+  - Баланс точності та доступності
+- section: Стратегії спрощення термінології
+  points:
+  - Заміна термінів загальновживаними словами
+  - Пояснення через аналогії
+  - Визначення в контексті
+  - Коли зберігати терміни
+- section: Додавання прикладів та ілюстрацій
+  points:
+  - Конкретні приклади з життя
+  - Візуальні аналогії
+  - Історичні анекдоти
+  - Порівняння з відомим
+- section: Зміна синтаксису
+  points:
+  - Від складних речень до простих
+  - Активний стан замість пасивного
+  - Риторичні запитання
+  - Діалогічність тексту
+- section: Адаптація для різних аудиторій
+  points:
+  - Широка публіка
+  - Студенти
+  - Фахівці інших галузей
+  - Діти та підлітки
+- section: Жанри науково-популярного письма
+  points:
+  - Стаття для журналу
+  - Блог-пост
+  - Публічна лекція
+  - Соціальні мережі
+- section: Практикум — Трансформація текстів
+  points:
+  - Перетворення анотації на блог-пост
+  - Порівняння наукової та популярної версії
+  - Пояснення складної концепції просто
+  - Оцінка збереження точності
+vocabulary:
+  required:
+  - популяризація (popularization)
+  - спрощення (simplification)
+  - аналогія (analogy)
+  - доступність (accessibility)
+  - аудиторія (audience)
+  - адаптація (adaptation)
+  - ілюстрація (illustration)
+  - приклад (example)
+  - концепція (concept)
+  - точність (accuracy)
+  recommended:
+  - метафора (metaphor)
+  - візуалізація (visualization)
+  - діалогічність (dialogicity)
+  - вульгаризація (vulgarization — negative)
+  - просвітництво (enlightenment)
+  forbidden: '[]'
+activities:
+  types_required:
+  - quiz
+  - fill-in
+  - critical-analysis
+  - essay-response
+  - comparative-study
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c2-11 (Official to journalistic transformation)
+- c2-58 (Cross-domain communication)
+- c2-12 (Lexical stylistics for word choice)
+vocabulary_hints:
+  required:
+  - концепція (concept)
+  - аналіз (analysis)
+  - дискурс (discourse)
+  - методологія (methodology)
+  recommended:
+  - інтерпретація (interpretation)
+  - контекстуалізація (contextualization)
+  - синтез (synthesis)
+activity_hints:
+- type: reading
+  focus: Поглиблений аналіз тексту
+  items: 4
+- type: essay-response
+  focus: Критичне осмислення
+- type: discussion
+  focus: Дискусія та аргументація
+  items: 1
+persona:
+  voice: Senior Specialist
+  role: Science Communicator
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Трансформація стилю I — Науковий → Популярний
+
+## State Standard Reference
+§4.3.7: "Уміння трансформувати текст з одного стилю в інший, зокрема науковий у науково-популярний, офіційний у публіцистичний тощо."
+§4.3.8: "Уміння утворювати вторинні тексти, зокрема реферати, повідомлення, довідково-інформаційні тексти."
+Alignment: Цей модуль безпосередньо реалізує вимогу §4.3.7 на рівні C2, фокусуючись на адаптації наукового контенту для широкої аудиторії.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| популяризація | Висока (медіа, освіта) | популяризація науки, займатися популяризацією, ефективна популяризація |
+| спрощення | Середня (академічна) | виправдане спрощення, надмірне спрощення, стратегія спрощення |
+| наукпоп | Низька (розмовна, сленг) | якісний наукпоп, український наукпоп, читати наукпоп |
+| доступність | Висока (загальна) | доступність викладу, забезпечити доступність, мовна доступність |
+| аналогія | Середня (наукова) | влучна аналогія, проводити аналогію, за аналогією з |
+
+## Cultural Hooks
+1. **«Куншт» (Kunsht)** — українське науково-популярне медіа, що позиціює науку як мистецтво. Використовує візуальний сторітелінг та метафори для пояснення складних явищ (наприклад, квантової фізики через мистецтво).
+2. **«Моя наука» (Moya Nauka)** — волонтерська ініціатива українських вчених, яка протидіє псевдонауці та публікує статті від експертів НАН України, демонструючи "людське обличчя" академічної науки.
+3. **Лекції Майбутнього (MANU)** — проєкт МАН України, що залучає нобелівських лауреатів до діалогу з українськими школярами, приклад високого рівня адаптації складного контенту.
+
+## Common Learner Errors
+1. **Надмірне вживання пасивного стану** (Excessive Passive Voice)
+   - *Помилка*: "Ця теорія була розроблена вченим..." (сухо, офіційно)
+   - *Виправлення*: "Вчений розробив цю теорію..." (активно, динамічно)
+   - *Причина*: Калькування англійських конструкцій або вплив офіційно-ділового стилю.
+2. **Зловживання віддієслівними іменниками** (Nominalization Overuse)
+   - *Помилка*: "Здійснення перевірки результатів..."
+   - *Виправлення*: "Перевірити результати..."
+   - *Причина*: Намагання звучати "розумно", що робить текст важким для сприйняття ("канцелярит").
+3. **Неадаптована термінологія**
+   - *Помилка*: Використання вузькоспеціальних термінів без пояснення або контексту.
+   - *Виправлення*: Введення терміна через означення або аналогію ("мітохондрія — це енергетична станція клітини").
+
+## Cross-References
+- Builds on: c1-11 (Official -> Journalistic), c1-48 (Ivan Puliui - Biography/Science history)
+- Prepares for: c2-11 (Official -> Journalistic II), c2-58 (Cross-domain communication)
+
+## Notes for Content Writing
+- Акцентувати на тому, що популяризація — це не "примітивізація" (dumbing down), а "переклад" мовою іншої аудиторії.
+- Використовувати приклади з реальних українських медіа (Куншт) як еталон стилю.
+- Обов'язково включити практикум з "деноміналізації" тексту (перетворення іменникових конструкцій на дієслівні).
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Природа науково-популярного стилю (Introduction: Nature of Popular Science Style)"
+  words: 400
+  points:
+  - "Реалізація вимог Держстандарту 2024 (§4.3.7): трансформація наукового стилю в науково-популярний як ключова компетенція C2"
+  - "Популяризація як 'переклад' мовою іншої аудиторії, а не примітивізація контенту; розрізнення понять 'спрощення' та 'вульгаризація'"
+- section: "Культурний контекст: Український наукпоп (Cultural Context: Ukrainian Popular Science)"
+  words: 500
+  points:
+  - "Кейс-стаді медіа «Куншт» (Kunsht): використання візуального сторітелінгу та мистецьких метафор для пояснення квантової фізики"
+  - "Ініціатива «Моя наука» (Moya Nauka): як українські вчені НАНУ протидіють псевдонауці через доступний експертний виклад"
+  - "Проєкт «Лекції Майбутнього» (MANU): досвід адаптації знань нобелівських лауреатів для підліткової аудиторії"
+- section: "Лексична адаптація та термінологія (Lexical Adaptation and Terminology)"
+  words: 600
+  points:
+  - "Стратегія введення терміна через аналогію: приклад з біології (мітохондрія як енергетична станція клітини)"
+  - "Learner error: використання вузькоспеціальних термінів без контексту — методика введення дефініції в популярному тексті"
+  - "Використання загальновживаних синонімів замість абстрактних наукових конструкцій для забезпечення мовної доступності"
+- section: "Синтаксична трансформація та деноміналізація (Syntactic Transformation and De-nominalization)"
+  words: 600
+  points:
+  - "Learner error: надмірне вживання пасивного стану (калькування англійської або офіційного стилю) — перехід до активних, динамічних конструкцій"
+  - "Практикум з 'деноміналізації': подолання канцеляриту через заміну віддієслівних іменників ('здійснення перевірки') на дієслова ('перевірити')"
+  - "Впровадження діалогічності: використання риторичних запитань та прямого звернення до читача для залучення аудиторії"
+- section: "Жанрова специфіка та вторинні тексти (Genre Specificity and Secondary Texts)"
+  words: 500
+  points:
+  - "Вимога Держстандарту (§4.3.8): створення вторинних текстів (рефератів, повідомлень, довідок) на основі наукових першоджерел"
+  - "Адаптація структури: від академічної анотації до клікабельного блог-посту або сценарію для соціальних мереж"
+- section: "Підсумок: Етика та точність популяризації (Summary: Ethics and Accuracy of Popularization)"
+  words: 400
+  points:
+  - "Баланс між захопливим викладом та науковою достовірністю: як не втратити суть концепції при спрощенні"
+  - "Фінальний практикум: оцінка трансформації тексту за критеріями точності, доступності та емоційного впливу"
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "популяризація (popularization) — займатися популяризацією науки, ефективна популяризація; висока частотність у медіа"
+  - "спрощення (simplification) — виправдане спрощення vs надмірне спрощення; стратегія доступності"
+  - "аналогія (analogy) — проводити влучну аналогію, за аналогією з; інструмент пояснення складного"
+  - "доступність (accessibility) — доступність викладу, мовна доступність; ключовий критерій наукпопу"
+  - "концепція (concept) — пояснення концепції простою мовою, збереження точності концепції"
+  recommended:
+  - "наукпоп (popular science) — сучасний термін для науково-популярного контенту та видань"
+  - "вторинний текст (secondary text) — термін Держстандарту для рефератів та адаптацій"
+  - "канцелярит (nominalization/bureaucratese) — негативне явище надмірного вживання віддієслівних іменників"
+  - "активний стан (active voice) — пріоритетна граматична форма для динамічного сторітелінгу"
+  - "просвітництво (enlightenment) — місія популяризатора науки в сучасному суспільстві"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (3774 chars)
+✅ Message sent to Claude (ID: 11131)
+✓ Message 11131 acknowledged
+   Auto-acknowledged reply #11131 (stdout delivery — no inbox accumulation)
+✓ Message 11124 acknowledged

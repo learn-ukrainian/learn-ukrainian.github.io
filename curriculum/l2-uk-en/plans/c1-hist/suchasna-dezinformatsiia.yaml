@@ -1,4 +1,3 @@
----
 module: c1-hist-110
 level: c1-hist
 sequence: 110
@@ -10,55 +9,47 @@ objectives:
 - Analyze the causes and consequences of сучасна російська дезінформація
 - Evaluate the historical significance of війна без зброї
 content_outline:
-- section: "Вступ — Війна без зброї"
-  words: 457
+- section: Вступ — Війна без зброї
   subsections:
   - Інформаційна війна — реальна війна
   - Від пропаганди до дезінформації
   - Цифрові інструменти
   - Структура модуля
 - section: Інфраструктура
-  words: 800
   subsections:
   - RT і Sputnik — глобальна мережа
   - Тролеферми — як працюють
   - Боти — масштаб операцій
   - Фінансування і координація
 - section: Методологія
-  words: 686
   subsections:
   - «Пожежний шланг брехні»
   - Багато версій — жодної правди
   - Емоції > факти
   - Теорії змови
 - section: Наративи про Україну
-  words: 686
   subsections:
   - «Нацисти при владі»
   - «Громадянська війна»
   - «Захист російськомовних»
   - MH17 — кейс-стаді
 - section: Цільові аудиторії
-  words: 571
   subsections:
   - Внутрішня — росіяни
   - Зовнішня — Захід
   - Українська — розкол
   - Різні наративи для різних аудиторій
 - section: Після 24.02.2022
-  words: 457
   subsections:
   - Посилення чи ослаблення?
   - Заборони RT у Європі
   - Адаптація методів
   - Нові платформи
 - section: Підсумок
-  words: 343
   subsections:
   - Дезінформація — зброя
   - Як розпізнавати
   - Перехід до західних медіа
-word_target: 4000
 vocabulary:
 - дезінформація
 - тролеферма
@@ -79,7 +70,7 @@ activities:
 - type: critical-analysis
   focus: Map Russian disinformation infrastructure
 - type: comparative-study
-  focus: "«Firehose of falsehood» — how it works"
+  focus: «Firehose of falsehood» — how it works
 - type: comparative-study
   focus: MH17 disinformation campaign analysis
 - type: critical-analysis
@@ -88,15 +79,15 @@ activities:
   focus: Чому 'пожежний шланг брехні' ефективний?
 sources:
 - name: Російська дезінформація (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Російська_дезінформація"
+  url: https://uk.wikipedia.org/wiki/Російська_дезінформація
   type: reference
   notes: Disinformation overview
 - name: Russia Today (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Russia_Today"
+  url: https://uk.wikipedia.org/wiki/Russia_Today
   type: reference
   notes: RT network
 - name: Тролі з Ольгіна (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Агентство_інтернет-досліджень"
+  url: https://uk.wikipedia.org/wiki/Агентство_інтернет-досліджень
   type: reference
   notes: Troll farms
 vocabulary_hints:
@@ -115,7 +106,9 @@ activity_hints:
   items: 4
 - type: essay-response
   focus: Критичний аналіз
-  word_target: 300
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Information Warfare Specialist

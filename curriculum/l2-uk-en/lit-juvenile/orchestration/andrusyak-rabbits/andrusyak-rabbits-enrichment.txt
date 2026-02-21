@@ -1,0 +1,227 @@
+✅ Message sent to Gemini (ID: 12074) [auto-acked: self-addressed]
+✓ Message 12074 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12074...
+📨 Message #12074
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-andrusyak-rabbits
+   Time: 2026-02-20T23:35:51.721639+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 21
+module: lit-juvenile-21
+level: LIT.JUVENILE
+slug: andrusyak-rabbits
+version: '2.0'
+title: Andrusyak Rabbits
+subtitle: Andrusyak Rabbits
+content_outline:
+- section: Вступ та контекст
+  points: []
+- section: Аналіз ключових творів
+  points: []
+- section: Стилістика та мова автора
+  points: []
+- section: Деколонізаційна перспектива
+  points:
+  - Як цей автор руйнує імперські міфи
+  - Українська суб'єктність у тексті
+- section: Підсумок та спадщина
+  points: []
+vocabulary_hints:
+  required:
+  - історіографія
+  - наратив
+  - суб'єктність
+  recommended:
+  - деколонізація
+activity_hints:
+- type: reading
+  focus: Аналіз першоджерела
+- type: essay-response
+  focus: Критичне есе
+- type: critical-analysis
+  focus: Деконструкція тексту
+focus: literature
+pedagogy: literature
+immersion: 100% Ukrainian
+phase: LIT Expansion
+objectives:
+- Проаналізувати творчість Andrusyak Rabbits у контексті української літератури
+- Дослідити вплив автора на формування національної ідентичності
+persona:
+  voice: Senior Specialist
+  role: Forest Diplomat
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Іван Андрусяк та його «Зайчикова книжечка»
+
+## Використані джерела
+1. [Енциклопедія Сучасної України: Андрусяк Іван Михайлович](https://esu.com.ua/article-44246) — огляд біографії та основних творів письменника.
+2. [Простір української дитячої книги «БараБука»](http://www.barabooka.com.ua/) — критичні статті та рецензії на дитячі твори Івана Андрусяка, зокрема аналіз його «зайчикового» циклу.
+3. [ЛітАкцент: світ сучасної літератури](http://litakcent.com/) — літературознавчий аналіз мовної гри та антидидактизму в поезії Андрусяка.
+
+## Хронологія
+- 1968: Народження Івана Андрусяка.
+- 1990-ті: Участь у літературному угрупованні «Нова дегенерація» (переважно доросла поезія).
+- 2007: Вихід у світ першої знакової дитячої книжки «Стефа і її Чакалка».
+- 2008: Публікація збірки поезій для дітей «Зайчикова книжечка» (згодом витримала безліч перевидань).
+- 2010: Вихід книги «Хто боїться Зайчиків», яка здобула першу премію на конкурсі «Золотий лелека».
+- 2014: Співзаснування видавництва «Фонтан казок», де Андрусяк стає головним редактором, формуючи канон сучасної української дитячої книги.
+
+## Ключові факти та цитати
+- Іван Андрусяк здійснив революцію в сучасній українській дитячій поезії, перейшовши від радянського нав'язливого моралізаторства до психологізму, емпатії та мовної гри.
+- Заєць у творах Андрусяка — це не боязке звірятко з російських народних казок чи радянських мультиків, а повноцінний, емоційно багатий персонаж, через якого дитина пізнає світ, проживає власні страхи та вчиться сміятися.
+- Цитата (Іван Андрусяк про дитячу літературу): > "Дитяча книжка має бути такою, щоб дитина з нею гралася, щоб вона була для неї другом, а не строгим учителем з указкою."
+- Поезія Андрусяка має виражений терапевтичний ефект (казкотерапія), зокрема у вірші «Хто боїться зайчиків», де страх деконструюється через парадокс і сміх.
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ та контекст: Новаторство Івана Андрусяка": [!context] — Пояснення переходу української літератури 2000-х від перекладів до створення власного унікального дитячого контенту.
+- Section "Аналіз ключових творів: Поетичний світ «Зайчикової книжечки»": [!quote] — Цитати з віршів, що демонструють особливий фонетичний ритм, ідеальний для читання вголос.
+- Section "Аналіз ключових творів: «Хто боїться зайчиків» та психологія страху": [!culture] — Казкотерапія в українській традиції виховання: як сміх допомагає долати дитячі травми.
+- Section "Стилістика та мова автора: Мовна гра": [!history-bite] — Зв'язок мовних експериментів Андрусяка з традиціями футуристів та авангардистів 1920-х років (адаптованих для дітей).
+- Section "Деколонізаційна перспектива: Подолання радянського дидактизму": [!myth-buster] — Спростування радянського міфу про те, що дитяча література має бути виключно "виховно-повчальною" (дидактичною).
+- Section "Деколонізаційна перспектива: Українська суб'єктність": [!decolonization] — Повернення образу Зайця до питомо українських фольклорних коренів, де він є хитрим і кмітливим, на противагу радянському образу вічної жертви.
+
+## Деколонізаційний контекст
+- **Imperial/Soviet myth**: Радянська дитяча література розглядала дитину як об'єкт виховання (tabula rasa), в який треба вкласти ідеологічно правильні моделі поведінки. Тварини в казках були чіткими алегоріями "хорошого" і "поганого" радянського громадянина.
+- **Ukrainian reality**: Андрусяк впроваджує європейський, дитиноцентричний підхід. Дитина — це суб'єкт, особистість. Його твори позбавлені менторського тону. Письменник стає на рівень дитини, спілкуючись із нею через гру, абсурд, щирість і повагу до її емоційного світу.
+
+## Section-Mapped Research Notes
+
+### Вступ та контекст: Новаторство Івана Андрусяка
+Іван Андрусяк прийшов у дитячу літературу з "дорослої" поезії 90-х. Він приніс із собою високу культуру слова та нелюбов до фальші. Його дебютні дитячі книжки стали ковтком свіжого повітря, показавши, що з дітьми можна говорити про все, використовуючи гумор і якісну літературну мову. 
+
+### Вступ та контекст: Концепція дитинства у творах Андрусяка
+Дитинство за Андрусяком — це простір безмежної фантазії. Письменник відмовляється від позиції "всезнаючого дорослого". Він досліджує світ разом із дитиною-читачем, легітимізуючи її право на пустощі, помилки та власні відкриття.
+
+### Аналіз ключових творів: Поетичний світ «Зайчикової книжечки»
+«Зайчикова книжечка» — це класика сучасного українського дитячого читання («bedtime stories»). Вірші вирізняються неймовірною мелодикою. Зайчик у книзі не просто персонаж, а альтер-его самої дитини, яка пізнає світ через побутові, але для неї грандіозні події.
+
+### Аналіз ключових творів: «Хто боїться зайчиків» та психологія страху
+Твір працює з базовими дитячими емоціями. Автор використовує прийом парадоксу (хто ж може боятися милих зайчиків?), щоб показати ілюзорність багатьох страхів. Сміх стає головним інструментом подолання тривожності.
+
+### Аналіз ключових творів: Образ зайця як архетип
+У фольклорі заєць часто виступає трикстером. Андрусяк трансформує цей архетип: його заєць — це сучасна дитина, допитлива, часом несмілива, але відкрита до світу. Аналіз трансформації тваринного епосу в сучасну авторську казку.
+
+### Стилістика та мова автора: Мовна гра та словотвір
+Одна з головних ознак стилю Андрусяка. Використання неологізмів, звукових ігор, каламбурів. Діти обожнюють гратися зі словами, і автор надає їм такий інструментарій, розвиваючи мовне чуття та любов до рідної мови.
+
+### Стилістика та мова автора: Ритміка та звуконаслідування
+Як поет-"шістдесятник" за духом, Андрусяк віртуозно володіє ритмом. Його дитячі вірші легко запам'ятовуються завдяки внутрішній динаміці та багатому звуконаслідуванню, що критично важливо для раннього мовленнєвого розвитку.
+
+### Деколонізаційна перспектива: Подолання радянського дидактизму
+Критика радянського підходу до виховання через літературу. Твори Андрусяка не дають готових відповідей і не сварять за неслухняність. Це література емпатії, яка вибудовує вільну, не закомплексовану особистість, що є основою громадянського суспільства.
+
+### Деколонізаційна перспектива: Українська суб'єктність та фольклор
+Опора на український менталітет і родинні традиції. Тексти глибоко вкорінені в український ландшафт і побут, без шароварщини, але з природним відчуттям свого "я". Герої діють проактивно.
+
+### Підсумок та спадщина: Вплив на сучасну дитячу літературу
+Андрусяк як видавець («Фонтан казок») та письменник задав високий стандарт якості для української дитячої книжки у XXI столітті. Його вплив на молоде покоління письменників та формування нових читацьких практик в українських родинах.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12153)
+✓ Message 12074 acknowledged
+✓ Message 12153 acknowledged

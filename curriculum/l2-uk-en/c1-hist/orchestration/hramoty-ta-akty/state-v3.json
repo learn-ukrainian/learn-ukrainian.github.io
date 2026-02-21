@@ -1,0 +1,13 @@
+{
+  "track": "c1-hist",
+  "slug": "hramoty-ta-akty",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T12:06:21Z",
+      "task_id": "v3-hramoty-ta-akty-pA",
+      "mode": "full"
+    }
+  }
+}

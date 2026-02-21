@@ -1,75 +1,42 @@
-# Research: Підрядні означальні: коли, що (Relative Clauses)
+# Дослідження: Підрядні означальні: коли, що
 
-**Module**: B1 M28
-**Topic**: Relative clauses with *коли* (when) and *що* (that/which)
-**Level**: B1 (Intermediate) - *Note: Prompt constraints indicated A1, but topic is strictly B1.*
+## State Standard Reference
+§4.4.3 (Lines 2397-2407): "складнопідрядне речення зі з’ясувальною підрядною частиною (сполучники що, щоб...): Викладач сказав, що я повинен багато працювати... складнопідрядні речення із часовою підрядною частиною (сполучне слово коли): вираження значення одночасності... вираження значення різночасовості"
+Alignment: This module directly addresses the B1 requirement for complex sentences with explanatory clauses (`що`) and temporal clauses (`коли`), focusing on the distinction between simultaneous and sequential actions.
 
-## 1. Grammar: State Standard 2024 Reference
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| **Коли** | High (Conjunction/Adv) | *Коли* не секрет; з того часу, *коли*; *коли* завгодно |
+| **Що** | Very High (Pronoun/Conj) | *Що*дня; *що*правда; *що*сь; те, *що*...; дарма, *що* |
+| **Час** | High (Noun) | *Час* минає; вільний *час*; *час* від *часу*; з *часом*; на *час* |
+| **Момент** | Medium (Noun) | У цей *момент*; вирішальний *момент*; слушний *момент* |
+| **Факт** | Medium (Noun) | Історичний *факт*; незаперечний *факт*; ставити перед *фактом* |
 
-According to the **State Standard for Ukrainian as a Foreign Language (Level B1)**, the learner is expected to master complex sentences (складнопідрядні речення).
+## Cultural Hooks
+1. **Proverb about Time**: "Час — не кінь: не підженеш та й не зупиниш." (Time is not a horse: you can't spur it on or stop it). This reflects the Ukrainian philosophical view of time as an unstoppable natural force.
+2. **Water Metaphor**: "Час пливе, як вода" (Time flows like water). This is a very common poetic metaphor in Ukrainian folklore and literature (e.g., in folk songs), connecting time to the "Motion Verbs" topic (Module 27).
 
-> **Reference**: Section on Syntax (Синтаксис), Level B1.
-> "Студент повинен вміти будувати складнопідрядні речення з підрядними означальними (relative clauses) та з'ясувальними (explanatory clauses), використовуючи сполучні слова *який*, *що*, *де*, *коли*."
+## Common Learner Errors
+1. **Коли vs. Якщо** (Condition vs. Time)
+   - *Error*: "Я зроблю це, *коли* (if) ти допоможеш." (Meaning: strictly time)
+   - *Correction*: "Я зроблю це, *якщо* (if) ти допоможеш." (Condition)
+   - *Why*: English "when" sometimes implies condition, but Ukrainian distinguishes strictly between temporal `коли` and conditional `якщо`.
 
-Specifically for this module:
-*   **Time Clauses (Часові)**: Introduced by *коли*.
-*   **Explanatory/Fact Clauses (З'ясувальні/Означальні)**: Introduced by *що* (used for abstract concepts or as a universal connector).
+2. **Що vs. Який** (Relative Pronoun Selection)
+   - *Error*: Overusing `який` where `що` is more natural/euphonic, or vice versa to avoid repetition.
+   - *Correction*: "Книга, *що* лежить на столі" = "Книга, *яка* лежить на столі".
+   - *Why*: Learners stick to one form. Good style requires alternating them to avoid tautology ("Той, *хто*..." vs "Те, *що*...").
 
-## 2. Vocabulary Frequency
+3. **Agreement with "Який"**
+   - *Error*: "Дівчина, *який* співає..."
+   - *Correction*: "Дівчина, *яка* співає..."
+   - *Why*: Forgetting that `який` behaves like an adjective and must agree with the antecedent gender/number.
 
-**High-Frequency Items (Core B1):**
-*   **коли** (when) - Essential connector.
-*   **що** (that/what) - Top 10 most frequent words in Ukrainian.
-*   **той / та / те** (that one) - Demonstrative pronouns often paired with relative clauses.
-*   **час** (time)
-*   **день** (day)
-*   **все** (everything)
+## Cross-References
+- **Builds on**: `b1-27` (Relative Clauses де/куди/звідки), `b1-16` (Motion Verbs - "Time flows").
+- **Prepares for**: `b1-29` (Purpose Clauses *щоб* + infinitive), `b1-30` (Causal Clauses *тому що*).
 
-**Common Collocations (A2/B1 Level):**
-*   *Той час, коли...* (The time when...)
-*   *Той день, коли...* (The day when...)
-*   *Те, що...* (That which... / What...)
-*   *Все, що...* (Everything that...)
-*   *В той момент, коли...* (At the moment when...)
-*   *Дякую за те, що...* (Thank you for the fact that...)
-
-## 3. Cultural Hook
-
-**Idiom: "Коли рак на горі свисне"**
-*   **Translation**: When the crawfish whistles on the mountain.
-*   **Meaning**: Never ("When pigs fly").
-*   **Cultural Context**: This is a classic, humorous Ukrainian idiom used to describe an impossible event or something that will happen in the indefinite, unlikely future. It perfectly illustrates the use of *коли* in a memorable phrase.
-
-**Concept: "Те, що важливо" (What matters)**
-*   Ukrainians often use the construction *Те, що...* to emphasize facts or feelings in conversation. Example: *Головне — те, що ми разом* (The main thing is that we are together). This reflects the emotional and collectivist aspect of Ukrainian communication.
-
-## 4. Pedagogical Notes
-
-**English vs. Ukrainian:**
-*   **The "That" Trap**: In English, "that" is a Swiss Army knife (conjunction, relative pronoun, demonstrative). In Ukrainian, learners must distinguish between:
-    *   *Що* (conjunction): *Я знаю, що ти тут.* (I know **that** you are here.)
-    *   *Що* (relative pronoun): *Все, що я знаю.* (Everything **that** I know.)
-    *   *Той/Цей* (demonstrative): *Той чоловік.* (**That** man.)
-
-**Common Learner Errors:**
-*   Omitting the comma before *що* or *коли*. (Unlike English, Ukrainian strict punctuation requires a comma before the subordinate clause).
-*   Confusing *коли* (when) with *якщо* (if).
-*   Using *що* when *який* is grammatically required for gender agreement (though in spoken Ukrainian *що* often replaces *який*).
-
-**Teaching Sequence:**
-1.  Start with **Fixed Phrases** (*Те, що...*; *Все, що...*).
-2.  Introduce **Time References** (*Час, коли...*).
-3.  Contrast with **Conjunctions** (Ensure they don't confuse "I know that..." with "The thing that...").
-
-## 5. Scope Boundaries
-
-**IN Scope (B1 Level):**
-*   **Temporal Relatives**: Sentences defining a specific time (*день, коли ми зустрілися*).
-*   **Abstract/Fact Relatives**: Sentences defining an abstract concept (*те, що ти сказав*; *все, що я маю*).
-*   **Case Usage**: Nominative and Accusative in simple structures. Past and Present tense usage within the clause.
-*   **Punctuation**: Mandatory comma usage rules.
-
-**OUT of Scope (for this module):**
-*   **Declension of *Який***: While related, this module focuses on *коли* and indeclinable/neutral *що*. Complex agreement of *який* (yakogo, yakomu, etc.) should be handled in M26/M27 or reviewed separately.
-*   **Participle Replacement**: Replacing clauses with active participles (*людина, що біжить* -> *біжуча людина*) is B2/C1 academic style.
-*   **Subjunctive Mood**: "As if..." structures are usually B2.
+## Notes for Content Writing
+- **Focus**: Clearly distinguish `що` (conjunction: "I know *that*...") from `що` (relative pronoun: "The book *that*..."). This is a key B1 threshold concept.
+- **Euphony**: Mention that `що` is often preferred after vowel-ending words or to avoid "k-heavy" sentences (unpleasant sound repetition), whereas `який` is better for strict gender specification.

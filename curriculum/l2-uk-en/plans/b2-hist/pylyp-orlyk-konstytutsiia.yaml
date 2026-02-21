@@ -1,4 +1,3 @@
----
 module: b2-hist-067
 level: B2-HIST
 sequence: 67
@@ -8,46 +7,69 @@ title: Пилип Орлик і перша Конституція
 subtitle: Pylyp Orlyk and the First Constitution
 content_outline:
 - section: 'Вступ: Гетьман у вигнанні'
-  words: 450
   points:
-  - Orlyk's background and education
-  - Election as Hetman in Bendery
-  - The tragic context of exile
+  - Orlyk's background and education — Czech noble origin (Barons Orlyk), Jesuit college
+    in Vilnius, Kyiv-Mohyla Academy (pupil of Stefan Yavorsky); born 1672 in Kosuta
+    (Belarus)
+  - 'Election as Hetman in Bendery — April 5 (16), 1710; first election in emigration;
+    cultural hook: [!history-bite] Orlyk was born in Belarus (Kosuta) but became a
+    Ukrainian Hetman'
+  - The tragic context of exile — post-Poltava defeat, death of Mazepa in Bendery,
+    alliance with Charles XII
 - section: Бендерська Конституція 1710 року
-  words: 800
   points:
-  - Structure of the document (Pacts and Constitutions)
-  - Separation of powers (Hetman, Council, Court)
-  - Protection of social groups
+  - 'Structure of the document (Pacts and Constitutions) — Full title «Пакти й Конституції
+    прав і вольностей Війська Запорозького»; Preamble (historical justification),
+    16 articles, Oath; cultural hook: [!context] 77 years before US Constitution,
+    81 years before French Constitution'
+  - Separation of powers (Hetman, Council, Court) — General Council meets 3 times/year
+    (Christmas, Easter, Pokrova); General Court independent from Hetman; Hetman limited
+    by law
+  - Protection of social groups — protection of Cossack widows/orphans, ban on Hetman
+    seizing land/property from Cossacks
 - section: 'Демократичні ідеї: Україна vs Європа'
-  words: 600
   points:
-  - Comparison with European legal thought (Locke, Montesquieu)
-  - The uniqueness of the contract between the Hetman and the Army
-  - Anti-tyranny safeguards
+  - 'Comparison with European legal thought (Locke, Montesquieu) — cultural hook:
+    [!myth-buster] Orlyk applied separation of powers *before* Montesquieu''s ''Spirit
+    of Laws'' (1748)'
+  - The uniqueness of the contract between the Hetman and the Army — 'social contract'
+    nature vs simple 'election capitulation' (pacta conventa)
+  - Anti-tyranny safeguards — Hetman cannot execute without court, cannot unilaterally
+    control treasury (skarbnytsia)
 - section: Дипломатична боротьба Орлика
-  words: 650
   points:
-  - Anti-Moscow coalition (Sweden, Turkey, Crimea)
-  - Campaign of 1711 onto the Right Bank
-  - Years of wandering in Europe (Thessaloniki, Paris, London)
+  - 'Anti-Moscow coalition (Sweden, Turkey, Crimea) — first European anti-Russian
+    coalition; cultural hook: [!decolonization] Ukraine viewed as the ''shield of
+    Europe'' against tyranny'
+  - Campaign of 1711 onto the Right Bank — initial success vs Tatar betrayal and looting
+    causing loss of support and retreat
+  - Years of wandering in Europe (Thessaloniki, Paris, London) — 12 years in Thessaloniki
+    under surveillance; seeking support from Louis XV and Vatican; death in Jassy
+    (1742)
 - section: 'Читання: Текст Конституції'
-  words: 500
   points:
-  - Analysis of specific articles (religion, borders, corruption)
-  - Language and style of the document (Latin/Old Ukrainian)
+  - 'Analysis of specific articles (religion, borders, corruption) — Art 1: Orthodoxy
+    under Constantinople (not Moscow); Art 2: Borders by Sluch river (Khmelnytsky
+    era); Art 6: Limits on Hetman by General Council'
+  - 'Language and style of the document (Latin/Old Ukrainian) — include quote: «Володарі,
+    що дорожать своїм добрим ім''ям... виставлені на суд загалу»'
 - section: 'Первинні джерела: Листи та діаріуш'
-  words: 500
   points:
-  - Excerpts from Orlyk's Diary ('Diariusz')
-  - Letters to European monarchs
+  - 'Excerpts from Orlyk''s Diary (''Diariusz'') — >2000 pages, travelogue of 18th-century
+    Europe, written in Polish with Latinisms; cultural hook: [!culture] Unique 18th-century
+    travelogue'
+  - 'Letters to European monarchs — ''Manifesto to European Governments'' (1712) explaining
+    war reasons (tyranny vs rights); quote: «Природним правом є визволятися від гноблення
+    і трудитися, аби повернути те, що несправедливістю... було забрано»'
 - section: 'Деколонізаційний погляд: Правова культура'
-  words: 500
   points:
-  - Ukrainian constitutionalism vs Russian autocracy
-  - Myth of 'anarchy' debunked
-  - Orlyk as a symbol of European Ukraine
-word_target: 4000
+  - Ukrainian constitutionalism vs Russian autocracy — refuting the imperial view
+    of the Constitution as a 'fiction' or simple 'pact'; Ukraine as part of European
+    legal tradition
+  - Myth of 'anarchy' debunked — Ukrainians sought legal order (Constitution), contrary
+    to the 'mazepynstvo' anarchy narrative invented by empire
+  - Orlyk as a symbol of European Ukraine — continuity with UNR Constitution (1918)
+    and modern Ukraine; 'Ukraine is Europe, Muscovy is Asia' dichotomy
 focus: history
 pedagogy: CBI
 prerequisites:
@@ -56,36 +78,53 @@ learning_outcomes:
 - Учень розуміє значення Конституції Пилипа Орлика 1710 року
 - Учень може описати структуру та основні ідеї документа
 - Учень знає біографію Пилипа Орлика як наступника Мазепи
-phase: "HIST.7 [Mazepa & End of Hetmanate]"
+phase: HIST.7 [Mazepa & End of Hetmanate]
 objectives:
 - Analyze the causes and consequences of пилип орлик і перша конституція
 - Evaluate the historical significance of гетьман у вигнанні
 - 'Trace the development of деколонізаційний погляд: правова культура'
 vocabulary_hints:
   required:
-  - історія (history)
-  - держава (state)
-  - народ (people)
-  - влада (power)
-  - період (period)
-  - подія (event)
-  - джерело (source)
-  - спадщина (heritage)
+  - історія (history) — козацька історія, вивчати історію
+  - держава (state) — вільна держава, будувати державу, державний суверенітет
+  - народ (people) — український народ, права народу
+  - влада (power) — поділ влади (separation of powers), обмеження влади, виконавча
+    влада
+  - період (period) — складний період, історичний період
+  - подія (event) — визначна подія, хронологія подій
+  - джерело (source) — історичне джерело, первинні джерела (primary sources)
+  - спадщина (heritage) — правова спадщина, культурна спадщина, епістолярна спадщина
+  - Конституція (Constitution) — перша Конституція, ухвалити Конституцію, Бендерська
+    Конституція
+  - гетьман (Hetman) — обрати гетьмана, влада гетьмана, гетьман у вигнанні
+  - рада (council) — Генеральна Рада, скликати раду, козацька рада
+  - вигнання (exile) — жити у вигнанні, політичне вигнання, еміграція
+  - угода (agreement/treaty) — підписати угоду, порушити угоду, суспільний договір
+    (social contract)
+  - права (rights) — права і вольності, захищати права, природне право
   recommended:
-  - аналіз (analysis)
-  - контекст (context)
-  - вплив (influence)
-  - наслідки (consequences)
+  - аналіз (analysis) — критичний аналіз, робити аналіз
+  - контекст (context) — історичний контекст, у контексті подій
+  - вплив (influence) — мати вплив, під впливом
+  - наслідки (consequences) — причини і наслідки, політичні наслідки
+  - тиранія (tyranny) — боротьба проти тиранії, московська тиранія
+  - суверенітет (sovereignty) — державний суверенітет, відстоювати суверенітет
+  - коаліція (coalition) — антимосковська коаліція, створити коаліцію
+  - скарбниця (treasury) — військова скарбниця, розпоряджатися скарбницею
+  - присяга (oath) — скласти присягу, текст присяги
 activity_hints:
 - type: reading
   focus: Первинні джерела
   items: 4
 - type: essay-response
   focus: Критичний аналіз
-  word_target: 300
 - type: critical-analysis
   focus: Аналіз причинно-наслідкових зв'язків між подіями
   items: 3
 - type: critical-analysis
   focus: Критична оцінка історичних тверджень та міфів
   items: 5
+persona:
+  voice: Senior Professor of History
+  role: Constitutional Scribe
+word_target: 5000

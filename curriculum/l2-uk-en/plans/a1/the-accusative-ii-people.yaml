@@ -1,0 +1,108 @@
+module: a1-12
+level: A1
+sequence: 12
+slug: the-accusative-ii-people
+version: '2.0'
+title: 'The Accusative II: People'
+subtitle: Animate Nouns and the Genitive Connection
+content_outline:
+- section: Розминка (Warm-up)
+  words: 300
+  points:
+  - Введення метафори 'Живі слова' (Heart Words) проти 'Кам'яних слів' (Stone Words)
+    для візуалізації категорії істот/неістот
+  - Контраст між Accusative I (things) та Accusative II (people) — чому граматика
+    змінюється, коли ми говоримо про живих істот
+  - 'Посилання на Державний стандарт §4.2.1.1: компетенція розрізнення відмінкових
+    форм для назв людей (син, тато, учитель, мама, сестра)'
+- section: Презентація (Presentation)
+  words: 650
+  points:
+  - 'Логіка чоловічого роду: знахідний = родовий (Acc=Gen) — чоловічі назви істот
+    ''жадібні'' до закінчень, щоб відрізнятися від об''єктів (бачу сина, тата, учителя)'
+  - 'Логіка жіночого роду: збереження стандартного закінчення знахідного відмінка
+    (-у/-ю), ігноруючи правило ''Acc=Gen'' (бачу маму, сестру)'
+  - 'Тварини як люди: пояснення, що домашні улюбленці (кіт, пес) граматично є істотами
+    і потребують закінчень знахідного-родового (бачу кота, пса)'
+  - Специфіка м'якої та мішаної груп для назв професій (учителя, лікаря) згідно з
+    параграфом §4.2.1.1
+- section: Культурний контекст (Cultural Context)
+  words: 400
+  points:
+  - Глибинне значення слова 'друг' в українській культурі — відмінність між близьким
+    другом (soulmate) та просто знайомим (acquaintance)
+  - Експресивна роль демінутивів (пестливих форм) у сімейному колі — використання
+    форм 'матуся', 'татусь', 'братик', 'сестричка' дорослими як знак тепла та близькості
+  - 'Ввічливе звертання та запитання про людей в українському соціумі: використання
+    назв професій та імен'
+- section: Типові помилки та практика (Common Errors and Practice)
+  words: 450
+  points:
+  - 'Learner error: ''The Masculine Animate Trap'' — залишення назви істоти в називному
+    відмінку (напр. ''Я бачу брат'' замість правильного ''Я бачу брата'')'
+  - 'Learner error: ''Feminine Overthinking'' — помилкове застосування правила Acc=Gen
+    до жіночого роду (напр. ''Я бачу сестри'' замість ''Я бачу сестру'')'
+  - 'Learner error: ''Animal Animacy Confusion'' — сприйняття тварин як неістот через
+    порівняння з іншими мовами (напр. ''Я маю кіт'' замість ''Я маю кота'')'
+  - 'Трансформаційні вправи: перетворення речень з неістотами (бачу стіл) на речення
+    з людьми (бачу студента)'
+- section: Вироблення навичок та підсумок (Production and Summary)
+  words: 200
+  points:
+  - Опис своєї родини та друзів з використанням дієслів 'любити', 'знати', 'чекати'
+    (Я люблю свою матусю і тата)
+  - 'Діалог-знайомство: обговорення друзів та колег (Ти знаєш мого найкращого друга
+    Андрія?)'
+  - 'Підсумковий чек-лист: коли Accusative дорівнює Genitive, а коли ні'
+vocabulary_hints:
+  required:
+  - 'брат (brother) — рідний брат, старший/молодший брат; diminutive: братик (High
+    frequency)'
+  - 'сестра (sister) — рідна сестра, старша/молодша сестра; diminutive: сестричка
+    (High frequency)'
+  - друг (friend m.) — найкращий друг, вірний друг; implies deep trust/soulmate connection
+  - подруга (friend f.) — вірна подруга, давня подруга
+  - 'мама (mother) — люба мама, чекаю маму; diminutive: матуся (Very high frequency)'
+  - 'тато (father) — бачу тата, знаю тата; diminutive: татусь (Very high frequency)'
+  - лікар (doctor) — викликати лікаря, чекати лікаря; professions often follow the
+    animate rule
+  - вчитель (teacher) — знати вчителя, бачу вчителя (State Standard §4.2.1.1 example)
+  recommended:
+  - кіт (cat) — grammatically animate (бачу кота); focus on Acc=Gen ending
+  - пес (dog) — grammatically animate (маю пса); irregular stem change (пес -> пса)
+  - студент (student) — знати студента, бачу студента
+  - 'колега (colleague) — чекати колегу; note: declines like feminine nouns'
+  - сусід (neighbor) — знати сусіда, бачу сусіда
+  - дитина (child) — люблю дитину, бачу дитину
+activity_hints:
+- type: fill-in
+  focus: Change animate nouns to accusative
+  items: 25
+- type: match-up
+  focus: Animate vs inanimate
+  items: 20
+- type: fill-in
+  focus: Complete with correct accusative
+  items: 20
+focus: grammar
+pedagogy: PPP
+prerequisites:
+- a1-11 (The Accusative I - Things)
+connects_to:
+- a1-13 (The Locative)
+- a1-32 (My Family)
+objectives:
+- Learner can use accusative case for animate nouns (people/animals)
+- Learner can distinguish between animate and inanimate accusative
+- Learner understands when accusative = genitive
+- Learner can talk about people as direct objects
+grammar:
+- Accusative for animate nouns
+- 'Masculine animate: accusative = genitive'
+- 'Feminine animate: same as inanimate'
+register: розмовний
+phase: A1.2 [Navigation]
+persona:
+  voice: Patient Supportive Tutor
+  role: HR Recruiter
+word_target: 2000

@@ -1,0 +1,114 @@
+module: b1-43
+level: B1
+sequence: 43
+slug: adverbial-participles-perfective
+version: '2.0'
+title: Дієприслівники доконаного виду
+subtitle: Adverbial Participles - Perfective (-вши/-ши)
+content_outline:
+- section: Вступ (Introduction)
+  words: 500
+  points:
+  - Introduction to the perfective adverbial participle as a tool for constructing
+    'simple complicated sentences' (просте ускладнене речення) per State Standard
+    §4.4.2, focusing on its role in sophisticated narrative sequencing.
+  - 'Cultural hook: Analysis of the proverb «Далеко сховавши, близько не знайдеш»
+    (Having hidden it far, you won''t find it near) to illustrate the logic of completed
+    priority (попередність).'
+- section: 'Граматика: Формування та значення (Grammar: Formation and Meaning)'
+  words: 900
+  points:
+  - Morphological rules for suffixes -вши (used with vowel stems, e.g., прочита-вши)
+    and -ши (used with consonant stems, e.g., приніс-ши), noting the overwhelming
+    dominance of -вши in high-frequency verbs.
+  - 'Conceptualizing temporal priority using a timeline visual: the ''completed dot''
+    (perfective) occurring strictly before the main action vs. the ''simultaneous
+    line'' (imperfective) explored in b1-42.'
+- section: Аналіз помилок та обмеження (Error Analysis and Constraints)
+  words: 1000
+  points:
+  - 'Correcting the ''Dangling Participle'' (Subject Mismatch): Explaining why sentences
+    like «Прийшовши додому, почався дощ» are incorrect and drilling the rule that
+    the subject of the participle and main verb must be identical.'
+  - 'The ''Impersonal Sentence'' Trap: Explaining the restriction against using participles
+    with impersonal predicates that have logical Dative subjects (e.g., «мені стало
+    сумно»), and providing correction patterns like «Прочитавши книгу, я засмутився».'
+  - 'Aspectual Contrast: Contrastive drills between -ючи (ongoing/simultaneous) and
+    -вши (completed/prior) to eliminate the common learner error of using imperfective
+    forms for completed sequential actions.'
+- section: Лексика та культурний контекст (Vocabulary and Cultural Context)
+  words: 1000
+  points:
+  - 'Deep dive into high-frequency perfective participles: прочитавши, написавши,
+    зробивши, прийшовши, побачивши, дізнавшись, emphasizing specific collocations
+    like «зробивши глибокий вдих» or «прийшовши до тями».'
+  - 'Integration of motivational proverbs: «Сівши, не поїдеш» (Having sat down, you
+    won''t go) and «Не розмовившись з головою, до чогось іншого не важся» (Having
+    not consulted your head, don''t dare do anything else) as models for prudence
+    and action.'
+- section: Практичне застосування та підсумок (Practical Application and Summary)
+  words: 600
+  points:
+  - 'Narrative sequencing task: transforming a series of simple sentences into a cohesive
+    paragraph using perfective participial phrases to demonstrate B1-level narrative
+    flow.'
+  - 'Final summary of derivation steps: identifying the past tense stem of the perfective
+    verb and attaching the correct suffix based on the final sound.'
+vocabulary_hints:
+  required:
+  - 'прочитавши (having read) — collocations: книгу, листа, новину, уважно; high frequency
+    in literature and media'
+  - 'написавши (having written) — collocations: заяву, заповіт, роман; common in formal
+    and creative registers'
+  - 'зробивши (having done) — collocations: крок, висновок, помилку, глибокий вдих;
+    high frequency general usage'
+  - 'прийшовши (having arrived) — collocations: додому, до тями, на допомогу; high
+    frequency narrative marker'
+  - 'побачивши (having seen) — collocations: світло, її, вперше; high frequency narrative
+    anchor'
+  - 'дізнавшись (having learned) — collocations: правду, про трагедію, новину; medium
+    frequency in news and storytelling'
+  - доконаний вид (perfective aspect) — grammar term; base for -вши/-ши derivation
+  - попередність (priority/sequence) — grammatical concept of action occurring BEFORE
+    the main verb
+  recommended:
+  - просте ускладнене речення (simple complicated sentence) — State Standard term
+    for sentences with participial phrases
+  - послідовність (sequence) — logical progression of events
+  - основа (stem) — the morphological part to which suffixes are attached
+  - дієприслівниковий зворот (adverbial participial phrase) — the syntactic structure
+    being taught
+activity_hints:
+- type: fill-in
+  focus: Perfective verb to participle
+  items: 25
+- type: fill-in
+  focus: Complete with perfective participles
+  items: 20
+- type: match-up
+  focus: Match participle to meaning
+  items: 15
+- type: fill-in
+  focus: Write sequential narratives
+  items: 10
+focus: grammar
+pedagogy: TTT
+prerequisites:
+- b1-42 (Adverbial Participles Imperfective)
+connects_to:
+- b1-44 (Active Participles Phrases)
+objectives:
+- Learner can form perfective adverbial participles using -вши/-ши suffixes
+- Learner can use participles to express prior completed actions
+- Learner can distinguish imperfective vs perfective adverbial participles
+- Learner can sequence actions using perfective participles
+grammar:
+- Дієприслівники доконаного виду
+- Суфікси -вши/-ши formation rules
+- Попередність дій (prior actions)
+register: розмовний
+phase: B1.4a [Participles]
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Film Director
+word_target: 4000

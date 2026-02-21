@@ -1,74 +1,85 @@
----
-module: b2-hist-116
-level: B2-HIST
 slug: afhanistan
-version: '2.0'
-status: skeleton
-transliteration: none
-naturalness:
-  score: 10
-  status: PASS
-track: history
-word_target: 4000
-build:
-  last_modified: '2026-01-30'
-phase: HIST.11 [Post-War Soviet Ukraine]
-id: b2-hist-116
 title: Українці в Афганістані
-activity_hints:
-  - type: reading
-    focus: Первинні джерела
-  - type: essay-response
-    focus: Критичний аналіз
-  - type: true-false
-    focus: Хронологія та факти
-  - type: comparative-study
-    focus: Пропаганда vs Реальність
-  - type: critical-analysis
-    focus: Спогади ветерана
+word_target: 5000
 content_outline:
-- section: Вступ — Чужа війна
-  words: 615
+- section: 'Вступ — Чужа війна: Геополітичний контекст'
+  words: 500
   points:
-  - Context of the Cold War and the Brezhnev era stagnation
-  - The concept of 'international duty' (інтернаціональний обов'язок)
-  - Disproportionate conscription of Ukrainians into the Soviet Army
-- section: Війна в Афганістані (1979-1989)
-  words: 1538
+  - 'Епоха «застою» Леоніда Брежнєва: економічна стагнація vs величезні військові
+    витрати'
+  - 'Початок вторгнення 25 грудня 1979 року: геополітичні амбіції Кремля під маскою
+    «інтернаціонального обов''язку»'
+  - '[!myth-buster] Міф про захист південних кордонів: реальність імперської експансії
+    та агресії проти суверенної держави'
+- section: 'Вступ — Чужа війна: Український вимір'
+  words: 500
   points:
-  - The invasion of December 1979 and the storming of Amin's palace
-  - 'Combat conditions: guerilla warfare in the mountains vs. Soviet mechanized doctrine'
-  - 'Daily life of a soldier: disease, isolation, and ''didschyna'' (hazing)'
-  - The 'Black Tulip' flights and 'Cargo 200' returning to Ukrainian cities
-- section: Первинні джерела
-  words: 923
+  - 'Масова мобілізація українців: понад 160 000 учасників, диспропорційний призов
+    із сіл та робітничих родин'
+  - 'Соціальна несправедливість: діти партноменклатури уникали служби, тоді як прості
+    українці гинули'
+  - 'Статистика втрат: понад 3000 загиблих, 8000 поранених — ціна чужих амбіцій для
+    України'
+- section: 'Війна в Афганістані: Хід бойових дій'
+  words: 600
   points:
-  - Letters from Ukrainian soldiers to their families (censorship vs. reality)
-  - Memoirs of veterans describing the disconnect between propaganda and the front
-  - Official Soviet reports masking casualties
-- section: Деколонізаційний погляд
-  words: 924
+  - 'Операція «Шторм-333» (27 грудня 1979): штурм палацу Аміна спецпідрозділами КДБ
+    і ГРУ як акт державного тероризму'
+  - 'Тактичний тупик: спроба застосувати механізовану доктрину (танкові прориви) в
+    умовах партизанської гірської війни'
+  - '[!context] Переломний момент 1986 року: поява ПЗРК «Стінгер» у моджахедів та
+    втрата радянською авіацією панування в повітрі'
+- section: 'Війна в Афганістані: Повсякденність та виживання'
+  words: 600
   points:
-  - 'Myth: Defending the southern borders of the Motherland'
-  - 'Reality: Imperial aggression using colonized people as cannon fodder'
-  - The trauma of the 'Afgantsi' generation in independent Ukraine
-  - 'Parallel: How Russia uses non-Russians in modern wars (e.g., against Ukraine)'
-  - The role of the Afghan war in delegitimizing the Soviet system
-  - The social and psychological legacy of the war in 1990s Ukraine
-  - Commemoration vs. glorification
-vocabulary_hints:
-  required:
-  - історія (history)
-  - держава (state)
-  - народ (people)
-  - влада (power)
-  - період (period)
-  - подія (event)
-  - джерело (source)
-  - спадщина (heritage)
-  recommended:
-  - аналіз (analysis)
-  - контекст (context)
-  - вплив (influence)
-  - наслідки (consequences)
-
+  - 'Небойові втрати: інфекційні хвороби (гепатит, тиф), погане водопостачання та
+    кліматичний шок'
+  - 'Феномен «дідівщини»: жорстока ієрархія в радянській армії як відображення тоталітарного
+    суспільства'
+  - 'Історія Геннадія (Наїка Мухаммада): перехід на бік моджахедів через знущання
+    своїх — крайня межа відчаю'
+- section: 'Війна в Афганістані: Людський вимір втрат'
+  words: 500
+  points:
+  - '[!history-bite] «Вантаж 200»: походження терміну від нормативної ваги цинкової
+    труни (~200 кг)'
+  - '«Чорний тюльпан» (Ан-12): літак-привид як фольклорний символ смерті та безглуздості
+    війни'
+  - 'Виведення військ (15 лютого 1989): завершення десятилітньої бойні без досягнення
+    політичних цілей'
+- section: 'Первинні джерела: Листування та цензура'
+  words: 400
+  points:
+  - 'Радянська цензура листів: заборона писати про втрати, геолокацію та реальні умови
+    служби'
+  - '[!quote] Уривок з листа загиблого солдата: «Мамо, вибач...» — прорив мовчання
+    та передчуття неминучого'
+  - Офіційна брехня про «будівництво шкіл» vs реальність жорстоких контрпартизанських
+    операцій
+- section: 'Первинні джерела: Спогади ветеранів'
+  words: 400
+  points:
+  - 'Розрив шаблону: ветерани згадують не героїзм, а побутовий абсурд, спрагу та втому'
+  - 'Психологія солдата окупаційної армії: відсутність мотивації («за що ми воюємо?»)
+    та відчуження від місцевого населення'
+  - Інтерв'ю Радіо Свобода як джерело правди про настрої в контингенті
+- section: 'Деколонізаційний погляд: Імперський механізм'
+  words: 750
+  points:
+  - '[!decolonization] Колонізовані як ресурс імперії: використання українців для
+    підкорення інших народів'
+  - 'Історична паралель: Москва сьогодні так само використовує нацменшини та українців
+    з окупованих територій'
+  - 'Термінологічна війна: деконструкція понять «воїни-інтернаціоналісти» (радянський
+    міф) та «окупанти» (реальність)'
+- section: 'Деколонізаційний погляд: Суспільні наслідки'
+  words: 750
+  points:
+  - 'Цинкові труни як каталізатор розпаду СРСР: делегітимізація влади в очах українського
+    суспільства'
+  - '«Афганський синдром» 90-х: повернення ветеранів у незалежну Україну, яка не посилала
+    їх на цю війну'
+  - '[!culture] Афганські пісні та кіно: альтернативна пам''ять про війну, що конфліктувала
+    з офіціозом'
+  - 'Еволюція пам''яті: від вшанування «героїв» до співчуття жертвам геополітичних
+    злочинів Кремля'

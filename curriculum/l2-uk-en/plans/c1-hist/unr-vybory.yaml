@@ -1,4 +1,3 @@
----
 module: c1-hist-091
 level: c1-hist
 sequence: 91
@@ -10,55 +9,47 @@ objectives:
 - 'Analyze the causes and consequences of унр 1917-1921: стратегічні помилки'
 - Evaluate the historical significance of втрачена незалежність
 content_outline:
-- section: "Вступ — Втрачена незалежність"
-  words: 457
+- section: Вступ — Втрачена незалежність
   subsections:
   - 1917-1921 — шанс і провал
   - Чому важливо аналізувати
   - Стратегічні рішення — ключові
   - Структура модуля
-- section: "Помилка 1 — Федералізм замість незалежності"
-  words: 686
+- section: Помилка 1 — Федералізм замість незалежності
   subsections:
   - Центральна Рада — автономія
   - Чому не одразу незалежність
   - Втрачений час
   - Коли змінили курс — пізно
-- section: "Помилка 2 — Армія"
-  words: 686
+- section: Помилка 2 — Армія
   subsections:
   - Небажання мілітаризму
   - «Вільне козацтво» — не армія
   - Без армії — без держави
   - Що могли зробити
-- section: "Помилка 3 — Брест-Литовськ"
-  words: 686
+- section: Помилка 3 — Брест-Литовськ
   subsections:
   - Угода з Німеччиною
   - Окупація — ціна допомоги
   - Гетьманат Скоропадського
   - Делегітимізація УНР
-- section: "Помилка 4 — Союзники"
-  words: 571
+- section: Помилка 4 — Союзники
   subsections:
   - Польща — війна і союз
   - Антанта — ігнорування
   - Ставка на одного партнера
   - Геополітична наївність
 - section: Що могли зробити інакше
-  words: 571
   subsections:
   - Раніша незалежність
   - Створення армії
   - Інша зовнішня політика
   - Чи було шанс?
 - section: Підсумок
-  words: 343
   subsections:
   - УНР — трагедія помилок
   - Уроки для майбутнього
   - Перехід до 1991
-word_target: 4000
 vocabulary:
 - УНР
 - стратегічна помилка
@@ -88,15 +79,15 @@ activities:
   focus: Яка помилка УНР була найфатальнішою?
 sources:
 - name: Українська Народна Республіка (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Українська_Народна_Республіка"
+  url: https://uk.wikipedia.org/wiki/Українська_Народна_Республіка
   type: reference
   notes: UNR history
 - name: Українсько-радянська війна (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Українсько-радянська_війна_(1917—1921)"
+  url: https://uk.wikipedia.org/wiki/Українсько-радянська_війна_(1917—1921)
   type: reference
   notes: War context
 - name: Центральна Рада (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Українська_Центральна_Рада"
+  url: https://uk.wikipedia.org/wiki/Українська_Центральна_Рада
   type: reference
   notes: Government
 vocabulary_hints:
@@ -115,7 +106,9 @@ activity_hints:
   items: 4
 - type: essay-response
   focus: Критичний аналіз
-  word_target: 300
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Electoral Systems Historian

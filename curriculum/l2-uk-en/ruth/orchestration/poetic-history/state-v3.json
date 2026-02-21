@@ -1,0 +1,13 @@
+{
+  "track": "ruth",
+  "slug": "poetic-history",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-20T12:18:15Z",
+      "task_id": "v3-poetic-history-pA",
+      "mode": "full"
+    }
+  }
+}

@@ -1,0 +1,308 @@
+✅ Message sent to Gemini (ID: 10317) [auto-acked: self-addressed]
+✓ Message 10317 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10317...
+📨 Message #10317
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-motion-approaching-departing
+   Time: 2026-02-20T20:19:56.190859+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b1-20
+level: B1
+sequence: 20
+slug: motion-approaching-departing
+version: '2.0'
+title: 'Рух: наближення і віддалення'
+subtitle: Motion - Approaching & Departing
+content_outline:
+- section: Тест
+  points:
+  - 'Prefix diagnostic — learner error focus: confusing під- (approach) vs при- (arrive)'
+  - Intuition check
+- section: Пояснення
+  points:
+  - 'під-, від-, до- prefixes — strict preposition enforcement: підійти ДО (genitive),
+    відійти ВІД (genitive)'
+  - 'Approaching, departing, reaching — nuance: підійти implies proximity/closeness,
+    дійти implies reaching the end/limit'
+- section: Поглиблення
+  points:
+  - 'Extended patterns — cultural hook: «Проводи» and train station vocabulary (поїзд
+    відходить о...)'
+  - 'Nuanced usage — figurative meanings: дійти згоди (agree), відійти в минуле (become
+    history)'
+- section: Практика
+  points:
+  - 'Prefix selection exercises — learner error focus: distinguishing від- (away from)
+    vs ви- (out of)'
+- section: Діалоги
+  points:
+  - 'Journey dialogues — cultural hook: «Присісти на дорогу» tradition before departure'
+  - 'Natural usage — common collocations: час підійти, поїзд відійшов'
+vocabulary_hints:
+  required:
+  - підійти/підходити (to approach on foot) — підійти до вікна, підійти ближче, час
+    підійти
+  - під'їхати/під'їжджати (to approach by vehicle)
+  - відійти/відходити (to move away on foot) — відійти від краю, поїзд відійшов (departed),
+    відійти в минуле
+  - від'їхати/від'їжджати (to drive away)
+  - дійти/доходити (to reach on foot) — дійти додому, дійти згоди (figurative), дійшли
+    чутки
+  - доїхати/доїжджати (to reach by vehicle)
+  - наближення (approach) — наближення свята, міра наближення
+  - віддалення (moving away) — ефект віддалення, поступове віддалення
+  - досягнення (reaching)
+  - відстань (distance)
+  recommended:
+  - підбігти/підбігати (to run up to)
+  - відбігти/відбігати (to run away)
+  - добігти/добігати (to reach running)
+  - наблизитися (to approach - reflexive)
+  - віддалитися (to move away - reflexive)
+activity_hints:
+- type: quiz
+  focus: під- vs від- vs до- selection
+  items: 15+
+- type: fill-in
+  focus: Route descriptions with direction
+  items: 12+
+- type: fill-in
+  focus: Approach → depart → reach sequence
+  items: 10+
+- type: fill-in
+  focus: Narrative about a journey
+  items: 12+
+- type: match-up
+  focus: Situation → prefixed verb
+  items: 12+
+focus: grammar
+pedagogy: TTT
+prerequisites:
+- b1-19 (Motion - starting & returning)
+connects_to:
+- b1-21 (Motion - figurative uses)
+- b1-22 (Motion full prefix integration)
+objectives:
+- Learner can use під- for approaching
+- Learner can use від- for departing
+- Learner can use до- for reaching destination
+grammar:
+- Prefixes під-, від-, до-
+- Approaching, departing, reaching patterns
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Motion Prefixes
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Official prefix meanings for approach/depart
+- name: Ukrainian Verbal Prefixes
+  url: https://uk.wikipedia.org/wiki/Дієслівні_префікси
+  type: reference
+  notes: під-, від-, до- semantics
+immersion: 100% Ukrainian
+phase: B1.2 Motion
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Station Master
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Рух: наближення і віддалення
+
+## State Standard Reference
+§4.3.8: "Утворення префіксальних дієслів руху: іти – прийти, перейти, дійти, відійти, зайти, вийти; їхати – приїхати, переїхати, доїхати, від’їхати, заїхати, поїхати, виїхати, об’їхати."
+Alignment: This module explicitly targets the formation and usage of `від-`, `до-`, and `під-` (implied in the category and standard prefix list) variants of motion verbs, strictly adhering to the B1 requirement for prefixed motion verbs.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| підійти | High (Core) | підійти до вікна, підійти ближче, час підійти (to approach) |
+| відійти | High (Core) | відійти від краю, поїзд відійшов, відійти в минуле (figurative) |
+| дійти | High (Core) | дійти додому, дійти згоди (figurative), дійшли чутки |
+| наближення | Medium (Academic/News) | наближення свята, міра наближення (math), почуття наближення |
+| віддалення | Medium (Academic/Formal) | ефект віддалення, у міру віддалення, поступове віддалення |
+
+## Cultural Hooks
+1. **Присісти на дорогу** (Sit for the road): A persistent Ukrainian superstition/tradition where travelers sit in silence for a moment before leaving the house. Originally to "trick" house spirits (domovyk) into thinking no one is leaving so they don't follow, now a practical moment to collect thoughts and check for passports/tickets.
+2. **Проводи** (Farewells): Traditional railway station culture in Ukraine involves long goodbyes on the platform, waiting until the train physically moves (`поїзд рушив/відійшов`) before leaving. The verb `відходити` is strongly associated with the train schedule (`поїзд відходить о...`).
+
+## Common Learner Errors
+1. **під- vs. при-**: Learners often use *підійти* (approach/come up to) when they mean *прийти* (arrive/come).
+    *   *Error*: Я підійшов додому о 6-й. (I approached home at 6).
+    *   *Correction*: Я прийшов додому о 6-й. (I arrived home at 6).
+    *   *Reason*: Confusion between "coming up to" vs "arriving at".
+2. **до- vs. при-**: Confusion between reaching a limit (`дійти до`) and general arrival.
+    *   *Error*: Я дійшов до парку. (Grammatically correct but implies a long trek/effort).
+    *   *Context*: Use `дійти` when emphasizing the *process* of walking all the way there, or reaching a specific point, not just generic arrival.
+3. **від- vs. ви-**: Confusing "away from" (`від-`) with "out of" (`ви-`).
+    *   *Error*: Я відійшов з кімнати. (I stepped away from the room - awkward).
+    *   *Correction*: Я вийшов з кімнати. (I went out of the room).
+
+## Cross-References
+- **Builds on**: b1-19 (Motion - starting & returning)
+- **Prepares for**: b1-21 (Motion - figurative uses), b1-22 (Motion full prefix integration)
+
+## Notes for Content Writing
+- **Prepositions**: Ensure strict enforcement of preposition usage: `підійти ДО` (genitive), `відійти ВІД` (genitive). This is a critical grammatical anchor.
+- **Nuance**: Highlight that `підійти` implies getting *close* to something (proximity), whereas `дійти` implies reaching the *end* of a path (destination).
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Діагностика: Вступний тест (Diagnostic Test)"
+  words: 600
+  points:
+  - "Prefix diagnostic focusing on the common learner error: confusing під- (approach/come up to) with при- (arrive) — identifying the semantic mismatch in 'Я підійшов додому о 6-й' versus the correct 'Я прийшов додому о 6-й'."
+  - "Intuition check on reaching a limit (до-) vs general arrival (при-) — testing the learner's sense of 'дійти' as a process of walking all the way to a destination versus simply appearing there."
+- section: "Граматика: Простір та межі (Grammar: Space & Limits)"
+  words: 1000
+  points:
+  - "Strict preposition enforcement as a grammatical anchor: підійти ДО (genitive) and відійти ВІД (genitive) — mandatory drills for matching prefixes with their required prepositions."
+  - "Semantic nuance breakdown based on State Standard §4.3.8: підійти implies proximity/getting close to an object, whereas дійти implies reaching the physical end or boundary of a path."
+  - "Prefix selection drills to correct the від- vs ви- confusion: explaining why 'відійшов з кімнати' is awkward and 'вийшов з кімнати' (out of) is the correct motion for leaving an enclosed space."
+- section: "Культурний контекст: Проводи та традиції (Cultural Context: Farewells & Traditions)"
+  words: 800
+  points:
+  - "Cultural hook: «Присісти на дорогу» (Sit for the road) — detailing the superstition of sitting in silence to trick house spirits (domovyk) before departure, now a practical moment for reflection."
+  - "Railway station culture: «Проводи» (Farewells) — describing the tradition of waiting on the platform until the train physically moves (поїзд рушив/відійшов), emphasizing station-specific vocabulary."
+- section: "Переносне значення та фразеологія (Figurative Meanings & Phraseology)"
+  words: 1000
+  points:
+  - "Abstract usage of motion verbs: mastering 'дійти згоди' (to reach an agreement), 'дійшли чутки' (rumors reached/circulated), and 'відійти в минуле' (to become history/fade away)."
+  - "Frequency-based collocations: using 'час підійти' (time to approach), 'міра наближення' (degree of approach), and 'поступове віддалення' (gradual moving away) in formal or academic registers."
+- section: "Практика: Роль начальника станції (Practice: Station Master Persona)"
+  words: 600
+  points:
+  - "Production task: Narrating a journey and departure schedule from the perspective of a Station Master, using 'поїзд відходить о...' and describing passengers 'підходячи до каси'."
+  - "Final summary and synthesis: Consolidating the approach-depart-reach sequence in a narrative about distance (відстань) and achieving a destination (досягнення)."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "підійти/підходити (to approach on foot) — підійти до вікна, підійти ближче, час підійти; High frequency; implies proximity"
+  - "під'їхати/під'їжджати (to approach by vehicle) — під'їхати до будинку, під'їхати на таксі"
+  - "відійти/відходити (to move away on foot/depart) — відійти від краю, поїзд відійшов (departed), відійти в минуле (figurative); High frequency"
+  - "від'їхати/від'їжджати (to drive away) — від'їхати від готелю, від'їжджати на літо"
+  - "дійти/доходити (to reach on foot) — дійти додому, дійти згоди (figurative), дійшли чутки; High frequency; implies reaching the end of a path"
+  - "доїхати/доїжджати (to reach by vehicle) — доїхати до міста, доїжджати до зупинки"
+  - "наближення (approach) — наближення свята, міра наближення; Medium frequency (Academic/News)"
+  - "віддалення (moving away) — ефект віддалення, поступове віддалення; Medium frequency (Formal)"
+  - "досягнення (reaching/achievement) — досягнення мети, досягнення пункту призначення"
+  - "відстань (distance) — велика відстань, на відстані кроку"
+  recommended:
+  - "підбігти/підбігати (to run up to) — підбігти до мами"
+  - "відбігти/відбігати (to run away) — відбігти від небезпеки"
+  - "добігти/добігати (to reach running) — добігти до фінішу"
+  - "наблизитися (to approach - reflexive) — наблизитися до розв'язки"
+  - "віддалитися (to move away - reflexive) — віддалитися від берега"
+  - "Присісти на дорогу (to sit for the road) — traditional superstition before departure"
+  - "Проводи (farewells) — railway station departure culture"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4338 chars)
+✅ Message sent to Claude (ID: 10322)
+✓ Message 10322 acknowledged
+   Auto-acknowledged reply #10322 (stdout delivery — no inbox accumulation)
+✓ Message 10317 acknowledged

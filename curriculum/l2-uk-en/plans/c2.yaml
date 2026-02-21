@@ -30,8 +30,8 @@ phases:
 
   - id: C2.4
     name: "Meta-Skills & Capstone"
-    modules: "[76, 100]"
-    focus: "Teaching, translation, final projects"
+    modules: "[76, 101]"
+    focus: "Teaching, translation, final projects, advanced rhetoric"
 
 grammar_scope:
   - Native-level stylistic control
@@ -46,4 +46,6 @@ notes: |
   Ukrainian in all contexts including specialized professional
   domains, literature, and language instruction.
 
+  101 modules total (gap analysis Feb 2026: +1 module for advanced
+  rhetoric per State Standard §4.3.5 at C2 mastery level).
   Module 100 is the C2 Level Certification preparation.

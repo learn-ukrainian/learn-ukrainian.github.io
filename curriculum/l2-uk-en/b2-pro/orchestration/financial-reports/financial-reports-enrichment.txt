@@ -1,0 +1,275 @@
+✅ Message sent to Gemini (ID: 11990) [auto-acked: self-addressed]
+✓ Message 11990 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #11990...
+📨 Message #11990
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-financial-reports
+   Time: 2026-02-20T23:35:05.634068+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b2-pro-20
+level: B2-PRO
+sequence: 20
+slug: financial-reports
+version: '2.0'
+title: Фінансова звітність
+subtitle: Financial Reports
+content_outline:
+- section: Розминка — Навіщо читати фінансову звітність
+  points:
+  - Фінансова звітність як мова бізнесу
+  - Хто читає звітність і навіщо (інвестори, партнери, керівництво)
+  - Українські стандарти vs МСФЗ
+- section: Баланс (Звіт про фінансовий стан)
+  points:
+  - 'Структура: активи = пасиви + власний капітал'
+  - 'Активи: оборотні та необоротні (запаси, дебіторка, основні засоби)'
+  - 'Пасиви: поточні та довгострокові зобов''язання'
+  - 'Власний капітал: статутний капітал, нерозподілений прибуток'
+- section: Звіт про фінансові результати
+  points:
+  - 'Структура: доходи - витрати = прибуток/збиток'
+  - 'Показники: чистий дохід, валовий прибуток, операційний прибуток, чистий прибуток'
+  - 'Витрати: собівартість, адміністративні, збутові'
+  - Аналіз рентабельності
+- section: Звіт про рух грошових коштів
+  points:
+  - 'Три види діяльності: операційна, інвестиційна, фінансова'
+  - Чому прибуток ≠ грошовий потік
+  - Аналіз ліквідності компанії
+- section: Зразок фінансової звітності
+  points:
+  - Спрощений баланс компанії з поясненнями
+  - Спрощений звіт про прибутки та збитки
+  - Як інтерпретувати основні показники
+- section: Практика — аналіз звітності
+  points:
+  - 'Завдання: Прочитати фінансову звітність і відповісти на питання'
+  - Порівняння показників за два періоди
+  - Висновки про фінансовий стан компанії
+vocabulary_hints:
+  required:
+  - звіт про фінансовий стан (statement of financial position)
+  - оборотні активи (current assets)
+  - необоротні активи (non-current assets)
+  - поточні зобов'язання (current liabilities)
+  - власний капітал (equity)
+  - чистий прибуток (net profit)
+  - рух грошових коштів (cash flow)
+  - дебіторська заборгованість (accounts receivable)
+  recommended:
+  - кредиторська заборгованість (accounts payable)
+  - нерозподілений прибуток (retained earnings)
+  - валовий прибуток (gross profit)
+  - операційні витрати (operating expenses)
+  - рентабельність (profitability)
+  - ліквідність (liquidity)
+activity_hints:
+- type: document-analysis
+  focus: Проаналізувати спрощений баланс — визначити структуру активів та пасивів
+  items: 1
+- type: reading-comprehension
+  focus: Прочитати звіт про прибутки та відповісти на питання
+  items: 6
+- type: vocabulary-domain
+  focus: Підібрати визначення до фінансових термінів
+  items: 12
+- type: fill-in
+  focus: Вставити правильні терміни у фінансовий звіт
+  items: 10
+- type: calculation
+  focus: Розрахувати прості фінансові показники за даними звітності
+  items: 5
+- type: matching
+  focus: З'єднати показник з його значенням/інтерпретацією
+  items: 8
+focus: professional
+pedagogy: ESP
+prerequisites:
+- b2-pro-19 (Фінансова лексика)
+connects_to:
+- b2-pro-21 (Юридична лексика)
+objectives:
+- Учень може читати та розуміти основні фінансові звіти
+- Учень знає структуру балансу та звіту про фінансові результати
+- Учень може інтерпретувати базові фінансові показники
+- Учень розуміє різницю між прибутком та грошовим потоком
+grammar:
+- Числівники у фінансовому контексті (тисячі, мільйони, відсотки)
+- Порівняльні конструкції (зріс на..., знизився до..., становить... від)
+- Дієслова фінансової динаміки (зрости, знизитися, стабілізуватися)
+register: офіційно-діловий
+phase: B2-PRO.2
+persona:
+  voice: Senior Specialist
+  role: Старший аудитор
+word_target: 2000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Фінансова звітність
+
+## Використані джерела
+1. [Закон України «Про бухгалтерський облік та фінансову звітність в Україні»](https://zakon.rada.gov.ua/laws/show/996-14) — основний законодавчий акт, що регулює правила звітності.
+2. [Міністерство фінансів України — МСФЗ](https://mof.gov.ua/uk/mizhnarodni-standarti-finansovoi-zvitnosti) — офіційні переклади міжнародних стандартів та П(С)БО.
+3. [ДСТУ 4163:2020](http://search.ligazakon.ua/l_doc2.nsf/link1/DSTU9043.html) — Державний стандарт щодо оформлення організаційно-розпорядчої документації.
+4. [Дія.Бізнес — Фінансова звітність](https://business.diia.gov.ua) — практичні поради для підприємців щодо подання звітності.
+5. [НАК «Нафтогаз України» — Фінансова звітність](https://www.naftogaz.com/finansova-zvitnist) — приклад реальної консолідованої звітності за МСФЗ.
+
+## Термінологічна база
+
+| Українська (норма) | Русизм/ненорма | English | Контекст вживання |
+|--------------------|---------------|---------|-------------------|
+| Чистий дохід від реалізації | Виручка | Revenue | Офіційні звіти, Форма №2 |
+| Оборотні активи | Текучі активи | Current assets | Баланс (Звіт про фін. стан) |
+| Зобов'язання | Обязатєльства | Liabilities | Пасив балансу |
+| Власний капітал | Собствєнний капітал | Equity | Структура фінансування |
+| Дебіторська заборгованість | Дебіторка | Accounts receivable | Кошти, які винні компанії |
+| Кредиторська заборгованість | Кредиторка | Accounts payable | Борги компанії перед іншими |
+| Собівартість реалізації | Себестоїмость | Cost of goods sold | Витрати на виробництво/закупку |
+| Нерозподілений прибуток | Нерозприділений прибуток | Retained earnings | Капітал у балансі |
+
+## Мовні норми та стандарти
+- **ДСТУ 4163:2020**: Встановлює жорсткі вимоги до реквізитів: назви підприємства, дати, підпису та печатки (за наявності).
+- **П(С)БО 1**: Визначає структуру Балансу та Звіту про фінансові результати.
+- **Вживання прийменників**: У фінансових текстах використовуємо «згідно з...» або «відповідно до...», уникаючи кальки «згідно закону».
+- **Динаміка показників**: Правильно вживати «зріс на 10%» (різниця) або «зріс до 100 млн» (кінцеве значення).
+
+## Аутентичні приклади
+1. [Баланс]: «Питома вага необоротних активів у структурі активу балансу складає 17% станом на кінець звітного періоду.»
+2. [Звіт про фінрезультати]: «Чистий прибуток компанії за 2023 рік зріс завдяки оптимізації адміністративних витрат та зростанню чистого доходу від реалізації продукції.»
+3. [Примітки]: «Примітки до фінансової звітності забезпечують деталізацію та обґрунтованість статей Балансу відповідно до вимог МСФЗ.»
+
+## Типові помилки
+1. ❌ «На протязі року» → ✅ «Протягом/упродовж року» — «на протязі» означає перебування під струменем повітря.
+2. ❌ «Виручка склала» → ✅ «Чистий дохід становив» — «становити» є більш літературною формою для показників.
+3. ❌ «Приймати міри» → ✅ «Вживати заходів» — калька з російської «принимать меры».
+4. ❌ «Відноситись до активів» → ✅ «Належати до активів» — «відноситись» вживається для математичних відношень або ставлення.
+5. ❌ «Заборгованість по податкам» → ✅ «Заборгованість із податків» — прийменник «по» часто є ознакою суржику в діловій мові.
+
+## Engagement Hooks (mapped to sections)
+- Section "Розминка — Навіщо читати фінансову звітність": [!pro-tip] — Фінансова звітність — це «паспорт» вашого бізнесу для інвестора.
+- Section "Баланс (Звіт про фінансовий стан)": [!language-note] — Чому ми кажемо «зобов'язання», а не «борги» в офіційній документації.
+- Section "Звіт про фінансові результати": [!example] — Як «Нафтогаз» звітує про свій прибуток: аналіз реальних цифр.
+- Section "Практика — аналіз звітності": [!common-error] — Обережно з терміном «рентабельність»: не плутайте її з чистим прибутком.
+
+## Section-Mapped Research Notes
+
+### Розминка — Навіщо читати фінансову звітність
+Звітність — це не просто податки, це інструмент прийняття рішень. Важливо розрізняти П(С)БО (національні стандарти) та МСФЗ (міжнародні). Stakeholders: shareholders (акціонери), creditors (кредитори), management (керівництво).
+
+### Баланс (Звіт про фінансовий стан)
+Золоте правило: Assets = Liabilities + Equity. Активи діляться на Current (оборотні) та Non-current (необоротні). Необоротні — це техніка, будівлі, нематеріальні активи. Оборотні — запаси (inventory), дебіторка, гроші в касі.
+
+### Звіт про фінансові результати
+Логіка «Доходи мінус Витрати». Поняття Gross Profit (валовий прибуток), Operating Profit (EBITDA/операційний прибуток) та Net Profit (чистий прибуток). Рентабельність (profitability) — це відношення прибутку до виручки або активів у відсотках.
+
+### Звіт про рух грошових коштів
+Три потоки: Operating (основна діяльність), Investing (купівля обладнання), Financing (кредити, дивіденди). Головне питання: чому на папері прибуток є, а на рахунку грошей немає?
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12054)
+✓ Message 11990 acknowledged
+✓ Message 12054 acknowledged

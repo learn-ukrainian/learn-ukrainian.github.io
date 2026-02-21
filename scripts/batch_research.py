@@ -21,25 +21,40 @@ REPO = Path(__file__).parent.parent
 def find_module_files(level: str, num: int) -> dict | None:
     """Find all files for a module by number."""
     level_dir = REPO / f"curriculum/l2-uk-en/{level}"
+
+    # Primary: resolve via manifest (slug-based)
+    try:
+        sys.path.insert(0, str(REPO / "scripts"))
+        from manifest_utils import get_module_by_number
+        mod = get_module_by_number(level, num)
+        if mod:
+            content_path = level_dir / f"{mod.slug}.md"
+            if content_path.exists():
+                slug = mod.slug
+                return {
+                    "num": num,
+                    "slug": slug,
+                    "content": content_path,
+                    "meta": level_dir / f"meta/{slug}.yaml",
+                    "research": level_dir / f"research/{slug}-research.md",
+                }
+    except Exception:
+        pass
+
+    # Fallback: glob for numbered prefix
     content_files = sorted(level_dir.glob(f"{num:02d}-*.md"))
     if not content_files:
         return None
 
     content_path = content_files[0]
     slug = to_bare_slug(content_path.stem)
-    full_stem = content_path.stem
-
-    meta_path = level_dir / f"meta/{full_stem}.yaml"
-    if not meta_path.exists():
-        meta_path = level_dir / f"meta/{slug}.yaml"
-    research_path = level_dir / f"research/{slug}-research.md"
 
     return {
         "num": num,
         "slug": slug,
         "content": content_path,
-        "meta": meta_path,
-        "research": research_path,
+        "meta": level_dir / f"meta/{slug}.yaml",
+        "research": level_dir / f"research/{slug}-research.md",
     }
 
 

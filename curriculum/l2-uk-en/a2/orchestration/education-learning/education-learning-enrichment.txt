@@ -1,0 +1,303 @@
+✅ Message sent to Gemini (ID: 10239) [auto-acked: self-addressed]
+✓ Message 10239 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10239...
+📨 Message #10239
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-education-learning
+   Time: 2026-02-20T20:04:26.652603+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: a2-52
+level: A2
+sequence: 52
+slug: education-learning
+version: '2.0'
+title: Education and Learning
+subtitle: School and University
+content_outline:
+- section: Вступ
+  points:
+  - 'Education system overview — cultural hook: Knowledge Day (Sept 1st) and ''First
+    Bell'' traditions (students in vyshyvankas); State Standard §3.7 alignment'
+  - 'School vs university — collocations: ходити до школи, вступати до університету'
+- section: Граматика
+  points:
+  - 'School subjects (математика, історія, фізика) — collocations: улюблений предмет,
+    профільний предмет'
+  - 'Learning verbs (вчитися, вивчати) — learner error: confusion of transitive ''вивчати''
+    (what?) vs intransitive ''вчитися'' (where/how?); distinct usage rules required'
+  - 'Academic life (студент, лекція, семінар) — learner error: preposition mismatch
+    (на лекції/на уроці vs в школі/в університеті)'
+  - 'Grades and exams (оцінка, іспит, залік) — cultural hook: 12-point grading system
+    (12 = exceptional); learner error: ''take an exam'' = складати, not брати'
+- section: Практика
+  points:
+  - 'Dialogues about education — context: discussing grades (using 12-point scale)
+    or preparing for exams'
+  - Describe studies and exams — focus on correct verb usage (вчитися vs вивчати)
+    and specific subjects
+- section: Підсумок
+  points:
+  - Summary of vocabulary
+vocabulary_hints:
+  required:
+  - 'школа (school) — collocations: ходити до школи, закінчити школу, середня школа,
+    у школі'
+  - 'університет (university) — collocations: вступати до університету, навчатися
+    в університеті, державний університет'
+  - 'вчитися (to study) — intransitive (process/location); collocations: вчитися в
+    школі/університеті, вчитися старанно, вчитися на відмінно, вчитися все життя'
+  - 'вивчати (to learn) — transitive (+ object); collocations: вивчати українську
+    мову, вивчати історію, вивчати нові слова, детально вивчати'
+  - 'предмет (subject) — collocations: шкільний предмет, улюблений предмет, профільний
+    предмет'
+  - 'іспит (exam) — collocations: складати іспит (take/attempt), скласти іспит (pass),
+    провалити іспит (fail), випускний іспит'
+  - 'оцінка (grade) — cultural context: 12-point scale (10-12 is high/excellent);
+    collocations: гарна оцінка, висока оцінка, отримувати оцінки'
+  - студент (student) — academic life context
+  recommended:
+  - викладач (lecturer) — university context
+  - 'лекція (lecture) — usage: на лекції (preposition ''на'')'
+  - залік (credit/test) — university context, distinct from 'іспит'
+  - диплом (diploma) — graduation context
+  - стипендія (scholarship) — financial aid context
+  - курсова (course paper) — university project context
+activity_hints:
+- type: match-up
+  focus: Education vocabulary
+  items: 30
+- type: fill-in
+  focus: Complete academic sentences
+  items: 20
+- type: cloze
+  focus: University conversation
+  items: 10
+- type: quiz
+  focus: Describe your studies
+  items: 8
+focus: vocabulary
+pedagogy: PPP
+prerequisites:
+- a2-51 (Hobbies and Leisure)
+connects_to:
+- a2-53 (Shopping and Services)
+objectives:
+- Learner can describe their studies
+- Learner can use 'вчитися' and 'вивчати' correctly
+- Learner can talk about school/university subjects
+- Learner can discuss exams and grades
+grammar:
+- Education verbs (вчитися, вивчати, навчати)
+- School subjects vocabulary
+- Grades, exams, and academic terms
+register: розмовний
+immersion: 75-90% Ukrainian
+phase: A2.5 [Vocabulary Expansion]
+persona:
+  voice: Encouraging Cultural Guide
+  role: School Principal
+word_target: 3000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Education and Learning
+
+## State Standard Reference
+§3.7: "Навчання: основні канцелярські товари; дії, пов’язані зі здобуттям знань (вчити, вивчати, вчитися); навчальні дисципліни."
+Alignment: Module directly addresses the required actions for acquiring knowledge (verbs *вчитися/вивчати*) and educational disciplines (*навчальні дисципліни*), as well as the general context of school/university life.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| **школа** | High (Core) | ходити до школи, закінчити школу, середня школа, у школі |
+| **університет** | High (Core) | вступати до університету, навчатися в університеті, державний університет |
+| **вчитися** | High (Common) | вчитися в школі/університеті, вчитися старанно, вчитися на відмінно, вчитися все життя |
+| **вивчати** | High (Common) | вивчати українську мову, вивчати історію, вивчати нові слова, детально вивчати |
+| **предмет** | Med-High | шкільний предмет, улюблений предмет, профільний предмет |
+| **іспит** | Medium | складати іспит (take), скласти іспит (pass), провалити іспит (fail), випускний іспит |
+| **оцінка** | Medium | гарна оцінка, висока оцінка, отримувати оцінки, 12 балів |
+
+## Cultural Hooks
+1. **12-Point Grading System**: Unlike many Western 5-point or 100-point systems, Ukrainian schools use a 12-point scale. 10-12 is "High" (Excellent), 7-9 is "Sufficient" (Good), 4-6 is "Average" (Satisfactory), and 1-3 is "Initial" (Unsatisfactory). A "12" is often reserved for exceptional creativity or effort.
+2. **Knowledge Day (День знань)**: Celebrated on September 1st. It’s a major festive event ("Свято першого дзвоника"), not just a regular school day. Students dress up (often in vyshyvankas), bring flowers to teachers, and the "First Bell" ceremony involves a graduating senior carrying a first-grader ringing a bell.
+
+## Common Learner Errors
+1. **Verb Confusion (вчитися vs. вивчати)**: Learners often use *вивчати* without an object (Wrong: *Я вивчаю в школі*) or *вчитися* with a direct object (Wrong: *Я вчуся математику*).
+   *   *Correction*: *Вчитися* is intransitive/reflexive (where/how/process); *Вивчати* is transitive (what + object).
+2. **Preposition Mismatch**: Using *на* vs *в/у*.
+   *   *Pattern*: *в школі*, *в університеті*, but *на уроці*, *на лекції*, *на факультеті*.
+3. **"To take" an exam**: Translating "take" literally as *брати*.
+   *   *Correction*: Use *складати іспит* (process/attempt) or *здавати* (colloquial). To pass successfully is *скласти*.
+
+## Cross-References
+- **Builds on**: `a2-51` (Hobbies and Leisure - potentially overlapping vocabulary like reading, interests).
+- **Prepares for**: `a2-53` (Shopping and Services - transactional interactions).
+- **Connects to**: `a2-09` (Dative Case - *мені подобається* for subjects), `a2-14` (Past Tense - talked about studies).
+
+## Notes for Content Writing
+- **Distinguish Verbs**: dedicate a specific clear section (table/comparison) to `вчитися` (process/location) vs `вивчати` (specific subject). This is the highest value grammar point here.
+- **Grades**: Use the 12-point scale in examples/dialogues to reinforce cultural realism (e.g., "Wow, you got a 11 in Math!").
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Cultural hook: Knowledge Day (День знань) on September 1st; describe the 'First Bell' (Перший дзвоник) traditions, including students in vyshyvankas and the ceremony of a senior carrying a first-grader."
+  - "Contextual overview of the education system; high-frequency collocations for starting and finishing studies: «ходити до школи», «закінчити школу», and «вступати до університету»."
+- section: "Лексика: Навчальні предмети та речі (Vocabulary: Subjects and Supplies)"
+  words: 600
+  points:
+  - "Alignment with State Standard §3.7: categorize school subjects (математика, історія, фізика) and basic school supplies (канцелярські товари) such as «зошит», «ручка», and «підручник»."
+  - "Describing interests and preferences using collocations like «улюблений предмет» and «профільний предмет»; building on a2-09 Dative Case structures (e.g., «Мені подобається історія»)."
+- section: "Граматика: Дієслова навчання (Grammar: Learning Verbs)"
+  words: 800
+  points:
+  - "High-value distinction between transitive «вивчати» (requires a direct object/subject) and intransitive/reflexive «вчитися» (process, location, or manner); provide a clear comparison table."
+  - "Learner error correction: address the common confusion between «Я вивчаю в школі» (Wrong) vs «Я вчуся в школі» (Correct) and «Я вчуся математику» (Wrong) vs «Я вивчаю математику» (Correct)."
+  - "Integration of «навчати» (to teach/instruct) to align with State Standard action requirements for acquiring knowledge; drill with basic sentence transformations."
+- section: "Академічне життя (Academic Life)"
+  words: 500
+  points:
+  - "Prepositional patterns in education: drill the distinction between «в/у» for institutions (в школі, в університеті) vs «на» for events/subdivisions (на уроці, на лекції, на факультеті)."
+  - "University terminology and roles: describe the interaction between «студент» and «викладач»; introduce academic milestones like «семінар», «залік» (credit), and «курсова робота» (course paper)."
+- section: "Оцінювання та іспити (Assessment and Exams)"
+  words: 500
+  points:
+  - "Cultural hook: the Ukrainian 12-point grading system; explain the scale (10-12 High, 7-9 Sufficient, etc.) and use realistic grade examples in dialogues (e.g., «Я отримав 11 балів»)."
+  - "Exam collocations and learner error: correct the literal translation of 'take an exam' as «брати іспит» (Wrong). Use «складати іспит» (process) and «скласти іспит» (pass/result)."
+- section: "Підсумок (Summary)"
+  words: 200
+  points:
+  - "Synthesis of school vs. university vocabulary; final review of the «вчитися» vs «вивчати» distinction through a summarized checklist."
+  - "Personal application: learners describe their own educational background or current learning goals using the correct verbs and cultural context provided in the module."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "школа (school) — ходити до школи, закінчити школу, середня школа, у школі; high-frequency core noun"
+  - "університет (university) — вступати до університету, навчатися в університеті, державний університет; high-frequency core noun"
+  - "вчитися (to study) — intransitive (process/location); вчитися в школі/університеті, вчитися старанно, вчитися на відмінно; note: never takes a direct object"
+  - "вивчати (to learn) — transitive (+ object); вивчати українську мову, вивчати історію, вивчати нові слова; note: always requires an object in the accusative case"
+  - "предмет (subject) — шкільний предмет, улюблений предмет, профільний предмет; refers to academic disciplines"
+  - "іспит (exam) — складати іспит (take/attempt), скласти іспит (pass), провалити іспит (fail), випускний іспит"
+  - "оцінка (grade) — 12-бальна система (12-point scale); гарна оцінка, висока оцінка, отримувати оцінки"
+  - "студент (student) — academic life context; masculine/feminine forms (студент/студентка)"
+  recommended:
+  - "викладач (lecturer) — university context; distinct from 'вчитель' (school teacher)"
+  - "лекція (lecture) — usage: на лекції (requires preposition «на»)"
+  - "залік (credit/test) — university context; distinct from «іспит» as a pass/fail assessment"
+  - "диплом (diploma) — graduation context; захищати диплом (defend a thesis)"
+  - "стипендія (scholarship) — financial aid context; отримувати стипендію"
+  - "курсова (course paper) — university project context; писати курсову роботу"
+  - "підручник (textbook) — навчатися за підручником; core school supply"
+  - "зошит (notebook) — писати в зошиті; core school supply"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4667 chars)
+✅ Message sent to Claude (ID: 10250)
+✓ Message 10250 acknowledged
+   Auto-acknowledged reply #10250 (stdout delivery — no inbox accumulation)
+✓ Message 10239 acknowledged

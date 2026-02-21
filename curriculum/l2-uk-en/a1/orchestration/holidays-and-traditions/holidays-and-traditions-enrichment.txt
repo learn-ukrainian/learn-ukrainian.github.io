@@ -1,0 +1,298 @@
+✅ Message sent to Gemini (ID: 10113) [auto-acked: self-addressed]
+✓ Message 10113 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10113...
+📨 Message #10113
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-holidays-and-traditions
+   Time: 2026-02-20T19:42:08.467288+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: a1-33
+level: A1
+sequence: 33
+slug: holidays-and-traditions
+version: '2.0'
+title: Holidays & Traditions
+subtitle: Свята і традиції
+content_outline:
+- section: Warm-up
+  points:
+  - 'Головні свята (Новий рік, Різдво, Великдень) — cultural hook: 12 страв на Святвечір
+    (12 dishes on Christmas Eve), main dish is Kutia'
+  - 'Чим відрізняються українські свята — cultural hook: «Щедрик» (Carol of the Bells)
+    by Mykola Leontovych'
+- section: Presentation
+  points:
+  - 'Конструкція "З + орудний" (З Новим роком!) — learner error: using З + Nominative
+    (e.g., «З Новий рік»); pedagogy note: teach as frozen chunks (Standard §4)'
+  - Дієслово вітати + зі святом — distinguish from «бажати» (process of congratulating
+    vs expressing wishes)
+  - 'Дієслово бажати + родовий (Бажаю щастя!) — learner error: using Accusative instead
+    of Genitive (e.g., «Бажаю успіх»)'
+- section: Presentation 2
+  points:
+  - 'Типові побажання (здоров''я, щастя, успіхів, любові) — pronunciation note: IPA
+    for щастя /ˈʃtʃɑstʲɐ/ (complex sound) and здоров''я /zdɔˈrɔu̯jɐ/'
+  - Відповіді на побажання (Взаємно! / Дякую!)
+- section: Presentation 3
+  points:
+  - 'Питання про дату (Коли твій день народження?) — cross-ref: builds on a1-23'
+  - Відповідь (П'ятого травня)
+  - 'Святкування дня народження — cultural hook: «Тягнути за вуха» (pulling ears tradition)'
+- section: Practice
+  points:
+  - Привітання з різними святами
+  - 'Підписання листівки — practical focus: writing short greeting cards'
+- section: Practice 2
+  points:
+  - Діалог про Новий рік
+  - Діалог на дні народження
+  - 'Обмін подарунками — collocation: дарувати подарунок'
+- section: Practice 3
+  points:
+  - Написання привітання з днем народження
+vocabulary_hints:
+  required:
+  - свято (holiday) — державне свято, велике свято
+  - Новий рік (New Year)
+  - Різдво (Christmas) — Різдво Христове, на Різдво
+  - день народження (birthday) — вітати з днем народження
+  - вітати (to congratulate) — вітати зі святом, вітати з днем народження
+  - бажати (to wish) — бажати щастя, бажати успіху
+  - подарунок (gift) — дарувати подарунок, гарний подарунок
+  - святкувати (to celebrate)
+  recommended:
+  - Великдень (Easter)
+  - 'щастя (happiness) — pronunciation note: /ˈʃtʃɑstʲɐ/ (no ''sh'' sound)'
+  - 'здоров''я (health) — pronunciation note: /zdɔˈrɔu̯jɐ/'
+  - успіх (success) — бажати успіху
+  - торт (cake)
+  - свічка (candle)
+activity_hints:
+- type: match-up
+  focus: Holiday names and greetings
+  items: 25
+- type: match-up
+  focus: Match holidays to dates
+  items: 15
+- type: fill-in
+  focus: Complete holiday wishes
+  items: 20
+- type: fill-in
+  focus: Birthday party conversation
+  items: 6
+focus: cultural
+pedagogy: PPP
+prerequisites:
+- a1-23 (What Time Is It)
+- a1-32 (My Family)
+connects_to:
+- a1-34 (Checkpoint Core Grammar)
+objectives:
+- Learner can name major Ukrainian holidays
+- Learner can give holiday greetings
+- Learner can talk about birthday celebrations
+- Learner can express wishes
+grammar:
+- Holiday greetings (З + Instrumental)
+- Date expressions with Genitive
+- Wish expressions (Бажаю + Genitive)
+register: розмовний
+phase: A1.3 [Consolidation]
+persona:
+  voice: Patient Supportive Tutor
+  role: Folklore Keeper from Pyrohiv
+word_target: 2000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Holidays & Traditions (A1 Core)
+
+## State Standard Reference
+§3.12: "Традиції, звичаї, свята: державні й релігійні свята; день народження, весілля; подарунки."
+Alignment: This module directly addresses the thematic requirement of §3.12. While §4.2.3 (Morphology) restricts A1 case usage to Nom/Acc/Loc/Voc, this module introduces "З + Instr" and "Бажаю + Gen" strictly as *lexicalized formulae* (frozen chunks) necessary for the "Speech Etiquette" communicative intentions typical of A1.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| свято | High (top 500) | державне свято, релігійне свято, веселе свято |
+| вітати | Medium | вітати з днем народження, вітати зі святом |
+| бажати | Medium | бажати щастя, бажати здоров'я (Genitive required) |
+| подарунок | High | дарувати подарунок, отримати подарунок |
+| Різдво | High (seasonal) | на Різдво, щасливого Різдва |
+| Великдень | High (seasonal) | на Великдень |
+
+## Cultural Hooks
+1. **12 страв (12 Dishes):** On Christmas Eve (Sviatvechir), standard tradition involves 12 meatless dishes, centred around *Kutia* (wheat berry pudding).
+2. **Щедрик (Shchedryk):** The world-famous "Carol of the Bells" is originally a Ukrainian folk chant arranged by Mykola Leontovych.
+3. **День народження (Birthday):** The tradition of "pulling ears" (тягнути за вуха) — one pull for each year of life to make the child grow tall.
+
+## Common Learner Errors
+1. **Case Mismatch in Greetings:** Learners often use Nominative after "З" (e.g., *«З Новий рік!»* instead of *«З Новим роком!»*). Fix: Teach "З + Instr" as a fixed block.
+2. **Case Mismatch in Wishes:** Learners use Accusative/Nominative after "бажаю" (e.g., *«Бажаю успіх!»* instead of *«Бажаю успіху!»*). Fix: Emphasize Genitive for abstract concepts wished for.
+3. **Verb Confusion:** Confusing *вітати* (to congratulate/greet) with *бажати* (to wish).
+
+## Cross-References
+- **Builds on:** `a1-23` (What Time Is It / Dates), `a1-32` (My Family - specifically vocabulary for relatives to greet).
+- **Prepares for:** `a1-34` (Checkpoint), `a2-04` (Instrumental Case full paradigm), `a2-02` (Genitive Case full paradigm).
+
+## Notes for Content Writing
+- **Immersion Constraints:** A1.3 Phase means ~30-40% immersion. Keep grammar explanations in English. Use Ukrainian for all examples, dialogues, and activity prompts.
+- **Pedagogy:** Focus on *recognition* and *production of set phrases* rather than deep grammatical analysis of the Instrumental/Genitive cases. Treat endings like `-ом`, `-ю` as part of the "holiday spelling".
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ та культура (Introduction & Culture)"
+  words: 500
+  points:
+  - "Огляд основних свят за Державним стандартом §3.12: державні та релігійні свята (Новий рік, Різдво, Великдень)"
+  - "Культурний аспект: Традиція 12 пісних страв на Святвечір та центральна роль Куті (Kutia)"
+  - "Культурний аспект: Історія всесвітньо відомого «Щедрика» Миколи Леонтовича як української обрядової пісні"
+- section: "Презентація: Вітання (Presentation: Greetings)"
+  words: 500
+  points:
+  - "Конструкція «З + орудний відмінок» як фіксована формула: З Новим роком!, З Різдвом!, Зі святом!"
+  - "Типова помилка: використання називного відмінка після «З» (напр., «З Новий рік» замість «З Новим роком»)"
+  - "Дієслово «вітати»: вживання з прийменником «з» (вітати з днем народження, вітати зі святом)"
+  - "Педагогічна порада: вивчення закінчень -ом/-ом як невід'ємної частини «святкового правопису» (лексикалізовані форми)"
+- section: "Презентація: Побажання (Presentation: Wishes)"
+  words: 500
+  points:
+  - "Конструкція «бажати + родовий відмінок» для абстрактних понять: бажати щастя, бажати успіху, бажати здоров'я"
+  - "Типова помилка: використання знахідного відмінка замість родового (напр., «Бажаю успіх» замість «Бажаю успіху»)"
+  - "Лексичне розмежування: різниця між «вітати» (процес привітання) та «бажати» (висловлення конкретних побажань)"
+  - "Фонетика: опрацювання складних звукосполучень у словах «щастя» /ˈʃtʃɑstʲɐ/ та «здоров'я» /zdɔˈrɔu̯jɐ/"
+- section: "Практика та дні народження (Practice & Birthdays)"
+  words: 500
+  points:
+  - "Традиції святкування дня народження: питання про дату (на основі a1-23) та відповіді у родовому відмінку"
+  - "Культурний аспект: Традиція «тягнути за вуха» на день народження («щоб великий ріс»)"
+  - "Робота з лексикою: колоквіальні пари «дарувати подарунок» та «отримати подарунок»"
+  - "Продуктивне завдання: написання короткої вітальної листівки (Practical focus: greeting card writing)"
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "свято (holiday) — державне свято, релігійне свято, велике свято; high frequency (top 500)"
+  - "Новий рік (New Year) — З Новим роком! (fixed formula)"
+  - "Різдво (Christmas) — на Різдво, щасливого Різдва, Різдво Христове"
+  - "день народження (birthday) — вітати з днем народження, Коли твій день народження?"
+  - "вітати (to congratulate) — вітати зі святом; act of greeting (distinguish from бажати)"
+  - "бажати (to wish) — бажати щастя, бажати успіху, бажати здоров'я; requires Genitive case"
+  - "подарунок (gift) — дарувати подарунок, отримати подарунок (high frequency)"
+  - "святкувати (to celebrate) — святкувати вдома, святкувати з родиною"
+  recommended:
+  - "Великдень (Easter) — на Великдень; high frequency seasonal term"
+  - "щастя (happiness) — бажати щастя (Gen); pronunciation: /ˈʃtʃɑstʲɐ/"
+  - "здоров'я (health) — бажати здоров'я (Gen); pronunciation: /zdɔˈrɔu̯jɐ/"
+  - "успіх (success) — бажати успіху (Gen); common learner error point"
+  - "торт (cake) — свічки на торті"
+  - "свічка (candle) — задувати свічки"
+  - "Кутя (Kutia) — cultural hook: traditional wheat berry pudding for Christmas Eve"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (3222 chars)
+✅ Message sent to Claude (ID: 10120)
+✓ Message 10120 acknowledged
+   Auto-acknowledged reply #10120 (stdout delivery — no inbox accumulation)
+✓ Message 10113 acknowledged

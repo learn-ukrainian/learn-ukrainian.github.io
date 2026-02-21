@@ -1,77 +1,31 @@
-# Research Notes: Свій чи його? У світі речей (The World of Possessions)
+# Дослідження: Possessive Sviy
 
-**Track**: Core A
-**Module**: A2 M17
-**Topic**: Reflexive Possessive Pronoun *свій* vs. Personal Possessives (*його, її, їх*)
+## State Standard Reference
+§3 (Thematic Catalogue A2): "930: коротка інформація про свою сім’ю, свій дім, своє місто й рідну країну;"
+Alignment: Although formal morphological listing in §4.2.1.4 (A2) focusing on basic possessives (мій, твій, наш, ваш, їхній) omits *свій*, the State Standard explicitly requires the use of *свій* for thematic A2 communication regarding family, home, and identity. This module bridges the gap between basic possession and the reflexive possessive logic necessary for these A2 benchmarks.
 
-## 1. Grammar: State Standard 2024 Reference
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| свій | High (Top 100) | своя сім'я, свій дім, у свій час |
+| власний | Medium | власний будинок, власна думка, власні назви |
+| особистий | Medium | особисте життя, особистий блог, особисті речі |
+| чужий | Medium | чужа дитина, чужі гроші, за чужий рахунок |
 
-According to the **Державний стандарт української мови (ДСТУ 2024)**, the systematic study of the reflexive possessive pronoun *свій* is explicitly listed in the **B1 level (Standard 2.4.3.4, Catalog V, Section 4.1.1.1)**:
+## Cultural Hooks
+1. **Binary "Свій — Чужий"**: A fundamental concept in Ukrainian (and Slavic) culture, defining the boundary between "one's own" (family, friends, community) and "the stranger." Language reflects this deeply; using *свій* correctly signals integration into the "inner circle."
+2. **Idiom**: «У чужий монастир зі своїм статутом не ходять» (Don't go to someone else's monastery with your own rules). Demonstrates the contrast between *свій* (one's own) and *чужий* (someone else's).
 
-> "присвійні займенники чоловічого, середнього і жіночого роду: мій, моє, моя; твій, твоє, твоя; наш, наше, наша; ваш, ваше, ваша; **свій, своє, своя**; їхній, їхня, їхнє;"
+## Common Learner Errors
+1. **Subject-Possessor Mismatch** → *«Він любить його маму»* (He loves his [someone else's] mother) vs *«Він любить свою маму»* (He loves his [own] mother). Learners often default to *його/її* regardless of the subject, creating ambiguity.
+2. **Redundancy (Tautology)** → *«Я мию свої руки»* (I wash my hands). In Ukrainian, if the possessor is the subject and the object is an inseparable part of the person (body parts, close family), the possessive is often omitted unless emphasis is needed.
+3. **1st/2nd Person Confusion** → Thinking *свій* is mandatory for 1st/2nd person. In *«Я люблю свою/мою маму»*, both are correct, but learners often struggle to decide which sounds more natural (hint: *свою* is more common in neutral speech).
 
-However, the **A2 level (Standard 2.4.2.4)** includes the use of *свій* in descriptors for communicative tasks (e.g., describing one's own family or possessions):
-- Section 1.3.1.1: "...описати простими фразами **свою** зовнішність, **свій** гардероб..."
-- Section 1.3.2: "...коротка інформація про **свою** сім’ю, **свій** дім, **своє** місто..."
+## Cross-References
+- Builds on: A1 possessive pronouns (мій, твій), a2-01 (Dative pronouns)
+- Prepares for: a2-18 (Bigger Better Stronger - comparisons), a2-20 (Preferences and Choices), a2-25 (Checkpoint)
 
-**Conclusion for A2 M17**: While full declension of *свій* is a B1 target, the A2 student is expected to use it in common cases (Nominative, Accusative, Genitive) to perform basic descriptions. This module bridges the gap by contrasting it with *його/її/їх* to resolve ambiguity.
-
-## 2. Vocabulary Frequency & Collocations
-
-### High-Frequency "Possession" Nouns (A1-A2)
-- **речі** (things/possessions) — *Essential for "The World of Things"*
-- **сумка / рюкзак** (bag / backpack)
-- **ключі** (keys)
-- **телефон** (phone)
-- **гаманець** (wallet)
-- **паспорт** (passport)
-- **гроші** (money)
-- **одяг** (clothes)
-- **машина / автомобіль** (car)
-- **місце** (place/seat)
-
-### Common Collocations at A2
-- **на своєму місці** (in its/one's place)
-- **мати свої речі** (to have one's own things)
-- **забути свою сумку** (to forget one's bag)
-- **загубити свої ключі** (to lose one's keys)
-- **у свій час** (in one's/its time)
-
-## 3. Cultural Hook
-
-### "Свій до свого по своє" (Each to his own for his own)
-This is a famous historical and social slogan from the Ukrainian cooperative movement in Western Ukraine (late 19th – early 20th century). It encouraged Ukrainians to buy from Ukrainian businesses and support their own community. It is a powerful example of the "reflexive" nature of *свій* (community-owned/belonging to us).
-
-### Proverb: "Своя сорочка ближче до тіла"
-(One's own shirt is closer to the body). Equivalent to "Charity begins at home" or "Self-interest comes first." It’s a very common idiomatic use of *своя* that A2 students can easily grasp.
-
-## 4. Pedagogical Notes
-
-### Key Differences from English
-- English uses personal possessives ("his", "her", "their") regardless of whether the owner is the subject.
-- Ukrainian **requires** *свій* if the owner is the subject of the sentence. Failing to do so often creates ambiguity.
-  - *Він взяв **його** книгу.* (He took *someone else's* book.)
-  - *Він взяв **свою** книгу.* (He took *his own* book.)
-
-### Common Learner Errors
-1. **Redundancy/Underuse**: Using *мій/твій* instead of *свій* in 1st/2nd person. While "Я люблю мою маму" is grammatically acceptable in colloquial speech, "Я люблю свою маму" is more idiomatic.
-2. **Third-Person Ambiguity**: Using *його* when the subject is the owner (e.g., *Він любить його дружину* sounds like he loves someone else's wife).
-3. **Declension Matching**: Forgetting that *свій* must match the **object** it modifies in gender, number, and case, not the subject/owner.
-
-### Teaching Sequence
-1. Review personal possessives (*мій, твій... його, її*).
-2. Introduce the rule: "Owner = Subject → Use *свій*".
-3. Practice with 1st and 2nd person (where *мій/свій* are interchangeable) to build comfort.
-4. Shift to 3rd person contrast (the "Ambiguity Trap") where the distinction is critical.
-
-## 5. Scope Boundaries
-
-### IN SCOPE
-- **Cases**: Nominative, Accusative (Direct Object), Genitive (Possession/Absence), Locative (Location - "на своєму місці").
-- **Persons**: All persons (я, ти, він, вона, ми, ви, вони).
-- **Contrast**: The semantic difference between *Він... свою* and *Він... його*.
-
-### OUT OF SCOPE
-- **Complex Instrumental/Dative**: While the student knows these cases, avoid overly complex reflexive-possessive constructions in these cases (e.g., "задоволений своїми результатами" is okay, but "співчувати своїм знайомим" might be too heavy for a possession-focused module).
-- **Subjunctive/Conditional**: Avoid "Якби у мене було своє..." until later.
-- **Abstract possession**: Focus on physical "World of Things" rather than abstract "one's own truth" or "one's own way."
+## Notes for Content Writing
+- **The "Subject=Possessor" Rule**: This is the heart of the module. Use a decision-tree approach (Mermaid flowchart) to show when *свій* is needed.
+- **Ambiguity Focus**: Use the "Petro and Ivan" example to show how *його* vs *свою* changes the entire meaning of a sentence.
+- **Declension Table**: Since *свій* declines like *мій*, reuse the pattern to build confidence.

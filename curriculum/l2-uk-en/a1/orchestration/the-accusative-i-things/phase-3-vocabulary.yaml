@@ -1,0 +1,81 @@
+- ipa: '[ˈbɑt͡ʃɪtɪ]'
+  lemma: бачити
+  pos: verb
+  translation: to see
+- ipa: '[ˈt͡ʃutɪ]'
+  lemma: чути
+  pos: verb
+  translation: to hear
+- ipa: '[ˈbrɑtɪ]'
+  lemma: брати
+  pos: verb
+  translation: to take
+- ipa: '[ˈmɑtɪ]'
+  lemma: мати
+  pos: verb
+  translation: to have
+- ipa: '[xɔˈtʲitɪ]'
+  lemma: хотіти
+  pos: verb
+  translation: to want
+- ipa: '[kupuˈʋɑtɪ]'
+  lemma: купувати
+  pos: verb
+  translation: to buy
+- ipa: '[ˈknɪɦɑ]'
+  lemma: книга
+  pos: noun
+  translation: book
+- ipa: '[ˈkɑʋɑ]'
+  lemma: кава
+  pos: noun
+  translation: coffee
+- ipa: '[sʲtʲil]'
+  lemma: стіл
+  pos: noun
+  translation: table
+- ipa: '[ˈlɑmpɑ]'
+  lemma: лампа
+  pos: noun
+  translation: lamp
+- ipa: '[ʋʲikˈnɔ]'
+  lemma: вікно
+  pos: noun
+  translation: window
+- ipa: '[ˈʋɔdɑ]'
+  lemma: вода
+  pos: noun
+  translation: water
+- ipa: '[ˈpʲit͡sɑ]'
+  lemma: піца
+  pos: noun
+  translation: pizza
+- ipa: '[t͡ʃɑi̯]'
+  lemma: чай
+  pos: noun
+  translation: tea
+- ipa: '[xlʲib]'
+  lemma: хліб
+  pos: noun
+  translation: bread
+- ipa: '[ˈsumkɑ]'
+  lemma: сумка
+  pos: noun
+  translation: bag (handbag/shopping bag)
+- ipa: '[pɑˈkɛt]'
+  lemma: пакет
+  pos: noun
+  translation: bag (plastic/paper package)
+- ipa: '[ˈɦrɛt͡ʃkɑ]'
+  lemma: гречка
+  pos: noun
+  translation: buckwheat
+- ipa: '[bɑˈzɑr]'
+  lemma: базар
+  pos: noun
+  translation: market (bazaar)
+- ipa: '[t͡sʲiˈnɑ]'
+  lemma: ціна
+  pos: noun
+  translation: price
+

@@ -336,11 +336,15 @@ def check_english_hints_in_activities(yaml_activities: list, level: str, module_
 
 
 def _get_activity_attr(activity, attr: str, default=None):
-    """Helper to get attribute from activity object or dictionary."""
+    """Helper to get attribute from activity object or dictionary.
+
+    Checks isinstance(dict) FIRST to avoid dict built-in methods (like
+    dict.items, dict.keys) shadowing actual dict keys of the same name.
+    """
+    if isinstance(activity, dict):
+        return activity.get(attr, default)
     if hasattr(activity, attr):
         return getattr(activity, attr, default)
-    elif isinstance(activity, dict):
-        return activity.get(attr, default)
     return default
 
 
@@ -447,6 +451,390 @@ def check_seminar_reading_pairing(yaml_activities: list, level: str) -> list:
     return violations
 
 
+def check_select_min_correct(yaml_activities: list) -> list:
+    """
+    Check that select activities have min_correct matching the actual number of
+    correct: true options in each question.
+
+    Bug pattern: min_correct: 2 but 3 options are marked correct: true.
+    This makes the activity unsolvable (student must pick exactly min_correct
+    but more are actually correct).
+    """
+    violations = []
+
+    for activity in yaml_activities:
+        act_type = _get_activity_attr(activity, 'type', '')
+        if act_type != 'select':
+            continue
+
+        title = _get_activity_attr(activity, 'title', 'Untitled')
+        items = _get_activity_attr(activity, 'items', [])
+
+        for idx, item in enumerate(items, 1):
+            if hasattr(item, 'options'):
+                options = item.options or []
+                min_correct = getattr(item, 'min_correct', None)
+            elif isinstance(item, dict):
+                options = item.get('options', [])
+                min_correct = item.get('min_correct', None)
+            else:
+                continue
+
+            if min_correct is None:
+                continue
+
+            # Count actual correct options
+            actual_correct = 0
+            for opt in options:
+                if hasattr(opt, 'correct'):
+                    if opt.correct:
+                        actual_correct += 1
+                elif isinstance(opt, dict):
+                    if opt.get('correct', False):
+                        actual_correct += 1
+
+            if actual_correct != min_correct:
+                violations.append({
+                    'type': 'SELECT_MIN_CORRECT_MISMATCH',
+                    'severity': 'critical',
+                    'activity': title,
+                    'message': (
+                        f'Question {idx}: min_correct={min_correct} but '
+                        f'{actual_correct} options are marked correct: true. '
+                        f'These must match exactly.'
+                    ),
+                    'suggestion': (
+                        f'Set min_correct: {actual_correct} OR mark exactly '
+                        f'{min_correct} options as correct: true.'
+                    ),
+                })
+
+    return violations
+
+
+def check_quiz_single_correct(yaml_activities: list) -> list:
+    """
+    Check that each quiz item has exactly one correct: true option.
+
+    Bug pattern: 0 or 2+ options marked correct in a single quiz question.
+    """
+    violations = []
+
+    for activity in yaml_activities:
+        act_type = _get_activity_attr(activity, 'type', '')
+        if act_type != 'quiz':
+            continue
+
+        title = _get_activity_attr(activity, 'title', 'Untitled')
+        items = _get_activity_attr(activity, 'items', [])
+
+        for idx, item in enumerate(items, 1):
+            if hasattr(item, 'options'):
+                options = item.options or []
+            elif isinstance(item, dict):
+                options = item.get('options', [])
+            else:
+                continue
+
+            correct_count = 0
+            for opt in options:
+                if hasattr(opt, 'correct'):
+                    if opt.correct:
+                        correct_count += 1
+                elif isinstance(opt, dict):
+                    if opt.get('correct', False):
+                        correct_count += 1
+
+            if correct_count != 1:
+                violations.append({
+                    'type': 'QUIZ_CORRECT_COUNT',
+                    'severity': 'critical',
+                    'activity': title,
+                    'message': (
+                        f'Question {idx} has {correct_count} correct options '
+                        f'(must be exactly 1).'
+                    ),
+                    'suggestion': 'Mark exactly one option as correct: true per question.',
+                })
+
+    return violations
+
+
+def check_fill_in_answer_in_options(yaml_activities: list) -> list:
+    """
+    Check that fill-in items have their answer present in the options list.
+
+    Bug pattern: answer: "слово" but options: ["інше", "щось"] — the correct
+    answer is not selectable.
+    """
+    violations = []
+
+    for activity in yaml_activities:
+        act_type = _get_activity_attr(activity, 'type', '')
+        if act_type != 'fill-in':
+            continue
+
+        title = _get_activity_attr(activity, 'title', 'Untitled')
+        items = _get_activity_attr(activity, 'items', [])
+
+        for idx, item in enumerate(items, 1):
+            if hasattr(item, 'answer'):
+                answer = item.answer
+                options = getattr(item, 'options', []) or []
+            elif isinstance(item, dict):
+                answer = item.get('answer', '')
+                options = item.get('options', []) or []
+            else:
+                continue
+
+            if not answer or not options:
+                continue
+
+            if answer not in options:
+                violations.append({
+                    'type': 'FILL_IN_ANSWER_NOT_IN_OPTIONS',
+                    'severity': 'critical',
+                    'activity': title,
+                    'message': (
+                        f'Item {idx}: answer "{answer}" not found in options '
+                        f'{options}. Student cannot select the correct answer.'
+                    ),
+                    'suggestion': f'Add "{answer}" to the options list.',
+                })
+
+    return violations
+
+
+def check_translate_single_correct(yaml_activities: list) -> list:
+    """
+    Check that each translate item has exactly one correct: true option.
+    """
+    violations = []
+
+    for activity in yaml_activities:
+        act_type = _get_activity_attr(activity, 'type', '')
+        if act_type != 'translate':
+            continue
+
+        title = _get_activity_attr(activity, 'title', 'Untitled')
+        items = _get_activity_attr(activity, 'items', [])
+
+        for idx, item in enumerate(items, 1):
+            if hasattr(item, 'options'):
+                options = item.options or []
+            elif isinstance(item, dict):
+                options = item.get('options', [])
+            else:
+                continue
+
+            correct_count = sum(
+                1 for opt in options
+                if (hasattr(opt, 'correct') and opt.correct)
+                or (isinstance(opt, dict) and opt.get('correct', False))
+            )
+
+            if correct_count != 1:
+                violations.append({
+                    'type': 'TRANSLATE_CORRECT_COUNT',
+                    'severity': 'critical',
+                    'activity': title,
+                    'message': (
+                        f'Item {idx} has {correct_count} correct options '
+                        f'(must be exactly 1).'
+                    ),
+                    'suggestion': 'Mark exactly one translation option as correct: true.',
+                })
+
+    return violations
+
+
+def check_mark_the_words_answers_in_text(yaml_activities: list) -> list:
+    """
+    Check that every answer string in mark-the-words activities is actually
+    present in the activity text.
+
+    Extends the existing check_mark_the_words_format which handles dict-based
+    activities; this handles both parsed objects and raw dicts, and provides
+    clearer error messages.
+    """
+    violations = []
+
+    for activity in yaml_activities:
+        act_type = _get_activity_attr(activity, 'type', '')
+        if act_type != 'mark-the-words':
+            continue
+
+        title = _get_activity_attr(activity, 'title', 'Untitled')
+
+        # Support both parsed objects (text/answers) and raw dicts (text/answers or passage/correct_words)
+        if isinstance(activity, dict):
+            text = activity.get('text', '') or activity.get('passage', '')
+            answers = activity.get('answers', []) or activity.get('correct_words', [])
+        else:
+            text = getattr(activity, 'text', '') or getattr(activity, 'passage', '')
+            answers = getattr(activity, 'answers', []) or getattr(activity, 'correct_words', [])
+
+        if not text or not answers:
+            continue
+
+        for ans in answers:
+            if ans not in text:
+                violations.append({
+                    'type': 'MARK_THE_WORDS_ANSWER_NOT_IN_TEXT',
+                    'severity': 'critical',
+                    'activity': title,
+                    'message': f'Answer "{ans}" not found in activity text.',
+                    'suggestion': (
+                        f'Either add "{ans}" to the text or remove it from answers. '
+                        f'Students cannot mark what is not in the text.'
+                    ),
+                })
+
+    return violations
+
+
+# Sentence-ending punctuation that legitimately precedes a capital letter
+_SENTENCE_ENDS = set('.!?:—»')
+
+# Ukrainian words that are ALWAYS capitalised regardless of position.
+# Я = first-person pronoun, Ви = formal second-person pronoun.
+_ALWAYS_CAPITAL = {'Я', 'Ви'}
+
+
+def check_unjumble_runon_answer(yaml_activities: list) -> list:
+    """
+    Check unjumble answers for run-on sentences.
+
+    A run-on is detected when a capital-letter token appears mid-answer
+    (not at position 0) and the preceding token does not end with
+    sentence-closing punctuation (.  !  ?  :  —  »).
+
+    Catches: "Вітаю тебе Це маленький подарунок" where "Це" starts a new
+    sentence but there is no full-stop after "тебе".
+
+    Always-capital Ukrainian words (Я) are excluded to avoid false positives.
+    """
+    violations = []
+
+    for activity in yaml_activities:
+        act_type = _get_activity_attr(activity, 'type', '')
+        if act_type not in ('unjumble', 'anagram'):
+            continue
+
+        title = _get_activity_attr(activity, 'title', 'Untitled')
+        items = _get_activity_attr(activity, 'items', [])
+
+        for idx, item in enumerate(items, 1):
+            if hasattr(item, 'answer'):
+                answer = item.answer or ''
+            elif isinstance(item, dict):
+                answer = item.get('answer', '') or ''
+            else:
+                continue
+
+            if not answer:
+                continue
+
+            tokens = answer.split()
+            for i, token in enumerate(tokens[1:], 1):  # skip first token
+                if not token or not token[0].isupper():
+                    continue
+                # Strip trailing punctuation before checking always-capital set
+                token_bare = token.rstrip('.,!?:;—»')
+                if token_bare in _ALWAYS_CAPITAL:
+                    continue
+                # If token itself ends with sentence punctuation, it closes a
+                # sentence (proper noun like "Іван.") — not starting a new one
+                if token[-1] in _SENTENCE_ENDS:
+                    continue
+                prev_token = tokens[i - 1]
+                if prev_token and prev_token[-1] in _SENTENCE_ENDS:
+                    continue  # capital after sentence-end is fine
+                # Capital token mid-answer with no preceding punctuation
+                violations.append({
+                    'type': 'UNJUMBLE_RUNON_SENTENCE',
+                    'severity': 'warning',
+                    'activity': title,
+                    'message': (
+                        f'Item {idx}: capital letter "{token}" appears after '
+                        f'"{prev_token}" without sentence-ending punctuation. '
+                        f'Possible run-on: two sentences merged into one answer.'
+                    ),
+                    'suggestion': (
+                        'If two sentences are intended, split into two separate '
+                        'unjumble items. If it is a proper noun mid-sentence, '
+                        'verify it is correct.'
+                    ),
+                    'answer': answer,
+                })
+                break  # one violation per item is enough
+
+
+    return violations
+
+
+# Possessive adjective dative forms — a clear signal that dative NOUNS
+# (not pronouns) are being used. These are distinct from the taught dative
+# pronouns (мені, тобі, йому, їй, нам, вам, їм).
+_POSSESSIVE_DATIVE_FORMS = {
+    'моїй', 'твоїй', 'нашій', 'вашій', 'своїй',      # singular feminine dative
+    'моєму', 'твоєму', 'нашому', 'вашому', 'своєму',  # singular masc/neut dative
+    'моїм', 'твоїм', 'нашим', 'вашим', 'своїм',       # plural dative
+}
+
+
+def check_unjumble_out_of_scope_dative(yaml_activities: list) -> list:
+    """
+    Detect unjumble items that use possessive-adjective dative forms
+    (моїй сестрі, твоєму другу, etc.), which signal dative NOUN phrases.
+
+    Dative nouns are taught in a separate module from dative pronouns.
+    Using them in a pronouns-only module introduces out-of-scope grammar.
+
+    Fires as WARNING — human/Gemini must confirm whether dative nouns
+    are actually in scope for this module.
+    """
+    violations = []
+
+    for activity in yaml_activities:
+        act_type = _get_activity_attr(activity, 'type', '')
+        if act_type != 'unjumble':
+            continue
+
+        title = _get_activity_attr(activity, 'title', 'Untitled')
+        items = _get_activity_attr(activity, 'items', [])
+
+        for idx, item in enumerate(items, 1):
+            if hasattr(item, 'words'):
+                words = item.words or []
+            elif isinstance(item, dict):
+                words = item.get('words', []) or []
+            else:
+                continue
+
+            flagged = [w for w in words if w.lower() in _POSSESSIVE_DATIVE_FORMS]
+            if flagged:
+                violations.append({
+                    'type': 'UNJUMBLE_POSSIBLE_OUT_OF_SCOPE_DATIVE',
+                    'severity': 'warning',
+                    'activity': title,
+                    'message': (
+                        f'Item {idx} contains possessive dative form(s) '
+                        f'{flagged} — these signal dative NOUN phrases, '
+                        f'not dative pronouns. Verify this grammar is in '
+                        f'scope for the current module.'
+                    ),
+                    'suggestion': (
+                        'If this module only teaches dative pronouns '
+                        '(мені, тобі, йому…), replace with a dative pronoun. '
+                        'If dative nouns ARE in scope, this warning can be ignored.'
+                    ),
+                    'words': words,
+                })
+
+    return violations
+
+
 __all__ = [
     'check_unjumble_empty_jumbled',
     'check_mdx_unjumble_rendering',
@@ -455,4 +843,13 @@ __all__ = [
     'check_morpheme_pedagogy',
     'check_english_hints_in_activities',
     'check_seminar_reading_pairing',
+    # Unjumble quality checks
+    'check_unjumble_runon_answer',
+    'check_unjumble_out_of_scope_dative',
+    # New semantic correctness checks
+    'check_select_min_correct',
+    'check_quiz_single_correct',
+    'check_fill_in_answer_in_options',
+    'check_translate_single_correct',
+    'check_mark_the_words_answers_in_text',
 ]

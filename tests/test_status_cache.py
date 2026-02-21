@@ -1,8 +1,9 @@
 """
-Tests for status cache correctness fixes (#539).
+Tests for status cache correctness.
 
-Fix 1: Plan mtime populated for seminar-track paths (b2-hist, c1-bio, etc.)
-Fix 2: Freshness invalidation when meta/activities/vocabulary change
+- #539: Plan mtime populated for seminar-track paths
+- #539: Freshness invalidation when meta/activities/vocabulary change
+- #561: Shared status cache access layer (read_status, StatusResult, get_source_paths)
 """
 
 import json
@@ -21,6 +22,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from scripts.audit.report import save_status_cache
 from scripts.generate_level_status import get_json_cache
+from scripts.audit.status_cache import read_status, get_source_paths, StatusResult
 
 
 # =============================================================================
@@ -247,3 +249,175 @@ class TestMultiFileFreshness:
         self.plan_file.write_text("title: Updated Plan\nword_target: 4000\n")
         result = get_json_cache("b1", "06-test-module", self.md_file)
         assert result is None
+
+
+# =============================================================================
+# #561: Shared status cache access layer
+# =============================================================================
+
+class TestReadStatus:
+    """Test read_status() — the single access point for status JSON."""
+
+    def setup_method(self):
+        self.tmpdir = tempfile.mkdtemp()
+        self.status_dir = Path(self.tmpdir) / "status"
+        self.status_dir.mkdir()
+
+        # Create a status JSON
+        self.status_file = self.status_dir / "test-module.json"
+        self.status_data = {
+            "module": "test-module",
+            "level": "A1",
+            "last_audit": datetime.now().isoformat() + "Z",
+            "gates": {
+                "meta": {"status": "pass", "violations": 0, "message": ""},
+                "lesson": {"status": "pass", "violations": 0, "message": "1200/1000"},
+            },
+            "overall": {
+                "status": "pass",
+                "blocking_issues": [],
+                "pass_count": 2,
+                "fail_count": 0,
+            },
+        }
+        self.status_file.write_text(json.dumps(self.status_data))
+
+    def teardown_method(self):
+        shutil.rmtree(self.tmpdir)
+
+    def test_returns_none_for_missing_file(self):
+        missing = self.status_dir / "nonexistent.json"
+        assert read_status(missing) is None
+
+    def test_returns_none_for_corrupt_json(self):
+        corrupt = self.status_dir / "corrupt.json"
+        corrupt.write_text("not valid json{{{")
+        assert read_status(corrupt) is None
+
+    def test_returns_data_without_source_paths(self):
+        result = read_status(self.status_file)
+        assert result is not None
+        assert result.is_fresh is True
+        assert result.status == "pass"
+        assert result.module == "test-module"
+        assert result.level == "A1"
+
+    def test_fresh_when_sources_older(self):
+        """Status file newer than all sources → fresh."""
+        # Create source files, then touch status to be newer
+        src = Path(self.tmpdir) / "source.md"
+        src.write_text("old content")
+        time.sleep(0.05)
+        self.status_file.write_text(json.dumps(self.status_data))
+
+        result = read_status(self.status_file, source_paths={"md": src})
+        assert result.is_fresh is True
+        assert result.stale_sources == []
+
+    def test_stale_when_source_newer(self):
+        """Source file newer than status → stale."""
+        time.sleep(0.05)
+        src = Path(self.tmpdir) / "source.md"
+        src.write_text("new content")
+
+        result = read_status(self.status_file, source_paths={"md": src})
+        assert result.is_fresh is False
+        assert "md" in result.stale_sources
+
+    def test_stale_reports_multiple_sources(self):
+        """Multiple stale sources reported."""
+        time.sleep(0.05)
+        md = Path(self.tmpdir) / "lesson.md"
+        md.write_text("new")
+        meta = Path(self.tmpdir) / "meta.yaml"
+        meta.write_text("new")
+
+        result = read_status(self.status_file, source_paths={"md": md, "meta": meta})
+        assert result.is_fresh is False
+        assert set(result.stale_sources) == {"md", "meta"}
+
+    def test_missing_source_not_stale(self):
+        """Non-existent source files don't trigger staleness."""
+        missing = Path(self.tmpdir) / "does-not-exist.yaml"
+        result = read_status(self.status_file, source_paths={"meta": missing})
+        assert result.is_fresh is True
+
+    def test_none_source_path_skipped(self):
+        """None values in source_paths are skipped."""
+        result = read_status(self.status_file, source_paths={"md": None, "meta": None})
+        assert result.is_fresh is True
+
+
+class TestStatusResult:
+    """Test StatusResult wrapper properties."""
+
+    def test_bool_true_when_data(self):
+        r = StatusResult(data={"module": "x"}, is_fresh=True)
+        assert bool(r) is True
+
+    def test_bool_false_when_empty(self):
+        r = StatusResult(data={}, is_fresh=True)
+        assert bool(r) is False
+
+    def test_has_issues_fresh_fail(self):
+        r = StatusResult(data={"overall": {"status": "fail"}}, is_fresh=True)
+        assert r.has_issues is True
+
+    def test_has_issues_stale_fail(self):
+        """Stale failures are not authoritative."""
+        r = StatusResult(data={"overall": {"status": "fail"}}, is_fresh=False, stale_sources=["md"])
+        assert r.has_issues is False
+
+    def test_has_issues_fresh_pass(self):
+        r = StatusResult(data={"overall": {"status": "pass"}}, is_fresh=True)
+        assert r.has_issues is False
+
+    def test_repr(self):
+        r = StatusResult(data={"module": "test", "level": "A1", "overall": {"status": "pass"}}, is_fresh=True)
+        assert "test" in repr(r)
+        assert "fresh" in repr(r)
+
+    def test_repr_stale(self):
+        r = StatusResult(data={"module": "test", "level": "A1", "overall": {"status": "pass"}},
+                         is_fresh=False, stale_sources=["md", "meta"])
+        assert "stale" in repr(r)
+        assert "md" in repr(r)
+
+    def test_gates_property(self):
+        gates = {"lesson": {"status": "pass"}}
+        r = StatusResult(data={"gates": gates}, is_fresh=True)
+        assert r.gates == gates
+
+
+class TestGetSourcePaths:
+    """Test get_source_paths() path resolution."""
+
+    def setup_method(self):
+        self.tmpdir = tempfile.mkdtemp()
+        self.track_dir = Path(self.tmpdir) / "curriculum" / "l2-uk-en" / "a1"
+        self.track_dir.mkdir(parents=True)
+        (self.track_dir / "meta").mkdir()
+        (self.track_dir / "activities").mkdir()
+        (self.track_dir / "vocabulary").mkdir()
+        plans_dir = self.track_dir.parent / "plans" / "a1"
+        plans_dir.mkdir(parents=True)
+
+    def teardown_method(self):
+        shutil.rmtree(self.tmpdir)
+
+    def test_resolves_bare_slug(self):
+        md = self.track_dir / "test-module.md"
+        md.write_text("content")
+        paths = get_source_paths(self.track_dir, "test-module")
+        assert paths["md"] == md
+
+    def test_resolves_numeric_prefix(self):
+        md = self.track_dir / "05-test-module.md"
+        md.write_text("content")
+        paths = get_source_paths(self.track_dir, "test-module")
+        assert paths["md"] == md
+
+    def test_plan_path_correct(self):
+        paths = get_source_paths(self.track_dir, "test-module")
+        expected = self.track_dir.parent / "plans" / "a1" / "test-module.yaml"
+        assert paths["plan"] == expected

@@ -1,0 +1,296 @@
+✅ Message sent to Gemini (ID: 13019) [auto-acked: self-addressed]
+✓ Message 13019 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #13019...
+📨 Message #13019
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-2004-vs-2014
+   Time: 2026-02-20T23:43:54.220168+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-hist-093
+level: c1-hist
+sequence: 93
+version: '1.0'
+title: 'Помаранчева vs Гідності: Чому різні результати?'
+focus: history
+pedagogy: seminar
+objectives:
+- 'Analyze the causes and consequences of помаранчева vs гідності: чому різні результати?'
+- Evaluate the historical significance of дві революції, різні наслідки
+content_outline:
+- section: Вступ — Дві революції, різні наслідки
+  subsections:
+  - 2004 — перемога, потім розчарування
+  - 2014 — трагедія, потім трансформація
+  - Чому так по-різному
+  - Структура модуля
+- section: Помаранчева 2004
+  subsections:
+  - Причини — фальсифікація виборів
+  - Методи — мирний протест
+  - Результат — перевибори, Ющенко
+  - Чому не втримали
+- section: Гідності 2014
+  subsections:
+  - Причини — Вільнюс, побиття студентів
+  - Ескалація — насильство, жертви
+  - Результат — втеча Януковича, війна
+  - Чому тривалі зміни
+- section: Ключові відмінності
+  subsections:
+  - Мета — вибори vs. система
+  - Ціна — мирна vs. кров
+  - Зовнішній фактор — Росія 2004 vs. 2014
+  - Громадянське суспільство — слабке vs. сильне
+- section: Уроки 2004 для 2014
+  subsections:
+  - Що засвоїли
+  - Не вірити обіцянкам
+  - Системні зміни важливіші
+  - Ціна свободи
+- section: Чому 2014 тривалий
+  subsections:
+  - Війна — консолідація
+  - Неможливість повернення
+  - Європейський вибір — незворотний
+- section: Підсумок
+  subsections:
+  - Дві революції — різні траєкторії
+  - 2014 — справжній перелом
+  - Перехід до синтезу
+vocabulary:
+- Помаранчева революція
+- Революція гідності
+- результат
+- фальсифікація
+- ескалація
+- трансформація
+- громадянське суспільство
+- системні зміни
+- консолідація
+- незворотний
+- перевибори
+- розчарування
+- Євромайдан
+- Небесна сотня
+- люстрація
+activities:
+- type: comparative-study
+  focus: 2004 vs. 2014 — systematic comparison
+- type: critical-analysis
+  focus: Why did 2004 fail and 2014 succeed?
+- type: critical-analysis
+  focus: What factors made 2014 transformative?
+- type: critical-analysis
+  focus: How 2004 lessons informed 2014
+- type: essay-response
+  focus: Чому Помаранчева революція не принесла тривалих змін?
+sources:
+- name: Помаранчева революція (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Помаранчева_революція
+  type: reference
+  notes: 2004 events
+- name: Революція гідності (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Революція_гідності
+  type: reference
+  notes: 2014 events
+- name: Віктор Ющенко (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Віктор_Ющенко
+  type: reference
+  notes: 2004 leader
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
+persona:
+  voice: Academic Historiographer
+  role: Revolution Comparative Analyst
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Помаранчева vs Гідності: Чому різні результати?
+
+## Використані джерела
+1. [Енциклопедія історії України: Помаранчева революція](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Pomarancheva_revolyutsiya) — академічний аналіз подій 2004 року.
+2. [Національний музей Революції Гідності: Хроніка подій](https://maidanmuseum.org/uk/node/1255) — детальна хронологія та матеріали про Євромайдан.
+3. [УІНП: Революція Гідності: чому це сталося і що це нам дало](https://uinp.gov.ua/informaciyni-materialy/vchytelyam/metodychni-rekomendaciyi/revolyuciya-gidnosti-chomu-ce-stalosya-i-shcho-ce-nam-dalo) — аналітичні матеріали Інституту національної пам'яті.
+
+## Хронологія
+- **21 листопада 2004**: Другий тур президентських виборів, масові фальсифікації на користь Януковича.
+- **22 листопада 2004**: Початок акції громадянської непокори на Майдані Незалежності.
+- **26 грудня 2004**: "Третій тур" виборів, перемога Віктора Ющенка.
+- **21 листопада 2013**: Уряд Азарова призупиняє підготовку до асоціації з ЄС; перший пост Мустафи Найєма.
+- **30 листопада 2013**: Силовий розгін студентів "Беркутом", початок масового спротиву.
+- **16 січня 2014**: Прийняття "диктаторських законів", ескалація конфлікту.
+- **18-20 лютого 2014**: Масові розстріли на вулиці Інститутській, загибель Небесної Сотні.
+- **22 лютого 2014**: Втеча Януковича, постанова ВР про його самоусунення.
+
+## Ключові факти та цитати
+- **Мустафа Найєм (21.11.2013)**: «Зустрічаємось о 22:30 під монументом Незалежності. Вдягайтесь тепло, беріть парасольки, чай, каву, хороший настрій і друзів».
+- **Віктор Ющенко (2004)**: «Ми не бидло, ми не козли, ми — громадяни України».
+- **Сергій Нігоян (2014)**: «Це питання мого майбутнього... Я хочу жити у вільній країні».
+- **Порівняльна статистика**: У 2004 році протест був суто мирним (т.зв. «Майдан-фестиваль»), у 2014 році — переріс у силове протистояння через насильство з боку влади.
+
+## Engagement Hooks (mapped to sections)
+- Section "Помаранчева 2004": [!history-bite] — Про "Наколоті апельсини" та інші міфи російської пропаганди того часу.
+- Section "Гідності 2014": [!quote] — Пост Найєма як тригер революції.
+- Section "Ключові відмінності": [!context] — Роль соціальних мереж: SMS у 2004 проти Facebook/Twitter у 2014.
+- Section "Уроки 2004 для 2014": [!myth-buster] — Міф про "проплачений Майдан": волонтерський рух як доказ самоорганізації.
+- Section "Чому 2014 тривалий": [!decolonization] — Остаточний розрив з "русским миром" як головний результат 2014 року.
+- Section "Підсумок": [!culture] — Зміна символіки: від помаранчевої стрічки до палаючої шини та каски.
+
+## Деколонізаційний контекст
+- **Imperial/Soviet myth**: "Кольорові революції" — це технології Заходу (США/Держдепу) для зміни режимів. Майдан — це "державний переворот" і "хунта".
+- **Ukrainian reality**: Обидва Майдани — це етапи еволюційного зростання політичної нації, реакція на несправедливість та спробу позбавити суб'єктності. 2014 рік став війною за незалежність, а не просто зміною влади.
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| Події 2013-2014 рр. | "Державний переворот", "путч" | Революція Гідності |
+| Учасники протестів | "Радикали", "нацисти", "бандерівці" | Активісти, патріоти, громадянське суспільство |
+| Причина подій | "Втручання Заходу", "печеньки Нуланд" | Захист прав людини, європейський вибір |
+| Наслідки | "Громадянська війна", "розвал країни" | Консолідація нації, початок російсько-української війни |
+
+## Section-Mapped Research Notes
+
+### Вступ — Дві революції, різні наслідки
+Порівняння масштабів та характеру. 2004 — свято демократії, 2014 — боротьба за виживання. Спільне: прагнення свободи. Відмінне: реакція системи та Росії.
+
+### Помаранчева 2004
+Фокус на електоральному майдані. Причина: зухвала фальсифікація. Метод: мирний тиск, Верховний Суд. Результат: зміна облич, але не системи. Ющенко як символ надії, що не справдилась.
+
+### Гідності 2014
+Фокус на ціннісному майдані. Причина: крадіжка майбутнього (ЄС). Ескалація через насилля влади (побиття студентів, закони 16 січня). Жертви змінили все — компроміс став неможливим.
+
+### Ключові відмінності
+1. **Лідерство**: 2004 — під політика (Ющенко), 2014 — без лідерів (горизонтальна структура).
+2. **Вимоги**: 2004 — "Ющенко так!", 2014 — зміна системи, гідність, ЄС.
+3. **Росія**: 2004 — політтехнологи та отруєння, 2014 — військова агресія та анексія.
+
+### Уроки 2004 для 2014
+Розчарування пасивністю після 2004 ("Ми вас обрали, тепер працюйте"). У 2014 розуміння: владу треба контролювати постійно. Поява потужного волонтерського руху як альтернативи державним інститутам.
+
+### Чому 2014 тривалий
+Бо заплачено кров'ю. Незворотність європейського вибору. Декомунізація, децентралізація, безвіз, Томос, армія. Формування політичної нації, де етнічне походження менш важливе за громадянську позицію.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 13055)
+✓ Message 13019 acknowledged
+✓ Message 13055 acknowledged

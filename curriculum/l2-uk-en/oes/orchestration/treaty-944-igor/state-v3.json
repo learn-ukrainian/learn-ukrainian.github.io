@@ -1,0 +1,13 @@
+{
+  "track": "oes",
+  "slug": "treaty-944-igor",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-20T11:30:35Z",
+      "task_id": "v3-treaty-944-igor-pA",
+      "mode": "full"
+    }
+  }
+}

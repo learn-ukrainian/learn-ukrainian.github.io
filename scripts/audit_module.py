@@ -18,6 +18,36 @@ from audit import audit_module
 
 
 
+def auto_fix_ipa(file_path: str) -> tuple[int, list[str]]:
+    """
+    Automatically fix IPA transcription errors in a module's .md and vocabulary YAML.
+
+    Returns (num_fixes, list_of_messages).
+    """
+    from pathlib import Path
+    from lint_ipa import apply_fixes
+
+    md_path = Path(file_path)
+    slug = md_path.stem
+    vocab_yaml = md_path.parent / "vocabulary" / f"{slug}.yaml"
+    activity_yaml = md_path.parent / "activities" / f"{slug}.yaml"
+
+    total_fixes = 0
+    messages = []
+
+    for target in [md_path, vocab_yaml, activity_yaml]:
+        if not target.exists():
+            continue
+        text = target.read_text(encoding='utf-8')
+        fixed_text, fix_count = apply_fixes(text)
+        if fix_count > 0:
+            target.write_text(fixed_text, encoding='utf-8')
+            total_fixes += fix_count
+            messages.append(f"  🔧 IPA: fixed {fix_count} issue(s) in {target.name}")
+
+    return total_fixes, messages
+
+
 def auto_fix_yaml_violations(file_path: str) -> tuple[int, list[str]]:
     """
     Automatically fix YAML schema violations in a module's activity file.
@@ -83,6 +113,16 @@ if __name__ == "__main__":
         action="store_true",
         help="Auto-check naturalness via Gemini if PENDING"
     )
+    parser.add_argument(
+        "--skip-activities",
+        action="store_true",
+        help="Content-only audit: defer activity/vocab gates (internal: used by prose-only audit loop)"
+    )
+    parser.add_argument(
+        "--skip-review",
+        action="store_true",
+        help="Defer review gate only: validate content + activities but not the review file (#606)"
+    )
 
     args = parser.parse_args()
 
@@ -106,11 +146,19 @@ if __name__ == "__main__":
             if messages:
                 for msg in messages:
                     print(msg)
+
+            # Auto-fix IPA transcription errors
+            ipa_fixes, ipa_messages = auto_fix_ipa(file_path)
+            num_fixes += ipa_fixes
+            for msg in ipa_messages:
+                print(msg)
+
             if num_fixes > 0:
                 print(f"\n✅ Applied {num_fixes} fixes. Re-running audit to verify...\n")
 
         # Run standard audit
-        success = audit_module(file_path)
+        success = audit_module(file_path, skip_activities=args.skip_activities,
+                               skip_review=args.skip_review)
 
 
         if not success:

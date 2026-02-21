@@ -1,0 +1,309 @@
+✅ Message sent to Gemini (ID: 10389) [auto-acked: self-addressed]
+✓ Message 10389 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10389...
+📨 Message #10389
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-agreement-disagreement
+   Time: 2026-02-20T20:30:23.818262+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b1-55
+level: B1
+sequence: 55
+slug: agreement-disagreement
+version: '2.0'
+title: Згода і незгода
+subtitle: Agreement & Disagreement — Vocabulary & Phrases
+content_outline:
+- section: Вступ
+  points:
+  - Importance in conversation — based on State Standard §2.4.3.2 (expressing agreement/refusal
+    and reacting to proposals)
+  - 'Cultural considerations — cultural hook: «Де два українці, там три гетьмани»
+    (illustrates individualism and debate culture)'
+  - Politeness strategies — emphasis on 'soft' disagreement strategies («Так, але...»,
+    «Можливо...») to avoid rudeness
+- section: Вивчення слів
+  points:
+  - Six vocabulary groups — grouping by intensity and function
+  - 'Full agreement, strengthening agreement — collocations: «цілком погоджуватися»,
+    «безперечно», «дати згоду»'
+  - 'Disagreement, strengthening disagreement — collocations: «категорично заперечувати»,
+    «виникли незгоди»'
+  - 'Discussion and compromise — idiom: «дійти згоди» (reach an agreement)'
+- section: Вживання
+  points:
+  - 'Agreement levels (weak to strongest) — learner error: confusion of gender forms
+    (Чоловік: «Я згоден», Жінка: «Я згодна»)'
+  - 'Disagreement levels (polite to categorical) — learner error: calque «Я є згоден»
+    (from ''I am agree'') -> Correct: «Я згоден» / «Я погоджуюся»'
+  - Register considerations — distinction between «правильно» (correctly) and «вірно»
+    (loyally/faithfully); avoid «вірно» for agreement
+- section: Читання
+  points:
+  - Work meeting text — formal register, using «безперечно» and «не можу не погодитися»
+    (Diplomat persona)
+  - Ecology debate — expressing opinions and partial agreement («Цікава думка, однак...»)
+  - Messenger chat (informal) — short forms, emojis, «+1», «згоден»
+- section: Діалоги
+  points:
+  - Colleagues at work (neutral) — seeking consensus, «на знак згоди»
+  - Friends (informal) — emotional agreement/disagreement, «Ти що!», «Та ні!»
+  - Formal discussion, family — navigating «яблуко незгоди» (bone of contention) with
+    polite refusal
+- section: Підсумок
+  points:
+  - Key vocabulary recap — review of gender forms and correct usage of «правильно»
+  - Practice recommendations — using «Так, але...» pattern in daily life
+vocabulary_hints:
+  required:
+  - згода (agreement) — дати згоду, за згодою, мовчазна згода
+  - незгода (disagreement) — виникли незгоди, серйозні незгоди
+  - згоден/згодна (agree - adj) — short form adjective; MUST agree with gender of
+    speaker
+  - погоджуватися (to agree) — цілком погоджуватися, не можу не погодитися
+  - заперечувати (to object) — категорично заперечувати, не буду заперечувати
+  - частково (partially) — погоджуватися частково
+  - абсолютно (absolutely) — абсолютно згоден
+  - категорично (categorically) — категорично проти
+  recommended:
+  - безумовно (unconditionally/undoubtedly) — used as strong agreement marker
+  - визнавати (to acknowledge) — визнавати правоту
+  - спростовувати (to refute) — спростовувати думку
+  - підтримувати (to support) — підтримувати пропозицію
+  - безперечно (undoubtedly) — це безперечно так (discourse marker)
+  - яблуко незгоди (bone of contention) — idiom
+activity_hints:
+- type: fill-in
+  focus: Debate scenarios
+  items: 20
+- type: fill-in
+  focus: Adjust agreement intensity
+  items: 20
+- type: fill-in
+  focus: Complete debate exchanges
+  items: 15
+- type: quiz
+  focus: Identify agreement/disagreement
+  items: 15
+focus: vocabulary
+pedagogy: PPP
+prerequisites:
+- b1-54 (Expressing Opinions)
+connects_to:
+- b1-56 (Discourse Markers Basic)
+objectives:
+- Learner can express agreement at different levels of intensity
+- Learner can express polite disagreement in formal and informal contexts
+- Learner can participate in debates using appropriate vocabulary
+- Learner can manage conversational flow with agreement markers
+grammar:
+- Expression patterns for agreement and disagreement
+- Concessive structures (хоча, але)
+- Partial agreement constructions
+register: розмовний
+phase: B1.5 [Vocabulary Expansion I]
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Diplomat
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Згода і незгода
+
+## State Standard Reference
+§2.4.3.2 (Каталог А. Перелік комунікативних намірів): "запитувати про згоду й відмову: Ти (не)погоджуєшся зі мною? Ти (не)згоден / (не)згодна? Ти за чи проти?; подавати, приймати й відхиляти пропозиції: Пропоную піти на концерт. На жаль, не можу сьогодні. А я залюбки піду з вами"
+Alignment: Цей модуль безпосередньо реалізує вимогу стандарту щодо вміння висловлювати згоду, незгоду та реагувати на пропозиції на рівні В1.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| **Згода** | High (General Vocabulary) | дати згоду, за згодою, дійти згоди, на знак згоди, мовчазна згода |
+| **Незгода** | High (General Vocabulary) | виникли незгоди, серйозні незгоди, яблуко незгоди (idiom) |
+| **Погоджуватися** | High (Verb) | цілком погоджуватися, погоджуватися з думкою, не можу не погодитися |
+| **Заперечувати** | Medium (Formal/Debate) | категорично заперечувати, не буду заперечувати, заперечувати факт |
+| **Безперечно** | High (Discourse Marker) | це безперечно так, безперечно правильний вибір |
+
+## Cultural Hooks
+1. **"Де два українці, там три гетьмани"**: Ця відома приказка ідеально ілюструє українську культуру дискусії та індивідуалізму. Вона жартівливо підкреслює, що українцям часто важко дійти повної згоди, оскільки кожен має власну лідерську позицію ("гетьман"). Походить з часів Руїни (XVII ст.), коли часта зміна гетьманів та політична роздробленість були нормою.
+2. **Культура "м'якої" незгоди**: В українській комунікативній культурі (особливо в західних регіонах та у ввічливому спілкуванні) пряме "Ні" може сприйматися як грубість. Часто використовують конструкції "Так, але...", "Можливо, ви маєте рацію, проте...", "Цікава думка, однак...".
+
+## Common Learner Errors
+1. **Калькування "I am agree"** → *Я є згоден* (помилка) → **Я згоден / Я погоджуюся** (правильно). Дієслово "to be" тут зайве.
+2. **Узгодження роду**: Чоловіки часто помилково кажуть "Я згодна", або жінки "Я згоден", плутаючи прикметникові форми. Потрібно чітко розрізняти: ♂ **Я згоден**, ♀ **Я згодна**.
+3. **Плутанина "Вірно" vs "Правильно"**: У значенні "correctly" слід вживати **правильно**. "Вірно" (loyally) є поширеною помилкою навіть серед носіїв (суржик/калька), але на рівні В1 варто вчити літературну норму: "Ви правильно сказали".
+
+## Cross-References
+- Builds on: `b1-54` (Expressing Opinions) — uses opinion structures to build agreement arguments.
+- Prepares for: `b1-56` (Discourse Markers Basic) — provides the foundation for more complex text structuring.
+
+## Notes for Content Writing
+- **Persona Flavor**: Use the "Diplomat" angle mentioned in the plan (`role: Diplomat`). The "Diplomat" fits perfectly with teaching *polite* disagreement and nuance.
+- **Register**: Balance formal (meeting) and informal (friends). Ensure "Categorical Disagreement" is marked as risky/strong.
+- **Structure**: Ensure the distinction between "Partial Agreement" (Так, але...) and "Full Agreement" (Авжеж!) is clear, as this is the key to B1 proficiency over A2.
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 500
+  points:
+  - "State Standard §2.4.3.2 competency: mastering communicative intentions for expressing agreement, refusal, and reacting to proposals at the B1 level."
+  - "Cultural hook: «Де два українці, там три гетьмани» — exploring the historical roots (Era of Ruin) of Ukrainian individualism and its impact on the culture of debate and disagreement."
+  - "The Diplomat's perspective on 'soft' disagreement: why a direct 'Ні' can be perceived as rudeness and how to use polite evasion in formal and informal contexts."
+- section: "Словник та фразеологія (Vocabulary & Phraseology)"
+  words: 800
+  points:
+  - "Core nouns and verbs: *згода/незгода*, *погоджуватися/заперечувати*. Frequency-based collocations: *дати згоду*, *мовчазна згода*, *виникли незгоди*."
+  - "Idiomatic expressions for consensus and conflict: *дійти згоди* (to reach an agreement) and the 'bone of contention' *яблуко незгоди*."
+  - "Intensifiers and discourse markers: *безперечно*, *безумовно*, *абсолютно*. Register distinction for *заперечувати* as a formal term for denying facts or opposing opinions."
+- section: "Граматика та типові помилки (Grammar & Common Errors)"
+  words: 800
+  points:
+  - "Learner error: correcting the English calque *«Я є згоден»* (from 'I am agree') to the correct forms *«Я згоден»* or *«Я погоджуюся»*."
+  - "Gender agreement with short-form adjectives: explicit drill on ♂ *я згоден* vs. ♀ *я згодна* to prevent common speaker-gender mismatch errors."
+  - "Linguistic purity and precision: *«Правильно»* (correctly) vs. *«Вірно»* (loyally). Drill to replace the 'loyalty' calque in the context of logical or speech agreement."
+- section: "Стратегії ввічливої дискусії (Polite Discussion Strategies)"
+  words: 900
+  points:
+  - "B1 communicative nuance: transitioning from binary agreement/disagreement to partial agreement using concessive structures like *хоча* and *але*."
+  - "Diplomatic patterns for 'Soft' disagreement: *«Цікава думка, однак...»*, *«Можливо, ви маєте рацію, проте...»*, *«Не можу не погодитися з вашим аргументом...»*."
+  - "Register and risk assessment: when to use categorical disagreement (*категорично проти*) and how to navigate heated discussions without damaging social rapport."
+- section: "Практика: Дебати та месенджери (Practice: Debates & Messengers)"
+  words: 700
+  points:
+  - "Formal scenario: A work meeting or ecology debate requiring precise terminology like *спростовувати думку* or *визнавати правоту* in a professional setting."
+  - "Informal scenario: Digital etiquette in messenger chats, including short forms, emojis, and modern markers like «+1» alongside *згоден/згодна*."
+  - "Real-life simulation: Friends navigating an emotional disagreement using markers like *«Ти що!»* or *«Та ні!»* and reaching a compromise."
+- section: "Підсумок (Summary)"
+  words: 300
+  points:
+  - "Self-assessment checklist based on State Standard §2.4.3.2: expressing agreement, accepting or declining proposals with appropriate register."
+  - "Final recap of the *правильно/вірно* distinction and the importance of gender matching in short-form expressions."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "згода (agreement) — дати згоду, за згодою, мовчазна згода; high frequency noun"
+  - "незгода (disagreement) — виникли незгоди, серйозні незгоди; high frequency noun"
+  - "згоден/згодна (agree - short adj) — ♂ згоден, ♀ згодна; MUST agree with speaker gender"
+  - "погоджуватися (to agree) — цілком погоджуватися, не можу не погодитися; high frequency verb"
+  - "заперечувати (to object/deny) — категорично заперечувати, заперечувати факт; medium frequency, formal/debate register"
+  - "правильно (correctly) — ви правильно сказали; use instead of 'вірно' in agreement contexts"
+  - "абсолютно (absolutely) — абсолютно згоден; strong agreement marker"
+  - "частково (partially) — погоджуватися частково; key adverb for B1 nuance"
+  recommended:
+  - "безперечно (undoubtedly) — це безперечно так; high frequency discourse marker"
+  - "яблуко незгоди (bone of contention) — idiom for debate or conflict"
+  - "дійти згоди (to reach an agreement) — common collocation for resolution"
+  - "спростовувати (to refute) — спростовувати думку; formal debate term"
+  - "визнавати (to acknowledge) — визнавати правоту; formal/polite interaction"
+  - "безумовно (unconditionally) — strong agreement discourse marker"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4510 chars)
+✅ Message sent to Claude (ID: 10400)
+✓ Message 10400 acknowledged
+   Auto-acknowledged reply #10400 (stdout delivery — no inbox accumulation)
+✓ Message 10389 acknowledged

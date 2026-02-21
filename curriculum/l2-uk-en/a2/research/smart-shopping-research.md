@@ -1,72 +1,34 @@
-# Research Notes: Розумні покупки (Smart Shopping)
+# Дослідження: Smart Shopping
 
-**Track**: Core A
-**Module**: A2 M24 (smart-shopping)
-**Researched**: 2026-02-08
-**Level**: A2 (Elementary)
+## State Standard Reference
+§4.3.1: "Ступені порівняння якісних прикметників: проста форма вищого ступеня: солодший, важливіший; проста форма найвищого ступеня: найсолодший, найважливіший; складена форма вищого ступеня: більш солодкий, менш кислий... складена форма найвищого ступеня порівняння: найбільш солодкий, найменш кислий."
+§3.9: "Купівля (закупи): магазини і ринки; споживчі товари; одиниці ваги й об’єму; гроші."
+Alignment: This module introduces adjective comparisons (cheap/cheaper/cheapest) as per §4.3.1 and covers the thematic requirements for shopping contexts and currency handling specified in Catalogue B (§3.9).
 
-## 1. Grammar: State Standard 2024 Reference
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| ціна | High (Thematic) | вигідна ціна, ціна зі знижкою, фіксована ціна |
+| знижка | High (Thematic) | сезонна знижка, акційна ціна, надати знижку |
+| решта | High (Practical) | дати решту, правильна решта, дрібна решта |
+| чек | High (Practical) | касовий чек, видати чек, зберігати чек |
+| кращий | High (Irregular) | набагато кращий, кращий варіант, найкраща якість |
+| дешевий | High (Grammar) | дешевший за..., найбільш дешевий товар |
 
-According to the **Державний стандарт української мови (ДСТУ 2024)**, the topic of shopping and comparison falls under the following sections for Level A2:
+## Cultural Hooks
+1. **The Social Ritual of "Bazar"**: Bargaining in Ukrainian markets (базар/ринок) is less about aggressive haggling and more about building rapport. A polite conversation with a "regular" vendor (свій продавець) is the standard way to secure fresh products and "friendly" prices.
+2. **Freshness Hierarchy**: Buying from "grannies" (бабусі) who sell produce from their own gardens is culturally perceived as superior to supermarket organic brands. These small-scale transactions often involve units like "стакан" (glass) for berries or "пучок" (bunch) for herbs.
 
-*   **§ 3.9. Купівля (закупи)**: "магазини і ринки; споживчі товари (овочі, фрукти, м’ясо, молочні продукти, хліб, яйця); засоби гігієни (мило, шампунь, зубна паста); одиниці ваги й об’єму; гроші." (Catalog B: Thematic Catalog).
-*   **§ 4.3.1. Ступені порівняння якісних прикметників**:
-    *   Simple comparative: *солодший, важливіший*.
-    *   Simple superlative: *найсолодший, найважливіший*.
-    *   Compound forms: *більш солодкий, менш кислий*.
-    *   Suppletive forms: *великий – більший, малий – менший*.
-*   **§ 4.4.1.3. Спонукальне речення**: Expression of requests and orders (*Дайте, покажіть*), essential for shopping interactions.
+## Common Learner Errors
+1. **Phonetic Stem Changes** (г+ш -> жч): Learners often produce "дорожший" instead of the correct "дорожчий" or "ближший" instead of "ближчий."
+2. **Double Comparison Contamination**: Using both "більш" and a comparative suffix (e.g., *більш дешевший* instead of *більш дешевий* or *дешевший*).
+3. **Comparative Particles**: Incorrectly using "як" (as) instead of "ніж" (than) or the preposition "за" + Accusative for direct comparisons.
 
-## 2. Vocabulary Frequency & Collocations
+## Cross-References
+- Builds on: A1 Modules for Nouns (Gender/Case basics), A1 Numbers (1-100 for prices), and A2 Food/Clothing (thematic items).
+- Prepares for: B1.7-8 (Consumerism and Modern Economy), B2.12 (Business and Negotiation Register).
 
-### High-Frequency Vocabulary
-| Ukrainian | English | Frequency/Priority |
-| :--- | :--- | :--- |
-| **Ціна** | Price | High (Core) |
-| **Знижка** | Discount | High (Practical) |
-| **Вибір** | Choice / Selection | Medium |
-| **Дешевий / Дорогий** | Cheap / Expensive | High (Comparison) |
-| **Якість** | Quality | Medium |
-| **Решта** | Change (money) | High (Market/Store) |
-| **Чек** | Receipt | High (Formal) |
-| **Пакет** | Bag | High (Practical) |
-| **Картка / Готівка** | Card / Cash | High (Payment) |
-| **Кошик** | Basket / Cart | Medium (Store/Online) |
-
-### Common A2 Collocations
-*   **Скільки коштує?** — How much does it cost?
-*   **Мені подобається цей більше.** — I like this one more.
-*   **Чи можна дешевше?** — Can it be cheaper? (Bargaining)
-*   **Яка якість?** — What is the quality?
-*   **Я шукаю...** — I am looking for...
-*   **Платити карткою/готівкою.** — To pay by card/cash.
-*   **Я ще подумаю.** — I'll think about it (Polite refusal).
-
-## 3. Cultural Hook: Bazar vs. Supermarket
-
-1.  **The Ritual of "Bazar" (Ринок)**: In Ukraine, the *ринок* is not just a place to buy food; it is a social institution. Unlike supermarkets (like *Сільпо* or *АТБ*), prices at the market are often flexible. 
-    *   **Bargaining (Торгуватися)**: It is culturally acceptable and often expected to ask for a small discount when buying several items from the same vendor.
-    *   **Tasting (Коштувати)**: Vendors often invite customers to taste cheese (*сир*), honey (*мед*), or fruit before buying. Refusing a taste is fine, but accepting is a common way to build rapport.
-2.  **Support Local (Купуй українське)**: There is a strong cultural pride in buying seasonal, locally grown produce (*домашні продукти*). Labeling something as "village-made" (*домашнє*) is a signal of the highest quality and freshness.
-
-## 4. Pedagogical Notes
-
-*   **Comparison Consistency**: English speakers struggle with the synthetic vs. analytic choice. While *більш* (more) is easy, A2 students should be pushed to use *кращий* (better) and *дешевший* (cheaper) as they are much more natural in daily speech.
-*   **Consonant Alternation**: Students will need a reminder of the "snipers" in comparison morphology: *дорогий* → *доро**ж**чий*, *високий* → *ви**щ**ий*.
-*   **Numeral Agreement**: Prices often involve complex agreement (e.g., *22 гривні* vs *25 гривень*). Even at A2, this remains a high-error area.
-*   **Politeness vs. Directness**: Ukrainian shopping can seem direct. Teaching the difference between a command (*Дайте!*) and a polite request (*Дайте, будь ласка*) is crucial for social integration.
-
-## 5. Scope Boundaries
-
-### IN Scope
-*   **Comparative & Superlative adjectives**: Specifically for price and quality (*кращий, гірший, дорожчий, дешевший*).
-*   **Numerals**: Prices up to 10,000 (Gryvnia).
-*   **Genitive Case**: Used for quantities (*кілограм яблук*) and after certain numerals.
-*   **Imperative Mood**: For making requests to vendors (*Покажіть*, *Дайте*).
-*   **Conditional**: Basic "What would you buy if..." (*Я б купив...*).
-
-### OUT Scope
-*   **Passive Voice**: Descriptions like "The price was reduced" (*Ціну було знижено*).
-*   **Participles**: "The choosing customer" or "The bought item".
-*   **Advanced Economics**: Terms for inflation, wholesale, or complex financial contracts.
-*   **Complex Syntax**: Sentences with more than two clauses or advanced subordinating conjunctions.
+## Notes for Content Writing
+- Focus on the practical distinction between "магазин" (standard fixed prices) and "ринок" (dynamic negotiation).
+- Introduce Digital Shopping terms (кошик, оформити, доставка) as they are high-frequency in modern Ukraine.
+- Use comparative forms primarily for price and quality—the most common contexts for A2 learners.

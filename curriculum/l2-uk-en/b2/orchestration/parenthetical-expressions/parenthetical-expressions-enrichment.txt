@@ -1,0 +1,339 @@
+✅ Message sent to Gemini (ID: 10491) [auto-acked: self-addressed]
+✓ Message 10491 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10491...
+📨 Message #10491
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-parenthetical-expressions
+   Time: 2026-02-20T20:38:21.133907+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b2-12
+level: B2
+sequence: 12
+slug: parenthetical-expressions
+version: '2.0'
+title: Вставні слова та вирази
+content_outline:
+- section: Вступ — Вставні слова та вирази
+  points:
+  - 'Що таке вставні конструкції — State Standard §4.3.2: «просте речення зі вставними
+    словами»'
+  - Їх роль у побудові тексту
+  - 'Відмінність від членів речення — learner error: homonymy (e.g., «Він може це
+    зробити» vs «Він, може, прийде»); use decision tree visual'
+- section: Вставні слова для вираження впевненості та невпевненості
+  points:
+  - 'Впевненість (безумовно, безперечно, звісно, напевно) — звісно/звичайно: high
+    frequency agreement markers'
+  - 'Невпевненість (можливо, мабуть, здається, очевидно) — cultural hook: «Polite
+    Uncertainty» (Ukrainians use «мабуть» to soften statements and avoid aggression)'
+  - Градація ступеня впевненості
+- section: Вставні слова для вираження ставлення
+  points:
+  - Позитивна оцінка (на щастя, на радість) — «на щастя» expresses relief/positive
+    evaluation
+  - 'Негативна оцінка (на жаль, на біду) — learner error: «на жаль» is always written
+    separately (not «нажаль»)'
+  - Нейтральне ставлення
+- section: Вставні слова для позначення джерела інформації
+  points:
+  - За словами... (according to...)
+  - На думку... (in the opinion of...)
+  - Як відомо... (as is known...)
+  - 'Кажуть... (they say...) — cultural hook: «Collective Wisdom» (implies shared
+    knowledge/rumor, appealing to community authority)'
+- section: Вставні слова для організації висловлювання
+  points:
+  - 'Послідовність (по-перше, по-друге, нарешті) — learner error: always hyphenated
+    (not «по перше»)'
+  - Узагальнення (загалом, взагалі, отже)
+  - Уточнення (зокрема, наприклад, а саме) — «до речі» used for topic switching
+  - Протиставлення (навпаки, з іншого боку)
+- section: Пунктуація при вставних словах
+  points:
+  - Виділення комами
+  - Позиція у реченні
+  - 'Типові помилки — warning: «False Parentheticals» (навіть, майже, адже, принаймні)
+    are NEVER separated by commas'
+- section: Практика і підсумок
+  points:
+  - Інтеграція в мовлення
+  - Стилістичні ефекти
+  - Підготовка до модуля 13
+vocabulary_hints:
+  required:
+  - вставне слово (parenthetical word)
+  - модальність (modality)
+  - впевненість (certainty)
+  - невпевненість (uncertainty)
+  - джерело інформації (source of information)
+  - безумовно (undoubtedly)
+  - можливо (possibly)
+  - на жаль (unfortunately) — always written separately; emotional evaluation
+  - на щастя (fortunately) — relief/positive evaluation
+  - по-перше (firstly) — always hyphenated; formal/structured speech
+  recommended:
+  - градація (gradation)
+  - оцінка (evaluation)
+  - висловлювання (utterance)
+  - уточнення (specification)
+  - узагальнення (generalization)
+  - мабуть (probably) — marks uncertainty/politeness; standard spelling with «т»
+  - кажуть (they say) — colloquial source of info; implies collective wisdom
+  - до речі (by the way) — topic switching; high frequency
+  - звісно (of course) — agreement/certainty
+activity_hints:
+- type: quiz
+  focus: Identify function of parenthetical expression
+  items: 15+
+- type: fill-in
+  focus: Insert appropriate parenthetical expressions
+  items: 15+
+- type: group-sort
+  focus: Sort by function (certainty, attitude, source, sequence)
+  items: 20+
+- type: fill-in
+  focus: Add parenthetical expressions to neutral sentences
+  items: 12+
+- type: error-correction
+  focus: Fix punctuation with parenthetical expressions
+  items: 10+
+- type: match-up
+  focus: Parenthetical expression → function
+  items: 16+
+- type: essay-response
+  focus: Write opinion text using varied parenthetical expressions
+  output: Model answer provided
+focus: grammar
+prerequisites:
+- b2-11 (Multi-clause Sentences)
+- Comma usage basics
+- Sentence structure
+connects_to:
+- b2-13 (Emphasis and Inversion)
+- b2-14 (Stylistic Connectors)
+- b2-25 (B2.1b Checkpoint)
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Discourse Markers
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Requirements for discourse organization at B2
+- name: Сучасна українська літературна мова - Синтаксис
+  url: https://uk.wikipedia.org/wiki/Синтаксис
+  type: secondary
+  notes: Parenthetical expressions classification
+- name: CEFR B2 Discourse Competence
+  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  type: reference
+  notes: B2 discourse organization requirements
+immersion: 100% Ukrainian
+phase: B2.1b [Participles & Register Intro]
+objectives:
+- Identify and correctly use вставні слова та вирази
+- Form and apply вставні слова та вирази
+persona:
+  voice: Professional Language Coach
+  role: Talk Show Host (Ведучий ток-шоу)
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Вставні слова та вирази
+
+## State Standard Reference
+§4.3.2: "просте речення зі вставними словами: Може, то птахи приносять на своїх крилах весну?;"
+Alignment: Module explicitly teaches identification and punctuation of parenthetical words (вставні слова) as required for B2 syntax competence.
+
+## Vocabulary Frequency
+| Word | Frequency / Notes | Key collocations / Synonyms |
+|------|-------------------|------------------|
+| **мабуть** | High frequency. Marks uncertainty/politeness. Note: standard spelling is with "т" (not "будь"). | мабуть, так; мабуть, ні; це, мабуть, найкращий... |
+| **на жаль** | High frequency. Emotional evaluation. Always written separately. | на жаль, не зможу; на превеликий жаль; як на жаль |
+| **на щастя** | Medium frequency. Relief/positive evaluation. | на щастя, все добре; на моє щастя |
+| **по-перше / по-друге** | High frequency in formal/structured speech. Always hyphenated. | по-перше, я хочу...; а по-друге... |
+| **звісно / звичайно** | High frequency. Agreement/certainty. | звісно, що так; звичайно, ні |
+| **кажуть** | High frequency in colloquial speech. Source of info. | кажуть, що...; люди кажуть |
+| **до речі** | High frequency. Topic switching. | до речі, ти знаєш...; до речі, про... |
+
+## Cultural Hooks
+1.  **The "Polite Uncertainty"**: Ukrainians often use **мабуть** or **напевно** even when they are fairly sure, to avoid sounding arrogant, categorical, or aggressive. It softens the statement and invites the listener's opinion (e.g., "Це, мабуть, найкращий варіант" vs "Це найкращий варіант").
+2.  **Collective Wisdom ("Кажуть")**: The phrase **кажуть** (they say) is a culturally specific marker of "shared knowledge" or "rumor," functioning similarly to the passive voice in other languages but retaining a sense of community "voice." It appeals to the authority of the "collective."
+
+## Common Learner Errors
+1.  **False Parentheticals**: Learners often put commas around words that *feel* parenthetical but are particles in Ukrainian: **навіть** (even), **майже** (almost), **адже** (after all), **принаймні** (at least). *Correction:* These are NEVER separated by commas.
+2.  **Homonymy (Member vs. Parenthetical)**: Confusing the word as a sentence member vs. a parenthetical.
+    *   *Error:* "Він, може, це зробити." (He, maybe, to do it.)
+    *   *Correct:* "Він може це зробити." (He can do it - verb) vs "Він, може, прийде." (He, maybe, will come - parenthetical).
+3.  **Hyphenation**: Writing **по перше** (wrong) instead of **по-перше** (correct), or **нажаль** (wrong) instead of **на жаль** (correct).
+
+## Cross-References
+- **Builds on**: b2-11 (Multi-clause Sentences), Comma usage basics
+- **Prepares for**: b2-13 (Emphasis and Inversion), b2-14 (Stylistic Connectors)
+
+## Notes for Content Writing
+- **Visuals**: A decision tree for "Is it parenthetical?" (Can you remove it? Does it change the fact or just the attitude?) would be very effective for the "Homonymy" error.
+- **Emphasis**: Explicitly list the "False Parentheticals" (навіть, майже, адже) in a warning box, as this is a persistent B2 error.
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Природа вставних конструкцій (Introduction: Nature of Parenthetical Structures)"
+  words: 600
+  points:
+  - "Визначення згідно з Держстандартом §4.3.2: просте речення зі вставними словами та їхня роль у синтаксичній побудові тексту"
+  - "Візуалізація «Decision Tree»: Як відрізнити вставне слово від члена речення (критерій можливості вилучення з контексту без руйнування граматичної структури)"
+  - "Загальна класифікація семантичних груп: впевненість, ставлення, джерело інформації, організація висловлювання"
+- section: "Впевненість та емоційне ставлення (Certainty and Emotional Attitude)"
+  words: 1000
+  points:
+  - "Градація впевненості: від безумовної («безперечно», «звісно», «безумовно») до припущеної («здається», «очевидно», «мабуть»)"
+  - "Cultural Hook: «Polite Uncertainty» — використання «мабуть» або «напевно» навіть за наявності впевненості для пом'якшення тверджень та уникнення категоричності"
+  - "Емоційна оцінка подій: вираження полегшення («на щастя», «на радість») та жалю («на жаль», «на біду»)"
+  - "Learner error warning: правопис «на жаль» (завжди окремо) та «мабуть» (стандартне написання з «т» на кінці)"
+- section: "Джерела інформації та логіка викладу (Information Sources and Logical Sequence)"
+  words: 1000
+  points:
+  - "Cultural Hook: «Collective Wisdom» — вставне слово «кажуть» як специфічний маркер спільного знання або чуток, що апелює до авторитету спільноти"
+  - "Посилання на джерело: диференціація «на мою думку», «за словами...», «як відомо...» залежно від офіційності ситуації"
+  - "Організація дискурсу: послідовність думок («по-перше», «по-друге», «нарешті») та логічні висновки («отже», «взагалі», «таким чином»)"
+  - "Topic switching: використання «до речі» для перемикання теми; правопис слів типу «по-перше» (обов'язковий дефіс)"
+- section: "Пунктуація та пастки гомонімії (Punctuation and Homonymy Traps)"
+  words: 800
+  points:
+  - "Правила виділення комами залежно від позиції у реченні (препозиція, інтерпозиція, постпозиція)"
+  - "Homonymy Trap: диференціація дієслова та вставного слова на прикладі «Він може прийти» (can) vs «Він, може, прийде» (maybe)"
+  - "Warning Box: «False Parentheticals» — слова «навіть», «майже», «адже», «принаймні», які ніколи не виділяються комами"
+- section: "Практика в ролі ведучого ток-шоу (Practice in the Role of a Talk Show Host)"
+  words: 600
+  points:
+  - "Persona integration: застосування вставних конструкцій для керування динамікою розмови, висловлення модальності та реакції на репліки гостей"
+  - "Стилістичні ефекти: порівняння «сухих» фактів та речень, збагачених модальністю, для досягнення переконливості"
+  - "Підсумковий дріл на розрізнення функцій та підготовка до Модуля 13 (Інверсія та емфаза)"
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "вставне слово (parenthetical word) — grammatical term for markers of modality and discourse"
+  - "мабуть (probably) — marks uncertainty or politeness; high frequency; standard spelling with «т»"
+  - "на жаль (unfortunately) — emotional evaluation; high frequency; always written separately (not «нажаль»)"
+  - "по-перше (firstly) — logical sequence marker; always hyphenated; used in structured speech"
+  - "кажуть (they say) — colloquial source marker; implies collective wisdom or community rumor"
+  - "безумовно (undoubtedly) — strong certainty marker; high register; «безумовно, ви праві»"
+  - "на щастя (fortunately) — marks relief or positive evaluation; «на щастя, все обійшлося»"
+  - "до речі (by the way) — topic switching marker; high frequency; «до речі, про це вже згадували»"
+  recommended:
+  - "звісно (of course) — marker of agreement or certainty; common synonym of «звичайно»"
+  - "мабуть, так (probably so) — common collocation for polite agreement"
+  - "напевно (surely / probably) — marker of high probability; used interchangeably with «мабуть»"
+  - "отже (so / therefore) — conclusion marker; used to summarize arguments"
+  - "зокрема (in particular) — specification marker; used to highlight specific examples"
+  - "навіть (even) — FALSE parenthetical warning; particle that never takes commas"
+  - "принаймні (at least) — FALSE parenthetical warning; marker that never takes commas"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4294 chars)
+✅ Message sent to Claude (ID: 10500)
+✓ Message 10500 acknowledged
+   Auto-acknowledged reply #10500 (stdout delivery — no inbox accumulation)
+✓ Message 10491 acknowledged

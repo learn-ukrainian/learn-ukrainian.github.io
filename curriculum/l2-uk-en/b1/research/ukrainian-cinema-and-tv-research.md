@@ -1,89 +1,36 @@
-# Research: Українське кіно та телебачення (B1 M77)
+# Дослідження: Українське кіно та серіали
 
-## 1. Grammar: State Standard 2024 Reference
+## State Standard Reference
+§3.4: "Дозвілля, відпочинок: способи проведення вільного часу; хобі та зацікавлення... театр, кінотеатр, філармонія; фестиваль."
+Alignment: Module covers "кінотеатр" and "фестиваль" (Odesa International Film Festival, Molodist), addressing the leisure topic through the lens of national cinema.
 
-**Topic:** Cultural sphere (Cinema and Theatre)
-**Level:** B1 (Independent User)
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| фільм | High (General) | дивитися фільм, цікавий фільм, документальний фільм, художній фільм |
+| кіно | High (Spoken/General) | йти в кіно, українське кіно, любити кіно, кінотеатр |
+| серіал | High (Media) | новий серіал, сезон серіалу, дивитися серіали на Netflix |
+| знімати | High (Action) | знімати фільм (shoot a film), зніматися в кіно (act in movies) |
+| стрічка | Medium (Journalistic) | нова стрічка, кінострічка (synonym for film) |
+| режисер | Medium (Professional) | відомий режисер, український режисер |
+| дубляж | Medium (Specific) | український дубляж, дивитися в дубляжі |
 
-According to the **Державний стандарт української мови як іноземної (2024)**, specific requirements for B1 level in the sociocultural domain include:
+## Cultural Hooks
+1. **"Тіні забутих предків" (Shadows of Forgotten Ancestors)**: Directed by Serhiy Parajanov (1965). A masterpiece of "Poetic Cinema" that defied Soviet socialist realism by celebrating Hutsul culture and mythology. It is visually stunning and crucial for understanding Ukrainian artistic identity.
+2. **Ukrainian Dubbing Culture**: Since the 2006/2019 language laws, Ukrainian dubbing has become a cultural phenomenon known for its high quality and wit (e.g., "Alf", "The Simpsons", "Cars"). It is a point of national pride.
+3. **"20 днів у Маріуполі" (20 Days in Mariupol)**: Mstyslav Chernov's documentary won Ukraine's first Oscar in 2024. It represents the vital role of documentary cinema in documenting the war and Russian crimes.
 
-> **Додаток Б. Тематика текстів для читання та аудіювання (Рівень В1)**
-> ...
-> **IV. Сфера культури**
-> 1. Кіно. Театр. Музика. Живопис. Архітектура.
-> 2. Видатні діячі української культури та мистецтва.
+## Common Learner Errors
+1. **Case Mismatch with "Подобатися"**: *Я подобаю цей фільм* (I like this film - incorrect) → **Мені подобається цей фільм** (To me appeals this film). Source: Dative subject structure difficulty.
+2. **False Friend "Series/Episode"**: Confusing *серіал* (TV series) with *серія* (episode). *Я дивлюся нову серію* (I am watching a new episode) vs *Я дивлюся новий серіал* (I am watching a new series).
+3. **Preposition "In the movie"**: *На фільмі* (On the film - incorrect) → **У фільмі** (In the film).
+4. **Passive Voice Overuse**: *Фільм був знятий режисером...* (The film was shot by...) → **Режисер зняв фільм...** (The director shot the film...). Violation of "Agency Pass".
 
-And regarding communicative intentions (expressing evaluation):
+## Cross-References
+- **Builds on**: b1-76 (Ukrainian Music Today) — expands cultural vocabulary (genre, style).
+- **Prepares for**: b1-78 (Technology and Startups) — media technology; C1-LIT/HIST modules — deep cultural analysis.
 
-> **Розділ 4. Вимоги до володіння мовою на рівні В1**
-> **4.2. Говоріння**
-> ... висловлювати власне ставлення до прочитаного/почутого (подобається / не подобається, цікаво / не цікаво тощо), аргументувати свою думку.
-
-## 2. Vocabulary Frequency
-
-**High Frequency (Core B1):**
-- **фільм** (film) / **кіно** (cinema/movie)
-- **серіал** (TV series)
-- **актор / акторка** (actor / actress)
-- **режисер** (director)
-- **дивитися / подивитися** (to watch)
-- **цікавий** (interesting) / **нудний** (boring)
-- **жанр** (genre)
-- **комедія** (comedy) / **драма** (drama)
-
-**Medium Frequency (Specific to Topic):**
-- **стрічка** (film/tape - stylistic synonym for film)
-- **документальне кіно** (documentary cinema)
-- **знімати фільм** (to shoot a film)
-- **грати роль** (to play a role)
-- **сюжет** (plot)
-- **сценарій** (script)
-- **прем'єра** (premiere)
-- **кінотеатр** (cinema theater)
-- **український дубляж** (Ukrainian dubbing)
-
-**Collocations:**
-- **йти в кіно** (to go to the cinema)
-- **дивитися фільм українською** (to watch a film in Ukrainian)
-- **вихід на екрани** (release on screens)
-- **головна роль** (main role)
-- **отримати нагороду** (to receive an award)
-
-## 3. Cultural Hook
-
-1.  **"Shadows of Forgotten Ancestors" (Тіні забутих предків):** This 1964 film by Serhiy Parajanov is the cornerstone of "Ukrainian Poetic Cinema." It broke away from Soviet realism, focusing on Hutsul culture, visual symbolism, and folklore. It is culturally mandatory knowledge for educated Ukrainians.
-2.  **"20 Days in Mariupol" (20 днів у Маріуполі):** Mstyslav Chernov's documentary won the **Oscar** for Best Documentary Feature in 2024. It represents the vital role of modern Ukrainian cinema as a witness to history and a tool of truth against propaganda.
-3.  **Dubbing Culture:** Since 2006, movies in theaters *must* be dubbed in Ukrainian. This created a boom in high-quality Ukrainian dubbing (e.g., Alf, The Simpsons, Friends), which many Ukrainians cite as superior to Russian versions and a key factor in language popularization.
-
-## 4. Pedagogical Notes
-
-**Key Differences from English:**
-- **"Кіно" is indeclinable:** Unlike most nouns, *кіно* does not change case (у кіно, про кіно, без кіно).
-- **"Фільм" vs "Стрічка":** *Стрічка* is a common stylistic synonym in reviews to avoid repetition, but learners often don't know it.
-- **Instrumental Case for Roles:** "Він був актором" (He was an actor) vs "Він актор" (He is an actor). Using the proper case for professions in the past tense.
-
-**Common Learner Errors:**
-- Confusing **бачити** (to see) and **дивитися** (to watch). *Я дивився фільм* (Correct) vs *Я бачив фільм* (I saw it [briefly/existence], but usually "watched" is intended).
-- Wrong preposition for "in the movie": *На фільмі* (Incorrect) -> **У фільмі** (Correct).
-- Adjective agreement with *кіно*: *українська кіно* (Incorrect) -> **українське кіно** (Correct, neuter).
-
-**Teaching Sequence:**
-1.  Basic genres and expressing preferences (I like comedies).
-2.  Describing a plot using past tense aspect (what happened vs what was happening).
-3.  Expressing opinions/reviews using complex sentences ("Я вважаю, що...", "Тому що...").
-4.  Discussing a specific Ukrainian film (e.g., *Mavka* or *Luxembourg, Luxembourg*).
-
-## 5. Scope Boundaries (B1 Level)
-
-**IN Scope:**
-- **Past Tense Aspects:** Describing plots (action completed vs process).
-- **Conditional Mood:** "Я б подивився..." (I would watch...).
-- **Complex Sentences:** Connectors *тому що, який, коли, щоб*.
-- **Ordinal Numbers:** Years of release (2024-й рік).
-- **Degrees of Comparison:** "Найкращий фільм року" (Best film of the year).
-
-**OUT of Scope:**
-- **Deep Film Theory Terms:** *мізансцена* (mise-en-scene), *монтаж* (editing/montage) - keep it simple.
-- **Archaic Vocabulary:** Words from 1920s cinema not used today.
-- **Highly Colloquial Slang:** Unless specifically from a popular TV show phrase.
-- **Participles:** Passive participles (unless lexicalized like *захоплюючий* - exciting).
+## Notes for Content Writing
+- **Agency Pass**: Ensure directors and actors "do" things (win awards, create art), rather than things "happening" to them.
+- **Modern Context**: Balance the classic "Poetic Cinema" (Dovzhenko/Parajanov) with the "New Wave" (Lukich, Tsilyk, Nariman Aliev) to show cinema is alive, not just a museum artifact.
+- **Dubbing**: Mention "український дубляж" as a specific selling point for watching movies in Ukrainian learners.

@@ -1,0 +1,316 @@
+✅ Message sent to Gemini (ID: 10291) [auto-acked: self-addressed]
+✓ Message 10291 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10291...
+📨 Message #10291
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-aspect-past-single-repeated
+   Time: 2026-02-20T20:18:14.794169+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b1-07
+level: B1
+sequence: 7
+slug: aspect-past-single-repeated
+version: '2.0'
+title: 'Вид у минулому: одного разу vs щодня'
+subtitle: 'Aspect in Past: Single vs Repeated Actions'
+content_outline:
+- section: Тест
+  points:
+  - Compare two narratives
+  - Deduce rule (One vs Many) — use visual timeline (Dots on a line vs One big X)
+    per research
+- section: Пояснення
+  points:
+  - 'Single events (markers: once, that time) — cultural hook: «Одного разу...» as
+    canonical folk tale opener'
+  - 'Repeated actions (markers: always, often) — cultural hook: «щонеділі» associations
+    with family rituals'
+  - 'Contrast table — explicit contrast: «читав» (process/habit) vs «прочитав» (result)'
+  - 'Special cases (once, long ago) — learner error: confusion with English «used
+    to» (just past imperfective)'
+- section: Практика
+  points:
+  - Selection algorithm
+  - 'Common mistakes — learner error: Perfective for Habitual Actions (Він прочитав
+    книгу щодня)'
+  - Aspect in daily life
+- section: Діалоги
+  points:
+  - 'School memories — context: habits (used to) vs specific events'
+  - Summer stories
+  - Work experience
+- section: Підсумок
+  points:
+  - Summary of markers — review frequency adverbs
+  - Self-check
+vocabulary_hints:
+  required:
+  - 'одного разу (once) — collocations: одного разу вранці/вночі, одного разу він
+    вирішив'
+  - 'щодня (every day) — collocations: робити щодня, щодня бачити; synonym: кожного
+    дня'
+  - 'часто (often) — collocations: дуже часто, досить часто'
+  - 'іноді (sometimes) — collocations: тільки іноді, іноді навіть, іноді буває'
+  - 'зазвичай (usually) — collocations: як зазвичай, він зазвичай'
+  - 'того разу (that time) — collocations: саме того разу, пам''ятаю того разу'
+  - того дня (that day)
+  - 'завжди (always) — collocations: назавжди (forever), завжди був, завжди казав'
+  - ніколи (never)
+  - рідко (rarely)
+  recommended:
+  - регулярно (regularly)
+  - постійно (constantly)
+  - вперше (for the first time)
+  - востаннє (for the last time)
+  - неодноразово (repeatedly)
+activity_hints:
+- type: fill-in
+  focus: Time marker → aspect selection
+  items: 15+
+- type: fill-in
+  focus: Single event → habitual (and vice versa)
+  items: 10+
+- type: quiz
+  focus: Which aspect for which context?
+  items: 12+
+- type: fill-in
+  focus: Narrative with aspect choices
+  items: 10+
+- type: match-up
+  focus: Time marker → aspect
+  items: 12+
+focus: grammar
+pedagogy: TTT
+prerequisites:
+- b1-06 (Aspect complete system)
+connects_to:
+- b1-08 (Aspect in past - result vs process)
+- b1-14 (Aspect integration practice)
+objectives:
+- Learner can distinguish single from repeated past actions
+- Learner can select correct aspect based on time markers
+- Learner understands how frequency affects aspect choice
+- Learner can transform between single and habitual narratives
+grammar:
+- Aspect selection with time markers
+- Single events vs habitual actions
+- Frequency adverbs and aspect
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Past Tense Aspect
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Official rules for aspect in past tense contexts
+- name: Ukrainian Aspectual Pairs
+  url: https://uk.wikipedia.org/wiki/Видові_пари_дієслів
+  type: reference
+  notes: Comprehensive list of aspectual pairs
+immersion: 100% Ukrainian
+phase: B1.1 Aspect
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Memoirist
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Вид у минулому: одного разу vs щодня
+
+## State Standard Reference
+§4.2.3.1: "утворення форм роду і числа дієслів минулого часу недоконаного і доконаного виду: хотів, хотіла, хотіло, хотіли; побачив, побачила, побачило, побачили"
+Alignment: This module explicitly teaches the semantic distinction between these forms (imperfective vs perfective) in past tense contexts, ensuring learners can correctly form and select them based on time markers as required by the standard.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| одного разу | High (Narrative) | одного разу вранці/вночі, одного разу він вирішив, як одного разу |
+| щодня | High (General) | робити щодня, щодня бачити, майже щодня, кожного дня (synonym) |
+| часто | Very High | дуже часто, досить часто, як часто |
+| іноді | High | тільки іноді, іноді навіть, іноді буває |
+| зазвичай | High | як зазвичай, зазвичай ми, він зазвичай |
+| того разу | Medium (Specific) | саме того разу, пам'ятаю того разу |
+| завжди | Very High | назавжди (forever), завжди був, завжди казав |
+
+## Cultural Hooks
+1. **"Одного разу..." (Once upon a time)**: This is the canonical opening for Ukrainian folk tales (казки), immediately signaling a shift from reality to narrative space. It carries a specific "storytelling mode" weight in the culture, distinct from casual conversation.
+2. **Habitual Hospitality**: The concept of "щонеділі" (every Sunday) or "на свята" (on holidays) often triggers specific imperfective verb associations in Ukrainian culture: gathering families, visiting grandparents, making varenyky. This contrasts with the specific "event" of a guest arriving unexpectedly ("одного разу прийшов гість").
+
+## Common Learner Errors
+1. **Perfective for Habitual Actions**: *Він прочитав книгу щодня.* → *Він читав книгу щодня.* — Learners mistake the "completeness" of reading a book for the perfective aspect, ignoring the repetition marker "щодня".
+2. **Imperfective for Single Achievements**: *Я складав іспит вчора.* (meaning "I passed") → *Я склав іспит вчора.* — Learners use the process verb (took the exam) when they mean the result (passed the exam).
+3. **"Used to" Confusion**: English speakers try to translate "used to" literally. In Ukrainian, this is simply the **past imperfective** (*Він курив* = He used to smoke / He smoked). Learners often look for a separate "used to" structure that doesn't exist.
+
+## Cross-References
+- **Builds on**: `b1-06` (Aspect complete system) — relies on the basic concept of Imp/Perf pairs.
+- **Prepares for**: `b1-08` (Aspect in past - result vs process) — sets the stage for more nuanced distinctions beyond simple frequency.
+- **Prepares for**: `b1-14` (Aspect integration practice) — feeds into the broader narrative skills.
+
+## Notes for Content Writing
+- **Visuals**: A timeline visualization is crucial. "Dots on a line" (repeated) vs "One big X" (single event).
+- **Immersion**: Ensure no English "used to" explanations in the main text. Show, don't tell, via the timeline and context.
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Тест: Два спогади (Test: Two Memories)"
+  words: 600
+  points:
+  - "Memoirist persona: Contrast a recurring childhood habit (repeated action) with a single, life-altering event (single action)."
+  - "Visual timeline deduction: Introduce the 'Dots on a line' (habits) vs 'One big X' (events) visualization to help learners identify frequency markers."
+  - "Initial identification of time markers found in research: «щодня» vs «того разу» as triggers for aspect selection."
+- section: "Презентація: Теорія та культурний контекст (Presentation: Theory and Cultural Context)"
+  words: 1000
+  points:
+  - "Alignment with State Standard §4.2.3.1: Systematic review of past tense formation for imperfective (хотів) and perfective (побачив) verbs."
+  - "The Folk Tale Hook: Deep dive into «Одного разу...» (Once upon a time) as the canonical folk-tale opener that shifts language into narrative storytelling mode."
+  - "Habitual Hospitality Hook: Cultural associations with «щонеділі» (every Sunday) and «на свята» (on holidays) as triggers for imperfective verb rituals (gathering, cooking, visiting)."
+  - "Semantic contrast table: Explicitly compare «читав» (process or habit) vs «прочитав» (achievement or result) using high-frequency collocations."
+  - "Deconstructing 'Used to' confusion: Explain how the Ukrainian past imperfective fully encompasses the English 'used to' concept without requiring extra structures."
+- section: "Грамматичні нюанси та типові помилки (Grammatical Nuances and Common Errors)"
+  words: 800
+  points:
+  - "Learner Error Correction: Addressing the 'Perfective for Habituals' trap (Він прочитав книгу щодня -> Він читав...) by focusing on the frequency marker over completion."
+  - "Process vs Achievement: Distinguishing between 'Я складав іспит' (the act of taking) and 'Я склав іспит' (the success of passing) as a marker of single achievement."
+  - "Selection algorithm: A step-by-step guide for choosing aspect based on frequency adverbs (часто, іноді, зазвичай) vs specific sequence markers (вперше, востаннє)."
+- section: "Практика: Минуле в деталях (Practice: Past in Detail)"
+  words: 1000
+  points:
+  - "School memories narrative: Practice contrasting teachers' routines (habitual) with a specific memory of a graduation ceremony (single event)."
+  - "The 'One Summer' Transformation: Drill transforming a habitual description ('Кожного літа ми їздили...') into a specific narrative ('Того літа ми поїхали...')."
+  - "Professional Memoir Dialogue: Scenario-based practice discussing repeated daily work tasks versus a single major career milestone."
+- section: "Підсумок: Резюме маркерів (Summary: Marker Recap)"
+  words: 600
+  points:
+  - "Master table of frequency markers: Grouping 'always/often/usually' (Imp) vs 'once/that day/that time' (Perf) for quick reference."
+  - "Persona reflection: A final narrative summary by the Memoirist, weaving together habits and specific events to showcase the beauty of Ukrainian aspectual flow."
+  - "Self-check assessment: 10-item diagnostic identifying the 'Storytelling Mode' triggered by narrative markers."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "одного разу (once) — High frequency; collocations: одного разу вранці/вночі; canonical folk-tale opener"
+  - "щодня (every day) — High frequency; synonym: кожного дня; collocations: робити щодня, бачити щодня"
+  - "часто (often) — Very High frequency; collocations: досить часто, дуже часто, як часто"
+  - "іноді (sometimes) — High frequency; collocations: тільки іноді, іноді навіть, іноді буває"
+  - "зазвичай (usually) — High frequency; usage: зазвичай ми, він зазвичай, як зазвичай"
+  - "того разу (that time) — Medium frequency; specific event marker; collocations: пам'ятаю того разу, саме того разу"
+  - "того дня (that day) — Specific perfective trigger for narrative events"
+  - "завжди (always) — Very High frequency; collocations: назавжди (forever), завжди був, завжди казав"
+  - "ніколи (never) — Negative frequency marker; usually requires past imperfective for habits"
+  - "рідко (rarely) — Frequency marker for repeated actions"
+  recommended:
+  - "регулярно (regularly) — Formal register frequency marker"
+  - "постійно (constantly) — High intensity habitual marker"
+  - "вперше (for the first time) — Achievement/single event marker"
+  - "востаннє (for the last time) — Final occurrence marker"
+  - "неодноразово (repeatedly) — Formal register for multiple occurrences"
+  - "щонеділі (every Sunday) — Cultural hook associated with family rituals and imperfective aspect"
+  - "на свята (on holidays) — Context for habitual hospitality and recurring actions"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4737 chars)
+✅ Message sent to Claude (ID: 10298)
+✓ Message 10298 acknowledged
+   Auto-acknowledged reply #10298 (stdout delivery — no inbox accumulation)
+✓ Message 10291 acknowledged

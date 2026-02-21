@@ -1,0 +1,314 @@
+✅ Message sent to Gemini (ID: 12303) [auto-acked: self-addressed]
+✓ Message 12303 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12303...
+📨 Message #12303
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-dmytro-bortnyanskyy
+   Time: 2026-02-20T23:38:15.991532+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-bio-35
+level: C1-BIO
+sequence: 35
+slug: dmytro-bortnyanskyy
+version: '2.0'
+title: 'Дмитро Бортнянський: Придворний маестро'
+content_outline:
+- section: Вступ — Між Україною та імперією
+  points:
+  - Бортнянський як найвідоміший український композитор XVIII століття
+  - Питання ідентичності та привласнення
+  - Його вплив на церковну музику
+- section: Глухівське походження
+  points:
+  - Народження в Глухові
+  - Глухівська музична школа
+  - Виявлення таланту
+  - Переїзд до Петербурга
+- section: Італійські роки
+  points:
+  - Навчання в Італії
+  - Опери для італійських театрів
+  - Вплив італійської школи
+  - Повернення до Росії
+- section: Придворна кар'єра
+  points:
+  - Директор Придворної капели
+  - Реформа церковного співу
+  - Відносини з двором
+  - Адміністративна діяльність
+- section: Музична спадщина
+  points:
+  - Хорові концерти
+  - Духовні твори
+  - Світська музика
+  - Стильові особливості
+  - '"Чертог Твой" та інші шедеври'
+- section: Спірне питання ідентичності
+  points:
+  - Бортнянський як "російський" композитор
+  - Українське коріння та традиція
+  - Сучасні дискусії про привласнення
+  - Його місце в українській культурі
+- section: Підсумок — Між світами
+  points:
+  - Успіх ціною ідентичності
+  - Спадщина для церковної музики
+  - Пам'ять про Бортнянського сьогодні
+vocabulary_hints:
+  required:
+  - композитор (composer)
+  - капела (chapel/choir)
+  - директор (director)
+  - хоровий (choral)
+  - концерт (concerto)
+  - духовна музика (sacred music)
+  - придворний (court)
+  - реформа (reform)
+  - спадщина (legacy)
+  - привласнення (appropriation)
+  recommended:
+  - регент (choir director)
+  - акапела (a cappella)
+  - партитура (score)
+  - гармонія (harmony)
+  - маестро (maestro)
+activity_hints:
+- type: reading
+  focus: Historical descriptions of Bortnyanskyy's work
+  source: Adapted historical sources
+  items: 3 passages
+- type: essay-response
+  focus: Is Bortnyanskyy Ukrainian or Russian?
+  output: Analysis of cultural identity debates
+- type: critical-analysis
+  focus: How did empire appropriate Ukrainian talent?
+  output: Decolonial perspective
+focus: biography
+prerequisites:
+- c1-bio-17 (Maksym Berezovskyy - contemporary)
+- Understanding of 18th century imperial culture
+connects_to:
+- c1-bio-19 (Semen Hulak-Artemovskyy - later music)
+- c1-bio-23 (Mykola Lysenko - national music)
+- c1-bio-43 (Mykola Leontovych - choral tradition)
+module_type: biography
+sources:
+- name: Дмитро Бортнянський (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Дмитро_Бортнянський
+  type: primary
+  notes: Biography, court career, choral works
+- name: Придворна співацька капела
+  url: https://uk.wikipedia.org/wiki/Придворна_співацька_капела
+  type: reference
+  notes: Institutional context
+- name: Глухівська співацька школа
+  url: https://uk.wikipedia.org/wiki/Глухівська_співацька_школа
+  type: reference
+  notes: Early education
+immersion: 100% Ukrainian
+phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of дмитро бортнянський: придворний маестро'
+- Evaluate the contributions of між україною та імперією
+persona:
+  voice: Senior Biographer
+  role: Choir Master
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Дмитро Бортнянський: Придворний маестро
+
+## Використані джерела
+1. [Бортнянський Дмитро Степанович (ВУЕ)](https://vue.gov.ua/Бортнянський,_Дмитро_Степанович) — Енциклопедична стаття про життя та творчість композитора, його вплив на українську та світову музику.
+2. [Дмитро Бортнянський (Журнал «Музика»)](https://mus.art.co.ua/dmytro-bortnyanskyj/) — Аналітична стаття про українські корені Бортнянського та вплив Глухівської школи.
+3. [Бортнянський Дмитро Степанович (Вікіпедія)](https://uk.wikipedia.org/wiki/Бортнянський_Дмитро_Степанович) — Загальний огляд біографії, хронологія творчості та перелік основних творів.
+
+## Хронологія
+- **1751, 28 жовтня**: Народився у місті Глухів, тодішній столиці Гетьманщини.
+- **1758**: Після початкового навчання у Глухівській співацькій школі був відібраний Марком Полторацьким до Придворної співацької капели в Санкт-Петербурзі.
+- **1769–1779**: Навчання та творчість в Італії (Венеція, Болонья, Неаполь, Рим) у Бальдассаре Ґалуппі. Постановка перших опер: «Креонт» (1776), «Алкід» (1778), «Квінт Фабій» (1779).
+- **1779**: Повернення до Петербурга, призначення придворним капельмейстером.
+- **1796**: Призначення директором Придворної співацької капели (перший випадок на цій посаді вихідця не з іноземців, а власне з українців).
+- **1816**: Призначений головним цензором видань духовних творів у Російській імперії.
+- **1825, 10 жовтня**: Помер у Санкт-Петербурзі.
+
+## Ключові факти та цитати
+- Бортнянський був першим композитором у Російській імперії, чиї музичні твори почали друкуватися ще за його життя.
+- Він здійснив масштабну реформу Придворної капели, перетворивши її на професійний європейський хоровий інститут, і постійно поповнював її склад співаками з України.
+- "Дмитро Бортнянський — це не просто композитор, це ціла епоха в історії східноєвропейської музики, чиє коріння глибоко вростає в український мелос" (узагальнення з українського музикознавства).
+- Завдяки Бортнянському відбувся синтез українського партесного багатоголосся та європейського класицизму.
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ — Між Україною та імперією": [!context] — Пояснення того, як Російська імперія XVIII століття масово "викачувала" таланти з України для розбудови власної культури, створюючи ілюзію "великої російської музики".
+- Section "Глухівське походження": [!history-bite] — Глухів у XVIII столітті був не лише гетьманською столицею, але й "музичною Меккою" Східної Європи, чия співацька школа виховувала найкращі голоси імперії.
+- Section "Італійські роки": [!quote] — Згадка про те, що Бортнянський у Венеції та Болоньї був відомий як "Demetrio Bortniansky", і його опери мали успіх на батьківщині оперного мистецтва, що доводить його європейський, а не провінційний рівень.
+- Section "Придворна кар'єра: I — Шлях до вершини": [!myth-buster] — Спростування міфу про те, що Бортнянський був типовим "російським" чиновником. Незважаючи на службу Павлу I, він зберігав зв'язок з українськими традиціями.
+- Section "Придворна кар'єра: II — Реформатор": [!culture] — Бортнянський як реформатор, який захищав права українських співаків у Петербурзі (покращення їхнього побуту, зарплатні), дбаючи про своїх земляків.
+- Section "Спірне питання ідентичності": [!decolonization] — Деконструкція спроб російського музикознавства привласнити Бортнянського як "основоположника російської класичної музики". Підкреслення того, що його "російськість" була лише географічно-політичною, а не музично-генетичною.
+
+## Деколонізаційний контекст
+- **Imperial/Soviet myth**: Дмитро Бортнянський — видатний "російський" композитор, засновник класичної російської хорової музики, який просто народився на теренах "Малоросії". Його талант є продуктом російської імперської культури.
+- **Ukrainian reality**: Бортнянський — український композитор, вихованець Глухівської музичної традиції (партесного співу), чий талант імперія використала (експропріювала) для створення свого престижу. Музична мова його творів (ліризм, кордоцентризм, мелодика) має виразні українські витоки.
+
+## Contested Terms (if applicable)
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| Національність Бортнянського | Російський композитор малоросійського походження | Український композитор, що працював у Російській імперії |
+| Музична традиція | Основоположник "російської хорової класики" | Синтезатор українського партесного співу та європейського класицизму |
+| Глухівська школа | Провінційний заклад для підготовки півчих | Провідна європейська музична академія XVIII ст. |
+
+## Section-Mapped Research Notes
+
+### Вступ — Між Україною та імперією
+- Бортнянський є однією з найважливіших фігур музичного класицизму. Його доля ілюструє трагедію і водночас тріумф українських митців XVIII ст.: щоб реалізувати свій талант, вони змушені були працювати на імперію.
+- Він є творцем жанру класичного хорового концерту.
+- Головний парадокс: будучи директором Придворної капели Російської імперії, він залишався носієм української музичної ментальності.
+
+### Глухівське походження
+- Глухів у середині XVIII ст. — інтелектуальний та культурний центр Гетьманщини. Глухівська співацька школа, заснована 1730 року, була професійним музичним закладом.
+- Звідти хлопчиків із найкращими голосами систематично забирали до Петербурга. Цей "фатальний відбір" здійснив полковник Марко Полторацький (також українець), коли Дмитру було 7-8 років.
+- Навчання в Глухові дало йому основу — розуміння партесного співу та української мелодики.
+
+### Італійські роки
+- Завдяки унікальному таланту отримав стипендію на навчання в Італії (1769–1779) у Бальдассаре Ґалуппі.
+- Написав і поставив опери-серіа італійською мовою в найпрестижніших театрах ("Креонт" у Венеції, "Алкід" у Венеції, "Квінт Фабій" у Модені).
+- Його європейський успіх спростовує міф про "провінційність" українських/імперських композиторів того часу. Він став майстром європейського рівня.
+
+### Придворна кар'єра: I — Шлях до вершини
+- Після повернення до Петербурга (1779) Бортнянський став капельмейстером при Малому дворі (спадкоємця Павла Петровича).
+- Конкурував з італійськими зірками при дворі (Сарті, Паїзієлло) і врешті виборов першість.
+- У 1796 році (коли Павло I став імператором) Бортнянського призначають директором Придворної співацької капели.
+
+### Придворна кар'єра: II — Реформатор
+- Реформа капели: Бортнянський запровадив жорстку дисципліну, але водночас різко покращив соціальне становище співаків (більшість з яких були українцями). Він домігся для них пенсій, кращих умов проживання, медичного догляду.
+- Ввів цензуру на церковний спів: до виконання допускалися лише високоякісні твори, що очистило літургію від низькопробної музики.
+- Капела під його керівництвом досягла такого рівня, що нею захоплювався Гектор Берліоз під час візиту до Петербурга.
+
+### Музична спадщина: I — Духовний всесвіт
+- Хорові концерти (понад 100) — вершина творчості. Синтез барокового партесного багатоголосся з віденським класицизмом.
+- Риси: "кордоцентризм" (щирість, емоційність), ліризм, використання інтонацій українських народних пісень (наприклад, у Концерті № 32 звучать веснянкові мотиви).
+- Херувимські пісні та гімн "Коль славен" стали абсолютними шедеврами духовної музики.
+
+### Музична спадщина: II — Світські горизонти
+- Бортнянський — талановитий світський композитор. Писав інструментальні твори (сонати для клавесина, квінтети) та франкомовні комічні опери для розваги двору ("Сокіл", "Син-суперник").
+- Стиль "галант": витонченість, легкість.
+- Світська спадщина залишалася маловідомою довго, оскільки в імперії його цінували переважно як церковного композитора.
+
+### Спірне питання ідентичності
+- Російська історіографія традиційно розглядає його як свого. Проте сучасне українське та світове музикознавство акцентує на його українських витоках.
+- Бортнянський ніколи не поривав зв'язків з Україною. Він оточував себе українцями в Петербурзі, продовжував традиції українського хорового співу.
+- Його музична мова структурно і мелодично відрізняється від власне російської музики (яка базується на знаменному розспіві).
+
+### Підсумок — Між світами
+- Бортнянський — "Орфей з Глухова", який підкорив Європу та імперію.
+- Його успіх мав ціну — асиміляцію в імперський контекст, проте його творчість залишилася глибоко українською за духом.
+- Він є фундаментом для розуміння української музичної культури переходу від бароко до класицизму, прокладаючи міст до творчості М. Лисенка та М. Леонтовича.
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12348)
+✓ Message 12303 acknowledged
+✓ Message 12348 acknowledged

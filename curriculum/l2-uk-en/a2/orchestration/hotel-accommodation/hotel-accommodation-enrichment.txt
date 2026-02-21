@@ -1,0 +1,312 @@
+✅ Message sent to Gemini (ID: 10257) [auto-acked: self-addressed]
+✓ Message 10257 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10257...
+📨 Message #10257
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-hotel-accommodation
+   Time: 2026-02-20T20:05:27.379935+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: a2-61
+level: A2
+sequence: 61
+slug: hotel-accommodation
+version: '2.0'
+title: Hotel Accommodation
+subtitle: Checking In and Out
+content_outline:
+- section: 'Introduction: Hotels in Ukraine'
+  points:
+  - 'Types of accommodation — aligns with State Standard §3.2: «Дім, помешкання...
+    резервування кімнати в готелі»'
+  - 'Booking options — collocation: бронювати онлайн; distinction: бронювати (process)
+    vs забронювати (result)'
+  - 'Hotel vocabulary overview — learner error: кімната (room in house) vs номер (hotel
+    room); learner error: номер is masculine (це гарний номер); collocation: п''ятизірковий
+    готель'
+- section: Making a Reservation
+  points:
+  - 'забронювати номер — collocation: забронювати готель; content note: distinguish
+    забронювати (completed) vs бронювати (process)'
+  - 'Room types (одномісний, двомісний) — collocation: номер люкс'
+  - 'Dates and duration — content note: use formal «Ви» address consistently (standard
+    for hotel staff interactions)'
+- section: Checking In
+  points:
+  - 'реєстрація, паспорт — cultural hook: original passport required for *every* guest
+    at check-in (compliance with state laws)'
+  - 'заселення, ключ — collocation: час заселення, пізнє заселення, ключ від номера'
+  - 'Room information — cultural hook: tourist tax (туристичний збір) often added
+    separately to the bill'
+- section: Hotel Amenities
+  points:
+  - 'сніданок, Wi-Fi, парковка — learner error: Я в готель (Accusative/Direction)
+    vs Я у готелі (Locative/Location)'
+  - 'рушник, мило, шампунь — collocation: прибирання (cleaning)'
+  - 'Requesting items — collocation: запитати адміністратора; content note: focus
+    on Interrogative Syntax (§4.4.1.2) for asking questions (Is breakfast included?)'
+- section: Problems and Solutions
+  points:
+  - 'Common complaints — collocation: час виселення, до виселення'
+  - 'Asking for help — collocation: на стійці адміністратора'
+  - 'Resolving issues — content note: maintain formal «Ви» tone'
+- section: 'Practice: Hotel Stay'
+  points:
+  - Check in dialogue — ensure passport request is included
+  - Request amenities — focus on asking questions and resolving minor issues
+vocabulary_hints:
+  required:
+  - готель (hotel) — у готелі (Locative), п'ятизірковий готель, забронювати готель
+  - 'номер (room) — одномісний/двомісний номер, номер люкс, забронювати номер; note:
+    masculine gender'
+  - 'забронювати (to book) — забронювати номер, бронювати онлайн; pair: бронювати
+    (imp) / забронювати (perf)'
+  - заселення (check-in) — час заселення, пізнє заселення
+  - виселення (check-out) — час виселення, до виселення
+  - ключ (key) — ключ від номера
+  - сніданок (breakfast) — сніданок включено?
+  - рахунок (bill) — оплатити рахунок, туристичний збір
+  recommended:
+  - одномісний (single) — одномісний номер
+  - двомісний (double) — двомісний номер
+  - рушник (towel) — попросити рушник
+  - кондиціонер (air conditioning) — чи є кондиціонер?
+  - прибирання (cleaning) — замовити прибирання
+  - адміністратор (receptionist) — запитати адміністратора, на стійці адміністратора
+activity_hints:
+- type: match-up
+  focus: Check-in conversation
+  items: 25
+- type: fill-in
+  focus: Hotel scenarios
+  items: 15
+focus: practical
+pedagogy: PPP
+prerequisites:
+- a2-60 (At the Pharmacy)
+connects_to:
+- a2-62 (Rental Accommodation)
+- a2-46 (Home and Furniture)
+objectives:
+- Learner can book a hotel room
+- Learner can check in and check out
+- Learner can ask for amenities
+- Learner can resolve common hotel issues
+grammar:
+- Booking vocabulary (забронювати, номер)
+- Check-in phrases (заселення, виселення)
+- Requests and complaints
+register: розмовний
+immersion: 75-90% Ukrainian
+phase: A2.6 [Practical]
+persona:
+  voice: Encouraging Cultural Guide
+  role: Hotel Concierge
+word_target: 3000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Hotel Accommodation
+
+## State Standard Reference
+§3.2: "Дім, помешкання: ... резервування кімнати в готелі; винаймання квартири або будинку."
+Alignment: This module directly addresses the explicit State Standard requirement for "booking a hotel room" within the "Home and Accommodation" thematic area.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| готель (ч) | High (General) | у готелі, п'ятизірковий готель, забронювати готель |
+| номер (ч) | High (Domain) | одномісний/двомісний номер, номер люкс, забронювати номер, ключ від номера |
+| бронювати (недок) | Medium (Domain) | бронювати номер, бронювати онлайн |
+| заселення (с) | Medium (Domain) | час заселення, пізнє заселення |
+| виселення (с) | Medium (Domain) | час виселення, до виселення |
+| адміністратор (ч) | Medium (General) | запитати адміністратора, на стійці адміністратора |
+
+## Cultural Hooks
+1. **Passport Control**: Unlike some Western countries where a credit card might suffice, Ukrainian hotels strictly require an original passport (internal or international) for *every* guest at check-in for registration, complying with state laws.
+2. **Tourist Tax (Туристичний збір)**: Guests should be aware that a municipal "tourist tax" is often added to the bill separately from the room rate, which can sometimes surprise travelers if not expected.
+
+## Common Learner Errors
+1. **Lexical Confusion (Room)**: Using "кімната" instead of "номер" for a hotel room.
+   *   *Error*: Я хочу забронювати кімнату.
+   *   *Correction*: Я хочу забронювати **номер**.
+   *   *Why*: "Кімната" refers to a room in a house/apartment; "номер" is the specific term for a hotel unit.
+2. **Case Mismatch (Location)**: Using Accusative instead of Locative for "in the hotel".
+   *   *Error*: Я в готель. (Meaning "I am [going] into the hotel")
+   *   *Correction*: Я **у готелі**. (Meaning "I am [staying] in the hotel")
+   *   *Why*: Confusion between direction (Accusative) and location (Locative).
+3. **Gender Agreement (Номер)**: Treating "номер" as feminine or neuter.
+   *   *Error*: Це гарна номер.
+   *   *Correction*: Це **гарний** номер.
+   *   *Why*: "Номер" is masculine ending in a consonant, but learners often default to neuter or guess wrong.
+
+## Cross-References
+- Builds on: `a2-46` (Home and Furniture), `a2-60` (At the Pharmacy - transactional skills).
+- Prepares for: `a2-62` (Rental Accommodation - expands "номер" to "квартира").
+
+## Notes for Content Writing
+- Focus heavily on the **Interrogative Syntax** (§4.4.1.2) as checking in involves asking many questions (Is breakfast included? What time is check-out?).
+- Ensure distinction between "забронювати" (perfective, completed) and "бронювати" (imperfective, process) is clear in examples.
+- Use the formal "Ви" address consistently, as interactions with hotel staff are standard formal situations.
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Готелі в Україні (Introduction: Hotels in Ukraine)"
+  words: 500
+  points:
+  - "Introduction to accommodation types based on State Standard §3.2: «Дім, помешкання... резервування кімнати в готелі»"
+  - "Lexical distinction: Explain the learner error of using «кімната» (room in a house) vs the correct term «номер» (hotel room)"
+  - "Gender agreement drill: «Номер» is masculine; emphasize correct agreement «це гарний номер» vs incorrect «це гарна номер»"
+  - "Establishing the formal «Ви» address as the standard for all interactions with hotel staff and administration"
+- section: "Бронювання та заселення (Booking and Check-in)"
+  words: 800
+  points:
+  - "Booking process: Distinguish between «бронювати» (imperfective/process) and «забронювати» (perfective/result) with online booking examples"
+  - "Room types and collocations: «одномісний/двомісний номер», «номер люкс», and «ключ від номера»"
+  - "Cultural Hook (Passport Control): Explain that Ukrainian law strictly requires an original passport for *every* guest at check-in, not just a credit card"
+  - "Check-in procedure: Vocabulary for «заселення» (check-in), «час заселення» (check-in time), and «реєстрація» (registration)"
+- section: "Послуги та зручності (Amenities and Services)"
+  words: 700
+  points:
+  - "Interrogative Syntax (§4.4.1.2): Practical application for asking questions such as «Сніданок включено?» (Is breakfast included?) and «Чи є Wi-Fi?»"
+  - "Grammar Drill (Location vs Direction): Correcting the learner error «Я в готель» (Accusative/Direction) vs the required «Я у готелі» (Locative/Location)"
+  - "Essential items: Collocations for requesting items like «рушник», «мило», «шампунь» and services like «прибирання»"
+- section: "Проблеми та розрахунок (Problems and Payment)"
+  words: 600
+  points:
+  - "Resolving issues: Using the phrase «на стійці адміністратора» and «запитати адміністратора» to handle common complaints"
+  - "Cultural Hook (Tourist Tax): Explaining «туристичний збір» (tourist tax) as a municipal fee often added separately to the bill"
+  - "Check-out process: Vocabulary for «виселення» (check-out), «час виселення», and «оплатити рахунок» (pay the bill)"
+- section: "Практика: Проживання в готелі (Practice: Hotel Stay)"
+  words: 400
+  points:
+  - "Check-in simulation: Dialogue incorporating the formal passport request and clarification of the room number"
+  - "Problem-solving drill: Requesting amenities or resolving a minor issue while maintaining the formal «Ви» register"
+  - "Final review of interrogative patterns for hotel-specific inquiries"
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "готель (ч) — у готелі (Locative), п'ятизірковий готель, забронювати готель; High frequency"
+  - "номер (ч) — одномісний/двомісний номер, номер люкс, забронювати номер; note: masculine gender (гарний номер)"
+  - "бронювати (недок) / забронювати (док) — бронювати онлайн, забронювати номер; pair distinction (process vs completed)"
+  - "заселення (с) — час заселення, пізнє заселення; registration process"
+  - "виселення (с) — час виселення, до виселення; check-out process"
+  - "ключ (ч) — ключ від номера; masculine noun"
+  - "адміністратор (ч) — запитати адміністратора, на стійці адміністратора; receptionist"
+  - "рахунок (ч) — оплатити рахунок, туристичний збір (tourist tax); bill and mandatory fees"
+  recommended:
+  - "одномісний (прикм) — одномісний номер; single room"
+  - "двомісний (прикм) — двомісний номер; double room"
+  - "сніданок (ч) — сніданок включено?; interrogative usage"
+  - "рушник (ч) — попросити рушник; towel"
+  - "прибирання (с) — замовити прибирання; cleaning service"
+  - "кондиціонер (ч) — чи працює кондиціонер?; air conditioning"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (3810 chars)
+✅ Message sent to Claude (ID: 10264)
+✓ Message 10264 acknowledged
+   Auto-acknowledged reply #10264 (stdout delivery — no inbox accumulation)
+✓ Message 10257 acknowledged

@@ -1,4 +1,3 @@
----
 module: c1-hist-077
 level: c1-hist
 sequence: 77
@@ -10,55 +9,47 @@ objectives:
 - 'Analyze the causes and consequences of донбас: індустріалізація та ідентичність'
 - Evaluate the historical significance of регіон, якого не було
 content_outline:
-- section: "Вступ — Регіон, якого не було"
-  words: 457
+- section: Вступ — Регіон, якого не було
   subsections:
   - Донбас — штучне створення
   - До індустріалізації — степ
   - Промисловий регіон — з нуля
   - Структура модуля
 - section: Створення промислового центру
-  words: 800
   subsections:
   - Джон Юз — засновник Донецька
   - Вугілля і метал
   - Імпортована робоча сила
   - Росіяни, українці, греки, євреї
 - section: «Робітнича» ідентичність
-  words: 686
   subsections:
   - Клас, не нація
   - Радянська пропаганда
   - «Донбас — серце Росії»
   - Мовний зсув
 - section: Українці Донбасу
-  words: 686
   subsections:
   - Частка населення
   - Село vs. місто
   - Збереження ідентичності
   - Дисиденти з Донбасу — Стус
 - section: Після 1991
-  words: 571
   subsections:
   - Економічний колапс
   - Олігархи
   - Проросійські настрої — чому
   - Але й українські — теж
 - section: 2014-2022
-  words: 457
   subsections:
   - «Русская весна»
   - Війна на Донбасі
   - Окупація
   - Донбас — не тільки сепаратизм
 - section: Підсумок
-  words: 343
   subsections:
   - Донбас — створений регіон
   - Ідентичність — конкуренція наративів
   - Перехід до Криму
-word_target: 4000
 vocabulary:
 - Донбас
 - індустріалізація
@@ -77,26 +68,26 @@ vocabulary:
 - деіндустріалізація
 activities:
 - type: critical-analysis
-  focus: "How Donbas was created — not ancient"
+  focus: How Donbas was created — not ancient
 - type: critical-analysis
   focus: Class vs. national identity in Donbas
 - type: comparative-study
-  focus: "Who lives in Donbas — ethnic composition over time"
+  focus: Who lives in Donbas — ethnic composition over time
 - type: critical-analysis
-  focus: "2014-2022 — why separatism, but also resistance"
+  focus: 2014-2022 — why separatism, but also resistance
 - type: essay-response
   focus: Чи Донбас 'російський'? Деконструкція міфу
 sources:
 - name: Донбас (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Донбас"
+  url: https://uk.wikipedia.org/wiki/Донбас
   type: reference
   notes: Regional overview
 - name: Індустріалізація Донбасу (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Індустріалізація_Донбасу"
+  url: https://uk.wikipedia.org/wiki/Індустріалізація_Донбасу
   type: reference
   notes: Industrial history
 - name: Джон Юз (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Джон_Юз"
+  url: https://uk.wikipedia.org/wiki/Джон_Юз
   type: reference
   notes: John Hughes founder
 vocabulary_hints:
@@ -115,7 +106,9 @@ activity_hints:
   items: 4
 - type: essay-response
   focus: Критичний аналіз
-  word_target: 300
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Labor Historian

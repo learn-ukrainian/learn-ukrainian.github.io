@@ -1,46 +1,31 @@
-# Research Notes: M08 — The Living Verb II (Second Conjugation)
-
-**Level:** A1 | **Module:** 08
-**Researched:** 2026-02-07
-**Grammar Focus:** Second Conjugation (-ити/-іти verbs) — present tense
+# Дослідження: The Living Verb II
 
 ## State Standard Reference
+§4.2.4.1: "дієвідмінювання дієслів у теперішньому часі: ... сидіти (сиджу, сидиш, сидить, сидимо, сидите, сидять)"
+Alignment: This module explicitly teaches the Second Conjugation pattern demonstrated by the Standard's example 'сидіти', including the required consonant mutation (д→дж) in the first person singular.
 
-**§80 — Дійсний спосіб (Indicative Mood)**
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| говорити | High (Top 100) | говорити українською, говорити правду, говорити з другом |
+| робити | High (Top 50) | робити домашнє завдання, робити покупки, що ти робиш? |
+| бачити | High (Top 200) | я бачу, радий бачити, бачити на власні очі |
+| любити | High (Top 100) | я люблю тебе, любити читати, любити природу |
+| їсти | High (Top 500) | їсти сніданок, хотіти їсти, смачно їсти |
 
-- **§80.2**: Division of verbs by conjugation (поділ дієслів за дієвідмінами)
-  - First Conjugation: personal endings -у/-ю, -еш/-єш, -е/-є, -емо/-ємо, -ете/-єте, -уть/-ють
-  - Second Conjugation: personal endings -у/-ю, -иш/-їш, -ить/-їть, -имо/-їмо, -ите/-їте, -ать/-ять
-  - Key identifier: 3rd person plural — First uses -уть/-ють, Second uses -ать/-ять
+## Cultural Hooks
+1. **The Etymology of "Любити"**: The verb *любити* (to love) shares a Proto-Indo-European root (*lewdh-*) with *люди* (people) and *людство* (humanity). This linguistic connection suggests that in the Slavic worldview, love is intrinsically connected to community and belonging to the people.
+2. **Hospitality & Verbs**: The verbs *їсти* (to eat), *пити* (to drink), and *говорити* (to speak) form the triad of Ukrainian hospitality. A guest is always fed, given a drink, and engaged in conversation (*розмова*). Refusing to eat (*не їсти*) can be seen as rejecting the host's goodwill.
 
-- **§80.5**: Consonant changes (чергування приголосних) in Second Conjugation, 1st person singular:
-  - д → дж (NOT д → ж!): водити → воджу, ходити → ходжу
-  - т → ч: вертіти → верчу, хотіти → хочу, платити → плачу
-  - з → ж: возити → вожу
-  - с → ш: просити → прошу, носити → ношу
-  - зд → ждж: їздити → їжджу
-  - ст → щ: вимостити → вимощу
+## Common Learner Errors
+1. **Conjugation Mixing**: Learners often apply First Conjugation endings to Second Conjugation verbs (e.g., *ти робеш* instead of *ти робиш*).
+2. **Mutation Omission**: Learners forget the consonant mutation in the 'Я' form (e.g., *я сидю* or *я ходю* instead of *я сиджу*, *я ходжу*).
+3. **Irregular "Їсти"**: Learners attempt to conjugate *їсти* like a regular verb (e.g., *я їм* is correct, but learners often try *я їджу* or *я їстю*).
 
-- **Labial consonant mutations** (губні + епентетичне л):
-  - б → бл: робити → роблю, любити → люблю
-  - п → пл: ліпити → ліплю
-  - в → вл: ловити → ловлю
-  - м → мл: (rare at A1)
-  - ф → фл: (very rare)
+## Cross-References
+- **Builds on**: a1-06 (The Living Verb I - introduces conjugation concept), a1-07 (Questions and Negation - needed for drill sentences).
+- **Prepares for**: a1-09 (Reflexive Verbs - many are 2nd conjugation), a1-21 (Past Tense - needing infinitive stems).
 
-- **§80.7**: Irregular verbs: дати, їсти, вісти, бути
-
-## Critical Finding for Content
-
-The current content at line 154 has "д → ж (dental)" — this is WRONG per State Standard §80.5.
-The correct change is д → дж (e.g., ходити → ходжу, сидіти → сиджу).
-Must be corrected in review.
-
-## Cultural Hook
-
-The content uses Harry Potter Ukrainian dub reference — "Я хочу їсти" (Ron). This is a widely known cultural reference for Ukrainian learners and illustrates two irregular verbs in one sentence.
-
-## Notes
-
-- спати is a special case: infinitive ends in -ати but conjugates as Second Conjugation (сплю, спиш, спить). The content mentions this but could be clearer.
-- стояти: conjugates with -ї- forms (стою, стоїш, стоїть) which follow a mixed pattern. At A1 level, this is acceptable as a "Second Conjugation-like" verb.
+## Notes for Content Writing
+- The "Labial L" (epenthetic l) in *люблю*, *роблю* must be taught not just as a rule, but as a phonetic aid to separate the lips (*б/п/в/м/ф*) from the *ю* sound.
+- Ensure the distinction between *бачити* (to see - faculty/result) and *дивитися* (to watch - process) is clear if *дивитися* is introduced, though the plan focuses on *бачити*.

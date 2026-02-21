@@ -1,0 +1,13 @@
+{
+  "track": "oes",
+  "slug": "law-intro",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-20T10:12:59Z",
+      "task_id": "v3-law-intro-pA",
+      "mode": "full"
+    }
+  }
+}

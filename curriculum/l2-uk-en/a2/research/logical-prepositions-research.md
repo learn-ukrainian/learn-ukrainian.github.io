@@ -1,69 +1,36 @@
-# Research Notes: Чому? Для кого? Логічні прийменники
+# Дослідження: Logical Prepositions (A2 Core Track)
 
-**Track**: a2
-**Module**: 08-logical-prepositions
-**Researched**: 2026-02-08
-**Level Context**: A2 M08 (Early A2 / A1+ Bridge)
+## State Standard Reference
+§4.2.2.2.2: "Родовий відмінок із прийменниками: для (призначення предмета, мета діяльності): Заняття спортом корисні для здоров’я."
+§4.2.2.4.2: "Знахідний відмінок із прийменниками: про (для вираження об’єктних відношень): Думати про майбутнє."
+§4.4.2: "Складне речення: складнопідрядні речення зі сполучниками тому що, бо; складнопідрядні речення зі сполучником щоб для вираження мети певної дії суб’єкта."
 
-## 1. Grammar: State Standard 2024 reference
+Alignment: This module covers the core A2 requirements for expressing purpose (`для`, `щоб`), cause (`через`, `тому що`), and topic (`про`), while expanding into relational prepositions (`без`, `крім`, `замість`) and time (`о`, `після`) as per the A2 lexical-grammatical minimum.
 
-According to the **Державний стандарт української мови як іноземної (2024)**, level A2 requires the ability to express logical relations such as cause (причина) and purpose (мета).
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| **для** | High (Top 10) | для мене, для роботи, для здоров'я |
+| **через** | High | через дощ, через помилку, через затори |
+| **про** | Very High | думати про..., розмовляти про..., знати про... |
+| **без** | High | без цукру, без проблем, без допомоги |
+| **після** | High | після роботи, після обіду, після війни |
+| **завдяки** | Medium | завдяки підтримці, завдяки зусиллям |
 
-> **Catalog B. Content of Language Competence (A2):**
-> "Здобувач має володіти мовними засобами для вираження причинно-наслідкових зв'язків та мети дії в межах повсякденних тем. Використання сполучників **тому що, бо, через те що** для підрядних речень причини та сполучника **щоб** для вираження мети (з інфінітивом)."
+## Cultural Hooks
+1. **The "Bread" Distinction**: In Ukrainian, there is a strict logical difference between going *for* something and going *behind* something. "Піти по хліб" (to get bread) is the correct logical expression of purpose, while "Піти за хлібом" literally means walking behind a loaf of bread. This reflects the precision of Ukrainian prepositions.
+2. **"Через" vs. "Завдяки"**: Ukrainian logic distinguishes between cause as an obstacle (`через` - usually negative/neutral) and cause as a factor of success (`завдяки` - positive). For example, "через затори" (because of traffic) vs. "завдяки другу" (thanks to a friend). 
 
-Specifically, the standard emphasizes:
-- **Prepositions of cause**: *через* (+ Accusative).
-- **Prepositions of purpose**: *для* (+ Genitive).
-- **Conjunctions**: *тому що, бо* (interchangeable in speech, but *тому що* is more formal/neutral).
+## Common Learner Errors
+1. **"Із-за" for cause** → **"Через"** — Learners often use the Russianism "із-за хвороби". In Ukrainian, "із-за" is strictly spatial (from behind). Cause must be expressed with "через": "через хворобу".
+2. **"В 10 годині" for time** → **"О 10 годині"** — Using "в" for specific time points is a common mistake. Ukrainian uses "о/об" + Locative for clock time.
+3. **"На протязі" for duration** → **"Протягом"** — "На протязі" literally means "in a draft" (of air). To express "during/throughout", one must use "протягом" or "упродовж".
 
-## 2. Vocabulary Frequency
+## Cross-References
+- Builds on: **a2-07** (Spatial prepositions - transition from physical to abstract), **A1 time expressions** (basic numbers for time).
+- Prepares for: **a2-09** (All Cases Practice - integrating these into complex syntax), **a2-10** (Post Office & Bank - practical application of logical relationships).
 
-Frequency based on general corpus data and pedagogical standards for A1-A2:
-
-| Word | Frequency | Role | Translation |
-|------|-----------|------|-------------|
-| **Чому?** | Very High | Question | Why? |
-| **Тому що** | Very High | Conjunction | Because |
-| **Бо** | Very High | Conjunction | Because / for |
-| **Для** | Very High | Preposition | For (purpose/beneficiary) |
-| **Через** | High | Preposition | Because of / through |
-| **Навіщо?** | High | Question | For what? / What for? |
-| **Щоб** | High | Conjunction | In order to |
-| **Від** | High | Preposition | From / due to (physical) |
-
-**High-frequency collocations:**
-- *Для мене / для тебе* (For me / for you)
-- *Через хворобу* (Because of illness)
-- *Для роботи* (For work)
-- *Бо я хочу* (Because I want to)
-
-## 3. Cultural Hook
-
-1. **"Для ЗСУ" (For the Armed Forces)**: This is the most prevalent "purpose" phrase in modern Ukraine. It appears on donation boxes, café menus (e.g., "Кава для ЗСУ"), and billboards. It demonstrates the national priority and the use of the Genitive case with *для*.
-2. **Hospitality & "Бо так треба"**: Ukrainian hospitality is often explained by the phrase "Бо так треба" (Because it must be so). It reflects a cultural code where certain social obligations (like feeding a guest) are performed without questioning, highlighting the use of *бо* for ultimate justification.
-
-## 4. Pedagogical Notes
-
-- **"Через" vs. "Бо"**: Students often confuse when to use a preposition (*через* + noun) vs. a conjunction (*бо* + clause). 
-  - *Через дощ* (Because of the rain - noun phrase).
-  - *Бо йде дощ* (Because it's raining - full clause).
-- **"Для" vs. "За"**: English "For" can be tricky. 
-  - *Для* is for beneficiary/purpose (*для мами*).
-  - *За* is for payment/support (*дякую за каву*).
-- **"Бо" vs. "Тому що"**: In A2, teach that *бо* is shorter and very common in spoken language, while *тому що* is standard for writing and answering "Why?" questions formally.
-- **Teaching Sequence**: Start with *Чому? -> Бо...*, then introduce *Для кого? -> Для...*, and finally the causal *Через*.
-
-## 5. Scope Boundaries
-
-**IN SCOPE:**
-- **Prepositions**: *Для* (+ Genitive), *Через* (+ Accusative), *Від* (+ Genitive for physical states like "від холоду").
-- **Conjunctions**: *Тому що, бо*.
-- **Questions**: *Чому? Навіщо? Для кого?*.
-- **Grammar**: Using these with the already learned cases (Genitive, Accusative, Dative).
-
-**OUT OF SCOPE:**
-- **Advanced Prepositions**: *Завдяки* (+ Dative), *Внаслідок* (+ Genitive), *З огляду на* (+ Accusative).
-- **Subjunctive "Щоб"**: Avoid *щоб* + Past Tense (e.g., "Я хочу, щоб ти прийшов"). Only use *щоб* + Infinitive (e.g., "Я пішов у магазин, щоб купити хліб").
-- **Complex Causal Clauses**: *Оскільки, позаяк, у зв'язку з тим що*.
-- **Participles/Gerunds**: No "due to being..." structures.
+## Notes for Content Writing
+- **Immersion Goal**: Aim for **50-60% Ukrainian**. Keep grammar explanations in English (Band 1 rules) but use Ukrainian for the "Story of the Letter" and Pharmacy dialogues.
+- **IPA Focus**: Ensure stress marks for all prepositions, especially `після` [ˈpʲisʲlʲa] and `завдяки` [zaʋˈdakɪ].
+- **Visuals**: A table comparing `через` (cause) vs `для` (purpose) vs `про` (topic) is essential for this level.

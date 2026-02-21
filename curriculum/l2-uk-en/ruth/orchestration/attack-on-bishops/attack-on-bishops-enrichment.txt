@@ -1,0 +1,203 @@
+✅ Message sent to Gemini (ID: 12678) [auto-acked: self-addressed]
+✓ Message 12678 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12678...
+📨 Message #12678
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-attack-on-bishops
+   Time: 2026-02-20T23:41:33.722387+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 62
+module: ruth-062
+module_number: 50
+slug: attack-on-bishops
+title_uk: Напад на єпископів
+title_en: Attack on Bishops
+phase: 2
+phase_id: sacred-word
+phase_name: Sacred Word
+focus: Fierce invective — Wolves in shepherds' skins
+content_outline:
+- section: Вступ
+  description: Introduction to Attack on Bishops
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Baroque Scholar
+  role: Polemical Firebrand
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Напад на єпископів (Attack On Bishops)
+
+## Використані джерела
+1. [Іван Вишенський. Твори](http://litopys.org.ua/vyshen/vysh.htm) — Першоджерела: «Послання до єпископів», «Книжка».
+2. [Історія української літератури. Том 2](http://litopys.org.ua/istukr/istukr.htm) — Аналіз полемічної літератури кінця XVI ст.
+3. [Енциклопедія Сучасної України: Берестейська церковна унія](https://esu.com.ua/article-39408) — Історичний контекст розколу.
+4. [Інститут історії України: Берестейська унія 1596](http://resource.history.org.ua/) — Хронологія та наслідки.
+5. [Іпатій Потій. Твори](http://litopys.org.ua/oldukr2/oldukr51.htm) — Уніатська позиція («Унія», «Антиризис»).
+
+## Хронологія
+- **1590**: Перші наради православних єпископів у Белзі щодо можливого об'єднання з Римом.
+- **1594**: Підписання «Торчинських артикулів» — таємної угоди єпископів про унію.
+- **1595**: Поїздка Іпатія Потія та Кирила Терлецького до Риму, прийняття унії папою Климентом VIII.
+- **1596 (жовтень)**: Берестейський собор. Розкол на два синоди: уніатський (проголосив унію) та православний (засудив її).
+- **1597-1598**: Вихід основних полемічних творів: «Екзезис», «Апокрисис» (Христофор Філалет), послання Івана Вишенського.
+
+## Ключові факти та цитати
+- **Метафора "Вовків"**: Іван Вишенський називає єпископів-уніатів "вовками", що розкрадають отару, зрадивши східну традицію заради земних благ.
+- **Цитата Вишенського**: «Отож бо ви тепер, що в ризах, у золоті, в розкошах, у мастких потравах, у повозках, у слугах... не єсте пастирі, але вовки, не єсте предводителі, але блудники...» («Послання до єпископів»).
+- **Позиція Потія**: Іпатій Потій аргументував унію як порятунок Руської церкви від занепаду та невігластва, а також як повернення до єдності, що існувала до розколу 1054 року.
+- **Мовний аспект**: Полеміка сприяла впровадженню "простої мови" (руської народної) у високу літературу, щоб бути зрозумілою ширшому загалу шляхти та міщан.
+
+## Engagement Hooks (mapped to sections)
+- Section "Основний матеріал: I — Криза та передумови унії": [!context] — Стан Київської митрополії напередодні 1596 року (занепад освіти, тиск Реформації).
+- Section "Основний матеріал: II — Берестейський собор 1596 року": [!history-bite] — Два собори в одному місті: як Берестя стало ареною розколу.
+- Section "Основний матеріал: III — Полемічний вибух: Іван Вишенський": [!quote] — Уривок з «Послання до єпископів» про "вовків в овечих шкурах".
+- Section "Основний матеріал: IV — Уніатська відповідь: Іпатій Потій": [!myth-buster] — Міф про "польську інтригу": ініціатива унії належала саме руським єпископам, а не полякам.
+- Section "Основний матеріал: V — Мовні особливості полемічної літератури": [!culture] — Макронічна мова та барокова риторика як зброя.
+
+## Деколонізаційний контекст
+- **Imperial/Soviet Myth**: Унія трактувалася виключно як інструмент польської експансії та католицького гніту, а єпископи-уніати — як зрадники народу.
+- **Ukrainian Reality**: Унія була спробою руської (української) еліти модернізувати церкву та вийти з кризи Константинопольського патріархату. Конфлікт був внутрішнім громадянським протистоянням, де обидві сторони захищали "Русь".
+- **Agency**: Українська культура не була пасивною жертвою; полеміка породила потужний інтелектуальний вибух і стимулювала розвиток освіти (Братські школи vs Уніатські школи).
+
+## Contested Terms
+| Concept | Imperial/Soviet framing | Ukrainian framing |
+|---------|------------------------|-------------------|
+| Унія | Знаряддя поневолення, "католицька експансія" | Спроба церковної реформи та модернізації, пошук місця в Європі |
+| Полеміка | Боротьба проти католицизму | Інтелектуальна дискусія, народження національної публіцистики |
+| "Народ" | Пригноблені селяни, що протистоять панам | Політична нація (шляхта, міщани), що шукає релігійного самовизначення |
+
+## Section-Mapped Research Notes
+
+### Основний матеріал: I — Криза та передумови унії
+Криза православ'я: "хлопська віра", перехід шляхти в протестантизм/католицизм. Занепад Константинополя під турками. Ідея унії як "порятунку" ієрархії та рівноправності з латинським духовенством.
+
+### Основний матеріал: II — Берестейський собор 1596 року
+Події жовтня 1596. Проголошення унії митрополитом Рогозою. Протест князя Острозького. Екскомунікація з обох боків. Початок легітимного існування двох церков: православної (де-факто) та уніатської (де-юре).
+
+### Основний матеріал: III — Полемічний вибух: Іван Вишенський
+Фігура Вишенського — афонського аскета. Його радикалізм. "Послання до єпископів-відступників". Риторика "вовків", "кровопивців". Звинувачення у користолюбстві та зраді традиції. Стиль: нагромадження епітетів, біблійний пафос.
+
+### Основний матеріал: IV — Уніатська відповідь: Іпатій Потій
+Іпатій Потій — "батько унії". Його освіченість, полемічний талант. Твір "Унія...". Аргументи: єдність церкви як Божа заповідь, занепад грецького православ'я, потреба в порядку і дисципліні. Потій як реформатор, а не лише "зрадник".
+
+### Основний матеріал: V — Мовні особливості полемічної літератури
+Бароковий стиль: "плетиво словес". Використання народної мови для переконання мас. Латинізми та полонізми. Емоційна напруга тексту. Риторичні фігури (вигуки, звертання, антитези).
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12708)
+✓ Message 12678 acknowledged
+✓ Message 12708 acknowledged

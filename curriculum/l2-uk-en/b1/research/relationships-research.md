@@ -1,74 +1,34 @@
-# Research: Стосунки та зв'язки (Relationships and Connections)
+# Дослідження: Стосунки та зв'язки
 
-**Module:** B1 M65
-**Topic:** Relationships (Personal, Professional, Social)
-**Level:** B1 (Intermediate) — *Correction from prompt: Module is B1, not A1.*
+## State Standard Reference
+§3.1: "Людина: ... сім’я, члени сім’ї, родичі; родинні стосунки; взаємини з іншими людьми; контакти з іншими людьми (зустріч, листування)."
+Alignment: Module covers the core vocabulary for family and social relationships, specifically distinguishing between personal and formal connections as required by the "взаємини з іншими людьми" topic.
 
-## 1. Grammar: State Standard 2024 Reference
+## Vocabulary Frequency
+| Word | Nuance / Usage | Key Collocations |
+|------|----------------|------------------|
+| **стосунки** | Personal, emotional, intimate interactions. | з’ясовувати стосунки (to have it out), дружні стосунки, стосунки в сім'ї |
+| **відносини** | Formal, official, regulated interactions. | міжнародні відносини, ринкові відносини, дипломатичні відносини |
+| **взаємини** | Reciprocal, deep personal connection (warmest term). | теплі взаємини, взаємини батьків і дітей |
+| **ставлення** | Attitude towards someone/something (one-way). | ставлення до роботи, упереджене ставлення |
+| **зв'язок** | Connection (general), communication. | родинний зв'язок, бути на зв'язку, зворотний зв'язок |
 
-**Державний стандарт української мови як іноземної (рівень B1):**
+## Cultural Hooks
+1. **Інститут кумівства (Godparenthood)**: In Ukraine, godparents (*куми*) are not just ceremonial figures but "spiritual parents" with a lifelong duty to help raise the child. The relationship between parents and godparents is often as close as blood kinship. There is a saying: «Рідня до півдня, а куми — довіку» (Relatives are until noon, but godparents are forever).
+2. **Любити vs Кохати**: Ukrainian strictly separates "to love". *Кохати* is reserved exclusively for romantic, passionate love (partner/spouse). *Любити* is used for family, friends, food, hobbies, or country. Saying «Я кохаю борщ» sounds comical and unnatural; «Я люблю борщ» is correct.
 
-> **Соціокультурна сфера:**
-> "Користувач вміє підтримувати розмову, обговорювати стосунки між людьми (у сім'ї, колективі), висловлювати своє ставлення до людей та подій."
->
-> **Лексична компетенція (B1):**
-> "Володіє достатнім словниковим запасом для висловлення думок на тему особистих стосунків, дружби, конфліктів та емоційної підтримки. Розрізняє відтінки значень слів (наприклад, *стосунки* vs *відносини*)."
+## Common Learner Errors
+1. **Russian Calque**: *«Він женився на ній»* → **Correct**: *«Він одружився з нею»* (or *«Він оженився з нею»*).
+   *Why*: Influence of Russian preposition usage. In Ukrainian, the verb *одружуватися* (to marry) is used with the preposition *з* (with).
+2. **Wrong "Love"**: *«Я кохаю свою маму»* → **Correct**: *«Я люблю свою маму»*.
+   *Why*: Overgeneralization of *кохати*. Using *кохати* for family implies an inappropriate romantic context.
+3. **Formal vs Personal**: Using *відносини* for a girlfriend/boyfriend (*«У нас гарні відносини»* sounds like a business contract). → **Correct**: *«У нас гарні стосунки»*.
 
-*Note: The standard specifically mandates the ability to discuss complex interpersonal dynamics beyond simple family labeling (A1).*
+## Cross-References
+- **Builds on**: b1-64 (Emotions Deep Dive) — uses emotion vocabulary to describe relationship dynamics.
+- **Prepares for**: b1-66 (Business Basics) — sets the contrast between *стосунки* (taught here) and *відносини* (business context in next module).
 
-## 2. Vocabulary Frequency
-
-**Core Terms (High Frequency):**
-*   **Стосунки** (pl. only) – Personal relationships (romantic or close). *Common mistake: confusing with відносини.*
-*   **Відносини** (pl. only) – Official, diplomatic, or legal relations. (e.g., *міжнародні відносини*).
-*   **Ставлення** (n.) – Attitude towards someone/something.
-*   **Зв'язок** (n.) – Connection (emotional, phone, internet).
-*   **Спілкуватися** (v.) – To communicate/socialize.
-*   **Підтримувати** (v.) – To support.
-*   **Довіряти** (v.) – To trust.
-
-**Common Collocations (B1 Level):**
-*   **Мати гарні стосунки з...** (To have good relationships with...)
-*   **Будувати стосунки** (To build relationships)
-*   **З’ясовувати стосунки** (To sort out relationships / to argue)
-*   **Розірвати стосунки** (To break off relationships)
-*   **Підтримувати зв’язок** (To keep in touch)
-*   **Втрачати зв’язок** (To lose touch)
-
-**Semantic Distinctions (Critical for B1):**
-*   **Друг / Подруга** vs **Знайомий / Знайома**: Ukrainians reserve "друг" for close friends. "Знайомий" (acquaintance) is much more common for casual contacts than "friend" is in English.
-*   **Кохання** (romantic love) vs **Любов** (general love - abstract, family, god).
-
-## 3. Cultural Hook
-
-**1. Кумівство (Godparenthood):**
-In Ukraine, *куми* (godparents of one's child) form a massive part of the social support network. It is not just a ceremonial role but a lifelong relationship akin to family. "Кум" and "кума" are valid forms of address and imply high trust and informality. This relationship often bridges the gap between "friend" and "family."
-
-**2. The Transition to "Ty":**
-Moving from *Ви* (formal you) to *ти* (informal you) is a significant milestone in a relationship, often marked by a ritual toast (*випити на брудершафт*) or explicit permission ("Давай перейдемо на ти"). Doing it too early is rude; waiting too long implies distance.
-
-## 4. Pedagogical Notes
-
-**Common Learner Errors:**
-*   **Using "відносини" for love:** *Ми маємо гарні відносини* sounds like "We have good bilateral agreements." Correct: *У нас гарні стосунки.*
-*   **Using "відношення" for attitude:** *Яке твоє відношення до цього?* is a Russism (отношение). Correct: *Яке твоє **ставлення** до цього?*
-*   **Case usage with "з":** Forgetting the Instrumental case for joint actions (*Ми з другом ходили* = My friend and I went; literally "We with friend").
-
-**Teaching Sequence:**
-1.  **Clarify Terminology:** Drill the triad *стосунки* (personal) / *відносини* (official) / *ставлення* (attitude) immediately.
-2.  **Collocations:** Focus on verbs used *with* relationships (buduvaty, rozryvaty, pidtrymuvaty).
-3.  **Nuance:** Discuss the "Friend vs Acquaintance" cultural boundary.
-
-## 5. Scope Boundaries
-
-**IN Scope (B1 Level):**
-*   **Instrumental Case (Orydnyi):** Essential for "being with someone" (*з ким?*) and passive constructions.
-*   **Reflexive Verbs:** *Спілкуватися, зустрічатися, сваритися*.
-*   **Aspect (Vyd):** *Спілкуватися* (process) vs *Поспілкуватися* (result).
-*   **Complex Sentences:** *Той, з ким я працюю...* (Relative clauses).
-
-**OUT of Scope (for this specific module):**
-*   **Archaic/Poetic forms:** *Кохання* nuances in 19th-century literature (save for C1).
-*   **Highly idiomatic slang:** Deep street slang for dating/hookups (save for B2/C1).
-*   **Legal terminology:** Divorce proceedings or contract law (save for B2 Civil Law).
-*   **Abstract philosophical ethics:** Deep ethical debates about loyalty (save for C1).
+## Notes for Content Writing
+- **Core B Requirement**: Use specific B1+ collocations like *«розірвати стосунки»* (to break up), *«налагодити стосунки»* (to fix relationships), *«втратити зв'язок»* (to lose touch).
+- **Register**: Emphasize the distinct register difference between *стосунки* (conversation/personal) and *відносини* (news/official).
+- **Narrative**: The module follows the Narrative structure (Intro → Narrative → Analysis). Use a story about a misunderstanding caused by *любити/кохати* or a heartwarming story about *куми* to illustrate the cultural depth.

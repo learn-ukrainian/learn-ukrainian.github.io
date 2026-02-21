@@ -1,0 +1,95 @@
+module: a1-02
+level: A1
+sequence: 2
+slug: the-cyrillic-code-ii
+version: '2.0'
+title: The Cyrillic Code II
+subtitle: The Final 14 Letters
+content_outline:
+- section: Warm-up
+  points:
+  - Quick review of Part I letters
+  - Reading diagnostic
+- section: Presentation
+  points:
+  - 'Unique Seven (Г, Ґ, Ж, Ш, Щ, Ч, Ц) — learner error: Г is a voiced ''h'' (ahead),
+    while Ґ is the hard ''g'' (rare); frame as ''Identity Letters'' that distinguish
+    Ukrainian from Russian'
+  - 'Iotated Four (Є, Ї, Ю, Я) — cultural hook: Ї as a symbol of resistance and independence;
+    note on euphony (smoothing consonant clumps)'
+  - 'Soft Sign (Ь) — learner error: treating Ь as silent; correction: tongue must
+    press flat against the roof of the mouth (e.g., день sounds like dyen''); State
+    Standard §4.1.3 alignment: use examples Львів, шість'
+  - 'Hard I (И) vs Soft I (І) — learner error: difficulty distinguishing И from І;
+    use ''Smile vs Grin'' analogy (І wide smile, И relaxed jaw); І softens previous
+    consonant, И keeps it hard; State Standard §4.1.4 alignment'
+  - Short Y (Й)
+- section: Practice
+  points:
+  - 'Reading words with new letters — incorporate high-frequency words: центр, чай,
+    школа, гарний, жити, день, Європа, яблуко'
+  - Distinguishing similar sounds — focus on Г/Ґ and И/І differentiation
+- section: Production
+  points:
+  - Reading practice
+  - Self-assessment
+- section: Cultural Insight
+  points:
+  - 'Kyiv spelling and Ukrainian identity — alignment with State Standard §4.1.1:
+    Kyiv, Kyivskyi, Ukraina, ukrainets; include Олена, олівець as standard examples'
+  - 'Italic variants warning — cultural hook: The repressed Ґ (banned 1933-1990) as
+    a symbol of recovering historical truth'
+vocabulary_hints:
+  required:
+  - 'центр (center) — collocations: торговий центр, історичний центр, центр міста,
+    у центрі'
+  - 'чай (tea) — collocations: зелений/чорний чай, пити чай, чашка чаю, чай з лимоном'
+  - 'школа (school) — collocations: іти до школи, у школі, середня школа, музична
+    школа'
+  - 'гарний (beautiful) — collocations: гарний день, гарна дівчина, гарна погода,
+    гарний настрій'
+  - 'жити (to live) — collocations: жити в Україні, жити добре, довго жити'
+  - 'день (day) — collocations: добрий день, кожен день, цілий день, робочий день'
+  - 'Європа (Europe) — collocations: Західна Європа, жити в Європі, поїхати до Європи'
+  - 'яблуко (apple) — collocations: червоне яблуко, їсти яблуко, яблуко розбрату (idiom)'
+  recommended:
+  - ще (still/more)
+  - ґанок (porch) — demonstration of the rare letter Ґ
+  - їжа (food) — demonstration of the unique letter Ї
+  - юнак (young man)
+  - ніч (night) — demonstrates the soft sign/soft consonant ending
+  - сім'я (family)
+activity_hints:
+- type: quiz
+  focus: Identify final 14 letters
+  items: 20
+- type: match-up
+  focus: Match unique sounds to letters
+  items: 20
+- type: match-up
+  focus: Distinguish И/І, Г/Ґ
+  items: 15
+- type: quiz
+  focus: Read words with new letters
+  items: 20
+focus: grammar
+pedagogy: PPP
+prerequisites:
+- a1-01 (The Cyrillic Code I)
+connects_to:
+- a1-03 (The Gender Code)
+objectives:
+- Learner can recognize unique Ukrainian letters (Г, Ґ, Ж, Ш, Щ, Ч, Ц)
+- Learner can identify iotated vowels (Є, Ї, Ю, Я)
+- Learner can understand the soft sign (Ь)
+- Learner can distinguish И (hard i) from І (soft i)
+grammar:
+- Unique Ukrainian consonants
+- Iotated vowels
+- Soft sign function
+register: розмовний
+phase: A1.1 [First Contact]
+persona:
+  voice: Patient Supportive Tutor
+  role: Ancient Manuscript Restorer
+word_target: 2000

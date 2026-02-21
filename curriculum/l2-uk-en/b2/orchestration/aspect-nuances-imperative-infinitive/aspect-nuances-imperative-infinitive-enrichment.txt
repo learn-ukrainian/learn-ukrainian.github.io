@@ -1,0 +1,269 @@
+✅ Message sent to Gemini (ID: 10551) [auto-acked: self-addressed]
+✓ Message 10551 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10551...
+📨 Message #10551
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-aspect-nuances-imperative-infinitive
+   Time: 2026-02-20T20:41:27.471204+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b2-42
+level: B2
+sequence: 42
+slug: aspect-nuances-imperative-infinitive
+version: '2.0'
+title: 'Відтінки виду II: наказовий спосіб та інфінітив'
+subtitle: Вид дієслова в командах та інфінітивних конструкціях
+content_outline:
+- section: Розминка — Вид у командах та заборонах
+  points:
+  - Чому "Сідай!" (НДВ) — ввічливо, а "Сядь!" (ДВ) — різко
+  - Чому заборона завжди НДВ (Не бігай! Не кричи!)
+  - Зв'язок із модальними конструкціями (можна, потрібно, не можна)
+- section: Infinitive Nuances
+  points:
+  - Не можна + Imperfective (Forbidden by rule)
+  - Не можна + Perfective (Impossible to do)
+- section: Практика — вибір виду в командах
+  points:
+  - Обрати правильний вид для ввічливого запрошення vs терміновий наказ
+  - Сформулювати заборону (Не + НДВ)
+  - Інтерпретувати "не можна + інфінітив" — заборона чи неможливість?
+  - Написати інструкцію з правильним видом (рецепт, правила гри)
+focus: grammar
+pedagogy: TTT
+objectives:
+- Learner can distinguish polite invitations from urgent commands by aspect
+- Learner can form prohibitions using the correct aspect
+- Learner can interpret не можна + infinitive based on aspect
+- Learner can choose appropriate aspect in imperative for different situations
+grammar:
+- Aspect in imperative mood
+- Imperfective vs perfective commands
+- Prohibition with imperfective
+- Aspect in infinitive constructions
+- не можна + aspect distinction
+phase: B2.2 [Grammar Completion]
+vocabulary_hints:
+  required:
+  - термін (term)
+  - поняття (concept)
+  - процес (process)
+  - метод (method)
+  recommended:
+  - аналіз (analysis)
+  - синтез (synthesis)
+  - дослідження (research)
+activity_hints:
+- type: reading
+  focus: Аналіз тексту
+  items: 4
+- type: essay-response
+  focus: Практичне застосування
+- type: true-false
+  focus: Перевірка розуміння
+  items: 8
+persona:
+  voice: Professional Language Coach
+  role: Military Instructor (Військовий інструктор)
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Відтінки виду II: наказовий спосіб та інфінітив
+
+## State Standard Reference
+§4.1.3.2: "Наказовий спосіб. Утворення різних форм наказового способу: ходити (ходи, ходімо, ходіть, хай / нехай ходить(-ять)); літати (літай, літаймо, літайте, хай / нехай літає(-ють))."
+§4.3.1.3: "Спонукальне речення (вираження розпорядження, прохання, поради, пропозиції): Дайте, будь ласка, дві склянки молока. Обміркуйте нашу пропозицію!"
+Alignment: This module directly addresses the B2 requirement for "softened forms and aspect choice in commands" and the syntactic ability to express requests, advice, and prohibitions using the correct aspectual nuance.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| **термін** (term) | High (General/Academic) | технічний термін, термін виконання, у визначений термін, спливає термін |
+| **поняття** (concept) | High (Academic) | ключове поняття, мати поняття, підміняти поняття, абстрактне поняття |
+| **процес** (process) | High (General) | навчальний процес, творчий процес, у процесі, контролювати процес |
+| **метод** (method) | High (Academic/Scientific) | ефективний метод, науковий метод, метод спроб і помилок, застосовувати метод |
+| **аналіз** (analysis) | High (Academic) | глибокий аналіз, проводити аналіз, хімічний аналіз, критичний аналіз |
+| **дослідження** (research) | High (Academic) | наукове дослідження, результати дослідження, проводити дослідження |
+| **наказ** (order) | Medium (Official/Military) | віддати наказ, виконувати наказ, згідно з наказом |
+| **прохання** (request) | Medium (Formal) | велике прохання, на прохання, звертатися з проханням |
+| **заборона** (prohibition) | Medium (Legal/General) | сувора заборона, накласти заборону, порушити заборону |
+
+## Cultural Hooks
+1.  **Hospitality Etiquette**: In Ukrainian culture, invitations to enter a home or sit at a table typically use the **Imperfective** aspect to sound polite and welcoming ("Заходьте, будь ласка", "Сідайте", "Беріть"). Using the Perfective ("Зайдіть", "Сядьте", "Візьміть") can sound like a strict military order or an urgent demand, creating distance or offense.
+2.  **Superstitions (Забобони)**: Cultural prohibitions often start with "Не можна" + Imperfective infinitive (forbidden/taboo). Examples: "Не можна передавати речі через поріг" (passing things over the threshold is forbidden), "Не можна сидіти на куті столу" (sitting at the table corner is forbidden). This is a perfect context to teach "Prohibition vs. Impossibility".
+
+## Common Learner Errors
+1.  **The "Rude Guest" Error**: Using Perfective for polite invitations (e.g., saying "Сядь!" instead of "Сідай(те)!").
+    *   *Correction*: Use Imperfective for open invitations. "Сядь" implies "Sit down right now!" (like to a dog or a naughty child).
+2.  **The "Accident" Warning**: Using Imperfective instead of Perfective when warning against an accidental result.
+    *   *Error*: "Не падай!" (Don't be in the process of falling - weird).
+    *   *Correction*: "Не впади!" (Watch out so you don't fall - warning).
+    *   *Rule*: Prohibitions of *actions* are Imperfective ("Не біжи"). Warnings against *results* are Perfective ("Не впади").
+3.  **The "Impossible" Ban**: Confusing "Не можна" + Imp vs Perf.
+    *   *Error*: "Не можна відчинити вікно" when meaning "It is forbidden to open the window".
+    *   *Correction*: "Не можна відчиняти вікно" (Forbidden/Rule). "Не можна відчинити вікно" means "It is physically impossible to open (it's stuck)".
+
+## Cross-References
+- **Builds on**: A2 Imperative basics, B1 Aspect introduction.
+- **Prepares for**: C1 Official-Business style (Regulations/Instructions), C1 Academic style (Hypothesis/Methodology descriptions).
+
+## Notes for Content Writing
+- **Contrast**: Explicitly contrast "Не можна" + НДВ (Taboo/Law) vs "Не можна" + ДВ (Physical impossibility).
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Культура спонукання та етикет (Introduction: The Culture of Prompting & Etiquette)"
+  words: 600
+  points:
+  - "The 'Polite Ukrainian Host' concept: why Imperfective aspect (Сідайте, заходьте, беріть) is essential for hospitality, contrasting with the distance created by the Perfective."
+  - "Learner error 'The Rude Guest': analyzing why 'Сядь!' (Perf) sounds like a military order or a command to a pet, whereas 'Сідай' (Impf) sounds welcoming."
+  - "State Standard §4.3.1.3 integration: expressing requests and advice through softened forms of the imperative mood."
+- section: "Граматика та морфологія наказу (Grammar & Morphology of Commands)"
+  words: 1000
+  points:
+  - "Morphological formation according to §4.1.3.2: regular patterns for 'хотіти', 'літати', and 'робити' across different persons (ходи, ходімо, ходіть)."
+  - "The spectrum of 'наказ' vs 'прохання': using Perfective for categorical, urgent, or single-result actions (Зроби це зараз!) vs Imperfective for processes or recurring actions."
+  - "Military register nuances (Persona): the use of Perfective aspect in formal 'накази' (orders) to ensure clarity of the required outcome."
+- section: "Заборони, застереження та забобони (Prohibitions, Warnings, & Superstitions)"
+  words: 800
+  points:
+  - "The 'Accident Warning' rule: using Perfective aspect to warn against unintentional results ('Не впади!', 'Не забудь!') vs Imperfective for general prohibitions ('Не бігай!')."
+  - "Cultural 'Забобони' (superstitions) as a linguistic anchor: teaching 'Не можна' + Imperfective through taboos like 'Не можна передавати речі через поріг'."
+  - "Distinguishing 'Не' + Imperfective (Forbidden action) from 'Не' + Perfective (Warning against a negative result/accidental completion)."
+- section: "Модальність інфінітива: Правила vs Можливість (Infinitive Modality: Rules vs Possibility)"
+  words: 900
+  points:
+  - "The Semantic Divide: 'Не можна' + Imperfective (It is forbidden/against the law/taboo) vs 'Не можна' + Perfective (It is physically impossible/the result cannot be achieved)."
+  - "Case study: 'Не можна відчиняти вікно' (Prohibited by the 'процес') vs 'Не можна відчинити вікно' (It is stuck/physically impossible to complete the 'аналіз')."
+  - "Integrating academic vocabulary (метод, поняття, дослідження) into modal constructions to discuss scientific constraints and methodologies."
+- section: "Професійне застосування: Накази та інструкції (Professional Application: Orders & Instructions)"
+  words: 700
+  points:
+  - "Drafting formal instructions: selecting aspect based on the 'термін виконання' (deadline) and nature of the 'процес' (ongoing vs finite)."
+  - "Synthesis of grammar: writing a 'наказ' (order) for a military scenario or a 'правила гри' (game rules) using correct aspectual nuances for prohibitions and invitations."
+  - "Review of 'Common Learner Errors' in official-business style: avoiding inappropriate imperatives in formal 'прохання' (requests)."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "термін (term) — термін виконання (deadline), у визначений термін (within a specified term), спливає термін (the term is expiring); High frequency in official/technical contexts."
+  - "поняття (concept) — ключове поняття (key concept), мати поняття (to have a clue), підміняти поняття (to substitute concepts); Essential for B2 academic discussion."
+  - "процес (process) — навчальний процес (learning process), творчий процес (creative process), у процесі (in progress), контролювати процес (to control the process)."
+  - "метод (method) — ефективний метод (effective method), науковий метод (scientific method), метод спроб і помилок (trial and error); Critical for describing research."
+  recommended:
+  - "аналіз (analysis) — глибокий аналіз (deep analysis), проводити аналіз (to conduct an analysis), критичний аналіз (critical analysis)."
+  - "синтез (synthesis) — логічний синтез (logical synthesis), результати синтезу (results of synthesis)."
+  - "дослідження (research) — наукове дослідження (scientific research), результати дослідження (research results), проводити дослідження (to conduct research)."
+  - "наказ (order) — віддати наказ (to issue an order), виконувати наказ (to follow an order), згідно з наказом (according to the order); High frequency in military/official contexts."
+  - "прохання (request) — велике прохання (big request), на прохання (at the request of), звертатися з проханням (to address with a request)."
+  - "заборона (prohibition) — сувора заборона (strict prohibition), накласти заборону (to impose a ban), порушити заборону (to violate a prohibition)."
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4730 chars)
+✅ Message sent to Claude (ID: 10558)
+✓ Message 10558 acknowledged
+   Auto-acknowledged reply #10558 (stdout delivery — no inbox accumulation)
+✓ Message 10551 acknowledged

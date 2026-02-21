@@ -1,4 +1,3 @@
----
 module: c1-hist-064
 level: c1-hist
 sequence: 64
@@ -10,56 +9,48 @@ objectives:
 - 'Analyze the causes and consequences of перша хвиля еміграції: трудова (1880-1914)'
 - Evaluate the historical significance of чому виїжджали?
 content_outline:
-- section: "Вступ — Чому виїжджали?"
-  words: 457
+- section: Вступ — Чому виїжджали?
   subsections:
   - Економічні причини — земельний голод
   - Перенаселення Галичини
   - Тиск імперій
   - Структура модуля
 - section: Галицькі селяни в дорозі
-  words: 686
   subsections:
   - Хто виїжджав — соціальний портрет
   - Маршрути — порти, кораблі
   - Агенти еміграції — реклама «нового світу»
   - Ілюзії і реальність
-- section: "Канада — «безкрайні прерії»"
-  words: 800
+- section: Канада — «безкрайні прерії»
   subsections:
   - Сіфтон і «чоловіки в кожухах»
   - Заселення прерій
   - Блокові поселення
   - Важке життя — землянки, холод
   - Перші церкви і школи
-- section: "США — вугільні копальні"
-  words: 686
+- section: США — вугільні копальні
   subsections:
   - Пенсільванія — шахтарські містечка
   - Важка праця — умови
   - Робітничий рух
   - Міські громади — Нью-Йорк, Чикаго
 - section: Південна Америка
-  words: 457
   subsections:
   - Бразилія — кавові плантації
   - Аргентина — пампаси
   - Менші хвилі — Парагвай, Уругвай
   - Збереження vs. асиміляція
 - section: Формування громад
-  words: 571
   subsections:
   - Церква як центр
   - Читальні та «Просвіти»
   - Преса — перші газети
   - Мова — збереження чи втрата?
 - section: Підсумок
-  words: 343
   subsections:
   - Масштаби — скільки виїхало
   - Закладення фундаменту
   - Підготовка до політичної хвилі
-word_target: 4000
 vocabulary:
 - еміграція
 - діаспора
@@ -89,19 +80,19 @@ activities:
   focus: Чому саме галичани становили більшість першої хвилі?
 sources:
 - name: Українська діаспора (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Українська_діаспора"
+  url: https://uk.wikipedia.org/wiki/Українська_діаспора
   type: reference
   notes: General overview
 - name: Українці в Канаді (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Українці_в_Канаді"
+  url: https://uk.wikipedia.org/wiki/Українці_в_Канаді
   type: reference
   notes: Canadian settlement
 - name: Українці в США (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Українці_в_США"
+  url: https://uk.wikipedia.org/wiki/Українці_в_США
   type: reference
   notes: American settlement
 - name: Еміграція з України (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Еміграція_з_України"
+  url: https://uk.wikipedia.org/wiki/Еміграція_з_України
   type: reference
   notes: Emigration waves
 vocabulary_hints:
@@ -120,7 +111,9 @@ activity_hints:
   items: 4
 - type: essay-response
   focus: Критичний аналіз
-  word_target: 300
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Migration Studies Scholar

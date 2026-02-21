@@ -1,4 +1,3 @@
----
 module: c1-hist-038
 level: c1-hist
 sequence: 38
@@ -10,15 +9,13 @@ objectives:
 - 'Analyze the causes and consequences of синтез: джерела нової доби'
 - Evaluate the historical significance of від козаків до xx століття
 content_outline:
-- section: "Вступ — Від козаків до XX століття"
-  words: 457
+- section: Вступ — Від козаків до XX століття
   subsections:
   - Огляд модулів 29-37
   - Нові типи джерел
   - Нові проблеми
   - Мета синтезу
 - section: Типологія джерел XIX-XX ст.
-  words: 686
   subsections:
   - Політичні маніфести
   - Імперські документи (заборони)
@@ -27,7 +24,6 @@ content_outline:
   - Архівні документи
   - Таблиця порівняння
 - section: Особливості модерних джерел
-  words: 686
   subsections:
   - Більша кількість — більше голосів
   - Масова грамотність — ширший спектр
@@ -35,33 +31,28 @@ content_outline:
   - Фотографія і кіно
   - Проблема надлишку
 - section: Джерела репресій
-  words: 686
   subsections:
   - Імперські vs. радянські
   - Як читати мову репресора
   - Голос жертви — де шукати
   - Етичні питання
 - section: Методологічні уроки
-  words: 571
   subsections:
   - Порівняння офіційного і підпільного
   - Імперський дискурс — розпізнавання
   - Пропаганда vs. документ
   - Усна історія — місце в дослідженні
 - section: Практикум
-  words: 571
   subsections:
   - Одна подія — різні джерела
   - 'Наприклад: 1933 рік'
   - Радянські документи + свідчення + преса
   - Комплексна реконструкція
 - section: Підсумок
-  words: 343
   subsections:
   - Готовність до дисидентських джерел
   - Чек-ліст для модерних джерел
   - Від минулого до сучасності
-word_target: 4000
 vocabulary:
 - синтез
 - типологія
@@ -89,11 +80,11 @@ activities:
   focus: Чим джерела XX ст. відрізняються від козацьких?
 sources:
 - name: Джерелознавство (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Джерелознавство"
+  url: https://uk.wikipedia.org/wiki/Джерелознавство
   type: reference
   notes: Source studies
 - name: Історичне джерело
-  url: "https://uk.wikipedia.org/wiki/Історичне_джерело"
+  url: https://uk.wikipedia.org/wiki/Історичне_джерело
   type: reference
   notes: Source types
 vocabulary_hints:
@@ -112,7 +103,9 @@ activity_hints:
   items: 4
 - type: essay-response
   focus: Критичний аналіз
-  word_target: 300
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Digital History Archivist

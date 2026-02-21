@@ -1,0 +1,13 @@
+{
+  "track": "b2-hist",
+  "slug": "kinets-hetmanshchyny",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T16:10:12Z",
+      "task_id": "v3-kinets-hetmanshchyny-pA",
+      "mode": "meta-only"
+    }
+  }
+}

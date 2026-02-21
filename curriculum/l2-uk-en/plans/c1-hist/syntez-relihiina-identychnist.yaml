@@ -1,4 +1,3 @@
----
 module: c1-hist-063
 level: c1-hist
 sequence: 63
@@ -10,15 +9,13 @@ objectives:
 - 'Analyze the causes and consequences of синтез: релігія і національна ідентичність'
 - Evaluate the historical significance of релігія і нація
 content_outline:
-- section: "Вступ — Релігія і нація"
-  words: 457
+- section: Вступ — Релігія і нація
   subsections:
   - Огляд модулів 58-62
   - Як релігія формує ідентичність
   - Українська специфіка
   - Мета синтезу
 - section: Релігійний ландшафт України
-  words: 686
   subsections:
   - ПЦУ — автокефальна
   - УПЦ МП — московська юрисдикція
@@ -27,15 +24,13 @@ content_outline:
   - Інші — мусульмани, юдеї
   - Карта розподілу
 - section: Церковні розколи і нація
-  words: 800
   subsections:
   - 1596 — перший розкол
   - 1686 — втрата Київської митрополії
   - 1946 — ліквідація УГКЦ
   - 1991-2019 — боротьба за автокефалію
   - Томос 2019 — що змінилося
-- section: "2022 — Релігія на війні"
-  words: 686
+- section: 2022 — Релігія на війні
   subsections:
   - УПЦ МП — криза лояльності
   - ПЦУ — церква опору
@@ -43,26 +38,22 @@ content_outline:
   - Релігійний вимір деколонізації
   - Заборона УПЦ МП?
 - section: Секуляризація vs. відродження
-  words: 571
   subsections:
   - Радянська спадщина — атеїзм
   - Релігійне відродження 1990-х
   - Молодь і релігія
   - Майбутнє — прогнози
 - section: Уроки для розуміння України
-  words: 457
   subsections:
   - Релігія — не тільки віра
   - Церква як політичний актор
   - Ідентичність — складна
   - Регіональні відмінності
 - section: Підсумок
-  words: 343
   subsections:
   - Релігія і нація — переплетені
   - Від минулого до сьогодення
   - Перехід до діаспорних студій
-word_target: 4000
 vocabulary:
 - синтез
 - автокефалія
@@ -90,11 +81,11 @@ activities:
   focus: Як релігія впливає на українську національну ідентичність сьогодні?
 sources:
 - name: Релігія в Україні (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Релігія_в_Україні"
+  url: https://uk.wikipedia.org/wiki/Релігія_в_Україні
   type: reference
   notes: Overview
 - name: Православна церква України
-  url: "https://uk.wikipedia.org/wiki/Православна_церква_України"
+  url: https://uk.wikipedia.org/wiki/Православна_церква_України
   type: reference
   notes: 2018-19 autocephaly
 vocabulary_hints:
@@ -113,7 +104,9 @@ activity_hints:
   items: 4
 - type: essay-response
   focus: Критичний аналіз
-  word_target: 300
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Theologian-Sociologist

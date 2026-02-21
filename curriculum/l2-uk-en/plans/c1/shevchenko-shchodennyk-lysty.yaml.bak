@@ -1,0 +1,40 @@
+module: c1-094
+level: C1
+sequence: 94
+slug: shevchenko-shchodennyk-lysty
+version: '2.0'
+title: 'Шевченко: Щоденник та листи'
+subtitle: 'Shevchenko: Diary and Letters'
+content_outline:
+- section: Розминка — Інтимний Шевченко
+  points:
+  - Щоденник на засланні — внутрішній голос
+  - Листи до Костомарова та Куліша
+  - Двомовність — українська та російська
+- section: Content Areas
+  points:
+  - 'Щоденник (Journal): intimate thoughts during exile'
+  - 'Letters to fraternity members: Костомаров, Куліш'
+  - Vernacular vs. Imperial Russian in correspondence
+  - The "Artist" (Художник) novella excerpts
+  - Social commentary in private writings
+- section: Практика — аналіз прози
+  points:
+  - Проаналізувати запис з Щоденника — настрій, стиль
+  - Порівняти лист українською та російською — перемикання кодів
+  - Написати есе про внутрішнє життя Шевченка на засланні
+  - Обговорити "Художника" як автобіографічний твір
+focus: literature
+pedagogy: Immersion & Analysis
+objectives:
+- Analyze Shevchenko’s personal prose for deeper biographical insight
+- Understand the context of his exile through his own words
+- Explore the bilingual nature of his private correspondence
+grammar:
+- Epistolary and diary register
+- Code-switching in personal writing
+phase: C1.6 Literature
+persona:
+  voice: Senior Specialist
+  role: Біограф
+word_target: 4000

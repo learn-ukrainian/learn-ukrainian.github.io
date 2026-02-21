@@ -1,0 +1,13 @@
+{
+  "track": "ruth",
+  "slug": "grammar-lab-parsing",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-20T19:35:24Z",
+      "task_id": "v3-grammar-lab-parsing-pA",
+      "mode": "full"
+    }
+  }
+}

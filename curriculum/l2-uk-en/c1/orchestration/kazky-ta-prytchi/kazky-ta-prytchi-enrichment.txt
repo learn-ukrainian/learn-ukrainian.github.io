@@ -1,0 +1,245 @@
+✅ Message sent to Gemini (ID: 10781) [auto-acked: self-addressed]
+✓ Message 10781 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10781...
+📨 Message #10781
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-kazky-ta-prytchi
+   Time: 2026-02-20T21:28:22.581633+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-059
+level: C1
+sequence: 59
+slug: kazky-ta-prytchi
+version: '2.0'
+title: Казки та притчі
+subtitle: Ukrainian Folk Tales and Parables
+content_outline:
+- section: Розминка — Мудрість у казках
+  points:
+  - Казка — універсальний жанр народної словесності
+  - Притча — короткий повчальний текст
+  - Функції казок — виховання, розвага, передача цінностей
+- section: Типи українських казок
+  points:
+  - 'Чарівні казки: Котигорошко, Івасик-Телесик, Кирило Кожум''яка'
+  - 'Казки про тварин: Лисичка-сестричка, Котик і Півник'
+  - 'Соціально-побутові: про бідного та багатого, розумного та дурного'
+  - Структура казки (зачин, розгортання, кінцівка)
+- section: Притчі та народна мудрість
+  points:
+  - Притчі Григорія Сковороди
+  - Байки Леоніда Глібова
+  - Народні притчі та їхня мораль
+  - Формули казки (жили-були, стали жити-поживати)
+- section: Практика — аналіз та творчість
+  points:
+  - Визначити тип казки та проаналізувати її структуру
+  - Порівняти українську казку з європейським аналогом
+  - Написати сучасну притчу на задану тему
+  - Обговорити казку як інструмент виховання
+focus: vocabulary
+pedagogy: Immersion & Analysis
+objectives:
+- Learner can categorize Ukrainian folk tales into magic, animal, and social types
+- Learner can analyze the moral and philosophical layers of Ukrainian parables
+- Learner can use traditional storytelling formulas in their own narratives
+grammar:
+- Narrative structures
+- Moral and allegorical registers
+phase: C1.5 Folk Culture & Fine Arts
+persona:
+  voice: Senior Specialist
+  role: Казкар
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Казки та притчі
+
+## State Standard Reference
+§3.21: "Традиції, звичаї, свята: ... забобони; українські звичаї і традиції; релігійні звичаї і традиції."
+§4.4.3: "Стилістичні засоби лексики: епітети... метафори... алегорія"
+Alignment: Цей модуль розкриває тему "Традиції" через аналіз народних казок та притч, а також тренує використання стилістичних засобів (алегорія, епітети) на рівні C1.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| Казка | High (General) | народна казка, чарівна казка, розказувати казку |
+| Притча | Medium (Literary) | біблійна притча, філософська притча, мова притч |
+| Байка | Medium (Literary) | писати байки, мораль байки, персонажі байки |
+| Алегорія | Medium (Academic) | вдаватися до алегорії, прозора алегорія |
+| Мораль | High (General) | мораль цієї історії, читати мораль, подвійна мораль |
+| Зачин | Low (Literary) | традиційний зачин, казковий зачин |
+
+## Cultural Hooks
+1. **Котигорошко**: Архетип українського супергероя, який народжується з горошини та перемагає змія, символізуючи силу, що прихована в простому народі.
+2. **Пан Коцький**: Сатирична казка про старого кота, якого боялися всі лісові звірі через "страх, що має великі очі" — іронія над сліпою покорою авторитетам.
+
+## Common Learner Errors
+1. **Казка vs Байка**: Плутанина жанрів (Fairy tale vs Fable). *Correction*: Казка — про пригоди та магію; Байка — короткий віршований твір з мораллю.
+2. **Word Order in Formulas**: "Жив-був дід" vs "Дід жив-був". *Correction*: У казках часто використовується інверсія "Жив-був..." для зачину.
+3. **Literal Translation**: Переклад ідіом типу "піймати облизня" (to fail) як literal physical action. *Correction*: Розуміння переносного значення фразеологізмів.
+
+## Cross-References
+- Builds on: B2 Literature modules, C1-056 (Folk Culture intro)
+- Prepares for: C1-086+ (Literature track), C1-060 (Legends & Myths)
+
+## Notes for Content Writing
+- Використовувати стиль "Казкаря" (Storyteller) для пояснень, але зберігати академічний рівень аналізу.
+- Звернути увагу на різницю між народною та літературною казкою/байкою.
+- Акцентувати на "формулах" (зачин, кінцівка) як на елементах структури тексту.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Світ української казки та притчі (Introduction: The World of Ukrainian Fairy Tales and Parables)"
+  words: 600
+  points:
+  - "Визначення казки як універсального жанру та притчі як повчального тексту (§3.21 State Standard: традиції та звичаї)"
+  - "Архетип Котигорошка: аналіз 'українського супергероя' як символу прихованої сили простого народу (Cultural Hook)"
+  - "Застосування стилю 'Казкар' (Storyteller) для занурення в атмосферу тексту при збереженні академічного рівня аналізу"
+- section: "Класифікація та структура народної казки (Classification and Structure of Folk Tales)"
+  words: 900
+  points:
+  - "Типологія казок: чарівні (Івасик-Телесик), про тварин (Лисичка-сестричка) та соціально-побутові (про бідного та багатого)"
+  - "Традиційна структура: зачин, розгортання дії, кінцівка. Використання інверсії 'Жив-був...' (Learner Error: Word Order)"
+  - "Стилістичні засоби фольклору (§4.4.3): роль постійних епітетів та метафор у створенні магічного простору"
+- section: "Притчі, байки та літературні трансформації (Parables, Fables, and Literary Transformations)"
+  words: 900
+  points:
+  - "Філософські притчі Григорія Сковороди: алегоризм та повчальність як основа української літературної традиції"
+  - "Байки Леоніда Глібова: жанрові особливості та роль моралі. Диференціація казки та байки (Learner Error: Fairy tale vs Fable)"
+  - "Сатира в казці 'Пан Коцький': іронія над сліпою покорою авторитетам та 'страхом, що має великі очі' (Cultural Hook)"
+- section: "Лінгвістичний аналіз та типові труднощі (Linguistic Analysis and Common Difficulties)"
+  words: 800
+  points:
+  - "Аналіз переносного значення та алегорії в текстах притч: від буквального до філософського трактування"
+  - "Фразеологізми в казковому контексті: розуміння ідіом на кшталт 'піймати облизня' (Learner Error: Literal Translation)"
+  - "Казкові формули та кліше: 'стали жити-поживати', 'і я там був, мед-пиво пив' як інструменти побудови наративу"
+- section: "Творча практика та дискусія (Creative Practice and Discussion)"
+  words: 800
+  points:
+  - "Порівняльний аналіз: український Котигорошко vs європейські аналоги (аналіз схожих сюжетів та локальної специфіки)"
+  - "Написання сучасної притчі на задану тему з використанням алегоричних персонажів та моралі"
+  - "Обговорення казки як інструменту сучасного виховання та деколонізації фольклорних наративів"
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "казка (fairy tale) — народна казка, чарівна казка, розказувати казку; high frequency"
+  - "притча (parable) — біблійна притча, філософська притча, мова притч; medium frequency (literary)"
+  - "байка (fable) — писати байки, мораль байки, персонажі байки; medium frequency (literary)"
+  - "алегорія (allegory) — вдаватися до алегорії, прозора алегорія; academic register/medium frequency"
+  - "мораль (moral) — мораль цієї історії, читати мораль, подвійна мораль; high frequency"
+  recommended:
+  - "зачин (opening/prologue) — традиційний зачин, казковий зачин; low frequency (literary/structural)"
+  - "піймати облизня (to fail/be rebuffed) — ідіоматичний вираз; correction for literal translation errors"
+  - "жив-був (once upon a time) — традиційна інверсія; usage marker for storytelling register"
+  - "епітет (epithet) — постійний епітет, влучний епітет; academic register/stylistic analysis"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (3426 chars)
+✅ Message sent to Claude (ID: 10788)
+✓ Message 10788 acknowledged
+   Auto-acknowledged reply #10788 (stdout delivery — no inbox accumulation)
+✓ Message 10781 acknowledged

@@ -1,4 +1,3 @@
----
 sequence: 55
 module: ruth-055
 module_number: 45
@@ -9,7 +8,6 @@ phase: 2
 phase_id: sacred-word
 phase_name: Sacred Word
 focus: Agreement and government rules
-word_target: 4000
 content_outline:
 - section: Вступ
   description: Introduction to Syntax I
@@ -24,3 +22,6 @@ activity_types:
 - transcription
 - etymology-trace
 - grammar-identify
+persona:
+  voice: Baroque Scholar
+  role: Grammar Prefect

@@ -8,12 +8,13 @@ Bare slug = filename stem with leading numeric prefix removed:
     "140-syntez-viyna"        → "syntez-viyna"
     "knyahynia-olha"          → "knyahynia-olha"  (no-op)
     "01-the-cyrillic-code-i.md" → "the-cyrillic-code-i"  (extension stripped)
+    "1991-referendum"         → "1991-referendum"  (year prefix, NOT stripped)
 """
 
 import re
 from pathlib import Path
 
-_NUMERIC_PREFIX_RE = re.compile(r"^\d+-")
+_NUMERIC_PREFIX_RE = re.compile(r"^\d{1,3}-")  # 1-3 digits only; 4-digit years like 1991- are not module prefixes
 
 
 def to_bare_slug(name: str) -> str:

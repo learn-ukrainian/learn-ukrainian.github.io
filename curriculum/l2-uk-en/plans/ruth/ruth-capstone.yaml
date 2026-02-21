@@ -8,7 +8,6 @@ phase: 4
 phase_id: cossack-word
 phase_name: Cossack Word
 focus: Tracing a word from 1529 to 1794
-word_target: 4000
 content_outline:
 - section: Вступ
   description: Introduction to RUTH Capstone
@@ -24,3 +23,6 @@ activity_types:
 - etymology-trace
 - grammar-identify
 - historical-writing
+persona:
+  voice: Baroque Scholar
+  role: Ruthenian Polymath

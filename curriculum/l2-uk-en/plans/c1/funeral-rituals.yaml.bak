@@ -1,0 +1,46 @@
+module: c1-074
+level: C1
+sequence: 74
+slug: funeral-rituals
+version: '2.0'
+title: Родинні обряди - похорон
+subtitle: Family Rituals - Funeral and Memorial
+content_outline:
+- section: Розминка — Смерть як перехід
+  points:
+  - Смерть в українській культурі — не кінець
+  - Культ предків та зв'язок живих і мертвих
+  - Структура похоронних обрядів
+- section: Похоронні обряди
+  points:
+  - 'Підготовка до смерті: сповідь, причастя, прощання'
+  - 'Голосіння: ритуальний плач'
+  - 'Похорон: процесія, прощання, поховання'
+  - Посипання зерном, переворот порожньої домовини
+- section: Поминальні обряди
+  points:
+  - 'Поминки: третини, дев''ятини, сороковини'
+  - 'Річниця: роковини'
+  - 'Поминальна їжа: коливо, канун'
+  - 'Провід (Гробки): відвідування могил'
+- section: Практика — поминальна культура
+  points:
+  - Проаналізувати текст голосіння — структура
+  - Пояснити символіку поминальних страв
+  - Порівняти українські та європейські традиції
+  - Написати есе про ставлення до смерті
+focus: cultural
+pedagogy: CBI
+objectives:
+- Learner can describe the traditional funeral rites (vigil, burial, meal)
+- Learner can explain the concept of "holosinnya" (ritual lamentation)
+- Learner can use respectful vocabulary to talk about death and memory
+- Learner can discuss the significance of memorial days (Provody)
+grammar:
+- euphemisms for death
+- memorial phrases
+phase: C1.5 Folk Culture & Arts
+persona:
+  voice: Senior Specialist
+  role: Етнограф обрядів
+word_target: 4000

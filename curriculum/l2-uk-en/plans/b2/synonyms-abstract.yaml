@@ -1,0 +1,111 @@
+module: b2-66
+level: B2
+sequence: 66
+slug: synonyms-abstract
+version: '2.0'
+title: 'Синоніми: Абстрактні Поняття та Ідеї'
+subtitle: Synonyms - Abstract Concepts and Ideas
+content_outline:
+- section: 'Вступ: Світ абстракцій (Introduction: The World of Abstractions)'
+  words: 600
+  points:
+  - Introduction to the hierarchy of abstract concepts in the 'Science and Technology'
+    domain (§3), focusing on stylistic lexical means as mandated by State Standard
+    §4.4.1.2.
+  - 'Cultural hook: Hryhoriy Skovoroda’s ''Philosophy of the Heart'' — analyzing ''думка''
+    as a spiritual unit born in one''s inner essence (''шукай справжніх благ'') rather
+    than just a cognitive process.'
+- section: 'Одиниці мислення: Думка, ідея, погляд (Units of Thought: Thought, Idea,
+    View)'
+  words: 1000
+  points:
+  - Distinguishing 'думка' (high-frequency transient unit) from 'погляд' (fixed stance
+    or worldview); explaining why 'Мій погляд на...' is a noun phrase and cannot directly
+    introduce a clause like 'opinion that'.
+  - 'Cultural hook: Lesya Ukrainka’s metaphor of the ''word'' (expressed thought)
+    as ''hard steel'' (твердая криця) — contrasting the abstract ''ідея'' with its
+    materialization as a weapon of resistance.'
+  - 'Analysis of intellectual perspectives: using ''на мій погляд'' (academic) vs
+    ''на мою думку'' (neutral) to express stances on social and scientific issues.'
+- section: 'Системне знання: Концепція, теорія, гіпотеза (Systemic Knowledge: Concept,
+    Theory, Hypothesis)'
+  words: 1000
+  points:
+  - 'The hierarchy of academic abstraction: the progression from a tentative ''гіпотеза''
+    (low frequency) to building a ''теорія'' and establishing a foundational ''авторська
+    концепція''.'
+  - 'Narrative frame: ''The Scientist’s Diary'' — a series of entries practicing the
+    transition from ''висунути гіпотезу'' to ''підтвердити теорію'' using scientific
+    collocations (e.g., ''робоча гіпотеза'', ''теорія ймовірності'').'
+- section: 'Культура мовлення: Регістри та помилки (Speech Culture: Registers and
+    Errors)'
+  words: 800
+  points:
+  - 'Learner error correction: replacing the calque ''З моєї думки'' with the correct
+    ''На мою думку''; drilling collocations like ''громадська думка'' and ''заглибитися
+    в думки''.'
+  - 'Register mismatch patterns: distinguishing casual usage (''я маю ідею'') from
+    formal academic proposals (''у мене є думка/пропозиція''); using ''припущення''
+    for general guesses instead of the formal ''теорія''.'
+- section: 'Практикум: Академічне письмо (Workshop: Academic Writing)'
+  words: 600
+  points:
+  - 'Sociologist''s task: writing a research abstract that correctly employs ''концепція
+    розвитку'', ''теоретична концепція'', and ''обмінятися поглядами'' in a professional
+    academic register.'
+  - Final systematization of synonyms from modules M55-66, focusing on the stylistic
+    coloring of intellectual activity (e.g., 'переконання' as conviction vs 'уявлення'
+    as a mental picture).
+focus: phraseology
+pedagogy: CBI
+objectives:
+- Учень може розрізняти відтінки значень між синонімами на позначення інтелектуальної
+  діяльності (думка, ідея, погляд)
+- Учень вміє використовувати академічну лексику для опису наукових концепцій та теорій
+- Учень розуміє різницю між гіпотезою, припущенням та переконанням
+grammar:
+- Nuances in abstract nouns
+- Collocations with idea/thought
+immersion: 100
+register: науковий
+phase: B2.2 [Phraseology & Synonymy]
+vocabulary_hints:
+  required:
+  - думка (thought) — на мою думку, громадська думка; high frequency, general unit
+    of thinking
+  - ідея (idea) — виникла ідея, головна ідея; med-high frequency, refers to the core
+    concept of a project or work
+  - погляд (view/perspective) — на мій погляд, науковий погляд, обмінятися поглядами;
+    implies a fixed stance or worldview
+  - концепція (conception/framework) — авторська концепція, концепція розвитку; med-low
+    frequency, formal academic framework
+  - теорія (theory) — будувати теорії, підтвердити теорію; med-low frequency, systematic
+    body of knowledge
+  - гіпотеза (hypothesis) — висунути гіпотезу, робоча гіпотеза; low frequency, tentative
+    scientific assumption
+  - переконання (belief/conviction) — глибоке переконання; refers to a stable, internal
+    ideological or moral stance
+  recommended:
+  - поняття (concept/notion) — базове поняття; the fundamental building block of understanding/definition
+  - уявлення (notion/mental picture) — помилкове уявлення; refers to a mental image
+    or general impression of something
+  - припущення (assumption/guess) — за припущенням; neutral term for a non-scientific
+    or casual guess
+  - світогляд (worldview) — формування світогляду; the total system of an individual's
+    'погляди'
+  - криця (steel/flint) — тверда криця; cultural reference to Lesya Ukrainka's metaphor
+    for the expressed thought
+activity_hints:
+- type: reading
+  focus: Контекстне використання
+  items: 4
+- type: fill-in-the-blank
+  focus: Практичне застосування
+  items: 10
+- type: true-false
+  focus: Розуміння значень
+  items: 8
+persona:
+  voice: Professional Language Coach
+  role: Sociologist (Соціолог)
+word_target: 4000

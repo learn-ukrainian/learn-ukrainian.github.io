@@ -1,75 +1,41 @@
-# Research: Purpose Clauses (Subjunctive with "щоб")
+# Дослідження: Підрядні речення мети: щоб + минула форма
 
-**Module**: B1 M30 "Purpose: Shchob + Past Form"
-**Topic**: Complex sentences of purpose with different subjects (Subjunctive Mood)
+## State Standard Reference
+§4.4.3: "складнопідрядні речення з підрядною частиною мети (сполучник щоб): Ми ходимо в музеї Львова, щоб краще знати історію цього старовинного міста"
+Also relevant (Indirect Command/Purpose with different subjects) §4.4.2: "Викладач сказав, щоб я багато працював"
+Alignment: This module directly addresses the B1 requirement for complex sentences with purpose clauses, specifically focusing on the "different subject" pattern (`щоб` + past tense), which is distinct from the same-subject infinitive pattern.
 
-## 1. Grammar: State Standard 2024 Reference
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| бажання | High (Core B1) | велике бажання, мати бажання, придушити бажання, за власним бажанням |
+| прохання | High (Core B1) | на прохання, мати прохання, звертатися з проханням, виконати прохання |
+| наказ | Medium (Core B1) | віддати наказ, виконати наказ, за наказом |
+| необхідність | High (Core B1) | гостра необхідність, викликана необхідністю, у разі необхідності |
+| вимагати | High (Core B1) | вимагати уваги, вимагати грошей, вимагати, щоб... |
+| радити | High (Core B1) | радити другу, я раджу тобі, лікар радить |
 
-This topic falls under **B1 Syntax: Complex Sentences (Складнопідрядні речення)**.
+## Cultural Hooks
+1. **Paternal Wisdom & Family Expectations**: Ukrainian culture places high value on intergenerational support. Parents often sacrifice "so that children have a better life" (`Батьки працюють, щоб діти мали краще майбутнє`). This is a perfect natural context for this grammar point.
+2. **Proverbs on Effort & Result**:
+   - "Щоб рибу їсти, треба у воду лізти" (To eat fish, one must climb into the water) — emphasizes purpose and necessary action.
+   - "Під лежачий камінь вода не тече" (Water doesn't flow under a lying stone) — action required for result.
 
-> **Section: Складнопідрядні речення з підрядними мети та з'ясувальними**
-> "Вживання сполучника **щоб** у складнопідрядних реченнях. Особливості вживання форм минулого часу дієслова після сполучника *щоб* для вираження бажання, прохання, наказу або мети, коли суб'єкт головного і підрядного речень не збігається."
-> *(State Standard Reference, Level B1, Syntax)*
+## Common Learner Errors
+1. **Infinitive instead of Past Tense**: Learners often try to mirror English "I want you to go" with `Я хочу тебе йти` or `Я хочу, щоб ти йти`.
+   → *Correct:* `Я хочу, щоб ти йшов/йшла`.
+   → *Why:* English uses infinitive for different subjects; Ukrainian strictly requires `щоб` + past tense (subjunctive).
+2. **Case Errors in Main Clause**: Using Nominative instead of Accusative/Genitive for the object of desire.
+   → *Correct:* `Я хочу (чого?) спокою` or `Я чекаю на (що?) результат`.
+3. **Gender/Number Disagreement**: Failing to match the past tense verb in the `щоб` clause with its subject (the person being told/wanted to do something).
+   → *Error:* `Він хоче, щоб я (female) написав...`
+   → *Correct:* `Він хоче, щоб я написала...`
 
-**Key Concept**: The "Subjunctive" (Умовний спосіб) in Ukrainian often looks identical to the Past Tense. When `щоб` introduces a clause where the subject changes (Subject 1 wants Subject 2 to do something), the verb in the `щоб` clause MUST be in the **Past Tense**.
+## Cross-References
+- Builds on: `b1-29` (Purpose Clauses: щоб + infinitive — same subject pattern)
+- Prepares for: `b1-31` (Conditionals Real `якщо` — similar subordinate logic), `b1-36` (Subjunctive Mood — full treatment)
 
-## 2. Vocabulary Frequency & Collocations
-
-### High Frequency (Core Triggers)
-*   **хотіти, щоб...** (to want that...) - *Most common*
-*   **просити, щоб...** (to ask that...)
-*   **сказати, щоб...** (to tell [someone] to...) - *Used for reported commands*
-*   **бажати, щоб...** (to wish that...)
-
-### Medium Frequency
-*   **вимагати, щоб...** (to demand that...)
-*   **радити, щоб...** (to advise that...)
-*   **робити [щось], щоб...** (to do [something] so that...)
-
-### Common Collocations (Patterns)
-*   *Я хочу, щоб ти знав...* (I want you to know...)
-*   *Він попросив, щоб я прийшла.* (He asked me to come.)
-*   *Мама сказала, щоб ми помили руки.* (Mom told us to wash our hands.)
-*   *Я роблю це для того, щоб ви були щасливі.* (I do this so that you would be happy.)
-
-## 3. Cultural Hook
-
-**1. The "Toast" Culture**
-Ukrainian toasts often start with **"Щоб..."** followed by a verb in the past tense (subjunctive meaning "May it happen").
-*   *Щоб ми були здорові!* (May we be healthy!)
-*   *Щоб діти радували!* (May the children bring joy!)
-This structure allows learners to participate in social rituals immediately.
-
-**2. Directness vs. Grammar**
-In English, "I want you to help me" is a grammatical construction (Object + Infinitive). In Ukrainian, this concept requires a full subordinate clause (*Я хочу, щоб ти мені допоміг*). Culturally, this highlights how Ukrainian syntax segments thoughts into distinct "subject-action" spheres rather than merging them into a single complex object.
-
-## 4. Pedagogical Notes
-
-### Key Differences from English
-*   **The "Infinitive Trap"**: English speakers desperately want to say *Я хочу тебе піти* (literal: I want you to go). This is **impossible** in Ukrainian.
-*   **The "Past Tense" Confusion**: Learners are confused why they must use "past tense" (*зробив*) for a future desire.
-    *   *Explanation*: Explain it as a "non-real" form. It hasn't happened yet, so we treat it as hypothetical (subjunctive). It just *looks* like the past.
-
-### Teaching Sequence
-1.  **Recall M29**: Review `щоб` + Infinitive (Subject 1 = Subject 2). "Я йду в магазин, щоб купити хліб."
-2.  **Introduce Conflict**: "What if I want **YOU** to buy bread?" -> Subject mismatch.
-3.  **The Formula**: Main Clause + `(,)` + `щоб` + New Subject + **Past Verb**.
-4.  **Drill**: Transform "I do X" -> "I want YOU to do X".
-
-### Common Errors
-*   *Я хочу тебе читати.* (Using accusative + infinitive like English/Latin).
-*   *Я хочу, щоб ти читаєш.* (Using Present Tense after `щоб`). **Correction**: Must be *читав/читала*.
-
-## 5. Scope Boundaries
-
-### IN Scope (B1 M30)
-*   **Pattern**: `Subject 1` + Verb + `, щоб` + `Subject 2` + **Past Tense Verb**.
-*   **Verbs of Influence**: *хотіти, просити, казати* (command), *бажати*.
-*   **Action for Purpose**: *Я зачинив вікно, щоб ти не змерзла.* (I closed the window so that you wouldn't freeze).
-*   **Gender Agreement**: Remind students the past verb must agree with `Subject 2` (*ти писав* vs *ти писала*).
-
-### OUT Scope (Wait for later)
-*   **`Щоб` + Infinitive**: Covered in M29 (Same subject).
-*   **Complex mixed conditionals**: "If I had wanted you to go..." (B2/C1).
-*   **Stylistic inversion**: Starting sentences with `Щоб` for emphasis in non-toast contexts (B2).
-*   **Formal bureaucratic equivalents**: *З метою...* (With the goal of...) (C1).
+## Notes for Content Writing
+- **Contrast is Key**: Constantly contrast "Same Subject (`я хочу читати`)" vs "Different Subject (`я хочу, щоб ти читав`)". This is the conceptual hurdle.
+- **"Subjunctive" Terminology**: At B1, avoid heavy linguistic jargon like "subjunctive mood" (умовний спосіб) in the explanations if possible, or introduce it gently. Focus on the *form* being identical to the past tense.
+- **Contexts**: Use professional contexts (boss/employee) for "commands/requests" and family contexts for "wishes/advice".

@@ -1,0 +1,317 @@
+✅ Message sent to Gemini (ID: 10325) [auto-acked: self-addressed]
+✓ Message 10325 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10325...
+📨 Message #10325
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-motion-practice-integration
+   Time: 2026-02-20T20:26:53.041650+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b1-24
+level: B1
+sequence: 24
+slug: motion-practice-integration
+version: '2.0'
+title: 'Дієслова руху: практика та інтеграція'
+subtitle: 'Motion verbs: practice and integration'
+content_outline:
+- section: Тест
+  points: '[]'
+- section: Пояснення
+  points:
+  - 1. Матриця "Префікс — Прийменник"
+  - 2. Складні маршрути та орієнтування
+  - '3. Ідіоми руху: Коли рух — це не рух'
+  - 4. Подорожувати vs Їздити
+  - 5. Географія українських доріг
+  - '6. Історія: "Чумацький Шлях"'
+  - '7. Етикет: Як правильно питати дорогу'
+  - 8. Типові помилки студентів (B1)
+  - '9. Рух у бізнесі: Метафори'
+- section: Практика
+  points:
+  - 'Аналіз тексту: "Одіссея" по-київськи'
+- section: Діалоги
+  points:
+  - 'Діалог 1: Таксист і Пасажир (Навігація)'
+  - 'Діалог 2: Кар''єра (Переносне значення)'
+  - 'Діалог 3: Зустріч у місті (Логістика)'
+- section: Потрібно більше практики?
+  points:
+  - Інтеграція знань
+  - Реальне застосування
+  - Онлайн-ресурси
+  - 📝 Практичне завдання
+vocabulary_hints:
+  required:
+  - спочатку (at first)
+  - потім (then)
+  - нарешті (finally)
+  - напрямок (direction)
+  - траєкторія (trajectory)
+  - маршрут (route)
+  - повернути (to turn)
+  - прямо (straight)
+  - праворуч (to the right)
+  - ліворуч (to the left)
+  recommended:
+  - на розі (at the corner)
+  - на перехресті (at the intersection)
+  - світлофор (traffic light)
+  - пішохідний перехід (pedestrian crossing)
+  - кілька кварталів (a few blocks)
+activity_hints:
+- type: fill-in
+  focus: Extended writing - "A journey I took"
+  items: 15+
+- type: fill-in
+  focus: Map-based - Give complex directions
+  items: 12+
+- type: fill-in
+  focus: Change direction/destination
+  items: 12+
+- type: quiz
+  focus: Preposition + motion verb combinations
+  items: 15+
+focus: grammar
+pedagogy: TTT
+prerequisites:
+- b1-16 (Motion verbs full system)
+- b1-17 (Motion - coming & going)
+- b1-18 (Motion - passing & crossing)
+- b1-19 (Motion - starting & returning)
+- b1-20 (Motion - approaching & departing)
+- b1-21 (Motion - figurative uses)
+- b1-22 (Motion full prefix integration)
+- b1-23 (Motion patterns in other verbs)
+connects_to:
+- b1-25 (Checkpoint - motion verbs)
+objectives:
+- Master complex travel narratives
+- Correctly use prepositions with specific motion prefixes
+- Understand and use high-frequency motion idioms
+grammar:
+- Integration of pure and prefixed motion verbs
+- Prepositions governing motion (в, на, до, через, повз)
+- Figurative idioms with motion verbs
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Motion and Prepositions
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Official guidance on preposition-verb combinations
+- name: Ukrainian Motion Verbs
+  url: https://uk.wikipedia.org/wiki/Дієслова_руху
+  type: reference
+  notes: Comprehensive motion verb reference
+- name: Ukrainian Prepositions
+  url: https://uk.wikipedia.org/wiki/Прийменник
+  type: reference
+  notes: Preposition usage with motion verbs
+immersion: 100% Ukrainian
+phase: B1.2 Motion
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Travel Blogger
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Дієслова руху: практика та інтеграція
+
+## State Standard Reference
+§4.3.8: "Утворення префіксальних дієслів руху: іти – прийти, перейти, дійти, відійти, зайти, вийти; їхати – приїхати, переїхати, доїхати, від’їхати, заїхати, поїхати, виїхати, об’їхати."
+§4.2.2.4: "Знахідний відмінок... Із прийменниками: в, у, на, за (кінцевий пункт руху суб’єкта, кінцева мета руху)... через (шлях руху)."
+Alignment: Module focuses on integrating these prefixed verbs with correct prepositions (в/на/до/через) in complex travel narratives (Theme §3.5 Подорожі).
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| спочатку | High (Core) | спочатку... а потім; спочатку поверніть |
+| потім | High (Core) | і потім; а потім |
+| нарешті | High (Core) | ну нарешті; і нарешті ми прийшли |
+| напрямок | High | у напрямку до; змінити напрямок |
+| маршрут | Medium (Transport) | прокласти маршрут; туристичний маршрут |
+| повернути | High | повернути праворуч/ліворуч; повернути за ріг |
+| прямо | High | йдіть прямо; прямо і направо |
+| траєкторія | Medium (Scientific/Tech) | траєкторія руху; зміна траєкторії |
+
+## Cultural Hooks
+1. **Чумацький Шлях (The Milky Way / The Chumak Way)**: Verified historical duality. It is both the Galaxy and the historic trade route of Chumaks (salt traders) to Crimea. Legend: Chumaks spilled salt across the sky to guide their way. Perfect metaphor for "navigation" and "long journeys".
+2. **Kyiv's Vertical Geography**: The iconic route connecting **Podil** (Lower City, trade, river) to **Verkhnie Misto** (Upper City, history, churches). Key connectors: *Andriivskyi Uzviz* (walking) and the *Funicular* (transport). Navigating this requires understanding "up" (піднятися) and "down" (спуститися).
+
+## Common Learner Errors
+1. **Wrong Preposition for Destination**: Using *на* instead of *в* or vice versa (e.g., *йти на парк* instead of *йти в парк*; *їхати в вокзал* instead of *їхати на вокзал*).
+   - *Fix:* Specific lexical drill (locations taking *на*: post office, station, square, street).
+2. **Case Confusion (Locative vs Accusative)**: Using Locative for destination (*Я йду в парку*) instead of Accusative (*Я йду в парк*).
+   - *Fix:* Contrastive examples: *Де? (в парку)* vs *Куди? (в парк)*.
+3. **Calques from English**: "Take a bus" (*брати автобус* - wrong) instead of *сісти на автобус* (sit on bus) or *їхати автобусом* (go by bus).
+
+## Cross-References
+- Builds on: b1-16 (Motion verbs full system), b1-22 (Motion full prefix integration)
+- Prepares for: b1-25 (Checkpoint), B2 narrative modules (travel stories)
+
+## Notes for Content Writing
+- **Odessey Concept**: Frame the "Kyiv Odyssey" text around the Podil-Upper City route. It's a real-world workout for motion verbs (up/down/across).
+- **Idioms**: Include *на роздоріжжі* (at a crossroads - life choice) and *глухий кут* (dead end - impasse).
+- **Maps**: Use text-based "mental maps" in exercises to force visualization of *праворуч/ліворуч*.
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Перевірка та мотивація (Introduction: Testing and Motivation)"
+  words: 400
+  points:
+  - "Діагностичний тест: перевірка навичок використання префіксальних дієслів руху та прийменників за §4.3.8 Державного стандарту."
+  - "Огляд цілей модуля: перехід від базового орієнтування до складних наративів про подорожі (Theme §3.5 Подорожі)."
+- section: "Пояснення: Матриця навігації та прийменників (Explanation: Navigation and Preposition Matrix)"
+  words: 1000
+  points:
+  - "Комплексний аналіз систем 'іти/прийти' та 'їхати/приїхати' у поєднанні з прийменниками в, на, до, через (§4.2.2.4)."
+  - "Усунення типових помилок: контраст між Знахідним (куди?) та Місцевим (де?) відмінками — моделі «йти в парк» vs «бути в парку»."
+  - "Лексичні пастки: розрізнення локацій, що вимагають прийменника 'на' (вокзал, пошта, вулиця) проти стандартного 'в' (парк, театр)."
+  - "Подолання кальок з англійської: заміна помилкового 'брати автобус' на нормативні 'сісти на автобус' або 'їхати автобусом'."
+- section: "Культурний контекст: Шляхи та ідіоми (Cultural Context: Ways and Idioms)"
+  words: 800
+  points:
+  - "Історія та легенди: 'Чумацький Шлях' як історичний маршрут соляних торговців до Криму та небесний орієнтир для навігації."
+  - "Ідіоматика руху: освоєння метафор 'на роздоріжжі' (життєвий вибір) та 'глухий кут' (безвихідна ситуація, тупик)."
+  - "Мовленнєвий етикет: як ввічливо запитувати дорогу, використовуючи конструкції з дієсловами 'дійти', 'піднятися', 'пройти'."
+- section: "Практика: Київська Одіссея (Practice: Kyiv Odyssey)"
+  words: 1200
+  points:
+  - "Текстова симуляція: маршрут від Подолу до Верхнього міста через Андріївський узвіз — акцент на дієслова 'піднятися' та 'спуститися'."
+  - "Аналіз логістики: використання фунікулера як специфічного транспорту для подолання вертикальної географії Києва."
+  - "Діалоговий тренажер: симуляція взаємодії 'таксист — пасажир' з використанням орієнтирів 'на розі', 'на перехресті', 'світлофор'."
+- section: "Підсумок та застосування (Summary and Application)"
+  words: 600
+  points:
+  - "Побудова власної траєкторії: опис складного маршруту з використанням маркерів послідовності 'спочатку', 'потім', 'нарешті'."
+  - "Творче завдання: 'Моя Одіссея' — написання розповіді про власну значущу поїздку з інтеграцією вивчених префіксальних дієслів."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "спочатку (at first) — спочатку... а потім; спочатку поверніть; High frequency marker"
+  - "потім (then) — і потім; а потім; High frequency sequence marker"
+  - "нарешті (finally) — ну нарешті; і нарешті ми прийшли; High frequency result marker"
+  - "напрямок (direction) — у напрямку до; змінити напрямок; High frequency"
+  - "маршрут (route) — прокласти маршрут; туристичний маршрут; Medium frequency"
+  - "повернути (to turn) — повернути праворуч/ліворуч; повернути за ріг; High frequency action"
+  - "траєкторія (trajectory) — траєкторія руху; зміна траєкторії; Medium frequency (scientific/tech)"
+  - "прямо (straight) — йдіть прямо; прямо і направо; High frequency direction"
+  recommended:
+  - "на розі (at the corner) — usage in city navigation"
+  - "на перехресті (at the intersection) — usage in complex directions"
+  - "піднятися (to go up / ascend) — crucial for hilly terrain like Kyiv"
+  - "спуститися (to go down / descend) — antonym to 'піднятися'"
+  - "на роздоріжжі (at a crossroads) — idiom for a life-changing choice"
+  - "глухий кут (dead end) — idiom for an impasse or hopeless situation"
+  - "фунікулер (funicular) — specific transport for vertical geography"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (3664 chars)
+✅ Message sent to Claude (ID: 10332)
+✓ Message 10332 acknowledged
+   Auto-acknowledged reply #10332 (stdout delivery — no inbox accumulation)
+✓ Message 10325 acknowledged

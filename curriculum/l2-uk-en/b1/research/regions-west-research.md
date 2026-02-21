@@ -1,62 +1,38 @@
-# Research: Українські регіони: Захід (Regions: West)
+# Дослідження: Українські регіони: Захід
 
-**Module:** B1 M72
-**Level:** B1 (Intermediate)
-**Topic:** Western Ukraine: Lviv, Galicia, Zakarpattia, Bukovyna
+## State Standard Reference
+§3.13: "Місця: тип і розташування місцевості; інституції та громадські місця; пам’ятки культури і пам’ятники; туристичні принади."
+§3.15: "Традиції, звичаї, свята: ... українські звичаї і традиції."
+Alignment: This module directly addresses the requirement to describe local terrain, cultural monuments, and tourist attractions (Lviv, Carpathians), as well as specific regional traditions (coffee culture, holidays).
 
-## 1. Grammar: State Standard 2024 Reference
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| **спадщина** (heritage) | High (Core Academic/Cultural) | культурна спадщина, історична спадщина, світова спадщина ЮНЕСКО |
+| **традиція** (tradition) | High (General) | за народною традицією, давня традиція, підтримувати традицію |
+| **архітектура** (architecture) | Medium (Thematic) | старовинна архітектура, пам'ятка архітектури, стиль архітектури |
+| **кав'ярня** (coffee shop) | High (Urban/Cultural) | затишна кав'ярня, львівська кав'ярня, сидіти в кав'ярні |
+| **Галичина** (Galicia) | Medium (Regional Proper Noun) | на Галичині, Східна Галичина, історія Галичини |
+| **Закарпаття** (Zakarpattia) | Medium (Regional Proper Noun) | відпочинок на Закарпатті, природа Закарпаття, вина Закарпаття |
 
-According to the **State Standard for Ukrainian as a Foreign Language (2024)**, proficiency level B1 requires the ability to maintain interaction and get across what one wants to, in a range of contexts.
+## Cultural Hooks
+1. **Lviv Coffee Origin**: The coffee tradition in Lviv is linked to **Yuriy Kulchytskyi** (from Lviv region), a hero of the Battle of Vienna (1683), who opened the first Viennese coffee house "Under the Blue Bottle" and invented the recipe for coffee with milk/sugar. Lviv's first coffee house opened later (1829), but the "cult" is modern.
+2. **Dialectal Flavor**: The "Galician" accent and vocabulary (*гаварити*, *філіжанка*, *коліжанка*, *файно*) are iconic markers of the region, often used in literature and media to signal "Western" identity.
+3. **Multicultural Zakarpattia**: Unlike the more homogenous center, Zakarpattia is a true borderland mosaic: Ukrainian, Hungarian, Romanian, and Slovak influences blend in language, cuisine (bograch), and architecture.
 
-*   **Relevant Section:** **Соціокультурна змістова лінія (Sociocultural Content Line)**
-*   **Specific Standard:** "Здатність сприймати та продукувати тексти, що стосуються географії, історії та культури України; описувати визначні місця, пам’ятки історії та культури." (Ability to perceive and produce texts related to geography, history, and culture of Ukraine; describe landmarks, historical and cultural monuments.)
-*   **Grammar Focus:** **Locative Case (Місцевий відмінок)** for location (*у Львові, на Закарпатті*), **Adjectives** for description (*старовинний, мальовничий*), and **Past Tense** for historical narrative.
+## Common Learner Errors
+1. **Preposition Usage**: *В Галичині* (Incorrect) → **На Галичині** (Correct).
+   *Why*: Historical regions (Galicia, Volhynia, Polissia, Zakarpattia) traditionally take the preposition *на*, treating them as territories/terrains rather than enclosed administrative units.
+2. **Regional Confusion**: Equating "Western Ukraine" solely with "Lviv/Galicia".
+   *Why*: Learners often overlook that Volhynia, Bukovyna, and Zakarpattia have distinct histories and dialects separate from the Galician tradition.
+3. **Adjective Agreement**: *Львівська кава* (Correct) vs *Львівський кава* (Incorrect).
+   *Why*: *Кава* is feminine in Ukrainian (unlike Russian where *кофе* is masculine), so adjectives must agree: *смачна кава*, *гаряча кава*.
 
-## 2. Vocabulary Frequency & Collocations
+## Cross-References
+- **Builds on**: A2 cultural modules (basic holidays, food), B1-71 (Emotional Intelligence - sequencing).
+- **Prepares for**: B1-73 (Regions East - intended for contrast), B1-84 (Internal Tourism).
 
-### High Frequency (Essential B1)
-*   **регіон** (region) — *західний регіон* (western region)
-*   **гори** (mountains) — *у горах, Карпати*
-*   **місто** (city) — *старе місто, центр міста*
-*   **історія** (history) — *давня історія*
-*   **культура** (culture) — *українська культура*
-*   **кордон** (border) — *біля кордону* (near the border)
-*   **традиція** (tradition) — *народні традиції*
-
-### Medium Frequency (Thematic)
-*   **спадщина** (heritage) — *культурна спадщина*
-*   **архітектура** (architecture) — *унікальна архітектура*
-*   **кав'ярня** (coffee shop) — *затишна кав'ярня* (cozy coffee shop)
-*   **фортеця / замок** (fortress / castle) — *старий замок*
-*   **діалект** (dialect) — *місцевий діалект*
-
-### Collocations
-*   **Випити кави** (To drink coffee) — *Typical Lviv activity*
-*   **Піднятися на Говерлу** (To climb Hoverla)
-*   **Гуляти вуличками** (To walk along narrow streets)
-
-## 3. Cultural Hook
-
-*   **Lviv Coffee Culture:** Lviv claims to be the coffee capital of Ukraine. The tradition is linked to Yuriy Kulchytsky, a noble from the region who opened one of the first coffee houses in Vienna in 1683. "Піти на каву" (to go for coffee) in Lviv is a ritual, not just a drink.
-*   **The Hutsuls:** An ethno-cultural group in the Carpathians known for their colorful clothing, *trembita* (the longest wind instrument in the world), and distinct dialect. They are often romanticized as the "highlanders" of Ukraine.
-
-## 4. Pedagogical Notes
-
-*   **Preposition Trap (У vs НА):** Students often confuse which preposition to use with regions.
-    *   *General Rule:* Cities take **у/в** (*у Львові, в Івано-Франківську*).
-    *   *Exception:* **Zakarpattia** (Transcarpathia) usually takes **на** (*на Закарпатті*), while **Halychyna** (Galicia) takes **в** (*в Галичині*).
-    *   *Bukovyna:* **на** Буковині (often) or **в** Буковині depending on context, but *на* is common for regions implying "territory".
-*   **Pronunciation of 'Г' (H):** Western dialects often have a softer, more distinct 'h' sound. It's a good opportunity to reinforce the standard Ukrainian voiced glottal fricative /ɦ/.
-*   **False Friends:** "Захід" means both "West" and "Sunset" (and also "Event" in a specific context *захід*). Ensure context distinguishes "Західна Україна" (Western Ukraine) from generic directions.
-
-## 5. Scope Boundaries (B1 Level)
-
-### IN Scope (Target)
-*   **Grammar:** Locative case (singular/plural), Genitive case (possession/of), Past tense verbs (perfective/imperfective distinction for history), Adjectives (descriptive).
-*   **Topics:** Tourism, geographical descriptions, simple historical facts, expressing impressions (*мені подобається*, *я вражений*).
-*   **Text Types:** Travel blog posts, tourist brochures, simple historical summaries.
-
-### OUT Scope (Too Advanced)
-*   **Dialect Recreation:** Do not force students to *speak* in Hutsul or Galician dialect. Mention it exists, but teach Standard Ukrainian.
-*   **Complex Political History:** Avoid deep dives into the geopolitics of the Austro-Hungarian Empire or Polish-Lithuanian Commonwealth details beyond "it was part of...".
-*   **Archaic Vocabulary:** Stick to modern terms. Use *кав'ярня* (modern), not archaic regionalisms unless explained as flavor text.
+## Notes for Content Writing
+- **Persona**: "Lviv Coffee Connoisseur" (Urbanist/Ethnographer blend). Use a tone that is welcoming, slightly sophisticated but warm (*«Запрошую на філіжанку кави...»*).
+- **Immersion**: Strict 100%. Use *«як кажуть львів'яни»* to introduce dialect words without breaking immersion.
+- **Geography**: Clearly distinguish the Carpathians (nature) from Lviv (urban culture).

@@ -1,0 +1,322 @@
+✅ Message sent to Gemini (ID: 10704) [auto-acked: self-addressed]
+✓ Message 10704 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10704...
+📨 Message #10704
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-cv-resume-writing
+   Time: 2026-02-20T21:24:18.143596+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-021
+level: C1
+sequence: 21
+slug: cv-resume-writing
+version: '2.0'
+title: Написання резюме та CV
+content_outline:
+- section: Вступ — Резюме vs CV
+  points:
+  - Різниця між резюме та CV
+  - Коли використовувати який формат
+  - Українські vs міжнародні стандарти
+- section: Структура українського CV
+  points:
+  - Особисті дані (Personal data)
+  - Освіта (Education)
+  - Досвід роботи (Work experience)
+  - Навички (Skills)
+  - Мови (Languages)
+  - Рекомендації (References)
+- section: Дієслова дії для досвіду
+  points:
+  - Розробляв, впроваджував, координував
+  - Керував, організовував, планував
+  - Аналізував, оптимізував, досягав
+- section: Формальний стиль опису
+  points:
+  - Безособові конструкції
+  - Формальна лексика
+  - Уникнення займенників
+- section: Супровідний лист
+  points:
+  - Структура листа
+  - Звертання і прощання
+  - Мотивація та цілі
+- section: Типові помилки
+  points:
+  - Зайва інформація
+  - Неформальний стиль
+  - Граматичні помилки
+- section: Практичне завдання
+  points:
+  - Написання власного CV
+  - Редагування чужого CV
+  - Трансформація стилю
+vocabulary_hints:
+  required:
+  - резюме (resume)
+  - CV (curriculum vitae)
+  - досвід роботи (work experience)
+  - освіта (education)
+  - навички (skills)
+  - компетенція (competency)
+  - посада (position)
+  - обов'язки (responsibilities)
+  - досягнення (achievements)
+  - рекомендація (reference)
+  recommended:
+  - кар'єрний шлях (career path)
+  - професійний розвиток (professional development)
+  - кваліфікація (qualification)
+  - сертифікат (certificate)
+  - стажування (internship)
+activity_hints:
+- type: fill-in
+  focus: CV section phrases
+  items: 15+
+- type: quiz
+  focus: CV structure and format
+  items: 15+
+- type: match-up
+  focus: Informal → formal descriptions
+  items: 12+
+- type: cloze
+  focus: Action verbs in work experience
+  items: 12+
+- type: error-correction
+  focus: Fix CV mistakes
+  items: 10+
+- type: essay-response
+  focus: Write cover letter
+focus: style
+prerequisites:
+- c1-01 to c1-20 (Complete C1.1)
+- Academic writing foundation
+connects_to:
+- c1-22 (Job Interview)
+- c1-23 (Business Etiquette)
+- c1-32 (Professional Scenarios)
+module_type: skills
+sources:
+- name: Ukrainian CV Standards
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Official guidelines for Ukrainian CV format
+- name: Ukrainian State Standard C1 (2024)
+  url: https://mon.gov.ua/
+  type: reference
+  notes: C1 professional writing requirements
+immersion: 100% Ukrainian
+phase: C1.2 Professional Communication
+objectives:
+- Understand and apply написання резюме та cv
+- Analyze and evaluate резюме vs cv
+- Identify key concepts of практичне завдання
+persona:
+  voice: Senior Specialist
+  role: HR-директор
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Написання резюме та CV
+
+## State Standard Reference
+§3.13: "Робота: назви професій; офіційне працевлаштування... кваліфікації... ділові переговори"
+§4.4.1.1: "Стилі мовлення: ... офіційний [офіційно-діловий]"
+Alignment: This module directly addresses the C1 requirement for professional communication regarding employment (official employment, qualifications) and mastery of the official-business style.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| резюме (n) | High / Business | надсилати резюме, складати резюме, розлядати резюме |
+| вакансія (n) | High / Job sites | відкрита вакансія, відгукнутися на вакансію |
+| досвід (n) | High / General | досвід роботи, професійний досвід, релевантний досвід |
+| навичка (n) | Med / Professional | ключові навички, м'які навички (soft skills), технічні навички |
+| роботодавець (n) | Med / Legal/Bus | потенційний роботодавець, вимоги роботодавця |
+| супровідний (adj) | Low / Specific | супровідний лист, супровідні документи |
+| претендувати (v) | Med / Formal | претендувати на посаду, претендувати на вакансію |
+
+## Cultural Hooks
+1. **Europass vs. Soviet Legacy**: Transition from the detailed, narrative "Autobiography" (Автобіографія) required in Soviet times to the modern, concise, reverse-chronological CV format aligned with Europass standards.
+2. **The Photo Question**: Unlike in the US/UK where photos are often discouraged due to anti-discrimination laws, in Ukraine, a professional photo on a CV is often expected and considered a sign of openness and professionalism.
+
+## Common Learner Errors
+1. **Overuse of "Я"**: Learners often start every sentence with "Я робив...", "Я керував...".
+   *   *Correction*: Use active verbs without the pronoun (e.g., "Керував відділом...", "Розробив стратегію...") or deverbal nouns for lists.
+2. **"Calques" from English**: Translating "apply for a job" as "аплікуватися" (slang/surzhyk) or "подавати на роботу".
+   *   *Correction*: "Подавати документи на посаду", "претендувати на вакансію", "відгукнутися на вакансію".
+3. **Style Mismatch**: Using conversational or emotional adjectives (e.g., "класний працівник", "дуже люблю працювати").
+   *   *Correction*: "Відповідальний фахівець", "вмотивований до професійного зростання".
+
+## Cross-References
+- **Builds on**: C1.1 Academic Foundation (formal writing skills).
+- **Prepares for**: c1-22 (Job Interview), c1-23 (Business Etiquette).
+
+## Notes for Content Writing
+- Focus on the "Action Verb" strategy: shifting from passive descriptions to result-oriented statements.
+- Emphasize the structure of the "Cover Letter" as it's often a weak point for learners accustomed to just sending a file.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Резюме vs CV та державні стандарти (Introduction: Resume vs CV and State Standards)"
+  words: 500
+  points:
+  - "Аналіз відмінностей між резюме та CV в українському контексті: коли використовувати короткий формат, а коли розгорнутий."
+  - "Відповідність вимогам Державного стандарту С1 (§3.13 та §4.4.1.1): опанування офіційно-ділового стилю для професійного працевлаштування."
+  - "Культурний контекст: еволюція від радянської розлогої «Автобіографії» до сучасного лаконічного формату за стандартами Europass."
+- section: "Структура та оформлення українського CV (Structure and Formatting of a Ukrainian CV)"
+  words: 700
+  points:
+  - "Обов'язкові блоки: особисті дані, освіта, досвід роботи, навички та рекомендації."
+  - "Культурна особливість: питання професійного фото в українському CV як ознака відкритості та професіоналізму (порівняння з практиками США/Великої Британії)."
+  - "Оформлення контактної інформації та посилань на професійні мережі (LinkedIn, портфоліо)."
+- section: "Мовна стратегія: Дієслова дії та уникнення займенників (Language Strategy: Action Verbs and Avoiding Pronouns)"
+  words: 850
+  points:
+  - "Стратегія «Action Verbs»: перехід від пасивного опису обов'язків до орієнтованого на результат викладу досягнень."
+  - "Типова помилка: надмірне вживання займенника «Я» (Я робив, Я керував) — відпрацювання вживання активних дієслів без підмета (Керував відділом, Розробив стратегію)."
+  - "Використання дієслів вищого регістру: впроваджував, координував, оптимізував, досягав, аналізував."
+- section: "Професійна лексика та боротьба з англіцизмами (Professional Vocabulary and Countering Anglicisms)"
+  words: 750
+  points:
+  - "Помилка «калькування» з англійської: розбір суржикових форм («аплікуватися», «подавати на роботу») та засвоєння нормативних еквівалентів («відгукнутися на вакансію», «претендувати на посаду»)."
+  - "Стилістична відповідність: заміна розмовних прикметників (класний, крутий) на професійні відповідники (відповідальний фахівець, вмотивований до професійного зростання)."
+  - "Робота з термінологією: ключові навички (hard skills) проти м'яких навичок (soft skills) в офіційному контексті."
+- section: "Супровідний лист: Структура та аргументація (Cover Letter: Structure and Argumentation)"
+  words: 600
+  points:
+  - "Мистецтво написання супровідного листа (Cover Letter) як критичного елемента відгуку на вакансію."
+  - "Офіційні звертання та формули ввічливості: як почати та завершити лист у діловому стилі."
+  - "Аргументація мотивації: як описати релевантний досвід та кваліфікацію без використання емоційної лексики."
+- section: "Практичний аудит та редагування (Practical Audit and Editing)"
+  words: 600
+  points:
+  - "Аналіз та виправлення типових помилок: усунення зайвої інформації, неформального стилю та граматичних неточностей."
+  - "Трансформація опису досвіду: перетворення «Я займався продажами» на «Збільшив обсяги продажів на 20% через впровадження нової стратегії»."
+  - "Фінальне завдання: написання власного CV та супровідного листа для HR-директора за заданою вакансією."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "резюме (resume) — складати резюме, розглядати резюме; основний документ для працевлаштування"
+  - "вакансія (vacancy/job opening) — відкрита вакансія, відгукнутися на вакансію; офіційний термін"
+  - "досвід (experience) — досвід роботи, професійний досвід, релевантний досвід; High Frequency"
+  - "навичка (skill) — ключові навички, технічні навички; вживається замість 'вміння' у професійному контексті"
+  - "роботодавець (employer) — потенційний роботодавець, вимоги роботодавця; офіційно-діловий стиль"
+  - "супровідний (cover/accompanying) — супровідний лист, супровідні документи; часто ігнорується учнями"
+  - "претендувати (to apply/claim) — претендувати на посаду, претендувати на вакансію; формальне дієслово"
+  - "досягнення (achievements) — професійні досягнення; фокус на результатах, а не процесі"
+  recommended:
+  - "вмотивований (motivated) — вмотивований до професійного зростання; професійна характеристика"
+  - "фахівець (specialist/expert) — відповідальний фахівець; заміна розмовного 'працівник'"
+  - "кваліфікація (qualification) — підтвердити кваліфікацію; вимога Держстандарту"
+  - "стажування (internship) — проходити стажування; важливо для початкового етапу кар'єри"
+  - "релевантний (relevant) — релевантний досвід; книжна лексика"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4491 chars)
+✅ Message sent to Claude (ID: 10709)
+✓ Message 10709 acknowledged
+   Auto-acknowledged reply #10709 (stdout delivery — no inbox accumulation)
+✓ Message 10704 acknowledged

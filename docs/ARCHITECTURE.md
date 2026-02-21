@@ -369,6 +369,73 @@ See `docs/MARKDOWN-FORMAT.md` for the complete spec.
 | word | слово |
 ```
 
+## AI Build Pipeline (v3 — Hybrid Gemini+Claude)
+
+`scripts/build_module_v3.py` orchestrates module creation using the best LLM for each phase.
+Gemini handles research and long-form prose (1M context, fast iteration);
+Claude handles interactive activities and final QA (better reasoning, structured outputs).
+
+### Phase-to-LLM Assignment
+
+| Phase | LLM | Default Model | Purpose |
+|-------|-----|---------------|---------|
+| **A** — Research + Meta | Gemini | `gemini-2.5-pro` | Web research, meta outline, friction hooks |
+| **B** — Content + Prose | Gemini | `gemini-2.5-pro` | Full lesson prose with track context |
+| **C** — Activities + Vocab | **Claude** | Sonnet (core) / Opus (seminar) | Interactive activities, vocabulary YAML |
+| **audit** — Fix loop | Gemini | `gemini-2.5-pro` | Prose + enrichment audit, up to 3 fix passes |
+| **D** — Review + Fix | Gemini | `gemini-2.5-pro` | Adversarial review + section fixes, max 2 iters |
+| **E** — MDX generation | _(no LLM)_ | — | Deterministic: markdown → Docusaurus MDX |
+| **F** — Final QA gate | **Claude** | Opus (always) | Deep semantic review, fix iterations, APPROVE/REJECT |
+
+**Rule:** Phase E (MDX) is always last — after Phase F if `--final-review`, after Phase D otherwise.
+
+### Model Selection Logic
+
+Model defaults are track-aware and centralized in `scripts/batch_gemini_config.py`:
+
+```python
+# Seminar tracks: c1-bio, b2-hist, c1-hist, lit, oes, ruth
+CLAUDE_MODEL_SEMINAR_RESEARCH   = CLAUDE_OPUS    # Phase A via --use-claude A
+CLAUDE_MODEL_SEMINAR_ACTIVITIES = CLAUDE_OPUS    # Phase C (always Claude)
+CLAUDE_MODEL_FINAL_REVIEW       = CLAUDE_OPUS    # Phase F (always Claude)
+
+# Core tracks: a1, a2, b1, b2, c1, c2, b2-pro, c1-pro
+CLAUDE_MODEL_CORE_RESEARCH    = CLAUDE_SONNET    # Phase A via --use-claude A
+CLAUDE_MODEL_CORE_ACTIVITIES  = CLAUDE_SONNET    # Phase C (always Claude)
+```
+
+Override per-session with `--claude-model-A`, `--claude-model-C`, `--claude-model-F`.
+**To change defaults project-wide, edit only `batch_gemini_config.py`.**
+
+### Why Hybrid?
+
+| Concern | Gemini | Claude |
+|---------|--------|--------|
+| 1M context for long prose | ✅ Ideal | ❌ Shorter context |
+| Web research (Phase A) | ✅ Grounding API | ✅ WebSearch/WebFetch |
+| Interactive activity quality | ⚠️ Acceptable | ✅ Better reasoning |
+| Adversarial self-review bias | ⚠️ Self-grading risk | n/a |
+| Final QA with APPROVE/REJECT | n/a | ✅ Critical thinking |
+
+### Running Claude Phases from Terminal
+
+Phase F (and optionally A/C) call the headless Claude CLI directly via subprocess.
+When running from Claude Code's bash tool, the 2-minute timeout applies.
+**Solution:** Run `build_module_v3.py` directly from a terminal, not from Claude Code:
+
+```bash
+# Terminal (no timeout): Claude handles Phase C + F automatically
+.venv/bin/python scripts/build_module_v3.py c1-bio --all --final-review
+
+# Route Phase A to Claude too (e.g. for c1/c2 where Claude research is preferred)
+.venv/bin/python scripts/build_module_v3.py c1 --all --use-claude A
+```
+
+The script removes `CLAUDECODE` from the environment before spawning Claude CLI to avoid
+nested-session errors.
+
+---
+
 ## Quality Validation Systems
 
 Learn Ukrainian uses a multi-layered quality validation approach with four complementary systems:

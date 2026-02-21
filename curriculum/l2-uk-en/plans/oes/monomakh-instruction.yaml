@@ -1,4 +1,3 @@
----
 sequence: 39
 module: oes-039
 module_number: 39
@@ -9,7 +8,6 @@ phase: 2
 phase_id: literary-tradition
 phase_name: Literary Tradition
 focus: Didactic genre — Imperative mood
-word_target: 4000
 content_outline:
 - section: Вступ
   description: Introduction to Monomakh's Instruction
@@ -24,3 +22,6 @@ activity_types:
 - transcription
 - etymology-trace
 - grammar-identify
+persona:
+  voice: Senior Paleographer
+  role: Wise Ruler

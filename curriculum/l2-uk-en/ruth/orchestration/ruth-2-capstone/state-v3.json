@@ -1,0 +1,13 @@
+{
+  "track": "ruth",
+  "slug": "ruth-2-capstone",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-20T10:34:35Z",
+      "task_id": "v3-ruth-2-capstone-pA",
+      "mode": "full"
+    }
+  }
+}

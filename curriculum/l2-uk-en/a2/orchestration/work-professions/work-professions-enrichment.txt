@@ -1,0 +1,303 @@
+✅ Message sent to Gemini (ID: 10233) [auto-acked: self-addressed]
+✓ Message 10233 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10233...
+📨 Message #10233
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-work-professions
+   Time: 2026-02-20T20:04:03.248548+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: a2-49
+level: A2
+sequence: 49
+slug: work-professions
+version: '2.0'
+title: Work and Professions
+subtitle: Jobs and Careers
+content_outline:
+- section: Вступ
+  points:
+  - Job market overview — IT sector prominence (programmers, remote work, flexible
+    schedules) as a modern cultural touchpoint — use terms «віддалено» and «гнучкий
+    графік»
+  - Work vocabulary introduction — focus on high-frequency collocations like «шукати
+    роботу», «місце роботи», «важка/цікава робота»
+- section: Граматика
+  points:
+  - 'Professions (лікар, вчитель, інженер) — ensure gender balance (лікар/лікарка,
+    вчитель/вчителька) where standard, noting official masculine titles — examples:
+    «вчитель історії», «сімейний лікар», «головний інженер»'
+  - 'Instrumental with professions — explain "Instrumental = Role/Function" logic;
+    learner error: usage of Nominative ("Він працює лікар") instead of Instrumental
+    ("Він працює лікарем"); aligns with State Standard §4.2.2.5.1 — learner error:
+    ending mismatches (masc -ом/-ем vs fem -ою/-ею)'
+  - 'Workplace vocabulary — address forms (Pan/Pani + Name/Title) in formal settings;
+    distinguish «колега» vs friend — include academic titles (Professor, Docent);
+    collocations: «шановний колега», «порада колеги»'
+  - Job activities — verbs governing specific roles (e.g., «викликати лікаря», «бути
+    класним керівником») — add «записатися до лікаря», «працювати інженером»
+- section: Практика
+  points:
+  - Dialogues about work — contrast "Я — студент" (Nominative/Now) vs "Я буду студентом"
+    (Instrumental/Future) — emphasize "to be" omission in present tense
+  - Job interview practice — basic intro preparing for deep dive in module a2-64 —
+    use «співбесіда», «резюме»
+- section: Підсумок
+  points:
+  - Summary of vocabulary
+vocabulary_hints:
+  required:
+  - робота (work/job) — шукати роботу, графік роботи, місце роботи, важка/цікава робота
+  - професія (profession) — за професією, характеристика особи за професією (State
+    Standard)
+  - лікар (doctor) — сімейний лікар, головний лікар, викликати лікаря, записатися
+    до лікаря
+  - вчитель (teacher) — вчитель історії, класний керівник, День вчителя (cultural
+    hook)
+  - інженер (engineer) — головний інженер, працювати інженером, інженер-програміст
+  - офіс (office) — працювати в офісі
+  - зарплата (salary) — висока/низька зарплата
+  - колега (colleague) — шановний колега, мої колеги, порада колеги
+  recommended:
+  - програміст (programmer) — працювати віддалено, гнучкий графік (cultural hook)
+  - бухгалтер (accountant) — головний бухгалтер
+  - резюме (resume) — писати резюме
+  - співбесіда (interview) — проходити співбесіду
+  - керівник (manager) — класний керівник
+  - підлеглий (subordinate) — мати підлеглих
+activity_hints:
+- type: match-up
+  focus: Professions and workplace
+  items: 30
+- type: fill-in
+  focus: Complete work descriptions
+  items: 20
+- type: cloze
+  focus: Job interview
+  items: 10
+- type: quiz
+  focus: Describe your work
+  items: 8
+focus: vocabulary
+pedagogy: PPP
+prerequisites:
+- a2-48 (Emotions and Personality)
+connects_to:
+- a2-50 (Technology and Media)
+- a2-64 (Scheduling Interviews)
+objectives:
+- Learner can name common professions
+- Learner can describe their job
+- Learner can talk about workplace activities
+- Learner can use instrumental case for jobs
+grammar:
+- Instrumental with professions (працювати лікарем)
+- Workplace vocabulary
+- Describing duties and responsibilities
+register: розмовний
+immersion: 60-75% Ukrainian
+phase: A2.5 [Vocabulary Expansion]
+persona:
+  voice: Encouraging Cultural Guide
+  role: Career Counselor
+word_target: 3000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Work and Professions
+
+## State Standard Reference
+§4.2.2.5.1: "Без прийменника: характеристика особи за професією чи статусом: Олег буде програмувальником. Микола хоче стати викладачем. Він працював менеджером."
+Alignment: Module teaches instrumental case with 'працювати' and 'бути' to describe professions, directly fulfilling this syntax/morphology requirement.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| робота | High (General) | шукати роботу (look for work), графік роботи (work schedule), місце роботи (place of work), важка/цікава робота (hard/interesting work) |
+| лікар | High (Everyday) | сімейний лікар (family doctor), головний лікар (head doctor), викликати лікаря (call a doctor), записатися до лікаря (make appointment) |
+| вчитель | High (Education) | вчитель історії (history teacher), класний керівник (homeroom teacher), День вчителя (Teacher's Day) |
+| інженер | Med-High (Tech) | головний інженер (chief engineer), інженер-програміст (software engineer), працювати інженером (work as an engineer) |
+| колега | Med (Business) | шановний колега (dear colleague), мої колеги (my colleagues), порада колеги (colleague's advice) |
+
+## Cultural Hooks
+1. **Forms of Address**: In Ukrainian workplaces, formal address using "Pan/Pani" + First Name (or Surname in very formal settings) is standard, unlike the immediate "first-name basis" often found in the West. Academic titles (Professor, Docent) are highly respected and used as titles.
+2. **IT Sector Prominence**: "Програміст" (Programmer/Developer) is a culturally significant profession in modern Ukraine, often associated with working remotely ("віддалено") and having a flexible schedule ("гнучкий графік").
+3. **Teacher's Day**: The first Sunday of October is a major celebration where students greet teachers; being a teacher is traditionally viewed with high social respect ("вчитель" is often synonymous with a mentor/guide role).
+
+## Common Learner Errors
+1. **Case Confusion**: "Він працює лікар" (Nominative) instead of "Він працює лікарем" (Instrumental).
+   *   *Correction*: Teach that `працювати` ALWAYS triggers Instrumental.
+2. **Ending Mismatches**: Using masculine endings for feminine nouns in Instrumental (e.g., "вона працює *секретаром*" instead of "секретаркою").
+   *   *Correction*: Reinforce `-ом/-ем` (masc) vs `-ою/-ею` (fem) distinction.
+3. **"To Be" Omission**: Forgetting that "to be" is omitted in present tense ("Я лікар" - Nom) but required in past/future ("Я буду лікарем" - Instr).
+   *   *Correction*: Contrast "Я — студент" (Now, Nom) vs "Я буду студентом" (Future, Instr).
+
+## Cross-References
+- **Builds on**: `a2-48` (Emotions/Personality - adjectives to describe jobs), A1 professions vocab.
+- **Prepares for**: `a2-64` (Scheduling Interviews), B1 modules on employment history.
+
+## Notes for Content Writing
+- **Gender**: Ensure balanced representation of male/female profession names (лікар/лікарка, вчитель/вчителька) where standard, but note that some official titles remain masculine in formal documents.
+- **Instrumental Logic**: Explain the "Instrumental = Role/Function" logic. You are *using* your profession as a tool to function in society.
+- **Meta-language**: Use the terms "Орудний відмінок" (Instrumental Case) and "Ким? Чим?" (By whom? With what?) clearly.
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Світ роботи (Introduction: World of Work)"
+  words: 450
+  points:
+  - "Modern Ukrainian job market overview: focus on the IT sector prominence where «програміст» is a key cultural figure associated with «віддалено» (remote work) and «гнучкий графік» (flexible schedule)."
+  - "High-frequency workplace collocations: introduce «шукати роботу», «місце роботи», and contrasting descriptions like «важка робота» vs. «цікава робота»."
+- section: "Назви професій та гендер (Profession Names and Gender)"
+  words: 600
+  points:
+  - "Common professions vocabulary: ensure gender balance (лікар/лікарка, вчитель/вчителька) and note that while spoken language prefers feminine forms, official titles in formal documents often remain masculine."
+  - "Cultural hook — Teacher's Day: The first Sunday of October celebration where «вчитель» is honored with high social respect, emphasizing their role as a mentor/guide."
+  - "Educational titles: Introduce academic roles like «професор» and «доцент», which are highly respected and used as formal titles in Ukrainian society."
+- section: "Граматика: Орудний відмінок (Grammar: Instrumental Case)"
+  words: 850
+  points:
+  - "State Standard §4.2.2.5.1 alignment: teaching the use of Instrumental without a preposition to characterize a person by profession (e.g., «Олег буде програмувальником», «Микола хоче стати викладачем»)."
+  - "The logic of Instrumental: explain that the case represents the 'Role/Function' — you are using your profession as a tool to function in society."
+  - "Verb triggers: reinforce that verbs like «працювати», «бути», and «стати» always trigger the Instrumental case when describing jobs."
+  - "Learner error — 'To Be' omission: contrast the Nominative used in the present tense («Я — лікар») with the mandatory Instrumental used in past/future («Я був лікарем», «Я буду лікарем»)."
+- section: "Діловий етикет та звертання (Business Etiquette and Address)"
+  words: 550
+  points:
+  - "Formal address in the workplace: emphasize the use of «Пан/Пані» + First Name or Surname, contrasting it with the informal Western 'first-name basis' approach."
+  - "Professional relationships: distinguish between «колега» (colleague) and friend; drill collocations like «шановний колега» and «порада колеги» for formal registers."
+- section: "Практика: Співбесіда та обов'язки (Practice: Interview and Duties)"
+  words: 550
+  points:
+  - "Job interview preparation: introduction to «співбесіда» and «резюме» as a bridge to module a2-64, focusing on describing basic duties."
+  - "Correction of learner errors: focus on ending mismatches between masculine (-ом/-ем) and feminine (-ою/-ею) Instrumental endings (e.g., «вона працює секретаркою» not «секретаром»)."
+  - "Collocations for responsibilities: drill verbs governing specific roles like «викликати лікаря», «записатися до лікаря», and «бути класним керівником»."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "робота (work/job) — high frequency; collocations: шукати роботу, графік роботи, місце роботи, важка/цікава робота"
+  - "професія (profession) — State Standard: характеристика особи за професією; за професією"
+  - "лікар (doctor) — сімейний лікар (family doctor), головний лікар, викликати лікаря, записатися до лікаря"
+  - "вчитель (teacher) — вчитель історії, класний керівник, День вчителя (cultural respect context)"
+  - "інженер (engineer) — головний інженер, працювати інженером, інженер-програміст"
+  - "офіс (office) — працювати в офісі, опен-спейс"
+  - "зарплата (salary) — висока/низька зарплата, отримувати зарплату"
+  - "колега (colleague) — шановний колега (formal), мої колеги, порада колеги"
+  recommended:
+  - "програміст (programmer) — modern cultural hook; працювати віддалено (remote), гнучкий графік"
+  - "бухгалтер (accountant) — головний бухгалтер"
+  - "резюме (resume/CV) — писати резюме, додавати до резюме"
+  - "співбесіда (interview) — проходити співбесіду, запросити на співбесіду"
+  - "керівник (manager/head) — класний керівник (homeroom teacher), безпосередній керівник"
+  - "підлеглий (subordinate) — мати підлеглих, спілкування з підлеглими"
+  - "лікарка (female doctor) — standard feminine form for gender balance"
+  - "вчителька (female teacher) — standard feminine form for gender balance"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4374 chars)
+✅ Message sent to Claude (ID: 10238)
+✓ Message 10238 acknowledged
+   Auto-acknowledged reply #10238 (stdout delivery — no inbox accumulation)
+✓ Message 10233 acknowledged

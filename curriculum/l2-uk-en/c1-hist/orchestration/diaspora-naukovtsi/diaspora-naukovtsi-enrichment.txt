@@ -1,0 +1,303 @@
+✅ Message sent to Gemini (ID: 12773) [auto-acked: self-addressed]
+✓ Message 12773 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12773...
+📨 Message #12773
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-diaspora-naukovtsi
+   Time: 2026-02-20T23:42:12.329485+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-hist-068
+level: c1-hist
+sequence: 68
+version: '1.0'
+title: 'Діаспорні науковці: Збереження спадщини'
+focus: history
+pedagogy: seminar
+objectives:
+- 'Analyze the causes and consequences of діаспорні науковці: збереження спадщини'
+- Evaluate the historical significance of наука в еміграції
+content_outline:
+- section: Вступ — Наука в еміграції
+  subsections:
+  - Чому потрібні наукові інституції
+  - Науковці серед ДіПі
+  - Створення альтернативного простору
+  - Структура модуля
+- section: Гарвардський український інститут (HURI)
+  subsections:
+  - Заснування — 1973
+  - Омелян Пріцак — візія
+  - Кафедра українознавства
+  - Видання — Harvard Ukrainian Studies
+  - Вплив на західну науку
+- section: УВАН — Українська вільна академія наук
+  subsections:
+  - Заснування — 1945, Аугсбург
+  - Переїзд до Нью-Йорка
+  - Наукова діяльність
+  - Видання і публікації
+  - Збереження традиції
+- section: НТШ в діаспорі
+  subsections:
+  - Історія — від Львова до еміграції
+  - Відновлення в діаспорі
+  - Наукові осередки — США, Канада, Європа
+  - Енциклопедія українознавства
+- section: Ключові постаті
+  subsections:
+  - Омелян Пріцак — орієнталіст
+  - Ярослав Пеленський — політолог
+  - Джон-Пол Химка — історик
+  - Роман Шпорлюк — націолог
+  - Оксана Забужко — письменниця-науковиця
+- section: Спадщина для України
+  subsections:
+  - Що зберегли — бібліотеки, архіви
+  - Вплив після 1991
+  - Повернення знань
+  - Сучасна співпраця
+- section: Підсумок
+  subsections:
+  - Діаспора — «інтелектуальний ковчег»
+  - Без діаспори — що б втратили
+  - Зв'язок з незалежною Україною
+vocabulary:
+- науковець
+- інститут
+- академія
+- кафедра
+- українознавство
+- енциклопедія
+- бібліотека
+- архів
+- публікація
+- спадщина
+- орієнталістика
+- націологія
+- джерелознавство
+- історіографія
+- рецепція
+activities:
+- type: comparative-study
+  focus: Compare HURI, UVAN, NTSh — missions and methods
+- type: reading
+  focus: Pritsak's vision for Ukrainian studies
+- type: critical-analysis
+  focus: Key diaspora publications and their impact
+- type: critical-analysis
+  focus: How diaspora knowledge returned to Ukraine after 1991
+- type: essay-response
+  focus: Що українська наука втратила б без діаспори?
+sources:
+- name: Український науковий інститут Гарварду (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Український_науковий_інститут_Гарвардського_університету
+  type: reference
+  notes: HURI history
+- name: УВАН (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Українська_вільна_академія_наук
+  type: reference
+  notes: UVAN history
+- name: НТШ (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Наукове_товариство_імені_Шевченка
+  type: reference
+  notes: Shevchenko Society
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
+persona:
+  voice: Academic Historiographer
+  role: History of Science Scholar
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Діаспорні науковці: Збереження спадщини
+
+## Використані джерела
+1. [Encyclopedia of Modern Ukraine (esu.com.ua)](https://esu.com.ua/article-25565) — Стаття про Омеляна Пріцака, його роль у заснуванні ГУНІ та науковий спадок.
+2. [History.org.ua](http://history.org.ua/LiberUA/978-966-00-1142-7/978-966-00-1142-7.pdf) — Інформація про діяльність УВАН та НТШ в еміграції (Енциклопедія історії України).
+3. [Litopys.org.ua](http://litopys.org.ua/hrushukr/hrush01.htm) — Праці О. Пріцака, зокрема "Історіософія Михайла Грушевського", що розкриває методологічні підходи діаспорної науки.
+4. [Harvard Ukrainian Research Institute](https://www.huri.harvard.edu/) — Офіційна історія інституту та місія.
+5. [Diasporiana](https://diasporiana.org.ua/) — Електронна бібліотека діаспорної літератури (для контексту видавничої діяльності).
+
+## Хронологія
+- **1873**: Заснування НТШ у Львові (преамбула традиції).
+- **1945**: Заснування Української Вільної Академії Наук (УВАН) в Аугсбурзі (Німеччина) як спадкоємиці ВУАН.
+- **1947**: Відновлення діяльності Наукового товариства імені Шевченка (НТШ) на еміграції (Мюнхен).
+- **1949**: Поділ УВАН на осередки в Канаді (Вінніпег) та США (Нью-Йорк).
+- **1968**: Створення кафедри українознавства в Гарвардському університеті.
+- **1973**: Заснування Українського наукового інституту Гарвардського університету (HURI).
+- **1977**: Початок видання журналу *Harvard Ukrainian Studies*.
+
+## Ключові факти та цитати
+- **Омелян Пріцак (про візію ГУНІ):** «Вивчати історію України на тлі всесвітньої, зокрема вияснити розвиток історії українського степу у зв'язку з історією Азії».
+- **Місія діаспори:** Збереження «академічної вільності» та методологічного плюралізму, який був знищений в УРСР.
+- **"Гарвардське диво":** Створення українського центру в топовому університеті світу сталося завдяки фандрейзингу самої громади (Студентська громада, Фонд українознавства).
+- **Енциклопедія українознавства:** Фундаментальний проект під керівництвом В. Кубійовича (Сарсель, Франція), що став альтернативою радянській УРЕ.
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ — Наука в еміграції": [!history-bite] — Про те, як науковці в таборах ДіПі читали лекції без підручників, по пам'яті відновлюючи курси.
+- Section "Гарвардський український інститут (HURI)": [!myth-buster] — Міф: українська наука — це лише краєзнавство. Реальність: Гарвардська школа інтегрувала Україну в глобальну медієвістику (норманістика, орієнталістика).
+- Section "УВАН — Українська вільна академія наук": [!context] — УВАН в Аугсбурзі вважала себе легітимним продовжувачем академії, яку більшовики «ліквідували» репресіями 1930-х.
+- Section "НТШ в діаспорі": [!culture] — Сарсель як «український Париж» та осередок Енциклопедії українознавства.
+- Section "Ключові постаті": [!quote] — Цитата Пріцака про те, що історія України не може бути зрозуміла без тюркського та скандинавського контекстів.
+- Section "Спадщина для України": [!decolonization] — Повернення бібліотек (наприклад, архів Пріцака в НаУКМА) як акт «репатріації знань».
+
+## Деколонізаційний контекст
+- **Imperial Myth:** Українська історія є провінційним відгалуженням російської; діаспорна наука — «буржуазний націоналізм» без наукової цінності.
+- **Ukrainian Reality:** Діаспора зберегла неперервність української академічної традиції (від Грушевського); розвинула напрямки, заборонені в СРСР (елітологія, немарксистська історіографія, дослідження Голодомору).
+- **Shift:** Від «плачу над поразкою» до «наукового осмислення державності» (школа Липинського, державницька школа).
+
+## Contested Terms
+| Concept | Imperial/Soviet framing | Ukrainian (decolonized) framing |
+|---------|-------------------------|---------------------------------|
+| Українська наука в еміграції | «Буржуазно-націоналістична фальсифікація» | Частина глобального академічного процесу; збереження тяглості |
+| Київська Русь | «Колиска трьох братніх народів» | Унікальна середньовічна держава; інтегральна частина європейської історії |
+| Мазепинство | Зрада | Боротьба за державний суверенітет (політологічний аналіз) |
+
+## Section-Mapped Research Notes
+
+### Вступ — Наука в еміграції
+Феномен "науки на валізах". Табори ДіПі (Displaced Persons) як інкубатори: Мюнхен, Аугсбург. Створення МУРу (Мистецький Український Рух) та наукових гуртків. Головна мета — протистояти радянській пропаганді правдою фактів.
+
+### Гарвардський український інститут (HURI)
+1968 — початок збору коштів (фонд 2 млн доларів, неймовірна сума на той час). Роль студентства. Офіційне відкриття 1973. Три кафедри: історії, літератури, мови. Пріцак як візіонер: «Ми не хочемо бути бідними родичами в науці». Видання *HUS* стало золотим стандартом західної україністики.
+
+### УВАН — Українська вільна академія наук
+1945, Аугсбург. Перший президент — Дмитро Дорошенко. Символічний зв'язок з ВУАН 1918 року. Дві гілки після 1949: США (Шевельов, Міяковський) і Канада (Славутич). Архів УВАН у Нью-Йорку — унікальне сховище (фонди Винниченка, Маланюка).
+
+### НТШ в діаспорі
+Найстаріша інституція (з 1873). Відродження 1947. Головний проект — *Encyclopedia of Ukraine* (англомовна версія стала вікном у світ). Сарсель (Франція) як мозковий центр. Співпраця з польським "Культурою" (Єжи Ґедройць) в контексті українсько-польського примирення.
+
+### Ключові постаті
+- **О. Пріцак:** Поліглот, медієвіст, теорія походження Русі (хазарська/скандинавська гіпотези).
+- **Я. Пеленський:** Дослідник українсько-російських відносин ("Contest for the Legacy of Kievan Rus'").
+- **І. Шевченко:** Візантиніст світового рівня, Гарвард.
+- **Р. Шпорлюк:** Директор HURI після Пріцака, дослідник націоналізму ("Комунізм і націоналізм").
+- **О. Забужко:** (Сучасний місток) Її стажування в США, *Notre Dame d'Ukraine* як переосмислення культурної спадщини методами, близькими до західної гуманітаристики.
+
+### Спадщина для України
+Бібліотека ім. О. Ольжича, Архів Пріцака в Києво-Могилянській академії. Вплив на формування нових істориків в Україні 1990-х (Ярослав Грицак, Наталя Яковенко мали доступ до цих праць). Проект "Україна модерна".
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12811)
+✓ Message 12773 acknowledged
+✓ Message 12811 acknowledged

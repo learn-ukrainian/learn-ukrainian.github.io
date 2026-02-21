@@ -1,73 +1,40 @@
-# Research Notes: A2 M58 "Practical Warm-up"
+# Дослідження: Practical Warm-up
 
-**Track**: Core A
-**Module**: A2 M58 "Practical Warm-up"
-**Level**: A2 (Post-Grammar Checkpoint)
-**Topic**: Review and mobilization of A2 linguistic resources for practical communication.
+## State Standard Reference
+§1.1.1.2: "Особа розуміє... окремі вислови, короткі репліки в діалозі і не дуже довгі (30 – 50 слів) монологічні висловлювання на визначену тематику... вміє виділити в потоці мовлення прості відомості, які містяться в короткому усному висловлюванні чіткої структури."
+§1.2.1.4: "Особа вміє застосовувати стратегії, які полегшують розуміння текстів, наприклад оглядове читання, пошукове читання..."
+§1.3.1.1: "Особа вміє... у формі коротких, простих, іноді непослідовних фраз... на письмі передавати інформацію про зміст почутого, прочитаного, побаченого."
 
-## 1. Grammar: State Standard 2024 Reference
+Alignment: This module explicitly targets the "strategies" mentioned in §1.2.1.4 (skimming/scanning) and the integrated skills of understanding and producing short texts (§1.1, §1.3).
 
-According to the **Державний стандарт української мови як іноземної (2024)**, Level A2 focuses on the expansion of communicative intentions and the ability to interact in everyday situations. This "Practical Warm-up" aligns with:
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| текст | High (General) | читати текст, розуміти текст, писати текст |
+| питання | High (General) | важливе питання, вирішити питання (issue) |
+| запитання | High (Educational) | ставити запитання, відповідати на запитання (ask/answer) |
+| відповідь | High (General) | правильна відповідь, дати відповідь |
+| розуміти | High (Core Verb) | я розумію, ти розумієш? |
+| слухати | High (Core Verb) | слухати музику, слухати уважно |
+| головний | Medium/High | головна ідея, головний герой |
 
-- **Catalog A: Комунікативні наміри (Communicative Intentions)**
-  - § 1.1. *Встановлення та підтримання соціального контакту* (Establishing and maintaining social contact): Greeting, initiating conversation, and maintaining interaction on familiar topics.
-  - § 1.3. *Висловлення ставлення* (Expressing attitude): Expressing certainty, doubt, preference, and feelings.
-  - § 2.1. *Запит та надання інформації* (Requesting and providing information): Asking for details about daily life, plans, and past experiences.
+## Cultural Hooks
+1. **Radio Dictation of National Unity (Радіодиктант національної єдності)**: An annual event on Ukrainian Language Day where thousands of Ukrainians worldwide listen to the radio and write down a dictation to test their skills and show unity. A perfect real-world example of "Listening & Writing" skills in action.
+2. **Reading Culture**: Ukrainians value reading; book forums (like in Lviv) are major cultural events. Being able to "skim" a book blurb is a practical skill for browsing a bookstore (`книгарня`).
 
-**Specific Quote (Reflecting A2 requirements):**
-> "Здатність вступати в спілкування, підтримувати та завершувати його у межах знайомих тем... Висловлювати власну думку, почуття, ставлення, використовуючи вивчений граматичний та лексичний матеріал." (Ability to enter into communication, maintain and terminate it within familiar topics... To express one's own opinion, feelings, attitude, using studied grammatical and lexical material.)
+## Common Learner Errors
+1. **питання vs. запитання**: Learners often use *питання* for everything.
+    *   *Error*: "Я маю питання до вчителя." (I have an issue/topic for the teacher - ambiguous).
+    *   *Correction*: "Я маю **запитання** до вчителя." (I have a question to ask).
+    *   *Rule*: Use *запитання* for a specific inquiry requiring an answer; *питання* for a topic/issue/problem.
+2. **чути vs. слухати**: Confusing physical hearing with active listening.
+    *   *Error*: "Я не чув тебе уважно."
+    *   *Correction*: "Я не **слухав** тебе уважно."
+    *   *Rule*: *Чути* = to hear (passive perception); *Слухати* = to listen (active process).
 
-## 2. Vocabulary Frequency
+## Cross-References
+- **Builds on**: A2-57 (Practical Intro) - establishes the context.
+- **Prepares for**: A2-59 (Doctor Visit) - applies listening/speaking skills in a high-stakes scenario.
 
-At this stage (late A2), the focus is on "Active Vocabulary" for conversation.
-
-### High-Frequency Items (A2 Core)
-- **Verbs of communication**: обговорювати (to discuss), ділитися (to share), запитувати (to ask), відповідати (to answer), повторювати (to repeat).
-- **Adverbs of degree/manner**: обов'язково (definitely), можливо (maybe), мабуть (probably), вільно (fluently), повільно (slowly).
-- **Interaction markers**: до речі (by the way), наприклад (for example), власне (actually), чесно кажучи (to be honest).
-
-### Common Collocations for Warm-ups
-- **мати значення** (to matter / have meaning)
-- **звертати увагу** (to pay attention)
-- **робити помилки** (to make mistakes - crucial for a warm-up context)
-- **виправляти помилки** (to correct mistakes)
-- **працювати над собою** (to work on oneself)
-
-## 3. Cultural Hook: Ukrainian Communication Style
-
-### The "Deep" Small Talk
-In many English-speaking cultures, "How are you?" is a ritualistic greeting requiring a brief, positive response. In Ukraine, **«Як справи?»** or **«Що нового?»** is often perceived as a genuine inquiry.
-- **Fact**: Ukrainians are less likely to use "plastic" smiles or automatic "I'm fine" responses. A typical A2-level response might involve a brief mention of health, work, or family (e.g., "Та потроху, роботи багато..." — "Bit by bit, a lot of work...").
-- **Cultural nuance**: Sharing a small complaint or a genuine success is seen as a sign of trust and authenticity (**щирість**).
-
-### Hospitality in Speech
-Using diminutives (пестливі форми) in hospitality contexts, even at A2, adds a layer of cultural authenticity (e.g., «чайок» instead of just «чай» when offering).
-
-## 4. Pedagogical Notes
-
-### Transition from Theory to Activation
-The student has just passed a massive grammar checkpoint (M57). There is a high "cognitive load" from learning cases, aspect, and motion verbs.
-- **The "Case Collapse"**: When speaking spontaneously, A2 students often "collapse" back to the Nominative case or confuse the Accusative and Genitive. The warm-up should use high-frequency structures to build "muscle memory."
-- **Aspect Trap**: Students often overthink Perfective vs. Imperfective. Exercises should focus on the *result* (Perfective) vs. the *process/habit* (Imperfective) in natural dialogue.
-
-### Recommended Sequence
-1.  **Reactive listening**: Quick responses to questions.
-2.  **Guided interaction**: Using prompts to form complex sentences (Relative clauses with *який*).
-3.  **Spontaneous production**: Short monologue or dialogue on a familiar A2 topic (daily routine, plans).
-
-## 5. Scope Boundaries
-
-### IN SCOPE (Student knows this)
-- **All 7 Cases**: Including Dative and Instrumental.
-- **Verbal Aspect**: Imperfective/Perfective pairs in all tenses.
-- **Motion Verbs**: Basic prefixes (при-, по-, ви-, за-).
-- **Moods**: Imperative and Conditional (*якби*).
-- **Complex Sentences**: Using *який, що, щоб, бо, коли, хоча*.
-- **Comparatives**: *кращий, більший* and superlatives *найкращий*.
-
-### OUT OF SCOPE (Do NOT use)
-- **Participles/Gerunds**: No *працюючий* or *зробивши*.
-- **Passive Voice**: Avoid formal passive constructions (use *мене було запрошено* or active voice instead).
-- **Advanced Conjunctions**: Avoid *втім, натомість, проте* (save for B1).
-- **Subjunctive Nuances**: Keep conditionals to simple *якби + past*.
-- **Abstract/Academic Lexis**: Avoid words like *глобалізація, концептуальний, методологія*.
+## Notes for Content Writing
+- Use the **Radio Dictation** as the "Integration Task" context (simulated mini-version).

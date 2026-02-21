@@ -1,0 +1,27 @@
+{
+  "track": "a2",
+  "slug": "spatial-prepositions",
+  "mode": "v3",
+  "phases": {
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-21T07:50:21Z",
+      "note": "migrated-from-v2"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-21T07:50:21Z",
+      "note": "migrated-from-v2"
+    },
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-21T07:50:21Z",
+      "note": "adopted-existing-meta"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-21T07:54:18Z",
+      "attempts": 2
+    }
+  }
+}

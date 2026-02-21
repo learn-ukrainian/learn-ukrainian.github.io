@@ -1,0 +1,309 @@
+- type: match-up
+  title: "Пари: Чоловік і Жінка"
+  instruction: "З'єднайте пари родичів (чоловічий і жіночий рід)."
+  pairs:
+    - left: "Тато"
+      right: "Мама"
+    - left: "Брат"
+      right: "Сестра"
+    - left: "Дідусь"
+      right: "Бабуся"
+    - left: "Дядько"
+      right: "Тітка"
+    - left: "Син"
+      right: "Донька"
+    - left: "Онук"
+      right: "Онука"
+    - left: "Чоловік"
+      right: "Дружина"
+    - left: "Батько"
+      right: "Мати"
+
+- type: match-up
+  title: "Хто це?"
+  instruction: "Знайдіть правильне визначення для кожного члена родини."
+  pairs:
+    - left: "Сестра мами"
+      right: "Тітка"
+    - left: "Брат тата"
+      right: "Дядько"
+    - left: "Тато мами"
+      right: "Дідусь"
+    - left: "Мама тата"
+      right: "Бабуся"
+    - left: "Син сина"
+      right: "Онук"
+    - left: "Тато і мама"
+      right: "Батьки"
+    - left: "Чоловік мами"
+      right: "Тато"
+    - left: "Донька доньки"
+      right: "Онука"
+
+- type: group-sort
+  title: "Він чи Вона?"
+  instruction: "Розподіліть слова за родом (чоловічий чи жіночий)."
+  groups:
+    - name: "Він (Мій)"
+      items: ["тато", "брат", "дідусь", "дядько", "син", "чоловік", "онук"]
+    - name: "Вона (Моя)"
+      items: ["мама", "сестра", "бабуся", "тітка", "донька", "дружина", "онука"]
+
+- type: fill-in
+  title: "Мій чи Моя?"
+  instruction: "Оберіть правильний займенник (мій, моя, мої)."
+  items:
+    - sentence: "Це {{answer}} тато."
+      answer: "мій"
+      options: ["мій", "моя", "мої", "моє"]
+      explanation: "Тато — чоловічий рід (masculine), тому «мій»."
+    - sentence: "Це {{answer}} мама."
+      answer: "моя"
+      options: ["мій", "моя", "мої", "моє"]
+      explanation: "Мама — жіночий рід (feminine), тому «моя»."
+    - sentence: "Це {{answer}} батьки."
+      answer: "мої"
+      options: ["мій", "моя", "мої", "моє"]
+      explanation: "Батьки — множина (plural), тому «мої»."
+    - sentence: "Це {{answer}} дідусь."
+      answer: "мій"
+      options: ["мій", "моя", "мої", "моє"]
+      explanation: "Дідусь — чоловічий рід, тому «мій»."
+    - sentence: "Це {{answer}} бабуся."
+      answer: "моя"
+      options: ["мій", "моя", "мої", "моє"]
+      explanation: "Бабуся — жіночий рід, тому «моя»."
+    - sentence: "Це {{answer}} сестра."
+      answer: "моя"
+      options: ["мій", "моя", "мої", "моє"]
+      explanation: "Сестра — жіночий рід, тому «моя»."
+    - sentence: "Це {{answer}} тітка."
+      answer: "моя"
+      options: ["мій", "моя", "мої", "моє"]
+      explanation: "Тітка — жіночий рід, тому «моя»."
+    - sentence: "Це {{answer}} дядько."
+      answer: "мій"
+      options: ["мій", "моя", "мої", "моє"]
+      explanation: "Дядько — чоловічий рід, тому «мій»."
+
+- type: fill-in
+  title: "Опис родини"
+  instruction: "Оберіть правильне слово, щоб доповнити речення."
+  items:
+    - sentence: "Мій брат ще маленький, він {{answer}}."
+      answer: "молодший"
+      options: ["молодший", "старший", "старий", "високий"]
+      explanation: "Small/young implies younger (молодший)."
+    - sentence: "Моя сестра вже студентка, вона {{answer}}."
+      answer: "старша"
+      options: ["старша", "молодша", "маленька", "нова"]
+      explanation: "Student usually implies older sister compared to a child."
+    - sentence: "Мій тато лікар. Він дуже {{answer}}."
+      answer: "розумний"
+      options: ["розумний", "розумна", "розумні", "зелений"]
+      explanation: "Тато is masculine, so we need the masculine adjective «розумний»."
+    - sentence: "Моя бабуся завжди готує їсти. Вона дуже {{answer}}."
+      answer: "добра"
+      options: ["добра", "добрий", "добрі", "злий"]
+      explanation: "Бабуся is feminine, so we need the feminine adjective «добра»."
+    - sentence: "Мій брат любить жартувати. Він {{answer}}."
+      answer: "веселий"
+      options: ["веселий", "весела", "сумний", "поганий"]
+      explanation: "Брат is masculine, so «веселий»."
+    - sentence: "У мене є велика {{answer}}."
+      answer: "родина"
+      options: ["родина", "роботу", "кіт", "стіл"]
+      explanation: "«Велика» is feminine, matching «родина»."
+    - sentence: "Моя мама любить співати. Вона {{answer}}."
+      answer: "весела"
+      options: ["весела", "веселий", "сумний", "поганий"]
+      explanation: "Мама is feminine, so «весела»."
+    - sentence: "Мій дідусь багато читає. Він {{answer}}."
+      answer: "мудрий"
+      options: ["мудрий", "мудра", "стара", "мала"]
+      explanation: "Дідусь is masculine, so «мудрий»."
+
+- type: unjumble
+  title: "Складіть речення"
+  instruction: "Розставте слова у правильному порядку."
+  items:
+    - words: ["мене", "У", "є", "сестра"]
+      answer: "У мене є сестра"
+    - words: ["мій", "Це", "старший", "брат"]
+      answer: "Це мій старший брат"
+    - words: ["Моя", "мама", "вчителька"]
+      answer: "Моя мама вчителька"
+    - words: ["Мій", "тато", "дуже", "добрий"]
+      answer: "Мій тато дуже добрий"
+    - words: ["У", "мене", "є", "велика", "родина"]
+      answer: "У мене є велика родина"
+    - words: ["Моя", "мама", "дуже", "добра"]
+      answer: "Моя мама дуже добра"
+
+- type: unjumble
+  title: "Запитання та відповіді"
+  instruction: "Складіть запитання або відповідь."
+  items:
+    - words: ["Хто", "це", "на", "фото"]
+      answer: "Хто це на фото"
+    - words: ["Це", "моя", "добра", "бабуся"]
+      answer: "Це моя добра бабуся"
+    - words: ["У", "тебе", "є", "брат"]
+      answer: "У тебе є брат"
+    - words: ["Так", "у", "мене", "є", "брат"]
+      answer: "Так у мене є брат"
+    - words: ["Це", "твоя", "рідна", "сестра"]
+      answer: "Це твоя рідна сестра"
+    - words: ["Ні", "це", "моя", "мама"]
+      answer: "Ні це моя мама"
+
+- type: match-up
+  title: "Кличний відмінок"
+  instruction: "З'єднайте слово з його формою звертання (Кличний відмінок)."
+  pairs:
+    - left: "Мама"
+      right: "Мамо!"
+    - left: "Тато"
+      right: "Тату!"
+    - left: "Бабуся"
+      right: "Бабусю!"
+    - left: "Дідусь"
+      right: "Дідусю!"
+    - left: "Син"
+      right: "Сину!"
+    - left: "Брат"
+      right: "Брате!"
+    - left: "Сестра"
+      right: "Сестро!"
+    - left: "Донька"
+      right: "Донько!"
+
+- type: fill-in
+  title: "Звертання до рідних"
+  instruction: "Оберіть правильну форму звертання."
+  items:
+    - sentence: "{{answer}}, дай мені яблуко, будь ласка."
+      answer: "Мамо"
+      options: ["Мамо", "Мама", "Мами", "Маму"]
+      explanation: "Calling mom -> Vocative case «Мамо»."
+    - sentence: "{{answer}}, ти вдома?"
+      answer: "Тату"
+      options: ["Тату", "Тато", "Тата", "Татові"]
+      explanation: "Calling dad -> Vocative case «Тату»."
+    - sentence: "Привіт, {{answer}}!"
+      answer: "бабусю"
+      options: ["бабусю", "бабуся", "бабусі", "бабусею"]
+      explanation: "Greeting grandma directly -> Vocative case «бабусю»."
+    - sentence: "{{answer}}, ходімо гуляти!"
+      answer: "Дідусю"
+      options: ["Дідусю", "Дідусь", "Дідуся", "Дідусем"]
+      explanation: "Calling grandpa -> Vocative case «Дідусю»."
+    - sentence: "Привіт, {{answer}}! Як ти?"
+      answer: "сину"
+      options: ["сину", "син", "сина", "сином"]
+      explanation: "Greeting your son -> Vocative «сину» (modeled in the phone dialogue)."
+    - sentence: "{{answer}}, я тебе люблю!"
+      answer: "Мамо"
+      options: ["Мамо", "Мама", "Мами", "Маму"]
+      explanation: "Expressing love to mom -> Vocative «Мамо»."
+    - sentence: "{{answer}}, де ти?"
+      answer: "Тату"
+      options: ["Тату", "Тато", "Тата", "Татові"]
+      explanation: "Calling dad -> Vocative «Тату»."
+    - sentence: "{{answer}}, розкажи казку!"
+      answer: "Бабусю"
+      options: ["Бабусю", "Бабуся", "Бабусі", "Бабусею"]
+      explanation: "Asking grandma to tell a story -> Vocative «Бабусю»."
+
+- type: quiz
+  title: "Перевірка знань"
+  instruction: "Оберіть правильну відповідь."
+  items:
+    - question: "Як правильно перекласти українською фразу «My family»?"
+      explanation: "Family is «моя сім'я» or «моя родина»."
+      options:
+        - text: "Моя сім'я"
+          correct: true
+        - text: "Мій сім'я"
+          correct: false
+        - text: "Мої сім'я"
+          correct: false
+        - text: "Моє сім'я"
+          correct: false
+    - question: "Оберіть слово, яке належить до чоловічого роду."
+      explanation: "«Тато» ends in -o but refers to a male, so it is masculine."
+      options:
+        - text: "Тато"
+          correct: true
+        - text: "Мама"
+          correct: false
+        - text: "Сестра"
+          correct: false
+        - text: "Бабуся"
+          correct: false
+    - question: "Яка фраза є правильним перекладом «I have a brother»?"
+      explanation: "We use the construction «У мене є...»."
+      options:
+        - text: "У мене є брат"
+          correct: true
+        - text: "Я маю брат"
+          correct: false
+        - text: "Мій є брат"
+          correct: false
+        - text: "У мене брат"
+          correct: false
+    - question: "Що означає українське слово «донька» англійською мовою?"
+      explanation: "«Донька» means daughter."
+      options:
+        - text: "Daughter"
+          correct: true
+        - text: "Son"
+          correct: false
+        - text: "Sister"
+          correct: false
+        - text: "Aunt"
+          correct: false
+    - question: "Яка форма є правильною для звертання до тата?"
+      explanation: "Vocative form for «тато» is «тату»."
+      options:
+        - text: "Тату!"
+          correct: true
+        - text: "Тато!"
+          correct: false
+        - text: "Тата!"
+          correct: false
+        - text: "Татові!"
+          correct: false
+    - question: "Яке українське слово має значення «Parents» англійською?"
+      explanation: "Parents translates to «Батьки»."
+      options:
+        - text: "Батьки"
+          correct: true
+        - text: "Родичі"
+          correct: false
+        - text: "Діти"
+          correct: false
+        - text: "Друзі"
+          correct: false
+    - question: "Як сказати «older brother» українською мовою?"
+      explanation: "Older is «старший»."
+      options:
+        - text: "Старший брат"
+          correct: true
+        - text: "Молодший брат"
+          correct: false
+        - text: "Великий брат"
+          correct: false
+        - text: "Старий брат"
+          correct: false
+    - question: "Яке закінчення має прикметник у фразі «Моя мама добр...»?"
+      explanation: "Feminine gender requires -a."
+      options:
+        - text: "-а (добра)"
+          correct: true
+        - text: "-ий (добрий)"
+          correct: false
+        - text: "-е (добре)"
+          correct: false
+        - text: "-і (добрі)"
+          correct: false

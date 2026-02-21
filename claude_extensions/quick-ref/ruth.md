@@ -42,7 +42,7 @@
 ## Module Standards
 
 ### Word Targets
-- Regular modules: **3000-4000 words**
+- Regular modules: **4000+ words**
 - Checkpoints: **2500-3000 words**
 - Labs: **2500-3000 words**
 

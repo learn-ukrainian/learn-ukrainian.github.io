@@ -1,0 +1,275 @@
+✅ Message sent to Gemini (ID: 12088) [auto-acked: self-addressed]
+✓ Message 12088 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12088...
+📨 Message #12088
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-peer-review-process
+   Time: 2026-02-20T23:36:03.695407+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-pro-21
+level: C1-PRO
+sequence: 21
+slug: peer-review-process
+version: '2.0'
+title: Рецензування
+subtitle: Peer Review Process
+content_outline:
+- section: Розминка — Система рецензування
+  points:
+  - Роль peer review в академічному світі
+  - 'Типи рецензування: одинарне сліпе, подвійне сліпе, відкрите'
+  - Етика рецензування для авторів та рецензентів
+- section: Написання рецензії
+  points:
+  - 'Структура рецензії: резюме, сильні сторони, зауваження, рекомендація'
+  - Як формулювати конструктивну критику
+  - 'Оцінка різних аспектів: методологія, аргументація, внесок'
+  - Типові формулювання для рецензій
+- section: Відповідь на рецензію
+  points:
+  - Як читати та інтерпретувати рецензію
+  - 'Структура response letter: точка за точкою'
+  - Як погоджуватися з критикою та вносити зміни
+  - Як не погоджуватися — обґрунтування своєї позиції
+- section: Редагування після рецензування
+  points:
+  - 'Типи правок: minor revisions, major revisions'
+  - Як відстежувати та позначати зміни в тексті
+  - Повторне подання — що включати
+  - Апеляція при відхиленні — коли та як
+- section: Зразки рецензій та відповідей
+  points:
+  - Зразок конструктивної рецензії
+  - Зразок response letter з відповідями на зауваження
+  - Типові помилки авторів у відповідях на рецензії
+- section: Практика — Рецензування та відповідь
+  points:
+  - 'Завдання 1: Написати рецензію на наданий текст'
+  - 'Завдання 2: Написати response letter на отримані зауваження'
+  - Критерії оцінювання
+vocabulary_hints:
+  required:
+  - рецензування (peer review)
+  - рецензія (review)
+  - рецензент (reviewer)
+  - response letter (лист-відповідь)
+  - подвійне сліпе рецензування (double-blind review)
+  - major revisions (суттєві правки)
+  - minor revisions (незначні правки)
+  - відхилення (rejection)
+  recommended:
+  - редакційна колегія (editorial board)
+  - головний редактор (editor-in-chief)
+  - конструктивна критика (constructive criticism)
+  - методологічні зауваження (methodological comments)
+  - прийняття до публікації (acceptance for publication)
+  - апеляція (appeal)
+activity_hints:
+- type: document-analysis
+  focus: Проаналізувати рецензію — оцінити конструктивність та повноту
+  items: 2
+- type: writing-task
+  focus: Написати рецензію на наданий науковий текст
+  items: 1
+- type: writing-task
+  focus: Написати response letter на отримані зауваження
+  items: 1
+- type: fill-in
+  focus: Вставити правильні конструкції для конструктивної критики
+  items: 8
+- type: rewriting
+  focus: Перетворити грубу критику на конструктивне зауваження
+  items: 6
+focus: professional
+pedagogy: ESP
+prerequisites:
+- c1-pro-20 (Написання дискусії)
+connects_to:
+- c1-pro-22 (Тези конференцій)
+objectives:
+- Учень може писати конструктивні рецензії на наукові роботи
+- Учень може відповідати на зауваження рецензентів у response letter
+- Учень може ефективно редагувати текст після рецензування
+- Учень знає етику рецензування та процес публікації
+grammar:
+- Конструкції для критики (Автору рекомендується... / Було б доречно уточнити...)
+- Конструкції для згоди (Дякуємо рецензенту за слушне зауваження... / Ми внесли відповідні
+  зміни...)
+- Конструкції для незгоди (Ми поважаємо думку рецензента, проте... / Хотіли б пояснити,
+  що...)
+register: науковий
+phase: C1-PRO.2
+persona:
+  voice: Senior Specialist
+  role: Рецензент наукового журналу
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Рецензування (Peer Review Process)
+
+## Використані джерела
+1. [Наукова бібліотека ім. М. Максимовича КНУ](https://library.knu.ua/ua/naukometriya/retsenzuvannya) — регламент та етика наукового рецензування.
+2. [Портал наукових видань НАН України](https://nas.gov.ua/) — стандарти редакційної політики та процедури експертного оцінювання.
+3. [Видавнича служба "Наукові журнали"](https://phdhelp.com.ua/blog/retsenziya-na-stattyu/) — практичні поради та шаблони для написання рецензій та відповідей.
+4. [ДСТУ 4163:2020](https://zakon.rada.gov.ua/) — державний стандарт щодо оформлення службової документації (для офіційних листів).
+
+## Термінологічна база
+
+| Українська (норма) | Русизм/ненорма | English | Контекст вживання |
+|--------------------|---------------|---------|-------------------|
+| Рецензування | - | Peer review | Загальний процес наукової експертизи |
+| Рецензент | - | Reviewer | Особа, що здійснює експертну оцінку |
+| Доопрацювання | Редагування (vague) | Revision / Resubmission | Процес внесення змін за зауваженнями |
+| Зазначити / зауважити | Відмітити | To state / To note | Формулювання висновків у тексті рецензії |
+| Брати участь | Приймати участь | To participate | Участь у дискусії чи процесі рецензування |
+| Згідно з (вимогами) | Згідно (вимог) | According to | Посилання на правила видання (граматична норма) |
+| Внесок | Вклад | Contribution | Оцінка новизни та значення роботи |
+| Лист-відповідь | - | Response letter | Офіційний документ автора до рецензентів |
+
+## Мовні норми та стандарти
+- **ДСТУ 4163:2020**: Визначає правила оформлення реквізитів у листах-відповідях та офіційних висновках редколегії.
+- **Науковий стиль (академічна мова)**: Вимагає використання безособових конструкцій (зауважено, встановлено) та модальних засобів пом'якшення критики (автору доцільно було б, видається за необхідне).
+- **Етика публікацій (COPE)**: Регламентує термінологію конфіденційності та конфлікту інтересів.
+
+## Аутентичні приклади
+1. [Зауваження]: «Незважаючи на актуальність обраної теми, методологічний апарат дослідження потребує суттєвого уточнення, зокрема в частині вибору вибірки.»
+2. [Згода автора]: «Ми вдячні рецензенту за слушне зауваження щодо статистичного аналізу. Відповідні зміни внесено до розділу 3.2 (стор. 14).»
+3. [Незгода автора]: «Ми поважаємо думку рецензента стосовно інтерпретації результатів, проте вважаємо за доцільне залишити авторське трактування, оскільки воно базується на...»
+
+## Типові помилки
+1. ❌ **В даній статті розглядається** → ✅ **У цій / пропонованій статті розглядається** (уникнення надлишкового вживання "даний").
+2. ❌ **Варто відмітити високий рівень** → ✅ **Варто зазначити високий рівень** (уникнення кальки з російської "отметить").
+3. ❌ **Автор являється фахівцем** → ✅ **Автор є фахівцем** (неправильне вживання дієслова "являтися").
+4. ❌ **На протязі місяця автор працював** → ✅ **Протягом місяця автор працював** (часова тривалість).
+5. ❌ **Підняти питання про новизну** → ✅ **Порушити питання про новизну** (лексична сполучність).
+
+## Engagement Hooks (mapped to sections)
+- Розминка: `[!pro-tip]` — Як розпізнати "хижацькі" журнали через відсутність реального рецензування.
+- Написання рецензії: `[!language-note]` — Використання конструкції "Було б доречно" замість прямого наказового способу.
+- Відповідь на рецензію: `[!example]` — Зразок таблиці порівняння зауважень та внесених змін (Revision Table).
+- Зразки: `[!common-error]` — Надмірна виправдовуваність автора у відповіді на критику (defense vs argumentation).
+
+## Section-Mapped Research Notes
+
+### Розминка — Система рецензування
+Огляд академічної етики (COPE), відмінності між Single-blind, Double-blind та Open Peer Review. Роль рецензента як фільтра якості (gatekeeper).
+
+### Написання рецензії
+Аналіз стандартної структури: Summary, General comments, Specific comments. Критерії оцінки: актуальність, новизна, методологічна коректність, логіка висновків.
+
+### Відповідь на рецензію
+Стратегія "Point-by-point response". Психологічні аспекти сприйняття критики. Мовні засоби для вираження вдячності та аргументованої дискусії.
+
+### Редагування після рецензування
+Класифікація правок: Major Revisions (переробка концепції) vs Minor Revisions (коректура, уточнення). Робота з режимом відстеження змін (Track Changes) в академічному контексті.
+
+### Зразки рецензій та відповідей
+Аналіз типових кліше: "The paper makes a significant contribution", "However, the literature review is insufficient". Розбір помилок: агресивна відповідь на критику.
+
+### Практика — Рецензування та відповідь
+Критерії оцінювання: точність термінології, дотримання академічного етикету, логіка аргументації у відповіді.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/

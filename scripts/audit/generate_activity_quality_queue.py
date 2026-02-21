@@ -259,11 +259,19 @@ def generate_queue_file(
     """
     level_dir = content_root / level
 
-    # Find activity YAML file
-    activity_files = list((level_dir / 'activities').glob(f'{module_num:02d}-*.yaml'))
-    if not activity_files:
-        # Try without zero-padding
-        activity_files = list((level_dir / 'activities').glob(f'{module_num}-*.yaml'))
+    # Find activity YAML file via manifest
+    activity_files = []
+    try:
+        import sys
+        sys.path.insert(0, str(content_root.parent.parent / "scripts"))
+        from manifest_utils import get_module_by_number
+        mod = get_module_by_number(level, module_num)
+        if mod:
+            af = level_dir / 'activities' / f"{mod.slug}.yaml"
+            if af.exists():
+                activity_files = [af]
+    except Exception:
+        activity_files = list((level_dir / 'activities').glob(f'{module_num:02d}-*.yaml'))
 
     if not activity_files:
         print(f"⚠️  No activity file found for {level.upper()} module {module_num}")

@@ -1,4 +1,3 @@
----
 module: b2-hist-035
 level: B2-HIST
 sequence: 35
@@ -8,77 +7,82 @@ title: 'Петро Могила: Реформатор церкви'
 subtitle: 'Petro Mohyla: The Church Reformer'
 content_outline:
 - section: Вступ
-  words: 500
   points:
-  - Crisis of Orthodoxy post-Union
-  - Need for new strategy
+  - Crisis of Orthodoxy post-Union — 1596 Union aftermath, hierarchy unrecognized,
+    churches seized
+  - 'Need for new strategy — beyond survival: modernization and intellectual defense'
 - section: Шлях до митри
-  words: 900
   points:
-  - Moldovan origins
-  - Western education
-  - Military service
-  - Tonsure at Lavra
+  - Moldovan origins — son of hospodar Simeon Mohyla
+  - Western education — Lviv Brotherhood School, Zamość Academy, possibly Paris (Sorbonne)
+  - 'Military service — 1620-1621 Cecora and Khotyn battles; [!history-bite]: Mohyla
+    was a soldier before becoming a monk, bringing military discipline to the church'
+  - Tonsure at Lavra — 1627 elected archimandrite, start of publishing activity
 - section: Заснування Академії
-  words: 900
   points:
-  - Merger of schools (1632)
-  - Latin curriculum for Orthodox defense
-  - Resistance from traditionalists
-  - Role of 'spudei' (students)
+  - Merger of schools (1632) — Lavra School (1631) + Brotherhood School = Kyiv-Mohyla
+    Collegium
+  - Latin curriculum for Orthodox defense — adopting Jesuit methods (language, rhetoric)
+    to defeat the enemy with their own weapons
+  - Resistance from traditionalists — conservative Cossacks and clergy feared 'Latinization'
+  - 'Role of ''spudei'' (students) — forming a new national elite; [!myth-buster]:
+    Myth: Mohyla ''Catholicized'' education. Reality: He used Latin tools for Orthodox
+    defense.'
 - section: Реформатор церкви
-  words: 600
   points:
-  - Legalization of hierarchy (1632/1633)
-  - Rebuilding St. Sophia and Desyatynna
-  - Liturgical reforms (Trebnyk)
-  - Discipline and education of clergy
+  - Legalization of hierarchy (1632/1633) — 'Articles of Pacification' from King Władysław
+    IV; consecration in Lviv
+  - 'Rebuilding St. Sophia and Desyatynna — 1633 restoration of Sophia (Octaviano
+    Mancini), 1635 excavations of Desyatynna; [!context]: Parallel with Counter-Reformation
+    — education + discipline + dogma'
+  - Liturgical reforms (Trebnyk) — 1646 'Euchologion', unification of rites, pastor's
+    manual
+  - Discipline and education of clergy — strict requirements for priests to be educated
 - section: Спадщина Могили
-  words: 250
   points:
-  - Kyiv as the 'New Jerusalem'
-  - Baroque culture
-  - Lasting impact on Ukrainian identity
+  - Kyiv as the 'New Jerusalem' — theological concept of Kyiv as a sacred center
+  - 'Baroque culture — [!culture]: ''Mohylian'' or ''Cossack'' Baroque style blending
+    European splendor with local tradition'
+  - Lasting impact on Ukrainian identity — integration into European cultural space
 - section: Читання
-  words: 50
   points:
-  - Primary sources assignment
+  - Primary sources assignment — excerpts from 'Trebnyk' Preface or 'Testament'
 - section: Первинні джерела
-  words: 500
   points:
-  - Testament of Mohyla
-  - Inscription on Desyatynna
-  - Linguistic analysis
+  - Testament of Mohyla — moral and educational instructions
+  - Inscription on Desyatynna — finding Rus' roots for legitimacy
+  - 'Linguistic analysis — [!quote]: ''Гарно й почесно бути свічкою... але свічка
+    має світити'' (Trebnyk, 1646) — metaphor of active service'
 - section: Деколонізаційний погляд
-  words: 150
   points:
-  - Myth of Latinization
-  - Intellectual sovereignty
-  - Summary of achievements
-  - Reflection on 'Western tools for Eastern faith'
+  - 'Myth of Latinization — [!decolonization]: Imperial historiography portrayed pre-Moscow
+    Orthodoxy as ''corrupted''; reality: peak intellectual sovereignty'
+  - Intellectual sovereignty — Kyiv exported scholars to Moscow, not vice versa
+  - Summary of achievements — standardized dogma ('Confession of Faith', 1640), recognized
+    by all patriarchs
+  - Reflection on 'Western tools for Eastern faith' — agency in self-reform without
+    waiting for Moscow or Constantinople
 - section: Потрібно більше практики?
-  words: 15
   points:
-  - Engagement
-word_target: 4000
+  - Engagement — reflective questions on Mohyla's strategy
 vocabulary_hints:
   required:
-  - митрополит
-  - академія
-  - реформа
-  - колегіум
-  - полеміка
-  - православ'я
-  - унія
-  - руїна
-  - канонізація
-  - друкарня
+  - митрополит (Metropolitan) — титул глави церкви
+  - академія (Academy) — Києво-Могилянська академія
+  - реформа (reform) — церковна реформа, освітня реформа
+  - колегіум (collegium) — за зразком єзуїтських колегіумів
+  - полеміка (polemics) — релігійна полеміка
+  - православ'я (Orthodoxy) — захист православ'я
+  - унія (Union) — Берестейська унія 1596
+  - руїна (ruin) — відбудова з руїн (rebuilding from ruins)
+  - канонізація (canonization) — Петро Могила канонізований у 1996
+  - друкарня (printing press) — Лаврська друкарня
   recommended:
-  - спудей
-  - риторика
-  - латина
-  - бароко
-  - меценат
+  - спудей (student) — студент академії (archaic)
+  - риторика (rhetoric) — мистецтво красномовства
+  - латина (Latin) — мова науки
+  - бароко (Baroque) — українське бароко, козацьке бароко
+  - меценат (patron) — меценат освіти і культури
 activity_hints:
 - type: critical-analysis
   focus: 'Верифікація фактів: facts'
@@ -96,9 +100,13 @@ grammar:
 - Passive voice in historical narrative
 sources:
 - name: Історія України-Руси
-  url: "http://litopys.org.ua/hrushrus/iur.htm"
+  url: http://litopys.org.ua/hrushrus/iur.htm
   type: secondary
 - name: Petro Mohyla (Encyclopedia of Ukraine)
-  url: "http://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CM%5CO%5CMohylaPetro.htm"
+  url: http://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CM%5CO%5CMohylaPetro.htm
   type: reference
-phase: "HIST.4 [Lithuanian-Polish Era]"
+phase: HIST.4 [Lithuanian-Polish Era]
+persona:
+  voice: Senior Professor of History
+  role: Academy Professor
+word_target: 5000

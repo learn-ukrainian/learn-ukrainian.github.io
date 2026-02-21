@@ -1,94 +1,39 @@
-# Research: Mixed and Complex Conditionals (B1 M33)
+# Дослідження: Умовні речення: змішані та складні умови
 
-**Module:** B1 M33 "Conditionals Mixed Complex"
-**Level:** B1 (Intermediate)
-**Topic:** Mixed Conditionals, Chained Conditionals, Complex Patterns (`навіть якщо`, `за умови`)
+## State Standard Reference
+§4.2.3.3: "Умовний спосіб. Утворення форм умовного способу: говорив би, випила б, прочитали б."
+§4.4.3: "складнопідрядні речення з підрядною частиною: реальної умови (сполучник якщо)... ірреальної умови (якби, коли б)..."
+Alignment: Module expands on basic real/unreal distinction by combining them (mixed conditionals) and introducing complex conjunctions (навіть якщо, якщо не), fully compliant with B1 expectations for complex sentence structure.
 
-## 1. Grammar: State Standard 2024 Reference
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| **якщо не** | High (Common conjunction) | *якщо не..., то...* (if not X, then Y); *якщо не помиляюся* (if I'm not mistaken); *якщо не секрет* (if it's not a secret) |
+| **навіть якщо** | Medium (Emphatic) | *навіть якщо це...* (even if it is...); *навіть якщо ми...* (even if we...); *навіть якщо припустити* (even if we assume) |
+| **за умови** | Medium (Formal/Semi-formal) | *за умови дотримання* (provided compliance with); *за умови згоди* (provided consent); *за умови, що...* (on the condition that...) |
+| **якби** | High (Proverbs/Unreal) | *якби знав, де впадеш...* (if I knew where I'd fall); *якби не...* (if it weren't for...) |
 
-**Державний стандарт української мови як іноземної (2024)**
-**Рівень B1 (Рубіжний рівень)**
+## Cultural Hooks
+1. **Proverbial Wisdom**: "Якби знав, де впадеш, соломки підстелив би" (If I knew where I would fall, I'd spread some straw). Perfect example of unreal past condition with present/timeless result.
+2. **Historical irony**: "Якби не макогін і качалка, не була б у хаті господарем Наталка" (If it weren't for the pestle and rolling pin, Natalka wouldn't be the master of the house). Illustrates the "Якби не + Noun" pattern.
 
-> **Розділ: Граматична компетенція. Синтаксис.**
-> **§ Складнопідрядні речення.**
-> "...вживання складнопідрядних речень з підрядними умови (сполучники *якщо, якби, коли, раз*); вираження реальної та нереальної умови; побудова речень зі змішаним типом часу (минула дія — теперішній наслідок)."
+## Common Learner Errors
+1. **Conjunction Confusion**: Using *якщо* for unreal conditions instead of *якби*.
+   - *Error*: *Якщо я був би там вчора...*
+   - *Correct*: *Якби я був там вчора...*
+   - *Why*: Direct translation from English "If" which covers both.
+2. **Punctuation Neglect**: Omitting the comma between clauses.
+   - *Error*: *Ми підемо гуляти якщо не буде дощу.*
+   - *Correct*: *Ми підемо гуляти, якщо не буде дощу.*
+   - *Why*: Overlooking Ukrainian syntax rules for complex sentences.
+3. **Russian Interference (Surzhyk)**: Using *єслі* instead of *якщо*.
+   - *Correct*: *Якщо ти прийдеш...*
 
-The standard explicitly requires B1 learners to master:
-1.  **Real Condition:** *Якщо завтра буде гарна погода, ми підемо в парк.*
-2.  **Unreal Condition (Subjunctive):** *Якби я мав час, я б допоміг.*
-3.  **Complex/Mixed:** Understanding logical relations where the condition is in the past (irrevocable) but the consequence is in the present.
+## Cross-References
+- **Builds on**: `b1-32` (Conditionals Unreal якби) - requires mastery of basic unreal form.
+- **Prepares for**: `b1-34` (Checkpoint Complex Sentences 1) - tests this logic; `b2` modules on complex syntax.
 
-## 2. Vocabulary Frequency
-
-### High Frequency (Core B1)
-*   **якщо** (if) - Top 100 frequency. Essential.
-*   **якби** (if - unreal) - High frequency.
-*   **то** (then) - Essential correlative particle.
-*   **б / би** (would particle) - Essential for unreal/conditional mood.
-
-### Medium Frequency (Target for M33)
-*   **навіть якщо** (even if - real) - Common in argumentative speech.
-*   **навіть якби** (even if - unreal) - Common in emotional speech.
-*   **за умови, що...** (on the condition that...) - Formal/Professional register.
-*   **у разі** (in case of) - Administrative/Formal.
-*   **інакше / в іншому випадку** (otherwise) - Logical connector.
-
-### Collocations
-*   *Якби знаття...* (If one only knew...)
-*   *За певних умов* (Under certain conditions)
-*   *У разі потреби* (In case of need / If necessary)
-
-## 3. Cultural Hook
-
-**The Fatalistic Optimism of "Якби"**
-Ukrainians frequently use the particle **"би"** to lament missed opportunities or dream of alternative histories. A quintessential cultural proverb for this module is:
-
-> **"Якби знаття, де впасти, то соломки б підстелив."**
-> *(If I knew where I was going to fall, I would have spread some straw.)*
-
-**Cultural Context:**
-This reflects a cultural pragmatic attitude: one cannot foresee everything, and regret ("якби") is a natural part of life. It’s often used when something goes wrong to express mild, philosophical regret rather than deep guilt.
-
-**Historical Context:**
-In history lessons (which B1 prepares for), "alternative history" is a popular topic discussed using mixed conditionals: *"Якби Хмельницький не підписав угоду..."* (If Khmelnytskyi hadn't signed the treaty... [Past Condition] ...Ukraine would be different today [Present Result]).
-
-## 4. Pedagogical Notes
-
-### Key Differences from English
-1.  **Tense Simplification:** English has complex "Third Conditional" (*would have done*) vs "Second Conditional" (*would do*). Ukrainian simplifies this:
-    *   **Action:** Past tense verb + **би**.
-    *   **Context:** The context (adverbs like *вчора*, *зараз*) determines if it's "would do" or "would have done".
-    *   *Examples:*
-        *   *Я б це зробив зараз.* (I would do it now.)
-        *   *Я б це зробив вчора.* (I would have done it yesterday.)
-    *   **Learner Win:** Ukrainian is formally simpler here than English!
-
-2.  **"If" vs "When":** Learners confuse *коли* (when) and *якщо* (if).
-    *   Rule: *Коли* implies certainty (time). *Якщо* implies uncertainty (condition).
-
-### Common Learner Errors
-*   **Double "би":** Using *би* in the *якщо/якби* clause.
-    *   *Wrong:* Якби я би знав...
-    *   *Correct:* Якби я знав... (Particle usually avoids the conjunction clause, though spoken language varies, strict standard puts it in the main clause or after the verb in the if-clause *without* doubling).
-*   **Mixing Real/Unreal:** *Якщо я мав час, я б пішов.* (Mixing *Якщо* [real] with *би* [unreal]). Must be *Якби...*.
-
-### Teaching Sequence
-1.  Review **Real** (*Якщо* + Present/Future).
-2.  Review **Unreal** (*Якби* + Past + *би*).
-3.  **Introduce Mixed:** Show a timeline.
-    *   Timeline A: Past mistake -> Present suffering. (*Якби ти не з'їв торт вчора, ти б не був товстим сьогодні.*)
-4.  **Introduce Emphatic:** *Навіть якщо/якби*.
-
-## 5. Scope Boundaries
-
-### IN Scope (B1)
-*   **Mixed Conditionals:** Past Cause -> Present Result.
-*   **Emphatic Conditionals:** *Навіть якщо* (Even if).
-*   **Formal Connectors:** *За умови*, *У разі*.
-*   **Particle Placement:** Correct placement of *би* (after the first stressed word or verb).
-
-### OUT of Scope (Save for B2/C1)
-*   **Archaic/Poetic Conjunctions:** *Коли б*, *Аби*.
-*   **Inverted Conditionals:** *Прийди він вчасно...* (Had he come on time...) without a conjunction.
-*   **Complex bureaucratic formulations:** *За наявності відсутності...*
-*   **Subjunctive in Noun Clauses:** *Я хочу, щоб ти прийшов* (This is Purpose/Wish, often taught separately from Conditionals, though formally similar).
+## Notes for Content Writing
+- **Mixed Conditional Types**: Clearly distinguish "Past Condition -> Present Result" (Якби я вчив (past), я б знав (now)) vs "Present State -> Past Result" (Якби я був розумний (generally), я б не зробив цього (then)).
+- **Chained Conditionals**: Use simple logic chains for practice (If A happens -> B happens -> If B happens -> C happens).
+- **Register**: Keep examples conversational but grammatically precise. Use *за умови* for slightly more formal contexts (rules, agreements).

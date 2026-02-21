@@ -1,4 +1,3 @@
----
 module: c1-hist-075
 level: c1-hist
 sequence: 75
@@ -10,55 +9,47 @@ objectives:
 - 'Analyze the causes and consequences of синтез: західні землі'
 - Evaluate the historical significance of чому «більш українські»?
 content_outline:
-- section: "Вступ — Чому «більш українські»?"
-  words: 457
+- section: Вступ — Чому «більш українські»?
   subsections:
   - Огляд модулів 70-74
   - Стереотип «справжніх українців»
   - Чи це правда?
   - Мета синтезу
 - section: Порівняння регіонів
-  words: 686
   subsections:
   - Галичина vs. Буковина vs. Закарпаття vs. Волинь
   - Різні імперії — різні долі
   - Спільне і відмінне
   - Таблиця порівняння
 - section: Чому зберегли ідентичність
-  words: 800
   subsections:
   - Австрія vs. Росія — ключ
   - Церква — греко-католицька
   - Освіта — можливості
   - Політичний досвід
 - section: Західні землі в XX столітті
-  words: 686
   subsections:
   - 1918 — ЗУНР
   - Міжвоєнний період — під Польщею, Румунією, Чехословаччиною
   - 1939-1945 — окупації
   - «Возз'єднання» 1939/1945
 - section: Західна Україна в СРСР
-  words: 571
   subsections:
   - Радянізація
   - Опір — УПА
   - Репресії
   - Збереження ідентичності
 - section: Роль після 1991
-  words: 457
   subsections:
   - «Український П'ємонт» — знову
   - Помаранчева революція
   - Революція Гідності
   - 2022 — чи ще актуальний поділ?
 - section: Підсумок
-  words: 343
   subsections:
   - Західні землі — інша історія
   - Але частина України
   - Перехід до східних регіонів
-word_target: 4000
 vocabulary:
 - синтез
 - західні землі
@@ -86,11 +77,11 @@ activities:
   focus: Чому західні українці 'більш українські'? Чи це міф?
 sources:
 - name: Західна Україна (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Західна_Україна"
+  url: https://uk.wikipedia.org/wiki/Західна_Україна
   type: reference
   notes: Regional overview
 - name: Галичина (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Галичина"
+  url: https://uk.wikipedia.org/wiki/Галичина
   type: reference
   notes: Galicia summary
 vocabulary_hints:
@@ -109,7 +100,9 @@ activity_hints:
   items: 4
 - type: essay-response
   focus: Критичний аналіз
-  word_target: 300
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Galician Studies Expert

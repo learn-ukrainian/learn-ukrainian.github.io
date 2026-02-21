@@ -1,0 +1,27 @@
+{
+  "track": "b2-hist",
+  "slug": "scythians-sarmatians",
+  "mode": "v3",
+  "phases": {
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-19T10:34:45Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-19T10:34:46Z",
+      "note": "adopted-existing"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-19T10:34:47Z",
+      "attempts": 1
+    },
+    "v3-D": {
+      "status": "failed",
+      "ts": "2026-02-21T14:27:25Z",
+      "attempts": 1,
+      "note": "d1-no-review"
+    }
+  }
+}

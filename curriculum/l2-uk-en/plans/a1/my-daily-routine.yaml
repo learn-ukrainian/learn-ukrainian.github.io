@@ -1,0 +1,107 @@
+module: a1-25
+level: A1
+sequence: 25
+slug: my-daily-routine
+version: '2.0'
+title: My Daily Routine
+subtitle: Reflexive Verbs and Daily Activities
+content_outline:
+- section: Вступ (Introduction)
+  words: 400
+  points:
+  - 'State Standard §3.4/§3.5 Alignment: Introducing typical daily activities (типові
+    щоденні заняття) and the conceptual split between a working day (робочий день)
+    and a day off (вихідний день).'
+  - 'Setting the scene: Discussing the start and end of activities (початок і кінець
+    дня) using chronological markers to establish a logical flow for the routine narrative.'
+- section: Презентація (Presentation)
+  words: 600
+  points:
+  - 'Reflexive verbs and daily hygiene: Presentation of прокидатися and вмиватися.
+    Explicitly address learner error: confusing reflexive ''вмиватися'' (washing one''s
+    face/body) with transitive ''мити руки'' (washing hands).'
+  - 'Morphological focus per §4.2.4.1: Conjugation of Class II reflexive verbs, specifically
+    ''дивитися'' (дивлюся, дивишся...). Drill the -ся/-сь rule: using -сь after vowels
+    (я дивлюсь) vs -ся after consonants (ти дивишся).'
+  - 'Cultural Hook: The Ukrainian ''Обід'' (lunch, 13:00–14:00) as the main, substantial
+    meal of the day (first and second courses), contrasting it with lighter Western
+    lunch habits; use of ''обідня перерва''.'
+- section: Практика (Practice)
+  words: 550
+  points:
+  - 'Daily commute and motion: Distinguishing between ''їхати на роботу'' (by transport)
+    and ''йти на роботу'' (on foot) as part of the daily sequence.'
+  - 'Time and Case correction: Addressing the common error of using ''в'' + Accusative
+    for time; drilling the correct Locative pattern ''о сьомій годині'' for scheduling
+    routine tasks.'
+  - 'Frequency and Sequence adverbs: Integrating ''зазвичай'' (usually) with markers
+    like ''спочатку'' (first), ''потім'' (then), and ''після цього'' (after that)
+    to build complex descriptions of a day.'
+- section: Продукування та Підсумок (Production and Summary)
+  words: 450
+  points:
+  - 'Evening transitions and the ''домашній одяг'' (home clothes) cultural hook: Explaining
+    the significance of changing clothes immediately upon returning home to separate
+    public and private spheres.'
+  - 'Synthesis Task: Learners describe their own daily routine, contrasting a busy
+    working day with a day off, focusing on reflexive verb agreement and temporal
+    markers.'
+vocabulary_hints:
+  required:
+  - 'прокидатися (to wake up) — High frequency; collocations: рано прокидатися, прокидатися
+    о сьомій'
+  - 'вмиватися (to wash oneself) — Medium frequency; learner error: distinguish from
+    ''мити руки'' (washing hands)'
+  - 'одягатися (to dress oneself) — Collocations: швидко одягатися, одягатися тепло;
+    note -ся/-сь agreement'
+  - снідати / обідати / вечеряти (to have breakfast/lunch/dinner) — High frequency;
+    note that 'обід' is the main meal (13:00-14:00)
+  - 'дивитися (to watch/look) — §4.2.4.1 core conjugation: дивлюся, дивишся, дивиться;
+    focus on reflexive particle'
+  - 'лягати (спати) (to lie down/go to bed) — High frequency; collocations: лягати
+    спати, лягати пізно'
+  - 'зазвичай (usually) — High frequency adverb; collocations: я зазвичай встаю, як
+    зазвичай'
+  recommended:
+  - спочатку (first) — sequence marker for routine
+  - потім (then) — sequence marker for routine
+  - нарешті (finally) — sequence marker for finishing the day
+  - щодня (every day) — frequency marker for habits
+  - обідня перерва (lunch break) — §3.5 concept; crucial for the working day description
+  - домашній одяг (home clothes) — cultural hook for the evening transition
+activity_hints:
+- type: quiz
+  focus: Order daily activities
+  items: 20
+- type: fill-in
+  focus: Complete routine descriptions
+  items: 20
+- type: match-up
+  focus: Match activities to times
+  items: 15
+- type: fill-in
+  focus: Describe your typical day
+  items: 6
+focus: practical
+pedagogy: PPP
+prerequisites:
+- a1-09 (Reflexive Verbs)
+- a1-23 (What Time Is It)
+connects_to:
+- a1-26 (Describing Things - Adjectives)
+- a1-30 (Checkpoint Consolidation)
+objectives:
+- Learner can conjugate common reflexive verbs
+- Learner can describe daily routine activities
+- Learner can use sequence words to order events
+- Learner can talk about habits and regular activities
+grammar:
+- Reflexive verbs (-ся/-сь) in context
+- Sequence adverbs (спочатку, потім, нарешті)
+- Daily routine expressions
+register: розмовний
+phase: A1.3 [Consolidation]
+persona:
+  voice: Patient Supportive Tutor
+  role: Time Management Coach
+word_target: 2000

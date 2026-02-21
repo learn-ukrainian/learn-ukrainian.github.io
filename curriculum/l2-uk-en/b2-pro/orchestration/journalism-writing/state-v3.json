@@ -1,0 +1,13 @@
+{
+  "track": "b2-pro",
+  "slug": "journalism-writing",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-20T01:11:02Z",
+      "task_id": "v3-journalism-writing-pA",
+      "mode": "full"
+    }
+  }
+}

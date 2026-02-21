@@ -1,0 +1,64 @@
+{
+  "module": "checkpoint-navigation",
+  "level": "A1",
+  "plan_version": "2.0",
+  "last_audit": "2026-02-21T00:46:40.660641Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-02-20T23:42:54.006414Z",
+    "meta": "2026-02-19T22:59:27.857161Z",
+    "activities": "2026-02-20T23:42:54.008037Z",
+    "vocabulary": "2026-02-19T10:40:30.123395Z",
+    "plan": "2026-02-20T20:40:58.184385Z",
+    "research": "2026-02-19T22:59:27.846910Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "2572/1500 (raw: 2773)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "10/8"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "20/1"
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "ipa": {
+      "status": "warn",
+      "violations": 0,
+      "message": "1 IPA issues (run lint_ipa.py --fix)"
+    },
+    "research": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Content aligned with research"
+    },
+    "review": {
+      "status": "pass",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 6,
+    "fail_count": 0,
+    "deferred_count": 0
+  }
+}

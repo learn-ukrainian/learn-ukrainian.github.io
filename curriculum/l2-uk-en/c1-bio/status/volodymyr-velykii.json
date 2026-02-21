@@ -2,14 +2,15 @@
   "module": "volodymyr-velykii",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-11T00:43:09.715147Z",
+  "last_audit": "2026-02-21T15:10:42.430545Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-09T22:47:00.990687Z",
-    "meta": "2026-02-09T21:46:50.065463Z",
-    "activities": "2026-02-09T22:44:25.964423Z",
-    "vocabulary": "2026-02-09T22:44:25.948520Z",
-    "plan": "2026-02-09T15:59:44.177136Z"
+    "md": "2026-02-19T11:23:44.252910Z",
+    "meta": "2026-02-19T11:16:07.810562Z",
+    "activities": "2026-02-19T11:18:29.671999Z",
+    "vocabulary": "2026-02-18T18:47:32.725534Z",
+    "plan": "2026-02-18T17:54:25.129844Z",
+    "research": "2026-02-18T17:53:18.077080Z"
   },
   "gates": {
     "meta": {
@@ -18,35 +19,46 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "warn",
-      "violations": 0,
-      "message": "4923/5000 (raw: 5011) (77 short)"
+      "status": "fail",
+      "violations": 1,
+      "message": "5528/5000 (raw: 5773) | pedagogy: 24 violations"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "8/3"
+      "message": "6/3"
     },
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "24/24"
+      "message": "30/24"
     },
     "naturalness": {
       "status": "pass",
       "violations": 0,
       "message": "10/10 (High)"
     },
-    "review": {
+    "ipa": {
       "status": "pass",
+      "violations": 0,
+      "message": "Clean IPA"
+    },
+    "research": {
+      "status": "warn",
+      "violations": 0,
+      "message": "Refresh recommended: Research has 5+ sources but content cites 0"
+    },
+    "review": {
+      "status": "skipped",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "pass",
+    "status": "fail",
     "blocking_issues": [],
     "pass_count": 5,
-    "fail_count": 0
+    "fail_count": 1,
+    "deferred_count": 0
   }
 }

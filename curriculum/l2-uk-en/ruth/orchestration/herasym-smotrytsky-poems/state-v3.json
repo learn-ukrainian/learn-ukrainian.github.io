@@ -1,0 +1,13 @@
+{
+  "track": "ruth",
+  "slug": "herasym-smotrytsky-poems",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-20T10:07:02Z",
+      "task_id": "v3-herasym-smotrytsky-poems-pA",
+      "mode": "full"
+    }
+  }
+}

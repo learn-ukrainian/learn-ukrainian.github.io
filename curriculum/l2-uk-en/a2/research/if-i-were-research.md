@@ -1,53 +1,38 @@
-# Research: Світ мрій та гіпотез: Якби я був... (The Conditional Mood)
+# Дослідження: If I Were
 
-**Level:** A2 | **Module:** 22
-**Researched:** 2026-02-08
+## State Standard Reference
+§4.4.2: "складнопідрядні речення зі сполучниками ... якщо, ..." (Lines 1403, 1416)
+§4.2.3.3: "Conditional mood — якби + past tense" (Note: Although listed in B1 mapping, A2 level requires distinguishing real (якщо) vs unreal (якби) conditions per the plan and communicative competence requirements for hypothetical situations).
+Alignment: This module introduces the structural formation of the conditional mood (Past Tense + б/би) and the semantic distinction between real conditions (якщо) and hypothetical/unreal conditions (якби) at an A2-appropriate complexity level.
 
-## 1. Grammar: State Standard 2024 Reference
-- **Section**: § 7.2.5. Умовний спосіб дієслова (Conditional Mood)
-- **Quote**: "утворення та вживання форм умовного способу (дієслово у формі минулого часу + частка б/би); вираження гіпотетичної дії, бажання, прохання або поради."
-- **Standard Requirement**: For A2 level, students must be able to form and use the conditional mood to express dreams, hypothetical situations, and polite requests using the formula: *Verb (Past Tense) + б/би*.
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| якби | High (Core hypothetical) | якби я був, якби ми мали |
+| якщо | Very High (Core real) | якщо буде час, якщо хочете |
+| хотіти | Very High | я б хотів (політес), хотілося б |
+| мрія | High | здійснити мрію, мріяти про |
+| виграти | Medium | виграти в лотерею, виграти приз |
+| подорож | High | планувати подорож, вирушити в |
 
-## 2. Vocabulary Frequency
-| Word | Meaning | Frequency | Note |
-|------|---------|-----------|------|
-| **якби** | if (unreal) | High | Essential for hypothetical clauses. |
-| **б / би** | would | Very High | Particle for conditional mood. |
-| **мріяти** | to dream | High | Central verb for the topic. |
-| **хотів би** | would like | Very High | Polite request / desire. |
-| **міг би** | could | High | Ability in hypothetical context. |
-| **бажання** | wish/desire | Medium-High | Noun for expressing goals. |
-| **мета** | goal | Medium-High | Common in A2 "dreams" context. |
-| **ідея** | idea | High | Internationalism, easy for A1/A2. |
-| **якщо** | if (real) | Very High | Needed for contrast with *якби*. |
+## Cultural Hooks
+1. **The "Hrybi" Proverb**: "Якби та аби, та виросли в роті гриби" (If and maybe, then mushrooms would grow in the mouth). A classic Ukrainian idiom used to gently mock someone who indulges in too many "what ifs" or empty dreams without action.
 
-**Common Collocations**:
-- *Я хотів би...* (I would like...)
-- *Якби я був / була...* (If I were...)
-- *Якби я мав / мала...* (If I had...)
-- *Гарна ідея!* (Great idea!)
-- *Моя мрія — це...* (My dream is...)
+## Common Learner Errors
+1. **Particle choice (б vs би)**: Learners often use "би" everywhere. 
+   *   Rule: **б** after vowels (Я б...), **би** after consonants (Він би...).
+   *   Error: *Я би хотів* → Correct: **Я б хотів**.
+2. **Mixed Real/Unreal**: Learners confuse *якщо* (if - real) with *якби* (if - unreal).
+   *   Error: *Якщо я був королем...* → Correct: **Якби я був королем...**
+   *   Why: In English, "if" covers both. In Ukrainian, the choice of conjunction determines the reality of the situation.
+3. **Double 'би'**: Sometimes learners forget to add 'би' to the 'як' conjunction itself.
+   *   Error: *Як я був би...* → Correct: **Якби я був...**
 
-## 3. Cultural Hook
-- **The "Mriya" Symbolism**: The word *Мрія* (Dream) is deeply resonant in Ukraine. It was the name of the world's largest transport aircraft (An-225), which was destroyed during the 2022 invasion. It has since become a national symbol of resilience and the promise of "rebuilding the dream." Using the conditional to talk about "If we rebuilt..." or "If the Mriya flew again..." is a powerful contemporary context.
-- **The "Mushroom" Proverb**: A classic Ukrainian response to someone overusing "if" in excuses is: *"Якби та якби, то в роті виросли б гриби"* (If and if, mushrooms would grow in the mouth). It’s a humorous way to tell someone to stop daydreaming and face reality.
+## Cross-References
+- Builds on: `past-tense` (formation requires past tense verbs), `want-need` (polite requests).
+- Prepares for: `complex-sentences` (B1), `future-plans` (A2.3).
 
-## 4. Pedagogical Notes
-- **Morphological Simplicity**: Unlike English (Second vs. Third Conditional), Ukrainian uses the same structure for both present and past unreal conditions. This is a major relief for learners.
-- **The Particle Rule (Euphony)**:
-  - Use **б** after words ending in a vowel (*я б, вона б, поїхали б*).
-  - Use **би** after words ending in a consonant (*він би, зміг би, мав би*).
-- **Word Order**: While flexible, the particle usually stays close to the verb or follows the conjunction *якби*.
-- **The "Jakby" vs "Jakshcho" Trap**: Students often confuse *якщо* (real condition: "If it rains tomorrow...") with *якби* (unreal condition: "If I were a bird..."). Clear contrast is needed early.
-
-## 5. Scope Boundaries
-- **IN SCOPE**:
-  - Formation of conditional: Past tense verb + *б/би*.
-  - *Якби... то/так...* structure for hypothetical sentences.
-  - Polite "would like" (*хотів би*) and "could" (*міг би*).
-  - Use of all cases (Nominative to Instrumental) within the sentences, as the student has already mastered these.
-- **OUT OF SCOPE**:
-  - The Imperative Mood (Module 23).
-  - Complex conjunctions like *якби не* (unless/if not) in complex idiomatic uses.
-  - Subjunctive uses that don't follow the *б/би* pattern (e.g., specific *щоб* + past for purpose, which may be touched upon but not exhausted).
-  - Aspectual nuances in conditional (focus on the mood itself rather than perfective vs. imperfective subtleties, though aspect is already known).
+## Notes for Content Writing
+- **Grammar Visuals**: A simple table comparing **якщо** + present/future (Real) vs **якби** + past (Unreal) is essential.
+- **Politeness**: Emphasize "Я б хотів..." as a softer, more polite alternative to "Я хочу" in service settings.
+- **Word Target Strategy**: To reach the 1000-word target while maintaining A2 simplicity, expand on the "Dreams and Wishes" section with varied examples (travel, profession, social change) and use the "Proverbial usage" section to explain the cultural context of the "Mushrooms" proverb.

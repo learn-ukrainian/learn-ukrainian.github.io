@@ -1,0 +1,33 @@
+{
+  "track": "a1",
+  "slug": "emergencies",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-20T23:18:14Z",
+      "task_id": "v3-emergencies-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-20T23:20:46Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-20T23:22:15Z",
+      "task_id": "v3-emergencies-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-21T00:02:33Z",
+      "attempts": 2
+    },
+    "v3-D": {
+      "status": "complete",
+      "ts": "2026-02-21T00:06:10Z",
+      "attempts": 2,
+      "note": "escalation-claude"
+    }
+  }
+}

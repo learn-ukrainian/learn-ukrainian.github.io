@@ -1,76 +1,43 @@
-# Research: Discourse Markers (Basic Connectors)
+# Дослідження: Дискурсивні маркери: базові конектори
 
-**Module:** B1 M56
-**Topic:** Basic Discourse Markers & Connectors
-**Level:** B1 (Intermediate)
+## State Standard Reference
+§4.4.2: "просте речення зі вставними словами мабуть, можливо, здається"
+§4.4.3: "складнопідрядне речення... сполучники тому що, бо, через те що... якщо... щоб... хоч, дарма що, незважаючи на те що"
+Alignment: This module systematically covers the "introductory words" (вставні слова) and "complex sentence connectors" (сполучники) required for B1 level text cohesion, moving beyond A2 simple conjunctions.
 
-> **Note on Prompt Constraints:** The prompt incorrectly identified this as an A1 module with "alphabet-only" prior knowledge. This research document treats the topic at its correct **B1 level** to ensure curriculum integrity, as discourse markers are impossible to teach without sentence formation skills.
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| але (but) | High (General Corpus) | але ж, але все ж таки |
+| однак (however) | Medium-High (Formal/Written) | однак варто зазначити, однак не слід забувати |
+| тому що (because) | High (Spoken/Written) | саме тому що, лише тому що |
+| наприклад (for example) | High (Academic/General) | як наприклад, наприклад у випадку |
+| отже (therefore/so) | Medium (Logical/Argumentative) | отже ми можемо, отже висновок |
+| до речі (by the way) | High (Spoken) | до речі кажучи, і до речі |
+| по-перше / по-друге (firstly/secondly) | Medium (Structured Speech) | по-перше, по-друге, і по-третє |
+| власне (actually/strictly) | Medium (Spoken correction) | власне кажучи, власне це |
+| безумовно (certainly) | Medium (Emphasis) | безумовно це так, я безумовно згоден |
 
-## 1. Grammar: State Standard 2024 Reference
+## Cultural Hooks
+1. **Kyiv-Mohyla Rhetoric**: The Kyiv-Mohyla Academy (17th-18th c.) treated rhetoric as a core art. Professors like Feofan Prokopovych taught that a well-structured argument (using clear connectors) was a sign of moral and intellectual discipline, moving away from "baroque excess" to clarity.
+2. **"The Living Word"**: Ukrainian cultural tradition (from Skovoroda to modern times) values the "living word" (живе слово) — speech that is not just information but emotional connection. Connectors like *мабуть* or *власне* are seen as "softeners" that make speech more human and polite, rather than just "filler words."
 
-**Section:** Додаток 2. Лексична та граматична компетентність (Рівень B1)
-**Category:** Синтаксис. Текст.
+## Common Learner Errors
+1. **Confusing 'і' vs 'а' vs 'але'**: Learners often use *і* where *а* (contrastive 'and/but') is required, or *а* where *але* (strong 'however') is needed.
+   - *Error*: Він студент, і я викладач. (Should be *а*)
+   - *Correction*: Він студент, **а** я викладач.
+2. **"So" Overload**: English speakers use "so" for everything (*так, отже, тому, ну*). In Ukrainian, *отже* is for logical conclusion, *тому* is for cause-effect, and *ну* is a hesitation filler.
+   - *Error*: Я втомився, **так** я пішов спати.
+   - *Correction*: Я втомився, **тому** пішов спати.
+3. **Punctuation Blindness**: English speakers often ignore commas before *але*, *що*, *бо*, which are mandatory in Ukrainian.
+   - *Error*: Я думаю що він прийде.
+   - *Correction*: Я думаю**, що** він прийде.
 
-> "Засоби зв’язку речень у тексті (сполучники, сполучні слова, вставні слова та конструкції). Логічна організація тексту: послідовність викладу (по-перше, по-друге, нарешті), протиставлення (однак, проте, навпаки), висновок (отже, таким чином)."
+## Cross-References
+- **Builds on**: b1-55 (Agreement Disagreement) - expands on "on the one hand/on the other hand".
+- **Prepares for**: b1-57 (Discourse Markers Advanced) - leads into more subtle argumentative markers like *тим не менш*, *попри все*.
 
-*Standard implies mastery of coherent text production where individual sentences are linked logically.*
-
-## 2. Vocabulary Frequency & Analysis
-
-The focus is on "signposting" language that guides the listener/reader through an argument.
-
-| Ukrainian | English | Frequency | Register | Collocations/Notes |
-| :--- | :--- | :--- | :--- | :--- |
-| **отже** | therefore / so | High | Neutral | Used to start a conclusion. |
-| **по-перше** | firstly | High | Neutral | Always followed by *по-друге*. |
-| **по-друге** | secondly | High | Neutral | |
-| **нарешті** | finally | High | Neutral | End of a list. |
-| **до речі** | by the way | High | Conversational | Very common way to shift topics. |
-| **власне** | actually / in fact | High | Conversational | Often works as a filler word. |
-| **з одного боку** | on one hand | Med | Written/Formal | Requires *з іншого боку*. |
-| **з іншого боку** | on the other hand | Med | Written/Formal | |
-| **проте** | however | Med | Formal | Stronger than *але*, weaker than *однак*. |
-| **наприклад** | for example | High | Neutral | Universal connector. |
-| **на мою думку** | in my opinion | High | Neutral | Standard way to introduce belief. |
-
-**Key Differentiation:**
-*   **Але** (A1) vs **Проте/Однак** (B1): *Але* is a simple conjunction. *Проте* acts more like a discourse marker signaling a shift in argument.
-
-## 3. Cultural Hook
-
-**The "Vlasne" Phenomenon:**
-The word **"власне"** (actually/properly speaking) is a quintessential Ukrainian filler/connector. In daily speech, it is often used not just to correct information, but to soften a statement or simply buy time to think. It signals a shift to the "core" of the matter.
-*   *Example:* "Ну, власне, я не знаю..." (Well, actually, I don't know...).
-
-**Structured Debate:**
-Ukrainian intellectual discourse (dating back to Kyiv-Mohyla Academy rhetoric traditions) values structured argumentation. Using *по-перше / по-друге* is not considered "stiff" or "too academic" in standard conversation—it is seen as a sign of clear thinking and respect for the listener's time.
-
-## 4. Pedagogical Notes
-
-**Common Learner Errors:**
-1.  **Overusing "І" (And):** Beginners string sentences with "і... і... і...". B1 students must be pushed to use *також, крім того, до речі*.
-2.  **"One hand" Mistake:** English speakers often drop the "z" (from). Correct: *З одного боку* (From one side). Incorrect: *На одній руці* (literal translation - amusing but wrong).
-3.  **Comma Comas:** Discourse markers in Ukrainian are strictly separated by commas in writing. Learners often forget this punctuation rule which is more rigid than in English.
-    *   *Отже, ми йдемо.* (Comma mandatory).
-
-**Teaching Sequence:**
-1.  **Ordering:** Start with simple enumeration (*по-перше, потім, нарешті*).
-2.  **Opinion:** Add *на мою думку, здається*.
-3.  **Contrast:** Introduce *з одного боку / з іншого боку*.
-4.  **Flow:** Practice *до речі* and *власне* to make dialogue sound natural, not robotic.
-
-## 5. Scope Boundaries
-
-**IN SCOPE (B1):**
-*   **Ordering:** *По-перше, по-друге, по-третє, нарешті.*
-*   **Conclusion:** *Отже, таким чином.*
-*   **Addition:** *До речі, крім того.*
-*   **Clarification:** *Тобто, власне, інакше кажучи.*
-*   **Simple Contrast:** *З одного боку / з іншого боку, проте.*
-*   **Parentheticals:** *Мабуть, напевно, на жаль, на щастя.*
-
-**OUT OF SCOPE (Save for C1):**
-*   **Formal Academic:** *Вищезазначений, як було сказано, підсумовуючи вищевикладене.*
-*   **Archaic/Literary:** *Слебіж, позаяк, далебі.*
-*   **Complex Causality:** *Внаслідок того що, з огляду на те що* (B2/C1 connectors).
-*   **Stylistic Nuance:** Differentiating subtle shades of "however" (*втім, а втім, менше з тим*).
+## Notes for Content Writing
+- **Register Distinction**: Clearly separate "spoken/casual" markers (*ну, коротше, до речі*) from "logical/written" markers (*отже, наприклад, по-перше*).
+- **Intonation**: Emphasize that introductory words (*мабуть, звичайно*) are often highlighted by intonation pauses (and commas in writing).
+- **Position**: Note that *однак* usually starts a sentence or clause, while *ж* (emphatic) is enclitic (second position).

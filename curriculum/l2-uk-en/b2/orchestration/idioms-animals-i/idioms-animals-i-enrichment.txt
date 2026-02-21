@@ -1,0 +1,266 @@
+✅ Message sent to Gemini (ID: 10571) [auto-acked: self-addressed]
+✓ Message 10571 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10571...
+📨 Message #10571
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-idioms-animals-i
+   Time: 2026-02-20T20:42:40.881725+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b2-52
+level: B2
+sequence: 52
+slug: idioms-animals-i
+version: '2.0'
+title: 'Фразеологізми: Тварини I (Вовк, Собака, Кінь)'
+content_outline:
+- section: Розминка — Тварини в українській культурі
+  points:
+  - Вовк — небезпека, але й сила, самотність
+  - Собака — відданість, але й приниження
+  - Кінь — сила, праця, благородство
+- section: Фразеологізми з "вовк"
+  points:
+  - Вовка ноги годують (треба працювати)
+  - Скільки вовка не годуй, він у ліс дивиться (природу не змінити)
+  - Вовк в овечій шкурі (лицемір)
+  - Морити вовка голодом (змушувати довго чекати)
+- section: Фразеологізми з "собака" та "кінь"
+  points:
+  - Собаку з'їсти (бути великим знавцем)
+  - Як собака на сіні (ні собі, ні людям)
+  - Собака гавкає — вітер несе (не варто звертати увагу)
+  - Кінь ще не валявся (ще нічого не зроблено)
+  - Дарованому коневі в зуби не заглядають (не критикуй подарунок)
+- section: Практика — тваринні образи
+  points:
+  - Обрати вираз для ситуації
+  - Пояснити культурний контекст образу
+  - Порівняти з англійськими аналогами (dog/wolf/horse idioms)
+  - Написати байку з використанням 3-4 виразів
+focus: phraseology
+pedagogy: CBI
+objectives:
+- Вивчити 8 ключових фразеологізмів про вовків, собак та коней
+- Розуміти культурний контекст тваринних образів в українській мові
+- Вміти вживати ці вирази у відповідних регістрах (від розмовного до книжного)
+grammar:
+- Fixed expressions
+- Idiom structure and variation
+register: varies
+phase: B2.2 [Phraseology & Synonymy]
+vocabulary_hints:
+  required:
+  - фразеологізм (idiom)
+  - вираз (expression)
+  - значення (meaning)
+  - контекст (context)
+  recommended:
+  - переносне значення (figurative meaning)
+  - стилістичне забарвлення (stylistic coloring)
+activity_hints:
+- type: reading
+  focus: Контекстне використання
+  items: 4
+- type: fill-in-the-blank
+  focus: Практичне застосування
+  items: 10
+- type: true-false
+  focus: Розуміння значень
+  items: 8
+persona:
+  voice: Professional Language Coach
+  role: Folklore Ethnographer (Етнограф)
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Фразеологізми: Тварини I (Вовк, Собака, Кінь)
+
+## State Standard Reference
+§4.4.1.2: "Стилістичні засоби лексики: ... метафори... епітети..."
+Alignment: This module develops B2 lexical competence by introducing fixed metaphorical expressions (idioms) as a bridge to C1 phraseology mastery, aligning with the standard's requirement for understanding stylistic means.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| Вовк | High (Core)       | голодний як вовк, вовчий апетит, дивитися вовком |
+| Собака | High (Core)     | вірний як собака, собаче життя, потрібний як собаці п'ята нога |
+| Кінь | High (Core)       | робоча конячка, бути на коні, хід конем |
+| Шкура | Medium            | в овечій шкурі, рятувати власну шкуру |
+| Гавкати | Medium          | собака гавкає, гавкати на когось (сваритися) |
+
+## Cultural Hooks
+1. **Wolf Duality**: In Polissia folklore, the wolf was believed to be created by the devil but tasked by God to destroy devils. This dual nature (danger vs. sacred function) explains why wolves were respected and their body parts used as amulets (wolf's tooth for teething children).
+2. **The Cossack's Soul**: The horse in Ukrainian culture is not just transport but a "sworn brother" (pobratym). In "Kozak Mamay" paintings, the horse is always present, symbolizing freedom and the connection between the warrior and the afterlife/destiny ("Долі й конем не об'їдеш").
+
+## Common Learner Errors
+1. **Literal Translation**: Using English "raining cats and dogs" -> *падають коти і собаки* (Incorrect) -> *ллє як з відра* (Correct).
+2. **Semantic Confusion**: Interpreting "Собаку з'їсти" literally or as "to be hungry" -> It means "to be an expert" (analogue: "cut one's teeth on something").
+3. **Register Mismatch**: Using "Кінь ще не валявся" in formal writing (it is colloquial).
+
+## Cross-References
+- Builds on: B1-Animal vocabulary (literal meanings)
+- Prepares for: C1-Phraseology (Animal idioms II), C1-Stylistics
+
+## Notes for Content Writing
+- **Idiom Alert**: The plan lists "Морити вовка голодом" with the definition "to make someone wait long". This is non-standard. The standard idiom for starvation is "морити голодом" (generic) or "голодний як вовк" (comparison). "Дивитися вовком" (to look hostile) is a better, more frequent alternative if "wait long" is not strictly required.
+- **Ethnography**: Emphasize the "Wolf" as a totem animal for *kharakternyky* (sorcerers) to fit the "Ethnographer" persona.
+- **Tone**: Keep it "Folklore Ethnographer" — use phrases like "У народній уяві...", "Як кажуть старі люди...".
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Тваринний код української культури (Introduction: Animal Code of Ukrainian Culture)"
+  words: 600
+  points:
+  - "Введення поняття «тваринного коду» як ключа до розуміння народного світогляду згідно зі стандартом §4.4.1.2 (стилістичні засоби лексики)"
+  - "Обговорення ролі тварин у фольклорі через призму етнографа: тварини як провідники між світами та символи людських рис"
+  - "Аналіз подвійної природи образу (вовк як небезпека і сакральна сила, собака як відданість і приниження)"
+- section: "Вовк — між демоном та захисником (The Wolf: Between Demon and Protector)"
+  words: 900
+  points:
+  - "Культурний гачок: дуалізм вовка в Поліському фольклорі (створений дияволом, але на службі у Бога) та роль вовка як тотема для козаків-характерників"
+  - "Детальний розбір фразеологізмів «Вовка ноги годують» та «Скільки вовка не годуй, він у ліс дивиться» як описів незмінної природи та потреби в активній дії"
+  - "Аналіз виразу «Дивитися вовком» (вороже налаштованим) замість нетипового «Морити вовка голодом» для вираження емоційного стану"
+  - "Вивчення образу «Вовк в овечій шкурі» як біблійної метафори лицемірства, поширеної в українській книжній традиції"
+- section: "Собака: відданість, майстерність та щоденний побут (The Dog: Loyalty, Mastery, and Daily Life)"
+  words: 800
+  points:
+  - "Розвінчання помилкового тлумачення виразу «Собаку з'їсти»: перехід від буквального розуміння до значення «бути великим знавцем/майстром справи»"
+  - "Аналіз соціальних контекстів: «Як собака на сіні» (егоїзм) та «Собака гавкає — вітер несе» (ігнорування пустих слів)"
+  - "Робота з частотними колоквіалізмами: «собаче життя» та «потрібний як собаці п'ята нога» з акцентом на емоційне забарвлення та розмовний регістр"
+- section: "Кінь — вірний побратим та символ долі (The Horse: Faithful Brother-in-arms and Symbol of Destiny)"
+  words: 900
+  points:
+  - "Культурний контекст: кінь у козацькій традиції та картинах «Козак Мамай» як символ свободи та «побратим»"
+  - "Опрацювання виразу «Кінь ще не валявся» з попередженням про його суто розмовний регістр та недоречність у формальному стилі"
+  - "Аналіз метафори долі через вираз «Долі й конем не об'їдеш» та етикетного правила «Дарованому коневі в зуби не заглядають»"
+  - "Вивчення частотних образів: «бути на коні» (успіх) та «робоча конячка» (невтомна праця)"
+- section: "Практикум: Труднощі перекладу та тваринні метафори (Practicum: Translation Difficulties and Animal Metaphors)"
+  words: 800
+  points:
+  - "Аналіз та виправлення помилок дослівного перекладу: чому англійське «raining cats and dogs» стає українським «ллє як з відра» (порівняльна фразеологія)"
+  - "Вправи на вибір правильного регістра: диференціація книжних метафор (вовк в овечій шкурі) та грубо-розмовних виразів (собаче життя)"
+  - "Творче завдання: написання байки в ролі Етнографа («Як кажуть старі люди...»), інтегруючи вивчені фразеологізми про вовка, собаку та коня"
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "фразеологізм (idiom) — стійке сполучення слів; high frequency in literature"
+  - "переносне значення (figurative meaning) — основа тваринної метафори"
+  - "стилістичне забарвлення (stylistic coloring) — маркування регістра (розмовне/книжне)"
+  - "вовчий апетит (wolfish appetite) — висока частотність; вказує на сильний голод"
+  - "дивитися вовком (to look hostile) — частотна колоквіальна одиниця для опису ворожості"
+  recommended:
+  - "побратим (brother-in-arms) — ключовий концепт для образу коня"
+  - "лицемірство (hypocrisy) — значення ідіоми про вовка в шкурі"
+  - "вірний як собака (loyal as a dog) — стійке порівняння"
+  - "робоча конячка (workhorse) — частотне метафоричне найменування людини-трудівника"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (3793 chars)
+✅ Message sent to Claude (ID: 10576)
+✓ Message 10576 acknowledged
+   Auto-acknowledged reply #10576 (stdout delivery — no inbox accumulation)
+✓ Message 10571 acknowledged

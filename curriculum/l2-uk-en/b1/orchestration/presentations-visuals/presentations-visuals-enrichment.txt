@@ -1,0 +1,323 @@
+✅ Message sent to Gemini (ID: 10459) [auto-acked: self-addressed]
+✓ Message 10459 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10459...
+📨 Message #10459
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-presentations-visuals
+   Time: 2026-02-20T20:34:13.878644+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b1-90
+level: B1
+sequence: 90
+slug: presentations-visuals
+version: '1.0'
+title: Презентації та візуалізація
+subtitle: Presentations & Describing Visual Information
+content_outline:
+- section: Вступ — Навіщо презентувати?
+  points:
+  - 'Презентації в навчанні, на роботі, в житті — cultural hook: contrast modern TEDxKyiv
+    style with traditional academic reading from paper'
+  - Структура цього модуля
+- section: Структура презентації
+  points:
+  - 'Початок (привітання, тема, план) — cultural hook: importance of formal address
+    «шановні колеги», «панство» in academic settings'
+  - Основна частина (пункти, переходи)
+  - Завершення (підсумок, запитання)
+  - 'Фрази для кожної частини — register: semi-formal «Дозвольте представити», «Зверніть
+    увагу»'
+- section: Опис візуальної інформації
+  points:
+  - 'Графіки (зростає, падає, стабільний) — learner error: confusion between «графік»
+    (line/trend) vs «діаграма» (parts) vs «розклад» (schedule)'
+  - 'Діаграми (частка, відсоток, порівняння) — types: «кругова» (pie), «стовпчаста»
+    (bar)'
+  - Таблиці (рядки, стовпці, дані)
+  - Фотографії та ілюстрації (на зображенні ми бачимо...)
+  - 'Distinction: «зрости на 10%» (by amount) vs «зрости до 10%» (to level) — critical
+    visual description nuance'
+- section: Мовні засоби презентатора
+  points:
+  - Привернення уваги (Зверніть увагу на...)
+  - Пояснення (Це означає, що...)
+  - Наголошення (Особливо важливо...)
+  - Переходи (Тепер перейдемо до...)
+- section: Узагальнення та резюмування
+  points:
+  - Як узагальнювати інформацію (Загалом..., Підсумовуючи...)
+  - 'Резюмування з різних джерел (За даними..., Згідно з...) — learner error: «Згідно
+    графіку» (wrong) -> «Згідно з графіком» / «Відповідно до графіка»'
+  - Ключові фрази для висновків (Отже..., Таким чином...)
+  - 'CEFR B1 skill - summarize information from different sources — learner error:
+    dangling participles «Аналізуючи діаграму, стає зрозуміло» (bad) -> «Аналізуючи
+    діаграму, ми бачимо» (good)'
+- section: Практика — Міні-презентація
+  points:
+  - '3-хвилинна презентація з візуальним матеріалом — persona: act as a Creative Director
+    rehearsal'
+  - Чекліст самооцінки
+  - Поширені помилки та як їх уникнути
+vocabulary_hints:
+  required:
+  - презентація (presentation) — робити/проводити презентацію, успішна презентація
+  - слайд (slide) — готувати слайди
+  - графік (graph/chart) — графік показує, лінійний графік; NOT schedule (розклад)
+  - діаграма (diagram) — кругова діаграма, стовпчаста діаграма, частка на діаграмі
+  - таблиця (table) — рядки та стовпці
+  - дані (data) — за даними...
+  - зростати (to grow/increase) — стрімко/поступово зростати, зрости на X%
+  - падати (to fall/decrease) — різко падати, тенденція до спадання
+  recommended:
+  - аудиторія (audience) — тримати увагу аудиторії
+  - висновок (conclusion) — робити висновки
+  - наочний (visual) — наочний матеріал, наочність
+  - тенденція (trend) — позитивна/негативна тенденція, тенденція до зростання
+  - показник (indicator) — зростання показників
+  - частка (share/portion) — значна частка
+  - узагальнювати (to summarize/generalize) — узагальнюючи сказане
+  - резюмувати (to summarize) — коротко резюмувати
+  - джерело (source) — з різних джерел
+  - згідно з (according to) — згідно з графіком (Instrumental case)
+activity_hints:
+- type: fill-in
+  focus: Complete presentation phrases
+  items: 15
+- type: match-up
+  focus: Match visual description to graph type
+  items: 12
+- type: quiz
+  focus: Choose correct phrase for situation
+  items: 15
+- type: fill-in
+  focus: Fill in presentation and summarizing phrases
+  items: 12
+- type: error-correction
+  focus: Reorder presentation sentences
+  items: 8
+focus: practical
+pedagogy: PPP
+prerequisites:
+- b1-89 (Communication Channels)
+connects_to:
+- b1-91 (Feedback & Negotiation)
+objectives:
+- Learner can structure a 3-5 minute presentation in Ukrainian
+- Learner can describe graphs, charts, and tables accurately
+- Learner can use appropriate transition phrases
+- Learner can engage audience with visual materials
+- Learner can summarize information from different sources (CEFR B1)
+grammar:
+- Presentation phrases (Дозвольте представити..., Як бачимо...)
+- Describing trends (зростає на X%, падає вдвічі)
+- Comparison structures (порівняно з..., на відміну від...)
+register: напівформальний
+phase: B1.9 [Communication Skills]
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Creative Director
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Презентації та візуалізація
+
+## State Standard Reference
+§3.9; §4.5.1: "Робота: офіційне працевлаштування... організація освітнього процесу (лекція, семінар)... Офіційне й неофіційне спілкування: стилістичні засоби лексики та синтаксису."
+Alignment: Модуль розвиває компетенції для професійної та освітньої сфер (презентація проєктів, звітів), використовуючи офіційно-діловий стиль та засоби візуалізації даних, що відповідає тематичним вимогам стандарту (B1).
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| **презентація** | High / Web Corpus | робити/проводити презентацію, готувати слайди, мультимедійна презентація, успішна презентація |
+| **графік** | Med / Business | графік показує, на графіку видно, лінійний графік, графік зростання |
+| **діаграма** | Med / Academic | кругова діаграма, стовпчаста діаграма, частка на діаграмі, сектор діаграми |
+| **зростати** | High / General | стрімко зростати, поступово зростати, зрости на X відсотків, зростання показників |
+| **падати** | High / General | різко падати, знижуватися до мінімуму, падіння попиту, тенденція до спадання |
+| **тенденція** | Med / Professional | позитивна/негативна тенденція, спостерігати тенденцію, тенденція до зростання |
+
+## Cultural Hooks
+1. **Культура публічних виступів**: В Україні активно розвивається культура публічних виступів (TEDxKyiv, бізнес-форуми), де цінується лаконічність та якісний візуальний супровід, на відміну від старих "паперових" доповідей.
+2. **Академічна вимогливість**: Попри модернізацію, в офіційних та наукових колах України (університети, держустанови) зберігається висока вимога до дотримання літературних норм та офіційного звертання (шановні колеги, панство) під час презентацій.
+
+## Common Learner Errors
+1. **Калькування прийменників**: *Згідно графіку* (помилка) → *Згідно з графіком* або *Відповідно до графіка* (правильно). Вплив російської мови ("согласно графику").
+2. **Дієприслівникові звороти**: *Аналізуючи діаграму, стає зрозуміло* (помилка: діаграма не аналізує) → *Аналізуючи діаграму, ми бачимо* (правильно: суб'єкт дії — ми).
+3. **Плутанина термінів**: *Графік* (лінії, динаміка) vs *Діаграма* (співвідношення часток) vs *Розклад* (schedule, теж "графік" у побуті). Студенти часто кажуть "графік" на все підряд.
+
+## Cross-References
+- Builds on: **b1-89 (Communication Channels)** — uses basic channel vocabulary; **A2 Numerals** — relies on cardinal numbers.
+- Prepares for: **b1-91 (Feedback & Negotiation)** — presentation leads to Q&A; **B2-PRO** — essential foundation for business tracks.
+
+## Notes for Content Writing
+- **Stylistic Balance**: Maintain a "semi-formal" (напівформальний) register. Accessible but professional. Use forms like "Дозвольте представити", "Зверніть увагу".
+- **Visual Description**: Distinguish clearly between *зрости на 10%* (by 10%) and *зрости до 10%* (to 10%). This is a crucial distinction for the "Describing trends" section.
+- **Narrative Approach**: Use a persona of a "Creative Director" or "Analyst" who teaches *how* to present, not just *what* words to say. Make the "mini-presentation" practice feel like a rehearsal for a real event.
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 500
+  points:
+  - "Роль презентацій у професійному та освітньому житті згідно з Державним стандартом (§3.9); перехід від традиційних доповідей «з папірця» до сучасного формату TEDxKyiv."
+  - "Культура публічних виступів в Україні: баланс між лаконічністю бізнес-форумів та академічною вимогливістю наукових кіл."
+- section: "Структура виступу та етикет (Presentation Structure & Etiquette)"
+  words: 800
+  points:
+  - "Важливість офіційного звертання в українському контексті: використання фраз «шановні колеги», «пані та панове», «панство» для налаштування контакту."
+  - "Мовні кліше для відкриття презентації: «Дозвольте представити...», «Темою моєї доповіді є...», «Перш за все, хочу подякувати...»."
+  - "Логічна побудова основної частини: використання переходів для підтримки уваги аудиторії та структурування аргументів."
+- section: "Опис візуальних даних (Describing Visual Data)"
+  words: 1000
+  points:
+  - "Термінологічна точність: розрізнення понять «графік» (динаміка змін), «діаграма» (співвідношення часток) та «розклад» (schedule); робота з круговими та стовпчастими діаграмами."
+  - "Граматична точність при описі тенденцій: критична різниця між «зрости на 10%» (амплітуда зміни) та «зрости до 10%» (кінцевий рівень)."
+  - "Дієслова для опису динаміки: стрімко/поступово зростати, різко падати, знижуватися до мінімуму, залишатися стабільним."
+- section: "Мовні засоби презентатора (Linguistic Tools for Presenters)"
+  words: 700
+  points:
+  - "Привернення та утримання уваги: використання конструкцій «Зверніть увагу на...», «Важливо наголосити, що...», «Подивіться на цей показник»."
+  - "Виправлення типової помилки з дієприслівниковими зворотами: drill конструкції «Аналізуючи діаграму, ми бачимо...» (суб'єкт — людина) замість помилкової «Аналізуючи діаграму, стає зрозуміло...»."
+  - "Пояснення та інтерпретація даних: фрази «Це означає, що...», «Це свідчить про те, що...», «З цього випливає...»."
+- section: "Узагальнення та робота з джерелами (Summarizing & Working with Sources)"
+  words: 600
+  points:
+  - "Синтез інформації з різних джерел згідно з вимогами CEFR B1: використання вставних слів «За даними...», «Згідно з дослідженнями...», «Відповідно до звіту...»."
+  - "Корекція калькування з російської: відпрацювання правильного вживання «згідно з графіком» (з орудним відмінком) або «відповідно до графіка» (з родовим відмінком) замість помилкового «згідно графіку»."
+  - "Ключові фрази для висновків та резюмування: «Отже...», «Таким чином...», «Підсумовуючи сказане...», «На завершення хочу додати...»."
+- section: "Практика: Міні-презентація (Practice: Mini-presentation)"
+  words: 400
+  points:
+  - "Симуляція виступу в ролі Креативного директора або Аналітика: підготовка та репетиція 3-хвилинної презентації з візуальним матеріалом."
+  - "Чекліст самооцінки на основі компетенцій Державного стандарту (§4.5.1): перевірка дотримання літературних норм та стилістичної доречності."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "презентація (presentation) — робити/проводити презентацію, мультимедійна презентація, успішна презентація; High frequency"
+  - "графік (graph/chart) — лінійний графік, графік показує, на графіку видно; розрізняти з «розклад» (schedule)"
+  - "діаграма (diagram) — кругова діаграма, стовпчаста діаграма, сектор діаграми, частка на діаграмі; Med frequency"
+  - "зростати (to grow/increase) — стрімко/поступово зростати, зрости на X відсотків, зростання показників; High frequency"
+  - "падати (to fall/decrease) — різко падати, знижуватися до мінімуму, тенденція до спадання; High frequency"
+  - "згідно з (according to) — згідно з графіком (+ Instrumental case), згідно з даними; уникати помилки «згідно графіку»"
+  - "дані (data) — за даними, обробляти дані, достовірні дані"
+  recommended:
+  - "тенденція (trend) — позитивна/негативна тенденція, спостерігати тенденцію, тенденція до зростання; Med frequency"
+  - "показник (indicator) — зростання показників, ключовий показник"
+  - "частка (share/portion) — значна частка, левова частка"
+  - "узагальнювати (to summarize/generalize) — узагальнюючи сказане, узагальнення результатів"
+  - "резюмувати (to summarize) — коротко резюмувати основні тези"
+  - "джерело (source) — з різних джерел, посилатися на джерело"
+  - "наочний (visual) — наочний матеріал, забезпечити наочність"
+  - "аудиторія (audience) — тримати увагу аудиторії, звертатися до аудиторії"
+  - "висновок (conclusion) — робити висновки, приходити до висновку"
+  - "відповідно до (in accordance with) — відповідно до графіка (+ Genitive case); синонім до «згідно з»"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4702 chars)
+✅ Message sent to Claude (ID: 10468)
+✓ Message 10468 acknowledged
+   Auto-acknowledged reply #10468 (stdout delivery — no inbox accumulation)
+✓ Message 10459 acknowledged

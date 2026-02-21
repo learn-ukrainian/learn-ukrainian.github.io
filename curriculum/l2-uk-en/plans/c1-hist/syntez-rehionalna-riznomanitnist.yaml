@@ -1,4 +1,3 @@
----
 module: c1-hist-080
 level: c1-hist
 sequence: 80
@@ -10,15 +9,13 @@ objectives:
 - 'Analyze the causes and consequences of синтез: регіональна різноманітність'
 - Evaluate the historical significance of єдність у різноманітності
 content_outline:
-- section: "Вступ — Єдність у різноманітності"
-  words: 457
+- section: Вступ — Єдність у різноманітності
   subsections:
   - Огляд модулів 70-79
   - Регіони — не перешкода
   - Єдина нація — різні шляхи
   - Мета синтезу
 - section: Порівняльна таблиця регіонів
-  words: 686
   subsections:
   - Захід vs. Схід vs. Південь vs. Центр
   - Імперський досвід
@@ -26,40 +23,34 @@ content_outline:
   - Мова
   - Національна свідомість
 - section: Чому різні траєкторії?
-  words: 800
   subsections:
   - Імперії — ключ до розуміння
   - Австрія дала шанс
   - Росія — русифікація
   - Різний час «пробудження»
 - section: Чи є «справжні українці»?
-  words: 686
   subsections:
   - Міф «західників»
   - Міф «русифікованого сходу»
   - Реальність — спектр
   - Ідентичність — процес
-- section: "2014 і 2022 — перевірка"
-  words: 571
+- section: 2014 і 2022 — перевірка
   subsections:
   - Майдан — не тільки Київ
   - 2014 — Схід і Південь
   - 2022 — загальна мобілізація
   - Регіоналізм vs. патріотизм
 - section: Майбутнє регіонів
-  words: 457
   subsections:
   - Децентралізація
   - Регіональна ідентичність в єдиній державі
   - Європейський досвід
   - Україна після війни
 - section: Підсумок
-  words: 343
   subsections:
   - Різноманітність — сила
   - Єдність — вибір
   - Перехід до імперських механізмів
-word_target: 4000
 vocabulary:
 - синтез
 - регіональна різноманітність
@@ -82,16 +73,16 @@ activities:
 - type: critical-analysis
   focus: How regions responded to crises
 - type: essay-response
-  focus: "Regional Ukraine after victory — what model?"
+  focus: Regional Ukraine after victory — what model?
 - type: essay-response
   focus: Чи регіональні відмінності загрожують єдності України?
 sources:
 - name: Регіони України (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Регіони_України"
+  url: https://uk.wikipedia.org/wiki/Регіони_України
   type: reference
   notes: Regional overview
 - name: Українська ідентичність (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Українська_ідентичність"
+  url: https://uk.wikipedia.org/wiki/Українська_ідентичність
   type: reference
   notes: Identity studies
 vocabulary_hints:
@@ -110,7 +101,9 @@ activity_hints:
   items: 4
 - type: essay-response
   focus: Критичний аналіз
-  word_target: 300
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Human Geographer

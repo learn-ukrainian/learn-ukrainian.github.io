@@ -1,0 +1,107 @@
+module: b1-10
+level: B1
+sequence: 10
+slug: aspect-negation
+version: '2.0'
+title: Вид у запереченні
+subtitle: 'Aspect in Negation: How ''не'' Changes Aspect Selection'
+content_outline:
+- section: Тест
+  points:
+  - Three types of negation — general denial, specific refusal, prohibition
+  - Intuition check — diagnostic questions on aspect choice in negative contexts
+- section: Пояснення
+  points:
+  - 'General negation (imperfective) — default preference for Imperfective aspect;
+    state standard: Genitive case for direct object (не читав книги)'
+  - '''Not yet'' exception (perfective) — ''ще не'' triggers Perfective (expectation
+    of result)'
+  - '''Don''t do it'' warnings (perfective) — distinction between warning (Perfective)
+    and prohibition (Imperfective)'
+  - 'Negative imperatives — learner error: using Perfective for general prohibitions
+    (Не роби цього!)'
+- section: Практика
+  points:
+  - 'Decision algorithm — flowchart: Is it a general fact? Is it ''not yet''? Is it
+    a warning?'
+  - 'Common mistakes — learner error: Missing Double Negation (Я не бачив нікого)'
+  - 'Scenarios — cultural hook: The ''Polite Refusal'' ritual (repeating ''ні'' with
+    gratitude)'
+- section: Діалоги
+  points:
+  - Bookstore — focus on Genitive case in negation (немає книги, не бачив словника)
+  - Movie discussion — using 'взагалі не' (not at all) and 'ніколи' (never)
+  - Academic work — excuses using 'ще не' (I haven't finished the paper yet)
+- section: Підсумок
+  points:
+  - Summary table — aspect usage matrix for negation types
+  - Self-check — verify understanding of Genitive trigger and 'ще не' exception
+vocabulary_hints:
+  required:
+  - заперечення (negation) — граматична категорія
+  - не (not) — не знаю, не можу, не треба
+  - Я не читав цієї книги (I didn't read this book) — Genitive trigger example
+  - Він не дзвонив (He didn't call) — general factual negation
+  - ще не (not yet) — ще не готовий, ще не час, ще не зробив
+  - ніколи (never) — ніколи не бачив, ніколи не пізно
+  - взагалі (in general / at all) — взагалі не, взагалі-то
+  - заборона (prohibition) — сувора заборона, заборона в'їзду
+  - попередження (warning) — останнє попередження, штормове попередження
+  - очікувана дія (expected action) — context for 'ще не'
+  - загальне заперечення (general negation) — imperfective aspect trigger
+  - 'відмова (refusal) — cultural hook: polite refusal requires repetition'
+  recommended:
+  - нікуди (nowhere) — double negation required
+  - ніяк (in no way) — double negation required
+  - ніщо (nothing) — double negation required
+  - випадково (accidentally) — contrast with intentional action
+  - навмисне (on purpose) — contrast with accidental action
+activity_hints:
+- type: quiz
+  focus: Which aspect in negation?
+  items: 15
+- type: fill-in
+  focus: ще не + perfective patterns
+  items: 12
+- type: fill-in
+  focus: Affirmative → negative with correct aspect
+  items: 10
+- type: match-up
+  focus: Negation type → aspect
+  items: 12
+focus: grammar
+pedagogy: TTT
+prerequisites:
+- b1-06 (Aspect complete system)
+- b1-07 (Aspect past)
+- b1-08 (Aspect past)
+- b1-09 (Aspect future)
+connects_to:
+- b1-11 (Aspect in imperatives)
+- b1-14 (Aspect integration practice)
+objectives:
+- Learner understands why negation favors imperfective aspect
+- Learner can distinguish 'ще не' + perfective vs 'не' + imperfective
+- Learner can form negative imperatives with correct aspect
+- Learner recognizes exceptions to imperfective preference
+grammar:
+- Imperfective preference with не
+- ще не + perfective - expected completion
+- не + imperfective - general negation
+- Negative imperatives - наказові форми
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Negation and Aspect
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Official rules for aspect in negative contexts
+- name: Ukrainian Negation Patterns
+  url: https://uk.wikipedia.org/wiki/Заперечення_(мовознавство)
+  type: reference
+  notes: Negation with aspect selection
+immersion: 100% Ukrainian
+phase: B1.1 Aspect
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Defense Lawyer
+word_target: 4000

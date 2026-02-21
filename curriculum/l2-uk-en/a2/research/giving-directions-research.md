@@ -1,80 +1,37 @@
-# Research Notes: Giving Directions
+# Дослідження: Giving Directions
 
-**Track**: Core A
-**Module**: A2 M65 (Giving Directions)
-**Researched**: 2026-02-08
-**Level**: A2 (Intermediate Beginner)
+## State Standard Reference
+§3.5: "Середовище перебування (місто чи село): ... туристичні принади (цікаві місця й культурні пам’ятки); напрямок руху (прямо, ліворуч, праворуч)."
+Alignment: Module directly teaches navigation vocabulary and giving instructions specified in the A2 thematic catalogue.
 
-## 1. Grammar: State Standard 2024 Reference
+Additional Grammar Support:
+- §4.2.2.4: Accusative case with prepositions (в/у, на) for destination ("кінцевий пункт руху суб’єкта").
+- §4.4.1.3: Imperative sentences ("Спонукальне речення") for giving advice/instructions.
 
-According to the **Державний стандарт української мови як іноземної (ДСТУ 2024)** for level A2, the topic of "Giving Directions" falls under the following communicative and linguistic competences:
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| йти / їхати | High (Core A1/A2) | йти прямо, їхати на метро, йти пішки |
+| повернути | High (A2) | повернути направо, повернути ліворуч, повернути за ріг |
+| вулиця | High (Core A1) | на вулиці, через вулицю, по вулиці |
+| перехрестя | Medium (A2) | на перехресті, до перехрестя |
+| зупинка | High (A2) | автобусна зупинка, наступна зупинка |
+| пройти | High (A2) | як пройти до...?, пройдіть два квартали |
 
-*   **§ 2.2.3. Орієнтування у просторі (Orientation in space):** Вміння запитувати про місце розташування об’єктів та шлях до них, розуміти вказівки щодо напрямку руху (запитувати: *Де знаходиться...? Як дійти до...? Як дістатися до...?*).
-*   **§ 2.2.4. Пересування (Movement):** Описувати маршрут, використовуючи дієслова руху, прислівники напрямку та прийменниково-відмінкові конструкції.
-*   **§ 1.3.3.4. Спонукальний спосіб дієслова (Imperative mood):** Використання форм наказового способу для надання інструкцій та вказівок (*ідіть, поверніть, зупиніться, перейдіть*).
+## Cultural Hooks
+1. **Arsenalna Metro Station**: Validated as one of the deepest stations in the world (105.5m). Navigation involves a famously long escalator ride (approx. 5 minutes). A classic Kyiv meeting point ("зустрінемось на Арсенальній").
+2. **Lviv Rynok Square Fountains**: Four mythological fountains (Neptune, Diana, Amphitrite, Adonis) located at the four corners of the square. They serve as iconic meeting spots and navigation landmarks in Lviv's city center ("біля Нептуна", "біля Діани").
 
-## 2. Vocabulary Frequency
+## Common Learner Errors
+1. **Adjective vs. Adverb**: Confusing "лівий/правий" (left/right adjective) with "ліворуч/наліво" (to the left adverb). *Error: "Ідіть лівий." → Correct: "Ідіть наліво/ліворуч."* — Learners translate "Go left" word-for-word using the dictionary form.
+2. **Motion Verbs**: Confusing "іти" (on foot) and "їхати" (by vehicle). *Error: "Я йду на метро." → Correct: "Я їду на метро."* — English "go" covers both, Ukrainian strictly separates them.
+3. **Case after "до"**: Using Nominative instead of Genitive after "до". *Error: "Ідіть до парк." → Correct: "Ідіть до парку."* — Forgetting prepositional government.
 
-At the A2 level, vocabulary should focus on high-frequency operational words and specific urban landmarks.
+## Cross-References
+- Builds on: a2-64 (Scheduling Interviews) — time/scheduling concepts.
+- Prepares for: a2-66 (Asking for Directions) — extends simple instructions to full dialogues.
+- Connects to: a2-13 (Locative case) — pre-taught "де?" (location), now adding "куди?" (motion).
 
-### High-Frequency Verbs (Imperative Focus)
-*   **Йти / Піти (Ідіть):** Go / Walk.
-*   **Повертати / Повернути (Поверніть):** Turn.
-*   **Переходити / Перейти (Перейдіть):** Cross (the street/square).
-*   **Проходити / Пройти (Пройдіть):** Go past / Walk a certain distance.
-*   **Їхати / Поїхати (Їдьте):** Go by vehicle.
-*   **Зупинятися / Зупинитися (Зупиніться):** Stop.
-
-### Directional Adverbs & Prepositions
-*   **Направо / Праворуч:** To the right.
-*   **Наліво / Ліворуч:** To the left.
-*   **Прямо:** Straight ahead.
-*   **Навпроти:** Opposite (requires Genitive).
-*   **Поруч / Біля:** Next to / Near (requires Genitive).
-*   **Через:** Across / Through (requires Accusative).
-*   **До:** To / Until (requires Genitive).
-
-### Landmarks (A2 Core)
-*   **Вулиця (вул.):** Street.
-*   **Площа / Майдан:** Square.
-*   **Перехрестя:** Intersection.
-*   **Зупинка:** Stop (bus/tram).
-*   **Світлофор:** Traffic light.
-*   **Кут / Ріг:** Corner (на розі - on the corner).
-*   **Метро:** Metro station.
-
-## 3. Cultural Hook
-
-*   **The "Marshrutka" Protocol:** In Ukraine, giving directions often involves explaining which "marshrutka" (yellow minibus) to take. A specific cultural nuance is the practice of asking the driver to stop: *"На зупинці, будь ласка"* (At the stop, please) or *"За перехрестям"* (After the intersection). 
-*   **Kyiv Topography:** Directions in Kyiv often involve "up" and "down" (*вгору / вниз*) due to the city's hilly terrain. Mentioning the "Upper City" (*Верхнє місто*) vs "Podil" (*Поділ*) adds authentic flavor.
-*   **Landmark-Based Navigation:** Ukrainians often navigate by prominent landmarks (monuments, specific stores, or "The House with Chimaeras") rather than just street numbers, which can be inconsistent or hidden.
-
-## 4. Pedagogical Notes
-
-*   **Imperative Politeness:** Students already know the imperative paradigm. This module should reinforce the use of the 2nd person plural (*-іть/-іть*) as the default for politeness with strangers, even if addressing one person.
-*   **The Preposition "На":** A common error for English speakers is omitting "на" when saying "Turn left/right" (*Поверніть наліво*). 
-*   **Aspectual Nuance:** 
-    *   Use **Imperfective** for ongoing movement: *"Йдіть прямо дві хвилини"* (Keep walking straight for two minutes).
-    *   Use **Perfective** for specific actions: *"Поверніть на розі"* (Turn at the corner).
-*   **Case Logic:** 
-    *   *Через дорогу* (Accusative) vs *На розі вулиці* (Genitive of possession).
-    *   Reinforce the Locative for position (*на вулиці*) vs Accusative for direction (*на вулицю*).
-
-## 5. Scope Boundaries
-
-### IN Scope
-*   **Imperatives:** Full paradigm (learned in M55).
-*   **Motion Prefixes:** Focus on *пере-* (across), *про-* (past/through), *до-* (up to).
-*   **Case Agreement:** Nominative, Accusative, Locative, Genitive, and Dative (for landmarks/distances).
-*   **Simple Adverbs:** Up, down, left, right, straight.
-
-### OUT Scope
-*   **Passive Voice:** Instructions like "the street is located..." (use active constructions).
-*   **Participles:** "The walking man", "the street crossing the river".
-*   **Technical Road Terminology:** Flyovers, slip roads, dual carriageways (stick to *вулиця, дорога, перехрестя*).
-*   **Complex Subjunctive:** "If I were you, I would go..." (The student knows *якби*, but focus on direct imperatives for efficiency).
-
-## Sources Consulted
-1. Державний стандарт української мови як іноземної (А2), 2024.
-2. Frequency Dictionary of the Ukrainian Language (Top 2000 words).
-3. "Яблуко" (Basic/Intermediate) Textbook series mapping.
+## Notes for Content Writing
+- **Perspective**: Focus on *giving* directions (imperatives: "ідіть", "поверніть") but include the *question* forms ("як пройти?") as triggers.
+- **Prepositions**: Clearly distinguish static location ("біля", "навпроти" + Genitive) from motion ("в/на" + Accusative, "до" + Genitive).

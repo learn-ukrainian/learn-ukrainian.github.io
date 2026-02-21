@@ -1,0 +1,113 @@
+sequence: 40
+module: a1-40
+level: A1
+slug: taking-transport
+version: '2.0'
+title: Taking Transport
+subtitle: Navigating the City
+content_outline:
+- section: Вступ (Introduction)
+  words: 400
+  points:
+  - Вступ до теми громадського транспорту згідно зі Стандартом (§3.3) — focus on 'громадський
+    транспорт' and 'місто' (city) context.
+  - 'Warm-up: ''Як ви їздите на роботу/навчання?'' — introduction of the ''Marshrutka
+    Veteran'' persona and the blend of modern Kyiv Digital systems with traditional
+    social customs.'
+  - 'Learner error: confusion between ''іти'' (to walk) and ''їхати'' (to go by vehicle)
+    — explicitly establishing ''Я їду на метро'' as the correct form over the English-influenced
+    ''Я йду на метро''.'
+- section: Презентація (Presentation)
+  words: 600
+  points:
+  - Види транспорту (метро, трамвай, тролейбус, автобус, маршрутка) — distinguishing
+    between 'зупинка' (bus/tram stop) and 'станція' (metro/train station) with frequency
+    notes.
+  - 'Cultural Hook: The depth of the Kyiv Metro — Arsenalna station (deepest in the
+    world, 105.5m) and the experience of long escalators where people read or listen
+    to music.'
+  - 'Grammar in context: Direction vs. Location (§4.2.3.2/3) — drilling the difference
+    between ''Куди ви їдете?'' (Accusative/Destination) and ''Де ви?'' (Locative/Location).'
+  - 'Case selection for transit: Instrumental (''їхати автобусом'') vs. Locative (''їхати
+    на автобусі'') — correcting the common omission error ''їду автобус''.'
+- section: Практика (Practice)
+  words: 600
+  points:
+  - 'Cultural Hook: ''Передайте за проїзд!'' — the social protocol of passing cash
+    by hand in a marshrutka, requiring phrases like ''За одного, будь ласка'' and
+    ''Зупиніть на зупинці''.'
+  - 'Modern Urban Reality: The shift from ''жетони'' (tokens) to ''Київ Цифровий''
+    (Kyiv Digital) — vocabulary for ''валідатор'', ''QR-код'', and ''прикласти картку''.'
+  - 'Essential transport phrases: ''Наступна зупинка...'', ''Обережно, двері зачиняються'',
+    and the vital social phrase ''Ви виходите?'' (Are you getting off?) used to move
+    through crowds.'
+  - 'Asking for help: ''Як доїхати до...?'' and understanding transit announcements,
+    with a focus on ''станція пересадки'' (transfer station).'
+- section: Підсумок (Summary)
+  words: 400
+  points:
+  - Summary of motion verbs and case patterns for public transport, consolidating
+    the 'Де' vs. 'Куди' distinction.
+  - Final review of the 'Marshrutka Veteran' persona's street-smart tips for navigating
+    Ukrainian cities efficiently.
+  - 'Cross-reference: Preparing for a1-41 (Phone Basics) and a1-42 (Emergencies) by
+    ensuring the learner can identify their location while traveling.'
+vocabulary_hints:
+  required:
+  - 'метро (metro) — їхати на метро, станція метро, глибока станція; cultural hook:
+    Arsenalna'
+  - зупинка (stop) — наступна зупинка, вийти на зупинці, автобусна зупинка; High frequency
+  - маршрутка (marshrutka) — зупиніть на зупинці, передайте за проїзд, повна маршрутка;
+    High spoken frequency
+  - пересадка (transfer) — робити пересадку, станція пересадки, без пересадок; Medium
+    frequency
+  - їхати (to go by vehicle) — їхати автобусом (Instrumental), їхати на метро (Locative);
+    State Standard §3.7
+  - виходити (to exit) — Ви виходите? (Are you getting off?); essential phrase for
+    crowds
+  recommended:
+  - валідатор (validator) — прикласти картку до валідатора, не працює валідатор; modern
+    urban reality
+  - квиток (ticket) — купити квиток, електронний квиток, один квиток
+  - станція (station) — кінцева станція, станція пересадки, станція метро
+  - проїзд (fare/passage) — оплата проїзду, передайте за проїзд; core social collocation
+  - прокомпостувати (to validate) — IPA required [prokompostʊˈvɑte]; challenging phonetic
+    target
+  - проїзний (transit pass) — проїзний квиток, студентський проїзний
+  - водій (driver) — водій маршрутки, водій автобуса
+activity_hints:
+- type: fill-in
+  focus: Asking for transport help
+  items: 10
+- type: quiz
+  focus: Transport announcements
+  items: 12
+- type: match-up
+  focus: Match routes to destinations
+  items: 15
+- type: fill-in
+  focus: On the bus/metro
+  items: 5
+focus: practical
+pedagogy: PPP
+prerequisites:
+- a1-15 (Around the City)
+- a1-39 (Buying Tickets)
+connects_to:
+- a1-41 (Phone Basics)
+- a1-42 (Emergencies)
+objectives:
+- Learner can use public transport
+- Learner can ask for directions
+- Learner can understand announcements
+- Learner can validate tickets
+grammar:
+- Direction questions (Як доїхати до...?)
+- Imperative for directions
+- Locative for stops
+register: розмовний
+phase: A1.4 [Practical Scenarios]
+persona:
+  voice: Patient Supportive Tutor
+  role: Marshrutka Veteran
+word_target: 2000

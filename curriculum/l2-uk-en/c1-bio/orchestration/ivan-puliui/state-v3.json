@@ -1,0 +1,13 @@
+{
+  "track": "c1-bio",
+  "slug": "ivan-puliui",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T15:13:53Z",
+      "task_id": "v3-ivan-puliui-pA",
+      "mode": "full"
+    }
+  }
+}

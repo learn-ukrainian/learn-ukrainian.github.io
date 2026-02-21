@@ -1,0 +1,310 @@
+✅ Message sent to Gemini (ID: 10354) [auto-acked: self-addressed]
+✓ Message 10354 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10354...
+📨 Message #10354
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-complex-sentence-integration
+   Time: 2026-02-20T20:28:24.815941+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b1-38
+level: B1
+sequence: 38
+slug: complex-sentence-integration
+version: '2.0'
+title: Інтеграція складних речень
+subtitle: Complex Sentence Integration
+content_outline:
+- section: Тест
+  points:
+  - Diagnostic quiz on complex sentences — trap students into using simple sentences
+    where a complex one is better/needed
+  - Self-assessment questions
+- section: Пояснення
+  points:
+  - 'Two-Clause Combinations — focus on «і» vs «а» contrast errors; learner error:
+    mixing up additive and contrastive conjunctions'
+  - Three+ Clause Sentences — use the 'Rule of Three' from folk tales as a structural
+    model
+  - 'Coordination + Subordination — State Standard §4.4.3: mastering mixed types (cause,
+    condition, purpose) in one sentence'
+  - 'Punctuation and Style — The Comma Rule is structural (hard), not breath-based;
+    learner error: omitting commas before «що», «який», «коли»; Melodic syntax: rhythm
+    in long sentences'
+- section: Практика
+  points:
+  - Build multi-clause sentences — practice sequential and parallel structures
+  - Edit for clarity — focus on correcting «що» vs «який» confusion
+- section: Діалоги
+  points:
+  - 'Complex sentences in conversation — distinguish register: «бо» (casual) vs «тому
+    що» (formal)'
+  - Multi-clause scenarios
+vocabulary_hints:
+  required:
+  - інтеграція (integration)
+  - складний (complex)
+  - сурядний (coordinating)
+  - підрядний (subordinating)
+  - багатокомпонентний (multi-component)
+  - структура (structure)
+  - кома (comma)
+  - розділовий знак (punctuation mark)
+  - а (and/but) — не ..., а ... (not ..., but ...); а також (and also)
+  - але (but) — гарний, але дорогий; хотів, але не зміг
+  - щоб (in order to/that) — для того, щоб (in order to); хочу, щоб... (want that...)
+  - бо (because) — не прийшов, бо захворів — casual register
+  - тому що (because) — тому що це закон — neutral/formal register
+  recommended:
+  - вкладений (nested)
+  - паралельний (parallel)
+  - зрозумілість (clarity)
+  - стиль (style)
+  - хоча (although) — хоча було пізно; хоча він знав
+  - якщо (if) — якщо буде час; якщо ти не проти
+activity_hints:
+- type: error-correction
+  focus: Build multi-clause sentences
+  items: 25
+- type: error-correction
+  focus: Fix complex sentence errors
+  items: 20
+- type: fill-in
+  focus: Complete integrated sentences
+  items: 15
+- type: fill-in
+  focus: Write complex paragraphs
+  items: 10
+focus: grammar
+pedagogy: TTT
+prerequisites:
+- b1-37 (Temporal Clauses)
+connects_to:
+- b1-39 (Reported Statements)
+objectives:
+- Learner can combine причинові, часові, умовні clauses
+- Learner can build multi-clause sentences
+- Learner can choose appropriate connectors for context
+- Learner can manage complex sentence structure
+grammar:
+- Combining multiple clause types
+- Coordination and subordination together
+- Multi-clause sentence management
+register: розмовний
+phase: B1.3b [Complex Sentences]
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Novel Editor
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Інтеграція складних речень
+
+## State Standard Reference
+§4.4.3: "Складне речення: складносурядне речення з єднальними відношеннями між його частинами (сполучник і)... з протиставними відношеннями (сполучники а, але)... з приєднувальними відношеннями (сполучник і)... з розділовими відношеннями (сполучники або... або, чи... чи)... складнопідрядне речення зі з’ясувальною підрядною частиною (сполучні слова що, хто, де, куди, звідки)... з підрядною означальною частиною... із часовою підрядною частиною (коли)... з підрядною частиною причини (тому що, бо)... реальної умови (якщо)... мети (щоб)... допустовою (хоч, незважаючи на те що)."
+Alignment: This module directly targets the B1 requirement to master a wide range of complex sentence types (compound and complex) and their conjunctions, moving beyond simple structures to express nuanced relationships like cause, condition, and concession.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| **а** | High (Top 10 conjunctions) | не ..., а ... (not ..., but ...); а також (and also) |
+| **але** | High (Top 10 conjunctions) | гарний, але дорогий; хотів, але не зміг |
+| **щоб** | High (Essential for purpose) | для того, щоб (in order to); хочу, щоб... (want that...) |
+| **бо** | High (Spoken/Casual) | не прийшов, бо захворів; це важливо, бо... |
+| **тому що** | Medium-High (Neutral/Formal) | тому що це закон; саме тому, що... |
+| **хоча** | Medium | хоча було пізно; хоча він знав |
+| **якщо** | High (Conditionals) | якщо буде час; якщо ти не проти |
+
+## Cultural Hooks
+1. **The "Rule of Three" in Folk Tales**: Ukrainian *kazkas* (folk tales) often feature a triple repetition structure (three brothers, three trials). This narrative style naturally utilizes complex sentences with sequential and parallel structures (e.g., "First he went..., then he saw..., and finally he conquered...").
+2. **Melodic Syntax**: Ukrainian is often cited as a "singing" language. The rhythm of complex sentences, especially those with balanced clauses connected by *і* or *а*, contributes to this musicality. Writers often use long, flowing sentences to mimic the landscape or the pace of life.
+
+## Common Learner Errors
+1. **Confusion of *і* vs. *а* vs. *але***:
+   *   *Error*: "Він студент, і я викладач" (when contrasting).
+   *   *Correction*: "Він студент, **а** я викладач."
+   *   *Reason*: English "and" covers both addition and mild contrast; Ukrainian distinguishes them strictly.
+2. **Comma Omission**:
+   *   *Error*: "Я знаю що ти робиш."
+   *   *Correction*: "Я знаю**,** що ти робиш."
+   *   *Reason*: Unlike English, Ukrainian strictly requires commas before subordinating conjunctions like *що*, *який*, *коли*.
+3. **Misuse of *що* vs. *який***:
+   *   *Error*: "Книга, що я читаю..." (stylistically poor or incorrect case).
+   *   *Correction*: "Книга, **яку** я читаю..."
+   *   *Reason*: Confusion between the invariant conjunction *що* and the declinable relative pronoun *який*.
+
+## Cross-References
+- **Builds on**: b1-37 (Temporal Clauses) — students already know *коли* structures.
+- **Prepares for**: b1-39 (Reported Statements) — *що* clauses are the foundation for indirect speech.
+
+## Notes for Content Writing
+- **TTT Approach**: Start with a diagnostic that traps students into using simple sentences where a complex one is better/needed.
+- **Focus on punctuation**: The comma rule is a "hard" rule in Ukrainian (structural), unlike the "breath" rule in English. Make this a key teaching point.
+- **Register**: Distinguish between *бо* (casual) and *тому що* (neutral/formal).
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Діагностика та вступ (Diagnostic Test & Introduction)"
+  words: 600
+  points:
+  - "Діагностичне тестування: використання простих речень там, де доцільніші складні речення; самооцінка навичок поєднання частин речення."
+  - "Вправа на розрізнення регістрів: вживання сполучників «бо» (розмовний) та «тому що» (офіційний/нейтральний) у діалогах."
+- section: "Граматичні основи та типи зв'язку (Grammatical Foundations & Types of Connection)"
+  words: 1000
+  points:
+  - "Державний стандарт §4.4.3: типи складносурядних речень (єднальні, протиставні, розділові) та складнопідрядних речень."
+  - "Аналіз типової помилки: плутанина між сполучниками «і» (додавання) та «а» (протиставлення), спричинена впливом англійського «and»."
+  - "Класифікація підрядних частин: причини (тому що, бо), умови (якщо), мети (щоб) та допустові (хоча/хоч)."
+- section: "Культура, ритм та пунктуація (Culture, Rhythm & Punctuation)"
+  words: 800
+  points:
+  - "Культурний гачок: «Правило трьох» в українських народних казках як модель для побудови багатокомпонентних речень (послідовний та паралельний зв'язок)."
+  - "Мелодійний синтаксис: ритміка та музикальність довгих речень; використання сполучників для створення плинності тексту («співоча мова»)."
+  - "Правила пунктуації: структурний характер коми перед «що», «який», «коли»; розбір помилок, пов'язаних із пропуском розділових знаків."
+- section: "Практичне застосування та стилістика (Practical Application & Stylistics)"
+  words: 900
+  points:
+  - "Побудова складних структур: поєднання сурядності та підрядності в одному реченні; керування структурою багатокомпонентних речень."
+  - "Усунення помилок: правильне вживання відносного займенника «який» замість незмінного сполучника «що» у відповідних відмінках та родах."
+  - "Стилістичні правки: вибір між короткими та довгими реченнями для досягнення бажаного ефекту в тексті."
+- section: "Творча майстерня редактора (Creative Editor's Workshop)"
+  words: 700
+  points:
+  - "Рольова гра «Редактор роману»: редагування тексту для покращення стилю та чіткості викладу думок через складні речення."
+  - "Сценарії багаторівневого діалогу: вибір відповідних конекторів залежно від контексту (регістр) та мети висловлювання."
+  - "Підсумковий огляд: закріплення навичок інтеграції складних речень у мовлення."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "інтеграція (integration) — інтеграція в текст; процес поєднання"
+  - "складний (complex) — складне речення; складна структура"
+  - "сурядний (coordinating) — сурядний зв'язок; рівноправні частини"
+  - "підрядний (subordinating) — підрядний зв'язок; головна та залежна частини"
+  - "багатокомпонентний (multi-component) — речення з трьома і більше частинами"
+  - "структура (structure) — структура речення; ритмічна структура"
+  - "кома (comma) — обов'язкова перед «що», «який», «коли»; структурна пунктуація"
+  - "розділовий знак (punctuation mark) — знаки для чіткості стилю"
+  - "а (and/but) — протиставлення (не ..., а ...); а також (and also); висока частотність"
+  - "але (but) — протиставлення; часто вживається у парі з «хоча»; high frequency"
+  - "щоб (in order to/that) — мета; для того, щоб; хочу, щоб...; high frequency"
+  - "бо (because) — причина; розмовний стиль; не прийшов, бо захворів"
+  - "тому що (because) — причина; нейтральний або офіційний стиль; тому що це важливо"
+  recommended:
+  - "вкладений (nested) — вкладені підрядні частини"
+  - "паралельний (parallel) — паралельна підрядність"
+  - "зрозумілість (clarity) — зрозумілість викладу думок"
+  - "стиль (style) — художній стиль; розмовний стиль"
+  - "хоча (although) — допустове значення; хоча було пізно; хоча він знав"
+  - "якщо (if) — умова; якщо буде час; якщо ти не проти; висока частотність"
+  - "який (which/who) — відносний займенник; книга, яку я читаю; узгодження у роді та відмінку"
+  - "що (that) — сполучник; незмінна форма; він каже, що..."
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (3995 chars)
+✅ Message sent to Claude (ID: 10361)
+✓ Message 10361 acknowledged
+   Auto-acknowledged reply #10361 (stdout delivery — no inbox accumulation)
+✓ Message 10354 acknowledged

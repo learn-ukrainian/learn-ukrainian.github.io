@@ -1,63 +1,37 @@
-# Research Notes: Хобі та дозвілля (Hobbies & Leisure)
+# Дослідження: Hobbies and Leisure
 
-**Track**: l2-uk-en (A2)
-**Module**: M51
-**Researched**: 2026-02-08
+## State Standard Reference
+§3.4: "Дозвілля, відпочинок: способи проведення вільного часу; хобі та зацікавлення; види спорту, спортивних споруд і спортивне спорядження; преса, радіо, телебачення, інтернет, соціальні мережі."
+Alignment: This module directly addresses the "ways of spending free time" and "hobbies and interests" requirements of the standard, providing the vocabulary and grammatical structures to discuss these topics.
 
-## 1. Grammar: State Standard 2024 Reference
-According to the "Державний стандарт української мови як іноземної" (2024), the topic "Дозвілля, відпочинок, хобі" (Leisure, recreation, hobbies) is a key thematic area for the A2 level.
-Specifically, §2.2 (Socio-cultural sphere) and §3.2 (Grammar - Syntax of simple sentences).
-Relevant section quote: "Студент може описувати власні інтереси та захоплення, розпитувати про вільний час інших, висловлювати вподобання та частоту дій." (The student can describe their own interests and hobbies, ask about the leisure time of others, express preferences and frequency of actions.)
-Key structures: Use of the Instrumental case for activities (`займатися + Instr.`) and interests (`цікавитися + Instr.`), and Dative for preferences (`подобатися + Dat.`).
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| хобі | High / A1-A2 Core | моє хобі, цікаве хобі |
+| дозвілля | Med-High / Core | проводити дозвілля, культурне дозвілля |
+| грати | High / Top 500 verbs | грати у футбол, грати на гітарі, грати в шахи |
+| займатися | High / Top 500 verbs | займатися спортом, займатися йогою, займатися танцями |
+| вільний час | High / Phrase | у вільний час, мати вільний час |
 
-## 2. Vocabulary Frequency
-**High Frequency (Must know):**
-- **Хобі** (Hobby)
-- **Дозвілля** (Leisure)
-- **Вільний час** (Free time)
-- **Займатися** (To engage in/practice - verb)
-- **Цікавитися** (To be interested in - verb)
-- **Спорт** (Sport)
-- **Музика** (Music)
-- **Читання** (Reading)
-- **Подорожі** (Travel)
-- **Кіно** (Cinema)
+## Cultural Hooks
+1. **Mushroom Picking ("Тихе полювання")**: Gathering mushrooms is a massively popular national pastime in Ukraine, often referred to as "silent hunting." It's not just for rural residents; city dwellers frequently travel to forests in autumn.
+2. **Embroidery (Вишивання)**: Far more than a craft, embroidery is a cultural act. Many Ukrainians embroider their own shirts (vyshyvanka) or household items (rushnyky), preserving specific regional patterns.
 
-**Medium Frequency (Targeted for A2):**
-- **Малювання** (Painting/Drawing)
-- **Кулінарія** (Cooking)
-- **Фотографія** (Photography)
-- **Настільні ігри** (Board games)
-- **Колекціонування** (Collecting)
-- **Вишивання** (Embroidery)
+## Common Learner Errors
+1. **Verb Choice (Play vs. Do)**: Learners often say "Я граю спорт" (calque from English "I play sport").
+   → **Correct**: "Я займаюся спортом" (I engage in sport).
+   → *Why*: "Грати" is strictly for games (with rules) or instruments. General physical activity uses "займатися".
+2. **Preposition & Case with "Грати"**: Learners confuse the structures for sports vs. instruments.
+   → **Error**: "Я граю гітару" (Accusative without preposition) or "Я граю на футбол" (Locative).
+   → **Correct**: "Я граю **на** гітарі" (Locative for instruments) vs. "Я граю **у** футбол" (Accusative + 'у' for games).
+3. **Case with "Займатися"**: Forgetting the Instrumental case.
+   → **Error**: "Я займаюся футбол" (Nominative/Accusative).
+   → **Correct**: "Я займаюся футбол**ом**" (Instrumental).
 
-**Common Collocations:**
-- **Грати в футбол / шахи** (To play football / chess — `в + Acc.`)
-- **Грати на гітарі / скрипці** (To play guitar / violin — `на + Loc.`)
-- **Займатися спортом / танцями** (To do sports / dancing — `Instr.`)
-- **Слухати музику / подкасти** (To listen to music / podcasts — `Acc.`)
+## Cross-References
+- **Builds on**: `a2-50` (Technology and Media) - usage of media verbs often overlaps with leisure.
+- **Prepares for**: `a2-54` (Sports and Fitness) - specifically the "займатися + Instrumental" structure which is critical for that module.
 
-## 3. Cultural Hook
-- **Pysankarstvo (Easter Egg Painting):** Beyond being a seasonal ritual, traditional crafts like embroidery (вишивання) and pottery (гончарство) are popular lifelong hobbies. Contemporary "Master classes" (майстер-класи) are a standard urban weekend activity.
-- **Hiking in the Carpathians:** "Pikhid v hory" (піхід в гори) is a quintessential Ukrainian leisure activity. Most students will be familiar with the concept of "Hory klychut'" (The mountains are calling).
-- **Board Game Renaissance:** Ukraine has a thriving modern board game industry (e.g., IGAMES, Lord of Boards) and a significant culture of "Igroteky" (board game meetups).
-
-## 4. Pedagogical Notes
-- **The "Play" Distinction:** English uses "play" for everything. Ukrainian strictly separates `грати в` (sports/games + Accusative) from `грати на` (musical instruments + Locative). This is a frequent point of confusion for A2 learners.
-- **The "Interested In" Case:** English requires a preposition ("in"). Ukrainian `цікавитися` or `захоплюватися` takes the bare Instrumental case. Ensure students don't use `у` or `в`.
-- **Preference Structures:** Contrast `мені подобається` (Dative + Nominative) with `я люблю` (Nominative + Accusative).
-- **Aspect Integration:** Use the student's existing knowledge of aspect to describe a hobby as a process (Imperfective: `я вчуся грати на гітарі`) vs. a specific leisure achievement (Perfective: `я прочитав цілу книгу`).
-
-## 5. Scope Boundaries
-**In Scope:**
-- Full use of all 7 cases (as per prior knowledge).
-- Verbs of interest (`цікавитися`, `захоплюватися`, `займатися`).
-- Adverbs of frequency (`завжди`, `часто`, `іноді`, `рідко`, `ніколи`).
-- Imperfective aspect for habitual activities; Perfective for specific leisure goals.
-- Superlative adjectives for "favourite" hobbies (`найулюбленіше`).
-
-**Out of Scope:**
-- Active and Passive participles (e.g., "The played game").
-- Subjunctive mood beyond basic `якби` (e.g., complex hypothetical hobby scenarios).
-- Deep technical terminology for specialized sports or arts (e.g., specific camera settings or advanced musical theory).
-- Transgressives/Gerunds (e.g., "While playing...").
+## Notes for Content Writing
+- **Grammar Focus**: Strictly enforce the distinction: *грати у + Acc* (games), *грати на + Loc* (music), *займатися + Instr* (activities).
+- **Immersion**: This is A2.5 (High Immersion). Use Ukrainian for all examples and dialogues. English is allowed only for the specific grammar explanation of the *грати/займатися* distinction to ensure clarity.

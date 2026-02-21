@@ -1,40 +1,34 @@
----
-module: c1-bio-027
+module: c1-bio-27
 level: C1-BIO
 sequence: 27
 slug: ivan-mazepa
 version: '2.0'
 title: 'Іван Мазепа: Меценат і трагічний герой'
 content_outline:
-- section: "Вступ — Між зрадою та героїзмом"
-  words: 400
+- section: Вступ — Між зрадою та героїзмом
   points:
   - Суперечливість постаті Мазепи
   - Його місце в українській та російській історіографії
   - Значення його вибору 1708 року
 - section: Молодість та шлях до влади
-  words: 600
   points:
   - Шляхетське походження
   - Освіта та служба при дворах
   - Козацька кар'єра
   - Обрання гетьманом 1687 року
 - section: 'Гетьманування: успіхи'
-  words: 700
   points:
   - Внутрішня політика та реформи
   - Військові походи з Петром I
   - Культурний розквіт — мазепинське бароко
   - Меценатство та будівництво
 - section: Шлях до розриву з Москвою
-  words: 800
   points:
   - Наростання суперечностей
   - Обмеження автономії
   - Північна війна та її тягар
   - Переговори з Карлом XII
 - section: Полтава та вигнання
-  words: 800
   points:
   - Відкритий виступ 1708 року
   - Руйнування Батурина
@@ -42,19 +36,16 @@ content_outline:
   - Втеча до Бендер
   - Смерть та анафема
 - section: Спадщина та реабілітація
-  words: 400
   points:
   - Образ Мазепи в літературі
   - Байрон, Пушкін, Словацький
   - Реабілітація в незалежній Україні
   - Мазепа на банкноті
-- section: "Підсумок — Трагічний вибір"
-  words: 300
+- section: Підсумок — Трагічний вибір
   points:
   - Мазепа як символ боротьби за незалежність
   - Уроки його історії
   - Актуальність сьогодні
-word_target: 4000
 vocabulary_hints:
   required:
   - гетьман (hetman)
@@ -80,7 +71,6 @@ activity_hints:
   items: 3 passages
 - type: essay-response
   focus: Was Mazepa a traitor or a patriot?
-  word_target: 300
   output: Analysis of competing narratives
 - type: critical-analysis
   focus: Analyze Mazepa in Ukrainian vs. Russian historiography
@@ -96,15 +86,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Іван Мазепа (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Іван_Мазепа"
+  url: https://uk.wikipedia.org/wiki/Іван_Мазепа
   type: primary
   notes: Biography, hetmanate, Poltava
 - name: Полтавська битва (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Полтавська_битва"
+  url: https://uk.wikipedia.org/wiki/Полтавська_битва
   type: reference
   notes: Military context and consequences
 - name: Мазепинське бароко
-  url: "https://uk.wikipedia.org/wiki/Мазепинське_бароко"
+  url: https://uk.wikipedia.org/wiki/Мазепинське_бароко
   type: reference
   notes: Cultural patronage
 immersion: 100% Ukrainian
@@ -112,3 +102,6 @@ phase: C1-BIO
 objectives:
 - 'Analyze the life and legacy of іван мазепа: меценат і трагічний герой'
 - Evaluate the contributions of між зрадою та героїзмом
+persona:
+  voice: Senior Biographer
+  role: Patron of Arts

@@ -1,0 +1,328 @@
+✅ Message sent to Gemini (ID: 11286) [auto-acked: self-addressed]
+✓ Message 11286 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #11286...
+📨 Message #11286
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-professional-portfolio-i
+   Time: 2026-02-20T22:34:42.685330+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c2-071
+level: c2
+sequence: 71
+version: '2.0'
+title: Професійне портфоліо I — Демонстрація компетентності
+focus: domain
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Державна служба зайнятості
+  url: https://www.dcz.gov.ua/
+  type: reference
+  notes: Вимоги ринку праці
+- name: Профстандарти України
+  url: https://www.me.gov.ua/
+  type: reference
+  notes: Професійні стандарти
+- name: Резюме та портфоліо — best practices
+  url: https://work.ua/
+  type: reference
+  notes: Українські стандарти оформлення
+content_outline:
+- section: Вступ — Професійне портфоліо в українському контексті
+  points:
+  - Що таке професійне портфоліо
+  - Культурні особливості українського ринку праці
+  - Типи портфоліо (академічне, професійне, творче)
+  - Цифрове vs традиційне
+- section: Структура та зміст портфоліо
+  points:
+  - Обов'язкові елементи
+  - Професійний профіль / summary
+  - Документація досягнень
+  - Рекомендаційні листи
+- section: Резюме та супровідний лист
+  points:
+  - Структура українського резюме
+  - Ключові слова та компетенції
+  - Супровідний лист — формат і тон
+  - Адаптація до вакансії
+- section: Документація професійних досягнень
+  points:
+  - Сертифікати та дипломи
+  - Публікації та виступи
+  - Проєкти та їх опис
+  - Кількісні показники досягнень
+- section: Рекомендації та відгуки
+  points:
+  - Рекомендаційний лист — структура
+  - Запит на рекомендацію
+  - LinkedIn та онлайн-рекомендації
+  - Портфоліо відгуків клієнтів
+- section: Презентація портфоліо
+  points:
+  - Онлайн-платформи
+  - PDF-версія
+  - Усна презентація
+  - Адаптація для різних авдиторій
+- section: Практикум — Створення власного портфоліо
+  points:
+  - Аудит власних досягнень
+  - Написання резюме
+  - Складання супровідного листа
+vocabulary:
+  required:
+  - портфоліо (portfolio)
+  - резюме (CV/resume)
+  - супровідний лист (cover letter)
+  - компетенція (competency)
+  - досягнення (achievement)
+  - рекомендаційний лист (letter of recommendation)
+  - професійний досвід (professional experience)
+  - навички (skills)
+  - кваліфікація (qualification)
+  - сертифікат (certificate)
+  recommended:
+  - профіль (profile)
+  - ключові слова (keywords)
+  - вакансія (job opening)
+  - кар'єра (career)
+  - потенційний роботодавець (potential employer)
+  forbidden: '[]'
+activities:
+  types_required:
+  - reading
+  - quiz
+  - fill-in
+  - match-up
+  - error-correction
+  - critical-analysis
+  - essay-response
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c2-72 (Professional Portfolio II — multi-format)
+- c2-73 (Professional Identity)
+- c2-75 (C2.3 Checkpoint)
+vocabulary_hints:
+  required:
+  - концепція (concept)
+  - аналіз (analysis)
+  - дискурс (discourse)
+  - методологія (methodology)
+  recommended:
+  - інтерпретація (interpretation)
+  - контекстуалізація (contextualization)
+  - синтез (synthesis)
+activity_hints:
+- type: reading
+  focus: Поглиблений аналіз тексту
+  items: 4
+- type: essay-response
+  focus: Критичне осмислення
+- type: discussion
+  focus: Дискусія та аргументація
+  items: 1
+persona:
+  voice: Senior Specialist
+  role: Talent Scout
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Професійне портфоліо I — Демонстрація компетентності
+
+## State Standard Reference
+§4.3.8: "Уміння утворювати вторинні тексти, зокрема реферати, повідомлення, довідково-інформаційні тексти."
+§3.13: "Робота: назви професій; офіційне працевлаштування... кваліфікації; ринок праці... ділові переговори."
+Alignment: Цей модуль безпосередньо розвиває вміння створювати "вторинні тексти" (портфоліо як збірка довідково-інформаційних матеріалів про себе) та охоплює тематику "Робота" на рівні C2.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| портфоліо | High (Business/IT) | цифрове портфоліо, сформувати портфоліо, портфоліо робіт |
+| компетентність | Medium (Formal) | професійна компетентність, ключова компетентність, рівень компетентності |
+| резюме | High | надіслати резюме, скласти резюме, розсилка резюме (NOT "сумарі") |
+| супровідний лист | Medium | мотиваційний лист, написати супровідний лист, структура листа |
+| досягнення | High | визначні досягнення, список досягнень, професійні здобутки |
+
+## Cultural Hooks
+1. **Фото в резюме**: В Україні традиційно очікується наявність фото в резюме (на відміну від США/Великої Британії), хоча в IT-сфері ця норма стає менш жорсткою.
+2. **"Володіння мовами"**: В українських реаліях рівень володіння мовами часто завищують ("зі словником"), тому портфоліо з сертифікатами є критичним доказом.
+3. **Рекомендації**: Письмові рекомендаційні листи менш поширені, ніж контакти рекомендадавців (телефонний дзвінок попередньому керівнику — стандартна практика служби безпеки/HR).
+
+## Common Learner Errors
+1. **Калькування**: "Аплікуватися на вакансію" (суржик/калька з "apply") → Правильно: "Подаватися на вакансію" або "Надсилати резюме".
+2. **Пароніми**: Плутанина між "досвід" (experience) та "дослід" (experiment). У портфоліо описуємо "професійний досвід".
+3. **Хибні друзі**: "Акуратний" (punctual/neat) vs "Точний" (accurate). В описі навичок важливо розрізняти "точність у розрахунках" та "охайність в роботі".
+
+## Cross-References
+- Builds on: C2.1 (Stylistics), C2.2 (Literary mastery - writing skills)
+- Prepares for: c2-72 (Professional Portfolio II — multi-format), c2-73 (Professional Identity)
+
+## Notes for Content Writing
+- Акцентувати на різниці між "резюме" (CV) та "портфоліо" (доказова база).
+- Використовувати безособові конструкції для опису вимог ("Вимагається...", "Очікується..."), але активний стан для опису досягнень ("Я реалізував...", "Ми досягли...").
+- Звернути увагу на стилістику ділового листування (Module covers Cover Letter).
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Професійне портфоліо в українському контексті (Introduction)"
+  words: 500
+  points:
+  - "Визначення портфоліо як довідково-інформаційного тексту (§4.3.8) та його роль у демонстрації кваліфікації на сучасному ринку праці."
+  - "Культурна специфіка: традиційна очікуваність фотографії в українському резюме та поступова лібералізація цієї норми в IT-сфері."
+  - "Типологія портфоліо: академічне, творче та професійне; перехід від традиційних папок до цифрових платформ."
+- section: "Структура та зміст: від резюме до портфоліо (Structure and Content)"
+  words: 800
+  points:
+  - "Розмежування понять «резюме» (CV) та «портфоліо» (доказова база професійних здобутків); структура професійного профілю (summary)."
+  - "Документація досягнень: підготовка «вторинних текстів» (рефератів проєктів, звітів про результати) згідно зі стандартом §4.3.8."
+  - "Сертифікація як інструмент верифікації: подолання проблеми суб'єктивного завищення рівня володіння мовами у резюме («читаю зі словником»)."
+- section: "Мовна грамотність та професійна термінологія (Linguistic Accuracy)"
+  words: 700
+  points:
+  - "Корекція типових помилок калькування: вживання «подаватися на вакансію» або «надсилати резюме» замість помилкового «аплікуватися»."
+  - "Розрізнення паронімів у професійному описі: вживання терміна «досвід» (experience) та уникнення плутанини з науковим «дослідом» (experiment)."
+  - "Диференціація понять «акуратний» (охайний, neat) та «точний» (accurate) при формулюванні навичок та кількісних показників."
+- section: "Супровідний лист та ділове листування (Cover Letter and Correspondence)"
+  words: 800
+  points:
+  - "Стилістичні норми мотиваційного листа: використання безособових конструкцій («вимагається», «очікується») для аналізу вакансії."
+  - "Опис власних досягнень в активному стані («я реалізував», «ми досягли») для підкреслення професійної агентності."
+  - "Формат і тон супровідного листа: адаптація стилю під корпоративну культуру потенційного роботодавця."
+- section: "Рекомендації та презентація портфоліо (Recommendations and Presentation)"
+  words: 700
+  points:
+  - "Специфіка рекомендацій в Україні: порівняльний аналіз письмових листів та поширеної практики телефонних перевірок (дзвінок попередньому керівнику)."
+  - "Презентаційні формати: вимоги до PDF-версії та оптимізація профілю в LinkedIn для українського та міжнародного ринків."
+  - "Усна презентація портфоліо: стратегії аргументації власних компетенцій під час ділових переговорів (§3.13)."
+- section: "Практикум: Створення та аудит власного бренду (Practical Workshop)"
+  words: 500
+  points:
+  - "Аудит власних досягнень: трансформація професійного досвіду в структуровані кейси з використанням частотної лексики («здобутки», «компетентність»)."
+  - "Складання пакету документів: написання резюме та супровідного листа з дотриманням мовних норм та униканням «хибних друзів перекладача»."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "портфоліо (portfolio) — висока частотність (IT/Business); колокації: «сформувати цифрове портфоліо», «портфоліо робіт»"
+  - "резюме (CV/resume) — частотне; НЕ вживати «сумарі»; сталі сполуки: «скласти резюме», «надіслати резюме»"
+  - "супровідний лист (cover letter) — часто синонімічне до «мотиваційний лист»; вимагає офіційно-ділового стилю"
+  - "компетентність (competency) — середньочастотне, формальний реєстр; «професійна компетентність», «рівень компетентності»"
+  - "досягнення (achievement) — висока частотність; синонім: «професійні здобутки»; вживається для кількісних показників"
+  - "професійний досвід (professional experience) — критично відрізняти від наукового «досліду» (experiment)"
+  recommended:
+  - "подаватися на вакансію (apply for a job) — нормативна конструкція; уникати кальки «аплікуватися»"
+  - "точність (accuracy) — вживається для опису компетенцій; відрізняти від охайності («акуратність»)"
+  - "вакансія (job opening) — колокація: «відкрита вакансія», «відповідати вимогам вакансії»"
+  - "кваліфікація (qualification) — підтвердження компетентності через дипломи та сертифікати"
+  - "вторинний текст (secondary text) — лінгвістичний термін для рефератів та повідомлень на основі портфоліо"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4277 chars)
+✅ Message sent to Claude (ID: 11291)
+✓ Message 11291 acknowledged
+   Auto-acknowledged reply #11291 (stdout delivery — no inbox accumulation)
+✓ Message 11286 acknowledged

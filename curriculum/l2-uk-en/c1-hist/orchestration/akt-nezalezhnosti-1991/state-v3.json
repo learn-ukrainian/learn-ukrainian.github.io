@@ -1,0 +1,13 @@
+{
+  "track": "c1-hist",
+  "slug": "akt-nezalezhnosti-1991",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T15:22:33Z",
+      "task_id": "v3-akt-nezalezhnosti-1991-pA",
+      "mode": "full"
+    }
+  }
+}

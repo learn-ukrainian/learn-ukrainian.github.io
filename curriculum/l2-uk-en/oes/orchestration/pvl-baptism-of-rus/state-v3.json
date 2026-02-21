@@ -1,0 +1,13 @@
+{
+  "track": "oes",
+  "slug": "pvl-baptism-of-rus",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-20T08:30:45Z",
+      "task_id": "v3-pvl-baptism-of-rus-pA",
+      "mode": "full"
+    }
+  }
+}

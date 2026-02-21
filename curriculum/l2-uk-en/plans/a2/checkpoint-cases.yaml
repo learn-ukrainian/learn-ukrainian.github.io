@@ -1,0 +1,137 @@
+module: a2-11
+level: A2
+sequence: 11
+slug: checkpoint-cases
+version: '2.0'
+title: Checkpoint — Cases
+subtitle: Review and Mastery
+content_outline:
+- section: Огляд та самооцінка (Overview and Self-assessment)
+  words: 400
+  points:
+  - 'Checkpoint goals and alignment with Ukrainian State Standard §4.2.2 (Linguistic
+    competence: morphology, Catalogue C); emphasis on systematic review of all 7 cases.'
+  - Comprehensive self-assessment checklist based on CEFR A2 descriptors; must include
+    a 'Preposition + Case' matching section as identified in research as a primary
+    friction point.
+- section: 'Відмінки в дії: Давальний та Орудний (Cases in Action: Dative and Instrumental)'
+  words: 700
+  points:
+  - 'Dative case review (Standard §4.2.2.3): Emphasize recipients (Подарувати книжку
+    студентові), age (Дідусеві вісімдесят років), and expressions of feeling (мені
+    холодно/цікаво).'
+  - 'Instrumental case review (Standard §4.2.2.5): Focus on profession/status (бути
+    програмувальником) and instruments (пише ручкою).'
+  - 'Targeted drill for learner error: Nom. for Instruments (e.g., correcting ''Я
+    пишу ручка'' to ''Я пишу ручкою'') to ensure mastery of case endings for tools.'
+- section: 'Граматичні тонкощі: Родовий, Знахідний та Кличний (Grammar Nuances: Genitive,
+    Accusative, and Vocative)'
+  words: 700
+  points:
+  - 'Genitive case functions (Standard §4.2.2.2): Practice with time/date (десятого
+    березня), prepositions (з, до, для, біля), and mandatory case change under negation.'
+  - 'Correction of learner error ''Nom. after Negation'': Drill minimal pairs (e.g.,
+    correcting ''У мене немає гроші'' to ''У мене немає грошей'').'
+  - 'Accusative vs. Locative for Motion and Location (Standard §4.2.2.4/§4.2.2.6):
+    Mastering prepositions в/у, на and the path-oriented ''по''.'
+  - 'Vocative case mastery: Addressing learner error ''Nom. instead of Voc.'' (e.g.,
+    correcting ''Сергій, привіт!'' to ''Сергію, привіт!'') to build natural conversational
+    habits.'
+- section: Сервіси та цифрова Україна (Services and Digital Ukraine)
+  words: 700
+  points:
+  - 'Practical mixed-case dialogues in service environments: Post office and Banking
+    (Standard Catalogue B).'
+  - 'Vocabulary integration: ''відправити поштою'', ''рахунок у банку'', ''допомагати
+    з роботою'' using high-frequency verbs ''допомагати'' and ''відправляти''.'
+  - 'Cultural Hook — Digital Banking Leadership: Exploring Ukraine''s role as a global
+    leader via Monobank and the ''Diia'' app; practicing case usage while discussing
+    modern tech ecosystems.'
+- section: Історичний виклик та підсумок (Historical Challenge and Summary)
+  words: 500
+  points:
+  - 'Integration Challenge: Mixed case narrative analysis based on the cultural hook
+    ''Stamps as Currency (1918)''; how the UNR issued stamps that circulated equally
+    with coins.'
+  - Final summary of case governance and prepositional matching; preparing the learner
+    for a2-12 (Aspect Introduction) where case endings remain constant regardless
+    of verb aspect.
+vocabulary_hints:
+  required:
+  - відмінок (case) — Nominative to Vocative (7 cases); review of the full system.
+  - давальний (dative) — Recipients & Experiencers; focus on age and feelings.
+  - орудний (instrumental) — Tools & Companions; focus on profession/status.
+  - прийменник (preposition) — Critical for case governance; major focus on matching.
+  - 'допомагати (to help) — High frequency (Dative); collocations: допомагати мамі/другові,
+    допомагати з роботою.'
+  - 'подобатися (to like) — High frequency (Dative); collocations: мені подобається
+    це місто, подобатися вчителю.'
+  - 'з (із/зі) (with/from) — Very High frequency (Inst/Gen); collocations: кава з
+    молоком, розмовляти з другом, приїхати з Києва.'
+  - для (for) — Genitive preposition; high frequency in service contexts.
+  - без (without) — Genitive preposition; essential for negation and exclusion.
+  - 'через (because of/through) — High frequency (Acc); collocations: через дорогу
+    (motion), через дощ (reason), через тиждень (time).'
+  - після (after) — Genitive preposition; frequency in scheduling and dates.
+  - 'пошта (post office) — Medium (Services); collocations: на пошті, відправити поштою,
+    відділення пошти.'
+  - 'рахунок (account) — Medium (Bank); collocations: відкрити рахунок, гроші на рахунку,
+    номер рахунку.'
+  - відправляти (to send) — Post context; typically takes Accusative direct object.
+  - обмінювати (to exchange) — Bank context; essential for currency exchange tasks.
+  recommended:
+  - правильно (correctly) — Self-correction and assessment context.
+  - помилка (mistake) — Focus on identifying and correcting learner errors.
+  - виправити (to correct) — Action-oriented verb for error correction tasks.
+  - перевірити (to check) — Self-assessment and verification context.
+  - оцінка (assessment) — Progress tracking and goal setting.
+activity_hints:
+- type: quiz
+  focus: Comprehensive case quiz - all 7 cases
+  items: 20+
+- type: fill-in
+  focus: Sentence transformation - change case
+  items: 15+
+- type: quiz
+  focus: Error identification and correction
+  items: 12+
+- type: match-up
+  focus: Preposition + case + meaning
+  items: 15+
+- type: fill-in
+  focus: Service interaction dialogues
+  items: 10+
+focus: checkpoint
+pedagogy: TTT
+prerequisites:
+- a2-01 through a2-10 (all A2.1 modules)
+connects_to:
+- a2-12 (Aspect Introduction)
+- a2-25 (Checkpoint - Aspect & Comparison)
+- a2-35 (Checkpoint - Complex Ideas)
+objectives:
+- Learner can correctly identify and use all 7 cases
+- Learner can choose appropriate prepositions for each case
+- Learner can correct common case errors
+- Learner can apply case knowledge in mixed contexts
+grammar:
+- case system review
+- prepositions review
+- case functions
+- error correction
+module_type: checkpoint
+sources:
+- name: Ukrainian State Standard 2024 - A2 Assessment
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Assessment criteria for case system mastery
+- name: CEFR A2 Can-Do Statements
+  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  type: reference
+  notes: A2 grammar proficiency requirements
+immersion: 50-60% Ukrainian
+phase: A2.1
+persona:
+  voice: Encouraging Cultural Guide
+  role: Manuscript Proofreader
+word_target: 3000

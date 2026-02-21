@@ -1,4 +1,3 @@
----
 module: c1-hist-116
 level: c1-hist
 sequence: 116
@@ -10,48 +9,41 @@ objectives:
 - 'Analyze the causes and consequences of волинь 1943: трагедія і контекст'
 - Evaluate the historical significance of найболючіша тема
 content_outline:
-- section: "Вступ — Найболючіша тема"
-  words: 515
+- section: Вступ — Найболючіша тема
   subsections:
   - Волинь 1943 — незагоєна рана
   - Не виправдання, а розуміння
   - Контекст ≠ виправдання
   - Структура модуля
-- section: "Контекст — що передувало"
-  words: 903
+- section: Контекст — що передувало
   subsections:
   - Міжвоєнний період — дискримінація
   - Пацифікації 1930-х
   - Нацистська окупація
   - Голод і насильство з усіх боків
 - section: Акція «Антиполяк»
-  words: 774
   subsections:
   - Рішення ОУН-УПА
   - Масштаб — цифри
   - Методи — жорстокість
   - Чому так — версії
 - section: Польська відповідь
-  words: 645
   subsections:
   - Армія Крайова
   - Українські жертви
   - Не лише «одна сторона»
   - Масштаб відповіді
 - section: Пам'ять і політика
-  words: 774
   subsections:
   - Польська пам'ять — «Wołyń»
   - Українська пам'ять — контекст
   - Законодавчі війни
   - Інструменталізація
 - section: Підсумок
-  words: 389
   subsections:
   - Трагедія — для обох народів
   - Визнання без релятивізації
   - Перехід до 2022
-word_target: 4000
 vocabulary:
 - Волинська трагедія
 - ОУН-УПА
@@ -76,20 +68,20 @@ activities:
 - type: critical-analysis
   focus: How Volhynia is used politically
 - type: critical-analysis
-  focus: "Context vs justification — where's the line?"
+  focus: Context vs justification — where's the line?
 - type: essay-response
   focus: Як говорити про Волинь без релятивізації?
 sources:
 - name: Волинська трагедія (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Волинська_трагедія"
+  url: https://uk.wikipedia.org/wiki/Волинська_трагедія
   type: reference
   notes: Volhynia tragedy
 - name: ОУН-УПА (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Українська_повстанська_армія"
+  url: https://uk.wikipedia.org/wiki/Українська_повстанська_армія
   type: reference
   notes: UPA context
 - name: Армія Крайова (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Армія_Крайова"
+  url: https://uk.wikipedia.org/wiki/Армія_Крайова
   type: reference
   notes: AK context
 vocabulary_hints:
@@ -108,7 +100,9 @@ activity_hints:
   items: 4
 - type: essay-response
   focus: Критичний аналіз
-  word_target: 300
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Historical Memory Researcher

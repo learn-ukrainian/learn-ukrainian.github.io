@@ -1,0 +1,202 @@
+✅ Message sent to Gemini (ID: 12885) [auto-acked: self-addressed]
+✓ Message 12885 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12885...
+📨 Message #12885
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-baroque-letters
+   Time: 2026-02-20T23:42:50.662363+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 81
+module: ruth-081
+module_number: 81
+slug: baroque-letters
+title_uk: Барокові листи
+title_en: Baroque Letters
+phase: 4
+phase_id: cossack-word
+phase_name: Cossack Word
+focus: Art of epistolography — Khmelnytsky's letters
+content_outline:
+- section: Вступ
+  description: Introduction to Baroque Letters
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Baroque Scholar
+  role: Epistolary Master
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Baroque Letters (Барокові листи)
+
+## Використані джерела
+1. [litopys.org.ua](http://litopys.org.ua/bhmel/bhm.htm) — *Богдан Хмельницький. Листи та універсали*. Першоджерела (тексти листів).
+2. [litopys.org.ua](http://litopys.org.ua/old18/old18_02.htm) — *Іван Мазепа. Листи до Мотрі Кочубеївни*. Тексти інтимної кореспонденції.
+3. [esu.com.ua](https://esu.com.ua/article-40432) — *Епістолярний стиль*. Енциклопедична стаття про жанр в українській літературі.
+4. [zbruc.eu](https://zbruc.eu/node/75685) — *Мова листів Хмельницького*. Аналіз канцеляризмів та живої мови.
+
+## Хронологія
+- **1632**: Заснування Києво-Могилянської колегії, де викладали піїтику та риторику (навчання складанню листів).
+- **2 липня 1648**: Лист Богдана Хмельницького до короля Владислава IV з табору під Білою Церквою (обґрунтування повстання).
+- **31 січня 1651**: Лист Хмельницького до Адама Киселя (дипломатичний тиск).
+- **1704**: Орієнтовна дата написання листів Івана Мазепи до Мотрі Кочубеївни (зразок високого бароко).
+- **1712**: Видання курсу риторики «Спудейський лексикон» (теоретичне закріплення епістолярних формул).
+
+## Ключові факти та цитати
+- **Хмельницький до короля (1648)**: «...нестерпні кривди, нам, Війську Вашої Королівської Милості Запорозькому... чинені». Риторика «вірних підданих», яких змусили до зброї «свавільні старости».
+- **Мазепа до Мотрі (1704)**: «Моє серденько, мій квіте рожаний! Сердечно від того болію...». Вживання зменшувально-пестливих форм, метафорика («квіт», «серденько»), контраст із суворим образом гетьмана.
+- **Мовні особливості**:
+    - *Макаронічна мова*: вкраплення латини (Vestra Majestas) та польських слів (в дипломатії).
+    - *Канцелярські формули*: «чолом бити», «до ніг припадати», «чим боржій» (якнайшвидше).
+    - *Народні фразеологізми*: «шию зламати», «як оком змигнути» (у Хмельницького).
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ": [!context] — Роль листа у XVII ст. як єдиного засобу комунікації та політичного інструменту.
+- Section "Основний матеріал: Дипломатія Хмельницького": [!myth-buster] — Міф про «простакуватого козака». Хмельницький володів латиною, польською, знав дипломатичний етикет і використовував його для маніпуляції королем.
+- Section "Основний матеріал: Дипломатія Хмельницького": [!quote] — Уривок з листа до Владислава IV (про вірність і кривди).
+- Section "Основний матеріал: Листи Мазепи": [!culture] — Епістолярний роман Мазепи і Мотрі як зразок європейської куртуазної традиції в українському контексті.
+- Section "Основний матеріал: Листи Мазепи": [!quote] — «Моє серденько, мій квіте рожаний!» (аналіз метафорики).
+- Section "Основний матеріал: Риторика і стиль": [!history-bite] — Як писарі «оздоблювали» листи: бароковий етикет вимагав приниження автора перед адресатом («найнижчий підніжок»).
+
+## Деколонізаційний контекст
+- **Imperial myth**: Козацька старшина як «груба воєнщина» або частина «общерусского» культурного простору. Листи Хмельницького як доказ «прагнення возз'єднання».
+- **Ukrainian reality**: Хмельницький — європейський політик, що пише латиною та староукраїнською (руською) мовою. Листи до Москви — дипломатична гра, а не акт підкорення. Мова листів має виразні українські риси, відмінні від московського "приказного язика".
+- **Contested Term**: «Руська мова» (Ruthenian) ≠ «Російська мова» (Russian). У XVII ст. це офіційна мова канцелярії Війська Запорозького.
+
+## Section-Mapped Research Notes
+
+### Вступ
+- Лист як літературний жанр. Вплив риторик КМА (Києво-Могилянської академії).
+- Структура барокового листа: salutatio (привітання), captatio benevolentiae (пошук прихильності), narratio (виклад), petitio (прохання), conclusio.
+
+### Основний матеріал: Дипломатія Хмельницького
+- Аналіз листа до Владислава IV (1648). Аргументація: ми не проти короля, ми проти панів.
+- Стиль: стриманий, офіційний, але з емоційним напруженням («тіла наші козацькі шматували»).
+- Дипломатична гнучкість: різні стилі для короля, хана, царя.
+
+### Основний матеріал: Листи Мазепи
+- Приватне листування. Листи до Мотрі — унікальна пам'ятка інтимної лірики.
+- Куртуазність, галантність, естетика високого бароко.
+- Психологізм: Мазепа як закоханий чоловік, а не лише політик.
+
+### Основний матеріал: Риторика і стиль
+- «Староукраїнська книжна мова»: суміш церковнослов'янської, польських запозичень та живої народної мови.
+- Риторичні фігури: гіперболи (опис страждань), метафори.
+- Формули ввічливості та субординації.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12912)
+✓ Message 12885 acknowledged
+✓ Message 12912 acknowledged

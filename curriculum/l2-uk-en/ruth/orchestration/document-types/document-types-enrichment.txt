@@ -1,0 +1,214 @@
+✅ Message sent to Gemini (ID: 12052) [auto-acked: self-addressed]
+✓ Message 12052 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12052...
+📨 Message #12052
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-document-types
+   Time: 2026-02-20T23:35:37.529774+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 23
+module: ruth-023
+module_number: 19
+slug: document-types
+title_uk: Види документів
+title_en: Document Types
+phase: 1
+phase_id: chancery-legal
+phase_name: Chancery & Legal
+focus: Привілей, Лист, Універсал
+content_outline:
+- section: Вступ
+  description: Introduction to Document Types
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Baroque Scholar
+  role: Royal Archivist
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Document Types (Види документів)
+
+## Використані джерела
+1. [Litopys.org.ua](http://litopys.org.ua) — Першоджерела: Універсали Богдана Хмельницького, Грамоти XIV ст.
+2. [History.org.ua](http://history.org.ua) — Енциклопедія історії України: статті "Універсал", "Привілей", "Канцелярія ВКЛ".
+3. [NBUV.gov.ua](http://nbuv.gov.ua) — Національна бібліотека ім. Вернадського: дослідження про українську ділову мову XVI-XVII ст.
+
+## Хронологія
+- 1393: Привілей Владислава II Ягайла князю Федору Любартовичу (приклад ранньої грамоти на пергаменті).
+- 1431: Привілей Владислава II Ягайла на володіння землями на Поділлі.
+- 1529: Перший Литовський Статут — кодифікація права руською мовою.
+- 1566: Другий Литовський Статут — закріплення руської мови як єдиної офіційної для діловодства ("а писар земський маєт по-руску литерами і слови рускими всі листи і позви писати").
+- 1648: Універсал Богдана Хмельницького під Білою Церквою — початок Національно-визвольної війни, формування гетьманської канцелярії.
+
+## Ключові факти та цитати
+- **Цитата (Статут 1566)**: «А писар земський маєт по-руску літерами і слови руськими всі листи, виписи і позви писати, а не іншим єзиком і слови».
+- **Цитата (Універсал Хмельницького)**: «Богдан Хмельницький, Гетьман Війська Запорозького, усім взагалі полковникам, сотникам, отаманам і всьому товариству... ознаймуємо цим нашим універсалом».
+- **Структура**: Універсал складався з протоколу (ін титуляція, інскрипція), корпусу (наррація, диспозиція, санкція) та есхатолу (датація, локація, корроборація).
+- **Термінологія**: "Лист" у той час означав будь-який письмовий документ, а не лише кореспонденцію. "Привілей" — це "конституція" прав для окремої особи чи міста (Магдебурзьке право).
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ: Документ як зброя": [!context] — У XIV-XVII ст. документ був не просто папірцем, а сакральним об'єктом, що гарантував життя і власність.
+- Section "Привілей: Фундамент прав": [!myth-buster] — Міф: українці не мали власної правової традиції до козаків. Реальність: Привілеї та Статути ВКЛ — це вершина європейської правової думки, писана староукраїнською мовою.
+- Section "Лист: Мистецтво комунікації": [!culture] — Епістолярний етикет був настільки складним, що за неправильне звертання (титулування) могли викликати на дуель або почати війну.
+- Section "Універсал: Голос влади": [!history-bite] — Універсали Хмельницького часто писалися "з коня" (у поході), але зберігали бездоганну юридичну структуру.
+- Section "Канцелярська мова": [!decolonization] — "Руська мова" (староукраїнська) була державною мовою величезної імперії (ВКЛ) від Балтики до Чорного моря, тоді як московська мова ще формувалася на інших засадах.
+
+## Деколонізаційний контекст
+- **Imperial Myth**: Литовський Статут — це досягнення Литви або Польщі.
+- **Ukrainian Reality**: Статут писаний староукраїнською мовою ("руською"), базувався на "Руській Правді" та звичаєвому праві Київської Русі. Це спадщина України.
+- **Imperial Myth**: Українська мова — це "наріччя", непридатне для науки і права.
+- **Ukrainian Reality**: У XVI ст. українська мова мала розроблену юридичну термінологію (позов, вирок, скарга, уряд, маєтність), яка використовується донині.
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| Литовський Статут | Пам'ятка литовського/польського права | Пам'ятка староукраїнської (руської) правової культури |
+| Руська мова | Діалект російської (западнорусский) | Староукраїнська літературна мова, державна мова ВКЛ |
+| Універсал | Політична прокламація (часто зневажливо) | Вищий нормативно-правовий акт Гетьманщини |
+
+## Section-Mapped Research Notes
+
+### Вступ: Документальна культура Русі
+- Документ як символ влади. Печатка важливіша за підпис.
+- Матеріали: пергамент (для вічності) vs папір (для буденності).
+- Роль писаря: "канцлер" як друга особа в державі.
+
+### Привілей: Архітектура прав
+- Визначення: акт верховної влади про надання прав.
+- Структура: хто дає (Інтитуляція), кому дає, що дає (Диспозиція), чому дає (Наррація — часто історія заслуг роду).
+- Приклади: привілеї на Магдебурзьке право (самоврядування міст).
+- Зв'язок з сучасністю: "Привілей" як предок сучасної "Ліцензії" або "Патенту".
+
+### Лист: Від побуту до дипломатії
+- "Лист" — універсальна назва (лист вірчий, лист наказний, лист духовний/заповіт).
+- Етикет: пишномовні вступи ("Мого вельмишановного пана брата і добродія...").
+- Формули ввічливості, які зникли (або відроджуються).
+
+### Універсал: Державотворення пером
+- Етимологія: лат. *universalis* — загальний. Звернення до "всіх взагалі і кожного зокрема".
+- Функція: оголошення мобілізації, податків, надання земель.
+- Структура козацького універсалу: сувора канонічність.
+- Приклад 1648 року: риторика визволення і захисту віри.
+
+### Канцелярська мова: Стандарт імперії
+- Лексика: полонізми (рада, скарга), латинізми (апеляція, конституція), власне українські слова (злото, борошно).
+- Синтаксис: довгі, розгалужені речення з дієприкметниковими зворотами ("маючи на увазі...", "бачачи пильність вашу...").
+- Це стиль "високої" бюрократії.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12126)
+✓ Message 12052 acknowledged
+✓ Message 12126 acknowledged

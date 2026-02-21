@@ -1,0 +1,262 @@
+✅ Message sent to Gemini (ID: 12067) [auto-acked: self-addressed]
+✓ Message 12067 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12067...
+📨 Message #12067
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-sylvestr-kosiv
+   Time: 2026-02-20T23:35:41.782602+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-bio-23
+level: C1-BIO
+sequence: 23
+slug: sylvestr-kosiv
+version: '2.0'
+title: 'Сильвестр Косів: Освітянин і будівничий'
+content_outline:
+- section: Вступ — Митрополит бурхливої епохи
+  points:
+  - Косів як наступник Могили
+  - Життя у вогні Хмельниччини
+  - Збереження духовної незалежності
+- section: Життєпис
+  points:
+  - Походження та освіта (Замойська академія)
+  - Співпраця з Петром Могилою
+  - Робота в Лаврській школі
+  - Обрання митрополитом 1647 р.
+- section: Історичний контекст
+  points:
+  - Хмельниччина та церква
+  - Проблема юрисдикції (Константинополь чи Москва)
+- section: Внесок
+  points:
+  - Розбудова Києво-Могилянського колегіуму
+  - '"Патерикон" та літературна діяльність'
+- section: Останні роки
+  points:
+  - Переяславська рада та відмова від присяги царю
+  - Дипломатичне балансування
+  - Смерть 1657 р.
+- section: Спадщина
+  points:
+  - Ідеолог "київського християнства"
+  - Збереження автономії церкви
+- section: Підсумок
+  points:
+  - Косів як інтелектуальний щит нації
+focus: biography
+pedagogy: seminar
+prerequisites:
+- c1-bio-23 (Петро Могила)
+- Знання контексту Хотинської війни
+connects_to:
+- c1-bio-20 (Богдан Хмельницький)
+- b2-hist hmelnychyna module
+objectives:
+- Оцінити роль Косіва у збереженні автономії української церкви
+- Проаналізувати його літературну спадщину
+- Дослідити позицію митрополита під час Переяславської ради
+grammar:
+- Церковно-слов'янізми (обмежено)
+- Текст-аналіз полеміки
+module_type: biography
+sources:
+- name: Сильвестр Косів (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Сильвестр_Косів
+  type: primary
+  notes: Біографія та діяльність
+- name: Патерикон Сильвестра Косіва
+  url: http://izbornyk.org.ua/
+  type: primary
+  notes: Літературна праця
+immersion: 100% Ukrainian
+phase: C1-BIO
+vocabulary_hints:
+  required:
+  - митрополит (metropolitan)
+  - Патерикон (Paterikon)
+  - присяга (oath)
+activity_hints:
+- type: reading
+  focus: Аналіз "Патерикону" та листів до царя
+  source: Primary sources (adapted)
+- type: essay-response
+  focus: Церква як гарант суверенітету
+persona:
+  voice: Senior Biographer
+  role: Academy Rector
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Сильвестр Косів: Освітянин і будівничий
+
+## Використані джерела
+1. [Енциклопедія історії України: Косів Сильвестр](http://resource.history.org.ua/) — академічна біографія.
+2. [Ізборник: Сильвестр Косів "Екзегезис"](http://litopys.org.ua/) — першоджерела та аналіз творчості.
+3. [Енциклопедія Сучасної України](https://esu.com.ua/) — сучасний погляд на діяльність.
+4. [Радіо Свобода: Сильвестр Косів проти Москви](https://www.radiosvoboda.org/) — аналіз політичної позиції 1654 року.
+
+## Хронологія
+- ~1607: Народження в с. Жировиці (Вітебщина).
+- 1631: Запрошений Петром Могилою викладати в Лаврській школі (пізніше колегіумі).
+- 1635: Вихід творів "Екзегезис" та "Патерикон". Призначення єпископом Мстиславським.
+- 1647: Обрання митрополитом Київським, Галицьким і всієї Русі.
+- Грудень 1648: Урочиста зустріч Богдана Хмельницького в Києві.
+- Січень 1654: Відмова присягати на вірність московському царю після Переяславської ради.
+- 13 квітня 1657: Смерть у Києві.
+
+## Ключові факти та цитати
+- **Цитата про освіту ("Екзегезис"):** «Перша причина, чому нашому народові потрібна латинська наука, є та, щоб нашої Руси не називали дурною Руссю... Вчіться, — каже обмовець, — грецькою мовою, а не латинською. Раджу й я те саме: вчіться грецькою, але й латинською не нехтуйте».
+- **Цитата про загрози ("Екзегезис"):** Згадує час, коли вчителі лаврської школи «вже чекали, що опозиція почне ними начиняти шлунки дніпровських осетрів».
+- **Політична позиція:** Категорично відмовився присягати Москві в 1654 році, аргументуючи це тим, що він підпорядковується лише Константинопольському патріарху.
+- **Титулатура:** Використовував титул «Екзарх Константинопольського трону» для підкреслення незалежності від Москви.
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ — Митрополит бурхливої епохи": [!history-bite] — Косів був не просто "людиною церкви", а інтелектуалом, який писав полемічні трактати і перекладав латиною.
+- Section "Життєпис": [!context] — Освіта в Замойській академії та Віленському братстві як формування західного вектора мислення.
+- Section "Історичний контекст": [!myth-buster] — Міф про "одвічне прагнення возз'єднання". Косів і духовенство були головними опонентами Переяславської угоди.
+- Section "Внесок": [!quote] — Цитата з "Екзегезису" про "дурну Русь" як мотивацію до навчання.
+- Section "Останні роки": [!decolonization] — Відмова присяги 1654 року як акт збереження суверенітету, а не "зрада".
+- Section "Спадщина": [!culture] — "Патерикон" як фундамент національної агіографії та ідентичності.
+
+## Деколонізаційний контекст
+- **Imperial/Soviet myth:** Косів часто зображувався як "полонофіл" або другорядна фігура в тіні Хмельницького, а його опір Москві замовчувався або трактувався як "класова обмеженість". Радянська історіографія ігнорувала його інтелектуальний внесок у розбудову "київського християнства".
+- **Ukrainian reality:** Косів — архітектор духовної незалежності, який розумів небезпеку московського православ'я. Він продовжував справу Могили, будуючи освічену, європейську церкву. Його "полонофільство" було насправді прагматичним використанням західних інструментів (освіти, мови) для захисту української ідентичності.
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| Переяславська рада 1654 | "Возз'єднання" двох братніх народів | Військово-політичний союз; початок московської експансії |
+| Позиція духовенства 1654 | "Зрадницька", "шляхетська" | Принциповий захист канонічної території та прав Константинополя |
+| Латинська освіта | "Окатоличення", "зрада православ'я" | Інструмент інтелектуального захисту та модернізації культури |
+
+## Section-Mapped Research Notes
+
+### Вступ — Митрополит бурхливої епохи
+Наступник Петра Могили, який прийняв жезл у найскладніший час — початок Хмельниччини. Він мав балансувати між козацькою шаблею, польською короною та московським скіпетром. Його головна мета — збереження Церкви та Академії.
+
+### Життєпис
+Походження зі шляхетського роду на Вітебщині. Освіта: Вільно, Люблін, Замостя. Це сформувало його як західника. 1631 — приїзд до Києва на запрошення Могили. Префект колегіуму. 1635 — єпископ Мстиславський. 1647 — обрання митрополитом (всупереч волі короля, але за підтримки Могили перед смертю).
+
+### Історичний контекст
+1648 рік — вибух Хмельниччини. Косів вітає Хмельницького як "Мойсея", але боїться хаосу війни. Церква опиняється між двох вогнів. Проблема юрисдикції: Константинополь (традиція, свобода) vs Москва (тиск, уніфікація).
+
+### Внесок
+"Екзегезис" (1635) — апологія латинської освіти. Він довів, що мова не визначає віру, а знання — це зброя. "Патерикон" (1635) — польськомовна переробка Києво-Печерського патерика. Мета: показати шляхті святість київської землі. Розбудова колегіуму як "Афін" на Дніпрі.
+
+### Останні роки
+1654 рік — Переяслав. Бутурлін вимагає присяги. Косів відмовляється. Погрози. Косів каже, що підпорядковується лише Царгороду. Лише під примусом стрільців духовенство формально погоджується, але продовжує саботаж. Дипломатична гра до самої смерті 1657 року.
+
+### Спадщина
+Ідеолог "київського християнства" — відкритого до світу, освіченого, самобутнього. Зберіг автономію церкви, яку Москва ліквідує лише 1686 року. Його "Патерикон" став основою для формування національного пантеону святих.
+
+### Підсумок
+Косів — це інтелектуальний щит нації в часи, коли фізичним щитом були козаки. Без його "гуманітарної аури" козацька держава могла б залишитися лише військовим табором.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12141)
+✓ Message 12067 acknowledged
+✓ Message 12141 acknowledged

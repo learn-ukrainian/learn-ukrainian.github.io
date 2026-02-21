@@ -1,72 +1,37 @@
-# Research: B1 M62 "Довкілля та екологія" (Environment & Ecology)
+# Дослідження: Довкілля та екологія
 
-**Module:** B1 M62
-**Topic:** Environment, Ecology, Nature Protection
-**Level:** B1 (Intermediate)
-*Note: This research targets the B1 level despite the prompt template's "A1" label, as "Ecology" is a standard B1/B2 topic requiring intermediate grammar and vocabulary.*
+## State Standard Reference
+§3.14: "Природне середовище: погода, пори року, клімат; рослини; деякі види свійських тварин, дикі тварини; природні об’єкти (ліс, озеро, річка, гори, море)."
+§4.4.3: "складнопідрядні речення з підрядною частиною причини (сполучники тому що, бо, через те що)"
+Alignment: This module directly addresses the B1 theme "Natural Environment" (§3.14) and fulfills the grammatical requirement for complex sentences with causal clauses (§4.4.3), which are essential for explaining environmental cause-and-effect (e.g., pollution causes climate change).
 
-## 1. Grammar: State Standard 2024 Reference
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| довкілля | High / Modern Usage | захист довкілля, стан довкілля, шкода довкіллю |
+| забруднення | High / Core | забруднення повітря, забруднення води, рівень забруднення |
+| відходи | Medium / Specific | переробка відходів, сортування відходів, побутові відходи |
+| глобальне потепління | High / Media | боротьба з глобальним потеплінням, наслідки потепління |
+| екосистема | Medium / Scientific | крихка екосистема, збереження екосистеми |
 
-According to the **State Standard of Ukrainian as a Foreign Language (2024)**, Level B1 candidates must demonstrate the ability to:
-*   **Monologue Production (Annex 5):** "Describe nature, environment, and ecological problems expressed in simple but connected text."
-*   **Grammar Competence:**
-    *   **Indefinite and Negative Pronouns:** (*хтось, щось, абихто, ніхто, ніщо*) — crucial for discussing "someone littered", "nobody cares", etc.
-    *   **Impersonal Constructions:** (*треба, потрібно, важливо, заборонено* + infinitive) — for rules and recommendations (e.g., "It is necessary to sort waste").
-    *   **Complex Sentences (Real Condition):** (*Якщо ми не будемо... то...*) — "If we don't protect nature, the climate will change."
+## Cultural Hooks
+1. **The "Lungs of Europe"**: The Ukrainian Carpathians are often called the "lungs of Europe" but face significant threats from deforestation (*вирубка лісів*). They host the highest mountain lake, Brebeneskul (1801m), and the largest, Synevyr, which stays cold (max 1-2m warm surface) even in summer.
+2. **The 7% Problem**: A striking statistic for discussion is that landfills occupy ~7% of Ukraine's territory (comparable to the size of Denmark), with only ~3% of waste being recycled, highlighting the urgent need for *сортування сміття* (waste sorting).
+3. **Modern Innovation**: Ukrainian startup *Rekava* creates biodegradable cups from coffee grounds, showcasing modern *еко-свідомість* (eco-consciousness).
 
-## 2. Vocabulary Frequency
+## Common Learner Errors
+1. **Довкілля vs. Навколишнє середовище**: Learners often overuse the bulky *навколишнє середовище* (official/bureaucratic).
+   → *Correct form*: Prefer **довкілля** for general usage; reserve *навколишнє середовище* for fixed official phrases like *Міністерство захисту довкілля та природних ресурсів*.
+2. **Case with "Забруднення"**: Learners often use the wrong case for what is being polluted.
+   → *Correct form*: *Забруднення* + **Genitive** (забруднення *повітря*, *води*, *ґрунту*).
+3. **"Recycling" translation**: Using "ресайклінг" (anglicism) instead of Ukrainian terms.
+   → *Correct form*: **Переробка** (processing/recycling) or **вторинна переробка**.
 
-### High Frequency (Core B1)
-*   **сміття** (n, neut, sg. only) — garbage, waste (mass noun).
-*   **природа** (n, fem) — nature.
-*   **довкілля** (n, neut) — environment (surroundings).
-*   **ліс / річка / повітря** — forest / river / air.
-*   **чистий / брудний** — clean / dirty.
-*   **кидати / викидати** — to throw / to throw away.
+## Cross-References
+- Builds on: b1-61 (Professional Communication - formal register introduction)
+- Prepares for: b1-63 (Health Wellness - link between environment and health)
 
-### Topic Specific (B1+)
-*   **екологія** (n, fem) — ecology.
-*   **забруднення** (n, neut) — pollution.
-*   **сортувати** (v, imperf) — to sort (waste).
-*   **переробка** (n, fem) — recycling/processing.
-*   **зберігати / берегти** (v) — to save/protect (resources).
-*   **пластик / папір / скло** — plastic / paper / glass.
-*   **шкідливий** (adj) — harmful.
-
-### Collocations
-*   **сортувати сміття** — to sort garbage.
-*   **забруднення повітря/води** — air/water pollution.
-*   **охорона довкілля** — environmental protection.
-*   **глобальне потепління** — global warming.
-*   **берегти природу** — to protect nature.
-
-## 3. Cultural Hook
-
-1.  **"Україна без сміття" (Ukraine Without Waste):** A prominent social initiative and sorting station in Kyiv that popularized the culture of deep recycling (sorting into 40+ categories). It is a modern symbol of urban ecological consciousness in Ukraine.
-2.  **The Carpathians (Карпати):** Often cited as the "lungs of Ukraine" (*легені України*), but suffering from illegal logging (*вирубка лісів*). This is a frequent topic of news and public pain/discussion.
-3.  **Eco-bags (*еко-торби*):** It has become culturally "trendy" in large cities to refuse plastic bags (*кульочки*) in favor of reusable mesh bags (*сіточки*) or tote bags (*шопери*).
-
-## 4. Pedagogical Notes
-
-*   **"Сміття" is Singular:** Students often try to pluralize it or use plural verbs. Emphasize that *сміття* functions like "trash" in English (always singular neuter: *Сміття лежить тут*).
-*   **Environment terms:** Distinguish between:
-    *   *Природа* (Nature - trees, animals).
-    *   *Довкілля* (Environment - the ecological system/surroundings).
-    *   *Середовище* (Environment - general, e.g., business environment).
-*   **Active vs Passive:** Ukrainians often use impersonal structures for rules (*Смітити заборонено* - Littering is forbidden) rather than active "You must not litter".
-*   **Verbs of Motion prefixes:** *Викидати* (throw out), *Забруднювати* (pollute/make dirty).
-
-## 5. Scope Boundaries
-
-### IN Scope (B1 Level)
-*   **Cases:** All 7 cases (Nominative, Genitive, Dative, Accusative, Instrumental, Locative, Vocative).
-*   **Verb Aspect:** Distinction between process (*сортувати*) and result (*посортувати*).
-*   **Tenses:** Past, Present, Future (perfective and imperfective).
-*   **Mood:** Imperative (commands/advice: *Сортуйте сміття!*).
-*   **Syntax:** Complex sentences with *тому що* (because), *щоб* (in order to), *якщо* (if).
-
-### OUT of Scope (Reserved for B2/C1)
-*   **Deep Scientific Terminology:** *Біорозкладання* (biodegradation), *вуглецевий слід* (carbon footprint) — unless as passive vocabulary.
-*   **Active Participles:** *Забруднюючий* (polluting) — prefer constructions with *який* (*завод, який забруднює*).
-*   **Complex Passive Voice:** *Було забруднено* (was polluted) — stick to simple past or impersonal forms.
-*   **Highly Idiomatic Nature Metaphors:** Keep to literal meanings first.
+## Notes for Content Writing
+- **Persona**: The "Carpathian Ecologist" voice should be passionate but grounded in science. Use the Synevyr or deforestation examples to make the "Problem-Solution" grammar structures feels urgent, not abstract.
+- **Grammar Integration**: Use the "Cause-Effect" focus to explain *why* these problems exist (because of plastic, because of emissions) using *тому що*, *через те що*, *бо*.
+- **Immersion**: Ensure all "eco-tips" (sorting rules, saving water) are in Ukrainian, perhaps modelled on real posters found in Lviv or Kyiv.

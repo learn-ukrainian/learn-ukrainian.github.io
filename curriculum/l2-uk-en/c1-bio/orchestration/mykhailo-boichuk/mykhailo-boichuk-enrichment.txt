@@ -1,0 +1,263 @@
+✅ Message sent to Gemini (ID: 12876) [auto-acked: self-addressed]
+✓ Message 12876 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12876...
+📨 Message #12876
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-mykhailo-boichuk
+   Time: 2026-02-20T23:42:50.616716+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-bio-80
+level: C1-BIO
+sequence: 80
+slug: mykhailo-boichuk
+version: '2.0'
+title: 'Михайло Бойчук: <!-- Title -->'
+content_outline:
+- section: Вступ — Painter, founded Boychukism
+  points:
+  - <!-- point -->
+- section: Ранні роки та становлення
+  points:
+  - <!-- point -->
+- section: Творчий шлях та основні здобутки
+  points:
+  - <!-- point -->
+- section: Роль у Розстріляному відродженні
+  points:
+  - <!-- point -->
+- section: Переслідування та трагічна доля
+  points:
+  - <!-- point -->
+- section: Спадщина та значення
+  points:
+  - <!-- point -->
+vocabulary_hints:
+  required:
+  - Розстріляне відродження
+  - Михайло Бойчук
+  recommended:
+  - модернізм (modernism)
+  - сатира (satire)
+  - абсурд (absurd)
+  - тоталітаризм (totalitarianism)
+activity_hints:
+- type: reading
+  focus: Фрагменти п'єси «Мина Мазайло»
+  source: Первинне джерело
+  items: 3 passages
+- type: essay-response
+  focus: Мовне питання у творчості Куліша
+  output: Аргументований есей
+- type: critical-analysis
+  focus: Порівняння долі Куліша та Курбаса
+focus: biography
+prerequisites:
+- b2-hist/rozstriliane-vidrodzennia
+- b2-hist/mekhanizm-teroru
+connects_to:
+- c1-bio/les-kurbas
+- c1-bio/mykola-khvylovyi
+module_type: biography
+sources:
+- name: Микола Куліш (Енциклопедія історії України)
+  url: https://esu.com.ua/article-7980
+  type: primary
+  notes: Академічна біографія
+- name: Куліш М. П'єси
+  type: primary
+  notes: Збірка драматичних творів
+- name: Жулинський М. Микола Куліш
+  type: reference
+  notes: Монографія про творчість
+immersion: 100% Ukrainian
+phase: C1-BIO
+objectives:
+- Дізнатися про життя та творчість Михайло Бойчук
+notes: 'Mykola Kulish is considered the greatest Ukrainian playwright of the 20th
+  century.
+
+  His plays combined modernist techniques with deep exploration of Ukrainian identity
+
+  and the absurdities of Soviet reality. "Myna Mazailo" brilliantly satirized
+
+  linguistic assimilation. His partnership with director Les Kurbas created
+
+  legendary theatrical productions. Both were arrested in 1934 and executed on
+
+  the same day (November 3, 1937) in the Sandarmokh mass execution.
+
+  '
+persona:
+  voice: Senior Biographer
+  role: School Founder
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Михайло Бойчук: Засновник монументальної школи
+
+## Використані джерела
+1. [Енциклопедія сучасної України: Бойчук Михайло Львович](https://esu.com.ua/article-36224) — Академічна біографія, опис мистецького методу та обставин репресій.
+2. [Інститут історії України НАНУ: Бойчук Михайло Львович](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Boychuk_M) — Історична довідка, етапи створення школи та хронологія переслідувань.
+3. [Бібліотека українського мистецтва: Михайло Бойчук](https://uartlib.org) — Мистецтвознавчий аналіз стилістики бойчукізму та каталог збережених ескізів.
+
+## Хронологія
+- 30 жовтня 1882: Народився в селі Романівка (нині Тернопільська область).
+- 1898–1904: Навчання у Львові (за підтримки А. Шептицького), Відні, а згодом — у Краківській академії мистецтв (закінчив зі срібною медаллю).
+- 1907–1910: Паризький період, навчання в Академії Рансона, заснування школи-майстерні «Renovation Byzantine» (Віднова візантійського мистецтва).
+- 1917: Стає одним із професорів-засновників Української державної академії мистецтв у Києві.
+- 1919–1935: Створення знакових монументальних розписів: Луцькі казарми (1919), санаторій на Хаджибейському лимані в Одесі (1927-1928), Червонозаводський театр (1933-1935).
+- 25 листопада 1936: Заарештований НКВС за сфабрикованим звинуваченням в «українському буржуазному націоналізмі» та шпигунстві.
+- 13 липня 1937: Розстріляний у Києві в один день зі своїми найталановитішими учнями.
+
+## Ключові факти та цитати
+- Бойчук свідомо відмовився від станкового олійного живопису на користь монументальної фрески й темпери, переконаний, що справжнє мистецтво має бути синтетичним і належати всьому суспільству.
+- Метод «цеху»: Бойчук відкидав буржуазний індивідуалізм і наполягав на колективній творчості. Авторами робіт зазвичай зазначалася вся майстерня, як у добу Середньовіччя.
+- > «Вони свідомо прагнули поєднати ідеали раннього Відродження з українською іконою та селянською картиною...» — (з оцінок сучасних мистецтвознавців про ядро бойчукізму).
+- > «Ми будуємо нове суспільство, і наше мистецтво має відповідати величі епохи, спираючись на найміцніше коріння минулого.» [needs verification — узагальнене кредо школи].
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ: Архітектор українського стилю": [!context] — Паралелі бойчукізму з мексиканським муралізмом (Дієго Рівера). Обидва рухи виникли одночасно як феномени відродження монументального мистецтва, що прагнули поєднати народні витоки з ліворадикальними та національно-визвольними ідеями.
+- Section "Ранні роки: Європейська школа": [!history-bite] — Фундаментальна роль митрополита Андрея Шептицького: саме він розгледів талант юнака і власним коштом оплатив його навчання у найкращих художніх академіях Європи.
+- Section "Бойчукізм: Синтез віків": [!culture] — Бойчукісти були не лише художниками, а й технологами-алхіміками. Вони відроджували давньоруські рецепти приготування фарб (темпери на яєчних жовтках та природних пігментах), щоб їхні фрески дихали монументальністю Візантії.
+- Section "Київська академія: Школа єдності": [!quote] — Сучасники згадували роботу бойчукістів як справжнє братерство: вони разом розтирали пігменти, готували ґрунт і спільно шукали бездоганну лінію, ігноруючи власне «Его» заради спільного шедевра.
+- Section "Розправа: Знищення митця і творів": [!myth-buster] — Спростування радянського міфу про репресії «за формалізм». Бойчукістів знищили не за художній стиль, а за те, що вони створювали потужний, візуально незалежний від Москви український національний наратив.
+- Section "Спадщина: Відродження через попіл": [!decolonization] — Акт *damnatio memoriae* (прокляття пам'яті): чекісти не просто стратили митців, вони методично збивали штукатурку з їхніми фресками. Сьогодні повернення бойчукізму — це перемога над культурним геноцидом.
+
+## Деколонізаційний контекст
+- Imperial/Soviet myth: Михайло Бойчук і його оточення — це «реакційні формалісти», які тягнули радянське мистецтво назад у церковщину, відриваючись від пролетарської реальності, за що були законно ліквідовані.
+- Ukrainian reality: Бойчукізм — це унікальна течія європейського модернізму, яка синтезувала авангард із візантійською іконою та українським народним малярством. Справжньою причиною репресій стало те, що Бойчук успішно формував візуальну ідентичність вільної України, що було екзистенційною загрозою для сталінської імперії.
+
+## Contested Terms (if applicable)
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| Бойчукізм | Буржуазно-націоналістичний формалізм, візантійщина, відрив від мас | Унікальна українська школа монументального мистецтва, національний варіант європейського модернізму |
+| Знищення фресок | «Реконструкція архітектури», «усунення ідеологічно шкідливих зображень» | Системний культурний терор, лінгво- та етноцид, акт *damnatio memoriae* |
+
+## Section-Mapped Research Notes
+
+### Вступ: Архітектор українського стилю
+Михайло Бойчук — візіонер і засновник власної монументальної школи («бойчукізму»). Він здійснив революцію в українському мистецтві, вирвавши його з лещат провінційного етнографізму та станкової обмеженості. Бойчукізм став потужною українською відповіддю на глобальні естетичні пошуки ХХ століття. Явище часто порівнюють із мексиканським монументалізмом Дієго Рівери (з яким Бойчук перетинався у Парижі) — обидва прагнули створювати мистецтво великих форм, що базується на автохтонній спадщині і звертається безпосередньо до народу.
+
+### Ранні роки: Європейська школа
+Бойчук народився 30 жовтня 1882 року в селі Романівка на Тернопільщині. Його шлях до світового мистецтва почався завдяки Юліану Панькевичу та меценату Андрею Шептицькому, який фінансово забезпечив європейську освіту митця. Навчання охоплювало Віденську, Краківську (закінчив зі срібною медаллю) та Мюнхенську академії мистецтв. У 1907 році Бойчук прибуває до Парижа (Академія Рансона), де не піддається впливу кубізму чи фовізму. Замість цього він гуртує навколо себе однодумців у групу «Renovation Byzantine» (Віднова візантійського мистецтва). Їхня виставка у паризькому «Салоні незалежних» (1910) здобуває тріумф і схвальні відгуки європейської критики.
+
+### Бойчукізм: Синтез віків
+Концептуальне ядро бойчукізму — синтез візантійської монументальної фрески, мистецтва італійського Проторенесансу (Джотто, Чімабуе) та української народної картини (іконопису). Бойчук принципово відмовився від олійного живопису, вважаючи його інструментом «буржуазного індивідуалізму». Художники використовували темперу та фреску по вогкій штукатурці. Ідеологічно школа базувалася на колективному методі творчості: митці працювали як середньовічний цех чи артіль. У їхніх роботах домінували гармонійна ритміка ліній, площинність, стриманий локальний колорит і монументальний спокій фігур.
+
+### Київська академія: Школа єдності
+У 1917 році Михайло Бойчук стає одним із фундаторів щойно створеної Української державної академії мистецтв у Києві. Він очолює майстерню монументального малярства (фрески та мозаїки). Тут навколо нього формується блискуча плеяда учнів-послідовників: Василь Седляр, Іван Падалка, Софія Налепинська (його дружина), Оксана Павленко. Ключові монументальні проєкти школи: розписи Луцьких казарм у Києві (1919) та санаторію на Хаджибейському лимані (1927–1928), де античні та візантійські форми органічно поєднувалися з темами селянської праці. Бойчук також проводив масштабні експедиції для дослідження та реставрації давньоруських храмів.
+
+### Розправа: Знищення митця і творів
+З початком 1930-х і зміцненням сталінського тоталітаризму бойчукісти стали мішенню шаленого ідеологічного цькування. Преса клеймила їх за «формалізм», «візантійщину» та «націоналізм». Розписи Червонозаводського театру в Харкові (1933–1935), де бойчукісти намагалися адаптувати свій стиль до вимог зображення індустріалізації, стали останньою компромісною спробою вижити. 25 листопада 1936 року НКВС заарештувало Бойчука. Під тортурами його змусили підписати брехливі зізнання в участі у «націоналістично-фашистській терористичній організації». 13 липня 1937 року Бойчука розстріляли в Києві разом з учнями Іваном Падалкою та Василем Седляром. У грудні була страчена його дружина Софія Налепинська-Бойчук.
+
+### Спадщина: Відродження через попіл
+Трагедія бойчукізму є безпрецедентною, адже режим не лише знищив митців фізично, а й провів тотальну зачистку їхнього доробку. Монументальні розписи були варварськи збиті зі стін або заштукатурені. Збереглася лише мізерна частка ескізів, театральних декорацій та графіка. Ім’я Бойчука було під абсолютною забороною до реабілітації у 1956 році. Відродження ідей бойчукізму розпочалося в середовищі шістдесятників (монументальні мозаїки Алли Горської, Опанаса Заливахи). Сучасне переосмислення бойчукізму доводить його виняткову вагу: це фундамент української візуальної ідентичності, який досі живить український авангард та сучасне мистецтво.
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12895)
+✓ Message 12876 acknowledged
+✓ Message 12895 acknowledged

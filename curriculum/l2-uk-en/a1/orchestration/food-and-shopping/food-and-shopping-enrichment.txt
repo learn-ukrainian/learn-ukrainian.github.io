@@ -1,0 +1,283 @@
+✅ Message sent to Gemini (ID: 10080) [auto-acked: self-addressed]
+✓ Message 10080 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10080...
+📨 Message #10080
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-food-and-shopping
+   Time: 2026-02-20T19:40:22.548805+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: a1-18
+level: A1
+sequence: 18
+slug: food-and-shopping
+version: '2.0'
+title: Food, Drinks & Shopping
+subtitle: Practical Vocabulary for Market and Store
+content_outline:
+- section: Warm-up
+  points:
+  - 'Улюблена їжа та напої — State Standard alignment: Focus on Accusative for direct
+    objects (e.g., I love pizza)'
+  - Категорії продуктів
+- section: Presentation
+  points:
+  - 'Овочі та фрукти (картопля, морква, яблуко, банан) — learner error: Nominative
+    overuse (forgetting -а/-я to -у/-ю change in Accusative)'
+  - М'ясо та риба (курка, свинина, риба)
+  - Молочні продукти (молоко, сир, масло, йогурт)
+  - Напої (вода, сік, кава, чай)
+  - 'Хлібобулочні вироби (хліб, булка, батон) — cultural hook: Bread is sacred in
+    Ukraine; ''Palianytsia'' as a shibboleth/symbol of identity'
+  - 'Одиниці виміру (кілограм, літр, пляшка, пачка) — learner error: Missing Genitive
+    after quantities (пляшка вода vs пляшка води); Number-case confusion (2-4 vs 5+)'
+- section: Practice
+  points:
+  - 'Складання списку покупок — content note: Use visual shopping lists for authenticity'
+  - Діалоги в магазині — State Standard §4.2.3.2.1 (Accusative object) and §4.2.3.2.2
+    (Genitive quantity)
+- section: Cultural Insight
+  points:
+  - 'Українська кухня та традиції харчування — cultural hook: Hospitality tradition
+    of ''хліб-сіль'' (bread and salt)'
+vocabulary_hints:
+  required:
+  - хліб (bread) — свіжий хліб, купити хліб, батон хліба; sacred cultural symbol
+  - молоко (milk) — купувати молоко, пакет молока, склянка молока
+  - яблуко (apple) — кілограм яблук (Genitive plural form)
+  - м'ясо (meat) — свіже м'ясо
+  - кава (coffee) — чорна кава, чашка кави, пити каву
+  - вода (water) — питна вода, пляшка води, пити воду
+  - кілограм (kilogram) — один кілограм яблук, два кілограми (Nominative plural with
+    2-4)
+  - пляшка (bottle) — пляшка води (requires Genitive noun after)
+  recommended:
+  - 'картопля (potato) — learner error: often mistaken in Accusative (картоплю)'
+  - помідор (tomato)
+  - курка (chicken)
+  - сир (cheese)
+  - яйце (egg)
+  - цукор (sugar)
+activity_hints:
+- type: match-up
+  focus: Food and drink names
+  items: 30
+- type: match-up
+  focus: Sort food by type
+  items: 20
+- type: fill-in
+  focus: Shopping conversations
+  items: 8
+- type: fill-in
+  focus: Complete with quantities
+  items: 15
+focus: vocabulary
+pedagogy: PPP
+prerequisites:
+- a1-17 (Numbers and Money)
+connects_to:
+- a1-19 (At the Café)
+- a1-37 (At the Market)
+objectives:
+- Learner can order food items using accusative case
+- Learner can request quantities using genitive case
+- Learner can ask prices and make purchases
+- Learner can distinguish between food and drink categories
+grammar:
+- Accusative for direct objects (review)
+- Genitive for quantities
+- Price expressions
+register: розмовний
+phase: A1.2 [Navigation]
+persona:
+  voice: Patient Supportive Tutor
+  role: Personal Chef
+word_target: 2000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Food, Drinks & Shopping
+
+## State Standard Reference
+§3.8 (Купівля): "споживчі товари (овочі, фрукти, м’ясо і молочні продукти, хліб, яйця); одиниці ваги й об’єму; гроші."
+§4.2.3.2.1 (Знахідний відмінок): "Без прийменника (об’єкт дії): Віра читає цікаву книжку."
+Alignment: This module directly addresses the thematic requirement of §3.8 and the grammatical requirement of Accusative case for direct objects (§4.2.3.2.1). Although Genitive case is strictly an A2 requirement (§4.2.2.2), the A1 thematic requirement for "units of weight and volume" (§3.8) necessitates a formulaic introduction of Genitive for quantities (пляшка води, кілограм яблук).
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| хліб (bread) | High (Core A1) | свіжий хліб, купувати хліб, хліб і сіль |
+| вода (water) | High (Core A1) | питна вода, пляшка води, склянка води |
+| молоко (milk) | High (Core A1) | пакет молока, пити молоко, кава з молоком |
+| купувати (to buy) | High (Core A1) | я купую продукти, скільки коштує? |
+| їсти (to eat) | High (Core A1) | я хочу їсти, смачно їсти |
+
+## Cultural Hooks
+1. **Bread Sanctity**: "Хліб — усьому голова" (Bread is the head of everything). It is considered a sin to throw away bread; leftover bread is given to birds or animals.
+2. **Hospitality**: Guests are traditionally welcomed with "хліб-сіль" (bread and salt) on an embroidered towel (rushnyk).
+3. **Palianytsia**: A type of Ukrainian bread that became a shibboleth during the war due to pronunciation difficulty for non-natives.
+
+## Common Learner Errors
+1. **Accusative Feminine**: "Я хочу *вода*" → "Я хочу **воду**" — Learners forget to change -а to -у for direct objects.
+2. **Genitive Quantities**: "Пляшка *вода*" → "Пляшка **води**" — Learners fail to use Genitive after quantity words.
+3. **Soup Verb**: "Пити суп" → "**Їсти** суп" — In Ukrainian, you "eat" soup (with a spoon), you don't "drink" it.
+
+## Cross-References
+- Builds on: a1-17 (Numbers and Money) — essential for prices and quantities.
+- Prepares for: a1-19 (At the Café) — expands food vocab to dining out context; a1-37 (At the Market) — more complex bargaining interactions.
+
+## Notes for Content Writing
+- **Genitive Handling**: Teach "quantity + noun" as fixed patterns/formulas rather than deep case theory, as Genitive is technically A2. Use visual patterns.
+- **Visuals**: Use shopping lists and price tags to make the context authentic.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Розминка: Їжа та напої (Warm-up: Food and Drinks)"
+  words: 400
+  points:
+  - "Улюблена їжа та напої — State Standard alignment (§4.2.3.2.1): Focus on Accusative for direct objects (e.g., 'Я люблю піцу')"
+  - "Cultural hook: 'Хліб — усьому голова' (Bread is the head of everything) — explain the sanctity of bread in Ukraine, why it is never thrown away, and the tradition of giving leftovers to birds"
+- section: "Презентація: У магазині (Presentation: At the Store)"
+  words: 600
+  points:
+  - "Категорії продуктів: Овочі, фрукти, м’ясо, риба, молочні продукти — State Standard §3.8 thematic requirements"
+  - "Learner error: Accusative Feminine correction — drill the change from -а to -у (e.g., 'Я купую воду' not 'вода') to prevent Nominative overuse"
+  - "Cultural hook: 'Паляниця' (Palianytsia) — a type of Ukrainian bread used as a shibboleth and symbol of identity due to its specific pronunciation"
+  - "Linguistic nuance: The 'Soup Verb' — drill that in Ukrainian you 'їсти' (eat) soup with a spoon, you do not 'пити' (drink) it"
+- section: "Одиниці виміру та граматика (Units of Measurement and Grammar)"
+  words: 600
+  points:
+  - "Одиниці виміру: кілограм, літр, пляшка, пачка, пакет — State Standard §3.8 competency for units of weight and volume"
+  - "Formulaic Genitive for quantities: Teach 'quantity + noun' as fixed patterns (e.g., 'пляшка води', 'кілограм яблук') to support A1 thematic needs without deep case theory"
+  - "Learner error: Missing Genitive after quantities — drill the distinction between 'пляшка вода' (wrong) and 'пляшка води' (correct)"
+  - "Price expressions and bargaining: Build on a1-17 (Numbers and Money) using authentic visual shopping lists and price tags"
+- section: "Традиції та практика (Traditions and Practice)"
+  words: 400
+  points:
+  - "Діалоги в магазині: 'Скільки коштує?', 'Я купую...', 'Дайте, будь ласка...' — State Standard §4.2.3.2.1 (Accusative object)"
+  - "Cultural hook: Hospitality tradition of 'хліб-сіль' (bread and salt) — guests welcomed with bread on a 'rushnyk' (embroidered towel)"
+  - "Production: Creating a visual shopping list and performing a basic transaction dialogue"
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "хліб (bread) — свіжий хліб, купувати хліб, хліб і сіль; sacred 'усьому голова' symbol"
+  - "вода (water) — питна вода, пляшка води (Genitive formula), склянка води; High frequency (Core A1)"
+  - "молоко (milk) — пакет молока, пити молоко, кава з молоком; High frequency (Core A1)"
+  - "купувати (to buy) — я купую продукти, скільки коштує?; High frequency (§3.8)"
+  - "їсти (to eat) — я хочу їсти, смачно їсти; remember 'їсти суп' (not drink)"
+  - "кілограм (kilogram) — один кілограм яблук, два кілограми; essential for §3.8 weight units"
+  recommended:
+  - "картопля (potato) — learner error: often mistaken in Accusative (картоплю)"
+  - "паляниця (palianytsia) — cultural shibboleth and symbol of identity"
+  - "яблуко (apple) — кілограм яблук (Genitive plural form)"
+  - "пляшка (bottle) — пляшка води; requires Genitive noun formula"
+  - "сіль (salt) — хліб-сіль tradition"
+  - "пакет (packet/bag) — пакет молока, купити пакет"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (3256 chars)
+✅ Message sent to Claude (ID: 10087)
+✓ Message 10087 acknowledged
+   Auto-acknowledged reply #10087 (stdout delivery — no inbox accumulation)
+✓ Message 10080 acknowledged

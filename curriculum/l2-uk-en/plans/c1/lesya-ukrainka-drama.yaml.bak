@@ -1,0 +1,41 @@
+module: c1-100
+level: C1
+sequence: 100
+slug: lesya-ukrainka-drama
+version: '2.0'
+title: 'Леся Українка: Драма'
+subtitle: Lesya Ukrainka's Drama
+content_outline:
+- section: Розминка — Лісова пісня душі
+  points:
+  - '"Лісова пісня" — Мавка, Лукаш, духи лісу'
+  - '"Кассандра" — грецька міфологія та пророцтво'
+  - Неоромантична драма — символізм та версифікація
+- section: Content Areas
+  points:
+  - 'Лісова пісня: forest spirits, love, sacrifice'
+  - 'Кассандра: Greek mythology, prophecy'
+  - 'Камінний господар: Don Juan retelling'
+  - 'Dramatic techniques: verse drama, symbolism'
+  - Mythological and historical settings
+- section: Практика — драматургія Лесі
+  points:
+  - Проаналізувати конфлікт духовного та матеріального у "Лісовій пісні"
+  - Порівняти образи Мавки та Килини — два світи
+  - Написати есе про міфологічні мотиви у "Кассандрі"
+  - Обговорити "Камінного господаря" як переосмислення Дон Жуана
+focus: literature
+pedagogy: Literary Analysis
+objectives:
+- Learner can analyze the conflict between spiritual and material worlds in "The Forest
+  Song".
+- Learner can interpret the symbolic meaning of characters like Mavka and Lukash.
+- Learner can discuss the features of neo-romantic drama.
+grammar:
+- Dramatic syntax
+- Symbolic imagery
+phase: C1.6 Literature
+persona:
+  voice: Senior Specialist
+  role: Театрознавець
+word_target: 4000

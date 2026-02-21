@@ -1,0 +1,279 @@
+✅ Message sent to Gemini (ID: 12532) [auto-acked: self-addressed]
+✓ Message 12532 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12532...
+📨 Message #12532
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-mariya-pavlova
+   Time: 2026-02-20T23:40:34.008685+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-bio-50
+level: C1-BIO
+sequence: 50
+slug: mariya-pavlova
+version: '2.0'
+title: 'Марія Павлова: Видатний палеонтолог'
+content_outline:
+- section: Вступ — Жінка, що читала кістки
+  points:
+  - Марія Павлова — перша жінка-палеонтолог світового рівня
+  - Від київської гімназистки до професора Московського університету
+  - Подолання бар'єрів у чоловічому світі науки
+- section: Ранні роки та освіта (1854-1880)
+  points:
+  - Народження в Києві в родині службовця
+  - Навчання в київській гімназії
+  - Інтерес до природничих наук
+  - Переїзд до Парижа для продовження освіти
+- section: Наукова кар'єра в Парижі (1880-1886)
+  points:
+  - Навчання в Сорбонні та робота з Альбером Годрі
+  - Шлюб з геологом Олексієм Павловим
+  - Перші наукові публікації про викопних ссавців
+  - Формування як самостійного науковця
+- section: Московський період (1886-1920)
+  points:
+  - Переїзд до Москви з чоловіком
+  - Робота в Московському університеті
+  - Дослідження викопних коней та хоботних
+  - Створення палеонтологічної колекції
+- section: Наукові досягнення
+  points:
+  - Монографії про викопних ссавців Євразії
+  - Теорія еволюції коней
+  - Відкриття нових видів та родів
+  - Міжнародне визнання та нагороди
+- section: Останні роки та спадщина (1920-1938)
+  points:
+  - Продовження роботи в радянський період
+  - Перша жінка — почесний член АН СРСР
+  - Смерть у 1938 році
+  - Вплив на розвиток палеонтології
+vocabulary_hints:
+  required:
+  - палеонтологія (paleontology)
+  - викопний (fossil)
+  - ссавець (mammal)
+  - еволюція (evolution)
+  - геологія (geology)
+  - монографія (monograph)
+  - колекція (collection)
+  - дослідник (researcher)
+  - відкриття (discovery)
+  - професор (professor)
+  recommended:
+  - хоботні (proboscideans)
+  - стратиграфія (stratigraphy)
+  - експедиція (expedition)
+  - музей (museum)
+  - академік (academician)
+activity_hints:
+- type: reading
+  focus: Описи наукових відкриттів та біографічні нариси
+  source: Наукові та біографічні статті
+  items: 3 passages
+- type: essay-response
+  focus: Які перешкоди долали жінки-науковці у XIX столітті?
+  output: Historical analysis
+focus: biography
+prerequisites:
+- c1-bio-26-mariya-zankovetska
+connects_to:
+- c1-bio-99-volodymyr-vernadskyi
+- c1-bio-33-sofiya-okunevska
+module_type: biography
+sources:
+- name: Марія Павлова (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Марія_Василівна_Павлова
+  type: primary
+  notes: Біографія, наукова діяльність, внесок у палеонтологію
+- name: Палеонтологія
+  url: https://uk.wikipedia.org/wiki/Палеонтологія
+  type: reference
+  notes: Наукова галузь та її методи
+- name: Жінки в науці XIX століття
+  url: https://uk.wikipedia.org/wiki/Жінки_в_науці
+  type: reference
+  notes: Контекст жіночої участі у науці
+immersion: 100% Ukrainian
+phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of марія павлова: видатний палеонтолог'
+- Evaluate the contributions of жінка, що читала кістки
+- Trace the career and influence of останні роки та спадщина (1920-1938)
+persona:
+  voice: Senior Biographer
+  role: Fossil Hunter
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Марія Павлова: Видатний палеонтолог
+
+## Використані джерела
+1. [Енциклопедія Сучасної України](https://esu.com.ua/article-12345) — Біографічні дані, належність до ВУАН.
+2. [Історія України (history.org.ua)](http://resource.history.org.ua/) — Контекст розвитку науки в кінці XIX - на початку XX ст.
+3. [Вісник НАН України](https://www.nas.gov.ua/) — Статті про історію академії та перших жінок-академіків.
+4. [UkrSvit](http://ukrsvit1.com.ua/) — Матеріали про українських вчених у діаспорі та імперії.
+
+## Хронологія
+- **1854, 27 червня**: Народилася в м. Козелець (нині Чернігівська обл.) у родині земського лікаря Василя Гортинського.
+- **1870**: Закінчила Київський інститут шляхетних дівчат.
+- **1880**: Виїхала до Парижа, де почала відвідувати лекції в Сорбонні та працювати в Музеї природничої історії.
+- **1884**: Почала спеціалізацію під керівництвом видатного палеонтолога Альбера Годрі.
+- **1886**: Переїхала до Москви, одружилася з геологом Олексієм Павловим.
+- **1887**: Опублікувала першу наукову працю про еволюцію копитних.
+- **1910**: Очолила кафедру палеонтології Московського університету (перша жінка-професор у цій галузі).
+- **1921**: Обрана дійсним членом Всеукраїнської академії наук (ВУАН) у Києві.
+- **1924**: Видала фундаментальну працю «Причини вимирання тварин у минулі геологічні епохи».
+- **1938, 23 грудня**: Померла в Москві, похована на Новодівочому цвинтарі.
+
+## Ключові факти та цитати
+- **Цитата (реконструкція поглядів):** «Ми повинні вивчати викопні рештки не як мертві камені, а як свідків живого процесу еволюції, що триває мільйони років». (Узагальнення її еволюційного підходу, заснованого на методах Ковалевського та Годрі).
+- **Факт:** Була першою жінкою, яка не просто описувала кістки, а застосовувала метод «трудової палеонтології» — реконструкцію способу життя тварини за будовою її скелета.
+- **Факт про Україну:** Її дослідження «Neogene Mammal Fauna of Southern Russia» фактично є дослідженням фауни Півдня України (Причорномор'я, Бессарабія), де вона проводила розкопки.
+- **Особисте:** Після смерті чоловіка (1929) продовжувала працювати до останніх днів, попри поважний вік, вважаючи науку своїм єдиним порятунком від самотності.
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ": [!history-bite] — Про те, що в Російській імперії жінці було легше здобути освіту в Парижі, ніж у Києві чи Москві через офіційні заборони.
+- Section "Ранні роки та освіта": [!context] — Атмосфера Києва 1860-х років: час змін, реформ і пробудження інтелігенції.
+- Section "Наукова кар'єра в Парижі": [!quote] — Слова Альбера Годрі про її талант (за французькими джерелами): «Ця російська дама (так її називали, хоч вона українка) має око орла для дрібних деталей».
+- Section "Московський період": [!myth-buster] — Міф про те, що вона була лише «дружиною академіка Павлова». Насправді її міжнародний авторитет у палеонтології ссавців часто перевищував авторитет чоловіка-геолога.
+- Section "Наукові досягнення": [!science-corner] — Пояснення, чому зуби коней є найкращим годинником для геологів (біостратиграфія).
+- Section "Останні роки та спадщина": [!decolonization] — Акцент на її обранні до ВУАН у 1921 році як акт повернення до української ідентичності.
+
+## Деколонізаційний контекст
+- **Імперський міф:** Марія Павлова — «велика російська вчена», засновниця московської школи палеонтології.
+- **Україноцентрична реальність:** Марія Гортинська — українська шляхтянка з Чернігівщини. Її науковий інтерес був зосереджений на фауні українського Півдня (Гіпаріонова фауна). Її обрання академіком ВУАН свідчить про те, що Київ визнавав її «своєю», а вона прийняла це визнання, попри проживання в Москві. Імперія використовувала її талант, але коріння її інтелекту — в українській освітній традиції.
+
+## Contested Terms (if applicable)
+| Поняття | Імперський наратив | Український (деколонізований) наратив |
+|---------|--------------------|---------------------------------------|
+| Південь Росії (Southern Russia) | Географічна прив'язка до імперії, що стирає етнічні межі. | Південь України / Причорномор'я. Викопна фауна, яку вона вивчала, — це фауна українських степів. |
+| Російський палеонтолог | Ігнорування етнічного походження та зв'язків з ВУАН. | Українська вчена, що працювала в імперському центрі; одна з перших жінок-академіків ВУАН. |
+
+## Section-Mapped Research Notes
+
+### Вступ — Жінка, що читала кістки
+Перша жінка-професор, яка пробила "скляну стелю" науки XIX століття. Її шлях почався в Києві, пролягав через Париж і завершився світовим визнанням.
+
+### Ранні роки та освіта (1854-1880)
+Козелець як гетьманське місто, що зберігало дух козацької старшини. Родина Гортинських — типова інтелігенція. Київський інститут шляхетних дівчат давав добру гуманітарну базу, але природничі науки жінці були майже недоступні. Самоосвіта як єдиний шлях.
+
+### Наукова кар'єра в Парижі (1880-1886)
+Париж як Мекка для жінок-вчених (згадати Софію Ковалевську, Марію Склодовську — хоча пізніше). Робота в музеї Jardin des Plantes. Вплив еволюціонізму. Шлюб з Олексієм Павловим не як "втеча в заміжжя", а як союз однодумців.
+
+### Московський період (1886-1920)
+Створення Геологічного музею. Вона не отримувала зарплати роками, працюючи на ентузіазмі. Боротьба за право викладати. Її лекції збирали повні аудиторії.
+
+### Наукові досягнення
+"Історія коней" — її головна тема. Вона довела, як змінювалася нога коня залежно від зміни ландшафту (від лісів до степів). Опис фауни ссавців третинного періоду. Її праці друкувалися французькою та німецькою мовами, що робило їх доступними Європі.
+
+### Останні роки та спадщина (1920-1938)
+Радянська влада намагалася використати її ім'я для престижу, але вона залишалася аполітичною, відданою лише науці. Обрання до ВУАН — важливий маркер ідентичності. Її учні стали цвітом науки, але багато хто був репресований.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12573)
+✓ Message 12532 acknowledged
+✓ Message 12573 acknowledged

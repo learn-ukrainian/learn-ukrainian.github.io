@@ -1,0 +1,107 @@
+module: a1-30
+level: A1
+sequence: 30
+slug: prepositions-direction-origin
+version: '2.0'
+title: 'Prepositions: Direction & Origin'
+subtitle: Direction, Location & Origin
+content_outline:
+- section: Вступ та культурний контекст (Introduction & Culture)
+  words: 400
+  points:
+  - 'Cultural hook: The Ukrzaliznytsia icebreaker — using «Звідки ти приїхав?» as
+    a fundamental social connector on long-distance trains.'
+  - 'Slipper Culture: Exploring the linguistic and physical boundary between the outside
+    world (shoes on) and the home «вдома» (shoes off).'
+  - 'Introduction to the Three Questions: Presenting ''Де'', ''Куди'', and ''Звідки''
+    as the primary coordinates for navigation and personal history.'
+- section: 'Місце: Де? (Location: Where?)'
+  words: 550
+  points:
+  - 'Standard ref §4.2.3.3: Defining location with Locative case using prepositions
+    ''в/у'' and ''на'' (e.g., у великій сумці, на столі).'
+  - 'Learner error: Institutional confusion — drilling the functional use of ''на
+    роботі'' versus the physical container ''у школі''.'
+  - 'The concept of ''вдома'': Framing static location as a state of being, contrasting
+    with the ''outside'' environment.'
+  - 'Euphony rules: Reinforcing the ''у/в'' alternation based on the preceding and
+    following sounds to ensure natural flow.'
+- section: 'Напрямок: Куди? (Direction: Where to?)'
+  words: 550
+  points:
+  - 'Standard ref §4.2.3.2.2: Marking the destination of movement using ''в/у'' and
+    ''на'' with the Accusative case (e.g., заходить у кімнату, кладу на стіл).'
+  - 'Learner error: Static vs. Dynamic confusion — correcting the common mistake of
+    using «Де ти йдеш?» instead of the correct «Куди ти йдеш?».'
+  - 'Direction with ''до'': Introducing ''до'' + Genitive as a specific target-oriented
+    direction, prepping for lexical patterns.'
+  - 'Learner error: Case Mismatch after ''до'' — preventing errors like «до магазин»
+    by teaching «до магазину» as a fixed pattern/chunk.'
+- section: Походження та маршрути (Origin & Routes)
+  words: 500
+  points:
+  - 'Standard ref §4.1.7: Using ''з/із/зі'' + Genitive for origin; focus on phonetic
+    variants (з Алжиру, із Сирії, зі школи).'
+  - 'Distinguishing ''з'' vs. ''від'': Clarifying that ''з'' usually denotes ''out
+    of a place'' while ''від'' denotes ''from a person/source''.'
+  - 'Practical Synthesis: Describing a city route (e.g., з дому в метро, з метро на
+    роботу) to integrate all three coordinates.'
+  - 'Summary Decision Table: A visual aid mapping Question -> Case -> Preposition
+    to help learners choose the correct signpost.'
+vocabulary_hints:
+  required:
+  - де (where) — High frequency (Top 100); used for static location; «Де це?», «Де
+    ви?»
+  - куди (where to) — High frequency (Top 200); used for direction/destination; «Куди
+    нам треба?»
+  - звідки (where from) — Medium frequency; social icebreaker; «Звідки ви родом?»
+  - в/у (in, into) — Alternates based on euphony; usage with Locative (state) vs Accusative
+    (motion)
+  - на (on, onto) — Used for surfaces and functional places; «на роботі», «на стіл»
+  - до (to, toward) — Always triggers Genitive; «додому», «до школи», «до Києва»
+  - з/із/зі (from, out of) — Euphony variants §4.1.7; triggers Genitive; «зі школи»,
+    «з України»
+  - від (from a person/source) — Used for origin relative to a point; «від брата»,
+    «від центру»
+  recommended:
+  - йти (to go) — High frequency; specifically by foot; «йти пішки», «йти додому»
+  - їхати (to go by transport) — High frequency; «їхати на метро», «їхати в центр»
+  - вдома (at home) — High frequency; static adverb; «Я зараз вдома»
+  - центр (center) — Common destination; «у центр» (motion) vs «у центрі» (location)
+  - робота (work) — Functional location; «на роботу» (motion) vs «на роботі» (location)
+activity_hints:
+- type: fill-in
+  focus: Choose correct preposition
+  items: 25
+- type: fill-in
+  focus: Change location to direction
+  items: 20
+- type: quiz
+  focus: Which question? Де/Куди/Звідки
+  items: 15
+- type: fill-in
+  focus: Asking directions
+  items: 6
+focus: grammar
+pedagogy: PPP
+prerequisites:
+- a1-13 (The Locative)
+- a1-29 (Weather and Nature)
+connects_to:
+- a1-31 (Body and Health)
+- a1-34 (Checkpoint Core Grammar)
+objectives:
+- Learner can distinguish location from direction questions
+- Learner can use в/на for location (Locative)
+- Learner can use в/на/до for direction (Accusative/Genitive)
+- Learner can use з/від for origin
+grammar:
+- Location (Де?) vs Direction (Куди?) vs Origin (Звідки?)
+- Prepositions with correct cases
+- Movement verbs with prepositions
+register: розмовний
+phase: A1.3 [Consolidation]
+persona:
+  voice: Patient Supportive Tutor
+  role: Set Designer
+word_target: 2000

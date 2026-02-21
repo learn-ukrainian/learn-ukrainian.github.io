@@ -1,0 +1,72 @@
+module: b2-33
+level: B2
+sequence: 33
+slug: word-formation-person-suffixes
+version: '2.0'
+title: 'Словотворення: суфікси на позначення осіб'
+subtitle: Word Formation - Person Suffixes
+content_outline:
+- section: Розминка — Як утворюються назви осіб
+  points:
+  - Словотвір як ключ до розширення словника
+  - Продуктивні суфікси для назв осіб
+  - Зв'язок з дієсловами, іменниками, прикметниками
+- section: Суфікс -ар/-яр (професія, заняття)
+  points:
+  - Від іменників (бібліотека → бібліотекар, ворота → воротар)
+  - Від дієслів (лікувати → лікар, кухарити → кухар)
+  - Варіант -яр після м'яких (камінь → каменяр, вівця → вівчар)
+  - Жіночий рід з -ка (бібліотекарка, лікарка)
+- section: Суфікс -ач (виконавець дії)
+  points:
+  - Від дієслів (викладати → викладач, читати → читач)
+  - Активний діяч (слухати → слухач, грати → гравець)
+  - Порівняння з -ник (працівник vs працювач — не існує)
+  - Жіночий рід (викладачка, читачка)
+- section: Суфікс -ник (рід занять, роль)
+  points:
+  - Від іменників (робота → робітник, письмо → письменник)
+  - Від прикметників (художній → художник)
+  - Роль у групі (учасник, спільник, союзник)
+  - Варіант -івник (працівник, службовець)
+- section: Практика — визначення словотвору
+  points:
+  - Визначити, від якого слова утворено назву особи
+  - Створити назви осіб від заданих слів
+  - Аналіз тексту — знайти всі назви осіб
+focus: grammar
+pedagogy: TTT
+objectives:
+- Learner can form person nouns from other words using -ар/-яр suffix
+- Learner can form agent nouns from verbs using -ач suffix
+- Learner can form person nouns using -ник suffix for roles and occupations
+- Learner can identify word formation patterns for person nouns in authentic texts
+grammar:
+- Суфікс -ар/-яр для позначення професії чи діяльності
+- Суфікс -ач для позначення виконавця дії
+- Суфікс -ник для позначення роду занять
+register: науковий
+phase: B2.1c [Register & Word Formation]
+vocabulary_hints:
+  required:
+  - термін (term)
+  - поняття (concept)
+  - процес (process)
+  - метод (method)
+  recommended:
+  - аналіз (analysis)
+  - синтез (synthesis)
+  - дослідження (research)
+activity_hints:
+- type: reading
+  focus: Аналіз тексту
+  items: 4
+- type: essay-response
+  focus: Практичне застосування
+- type: true-false
+  focus: Перевірка розуміння
+  items: 8
+persona:
+  voice: Professional Language Coach
+  role: Recruiter (Рекрутер)
+word_target: 4000

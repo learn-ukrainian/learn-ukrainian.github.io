@@ -1,0 +1,85 @@
+module: b1-35
+level: B1
+sequence: 35
+slug: concessive-khocha
+version: '2.0'
+title: 'Допустові речення: хоча, незважаючи на'
+subtitle: Concessive Clauses - Although, Despite
+content_outline:
+- section: 'Тест: Перевірте себе'
+  points:
+  - Diagnostic quiz on concessive clauses
+  - Self-assessment questions — focus on distinguishing 'незважаючи на' vs common
+    error 'не дивлячись на'
+- section: Пояснення
+  points:
+  - 'What are concessive clauses — State Standard §4.4.3: complex sentences with concessive
+    subordinate clauses'
+  - 'хоча - Although Clauses — use high-freq collocations ''хоча б'', ''хоча й'';
+    cultural hook: proverb «Хоч бачить око, та зуб не йме»'
+  - 'незважаючи на - Despite — learner error: calque ''не дивлячись на'' (gerund)
+    vs ''незважаючи на'' (preposition); spelling warning: ''не зважаючи'' (2 words,
+    gerund) vs ''незважаючи'' (1 word, prep)'
+  - 'Other Concessive Connectors (попри, хоч би) — ''попри'' as stylish media alternative;
+    literature quote: Ліна Костенко «Не бійся правди, хоч яка гірка...»'
+  - Concessive vs Adversative (хоча vs але) — introduction of 'проте' as formal/academic
+    connector
+- section: Практика
+  points:
+  - Form concessive clauses — practice transforming 'але' sentences into 'хоча' clauses
+  - 'Express unexpected outcomes — folk wisdom: «Хоч не з красою, аби з головою»'
+- section: Діалоги
+  points:
+  - 'Concessive clauses in conversation — register mismatch warning: avoid archaic
+    ''дарма що'' in business contexts'
+  - Contrast scenarios
+vocabulary_hints:
+  required:
+  - хоча (although) — хоча б (at least), хоча й (even though), хоча... але/проте
+  - незважаючи на (despite) — незважаючи на те що, незважаючи ні на що; NEVER 'не
+    дивлячись на'
+  - попри (despite - literary) — попри все, попри очікування, попри те що
+  - контраст (contrast)
+  - неочікуваний (unexpected)
+  - результат (result)
+  - допустовий (concessive)
+  - проте (however) — однак проте, хоча... проте (formal/academic)
+  recommended:
+  - хоч би (even though) — emphatic concession
+  - дарма що (in vain) — archaic/literary usage
+  - все одно (anyway)
+  - тим не менш (nevertheless)
+activity_hints:
+- type: fill-in
+  focus: Complete concessive sentences
+  items: 25
+- type: fill-in
+  focus: Convert sentences to concessive
+  items: 20
+- type: error-correction
+  focus: Fix concessive clause errors
+  items: 15
+- type: translate
+  focus: English to Ukrainian
+  items: 15
+focus: grammar
+pedagogy: TTT
+prerequisites:
+- b1-34 (Checkpoint Complex Sentences 1)
+connects_to:
+- b1-36 (Causal Result Clauses)
+objectives:
+- Learner understands concessive clause constructions
+- Learner can express contrast and unexpected outcomes
+- Learner can use various concessive connectors
+- Learner can distinguish concessive from adversative clauses
+grammar:
+- Concessive clauses with хоча (although)
+- Concessive phrases with незважаючи на (despite)
+- Contrast and unexpected outcome expressions
+register: розмовний
+phase: B1.3b [Complex Sentences]
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Debate Champion
+word_target: 4000

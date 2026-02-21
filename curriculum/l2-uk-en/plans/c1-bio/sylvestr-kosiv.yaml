@@ -1,48 +1,39 @@
----
-module: c1-bio-021
+module: c1-bio-23
 level: C1-BIO
-sequence: 21
+sequence: 23
 slug: sylvestr-kosiv
 version: '2.0'
 title: 'Сильвестр Косів: Освітянин і будівничий'
-word_target: 4300
 content_outline:
-- section: "Вступ — Митрополит бурхливої епохи"
-  words: 600
+- section: Вступ — Митрополит бурхливої епохи
   points:
   - Косів як наступник Могили
   - Життя у вогні Хмельниччини
   - Збереження духовної незалежності
-- section: "Життєпис"
-  words: 1600
+- section: Життєпис
   points:
   - Походження та освіта (Замойська академія)
   - Співпраця з Петром Могилою
   - Робота в Лаврській школі
   - Обрання митрополитом 1647 р.
-- section: "Історичний контекст"
-  words: 600
+- section: Історичний контекст
   points:
   - Хмельниччина та церква
   - Проблема юрисдикції (Константинополь чи Москва)
-- section: "Внесок"
-  words: 400
+- section: Внесок
   points:
   - Розбудова Києво-Могилянського колегіуму
   - '"Патерикон" та літературна діяльність'
-- section: "Останні роки"
-  words: 400
+- section: Останні роки
   points:
   - Переяславська рада та відмова від присяги царю
   - Дипломатичне балансування
   - Смерть 1657 р.
-- section: "Спадщина"
-  words: 400
+- section: Спадщина
   points:
-  - 'Ідеолог "київського християнства"'
+  - Ідеолог "київського християнства"
   - Збереження автономії церкви
-- section: "Підсумок"
-  words: 300
+- section: Підсумок
   points:
   - Косів як інтелектуальний щит нації
 focus: biography
@@ -58,16 +49,16 @@ objectives:
 - Проаналізувати його літературну спадщину
 - Дослідити позицію митрополита під час Переяславської ради
 grammar:
-- "Церковно-слов'янізми (обмежено)"
+- Церковно-слов'янізми (обмежено)
 - Текст-аналіз полеміки
 module_type: biography
 sources:
 - name: Сильвестр Косів (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Сильвестр_Косів"
+  url: https://uk.wikipedia.org/wiki/Сильвестр_Косів
   type: primary
   notes: Біографія та діяльність
 - name: Патерикон Сильвестра Косіва
-  url: "http://izbornyk.org.ua/"
+  url: http://izbornyk.org.ua/
   type: primary
   notes: Літературна праця
 immersion: 100% Ukrainian
@@ -79,7 +70,10 @@ vocabulary_hints:
   - присяга (oath)
 activity_hints:
 - type: reading
-  focus: "Аналіз \"Патерикону\" та листів до царя"
+  focus: Аналіз "Патерикону" та листів до царя
   source: Primary sources (adapted)
 - type: essay-response
   focus: Церква як гарант суверенітету
+persona:
+  voice: Senior Biographer
+  role: Academy Rector

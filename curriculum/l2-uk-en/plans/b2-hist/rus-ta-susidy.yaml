@@ -1,4 +1,3 @@
----
 module: b2-hist-019
 level: B2-HIST
 sequence: 19
@@ -6,43 +5,37 @@ slug: rus-ta-susidy
 version: '2.0'
 title: 'Русь та сусіди: Візантія, Польща, Угорщина'
 content_outline:
-- section: "Вступ — Русь у міжнародному контексті"
-  words: 529
+- section: Вступ — Русь у міжнародному контексті
   points:
   - Геополітичне положення Русі
   - Торгівля, війна, дипломатія
   - Династичні зв'язки як інструмент політики
   - Русь очима сусідів
 - section: Русь і Візантія
-  words: 823
   points:
   - Від ворожнечі до союзу
   - Договори 907, 911, 944, 971 років
   - Хрещення та церковні зв'язки
   - Культурний вплив — мистецтво, право, освіта
 - section: Русь і Польща
-  words: 706
   points:
   - Сусіди та суперники
   - Конфлікт за Червенські гради
   - Болеслав Хоробрий у Києві (1018)
   - Від ворожнечі до династичних шлюбів
 - section: Русь і Угорщина
-  words: 646
   points:
   - Сусідство в Карпатах
   - Династичні зв'язки — Анастасія, дружина Андраша I
   - Боротьба за Галичину
   - Спільний ворог — кочівники
 - section: Степові сусіди
-  words: 706
   points:
   - Печеніги — постійна загроза
   - Торки та берендеї — «чорні клобуки«
   - Половці — вороги та союзники
   - Степовий кордон як виклик
 - section: Скандинавія та Захід
-  words: 590
   points:
   - Варязькі зв'язки
   - Гаральд Суворий та Єлисавета
@@ -51,7 +44,6 @@ content_outline:
   - Русь як європейська держава
   - Мережа дипломатичних зв'язків
   - Перехід до синтезу Київської Русі
-word_target: 4000
 vocabulary_hints:
   required:
   - дипломатія (diplomacy)
@@ -94,16 +86,20 @@ grammar:
 - Diplomatic and international relations terminology
 sources:
 - name: Зовнішня політика Київської Русі (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Зовнішня_політика_Київської_Русі"
+  url: https://uk.wikipedia.org/wiki/Зовнішня_політика_Київської_Русі
   type: reference
   notes: Overview of foreign relations
 - name: Русько-візантійські договори
-  url: "https://uk.wikipedia.org/wiki/Русько-візантійські_договори"
+  url: https://uk.wikipedia.org/wiki/Русько-візантійські_договори
   type: reference
   notes: Treaties with Byzantium
-- name: "Повість минулих літ — дипломатичні місії"
-  url: "https://litopys.org.ua/pvl/pvl.htm"
+- name: Повість минулих літ — дипломатичні місії
+  url: https://litopys.org.ua/pvl/pvl.htm
   type: primary
   notes: Chronicle accounts
-phase: "B2-HIST.1 [Kyivan Rus]"
+phase: B2-HIST.1 [Kyivan Rus]
 immersion: 100% Ukrainian
+persona:
+  voice: Senior Professor of History
+  role: Diplomatic Envoy
+word_target: 5000

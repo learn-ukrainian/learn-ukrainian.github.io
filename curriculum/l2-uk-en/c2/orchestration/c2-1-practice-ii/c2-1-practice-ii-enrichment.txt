@@ -1,0 +1,319 @@
+✅ Message sent to Gemini (ID: 11146) [auto-acked: self-addressed]
+✓ Message 11146 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #11146...
+📨 Message #11146
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-c2-1-practice-ii
+   Time: 2026-02-20T22:26:46.535924+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c2-018
+level: c2
+sequence: 18
+version: '2.0'
+title: Практика C2.1 II — Вправи на трансформацію
+focus: practice
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Style transformation methodology
+  url: https://www.nbuv.gov.ua/
+  type: reference
+  notes: Academic research on register shifting
+- name: Practical stylistics exercises
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Transformation exercise examples
+- name: Ukrainian State Standard 2024 — Style flexibility
+  url: https://mon.gov.ua/
+  type: reference
+  notes: C2 requirements for register control
+content_outline:
+- section: Вступ — Трансформація як майстерність
+  points:
+  - Чому вміння трансформувати — ознака C2
+  - Збереження змісту при зміні форми
+  - Критерії успішної трансформації
+- section: Трансформація 1 — Юридичний → Журналістський → Блог
+  points:
+  - Вихідний юридичний документ
+  - Етапи спрощення
+  - Аналіз втрат та здобутків
+  - Три версії одного змісту
+- section: Трансформація 2 — Наукова стаття → Популярна → Соцмережі
+  points:
+  - Академічний оригінал
+  - Адаптація для журналу
+  - Скорочення для Twitter/Facebook
+  - Збереження точності
+- section: Трансформація 3 — Формальна промова → Неформальне пояснення → Жарт
+  points:
+  - Офіційний виступ
+  - Розмовне переказування
+  - Гумористична версія
+  - Межі трансформації
+- section: Multi-step трансформація
+  points:
+  - Ланцюжки перетворень
+  - Контроль якості на кожному етапі
+  - Зворотна трансформація
+  - Відновлення інформації
+- section: Peer comparison
+  points:
+  - Порівняння трансформацій з колегами
+  - Різні підходи до одного завдання
+  - Обговорення стратегій
+  - Найкращі практики
+- section: Оцінка збереження інформації
+  points:
+  - Що втрачається при трансформації
+  - Критичні елементи змісту
+  - Баланс форми та змісту
+  - Етичні питання спрощення
+vocabulary:
+  required:
+  - трансформація (transformation)
+  - перетворення (conversion)
+  - адаптація (adaptation)
+  - версія (version)
+  - формат (format)
+  - канал (channel)
+  - платформа (platform)
+  - аудиторія (audience)
+  - спрощення (simplification)
+  - збереження (preservation)
+  recommended:
+  - ланцюжок (chain)
+  - етап (stage)
+  - зворотний (reverse)
+  - втрата (loss)
+  - здобуток (gain)
+  forbidden: '[]'
+activities:
+  types_required:
+  - essay-response
+  - quiz
+  - comparative-study
+  - critical-analysis
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c2-19 (C2.1 Review consolidates skills)
+- c2-20 (C2.1 Checkpoint assesses transformation ability)
+- c2-24 (Style blending builds on transformation)
+vocabulary_hints:
+  required:
+  - концепція (concept)
+  - аналіз (analysis)
+  - дискурс (discourse)
+  - методологія (methodology)
+  recommended:
+  - інтерпретація (interpretation)
+  - контекстуалізація (contextualization)
+  - синтез (synthesis)
+activity_hints:
+- type: reading
+  focus: Поглиблений аналіз тексту
+  items: 4
+- type: essay-response
+  focus: Критичне осмислення
+- type: discussion
+  focus: Дискусія та аргументація
+  items: 1
+persona:
+  voice: Senior Specialist
+  role: Style Consultant
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Практика C2.1 II — Вправи на трансформацію
+
+## State Standard Reference
+§4.3.7: "Уміння трансформувати текст з одного стилю в інший, зокрема науковий у науково-популярний, офіційний у публіцистичний тощо."
+Alignment: Цей модуль безпосередньо реалізує вимогу стандарту щодо стилістичної гнучкості та вміння адаптувати текст під різні комунікативні завдання (науковий → популярний, офіційний → публіцистичний).
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| трансформація | High (Academic/Tech) | докорінна ~, структурна ~, поетапна ~, ~ тексту |
+| адаптація | Medium (General) | соціальна ~, ~ до умов, успішна ~, мовна ~ |
+| версія | High (General) | попередня ~, остаточна ~, офіційна ~, скорочена ~ |
+| спрощення | Medium (General) | процедурне ~, надмірне ~, ~ викладу, шлях до ~ |
+| канал | High (Media/Tech) | інформаційний ~, ~ зв'язку, комунікаційний ~, надійний ~ |
+| аудиторія | High (Media) | цільова ~, широка ~, молодіжна ~, залучення ~ |
+
+## Cultural Hooks
+1. **Боротьба з "канцеляритом"**: В українській культурі існує давня традиція (від класиків до сучасних блогерів) висміювання надмірного офіціозу. Вміння "перекласти з бюрократичної на людську" вважається ознакою високої мовної культури та демократичності.
+2. **Постмодерна гра стилями**: Сучасні українські письменники (Ю. Андрухович, С. Жадан) часто використовують стилістичні змішування та трансформації як художній прийом, перетворюючи високий стиль на низький і навпаки для створення іронічного ефекту.
+
+## Common Learner Errors
+1. **"Стилістичні сліди" (Calquing of register)** → Збереження пасивних конструкцій або канцеляризмів (напр., "даний захід") у блогах чи розмовній мові. — *Причина*: недостатнє відчуття меж стилю.
+2. **Втрата змісту при спрощенні** → Вилучення важливих деталей разом зі складними конструкціями. — *Причина*: фокус на формі на шкоду змісту.
+3. **Невідповідність тону (Tone mismatch)** → Використання надмірно емоційної лексики при адаптації наукового тексту або навпаки, сухість у соцмережах. — *Причина*: нерозуміння очікувань цільової аудиторії.
+
+## Cross-References
+- Builds on: C2.1 Modules 1-17 (Stylistic Perfection phase)
+- Prepares for: C2.1 Checkpoint (M20), Style Blending (M24)
+
+## Notes for Content Writing
+- Module needs to provide concrete examples of the *same* information presented in 3 distinct ways side-by-side for comparison.
+- Emphasize that "simplification" does not mean "dumbing down" (примітивізація), but rather "clarification" (прояснення).
+- Use distinct formatting or visual cues (e.g., distinctive intros) to signal the style shift in examples.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ — Трансформація як ознака мовної майстерності (Introduction — Transformation as a Sign of Linguistic Mastery)"
+  words: 400
+  points:
+  - "Аналіз вимог Державного стандарту 2024 (§4.3.7) щодо вміння адаптувати тексти під різні комунікативні завдання: від наукового до популярного."
+  - "Трансформація як інструмент збереження змісту при зміні форми: чому вміння перефразувати без втрати сенсу є ознакою рівня C2."
+  - "Критерії успішної трансформації: точність передачі фактів, доречність регістру та глибоке розуміння очікувань цільової аудиторії."
+- section: "Подолання канцеляриту та 'стилістичних слідів' (Overcoming Bureaucratese and 'Stylistic Traces')"
+  words: 600
+  points:
+  - "Культурний контекст: українська традиція боротьби з канцеляритом від класиків до сучасних медіа; концепція 'перекладу з бюрократичної на людську'."
+  - "Learner error: збереження пасивних конструкцій та кліше (напр. 'даний захід', 'здійснювати контроль') при переході до блогу — вправи на де-бюрократизацію."
+  - "Аналіз 'стилістичних слідів' (Calquing of register): як розпізнати та усунути недоречні елементи попереднього стилю в новій версії тексту."
+- section: "Практикум: Від наукового оригіналу до соцмереж (Workshop: From Academic Original to Social Media)"
+  words: 700
+  points:
+  - "Методологія адаптації академічної статті до науково-популярного викладу: вилучення надмірної термінології при збереженні концептуальної глибини."
+  - "Техніки радикального стиснення інформації для форматів Facebook/Twitter: виділення 'головного меседжу' при обмеженні знаків."
+  - "Дискусія про межу між 'спрощенням' (clarification) та 'примітивізацією' (dumbing down): як зробити текст доступним, не втрачаючи наукової точності."
+- section: "Офіційний виступ та іронічна трансформація (Official Speech and Ironic Transformation)"
+  words: 700
+  points:
+  - "Трансформація формальної промови у неформальне пояснення: зміна синтаксичних структур, вибір емоційної лексики та розмовних маркерів."
+  - "Постмодерна гра стилями в українській літературі (Ю. Андрухович, С. Жадан): використання трансформації як художнього прийому для іронічного ефекту."
+  - "Learner error: 'Tone mismatch' — використання надмірно емоційної лексики при адаптації наукового тексту або сухість у соцмережах."
+- section: "Контроль якості та зворотна трансформація (Quality Control and Reverse Transformation)"
+  words: 600
+  points:
+  - "Методика зворотної трансформації: спроба відновити вихідний документ на основі спрощеної версії для перевірки збереження критичних елементів змісту."
+  - "Етичні аспекти трансформації: межа між успішною адаптацією та маніпулятивним викривленням інформації при зміні каналу зв'язку."
+  - "Підсумковий аналіз ланцюжка перетворень: порівняння трьох версій одного змісту (юридичний → журналістський → блог) та оцінка втрат і здобутків."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "трансформація (transformation) — докорінна, структурна, поетапна трансформація тексту; ключовий термін для C2"
+  - "адаптація (adaptation) — успішна мовна адаптація до умов; вживання в контексті налаштування тексту під аудиторію"
+  - "версія (version) — попередня, остаточна, скорочена версія; базове поняття для порівняльного аналізу варіантів"
+  - "спрощення (simplification) — процедурне спрощення, спрощення викладу; важливо уникати надмірного спрощення (примітивізації)"
+  - "канал (channel) — інформаційний канал, канал зв'язку; фактор, що визначає технічні межі трансформації"
+  - "аудиторія (audience) — цільова, широка аудиторія; головний орієнтир для вибору стилістичного регістру"
+  - "збереження (preservation) — збереження змісту, збереження точності викладу; основний критерій якості трансформації"
+  recommended:
+  - "примітивізація (dumbing down) — уникати примітивізації; негативний аспект невдалої спроби спрощення тексту"
+  - "прояснення (clarification) — стилістичне прояснення сенсів; позитивна мета якісної переробки тексту"
+  - "канцелярит (bureaucratese) — очищення мови від канцеляриту; традиція висміювання офіціозу в українській культурі"
+  - "ланцюжок (chain) — ланцюжок перетворень; послідовна зміна регістрів від високого до низького"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4269 chars)
+✅ Message sent to Claude (ID: 11159)
+✓ Message 11159 acknowledged
+   Auto-acknowledged reply #11159 (stdout delivery — no inbox accumulation)
+✓ Message 11146 acknowledged

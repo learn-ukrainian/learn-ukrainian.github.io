@@ -1,0 +1,222 @@
+✅ Message sent to Gemini (ID: 10751) [auto-acked: self-addressed]
+✓ Message 10751 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10751...
+📨 Message #10751
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-intimate-register
+   Time: 2026-02-20T21:26:59.534645+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-044
+level: c1
+sequence: 44
+version: '1.0'
+title: 'Інтимно-ласкавий стиль: Мова близьких стосунків'
+subtitle: 'Intimate Register: Language of Close Relationships'
+focus: style
+pedagogy: Sociolinguistics
+objectives:
+- Learner can identify and use diminutive forms to express affection
+- Learner can distinguish between neutral and intimate registers
+- Learner can express deep emotions (love, care, longing) in Ukrainian
+content_outline:
+- section: Introduction
+  subsections:
+  - TBD
+vocabulary:
+  required: '[]'
+  recommended: '[]'
+  forbidden: '[]'
+persona:
+  voice: Senior Specialist
+  role: Психолог стосунків
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Інтимно-ласкавий стиль: Мова близьких стосунків
+
+## State Standard Reference
+§4.4.3: "Стилістичні засоби лексики: ... зменшувально-пестливі форми: хлопець – хлопчик, дощ – дощик, донька – донечка".
+§4.1.2.7: "Кличний відмінок... адресат ідентифікації: Ой ти, дівчино, з горіха зерня...".
+Alignment: Модуль розкриває специфіку використання зменшувально-пестливих форм та інтимного вокативу як ключових ознак розмовного та епістолярного стилів у близьких стосунках (C1).
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| коханий/кохана | High / General | мій коханий, єдиний коханий, кохана дружина |
+| любий/люба | High / Epistolary | любий мій, моя люба, найлюбіший |
+| рідний/рідна | High / Emotional | найрідніший, рідна душа, рідненький |
+| сонечко | High / Diminutive | моє сонечко, ясне сонечко |
+| зіронька | Med / Poetic | ясна зіронька, вечірня зіронька |
+| серденько | High / Diminutive | моє серденько, від усього серденька |
+| пташка/пташина | Med / Term of endearment | моя пташка, пташеня |
+
+## Cultural Hooks
+1. **Іван Франко "Ой ти, дівчино, з горіха зерня"**: Класичний приклад літературного інтимного звертання, що стало народним романсом. Демонструє використання порівнянь та епітетів.
+2. **Епістолярій Лесі Українки**: Її листи до Сергія Мержинського або Ольги Кобилянської («Хтось біленький», «Хтось чорненький») — зразок високопоетичної інтимності, використання займенників третьої особи для інтимізації («Хтось» замість «Я/Ти»).
+
+## Common Learner Errors
+1. **Confusion of "любий" vs "улюблений"**: *Мій улюблений чоловік* (My favorite husband - implies list) instead of *Мій любий чоловік* (My dear husband).
+2. **Inappropriate Diminutives**: Using *водієчку* or *продавчине* in neutral contexts (sounds condescending or overly familiar).
+3. **Misuse of Possessives**: Overusing *мій/моя* (*Я люблю мою дружину* vs *Я люблю дружину*), whereas in intimate style *мій* is often used *post-positively* for emphasis (*Гарна ти моя*).
+
+## Cross-References
+- Builds on: B1-06 (Family), B2-45 (Emotions).
+- Prepares for: C1-Literature (Franko, Ukrainka), C2-Stylistics.
+
+## Notes for Content Writing
+- Focus on the **morphological mechanism** of creating tenderness (suffixes: -оньк-, -еньк-, -ус-, -яс-).
+- Distinguish between **romantic intimacy** (partners), **familial intimacy** (parent-child), and **friendly intimacy** (close friends).
+- Emphasize the **syntactic shifts**: incomplete sentences (ellipsis) because close people understand half-words.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Природа інтимно-ласкавого стилю (Introduction: Nature of the Intimate Register)"
+  words: 500
+  points:
+  - "Визначення інтимного регістру через призму Державного стандарту (§4.4.3): роль зменшувально-пестливих форм у розмовному та епістолярному стилях"
+  - "Класифікація інтимності: розрізнення романтичного (партнери), сімейного (батьки-діти) та дружнього (близькі друзі) контекстів"
+- section: "Морфологія ніжності: Суфіксальна магія (Morphology of Tenderness: Suffixal Magic)"
+  words: 1000
+  points:
+  - "Механізми творення пестливості: практичне застосування суфіксів -оньк-, -еньк-, -ус-, -яс- для трансформації нейтральних іменників (дощ – дощик, донька – донечка)"
+  - "Аналіз емоційного забарвлення: як вибір суфікса змінює інтенсивність почуття (наприклад, мама — матуся — мамуся — мамочка)"
+  - "Типова помилка: недоречне вживання демінутивів у нейтральних контекстах (наприклад, звертання 'водієчку' чи 'продавчине'), що створює ефект фамільярності або зверхності"
+- section: "Культурні коди інтимності: Франко та Українка (Cultural Codes of Intimacy: Franko and Ukrainka)"
+  words: 1000
+  points:
+  - "Аналіз поетичного звертання на прикладі Івана Франка «Ой ти, дівчино, з горіха зерня»: використання порівнянь, епітетів та інтимного вокативу як засобів адресації (§4.1.2.7)"
+  - "Епістолярний етикет Лесі Українки: техніка інтимізації через вживання займенників третьої особи («Хтось біленький», «Хтось чорненький») замість прямого 'Я/Ти'"
+  - "Метафоричний світ інтимності: використання назв птахів та небесних світил (зіронька, сонечко, пташина) у літературній та народній традиції"
+- section: "Лексичні пастки та синтаксис близькості (Lexical Traps and Syntax of Closeness)"
+  words: 800
+  points:
+  - "Корекція помилки вживання 'любий' vs 'улюблений': розрізнення 'мій любий чоловік' (dear/beloved) та помилкового 'мій улюблений чоловік' (favorite - що передбачає список)"
+  - "Синтаксичні зсуви в інтимному мовленні: використання еліпсису (неповних речень) як ознаки глибокого розуміння 'з пів слова'"
+  - "Позиція присвійних займенників: емоційне наголошення через постпозицію слова 'мій/моя' (наприклад, 'Гарна ти моя' замість нейтрального 'Ти моя гарна')"
+- section: "Практика та підсумок: Мова серця (Practice and Summary: Language of the Heart)"
+  words: 700
+  points:
+  - "Трансформаційна вправа: переклад нейтрального діалогу в інтимно-ласкавий регістр з використанням вивчених суфіксів та вокативів"
+  - "Продуктивне завдання: написання короткого листа близькій людині, інтегруючи лексику 'рідна душа', 'серденько' та прийоми високої епістолярної інтимності Лесі Українки"
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "коханий / кохана (beloved) — мій коханий, єдиний коханий, кохана дружина; основне слово для романтичних стосунків"
+  - "любий / люба (dear / beloved) — любий мій, моя люба, найлюбіший; висока частотність в епістолярії; уникати плутанини з 'улюблений'"
+  - "рідний / рідна (dear / blood-related) — найрідніший, рідна душа, рідненький; виражає найглибший емоційний зв'язок"
+  - "серденько (dear heart) — моє серденько, від усього серденька; класичний демінутив для вираження ласки"
+  recommended:
+  - "сонечко (sunshine / little sun) — моє сонечко, ясне сонечко; універсальне пестливе звертання"
+  - "зіронька (little star) — ясна зіронька, вечірня зіронька; поетичний та фольклорний реєстр"
+  - "пташка / пташина (little bird) — моя пташка, пташеня; метафоричне звертання до коханих або дітей"
+  - "вокатив (vocative forms) — дівчино, кохана, рідненький; обов'язкова форма адресації в інтимному стилі"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (3682 chars)
+✅ Message sent to Claude (ID: 10760)
+✓ Message 10760 acknowledged
+   Auto-acknowledged reply #10760 (stdout delivery — no inbox accumulation)
+✓ Message 10751 acknowledged

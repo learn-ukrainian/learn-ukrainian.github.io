@@ -1,0 +1,211 @@
+✅ Message sent to Gemini (ID: 12755) [auto-acked: self-addressed]
+✓ Message 12755 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12755...
+📨 Message #12755
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-smerd-peasants
+   Time: 2026-02-20T23:42:07.450188+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 62
+module: oes-062
+module_number: 50
+slug: smerd-peasants
+title_uk: Смерди (селяни)
+title_en: The Smerd (Peasants)
+phase: 2
+phase_id: literary-tradition
+phase_name: Literary Tradition
+focus: Feudal relationships
+content_outline:
+- section: Вступ
+  description: Introduction to The Smerd (Peasants)
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Senior Paleographer
+  role: Estate Overseer
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Смерди (Smerd Peasants)
+
+## Використані джерела
+1. [Енциклопедія історії України: Смерди](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Smerdy) — академічна стаття про статус, історіографію та еволюцію смердів.
+2. [Руська Правда (Тексти)](http://litopys.org.ua/yushkov/yu.htm) — першоджерело для аналізу правового статусу (статті про вбивство, спадщину, муку).
+3. [Ізборник: Соціальний устрій Київської Русі](http://litopys.org.ua/) — загальний огляд соціальної стратифікації.
+4. [Етимологічний словник української мови](https://goroh.pp.ua/%D0%95%D1%82%D0%B8%D0%BC%D0%BE%D0%BB%D0%BE%D0%B3%D1%96%D1%8F/%D1%81%D0%BC%D0%B5%D1%80%D0%B4) — походження слова від псл. *smьrdъ.
+
+## Хронологія
+- **X-XI ст.** — Формування категорії смердів як вільного сільського населення, що сплачує данину князю.
+- **1016 рік** — «Правда Ярослава» (Коротка редакція): встановлення віри за вбивство смерда (дискусійно 40 гривень у Новгороді, або пізніше зниження).
+- **1072 рік** — «Правда Ярославичів»: чітка фіксація штрафу 5 гривень за вбивство смерда (рівноцінно холопу) у князівських вотчинах.
+- **XII ст.** — «Простора Правда»: кодифікація права на спадщину (задниця) та обмежень (виморочне майно йде князю).
+- **XII-XIII ст.** — Поступове витіснення терміну «смерд» назвами «люди» або «сироти» на Наддніпрянщині.
+- **XIV-XV ст.** — Збереження терміну на західноукраїнських землях (Галичина) на позначення залежних селян.
+
+## Ключові факти та цитати
+- **Етимологія**: Від праслов'янського `*smьrdъ` (той, що смердить). Відображає зневагу аристократії до чорної праці («гній», «піт»).
+- **Статус**: Особисто вільні (мають майно, платять штрафи), але соціально принижені (життя оцінено дешево).
+- **Цитата (Руська Правда, ст. 26 Просторової ред.)**: «А в смердѣ и в холопѣ 5 гривенъ» — життя смерда і холопа оцінюється однаково у штрафах за вбивство.
+- **Цитата (Руська Правда, ст. 90)**: «Аже умретъ смердъ, то задницю князю; аже будуть дщери у него дома, то даяти часть на нѣ; аже будуть за мужемъ, то не даяти їмъ части» — право успадкування обмежене (виморочне йде князю).
+- **Військо**: Смерди брали участь у походах як піше ополчення («вої»), іноді зі своїми кіньми.
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ": [!history-bite] — Про те, що слово «смерд» (селянин) і «смердіти» — спільнокореневі, що показує соціальну прірву між елітою та народом.
+- Section "Основний матеріал: I": [!paleography] — Аналіз написання слова смьрдъ у берестяних грамотах та літописах (використання ь/є).
+- Section "Основний матеріал: II": [!myth-buster] — Спростування радянського міфу про те, що всі смерди були кріпаками. Багато з них були вільними общинниками.
+- Section "Основний матеріал: III": [!context] — Порівняння «задниці» (спадщини) смерда з майновими правами вікінгів (bondi) або англосаксонських ceorl.
+- Section "Основний матеріал: IV": [!decolonization] — Як імперська історіографія використовувала термін «смерд» для обґрунтування «споконвічного російського рабства».
+- Section "Підсумок": [!culture] — Сліди слова у фольклорі та сучасній мові (як лайка).
+
+## Деколонізаційний контекст
+- **Імперський міф**: Російська/радянська історіографія (Греков, Рибаков) намагалася уніфікувати всіх селян Русі під категорію «феодально залежних», підганяючи реалії під марксистську п'ятичленку. Смерд малювався як безправний кріпак.
+- **Українська реальність**: Смерди мали ознаки правосуб'єктності (штрафи, суд), власне господарство і були, ймовірно, неоднорідною верствою (від заможних, що мали коней, до бідних). Київська Русь була більш вільним суспільством, ніж пізніша Московія.
+- **Термінологія**: Вживання «Давня Русь» або «Київська держава» замість «Древняя Русь». Уникнення терміну «кріпацтво» (serfdom) для XI ст., використання «особиста залежність» або «патронат».
+
+## Contested Terms
+| Concept | Imperial/Soviet framing | Ukrainian (decolonized) framing |
+|---------|-------------------------|--------------------------------|
+| **Смерд** | Кріпак, феодально залежний селянин, прообраз російського мужика. | Член сільської громади, статус якого еволюціонував; мав правоздатність, відмінну від рабської. |
+| **Феодалізм на Русі** | Класичний феодалізм з абсолютною владою землевласника. | Специфічна система залежності, де громада зберігала значну автономію; «державний феодалізм». |
+| **Задниця (спадщина)** | Доказ повної безправності смерда перед князем. | Форма податку/обмеження, але з гарантією частки для неодружених дочок (захист вразливих). |
+
+## Section-Mapped Research Notes
+
+### Вступ
+Визначення смерда як основної категорії сільського населення. Соціальна піраміда Русі.
+
+### Основний матеріал: I — Етимологія та семантика
+Походження від *smьrdъ. Зв'язок із запахом (соціальний маркер). Паралелі в інших мовах (лат. merda?). Як слово змінювало значення від «простолюдин» до «залежний».
+
+### Основний матеріал: II — Правовий статус у «Руській Правді»
+«Ціна крові» (віра). 5 гривень vs 40 гривень. Чому за смерда і холопа платили однаково в пізніх редакціях? Захист від муки (катувань) без княжого слова — привілей вільної людини.
+
+### Основний матеріал: III — Майнові права та «Задниця»
+Інститут спадщини. Чому майно йшло князю, якщо не було синів? Порівняння з правом "мертвої руки" в Європі. Роль дочок. Право власності на землю (дискусійне) та рухоме майно (кінь, знаряддя).
+
+### Основний матеріал: IV — Смерди vs Холопи vs Закупи
+Чітке розмежування. Холоп — об'єкт права (раб), смерд — суб'єкт права. Закуп — боржник (тимчасовий стан). Рядович — той, хто уклав договір (ряд). Смерд як корінне населення на своїй землі.
+
+### Основний матеріал: V — Господарство та побут
+Археологічні дані про сільські поселення. Житло (напівземлянки -> наземні хати). Землеробство (рало, плуг). Одяг. Харчування. Смерд як воїн-ополченець (піхота).
+
+### Основний матеріал: VI — Еволюція та зникнення
+Зміни в XII-XIII ст. Поява терміну «люди». Регіональні відмінності (Галичина vs Наддніпрянщина). Доля смердів після монгольської навали.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12791)
+✓ Message 12755 acknowledged
+✓ Message 12791 acknowledged

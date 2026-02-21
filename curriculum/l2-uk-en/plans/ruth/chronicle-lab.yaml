@@ -8,7 +8,6 @@ phase: 4
 phase_id: cossack-word
 phase_name: Cossack Word
 focus: Drafting a chronicle entry for a modern event
-word_target: 4000
 content_outline:
 - section: Вступ
   description: Introduction to Chronicle Lab
@@ -24,3 +23,6 @@ activity_types:
 - etymology-trace
 - grammar-identify
 - grammar-lab
+persona:
+  voice: Baroque Scholar
+  role: Cossack Chronicler

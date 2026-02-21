@@ -1,4 +1,3 @@
----
 module: c1-hist-007
 level: c1-hist
 sequence: 7
@@ -11,15 +10,13 @@ objectives:
 - Evaluate the historical significance of історія для нової держави
 - Trace the development of виклики і перспективи
 content_outline:
-- section: "Вступ — Історія для нової держави"
-  words: 457
+- section: Вступ — Історія для нової держави
   subsections:
   - 1991 — що змінилося?
   - Відкриття архівів
   - Повернення забороненого
   - Нові питання, старі відповіді?
 - section: Перше десятиліття (1991-2000)
-  words: 686
   subsections:
   - Повернення діаспорної спадщини
   - Реабілітація Грушевського
@@ -27,7 +24,6 @@ content_outline:
   - Проблема кадрів — хто вчить істориків
   - Нові підручники — хаос і пошук
 - section: Друге десятиліття (2000-2014)
-  words: 571
   subsections:
   - Професіоналізація
   - Контроверсії — ОУН-УПА, Бандера
@@ -35,7 +31,6 @@ content_outline:
   - Інституційний розвиток
   - «Війни пам'яті» з Росією
 - section: Декомунізація (2015)
-  words: 686
   subsections:
   - Чотири закони про декомунізацію
   - Перейменування — масштаб операції
@@ -43,7 +38,6 @@ content_outline:
   - Критика — внутрішня і зовнішня
   - Результати — що змінилося
 - section: Інститут національної пам'яті
-  words: 571
   subsections:
   - Створення і мандат
   - Володимир В'ятрович — перший голова
@@ -51,7 +45,6 @@ content_outline:
   - Контроверсії — політизація?
   - Порівняння з польським IPN
 - section: Сучасний стан (2022+)
-  words: 571
   subsections:
   - Війна як каталізатор
   - Деколонізація — новий етап
@@ -59,13 +52,11 @@ content_outline:
   - Молоде покоління істориків
   - Міжнародне визнання
 - section: Виклики і перспективи
-  words: 458
   subsections:
   - Що залишається спірним
   - Баланс — національний наратив vs. критична історія
   - Роль у формуванні нації
   - Що далі
-word_target: 4000
 vocabulary:
 - декомунізація
 - реабілітація
@@ -84,28 +75,28 @@ vocabulary:
 - пострадянський
 activities:
 - type: reading
-  focus: "Excerpt from decommunization law (2015) — key provisions"
+  focus: Excerpt from decommunization law (2015) — key provisions
 - type: reading
-  focus: "Explore UINP website — what current projects exist?"
+  focus: Explore UINP website — what current projects exist?
 - type: critical-analysis
-  focus: "Analyze renaming of a street/city — what was the historical reasoning?"
+  focus: Analyze renaming of a street/city — what was the historical reasoning?
 - type: essay-response
   focus: Чи є декомунізація переписуванням історії?
 sources:
 - name: Інститут історії України НАНУ
-  url: "http://history.org.ua/"
+  url: http://history.org.ua/
   type: reference
   notes: Main academic institution
 - name: Український інститут національної пам'яті
-  url: "https://uinp.gov.ua/"
+  url: https://uinp.gov.ua/
   type: reference
   notes: State memory policy institution
 - name: Декомунізація в Україні
-  url: "https://uk.wikipedia.org/wiki/Декомунізація_в_Україні"
+  url: https://uk.wikipedia.org/wiki/Декомунізація_в_Україні
   type: reference
   notes: Legal framework for historical revision
 - name: Закони про декомунізацію (2015)
-  url: "https://zakon.rada.gov.ua/laws/show/317-19"
+  url: https://zakon.rada.gov.ua/laws/show/317-19
   type: primary
   notes: Decommunization law text
 vocabulary_hints:
@@ -124,7 +115,9 @@ activity_hints:
   items: 4
 - type: essay-response
   focus: Критичний аналіз
-  word_target: 300
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Academic Reformer

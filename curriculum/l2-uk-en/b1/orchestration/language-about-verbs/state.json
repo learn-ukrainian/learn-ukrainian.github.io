@@ -1,0 +1,74 @@
+{
+  "slug": "language-about-verbs",
+  "track": "b1",
+  "module_num": 2,
+  "mode": "v3",
+  "phases": {
+    "0": {
+      "status": "complete",
+      "timestamp": "2026-02-18T12:13:41Z",
+      "note": "adopted-existing-research"
+    },
+    "0.5": {
+      "status": "complete",
+      "timestamp": "2026-02-18T12:13:41Z",
+      "note": "already-enriched"
+    },
+    "1": {
+      "status": "complete",
+      "timestamp": "2026-02-18T12:14:29Z",
+      "task_id": "yw-language-about-verbs-p1"
+    },
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-02-18T12:17:57Z",
+      "words": 4474,
+      "attempts": 2
+    },
+    "3": {
+      "status": "complete",
+      "timestamp": "2026-02-20T13:43:03Z",
+      "note": "v3-audit-autofix"
+    },
+    "3b": {
+      "status": "complete",
+      "timestamp": "2026-02-18T12:30:48Z",
+      "task_id": "yw-language-about-verbs-p3b"
+    },
+    "3a": {
+      "status": "complete",
+      "timestamp": "2026-02-18T12:31:11Z",
+      "task_id": "yw-language-about-verbs-p3a"
+    },
+    "6": {
+      "status": "complete",
+      "timestamp": "2026-02-20T13:48:11Z",
+      "note": "v3-phase-D-escalation"
+    },
+    "6b": {
+      "status": "complete",
+      "timestamp": "2026-02-20T13:48:11Z",
+      "note": "v3-phase-D-escalation"
+    },
+    "5-enrich": {
+      "status": "complete",
+      "timestamp": "2026-02-20T13:43:03Z",
+      "note": "v3-audit-autofix"
+    },
+    "7-final": {
+      "status": "complete",
+      "timestamp": "2026-02-20T13:48:11Z",
+      "note": "v3-phase-D-escalation"
+    },
+    "9-final-review": {
+      "status": "complete",
+      "timestamp": "2026-02-21T00:09:55Z",
+      "verdict": "APPROVE"
+    },
+    "8": {
+      "status": "complete",
+      "timestamp": "2026-02-21T00:09:56Z"
+    }
+  },
+  "last_updated": "2026-02-21T00:09:56Z"
+}

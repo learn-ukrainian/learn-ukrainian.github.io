@@ -1,0 +1,59 @@
+{
+  "slug": "can-must-want-modals",
+  "track": "a1",
+  "module_num": 24,
+  "mode": "v3",
+  "phases": {
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-02-19T20:30:10Z",
+      "words": 2740,
+      "attempts": 1
+    },
+    "3a": {
+      "status": "complete",
+      "timestamp": "2026-02-19T20:31:02Z",
+      "note": "v3-phase-C"
+    },
+    "3b": {
+      "status": "complete",
+      "timestamp": "2026-02-19T20:31:02Z",
+      "note": "v3-phase-C"
+    },
+    "3": {
+      "status": "complete",
+      "timestamp": "2026-02-19T20:58:58Z",
+      "note": "v3-audit"
+    },
+    "5-enrich": {
+      "status": "complete",
+      "timestamp": "2026-02-19T20:58:58Z",
+      "note": "v3-audit"
+    },
+    "6": {
+      "status": "complete",
+      "timestamp": "2026-02-19T21:00:19Z",
+      "note": "v3-phase-D"
+    },
+    "6b": {
+      "status": "complete",
+      "timestamp": "2026-02-19T21:00:19Z",
+      "note": "v3-phase-D"
+    },
+    "7-final": {
+      "status": "complete",
+      "timestamp": "2026-02-19T21:00:19Z",
+      "note": "v3-phase-D"
+    },
+    "9-final-review": {
+      "status": "complete",
+      "timestamp": "2026-02-20T23:07:35Z",
+      "verdict": "APPROVE"
+    },
+    "8": {
+      "status": "complete",
+      "timestamp": "2026-02-20T23:07:36Z"
+    }
+  },
+  "last_updated": "2026-02-20T23:07:36Z"
+}

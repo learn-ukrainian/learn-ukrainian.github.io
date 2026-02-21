@@ -1,4 +1,3 @@
----
 module: c1-hist-133
 level: c1-hist
 sequence: 133
@@ -10,48 +9,41 @@ objectives:
 - 'Analyze the causes and consequences of синтез: від жертви до суб''єкта'
 - Evaluate the historical significance of наратив агентності
 content_outline:
-- section: "Вступ — Наратив агентності"
-  words: 515
+- section: Вступ — Наратив агентності
   subsections:
   - Огляд модулів 126-132
   - Україна — не лише жертва
   - Активне творення історії
   - Мета синтезу
 - section: Стратегії виживання
-  words: 774
   subsections:
   - Культурна резистенція
   - Громадянське суспільство
   - Революційна традиція
   - Накопичення досвіду
 - section: Поворотні моменти агентності
-  words: 903
   subsections:
   - Гранітна революція 1990
   - Помаранчева 2004
   - Євромайдан 2014
   - 24 лютого 2022
 - section: Хто будував Україну
-  words: 774
   subsections:
   - Не лише еліти
   - Жінки — прихована історія
   - Волонтери — нова сила
   - Звичайні люди — герої
 - section: Від об'єкта до суб'єкта
-  words: 645
   subsections:
   - Імперська історія — Україна як об'єкт
   - Власна історія — Україна як суб'єкт
   - 2022 — точка переходу
   - Що це означає
 - section: Підсумок
-  words: 389
   subsections:
   - Агентність — ключ до розуміння
   - Україна — творець власної долі
   - Перехід до фінального синтезу
-word_target: 4000
 vocabulary:
 - синтез
 - агентність
@@ -74,16 +66,16 @@ activities:
 - type: critical-analysis
   focus: Connect all turning points of agency
 - type: critical-analysis
-  focus: "Who built Ukraine — beyond elites"
+  focus: Who built Ukraine — beyond elites
 - type: essay-response
   focus: Як Україна стала суб'єктом історії?
 sources:
 - name: Історія України (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Історія_України"
+  url: https://uk.wikipedia.org/wiki/Історія_України
   type: reference
   notes: History overview
 - name: Українська ідентичність (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Українська_національна_ідентичність"
+  url: https://uk.wikipedia.org/wiki/Українська_національна_ідентичність
   type: reference
   notes: National identity
 vocabulary_hints:
@@ -102,7 +94,9 @@ activity_hints:
   items: 4
 - type: essay-response
   focus: Критичний аналіз
-  word_target: 300
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Philosophy of History Scholar

@@ -1,0 +1,358 @@
+✅ Message sent to Gemini (ID: 11876) [auto-acked: self-addressed]
+✓ Message 11876 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #11876...
+📨 Message #11876
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-yaroslav-wise
+   Time: 2026-02-20T23:34:17.544918+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b2-hist-012
+level: B2-HIST
+sequence: 12
+slug: yaroslav-wise
+version: '2.0'
+title: 'Ярослав Мудрий: Золота доба'
+content_outline:
+- section: Розминка
+  points:
+  - '[] — Фокус: Введення в епоху через поняття «Золота доба»; факт: Київ часів Ярослава
+    був більшим за Лондон і Париж (у 7 разів більший за «місто Володимира»)'
+  - Графіті на стінах Софії — «соціальні мережі» середньовіччя [!quote]
+- section: 'Читання: Руська Правда — Перший правовий кодекс'
+  points:
+  - Історичне тло — «Правда Ярослава» (найдавніша частина, 18 статей); перехід від
+    племінного ладу до держави [!context]
+  - Основні положення — Відмова від кровної помсти (обмеження колом родичів), введення
+    «віри» (штрафу князю) та «головництва» (виплати родичам)
+  - 'Наслідки — Соціальна стратифікація: життя «княжого мужа» (80 гривень) цінувалося
+    вдвічі дорожче за простого вільного (40 гривень)'
+- section: Софія Київська — Символ могутності
+  points:
+  - Будівництво собору — Датування (1011/1018 vs 1037); 13 куполів як символ Христа
+    і апостолів
+  - Мистецька спадщина — Оранта «Нерушима стіна» (духовний оберіг), світські фрески
+    з родиною Ярослава [!culture]
+- section: '"Тесть Європи" — Династична дипломатія'
+  points:
+  - 'Стратегія шлюбів — Мета: гарантії миру та престижу, інтеграція в європейський
+    простір, а не лише військові союзи'
+  - Анна Ярославна — королева Франції — Єдина грамотна при дворі (підпис кирилицею
+    vs хрестик короля); міф про «культуру в дику Європу» [!myth-buster]
+  - Інші династичні зв'язки — Єлизавета (Норвегія), Анастасія (Угорщина), Всеволод
+    (Візантія) — Київ як рівноправний гравець
+- section: Культурна революція
+  points:
+  - Бібліотека Софійського собору — Перша державна бібліотека (950 томів); легенда
+    про Реймське Євангеліє [!history-bite]
+  - Школи та освіта — Навчання дітей знаті; Іларіон — перший митрополит-русич (1051)
+    як ознака церковної самостійності
+  - '"Руська Правда" та правові реформи — Кодифікація права як культурний акт (писемна
+    фіксація норм)'
+- section: Первинні джерела
+  points:
+  - 'Документ 1: Руська Правда (XI ст.) — Стаття 1 («Уб''є муж мужа...»); аналіз заміни
+    помсти штрафом'
+  - 'Документ 2: Похвала книгам («Повість минулих літ», 1037 р.) — Метафора книг як
+    «річок, що наповнюють всесвіт» та «джерела мудрості»'
+- section: Деколонізаційний погляд
+  points:
+  - 'Міфи та реальність — Імперський міф: Ярослав — «російський цар»; Реальність:
+    Київський каган (графіті), Московії ще не існувало [!decolonization]'
+  - Українська тяглість — Вплив «Руської Правди» на Литовський Статут і козацьке право
+    vs московський Судебник (ординська деспотія)
+  - Сучасна Україна — Ярослав на банкнотах та у державній символіці
+  - Глибший аналіз правління Ярослава — «Золота доба» як пік могутності перед роздробленістю
+  - Київ — "Другий Константинополь" — Амбіція стати новим сакральним центром (Софія,
+    Золоті ворота)
+  - Освіта та інтелектуальне життя — Скрипторії та переклади з грецької
+  - Церковна політика — Спроба унезалежнення від Константинополя (Іларіон)
+  - Правова спадщина — Європейська правова традиція (компенсація) vs азійська (покарання)
+  - Міжнародний престиж — Київ як центр європейської політики XI ст.
+  - Уроки для сучасності — Важливість «м'якої сили» (дипломатія, культура)
+  - Запо­віт та кри­за наслідування — Система сеньйорату (лествичне право) як причина
+    майбутніх міжусобиць
+  - Порівняння з сучасниками — Ярослав vs Канут Великий або Карл Великий
+  - Історіографія Ярослава — Як Росія привласнює постать (пам'ятник у Ярославлі)
+  - 'Деколонізаційний аналіз — Термінологічне мапування: Русь ≠ Росія'
+  - Археологічна спадщина — Саркофаг у Софії
+  - Ярослав у народній пам'яті — «Мудрий» (епітет з XIX ст., не сучасний)
+  - Таємниця останків Ярослава — Версія про вивезення в США під час Другої світової
+    війни
+  - Значення для сучасної України — Тяглість державності від Києва, а не Москви
+  - Заключне слово — Ярослав як символ європейського вибору України
+- section: Потрібно більше практики?
+  points:
+  - 🔄 Інтеграція знань — Есе про роль дипломатії vs війни
+  - Реальне застосування — Пошук паралелей у сучасній політиці
+  - 🌐 Онлайн-ресурси — Віртуальний тур Софією Київською
+vocabulary_hints:
+  required:
+  - мудрий (wise) — епітет, що закріпився пізніше; асоціація з книжністю
+  - золота доба (golden age) — метафора розквіту культури і держави
+  - законодавство (legislation) — кодифікація звичаєвого права
+  - Руська Правда (Rus' Justice) — збірник законів, не «російська правда» [contested
+    term]
+  - віра (wergild/fine) — грошовий штраф князю за вбивство вільної людини
+  - Софія Київська (St. Sophia Cathedral) — головний храм, «митрополія руська»
+  - Золоті ворота (Golden Gate) — парадний в'їзд, копія константинопольських
+  - дипломатія (diplomacy) — шлюбна дипломатія як інструмент миру
+  - династичний шлюб (dynastic marriage) — засіб міжнародної інтеграції
+  - митрополит (metropolitan) — голова церкви; Іларіон (перший русич)
+  - книжність (book learning) — «велика бо користь від навчання книжного»
+  - спадщина (legacy) — культурна та правова традиція
+  recommended:
+  - міжусобиця (internecine war) — боротьба за владу між братами
+  - продаж (sale-fine) — штраф за дрібні злочини
+  - тесть (father-in-law) — «тесть Європи» (метафора впливовості)
+  - фортифікація (fortification) — «місто Ярослава»
+  - заповіт (testament) — спроба врегулювати спадкування престолу
+activity_hints:
+- type: reading
+  focus: Excerpt from Ruska Pravda (translated)
+  source: Provide in module
+- type: critical-analysis
+  focus: St. Sophia Cathedral mosaics and architecture
+  items: 5-6 images
+- type: essay-response
+  focus: Чому Ярослава називають 'тестем Європи'?
+focus: history
+pedagogy: CBI
+prerequisites:
+- b2-hist-11 (Volodymyr and Baptism)
+connects_to:
+- b2-hist-13 (Ruska Pravda in detail)
+- b2-hist-14 (St. Sophia and cultural flowering)
+- b2-hist-17 (Princely feuds)
+- 'b2-hist-20 (Synthesis: Kyivan Rus)'
+objectives:
+- Understand the Golden Age of Kyivan Rus
+- Analyze Yaroslav's diplomatic strategy
+- Discuss the significance of Ruska Pravda
+grammar:
+- Legal terminology
+- Diplomatic language
+sources:
+- name: Ярослав Мудрий (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Ярослав_Мудрий
+  type: reference
+  notes: Comprehensive overview
+- name: Повість минулих літ
+  url: https://litopys.org.ua/pvl/pvl.htm
+  type: primary
+  notes: Chronicle accounts of Yaroslav's reign
+- name: Руська Правда (текст)
+  url: https://litopys.org.ua/oldukr2/oldukr51.htm
+  type: primary
+  notes: Legal code text
+phase: B2-HIST.1 [Kyivan Rus]
+module_type: history
+immersion: 100% Ukrainian
+persona:
+  voice: Senior Professor of History
+  role: Royal Librarian
+word_target: 5000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Ярослав Мудрий: Золота доба
+
+## Використані джерела
+1. [Енциклопедія історії України: Ярослав Мудрий](http://www.history.org.ua/?termin=Yaroslav_Mudry) — академічний огляд правління та спадщини.
+2. [Ізборник: Руська Правда](http://litopys.org.ua/oldukr2/oldukr51.htm) — текст та аналіз правового кодексу.
+3. [Повість минулих літ](http://litopys.org.ua/pvl/pvl.htm) — літописні свідчення про будівництво та просвітництво 1037 року.
+4. [Енциклопедія Сучасної України: Софійський собор](https://esu.com.ua/article-1017) — архітектурне та історичне значення.
+5. [Історична Правда: Як Москва привласнила Анну Ярославну](https://www.istpravda.com.ua) — деколонізаційний погляд на династичні зв'язки.
+
+## Хронологія
+- 1019: Битва на Альті, перемога над Святополком, утвердження Ярослава в Києві.
+- 1036: Остаточна перемога над печенігами під Києвом; Ярослав стає єдиновладним правителем Русі (після смерті Мстислава).
+- 1037: Літописна дата «великого будівництва»: закладення Софії Київської, Золотих воріт, монастирів св. Георгія та Ірини.
+- 1037-1050-ті: Укладання першої редакції «Руської Правди» (Правда Ярослава).
+- 1048-1051: Династичні шлюби доньок: Анастасії (Угорщина), Єлизавети (Норвегія), Анни (Франція).
+- 1051: Призначення Іларіона першим митрополитом-русином без згоди Константинополя.
+- 1054: Смерть Ярослава Мудрого у Вишгороді.
+
+## Ключові факти та цитати
+- **Цитата (Похвала книгам, 1037):** «Велика бо користь від навчання книжного. Книги — мов ріки, які наповнюють собою увесь світ; це джерело мудрості, в книгах — незмірна глибина».
+- **Цитата (Руська Правда):** «Якщо уб’є людина людину, то мстити брату за брата... а якщо не буде кому мстити, то покласти за голову 40 гривень».
+- **Факт:** Бібліотека Ярослава Мудрого при Софії налічувала близько 950 томів і була першою державною бібліотекою.
+- **Факт:** Саркофаг Ярослава в Софії зберігся, але останки зникли (ймовірно вивезені в США під час Другої світової).
+
+## Engagement Hooks (mapped to sections)
+- Section "Софія Київська — Символ могутності": [!culture] — Мозаїка Оранти ("Нерушима стіна") як духовний оберіг, що не був ушкоджений за 1000 років.
+- Section '"Тесть Європи" — Династична дипломатія': [!myth-buster] — Анна Ярославна не привезла "культуру в дику Європу" (це спрощення), але вона була єдиною грамотною особою при французькому дворі, підписуючись кирилицею, поки король ставив хрестик.
+- Section "Культурна революція": [!history-bite] — Реймське Євангеліє, на якому присягали королі Франції, походить з бібліотеки Ярослава (хоча це дискусійно, легенда потужна).
+- Section "Деколонізаційний погляд": [!decolonization] — Ярослав не був "російським царем", як його малюють в РФ; він був київським каганом (титул з графіті), європейським монархом.
+- Section "Читання: Руська Правда": [!context] — Заміна кровної помсти грошовими штрафами (вірою) свідчить про перехід від племінного ладу до держави.
+- Section "Розминка": [!quote] — Графіті на стінах Софії як "соціальні мережі" середньовіччя.
+
+## Деколонізаційний контекст
+- **Imperial/Soviet myth:** Ярослав Мудрий — "общерусский" князь, засновник російської державності (на пам'ятнику "Тисячоліття Росії" в Новгороді).
+- **Ukrainian reality:** Ярослав — Великий князь Київський, його діяльність зосереджена на розбудові Києва як конкурента Константинополя ("Другий Єрусалим"). Московії тоді не існувало навіть як лісу.
+- **Imperial/Soviet myth:** "Три братні народи" вийшли з колиски Русі.
+- **Ukrainian reality:** Русь була політичним і культурним утворенням з центром у Києві; північні землі (майбутня Московія) були колонізованими периферіями.
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| Ярослав Мудрий | Русский князь, "Ярославль" як символ | Великий князь Київський, будівничий української держави |
+| Руська Правда | "Русская Правда" (джерело права РФ) | Руська Правда (кодекс права Русі-України) |
+| Анна Ярославна | Анна Русская | Анна Київська (Anna de Kyiv) |
+| Держава | Древнерусское государство | Русь, Київська держава |
+
+## Section-Mapped Research Notes
+
+### Розминка
+- **Фокус:** Введення в епоху через поняття "Золота доба".
+- **Факт:** Київ часів Ярослава був більшим за Лондон і Париж (площа "міста Ярослава" у 7 разів перевищувала "місто Володимира").
+- **Концепт:** Ярослав завершив справу батька (Володимира), перетворивши християнство з релігії еліти на фундамент культури.
+
+### Читання: Руська Правда — Перший правовий кодекс
+- **Джерело:** "Правда Ярослава" (найдавніша частина, 18 статей).
+- **Суть:** Відмова від кровної помсти (обмеження колом найближчих родичів, пізніше — повна заміна штрафом).
+- **Терміни:** *Віра* (штраф князю), *головництво* (виплата родичам), *гривня* (валюта і вагова одиниця).
+- **Соціальний аспект:** Захист життя "княжих мужів" коштував дорожче (80 гривень) за простих вільних людей (40 гривень).
+
+### Софія Київська — Символ могутності
+- **Датування:** Традиційне 1037 р., нові теорії (Н. Нікітенко) — 1011/1018 р., але завершення точно за Ярослава.
+- **Архітектура:** 13 куполів (Христос і 12 апостолів), візантійський стиль + руські елементи (багатокупольність, галереї).
+- **Мозаїки та фрески:** Оранта, Христос Пантократор, світські фрески (родина Ярослава, полювання, музиканти).
+- **Графіті:** Унікальне джерело живої розмовної мови давніх киян (староукраїнської).
+
+### "Тесть Європи" — Династична дипломатія
+- **Мета:** Не пошук військових союзників для війни, а гарантії миру і престижу.
+- **Шлюби:**
+  - Анна + Генріх I (Франція).
+  - Єлизавета + Гаральд Суворий (Норвегія).
+  - Анастасія + Андраш I (Угорщина).
+  - Ізяслав + Гертруда (Польща).
+  - Всеволод + Мономахівна (Візантія).
+- **Значення:** Інтеграція Русі в європейський простір як рівноправного гравця.
+
+### Культурна революція
+- **Скрипторій:** Майстерня переписувачів при Софії. Переклад грецьких книг.
+- **Школи:** Навчання грамоти дітей знаті та духовенства.
+- **Церковна самостійність:** Іларіон — перший митрополит русич (автор "Слова про закон і благодать"), поставлений собором єпископів без Константинополя (1051).
+
+### Первинні джерела
+- **Уривок 1:** Стаття 1 Руської Правди ("Уб'є муж мужа..."). Аналіз соціальної структури через штрафи.
+- **Уривок 2:** "Похвала книгам" з ПВЛ (1037). Метафори книг як річок, глибини, вуздечки для стримання.
+
+### Деколонізаційний погляд
+- **Проблема:** Росія привласнює Ярослава як свого правителя (зображення на рублях, пам'ятники).
+- **Контраргумент:** Ярослав правив у Києві, похований у Києві, говорив мовою, наближеною до української (згідно графіті). Москва заснована через 100 років після його смерті.
+- **Спадщина:** "Руська Правда" вплинула на Литовський Статут і українське козацьке право, а не на московський Судебник (який базувався на ординських традиціях деспотії).
+- **Останки:** Таємниця зникнення кісток Ярослава (версія про вивезення в США українськими емігрантами, щоб врятувати від совєтів).
+
+### Потрібно більше практики?
+- **Ресурси:** Віртуальний тур Софією Київською.
+- **Завдання:** Знайти 3 відмінності між візантійським і руським стилем в архітектурі.
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 11918)
+✓ Message 11876 acknowledged
+✓ Message 11918 acknowledged

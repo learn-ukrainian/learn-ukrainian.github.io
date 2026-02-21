@@ -1,80 +1,46 @@
-# Research: B1 M78 "Технології та стартапи"
+# Дослідження: Технології та стартапи
 
-**Level Analysis**: This module is designated **B1** (Intermediate) in the curriculum plan. The prompt text erroneously listed it as "A1 (beginner)". This research assumes **B1** proficiency (mastery of cases, tenses, aspect) to adequately cover the topic of "Ukraine's Tech Industry and Startup Ecosystem".
+## State Standard Reference
+§3: "Тематичний каталог: ... Робота (офіційне працевлаштування...); Послуги (банк... інтернет)." (Lines 1960-1970)
+§4.3.3: "Утворення іменників – назв діячів за допомогою суфіксів -тель, -ник, -ар (-яр), -іст (-їст): викладати – викладач, читати – читач." (Lines 2320-2321)
+§4.3.4: "Утворення іменників від дієслів: читати – читання, говорити – говоріння, бачити – бачення." (Lines 2323-2324)
 
-## 1. Grammar: State Standard 2024 Reference
+Alignment: Модуль розкриває тему "Робота" через призму сучасної IT-індустрії. Граматичний фокус на словотворі (Section 4.3.3, 4.3.4) ідеально підходить для вивчення назв професій (*програміст, розробник, тестувальник*) та процесів (*програмування, тестування, кодування*).
 
-**Standard**: Державний стандарт української мови як іноземної (2024)
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| **стартап** | High (Media/Tech) | заснувати стартап, інвестувати в стартап, український стартап-єдиноріг, стартап-екосистема |
+| **програміст** | High (Job market) | працювати програмістом, починаючий програміст (junior), досвідчений програміст (senior), мова програмування |
+| **розробник** | High (Formal) | розробник програмного забезпечення (software developer), веб-розробник, команда розробників |
+| **інвестиція** | Medium (Business) | залучати інвестиції (raise investment), венчурні інвестиції, іноземні інвестиції, прибуткові інвестиції |
+| **застосунок** | High (Modern) | мобільний застосунок, завантажити застосунок, оновити застосунок (replacement for rus. "додаток" in software context) |
 
-**Relevant Section**: **Рівень В1 (Рубіжний)**
-*   **Соціокультурна компетенція**: "Сфери спілкування: Публічна, Професійна. Теми: Наука і технічний прогрес, Інформаційні технології, Сучасні засоби комунікації."
-*   **Граматична компетенція**: "Вживання віддієслівних іменників (створення, розробка), активних та пасивних конструкцій, складнопідрядних речень причини та наслідку (*завдяки тому, що...*, *внаслідок чого...*)."
+## Cultural Hooks
+1. **Grammarly** — заснований українцями (Максим Литвин, Олексій Шевченко, Дмитро Лідер) у 2009 році. Перший український "єдиноріг" ($1B+), а з 2021 року — "декакорн" ($13B+).
+2. **Дія (Diia)** — Україна стала першою державою у світі, яка прирівняла цифрові паспорти до паперових (2021 рік). Концепція "держава у смартфоні".
+3. **GitLab** — співзасновник Дмитро Запорожець написав першу версію в Харкові. Компанія працює повністю віддалено (all-remote) з моменту заснування.
+4. **Ajax Systems** — світовий лідер у бездротових системах безпеки, R&D (research and development) центр знаходиться в Києві.
 
-## 2. Vocabulary Frequency
+## Common Learner Errors
+1. **Anglicisms vs. Translation**: Використання *аплікація* або *апп* замість **застосунок** (app).
+   - *Error*: "Я скачав нову аплікацію." → *Correct*: "Я завантажив новий **застосунок**."
+2. **"Computer" Gender**: Плутанина з родом слова *комп'ютер* (чоловічий рід).
+   - *Error*: "Моя комп'ютер зламалася." → *Correct*: "Мій **комп'ютер** зламався."
+3. **Verb Aspect**: Неправильний вибір виду дієслова для процесів vs результатів (писати код vs написати код).
+   - *Error*: "Я написав код цілий день." → *Correct*: "Я **писав** код цілий день."
+4. **Loanword Declension**: Неправильне відмінювання запозичених слів.
+   - *Error*: "Я працюю в стартапі." (Correct, but learners often freeze it as "в стартап").
 
-**Core Topics**: IT Industry, Software, Digital Government, Business.
+## Cross-References
+- **Builds on**:
+  - `b1-09` (Past Tense - for history of companies)
+  - `b1-77` (Ukrainian Cinema and TV - modern culture context)
+- **Prepares for**:
+  - `b1-89` (Modern Communication Channels)
+  - `b2-pro-tech` (Future specialized tech track)
 
-### High-Frequency (Essential B1)
-*   **технологія** — technology
-*   **стартап** — startup (masculine, fully declinable)
-*   **додаток** — application / app (mobile)
-*   **сайт** — website
-*   **користувач** — user
-*   **розробник** — developer
-*   **програма** — program / software
-*   **мережа** — network / web
-*   **інтернет** — internet (often capitalized, declined)
-
-### Medium-Frequency (Contextual)
-*   **штучний інтелект (ШІ)** — artificial intelligence (AI)
-*   **інновація** — innovation
-*   **кібербезпека** — cybersecurity
-*   **засновник** — founder
-*   **інвестор** — investor
-*   **єдиноріг** — unicorn (business context)
-*   **цифровий** — digital
-
-### Common Collocations
-*   **завантажити додаток** — to download an app
-*   **створити стартап** — to create/found a startup
-*   **працювати в IT (айті)** — to work in IT
-*   **користуватися інтернетом** — to use the internet
-*   **розробляти програмне забезпечення** — to develop software
-*   **цифрові документи** — digital documents
-
-## 3. Cultural Hook
-
-1.  **Diia (Дія) — "State in a Smartphone"**: Ukraine is the first country in the world to give digital passports the same legal status as physical ones. Through the "Diia" app, Ukrainians can pay taxes, register businesses, donate to the army, and access hundreds of government services instantly. It is a source of national pride and digital resilience.
-2.  **Global Ukrainian Tech**: Many world-famous products have Ukrainian roots. **Grammarly** (founded by Kyivans), **GitLab** (co-founded by Dmytro Zaporozhets), **Ajax Systems** (security systems), and **MacPaw** (CleanMyMac).
-3.  **IT Army & Resilience**: Since 2022, the Ukrainian IT sector has shown incredible resilience, maintaining 90%+ capacity despite the war. The "IT Army of Ukraine" is a volunteer cyber-warfare organization that protects Ukrainian digital infrastructure.
-
-## 4. Pedagogical Notes
-
-### Key Differences from English
-*   **Loanwords Adaptation**: English tech terms are heavily borrowed but adapted to Ukrainian morphology.
-    *   *Startup* -> **стартап** (declines like a masculine noun: *стартапу*, *стартапом*).
-    *   *Link* -> **лінк** (or native **посилання**).
-    *   *Browser* -> **браузер**.
-*   **"To Download"**:
-    *   **Завантажити** (Standard, formal, used in UI).
-    *   **Скачати** (Colloquial, very common, but frowned upon in formal contexts).
-*   **"IT" Gender**:
-    *   **IT** (pronounced *ай-ті*) is indeclinable. Often treated as neuter (*українське IT*) or plural/collective depending on context, or feminine if implying *сфера*. Best to use **IT-сфера** (fem) or **IT-галузь** (fem) for clarity.
-
-### Common Learner Errors
-*   **Translating "Developer"**: Students might say *девелопер* (which is understood slang) but should learn **розробник** for B1 level standard language.
-*   **Prepositions**: "On the internet" -> **в інтернеті** (Locative, "in"), NOT *на*. "On a website" -> **на сайті**.
-*   **Confusion with "Application"**: English "Application" (form) is **заява**. "Application" (software) is **додаток**.
-
-## 5. Scope Boundaries (B1 Level)
-
-### IN Scope (Assumed Known)
-*   **Passive Constructions (Basic)**: "Додаток був розроблений..." (The app was developed...).
-*   **Verbal Nouns**: *Використання* (usage), *створення* (creation).
-*   **Future Tense**: Making predictions about technology (*штучний інтелект змінить світ*).
-*   **Complex Sentences**: Explaining how things work (*Я користуюся цим додатком, щоб...*).
-
-### OUT Scope (Avoid)
-*   **Deep Technical Jargon**: *Бекенд*, *фронтенд*, *деплой*, *рефакторинг* (unless taught as specific slang examples).
-*   **Legal Tech Terms**: Complex copyright or patent law vocabulary.
-*   **Active Participles**: Avoid heavy use of *кодуючий*, *завантажуючий* (unnatural). Use relative clauses (*той, хто кодує*).
+## Notes for Content Writing
+- **Terminology**: Use **застосунок** for "app" (official terminology), not *додаток* (which is technically "attachment" or "supplement", though common colloquially).
+- **Tone**: Maintain a balance between professional IT slang (which is often Anglicized) and proper literary Ukrainian terminology to show the "high" register.
+- **Narrative**: Frame the "Success Stories" (Grammarly, Ajax) not just as business wins, but as proof of Ukrainian intellectual potential ("Ukrainian brains conquering the world").

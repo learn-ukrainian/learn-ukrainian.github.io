@@ -1,0 +1,320 @@
+✅ Message sent to Gemini (ID: 10221) [auto-acked: self-addressed]
+✓ Message 10221 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10221...
+📨 Message #10221
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-wf-mastery
+   Time: 2026-02-20T20:03:23.367289+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: a2-43
+level: A2
+sequence: 43
+slug: wf-mastery
+version: '2.0'
+title: 'Майстерня слів: Велика гра'
+subtitle: Word Formation Mastery
+content_outline:
+- section: Introduction / Вступ
+  points:
+  - 'From analysis to synthesis — cultural hook: Ukrainian as a ''LEGO'' language
+    (synthetic vs analytic); avoid ''phrasal verb'' thinking (e.g., get up vs встати)'
+  - Creating new words — introduction to high-yield 'blocks' (prefixes по-, з-, ви-,
+    пере-, за-)
+  - 'Pattern recognition — transition from memorizing words to building them (State
+    Standard §4.3.1-2: Aspectual Pairs & Comparisons)'
+- section: Presentation / Презентація
+  points:
+  - The Word Architect and Derivative Chain — use 'Word Math' equations (e.g., за
+    + пис + ати = записати)
+  - The 8 Super-Roots Review — focus on high-frequency roots like -ход- (motion),
+    -пис- (write), -роб- (work)
+  - The Mastery Matrix — covering Aspectual Pairs (prefixation) and Comparisons (suffixation)
+    per State Standard §4.3.1-2
+  - 'Anatomy of a Complex Word — examples like ''гідроелектростанція'' to show synthesis
+    logic; learner error: Root Rigidity (failing to see root when vowels change, e.g.,
+    кінець/кінця)'
+- section: Practice / Практика
+  points:
+  - Reverse Engineering — identifying roots in complex words to guess meaning
+  - 'Word Architect Challenge — applying the Euphony Rule (Cafe ''Ptakh'': с- before
+    к, п, т, ф, х); learner error: writing ''зфотографувати'' instead of ''сфотографувати'''
+  - 'Logic Synthesis — distinguishing prefixes; learner error: using ''ре-'' instead
+    of ''пере-'' for repetition (e.g., переписати)'
+- section: Dialogues / Діалоги
+  points:
+  - At the Linguistic Club conversation — discussing 'Emotional Engineering' (diminutives
+    like мама -> матуся)
+  - Confidence through Logic reflection — summarizing the 'Mastery Matrix' approach
+vocabulary_hints:
+  required:
+  - корінь (root) — e.g., -ход- (motion), -пис- (write), -роб- (work)
+  - префікс (prefix) — e.g., по- (start/limit), пере- (re-/cross), з-/с- (together)
+  - суфікс (suffix) — e.g., -ник (agent/person), -ння (process)
+  - творити (to create) — context of word formation (творення слів)
+  - будувати (to build) — metaphor of 'Word Architect'
+  - аналізувати (to analyze) — breaking down words into parts
+  - синтезувати (to synthesize) — combining parts into new words
+  - значення (meaning) — how prefixes change meaning
+  recommended:
+  - похідний (derivative) — words derived from roots
+  - первісний (original) — original form
+  - продуктивний (productive) — patterns that work often (high-yield)
+  - закінчення (ending) — grammatical changes
+activity_hints:
+- type: fill-in
+  focus: Create words from parts
+  items: 12
+- type: group-sort
+  focus: Break down and categorize word parts
+  items: 15
+- type: match-up
+  focus: Match roots to meanings
+  items: 12
+- type: quiz
+  focus: Word formation patterns
+  items: 12
+- type: unjumble
+  focus: Build sentences with derived words
+  items: 8
+- type: cloze
+  focus: Word formation in context
+  items: 12
+- type: error-correction
+  focus: Fix word formation errors
+  items: 8
+focus: grammar
+pedagogy: PPP
+prerequisites:
+- a2-42 (Word Formation V)
+connects_to:
+- a2-44 (Checkpoint Word Formation)
+objectives:
+- Learner can synthesize words from parts
+- Learner can predict meaning relative to root
+- Learner can analyze complex words
+- Learner can create new words using patterns
+grammar:
+- Word formation synthesis
+- Prefix-root-suffix analysis
+- Productive patterns
+register: розмовний
+immersion: 60-75% Ukrainian
+phase: A2.4 [Word Formation]
+persona:
+  voice: Encouraging Cultural Guide
+  role: Scrabble Champion
+word_target: 3000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Майстерня слів: Велика гра
+
+## State Standard Reference
+§4.3.1 (A2): "Ступені порівняння якісних прикметників: проста форма... складена форма..."
+§4.3.2 (A2): "Видові пари дієслів: робити – зробити, ділити – поділити..."
+Alignment: This module provides the *foundational "Mastery Matrix"* (logic of analysis/synthesis) required to master the specific State Standard goals of Aspectual Pairs (prefixation) and Comparisons (suffixation). It transitions learners from memorizing words to building them, directly enabling the "Competence in Word Formation" required for B1 (§4.3.3-4.3.8).
+
+## Vocabulary Frequency
+**High-Yield "LEGO" Blocks (A2 Level):**
+
+| Type | Morpheme | Meaning/Function | Key Collocations/Examples |
+|---|---|---|---|
+| **Prefix** | `по-` | Start/Limit/Perf. | поїхати, подумати, погуляти |
+| **Prefix** | `з-/с-` | Together/Complete | зробити, сфотографувати, зустріч |
+| **Prefix** | `ви-` | Out/Exit | вихід, вивчити, виграти |
+| **Prefix** | `пере-` | Re-/Cross/Over | перехід, перекласти, перерва |
+| **Prefix** | `за-` | Start/Into/Behind | захід, закрити, записати |
+| **Suffix** | `-ник` | Person/Agent | працівник, керівник, словник |
+| **Suffix** | `-ння` | Process (Noun) | навчання, читання, знання |
+| **Root** | `-ход-` | Motion/Go | вихід, захід, перехід, вхід |
+| **Root** | `-пис-` | Write | писати, записати, підпис, розпис |
+| **Root** | `-роб-` | Work/Do | робота, робити, заробити, виробник |
+
+## Cultural Hooks
+1.  **Linguistic LEGO**: Ukrainian is a *synthetic* language. Unlike English, which often adds small words (phrasal verbs: *get up, get out, get over*), Ukrainian modifies the word itself (*встати, вийти, пережити*). It’s like playing with LEGO blocks.
+2.  **The Longest Words**: While `дихлордифенілтрихлорметилметан` (30 letters) is the longest technical term, A2 learners can appreciate `гідроелектростанція` (19 letters) as a perfect example of synthesis: *гідро* (water) + *електро* (electric) + *станція* (station).
+3.  **Emotional Engineering**: Ukrainian is famous for its "diminutive" capacity. You can make almost any noun "cuter" or "smaller" with suffixes (`мама` -> `матуся`, `кіт` -> `котик`).
+
+## Common Learner Errors
+1.  **Prefix Generalization**: Using `ре-` (re-) instead of `пере-` for repetition.
+    *   *Error*: *ре-писати* (wrong) → *переписати* (correct).
+2.  **Euphony Violation**: Ignoring the `з-` vs `с-` rule (Cafe "Ptakh" rule: `с-` before `к, п, т, ф, х`).
+    *   *Error*: *зфотографувати* → *сфотографувати*.
+3.  **Root Rigidity**: Failing to recognize the root when it changes slightly (fleeting vowels or alternation).
+    *   *Confusion*: *кінець* vs *кінця* vs *закінчити* (learner thinks these are 3 unrelated words).
+
+## Cross-References
+- **Builds on**: `a2-42` (Word Formation V - likely introduced basic roots).
+- **Prepares for**: `a2-44` (Checkpoint), and B1 Modules on Verbal Nouns (§4.3.4) and Agent Nouns (§4.3.3).
+
+## Notes for Content Writing
+- **Metaphor**: Use the "Word Architect" or "Lego" metaphor consistently.
+- **Visuals**: Use "Word Math" equations (e.g., `за` + `пис` + `ати` = `записати`).
+- **Scope**: Keep it productive. Don't list rare prefixes. Focus on the ones that create the most common A2 vocabulary (especially for motion verbs and aspect pairs).
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Українська як LEGO (Introduction: Ukrainian as LEGO)"
+  words: 500
+  points:
+  - "From analysis to synthesis — cultural hook: Ukrainian as a 'LEGO' language (synthetic vs analytic); contrast with English phrasal verbs (e.g., instead of 'get up' or 'get out', we modify the word itself: встати, вийти)"
+  - "Creating new words — introduction to high-yield 'blocks': prefixes по- (start), з-/с- (complete), ви- (out), пере- (re-/cross), за- (into/behind)"
+  - "Pattern recognition — transition from memorizing isolated words to building them; alignment with State Standard §4.3.1-2 (Aspectual Pairs & Comparisons)"
+- section: "Презентація: Архітектор слова (Presentation: The Word Architect)"
+  words: 750
+  points:
+  - "The Word Architect and Derivative Chain — use 'Word Math' equations (e.g., за + пис + ати = записати; праців + ник = працівник)"
+  - "The 8 Super-Roots Review — focus on high-frequency roots like -ход- (motion: вихід, захід, перехід), -пис- (write: писати, підпис, розпис), -роб- (work/do: робити, заробити, виробник)"
+  - "The Mastery Matrix — covering Aspectual Pairs (prefixation: робити -> зробити) and Comparisons (suffixation) per State Standard §4.3.1-2"
+  - "Anatomy of a Complex Word — demonstrate synthesis logic with examples like 'гідроелектростанція' (19 letters: гідро + електро + станція); explain the 'LEGO' efficiency of long words"
+- section: "Практика: Логіка синтезу (Practice: Logic Synthesis)"
+  words: 800
+  points:
+  - "Reverse Engineering — identifying roots in complex words to guess meaning; focus on root recognition despite vowel changes (e.g., кінець/кінця/закінчити)"
+  - "Word Architect Challenge — applying the Euphony Rule (Cafe 'Ptakh': с- before к, п, т, ф, х); learner error: correcting 'зфотографувати' (wrong) to 'сфотографувати' (correct)"
+  - "Logic Synthesis — distinguishing prefixes; learner error: correcting the use of 'ре-' (re-) instead of the productive 'пере-' for repetition (e.g., 'реписати' -> 'переписати')"
+  - "The Suffix Factory — practicing -ник (agent: працівник, керівник) and -ння (process: навчання, читання) to transform verbs into nouns"
+- section: "Діалоги: Емоційна інженерія (Dialogues: Emotional Engineering)"
+  words: 600
+  points:
+  - "At the Linguistic Club conversation — discussing 'Emotional Engineering'; the cultural capacity for diminutives (e.g., мама -> матуся, кіт -> котик) to add nuance"
+  - "Synthesis in Action — dialogue using high-frequency derivatives of -ход- and -пис- to describe daily routines and bureaucratic tasks (signing documents, entering/exiting)"
+- section: "Підсумок: Матриця майстерності (Summary: Mastery Matrix)"
+  words: 350
+  points:
+  - "Confidence through Logic reflection — summarizing the 'Mastery Matrix' approach to vocabulary expansion"
+  - "De-imperializing the dictionary — emphasizing Ukrainian's internal logic and creative potential as a distinct synthetic language"
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "корінь (root) — the core meaning-bearer; e.g., -ход- (motion), -пис- (write), -роб- (work)"
+  - "префікс (prefix) — e.g., по- (start/limit), пере- (re-/cross), з-/с- (together/complete)"
+  - "суфікс (suffix) — e.g., -ник (agent/person), -ння (process/noun)"
+  - "творення слів (word formation) — the process of 'creating' (творити) new lexemes"
+  - "будувати (to build) — the metaphor of the 'Word Architect'"
+  - "аналізувати (to analyze) — breaking complex words into morphemes"
+  - "синтезувати (to synthesize) — the logic of combining 'blocks' into new words"
+  - "значення (meaning) — how morphemes alter the semantic core"
+  - "сфотографувати (to take a photo) — key example for the с- (Cafe Ptakh) rule"
+  - "переписати (to rewrite) — key example for 're-' repetition (using пере- not ре-)"
+  required_roots:
+  - "-ход- (go/motion) — вихід (exit), захід (west/entry), перехід (crossing)"
+  - "-пис- (write) — записати (to record), підпис (signature), розпис (mural/schedule)"
+  - "-роб- (work/do) — робота, зробити (complete), виробник (producer)"
+  recommended:
+  - "похідний (derivative) — a word formed from another word or root"
+  - "первісний (original) — the primary form before derivation"
+  - "продуктивний (productive) — a pattern or morpheme that is frequently used"
+  - "закінчення (ending) — the inflectional part of the word"
+  - "гідроелектростанція (hydroelectric station) — 19-letter example of synthesis"
+  - "матуся (mommy) — example of emotional diminutive suffixation"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4579 chars)
+✅ Message sent to Claude (ID: 10224)
+✓ Message 10224 acknowledged
+   Auto-acknowledged reply #10224 (stdout delivery — no inbox accumulation)
+✓ Message 10221 acknowledged

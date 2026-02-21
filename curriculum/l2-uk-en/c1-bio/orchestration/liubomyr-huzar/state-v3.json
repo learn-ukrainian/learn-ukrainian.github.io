@@ -1,0 +1,13 @@
+{
+  "track": "c1-bio",
+  "slug": "liubomyr-huzar",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T09:29:06Z",
+      "task_id": "v3-liubomyr-huzar-pA",
+      "mode": "full"
+    }
+  }
+}

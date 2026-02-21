@@ -1,4 +1,3 @@
----
 sequence: 73
 module: ruth-073
 module_number: 59
@@ -9,7 +8,6 @@ phase: 3
 phase_id: baroque-fight
 phase_name: Baroque Fight
 focus: Praising patrons (Mazepa, Mohyla)
-word_target: 4000
 content_outline:
 - section: Вступ
   description: Introduction to Panegyric Style
@@ -24,3 +22,6 @@ activity_types:
 - transcription
 - etymology-trace
 - grammar-identify
+persona:
+  voice: Baroque Scholar
+  role: Court Orator

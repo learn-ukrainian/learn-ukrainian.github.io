@@ -1,17 +1,17 @@
-# Audit Report: M04 — 04-sentence-structure.md
-**Level:** B1 | **Module:** M04 | **Phase:** B1.0 | **Pedagogy:** PPP | **Target:** 3000
-**Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-10 23:30:33
+# Audit Report: M04 — sentence-structure.md
+**Level:** B1 | **Module:** M04 | **Phase:** B1.0 | **Pedagogy:** PPP | **Target:** 4000
+**Naturalness:** 9.0/10 (PASS)
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-21 11:24:01
 
 ## Configuration
 **Type:** B1-bridge
-**Word Target:** 3000 words
-**Activities:** 12-16 required
-**Items per Activity:** ≥14 items
-**Unique Types:** ≥5 types required
-**Priority Types:** fill-in, match-up, quiz, translate
-**Required Types:** fill-in, group-sort, mark-the-words, match-up, quiz
+**Word Target:** 4000 words
+**Activities:** 4-8 required
+**Items per Activity:** ≥6 items
+**Unique Types:** ≥3 types required
+**Priority Types:** critical-analysis, error-correction, essay-response, fill-in, mark-the-words, match-up, quiz
+**Required Types:** fill-in, mark-the-words, match-up, quiz, true-false
 **Engagement:** ≥4 callouts
 **Immersion:** 0-100%
 **Vocab Target:** ≥20 words
@@ -20,101 +20,71 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | match-up | Основні терміни | 11 | 8 | ✅ |
-| 2 | match-up | Види речень та знаки | 11 | 8 | ✅ |
-| 3 | group-sort | Класифікація термінів | 17 | 14 | ✅ |
-| 4 | quiz | Головні члени речення | 8 | 8 | ✅ |
-| 5 | quiz | Другорядні члени речення | 8 | 8 | ✅ |
-| 6 | true-false | Теорія речень | 8 | 8 | ✅ |
-| 7 | true-false | Пунктуація та сполучники | 8 | 8 | ✅ |
-| 8 | fill-in | Визначення термінів | 8 | 8 | ✅ |
-| 9 | fill-in | Розділові знаки | 8 | 8 | ✅ |
-| 10 | select | Ознаки термінів | 6 | 6 | ✅ |
-| 11 | unjumble | Визначення понять | 8 | 6 | ✅ |
-| 12 | error-correction | Знайди помилку | 8 | 6 | ✅ |
-| 13 | mark-the-words | Знайдіть підмет | 6 | 6 | ✅ |
-| 14 | cloze | Синтаксичний розбір | 15 | 14 | ✅ |
+| 1 | match-up | Термінологія: Знайдіть пару | 12 | 8 | ✅ |
+| 2 | mark-the-words | Знайдіть граматичну основу | 10 | 6 | ✅ |
+| 3 | quiz | Аналіз речення | 8 | 8 | ✅ |
+| 4 | unjumble | Складіть речення | 6 | 6 | ✅ |
+| 5 | error-correction | Редактор пунктуації | 6 | 6 | ✅ |
+| 6 | fill-in | Оберіть правильний сполучник | 8 | 8 | ✅ |
+| 7 | true-false | Правда чи ні: Структура речення | 8 | 8 | ✅ |
 
 **Summary:**
-- Total activities: 14 (target: 12-16) ✅
-- Unique types: 10 (minimum: 5) ✅
-- Priority types used: 3/4 (fill-in, match-up, quiz) ✅
-- Required types used: 5/5 (fill-in, group-sort, mark-the-words, match-up, quiz) ✅
+- Total activities: 7 (target: 4-8) ✅
+- Unique types: 7 (minimum: 3) ✅
+- Priority types used: 5/7 (error-correction, fill-in, mark-the-words, match-up, quiz) ✅
+- Required types used: 5/5 (fill-in, mark-the-words, match-up, quiz, true-false) ✅
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 3041/3000 (raw: 3897)
-- **Activities:** ✅ 14/12
-- **Density:** ✅ All > 14
-- **Unique_types:** ✅ 10/5 types
+- **Words:** ✅ 4344/4000 (raw: 4574)
+- **Activities:** ✅ 7/4
+- **Density:** ✅ All > 6
+- **Unique_types:** ✅ 7/3 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 9/4
+- **Engagement:** ✅ 7/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 52/20
+- **Vocab:** ✅ 25/20
 - **Structure:** ✅ Valid Structure
+- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 39.1% (B1.1 Aspect)
-- **Richness:** ❌ 84% < 95% min (grammar)
+- **Immersion:** 🇺🇦 92.1% (target 60-100% (B1.0 Bridge))
+- **Richness:** ✅ 92% (bridge)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ✅ 9/10 (High)
+- **Naturalness:** ✅ 9.0/10 (High)
+- **Research:** ✅ Content aligned with research
 
 ## Richness Details
-**Score:** 84% (minimum: 95%)
-**Module Type:** grammar
+**Score:** 92% (minimum: 90%)
+**Module Type:** bridge
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 67 | 24 | 100% | 20% | 20.0% |
-| engagement | 9 | 5 | 100% | 15% | 15.0% |
-| dialogues | 0 | 4 | 0% | 15% | 0.0% |
-| variety | 0.94 | - | 94% | 10% | 9.4% |
-| cultural | 6 | 3 | 100% | 10% | 10.0% |
-| realworld | 11 | 3 | 100% | 10% | 10.0% |
-| visual | 12 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| questions | 87 | 5 | 100% | 5% | 5.0% |
-| proverbs | 10 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **84.4%** |
-
-### Dryness Flags & Fixes
-- ❌ **NO_DIALOGUE**
-  - FIX:
-    Add 4+ mini-dialogues. The detector counts lines in blockquotes with bold speaker names.
-    
-    Use ONE of these formats (blockquote is required for detection):
-    
-    Format 1 — Bold speaker in blockquote (PREFERRED):
-    > **Студент:** Чому тут знахідний відмінок?
-    > **Викладач:** Бо дієслово «бачити» вимагає знахідного.
-    > **Студент:** А якщо це заперечення?
-    > **Викладач:** Тоді родовий: «не бачу **книжки**».
-    
-    Format 2 — Em-dash in blockquote:
-    > — Чому тут знахідний?
-    > — Бо дієслово вимагає знахідного.
-    
-    Format 3 — Plain А:/Б: speakers:
-    А: Чому тут знахідний?
-    Б: Бо дієслово вимагає знахідного.
-    
-    IMPORTANT: Dialogues OUTSIDE blockquotes (>) using **Speaker:** format are NOT detected.
-    Place dialogues inside [!dialogue] callouts or blockquotes.
+| examples | 80 | 20 | 100% | 29% | 28.6% |
+| engagement | 7 | 5 | 100% | 19% | 19.0% |
+| variety | 0.96 | - | 96% | 10% | 9.1% |
+| cultural | 1 | 2 | 50% | 10% | 4.8% |
+| visual | 8 | 4 | 100% | 10% | 9.5% |
+| realworld | 12 | 2 | 100% | 10% | 9.5% |
+| paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
+| questions | 136 | 4 | 100% | 5% | 4.8% |
+| tables | 1 | 2 | 50% | 5% | 2.4% |
+| **TOTAL** | | | | | **92.5%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 47 | Included in Core |
-| **Introduction - Understanding Sentence Structure** | ✅ | 322 | Included in Core |
-| **Sentence Parts (Члени речення)** | ⚪️ | 818 | Skipped |
-| **Sentence Types** | ⚪️ | 150 | Skipped |
-| **Clause Types** | ⚪️ | 146 | Skipped |
-| **Conjunctions** | ⚪️ | 100 | Skipped |
-| **Punctuation Terms** | ⚪️ | 156 | Skipped |
-| **Additional Syntax Terms** | ⚪️ | 95 | Skipped |
-| **Practice Analyzing Sentences** | ⚪️ | 324 | Skipped |
-| **Dialogues** | ✅ | 476 | Included in Core |
-| **Summary** | ✅ | 350 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 57 | Skipped |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Структура речення** | ✅ | 76 | Included in Core |
+| **Вступ: Анатомія мови** | ✅ | 282 | Included in Core |
+| **Головні члени речення: Основа** | ✅ | 801 | Included in Core |
+| **Другорядні члени речення** | ✅ | 769 | Included in Core |
+| **Типи речень: Прості та складні** | ✅ | 417 | Included in Core |
+| **Частини складного речення** | ✅ | 397 | Included in Core |
+| **Сполучники та зв'язок** | ✅ | 327 | Included in Core |
+| **Пунктуація: Знаки зупинки** | ✅ | 373 | Included in Core |
+| **Синтаксис у дії: Розбір** | ✅ | 385 | Included in Core |
+| **Діалоги: Розбір польотів** | ✅ | 348 | Included in Core |
+| **Підсумок** | ✅ | 169 | Included in Core |

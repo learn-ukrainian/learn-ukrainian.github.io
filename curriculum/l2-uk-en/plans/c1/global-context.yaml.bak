@@ -1,0 +1,106 @@
+module: c1-027
+level: C1
+sequence: 27
+slug: global-context
+version: '2.0'
+title: 'Глобальний контекст: Україна, ЄС та НАТО'
+content_outline:
+- section: Вступ — Україна у світовому контексті
+  points:
+  - Геополітичне положення
+  - Зовнішня політика
+  - Міжнародні відносини
+- section: Європейський Союз
+  points:
+  - Структура ЄС
+  - Кандидатство України
+  - Угода про асоціацію
+- section: НАТО
+  points:
+  - Структура НАТО
+  - Шлях України до членства
+  - Співпраця з альянсом
+- section: Інші міжнародні організації
+  points:
+  - ООН
+  - МВФ та Світовий банк
+  - Рада Європи
+- section: Дипломатичний регістр
+  points:
+  - Пасивний стан в документах
+  - Офіційно-ділова лексика
+  - Кліше дипломатичного мовлення
+- section: Виклики та перспективи
+  points:
+  - Умови членства
+  - Реформи для інтеграції
+  - Геополітичні виклики
+- section: Практичне завдання
+  points:
+  - Аналіз офіційних документів
+  - Дискусія про євроінтеграцію
+  - Написання аналітичної записки
+vocabulary_hints:
+  required:
+  - Європейський Союз (European Union)
+  - НАТО (NATO)
+  - інтеграція (integration)
+  - кандидат (candidate)
+  - членство (membership)
+  - переговори (negotiations)
+  - угода (agreement)
+  - реформа (reform)
+  - дипломатія (diplomacy)
+  - зовнішня політика (foreign policy)
+  recommended:
+  - євроатлантичний (Euro-Atlantic)
+  - імплементація (implementation)
+  - гармонізація (harmonization)
+  - ратифікація (ratification)
+  - безвіз (visa-free regime)
+activity_hints:
+- type: quiz
+  focus: EU/NATO integration process
+  items: 15+
+- type: match-up
+  focus: Organization → function
+  items: 15+
+- type: fill-in
+  focus: Diplomatic document phrases
+  items: 12+
+- type: cloze
+  focus: International relations vocabulary
+  items: 10+
+- type: group-sort
+  focus: Organizations by type
+  items: 12+
+- type: essay-response
+  focus: Ukraine's European path
+focus: communication
+prerequisites:
+- c1-25 (Political System)
+- c1-26 (Media Landscape)
+connects_to:
+- c1-28 (Dialects)
+- c1-33 (Case Studies)
+- c1-35 (C1.2 Checkpoint)
+module_type: cultural
+sources:
+- name: Європейська правда
+  url: https://www.eurointegration.com.ua/
+  type: reference
+  notes: EU integration news and analysis
+- name: МЗС України
+  url: https://mfa.gov.ua/
+  type: primary
+  notes: Official foreign policy information
+immersion: 100% Ukrainian
+phase: C1.2 Professional Communication
+objectives:
+- 'Understand and apply глобальний контекст: україна, єс та нато'
+- Analyze and evaluate україна у світовому контексті
+- Identify key concepts of практичне завдання
+persona:
+  voice: Senior Specialist
+  role: Дипломатичний радник
+word_target: 4000

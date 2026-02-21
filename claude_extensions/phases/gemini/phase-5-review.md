@@ -9,6 +9,22 @@ The original author may have been Gemini, Claude, GPT, or another model — you 
 You are an independent reviewer. Evaluate purely on quality.
 Do not assume you wrote this content.**
 
+## MANDATORY PRE-CHECK: Citation Verification Protocol
+
+**BEFORE writing any review sentence that quotes Ukrainian text:**
+
+1. Read the actual file from disk
+2. For EVERY Ukrainian sentence you plan to cite, run:
+   ```bash
+   grep -c "first 6 words of the sentence" {CONTENT_PATH}
+   ```
+3. If grep returns 0 — **the sentence does not exist in the content**. Remove it from your review.
+4. Only cite sentences that grep confirms are present.
+
+**This is not optional.** An automated `UNVERIFIED_CITATIONS` detector runs after your review and cross-checks every Ukrainian quote against the source file. Any review with more than 3 unverifiable quotes will be **automatically rejected and regenerated from scratch**, wasting your compute and delaying the pipeline.
+
+**The fastest path: cite only what you've verified via grep.**
+
 ## Files to Read (ALL REQUIRED)
 
 Read ALL of these files from disk before writing anything:

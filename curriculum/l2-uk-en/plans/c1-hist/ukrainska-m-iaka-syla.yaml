@@ -1,4 +1,3 @@
----
 module: c1-hist-132
 level: c1-hist
 sequence: 132
@@ -10,48 +9,41 @@ objectives:
 - 'Analyze the causes and consequences of українська м''яка сила: культурна дипломатія'
 - Evaluate the historical significance of культура як зброя
 content_outline:
-- section: "Вступ — Культура як зброя"
-  words: 515
+- section: Вступ — Культура як зброя
   subsections:
   - М'яка сила — що це
   - Україна до 2022 — невидима
   - Після 2022 — прорив
   - Структура модуля
 - section: Eurovision як фронт
-  words: 903
   subsections:
   - Джамала 2016 — «1944»
   - Kalush Orchestra 2022 — «Stefania»
   - Політика через музику
   - Міжнародний резонанс
 - section: Кінематограф
-  words: 774
   subsections:
   - Сенцов — символ
   - «20 днів у Маріуполі»
   - Документалістика війни
   - Фестивалі — платформа
 - section: Мистецтво і дизайн
-  words: 774
   subsections:
   - Українські бренди
   - Вишиванка — глобальний символ
   - Музеї під обстрілами
   - Мистецтво спротиву
 - section: Цифрова дипломатія
-  words: 645
   subsections:
   - Соцмережі — миттєвий вплив
   - Мемо-культура
   - Зеленський — глобальна зірка
   - United24
 - section: Підсумок
-  words: 389
   subsections:
   - М'яка сила — справжня сила
   - Україна — більше не невидима
   - Перехід до синтезу агентності
-word_target: 4000
 vocabulary:
 - «м'яка сила»
 - культурна дипломатія
@@ -81,15 +73,15 @@ activities:
   focus: Як війна зробила Україну 'видимою'?
 sources:
 - name: М'яка сила України (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/М%27яка_сила"
+  url: https://uk.wikipedia.org/wiki/М%27яка_сила
   type: reference
   notes: Soft power concept
 - name: Kalush Orchestra (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Kalush_Orchestra"
+  url: https://uk.wikipedia.org/wiki/Kalush_Orchestra
   type: reference
   notes: Eurovision 2022
 - name: Культурна дипломатія України (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Культурна_дипломатія_України"
+  url: https://uk.wikipedia.org/wiki/Культурна_дипломатія_України
   type: reference
   notes: Cultural diplomacy
 vocabulary_hints:
@@ -108,7 +100,9 @@ activity_hints:
   items: 4
 - type: essay-response
   focus: Критичний аналіз
-  word_target: 300
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Cultural Diplomat

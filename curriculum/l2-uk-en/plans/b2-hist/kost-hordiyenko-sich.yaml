@@ -1,4 +1,3 @@
----
 module: b2-hist-065
 level: B2-HIST
 sequence: 65
@@ -8,46 +7,63 @@ title: Кость Гордієнко та Січ
 subtitle: Kost Hordiyenko and the Sich
 content_outline:
 - section: 'Вступ: Непримиренний кошовий'
-  words: 450
   points:
-  - The unique personality of Kost Hordiyenko
-  - The role of the koshovyi otaman
-  - Geopolitical situation at the start of the 18th century
+  - 'The unique personality of Kost Hordiyenko — educated at Kyiv-Mohyla Academy,
+    breaking the stereotype of ''uneducated steppe warriors''; cultural hook: intellectual
+    warrior archetype'
+  - 'The role of the koshovyi otaman — elected leader (1702) representing the will
+    of the Sich; learner error: confused with Hetman'
+  - 'Geopolitical situation at the start of the 18th century — tension between Cossack
+    liberties and Moscow''s centralization (building of Kamiany Zaton fortress); include
+    quote from 1702 letter: «...запорожці будуть збройно з ними битися»'
 - section: 'Запорозька Січ: Острів свободи в морі імперій'
-  words: 650
   points:
-  - The internal structure of the Sich
-  - Democratic traditions and Cossack law
-  - Conflicts with Moscow's centralization policy
+  - The internal structure of the Sich — Chortomlyk Sich (1652–1709) as a 'Christian
+    Republic' with direct democracy
+  - Democratic traditions and Cossack law — equality of rights vs. Moscow's autocracy;
+    include quote from Adlerfelt on their love for freedom
+  - 'Conflicts with Moscow''s centralization policy — protests against colonization
+    and fortress construction; context: Kamiany Zaton as a ''stranglehold'' on the
+    Sich'
 - section: 'Великий союз: Гордієнко, Мазепа та Карл XII'
-  words: 1000
   points:
-  - Motives for joining the anti-Moscow coalition
-  - Meeting between Hordiyenko and Mazepa
-  - The strategic importance of the Sich for the Swedish campaign
+  - 'Motives for joining the anti-Moscow coalition — ''Moscow wants to enslave us''
+    (pragmatic alliance to save the Motherland); quote from 1708 letter: «Злість московська
+    здавна на Вітчизну, нашу матір...»'
+  - Meeting between Hordiyenko and Mazepa — Dykanka (or Velyki Budyshcha), March 1709;
+    overcoming personal enmity for national interest
+  - 'The strategic importance of the Sich for the Swedish campaign — 8000 seasoned
+    warriors joined; myth-buster: Mazepa was not alone'
 - section: 'Трагедія 1709: Зруйнування Чортомлицької Січі'
-  words: 600
   points:
-  - The campaign of Menshikov and Yakovlev
-  - The heroic defense and the betrayal
-  - Symbolism of the Sich's destruction
+  - The campaign of Menshikov and Yakovlev — May 14 (25), 1709; punitive expedition
+    by Colonel Yakovlev
+  - The heroic defense and the betrayal — defense led by Yakym Bohush; betrayal by
+    Hnat Halahan (false promise of pardon)
+  - 'Symbolism of the Sich''s destruction — massacre of 156 prisoners, bodies on rafts
+    sent down Dnipro; cultural hook: absolute ruthlessness of empire; quote: «Все
+    прибрежжя Дніпра... було завалене трупами»'
 - section: 'Читання: Козацький дух у документах'
-  words: 400
   points:
-  - Analysis of Hordiyenko's letters
-  - Provisions of the Constitution of Pylyp Orlyk related to the Sich
+  - Analysis of Hordiyenko's letters — letter to Mazepa (1708) citing 'Moscow's malice';
+    focus on rhetorical style and usage of «Вітчизна-мати»
+  - Provisions of the Constitution of Pylyp Orlyk related to the Sich — Hordiyenko
+    signed as representative (April 5, 1710); guarantees of territorial rights and
+    restoration of lands
 - section: 'Первинні джерела: Свідчення очевидців'
-  words: 400
   points:
-  - Swedish descriptions of the Cossacks
-  - Folk songs about Hordiyenko
+  - Swedish descriptions of the Cossacks — memoirs of Adlerfelt and Nordberg; distinctness
+    from Russian troops and recognition of their separate identity
+  - Folk songs about Hordiyenko — Duma about the destruction of the Sich ('Ой встань,
+    Петре...'); emotional contrast to military reports
 - section: 'Деколонізаційний погляд: Січ як анти-імперський проект'
-  words: 500
   points:
-  - Sich as a democratic alternative to Moscow's autocracy
-  - The myth of 'unlimited loyalty' vs contractual rights
-  - Legacy of Hordiyenko in the fight for independence
-word_target: 4000
+  - Sich as a democratic alternative to Moscow's autocracy — 'Republic' vs 'Tsardom';
+    debunking the imperial myth of 'bandits and drunkards'
+  - The myth of 'unlimited loyalty' vs contractual rights — right to rebellion when
+    the sovereign violates the contract
+  - Legacy of Hordiyenko in the fight for independence — exile in Oleshky/Kamianka,
+    resistance until death (1733)
 focus: history
 pedagogy: CBI
 prerequisites:
@@ -57,36 +73,53 @@ learning_outcomes:
 - Учень розуміє роль Костя Гордієнка в союзі з Іваном Мазепою та Карлом XII
 - Учень може пояснити ідеологію Запорозької Січі як автономної республіки
 - Учень знає про трагедію Чортомлицької Січі 1709 року
-phase: "HIST.7 [Mazepa & End of Hetmanate]"
+phase: HIST.7 [Mazepa & End of Hetmanate]
 objectives:
 - Analyze the causes and consequences of кость гордієнко та січ
 - Evaluate the historical significance of непримиренний кошовий
 - 'Trace the development of деколонізаційний погляд: січ як анти-імперський проект'
 vocabulary_hints:
   required:
-  - історія (history)
-  - держава (state)
-  - народ (people)
-  - влада (power)
-  - період (period)
-  - подія (event)
-  - джерело (source)
-  - спадщина (heritage)
+  - історія (history) — історія України, козацька історія
+  - держава (state) — будувати державу, захист держави
+  - народ (people) — український народ, воля народу
+  - влада (power) — імперська влада, козацька влада
+  - період (period) — історичний період, період Руїни
+  - подія (event) — трагічна подія, історична подія
+  - джерело (source) — першоджерело, історичне джерело
+  - спадщина (heritage) — культурна спадщина, козацька спадщина
+  - 'кошовий отаман (koshovyi otaman) — виборний лідер Січі (elected leader of the
+    Sich); collocations: обрати кошового, наказ кошового'
+  - 'Січ (Sich) — Запорозька Січ, Чортомлицька Січ; collocations: зруйнування Січі,
+    закони Січі'
+  - 'вольності (liberties) — козацькі вольності, захист вольностей; context: rights
+    and privileges guaranteed by tradition'
   recommended:
-  - аналіз (analysis)
-  - контекст (context)
-  - вплив (influence)
-  - наслідки (consequences)
+  - аналіз (analysis) — критичний аналіз, аналіз джерел
+  - контекст (context) — історичний контекст, геополітичний контекст
+  - вплив (influence) — вплив на історію, політичний вплив
+  - наслідки (consequences) — трагічні наслідки, політичні наслідки
+  - 'зрада (betrayal/treason) — міф про зраду, звинувачення у зраді; decolonization:
+    often used by empires to describe independence movements'
+  - союз (alliance) — військовий союз, шведсько-український союз
+  - Кам'яний Затон (Kamiany Zaton) — фортеця, збудована Москвою (fortress built by
+    Moscow); symbol of colonization
+  - Диканька (Dykanka) — місце зустрічі Мазепи і Гордієнка (meeting place of Mazepa
+    and Hordiyenko)
+  - Чортомлицька Січ (Chortomlyk Sich) — знищена у 1709 році (destroyed in 1709)
 activity_hints:
 - type: reading
   focus: Первинні джерела
   items: 4
 - type: essay-response
   focus: Критичний аналіз
-  word_target: 300
 - type: critical-analysis
   focus: Аналіз причинно-наслідкових зв'язків між подіями
   items: 3
 - type: critical-analysis
   focus: Критична оцінка історичних тверджень та міфів
   items: 5
+persona:
+  voice: Senior Professor of History
+  role: Zaporozhian Envoy
+word_target: 5000

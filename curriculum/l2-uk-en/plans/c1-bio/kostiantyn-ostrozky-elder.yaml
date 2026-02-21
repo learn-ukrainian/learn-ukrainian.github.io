@@ -1,5 +1,4 @@
----
-module: c1-bio-013
+module: c1-bio-13
 level: C1-BIO
 sequence: 13
 slug: kostiantyn-ostrozky-elder
@@ -7,14 +6,12 @@ version: '2.0'
 title: 'Костянтин Іванович Острозький: Гетьман двох народів'
 subtitle: 'Kostiantyn Ostrozky: Hetman of Two Nations'
 content_outline:
-- section: "Вступ — Гетьман двох народів"
-  words: 615
+- section: Вступ — Гетьман двох народів
   points:
   - Великий гетьман Литовський
   - Православний магнат у католицькій державі
   - Переможець у 33 битвах
 - section: Життєпис
-  words: 1538
   points:
   - Ранні роки та походження
   - Військова кар'єра: боротьба з татарами
@@ -23,23 +20,19 @@ content_outline:
   - Полон і втеча (якщо релевантно, або інші деталі)
   - Останні роки та поховання в Лаврі
 - section: Історичний контекст
-  words: 615
   points:
   - Велике князівство Литовське як мультикультурна держава
   - Становище православних русинів
   - Експансія Москви
 - section: Внесок та Спадщина
-  words: 615
   points:
   - Захисник православ'я (фундатор церков)
   - Династичний підйом Острозьких
   - Пам'ять про Оршу як символ європейської єдності проти сходу
 - section: Порівняльний аналіз
-  words: 617
   points:
   - Острозький vs. Вишневецький (регулярна армія vs козацтво)
   - Роль у формуванні шляхетської ідентичності
-word_target: 4000
 vocabulary_hints:
   required:
   - гетьман (hetman)
@@ -57,7 +50,6 @@ activity_hints:
   focus: Chronicle accounts of Orsha
 - type: essay-response
   focus: Ostrozky's role in preserving Orthodox identity
-  word_target: 300
 focus: biography
 pedagogy: CBI
 objectives:
@@ -68,10 +60,13 @@ grammar:
 - Military terminology
 sources:
 - name: Костянтин Іванович Острозький (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Костянтин_Іванович_Острозький"
+  url: https://uk.wikipedia.org/wiki/Костянтин_Іванович_Острозький
   type: primary
 - name: Битва під Оршею
-  url: "https://uk.wikipedia.org/wiki/Битва_під_Оршею"
+  url: https://uk.wikipedia.org/wiki/Битва_під_Оршею
   type: primary
 immersion: 100% Ukrainian
 phase: C1-BIO
+persona:
+  voice: Senior Biographer
+  role: Military Strategist

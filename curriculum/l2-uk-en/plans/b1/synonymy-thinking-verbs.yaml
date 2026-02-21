@@ -1,0 +1,118 @@
+module: b1-68
+level: B1
+sequence: 68
+slug: synonymy-thinking-verbs
+version: '2.0'
+title: 'Синонімія I: Дієслова мислення'
+subtitle: 'Synonymy I: Thinking Verbs'
+content_outline:
+- section: 'Вступ: Я мислю, отже я існую (Introduction: Cogito Ergo Sum)'
+  words: 600
+  points:
+  - 'Cultural hook: Introduction to the philosophy of thinking through René Descartes’
+    iconic quote «Я мислю, отже я існую» (Cognito, ergo sum) and its significance
+    in Ukrainian intellectual tradition.'
+  - 'The power of precision: Why choosing the right ''thinking'' verb matters for
+    character traits and personal views, aligning with State Standard §3.1 ''Людина''.'
+  - 'Conceptual categorization: Distinguishing between cognitive processes (міркувати),
+    expressing opinions (вважати), and pure states of understanding (розуміти).'
+- section: 'Словник думок: Від «думати» до «вважати» (Vocabulary: From Thinking to
+    Opining)'
+  words: 800
+  points:
+  - 'Semantic deep dive into ''Думати'': Neutral usage (''думати про'' for general
+    thoughts) vs. problem-solving nuance (''думати над'' for puzzles and tasks).'
+  - 'The ''Opinion'' Tier: Using ''Вважати'' for formal discussions and personal stances
+    (e.g., ''я вважаю, що...''); mapping it to formal stylistic registers.'
+  - 'The ''Supposition'' Tier: Exploring ''Гадати'' (to suppose/guess) and its idiomatic
+    usage in ''не довго думаючи й гадаючи''.'
+  - 'The ''Process'' Tier: ''Міркувати'' as a deliberate, logical activity (міркувати
+    вголос, міркувати логічно).'
+- section: 'Аналіз помилок: Рахувати чи вважати? (Error Analysis: To Count or to Opine?)'
+  words: 800
+  points:
+  - 'Critical correction of the common calque: Learner error ''Я рахую, що...'' (from
+    Russian) vs. correct Ukrainian ''Я вважаю, що...''. Rule: ''Рахувати'' is strictly
+    for numbers/money.'
+  - 'Disambiguating ''Гадати'' vs. ''Ворожити'': Correcting the error ''Циганка гадала
+    мені'' to ''Циганка ворожила мені'', clarifying that ''гадати'' is a mental act,
+    not fortune-telling.'
+  - 'State Standard §4.5.1.1 compliance: Exercises on stylistic differentiation between
+    neutral ''я думаю'' and formal ''я вважаю'' in various social contexts.'
+- section: Літературні думи та народна мудрість (Literary Thoughts and Folk Wisdom)
+  words: 900
+  points:
+  - 'Cultural hook: Taras Shevchenko’s ''Думи мої, думи мої...'' — analyzing the word
+    ''думи'' as a symbol of sorrowful reflection on the nation''s fate.'
+  - 'Folk wisdom integration: Analyzing ''На те й голова, щоб у ній розум був'' to
+    discuss the cultural value of pragmatic intelligence and comprehension (розуміти
+    з півслова).'
+  - 'Deep cognition: Exploring ''усвідомлювати'' (to realize) and ''осягати'' (to
+    grasp/comprehend) through short philosophical excerpts.'
+- section: 'Практика та підсумок: Точність міркувань (Practice and Summary: Precision
+    of Reasoning)'
+  words: 900
+  points:
+  - 'Scenario-based production: Choosing appropriate verbs for collocations like ''вважати
+    за потрібне'' or ''дати зрозуміти'' in workplace vs. personal dialogues.'
+  - 'Synthesis: Connecting thinking to speaking (preparing for b1-69); learners express
+    their cognitive process for solving a travel problem (linked to b1-67).'
+  - 'Final summary: Recap of the 10/12 rule (choosing the right synonym for the right
+    register) and a check on the State Standard competencies for §4.5.1.1.'
+vocabulary_hints:
+  required:
+  - 'думати (to think) — High frequency, neutral; collocations: думати про (general),
+    думати над (problem-solving)'
+  - 'вважати (to consider/opine) — High frequency, formal; collocations: вважати за
+    потрібне, вважати когось другом. Correct alternative to ''рахувати''.'
+  - 'гадати (to suppose/guess) — Medium frequency; context: я гадаю, що...; ''не довго
+    думаючи й гадаючи''.'
+  - 'міркувати (to ponder/reason) — Medium frequency, process-oriented; collocations:
+    міркувати логічно, міркувати вголос.'
+  - 'розуміти (to understand) — High frequency; collocations: розуміти з півслова
+    (to understand perfectly), дати зрозуміти (to hint/make understood).'
+  - пам'ятати (to remember) — Cognitive state of retention.
+  - згадувати (to recall/mention) — Active process of bringing to mind.
+  - усвідомлювати (to realize/be conscious of) — Deep cognitive realization.
+  - 'рахувати (to count) — Note: Often misused for ''вважати''; only for numbers/money.'
+  - 'ворожити (to tell fortunes) — Note: Often confused with ''гадати''.'
+  recommended:
+  - роздумувати (to reflect/meditate) — Profound, often literary thought process.
+  - обмірковувати (to deliberate/weigh) — Analyzing options before a decision.
+  - осягати (to grasp/comprehend) — Achieving full intellectual understanding.
+  - впізнавати (to recognize) — Cognitive identification of something known.
+  - мислити (to think/reason) — Abstract, philosophical act of thinking (as in Descartes).
+activity_hints:
+- type: match-up
+  focus: Match verbs to meanings
+  items: 25
+- type: fill-in
+  focus: Choose correct thinking verb
+  items: 20
+- type: fill-in
+  focus: Replace with synonyms
+  items: 15
+- type: fill-in
+  focus: Express thoughts precisely
+  items: 10
+focus: vocabulary
+pedagogy: PPP
+prerequisites:
+- b1-67 (Travel Geography)
+connects_to:
+- b1-69 (Synonymy Speaking Verbs)
+objectives:
+- Learner can distinguish between думати/гадати/вважати/міркувати
+- Learner can use 20 thinking verbs in appropriate contexts
+- Learner can form natural collocations with thinking verbs
+- Learner can express cognitive processes precisely
+grammar:
+- Verb synonymy and semantic distinctions
+- Thinking verb collocations
+- Cognitive verb patterns
+register: розмовний
+phase: B1.6 [Vocabulary Expansion II]
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Philosopher
+word_target: 4000

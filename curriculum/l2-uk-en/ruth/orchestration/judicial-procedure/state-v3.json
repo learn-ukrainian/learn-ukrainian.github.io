@@ -1,0 +1,13 @@
+{
+  "track": "ruth",
+  "slug": "judicial-procedure",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-20T01:02:19Z",
+      "task_id": "v3-judicial-procedure-pA",
+      "mode": "full"
+    }
+  }
+}

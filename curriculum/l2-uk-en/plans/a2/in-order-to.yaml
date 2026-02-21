@@ -1,0 +1,99 @@
+module: a2-31
+level: A2
+sequence: 31
+slug: in-order-to
+version: '2.0'
+title: In Order To
+subtitle: Expressing Purpose with Щоб
+content_outline:
+- section: Вступ (Introduction)
+  words: 450
+  points:
+  - 'The logic of intentionality per State Standard §4.4.2: expressing purpose with
+    «щоб»; example: «Ми вчимо українську мову, щоб розмовляти з друзями»'
+  - Why 'Purpose' requires a specific grammar bridge — addressing the core syntax
+    competency for A2 involving complex sentences
+  - 'Common Learner Error: Omitting the comma before «щоб» in purpose clauses; emphasis
+    on strict punctuation rules in Ukrainian syntax'
+- section: 'Презентація: Логіка суб''єктів (Presentation: Subject Logic)'
+  words: 900
+  points:
+  - 'Same Subject Logic: Щоб + Infinitive — Visual logic: ''Is the doer the same?''
+    → YES (Infinitive usage)'
+  - 'Common Learner Error: The ''For To'' Calque — confusing «для» + infinitive with
+    «щоб» + infinitive (e.g., *Я йду для купити* vs correct *Я йду, щоб купити*);
+    clarification that «для» is for nouns/pronouns only'
+  - 'Different Subject Logic: Щоб + Past Tense (The Subjunctive twist) — Visual logic:
+    ''Is the doer the same?'' → NO (Past Tense usage)'
+  - 'Common Learner Error: Subject Mismatch — failing to switch to past tense when
+    the subject changes (e.g., *Я хочу тебе читати* vs correct *Я хочу, щоб ти читав*)'
+  - 'Purpose with Nouns: Для + Genitive — Reinforcing Genitive case usage (§4.2.2.2.2)
+    and distinguishing from «щоб» clauses'
+- section: Культурний контекст та Реєстр (Cultural Context and Register)
+  words: 600
+  points:
+  - 'The ''Щоб'' Toast Culture: Playful social usage of purpose grammar; feature the
+    classic toast: «Щоб їлося і пилося, щоб хотілося і моглося!»'
+  - 'Wisdom in Grammar: Proverb «На те коня кують, щоб не спотикався.» (One shoes
+    a horse so it doesn''t stumble) to illustrate planning and intentionality'
+  - 'Register Check (Formal): «Для того щоб» — usage in emphatic or official contexts,
+    preparing learners for future C1 Stylistics'
+  - 'Register Check (Informal): «Аби» — spoken usage implying ''just so that'' or
+    ''if only'' (e.g., «аби не спізнитися»)'
+- section: Практичне застосування (Practical Application)
+  words: 650
+  points:
+  - 'Subject-shifting drills: Moving from same-subject goals to different-subject
+    wishes using a clear decision-tree flowchart'
+  - 'Comma placement and punctuation mastery: exercises focused on fixing the common
+    error of comma omission in complex sentences'
+  - 'De-calquing workshop: identifying and correcting the ''для + infinitive'' error
+    in sentence sets'
+- section: 'Комунікація: Цілі та плани (Communication: Goals and Plans)'
+  words: 400
+  points:
+  - 'Planning a social event or career path: integrating high-frequency collocations
+    like «Я хочу, щоб...» and «Для того, щоб...»'
+  - 'Role-play: helping a colleague or discussing travel plans using standard «щоб»
+    (80% focus) and informal «аби» (20% focus)'
+  - 'Summary: Review of the visual logic (same vs. different doers) and final comma
+    check'
+focus: grammar
+pedagogy: PPP
+objectives:
+- Learner can express purpose using щоб + infinitive (same subject)
+- Learner can express purpose using щоб + past tense (different subjects)
+- Learner can distinguish between щоб and тому що
+- Learner can use для того щоб for emphasis
+grammar:
+- щоб + infinitive
+- щоб + past tense
+- для того щоб
+- purpose clauses
+- complex sentences
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Purpose Clauses
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Communicative requirements for expressing intentionality and purpose at A2
+- name: Syntax of Ukrainian Language - Purpose Clauses
+  url: https://uk.wikipedia.org/wiki/Складнопідрядне_речення_мети
+  type: reference
+  notes: Rules for mood and tense in purpose clauses
+immersion: 60-75% Ukrainian
+phase: A2.2
+persona:
+  voice: Encouraging Cultural Guide
+  role: Project Strategist
+vocabulary_hints:
+  required:
+  - 'щоб (in order to) — High frequency (Top 100); used for purpose clauses; collocations:
+    «Я хочу, щоб...», «Він пішов, щоб...», «Для того, щоб...»'
+  - 'для (for) — High frequency (Top 50); usage strictly with nouns/pronouns in Genitive;
+    collocations: «для тебе», «для роботи», «для здоров''я»'
+  - 'аби (so that / if only) — Medium frequency; informal/spoken register; often implies
+    ''just so that'' or ''if only''; collocation: «аби не спізнитися»'
+  - 'мета (goal / purpose) — Medium frequency; used in planning; collocations: «моя
+    мета», «з метою» (formal/official style)'
+word_target: 3000

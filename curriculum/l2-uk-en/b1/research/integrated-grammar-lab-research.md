@@ -1,84 +1,32 @@
-# Research: Integrated Grammar Lab (B1.50)
+# Дослідження: Інтегрована граматична лабораторія
 
-**Module**: B1 M50 "Інтегрована граматична лабораторія"  
-**Level**: B1 (Advanced Synthesis / Pre-B2)  
-**Topic**: Stylistic Flexibility, Register Switching, Participle Integration
+## State Standard Reference
+§4.5.1: "Офіційне й неофіційне спілкування... Стилістичні засоби лексики: антоніми, синоніми... Стилістичні засоби синтаксису: звертання, еліпсис, повтор..."
+Alignment: Модуль безпосередньо реалізує вимогу стандарту щодо розрізнення офіційного та неофіційного регістрів спілкування через практичні сценарії (звіт vs сімейна розмова) та вправи на редагування.
 
-## 1. Grammar: State Standard 2024 Reference
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| **інтеграція** | Середня (Media/Science) | *інтеграція в суспільство*, *інтеграція зусиль*, *європейська інтеграція* (але краще *входження до*), *процес інтеграції* |
+| **синтез** | Низька (Scientific) | *синтез мистецтв*, *аналіз і синтез*, *гармонійний синтез*, *синтез ідей* |
+| **стиль** | Висока (General) | *офіційно-діловий стиль*, *розмовний стиль*, *художній стиль*, *власний стиль*, *змінити стиль* |
+| **регістр** | Низька (Linguistic) | *високий/низький регістр*, *перемикання регістрів*, *мовний регістр* |
+| **редагування** | Середня (Professional) | *літературне редагування*, *редагування тексту*, *внести правки* |
 
-This module functions as a bridge to B2, introducing concepts formally codified in the **Level B2** standard but introduced here for synthesis.
+## Cultural Hooks
+1. **Боротьба з "канцеляритом"**: В українській культурі існує сильна традиція критики надмірного вживання офіційно-ділового стилю в живому спілкуванні (відомий як "канцелярит"). Використання пасивних конструкцій ("питання розглядається") замість активних ("ми розглядаємо питання") часто сприймається як ознака радянської бюрократичної спадщини.
+2. **Стилістичне багатство синонімів**: Українська мова славиться величезними синонімічними рядами (наприклад, до слова "горизонт" — *обрій, небокрай, видноколо, виднокруг, крайнебо*), що дозволяє дуже точно налаштовувати регістр мовлення від поетичного до сухого наукового.
 
-*   **Complex Syntax & Participles**:  
-    > **ДСТУ 2024, Рівень В2, 4.3.2. Просте ускладнене речення:**  
-    > "просте речення з дієприкметниковим зворотом... просте речення з дієприслівниковим зворотом... просте речення з однорідними членами"
+## Common Learner Errors
+1. **Зловживання пасивом (Passive Voice Overuse)** → *Книга читається учнем* (неприродно) → *Учень читає книгу* (природно). Вплив англійської/російської мов; українська тяжіє до активних конструкцій.
+2. **Плутанина безособових та неповних речень** → Учні часто не розрізняють речення типу *«Немає часу»* (безособове, односкладне) і *«Я не маю часу»* (двоскладне).
+3. **Невідповідність регістру (Register Mismatch)** → Використання слів типу *«здійснити»* (здійснити покупку) у розмові замість *«купити»*, або *«даний»* (даний випадок) замість *«цей»*.
 
-*   **One-Member Sentences (Impersonal/Passive)**:  
-    > **ДСТУ 2024, Рівень В2, 4.3.3. Просте односкладне речення:**  
-    > "4.3.3.1. Односкладні речення з головним членом – дієсловом: неозначено-особові речення... безособові речення (Там усе правильно записано)."
+## Cross-References
+- Builds on: b1-49 (Numerals), b1-06-15 (Aspect), b1-26-41 (Complex Sentences)
+- Prepares for: b1-51 (Checkpoint), B2-01 (Advanced Syntax)
 
-*   **Register & Stylistics**:  
-    > **ДСТУ 2024, Рівень В1, 4.5. Стилістика:**  
-    > "4.5.1. Офіційне й неофіційне спілкування... Стилістичні засоби синтаксису: звертання, еліпсис, повтор..."
-
-## 2. Vocabulary Frequency
-
-**Core Theme**: Language about Language (Meta-language) & Register
-
-*   **High Frequency (A2/B1 Common)**:
-    *   *стиль* (style) - Common in lifestyle/music contexts.
-    *   *офіційний* (official) - Common in documents.
-    *   *розмова* (conversation) - High freq.
-    *   *звучати* (to sound) - "Це звучить дивно" (That sounds strange).
-    *   *писати* (to write) / *говорити* (to speak).
-
-*   **Medium Frequency (B1 Specific)**:
-    *   *доречний* (appropriate/fitting) - Key for register.
-    *   *шановний* (dear/respected) - Formal address.
-    *   *спілкування* (communication) - Slightly more formal than *розмова*.
-    *   *вживати* (to use/employ) - Grammar context.
-
-*   **Collocations**:
-    *   *офіційний стиль* (official style)
-    *   *розмовна мова* (colloquial language)
-    *   *на мою думку* (in my opinion) - B1 marker.
-    *   *з одного боку... з іншого боку* (on one hand... on the other) - Structuring thought.
-
-## 3. Cultural Hook
-
-*   **Kantselyaryt (Канцелярит)**: Ukrainian culture has a specific love-hate relationship with "Bureaucratese" (*канцелярит*). It is often mocked in literature and comedy for being overly passive and heavy (e.g., "Питання було вирішено мною" instead of "Я вирішив"). However, using it correctly is still seen as a sign of "seriousness" in government/legal contexts.
-*   **The "Kitchen Talk" vs. "High Tribune"**: Historically, there was a sharp divide between the sincere, emotional language used in the kitchen (*на кухні*) among friends and the wooden, fossilized language of public speeches. The modern trend (since 1991 and especially 2014) is the "humanization" of public discourse, but the ability to code-switch remains a critical skill for an educated Ukrainian.
-
-## 4. Pedagogical Notes
-
-*   **English vs. Ukrainian Register**:
-    *   *English*: Often marks register via vocabulary (buy vs. purchase, ask vs. request).
-    *   *Ukrainian*: Marks register via **Grammar** (Active vs. Passive, Impersonal structures) and **Suffixes** (Diminutives in informal).
-*   **Common Learner Errors**:
-    *   *Over-formality*: Using bookish/passive forms in casual chat (*"Мною була прочитана книга"* instead of *"Я прочитав книжку"*).
-    *   *Under-formality*: Using *ти* or diminutives (*документик, підписочок*) in strict business settings (though this is sometimes done ironically).
-    *   *Participle Trap*: Learners try to use Participles (*зроблений, написаний*) as main verbs without the auxiliary *бути* (or omitting *був/буде*), or confusing them with Adjectives.
-*   **Teaching Sequence**:
-    1.  **Analyze**: Show the same text in two styles (News vs. Chat).
-    2.  **Identify**: Highlight the markers (Passive voice, diminutives, connectors).
-    3.  **Transform**: Rewrite "Robot text" into "Human text" and vice versa.
-
-## 5. Scope Boundaries
-
-*   **IN Scope (B1.4)**:
-    *   **Passive Participles** (Short & Long): *зроблений, відчинено*.
-    *   **Active Participles** (Limited): *працюючий, бажаючий* (recognized, though some are deprecated in favor of clauses).
-    *   **Adverbial Participles** (Diyepryslivnyk): *читаючи, зробивши*.
-    *   **Impersonal Sentences**: *Треба зробити, Було холодно*.
-    *   **Diminutives**: *кавуся, трошки*.
-    *   **Numerals**: Basic declension in dates/prices.
-
-*   **OUT Scope (A1/A2/Early B1 - Known)**:
-    *   Basic cases (Nominative, Genitive, etc.).
-    *   Simple tenses (Past, Present, Future).
-    *   Aspect pairs (introductory level).
-
-*   **OUT OF Scope (Reserved for B2/C1)**:
-    *   **Archaic/Poetic Syntax**: Inversions, rhetoric exclamations.
-    *   **Dialect/Surzhyk**: Detailed analysis of *surzhyk* is C1. Here we just treat it as "informal/mixed" without deep linguistic breakdown.
-    *   **Complex Bureaucracy**: Drafting actual legal contracts (C1 Business).
-    *   **Scientific Jargon**: Academic citation styles (C1 Academic).
+## Notes for Content Writing
+- **Односкладні речення**: Хоча повна класифікація є у програмі B2, на рівні B1 важливо подати їх як інструмент стилістики (лаконічність у новинах, безособовість у звітах).
+- **Синтез**: У розділі "Практика" варто дати завдання на перетворення одного й того ж змісту (наприклад, "Я запізнився") у три різні стилі: пояснювальна записка (офіційний), повідомлення другу (розмовний), заголовок новини (публіцистичний/еліптичний).
+- **Акцент на актив**: При вивченні стилів підкреслити, що навіть в офіційному стилі українська мова надає перевагу активним конструкціям («Комісія ухвалила рішення», а не «Рішення було ухвалене комісією» — хоча останнє допустиме, перше краще).

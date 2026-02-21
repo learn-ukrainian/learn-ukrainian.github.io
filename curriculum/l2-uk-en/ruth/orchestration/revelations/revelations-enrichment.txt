@@ -1,0 +1,206 @@
+✅ Message sent to Gemini (ID: 12425) [auto-acked: self-addressed]
+✓ Message 12425 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12425...
+📨 Message #12425
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-revelations
+   Time: 2026-02-20T23:39:34.832524+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 42
+module: ruth-042
+module_number: 34
+slug: revelations
+title_uk: Откровення
+title_en: Revelations
+phase: 2
+phase_id: sacred-word
+phase_name: Sacred Word
+focus: Apocalyptic imagery — Rare lexicon
+content_outline:
+- section: Вступ
+  description: Introduction to Revelations
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Baroque Scholar
+  role: Apocalyptic Exegete
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Revelations (Апокаліпсис в українській культурі XVI-XVII ст.)
+
+## Використані джерела
+1. [Ізборник](http://litopys.org.ua/old17/old17_06.htm) — Іван Вишенський. Твори. Апокаліптичні мотиви в полеміці.
+2. [Енциклопедія Сучасної України](https://esu.com.ua/article-13645) — Стаття "Апокаліпсис".
+3. [Острозька академія](https://oa.edu.ua/ua/info/news/2016/05/26/ostrozkabibliya) — Острозька Біблія як першодрук, текстологічні особливості Одкровення.
+4. [Національний музей у Львові](https://nml.link/) — Колекція ікон "Страшний Суд" (описи та аналіз сюжетів).
+
+## Хронологія
+- **1581**: Вихід Острозької Біблії, що містила повний церковнослов'янський текст Одкровення Іоанна Богослова.
+- **1596**: Берестейська унія, яка спровокувала вибух полемічної літератури з есхатологічними мотивами (ототожнення унії з приходом Антихриста).
+- **1598**: Іван Вишенський пише "Книжку", де активно використовує образ Антихриста для критики відступників.
+- **1618**: Кирило-Транквіліон Ставровецький видає "Зерцало Богословії" (Почаїв) з описом кінця світу.
+- **1648**: Початок Хмельниччини, посилення есхатологічних очікувань в народі.
+- **1679**: У Полтаві переписано "Книгу тайн Енохових" (апокрифічний апокаліпсис).
+
+## Ключові факти та цитати
+- **Іван Вишенський**: «...слід антихристів ухвалили ви...» (звинувачення уніатів).
+- **Кирило-Транквіліон Ставровецький**: «...тіла зійдуть з неба, в той святий Єрусалим...» (опис воскресіння).
+- **Візуальна сатира**: На іконах Страшного Суду в пеклі зображували не лише абстрактних грішників, а й конкретних соціальних типів: нечесних суддів, корчмарів, лихварів, а іноді й іноземців (турків, татар, ляхів).
+- **Лексика**: Використання термінів "прелесть" (омана), "беззаконня", "суд", "вінець", "змій", "печать" у специфічному релігійному значенні.
+
+## Engagement Hooks (mapped to sections)
+- **Section "Вступ: Есхатологія Русі"**: [!context] — Пояснення атмосфери "Кінця світу" під час Руїни (війни, чума, соціальний хаос).
+- **Section "Тексти: Острозька Біблія"**: [!myth-buster] — Міф: "Церковнослов'янська мова була мертвою". Реальність: Вона була мовою високої культури, а Острозька Біблія стала стандартом для всього слов'янського світу, вплинувши навіть на майбутню Єлизаветинську Біблію.
+- **Section "Полеміка: Риторика Вишенського"**: [!quote] — Цитата Вишенського про "мистра диявола", що навчає хитрощів.
+- **Section "Апокрифи: Таємниці Еноха"**: [!history-bite] — Про рукопис "Книги Еноха", знайдений у Полтаві 1679 року. Це свідчить про глибокий інтерес козацької еліти до містичної літератури.
+- **Section "Візуалізація: Страшний Суд"**: [!culture] — Аналіз соціальної сатири в іконописі: чому "суддя неправедний" був популярним персонажем пекла.
+- **Section "Лексика: Мова пророцтв"**: [!decolonization] — Як українські мислителі (Вишенський, Ставровецький) використовували апокаліптичну риторику для захисту власної ідентичності, а не просто копіювали візантійські зразки.
+
+## Деколонізаційний контекст
+- **Imperial Myth**: Російська історіографія часто привласнює спадщину Острозької Біблії та полемічної літератури як "загальноросійську".
+- **Ukrainian Reality**: Ці тексти виникли в контексті боротьби Русі-України за релігійну та культурну самобутність у Речі Посполитій. Апокаліптична риторика була зброєю проти асиміляції (полонізації/католичення), а не просто релігійним фанатизмом. Київська митрополія мала власну, відмінну від Московської, традицію есхатології (більш відкриту до західних впливів, але догматично православну).
+
+## Contested Terms (if applicable)
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| Острозька Біблія | "Русская Библия", "Памятник русской культуры" | Пам'ятка української культури, створена в Острозі за ініціативою князя Острозького. |
+| Полемічна література | Частина "западнорусской" літератури | Органічна частина українського літературного бароко. |
+| Руська мова (XVI-XVII ст.) | Діалект російської / "западнорусский язык" | Староукраїнська мова, державна мова ВКЛ та мова козацької канцелярії. |
+
+## Section-Mapped Research Notes
+
+### Вступ: Есхатологія Русі
+Атмосфера постійної війни та релігійного протистояння (XVII ст.) формувала "апокаліптичне світовідчуття". Люди шукали знаки кінця світу в історичних подіях.
+
+### Тексти: Острозька Біблія
+Острозька Біблія 1581 року — монументальна праця. Текст Апокаліпсису був звірений з грецькими джерелами. Роль Острозького гуртка. Мовні особливості: вплив південнослов'янської традиції.
+
+### Полеміка: Риторика Вишенського
+Іван Вишенський як "апокаліптичний пророк". Його втеча на Афон як спроба врятуватися від "світу антихриста". Ототожнення Унії з діяльністю диявола. Стиль: "плетіння словес", емоційна напруга, риторичні запитання.
+
+### Апокрифи: Таємниці Еноха
+Популярність неканонічних текстів. "Книга тайн Енохових" (Полтава, 1679). Опис подорожі Еноха небесами, видіння суду та раю. Це показує багатство духовної літератури Гетьманщини.
+
+### Візуалізація: Страшний Суд
+Ікона "Страшний Суд" як енциклопедія народного життя. Сюжети: "Змій митарств", "Милостивий блудник", персоніфікація гріхів. Дидактична функція ікон у храмах (розміщення на західній стіні).
+
+### Лексика: Мова пророцтв
+Аналіз ключових слів: *апокаліпсис, одкровення, видіння, пророк, антихрист, звір, печать, чаша гніву, сурма*. Порівняння значень у староукраїнській та сучасній мовах.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12469)
+✓ Message 12425 acknowledged
+✓ Message 12469 acknowledged

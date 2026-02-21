@@ -1,0 +1,133 @@
+module: c1-019
+level: C1
+sequence: 19
+slug: practice-ii-article-critique
+version: '2.0'
+title: Практика II — Критика статті
+content_outline:
+- section: 'Вступ: Традиції української наукової критики (Introduction: Traditions
+    of Ukrainian Scientific Critique)'
+  words: 500
+  points:
+  - 'Historical hook: The role of the Shevchenko Scientific Society (НТШ, 1873) in
+    establishing the standards of Ukrainian academic discourse and peer review.'
+  - The influence of Ivan Franko's 'Literary-Scientific Bulletin' as a benchmark for
+    high-level critical analysis and scientific discussion.
+  - 'Defining the goal of critical reading according to State Standard §4.4.5: transition
+    from comprehension to stylistic production.'
+- section: 'Від переказу до аналізу: Дієслова оцінки (From Summary to Analysis: Evaluation
+    Verbs)'
+  words: 700
+  points:
+  - 'Learner error: Avoiding the ''Author says X'' summary trap; introducing evaluation
+    verbs like ''аналізує'', ''нехтує'', ''перебільшує'', ''акцентує''.'
+  - Implementing rhetoric elements (§4.4.6) to build a logical progression from content
+    overview to critical evaluation.
+  - Distinction between a scientific review (journal standard) and a student's opinion;
+    the necessity of 'фахова критика'.
+- section: Оцінка методології та аргументації (Evaluating Methodology and Argumentation)
+  words: 800
+  points:
+  - 'Evaluating sampling: Using concepts like ''репрезентативна вибірка'' and ''обсяг
+    вибірки'' to challenge research validity.'
+  - 'Analyzing the logic of argumentation: ''переконлива аргументація'' versus ''недостатня
+    обґрунтованість'' in scientific claims.'
+  - Discussing alternative interpretations ('альтернативна інтерпретація') as a sign
+    of deep analytical engagement with the text.
+- section: Об'єктивність та безособовий стиль (Objectivity and Impersonal Style)
+  words: 700
+  points:
+  - 'Learner error: Replacing emotional judgments (''The study is bad'') with objective
+    criteria (''The methodology has certain limitations'').'
+  - 'Mastering the impersonal constructions typical of Ukrainian academic style: ''вважається'',
+    ''доведено'', ''встановлено'', ''у роботі зазначено''.'
+  - 'Correction of familiarity issues: Using the third person (''Автор стверджує'')
+    and formal surnames instead of first names to maintain academic distance.'
+- section: Мовна палітра та шаблони рецензента (Linguistic Palette and Reviewer Templates)
+  words: 600
+  points:
+  - 'Providing a ''Review Constructor'': Sentence templates for evaluating strengths
+    (''безперечна перевага'') and constructive criticism (''варто було б детальніше
+    розглянути'').'
+  - 'The decolonization context: Awareness of ''repressed terminology'' (1930s) and
+    prioritizing authentic academic terms over Soviet-era borrowings.'
+  - The concept of 'релевантність джерел' and its role in determining the scientific
+    value of an article critique.
+- section: Практичне застосування та підсумок (Practical Application and Summary)
+  words: 700
+  points:
+  - 'Writing workshop: Drafting a review using the provided templates, ensuring ''наукова
+    обґрунтованість'' of every critical remark.'
+  - 'Mutual reviewing (Peer Review): Practicing ''конструктивна критика'' and ''конструктивний
+    діалог'' between classmates.'
+  - Final reflection on the balance of praise and critique to ensure a professional
+    and fair 'підсумкова оцінка'.
+vocabulary_hints:
+  required:
+  - рецензія (review) — наукова рецензія, писати рецензію, об'єктивна рецензія; High
+    frequency in academic contexts.
+  - критика (critique) — конструктивна критика, фахова критика, літературна критика.
+  - методологія (methodology) — методологія дослідження, обґрунтована методологія,
+    недоліки методології.
+  - вибірка (sample) — репрезентативна вибірка, обсяг вибірки, формування вибірки.
+  - обмеження (limitation) — дослідження має певні обмеження; used for objective academic
+    tone.
+  - аргументація (argumentation) — переконлива аргументація, слабка аргументація,
+    логіка аргументації.
+  - доказ (evidence) — неспростовний доказ, наводити докази, емпіричні докази.
+  - інтерпретація (interpretation) — альтернативна інтерпретація, хибна інтерпретація,
+    інтерпретація даних.
+  - оцінка (evaluation) — підсумкова оцінка, давати оцінку, об'єктивна оцінка.
+  - конструктивний (constructive) — конструктивний підхід, конструктивна пропозиція,
+    конструктивний діалог.
+  recommended:
+  - переконливий (convincing) — переконливі аргументи, переконливе спростування.
+  - недолік (shortcoming) — виявляти недоліки, суттєвий недолік.
+  - перевага (advantage) — безперечна перевага, конкурентна перевага.
+  - обґрунтованість (validity) — наукова обґрунтованість, недостатня обґрунтованість.
+  - релевантність (relevance) — релевантність джерел, висока релевантність.
+activity_hints:
+- type: essay-response
+  focus: Write article review
+- type: quiz
+  focus: Identify strengths/weaknesses in research
+  items: 15+
+- type: cloze
+  focus: Critical analysis phrases
+  items: 12+
+- type: match-up
+  focus: Critique type to appropriate language
+  items: 12+
+- type: fill-in
+  focus: Complete critique sentences
+  items: 10+
+- type: group-sort
+  focus: Classify comments as positive/negative/neutral
+  items: 12+
+focus: practice
+prerequisites:
+- c1-14 (Literature Review)
+- c1-18 (Essay Writing Practice)
+connects_to:
+- c1-20 (C1.1 Checkpoint)
+- c1-33 (Case Studies)
+module_type: practice
+sources:
+- name: Academic Review Writing
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Standards for article reviews
+- name: Critical Analysis Methodology
+  url: https://mova.info/
+  type: secondary
+  notes: Techniques for evaluating research
+immersion: 100% Ukrainian
+phase: C1.1 Academic Ukrainian
+objectives:
+- Understand and apply практика ii — критика статті
+- Analyze and evaluate критичне читання
+- Identify key concepts of практичне завдання
+persona:
+  voice: Senior Specialist
+  role: Науковий опонент
+word_target: 4000

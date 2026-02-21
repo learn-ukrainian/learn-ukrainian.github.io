@@ -1,0 +1,77 @@
+sequence: 43
+module: lit-43
+level: LIT
+slug: franko-zakhar-berkut
+version: '2.0'
+title: '«Захар Беркут»: Історична пам''ять та опір'
+subtitle: Franko Zakhar Berkut
+content_outline:
+- section: Вступ та культурний контекст
+  points:
+  - Історичні умови появи твору/автора
+  - Місце в літературному каноні
+  - Чому цей текст важливий сьогодні
+- section: 'Аналіз твору: Сюжет та структура'
+  points:
+  - Ключові етапи життя/розвитку сюжету
+  - Впливи та джерела
+  - Конфлікт як рушійна сила
+- section: Герменевтика та ключові образи
+  points:
+  - Детальний розбір символіки
+  - Система персонажів та їхня еволюція
+  - Архетипи та міфологічні підтексти
+- section: Мова, стиль та поетика
+  points:
+  - Стилістичні інновації автора
+  - Робота з народною мовою або неохотизмами
+  - Особливості ритміки та синтаксису
+- section: Деколонізаційний вимір
+  points:
+  - Який імперський міф руйнує цей текст?
+  - Агентність українського героя
+  - Опір асиміляції та культурне самоствердження
+- section: Підсумок та рецепція
+  points:
+  - Вплив на наступні покоління письменників
+  - Світовий контекст твору
+  - Питання для дискусії
+vocabulary_hints:
+  required:
+  - канон (canon)
+  - метафора (metaphor)
+  - дискурс (discourse)
+  - інтерпретація (interpretation)
+  recommended:
+  - алегорія (allegory)
+  - контекст (context)
+  - рецепція (reception)
+activity_hints:
+- type: reading
+  focus: Аналіз ключових уривків franko-zakhar-berkut
+  source: UkrLib
+  items: 5+
+- type: essay-response
+  focus: Філософський або літературознавчий аспект твору
+  output: Аналітичне есе
+focus: literature
+pedagogy: Seminar
+prerequisites:
+- lit-42
+connects_to:
+- lit-44
+module_type: literature
+sources:
+- name: '«Захар Беркут»: Історична пам''ять та опір — тексти та аналіз'
+  url: https://www.ukrlib.com.ua/
+  type: primary
+  notes: Основне джерело
+immersion: 100% Ukrainian
+phase: LIT.2 European Modernism 1890s-1917
+objectives:
+- 'Проаналізувати твір «Захар Беркут»: Історична пам''ять та опір у контексті епохи'
+- Дослідити стилістичні особливості тексту
+- Зрозуміти деколонізаційне значення автора
+persona:
+  voice: Senior Philologist & Critic
+  role: Community Elder

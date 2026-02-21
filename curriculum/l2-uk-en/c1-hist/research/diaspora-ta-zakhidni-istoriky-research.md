@@ -1,72 +1,72 @@
-# Research Notes: Diaspora and Western Historians (C1-HIST-006)
+# Дослідження: Діаспора та західні історики
 
-## Contested Terms / Historiographical Mapping
+## Використані джерела
+1. [Енциклопедія Сучасної України: Пріцак Омелян Йосипович](https://esu.com.ua/search_articles.php?id=878360) — біографія та внесок засновника HURI.
+2. [Історична правда: Феномен Ореста Субтельного](https://www.istpravda.com.ua/articles/2016/07/26/149174/) — аналіз впливу його підручника.
+3. [УІНП: Наукове товариство імені Шевченка](https://uinp.gov.ua/istorychnyy-kalendar/lypen/11/1873-zasnovano-naukove-tovarystvo-imeni-shevchenka) — історія відновлення НТШ в екзилі.
+4. [Лисяк-Рудницький І. Історичні есе. Том 1](http://litopys.org.ua/rudnytsky/rudn.htm) — концепція "Україна між Сходом і Заходом".
+5. [CIUS Press: About Us](https://www.ciuspress.com/about-us/) — історія Канадського інституту українських студій.
 
-| Concept                  | Enemy framing (Soviet/Russian)              | Neighbor framing (Polish/Western Old School)        | Ukrainian (Decolonized/Diaspora)                                                                                               |
-| :----------------------- | :------------------------------------------ | :-------------------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------- |
-| **Old Rus' Language**    | "Древнерусский язык" (Common Russian)       | "Old Russian" (often conflated with modern Russian) | **Протоукраїнські діалекти** / Спільна східнослов'янська мова (Shevelov's concept: no "common" unity, but dialectal continuum) |
-| **Nature of Ukraine**    | "Part of Butcher's Russia", "Little Russia" | "Borderland" (Kresy), object of history             | **Суб'єкт історії**, "Україна між Сходом і Заходом" (Rudnytsky), "Брама Європи" (Plokhy)                                       |
-| **1917-1921 Events**     | "Civil War", "Banditry"                     | "Lost territories", "Chaos"                         | **Українська революція**, Змагання за державність (Lysiak-Rudnytsky's political analysis)                                      |
-| **Kyivan Rus' Heritage** | "Cradle of Three Brotherly Peoples"         | "Russia's origin"                                   | **Спадщина Русі-України** (Pritsak: Rus' as a multi-ethnic, commercial maritime polity, distinct from Muscovy)                 |
+## Хронологія
+- 1945: Заснування УВАН (Українська Вільна Академія Наук) в Аугсбурзі (пізніше переїзд до Канади та США).
+- 1947: Відновлення діяльності НТШ (Наукове товариство імені Шевченка) в Західній Європі та США.
+- 1973: Заснування Українського наукового інституту Гарвардського університету (HURI) Омеляном Пріцаком.
+- 1976: Заснування Канадського інституту українських студій (CIUS) при Університеті Альберти.
+- 1988: Вихід друком англомовного видання "Ukraine: A History" Ореста Субтельного.
+- 1991: Перевидання книги Субтельного в Україні, тираж понад 100 000 примірників.
 
-## 1. Омелян Пріцак (Omeljan Pritsak)
+## Ключові факти та цитати
+- **Омелян Пріцак**: «Україна — це не тільки "співаюча нація", це нація, що має свою державницьку традицію». Його концепція походження Русі як поліетнічного утворення викликала бурхливі дискусії (т.зв. "норманістська" полеміка).
+- **Іван Лисяк-Рудницький**: «Історія України — це історія західної країни, яка волею долі опинилася на Сході». Його теза про Україну як "місток" або "бастіон" між цивілізаціями.
+- **Орест Субтельний**: Його книга стала "біблією" для українців 90-х, бо вперше запропонувала нерадянський погляд на історію, написаний доступною мовою без надмірного пафосу чи марксистської догматики.
 
-- **Role**: "The Builder". Founder of HURI (1973).
-- **Key Concept**: Use of **Oriental sources** (Arabic, Turkish, Persian) to reconstruct Ukrainian history. Broke the "Russian monopoly" on sources.
-- **Major Work**: _The Origin of Rus'_ (Old Scandinavian + Oriental sources).
-- **Legacy**:
-  - Established the **Chair of Ukrainian History** at Harvard (first in the West).
-  - Founded _Harvard Ukrainian Studies_ journal (1977).
-  - **Vision**: To place Ukrainian studies on the same academic footing as French or Chinese studies — objective, philological, source-based.
-  - **Quote**: "Ми повинні вийти на світову арену не як прохачі, а як творці наукових цінностей." (Paraphrase of his philosophy).
+## Engagement Hooks (mapped to sections)
+- Section "Вступ — Історія в екзилі": [!context] — Пояснення терміну "екзиль" (exile) не просто як еміграції, а як вимушеного вигнання зі збереженням місії повернення.
+- Section "Українські наукові інституції на Заході": [!history-bite] — Як українці в діаспорі "скидалися" по долару на створення кафедр у Гарварді (фонд українознавства).
+- Section "Омелян Пріцак і Гарвард": [!myth-buster] — Спростування міфу про те, що діаспорна наука була "аматорською" чи суто "націоналістичною"; Пріцак запровадив найвищі академічні стандарти.
+- Section "Орест Субтельний — популяризатор": [!culture] — Феномен черг за книгою Субтельного в Києві у 1991 році.
+- Section "Інші ключові постаті": [!decolonization] — Як Тімоті Снайдер ("Криваві землі") змінив сприйняття України на Заході, вивівши її з тіні Росії.
+- Section "Методологічні особливості західної школи": [!historiography] — Порівняння радянського "класового підходу" з західним "позитивізмом" та "інтелектуальною історією".
 
-## 2. Іван Лисяк-Рудницький (Ivan Lysiak-Rudnytsky)
+## Деколонізаційний контекст
+- **Imperial/Soviet myth**: "Київська Русь — колиска трьох братніх народів". Радянська історіографія заперечувала окремішність українського процесу до XIV ст.
+- **Ukrainian reality (Diaspora view)**: Грушевський та його послідовники (Пріцак, Субтельний) розглядали історію України як безперервний процес від антів і полян до сучасності, де Русь є першим етапом саме української державності.
+- **Imperial/Soviet myth**: Мазепа, Петлюра, Бандера — "зрадники" та "буржуазні націоналісти".
+- **Ukrainian reality (Diaspora view)**: Вони — лідери національно-визвольних змагань; акцент на державотворчих зусиллях, а не на класовій боротьбі.
 
-- **Role**: "The Political Thinker". Essayist, analyst of Ukrainian political thought.
-- **Key Concept**: **"Ukraine between East and West"**. Ukraine is structurally part of the West (Roman law, limited government, baroque), but geo-politically pulled to the East.
-- **Analysis**:
-  - Divided UA political thought into: Conservatism (Lypynsky), Radicalism (Drahomanov), Nationalism (Dontsov), Communism.
-  - **Critique**: Critical of "totalitarian nationalism" (Dontsov), advocated for a liberal, democratic civic nationalism.
-  - **Civil Society**: Emphasized the role of associating (gromady) in Ukrainian history as a counter to statism.
-- **Major Work**: _Historical Essays_ (Історичні есе).
+## Contested Terms (Термінологічне мапування)
+| Поняття | Радянська/Імперська інтерпретація | Українська (діаспорна/сучасна) інтерпретація |
+|---------|-----------------------------------|---------------------------------------------|
+| Возз'єднання (1654) | "Віковічне прагнення до єдності з Росією" | Військовий союз, згодом — окупація/анексія |
+| Український буржуазний націоналізм | Лайливе кліше, позначення ворогів народу | Національно-визвольний рух, боротьба за державність |
+| Київська Русь | Спільна колиска росіян, українців, білорусів | Княжа доба історії України, протоукраїнська держава |
+| Велика Вітчизняна війна | Героїчна боротьба радянського народу (1941-1945) | Друга світова війна (1939-1945), трагедія бездержавності |
 
-## 3. Юрій Шевельов (Yuri Shevelov / George Y. Shevelov)
+## Section-Mapped Research Notes
 
-- **Role**: "The Debunker". Linguist, literary critic.
-- **Key Concept**: **Destruction of the "Cradle" myth**. Proven that there was no monolithic "Old Russian language" from which UA, RU, BY split. Instead, there were dialectal groups capable of independent development.
-- **Major Work**: _A Prehistory of Slavic_ (1965), _The Historical Phonology of the Ukrainian Language_ (1979).
-- **Cultural Critique**:
-  - Active in MUR (Mystetskyi Ukrainskyi Rukh) in DP camps.
-  - Critique of "Provincialism" (Kochurivshchyna is good, but isolation is bad).
-  - Fifth Kharkiv concept (visionary).
+### Вступ — Історія в екзилі
+Діаспора взяла на себе місію "держави без держави". Головна мета — зберегти історичну пам'ять, яку нищили в СРСР, та представити українську справу вільному світу. Наука стала формою політичної боротьби за ідентичність.
 
-## 4. Інституційна база: HURI та CIUS
+### Українські наукові інституції на Заході
+- **НТШ**: Найстаріша українська академічна установа (з 1873), відновлена в Мюнхені (1947), згодом у Сарселі (Франція) та Нью-Йорку. Видання "Енциклопедії українознавства".
+- **УВАН**: Створена в Аугсбурзі (1945), продовжила традиції ВУАН 1920-х, знищеної більшовиками.
+- **HURI (1973)**: Прорив у "велику науку". Пріцак наполіг, щоб це була частина Гарварду, а не окрема емігрантська установа, щоб легітимізувати українознавство.
+- **CIUS (1976)**: Створений в Альберті (Едмонтон) для підтримки українських студій в Канаді, видання підручників та енциклопедії.
 
-- **HURI (Harvard Ukrainian Research Institute)**:
-  - Founded: 1973 (Pritsak, Shevchenko, Pyziur).
-  - Focus: Early history, philology, source studies. "High Science".
-  - Impact: Legitimizated Ukrainian studies in the Ivy League. Before HURI, Ukraine was just a chapter in "Russian Studies".
-  - _Harvard Project_: Millington-Drake library collections, huge publishing house.
-- **CIUS (Canadian Institute of Ukrainian Studies)**:
-  - Founded: 1976 (University of Alberta). Manoly Lupul.
-  - Focus: Encyclopedia of Ukraine (huge project), Holodomor studies, modern politics, education.
-  - Impact: Vital for textbook creation, diaspora education, and sociological studies.
+### Омелян Пріцак і Гарвард
+Біографія: учень Агатангела Кримського, поліглот (знав понад 50 мов). Його стратегія: вивести українознавство з "гетто" на рівень світової гуманітаристики. Заснування журналу *Harvard Ukrainian Studies*. Його праця "Походження Русі" (The Origin of Rus') викликала суперечки через залучення скандинавських та хозарських джерел, що йшло врозріз із традиційним народницьким підходом, але це був справжній науковий дискурс.
 
-## 5. Engagement Mapping (Callouts)
+### Орест Субтельний — популяризатор
+Учень Пріцака. Його "Ukraine: A History" (1988) стала феноменом, бо була написана західним стилем: чітко, аналітично, без емоційного надриву (характерного для старої еміграції) і без брехні (характерної для СРСР). В Україні на початку 90-х її сприймали як одкровення. Критика: зараз вважається дещо застарілою, "державницькою" (elite-centric), мало уваги соціальній історії.
 
-1.  **[!myth-buster]** (Section: Shevelov): Myth of "Unity of three brotherly peoples" vs Shevelov's linguistic data showing 5+ dialect groups.
-2.  **[!biography]** (Section: Pritsak): His journey from obscurity to creating a Harvard chair. The power of fundraising (diaspora threw existing money to endow chairs).
-3.  **[!quote]** (Section: Rudnytsky): On the nature of Ukrainian nobility or the "Eastern/Western" duality.
-4.  **[!context]** (Section: HURI): How "Russian Studies" dominated establishment and how hard it was to carve out "Ukrainian Studies".
-5.  **[!history-bite]** (Section: CIUS): The "Encyclopedia of Ukraine" project — the internet before the internet for Ukrainians.
-6.  **[!reflection]** (Conclusion): Why does it matter that history is written "outside" the homeland? (Preservation when the homeland is silenced).
+### Інші ключові постаті
+- **Іван Лисяк-Рудницький**: Політичний мислитель, есеїст. Аналізував політичну культуру, роль шляхти, драгоманівство.
+- **Пол Роберт Маґочі**: Дослідник історії українських земель, картограф, автор концепції мультикультурності.
+- **Сергій Плохій**: Директор HURI, автор "Брами Європи", продовжує традицію синтезу історії України в глобальному контексті.
+- **Тімоті Снайдер**: Не українець, але ключовий західний історик ("Криваві землі", "Шлях до несвободи"), який пояснює Україну світу.
 
-## 6. Structure & Word Count Plan (Target: ~4000 audit / ~6000 raw)
+### Методологічні особливості західної школи
+Відмова від марксистського детермінізму. Плюралізм думок. Використання західних теорій (націоналізму, постколоніалізму). Об'єктивність як ідеал (хоча й недосяжний). Доступ до закритих в СРСР архівів (через трофейні документи, дипломатичні архіви Заходу).
 
-- **I. Вступ: Голос з-за океану (Intro)** - 400 words
-- **II. Омелян Пріцак: Гарвардський проект (Pritsak)** - 1000 words
-- **III. Іван Лисяк-Рудницький: Політична філософія (Rudnytsky)** - 1000 words
-- **IV. Юрій Шевельов: Лінгвістичний щит (Shevelov)** - 1000 words
-- **V. Інституції пам'яті: HURI та CIUS** - 1000 words
-- **VI. Підсумок: Повернення спадщини** - 400 words
-- **Total**: ~4800 words (Safe buffer)
+### Діалог із Україною після 1991
+"Зустріч двох історіографій". Спочатку — ейфорія і некритичне сприйняття діаспорної літератури. Згодом — синтез. Переклад західних праць. Спільні проєкти (наприклад, переклад архівних документів). Нове покоління істориків (Ярослав Грицак, Наталя Яковенко) сформувалося під впливом західної методології.

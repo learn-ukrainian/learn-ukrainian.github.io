@@ -1,0 +1,99 @@
+sequence: 18
+module: lit-18
+level: LIT
+slug: women-in-kobzar
+version: '2.0'
+title: Жіноча доля в "Кобзарі"
+subtitle: 'Women in Kobzar: The Tragic Archetype'
+content_outline:
+- section: Вступ
+  points:
+  - Чому жінки — центральні персонажі
+  - Біографічний контекст (сирітство)
+  - Емпатія як творчий метод
+- section: Катерина
+  points:
+  - Сюжет поеми
+  - Образ покритки в суспільстві
+  - Критика подвійних стандартів
+- section: Наймичка
+  points:
+  - Сюжет поеми
+  - Образ матері-страдниці
+  - Порівняння з "Катериною"
+- section: Архетип Трагічної Матері
+  points:
+  - Покритка, наймичка, удова
+  - Самотність і жертовність
+  - Україна як мати
+- section: Димінутиви та емоційний пафос
+  points:
+  - Пестлива лексика у жіночих образах
+  - Функція димінутивів
+  - Катарсис через мову
+- section: Підсумок
+  points:
+  - Унікальність Шевченкової емпатії
+  - Порівняння з іншими авторами
+  - Сучасне прочитання
+vocabulary_hints:
+  required:
+  - покритка (unwed mother)
+  - наймичка (hired servant woman)
+  - архетип (archetype)
+  - жертовність (self-sacrifice)
+  - емпатія (empathy)
+  - пафос (pathos)
+  - димінутив (diminutive)
+  - катарсис (catharsis)
+  - удова (widow)
+  - сирота (orphan)
+  recommended:
+  - подвійні стандарти (double standards)
+  - страдниця (sufferer)
+  - ганьба (shame)
+  - матір (mother)
+  - доля (fate)
+activity_hints:
+- type: reading
+  focus: Катерина і Наймичка (уривки)
+  source: UkrLib
+  items: 6+
+- type: essay-response
+  focus: Архетип Трагічної Матері у Шевченка
+  output: Літературознавче есе
+focus: literature
+pedagogy: Seminar
+prerequisites:
+- lit-12 (The Ballads — жіночі образи)
+- lit-07 (Marusya — порівняння)
+connects_to:
+- lit-19 (Diary — внутрішній світ)
+- lit-20 (Cult of Shevchenko — рецепція)
+objectives:
+- Analyze the archetype of the Tragic Mother (Pokrytka) in Shevchenko's works
+- Compare the characters of Kateryna and Hanna (Naimychka)
+- Discuss Shevchenko's ethical evolution from romanticism to realism
+- Identify the function of diminutives in creating emotional pathos
+grammar:
+- Emotional pathos
+- Diminutives usage
+module_type: literature
+sources:
+- name: Катерина — поема
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=6
+  type: primary
+  notes: Рання поема про покритку
+- name: Наймичка — поема
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=30
+  type: primary
+  notes: Зріла поема про матір
+- name: Жіночі образи у Шевченка
+  url: https://www.ukrlib.com.ua/analiz/printit.php?tid=6
+  type: secondary
+  notes: Літературознавчий аналіз
+immersion: 100% Ukrainian
+phase: LIT.3 The Prophet (Taras Shevchenko)
+persona:
+  voice: Senior Philologist & Critic
+  role: Women's Advocate

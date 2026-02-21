@@ -1,4 +1,3 @@
----
 sequence: 15
 module: ruth-015
 module_number: 13
@@ -9,7 +8,6 @@ phase: 1
 phase_id: chancery-legal
 phase_name: Chancery & Legal
 focus: Identifying Polish loanwords
-word_target: 4000
 content_outline:
 - section: Вступ
   description: Introduction to Polonisms in Law
@@ -25,3 +23,6 @@ activity_types:
 - etymology-trace
 - grammar-identify
 - loanword-trace
+persona:
+  voice: Baroque Scholar
+  role: Chancery Clerk

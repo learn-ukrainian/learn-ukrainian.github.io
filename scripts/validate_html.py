@@ -48,18 +48,24 @@ def find_source_md(lang_pair: str, level: str, module_num: int) -> Path | None:
     if not level_dir.exists():
         return None
 
-    # Look for files matching pattern: NN-slug.md
+    # Resolve via manifest
+    try:
+        import sys
+        sys.path.insert(0, str(Path(__file__).parent))
+        from manifest_utils import get_module_by_number
+        mod = get_module_by_number(level, module_num)
+        if mod:
+            md_file = level_dir / f"{mod.slug}.md"
+            if md_file.exists():
+                return md_file
+    except Exception:
+        pass
+
+    # Fallback: glob for numbered prefix
     pattern = f"{module_num:02d}-*.md"
     matches = list(level_dir.glob(pattern))
     if matches:
         return matches[0]
-
-    # Also try single digit for modules < 10
-    if module_num < 10:
-        pattern = f"{module_num}-*.md"
-        matches = list(level_dir.glob(pattern))
-        if matches:
-            return matches[0]
 
     return None
 

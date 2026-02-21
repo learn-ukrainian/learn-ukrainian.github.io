@@ -1,67 +1,42 @@
-# Research Notes: Варіанти проживання в готелі (Hotel Accommodation Options)
+# Дослідження: Hotel Accommodation
 
-**Module**: A2 M61
-**Level**: A2 (Elementary II)
-**Topic**: Hotel Reservation, Check-in, and Amenities
-**Reference**: Державний стандарт української мови як іноземної (ДСТУ 2024)
+## State Standard Reference
+§3.2: "Дім, помешкання: ... резервування кімнати в готелі; винаймання квартири або будинку."
+Alignment: This module directly addresses the explicit State Standard requirement for "booking a hotel room" within the "Home and Accommodation" thematic area.
 
-## 1. Grammar: State Standard 2024 Reference
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| готель (ч) | High (General) | у готелі, п'ятизірковий готель, забронювати готель |
+| номер (ч) | High (Domain) | одномісний/двомісний номер, номер люкс, забронювати номер, ключ від номера |
+| бронювати (недок) | Medium (Domain) | бронювати номер, бронювати онлайн |
+| заселення (с) | Medium (Domain) | час заселення, пізнє заселення |
+| виселення (с) | Medium (Domain) | час виселення, до виселення |
+| адміністратор (ч) | Medium (General) | запитати адміністратора, на стійці адміністратора |
 
-According to the **Державний стандарт української мови як іноземної (2024)**, the topic of accommodation and travel services is a core component for the **Elementary Level II (A2)**.
+## Cultural Hooks
+1. **Passport Control**: Unlike some Western countries where a credit card might suffice, Ukrainian hotels strictly require an original passport (internal or international) for *every* guest at check-in for registration, complying with state laws.
+2. **Tourist Tax (Туристичний збір)**: Guests should be aware that a municipal "tourist tax" is often added to the bill separately from the room rate, which can sometimes surprise travelers if not expected.
 
-*   **Section**: §2.4.2. "Початковий рівень другого ступеня (А2)".
-*   **Thematic Group**: §2.4.2.3. "Каталог Б. Тематичний каталог", Item 3.2 "Дім, помешкання" (Home, Accommodation).
-*   **Specific Reference**: The catalog explicitly lists **резервування кімнати в готелі** (booking a hotel room) as a required communication topic.
-*   **Grammar Alignment**: The module utilizes the **Locative Case** for location (*у готелі*, *у номері*), the **Accusative Case** for objects of booking (*забронювати номер*), the **Genitive Case** for expressing availability and duration (*вільних номерів немає*, *на три дні*), and the **Instrumental Case** for amenities (*номер із кондиціонером*). It also incorporates **Numeral-Noun agreement** for room numbers and stay duration.
+## Common Learner Errors
+1. **Lexical Confusion (Room)**: Using "кімната" instead of "номер" for a hotel room.
+   *   *Error*: Я хочу забронювати кімнату.
+   *   *Correction*: Я хочу забронювати **номер**.
+   *   *Why*: "Кімната" refers to a room in a house/apartment; "номер" is the specific term for a hotel unit.
+2. **Case Mismatch (Location)**: Using Accusative instead of Locative for "in the hotel".
+   *   *Error*: Я в готель. (Meaning "I am [going] into the hotel")
+   *   *Correction*: Я **у готелі**. (Meaning "I am [staying] in the hotel")
+   *   *Why*: Confusion between direction (Accusative) and location (Locative).
+3. **Gender Agreement (Номер)**: Treating "номер" as feminine or neuter.
+   *   *Error*: Це гарна номер.
+   *   *Correction*: Це **гарний** номер.
+   *   *Why*: "Номер" is masculine ending in a consonant, but learners often default to neuter or guess wrong.
 
-## 2. Vocabulary Frequency
+## Cross-References
+- Builds on: `a2-46` (Home and Furniture), `a2-60` (At the Pharmacy - transactional skills).
+- Prepares for: `a2-62` (Rental Accommodation - expands "номер" to "квартира").
 
-### High-Frequency (Essential A2)
-*   **Core Terms**: готель (hotel), номер (hotel room), ключ (key), паспорт (passport), адміністратор (receptionist), рецепція (reception).
-*   **Room Types**: одномісний (single), двомісний (double), люкс (suite/deluxe).
-*   **Processes**: забронювати / бронювати (to book), заселення (check-in), виселення (check-out), реєстрація (registration).
-*   **Amenities**: сніданок (breakfast), Wi-Fi / вай-фай, кондиціонер (air conditioning), душ (shower).
-*   **Verbs**: жити (to live/stay), платити / оплатити (to pay), заповнити (to fill in), залишити (to leave).
-*   **Collocations**:
-    *   *Забронювати номер* (To book a room).
-    *   *Вільний номер* (Available room).
-    *   *Сніданок включено* (Breakfast included).
-    *   *Оплатити рахунок* (To pay the bill).
-    *   *На чиє ім'я?* (In whose name?).
-
-### Medium-Frequency (Contextual)
-*   покоївка (housemaid), прибирання (cleaning), рушник (towel), сейф (safe), парковка (parking), ліфт (elevator), краєвид / вид (view).
-
-### Low-Frequency (Advanced/Passive)
-*   підтвердження бронювання (booking confirmation), додаткове ліжко (extra bed), міні-бар (mini-bar), послуги пральні (laundry services).
-
-## 3. Cultural Hook
-
-1.  **"Шведський стіл" (Swedish Table)**: This is the standard Ukrainian term for a buffet. In Ukrainian hotels, the breakfast buffet often includes local staples like *syrnyky* (cheese pancakes) and *mlyntsi* (crepes), alongside international fare.
-2.  **The "Key" Tradition**: While card-keys are now the norm in major cities, many older or state-owned hotels in regional centers still use traditional heavy metal keys with large wooden or plastic tags. It is culturally common (and sometimes required) to leave these keys at the "рецепція" whenever you leave the building.
-3.  **Registration for Foreigners**: In modern Ukraine, the hotel reception handles all necessary notifications to authorities. For a student, "реєстрація" simply means the 5-minute process of the receptionist scanning their passport and entry stamp.
-4.  **Booking Platforms**: While global sites like Booking.com are dominant, local platforms like "Dobovo" are frequently used for apartment-style hotel accommodations, which are very popular in cities like Kyiv and Lviv.
-
-## 4. Pedagogical Notes
-
-*   **"Номер" vs. "Кімната"**: English speakers often use *кімната* (room in a house) for everything. In Ukrainian, a hotel room is strictly a **номер**. Using *кімната* in a hotel context sounds slightly unnatural.
-*   **Genitive for Availability**: To ask if rooms are available, Ukrainians use the Genitive: *Чи є вільні номери?* (Are there any available rooms?). If none are left: *Вільних номерів немає*.
-*   **The "To Book" Aspect**: Students should be introduced to the aspect pair *бронювати* (Imp.) / *забронювати* (Perf.). When making a reservation, the perfective *забронювати* is almost always used as the focus is on the completed action.
-*   **Preposition "Ha" + Accusative**: For duration of stay, use "на": *Я хочу забронювати номер на три дні* (on/for three days).
-*   **Gender and Number**: *Номер* is masculine. *Ключ* is masculine. *Рецепція* is feminine. *Сніданок* is masculine.
-*   **Politeness**: Encourage the use of the conditional *Я б хотів / хотіла...* (I would like...) for a more polite register at the front desk.
-
-## 5. Scope Boundaries
-
-### In Scope
-*   **Cases**: Nominative (subject), Accusative (object of booking), Locative (location of stay), Genitive (negation of availability, duration), Instrumental (features/amenities).
-*   **Numerals**: Stay duration (2-4 nights Gen. Sing., 5+ Gen. Plur.) and room numbers (1-999).
-*   **Aspect**: Simple usage of *забронювати* vs. *бронювати*.
-*   **Comparison**: Asking for a "cheaper" (*дешевший*) or "better" (*кращий*) room.
-*   **Imperative**: Simple instructions from the receptionist (*Заповніть анкету*, *Зачекайте хвилинку*).
-
-### Out of Scope
-*   **Passive Voice**: Formal descriptions like "the reservation was canceled".
-*   **Legal Jargon**: Complex terms and conditions of rental contracts.
-*   **Business Negotiation**: Negotiating corporate rates or complex group bookings.
-*   **Advanced Prefixes**: Complex verbs for specialized hotel management (e.g., *перебронювати* might be too early for A2 M61).
+## Notes for Content Writing
+- Focus heavily on the **Interrogative Syntax** (§4.4.1.2) as checking in involves asking many questions (Is breakfast included? What time is check-out?).
+- Ensure distinction between "забронювати" (perfective, completed) and "бронювати" (imperfective, process) is clear in examples.
+- Use the formal "Ви" address consistently, as interactions with hotel staff are standard formal situations.

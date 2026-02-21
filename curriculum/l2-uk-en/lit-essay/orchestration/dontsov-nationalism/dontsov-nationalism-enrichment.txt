@@ -1,0 +1,235 @@
+✅ Message sent to Gemini (ID: 11819) [auto-acked: self-addressed]
+✓ Message 11819 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #11819...
+📨 Message #11819
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-dontsov-nationalism
+   Time: 2026-02-20T23:33:25.912263+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 11
+module: lit-essay-11
+level: LIT.ESSAY
+slug: dontsov-nationalism
+version: '2.0'
+title: Dontsov Nationalism
+subtitle: Dontsov Nationalism
+content_outline:
+- section: Вступ та контекст
+  points: []
+- section: Аналіз ключових творів
+  points: []
+- section: Стилістика та мова автора
+  points: []
+- section: Деколонізаційна перспектива
+  points:
+  - Як цей автор руйнує імперські міфи
+  - Українська суб'єктність у тексті
+- section: Підсумок та спадщина
+  points: []
+vocabulary_hints:
+  required:
+  - історіографія
+  - наратив
+  - суб'єктність
+  recommended:
+  - деколонізація
+activity_hints:
+- type: reading
+  focus: Аналіз першоджерела
+- type: essay-response
+  focus: Критичне есе
+- type: critical-analysis
+  focus: Деконструкція тексту
+focus: literature
+pedagogy: literature
+immersion: 100% Ukrainian
+phase: LIT Expansion
+objectives:
+- Проаналізувати творчість Dontsov Nationalism у контексті української літератури
+- Дослідити вплив автора на формування національної ідентичності
+persona:
+  voice: Senior Specialist
+  role: Integral Nationalist
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Dontsov Nationalism
+
+## Використані джерела
+1. [Енциклопедія Сучасної України (ЕСУ)](https://esu.com.ua/) — стаття «Донцов Дмитро Іванович», огляд його філософських концепцій, життєвого шляху та значення монографії «Націоналізм».
+2. [Інститут історії України НАНУ](http://history.org.ua/) — матеріали про ідеологічне підґрунтя ОУН, еволюцію української політичної думки та вплив праці «Націоналізм» (1926).
+3. [Вікіпедія: Націоналізм (книга)](https://uk.wikipedia.org/wiki/%D0%9D%D0%B0%D1%86%D1%96%D0%BE%D0%BD%D0%B0%D0%BB%D1%96%D0%B7%D0%BC_(%D0%BA%D0%BD%D0%B8%D0%B3%D0%B0)) — детальна структура твору (Українське провансальство, Чинний націоналізм, Українська ідея) та основні постулати.
+
+## Хронологія
+- 1883: Народження Дмитра Донцова у Мелітополі.
+- 1913: Виступ на II Всеукраїнському студентському з'їзді у Львові з публічним обґрунтуванням політичного сепаратизму від Росії.
+- 1921: Відновлення видання «Літературно-наукового вістника» (пізніше «Вістник»), який став головною трибуною для поширення нових ідей.
+- 1926: Публікація епохальної монографії «Націоналізм» у друкарні отців Василіян у Жовкві.
+- 1929: Створення Організації Українських Націоналістів (ОУН), ідеологічним фундаментом якої стали праці Донцова.
+- 1973: Смерть Дмитра Донцова в еміграції (Канада).
+
+## Ключові факти та цитати
+- Праця складається з трьох ключових частин: «Українське провансальство», «Чинний націоналізм», «Українська ідея».
+- Донцов категорично відкинув раціоналізм, демократизм і соціалізм ХІХ століття, піддавши нищівній критиці угодовську політику («драгоманівщину»).
+- Автор ввів у політичний дискурс поняття «воля до життя» та «воля до влади» як ірраціональні, але найдієвіші основи націєтворення.
+- Цитата: "Коли читаємо історію Європи, читаємо історію її народів. Читаючи історію Росії, не бачимо нічого, опріч темної маси..." [needs verification — загальний тон вістниківства].
+- Цитата: "Без проводу, без «ініціативної меншості», що захоплює маси, нація є ніщо." [needs verification — концепт ініціативної меншості є наріжним каменем].
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ: Історичний контекст 1920-х років": [!context] — Поразка УНР як травматичний каталізатор пошуку нової, жорсткішої ідеології, що здатна протистояти тоталітаризму.
+- Section "Аналіз: Критика «українського провансальства»": [!history-bite] — Чому Донцов зневажав М. Драгоманова і соціалістів за їхню сліпу віру в еволюцію, гуманізм та компроміс з імперіями.
+- Section "Аналіз: Доктрина «чинного націоналізму»": [!quote] — Цитата про "волю до влади" та ірраціональний характер національного пориву.
+- Section "Стилістика: Риторична стратегія та мова": [!culture] — Донцовський стиль як блискучий публіцистичний перформанс, що межує з політичною проповіддю та гіпнотичним впливом.
+- Section "Деколонізаційна перспектива: Радикальний розрив з Москвою": [!decolonization] — Сепаратизм обґрунтовується не як тимчасова тактика, а як абсолютна екзистенційна основа виживання української нації.
+- Section "Спадщина: Сучасне переосмислення": [!myth-buster] — Спростування радянського міфу про "фашизм" Донцова; його ідеологія розглядається як радикальна реакція бездержавної нації на загрозу знищення імперією.
+
+## Деколонізаційний контекст
+- **Imperial/Soviet myth**: Донцов був "ідеологом українського буржуазного фашизму", його вчення було деструктивним, людиноненависницьким сліпим копіюванням західноєвропейських тоталітарних рухів, що штовхало українців на братовбивчу війну.
+- **Ukrainian reality**: Праця «Націоналізм» була першим потужним антиколоніальним маніфестом ХХ століття в Україні. Це інтелектуальна зброя бездержавної нації, покликана зруйнувати ментальний комплекс меншовартості («провансальство») і сформувати покоління, здатне на радикальний, безкомпромісний розрив із Російською імперією у будь-яких її проявах.
+
+## Contested Terms
+| Concept | Imperial/Soviet framing | Ukrainian (decolonized) framing |
+|---------|-----------------|-------------------------------|
+| Донцівський націоналізм | Український фашизм, екстремізм | Чинний (інтегральний) націоналізм, ідеологія національного визволення |
+| Українське провансальство | Братерство народів, пролетарський інтернаціоналізм | Колоніальний синдром, політичне угодовство, меншовартість |
+| Ініціативна меншість | Терористична купка, відщепенці | Провід нації, авангард визвольної боротьби |
+
+## Section-Mapped Research Notes
+
+### Вступ: Історичний контекст 1920-х років
+Поразка Визвольних змагань 1917–1921 рр. стала катастрофою, що довела неспроможність старих демократичних і соціалістичних концепцій захистити державу. Український нацбілдинг терміново потребував нової, безкомпромісної платформи в умовах агресивного наступу більшовизму на сході та полонізації на заході.
+
+### Вступ: Публікація та резонанс монографії
+Монографія вийшла у 1926 році в друкарні отців Василіян у Жовкві. Вона стала справжньою "бомбою" в галицькому інтелектуальному середовищі, викликавши фанатичне захоплення революційної молоді та різку критику старшого покоління поміркованих легалістів.
+
+### Аналіз: Критика «українського провансальства»
+У першій частині праці Донцов розгромлює народництво, марксизм і соціалізм ХІХ століття. Він вводить термін «провансальство», описуючи його як психологію раба, що не мислить категоріями власної державної сили, а лише прагне культурної автономії під опікою «доброго» пана (імперії).
+
+### Аналіз: Доктрина «чинного націоналізму»
+Друга частина формулює націоналізм як світогляд, а не вузьку партійну програму. Головні рушії за Донцовим: воля до життя, до експансії, а також ірраціоналізм, фанатизм і догматизм. Це відмова від холодного раціо на користь глибинного емоційного пориву нації.
+
+### Аналіз: Формування «людини нового духу»
+Ключовий концепт — «ініціативна меншість», або провід, який не чекає на згоду пасивної більшості, а веде її за собою. Культивується авангардизм, готовність до самопожертви, романтизм боротьби та військовий героїзм.
+
+### Стилістика: Риторична стратегія та мова
+Донцов писав не сухі академічні трактати. Його мова — це вкрай експресивна, полемічна, багата на історичні алюзії та метафори есеїстика. Текст працює як пристрасна проповідь, яка має гіпнотичний вплив на читача, апелюючи до його емоцій.
+
+### Деколонізаційна перспектива: Радикальний розрив з Москвою
+Донцов одним із перших послідовно обґрунтував, що будь-який зв'язок або компроміс з Росією (навіть "демократичною") є смертельним для українського проекту. Повний сепаратизм — це санітарна необхідність та екзистенційна умова.
+
+### Деколонізаційна перспектива: Українська суб'єктність
+Текст повертає українцям право бути суб'єктом, а не об'єктом політики чужих імперій. Суб'єктність виборюється через усвідомлення власної агресивної сили, відкидання комплексу жертви та перехід у політичний наступ.
+
+### Підсумок: Вплив на покоління борців
+Праця «Націоналізм» стала «Євангелієм» для радикальної молоді 1930-х років. Вона заклала світоглядні та психологічні основи ОУН і виховала покоління вояків УПА, які були готові вести безнадійну війну проти двох найбільших тоталітарних систем світу.
+
+### Спадщина: Сучасне переосмислення
+Сьогодні працю розглядають як класичний і необхідний антиколоніальний маніфест. Попри цілком слушну критику його авторитарних чи антидемократичних тенденцій, розуміння Донцовим екзистенційної загрози від Москви виявилося пророчим в умовах сучасної війни.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 11854)
+✓ Message 11819 acknowledged
+✓ Message 11854 acknowledged

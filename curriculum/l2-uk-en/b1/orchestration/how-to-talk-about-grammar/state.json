@@ -1,0 +1,76 @@
+{
+  "slug": "how-to-talk-about-grammar",
+  "track": "b1",
+  "module_num": 1,
+  "mode": "v3",
+  "phases": {
+    "0": {
+      "status": "complete",
+      "timestamp": "2026-02-18T11:42:44Z",
+      "note": "adopted-existing-research"
+    },
+    "0.5": {
+      "status": "complete",
+      "timestamp": "2026-02-18T11:42:44Z",
+      "note": "already-enriched"
+    },
+    "1": {
+      "status": "complete",
+      "timestamp": "2026-02-18T11:43:28Z",
+      "task_id": "yw-how-to-talk-about-grammar-p1"
+    },
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-02-18T11:43:28Z",
+      "note": "adopted-existing-prose",
+      "words": 5583
+    },
+    "3": {
+      "status": "complete",
+      "timestamp": "2026-02-18T11:43:29Z",
+      "attempts": 1
+    },
+    "3a": {
+      "status": "complete",
+      "timestamp": "2026-02-18T11:43:29Z",
+      "note": "adopted-existing"
+    },
+    "3b": {
+      "status": "complete",
+      "timestamp": "2026-02-18T11:43:29Z",
+      "note": "adopted-existing"
+    },
+    "6": {
+      "status": "complete",
+      "timestamp": "2026-02-18T11:44:53Z",
+      "task_id": "gr-how-to-talk-about-grammar",
+      "attempts": 1
+    },
+    "6b": {
+      "status": "complete",
+      "timestamp": "2026-02-18T11:49:31Z",
+      "task_id": "yw-how-to-talk-about-grammar-6b",
+      "attempts": 1
+    },
+    "5-enrich": {
+      "status": "complete",
+      "timestamp": "2026-02-18T11:49:31Z",
+      "attempts": 1
+    },
+    "7-final": {
+      "status": "complete",
+      "timestamp": "2026-02-18T11:49:32Z",
+      "attempts": 1
+    },
+    "9-final-review": {
+      "status": "complete",
+      "timestamp": "2026-02-21T00:02:10Z",
+      "verdict": "APPROVE"
+    },
+    "8": {
+      "status": "complete",
+      "timestamp": "2026-02-21T00:02:11Z"
+    }
+  },
+  "last_updated": "2026-02-21T00:02:11Z"
+}

@@ -1,0 +1,78 @@
+module: a2-28
+level: A2
+sequence: 28
+slug: she-said-that
+version: '2.0'
+title: She Said That...
+subtitle: Reported Speech Basics
+content_outline:
+- section: Introduction / Вступ
+  points:
+  - 'The social function of reporting — cultural hook: «На лавці» culture (grandmothers
+    discussing neighbors) as a recognizable trope for reporting information'
+  - Why Ukrainian tense logic is 'Fair' — explicitly frame the system as «Honest»
+    (we report exactly what we heard without changing the time)
+- section: Presentation / Презентація
+  points:
+  - 'The Three Pillars: Що (Statement), Чи (Question), Щоб (Command) — alignment:
+    State Standard §4.4.2 (complex sentences with що, щоб, чи)'
+  - 'The No-Backshift Rule (The Golden Rule) — learner error: The «Backshift» Trap
+    (applying English past-to-past rules like «He said he *was* busy» instead of «He
+    said he *is* busy»)'
+  - 'Pronoun Shifting (I -> He/She) — learner error: Pronoun Persistence (forgetting
+    to shift perspective from «Я» to «Він/Вона»)'
+  - 'Reporting Verbs: Formal vs Emotional registers — differentiation: clearly distinguish
+    *казати* (message content, introduces *що*) vs *говорити* (act of speaking)'
+  - 'Reporting Commands: The Past Tense after ''щоб'''
+- section: Practice / Практика
+  points:
+  - 'Conversational ''Chain'' (Whisper game) — cultural hook: «Зіпсований телефон»
+    (Broken telephone) game to demonstrate distortion'
+  - 'Direct to Indirect transformation drills — learner error: Question Word Order
+    (keeping inversion in reported questions) and «If» vs «Whether» (*якщо* vs *чи*)'
+- section: Dialogues / Діалоги
+  points:
+  - 'Gossip at the ''lavka'' or office news — cultural hook: proverb «Слово не горобець
+    — вилетить не впіймаєш» (A word is not a sparrow—you can''t catch it once it has
+    flown)'
+focus: grammar
+pedagogy: PPP
+objectives:
+- Learner can convert direct speech to indirect speech
+- Learner can report statements using 'що'
+- Learner can report questions using 'чи'
+- Learner can report commands using 'щоб'
+grammar:
+- indirect speech construction (що, щоб, чи)
+- pronoun changes
+- tense retention rule
+- reporting verbs (казати, говорити, питати)
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Indirect Speech
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Standards for speech reporting and indirect questions for A2
+- name: Grammar of Ukrainian Language - Reported Statements
+  url: https://uk.wikipedia.org/wiki/Непряма_мова
+  type: reference
+  notes: Rules for tense retention and pronoun shifts
+immersion: 60-75% Ukrainian
+phase: A2.2
+persona:
+  voice: Encouraging Cultural Guide
+  role: Gossip Columnist
+vocabulary_hints:
+  required:
+  - 'казати (to say/tell) — collocations: казати правду (tell the truth), він каже,
+    що... (he says that...), так би мовити (so to speak)'
+  - 'говорити (to speak/talk) — collocations: говорити українською (speak Ukrainian),
+    говорити про... (talk about...), говорити з... (speak with...)'
+  - 'питати (to ask) — collocations: питати дозволу (ask permission), питати дорогу
+    (ask for directions)'
+  - 'відповідати (to answer) — collocations: відповідати на питання (answer a question),
+    відповідати за... (be responsible for...)'
+  recommended:
+  - 'плітки (gossip) — context: «на лавці» culture'
+  - 'зіпсований телефон (broken telephone) — context: children''s game used for practice'
+word_target: 3000

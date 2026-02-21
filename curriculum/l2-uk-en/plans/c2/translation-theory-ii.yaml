@@ -1,69 +1,86 @@
----
 module: c2-085
 level: c2
 sequence: 85
 version: '2.0'
-title: "Теорія перекладу II — Поглиблений курс"
+title: Теорія перекладу II — Поглиблений курс
 focus: stylistics
 pedagogy: TTT
 objectives:
 - TBD
 sources:
-- name: "Коптілов — Теорія і практика перекладу"
-  url: "https://uk.wikipedia.org/wiki/Коптілов_Віктор_Вікторович"
+- name: Коптілов — Теорія і практика перекладу
+  url: https://uk.wikipedia.org/wiki/Коптілов_Віктор_Вікторович
   type: primary
   notes: Classic Ukrainian translation studies textbook
-- name: "Venuti — The Translator's Invisibility"
-  url: "https://www.routledge.com/"
+- name: Venuti — The Translator's Invisibility
+  url: https://www.routledge.com/
   type: secondary
   notes: Key concepts of domestication and foreignization
-- name: "Nida — Toward a Science of Translating"
-  url: "https://www.brill.com/"
+- name: Nida — Toward a Science of Translating
+  url: https://www.brill.com/
   type: reference
   notes: Dynamic vs. formal equivalence theory
 content_outline:
-- section: "Вступ — Перекладознавство як наука"
-  words: 541
+- section: 'Вступ: Перекладознавство та українська традиція (Introduction: Translation
+    Studies and Ukrainian Tradition)'
+  words: 700
   points:
-  - Місце перекладознавства серед гуманітарних наук
-  - Зв'язок із лінгвістикою, літературознавством, культурологією
-  - Українська школа перекладознавства
-- section: Ключові концепції перекладу
-  words: 757
+  - 'Місце перекладознавства серед гуманітарних наук та його розвиток в Україні: від
+    Котляревського до сучасності'
+  - 'Культурний гачок: «Енеїда» І. Котляревського як радикальний приклад одомашнення
+    (доместикації) класичного сюжету для самоствердження мови'
+  - 'Київська школа перекладу (Г. Кочур, М. Лукаш): опір уніфікації через естетичну
+    еквівалентність та використання архаїзмів/діялектизмів'
+  - 'Державний стандарт (§4.3.8): Навички утворення вторинних текстів (рефератів,
+    повідомлень) як форма перекладацької компресії'
+- section: 'Ключові концепції: Еквівалентність та адекватність (Key Concepts: Equivalence
+    and Adequacy)'
+  words: 800
   points:
-  - Еквівалентність vs. адекватність
-  - Формальна vs. динамічна еквівалентність (Nida)
-  - Одомашнення vs. очуження (Venuti)
-  - Перекладацькі трансформації
-- section: Перекладацькі стратегії
-  words: 757
+  - Диференціація понять «еквівалентність» та «адекватність» у сучасному перекладознавчому
+    дискурсі
+  - 'Теорія Ю. Найди: формальна еквівалентність (відповідність форми) vs. динамічна
+    еквівалентність (тотожність реакції отримувача)'
+  - 'Рівні еквівалентності: від семантичної точності до прагматичної відповідності
+    цільовому контексту'
+  - 'Критерії адекватності перекладу: стилістична витриманість та збереження авторської
+    інтенції'
+- section: 'Перекладацькі стратегії: Одомашнення та очуження (Translation Strategies:
+    Domestication and Foreignization)'
+  words: 900
   points:
-  - Лексичні трансформації (конкретизація, генералізація, модуляція)
-  - Граматичні трансформації (заміна, перестановка)
-  - Стилістичні трансформації
-  - Компенсація втрат
-- section: Проблеми неперекладності
-  words: 649
+  - 'Концепція Лоуренса Венуті: «невидимість» перекладача та етичний вибір між двома
+    полюсами'
+  - 'Стратегія одомашнення (domestication): адаптація тексту до мовних та культурних
+    норм цільової авдиторії'
+  - 'Стратегія очуження (foreignization): збереження культурної дистанції та специфіки
+    оригіналу'
+  - Аналіз «за» та «проти» кожної стратегії в контексті глобалізації та культурної
+    ідентичності
+- section: Трансформації та типові помилки перекладача (Transformations and Common
+    Translator Errors)
+  words: 800
   points:
-  - Реалії та культурно-специфічні поняття
-  - Гра слів і каламбури
-  - Ритм і рима в поезії
-  - Стратегії подолання неперекладності
-- section: Етика перекладу
-  words: 541
+  - 'Лексичні та граматичні трансформації: конкретизація, генералізація, модуляція
+    та перестановка'
+  - 'Помилка перекладача: калькування (False Friends) сталих сполук — drill: «брати
+    участь» (correct) vs. «приймати участь» (wrong)'
+  - 'Стилістичний дисонанс: недоречне використання канцеляризмів у художньому тексті
+    або розмовної лексики в офіційних документах'
+  - Гіперкорекція як наслідок намагання штучно уникнути міжмовної схожості; пошук
+    природного балансу
+- section: Етика, деколонізація та оцінка якості (Ethics, Decolonization, and Quality
+    Assessment)
+  words: 800
   points:
-  - Відповідальність перекладача
-  - Перекладач як посередник культур
-  - Невидимість vs. видимість перекладача
-  - Деколоніальний підхід у перекладі
-- section: "Практика — Аналіз перекладів"
-  words: 755
-  points:
-  - Порівняльний аналіз двох перекладів одного тексту
-  - Ідентифікація стратегій і трансформацій
-  - Оцінка якості перекладу
-  - Обґрунтування перекладацьких рішень
-word_target: 4000
+  - 'Відповідальність перекладача в постколоніальному контексті: рішення щодо збереження
+    чи стирання «іншості» (agency)'
+  - 'Деколоніальний підхід у перекладі: повернення суб''єктності українській культурі
+    через деконструкцію імперських наративів'
+  - 'Державний стандарт (§4.3.7): Уміння трансформувати текст з одного стилю в інший
+    (науковий у науково-популярний тощо)'
+  - 'Методологія критичного аналізу: обґрунтування перекладацьких рішень та оцінка
+    їхнього впливу на реципієнта'
 vocabulary:
   required:
   - перекладознавство (translation studies)
@@ -82,7 +99,7 @@ vocabulary:
   - калька (calque)
   - транслітерація (transliteration)
   - інтерпретант (interpretant)
-  forbidden: "[]"
+  forbidden: '[]'
 activities:
   types_required:
   - match-up
@@ -98,21 +115,43 @@ connects_to:
 - c2-88 (Interpretation Basics)
 vocabulary_hints:
   required:
-  - концепція (concept)
-  - аналіз (analysis)
-  - дискурс (discourse)
-  - методологія (methodology)
+  - 'перекладознавство (translation studies) — Academic frequency; collocations: вітчизняне
+    перекладознавство, методи перекладознавства'
+  - 'еквівалентність (equivalence) — High frequency; collocations: динамічна еквівалентність,
+    рівні еквівалентності, повна/часткова еквівалентність'
+  - 'адекватність (adequacy) — Focus on quality criteria; collocations: адекватність
+    перекладу, стилістична адекватність'
+  - 'одомашнення (domestication) — Specialized term (Venuti); collocation: стратегія
+    одомашнення, культурне одомашнення'
+  - 'очуження (foreignization) — Specialized term (Venuti); collocation: ефект очуження,
+    стратегія очуження'
+  - 'трансформація (transformation) — General/Academic; collocations: перекладацька
+    трансформація, граматична трансформація'
+  - конкретизація (specification) — Translation technique; narrowing of meaning from
+    SL to TL
+  - генералізація (generalization) — Translation technique; widening of meaning from
+    SL to TL
+  - модуляція (modulation) — Semantic/perspective shift in translation
+  - компенсація (compensation) — Replacing lost element in one part of the text with
+    a gain in another
   recommended:
-  - інтерпретація (interpretation)
-  - контекстуалізація (contextualization)
-  - синтез (synthesis)
+  - неперекладність (untranslatability) — Phenomenon where target language lacks exact
+    equivalent
+  - реалія (culture-specific item) — Term for objects/concepts specific to a particular
+    culture
+  - калька (calque) — Loan translation; often leads to 'false friends' errors if overused
+  - транслітерація (transliteration) — Mechanical rendering of characters from SL
+    to TL
+  - інтерпретант (interpretant) — Semantic aspect of a sign in the process of translation
 activity_hints:
 - type: reading
   focus: Поглиблений аналіз тексту
   items: 4
 - type: essay-response
   focus: Критичне осмислення
-  word_target: 400
 - type: discussion
   focus: Дискусія та аргументація
   items: 1
+persona:
+  voice: Senior Specialist
+  role: Translation Theorist

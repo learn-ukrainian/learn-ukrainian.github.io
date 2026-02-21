@@ -1,0 +1,295 @@
+✅ Message sent to Gemini (ID: 13012) [auto-acked: self-addressed]
+✓ Message 13012 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #13012...
+📨 Message #13012
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-milena-rudnytska
+   Time: 2026-02-20T23:43:43.488082+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-bio-94
+level: C1-BIO
+sequence: 94
+slug: milena-rudnytska
+version: '2.0'
+title: 'Мілена Рудницька: Голос українського фемінізму'
+content_outline:
+- section: Вступ — Піонерка жіночого руху
+  points:
+  - Рудницька як перша жінка-посол у польському сеймі від українців
+  - Лідерка Союзу українок
+  - Борець за права жінок і національне визволення
+- section: Молодість і освіта
+  points:
+  - Народження у Збаражі (1892)
+  - Навчання у Відні
+  - Вплив європейського фемінізму
+  - Повернення до Галичини
+- section: Політична кар'єра
+  points:
+  - Депутатка польського сейму (1928-1935)
+  - Захист прав української меншини
+  - Боротьба за освіту українською мовою
+  - Протести проти пацифікації
+- section: Союз українок
+  points:
+  - Очолення найбільшої жіночої організації
+  - Програма економічної самодопомоги
+  - Освітня діяльність
+  - Міжнародні зв'язки
+- section: Війна та еміграція
+  points:
+  - Радянська окупація 1939
+  - Втеча на Захід
+  - Діяльність в еміграції
+  - Документування радянських злочинів
+- section: Спадщина та визнання
+  points:
+  - Смерть у Мюнхені (1976)
+  - Вплив на український фемінізм
+  - Перевидання праць в незалежній Україні
+  - Рудницька як взірець жінки-політика
+vocabulary_hints:
+  required:
+  - фемінізм (feminism)
+  - посол (representative/deputy)
+  - сейм (parliament/Sejm)
+  - меншина (minority)
+  - пацифікація (pacification)
+  - емансипація (emancipation)
+  - самодопомога (self-help)
+  - права жінок (women's rights)
+  - еміграція (emigration)
+  - громадська діячка (civic activist)
+  recommended:
+  - суфражистка (suffragette)
+  - виборче право (voting rights)
+  - петиція (petition)
+  - делегація (delegation)
+  - маніфест (manifesto)
+activity_hints:
+- type: reading
+  focus: Rudnytska's speeches and articles
+  source: Historical archives
+  items: 3 passages
+- type: essay-response
+  focus: How did Rudnytska combine feminism with national liberation?
+  output: Analysis of intersectional activism
+focus: biography
+prerequisites:
+- c1-bio-59 (Olha Basarab - earlier activist)
+- c1-bio-68 (Olena Teliha - contemporary)
+- Understanding of interwar Galicia
+connects_to:
+- c1-bio-59 (Olha Basarab - earlier generation)
+- c1-bio-68 (Olena Teliha - contemporary activist)
+- c1-bio-108 (Konovalets - same political era)
+module_type: biography
+sources:
+- name: Мілена Рудницька (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Рудницька_Мілена_Іванівна
+  type: primary
+  notes: Biography, activism, political career
+- name: Союз українок
+  url: https://uk.wikipedia.org/wiki/Союз_українок
+  type: reference
+  notes: Organization she led
+- name: УНДО
+  url: https://uk.wikipedia.org/wiki/Українське_національно-демократичне_об%27єднання
+  type: reference
+  notes: Political party she represented
+immersion: 100% Ukrainian
+phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of мілена рудницька: голос українського фемінізму'
+- Evaluate the contributions of піонерка жіночого руху
+- Trace the career and influence of спадщина та визнання
+persona:
+  voice: Senior Biographer
+  role: Parliamentary Delegate
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Мілена Рудницька: Голос українського фемінізму
+
+## Використані джерела
+1.  [Енциклопедія Сучасної України (esu.com.ua)](https://esu.com.ua/article-8792) — академічна біографічна стаття.
+2.  [Український інститут національної пам'яті (uinp.gov.ua)](https://uinp.gov.ua) — матеріали про діяльність у Лізі Націй.
+3.  [Гендер в деталях (genderindetail.org.ua)](https://genderindetail.org.ua) — аналіз феміністичної діяльності та праць.
+4.  [Локальна історія (localhistory.org.ua)](https://localhistory.org.ua) — статті про міжвоєнний період та Союз українок.
+5.  [Енциклопедія історії України (history.org.ua)](http://resource.history.org.ua) — академічний огляд політичної діяльності.
+
+## Хронологія
+- **1892, 15 липня**: Народження у м. Зборів (Галичина) в родині інтелігенції.
+- **1910–1917**: Навчання у Львівському та Віденському університетах, захист докторської дисертації.
+- **1919**: Початок активної громадської діяльності, публіцистика.
+- **1928**: Обрання послом до польського Сейму від УНДО (переобрана 1930).
+- **1928**: Обрання головою Союзу українок (очолювала до 1939).
+- **1930, осінь**: Документування польської «пацифікації», підготовка петицій.
+- **1931**: Виступ у Лізі Націй (Женева) з осудом дій польської влади.
+- **1933, вересень**: Місія до Женеви, спроба винести питання Голодомору на розгляд Ліги Націй.
+- **1934**: Організація Українського жіночого конгресу в Станіславові.
+- **1939**: Еміграція після радянської окупації (Краків, Берлін, Прага).
+- **1945–1950**: Діяльність в еміграції, організація допомоги біженцям.
+- **1976, 29 березня**: Смерть у Мюнхені.
+- **1993**: Перепоховання у Львові на Личаківському цвинтарі.
+
+## Ключові факти та цитати
+- **Цитата про фемінізм**: «Жіночий рух не є тільки рухом за права жінок, він є рухом за оздоровлення цілого нашого суспільного життя».
+- **Цитата про Голодомор**: «Ми мусимо розбудити сумління світу... Якщо ми не можемо врятувати їх, то мусимо принаймні врятувати пам'ять про них».
+- **Лідерство**: Союз українок під її керівництвом налічував до 100 000 членкинь — одна з найбільших жіночих організацій Європи.
+- **Пацифікація**: Особисто об’їжджала постраждалі села, збираючи свідчення про побиття та руйнування майна.
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ — Піонерка жіночого руху": `[!context]` — Контекст "подвійної окупації" (гендерної та національної) для українок Галичини.
+- Section "Молодість і освіта": `[!culture]` — Атмосфера інтелектуального Львова та Відня початку XX ст.
+- Section "Політична кар'єра: На трибуні Сейму": `[!quote]` — Уривок з першої промови у Сеймі про права меншин.
+- Section "Політична кар'єра: Боротьба з пацифікацією": `[!myth-buster]` — Спростування польського міфу про пацифікацію як "наведення порядку" (це був державний терор).
+- Section "Союз українок: Організація нації": `[!history-bite]` — Масштаб організації: мережа кооперативів, дитсадків, курсів, що заміняла державу.
+- Section "Союз українок: Міжнародний голос та Голодомор": `[!decolonization]` — Як Рудницька прорвала інформаційну блокаду СРСР у Лізі Націй.
+- Section "Війна та еміграція": `[!fact]` — Роль у порятунку "ді-пі" (переміщених осіб) після війни.
+- Section "Спадщина та визнання": `[!reflection]` — Актуальність її ідей для сучасного українського фемінізму.
+
+## Деколонізаційний контекст
+- **Imperial Myth**: Радянська історіографія таврувала Рудницьку як "буржуазну націоналістку" та "фашистську прислужницю", замовчуючи її правозахисну діяльність. Польська історіографія часто маргіналізувала український рух опору 1930-х як "терористичний".
+- **Ukrainian Reality**: Рудницька демонструє суб'єктність української жінки, яка не просила, а вимагала прав. Вона поєднала ліберальний фемінізм з національно-визвольною боротьбою, створивши унікальну модель "національного фемінізму". Її боротьба за визнання Голодомору геноцидом почалася ще в 1933 році.
+
+## Contested Terms
+| Concept | Imperial/Polish/Soviet framing | Ukrainian (decolonized) framing |
+|---------|--------------------------------|---------------------------------|
+| Пацифікація | "Умиротворення", наведення ладу | Державний терор, колективна кара, репресії |
+| Голодомор | "Продовольчі труднощі", неврожай | Геноцид, штучний голод, інструмент терору |
+| Союз українок | "Буржуазна організація" | Основа громадянського суспільства, "держава в державі" |
+
+## Section-Mapped Research Notes
+
+### Вступ — Піонерка жіночого руху
+Унікальність постаті: жінка-політик у патріархальному суспільстві. Поєднання національного обов'язку з боротьбою за гендерну рівність. Визначення її як "голосу українського фемінізму".
+
+### Молодість і освіта
+Вплив батька Івана Рудницького та матері Іди. Смерть батька, роль матері у вихованні. Навчання у Відні: знайомство з європейським суфражизмом. Повернення до Львова, робота вчителькою, шлюб з Павлом Лисяком (і розлучення).
+
+### Політична кар'єра: На трибуні Сейму
+Вступ до УНДО. Парламентська діяльність: комісія освіти, бюджетна комісія. Боротьба за українське шкільництво. Ораторський талант. Специфіка роботи жінки-депутата в чоловічому середовищі.
+
+### Політична кар'єра: Боротьба з пацифікацією
+Події 1930 року. Рудницька як свідок і документаліст. Поїздки селами. Підготовка "Чорної книги" фактів. Виїзд до Женеви, виступ перед комісією Ліги Націй. Резонанс у європейській пресі (Манчестер Гардіан тощо).
+
+### Союз українок: Організація нації
+Трансформація жіночого руху з благодійного на політичний. Структура Союзу: філії в кожному селі. Гасло "Жінка — громадянка". Економічна самодопомога: кооперативи "Українське народне мистецтво".
+
+### Союз українок: Міжнародний голос та Голодомор
+Співпраця з міжнародними жіночими організаціями. Конгрес 1934 року (заборонений польською владою). Місія 1933 року: Йоган Мовінкель і Мілена Рудницька в Лізі Націй. Зустрічі з політиками, спроба організувати допомогу голодуючим. "Цинізм світу": відмова великих держав втручатися через торгівлю з СРСР.
+
+### Війна та еміграція
+Радянська окупація 1939: Рудницька у "розстрільних списках" НКВС. Втеча. Життя в Празі та Берліні. Післявоєнна діяльність: Українська жіноча рада. Публіцистика: книга "Західна Україна під більшовиками".
+
+### Спадщина та визнання
+Останні роки в Мюнхені. Роль сина Івана Лисяка-Рудницького у збереженні архіву. Перепоховання 1993 року як символ повернення історичної пам'яті. Сучасні дослідження (Марта Богачевська-Хомяк).
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 13026)
+✓ Message 13012 acknowledged
+✓ Message 13026 acknowledged

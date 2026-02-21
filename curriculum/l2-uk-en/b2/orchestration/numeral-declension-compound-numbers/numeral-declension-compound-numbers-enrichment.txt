@@ -1,0 +1,285 @@
+✅ Message sent to Gemini (ID: 10531) [auto-acked: self-addressed]
+✓ Message 10531 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10531...
+📨 Message #10531
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-numeral-declension-compound-numbers
+   Time: 2026-02-20T20:40:32.443821+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b2-32
+level: B2
+sequence: 32
+slug: numeral-declension-compound-numbers
+version: '2.0'
+title: 'Відмінювання числівників ІІ: Складені числівники'
+subtitle: 'Numeral Declension II: Compound Numbers'
+content_outline:
+- section: Розминка — Складні числівники
+  points:
+  - Відмінювання кожної частини окремо
+  - Де потрібно (статистика, ціни, адреси, роки)
+  - Правило узгодження з іменником
+- section: Складені кількісні числівники
+  points:
+  - Двадцять один, тридцять два — узгодження з іменником
+  - Сотні (двісті, триста, п'ятсот) у різних відмінках
+  - Тисячі та мільйони — як іменники жіночого роду
+  - Приклади з усіма відмінками (з трьомастами п'ятдесятьма)
+- section: Складені порядкові числівники
+  points:
+  - Тільки останній компонент змінюється (триста вісімдесят перший/першого/першому)
+  - Роки (у тисяча дев'ятсот вісімдесят дев'ятому році)
+  - Номери — будинок, квартира, сторінка
+  - Століття (у двадцять першому столітті)
+- section: Числівники в статистиці та новинах
+  points:
+  - Населення, бюджет, ціни — як читати цифри
+  - Узгодження з одиницями виміру (п'ять кілограмів, сто гривень)
+  - Приблизні числа (близько, понад, майже)
+  - Дроби та відсотки (одна друга, сорок п'ять відсотків)
+- section: Практика
+  points:
+  - Читання статистичних даних вголос
+  - Написання чисел словами
+  - Диктант — складні числа
+focus: grammar
+pedagogy: TTT
+objectives:
+- Learner can decline compound ordinal numerals in all cases
+- Learner can decline compound cardinal numerals in all cases
+- Learner can use numerals correctly in statistical and price contexts
+grammar:
+- Відмінювання складених порядкових числівників
+- Відмінювання складених кількісних числівників
+- Числівники в статистиці та цінах
+immersion: 100
+register: нейтральний
+phase: B2.1c
+vocabulary_hints:
+  required:
+  - термін (term)
+  - поняття (concept)
+  - процес (process)
+  - метод (method)
+  recommended:
+  - аналіз (analysis)
+  - синтез (synthesis)
+  - дослідження (research)
+activity_hints:
+- type: reading
+  focus: Аналіз тексту
+  items: 4
+- type: essay-response
+  focus: Практичне застосування
+- type: true-false
+  focus: Перевірка розуміння
+  items: 8
+persona:
+  voice: Professional Language Coach
+  role: Accountant (Бухгалтер)
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Відмінювання числівників ІІ: Складені числівники
+
+## State Standard Reference
+§4.1.1.3: "відмінювання складених порядкових числівників: сто третій (сто третього, сто третьому...); відмінювання кількісних числівників... двадцяти (двадцятьох) восьми (вісьмох)... шістдесятьома (шістдесятьма) двома..."
+Alignment: Module directly addresses the standard's requirement for full mastery of compound numeral declension (both cardinal and ordinal) and case agreement.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| **відсоток** | High (News/Academic) | п'ятдесят відсотків, сто відсотків, великий відсоток, відсоток жиру |
+| **населення** | High (Demographics) | кількість населення, перепис населення, 40 мільйонів населення |
+| **бюджет** | Medium (Econ/Gov) | державний бюджет, бюджет проєкту, мільйон гривень |
+| **гривня** | High (Daily) | двісті гривень, п'ять тисяч гривень, курс гривні |
+| **кілометр** | High (Geo/Travel) | сто кілометрів, тисяча кілометрів, квадратний кілометр |
+
+## Cultural Hooks
+1. **Станція «Арсенальна»**: Найглибша станція метро у світі — **105,5** (сто п'ять цілих і п'ять десятих) метрів. Збудована в **1960** (тисяча дев'ятсот шістдесятому) році.
+2. **Літак «Мрія»**: Ан-225 встановив **462** (чотириста шістдесят два) авіаційні рекорди. Максимальна злітна маса — **640** (шістсот сорок) тонн.
+3. **Конституція Пилипа Орлика**: Написана у **1710** (тисяча сімсот десятому) році — одна з перших конституцій у світі.
+
+## Common Learner Errors
+1. **Partial Declension (Cardinal)**: *на ста сорока п'яти* (correct) vs *на сто сорок п'яти* (incorrect).
+   *   *Cause*: Influence of English/Russian where only the last element might change or case marking is simpler. In Ukrainian cardinal compound numerals, **every** word changes.
+2. **Incorrect Declension of Hundreds (200-900)**: *двохсот* (correct) vs *двісот* (incorrect); *п'ятисот* (correct) vs *п'ятьсот* (genitive).
+   *   *Cause*: Failure to decline the first part of the compound word (e.g., *дві-* becomes *двох-*).
+3. **Ordinal vs Cardinal Confusion**: *у тисяча дев'ятсот дев'яносто першому році* (correct) vs *у тисячі дев'ятсот...* (incorrect).
+   *   *Rule*: In compound **ordinal** numerals (years), only the **last** word declines.
+
+## Cross-References
+- **Builds on**: `numeral-declension-basics` (A2), `dates-and-time` (A2).
+- **Prepares for**: `professional-statistics` (C1), `historical-dates` (B2-HIST modules), `economic-geography` (B2).
+
+## Notes for Content Writing
+- **Visuals**: Use a clear table contrasting "Cardinals (ALL change)" vs "Ordinals (LAST changes)".
+- **Immersion**: Ensure all large numbers are written out in words in the theory sections to force reading practice.
+- **Morphology**: Highlight the internal inflection of hundreds (*п'ят**и**сот*, *сем**и**сот*) as a key drill point.
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ та повторення складних числівників (Introduction and Review of Complex Numerals)"
+  words: 600
+  points:
+  - "Повторення відмінювання складних числівників (50-80, 200-900) як фундаменту для складених форм."
+  - "Акцент на внутрішній флексії сотень: відмінювання обох частин (наприклад, п'ятисот, семисот) та аналіз помилки «двісот» замість «двохсот»."
+  - "Культурний контекст: Ан-225 «Мрія» — введення числівників через 462 авіаційні рекорди та 640 тонн максимальної маси."
+  - "Розминка: виявлення типових помилок у відмінюванні складних числівників у коротких новинах."
+- section: "Складені кількісні числівники — Правило повної зміни (Compound Cardinal Numerals — Full Declension Rule)"
+  words: 1000
+  points:
+  - "Головне правило: у складених кількісних числівниках змінюється кожне слово (кожен компонент) у всіх відмінках."
+  - "Аналіз помилки часткового відмінювання: порівняння правильного «на ста сорока п'яти» та помилкового «на сто сорок п'яти»."
+  - "Практика відмінювання великих сум: сотні, тисячі та мільйони у поєднанні з назвою валюти (гривня)."
+  - "Відповідність Державному стандарту (§4.1.1.3): вивчення варіантних форм орудного відмінка на кшталт «шістдесятьома / шістдесятьма»."
+- section: "Складені порядкові числівники та історичні дати (Compound Ordinal Numerals and Historical Dates)"
+  words: 900
+  points:
+  - "Правило відмінювання тільки останнього компонента у складених порядкових числівниках (триста вісімдесят перший/першого)."
+  - "Історичний контекст: Конституція Пилипа Орлика (1710 рік) — тренування відмінювання року в різних непрямих відмінках."
+  - "Усунення помилки змішування кількісних та порядкових форм: чому «у тисячі дев'ятсот...» є помилкою для позначення року."
+  - "Робота з великими проміжками часу: від «тисяча сімсот десятого року» до подій «двадцять першого століття»."
+- section: "Числівники в статистиці та географії (Numerals in Statistics and Geography)"
+  words: 900
+  points:
+  - "Станція метро «Арсенальна»: робота з дробовими числівниками на прикладі глибини 105,5 (сто п'ять цілих і п'ять десятих) метра."
+  - "Демографічні та економічні показники: опис кількості населення (близько 40 мільйонів) та обговорення бюджету проєкту."
+  - "Використання обмежувачів у статистиці: близько, понад, майже, щонайменше у поєднанні з відповідними відмінками числівників."
+  - "Вживання відсотків (відсоток) та одиниць виміру (кілометр) у науковому та офіційно-діловому стилях."
+- section: "Практикум та синтез (Workshop and Synthesis)"
+  words: 600
+  points:
+  - "Диктант: запис статистичних даних словами для перевірки орфографії та морфології складених числівників."
+  - "Рольова гра «Бухгалтер»: підготовка фінансового звіту, що включає відмінювання сум, відсотків та дат."
+  - "Аналітична вправа: виправлення помилок у відмінюванні числівників у реальних заголовках новин та економічних статтях."
+  - "Підсумковий тест: диференціація відмінювання кількісних (змінюються всі слова) та порядкових (змінюється лише останнє слово) форм."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "відсоток (percent) — п'ятдесят відсотків, сто відсотків; висока частотність у новинах та академічних текстах."
+  - "населення (population) — кількість населення, перепис населення; використовується в демографічних даних."
+  - "бюджет (budget) — державний бюджет, бюджет проєкту; ключове слово для економічного контексту."
+  - "гривня (hryvnia) — двісті гривень, п'ять тисяч гривень; щоденне фінансове використання."
+  - "кілометр (kilometer) — сто кілометрів, квадратний кілометр; географічний та подорожній контексти."
+  - "термін (term) — технічний термін, визначення терміна; для академічного дискурсу."
+  - "поняття (concept) — абстрактне поняття, базове поняття; для пояснення теорії."
+  - "процес (process) — виробничий процес, процес навчання; опис динамічних систем."
+  - "метод (method) — науковий метод, метод аналізу; опис підходів до роботи."
+  recommended:
+  - "аналіз (analysis) — глибокий аналіз даних."
+  - "синтез (synthesis) — синтез отриманої інформації."
+  - "дослідження (research) — результати останніх досліджень."
+  - "кількість (quantity/amount) — значна кількість, кількість опадів."
+  - "показник (indicator/index) — економічний показник, високі показники."
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4354 chars)
+✅ Message sent to Claude (ID: 10540)
+✓ Message 10540 acknowledged
+   Auto-acknowledged reply #10540 (stdout delivery — no inbox accumulation)
+✓ Message 10531 acknowledged

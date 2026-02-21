@@ -1,0 +1,121 @@
+- ipa: '[pɐˈsɪu̯nɪi̯ stɑn]'
+  lemma: пасивний стан
+  pos: phrase
+  translation: passive voice
+- ipa: '[ɐkˈtɪu̯nɪi̯ stɑn]'
+  lemma: активний стан
+  pos: phrase
+  translation: active voice
+- ipa: '[dʲijeprɪkˈmɛtnɪk]'
+  lemma: дієприкметник
+  pos: noun
+  translation: participle
+- ipa: '[bezosoˈbɔʋɪi̯]'
+  lemma: безособовий
+  pos: adj
+  translation: impersonal
+- ipa: '[zʋoˈrɔtnɪi̯]'
+  lemma: зворотний
+  pos: adj
+  translation: reflexive
+- ipa: '[ɐˈɦɛnt]'
+  lemma: агент
+  pos: noun
+  translation: agent
+- ipa: '[ʋɪkoˈnɑʋet͡sʲ]'
+  lemma: виконавець
+  pos: noun
+  translation: performer / executor
+- ipa: '[reˈɦ⁽ʲ⁾istr]'
+  lemma: регістр
+  pos: noun
+  translation: register
+- ipa: '[of⁽ʲ⁾iˈt͡s⁽ʲ⁾ijno dʲiloˈʋɪi̯]'
+  lemma: офіційно-діловий
+  pos: adj
+  translation: official-business (style)
+- ipa: '[nɐuˈkɔʋɪi̯]'
+  lemma: науковий
+  pos: adj
+  translation: scientific
+- ipa: '[rozˈmɔʋnɪi̯]'
+  lemma: розмовний
+  pos: adj
+  translation: colloquial / conversational
+- ipa: '[lʲiterɐˈturnɪi̯]'
+  lemma: літературний
+  pos: adj
+  translation: literary
+- ipa: '[kɐnt͡selʲɐˈrɪt]'
+  lemma: канцелярит
+  pos: noun
+  translation: bureaucratese
+- ipa: '[uzˈɦɔd͡ʒenʲːɐ]'
+  lemma: узгодження
+  pos: noun
+  translation: agreement
+- ipa: '[konˈstrukt͡s⁽ʲ⁾ijɐ]'
+  lemma: конструкція
+  pos: noun
+  translation: construction
+- ipa: '[trɐnsforˈmɑt͡s⁽ʲ⁾ijɐ]'
+  lemma: трансформація
+  pos: noun
+  translation: transformation
+- ipa: '[konˈtɛkst]'
+  lemma: контекст
+  pos: noun
+  translation: context
+- ipa: '[stɪlʲ]'
+  lemma: стиль
+  pos: noun
+  translation: style
+- ipa: '[ˈsuf⁽ʲ⁾iks]'
+  lemma: суфікс
+  pos: noun
+  translation: suffix
+- ipa: '[doˈkɔnɐnɪi̯ ʋɪd]'
+  lemma: доконаний вид
+  pos: phrase
+  translation: perfective aspect
+- ipa: '[nedoˈkɔnɐnɪi̯ ʋɪd]'
+  lemma: недоконаний вид
+  pos: phrase
+  translation: imperfective aspect
+- ipa: '[ˈp⁽ʲ⁾idmet]'
+  lemma: підмет
+  pos: noun
+  translation: subject
+- ipa: '[doˈdɑtok]'
+  lemma: додаток
+  pos: noun
+  translation: object / addition
+- ipa: '[ʋidˈm⁽ʲ⁾inok]'
+  lemma: відмінок
+  pos: noun
+  translation: case
+- ipa: '[dʲijeˈslɔʋo ˈzʋjɐzkɐ]'
+  lemma: дієслово-зв'язка
+  pos: noun
+  translation: copula verb / linking verb
+- ipa: '[stɑn]'
+  lemma: стан
+  pos: noun
+  translation: state / condition
+- ipa: '[proˈt͡sɛs]'
+  lemma: процес
+  pos: noun
+  translation: process
+- ipa: '[rezulʲˈtɑt]'
+  lemma: результат
+  pos: noun
+  translation: result
+- ipa: '[subˈjɛktn⁽ʲ⁾isʲtʲ]'
+  lemma: суб'єктність
+  pos: noun
+  translation: subjectivity / agency
+- ipa: '[ˈkɑlʲkɐ]'
+  lemma: калька
+  pos: noun
+  translation: calque / loan translation
+

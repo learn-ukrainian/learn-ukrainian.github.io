@@ -2,14 +2,15 @@
   "module": "knyahynia-olha",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-11T00:43:08.490450Z",
+  "last_audit": "2026-02-21T15:10:40.613253Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-09T21:29:01.134243Z",
-    "meta": "2026-02-09T15:59:44.176089Z",
-    "activities": "2026-02-07T16:58:54.796160Z",
-    "vocabulary": "2026-02-09T21:28:43.247371Z",
-    "plan": "2026-02-09T15:59:44.175699Z"
+    "md": "2026-02-19T22:23:51.313376Z",
+    "meta": "2026-02-19T10:56:42.416676Z",
+    "activities": "2026-02-19T22:23:51.313803Z",
+    "vocabulary": "2026-02-19T22:23:51.314823Z",
+    "plan": "2026-02-18T15:59:52.245649Z",
+    "research": "2026-02-18T15:58:39.061032Z"
   },
   "gates": {
     "meta": {
@@ -18,9 +19,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "6942/5000 (raw: 7322)"
+      "status": "fail",
+      "violations": 1,
+      "message": "5239/5000 (raw: 5465) | pedagogy: 16 violations"
     },
     "activities": {
       "status": "pass",
@@ -30,23 +31,34 @@
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "25/24"
+      "message": "38/24"
     },
     "naturalness": {
       "status": "pass",
       "violations": 0,
       "message": "10/10 (High)"
     },
-    "review": {
+    "ipa": {
       "status": "pass",
+      "violations": 0,
+      "message": "Clean IPA"
+    },
+    "research": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Content aligned with research"
+    },
+    "review": {
+      "status": "skipped",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "pass",
+    "status": "fail",
     "blocking_issues": [],
     "pass_count": 6,
-    "fail_count": 0
+    "fail_count": 1,
+    "deferred_count": 0
   }
 }

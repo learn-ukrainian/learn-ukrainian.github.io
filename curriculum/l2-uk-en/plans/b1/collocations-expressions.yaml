@@ -1,0 +1,124 @@
+module: b1-70
+level: B1
+sequence: 70
+slug: collocations-expressions
+version: '2.0'
+title: Колокації та вирази
+subtitle: Collocations and Expressions
+content_outline:
+- section: Вступ та теоретична основа (Introduction and Theoretical Foundation)
+  words: 600
+  points:
+  - Definition of collocations (сталі словосполучення) as stylistic means per State
+    Standard §4.5.1.1; focus on lexical competence and semantic precision.
+  - 'Cultural hook: The richness of Ukrainian synonymy as a tool for precise collocations
+    (e.g., the word ''горизонт'' and its 10+ synonyms like ''обрій'', ''небокрай'',
+    ''видноколо'').'
+  - 'The concept of ''Natural vs. Unnatural'' combinations: contrast literal translation
+    (calquing) with authentic usage patterns.'
+- section: Основні дієслівні колокації (Core Verb-Noun Collocations)
+  words: 1000
+  points:
+  - High-frequency clusters for 'Рішення' (приймати, ухвалювати, остаточне, скасувати)
+    and 'Участь' (брати, активна, відмовитися від).
+  - 'Collocations for ''Увага'': the distinction between ''звертати увагу'' (pay attention)
+    and ''приділяти увагу'' (devote/allocate attention), plus ''заслуговувати на увагу''.'
+  - 'Professional and educational collocations for ''Досвід'': ''набувати досвіду''
+    (gain), ''ділитися досвідом'' (share), and ''життєвий досвід'' vs ''гіркий досвід''.'
+  - 'Usage of ''Слово'': ''дотримувати слова'' (keep), ''дати слово'', and the fixed
+    expression ''чесне слово''.'
+- section: Культура мовлення та боротьба з кальками (Speech Culture and Fighting Calques)
+  words: 900
+  points:
+  - The problem of 'Surzhyk' arising from literal translation (calquing) of Russian
+    and English structures; emphasis on linguistic decolonization.
+  - 'Correcting common errors: ''Правильна відповідь'' (not вірна - loyal), ''Вважати,
+    що...'' (not рахувати - count), and ''Розплющувати очі'' (not відкривати - door/bottle).'
+  - 'Functional distinction in time verbs: ''проводити час'' (leisure), ''витрачати
+    час'' (resource/spend), and ''гаяти час'' (waste/idle away).'
+  - 'Case government awareness per State Standard §4.2.2: ensuring correct endings
+    in complex collocations (e.g., ''набувати досвіду'' with Genitive).'
+- section: 'Читання: Колокації в контексті (Reading: Collocations in Context)'
+  words: 800
+  points:
+  - 'Narrative text analyzing ''False Friends of the Translator'': comparing ''make/do''
+    in English with the varied Ukrainian equivalents (''робити вибір'' vs ''приймати
+    рішення'').'
+  - 'Analysis of descriptive collocations in literature: using ''справляти враження''
+    (make an impression) and ''ділитися враженнями'' within a narrative arc.'
+  - 'Identifying collocations in social scenarios: scenarios involving ''висловлювати
+    думку'' (express) and ''поділяти думку'' (share/agree).'
+- section: Практика та комунікативна продукція (Practice and Communicative Production)
+  words: 700
+  points:
+  - 'Interactive exercise: ''Correct/Incorrect'' (Правильно/Неправильно) table drills
+    focused on the 6 most frequent learner errors identified in research.'
+  - 'Scenario-based production: forming natural word combinations for business (contact
+    establishment) and daily life (keeping calm/keeping words).'
+  - 'Summary: ''Vocabulary is not just words, but how they connect'' — final reflection
+    on choosing the culturally precise word for stylistic elegance.'
+vocabulary_hints:
+  required:
+  - 'приймати рішення (to make a decision) — collocations: ухвалювати рішення (official),
+    остаточне рішення; learner error: робити рішення'
+  - 'брати участь (to participate) — collocations: активна участь, відмовитися від
+    участі; frequency: high; learner error: приймати участь'
+  - 'звертати увагу (to pay attention) — collocations: приділяти увагу (devote), заслуговувати
+    на увагу; center of attention (у центрі уваги)'
+  - 'набувати досвіду (to gain experience) — collocations: життєвий досвід, обмін
+    досвідом, гіркий досвід; context: education and career'
+  - 'правильна відповідь (correct answer) — note: ''вірний'' is loyal/faithful (вірний
+    друг), not for correctness'
+  - 'розплющувати очі (to open one''s eyes) — note: physical action of opening eyes;
+    ''відкривати'' is for doors, bottles, or discoveries'
+  - 'вважати (to consider/think) — usage: to express an opinion; note: ''рахувати''
+    is for counting items (1, 2, 3)'
+  - 'проводити час (to spend time) — context: leisure/enjoyment; collocations: вільний
+    час; contrast with ''гаяти час'' (waste)'
+  recommended:
+  - 'висловлювати думку (to express an opinion) — collocations: поділяти думку, на
+    мою думку, громадська думка'
+  - 'справляти враження (to make an impression) — collocations: незабутнє враження,
+    ділитися враженнями'
+  - 'дотримувати слова (to keep one''s word) — collocations: дати слово, чесне слово'
+  - 'гаяти час (to waste time) — usage: negative connotation of idling away time'
+  - 'обрій (horizon) — synonyms: горизонт, небокрай, видноколо; used to demonstrate
+    synonym richness'
+  - 'витрачати час (to spend/waste time) — usage: spending time as a resource; ''витрачати
+    зусилля'' (spend effort)'
+  - 'встановлювати контакт (to establish contact) — collocations: тісний контакт,
+    зоровий контакт'
+activity_hints:
+- type: match-up
+  focus: Match verb to noun
+  items: 25
+- type: fill-in
+  focus: Complete collocations
+  items: 20
+- type: error-correction
+  focus: Fix unnatural collocations
+  items: 15
+- type: fill-in
+  focus: Use collocations in context
+  items: 10
+focus: vocabulary
+pedagogy: PPP
+prerequisites:
+- b1-69 (Synonymy Speaking Verbs)
+connects_to:
+- b1-71 (Emotional Intelligence)
+objectives:
+- Learner can use 25 common verb-noun collocations naturally
+- Learner can distinguish between similar verbs in collocations
+- Learner can form natural word combinations in professional and everyday contexts
+- Learner can recognize and avoid unnatural collocations
+grammar:
+- Verb-noun collocations
+- Adjective-noun collocations
+- Fixed and semi-fixed expressions
+register: розмовний
+phase: B1.6 [Vocabulary Expansion II]
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Literary Translator
+word_target: 4000

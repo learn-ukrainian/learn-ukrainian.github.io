@@ -125,6 +125,24 @@ def evaluate_structure(
     return GateResult('PASS', '✅', "Valid Structure")
 
 
+def evaluate_persona(has_persona: bool, has_voice: bool, has_role: bool) -> GateResult:
+    """Evaluate persona gate (Deterministic Curriculum Standard v2.2)."""
+    if not has_persona:
+        return GateResult('FAIL', '❌', "Missing 'persona' in plan YAML")
+    if not has_voice:
+        return GateResult('FAIL', '❌', "Missing 'persona.voice' in plan YAML")
+    if not has_role:
+        return GateResult('FAIL', '❌', "Missing 'persona.role' in plan YAML")
+    return GateResult('PASS', '✅', "Persona Defined")
+
+
+def evaluate_ipa(issue_count: int) -> GateResult:
+    """Evaluate IPA transcription quality (auto-fixable, WARN level)."""
+    if issue_count == 0:
+        return GateResult('PASS', '✅', "Clean IPA")
+    return GateResult('WARN', '⚠️', f"{issue_count} IPA issues (run lint_ipa.py --fix)")
+
+
 def evaluate_lint(error_count: int) -> GateResult:
     """Evaluate lint errors gate."""
     if error_count == 0:
@@ -325,6 +343,33 @@ def evaluate_content_heavy(
         return GateResult('WARN', '⚠️', "; ".join(issues))
     
     return GateResult('PASS', '✅', f"Content-heavy OK ({activity_count} activities)")
+
+
+def evaluate_research_alignment(
+    research_info: Optional[dict],
+    content_exists: bool,
+) -> GateResult:
+    """Evaluate whether content reflects the current research quality.
+
+    WARN-level gate — flags stale content but doesn't block audits.
+    Uses content_alignment data from research_quality.assess_research().
+    """
+    if research_info is None:
+        return GateResult('INFO', 'ℹ️', "N/A (no research file)")
+
+    if not content_exists:
+        return GateResult('INFO', 'ℹ️', "Content not yet written")
+
+    alignment = research_info.get("content_alignment")
+    if alignment is None:
+        return GateResult('INFO', 'ℹ️', "N/A (no alignment data)")
+
+    if alignment.get("refresh_recommended"):
+        reasons = alignment.get("reasons", [])
+        reason_str = reasons[0] if reasons else "research upgraded"
+        return GateResult('WARN', '⚠️', f"Refresh recommended: {reason_str}")
+
+    return GateResult('PASS', '✅', "Content aligned with research")
 
 
 def compute_recommendation(

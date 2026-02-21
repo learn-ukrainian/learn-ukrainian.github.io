@@ -1,24 +1,38 @@
-# Research: Questions & Negation
-
-**Level:** A1 | **Module:** 07
-**Researched:** 2026-02-07
+# Дослідження: Questions & Negation
 
 ## State Standard Reference
-- Section: §4.3.1 (Просте речення — Simple sentence)
-- Required grammar:
-  - Питальне речення: Чи студент відповідає? Чи це наш автобус?
-  - Питальне речення зі спеціальними словами де, звідки, куди, що, хто: Де ви були вчора? Хто вам це сказав? Що тобі купити? Куди ви їдете?
-  - Стверджувальні й заперечні речення: Він чекає. Він не чекає. Чекайте на нас! Не чекайте на нас!
-- Level placement: A1 — questions and negation are core A1 syntax, explicitly in §4.3.1
-- Note: §4.4.1.2 (A2) expands with "просте питальне інтонаційне речення" (intonation-only questions) and more question words (з ким?, про кого?)
+§4.3.1 (A1): "питальне речення: Чи студент відповідає? Чи це наш автобус?; питальне речення зі спеціальними словами де, звідки, куди, що, хто: Де ви були вчора? Хто вам це сказав? Що тобі купити? Куди ви їдете?; стверджувальні й заперечні речення: Він чекає. Він не чекає."
+Alignment: This module directly implements the core syntactic requirements for A1 interrogative and negative sentences as defined in the Standard.
 
-## Vocabulary Check
-- Core question words: що, хто, де, куди, звідки, коли, чому, як, скільки — all high-frequency function words
-- Particles: чи (question particle), не (negation), так/ні (yes/no) — essential A1 vocabulary
-- Frequency adverbs: завжди, часто, іноді, рідко, ніколи, звичайно — common A1 adverbs
-- Note on double negation: ніколи не + verb is mandatory in Ukrainian (Standard examples at A2 §4.4.1.1: "подвійне заперечення: Ми ще нічого не приготували")
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| чи | High (Particle) | Чи ти..., Чи це... |
+| що | Top 10 (Pronoun) | Що це?, Що ти робиш? |
+| хто | Top 50 (Pronoun) | Хто це?, Хто там? |
+| де | High (Adverb) | Де ти?, Де туалет? |
+| коли | High (Adverb) | Коли сніданок?, Коли ти вдома? |
+| не | Top 5 (Particle) | не знаю, не розумію, не хочу |
+| так | High (Particle) | так, звичайно; так, будь ласка |
+| ні | High (Particle) | ні, дякую; ні, не... |
+| шо | Spoken (Very High) | шо ти кажеш? (colloquial variant of що) |
 
-## Cultural Hook (verified)
-- Fact 1: Ukrainian conversational directness — when Ukrainians ask "Як справи?" they expect a genuine answer, unlike the formulaic English "How are you?" Ukrainians value sincerity and directness in conversations.
-- Source: speakua.com/blog/9-ways-to-say-hello-in-ukrainian; ukrainianlessons.com/greetings/
-- How to use: Cultural Insight section — demonstrates that Ukrainian question culture reflects genuine interest, not mere formality
+## Cultural Hooks
+1. **The ALF Quote**: "Ти не любиш котів? Ти просто не вмієш їх готувати!" (You don't like cats? You just don't know how to cook them!) — iconic line from the Ukrainian dub of ALF, widely recognized and quoted.
+2. **Politeness & `Чи`**: While intonation alone works for questions, using `чи` adds a layer of polite formality or emphasis. In very casual speech, `чи` is often dropped, relying solely on the rising intonation.
+
+## Common Learner Errors
+1. **The "Do" Trap**: Trying to translate English auxiliary "do/does" (e.g., "Robysh ty znaty?" instead of "Ty znayesh?").
+   *Correct form*: Subject + Verb + ? (Intonation/Chi). *Why*: English transfer error.
+2. **Ні vs Не**: Confusing the answer "No" (`ні`) with the negation particle "Not" (`не`).
+   *Correct form*: "Ні, я не знаю" (No, I do not know). *Why*: Phonetic similarity.
+3. **Flat Intonation**: Failing to raise pitch at the end of a question without `чи`, making it sound like a statement.
+   *Correct form*: Sharp rise (↗) on the focus word. *Why*: L1 intonation patterns.
+
+## Cross-References
+- Builds on: a1-06 (The Living Verb I)
+- Prepares for: a1-08 (The Living Verb II), a1-19 (At the Café)
+
+## Notes for Content Writing
+- Ensure the distinction between `що` (standard) and `шо` (spoken) is mentioned but prioritized correctly (teach standard, recognize spoken).
+- Use visual arrows (↗ / ↘) to illustrate intonation patterns in the text.

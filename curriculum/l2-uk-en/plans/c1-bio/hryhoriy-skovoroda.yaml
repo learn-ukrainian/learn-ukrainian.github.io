@@ -1,20 +1,16 @@
----
-module: c1-bio-033
+module: c1-bio-33
 level: C1-BIO
 sequence: 33
 slug: hryhoriy-skovoroda
 version: '2.0'
 title: 'Григорій Сковорода: Мандрівний філософ'
-word_target: 4300
 content_outline:
-- section: "Вступ — Український Сократ"
-  words: 600
+- section: Вступ — Український Сократ
   points:
   - Сковорода як символ духовної свободи
   - Філософія серця та її актуальність
   - Образ мандрівного вчителя
 - section: Життєпис
-  words: 1600
   points:
   - Дитинство та навчання в Києво-Могилянській академії
   - Перебування в придворній капелі в Петербурзі
@@ -23,30 +19,25 @@ content_outline:
   - Відмова від світської та церковної кар'єри
   - Роки мандрів
 - section: Історичний контекст
-  words: 600
   points:
   - Українське Просвітництво
   - Ліквідація автономії (Січ, кріпацтво)
 - section: Внесок
-  words: 400
   points:
   - Вчення про "сродну працю"
   - Три світи та дві природи
   - Літературна спадщина (байки, пісні)
 - section: Останні роки
-  words: 400
   points:
   - Життя на Слобожанщині
   - Передчуття смерті та легенда про могилу
-  - Епітафія: "Світ ловив мене, та не спіймав"
+  - Епітафія: Світ ловив мене, та не спіймав
 - section: Спадщина
-  words: 400
   points:
   - Вплив на український кордоцентризм
   - Символ ідентичності (500 гривень)
   - Знищення музею у Сковородинівці 2022 р.
 - section: Підсумок
-  words: 300
   points:
   - Сковорода як пророк внутрішньої незалежності
 focus: biography
@@ -67,11 +58,11 @@ grammar:
 module_type: biography
 sources:
 - name: Григорій Сковорода (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Сковорода_Григорій_Савич"
+  url: https://uk.wikipedia.org/wiki/Сковорода_Григорій_Савич
   type: primary
   notes: Життєпис та вчення
 - name: Повне зібрання творів Сковороди
-  url: "http://izbornyk.org.ua/"
+  url: http://izbornyk.org.ua/
   type: primary
   notes: Тексти творів
 immersion: 100% Ukrainian
@@ -87,3 +78,6 @@ activity_hints:
   source: Original text (adapted)
 - type: creative-writing
   focus: Тлумачення афоризмів
+persona:
+  voice: Senior Biographer
+  role: Wandering Sage

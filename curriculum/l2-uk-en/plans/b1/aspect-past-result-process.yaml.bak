@@ -1,0 +1,106 @@
+module: b1-08
+level: B1
+sequence: 8
+slug: aspect-past-result-process
+version: '2.0'
+title: 'Вид у минулому: результат і процес'
+subtitle: 'Aspect in Past: Result vs Process'
+content_outline:
+- section: Тест
+  points:
+  - 'Narrative comparison — visual metaphor: Process = wavy line (no end), Result
+    = checkmark on timeline'
+  - Result vs Process focus — builds on concept from b1-06 (Aspect system)
+- section: Пояснення
+  points:
+  - 'Perfective (Result) — cultural hook: proverb «Зробив діло — гуляй сміло» (result
+    justifies leisure)'
+  - 'Imperfective (Process) — cultural hook: proverb «Тихіше їдеш — далі будеш» (manner
+    of action focus)'
+  - 'Markers — contrast specific markers: duration (весь день, годину) vs result (вже,
+    нарешті)'
+- section: Контраст
+  points:
+  - 'Same fact, different focus — cultural hook: Toloka tradition (building together
+    all day vs built the house by sunset)'
+  - 'Communication intent — context note: Boss asks for Perfective (accomplishment),
+    Friend asks for Imperfective (activity)'
+- section: Практика
+  points:
+  - Algorithm
+  - 'Common mistakes — learner error: Process for Result («Я писав тест» for achievement)
+    and Overuse of «був»'
+  - Daily life scenarios
+- section: Діалоги
+  points:
+  - Work report — emphasize result-oriented questions from supervisor
+  - Study experience
+  - Moving houses
+- section: Підсумок
+  points:
+  - Key rules — alignment with State Standard §4.2.3.1 (indicative mood past tense)
+  - Self-check
+vocabulary_hints:
+  required:
+  - результат (result) — досягти результату, головний результат, чекати на результат
+  - процес (process) — у процесі, навчальний процес, тривалий процес
+  - завершення (completion) — успішне завершення, після завершення, етап завершення
+  - тривалість (duration) — середня тривалість, тривалість життя, тривалість дії
+  - весь день (all day)
+  - годину (for an hour)
+  - вже (already) — вже зробив, вже готово, я вже знаю
+  - нарешті (finally) — нарешті прийшов, нарешті зробив, ну нарешті
+  - до кінця (to the end)
+  - довго (for a long time)
+  recommended:
+  - ще (still/yet)
+  - зараз (now)
+  - поступово (gradually)
+  - раптом (suddenly)
+  - миттєво (instantly)
+activity_hints:
+- type: quiz
+  focus: Result or process aspect?
+  items: 15+
+- type: fill-in
+  focus: Duration markers with imperfective
+  items: 12+
+- type: fill-in
+  focus: Add result marker → change to perfective
+  items: 10+
+- type: fill-in
+  focus: Narrative with result/process focus
+  items: 10+
+focus: grammar
+pedagogy: TTT
+prerequisites:
+- b1-06 (Aspect complete system)
+- b1-07 (Aspect past - single vs repeated)
+connects_to:
+- b1-09 (Aspect in future)
+- b1-14 (Aspect integration practice)
+objectives:
+- Learner can distinguish result from process in past tense
+- Learner understands duration markers with imperfective
+- Learner can select aspect based on speaker's focus (result vs activity)
+- Learner recognizes completion markers with perfective
+grammar:
+- Result-oriented vs process-oriented aspect
+- Duration markers and aspect
+- Completed actions vs ongoing processes
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Aspect and Result
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Official guidance on result-oriented aspect usage
+- name: Ukrainian Grammar - Aspect
+  url: https://uk.wikipedia.org/wiki/Вид_дієслова
+  type: reference
+  notes: Process vs result distinction in Ukrainian
+immersion: 100% Ukrainian
+phase: B1.1 Aspect
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Crime Scene Investigator
+word_target: 4000

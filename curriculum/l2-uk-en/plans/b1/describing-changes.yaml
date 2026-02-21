@@ -1,0 +1,125 @@
+module: b1-58
+level: B1
+sequence: 58
+slug: describing-changes
+version: '2.0'
+title: Опис змін
+subtitle: Describing Changes
+content_outline:
+- section: 'Вступ: Мова динаміки (Introduction: The Language of Dynamics)'
+  words: 400
+  points:
+  - 'Introduction to the Climate Scientist persona: setting a professional tone for
+    describing environmental and social shifts according to State Standard §3.14.'
+  - Distinguishing between dynamic processes (*процес*) and static results (*результат*)
+    in Ukrainian descriptive grammar.
+  - 'Temporal perspectives: defining the scale of change from gradual (*поступово*)
+    to sudden (*різко*) or rapid (*стрімко*).'
+- section: Презентація та граматичні нюанси (Presentation and Grammatical Nuances)
+  words: 1000
+  points:
+  - 'Lexical groups for change: Motion, State, Quantity, Quality, and Abstract concepts
+    as mandated by Standard §3.6.'
+  - 'Comparison of adverbs: using *більш сучасно* or *менш холодно* to describe shifting
+    states (State Standard §4.3.2).'
+  - 'Learner Error Focus 1: Distinguishing *рости* (physical growth of plants/children)
+    from *зростати* (abstract/statistical growth like *економіка зростає*).'
+  - 'Learner Error Focus 2: Transitive *змінювати* (active agent) vs reflexive *змінюватися*
+    (intransitive state); drill correct Accusative governance *змінювати план* vs
+    incorrect *змінювати до плану*.'
+  - 'Collocations with speed adverbs: *стрімко зростати*, *поступово змінюватися*,
+    *різко падати*.'
+- section: 'Читання: Клімат та трансформація міст (Reading: Climate and City Transformation)'
+  words: 1000
+  points:
+  - 'Climate Scientist Report: analytical text on environmental trends using *температура
+    підвищується/знижується* and *клімат змінюється*.'
+  - 'Cultural Hook: The transformation of Kyiv into a ''UNESCO City of Music'' (2025)
+    as a context for verbs of improvement (*покращуватися*, *розвиватися*).'
+  - 'Social Context: De-russification and street renaming as an active process of
+    *змінювати назви*, contrasting with how the urban landscape *змінюється* (passive/state).'
+- section: 'Діалоги: Від прогнозів до цифровізації (Dialogues: From Forecasts to Digitalization)'
+  words: 800
+  points:
+  - 'Formal workplace dialogue: negotiating project changes and adjustments using
+    transitive verbs and Accusative case.'
+  - 'Informal weather discussion: practicing the distinction between *погода змінюється*
+    (intransitive) and *вітер змінює напрямок* (transitive).'
+  - 'Digital State Discussion: Cultural hook on how the ''Diia'' ecosystem *стрімко
+    розвивається*, transforming bureaucratic processes into digital services.'
+- section: Виробництво та підсумок (Production and Summary)
+  words: 800
+  points:
+  - 'Guided production: learners describe a significant change in their hometown or
+    professional field using at least 10 verbs/adverbs from the required list.'
+  - 'Refining nuances: choosing between *поступово*, *різко*, and *стрімко* to accurately
+    convey the speed of transformation.'
+  - Final recap of case governance (*перетворюватися на...*) and the contrast between
+    physical and abstract growth verbs.
+vocabulary_hints:
+  required:
+  - зростати (to grow/increase) — *попит/економіка/ціни/напруга зростають*; high frequency
+    in news/econ; contrast with physical *рости*
+  - зменшуватися (to decrease) — *кількість/відстань/ризик зменшується*; common for
+    gradual reduction
+  - змінюватися (to change [itself]) — *погода/ситуація/часи змінюються*; intransitive/reflexive;
+    contrast with transitive *змінювати*
+  - 'змінювати (to change [something]) — *змінювати план/назву/пароль*; transitive,
+    requires Accusative; error: do not use ''до'''
+  - перетворюватися на (to transform into) — *місто перетворюється на культурний хаб*;
+    requires Accusative governance
+  - підвищуватися (to rise/increase) — *температура/рівень/тиск підвищується*; specific
+    to measurements and scales
+  - знижуватися (to lower/decline) — *температура/ціни/рівень знижується*; antonym
+    to *підвищуватися*
+  - поступово (gradually) — *поступово змінюватися/звикати/відновлюватися*; high frequency
+    for steady processes
+  - різко (sharply/suddenly) — *різко змінитися/впасти/піднятися*; indicates a sudden
+    break in trend
+  recommended:
+  - стрімко (rapidly) — *стрімко розвиватися/зростати/падати*; used for digitalization
+    (Diia) and fast economic shifts
+  - значно (significantly) — *значно впливати/змінити/покращити*; adds emphasis to
+    the scale of change
+  - падати (to fall) — *курс валют/ціни/температура падає*; common for rapid or negative
+    trends
+  - ставати (to become) — *ставати кращим/гіршим/доступнішим*; used with comparative
+    adjectives/adverbs
+  - покращуватися (to improve) — *ситуація/здоров'я/якість покращується*; reflexive
+    form for positive change
+  - погіршуватися (to worsen) — *зір/погода/відносини погіршуються*; reflexive form
+    for negative change
+activity_hints:
+- type: match-up
+  focus: Verb + adverb combinations
+  items: 25
+- type: fill-in
+  focus: Describe changes in context
+  items: 20
+- type: fill-in
+  focus: Rephrase change descriptions
+  items: 15
+- type: fill-in
+  focus: Narrate trends
+  items: 10
+focus: vocabulary
+pedagogy: PPP
+prerequisites:
+- b1-57 (Discourse Markers Advanced)
+connects_to:
+- b1-59 (Media News)
+objectives:
+- Learner can use 25 verbs and expressions for describing changes
+- Learner can distinguish between gradual and sudden change vocabulary
+- Learner can form natural collocations with change-related adverbs
+- Learner can narrate transformations over time
+grammar:
+- Verb collocations for describing change
+- Adverbs of manner with change verbs
+- Temporal expressions for change processes
+register: розмовний
+phase: B1.5 [Vocabulary Expansion I]
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Climate Scientist
+word_target: 4000

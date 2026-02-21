@@ -1,0 +1,302 @@
+✅ Message sent to Gemini (ID: 10020) [auto-acked: self-addressed]
+✓ Message 10020 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10020...
+📨 Message #10020
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-the-cyrillic-code-ii
+   Time: 2026-02-20T19:34:11.381485+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: a1-02
+level: A1
+sequence: 2
+slug: the-cyrillic-code-ii
+version: '2.0'
+title: The Cyrillic Code II
+subtitle: The Final 14 Letters
+content_outline:
+- section: Warm-up
+  points:
+  - Quick review of Part I letters
+  - Reading diagnostic
+- section: Presentation
+  points:
+  - 'Unique Seven (Г, Ґ, Ж, Ш, Щ, Ч, Ц) — learner error: Г is a voiced ''h'' (ahead),
+    while Ґ is the hard ''g'' (rare); frame as ''Identity Letters'' that distinguish
+    Ukrainian from Russian'
+  - 'Iotated Four (Є, Ї, Ю, Я) — cultural hook: Ї as a symbol of resistance and independence;
+    note on euphony (smoothing consonant clumps)'
+  - 'Soft Sign (Ь) — learner error: treating Ь as silent; correction: tongue must
+    press flat against the roof of the mouth (e.g., день sounds like dyen''); State
+    Standard §4.1.3 alignment: use examples Львів, шість'
+  - 'Hard I (И) vs Soft I (І) — learner error: difficulty distinguishing И from І;
+    use ''Smile vs Grin'' analogy (І wide smile, И relaxed jaw); І softens previous
+    consonant, И keeps it hard; State Standard §4.1.4 alignment'
+  - Short Y (Й)
+- section: Practice
+  points:
+  - 'Reading words with new letters — incorporate high-frequency words: центр, чай,
+    школа, гарний, жити, день, Європа, яблуко'
+  - Distinguishing similar sounds — focus on Г/Ґ and И/І differentiation
+- section: Production
+  points:
+  - Reading practice
+  - Self-assessment
+- section: Cultural Insight
+  points:
+  - 'Kyiv spelling and Ukrainian identity — alignment with State Standard §4.1.1:
+    Kyiv, Kyivskyi, Ukraina, ukrainets; include Олена, олівець as standard examples'
+  - 'Italic variants warning — cultural hook: The repressed Ґ (banned 1933-1990) as
+    a symbol of recovering historical truth'
+vocabulary_hints:
+  required:
+  - 'центр (center) — collocations: торговий центр, історичний центр, центр міста,
+    у центрі'
+  - 'чай (tea) — collocations: зелений/чорний чай, пити чай, чашка чаю, чай з лимоном'
+  - 'школа (school) — collocations: іти до школи, у школі, середня школа, музична
+    школа'
+  - 'гарний (beautiful) — collocations: гарний день, гарна дівчина, гарна погода,
+    гарний настрій'
+  - 'жити (to live) — collocations: жити в Україні, жити добре, довго жити'
+  - 'день (day) — collocations: добрий день, кожен день, цілий день, робочий день'
+  - 'Європа (Europe) — collocations: Західна Європа, жити в Європі, поїхати до Європи'
+  - 'яблуко (apple) — collocations: червоне яблуко, їсти яблуко, яблуко розбрату (idiom)'
+  recommended:
+  - ще (still/more)
+  - ґанок (porch) — demonstration of the rare letter Ґ
+  - їжа (food) — demonstration of the unique letter Ї
+  - юнак (young man)
+  - ніч (night) — demonstrates the soft sign/soft consonant ending
+  - сім'я (family)
+activity_hints:
+- type: quiz
+  focus: Identify final 14 letters
+  items: 20
+- type: match-up
+  focus: Match unique sounds to letters
+  items: 20
+- type: match-up
+  focus: Distinguish И/І, Г/Ґ
+  items: 15
+- type: quiz
+  focus: Read words with new letters
+  items: 20
+focus: grammar
+pedagogy: PPP
+prerequisites:
+- a1-01 (The Cyrillic Code I)
+connects_to:
+- a1-03 (The Gender Code)
+objectives:
+- Learner can recognize unique Ukrainian letters (Г, Ґ, Ж, Ш, Щ, Ч, Ц)
+- Learner can identify iotated vowels (Є, Ї, Ю, Я)
+- Learner can understand the soft sign (Ь)
+- Learner can distinguish И (hard i) from І (soft i)
+grammar:
+- Unique Ukrainian consonants
+- Iotated vowels
+- Soft sign function
+register: розмовний
+phase: A1.1 [First Contact]
+persona:
+  voice: Patient Supportive Tutor
+  role: Ancient Manuscript Restorer
+word_target: 2000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: The Cyrillic Code II
+
+## State Standard Reference
+§4.1.3: "М’який знак: Львів, шість."
+§4.1.4: "Тверді та м’які приголосні: лист – ліс, Рим – Рівне... Дзвінкі та глухі приголосні: голодний – холодний."
+Alignment: Module teaches identification of hard vs soft consonants (regulated by И/І and Ь) and unique Ukrainian consonants (Г/Ґ), directly fulfilling §4.1.3 and §4.1.4 requirements for phonetic distinction at A1.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| центр | High (Top 300) | у центрі, центр міста, торговий центр |
+| чай | High (Top 500) | пити чай, чорний чай, чашка чаю |
+| школа | Very High (Top 200) | у школі, нова школа, іти до школи |
+| гарний | High (Top 300) | гарний день, гарна дівчина, дуже гарний |
+| жити | Very High (Top 50) | жити в Україні, жити добре |
+| день | Very High (Top 50) | добрий день, кожен день, цілий день |
+| Європа | High (Cultural) | жити в Європі, Західна Європа |
+| яблуко | Medium (Food) | смачне яблуко, червоне яблуко |
+
+## Cultural Hooks
+1. **The Letter Ї**: Became a symbol of resistance in occupied Mariupol (2022) and general Ukrainian distinctness, as it does not exist in Russian. Used in graffiti to mark Ukrainian presence.
+2. **The Repressed Letter Ґ**: Banned in the 1933 orthography reform ("Skrypnykivka" reversal) to make Ukrainian closer to Russian. Restored only in 1990. Its usage is a shibboleth for proper Ukrainian education.
+
+## Common Learner Errors
+1. **Г vs Ґ**: Learners often use the hard English 'g' for both. Correction: Г is voiced 'h' (head), Ґ is 'g' (go).
+2. **Ignored Soft Sign (Ь)**: Treating it as silent. Correction: It changes the *previous* consonant, smashing the tongue flat against the roof of the mouth (palatalization).
+3. **И vs І Confusion**: Learners hear them as the same "ee" sound. Correction: І is a smile (dots = eyes), И is a grimace/relaxed jaw (lower pitch, harder sound).
+
+## Cross-References
+- Builds on: a1-01 (The Cyrillic Code I) — uses the first 19 letters.
+- Prepares for: a1-03 (The Gender Code) — identification of hard/soft endings is crucial for gender determination.
+
+## Notes for Content Writing
+- **Immersion**: A1.1 Level. Use English for all explanations. Ukrainian only for examples/drills.
+- **Pedagogy**: Focus on *contrast*. Always show pairs: Г-Ґ, И-І, С-СЬ.
+- **Visuals**: Describe the "Smile vs Grin" technique visually in the text.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 2000`
+- **Minimum 4 sections** for modules with `word_target < 2000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 300
+  points:
+  - "Quick review of the first 19 letters from a1-01 and a reading diagnostic to identify retention gaps"
+  - "Introduction to the 'Identity Letters' concept — framing the final 14 letters as the keys to Ukrainian distinctness and linguistic sovereignty"
+- section: "Унікальні приголосні (Unique Consonants)"
+  words: 450
+  points:
+  - "The 'Unique Seven' (Г, Ґ, Ж, Ш, Щ, Ч, Ц): presentation of sounds with specific focus on Г vs Ґ distinction as per State Standard §4.1.4"
+  - "Learner error correction: addressing the tendency to use English hard 'g' for both Г and Ґ; Г is a voiced 'h' (head), while Ґ is the rare hard 'g' (go)"
+  - "Cultural hook: The repressed letter Ґ — explaining its ban (1933-1990) as an attempt to diminish Ukrainian identity and its role today as a shibboleth for proper education"
+- section: "Йотовані голосні та М’який знак (Iotated Vowels and Soft Sign)"
+  words: 450
+  points:
+  - "Presentation of Iotated Four (Є, Ї, Ю, Я) and their role in euphony (smoothing consonant clumps)"
+  - "Cultural hook: The letter Ї as a symbol of resistance — referencing its use in graffiti in occupied Mariupol (2022) to mark Ukrainian presence and distinctness from Russian"
+  - "Soft Sign (Ь) function as per State Standard §4.1.3: correcting the 'silent letter' misconception by explaining palatalization (pressing the tongue flat against the roof of the mouth)"
+  - "Drilling §4.1.3 standard examples: Львів, шість, and high-frequency word 'день'"
+- section: "Голосні та напівголосні (Vowels and Semivowels)"
+  words: 400
+  points:
+  - "Hard I (И) vs Soft I (І) distinction: alignment with State Standard §4.1.4 through minimal pairs like Рим – Рівне"
+  - "Visual technique 'Smile vs Grin': І is a wide smile (dots are eyes), while И requires a relaxed jaw/grimace for a lower pitch and harder sound"
+  - "Introduction to Short Y (Й) and its usage in high-frequency collocations"
+- section: "Практика та вимова (Practice and Pronunciation)"
+  words: 400
+  points:
+  - "Contrast drills focusing on common learner hearing errors: minimal pairs for И-І (smile vs grin), Г-Ґ (voiced h vs hard g), and С-СЬ (hard vs soft)"
+  - "Spelling and identity alignment (§4.1.1): practicing the correct Ukrainian spelling of Kyiv, Kyivskyi, Ukraina, and ukrainets"
+  - "Reading practice using high-frequency vocabulary (центр, чай, школа, гарний, жити, день) with focus on proper word stress and phonetic accuracy"
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "центр (center) — Top 300 word; collocations: у центрі, центр міста, торговий центр"
+  - "чай (tea) — Top 500 word; collocations: пити чай, чорний чай, чашка чаю, чай з лимоном"
+  - "школа (school) — Top 200 word; collocations: у школі, нова школа, іти до школи"
+  - "гарний (beautiful/good) — Top 300 word; collocations: гарний день, гарна дівчина, дуже гарний"
+  - "жити (to live) — Top 50 word; collocations: жити в Україні, жити добре, довго жити"
+  - "день (day) — Top 50 word; collocations: добрий день, кожен день, цілий день, робочий день"
+  - "Європа (Europe) — high cultural frequency; collocations: жити в Європі, Західна Європа, поїхати до Європи"
+  - "яблуко (apple) — medium frequency; collocations: смачне яблуко, червоне яблуко, їсти яблуко; idiom: яблуко розбрату"
+  recommended:
+  - "ще (still/more) — high frequency function word"
+  - "ґанок (porch) — demonstration of the repressed/restored letter Ґ"
+  - "їжа (food) — demonstration of the unique resistance symbol letter Ї"
+  - "юнак (young man) — iotated vowel demonstration"
+  - "ніч (night) — demonstrates soft consonant ending contrast to hard consonants"
+  - "сім'я (family) — common word showing iotated vowel after apostrophe"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (3840 chars)
+✅ Message sent to Claude (ID: 10029)
+✓ Message 10029 acknowledged
+   Auto-acknowledged reply #10029 (stdout delivery — no inbox accumulation)
+✓ Message 10020 acknowledged

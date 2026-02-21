@@ -1,4 +1,3 @@
----
 sequence: 63
 module: oes-063
 module_number: 51
@@ -9,7 +8,6 @@ phase: 3
 phase_id: legal-tradition
 phase_name: Legal Tradition
 focus: Debt slavery laws
-word_target: 4000
 content_outline:
 - section: Вступ
   description: Introduction to The Zakup (Indentured)
@@ -24,3 +22,6 @@ activity_types:
 - transcription
 - etymology-trace
 - grammar-identify
+persona:
+  voice: Senior Paleographer
+  role: Manumission Scribe

@@ -1,0 +1,118 @@
+module: a2-69
+level: A2
+sequence: 69
+slug: online-services
+version: '2.0'
+title: Online Services
+subtitle: Apps and Delivery
+content_outline:
+- section: Вступ (Introduction)
+  words: 400
+  points:
+  - 'Online services in Ukraine — cultural hook: ''State in a Smartphone'' (Держава
+    у смартфоні) and the Diia (Дія) app; explain that Ukraine is the first country
+    to grant digital passports full legal status (State Standard §3.11, §3.4)'
+  - 'Cashless economy context: the ubiquity of Apple Pay/Google Pay even at street
+    kiosks; introduce the cultural phrase ''skinuty na kartu'' (скинути на картку)
+    as a standard social and commercial interaction'
+- section: Презентація (Presentation)
+  words: 700
+  points:
+  - 'Core UI vocabulary: focus on ''замовлення'' (order), ''кошик'' (cart), and ''додаток''
+    (app); note ''додаток'' is the standard term for a mobile application (State Standard
+    §3.9)'
+  - 'Grammar focus: Imperative mood for app commands (Натисніть, Оберіть, Оплатити,
+    Підтвердіть); provide a list of common button labels and their functions'
+  - 'Learner error alert: ''Замовлення'' is neuter gender (моє замовлення); drill
+    agreement to prevent feminine-ending confusion (-я suffix pattern)'
+- section: Практика (Practice)
+  words: 700
+  points:
+  - 'Navigation and Cart logic: drill the distinction between ''додати в кошик'' (motion,
+    Accusative) and ''у кошику'' (static location, Locative); use 5 minimal pairs
+    to reinforce the case change'
+  - 'Ordering logistics: distinguish between ''номер'' (ID/phone number) and ''кількість''
+    (quantity); example: ''номер замовлення'' vs ''кількість товарів'''
+  - 'Delivery specifics: collocations for ''доставка'' (безкоштовна доставка, час
+    доставки, служба доставки); simulate tracking an order using ''номер для відстеження'''
+- section: Діалоги (Dialogues)
+  words: 600
+  points:
+  - 'Taxi and Transport: functional dialogue using apps like Uklon or Bolt; use terms
+    ''замовити таксі'', ''місце посадки'' (pickup), and ''місце призначення'' (destination)'
+  - 'Banking and Support: customer support chat context; handling a ''скарга'' (complaint)
+    or ''повернення'' (refund/return); common phrases like ''перевірити баланс'' and
+    ''поповнити рахунок'''
+  - 'Peer-to-peer transfers: a dialogue about splitting a bill using ''скинути на
+    картку''; mention Monobank and Privat24 as the primary platforms'
+- section: Розповідь (Narrative)
+  words: 400
+  points:
+  - 'Cultural narrative: The ''Monobank cat'' mascot and the social phenomenon of
+    the ''banka'' (банка/jar) for collective fundraising and digital philanthropy'
+  - 'Story of a digital day: using Diia for ID, ordering delivery via Glovo/Bolt,
+    and donating to a ''banka'', emphasizing Ukraine''s status as a digital leader'
+- section: Підсумок (Summary)
+  words: 200
+  points:
+  - Review of key collocations (оформити замовлення, оплата карткою); final check
+    on neuter gender agreement for 'замовлення'
+  - Preparation for a2-70 (Introduction to Participles) and the A2 Final Exam (a2-71)
+vocabulary_hints:
+  required:
+  - замовлення (order) — оформити замовлення, номер замовлення, скасувати замовлення;
+    high frequency; note neuter gender (моє)
+  - кошик (cart/basket) — додати в кошик (motion/Acc), ваш кошик порожній (Loc); standard
+    UI term
+  - доставка (delivery) — служба доставки, безкоштовна доставка, час доставки; essential
+    for e-commerce
+  - додаток (app/application) — мобільний додаток, завантажити додаток, через додаток;
+    refers specifically to mobile software
+  - картка (card) — банківська картка, оплата карткою, номер картки; central to 'skinuty
+    na kartu' culture
+  - переказ (transfer) — грошовий переказ, переказ на картку; common in banking apps
+  - баланс (balance) — перевірити баланс, поповнити баланс; used for phones and banks
+  - оплата (payment) — термінал для оплати, підтвердити оплату; standard checkout
+    term
+  recommended:
+  - підтвердження (confirmation) — код підтвердження, чекати на підтвердження
+  - відстеження (tracking) — номер для відстеження, відстежити замовлення
+  - підтримка (support) — служба підтримки, написати в підтримку
+  - скарга (complaint) — подати скаргу, розгляд скарги
+  - повернення (return/refund) — оформити повернення коштів, повернення товару
+  - банка (jar/fundraising tool) — скинути в банку, відкрити банку; specific Monobank
+    cultural term
+  - промокод (promo code) — ввести промокод, знижка за промокодом
+activity_hints:
+- type: match-up
+  focus: Online services vocabulary
+  items: 25
+- type: quiz
+  focus: Understand app interfaces (reading comprehension)
+  items: 15
+- type: fill-in
+  focus: Complete service requests
+  items: 15
+focus: practical
+pedagogy: PPP
+prerequisites:
+- a2-68 (Texting and Messaging)
+connects_to:
+- a2-70 (Introduction to Participles)
+- a2-53 (Shopping and Services)
+objectives:
+- Learner can use Ukrainian delivery apps
+- Learner can handle online banking basics
+- Learner can communicate with support
+- Learner can understand app notifications
+grammar:
+- App interface vocabulary (кошик, замовити)
+- Banking terms (картка, переказ, баланс)
+- Customer support phrases
+register: розмовний
+immersion: 75-90% Ukrainian
+phase: A2.6 [Practical]
+persona:
+  voice: Encouraging Cultural Guide
+  role: IT Support Specialist
+word_target: 3000

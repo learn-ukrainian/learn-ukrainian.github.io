@@ -1,0 +1,83 @@
+module: b1-65
+level: B1
+sequence: 65
+slug: relationships
+version: '2.0'
+title: Стосунки та зв'язки
+subtitle: Relationships and Connections
+content_outline:
+- section: Вступ
+  points:
+  - Types of relationships — distinguish between «стосунки» (personal), «відносини»
+    (formal), «взаємини» (reciprocal), and «ставлення» (attitude)
+  - 'Cultural context — introduce the strict distinction between «любити» (family/general)
+    and «кохати» (romantic); cultural hook: «куми» (godparents) as lifelong spiritual
+    kin'
+  - 'Vocabulary overview — focus on high-frequency collocations: «з’ясовувати стосунки»
+    (to have it out), «налагодити стосунки» (to fix relationships)'
+- section: Читання
+  points:
+  - Relationship texts — narrative about a misunderstanding caused by «любити/кохати»
+    or a story illustrating the depth of the «куми» bond
+  - Ukrainian traditions — explain the proverb «Рідня до півдня, а куми — довіку»
+- section: Діалоги
+  points:
+  - 'Discuss relationships — learner error: avoid Russian calque «женився на ній»,
+    use «одружився з нею»'
+  - Use cultural vocabulary — incorporate B1+ collocations like «розірвати стосунки»
+    (to break up) and «втратити зв'язок» (to lose touch)
+vocabulary_hints:
+  required:
+  - 'стосунки (relationships) — personal, emotional interactions; collocations: з’ясовувати
+    стосунки, стосунки в сім''ї'
+  - дружба (friendship) — close personal bond
+  - кохання (love) — romantic passion only (not for family)
+  - родина (family) — close kin group
+  - партнер (partner) — romantic or business context (context matters)
+  - знайомство (acquaintance) — process of meeting or person known slightly
+  - спілкуватися (to communicate) — to maintain contact/connection
+  - підтримувати (to support) — emotional or practical backing
+  recommended:
+  - закоханість (being in love) — temporary state vs deep love
+  - шлюб (marriage) — official union; note usage «шлюб з»
+  - 'зв''язок (connection) — general term; collocations: родинний зв''язок, бути на
+    зв''язку'
+  - приятелювати (to be friends) — to be on friendly terms (less deep than druzhba)
+  - взаємини (mutual relations) — deep, reciprocal warmth; e.g., теплі взаємини
+  - ставлення (attitude) — one-way feeling towards something/someone; e.g., ставлення
+    до роботи
+  - куми (godparents) — spiritual parents, lifelong kin
+activity_hints:
+- type: match-up
+  focus: Relationship noun phrases
+  items: 25
+- type: fill-in
+  focus: Describe relationships
+  items: 20
+- type: match-up
+  focus: Match relationship types
+  items: 15
+- type: quiz
+  focus: Discuss relationship topics
+  items: 10
+focus: vocabulary
+pedagogy: PPP
+prerequisites:
+- b1-64 (Emotions Deep Dive)
+connects_to:
+- b1-66 (Business Basics)
+objectives:
+- Learner can use 25 relationship vocabulary words in context
+- Learner can distinguish between стосунки/відносини/зв'язок
+- Learner can form natural collocations with relationship nouns
+- Learner can discuss Ukrainian cultural traditions related to relationships
+grammar:
+- Noun collocations with relationship vocabulary
+- Verb patterns with emotional states
+- Preposition usage in relationship contexts
+register: розмовний
+phase: B1.6 [Vocabulary Expansion II]
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Family Psychologist
+word_target: 4000

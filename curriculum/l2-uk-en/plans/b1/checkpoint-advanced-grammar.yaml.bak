@@ -1,0 +1,114 @@
+module: b1-51
+level: B1
+sequence: 51
+slug: checkpoint-advanced-grammar
+version: '2.0'
+title: 'Контрольна точка: Просунута граматика'
+subtitle: Advanced Grammar Phase Checkpoint
+content_outline:
+- section: Огляд
+  points:
+  - Review B1.4 objectives
+  - Identify strengths and gaps
+  - Set checkpoint goals
+- section: 'Навичка 1: Дієприслівники недоконаного виду'
+  points:
+  - Утворення (-ючи, -ачи від НДВ)
+  - Читаючи книгу, він заснув
+  - Одночасність дій
+  - Самоперевірка
+- section: 'Навичка 2: Дієприслівники доконаного виду'
+  points:
+  - Утворення (-вши, -ши від ДВ)
+  - Прочитавши книгу, він заснув
+  - Послідовність дій (спочатку прочитав, потім заснув)
+  - Самоперевірка
+- section: 'Навичка 3: Активні дієприкметники'
+  points:
+  - Теперішній час (-учий/-ючий, -ачий/-ячий)
+  - Минулий час (-лий)
+  - Узгодження з іменником
+  - Самоперевірка
+- section: 'Навичка 4: Пасивні дієприкметники — повна форма'
+  points:
+  - Утворення (-ний/-тий)
+  - Написана книга, відкриті двері
+  - Узгодження з іменником (рід, число, відмінок)
+- section: 'Навичка 5: Пасивні дієприкметники — коротка форма'
+  points:
+  - Утворення (написано, відкрито)
+  - Вживання в безособових конструкціях
+  - Книгу написано
+- section: 'Навичка 6: Пасивні конструкції'
+  points:
+  - Три способи вираження пасиву
+  - Вибір форми залежно від регістру
+  - Порівняння активу і пасиву
+- section: 'Навичка 7: Демінутиви'
+  points:
+  - Суфікси демінутивів (-ик, -ок, -очок, -еньк-)
+  - Прагматика — пестливість, іронія, применшення
+  - Стилістичне вживання
+- section: 'Навичка 8: Збірні числівники та дроби'
+  points:
+  - Збірні числівники (двоє, троє, четверо)
+  - Дроби (одна друга, три чверті)
+  - Відсотки (п'ять відсотків)
+- section: Інтеграційне завдання
+  points:
+  - Comprehensive text with all forms
+  - Error analysis
+  - Proficiency check
+- section: Підсумок
+  points:
+  - Review results
+  - Plan for B1.5
+vocabulary_hints:
+  required:
+  - контрольна точка (checkpoint)
+  - оцінювання (assessment)
+  - дієприкметник (participle)
+  - дієприслівник (adverbial participle)
+  - пасивний стан (passive voice)
+  - демінутив (diminutive)
+  - збірний числівник (collective numeral)
+  - інтеграція (integration)
+  recommended:
+  - готовність (readiness)
+  - прогрес (progress)
+  - майстерність (mastery)
+  - самооцінка (self-assessment)
+activity_hints:
+- type: quiz
+  focus: B1.4 comprehensive test
+  items: 30
+- type: fill-in
+  focus: All participle and passive conversions
+  items: 25
+- type: fill-in
+  focus: Complete with appropriate forms
+  items: 20
+- type: fill-in
+  focus: Write integrated paragraphs
+  items: 10
+focus: checkpoint
+pedagogy: TTT
+prerequisites:
+- b1-50 (Integrated Grammar Lab)
+connects_to:
+- b1-52 (Abstract Concepts Ideas)
+objectives:
+- Learner can demonstrate mastery of advanced grammar forms
+- Learner can integrate knowledge from M42-M50
+- Learner can form and use adverbial and passive participles
+- Learner can self-assess readiness for Vocabulary Expansion phase
+grammar:
+- Integration of M42-M50
+- Participles, passive voice, diminutives, numerals
+- Comprehensive review and testing
+register: розмовний
+phase: B1.4b [Advanced Grammar Checkpoint]
+persona:
+  voice: Senior Language & Culture Specialist
+  role: University Philologist
+word_target: 4000

@@ -1,4 +1,3 @@
----
 sequence: 53
 module: ruth-053
 module_number: 43
@@ -9,7 +8,6 @@ phase: 2
 phase_id: sacred-word
 phase_name: Sacred Word
 focus: Noun declensions (standardized)
-word_target: 4000
 content_outline:
 - section: Вступ
   description: Introduction to Parts of Speech
@@ -24,3 +22,6 @@ activity_types:
 - transcription
 - etymology-trace
 - grammar-identify
+persona:
+  voice: Baroque Scholar
+  role: Latinist Grammarian

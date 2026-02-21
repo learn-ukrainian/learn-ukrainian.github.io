@@ -1,4 +1,3 @@
----
 sequence: 58
 module: ruth-058
 module_number: 58
@@ -9,7 +8,6 @@ phase: 3
 phase_id: baroque-fight
 phase_name: Baroque Fight
 focus: High vs Low style distinctions
-word_target: 4000
 content_outline:
 - section: Вступ
   description: Introduction to Stylistic Levels
@@ -25,3 +23,6 @@ activity_types:
 - etymology-trace
 - grammar-identify
 - register-identify
+persona:
+  voice: Baroque Scholar
+  role: Lector

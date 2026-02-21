@@ -1,0 +1,117 @@
+module: a1-28
+level: A1
+sequence: 28
+slug: description-adverbs
+version: '2.0'
+title: 'Description: Adverbs'
+subtitle: How We Do Things
+content_outline:
+- section: Вступ (Introduction)
+  words: 400
+  points:
+  - 'Питання Як? (добре, швидко, тихо) — State Standard §1.3.1: focus on elementary
+    description of actions and signs.'
+  - 'Learner error: using adjective instead of adverb (Він говорить хороший instead
+    of Він говорить добре) due to English interference (e.g. ''fast'').'
+  - Visual contrast between Який? (Adjective describing a person) vs Як? (Adverb describing
+    the action).
+- section: Основи та Формування (Basics and Formation)
+  words: 450
+  points:
+  - 'Derivation rule: Adjective stem + -ий → -о (швидкий → швидко, гарний → гарно)
+    with visual mapping of ending changes.'
+  - 'The exception добрий → добре and its frequency: ''добре'' is High Frequency (Top
+    100) and serves as a universal ''OK/Agreed'' response.'
+  - 'Standard word order: Adverb typically follows the verb (Він працює добре) — State
+    Standard line 374, 436.'
+- section: Час та Частота (Time and Frequency)
+  words: 450
+  points:
+  - 'Frequency scale: завжди (always) → зазвичай (usually) → часто (often) → іноді
+    (sometimes) → рідко (rarely) → ніколи (never).'
+  - 'Learner error: Missing double negation with ''ніколи''. Drill the pattern: Я
+    ніколи НЕ (+ verb) vs English ''I never...''.'
+  - 'Integrating State Standard Catalog A spatial/temporal markers: тут (here), там
+    (there), сьогодні (today), завтра (tomorrow).'
+- section: Синтаксис та Інтенсивність (Syntax and Intensity)
+  words: 400
+  points:
+  - 'Intensity markers: Дуже (very), трохи (a bit), зовсім (completely), майже (almost).'
+  - 'Learner error: Wrong placement of ''дуже'' at the end (Це добре дуже). Instruction:
+    ''Дуже'' MUST precede the modified adverb or adjective.'
+  - 'Usage in combination: Дуже добре (very well), Дуже швидко (very quickly), Майже
+    завжди (almost always).'
+- section: Підсумок та Культура (Summary and Culture)
+  words: 300
+  points:
+  - 'Production: Describing personal habits (Я зазвичай снідаю швидко) and daily routines
+    using frequency adverbs.'
+  - 'Cultural hook: Proverb «Повільно їдеш — далі будеш» (Haste makes waste/Slow and
+    steady) reflecting Ukrainian values of caution.'
+  - Roleplay as a 'Food Critic' (persona) describing how someone cooks or eats (добре,
+    погано, дуже смачно).
+vocabulary_hints:
+  required:
+  - 'добре (well) — High frequency (Top 100); universal ''OK/Agreed'' marker; collocations:
+    дуже добре, все добре, добре знати'
+  - 'швидко (quickly) — High frequency; collocations: швидко йти, швидко читати, дуже
+    швидко, швидко бігати'
+  - 'часто (often) — Medium-High frequency; collocations: як часто?, досить часто,
+    дуже часто'
+  - 'ніколи (never) — High frequency; REQUIRES double negation (ніколи не...); collocations:
+    ніколи не бачив, я ніколи не був'
+  - 'зазвичай (usually) — Medium frequency; collocations: як зазвичай, зазвичай вранці,
+    я зазвичай...'
+  - 'завжди (always) — collocations: завжди разом, завжди готовий, завжди вранці'
+  - 'погано (badly) — collocations: погано почуватися, погано розуміти, дуже погано'
+  - 'повільно (slowly) — cultural proverb link; collocations: повільно йти, повільно
+    читати'
+  recommended:
+  - 'дуже (very) — High frequency; placement note: must precede modified word; collocations:
+    дуже цікаво, дуже гарно'
+  - 'іноді (sometimes) — collocations: іноді буває, іноді ми ходимо'
+  - 'рідко (rarely) — collocations: рідко бачити, досить рідко'
+  - 'голосно (loudly) — collocations: голосно говорити, дуже голосно'
+  - 'тихо (quietly) — collocations: тихо йти, тихо сидіти'
+  - тут (here) — State Standard Catalog A spatial marker
+  - там (there) — State Standard Catalog A spatial marker
+  - сьогодні (today) — State Standard Catalog A time marker
+  - завтра (tomorrow) — State Standard Catalog A time marker
+  - 'легко (easily) — collocations: легко зробити, досить легко'
+  - 'важко (with difficulty) — collocations: важко зрозуміти, дуже важко'
+activity_hints:
+- type: fill-in
+  focus: Form adverbs from adjectives
+  items: 25
+- type: fill-in
+  focus: Complete with correct adverb
+  items: 20
+- type: quiz
+  focus: Order frequency adverbs
+  items: 10
+- type: fill-in
+  focus: Describe how you do activities
+  items: 8
+focus: grammar
+pedagogy: PPP
+prerequisites:
+- a1-26 (Describing Things - Adjectives)
+- a1-27 (Colors and Clothing)
+connects_to:
+- a1-29 (Weather and Seasons)
+- a1-30 (Checkpoint Consolidation)
+objectives:
+- Learner can form adverbs from adjectives
+- Learner can use adverbs to describe how actions are done
+- Learner can use frequency adverbs correctly
+- Learner can distinguish adverbs from adjectives
+grammar:
+- Adverbs of manner (adjective stem + -о)
+- Adverbs of frequency
+- Adverb placement in sentences
+register: розмовний
+phase: A1.3 [Consolidation]
+persona:
+  voice: Patient Supportive Tutor
+  role: Food Critic
+word_target: 2000

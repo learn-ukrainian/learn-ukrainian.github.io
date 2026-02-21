@@ -1,0 +1,220 @@
+✅ Message sent to Gemini (ID: 12939) [auto-acked: self-addressed]
+✓ Message 12939 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12939...
+📨 Message #12939
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-social-contract
+   Time: 2026-02-20T23:43:22.199472+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 88
+module: ruth-088
+module_number: 88
+slug: social-contract
+title_uk: Суспільний договір
+title_en: Social Contract
+phase: 4
+phase_id: cossack-word
+phase_name: Cossack Word
+focus: Rights of widows, orphans, commoners
+content_outline:
+- section: Вступ
+  description: Introduction to Social Contract
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Baroque Scholar
+  role: Political Philosopher
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Social Contract (Суспільний договір)
+
+## Використані джерела
+1. [Енциклопедія історії України: Литовські Статути](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Lytovski_statuty) — аналіз трьох редакцій Статуту як правової основи.
+2. [Ізборник: Пакти й Конституції прав і вольностей Війська Запорозького (1710)](http://litopys.org.ua/old18/old18_07.htm) — повний текст Конституції Пилипа Орлика українською мовою.
+3. [Ізборник: Статут Львівського братства 1586](http://litopys.org.ua/old14/old14_08.htm) — текст статуту братства.
+4. [Енциклопедія Сучасної України: Магдебурзьке право](https://esu.com.ua/article-60288) — роль самоврядування у формуванні правової свідомості.
+
+## Хронологія
+- 1529: Перший Литовський Статут — кодифікація шляхетських прав, захист вдів («не видавати заміж насильно»).
+- 1566: Другий Литовський Статут — розширення прав шляхти, реформа судів.
+- 1586: Статут Львівського Успенського братства — при===RESEARCH_START===
+
+# Дослідження: Social Contract (Суспільний договір)
+
+## Використані джерела
+1.  **Литовський Статут 1529, 1566, 1588 років** (litopys.org.ua) — Фундаментальні кодекси права, що визначали права шляхти, міщан та соціальний захист вдів і сиріт.
+2.  **Пакти й Конституції прав і вольностей Війська Запорозького 1710 року** (litopys.org.ua) — "Конституція Пилипа Орлика", ст. 10-11, що гарантують звільнення козацьких вдів та сиріт від податків.
+3.  **Статут Львівського Успенського братства 1586 року** (litopys.org.ua) — Документ про самоорганізацію міщан, шкільництво та соціальну допомогу.
+4.  **Енциклопедія історії України: Магдебурзьке право** (history.org.ua) — Аналіз міського самоврядування як форми суспільного договору.
+5.  **Історія українського права** (підручники/статті на history.org.ua) — Огляд еволюції опікунського права.
+
+## Хронологія
+-   **1529**: Прийняття Першого Литовського Статуту (Старого), що кодифікував звичаєве право та гарантував права шляхти.
+-   **1566**: Другий Литовський Статут (Волинський), розширення прав шляхетської демократії.
+-   **1586**: Затвердження Статуту Львівського братства патріархом Йоакимом — модель міського "горизонтального" договору.
+-   **1588**: Третій Литовський Статут — вершина правової думки, діяв на українських землях до 1840 року.
+-   **5 квітня 1710**: Укладення "Пактів й Конституцій" (Конституції Пилипа Орлика) під Бендерами — перший власне український конституційний проєкт.
+
+## Ключові факти та цитати
+-   **Литовський Статут (1529)**: Встановив принцип, що навіть Великий князь не стоїть над законом. Щодо вдів: «Вдови і дівчата не повинні йти заміж проти своєї волі». Жінки мали право володіти майном і виступати в суді.
+-   **Конституція Пилипа Орлика (1710)**: Стаття 10 зобов'язує гетьмана дбати про те, щоб «вдови козацькі й осиротілі діти козацькі, козацькі господарства і жінки, яких чоловіки перебувають на війні... не були обтяжені жодними податками і поборами».
+-   **Львівське братство**: Статут зобов'язував братчиків допомагати хворим, утримувати шпиталь і надавати безкоштовну освіту сиротам («навчати сиріт і бідних дітей»).
+-   **Принцип "Нічого про нас без нас"** (*Nihil novi*): Шляхетська демократія вимагала згоди шляхти на нові закони (сейми).
+
+## Engagement Hooks (mapped to sections)
+-   Section "Вступ": `[!context]` — Ідея "суспільного договору" існувала в Україні на практиці (Статути) за століття до того, як Руссо її теоретизував.
+-   Section "Основний матеріал: I — Литовські Статути": `[!myth-buster]` — Міф про "бездержавність" українців. Реальність: Українські землі жили за одним із найдосконаліших правових кодексів Європи (III Статут).
+-   Section "Основний матеріал: II — Міські свободи": `[!culture]` — Братства як прообраз громадянського суспільства. Вони не чекали допомоги від держави, а самі будували школи й шпиталі.
+-   Section "Основний матеріал: III — Конституція Пилипа Орлика": `[!quote]` — Цитата з преамбули про відновлення "стародавніх прав".
+-   Section "Основний матеріал: IV — Захист вразливих": `[!history-bite]` — У 16 ст. українська вдова-шляхтянка мала більше майнових прав та незалежності, ніж британська жінка у вікторіанську епоху.
+-   Section "Підсумок": `[!decolonization]` — Російська модель (самодержавство, піддані-раби) проти Української моделі (договір, громадяни-товариші).
+
+## Деколонізаційний контекст
+-   **Імперський міф**: Росія принесла "порядок" у "дике поле" і "хаос" Речі Посполитої.
+-   **Українська реальність**: Українська політична культура базувалася на *договорі* (pacta), обмеженні влади законом і виборності, тоді як московська — на необмеженому *самодержавстві* та підданстві. Ліквідація Гетьманщини була порушенням договору (Березневих статей).
+-   **Правова культура**: Литовський Статут діяв на Лівобережжі до 1840-х років, поки Микола I не скасував його, уніфікуючи закони імперії. Це був акт колоніального насилля над правовою традицією.
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian (decolonized) framing |
+|---------|-----------------|-------------------------------|
+| **Державний устрій** | Самодержавство (Autocracy), де цар — намісник Бога. | Республіка (Rzeczpospolita/Гетьманщина), де влада — виборна і договірна. |
+| **Населення** | Піддані (Subjects), холопи государеві. | Товариство, громадяни, вільні люди. |
+| **Мазепинці** | Зрадники царя. | Захисники конституційних прав і свобод Війська Запорозького. |
+
+## Section-Mapped Research Notes
+
+### Вступ
+Поняття "суспільного договору" не як абстрактної теорії Просвітництва, а як живої практики ранньомодерної України. Відносини "влада-суспільство" регулювалися писаним правом, а не сваволею монарха.
+
+### Основний матеріал: I — Литовські Статути як фундамент
+Три редакції Статутів. Статут 1588 року як вершина правової думки. Розділення влади (судова, законодавча, виконавча). Шляхетська демократія та сейми. Обмеження влади Великого князя. Це була "конституція" для привілейованого стану, але вона встановлювала *верховенство права*.
+
+### Основний матеріал: II — Міське самоврядування та братський рух
+Магдебурзьке право: міста як "держави в державі". Звільнення від суду феодалів. Братства (Львівське 1586) як горизонтальний суспільний договір: "ми об'єднуємося, щоб захищати віру, вчити дітей і допомагати бідним". Соціальна функція братств (шпиталі, школи).
+
+### Основний матеріал: III — Козацькі конституційні акти
+Еволюція від козацьких "вольностей" (привілеїв) до державного права. Зборівський (1649) та Гадяцький (1658) договори. Конституція Пилипа Орлика (1710) як апогей політичної думки: договір між Гетьманом і Військом, обмеження гетьманської влади Генеральною Радою, гарантії прав.
+
+### Основний матеріал: IV — Правовий захист вразливих верств
+Фокус модуль. Права жінок: вдови розпоряджалися майном (на відміну від багатьох країн Європи), заборона видавати заміж примусово. Опіка над сиротами: чіткі правила в Статуті, щоб опікуни не розкрадали майно. Конституція 1710: звільнення вдів і сиріт від податків — рання форма соціальної політики.
+
+### Підсумок
+Тяглість правової традиції від Русі через ВКЛ і Гетьманщину до модерної України. Чому російська окупація завжди починалася зі скасування місцевого права (Статуту, Магдебурзького права). Українська ідентичність — це ідентичність вільної людини, що має права.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12978)
+✓ Message 12939 acknowledged
+✓ Message 12978 acknowledged

@@ -1,0 +1,335 @@
+✅ Message sent to Gemini (ID: 11744) [auto-acked: self-addressed]
+✓ Message 11744 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #11744...
+📨 Message #11744
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-oleh-ihor
+   Time: 2026-02-20T23:30:14.414585+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b2-hist-009
+level: B2-HIST
+sequence: 9
+slug: oleh-ihor
+version: '2.0'
+title: 'Олег та Ігор: Перші правителі'
+subtitle: 'Oleh and Ihor: First Rulers'
+content_outline:
+- section: 'Вступ: Варяги та Київ'
+  points:
+  - Варязьке питання — [!myth-buster] Варяги не «створили» державу, а виступили каталізатором
+    об’єднання вже існуючих центрів (Славії та Куявії)
+  - Інфраструктура ранньої держави — використання розвиненої логістики полян
+  - Загадка походження Олега — Хельгі як регент або узурпатор
+- section: 'Читання: Князь Олег: Об''єднання земель'
+  points:
+  - Захоплення Києва (882) — вбивство Аскольда і Діра, встановлення контролю Півночі
+    над Півднем
+  - Матір міст руських — цитата «Се буде мати городам руським» (калька з грецької
+    «метрополія»)
+  - Підкорення племен — встановлення регулярної данини (полюддя) як інструмент державотворення
+- section: Походи на Царгород і Договори
+  points:
+  - Похід 907 року (легенда і реальність) — 2000 кораблів на колесах; [!history-bite]
+    «Щит на воротах» як метафора тріумфу
+  - 'Договір 911 року: Умови — безмитна торгівля, право на лазні, юридичний паритет
+    (смерть за смерть)'
+  - Міжнародне визнання Русі — дипломатичний прорив і легітимізація на світовій арені
+- section: 'Князь Ігор: Криза експансії'
+  points:
+  - Похід 941 (Грецький вогонь) — [!history-bite] «Ніби блискавку небесну мають...»,
+    технологічний шок русинів
+  - Похід 944 (Компроміс) — втрата безмитної торгівлі, введення грамот для купців
+  - Повстання древлян (945) — цитата «Якщо внадиться вовк до овець...», смерть Ігоря
+    через повторний збір данини
+- section: Геоекономіка та Торгівля
+  points:
+  - Шлях із варягів у греки — [!context] не просто дорога, а складна логістична система
+    (волоки, пороги)
+  - Експорт (хутро, віск, раби) — хутро як середньовічна валюта, віск для церков Європи
+  - Імпорт (шовк, вино, золото) — престижні товари для забезпечення лояльності еліти
+- section: Суспільство та Культура
+  points:
+  - Повсякденне життя киян — мілітаризоване суспільство, місто як торговельний хаб
+  - Релігійний світ (Перун vs Християнство) — [!culture] клятва зброєю, Перуном і
+    Велесом у договорах
+  - Статус жінки в ранній Русі — (перехід до наступної теми про Ольгу)
+- section: 'Первинні джерела: Голоси епохи'
+  points:
+  - Уривки з договорів — аналіз імен послів (Карли, Інегелд, Фарлаф) як доказ скандинавського
+    походження еліти
+  - Літописна легенда про смерть Олега — фаталізм і роль волхвів
+  - Лінгвістичний аналіз — «Ми від роду руського...»
+- section: Деколонізаційний погляд
+  points:
+  - 'Норманська теорія: Український погляд — інтеграція в європейський контекст епохи
+    вікінгів, а не «меншовартість»'
+  - Руський vs Російський — [!decolonization] Русь як суверенна європейська монархія,
+    привласнення назви Росією у XVIII ст.
+  - Тяглість державності — Київська Русь —> Галицько-Волинська держава —> Україна
+- section: Спадщина
+  points:
+  - Від військової демократії до держави — перетворення торговельної факторії на імперію
+  - Значення перших князів — заснування династії Рюриковичів (правили 400 років)
+- section: Підсумок
+  points:
+  - Заключне слово — епоха «Бурі і натиску» (Sturm und Drang) ранньої Русі
+vocabulary_hints:
+  required:
+  - князь (prince) — київський князь, великий князь
+  - варяги (Varangians) — шлях із варягів у греки, варязька дружина
+  - дружина (druzhina/retinue) — князівська дружина, вірна дружина
+  - данина (tribute) — збирати данину, платити данину, полюддя
+  - похід (campaign) — військовий похід, похід на Царгород
+  - договір (treaty) — мирний договір, укласти договір, порушити договір
+  - Візантія (Byzantium) — відносини з Візантією, вплив Візантії
+  - літопис (chronicle) — «Повість минулих літ», літописна легенда
+  - об'єднання (unification) — об'єднання земель, політичне об'єднання
+  - підкорення (subjugation) — підкорення племен, насильницьке підкорення
+  - правитель (ruler) — мудрий правитель, жорстокий правитель
+  - династія (dynasty) — династія Рюриковичів, засновник династії
+  recommended:
+  - регент (regent) — Олег як регент Ігоря
+  - волхв (sorcerer/pagan priest) — пророцтво волхва
+  - торговельні привілеї (trade privileges) — безмитна торгівля
+  - легітимність (legitimacy) — династична легітимність
+  - Щекавиця (Shchekavytsia) — гора в Києві, могила Олега
+activity_hints:
+- type: reading
+  focus: Excerpt from Primary Chronicle about Oleh's campaigns
+  source: Provide in module
+- type: comparative-study
+  focus: Oleh vs Ihor — leadership styles and achievements
+  output: Comparison table
+- type: essay-response
+  focus: Чи можна вважати Олега засновником Київської Русі?
+focus: history
+pedagogy: CBI
+prerequisites:
+- 'b2-hist-08 (Synthesis: Origins to Kyiv)'
+- Understanding of tribal society
+connects_to:
+- b2-hist-10 (Olha and Sviatoslav)
+- b2-hist-11 (Volodymyr and Baptism)
+- 'b2-hist-20 (Synthesis: Kyivan Rus)'
+objectives:
+- Analyze the role of Varangians in state formation
+- Compare the policies of Oleh and Ihor
+- Evaluate the significance of Rus-Byzantine treaties
+grammar:
+- Narrative tenses
+- Treaty language
+sources:
+- name: Олег (князь київський) (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Олег_(князь_київський)
+  type: reference
+  notes: Overview of Prince Oleh
+- name: Ігор Рюрикович (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Ігор_Рюрикович
+  type: reference
+  notes: Overview of Prince Ihor
+- name: Повість минулих літ
+  url: https://litopys.org.ua/pvl/pvl.htm
+  type: primary
+  notes: Chronicle accounts of early rulers
+register: публіцистичний
+phase: B2-HIST.1 [Kyivan Rus]
+persona:
+  voice: Senior Professor of History
+  role: Treaty Scribe
+word_target: 5000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Олег та Ігор: Перші правителі
+
+## Використані джерела
+1. [Літопис руський (за Іпатіївським списком)](http://litopys.org.ua/ipatlet/ipat01.htm) — першоджерело («Повість минулих літ»), що містить тексти договорів та опис походів.
+2. [Енциклопедія історії України: Олег](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Oleh_kyivskyj) — академічний огляд правління князя Олега.
+3. [Енциклопедія історії України: Ігор](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Igor_Staryj) — академічний огляд правління князя Ігоря.
+4. [Енциклопедія Сучасної України: Норманська проблема](https://esu.com.ua/article-72085) — сучасний погляд на походження Русі та варязький фактор.
+
+## Хронологія
+- **882**: Захоплення Києва Олегом. Вбивство Аскольда і Діра. Проголошення Києва «матір’ю городам руським».
+- **907**: Похід Олега на Царгород (Константинополь). Легенда про щит на воротах. Перший усний договір.
+- **911**: Укладення першого письмового русько-візантійського договору (надзвичайно вигідного для Русі).
+- **912**: Смерть Олега (за літописною легендою — від укусу змії). Початок правління Ігоря.
+- **941**: Перший похід Ігоря на Царгород. Поразка руського флоту від «грецького вогню».
+- **944**: Другий похід Ігоря. Укладення нового договору з Візантією (менш вигідного, ніж у Олега).
+- **945**: Повстання древлян через повторний збір данини. Вбивство Ігоря.
+
+## Ключові факти та цитати
+- **Цитата Олега (882)**: «Се буде мати городам руським» (визначення Києва як політичного центру).
+- **Клятва (911/944)**: Русь клялася зброєю, Перуном і Велесом («скотієм богом»), що свідчить про дохристиянський характер еліти.
+- **Договір 911**: «Ми від роду руського...» (перелік імен послів: Карли, Інегелд, Фарлаф, Веремуд — скандинавські імена, що підтверджує варязьке походження еліти).
+- **Смерть Ігоря**: Древляни сказали: «Якщо внадиться вовк до овець, то виносить по одній все стадо, якщо не уб’ють його. Так і сей: якщо не вб’ємо його, то він усіх нас погубить».
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ: Варяги та Київ": [!myth-buster] — Варяги не «створили» державу на пустому місці, а виступили каталізатором об’єднання вже існуючих слов’янських протодержавних центрів (Славії та Куявії).
+- Section "Походи на Царгород і Договори": [!history-bite] — «Щит на воротах Царгорода» — це, ймовірно, метафора або пізніша легенда, але сам факт тріумфу підтверджений винятковими умовами договору 911 року (безмитна торгівля).
+- Section "Князь Ігор: Криза експансії": [!history-bite] — Опис «грецького вогню»: «Ніби блискавку небесну мають у себе греки і, пускаючи її, палять нас». Технологічний шок варварів перед цивілізацією.
+- Section "Геоекономіка та Торгівля": [!context] — Пояснення механізму «Шляху із варягів у греки» не як дороги, а як складної логістичної системи (волоки, пороги, перевалочні пункти).
+- Section "Суспільство та Культура": [!culture] — Клятва Перуном і Велесом у договорах як доказ офіційного статусу язичницького пантеону перед християнізацією.
+- Section "Деколонізаційний погляд": [!decolonization] — Термін «Русь» спочатку означав скандинавську дружину, потім землю (Київщину), і лише згодом — державу. Росія (Московія) привласнила цю назву лише у XVIII ст.
+
+## Деколонізаційний контекст
+- **Imperial/Soviet myth**: «Київська Русь — колиска трьох братніх народів».
+- **Ukrainian reality**: Київська Русь — це суверенна європейська середньовічна монархія, прямим спадкоємцем якої є Україна (через Галицько-Волинську державу). Росія та Білорусь формувалися на периферії руського світу з іншими етнічними та політичними субстратами.
+- **Imperial/Soviet myth**: «Норманська теорія» як доказ нездатності слов’ян до державотворення.
+- **Ukrainian reality**: Скандинави (варяги) були інтегровані в місцеву еліту так само, як нормани в Англії чи Франції. Це свідчить про включеність України в загальноєвропейські процеси епохи вікінгів, а не про «меншовартість».
+
+## Contested Terms (if applicable)
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| Давньоруська держава | Спільна держава предків росіян, українців, білорусів | Русь, Русь-Україна, Київська держава (власне українська середньовічна держава) |
+| Олег/Ігор | «Русские князья» | Руські князі (київські правителі) |
+| Завоювання Києва (882) | Об'єднання земель навколо центру | Встановлення контролю Півночі (варягів) над Півднем (полянами), початок династії Рюриковичів у Києві |
+
+## Section-Mapped Research Notes
+
+### Вступ: Варяги та Київ
+882 рік — поворотна дата. Олег прибуває з Новгорода (або Ладоги), вбиває Аскольда і Діра (які, можливо, були останніми представниками династії Кия). Фраза «Се буде мати городам руським» — це калька з грецької «метрополія». Варяги принесли військову організацію та далекосяжну торгівлю, але скористалися вже розвиненою інфраструктурою полян.
+
+### Читання: Князь Олег: Об'єднання земель
+Олег (Хельгі) — не просто воїн, а будівничий держави. Він почав збирати землі (древлян, сіверян, радимичів) під владу Києва не просто грабунком, а встановленням регулярної данини (полюддя). Це перетворило конгломерат племен на ранню державу. Його статус «віщого» (священного, чаклуна) додавав легітимності в очах язичників.
+
+### Походи на Царгород і Договори
+Похід 907 року: 2000 кораблів (ймовірно, перебільшення), колеса під кораблями (військова хитрість або легенда).
+Договір 911 року — дипломатичний шедевр. Статті:
+1. Безмитна торгівля для русів.
+2. Право митися в лазнях Константинополя (соціальний статус!).
+3. Забезпечення припасами на зворотний шлях.
+4. Юридичний паритет: за вбивство русина греком — смертна кара (рівність перед законом).
+
+### Князь Ігор: Криза експансії
+Ігор (Інгвар) — менш успішний, ніж Олег. Старий (почав правити пізно).
+Похід 941: Катастрофа через «грецький вогонь» («вогонь, що горить на воді»).
+Похід 944: Візантія відкупилася дарами. Новий договір 944 року скасував безмитну торгівлю і ввів обов’язкові грамоти для купців (щоб відрізнити мирних торговців від розбійників). Русь втрачала позиції.
+
+### Геоекономіка та Торгівля
+«Шлях із варягів у греки» — хребет держави. Експорт: хутро (хутра — валюта середньовіччя), мед, віск (для свічок у церквах Європи), раби (челядь). Імпорт: престижні товари для еліти (шовк, золото, вино, зброя). Київ — хаб, що контролював ключовий відрізок шляху.
+
+### Суспільство та Культура
+Суспільство мілітаризоване. Еліта — дружина (варяги + слов’янська знать). Основне населення — вільні общинники (смерди). Міста — центри торгівлі і влади, а не ремесла (поки що). Релігія: політеїзм. Перун — бог дружини/війни, Велес — бог торгівлі/багатства («скотій бог»).
+
+### Первинні джерела: Голоси епохи
+Аналіз імен послів 911 року: Карли, Інегелд, Фарлаф, Веремуд, Рулав, Гуди, Руалд, Карн, Фрелав, Рюар, Актеву, Труан, Лідул, Фост, Стемід. Жодного слов’янського імені! Це доказ скандинавської етнічності ранньої руської еліти.
+Легенда про смерть Олега: фаталізм, роль волхвів, неможливість уникнути долі.
+
+### Деколонізаційний погляд
+Норманська теорія: Російська історіографія часто або заперечувала її (щоб довести «самобутність»), або використовувала для імперської зверхності («німці принесли порядок дикунам»). Український погляд: це нормальний європейський процес синтезу. Варяги асимілювалися за 2-3 покоління (вже онук Ігоря — Святослав — має чисто слов’янське ім’я і спосіб життя степовика).
+Русь — це не Росія. Спадщина Русі — це європейська традиція (договірна культура, віче), яку знищила Москва, перейнявши ординську модель деспотії.
+
+### Спадщина
+Олег та Ігор перетворили торговельну факторію на імперію, що контролювала Східну Європу. Вони вивели Русь на міжнародну арену (визнання Візантією). Заклали династію Рюриковичів, яка правила 400 років.
+
+### Підсумок
+Період Олега та Ігоря — це час «Бурі і натиску» (Sturm und Drang) ранньої Русі. Час військової демократії, формування території та виходу на світовий ринок. Це фундамент, на якому Ольга та Володимир збудують цивілізовану християнську державу.
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 11809)
+✓ Message 11744 acknowledged
+✓ Message 11809 acknowledged

@@ -1,0 +1,274 @@
+✅ Message sent to Gemini (ID: 10517) [auto-acked: self-addressed]
+✓ Message 10517 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10517...
+📨 Message #10517
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-register-practice-cross-register-rewriting
+   Time: 2026-02-20T20:39:38.815273+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b2-25
+level: B2
+sequence: 25
+slug: register-practice-cross-register-rewriting
+version: '2.0'
+title: 'Регістрова практика: Перенесення тексту між стилями'
+subtitle: Один зміст — п'ять голосів
+content_outline:
+- section: Огляд — Один зміст, п'ять голосів
+  points:
+  - Мета модуля — вправність у перемиканні регістрів
+  - Огляд вивчених стилів (науковий, офіційний, літературний, публіцистичний, розмовний)
+  - Принципи адаптації тексту
+- section: Трансформація в науковий стиль
+  points:
+  - Базовий текст про кліматичні зміни
+  - Номіналізація та безособові конструкції
+  - Термінологія та об'єктивність
+  - Зразок наукової анотації
+- section: Трансформація в офіційний стиль
+  points:
+  - Той самий зміст як офіційний лист
+  - Формули звертання та завершення
+  - Канцелярська лексика
+  - Структура офіційного документа
+- section: Трансформація в публіцистичний стиль
+  points:
+  - Написання новинної замітки
+  - Заголовок та лід
+  - Емоційний вплив та актуальність
+  - Цитати та атрибуція
+- section: Трансформація в розмовний стиль
+  points:
+  - Діалог двох друзів на ту саму тему
+  - Скорочення, частки, емоційність
+  - Природність мовлення
+- section: Інтеграційне завдання
+  points:
+  - Самостійна трансформація нового тексту в три регістри
+  - Самооцінка та зворотній зв'язок
+focus: checkpoint
+pedagogy: TTT
+objectives:
+- Учень може переписати текст з одного функціонального стилю в інший
+- Учень може обирати мовні засоби відповідно до регістру
+- Учень може визначати, які елементи тексту потребують адаптації при зміні стилю
+grammar:
+- register-transformation
+- style-adaptation
+- cross-register-writing
+phase: B2
+vocabulary_hints:
+  required:
+  - термін (term)
+  - поняття (concept)
+  - процес (process)
+  - метод (method)
+  recommended:
+  - аналіз (analysis)
+  - синтез (synthesis)
+  - дослідження (research)
+activity_hints:
+- type: reading
+  focus: Аналіз тексту
+  items: 4
+- type: essay-response
+  focus: Практичне застосування
+- type: true-false
+  focus: Перевірка розуміння
+  items: 8
+persona:
+  voice: Professional Language Coach
+  role: Localization Specialist (Спеціаліст з локалізації)
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Регістрова практика: Перенесення тексту між стилями
+
+## State Standard Reference
+§4.4.1: "Офіційне й неофіційне спілкування... Стилістичні засоби лексики... Стилістичні засоби синтаксису"
+Alignment: Цей модуль безпосередньо реалізує вимогу стандарту щодо розрізнення офіційного та неофіційного регістрів, а також готує до вимог рівня С1 (§4.3.7 "Уміння трансформувати текст одного стилю в інший"). Він навчає використовувати лексичні (синоніми, епітети, терміни) та синтаксичні (еліпсис, вставні слова, складні конструкції) засоби для зміни функціонального стилю тексту.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| **Термін** | Висока (наук., офіц.) / GRAK | науковий термін, вживати термін, визначення терміна, термін дії (омонім) |
+| **Поняття** | Висока (наук., філос.) / MOVA.info | базове поняття, розширити поняття, підміна понять (логічна помилка), ключове поняття |
+| **Процес** | Дуже висока (заг.) / GRAK | навчальний процес, творчий процес, незворотний процес, судовий процес |
+| **Метод** | Висока (наук.) / MOVA.info | науковий метод, метод дослідження, ефективний метод, дідівський метод (розм.) |
+| **Аналіз** | Висока (наук., публ.) | глибокий аналіз, порівняльний аналіз, зробити аналіз, аналіз крові (мед.) |
+
+## Cultural Hooks
+1. **Суржик як літературний прийом**: Хоча в житті суржик часто є наслідком русифікації, в літературі це потужний стилістичний засіб. Класичний приклад — Возний у п'єсі І. Котляревського «Наталка Полтавка», який говорить сумішшю канцеляризмів та суржику, щоб здаватися «освіченим», але виглядає комічно.
+2. **Боротьба з канцеляритом**: В українській культурі мовлення активна кампанія проти «канцеляризму» (officialese) у повсякденному житті. Вирази типу «зробіть це за планом графіка» або «питання стоїть гостро» вважаються ознакою «радянського менталітету» і поганого смаку.
+
+## Common Learner Errors
+1. **Калькування канцеляризмів**: «Приймати участь» (помилка) → «Брати участь» (правильно), «Згідно наказу» (помилка) → «Згідно з наказом» (правильно). *Причина: вплив російської мови та офіційного стилю.*
+2. **Плеоназми в офіційному стилі**: «Вільна вакансія» (вакансія вже означає вільне місце), «своя автобіографія», «період часу». *Причина: намагання звучати «розумніше» або «офіційніше».*
+3. **Невідповідність регістру**: Використання сленгу або надмірної емоційності в офіційних листах (наприклад, смайлики, вигуки «Ого!») або, навпаки, використання пасивних конструкцій («Мною було вирішено») у розмові з друзями.
+
+## Cross-References
+- **Builds on**: B1 Grammar (Passive voice, Participles), B2.1a (Passive System), B2.1b (Participles).
+- **Prepares for**: C1 Stylistics (Academic writing, Rhetoric), C1-PRO tracks (Professional communication).
+
+## Notes for Content Writing
+- Використовувати **«Один зміст — п'ять голосів»** як наскрізну метафору. Показати один і той самий короткий текст (наприклад, про дощ або про купівлю кави) у 5 варіантах: Науковий (метеорологічний), Офіційний (звіт), Публіцистичний (новина), Художній (есе), Розмовний (чат).
+- Чітко розмежувати **«Канцеляризми»** (доречні в документах, шкідливі в житті) і **«Терміни»** (доречні в науці).
+- У розмовному стилі підкреслити роль **еліпсису** (пропуску слів) та часток, на відміну від повних речень у науковому стилі.
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Огляд: Один зміст — п'ять голосів (Overview: One Content, Five Voices)"
+  words: 500
+  points:
+  - "Мета модуля — опанування вправності у перемиканні регістрів згідно з §4.4.1 Держстандарту"
+  - "Наскрізна метафора: представлення однієї ситуації (наприклад, купівля кави) у п'яти стилях: науковому, офіційному, публіцистичному, художньому та розмовному"
+  - "Принципи адаптації тексту: вибір лексичних (синоніми, терміни) та синтаксичних засобів відповідно до ситуації спілкування"
+- section: "Трансформація в науковий та офіційний стилі (Transformation into Academic and Official Styles)"
+  words: 900
+  points:
+  - "Науковий стиль: номіналізація, безособові конструкції та вживання термінів (процес, метод, поняття)"
+  - "Офіційний стиль: формули звертання, канцеляризми та чітка структура документа"
+  - "Аналіз типових помилок: калькування «приймати участь» замість «брати участь» та «згідно наказу» замість «згідно з наказом»"
+  - "Боротьба з канцеляритом: розрізнення доречних канцеляризмів у документах та шкідливого «радянського менталітету» у повсякденному мовленні"
+- section: "Трансформація в публіцистичний та художній стилі (Transformation into Journalistic and Literary Styles)"
+  words: 900
+  points:
+  - "Публіцистика: створення заголовка та ліду, використання емоційно забарвленої лексики та атрибуція цитат"
+  - "Художній стиль: епітети, метафори та створення образу"
+  - "Культурний гачок: суржик як літературний прийом на прикладі Возного з п'єси «Наталка Полтавка» І. Котляревського"
+- section: "Трансформація в розмовний стиль (Transformation into Colloquial Style)"
+  words: 800
+  points:
+  - "Природність мовлення: роль еліпсису (пропуску слів), часток та вигуків"
+  - "Learner error: невідповідність регістру (використання смайликів в офіційних листах або пасивних конструкцій типу «мною було вирішено» у дружній розмові)"
+  - "Діалог як інструмент відпрацювання скорочень та емоційності"
+- section: "Практикум: Редагування та плеоназми (Workshop: Editing and Pleonasms)"
+  words: 900
+  points:
+  - "Виявлення та усунення плеоназмів, характерних для спроб звучати «офіційніше» (вільна вакансія, своя автобіографія, період часу)"
+  - "Інтеграційне завдання: самостійна трансформація базового тексту про кліматичні зміни у три обрані регістри"
+  - "Підсумкова самооцінка: перевірка відповідності обраних засобів функціональному стилю"
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "термін (term) — науковий термін, вживати термін; висока частотність у науковому стилі"
+  - "поняття (concept) — базове поняття, ключове поняття, підміна понять; вживається у науковому та офіційному регістрах"
+  - "процес (process) — навчальний процес, творчий процес, незворотний процес; універсальне слово з високою частотністю"
+  - "метод (method) — науковий метод, метод дослідження; у розмовному стилі вживається як «дідівський метод»"
+  recommended:
+  - "аналіз (analysis) — глибокий аналіз, порівняльний аналіз, зробити аналіз; ключове слово для публіцистики та науки"
+  - "синтез (synthesis) — логічне поєднання елементів; науковий регістр"
+  - "дослідження (research) — проводити дослідження; основа наукового стилю"
+  - "канцеляризм (officialese) — лексика офіційно-ділового стилю, якої слід уникати в інших регістрах"
+  - "плеоназм (pleonasm) — надмірність слів, якої слід уникати для чистоти стилю (напр. «вільна вакансія»)"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (3466 chars)
+✅ Message sent to Claude (ID: 10518)
+✓ Message 10518 acknowledged
+   Auto-acknowledged reply #10518 (stdout delivery — no inbox accumulation)
+✓ Message 10517 acknowledged

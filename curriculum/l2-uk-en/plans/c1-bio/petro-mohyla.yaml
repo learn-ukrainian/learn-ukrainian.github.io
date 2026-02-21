@@ -1,49 +1,40 @@
----
-module: c1-bio-023
+module: c1-bio-22
 level: C1-BIO
-sequence: 23
+sequence: 22
 slug: petro-mohyla
 version: '2.0'
 title: 'Петро Могила: Засновник академії та реформатор церкви'
-word_target: 4300
 content_outline:
-- section: "Вступ — Архітектор українського бароко"
-  words: 600
+- section: Вступ — Архітектор українського бароко
   points:
   - Могила як символ просвітництва
   - Реформування православної церкви
   - Інтелектуальний опір католицькій експансії
 - section: Життєпис
-  words: 1600
   points:
   - Походження (молдовський княжич)
   - Освіта в Європі
   - Військова кар'єра та Хотинська битва 1621 р.
   - Обрання архімандритом Лаври
 - section: Історичний контекст
-  words: 600
   points:
   - Контрреформація в Європі
   - Релігійна боротьба в Речі Посполитій
   - Стан православної церкви до Могили
 - section: Внесок
-  words: 400
   points:
   - Заснування Києво-Могилянського колегіуму 1632 р.
   - Требник та Православне сповідання віри
 - section: Останні роки
-  words: 400
   points:
   - Реставрація святинь (Свята Софія, Десятинна церква)
   - Вплив на розвиток барокової культури
   - Смерть і заповіт
 - section: Спадщина
-  words: 400
   points:
   - Київська вченість як інтелектуальний бренд
   - Значення для української освіти
 - section: Підсумок
-  words: 300
   points:
   - Могила як "батько" українського інтелекту
 focus: biography
@@ -64,11 +55,11 @@ grammar:
 module_type: biography
 sources:
 - name: Петро Могила (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Петро_Могила"
+  url: https://uk.wikipedia.org/wiki/Петро_Могила
   type: primary
   notes: Основні факти життя
 - name: Києво-Могилянська академія
-  url: "https://ukma.edu.ua/"
+  url: https://ukma.edu.ua/
   type: reference
   notes: Історія інституції
 immersion: 100% Ukrainian
@@ -80,7 +71,10 @@ vocabulary_hints:
   - бароко (baroque)
 activity_hints:
 - type: reading
-  focus: "Аналіз \"Требника\" та заповіту"
+  focus: Аналіз "Требника" та заповіту
   source: Primary sources (adapted)
 - type: essay-response
   focus: Освіта як зброя
+persona:
+  voice: Senior Biographer
+  role: Educational Reformer

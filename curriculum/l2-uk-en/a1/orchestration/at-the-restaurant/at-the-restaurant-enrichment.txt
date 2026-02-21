@@ -1,0 +1,294 @@
+✅ Message sent to Gemini (ID: 10119) [auto-acked: self-addressed]
+✓ Message 10119 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10119...
+📨 Message #10119
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-at-the-restaurant
+   Time: 2026-02-20T19:42:23.395452+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 36
+module: a1-36
+level: A1
+slug: at-the-restaurant
+version: '2.0'
+title: At the Restaurant
+subtitle: Dining Out in Ukraine
+content_outline:
+- section: Warm-up
+  points:
+  - 'Структура українського меню (перше, друге, десерт) — фокус на традиційному поділі:
+    перше (супи), друге (основні страви/гарніри); content writing note: emphasize
+    this tripartite structure as standard'
+  - 'Етикет у ресторані — cultural hook: різниця між «ресторан» (урочисто/formal)
+    та «кафе» (повсякденно/casual); традиційний тост «Будьмо!» ([ˈbudʲmɔ] — "Let us
+    be!")'
+- section: Presentation
+  points:
+  - Резервація (Я хотів би замовити столик на...) — використання конструкції «замовити
+    столик» (collocation from research)
+  - Отримання столика (Столик на двох, будь ласка) — focus on polite requests using
+    «будь ласка»
+  - 'Читання меню та запитання (Що таке...? / З чого це?) — collocation: «подивитися
+    меню», «дати меню»'
+  - 'Замовлення страв (Мені перше... і на друге...) — learner error: використання
+    називного відмінка замість знахідного (Я буду *кава* ❌ instead of *Я буду каву*
+    ✅); focus on polite «Я буду...» structure (Future Tense)'
+  - 'Особливі потреби (Без м''яса / Без глютену) — include modern dietary phrases:
+    «без м''яса», «без глютену» early for travelers'
+  - 'Рахунок та чайові (Скільки з мене?) — learner error: використання русизму «счёт»
+    замість «рахунок»; cultural hook: чайові 5-15% (часто готівкою, навіть при оплаті
+    карткою)'
+- section: Practice
+  points:
+  - 'Діалог 1: Замовлення повної вечері — використання Future Tense для замовлення
+    (Я буду...); learner error: over-formality, prefer natural «Мені, будь ласка...»'
+  - 'Діалог 2: Скарга на страву (ввічливо) — use polite markers like «Можна...?»'
+  - 'Діалог 3: Розподіл рахунку між друзями — phrase «Ми заплатимо окремо» vs «Разом,
+    будь ласка»; collocation: «оплатити рахунок»'
+- section: Warm-up 2
+  points:
+  - 'Наратив про вечерю в українському ресторані — content writing note: include «смачного»
+    (Bon appetit) as a frequent polite marker'
+  - Типові страви та культурний контекст — reinforce the «перше/друге» structure in
+    context
+vocabulary_hints:
+  required:
+  - столик (table) — замовити столик
+  - замовити (to order) — замовити страву, замовити столик (High frequency)
+  - офіціант (waiter) — polite interaction context
+  - меню (menu) — дати меню, подивитися меню
+  - страва (dish) — перша страва, смачна страва
+  - 'рахунок (bill) — просити рахунок, оплатити рахунок; learner error: avoid ''счёт'''
+  - перше (first course) — soups context
+  - друге (main course) — mains/sides context
+  recommended:
+  - десерт (dessert) — part of standard menu structure
+  - напій (drink) — builds on A1-35
+  - гарнір (side dish) — often part of 'друге'
+  - порція (portion) — helpful for ordering
+  - чайові (tip) — 5-15% standard, cash preferred
+  - резервація (reservation) — context of 'замовити столик'
+  - 'бути (to be) — collocations: я буду... (I''ll have...), ви будете...?'
+activity_hints:
+- type: fill-in
+  focus: Full restaurant experience
+  items: 12
+- type: fill-in
+  focus: Waiter and customer
+  items: 6
+- type: match-up
+  focus: Menu item names
+  items: 20
+- type: quiz
+  focus: Restaurant conversations
+  items: 10
+focus: practical
+pedagogy: PPP
+prerequisites:
+- a1-35 (At the Café Practical)
+connects_to:
+- a1-37 (At the Market)
+- a1-38 (At the Store)
+objectives:
+- Learner can make a reservation
+- Learner can order a full meal
+- Learner can handle restaurant situations
+- Learner can communicate dietary needs
+grammar:
+- Practical usage of A1 cases
+- Polite requests and questions
+- Future tense for ordering
+register: розмовний
+phase: A1.4 [Practical Scenarios]
+persona:
+  voice: Patient Supportive Tutor
+  role: Maître d'hôtel
+word_target: 2000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: At the Restaurant
+
+## State Standard Reference
+§3.9: "Ресторан, кафе: страви; напої; посуд і столові прибори."
+§4.2.4.1: "Утворення складеної форми майбутнього часу дієслів недоконаного виду: буду читати... дієвідмінювання дієслова бути в майбутньому часі: буду, будеш..."
+§4.2.3.2.1: "Знахідний відмінок без прийменника (об’єкт дії): Віра читає цікаву книжку."
+Alignment: This module directly addresses the thematic requirement "Restaurant, cafe" (§3.9) and implements the grammatical requirements for Future Tense (§4.2.4.1) and Accusative Case for direct objects (§4.2.3.2.1) in the context of ordering food ("Я буду борщ").
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| **замовити** | High (Common usage) | замовити столик (book a table), замовити страву (order a dish), зробити замовлення (place an order), готовий замовити (ready to order). |
+| **рахунок** | High (Essential) | попросити рахунок (ask for the bill), оплатити рахунок (pay the bill), рахунок, будь ласка (the bill, please). |
+| **страва** | Medium-High | перша страва (first course), друга страва (main course), національна страва (national dish), смачна страва (delicious dish). |
+| **офіціант** | Medium (Context specific) | покликати офіціанта (call the waiter), запитати офіціанта (ask the waiter), наш офіціант (our waiter). |
+
+## Cultural Hooks
+1. **Toasting**: The universal Ukrainian toast is «Будьмо!» (Let us be!), often accompanied by «Гей! Гей! Гей!» in group settings. It is used for almost any drink, not just alcohol.
+2. **Menu Structure**: A traditional Ukrainian meal structure is distinct: "Перше" (First) is always soup/borshch, "Друге" (Second) is the main meat/garnish dish, and "Трете" (Third) is often a drink (compote/uzvar) or dessert.
+3. **Tipping**: "Чайові" are typically 10% and are often preferred in cash (scan-to-pay tips are becoming common in cities but cash is safer).
+
+## Common Learner Errors
+1. **Case Mismatch**: Learners often use Nominative instead of Accusative when ordering: «Я буду *кава*» (Incorrect) → «Я буду *каву*» (Correct). *Why*: L1 interference where objects don't change form.
+2. **Russian Interference**: Using «счёт» instead of «рахунок». *Why*: Common Surzhyk or Russian influence in media.
+3. **Verb Confusion**: Using «бронювати» for food. While «бронювати» works for tables (booking), «замовити» is the universal verb for ordering specific dishes.
+
+## Cross-References
+- Builds on: a1-35 (At the Café Practical) - expands simple ordering to full meals.
+- Prepares for: a1-37 (At the Market) - vocabulary for food items; a1-38 (At the Store).
+
+## Notes for Content Writing
+- **Politeness**: Emphasize «будь ласка» and polite intonation. Ukrainian service culture has shifted significantly to be very customer-focused and polite.
+- **Dietary Needs**: "Vegetarian" and "Gluten-free" are well-understood concepts in modern Ukrainian urban dining.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ та культурний контекст (Introduction & Cultural Context)"
+  words: 450
+  points:
+  - "State Standard §3.9: Introduction to restaurant and cafe settings. Focus on the traditional tripartite Ukrainian menu structure: «Перше» (soups/borshch), «Друге» (main dishes), and «Третє» (dessert/drinks/uzvar)."
+  - "Cultural Hook: Distinguishing between «ресторан» (formal/celebratory) and «кафе» (casual/daily) registers. Tipping etiquette («чайові»): 10% standard, with a note that cash is still preferred by staff despite the rise of scan-to-pay options."
+- section: "Презентація: Мова замовлення (Presentation: Ordering Language)"
+  words: 650
+  points:
+  - "Grammar §4.2.4.1: Implementation of Future Tense with the verb «бути» (буду, будеш, буде) for ordering. Focus on the standard structure «Я буду...» (I'll have...) as the most natural way to order."
+  - "Grammar §4.2.3.2.1: Accusative Case (Знахідний відмінок) for direct objects. Crucial learner error correction: fixing the mismatch where learners use Nominative instead of Accusative (e.g., «Я буду кава» ❌ → «Я буду каву» ✅)."
+  - "Verb Usage: Distinguish between the collocations «бронювати» (specifically for booking tables/reservations) and «замовити» (universal high-frequency verb for ordering specific dishes and drinks)."
+- section: "Практика: Типові ситуації (Practice: Typical Situations)"
+  words: 500
+  points:
+  - "Interacting with the «офіціант» (waiter). Polite collocations from research: «дати меню» (give the menu), «запитати офіціанта» (ask the waiter), and «зробити замовлення» (place an order)."
+  - "Learner Error Fix: Combatting Russian interference. Explicitly drill the use of «рахунок» (bill) instead of the common Russianism «счёт». Practical phrases: «рахунок, будь ласка» and «оплатити рахунок»."
+  - "Modern Dining: Addressing dietary needs using modern phrases like «без м'яса» (vegetarian) and «без глютену» (gluten-free), noting their high recognition in modern Ukrainian urban dining environments."
+- section: "Підсумок та етикет (Summary & Etiquette)"
+  words: 400
+  points:
+  - "Cultural Hook: The universal Ukrainian toast «Будьмо!» (Let us be!) and the rhythmic response «Гей!». Explain its usage across different beverage types and social settings (from juice to horilka)."
+  - "Politeness and Closures: Emphasize the shift to customer-focused service culture with essential markers: «смачного» (bon appetit), «дякую» (thank you), and maintaining polite intonation with «будь ласка»."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "замовити (to order) — замовити страву, замовити столик (High frequency §3.9)"
+  - "рахунок (bill) — попросити рахунок, оплатити рахунок; learner error: avoid Russian 'счёт'"
+  - "страва (dish) — перша страва, друга страва, національна страва"
+  - "офіціант (waiter) — покликати офіціанта; нашому офіціантові (Dat)"
+  - "бути (to be) — буду, будеш (Future Tense §4.2.4.1); ordering structure: «Я буду...»"
+  - "перше (first course) — focus on traditional soups and borshch"
+  - "друге (main course) — meat or fish with a side dish (гарнір)"
+  - "столик (table) — замовити столик, столик на двох, вільний столик"
+  recommended:
+  - "будьмо (let's be) — universal toast (§4.2.4.1 context); often followed by «Гей!»"
+  - "чайові (tip) — 10% standard; cultural note: cash is preferred"
+  - "гарнір (side dish) — standard component of the 'друге' course"
+  - "без м'яса (without meat) — essential for vegetarian ordering"
+  - "без глютену (gluten-free) — common modern dietary request"
+  - "меню (menu) — подивитися меню, дати меню, в меню є..."
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (3696 chars)
+✅ Message sent to Claude (ID: 10128)
+✓ Message 10128 acknowledged
+   Auto-acknowledged reply #10128 (stdout delivery — no inbox accumulation)
+✓ Message 10119 acknowledged

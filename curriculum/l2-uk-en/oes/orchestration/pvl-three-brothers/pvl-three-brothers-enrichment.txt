@@ -1,0 +1,207 @@
+✅ Message sent to Gemini (ID: 12439) [auto-acked: self-addressed]
+✓ Message 12439 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12439...
+📨 Message #12439
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-pvl-three-brothers
+   Time: 2026-02-20T23:39:37.877598+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 35
+module: oes-035
+module_number: 29
+slug: pvl-three-brothers
+title_uk: 'ПВЛ: Три брати'
+title_en: 'PVL: The Three Brothers'
+phase: 2
+phase_id: literary-tradition
+phase_name: Literary Tradition
+focus: Yaroslavychi — Feudal terminology
+content_outline:
+- section: Вступ
+  description: 'Introduction to PVL: The Three Brothers'
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Senior Paleographer
+  role: Genealogist
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: ПВЛ: Три брати (Тріумвірат Ярославичів)
+
+## Використані джерела
+1. [Енциклопедія історії України: Тріумвірат Ярославичів](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Triumvirat_Yaroslavychiv) — фундаментальний огляд політичної системи 1054–1073 рр.
+2. [Ізборник: Повість врем'яних літ (переклад В. Яременка)](http://litopys.org.ua/pvlyar/yar05.htm) — першоджерело, події 1054–1072 рр.
+3. [Правда Руська (тексти)](http://litopys.org.ua/oldukr2/oldukr01.htm) — текст Правди Ярославичів, статті про скасування кровної помсти.
+4. [М. Грушевський. Історія України-Руси. Том II](http://litopys.org.ua/hrushrus/iur204.htm) — аналіз розпаду монархії Ярослава.
+
+## Хронологія
+- **1054**: Смерть Ярослава Мудрого. «Ряд» (заповіт) Ярослава, встановлення лествичної системи.
+- **1054–1073**: Спільне правління (тріумвірат) Ізяслава, Святослава та Всеволода.
+- **1060**: Успішний похід тріумвірату на торків.
+- **1068**: Битва на Альті — поразка від половців.
+- **Вересень 1068**: Київське повстання. Втеча Ізяслава, звільнення Всеслава Полоцького (Чародія).
+- **1069**: Повернення Ізяслава з польською допомогою. Жорстока розправа над повстанцями.
+- **1072**: Вишгородський з'їзд князів. Перенесення мощів Бориса і Гліба. Ухвалення «Правди Ярославичів».
+- **1073**: Розпад тріумвірату. Святослав і Всеволод виганяють Ізяслава з Києва.
+
+## Ключові факти та цитати
+- **Заповіт Ярослава**: «Се же поручаю в собе місто стіл найстаршому сину моєму і брату вашому Ізяславу; того слухайтесь, як слухались мене, хай він вам буде замість мене».
+- **Повстання 1068**: Кияни на вічі кричали: «Половці землю нашу рознесли, а дружини в нас нема, а коней нема! То дай, княже, зброю і коней, ми ще будемо битися з ними!»
+- **Правда Ярославичів**: Скасування кровної помсти («Оже уб'єть мужь мужа, то мстити брату брата... аще ли не буде хто мстя, то положити за голову 80 гривен»). Заміна помсти на грошовий штраф (віру) — ознака зміцнення державної влади.
+
+## Engagement Hooks (mapped to sections)
+- Section "Основний матеріал: I": [!context] — Пояснення системи «лествичного права» (сеньйорату) як механізму ротації влади, а не хаосу.
+- Section "Основний матеріал: II": [!myth-buster] — Спростування міфу про «феодальну роздробленість» одразу після смерті Ярослава. Тріумвірат був стабільною федеративною структурою майже 20 років.
+- Section "Основний матеріал: III": [!paleography] — Аналіз тексту «Правди Ярославичів»: терміни «віра», «головник», «огніщанин».
+- Section "Основний матеріал: IV": [!history-bite] — Всеслав Чародій як єдиний князь на київському престолі, що не належав до гілки Ярославичів (легенди про його перевертництво зі «Слова о полку Ігоревім»).
+- Section "Основний матеріал: V": [!culture] — Канонізація Бориса і Гліба як політичний акт єднання роду Рюриковичів («Свята Трійця» братів).
+
+## Деколонізаційний контекст
+- **Міф**: «Розпад давньоруської держави» після 1054 року.
+- **Реальність**: Свідома спроба побудувати колективний суверенітет. «Правда Ярославичів» свідчить про високий рівень правової культури, що випередив багато європейських кодексів того часу (заміна смертної кари штрафами).
+- **Термінологія**: Уникнення терміну «міжусобиця» для періоду 1054–1068 рр. Це був період консенсусу.
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| Лествичне право | Джерело хаосу та слабкості держави | Складна федеративна система ротації влади, спрямована на збереження єдності роду |
+| Київське повстання 1068 | Бунт черні (класова боротьба) | Вияв вічової демократії та громадянської відповідальності киян за оборону землі |
+| Правда Ярославичів | Феодальне гноблення смердів | Розвиток правової системи, захист життя та майна, гуманізація покарань (відмова від кари смерті) |
+
+## Section-Mapped Research Notes
+
+### Вступ
+Смерть Ярослава Мудрого як кінець епохи одноосібної монархії. Виклик збереження єдності величезної території.
+
+### Основний матеріал: I — Заповіт Ярослава (1054)
+Аналіз тексту заповіту з ПВЛ. Принцип старшинства. Географічний розподіл: Київ, Чернігів, Переяслав, Володимир, Смоленськ. Ідея «любові» (злагоди) між братами як політична категорія.
+
+### Основний матеріал: II — Тріумвірат Ярославичів
+Механізм співправління. Спільні походи (на торків, на Всеслава Полоцького). Дуумвірат як пізніша стадія. Роль візитів і нарад (снемів).
+
+### Основний матеріал: III — Правда Ярославичів
+Юридичний аспект. Статті 19–41 Короткої Правди. Захист князівської адміністрації (огніщани, під'їзні). Відмінність від Правди Ярослава. Соціальна стратифікація через штрафи.
+
+### Основний матеріал: IV — Криза 1068 року
+Битва на Альті — перша серйозна поразка від половців. Реакція київського віча. Втеча Ізяслава. Коротке правління Всеслава Полоцького. Повернення Ізяслава і роль польського короля Болеслава Сміливого.
+
+### Основний матеріал: V — Вишгородський з'їзд (1072)
+Кульмінація і водночас початок кінця тріумвірату. Перенесення мощів святих Бориса і Гліба. Символізм єдності через культ святих мучеників.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12479)
+✓ Message 12439 acknowledged
+✓ Message 12479 acknowledged

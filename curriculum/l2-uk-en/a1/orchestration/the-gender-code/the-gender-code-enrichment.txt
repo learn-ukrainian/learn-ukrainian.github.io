@@ -1,0 +1,320 @@
+✅ Message sent to Gemini (ID: 10030) [auto-acked: self-addressed]
+✓ Message 10030 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10030...
+📨 Message #10030
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-the-gender-code
+   Time: 2026-02-20T19:34:32.248164+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: a1-03
+level: A1
+sequence: 3
+slug: the-gender-code
+version: '2.0'
+title: The Gender Code
+subtitle: Unlocking Ukrainian Gender Patterns
+content_outline:
+- section: Warm-up
+  points:
+  - 'Every Ukrainian noun has a gender — masculine, feminine, or neuter — cultural
+    hook: contrast sun (neuter) with other languages; seen as gentle/impartial life-giver'
+  - 'The ending reveals the gender (pattern recognition, not memorization) — Mnemonic
+    aids: M = Hard/Stop, F = Open/A, N = Round/Circle'
+  - '95% predictable from the word ending — learner error: over-reliance on English
+    ''it'' for objects'
+- section: Presentation
+  points:
+  - 'Masculine: consonant ending (стіл, хліб, дім) — collocations: новий дім, дерев''яний
+    стіл; include ''гарний день'' (M) from research'
+  - 'Feminine: -а or -я ending (книга, кімната, земля) — collocations: цікава книга,
+    рідна земля; include ''добра ніч'' (F)'
+  - 'Neuter: -о or -е ending (вікно, місто, море) — collocations: відкрите вікно,
+    велике місто, тепле море; include ''добре серце'' (N)'
+  - 'Gender affects adjectives, pronouns, and case endings — State Standard §4.2.2:
+    introduction of мій, моя, моє'
+  - Mini-dialogue demonstrating all three genders — include high-frequency family
+    context (брат, сестра, мама); add 'тато' (dad) and 'мій/моя' agreement
+- section: Practice
+  points:
+  - '4 declension families overview (відміни) — State Standard §4.2.1.1: focus on
+    singular general gender meanings'
+  - 'Family 1: -а/-я (mostly feminine) — мама, земля — learner error: ''тато'' ends
+    in -o but is M due to natural gender; biological sex overrides ending'
+  - 'Family 2: masculine consonant + neuter -о/-е — стіл, вікно — learner error: ''день''
+    is M (consonant) despite soft sign; ''м''який знак'' trap'
+  - 'Family 3: feminine consonant (rare) — ніч, любов — learner error: ''ніч'' is
+    F; common ''ь'' trap for learners (compare with день-M)'
+  - 'Family 4: neuter -а/-я with stem changes — імʼя, теля — learner error: ''ім''я''
+    is N, not F; ends in -я but is Neuter'
+- section: Production
+  points:
+  - 'Categorize nouns by gender from endings — Use visual memory hooks: Blue (M),
+    Red (F), Yellow (N)'
+  - Identify declension family for common words — Focus on high-frequency heart and
+    nature terms (серце, море)
+- section: Cultural Insight
+  points:
+  - S.T.A.L.K.E.R. Ukrainian game vocabulary example — артефакт (M), зона (F), укриття
+    (N) as modern hooks
+  - 'Home vocabulary across all three genders — State Standard §4.2.1.1: чоловік,
+    жінка, місто examples; include ''собака'' (M) distinction'
+vocabulary_hints:
+  required:
+  - брат (brother) — старший брат (older brother)
+  - сестра (sister) — молодша сестра (younger sister)
+  - мама (mother) — моя мама (my mom), люба мама (dear mom)
+  - тато (father) — мудрий тато (wise dad); natural gender overrides -o ending; мій
+    тато (my dad)
+  - дім (house) — новий дім (new house), рідний дім (native home)
+  - вікно (window) — відкрите вікно (open window)
+  - книга (book) — цікава книга (interesting book)
+  - місто (city) — моє місто (my city), велике місто (big city)
+  recommended:
+  - стіл (table) — дерев'яний стіл (wooden table)
+  - море (sea) — синє море (blue sea), тепле море (warm sea)
+  - ніч (night) — добра ніч (good night), темна ніч (dark night); feminine exception
+    with soft sign
+  - день (day) — гарний день (good day); masculine with soft sign
+  - земля (earth) — рідна земля (native land), чорна земля (black earth)
+  - серце (heart) — добре серце (kind heart), моє серце (my heart)
+  - собака (dog) — мій собака (my dog); masculine gender trap
+  - ім'я (name) — моє ім'я (my name); neuter family 4 exception
+activity_hints:
+- type: match-up
+  focus: Sort nouns by gender
+  items: 30
+- type: quiz
+  focus: Identify gender by ending
+  items: 20
+- type: fill-in
+  focus: Choose correct gender
+  items: 15
+- type: match-up
+  focus: Noun → gender
+  items: 20
+focus: grammar
+pedagogy: PPP
+prerequisites:
+- a1-02 (The Cyrillic Code II)
+connects_to:
+- a1-04 (This Is, I Am)
+- a1-26 (Adjectives)
+objectives:
+- Learner can identify noun gender by word ending
+- Learner can categorize nouns into 4 declension families
+- 'Learner recognizes patterns: consonant (m), -а/-я (f), -о/-е (n)'
+- Learner knows common exceptions
+grammar:
+- Three-gender system
+- Declension families overview
+- Gender prediction rules
+register: розмовний
+phase: A1.1 [First Contact]
+persona:
+  voice: Patient Supportive Tutor
+  role: Linguistic Taxonomist
+word_target: 2000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: The Gender Code
+
+## State Standard Reference
+§4.2.1.1: "загальні родові значення іменників в однині (чоловічий рід, жіночий рід, середній рід): чоловік, жінка, місто"
+Alignment: This module directly teaches the three-gender system required by the standard.
+
+§4.2.2: "утворення родових форм присвійних займенників: мій, моя, моє"
+Alignment: The module introduces gender agreement with "мій/моя/моє" as the primary diagnostic tool.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| стіл (M) | High (Core A1) | великий стіл, новий стіл, дерев'яний стіл |
+| книга (F) | High (Core A1) | цікава книга, стара книга, електронна книга |
+| вікно (N) | High (Core A1) | відкрите вікно, велике вікно, чисте вікно |
+| день (M) | Very High | гарний день, кожен день, цілий день |
+| ніч (F) | High | темна ніч, добра ніч, холодна ніч |
+| тато (M) | High (Family) | мій тато, добрий тато, любий тато |
+| ім'я (N) | High (Identity) | моє ім'я, гарне ім'я, повне ім'я |
+
+## Cultural Hooks
+1. **The Neuter Sun**: Unlike Romance languages where the sun is masculine (*el sol*, *le soleil*), in Ukrainian *сонце* is Neuter. It acts as an impartial, gentle life-giver, historically associated with Dazhbog but linguistically neutral.
+2. **S.T.A.L.K.E.R. Legacy**: A modern cultural touchpoint for gender classification: *Артефакт* (Masculine), *Зона* (Feminine), *Укриття* (Neuter).
+
+## Common Learner Errors
+1. **The "It" Trap**: Learners treat all objects as "it" (neuter). Correction: Objects have gender (стіл = він, книга = вона).
+2. **The "Soft Sign" Ambiguity**: Confusion between words ending in -ь. *День* is Masculine, *Ніч* is Feminine. Must be memorized.
+3. **The "Natural Gender" Override**: *Тато* ends in -o but is Masculine because it refers to a male person. Biological gender overrides grammatical ending.
+4. **The "Name" Trap**: *Ім'я* ends in -я but is Neuter (Family 4 exception). Learners often mistake it for Feminine.
+
+## Cross-References
+- Builds on: a1-02 (Cyrillic Code II - reading skills)
+- Prepares for: a1-04 (This Is, I Am), a1-26 (Adjectives)
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 2000`
+- **Minimum 4 sections** for modules with `word_target < 2000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 300
+  points:
+  - "Introduction to the Ukrainian three-gender system: Masculine, Feminine, and Neuter — stressing that gender is a linguistic category for all nouns, not just people."
+  - "Cultural Hook: The Neuter Sun (сонце) — explain its role as an impartial, gentle life-giver in Ukrainian folklore, contrasting it with the masculine sun in Romance languages (el sol/le soleil)."
+  - "Visual Mnemonic Framework: Categorization logic using color codes — Blue for Masculine (Hard/Consonant), Red for Feminine (Open/A-ending), and Yellow for Neuter (Round/O-E-ending)."
+- section: "Презентація правил (Presentation of Rules)"
+  words: 500
+  points:
+  - "Pattern Recognition for Endings: Masculine (consonant: стіл, хліб, дім), Feminine (-а/-я: книга, кімната, земля), and Neuter (-о/-е: вікно, місто, море)."
+  - "State Standard §4.2.2 Integration: Introduction of possessive pronouns 'мій, моя, моє' as the primary diagnostic tool for gender agreement and identity."
+  - "Syntactic Agreement: How gender dictates the form of adjectives and pronouns — examples with 'великий стіл' (M), 'цікава книга' (F), and 'чисте вікно' (N)."
+  - "Identity and Family Dialogue: High-frequency context using 'брат' (M), 'сестра' (F), 'мама' (F), and 'тато' (M) to demonstrate natural vs. grammatical gender."
+- section: "Практичні вправи (Practice Exercises)"
+  words: 500
+  points:
+  - "Natural Gender Override Trap: The case of 'тато' — explain that biological sex overrides the '-o' ending, making it Masculine (мій тато); contrast with 'місто' (N)."
+  - "The Soft Sign Ambiguity (Ь): Drill with the high-frequency minimal pair 'день' (Masculine) vs. 'ніч' (Feminine); strategy for memorizing these essential 'soft' exceptions."
+  - "The 'Name' Trap and Family 4: Explaining why 'ім'я' (name) is Neuter despite ending in '-я' — contrast with Feminine 'земля' to avoid common learner confusion."
+  - "State Standard §4.2.1.1 Drill: Categorizing high-frequency nouns 'чоловік' (man), 'жінка' (woman), and 'місто' (city) into their respective gender buckets."
+- section: "Самостійна робота (Independent Work/Production)"
+  words: 400
+  points:
+  - "The 'It' Trap Correction: Targeted drill to stop learners from using neuter 'воно' for all objects; reinforcing 'стіл = він' and 'книга = вона'."
+  - "Mapping Gender to Modern Contexts: Using S.T.A.L.K.E.R. vocabulary — 'Артефакт' (M), 'Зона' (F), and 'Укриття' (N) as classification anchors."
+  - "Applying Agreement: Creating simple descriptive phrases for personal items and nature terms using 'мій/моя/моє' and basic adjectives (новий, цікавий, великий)."
+- section: "Культурний код та підсумок (Cultural Code and Summary)"
+  words: 300
+  points:
+  - "Summary of gender prediction from endings: 95% predictability rule — reinforcement of the 'Soft Sign' and 'Natural Gender' exceptions."
+  - "Cultural Reflection: How gendered language shapes the Ukrainian worldview — personification of nature (земля-мати, сонце-життя)."
+  - "Final Competency Check: Identification of gender for core identity vocabulary (ім'я, тато, мама, місто) as per State Standard requirements."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "брат (brother) — старший брат (older brother); high-frequency family term"
+  - "сестра (sister) — молодша сестра (younger sister); high-frequency family term"
+  - "мама (mother) — моя мама; люба мама; high-frequency feminine"
+  - "тато (father) — мій тато (my dad); natural gender overrides -o ending; masculine trap"
+  - "дім (house) — новий дім; рідний дім; high-frequency masculine"
+  - "вікно (window) — відкрите вікно; велике вікно; чисте вікно; high-frequency neuter"
+  - "книга (book) — цікава книга; стара книга; електронна книга; high-frequency feminine"
+  - "місто (city) — моє місто; велике місто; State Standard §4.2.1.1 example"
+  recommended:
+  - "стіл (table) — дерев'яний стіл; великий стіл; новий стіл; core masculine"
+  - "море (sea) — синє море; тепле море; high-frequency neuter"
+  - "ніч (night) — добра ніч (good night); feminine exception with soft sign"
+  - "день (day) — гарний день (good day); masculine contrast with 'ніч'"
+  - "земля (earth) — рідна земля; чорна земля; feminine ending in -я"
+  - "серце (heart) — добре серце; моє серце; high-frequency neuter"
+  - "сонце (sun) — ясне сонце; cultural hook; neuter life-giver"
+  - "собака (dog) — мій собака (my dog); masculine gender trap for -a endings"
+  - "ім'я (name) — моє повне ім'я; гарне ім'я; neuter exception (Family 4)"
+  - "артефакт (artifact) — S.T.A.L.K.E.R. hook; masculine consonant ending"
+  - "зона (zone) — S.T.A.L.K.E.R. hook; feminine -a ending"
+  - "укриття (shelter) — S.T.A.L.K.E.R. hook; neuter -я ending with stem change"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4838 chars)
+✅ Message sent to Claude (ID: 10032)
+✓ Message 10032 acknowledged
+   Auto-acknowledged reply #10032 (stdout delivery — no inbox accumulation)
+✓ Message 10030 acknowledged

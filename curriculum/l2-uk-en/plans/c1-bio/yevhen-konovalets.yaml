@@ -1,53 +1,45 @@
----
-module: c1-bio-093
+module: c1-bio-92
 level: C1-BIO
-sequence: 93
+sequence: 92
 slug: yevhen-konovalets
 version: '2.0'
 title: 'Євген Коновалець: Полковник і організатор'
 content_outline:
-- section: "Вступ — Архітектор національного руху"
-  words: 457
+- section: Вступ — Архітектор національного руху
   points:
   - Коновалець як творець організованого опору
   - Від військового командира до політичного лідера
   - Трагічна загибель від рук НКВД
 - section: Молодість і Перша світова війна
-  words: 685
   points:
   - Народження в Галичині (1891)
   - Юридична освіта у Львові
   - Служба в австрійській армії
   - Російський полон і формування Січових Стрільців
 - section: Командир Січових Стрільців
-  words: 800
   points:
   - Бої за Київ (1918)
   - Захист УНР
   - Листопадовий чин у Львові
   - Поразка і еміграція
 - section: Створення ОУН
-  words: 800
   points:
   - Українська Військова Організація (1920)
   - Підпільна боротьба в Польщі
   - Заснування ОУН (1929)
   - Ідеологія та стратегія руху
 - section: Лідер в еміграції
-  words: 685
   points:
   - Дипломатична діяльність
   - Пошук союзників для України
   - Конфлікти всередині руху
   - Підготовка до майбутньої боротьби
 - section: Вбивство та спадщина
-  words: 573
   points:
   - Замах НКВД у Роттердамі (1938)
   - Павло Судоплатов — вбивця
   - Вплив на ОУН після смерті
   - Коновалець як символ боротьби
-word_target: 4000
 vocabulary_hints:
   required:
   - полковник (colonel)
@@ -73,7 +65,6 @@ activity_hints:
   items: 3 passages
 - type: essay-response
   focus: How did Konovalets transform military defeat into political movement?
-  word_target: 300
   output: Strategic analysis
 focus: biography
 prerequisites:
@@ -87,19 +78,19 @@ connects_to:
 module_type: biography
 sources:
 - name: Євген Коновалець (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Коновалець_Євген_Михайлович"
+  url: https://uk.wikipedia.org/wiki/Коновалець_Євген_Михайлович
   type: primary
   notes: Military career, OUN leadership, assassination
 - name: Січові Стрільці
-  url: "https://uk.wikipedia.org/wiki/Січові_стрільці"
+  url: https://uk.wikipedia.org/wiki/Січові_стрільці
   type: reference
   notes: Military formation he led
 - name: Організація українських націоналістів
-  url: "https://uk.wikipedia.org/wiki/Організація_українських_націоналістів"
+  url: https://uk.wikipedia.org/wiki/Організація_українських_націоналістів
   type: reference
   notes: Organization he founded
 - name: СЗР України - Коновалець
-  url: "https://szru.gov.ua/en/history/stories/leaders-of-the-liberation-movement--about-ukrainian-statehood-yevhen-konovalets"
+  url: https://szru.gov.ua/en/history/stories/leaders-of-the-liberation-movement--about-ukrainian-statehood-yevhen-konovalets
   type: reference
   notes: Intelligence service historical page
 immersion: 100% Ukrainian
@@ -108,3 +99,6 @@ objectives:
 - 'Analyze the life and legacy of євген коновалець: полковник і організатор'
 - Evaluate the contributions of архітектор національного руху
 - Trace the career and influence of вбивство та спадщина
+persona:
+  voice: Senior Biographer
+  role: Underground Commander

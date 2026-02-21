@@ -1,0 +1,204 @@
+✅ Message sent to Gemini (ID: 12981) [auto-acked: self-addressed]
+✓ Message 12981 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12981...
+📨 Message #12981
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-fables-kharkiv
+   Time: 2026-02-20T23:43:38.824274+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 92
+module: ruth-092
+module_number: 92
+slug: fables-kharkiv
+title_uk: Харківські байки
+title_en: Fables of Kharkiv
+phase: 4
+phase_id: cossack-word
+phase_name: Cossack Word
+focus: Genre of Fable — "The Bee and the Hornet"
+content_outline:
+- section: Вступ
+  description: Introduction to Fables of Kharkiv
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Baroque Scholar
+  role: Moral Fabulist
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Fables Kharkiv (Байки Харківські)
+
+## Використані джерела
+1. [Енциклопедія Сучасної України (ЕСУ)](https://esu.com.ua/search_articles.php?id=Skovoroda_Hryhorii) — Біографія та аналіз творчості Г. Сковороди.
+2. [Ізборник (Litopys.org.ua)](http://litopys.org.ua/skovoroda/skov.htm) — Оригінальні тексти творів Сковороди, зокрема "Байки Харківські".
+3. [УкрЛіб (UkrLib)](https://www.ukrlib.com.ua/bio/printit.php?tid=1560) — Аналіз байки "Бджола та Шершень".
+4. [Шевельов Ю. Попередні зауваги до вивчення мови та стилю Сковороди](http://litopys.org.ua/shevelov/shev06.htm) — Мовознавча розвідка про характер мови Сковороди.
+
+## Хронологія
+- 1722: Народження Григорія Сковороди у с. Чорнухи.
+- 1753–1759: Викладання у Переяславському колегіумі (період формування педагогічних поглядів).
+- 1759–1769: Викладання у Харківському колегіумі (з перервами).
+- 1769: Початок написання перших 15 байок збірки "Байки Харківські".
+- 1774: Завершення збірки (30 байок) у с. Бабаї (нині Харківська обл.).
+- 1794: Смерть філософа у с. Пан-Іванівка (Сковородинівка).
+- 1837: Перше посмертне видання "Байок Харківських" у Москві.
+
+## Ключові факти та цитати
+- **Структура байки**: Фабула (сюжет) + "Сила" (мораль/висновок). "Сила" у Сковороди часто більша за обсягом, ніж сама фабула.
+- **Цитата (Бджола та Шершень)**: "Нѣтъ сладчайшаго, какъ общая всѣмъ работа." (Немає нічого солодшого, як спільна для всіх робота).
+- **Цитата (Бджола)**: "К сему мы рождены" (Для цього ми народжені).
+- **Цитата (Мораль)**: "Багато людей без природи починають великі справи, та погано кінчають. Добрий намір і кінець — всякій справі є вінець."
+- **Концепція**: "Сродна праця" (Congenial Work) — праця, що відповідає природним нахилам людини, є джерелом щастя.
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ": [!history-bite] — Сковорода писав байки не для публікації, а як "духовні вправи" для друзів.
+- Section "Основний матеріал: I — Байки Харківські": [!context] — Харківський колегіум як центр освіти Слобожанщини, де формувався стиль Сковороди.
+- Section "Основний матеріал: II — Бджола та Шершень": [!quote] — Оригінальний текст діалогу Бджоли та Шершня (барокова мова).
+- Section "Основний матеріал: III — Філософія": [!myth-buster] — Сковорода не був "самітником-відлюдником", а мав широке коло друзів і учнів, для яких і писав.
+- Section "Основний матеріал: IV — Мова": [!decolonization] — Мова Сковороди — це не "російська", а книжна українська (староукраїнська) мова XVIII ст.
+
+## Деколонізаційний контекст
+- **Imperial Myth**: Сковорода — "перший російський філософ", писав російською мовою.
+- **Ukrainian Reality**: Сковорода — представник українського бароко. Його мова — це слобожанський варіант книжної української мови (суміш церковнослов'янської, живої народної та канцеляризмів), типова для освіченої еліти Гетьманщини. Називати її "російською" — імперська маніпуляція.
+
+## Contested Terms (Language)
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| Мова Сковороди | Російська мова (з діалектизмами) | Староукраїнська книжна мова (Slov'ianoruska) |
+| Сродна праця | Сродный труд (як абстракція) | Природжена праця (як шлях до особистої свободи) |
+| Ідентичність | Російський підданий | Син "Малоросії" (України), волелюбний філософ |
+
+## Section-Mapped Research Notes
+
+### Вступ: Барокова байка
+Езопівська мова, алегорія. Байка як популярний шкільний жанр у Києво-Могилянській та Харківській академіях.
+
+### Основний матеріал: I — "Байки Харківські"
+Історія написання (1769-1774). Присвята Опанасу Панкову. Структура збірки: 30 байок. Особливість: мораль ("сила") — це філософський трактат у мініатюрі.
+
+### Основний матеріал: II — "Бджола та Шершень"
+Аналіз сюжету. Шершень — споживач, живе крадіжкою. Бджола — творець, живе процесом праці. Конфлікт "жити, щоб їсти" vs "їсти, щоб жити (і творити)".
+
+### Основний матеріал: III — Філософія "Сродної праці"
+Бог (Природа) зробив потрібне неважким, а важке — непотрібним. Щастя не в посадах чи багатстві, а в реалізації природного покликання. Приклад: мисливський пес радіє полюванню, а не лише зайцю.
+
+### Основний матеріал: IV — Мовний світ Сковороди
+Деколонізація мовного питання. Лексика: "сродность", "нужность", "натура". Вплив латини та розмовної української стихії. Чому це важливо читати в оригіналі (або адаптації), а не в перекладі на сучасну російську.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 13016)
+✓ Message 12981 acknowledged
+✓ Message 13016 acknowledged

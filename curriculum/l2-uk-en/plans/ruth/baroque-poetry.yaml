@@ -1,4 +1,3 @@
----
 sequence: 74
 module: ruth-074
 module_number: 60
@@ -9,7 +8,6 @@ phase: 3
 phase_id: baroque-fight
 phase_name: Baroque Fight
 focus: Curiosity verse, visual poetry
-word_target: 4000
 content_outline:
 - section: Вступ
   description: Introduction to Baroque Poetry
@@ -24,3 +22,6 @@ activity_types:
 - transcription
 - etymology-trace
 - grammar-identify
+persona:
+  voice: Baroque Scholar
+  role: Master of Concetti

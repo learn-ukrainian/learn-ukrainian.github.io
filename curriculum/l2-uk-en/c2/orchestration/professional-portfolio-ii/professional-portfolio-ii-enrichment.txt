@@ -1,0 +1,321 @@
+✅ Message sent to Gemini (ID: 11288) [auto-acked: self-addressed]
+✓ Message 11288 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #11288...
+📨 Message #11288
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-professional-portfolio-ii
+   Time: 2026-02-20T22:35:06.108809+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c2-072
+level: c2
+sequence: 72
+version: '2.0'
+title: Професійне портфоліо II — Багатоформатна презентація
+focus: domain
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Дія.Бізнес — Підприємництво
+  url: https://business.diia.gov.ua/
+  type: reference
+  notes: Цифрові інструменти для професіоналів
+- name: LinkedIn Україна
+  url: https://www.linkedin.com/
+  type: reference
+  notes: Професійні мережі
+- name: Behance/Dribbble для творчих професій
+  url: https://www.behance.net/
+  type: reference
+  notes: Портфоліо креативних спеціалістів
+content_outline:
+- section: Вступ — Мультиформатне портфоліо
+  points:
+  - Різні формати для різних цілей
+  - Синергія форматів
+  - Консистентність особистого бренду
+  - Адаптація до авдиторії
+- section: Цифрове портфоліо
+  points:
+  - Особистий вебсайт
+  - LinkedIn-профіль українською
+  - Галерейні платформи (Behance, GitHub)
+  - Блог як частина портфоліо
+- section: Відеопрезентація
+  points:
+  - Відеорезюме — формат і зміст
+  - Відеоогляд проєктів
+  - Вебінари та записи виступів
+  - Технічні вимоги та якість
+- section: Презентаційні матеріали
+  points:
+  - Слайд-дек (pitch deck)
+  - Інфографіка досягнень
+  - Один-сторінковий профіль
+  - Візитівка та брендинг
+- section: Кейс-стаді та проєктна документація
+  points:
+  - Структура кейс-стаді
+  - Опис проблеми та рішення
+  - Результати та метрики
+  - Візуалізація процесу
+- section: Інтеграція форматів
+  points:
+  - Єдиний наратив
+  - Перехресні посилання
+  - Оновлення та підтримка
+  - Архівування та версіонування
+- section: Практикум — Багатоформатна презентація
+  points:
+  - Створення LinkedIn-профілю
+  - Написання кейс-стаді
+  - Підготовка відеопрезентації
+vocabulary:
+  required:
+  - цифрове портфоліо (digital portfolio)
+  - особистий бренд (personal brand)
+  - відеорезюме (video resume)
+  - кейс-стаді (case study)
+  - презентація (presentation)
+  - слайд-дек (slide deck)
+  - інфографіка (infographic)
+  - метрика (metric)
+  - візуалізація (visualization)
+  - наратив (narrative)
+  recommended:
+  - pitch (pitch)
+  - брендинг (branding)
+  - вебінар (webinar)
+  - контент (content)
+  - платформа (platform)
+  forbidden: '[]'
+activities:
+  types_required:
+  - reading
+  - quiz
+  - fill-in
+  - critical-analysis
+  - essay-response
+  - comparative-study
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c2-73 (Professional Identity)
+- c2-74 (C2.3 Review)
+- c2-75 (C2.3 Checkpoint)
+vocabulary_hints:
+  required:
+  - концепція (concept)
+  - аналіз (analysis)
+  - дискурс (discourse)
+  - методологія (methodology)
+  recommended:
+  - інтерпретація (interpretation)
+  - контекстуалізація (contextualization)
+  - синтез (synthesis)
+activity_hints:
+- type: reading
+  focus: Поглиблений аналіз тексту
+  items: 4
+- type: essay-response
+  focus: Критичне осмислення
+- type: discussion
+  focus: Дискусія та аргументація
+  items: 1
+persona:
+  voice: Senior Specialist
+  role: Agency Director
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Професійне портфоліо II — Багатоформатна презентація
+
+## State Standard Reference
+§4.3.6: "Уміння створити текст певного стилю за планом."
+§4.3.5: "Використання елементів риторики в композиції тексту."
+Alignment: Модуль розвиває навички створення професійних самопрезентаційних текстів (резюме, кейс-стаді, портфоліо) у публіцистичному та офіційно-діловому стилях з використанням риторичних прийомів переконання.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| портфоліо | High (IT/Digital) | цифрове портфоліо, структура портфоліо, оновити портфоліо |
+| кейс-стаді | Medium (Professional) | написати кейс-стаді, структура кейсу, аналіз проблеми |
+| особистий бренд | High (Business) | будувати особистий бренд, стратегія бренду, репутація |
+| відеорезюме | Medium (Modern HR) | записати відеорезюме, сценарій відео, самопрезентація |
+| досягнення | High (Resume) | ключові досягнення, кількісні показники, вимірювані результати |
+| навички | High (General) | hard skills, soft skills, ключові компетенції |
+
+## Cultural Hooks
+1. **Зміна парадигми скромності**: Традиційна українська скромність поступається місцем західній культурі "personal branding", особливо в IT та креативних індустріях. Вміння "продати себе" стає критичною навичкою.
+2. **Мовний пуризм як маркер фаховості**: Використання чистої української мови (без суржику та кальок) у професійних матеріалах сприймається як ознака високої освіченості та професіоналізму.
+
+## Common Learner Errors
+1. **Калькування з російської/англійської**: "приймати участь" (помилка) → "брати участь" (правильно); "на протязі року" (помилка) → "протягом/впродовж року".
+2. **Опис обов'язків замість досягнень**: Кандидати часто пишуть "робив звіти", замість "оптимізував звітність, що зекономило 20% часу".
+3. **Відсутність контексту в портфоліо**: Публікація посилань або картинок без опису задачі, ролі та результату (методологія STAR).
+
+## Cross-References
+- Builds on: c2-71 (Professional Portfolio I - CV & Cover Letter)
+- Prepares for: c2-73 (Professional Identity), c2-75 (Checkpoint)
+
+## Notes for Content Writing
+- Акцентувати на "методі STAR" (Situation, Task, Action, Result) для опису кейсів.
+- Включити поради щодо технічної якості відеорезюме (світло, звук), оскільки це часто ігнорується.
+- Підкреслити важливість адаптації контенту під різні платформи (LinkedIn vs Behance).
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ — Мультиформатне портфоліо (Introduction — Multi-format Portfolio)"
+  words: 400
+  points:
+  - "Cultural shift: transitioning from traditional Ukrainian modesty to the proactive 'personal branding' paradigm prevalent in IT and creative sectors"
+  - "Strategic consistency: maintaining a unified professional narrative across disparate digital formats to ensure a coherent personal brand"
+- section: "Цифрове портфоліо та платформи (Digital Portfolio and Platforms)"
+  words: 700
+  points:
+  - "Adaptation of content strategy for different platforms: professional tone for LinkedIn vs. visual storytelling for Behance and Dribbble"
+  - "Linguistic purism as a professional marker: using clean Ukrainian (without calques or surzhyk) to signal high educational status and expertise"
+- section: "Відеопрезентація та риторика (Video Presentation and Rhetoric)"
+  words: 700
+  points:
+  - "Video resume: applying rhetorical elements of persuasion and composition according to State Standard §4.3.5 for effective self-presentation"
+  - "Technical quality and digital literacy: importance of lighting and sound in video resumes as markers of professional attention to detail"
+- section: "Кейс-стаді та методологія STAR (Case Study and STAR Methodology)"
+  words: 800
+  points:
+  - "The STAR method (Situation, Task, Action, Result) as a rhetorical framework for structuring achievement-oriented project descriptions"
+  - "Shifting from duty-based descriptions to result-based narratives: using measurable metrics and quantitative indicators of success"
+- section: "Презентаційні матеріали та візуалізація (Presentation Materials and Visualization)"
+  words: 700
+  points:
+  - "Pitch deck structure according to State Standard §4.3.6: creating goal-oriented professional texts following a specific stylistic plan"
+  - "Infographics and visual hierarchy: highlighting key achievements and skills to manage audience attention and information density"
+- section: "Практикум — Мовна чистота (Practicum — Linguistic Purity)"
+  words: 700
+  points:
+  - "Common learner error: correcting the Russian-influenced «приймати участь» with the proper Ukrainian «брати участь» in professional contexts"
+  - "Correction of temporal calques: using «протягом року» or «впродовж року» instead of the erroneous «на протязі року» in project documentation"
+===ENRICHED_OUTLINE_END===
+
+===ENERICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "цифрове портфоліо (digital portfolio) — collocation: «структура цифрового портфоліо»; high frequency in IT sectors"
+  - "особистий бренд (personal brand) — usage: «будувати особистий бренд»; marker of modern professional identity"
+  - "відеорезюме (video resume) — collocation: «записати відеорезюме»; script-based self-presentation format"
+  - "кейс-стаді (case study) — structure: «написати кейс-стаді»; methodology for problem-solution-result analysis"
+  - "досягнення (achievements) — collocation: «ключові досягнення»; focus on measurable results (KPIs) over duties"
+  - "компетенції (competencies) — usage: «ключові компетенції»; formal-business register for skill-sets"
+  recommended:
+  - "метод STAR (STAR method) — Situation, Task, Action, Result framework for narrative case studies"
+  - "мовна чистота (linguistic purity) — usage: «дотримуватися мовної чистоти»; signifier of professional credibility"
+  - "калькування (calquing) — note: avoid calques from Russian/English in formal self-presentation texts"
+  - "кількісні показники (quantitative indicators) — context: using metrics to validate professional success"
+===ENERICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (3636 chars)
+✅ Message sent to Claude (ID: 11301)
+✓ Message 11301 acknowledged
+   Auto-acknowledged reply #11301 (stdout delivery — no inbox accumulation)
+✓ Message 11288 acknowledged

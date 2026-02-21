@@ -1,0 +1,342 @@
+✅ Message sent to Gemini (ID: 10475) [auto-acked: self-addressed]
+✓ Message 10475 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10475...
+📨 Message #10475
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-passive-voice-system
+   Time: 2026-02-20T20:37:01.393323+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b2-01
+level: B2
+sequence: 1
+slug: passive-voice-system
+version: '2.0'
+title: 'Пасивний стан: повна система'
+content_outline:
+- section: Вступ — Що таке пасивний стан?
+  points:
+  - Різниця між активним і пасивним станом
+  - Чому пасив важливий для офіційного та наукового стилю
+  - Огляд чотирьох форм пасиву в українській мові
+- section: Форма 1 — Дієприкметники на -ний/-тий
+  points:
+  - Утворення від дієслова (написати → написаний)
+  - Узгодження з іменником (рід, число, відмінок)
+  - Вживання з допоміжним дієсловом бути
+  - Регістр — літературний, академічний, формальний
+- section: Форма 2 — Безособові конструкції на -но/-то
+  points:
+  - Утворення від дієприкметника (написаний → написано)
+  - Об'єкт у знахідному відмінку (Книгу написано)
+  - Відсутність агента — безособовість
+  - Регістр — офіційно-діловий, юридичний, бюрократичний
+- section: Форма 3 — Зворотний пасив із -ся
+  points:
+  - Утворення (будуватися, писатися)
+  - Акцент на процесі, а не на результаті
+  - Можливість вираження агента (орудний відмінок)
+  - Регістр — науковий, технічний, процедурний
+- section: Форма 4 — Третя особа множини
+  points:
+  - Конструкція без явного підмета (Мені сказали)
+  - Імпліцитний агент — невизначені "вони"
+  - Об'єкт часто в давальному відмінку
+  - Регістр — розмовний, неформальний
+- section: Вибір форми пасиву за контекстом
+  points:
+  - Таблиця регістрів і відповідних форм
+  - Практичні сценарії вибору
+  - Помилки вибору — коли -но/-то замість -ся, і навпаки
+  - Змішування регістрів — розмовний пасив у формальному тексті
+- section: Підсумок і практика
+  points:
+  - Ключові правила вибору пасиву
+  - Зв'язок із наступними модулями
+vocabulary_hints:
+  required:
+  - пасивний стан (passive voice)
+  - дієприкметник (participle)
+  - безособовий (impersonal)
+  - зворотний (reflexive)
+  - агент (agent)
+  - регістр (register)
+  - офіційно-діловий (official/bureaucratic)
+  - науковий (scientific)
+  - літературний (literary)
+  - розмовний (colloquial)
+  recommended:
+  - узгодження (agreement)
+  - конструкція (construction)
+  - трансформація (transformation)
+  - контекст (context)
+  - стиль (style)
+activity_hints:
+- type: quiz
+  focus: Identify passive voice type from sentence
+  items: 15+
+- type: match-up
+  focus: Sentence → passive type classification
+  items: 12+
+- type: group-sort
+  focus: Classify sentences by passive form (4 categories)
+  items: 16+
+- type: fill-in
+  focus: Complete sentences with correct passive form
+  items: 12+
+- type: fill-in
+  focus: Active → passive transformation (choose appropriate type)
+  items: 10+
+- type: quiz
+  focus: Which passive for which register?
+  items: 12+
+- type: essay-response
+  focus: Rewrite paragraph using appropriate passive forms
+  output: Model answer provided
+focus: grammar
+prerequisites:
+- B1 completion required
+- Active voice mastery
+- All 7 cases
+- Aspect system (perfective/imperfective)
+connects_to:
+- b2-02 (Past Passive Participles -ний/-тий)
+- b2-03 (Impersonal -но/-то)
+- b2-06 (Passive in Context)
+- b2-10 (B2.1a Checkpoint)
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Passive Voice
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Official B2 passive voice requirements, all 4 forms
+- name: CEFR B2 Grammar Descriptors
+  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  type: reference
+  notes: B2 grammar complexity expectations
+- name: Сучасна українська мова - Пономарів
+  url: https://uk.wikipedia.org/wiki/Пономарів_Олександр_Данилович
+  type: secondary
+  notes: Academic reference for passive voice usage and register
+immersion: 100% Ukrainian
+phase: B2.1a [Passive Voice]
+objectives:
+- 'Identify and correctly use пасивний стан: повна система'
+- Form and apply що таке пасивний стан?
+persona:
+  voice: Professional Language Coach
+  role: Laboratory Scientist (Лаборант)
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Пасивний стан: повна система
+
+## State Standard Reference
+§4.1.3.1: "Дійсний спосіб: дієвідмінювання дієслів... пасивний стан (дієприкметники)..."
+§4.3.3.1: "Односкладні речення... неозначено-особові речення... безособові речення (Там усе правильно записано)."
+Alignment: Цей модуль систематизує всі форми пасивного стану та безособових речень, які вимагаються стандартом для рівня B2 (науковий та офіційний стилі).
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| пасивний стан | Середня (термін) | вживати пасивний стан, форми пасивного стану |
+| дієприкметник | Середня (термін) | пасивний дієприкметник, утворити дієприкметник |
+| безособовий | Середня | безособове речення, безособова форма на -но/-то |
+| агент | Низька (наук.) | виконавець дії, опущення агента |
+| регістр | Середня | офіційний регістр, науковий стиль |
+
+## Cultural Hooks
+1. **Офіційні документи**: Акт проголошення незалежності України та Конституція. Використання безособових форм на -но/-то для констатації фактів ("Закон прийнято").
+2. **Науковий етикет**: В українській науковій мові традиційно уникають "я вважаю", замінюючи на "вважається", "досліджено", "встановлено" (пасив) або "ми вважаємо" (авторське "ми").
+3. **Агентність нації**: У сучасній культурі (особливо під час війни) є тенденція до активних конструкцій ("Ми знищили ворога", а не "Ворога було знищено"), що підкреслює суб'єктність.
+
+## Common Learner Errors
+1. **"Було зроблено" (Calque)**: Калькування англійського "was done".
+   - *Помилка*: Цю роботу було зроблено студентом.
+   - *Виправлення*: Студент зробив цю роботу (актив) або Цю роботу зроблено (безособово).
+2. **Агент у безособових реченнях**: Вживання орудного відмінка виконавця з формами на -но/-то.
+   - *Помилка*: Закон прийнято депутатами.
+   - *Виправлення*: Депутати прийняли закон. (У формах на -но/-то агент неможливий).
+3. **Зловживання -ся**: Використання зворотних дієслів там, де вони звучать неприродно.
+   - *Помилка*: Цей будинок будується робітниками.
+   - *Виправлення*: Робітники будують цей будинок.
+
+## Cross-References
+- Builds on: B1 Verbs (Active Voice), Case System (Accusative/Instrumental)
+- Prepares for: B2.1b (Participles), B2-PRO (Academic Writing), C1 (Stylistics)
+
+## Notes for Content Writing
+- **Agency Pass**: Жорстко критикувати пасивний стан там, де він приховує відповідальність. Пасив — це інструмент, а не милиця.
+- **Register Clarity**: Чітко розмежувати: -но/-то (бюрократія), -ся (інструкції/процеси), -ний/-тий (опис стану).
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Природа пасивного стану (Introduction: The Nature of Passive Voice)"
+  words: 500
+  points:
+  - "Визначення пасивного стану та його роль у структуруванні інформації: зміщення акценту з виконавця на об'єкт чи результат дії."
+  - "Культурний аспект суб'єктності: обговорення сучасної тенденції до активних конструкцій («Ми перемогли») замість пасивних («Ворога було переможено») для підкреслення агентності та відповідальності нації."
+  - "Огляд чотирьох основних стратегій вираження пасивності в українській мові залежно від стилістичного регістру (наука, право, розмова)."
+- section: "Форма 1: Пасивні дієприкметники на -ний/-тий (Form 1: Passive Participles in -nyi/-tyi)"
+  words: 800
+  points:
+  - "Механізм утворення від перехідних дієслів доконаного виду (написати → написаний) та правила узгодження в роді, числі та відмінку з іменником."
+  - "Пасив у науковому етикеті: використання дієприкметникових форм для створення дистанції та об'єктивності викладу (заміна «я вважаю» на «вважається», «досліджено», «встановлено»)."
+  - "Синтаксичні особливості: вживання з допоміжним дієсловом «бути» у минулому та майбутньому часі та роль дієприкметника як присудка."
+- section: "Форма 2: Безособові конструкції на -но/-то (Form 2: Impersonal Constructions in -no/-to)"
+  words: 1000
+  points:
+  - "Утворення незмінних безособових форм від пасивних дієприкметників та їхнє домінування в офіційно-діловому та юридичному стилях."
+  - "Аналіз державних документів: використання форм на -но/-то в Конституції України та Акті проголошення незалежності («Закон прийнято», «Державу проголошено») для констатації завершених фактів."
+  - "Критична заборона: неможливість вживання агента (виконавця) в орудному відмінку з формами на -но/-то (Learner error: виправлення конструкцій на кшталт «Закон прийнято депутатами»)."
+  - "Специфіка керування: об'єкт дії у знахідному відмінку (Книгу написано) як ознака чистого пасивного значення."
+- section: "Форма 3: Зворотний пасив із суфіксом -ся (Form 3: Reflexive Passive with -sia)"
+  words: 600
+  points:
+  - "Вираження пасивності через зворотні дієслова недоконаного виду (будуватися, писатися) для опису тривалих процесів або регулярних дій."
+  - "Технічний та інструктивний регістр: опис процедур та інструкцій («Питання розглядається», «Посилка відправляється»)."
+  - "Стилістичне застереження щодо надмірного вживання -ся там, де активна конструкція звучить природніше (Learner error: уникання штучних речень типу «Цей будинок будується робітниками»)."
+- section: "Форма 4: Неозначено-особові речення (Form 4: Indefinite Personal Sentences)"
+  words: 400
+  points:
+  - "Використання третьої особи множини без підмета («Мені сказали», «Нас запросили») як функціонального замінника пасиву в розмовному стилі."
+  - "Імпліцитний агент: коли виконавець дії невідомий, неважливий або свідомо прихований мовцем."
+- section: "Вибір форми та корекція типових помилок (Form Selection and Error Correction)"
+  words: 700
+  points:
+  - "Подолання інтерференції: деконструкція англомовної кальки «було зроблено» (was done) — трансформація у природний актив або безособову форму («зроблено»)."
+  - "Матриця відповідності стилів: практичні сценарії вибору між -но/-то (бюрократія), -ся (процес) та неозначено-особовою формою (розмова)."
+  - "Agency Pass: лінгвістичний аналіз ситуацій, коли пасивний стан приховує відповідальність, і практика відновлення активної суб'єктності."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "пасивний стан (passive voice) — вживати пасивний стан, форми пасивного стану; граматичний термін"
+  - "дієприкметник (participle) — пасивний дієприкметник, утворити дієприкметник; середня частотність"
+  - "безособовий (impersonal) — безособове речення, безособова форма на -но/-то; ключова категорія"
+  - "агент (agent) — виконавець дії, опущення агента; науковий термін, низька частотність"
+  - "регістр (register) — офіційний регістр, науковий стиль; поняття функціональних стилів"
+  - "офіційно-діловий (official/bureaucratic) — вживання у документах, правовий контекст"
+  - "науковий (scientific) — науковий етикет, об'єктивність викладу"
+  - "літературний (literary) — використання у художньому та публіцистичному стилях"
+  - "розмовний (colloquial) — неформальне спілкування, вживання неозначено-особових форм"
+  - "зворотний (reflexive) — зворотне дієслово, суфікс -ся"
+  - "узгодження (agreement) — узгодження дієприкметника з іменником у роді, числі та відмінку"
+  - "виконавець (performer/doer) — синонім до терміну 'агент'"
+  - "суб'єктність (subjectivity/agency) — підкреслення ролі виконавця дії"
+  recommended:
+  - "вважається (it is considered) — кліше наукового етикету для об'єктивності"
+  - "досліджено (it has been researched) — форма на -но для представлення результатів"
+  - "встановлено (it has been established) — канцеляризм для констатації факту"
+  - "концепція (concept) — об'єкт наукового пасиву"
+  - "закон прийнято (the law is passed) — стала формула офіційного стилю"
+  - "трансформація (transformation) — перехід з активу в пасив"
+  - "калька (calque) — помилка через дослівний переклад з іншої мови"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (5215 chars)
+✅ Message sent to Claude (ID: 10480)
+✓ Message 10480 acknowledged
+   Auto-acknowledged reply #10480 (stdout delivery — no inbox accumulation)
+✓ Message 10475 acknowledged

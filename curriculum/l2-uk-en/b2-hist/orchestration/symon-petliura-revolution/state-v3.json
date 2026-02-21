@@ -1,0 +1,13 @@
+{
+  "track": "b2-hist",
+  "slug": "symon-petliura-revolution",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T16:44:39Z",
+      "task_id": "v3-symon-petliura-revolution-pA",
+      "mode": "meta-only"
+    }
+  }
+}

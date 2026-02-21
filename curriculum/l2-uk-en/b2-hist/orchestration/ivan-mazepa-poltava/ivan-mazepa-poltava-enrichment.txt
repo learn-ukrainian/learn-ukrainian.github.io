@@ -1,0 +1,319 @@
+✅ Message sent to Gemini (ID: 12729) [auto-acked: self-addressed]
+✓ Message 12729 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12729...
+📨 Message #12729
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-ivan-mazepa-poltava
+   Time: 2026-02-20T23:41:53.804700+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b2-hist-066
+level: B2-HIST
+sequence: 66
+slug: ivan-mazepa-poltava
+version: '2.0'
+title: 'Іван Мазепа III: Полтава і вигнання'
+subtitle: 'Ivan Mazepa III: Poltava and Exile'
+content_outline:
+- section: Вступ
+  points:
+  - Рішення, що змінило історію — не спонтанний крок, а реакція на наміри Петра І
+    перетворити козаків на драгунів та скасувати автономію
+  - Геополітичний контекст — Швеція як гарант протекторату (аналогія з угодою Хмельницького);
+    [!myth-buster] Мазепа не «зрадник», а державник, що рятував країну від поглинання
+- section: Читання
+  points:
+  - Таємні перемовини та дипломатичні маневри — 1706–1708 рр., роль княгині Дольської,
+    мотивація «врятувати Україну між двома каменями»; [!context] Велика Північна війна
+    як глобальний конфлікт
+  - Гнів царя та ідеологічна війна — Петро І до останнього вважав доноси Кочубея та
+    Іскри наклепом, анафема як політичний інструмент
+- section: 'Батуринська трагедія: Ціна спротиву'
+  points:
+  - Оплот Мазепи — оборона під командуванням полковника Дмитра Чечеля
+  - Ніч зради та ранок геноциду — зрада Івана Носа, знищення 11–15 тис. мешканців
+    (включно з жінками та дітьми); [!history-bite] археологічні докази геноциду (розтрощені
+    черепи, обгорілі ікони)
+- section: 'Полтавська битва: Злам епох'
+  points:
+  - Зима відчаю та весна надій — люта зима 1708–1709, приєднання запорожців під проводом
+    Костя Гордієнка (березень 1709)
+  - '27 червня 1709 року: Ранок імперії — фатальна помилка (поранення Карла XII),
+    перевага російської артилерії; [!military] відсутність єдиного командування у
+    шведів'
+  - 'Переволочна: Кінець міфу — капітуляція Левенгаупта, втеча Мазепи і Карла через
+    Дніпро в османські володіння'
+- section: Вигнання, Смерть і Початок нової боротьби
+  points:
+  - 'Бендери: Життя після поразки — табір у Варниці, смерть гетьмана 21 вересня 1709
+    року, поховання в Галаці; [!legacy] зародження першої політичної еміграції'
+  - Пилип Орлик та Перша Конституція Європи — квітень 1710, «Пакти і Конституції»
+    як правова основа нової держави, ідея поділу влади
+- section: 'Мазепа в культурі: Між прокляттям і романтизмом'
+  points:
+  - Образ Мазепи в Європі vs Росії — романтичний герой свободи (Байрон, Гюго, Ліст)
+    проти «Юду» в російській пропаганді (Пушкін); [!culture] європейський міф про
+    Мазепу
+- section: Первинні джерела
+  points:
+  - Дипломатичне листування — листи до Карла XII та Станіслава Лещинського
+  - Військові рапорти — Універсали до українського народу з поясненням причин переходу
+  - Державотворчі акти — «Маніфест до європейських народів» Пилипа Орлика (1712)
+- section: 'Деколонізаційний погляд: Руйнування імперських міфів'
+  points:
+  - 'Мазепа: Герой чи антигерой? — васал, що розриває угоду через порушення сюзереном
+    обов''язку захисту («бороніться самі»); [!decolonization] термін «мазепинці» як
+    тавро для борців за незалежність'
+  - Спадщина в сучасній Україні — відродження пам'яті (пам'ятники, 10 гривень), спростування
+    радянських міфів
+- section: Підсумок
+  points:
+  - Спадщина та пам'ять — поразка затримала незалежність, але вчинок Мазепи заклав
+    фундамент збройного опору імперії
+vocabulary_hints:
+  required:
+  - зрада (betrayal/treason) — російський міф про «зраду Мазепи» vs українська «зрада
+    царя»
+  - анафема (anathema) — накласти анафему (політичний акт), зняти анафему
+  - вигнання (exile) — політичне вигнання, мазепинська еміграція
+  - конституція (constitution) — Конституція Пилипа Орлика, правові основи
+  - трагедія (tragedy) — Батуринська трагедія, національна трагедія
+  - альянс (alliance) — шведсько-український альянс, військовий союз
+  - битва (battle) — генеральна битва, поле битви
+  - терор (terror) — московський терор, тактика випаленої землі
+  recommended:
+  - маніфест (manifesto) — Маніфест до європейських народів
+  - гарнізон (garrison) — знищення гарнізону, оборона фортеці
+  - облога (siege) — тримати в облозі, прорвати облогу
+  - капітуляція (capitulation) — ганебна капітуляція, умови капітуляції
+  - еміграція (emigration) — перша хвиля еміграції, політичні біженці
+  - прокляття (curse) — церковне прокляття, історичне прокляття
+activity_hints:
+- type: reading
+  focus: Полтавська битва
+  source: Історичний опис
+  items: 4
+- type: essay-response
+  focus: Чому Мазепа програв?
+focus: history
+pedagogy: CBI
+prerequisites:
+- b2-hist-63 (Іван Мазепа I: Державник)
+connects_to:
+- b2-hist-67 (Пилип Орлик: Перша Конституція)
+objectives:
+- Учень може описати причини переходу Мазепи на бік Швеції
+- Учень може проаналізувати наслідки Полтавської битви
+- Учень може пояснити значення Батуринської трагедії
+- Учень може оцінити роль Конституції Пилипа Орлика
+grammar:
+- Пасивний стан в історичних описах
+- Лексика поразки та перемоги
+- Складні речення з протиставленням
+register: публіцистичний
+phase: HIST.7 [Mazepa & End of Hetmanate]
+persona:
+  voice: Senior Professor of History
+  role: Hetman's Adjutant
+word_target: 5000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Іван Мазепа III: Полтава і вигнання
+
+## Використані джерела
+1. [Енциклопедія історії України: Полтавська битва 1709](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Poltavska_byтва_1709) — детальний опис ходу битви та її наслідків.
+2. [Іван Мазепа — Архіви (mazepa.name)](http://www.mazepa.name/) — біографічні дані, дипломатичне листування, деталі переговорів з Карлом XII.
+3. [Літопис Самійла Величка](http://litopys.org.ua/velichko/vel.htm) — першоджерело, опис подій очима сучасника (хоча й з певною критикою, але містить цінні документи).
+4. [Батуринська трагедія (УІНП)](https://uinp.gov.ua/istorychnyy-kalendar/lystopad/2/1708-znyshchennya-baturyna) — факти про знищення гетьманської столиці.
+5. [Конституція Пилипа Орлика (litopys.org.ua)](http://litopys.org.ua/voln/voln01.htm) — текст та аналіз Бендерської конституції.
+
+## Хронологія
+- **1706–1708**: Таємні переговори Мазепи з Карлом XII та Станіславом Лещинським.
+- **24-28 жовтня 1708**: Мазепа відкрито переходить на бік шведів, прибуває до ставки Карла XII.
+- **2 (13) листопада 1708**: Батуринська трагедія. Меншиков знищує місто та всіх мешканців.
+- **12 листопада 1708**: Анафема Мазепі у Глухові (за наказом Петра І).
+- **Березень 1709**: Запорожці під проводом кошового Костя Гордієнка приєднуються до Мазепи.
+- **27 червня (8 липня) 1709**: Полтавська битва. Поразка шведсько-українських військ.
+- **30 червня 1709**: Капітуляція залишків шведської армії під Переволочною. Мазепа і Карл рятуються втечею.
+- **21 вересня (2 жовтня) 1709**: Смерть Івана Мазепи у с. Варниця (поблизу Бендер).
+- **5 (16) квітня 1710**: Обрання Пилипа Орлика гетьманом та ухвалення "Пактів і Конституцій".
+
+## Ключові факти та цитати
+- **Мотивація Мазепи**: Не особиста влада, а порятунок України від перетворення на випалену землю ("між двома каменями") та збереження автономії, яку Петро І планував скасувати.
+- **Цитата Мазепи (промова перед військом)**: «Браття, прийшла наша пора; скористаємося цим випадком і помстимося москалям за їхнє тривале насилля над нами, за всі скоєні ними жорстокості й несправедливості...» (зі "Історії Русів", приписується Мазепі).
+- **Цитата з Конституції Орлика**: «...щоб на майбутнє... ніхто з князів, ніхто з високих достойників, ніхто взагалі не міг привласнювати собі абсолютної влади...»
+- **Втрати в Батурині**: Від 11 до 15 тисяч загиблих, включаючи жінок і дітей. Археологія підтверджує масові поховання та сліди пожежі.
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ": [!myth-buster] — Мазепа не "зрадник", а державник, що намагався врятувати країну від поглинання імперією, як це робили володарі Молдови чи Валахії.
+- Section "Читання": [!context] — Велика Північна війна не була "російською війною", це був глобальний конфлікт, де Україна стала картою в грі великих держав.
+- Section "Батуринська трагедія: Ціна спротиву": [!history-bite] — Археологи в Батурині знаходять розтрощені черепи жінок і дітей та обгорілі ікони — свідчення геноцидної тактики Меншикова.
+- Section "Полтавська битва: Злам епох": [!military] — Фатальна помилка: поранення Карла XII напередодні битви, що позбавило шведів ефективного командування.
+- Section "Вигнання, Смерть і Початок нової боротьби": [!legacy] — "Мазепинська еміграція" стала першою українською політичною еміграцією, яка лобіювала інтереси України в Європі.
+- Section "Мазепа в культурі...": [!culture] — Байрон, Гюго, Ліст: для Європи Мазепа був романтичним героєм свободи, поки Росія малювала з нього "Юду".
+- Section "Деколонізаційний погляд...": [!decolonization] — Термін "мазепинці" використовувався імперією як тавро (як пізніше "петлюрівці" та "бандерівці"), але означав лише одне: борців за незалежність.
+
+## Деколонізаційний контекст
+- **Imperial/Soviet myth**: "Зрада Мазепи" — центральний міф російської історіографії. Стверджувалося, що він зрадив "братній народ" заради польських панів.
+- **Ukrainian reality**: Мазепа діяв як суверенний володар (васал, що змінює сюзерена через порушення васальної угоди сюзереном). Петро І порушив обов'язок захищати Україну ("бороніться самі"), що легітимізувало розрив угоди 1654 року. Анафема була суто політичним актом, не визнаним Вселенським патріархатом.
+
+## Contested Terms (if applicable)
+| Concept | Imperial framing | Ukrainian framing |
+|---------|------------------|-------------------|
+| Вчинок Мазепи | Зрада (treason), підступність | Виступ за права (uprising), дипломатичний маневр, чин (act of statehood) |
+| Полтавська битва | "Дни славы", тріумф російської зброї | Полтавська катастрофа, початок повної окупації |
+| Мазепинці | Зрадники, вороги народу, бандити | Патріоти, перша політична еміграція, еліта нації |
+| Анафема | Церковне покарання за гріх | Політичне прокляття, інструмент терору (неканонічне) |
+
+## Section-Mapped Research Notes
+
+### Вступ
+- Рішення 1708 року не було спонтанним. Це реакція на наміри Петра І ліквідувати автономію Гетьманщини та перетворити козаків на драгунів.
+- Геополітика: Швеція як гарант (подібно до угоди Богдана Хмельницького).
+
+### Читання
+- Таємна дипломатія з 1705-1706 рр. (після того, як Петро відмовив у допомозі проти поляків).
+- Княгиня Дольська як посередниця.
+- Петро І до останнього не вірив доносам (Кочубея та Іскри), вважаючи їх наклепом.
+
+### Батуринська трагедія: Ціна спротиву
+- Оборона Батурина: полковник Дмитро Чечель.
+- Зрада Івана Носа (показав таємний хід).
+- Наслідки: знищено все (6-7.5 тис. мирних, 5-6 тис. військових). Місто стерте з лиця землі. Це був акт залякування для всієї України.
+
+### Полтавська битва: Злам епох
+- Зима 1708-1709: "зима люта", шведи виснажені.
+- Приєднання запорожців (Гордієнко) — моральна перемога, але військово їх було мало (бл. 8 тис.).
+- Хід битви: 27 червня. Перевага росіян у артилерії та живій силі (прибл. 2:1 або 3:1). Поранення Карла. Паніка серед шведів.
+- Переволочна: капітуляція Левенгаупта. Втеча Мазепи і Карла через Дніпро в османські володіння.
+
+### Вигнання, Смерть і Початок нової боротьби
+- Бендери (Османська імперія). Табір шведів і козаків.
+- Смерть Мазепи: фізичне і моральне виснаження. Похований у Галаці (тепер Румунія).
+- Пилип Орлик — наступник. Конституція 1710 року: "Пакти і Конституції прав і вольностей Війська Запорозького". Ідея поділу влади, соціальний захист козацьких вдів та сиріт.
+
+### Мазепа в культурі: Між прокляттям і романтизмом
+- Європа: Байрон ("Мазепа"), Гюго, Ліст (симфонічна поема). Символ нескореного духу, романтичний коханець.
+- Росія: Пушкін ("Полтава") — образ підступного зрадника.
+- Україна: Шевченко, Сосюра ("Любіть Україну" - згадка), Лепкий (трилогія).
+
+### Первинні джерела
+- Листи Мазепи до Карла XII та Станіслава Лещинського.
+- Універсали Мазепи до українського народу (пояснення причин переходу).
+- "Маніфест до європейських народів" Пилипа Орлика (1712) — пояснення боротьби за волю.
+
+### Деколонізаційний погляд: Руйнування імперських міфів
+- Мазепа як "антигерой" — конструкт для цементування імперії. Без "зрадника Мазепи" руйнується міф про "добровільне возз'єднання".
+- Спадщина: 10-гривнева купюра, назви вулиць, пам'ятники (Полтава, Київ, Чернігів — встановлені вже в незалежній Україні).
+
+### Підсумок
+- Поразка під Полтавою затримала незалежність України на століття, але вчинок Мазепи заклав традицію збройного опору імперії.
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12765)
+✓ Message 12729 acknowledged
+✓ Message 12765 acknowledged

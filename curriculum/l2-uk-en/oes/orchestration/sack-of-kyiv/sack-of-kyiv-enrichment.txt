@@ -1,0 +1,206 @@
+✅ Message sent to Gemini (ID: 12549) [auto-acked: self-addressed]
+✓ Message 12549 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12549...
+📨 Message #12549
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-sack-of-kyiv
+   Time: 2026-02-20T23:40:34.932812+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 43
+module: oes-043
+module_number: 35
+slug: sack-of-kyiv
+title_uk: Розграбування Києва
+title_en: Sack of Kyiv
+phase: 2
+phase_id: literary-tradition
+phase_name: Literary Tradition
+focus: Bogolyubsky — The shift of power
+content_outline:
+- section: Вступ
+  description: Introduction to Sack of Kyiv
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Senior Paleographer
+  role: Refugee
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Sack Of Kyiv (1169)
+
+## Використані джерела
+1. [Ізборник (litopys.org.ua)](http://litopys.org.ua/) — Іпатіївський літопис (Київський літописний звід).
+2. [Енциклопедія історії України (history.org.ua)](http://resource.history.org.ua/) — Статті про Андрія Боголюбського та Мстислава Ізяславича.
+3. [Радіо Свобода (radiosvoboda.org)](https://www.radiosvoboda.org/) — Матеріали про викрадення Вишгородської ікони та деколонізацію історії.
+4. [Михайло Грушевський: Історія України-Руси](http://litopys.org.ua/hrushrus/iur.htm) — Том II, розділ про занепад Києва.
+
+## Хронологія
+- **1155**: Андрій Боголюбський викрадає Вишгородську ікону Божої Матері з жіночого монастиря у Вишгороді та втікає до Залісся (Володимира-на-Клязьмі).
+- **1167**: Мстислав Ізяславич займає київський стіл, намагаючись консолідувати Русь навколо Києва.
+- **1168**: Успішний похід Мстислава проти половців, що підняло його авторитет і викликало заздрість інших князів.
+- **8 березня 1169**: Початок облоги Києва коаліцією з 11 князів під проводом Мстислава Андрійовича (сина Боголюбського).
+- **12 березня 1169**: Падіння Києва. Початок дводенного розграбування ("поток і розграблення").
+- **1170**: Невдалий похід Боголюбського на Новгород (поразка суздальців), що показало межі його могутності.
+
+## Ключові факти та цитати
+- **Цитата з літопису (про розграбування):** «І грабували вони два дні увесь город: Поділ, і гору, і монастирі, і Софію, і Десятинну Богородицю. І не було помилування нікому і нізвідки. Церкви горіли, християн убивали, а других в'язали. Жінок вели в полон, силоміць розлучали з мужами їхніми. Діти ридали, дивлячись на матерів своїх».
+- **Цитата Грушевського:** «Сей погром Київа, зроблений суздальцями і їх союзниками, зробив велике вражіннє; се не була звичайна княжа боротьба за київський стіл... се був прихід чужинців, ворогів, що мали на меті знищити, зруйнувати Київ, звести його до ролі звичайного волостного міста».
+- **Склад коаліції:** Окрім суздальців, у погромі брали участь чернігівські Ольговичі, смоленські Ростиславичі, Гліб Юрійович (Переяслав), половецькі найманці.
+- **Символізм:** Боголюбський вперше в історії Русі відокремив титул "Великого князя" від місця перебування (Києва), залишившись у Володимирі після перемоги.
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ": [!context] — Політична мапа Русі кінця XII ст.: Київ як "яблуко розбрату" vs. Залісся як "антисистема".
+- Section "Читання: I — Коаліція...": [!history-bite] — Чому 11 князів об'єдналися проти одного? Роль заздрості та інтриг "першого великороса".
+- Section "Читання: II — Облога...": [!myth-buster] — Міф про "єдину Русь": чому суздальці діяли як іноземні загарбники, не маючи пієтету до київських святинь.
+- Section "Читання: III — «І не було помилування...»": [!quote] — Аналіз жорстокого опису з Іпатіївського літопису (оригінал).
+- Section "Читання: IV — Викрадення святині...": [!culture] — Вишгородська (Володимирська) ікона як вкрадений символ. Як її "переписали" в російську історію.
+- Section "Підсумок": [!decolonization] — Боголюбський як прототип московського самодержця: деспотизм замість київського віча та договорів.
+
+## Деколонізаційний контекст
+- **Imperial/Soviet myth:** Андрій Боголюбський — "збирач земель руських", мудрий державник, який переніс столицю з Києва до Володимира, започаткувавши "Московську Русь". Погром Києва часто замовчувався або подавався як звичайна міжусобиця.
+- **Ukrainian reality:** Боголюбський — сепаратист і руйнівник традиційного устрою Русі. Його дії — це не "перенесення столиці", а спроба знищити Київ як конкурента. Він зруйнував єдність Русі, створивши ворожий центр на периферії. Викрадення ікони — акт культурної апропріації.
+
+## Contested Terms (if applicable)
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| Андрій Боголюбський | "Перший великорос", державник, святий | Руйнівник Києва, викрадач святинь, прототип деспота |
+| Подія 1169 року | Перенесення столиці Русі | Злочинне розграбування, початок занепаду Києва |
+| Вишгородська ікона | Володимирська ікона (символ Росії) | Вишгородська ікона (вкрадена українська святиня) |
+
+## Section-Mapped Research Notes
+
+### Вступ: Княжа міжусобиця...
+Зосередитись на зростанні напруги між Києвом (Мстислав Ізяславич) та суздальським угрупованням. Пояснити роль "лествичного права" і як Боголюбський хотів його зламати, замінивши спадковістю та силою.
+
+### Читання: I — Коаліція...
+Деталізувати склад учасників. Чому Ольговичі (Чернігів) зрадили Київ? (Давня ворожнеча з Мономаховичами). Чому Смоленськ приєднався? (Тиск Андрія). Це був не просто похід одного князя, а широка змова.
+
+### Читання: II — Облога і штурм...
+Опис тактики. Облога тривала 3 дні (за іншими даними 4). Вирішальна роль "поганих" (половців) у війську Боголюбського. Втеча Мстислава Ізяславича на Волинь — чому він не зміг втримати оборону? (Зрада "чорних клобуків"?).
+
+### Читання: III — «І не було помилування...»
+Головний фокус — текст літопису. Аналіз лексики: "взяша", "грабиша", "запалиша". Спалення церков — безпрецедентний акт для усобиць. Викрадення дзвонів, риз, книг — це було саме пограбування матеріальних цінностей для вивезення на північ. Вбивство ченців і священиків.
+
+### Читання: IV — Викрадення святині...
+Історія ікони до 1155 р. (подарунок з Царгорода). Нічна втеча Андрія з Вишгорода. Легенда про "зупинку коней" під Володимиром (як виправдання для заснування Боголюбова). Як ікона стала палладіумом Московської держави.
+
+### Підсумок: Народження...
+Висновки Ключевського ("перший великорос") проти висновків Грушевського. Ця подія — вододіл. Київ залишається сакральним центром, але втрачає політичну гегемонію. Початок формування двох різних цивілізаційних векторів: демократичного/вічевого (Київ) та авторитарного (Володимир-Москва).
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12577)
+✓ Message 12549 acknowledged
+✓ Message 12577 acknowledged

@@ -1,0 +1,64 @@
+{
+  "module": "the-accusative-ii-people",
+  "level": "A1",
+  "plan_version": "2.0",
+  "last_audit": "2026-02-21T00:46:35.291163Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-02-20T22:35:38.841200Z",
+    "meta": "2026-02-19T13:56:28.449993Z",
+    "activities": "2026-02-20T22:35:38.097469Z",
+    "vocabulary": "2026-02-20T22:35:38.096913Z",
+    "plan": "2026-02-20T20:38:59.010124Z",
+    "research": "2026-02-19T13:56:28.445127Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "2341/2000 (raw: 2986)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "10/8"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "20/1"
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "ipa": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Clean IPA"
+    },
+    "research": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Content aligned with research"
+    },
+    "review": {
+      "status": "pass",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 7,
+    "fail_count": 0,
+    "deferred_count": 0
+  }
+}

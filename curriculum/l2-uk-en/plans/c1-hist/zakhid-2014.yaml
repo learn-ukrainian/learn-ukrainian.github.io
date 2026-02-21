@@ -1,4 +1,3 @@
----
 module: c1-hist-101
 level: c1-hist
 sequence: 101
@@ -10,54 +9,46 @@ objectives:
 - 'Analyze the causes and consequences of 2014: анексія без відповіді'
 - Evaluate the historical significance of безкарність
 content_outline:
-- section: "Вступ — Безкарність"
-  words: 457
+- section: Вступ — Безкарність
   subsections:
   - Лютий-березень 2014
   - Росія захоплює Крим
   - Захід — що зробив
   - Структура модуля
-- section: "Анексія — хроніка"
-  words: 686
+- section: Анексія — хроніка
   subsections:
   - «Зелені чоловічки»
   - «Референдум»
   - Анексія — 18 березня
   - Швидкість шокує
 - section: Західна реакція
-  words: 800
   subsections:
   - Заяви засудження
   - Санкції — символічні
   - «Летальна зброя» — відмова
   - «Деескалація» — пріоритет
-- section: "Мінськ — капітуляція під виглядом дипломатії"
-  words: 686
+- section: Мінськ — капітуляція під виглядом дипломатії
   subsections:
   - Мінськ I, Мінськ II
   - Що підписали
   - Чому невигідно Україні
   - Меркель і Олланд — посередники чи?
 - section: Чому слабка відповідь
-  words: 571
   subsections:
   - Економічні інтереси
   - Nord Stream 2
   - «Не провокувати»
   - Нерозуміння загрози
 - section: Наслідки
-  words: 457
   subsections:
   - Путін бачить безкарність
   - 2015-2021 — підготовка
   - Україна — сама
 - section: Підсумок
-  words: 343
   subsections:
   - 2014 — повторення паттерну
   - Але щось змінюється
   - Перехід до 2022
-word_target: 4000
 vocabulary:
 - анексія
 - санкції
@@ -78,7 +69,7 @@ activities:
 - type: critical-analysis
   focus: What did the West actually do in 2014?
 - type: critical-analysis
-  focus: "Minsk Agreements — who benefited?"
+  focus: Minsk Agreements — who benefited?
 - type: comparative-study
   focus: Why was Western response weak?
 - type: critical-analysis
@@ -87,15 +78,15 @@ activities:
   focus: Чи слабка відповідь Заходу у 2014 спричинила 2022?
 sources:
 - name: Анексія Криму (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Анексія_Криму_(2014)"
+  url: https://uk.wikipedia.org/wiki/Анексія_Криму_(2014)
   type: reference
   notes: Annexation
 - name: Санкції проти Росії (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Санкції_проти_Росії"
+  url: https://uk.wikipedia.org/wiki/Санкції_проти_Росії
   type: reference
   notes: Western response
 - name: Мінські угоди (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Мінські_угоди"
+  url: https://uk.wikipedia.org/wiki/Мінські_угоди
   type: reference
   notes: Minsk process
 vocabulary_hints:
@@ -114,7 +105,9 @@ activity_hints:
   items: 4
 - type: essay-response
   focus: Критичний аналіз
-  word_target: 300
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Global Security Analyst

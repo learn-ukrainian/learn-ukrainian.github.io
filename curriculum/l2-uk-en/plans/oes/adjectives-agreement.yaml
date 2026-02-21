@@ -1,4 +1,3 @@
----
 sequence: 20
 module: oes-020
 module_number: 16
@@ -9,7 +8,6 @@ phase: 1
 phase_id: vernacular-foundations
 phase_name: Vernacular Foundations
 focus: Куни лодійні — Agreement in case/gender
-word_target: 4000
 content_outline:
 - section: Вступ
   description: Introduction to Adjectives & Agreement
@@ -24,3 +22,6 @@ activity_types:
 - transcription
 - etymology-trace
 - grammar-identify
+persona:
+  voice: Senior Paleographer
+  role: Rhetorician

@@ -1,4 +1,3 @@
----
 module: c1-hist-093
 level: c1-hist
 sequence: 93
@@ -10,54 +9,46 @@ objectives:
 - 'Analyze the causes and consequences of помаранчева vs гідності: чому різні результати?'
 - Evaluate the historical significance of дві революції, різні наслідки
 content_outline:
-- section: "Вступ — Дві революції, різні наслідки"
-  words: 457
+- section: Вступ — Дві революції, різні наслідки
   subsections:
   - 2004 — перемога, потім розчарування
   - 2014 — трагедія, потім трансформація
   - Чому так по-різному
   - Структура модуля
 - section: Помаранчева 2004
-  words: 800
   subsections:
   - Причини — фальсифікація виборів
   - Методи — мирний протест
   - Результат — перевибори, Ющенко
   - Чому не втримали
 - section: Гідності 2014
-  words: 800
   subsections:
   - Причини — Вільнюс, побиття студентів
   - Ескалація — насильство, жертви
   - Результат — втеча Януковича, війна
   - Чому тривалі зміни
 - section: Ключові відмінності
-  words: 686
   subsections:
   - Мета — вибори vs. система
   - Ціна — мирна vs. кров
   - Зовнішній фактор — Росія 2004 vs. 2014
   - Громадянське суспільство — слабке vs. сильне
 - section: Уроки 2004 для 2014
-  words: 571
   subsections:
   - Що засвоїли
   - Не вірити обіцянкам
   - Системні зміни важливіші
   - Ціна свободи
 - section: Чому 2014 тривалий
-  words: 343
   subsections:
   - Війна — консолідація
   - Неможливість повернення
   - Європейський вибір — незворотний
 - section: Підсумок
-  words: 343
   subsections:
   - Дві революції — різні траєкторії
   - 2014 — справжній перелом
   - Перехід до синтезу
-word_target: 4000
 vocabulary:
 - Помаранчева революція
 - Революція гідності
@@ -76,7 +67,7 @@ vocabulary:
 - люстрація
 activities:
 - type: comparative-study
-  focus: "2004 vs. 2014 — systematic comparison"
+  focus: 2004 vs. 2014 — systematic comparison
 - type: critical-analysis
   focus: Why did 2004 fail and 2014 succeed?
 - type: critical-analysis
@@ -87,15 +78,15 @@ activities:
   focus: Чому Помаранчева революція не принесла тривалих змін?
 sources:
 - name: Помаранчева революція (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Помаранчева_революція"
+  url: https://uk.wikipedia.org/wiki/Помаранчева_революція
   type: reference
   notes: 2004 events
 - name: Революція гідності (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Революція_гідності"
+  url: https://uk.wikipedia.org/wiki/Революція_гідності
   type: reference
   notes: 2014 events
 - name: Віктор Ющенко (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Віктор_Ющенко"
+  url: https://uk.wikipedia.org/wiki/Віктор_Ющенко
   type: reference
   notes: 2004 leader
 vocabulary_hints:
@@ -114,7 +105,9 @@ activity_hints:
   items: 4
 - type: essay-response
   focus: Критичний аналіз
-  word_target: 300
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Revolution Comparative Analyst

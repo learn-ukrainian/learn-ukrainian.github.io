@@ -1,0 +1,324 @@
+✅ Message sent to Gemini (ID: 10472) [auto-acked: self-addressed]
+✓ Message 10472 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10472...
+📨 Message #10472
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-impersonal-passive
+   Time: 2026-02-20T20:37:01.386180+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b2-03
+level: B2
+sequence: 3
+slug: impersonal-passive
+version: '2.0'
+title: Безособові конструкції на -но/-то
+content_outline:
+- section: Вступ — Безособовість в українській мові
+  points:
+  - Концепція безособових конструкцій
+  - Роль у офіційному мовленні
+  - Зв'язок із дієприкметниками на -ний/-тий
+- section: Утворення форм на -но/-то
+  points:
+  - Від дієприкметника до -но/-то (написаний → написано)
+  - Правило вибору -но чи -то
+  - Наголос і фонетичні зміни
+- section: Синтаксичні особливості
+  points:
+  - Об'єкт у знахідному відмінку (Книгу написано)
+  - Відсутність підмета
+  - Незмінність форми (завжди середній рід)
+  - Порівняння з іншими безособовими конструкціями
+- section: Контексти вживання
+  points:
+  - Офіційні документи (Засідання оголошено закритим)
+  - Юридичні тексти (Рішення прийнято)
+  - Адміністративні оголошення (Роботу завершено)
+  - Журналістика (Новину підтверджено)
+- section: Регістрова специфіка
+  points:
+  - Високий регістр — офіційно-діловий
+  - Уникання в розмовному мовленні
+  - Порівняння з альтернативними конструкціями
+  - Стилістичний ефект
+- section: Типові помилки
+  points:
+  - Неправильний відмінок об'єкта
+  - Змішування з дієприкметниками
+  - Надмірне вживання
+  - Як виправити
+- section: Практика і підсумок
+  points:
+  - Ключові правила
+  - Зразки документів
+  - Підготовка до модуля 06
+vocabulary_hints:
+  required:
+  - безособовий (impersonal)
+  - засідання (meeting/session)
+  - оголошено (announced/declared)
+  - рішення (decision)
+  - прийнято (accepted/adopted)
+  - закрито (closed)
+  - завершено (completed)
+  - документ (document)
+  - юридичний (legal)
+  - адміністративний (administrative)
+  recommended:
+  - наказ (order/decree)
+  - протокол (minutes/protocol)
+  - постанова (resolution)
+  - затверджено (approved)
+  - скасовано (cancelled)
+activity_hints:
+- type: fill-in
+  focus: Participle → -но/-то form
+  items: 12+
+- type: fill-in
+  focus: Complete official document sentences
+  items: 14+
+- type: quiz
+  focus: Identify -но/-то in documents
+  items: 12+
+- type: error-correction
+  focus: Active sentences → official passive (-но/-то)
+  items: 10+
+- type: error-correction
+  focus: Fix case errors in -но/-то sentences
+  items: 10+
+- type: match-up
+  focus: Document type → appropriate -но/-то phrase
+  items: 10+
+- type: essay-response
+  focus: Write official announcement using -но/-то
+  output: Model answer provided
+focus: grammar
+prerequisites:
+- b2-01 (Passive Voice System)
+- b2-02 (Past Passive Participles)
+- Accusative case mastery
+connects_to:
+- b2-04 (Reflexive Passive)
+- b2-06 (Passive in Context)
+- 'b2-19 (Register: Official/Legal)'
+- b2-10 (B2.1a Checkpoint)
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Impersonal Constructions
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Official requirements for -но/-то usage
+- name: Юридична мова України
+  url: https://uk.wikipedia.org/wiki/Юридична_мова
+  type: secondary
+  notes: Examples of -но/-то in legal documents
+- name: Офіційно-діловий стиль
+  url: https://uk.wikipedia.org/wiki/Офіційно-діловий_стиль
+  type: secondary
+  notes: Register characteristics and examples
+immersion: 100% Ukrainian
+phase: B2.1a [Passive Voice]
+objectives:
+- Identify and correctly use безособові конструкції на -но/-то
+- Form and apply безособовість в українській мові
+persona:
+  voice: Professional Language Coach
+  role: Event Organizer (Організатор подій)
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Безособові конструкції на -но/-то
+
+## State Standard Reference
+§4.3.3.1: "безособові речення: Було приємно дивитися на веселих дітей. Там усе правильно записано."
+Alignment: This module directly addresses the B2 requirement for "One-member sentences with a verb as the main member (impersonal sentences)" specifically focusing on the invariant forms ending in -но/-то as cited in the standard's example.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| **Оголошено** | High (Official/Media) | оголошено перерву, оголошено повітряну тривогу, оголошено набір, засідання оголошено відкритим |
+| **Прийнято** | High (Official/Legal) | рішення прийнято, закон прийнято, постанову прийнято, до уваги прийнято |
+| **Встановлено** | High (Admin/Tech) | особу встановлено, факт встановлено, порушення встановлено, строк встановлено |
+| **Заборонено** | High (General/Public) | вхід заборонено, палити заборонено, рух заборонено, суворо заборонено |
+| **Зроблено** | High (General) | все зроблено, висновки зроблено, роботу зроблено, зроблено в Україні |
+
+## Cultural Hooks
+2. **"Written in the Book of Life"**: The phrase "Так судилося" or "Так написано" (It is fated/written) is a deep cultural fatalistic trope in Ukrainian literature (Shevchenko, Franko), contrasting with the dry bureaucratic "Затверджено" (Approved).
+
+## Common Learner Errors
+1. **Agent in Instrumental Case**: "Книгу написано *мною*." → **Книгу написав я.** — The -no/-to construction in Ukrainian does NOT accept an instrumental agent (unlike Polish or English passive). It emphasizes the *result*, not the doer.
+2. **Object Case Confusion**: "*Книга* (Nom) написано." → **Книгу (Acc) написано.** — These forms govern the Accusative case (like a verb), not the Nominative. The object is not the subject.
+3. **Agreement Errors**: "Вікно *розбито*." vs "Вікно *розбите*." — Confusing the impersonal form (invariant) with the neuter participle (agrees with subject). "Вікно розбито" = action focus (someone broke it). "Вікно розбите" = state focus (it is broken).
+
+## Cross-References
+- Builds on: **b2-02 (Past Passive Participles)** — Forms on -no/-to are derived from -nyi/-tyi participles.
+- Prepares for: **b2-19 (Register: Official/Legal)** — This grammar is the cornerstone of official documentation style.
+
+## Notes for Content Writing
+- **Strict Distinction**: Be very clear about the difference between "Лист написаний" (The letter is written - Adjective/Participle describing state) and "Лист написано" (The letter has been written - Impersonal verb form emphasizing completion).
+- **No Agent**: Drill the rule: If you want to say *who* did it, use the active voice. If the doer is unknown or irrelevant, use -но/-то.
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Поняття безособовості (Introduction: Concept of Impersonality)"
+  words: 500
+  points:
+  - "Концепція безособовості в українській мові: фокус на результаті дії, а не на її виконавцеві."
+  - "Державний стандарт (§4.3.3.1): безособові речення як засіб об'єктивного опису дійсності."
+  - "Культурний контекст: фаталізм у фразах «Так судилося» або «Так написано» (Шевченко, Франко) як контраст до офіційного стилю."
+- section: "Творення та граматичні особливості (Formation and Grammatical Features)"
+  words: 800
+  points:
+  - "Трансформація: від пасивного дієприкметника на -ний/-тий до незмінної форми на -но/-то (написаний → написано)."
+  - "Правило вибору суфікса -но/-то залежно від основи дієслова; наголошування та чергування."
+  - "Незмінність форми: чому конструкції на -но/-то завжди вживаються у формі середнього роду без узгодження з об'єктом."
+  - "Відмінність між станом («Вікно розбите») та дією («Вікно розбито»): коли вживати кожну з форм."
+- section: "Синтаксис та керування об'єктом (Syntax and Object Governance)"
+  words: 900
+  points:
+  - "Головне правило: об'єкт у знахідному відмінку (Accusative), а не в називному (Книгу написано, а не Книга написано)."
+  - "Заборона на орудний відмінок діяча: чому не можна казати «Книгу написано мною» і як це замінити активним станом."
+  - "Відсутність підмета як ключова ознака речення: синтаксичний розбір типових конструкцій."
+  - "Порівняння з іншими типами безособових речень (на -ло, -ся) для чіткого розмежування функцій."
+- section: "Офіційно-діловий та юридичний стиль (Official and Legal Registers)"
+  words: 1000
+  points:
+  - "Висока частотність у документах: накази, протоколи, постанови (Засідання оголошено закритим)."
+  - "Юридична мова: вживання «Рішення прийнято», «Закон затверджено» для надання тексту нейтральності."
+  - "Адміністративний контекст: «Встановлено порушення», «Строк визначено» — розбір реальних прикладів."
+  - "Специфіка вживання в медіа: «Новину підтверджено», «Оголошено повітряну тривогу» — аналіз актуальних контекстів."
+- section: "Практика та запобігання помилкам (Practice and Error Prevention)"
+  words: 800
+  points:
+  - "Типова помилка №1: Плутанина між суб'єктом і об'єктом (виправлення називного відмінка на знахідний)."
+  - "Типова помилка №2: Спроба додати виконавця в орудному відмінку (перефразування в активний стан)."
+  - "Стилістичні вправи: трансформація активних речень у пасивні безособові для офіційних звітів."
+  - "Підсумок: роль конструкцій на -но/-то у формуванні професійної компетенції рівня B2 та підготовка до модуля 06."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "безособовий (impersonal) — безособова конструкція, безособове речення"
+  - "оголошено (announced/declared) — оголошено перерву, оголошено набір, оголошено тривогу; дуже висока частотність у медіа"
+  - "прийнято (accepted/adopted) — рішення прийнято, закон прийнято, постанову прийнято; стандарт юридичної мови"
+  - "встановлено (established/set) — особу встановлено, факт встановлено, порушення встановлено; адмін/тех контекст"
+  - "заборонено (prohibited) — вхід заборонено, суворо заборонено, рух заборонено; загальновживаний імператив"
+  - "завершено (completed) — роботу завершено, будівництво завершено, засідання завершено"
+  - "рішення (decision) — прийняти рішення, оскаржити рішення, остаточне рішення"
+  - "засідання (meeting/session) — відкрити засідання, порядок денний засідання, протокол засідання"
+  recommended:
+  - "затверджено (approved) — статут затверджено, план затверджено; офіційний гриф"
+  - "скасовано (cancelled/annulled) — наказ скасовано, рішення скасовано, рейс скасовано"
+  - "підтверджено (confirmed) — інформацію підтверджено, особу підтверджено; медіа-контекст"
+  - "виконано (executed/done) — план виконано, завдання виконано, доручення виконано"
+  - "зроблено (done/made) — зроблено в Україні, висновки зроблено, усе зроблено"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (3990 chars)
+✅ Message sent to Claude (ID: 10476)
+✓ Message 10476 acknowledged
+   Auto-acknowledged reply #10476 (stdout delivery — no inbox accumulation)
+✓ Message 10472 acknowledged

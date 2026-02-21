@@ -30,10 +30,23 @@ LEVELS = [
     {"id": "c1-hist", "name": "C1-HIST - History Track", "path": "c1-hist"},
     {"id": "c1-bio", "name": "C1-BIO - Biography Track", "path": "c1-bio"},
     {"id": "lit", "name": "LIT - Literature Track", "path": "lit"},
+    {"id": "lit-essay", "name": "LIT-ESSAY - Essays", "path": "lit-essay"},
+    {"id": "lit-hist-fic", "name": "LIT-HIST-FIC - Historical Fiction", "path": "lit-hist-fic"},
+    {"id": "lit-fantastika", "name": "LIT-FANTASTIKA - Fantasy/Sci-Fi", "path": "lit-fantastika"},
+    {"id": "lit-war", "name": "LIT-WAR - War Literature", "path": "lit-war"},
+    {"id": "lit-humor", "name": "LIT-HUMOR - Humor", "path": "lit-humor"},
+    {"id": "lit-juvenile", "name": "LIT-JUVENILE - Juvenile", "path": "lit-juvenile"},
     # Historical language tracks
     {"id": "oes", "name": "OES - Old East Slavic", "path": "oes"},
     {"id": "ruth", "name": "RUTH - Ruthenian", "path": "ruth"},
 ]
+
+# Seminar tracks (require Phase 0 research)
+SEMINAR_TRACK_IDS = {
+    "b2-hist", "c1-hist", "c1-bio",
+    "lit", "lit-essay", "lit-hist-fic", "lit-fantastika", "lit-war", "lit-humor", "lit-juvenile",
+    "oes", "ruth",
+}
 
 # Batch state directory
 BATCH_STATE_DIR = PROJECT_ROOT / "batch_state"

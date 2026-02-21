@@ -84,8 +84,6 @@ phases:
       - "Підсумковий модуль: Антологія та огляд"
 
 constraints:
-  min_word_target: 3500
-  max_word_target: 5000
   min_engagement_boxes: 3
   min_primary_sources: 2
   immersion_target: 0.95

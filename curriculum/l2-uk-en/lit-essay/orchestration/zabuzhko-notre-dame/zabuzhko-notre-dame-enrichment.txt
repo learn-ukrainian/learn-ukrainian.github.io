@@ -1,0 +1,219 @@
+✅ Message sent to Gemini (ID: 12159) [auto-acked: self-addressed]
+✓ Message 12159 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12159...
+📨 Message #12159
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-zabuzhko-notre-dame
+   Time: 2026-02-20T23:37:00.354906+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 26
+module: lit-essay-26
+level: LIT.ESSAY
+slug: zabuzhko-notre-dame
+version: '2.0'
+title: Zabuzhko Notre Dame
+subtitle: Zabuzhko Notre Dame
+content_outline:
+- section: Вступ та контекст
+  points: []
+- section: Аналіз ключових творів
+  points: []
+- section: Стилістика та мова автора
+  points: []
+- section: Деколонізаційна перспектива
+  points:
+  - Як цей автор руйнує імперські міфи
+  - Українська суб'єктність у тексті
+- section: Підсумок та спадщина
+  points: []
+vocabulary_hints:
+  required:
+  - історіографія
+  - наратив
+  - суб'єктність
+  recommended:
+  - деколонізація
+activity_hints:
+- type: reading
+  focus: Аналіз першоджерела
+- type: essay-response
+  focus: Критичне есе
+- type: critical-analysis
+  focus: Деконструкція тексту
+focus: literature
+pedagogy: literature
+immersion: 100% Ukrainian
+phase: LIT Expansion
+objectives:
+- Проаналізувати творчість Zabuzhko Notre Dame у контексті української літератури
+- Дослідити вплив автора на формування національної ідентичності
+persona:
+  voice: Senior Specialist
+  role: Cultural Exorcist
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Zabuzhko Notre Dame
+
+## Використані джерела
+1. [Енциклопедія Сучасної України / uk.wikipedia.org](https://uk.wikipedia.org/wiki/Notre_Dame_d%27Ukraine:_Українка_в_конфлікті_міфологій) — Огляд концепції книги, історії її створення та нагород.
+2. [Читомо (архівні рецензії)](https://chytomo.com) — Аналіз рецепції книги в сучасному українському суспільстві та літературознавчому дискурсі.
+3. [Комора (видавництво)](https://komorabooks.com/product/notre-dame-dukraine-ukrayinka-v-konflikti-mifologij/) — Анотація та ключові тези дослідження Оксани Забужко.
+
+## Хронологія
+- 1992: Вихід першої частини "дослідницької трилогії" Оксани Забужко — про Івана Франка ("Філософія української ідеї та європейський контекст: Франківський період").
+- 1997: Публікація другої частини трилогії — про Тараса Шевченка ("Шевченків міф України: Спроба філософського аналізу").
+- 1999: Оксана Забужко обіцяє Соломії Павличко написати масштабну працю про Лесю Українку.
+- 2007: Перше видання книги "Notre Dame d'Ukraine: Українка в конфлікті міфологій".
+- 2008: Книга здобуває Гран-прі Всеукраїнського рейтингу "Книжка року 2007" та Першу премію з літератури Союзу українок Америки.
+- 2009: Оксана Забужко отримує за книгу Премію Фундації Антоновичів.
+
+## Ключові факти та цитати
+- "Цю книжку можна вважати заключною частиною моєї «дослідницької трилогії» — п'ятнадцятилітнього, завдовжки якраз в історію української незалежности, «інтелектуального роману» авторки з класиками..." (Оксана Забужко).
+- Книга не лише деконструює образ Лесі Українки, а й піднімає глобальні питання: розрізнення європейського та російського народництва, європейське лицарство як культурний код України, зашифрована містерія Грааля у "Лісовій пісні".
+- Забужко розглядає Лесю Українку як єдину українську письменницю, яку нація беззастережно визнала "великою", досліджуючи її архетипову функцію.
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ та контекст: Задум і створення праці": [!history-bite] — Книга писалася як підсумок 15-річної "дослідницької трилогії", що супроводжувала перші роки незалежності України.
+- Section "Аналіз ключових творів: Деконструкція міфу Лесі Українки": [!myth-buster] — Спростування радянського образу "хворої дівчинки" та "дочки Прометея", яка нібито була співачкою робітничого класу.
+- Section "Аналіз ключових творів: Лицарський код та легенда про Грааль": [!context] — Пояснення лицарського коду та європейської традиції, що є фундаментальними для розуміння Лесі Українки.
+- Section "Стилістика та мова автора: Жанр і метод": [!quote] — Цитата про "інтелектуальний роман авторки з класиками".
+- Section "Деколонізаційна перспектива: Протистояння імперським міфам": [!decolonization] — Деконструкція міфу про українців як суто "селянську націю" без власної аристократичної еліти.
+- Section "Підсумок та спадщина: Значення для сучасності": [!culture] — Значення "Notre Dame d'Ukraine" для сучасного осмислення української ідентичності та "модерного проекту".
+
+## Деколонізаційний контекст
+- Imperial/Soviet myth: Леся Українка як "революціонерка-демократка", "хвора, але сильна духом пролетарська поетеса", що продовжувала традиції "селянської" (малоросійської) нації.
+- Ukrainian reality: Леся Українка — аристократка духу, високоосвічена європейська інтелектуалка, свідома творчиня модерної української ідентичності, яка протиставляла українську шляхетську традицію російському народницькому нігілізму.
+
+## Contested Terms (if applicable)
+| Concept | Imperial framing | Ukrainian (decolonized) framing |
+|---------|-----------------|-------------------------------|
+| Постать Лесі Українки | "Співачка досвітніх вогнів", революціонерка, хвора мучениця | Модерна європейська інтелектуалка, носійка елітарного аристократичного коду |
+| Українська нація | Безкласова "селянська нація", провінційна гілка великого "російського" дерева | Самобутня нація з потужними традиціями лицарства, релігійної містики та шляхетності |
+| "Лісова пісня" | Фольклорна казка-феєрія про конфлікт людини і природи | Складна гностична містерія, що зберігає код легенди про Грааль |
+
+## Section-Mapped Research Notes
+
+### Вступ та контекст: Задум і створення праці
+Історія 15-річної трилогії (Франко-Шевченко-Українка). Обіцянка Соломії Павличко 1999 року. Вихід книги у 2007 році як інтелектуального підсумку.
+
+### Аналіз ключових творів: Деконструкція міфу Лесі Українки
+Критика радянського та стереотипного традиційного сприйняття поетеси. Аналіз архетипу національної героїні.
+
+### Аналіз ключових творів: Лицарський код та легенда про Грааль
+Дослідження європейських джерел Лесі Українки. "Лісова пісня" як гностичний текст. Тема лицарства та культу Прекрасної Дами.
+
+### Стилістика та мова автора: Жанр і метод
+Есеїстичний, складний синтаксис Оксани Забужко. Застосування філософського, культурологічного та феміністичного методів аналізу.
+
+### Деколонізаційна перспектива: Протистояння імперським міфам
+Спростування міфу про "селянську націю". Розмежування українського (органічного) та російського (радикального) народництва.
+
+### Підсумок та спадщина: Значення для сучасності
+Сприйняття книги, престижні премії (Книжка року, премія Антоновичів). Її вплив на формування нової ґенерації читачів Лесі Українки.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12237)

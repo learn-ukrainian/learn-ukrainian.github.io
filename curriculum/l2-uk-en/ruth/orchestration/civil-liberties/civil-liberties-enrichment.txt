@@ -1,0 +1,204 @@
+✅ Message sent to Gemini (ID: 11988) [auto-acked: self-addressed]
+✓ Message 11988 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #11988...
+📨 Message #11988
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-civil-liberties
+   Time: 2026-02-20T23:35:05.570603+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 19
+module: ruth-019
+module_number: 19
+slug: civil-liberties
+title_uk: Громадянські свободи
+title_en: Civil Liberties
+phase: 1
+phase_id: chancery-legal
+phase_name: Chancery & Legal
+focus: Neminem captivabimus — Habeas Corpus
+content_outline:
+- section: Вступ
+  description: Introduction to Civil Liberties
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Baroque Scholar
+  role: Rights Advocate
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Civil Liberties (Громадянські свободи)
+
+## Використані джерела
+1. [Енциклопедія історії України: Неменем каптівабімус](http://history.org.ua) — фундаментальна стаття про привілей недоторканності особи.
+2. [Ізборник: Литовські Статути](http://litopys.org.ua) — тексти Статутів та коментарі, зокрема передмова Лева Сапєги.
+3. [Енциклопедія сучасної України: Магдебурзьке право](http://esu.com.ua) — аналіз міського самоврядування та його впливу на українські землі.
+4. [Історія українського права](http://litopys.org.ua) — огляд розвитку правничої термінології та судочинства.
+
+## Хронологія
+- 1430 — Привілей Єдлінський: поширення права *Neminem captivabimus* на руську шляхту (Руське право).
+- 1433 — Краківський привілей: підтвердження та розширення прав.
+- 1529 — Перший Литовський Статут: кодифікація норм звичаєвого права.
+- 1566 — Другий Литовський Статут (Волинський): реформа судочинства, виборні суди.
+- 1588 — Третій Литовський Статут: вершина правничої думки, написаний руською мовою («не обчим яким язиком»).
+- 1658 — Гадяцький договір: спроба перетворення Гетьманщини на Велике Князівство Руське з власними судами та правами.
+
+## Ключові факти та цитати
+- **Neminem captivabimus nisi jure victum** («Нікого не ув'язнимо без вироку суду») — польсько-литовський аналог Habeas Corpus (Англія, 1679), що випередив британський акт на 250 років.
+- **Лев Сапєга (1588):** «Не обчим яким язиком, але своїм власним права списані маємо і кожного часу чого нам потреба ку отпору всякої кривди відати можем» — маніфест правової суб'єктності руської мови.
+- **Магдебурзьке право:** Вводило поняття «громадянин» (civis) для мешканців міст, хоча й з дискримінацією православних русинів у великих центрах (Львів).
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ": [!context] — Порівняння «дикого поля» (міф) з реальністю правової держави, де діяли одні з найпрогресивніших законів Європи.
+- Section "Neminem Captivabimus": [!history-bite] — Українська шляхта мала гарантії недоторканності особи на століття раніше, ніж більшість європейців.
+- Section "Литовські Статути": [!myth-buster] — Міф про «литовське» (чуже) право. Реальність: Статути базувалися на «Руській Правді» і писалися староукраїнською мовою.
+- Section "Магдебурзьке право": [!decolonization] — Як імперська історіографія применшувала роль міського самоврядування в Україні, зображуючи українців виключно селянською нацією.
+- Section "Козацькі вольності": [!culture] — Трансформація поняття «вольності» від станового привілею до національної ідеї.
+
+## Деколонізаційний контекст
+- **Імперський міф:** Російська історіографія зображувала період ВКЛ та Речі Посполитої як час «польського гніту» та безправ'я, ігноруючи існування розвиненої правової системи, в якій руська еліта брала безпосередню участь.
+- **Українська реальність:** Руська шляхта виборола собі рівні права з польською (Привілей 1430), а Литовські Статути — це спільний здобуток, кодифікований руською мовою, який діяв на Лівобережжі аж до 1840-х років, поки не був скасований царатом як «небезпечний».
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| Литовський Статут | Пам'ятка литовського/польського права | Кодекс західноруського (українсько-білоруського) права, базований на звичаєвому праві Русі. |
+| Шляхетські вольності | «Золота вольність» як анархія, що розвалила державу | Система стримувань і противаг, рання форма республіканізму та захисту прав людини. |
+| Привілеї | Дарунки короля | Конституційні угоди між монархом і політичною нацією («pacta conventa»). |
+
+## Section-Mapped Research Notes
+
+### Вступ: Правова культура
+Україна XIV-XVI ст. — це простір правової культури, а не анархії. Тяглість від «Руської Правди».
+
+### Привілей Єдлінський
+1430 рік — зрівняння прав руської шляхти з польською. Принцип недоторканності особи. Це фундамент громадянських свобод.
+
+### Литовські Статути
+Три редакції. 1588 — найважливіший. Розподіл влади, незалежність судів, презумпція невинуватості. Мова статуту — староукраїнська.
+
+### Магдебурзьке право
+Самоврядування міст (Київ, Львів, Кам'янець). Війт, лава, рада. Право на суд рівних. Але й релігійна дискримінація.
+
+### Козацькі права
+Козаки як «нові люди» вимагали старих прав (шляхетських). Зборівський, Білоцерківський, Гадяцький договори як правові акти.
+
+### Мова закону
+Термінологія: *позов*, *вирок*, *уряд*, *скарга*. Відсутність росіянізмів. Високий стиль канцелярії.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12039)
+✓ Message 11988 acknowledged
+✓ Message 12039 acknowledged

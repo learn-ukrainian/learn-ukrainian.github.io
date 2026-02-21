@@ -1,81 +1,32 @@
-# Research Notes: Social Media Ukrainian
+# Дослідження: Social Media Ukrainian
 
-**Track**: Core A
-**Module**: A2 M67 (Social Media Ukrainian)
-**Level**: A2 (Pre-Intermediate)
-**Focus**: Digital communication, social media terminology, and basic engagement.
+## State Standard Reference
+§3.4: "Дозвілля, відпочинок: ... преса, радіо, телебачення, інтернет, соціальні мережі."
+Alignment: This module directly addresses the "social networks" (соціальні мережі) component of the Leisure topic, teaching learners to navigate interfaces and interact online.
 
-## 1. Grammar: State Standard 2024 Reference
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| лайк | High (General Internet) | ставити лайк, збирати лайки, вподобайка (purist alternative) |
+| пост | High (Social Media) | писати пост, опублікувати пост, новий пост |
+| сторіз | High (Instagram/Facebook) | знімати сторіз, кидати в сторіз, дивитися сторіз |
+| підписник | High (Influencer culture) | мої підписники, кількість підписників, накрутка підписників |
+| підписатися | High (Action) | підписатися на канал, підписатися на сторінку |
+| поширити | Medium (UI Action) | поширити допис, поділитися з друзями |
 
-According to the **Державний стандарт української мови як іноземної (2024)**, the topic of electronic communication and social media is integrated into the communicative competencies for the **A2 level**.
+## Cultural Hooks
+1. **Telegram Phenomenon**: Unlike in the West where it's niche, Telegram is the primary news source for 75% of Ukrainians and the main tool for daily communication (90% usage). It's where air raid alerts and official government updates appear first.
+2. **Instagram & Micro-businesses**: Instagram in Ukraine is a massive platform for small businesses (shops, bakeries, services) often replacing traditional websites. "Пишіть у дірект" (Write to DM) is a standard business phrase.
 
-**Section Reference**: §3.2. "Комунікативні наміри та теми спілкування".
-**Topic**: "Суспільне життя. Інтернет та сучасні засоби зв'язку".
+## Common Learner Errors
+1. **Case Mismatch**: *Підписатися на канал* (Nominative) → *Підписатися на канал* (Accusative). *Error*: Learners often use the wrong case or preposition for "subscribe to". Note: For masculine inanimate objects like "канал", Nominative and Accusative look the same, but for feminine "сторінка" → "сторінку" (Accusative) the difference is crucial.
+2. **False Friends**: Confusion between *сторінка* (profile/page) and *сайт* (website). Learners might say "твоя сайт" instead of "твоя сторінка" regarding an Instagram profile.
+3. **Transliteration vs Translation**: Using *лайк* is common, but ignoring Ukrainian alternatives like *вподобайка* (like) or *світлина* (photo) misses cultural nuance, though *лайк* is standard internet slang.
 
-**Quote**: 
-> «Здобувач вміє здійснювати комунікацію в цифровому просторі: розуміти короткі повідомлення та дописи в соціальних мережах, висловлювати ставлення до контенту (вподобання, коментарі), поширювати інформацію та звертатися до користувачів за допомогою імперативних форм».
+## Cross-References
+- Builds on: a2-66 (Asking for Directions - navigation), a2-50 (Technology and Media)
+- Prepares for: a2-68 (Texting and Messaging)
 
-## 2. Vocabulary Frequency
-
-Social media Ukrainian is a blend of native roots and borrowed English terminology. For an A2 student, the focus is on high-frequency "interface" verbs and nouns.
-
-### High-Frequency Nouns
-| Ukrainian | Transcription | English | Frequency Note |
-| :--- | :--- | :--- | :--- |
-| **Допис** | dopys | Post / Entry | High (Formal/Standard) |
-| **Пост** | post | Post | High (Informal/Common) |
-| **Вподобайка** | vpodobayka | Like | High (Authentic/Purist) |
-| **Лайк** | layk | Like | Very High (Colloquial) |
-| **Стрічка** | strichka | Feed (Timeline) | High |
-| **Посилання** | posylannya | Link | High |
-| **Повідомлення** | povidomlennya | Message | Very High |
-| **Мережа** | merezha | Network | High |
-| **Профіль** | profil' | Profile | High |
-
-### High-Frequency Verbs (Aspect Pairs)
-| Imperfective | Perfective | English | Collocation |
-| :--- | :--- | :--- | :--- |
-| **Поширювати** | **Поширити** | To share | Поширити допис |
-| **Підписуватися** | **Підписатися** | To subscribe/follow | Підписатися на канал |
-| **Коментувати** | **Прокоментувати** | To comment | Прокоментувати фото |
-| **Надсилати** | **Надіслати** | To send | Надіслати посилання |
-| **Гортати** | — | To scroll/flip | Гортати стрічку |
-
-## 3. Cultural Hook
-
-### The "Telegram" Phenomenon
-Unlike many Western countries where Instagram or X (Twitter) leads news, **Telegram** is the primary source of information in Ukraine. Since February 2022, it has become the "digital life-support" system. 
-- **Fact**: Official government channels (like the Office of the President or the Air Force) use Telegram for real-time air raid alerts and official statements. 
-- **Lesson Insight**: Students should recognize terms like "Офіційний канал" (Official channel) and "Повітряна тривога" (Air alarm) which often appear in Ukrainian feeds.
-
-### Linguistic Purism: Вподобайка
-There is a strong cultural movement to replace English loanwords with melodic Ukrainian alternatives. While "лайк" is understood, using **"вподобайка"** (from the verb *вподобати* - to like/fancy) is seen as a sign of high-quality, patriotic language use.
-
-## 4. Pedagogical Notes
-
-### Loanword vs. Native
-Learners will naturally gravitate toward *лайк, пост, репост*. However, the curriculum should introduce *вподобайка, допис, поширення* to build a more authentic vocabulary.
-
-### The "On" (На) Construction
-A common error for English speakers is saying "Follow me" (Direct Object). In Ukrainian, it requires the preposition **на** + Accusative:
-- **Incorrect**: Підпишися мене.
-- **Correct**: Підпишися **на мене** (Subscribe/Follow on me).
-
-### Case Logic in Social Media
-- **Dative**: Used for recipients of messages (*надіслати другу*).
-- **Locative**: Used for platforms (*в Інстаграмі*, *у Фейсбуці*).
-- **Accusative**: Used for destinations/actions (*викласти фото*, *зайти в мережу*).
-
-## 5. Scope Boundaries
-
-### IN Scope (Based on Prior Knowledge)
-- **Imperatives**: Used for Call-to-Actions (CTAs). "Підпишіться!", "Поставте лайк!".
-- **Aspect**: Distinguishing between "I am scrolling" (Imperfective) and "I posted a photo" (Perfective).
-- **Relative Clauses**: "The post **that** I liked" (*Допис, який мені сподобався*).
-- **Dative of Like**: Using *подобатися* for "I like this profile" (*Мені подобається цей профіль*).
-
-### OUT of Scope
-- **Participles**: Avoid structures like "The mentioned post" (*згаданий допис*) or "Users following me" (*користувачі, що підписані*). Use relative clauses instead.
-- **Passive Voice**: "The photo was shared" (*Фото було поширене*). Use active voice: "Друзі поширили фото".
-- **Advanced Tech Terminology**: Avoid complex backend terms like "алгоритм ранжування" (ranking algorithm) or "монетизація" (monetization). Stick to user-end interaction.
-- **Subjunctive Mood in Complex Strategies**: Avoid "If I were a blogger, I would..." unless simplified to basic conditional forms.
+## Notes for Content Writing
+- **Platform Specifics**: Focus examples on Instagram (visuals/lifestyle) and Telegram (news/channels) as they dominate the Ukrainian landscape.
+- **Visuals**: Describe UI elements clearly (e.g., "кнопка 'Стежити'", "іконка серця").

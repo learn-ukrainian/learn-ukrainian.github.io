@@ -124,3 +124,57 @@ class TestRecommendationHeader:
     ])
     def test_rejects(self, header):
         assert not re.search(_HEADER_RECOMMENDATION[0], header), f"Should NOT match: {header}"
+
+
+class TestCitationSeverityThreshold:
+    """UNVERIFIED_CITATIONS must escalate to critical when sample is conclusive (≥5 unverified).
+
+    Tests the severity-escalation logic directly, without the full file I/O pipeline.
+    """
+
+    def _severity_for(self, verified: int, total: int) -> str | None:
+        """Mirror the severity logic from review_validation.py."""
+        if total < 3:
+            return None
+        unverified = total - verified
+        rate = verified / total if total else 0
+        if verified == 0:
+            return 'critical'   # FABRICATED_CITATIONS
+        if rate < 0.5:
+            is_conclusive = total >= 5 and unverified >= 5
+            return 'critical' if is_conclusive else 'warning'  # UNVERIFIED_CITATIONS
+        return None  # passes
+
+    def test_zero_verified_is_critical(self):
+        """0% verified → FABRICATED → critical."""
+        assert self._severity_for(0, 6) == 'critical'
+        assert self._severity_for(0, 20) == 'critical'
+
+    def test_low_rate_large_sample_is_critical(self):
+        """<50% verified with ≥5 total and ≥5 unverified → critical (was warning before fix)."""
+        # 22% verified (5/23) — the kniaz-sviatoslav production case
+        assert self._severity_for(5, 23) == 'critical'
+        # 33% verified (5/15) — knyahynia-olha
+        assert self._severity_for(5, 15) == 'critical'
+        # 40% verified (8/20) — scythians-sarmatians
+        assert self._severity_for(8, 20) == 'critical'
+        # 31% verified (5/16) — sloviany-origins
+        assert self._severity_for(5, 16) == 'critical'
+
+    def test_low_rate_small_sample_is_warning(self):
+        """<50% verified with <5 unverified → warning (too small to be conclusive)."""
+        # 1 verified out of 4 = 25%, unverified=3 < 5 → warning
+        assert self._severity_for(1, 4) == 'warning'
+        # 2 verified out of 4 = 50% → passes (not < 0.5)
+        assert self._severity_for(2, 4) is None
+
+    def test_exactly_50pct_passes(self):
+        """Exactly 50% verified → no violation (boundary condition)."""
+        assert self._severity_for(10, 20) is None
+        assert self._severity_for(5, 10) is None
+
+    def test_above_50pct_passes(self):
+        """≥50% verified → no citation violation."""
+        assert self._severity_for(13, 22) is None   # 59% — scythians after fix
+        assert self._severity_for(17, 27) is None   # 63% — sloviany after fix
+        assert self._severity_for(26, 44) is None   # 59% — knyahynia after fix

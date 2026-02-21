@@ -1,0 +1,262 @@
+✅ Message sent to Gemini (ID: 10807) [auto-acked: self-addressed]
+✓ Message 10807 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10807...
+📨 Message #10807
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-wedding-rituals
+   Time: 2026-02-20T21:29:49.076540+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-072
+level: C1
+sequence: 72
+slug: wedding-rituals
+version: '2.0'
+title: Родинні обряди - весілля
+subtitle: Family Rituals - Wedding
+content_outline:
+- section: Розминка — Весілля як перехід
+  points:
+  - Весілля — найважливіший обряд переходу
+  - Багатоденне дійство з чіткою структурою
+  - Символіка шлюбу в українській культурі
+- section: Передвесільні обряди
+  points:
+  - 'Сватання: старости, рушники, гарбуз'
+  - 'Заручини: обручки, благословення батьків'
+  - Дівич-вечір та парубоцький вечір
+  - Випікання коровая
+- section: Весільні обряди
+  points:
+  - 'Посад: розплітання коси, вінок'
+  - Вінчання та викуп
+  - 'Коровай: розподіл, символіка'
+  - 'Перезва: післявесільні гості'
+- section: Практика — весільна обрядовість
+  points:
+  - Описати етапи традиційного весілля
+  - Пояснити символіку рушника та коровая
+  - Порівняти українське та європейське весілля
+  - Написати весільний тост у традиційному стилі
+focus: cultural
+pedagogy: CBI
+objectives:
+- Learner can describe the stages of a traditional Ukrainian wedding
+- Learner can explain the symbolism of the korovai and rushnyk
+- Learner can distinguish between matchmaking (svatannia) and engagement (zaruchyny)
+- Learner can recite a traditional wedding toast
+grammar:
+- ritual actions description
+- conditional mood in toasts
+phase: C1.5 Folk Culture & Arts
+persona:
+  voice: Senior Specialist
+  role: Фольклорист-обрядовець
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Родинні обряди - весілля
+
+## State Standard Reference
+§3.21: "Традиції, звичаї, свята: ... сімейні свята (день народження, іменини, весілля, хрестини); ... забобони; українські звичаї і традиції"
+Alignment: Цей модуль безпосередньо реалізує вимогу стандарту щодо тем "сімейні свята" (весілля) та "українські звичаї і традиції", а також інтегрує елементи "забобонів" у практичну частину.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| **Весілля** | High (General) | справляти весілля, гуляти весілля, запрошувати на весілля, срібне/золоте весілля |
+| **Шлюб** | High (Formal/Legal) | брати шлюб, вступати в шлюб, розірвання шлюбу, церковний шлюб, громадянський шлюб |
+| **Вінчання** | Medium (Religious) | таїнство вінчання, йти до вінчання, вінчальні ікони |
+| **Коровай** | Medium (Cultural) | бгати коровай, весільний коровай, ділити коровай, оздоблення короваю |
+| **Рушник** | High (Cultural) | весільний рушник, ставати на рушник (фразеологізм), вишивати рушник |
+| **Староста** | Medium (Ritual) | засилати старостів, перев'язувати старостів рушниками |
+| **Гарбуз** | Medium (Cultural idiom) | дати гарбуза (відмовити), отримати гарбуза |
+
+## Cultural Hooks
+1. **Ставати на рушник**: Цей вираз є синонімом одруження. Традиція вірить, що той, хто першим стане на рушник під час вінчання, буде головою в сім'ї.
+2. **Гарбуз як відмова**: Унікальна українська традиція, де винесення гарбуза сватам було ввічливою, але категоричною формою відмови дівчини парубкові (на відміну від прямих слів).
+3. **Коровай як модель всесвіту**: Коровай — це не просто хліб, а сакральний символ. Його випікання ("бгання") супроводжувалося спеціальними піснями, а участь у цьому брали лише щасливі у шлюбі жінки.
+
+## Common Learner Errors
+1. **Весілля vs Шлюб**: Студенти часто плутають подію (весілля - wedding party/ceremony) та інститут/статус (шлюб - marriage).
+   *   *Помилка*: "Вони мають щасливе весілля." (мають на увазі шлюб)
+   *   *Виправлення*: "Вони мають щасливий шлюб."
+2. **Прийменники з дієсловом "одружуватися"**: Калькування з російської "жениться на".
+   *   *Помилка*: "Він одружився на ній."
+   *   *Виправлення*: "Він одружився з нею." (Орудний відмінок з прийменником "з").
+3. **Вінчатися vs Одружуватися**: Використання "вінчатися" для будь-якого шлюбу.
+   *   *Виправлення*: "Вінчатися" — виключно церковний обряд. Для РАЦСу — "розписуватися" або "реєструвати шлюб".
+
+## Cross-References
+- Builds on: A2/B1 modules on family vocabulary, general holidays.
+- Prepares for: C1 Folk Culture modules (M56-85), specifically "Символіка українського побуту".
+
+## Notes for Content Writing
+- Дотримуватися академічного тону (C1), але з емоційним забарвленням при описі обрядів.
+- Чітко розмежувати етапи: до, під час, після.
+- У розділі про тости використати умовний спосіб (*Conditional Mood*) як граматичний фокус (конструкції з "щоб", "якби").
+- Акцентувати на ролі жінки та чоловіка як рівноправних творців нової родини (Agency Pass).
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Весілля як сакральний обряд переходу (Introduction: Wedding as a Sacred Rite of Passage)"
+  words: 500
+  points:
+  - "Весілля як найважливіший обряд переходу в життєвому циклі людини (State Standard §3.21: сімейні свята)"
+  - "Структура традиційного весілля: передвесільний, весільний та післявесільний цикли"
+  - "Сакральна символіка шлюбу: створення нової родини як соціальний та духовний акт"
+- section: "Передвесільний цикл: Від сватання до короваю (Pre-wedding Cycle: From Matchmaking to Korovai)"
+  words: 1000
+  points:
+  - "Сватання (matchmaking): ролі старостів, обряд перев'язування рушниками та культурний код 'дати гарбуза' як ввічлива відмова"
+  - "Заручини (engagement): обмін обручками, благословення батьків та офіційне закріплення статусу наречених"
+  - "Ритуал 'бгання короваю': коровай як модель всесвіту, участь щасливих у шлюбі жінок (коровайниць) та магічне оздоблення"
+  - "Дівич-вечір та парубоцький вечір: прощання з молодіжним станом, плетіння вінків та ритуальні пісні"
+- section: "Весільна драма: Від посаду до перезви (The Wedding Drama: From Posad to Perezhva)"
+  words: 1100
+  points:
+  - "Посад та розплітання коси: символіка переходу дівчини до статусу заміжньої жінки, заміна вінка на хустку"
+  - "Вінчання (church wedding): таїнство шлюбу та народна прикмета 'ставати на рушник' (хто перший стане — той голова в домі)"
+  - "Викуп нареченої: ігровий елемент весілля, роль дружбів та світилок у подоланні символічних перешкод"
+  - "Розподіл короваю: порядок обдаровування родичів та символіка спільного споживання освяченого хліба"
+  - "Післявесілля: 'перезва' (гостювання) та закріплення зв'язків між двома родами"
+- section: "Лінгвістичні нюанси: Шлюб, весілля та граматика стосунків (Linguistic Nuances: Marriage, Wedding, and Relationship Grammar)"
+  words: 700
+  points:
+  - "Learner error check: розмежування понять 'весілля' (celebration/party) та 'шлюб' (institution/status) — приклади 'щасливий шлюб' vs 'гучне весілля'"
+  - "Стилістичні відмінності: 'вінчатися' (церковний обряд) vs 'розписуватися/реєструвати шлюб' (юридична процедура) vs 'одружуватися' (нейтрально)"
+  - "Граматичний фокус: уникнення кальки 'одружитися на' — тренування конструкції 'одружитися з кимось' (Instrumental case)"
+  - "Фразеологія весільного обряду: аналіз виразів 'ставати на рушник', 'дати гарбуза', 'засилати старостів'"
+- section: "Практика та творчість: Весільна атрибутика та тости (Practice and Creativity: Wedding Attributes and Toasts)"
+  words: 700
+  points:
+  - "Аналіз символіки весільної атрибутики: роль рушника як життєвої дороги та короваю як символу достатку"
+  - "Порівняльний аналіз: українські традиції vs сучасні європейські весільні тренди (Agency Pass: наречені як творці свята)"
+  - "Продуктивне завдання: написання весільного тосту у традиційному стилі з використанням умовного способу (конструкції 'щоб', 'якби', 'бажав би')"
+  - "Інтеграція забобонів у сучасний контекст: як традиційні уявлення впливають на сучасні весільні сценарії"
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "весілля (wedding) — справляти весілля, гуляти весілля, запрошувати на весілля; high frequency"
+  - "шлюб (marriage) — вступати в шлюб, розірвання шлюбу, церковний/громадянський шлюб; formal/legal register"
+  - "вінчання (church wedding ceremony) — таїнство вінчання, йти до вінчання, вінчальні ікони; religious context"
+  - "коровай (ritual wedding bread) — бгати коровай, ділити коровай, оздоблення короваю; cultural key term"
+  - "рушник (ritual embroidered towel) — весільний рушник, ставати на рушник (to get married), вишивати рушник"
+  - "староста (matchmaker/master of ceremonies) — засилати старостів, перев'язувати старостів рушниками"
+  - "гарбуз (pumpkin/symbol of refusal) — дати гарбуза (to refuse a proposal), отримати гарбуза; cultural idiom"
+  recommended:
+  - "сватання (matchmaking ritual) — засилати сватів, іти в свати"
+  - "заручини (engagement ceremony) — обмінюватися обручками, благословення"
+  - "бгати (to knead/shape ritual bread) — бгати коровай; specific ritual verb"
+  - "одружуватися (to get married) — одружуватися з кимось (Instrumental); neutral register"
+  - "розписуватися (to sign/register marriage) — розписуватися в РАЦСі; colloquial/informal register for civil ceremony"
+  - "перезва (post-wedding visiting) — іти на перезву; traditional term"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4448 chars)
+✅ Message sent to Claude (ID: 10812)
+✓ Message 10812 acknowledged
+   Auto-acknowledged reply #10812 (stdout delivery — no inbox accumulation)
+✓ Message 10807 acknowledged

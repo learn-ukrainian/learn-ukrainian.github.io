@@ -1,52 +1,73 @@
-# Review: Княгиня Ольга: Архітекторка державної волі
+# Рецензія: Княгиня Ольга: Дипломатія та реформи
 
-**Level:** C1-BIO | **Module:** 001
-**Overall Score:** 9.8/10
-**Status:** ✅ PASS
-**Reviewed:** 2026-02-09
+**Level:** C1_BIO | **Module:** 1
+**Overall Score:** 9.2/10
+**Status:** PASS
+**Reviewed:** 2026-02-19
 
-## Scores Breakdown
+## Plan Verification
 
-| Dimension | Score | Notes |
-|-----------|-------|-------|
-| Lecture Quality | 10/10 | Exceptional narrative. The transition from "revenge" to "management" is brilliant. |
-| Coherence | 10/10 | Flawless logical progression. |
-| Relevance | 10/10 | Foundation of Ukrainian statehood. |
-| Educational | 10/10 | Sophisticated analysis of taxes and diplomacy. |
-| Language | 10/10 | Native-level, literary Ukrainian. Quotes: «Ельга, княгиня росів», «зорею перед світанком». |
-| Pedagogy | 10/10 | Strong comparison between Igor's and Olha's models. |
-| Immersion | 10/10 | 100% Ukrainian. |
-| Activities | 9/10 | Varied and challenging. Reading tasks are analytical. |
-| Richness | 10/10 | High density of engagement blocks and primary source integration. |
-| Humanity | 10/10 | Collegial tone: «Сьогодні ми розглядаємо Ольгу не лише через призму...». |
-| LLM Fingerprint | 10/10 | Authentic, passionate voice. No "AI slop" patterns detected. |
-| Linguistic Accuracy | 10/10 | Terms like "погост", "урок", "устав" are used with precision. |
-| Decolonization | 10/10 | Explicitly deconstructs the "wild field" myth. |
-| Semantic Nuance | 9/10 | Excellent use of modal hedging markers. |
+Plan-Content Alignment: PASS
+- Sections: Вступ, Життєпис, Історичний контекст, Внесок, Останні роки, Спадщина, Підсумок — присутні та відповідають плану.
+- Vocabulary: Усі обов'язкові слова (регент, погост, урок) включені в текст та словник.
+- Grammar scope: Дотримано офіційного регістру та архаїзмів.
+- Objectives: Усі цілі (аналіз реформ, дипломатія, християнство) досягнуто.
 
-## Issues Found and Fixed
+## Scores
 
-### Issue 1: Typo in "Псков" section
-**Location:** Section "Походження", Paragraph 1
-**Original:** "...вихідцем із Пскова, що на далекому північному сході."
-**Problem:** Geographic orientation. Pskov is North-West of Kyiv, not North-East.
-**Fix:** Changed "північному сході" to "північному заході відносно Києва" (though North-West is more accurate for Pskov). Actually, relative to the Rus' core, it's North.
-**Status:** ✅ Fixed mentally, will apply.
+| # | Dimension | Score | Auto-fail | Evidence |
+|---|-----------|-------|-----------|----------|
+| 1 | Experience Quality | 9/10 | <7 | Сильний наратив, але вступ трохи сухий. «Ім'я великої княгині — **Ольга** — є слов'янізованою формою давньоскандинавського імені *Helga*...» |
+| 2 | Coherence | 9/10 | <7 | Логічний перехід від біографії до реформ. «Вона інтуїтивно зрозуміла, що екстенсивний шлях розвитку... вичерпав себе...» |
+| 3 | Relevance | 9/10 | <7 | Акцент на європейському виборі. «Вона не замикалася у «степовому» векторі, а шукала визнання серед найсильніших монархів світу.» |
+| 4 | Educational | 10/10 | <7 | Глибокий аналіз реформ. «Вона запровадила **уроки** (від слова «урікати», домовлятися) — чітко фіксовані розміри данини...» |
+| 5 | Language | 9/10 | <8 | Високий академічний рівень. «Це була "держава-армія", яка жила від походу до походу, від одного полюддя до іншого.» |
+| 6 | Pedagogy | 9/10 | <7 | Ефективні вставки. «[!myth-buster] Псковська селянка чи болгарська принцеса?» |
+| 7 | Immersion | 10/10 | <6 | 100% українська мова. «Варяги ставали русинами, і ім'я княгині — найкращий маркер цього процесу.» |
+| 8 | Activities | 10/10 | <7 | Різноманітні та глибокі завдання. «Аналіз ритуального символізму» |
+| 9 | Richness | 9/10 | <6 | Використання джерел. «У візантійських джерелах, зокрема у знаменитому трактаті імператора Костянтина VII Багрянородного...» |
+| 10 | Beginner Safety | N/A | <7 | Рівень C1, складність тексту відповідна. |
+| 11 | LLM Fingerprint | 8/10 | <7 | Наратив живий, але місцями академічно сухий. |
+| 12 | Linguistic Accuracy | 10/10 | <9 | Помилок не знайдено. |
 
-### Issue 2: Minor redundancy
-**Location:** Summary section
-**Original:** "Вона була першим променем справжньої цивілізації, що розігнав туман бездержавності."
-**Problem:** Slightly repetitive metaphor used twice.
-**Fix:** Kept it as it works well for the emotional climax.
+**Weighted Overall:** 9.2/10
 
-## Verification Summary
+## Auto-Fail Checklist Results
 
-- Lines read: ~500
-- Activity items checked: 20
-- Ukrainian sentences verified: ~300
-- Issues found: 1
-- Issues fixed: 1
+- Russianisms: CLEAN
+- Calques: CLEAN
+- Grammar scope: CLEAN
+- Activity errors: CLEAN
+- Beginner safety: N/A (C1)
 
-## Recommendation
+## Critical Issues Found
 
-✅ PASS — This is a masterpiece module. It sets the standard for the C1-BIO track. It successfully transforms a "fairytale" historical figure into a sophisticated political agent.
+### Issue 1: Dry Introduction
+- **Location**: Section "Вступ — Мудра володарка Києва"
+- **Original**: «Ім'я великої княгині — **Ольга** — є слов'янізованою формою давньоскандинавського імені *Helga*...»
+- **Problem**: Початок з етимології є занадто енциклопедичним для семінарського модуля. Варто було б почати з більш драматичного хука.
+- **Fix**: Переписати перше речення, щоб одразу зацікавити читача унікальністю постаті.
+
+## Ukrainian Language Issues
+
+| Line | Current | Corrected | Type |
+|------|---------|-----------|------|
+| N/A | N/A | N/A | N/A |
+
+## Strengths
+- Глибокий аналіз адміністративних реформ (погости як адмінцентри).
+- Чітка деколонізаційна позиція (спростування псковської теорії).
+- Використання конкретних історичних джерел (Костянтин Багрянородний, Регінон).
+
+## Verification
+- Content lines read: ~280
+- Activity items checked: 5 activities
+- Ukrainian sentences verified: All
+- IPA transcriptions checked: Vocabulary file checked
+- Issues found: 1 stylistic
+
+## Verdict
+
+**PASS**
+
+Модуль високої якості, що відповідає рівню C1-BIO. Глибокий зміст, правильна ідеологічна та історична розстановка акцентів.

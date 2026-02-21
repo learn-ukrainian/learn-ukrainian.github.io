@@ -1,4 +1,3 @@
----
 module: c1-hist-040
 level: c1-hist
 sequence: 40
@@ -10,29 +9,25 @@ objectives:
 - Analyze the causes and consequences of листи василя стуса з таборів
 - Evaluate the historical significance of голос із гулагу
 content_outline:
-- section: "Вступ — Голос із ГУЛАГу"
-  words: 457
+- section: Вступ — Голос із ГУЛАГу
   subsections:
   - Стус — поет і дисидент
   - Листи — унікальне джерело
   - Умови написання
   - Чому важливі
 - section: Біографічний контекст
-  words: 571
   subsections:
   - Життя до арешту
   - Перший арешт — 1972
   - Другий арешт — 1980
   - Смерть у таборі — 1985
 - section: Табір як контекст
-  words: 686
   subsections:
   - Де утримувався — Мордовія, Пермь
   - Умови — режим, праця, харчування
   - Цензура листів
   - Що можна було писати
 - section: Листи до родини
-  words: 800
   subsections:
   - Фрагменти (з глосами)
   - До дружини
@@ -40,26 +35,22 @@ content_outline:
   - Особисте і політичне
   - Як зберігав людяність
 - section: Філософські роздуми
-  words: 686
   subsections:
   - Стус як мислитель
   - Українська ідентичність
   - Сенс опору
   - Готовність до смерті
 - section: Критика джерела
-  words: 457
   subsections:
   - Цензура — що вирізано
   - Самоцензура — чого не писав
   - Як читати між рядками
   - Порівняння з поезією
 - section: Підсумок
-  words: 343
   subsections:
   - Листи як духовний заповіт
   - Стус — символ опору
   - Зв'язок із сьогоденням
-word_target: 4000
 vocabulary:
 - табір
 - ГУЛАГ
@@ -80,7 +71,7 @@ activities:
 - type: reading
   focus: Letter to son with glosses
 - type: critical-analysis
-  focus: "Read a censored letter — what might have been cut?"
+  focus: Read a censored letter — what might have been cut?
 - type: comparative-study
   focus: Compare letter tone to poetry on same themes
 - type: comparative-study
@@ -89,15 +80,15 @@ activities:
   focus: Як Стус зберігав людяність у нелюдських умовах?
 sources:
 - name: Василь Стус (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Василь_Стус"
+  url: https://uk.wikipedia.org/wiki/Василь_Стус
   type: reference
   notes: Biography
 - name: Листи Стуса
-  url: "https://uk.wikisource.org/wiki/Категорія:Листи_Василя_Стуса"
+  url: https://uk.wikisource.org/wiki/Категорія:Листи_Василя_Стуса
   type: primary
   notes: Letters collection
 - name: Табори для політв'язнів
-  url: "https://uk.wikipedia.org/wiki/Концентраційні_табори_СРСР"
+  url: https://uk.wikipedia.org/wiki/Концентраційні_табори_СРСР
   type: reference
   notes: Gulag context
 vocabulary_hints:
@@ -116,7 +107,9 @@ activity_hints:
   items: 4
 - type: essay-response
   focus: Критичний аналіз
-  word_target: 300
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Prison Literature Scholar

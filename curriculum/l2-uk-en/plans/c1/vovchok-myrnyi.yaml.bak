@@ -1,0 +1,41 @@
+module: c1-101
+level: C1
+sequence: 101
+slug: vovchok-myrnyi
+version: '2.0'
+title: Вовчок та Мирний
+subtitle: 'Vovchok and Myrny: Social Realism'
+content_outline:
+- section: Розминка — Голоси знедолених
+  points:
+  - Марко Вовчок — жіночий погляд на кріпацтво
+  - '"Інститутка" — трагедія та соціальна критика'
+  - Панас Мирний — "Хіба ревуть воли..."
+- section: Content Areas
+  points:
+  - 'Марко Вовчок: women''s perspective, serfdom critique'
+  - 'Інститутка, Народні оповідання: short prose'
+  - 'Панас Мирний: Хіба ревуть воли, як ясла повні?'
+  - 'Social realism techniques: типовість, народність'
+  - Village life and social injustice
+- section: Практика — соціальний реалізм
+  points:
+  - Проаналізувати "Інститутку" — жіночі образи та соціальна критика
+  - Порівняти оповідальну техніку Вовчок та Шевченка
+  - Написати есе про психологічну мотивацію героїв Мирного
+  - Обговорити поняття "типовість" та "народність" у реалізмі
+focus: literature
+pedagogy: Literary Analysis
+objectives:
+- Learner can analyze the social critique in Marko Vovchok’s "Instytutka".
+- Learner can interpret the psychological motivation of characters in Panas Myrny’s
+  work.
+- Learner can discuss the features of Ukrainian social realism.
+grammar:
+- Narrative voice
+- Dialectal speech
+phase: C1.6 Literature
+persona:
+  voice: Senior Specialist
+  role: Реаліст-побутописець
+word_target: 4000

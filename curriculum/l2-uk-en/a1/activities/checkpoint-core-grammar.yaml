@@ -1,0 +1,250 @@
+- type: match-up
+  title: 'Числа від 1 до 8'
+  instruction: 'З’єднайте число з його назвою.'
+  pairs:
+    - left: "1"
+      right: "один"
+    - left: "2"
+      right: "два"
+    - left: "3"
+      right: "три"
+    - left: "4"
+      right: "чотири"
+    - left: "5"
+      right: "п’ять"
+    - left: "6"
+      right: "шість"
+    - left: "7"
+      right: "сім"
+    - left: "8"
+      right: "вісім"
+
+- type: match-up
+  title: 'Хто що робив?'
+  instruction: 'З’єднайте особу з правильною формою дієслова у минулому часі.'
+  pairs:
+    - left: "Він"
+      right: "читав"
+    - left: "Вона"
+      right: "читала"
+    - left: "Воно"
+      right: "читало"
+    - left: "Вони"
+      right: "читали"
+    - left: "Я (чоловік)"
+      right: "був"
+    - left: "Я (жінка)"
+      right: "була"
+    - left: "Ми"
+      right: "були"
+    - left: "Брат"
+      right: "хотів"
+
+- type: fill-in
+  title: 'Дієслова у теперішньому часі'
+  instruction: 'Оберіть правильне закінчення для дієслова.'
+  items:
+    - sentence: "Я чита__ цікаву книгу."
+      answer: "ю"
+      options: ["ю", "єш", "є", "ємо"]
+    - sentence: "Ти добре зна__ українську мову?"
+      answer: "єш"
+      options: ["єш", "ю", "є", "єте"]
+    - sentence: "Він роб__ смачну каву."
+      answer: "ить"
+      options: ["ить", "лю", "имо", "лять"]
+    - sentence: "Ми люб__ гуляти в парку."
+      answer: "имо"
+      options: ["имо", "лю", "иш", "лять"]
+    - sentence: "Ви говор__ англійською?"
+      answer: "ите"
+      options: ["ите", "иш", "имо", "ять"]
+    - sentence: "Вони бач__ нас."
+      answer: "ать"
+      options: ["ать", "уть", "ють", "ить"]
+    - sentence: "Ми слуха__ музику."
+      answer: "ємо"
+      options: ["ємо", "єте", "ють", "є"]
+    - sentence: "Вони жив__ у Львові."
+      answer: "уть"
+      options: ["уть", "е", "емо", "у"]
+
+- type: quiz
+  title: 'Граматичний тест'
+  instruction: 'Дайте відповідь на граматичні запитання.'
+  items:
+    - question: "У реченні «Я йду в парк», який відмінок ми використовуємо для напрямку?"
+      explanation: "Це напрямок (Куди?), тому ми використовуємо Знахідний відмінок (Accusative)."
+      options:
+        - text: "Знахідний (Accusative)"
+          correct: true
+        - text: "Місцевий (Locative)"
+          correct: false
+        - text: "Називний (Nominative)"
+          correct: false
+        - text: "Родовий (Genitive)"
+          correct: false
+    - question: "У реченні «Книга на столі», який відмінок ми використовуємо для місця?"
+      explanation: "Це місце (Де?), тому ми використовуємо Місцевий відмінок (Locative)."
+      options:
+        - text: "Місцевий (Locative)"
+          correct: true
+        - text: "Знахідний (Accusative)"
+          correct: false
+        - text: "Називний (Nominative)"
+          correct: false
+        - text: "Родовий (Genitive)"
+          correct: false
+    - question: "Визначте граматичний рід іменника «вікно» (закінчення -о):"
+      explanation: "Слова, що закінчуються на -о або -е, зазвичай середнього роду."
+      options:
+        - text: "Середній (Воно)"
+          correct: true
+        - text: "Чоловічий (Він)"
+          correct: false
+        - text: "Жіночий (Вона)"
+          correct: false
+        - text: "Множина"
+          correct: false
+    - question: "Визначте граматичний рід іменника «день» (з м'яким знаком):"
+      explanation: "Слова на м'який знак можуть бути чоловічого або жіночого роду. День — це він."
+      options:
+        - text: "Чоловічий (Він)"
+          correct: true
+        - text: "Жіночий (Вона)"
+          correct: false
+        - text: "Середній (Воно)"
+          correct: false
+        - text: "Множина"
+          correct: false
+    - question: "Який граматичний час у реченні «Ми були вдома»?"
+      explanation: "Слово «були» вказує на минулий час."
+      options:
+        - text: "Минулий"
+          correct: true
+        - text: "Теперішній"
+          correct: false
+        - text: "Майбутній"
+          correct: false
+        - text: "Інфінітив"
+          correct: false
+    - question: "Який граматичний час у реченні «Я буду читати»?"
+      explanation: "Конструкція «буду + інфінітив» вказує на майбутній час."
+      options:
+        - text: "Майбутній"
+          correct: true
+        - text: "Теперішній"
+          correct: false
+        - text: "Минулий"
+          correct: false
+        - text: "Інфінітив"
+          correct: false
+    - question: "Який відмінок потрібен після слова «немає» (заперечення)?"
+      explanation: "Для заперечення (відсутності) ми використовуємо Родовий відмінок (Genitive)."
+      options:
+        - text: "Родовий (Genitive)"
+          correct: true
+        - text: "Називний (Nominative)"
+          correct: false
+        - text: "Знахідний (Accusative)"
+          correct: false
+        - text: "Місцевий (Locative)"
+          correct: false
+    - question: "Як правильно перекласти фразу «I have» українською мовою?"
+      explanation: "Українською ми кажемо «У мене є»."
+      options:
+        - text: "У мене є"
+          correct: true
+        - text: "Я маю є"
+          correct: false
+        - text: "Я є"
+          correct: false
+        - text: "У мене"
+          correct: false
+
+- type: match-up
+  title: 'Однина та Множина'
+  instruction: 'З’єднайте слово в однині з його формою в множині.'
+  pairs:
+    - left: "Студент"
+      right: "Студенти"
+    - left: "Книга"
+      right: "Книги"
+    - left: "Місто"
+      right: "Міста"
+    - left: "День"
+      right: "Дні"
+    - left: "Вікно"
+      right: "Вікна"
+    - left: "Друг"
+      right: "Друзі"
+    - left: "Стіл"
+      right: "Столи"
+    - left: "Машина"
+      right: "Машини"
+
+- type: unjumble
+  title: 'Складіть речення'
+  items:
+    - words: ["Я", "буду", "каву", "і", "салат"]
+      answer: "Я буду каву і салат"
+    - words: ["Ми", "не", "маємо", "часу"]
+      answer: "Ми не маємо часу"
+    - words: ["Де", "твоя", "нова", "машина?"]
+      answer: "Де твоя нова машина?"
+    - words: ["Він", "працює", "в", "банку"]
+      answer: "Він працює в банку"
+    - words: ["Я", "люблю", "читати", "книги"]
+      answer: "Я люблю читати книги"
+    - words: ["Вони", "були", "в", "кіно"]
+      answer: "Вони були в кіно"
+
+- type: fill-in
+  title: 'Відмінки: оберіть правильну форму'
+  instruction: 'Оберіть правильну форму слова для кожного речення.'
+  items:
+    - sentence: "Я йду в __ (напрямок)."
+      answer: "парк"
+      options: ["парк", "парку", "парка", "парки"]
+    - sentence: "Я гуляю в __ (місце)."
+      answer: "парку"
+      options: ["парку", "парк", "парком", "парка"]
+    - sentence: "Це мій __."
+      answer: "брат"
+      options: ["брат", "брата", "брату", "братом"]
+    - sentence: "У мене немає __."
+      answer: "брата"
+      options: ["брата", "брат", "брату", "братом"]
+    - sentence: "Ми їдемо в __ (напрямок)."
+      answer: "Київ"
+      options: ["Київ", "Києві", "Києва", "Києвом"]
+    - sentence: "Ми живемо в __ (місце)."
+      answer: "Києві"
+      options: ["Києві", "Київ", "Києва", "Києву"]
+    - sentence: "Книга лежить на __ (місце)."
+      answer: "столі"
+      options: ["столі", "стіл", "столу", "столом"]
+    - sentence: "Я кладу книгу на __ (напрямок)."
+      answer: "стіл"
+      options: ["стіл", "столі", "столу", "стола"]
+
+- type: match-up
+  title: 'Відмінки та Питання'
+  instruction: 'З’єднайте відмінок з його питанням.'
+  pairs:
+    - left: "Називний (Nominative)"
+      right: "Хто? Що? (Subject)"
+    - left: "Знахідний (Accusative)"
+      right: "Куди? (Direction)"
+    - left: "Місцевий (Locative)"
+      right: "Де? (Location)"
+    - left: "Родовий (Genitive)"
+      right: "Кого? Чого? (Absence)"
+    - left: "Я бачу..."
+      right: "сестру (Accusative)"
+    - left: "Я гуляю..."
+      right: "в парку (Locative)"
+    - left: "У мене немає..."
+      right: "часу (Genitive)"
+    - left: "Це..."
+      right: "мій дім (Nominative)"

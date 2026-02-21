@@ -354,11 +354,19 @@ def finalize_quality(
     """
     level_dir = content_root / level
 
-    # Find queue file
-    queue_files = list((level_dir / 'queue').glob(f'{module_num:02d}-*-quality.yaml'))
-    if not queue_files:
-        # Try without zero-padding
-        queue_files = list((level_dir / 'queue').glob(f'{module_num}-*-quality.yaml'))
+    # Find queue file via manifest or glob
+    queue_files = []
+    try:
+        import sys
+        sys.path.insert(0, str(content_root.parent.parent / "scripts"))
+        from manifest_utils import get_module_by_number
+        mod = get_module_by_number(level, module_num)
+        if mod:
+            qf = level_dir / 'queue' / f"{mod.slug}-quality.yaml"
+            if qf.exists():
+                queue_files = [qf]
+    except Exception:
+        queue_files = list((level_dir / 'queue').glob(f'{module_num:02d}-*-quality.yaml'))
 
     if not queue_files:
         print(f"⚠️  No quality queue file found for {level.upper()} module {module_num}")

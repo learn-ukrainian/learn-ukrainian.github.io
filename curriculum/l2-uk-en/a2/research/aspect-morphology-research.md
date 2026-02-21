@@ -1,72 +1,34 @@
-# Research Notes: Aspect Morphology
+# Дослідження: Aspect Morphology (A2)
 
-**Track**: a2
-**Module**: aspect-morphology
-**Researched**: 2026-02-08
-**Level**: A2 (Elementary)
+## State Standard Reference
+§4.3.2: "Видові пари дієслів: робити – зробити, ділити – поділити, писати – написати, виходити – вийти, забувати – забути."
+Alignment: This module focuses on the morphological formation of aspectual pairs (prefixes and suffixes) as specified in the standard, enabling learners to move from basic recognition (A1) to active formation and selection (A2).
 
-## 1. Grammar: State Standard 2024 Reference
-According to the **Державний стандарт української мови (ДСТУ 2024)**, the study of verbal aspect morphology at the **A2 level (Початковий рівень другого ступеня)** is categorized under Word Formation (Словотвір) and Morphology (Морфологія).
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| відпочивати / відпочити | High (Daily life) | відпочивати на морі, гарно відпочити |
+| вставати / встати | High (Routine) | встати рано, вставати з ліжка |
+| одягатися / одягнутися | High (Routine) | тепло одягнутися, одягатися на роботу |
+| відкривати / відкрити | High (General) | відкрити вікно, відкривати двері |
+| починати / почати | High (Structure) | почати роботу, починати урок |
+| вирішувати / вирішити | High (Cognitive) | вирішити проблему, вирішувати завдання |
 
-**Catalog V (Language Competence), Section 4.3.2:**
-> «Видові пари дієслів: робити – зробити, ділити – поділити, писати – написати, виходити – вийти, забувати – забути.»
+## Cultural Hooks
+1. **Hospitality & Routine**: Ukrainian hospitality often involves "preparing" (приготувати) a meal for a "guest" (гість) who just "arrived" (приїхав/прийшов). The contrast between the process of cooking and the finished table is a perfect anchor for aspect. (Source: Ukrainian Folklore/Hospitality traditions).
+2. **"The Morning Rhythm"**: Daily routines in a Ukrainian household (умиватися, снідати, збиратися) provide a natural context for prefixal/suffixal pairs that describe completing a step (вмитися) vs. the ongoing morning process. (Source: Daily Life Ethnography).
 
-**Catalog V (Language Competence), Section 4.2.3.1 (Indicative Mood):**
-The standard specifies that students should be able to differentiate aspect in the future tense:
-> - «утворення складеної форми майбутнього часу дієслів недоконаного виду: буду боротися...»
-> - «майбутній час дієслів доконаного виду: скажу, закричите, поборють.»
+## Common Learner Errors
+1. **Process vs. Result Confusion**: Using the imperfective (читав) when the result is achieved (прочитав). E.g., *Я читав цю книгу вчора* instead of *Я прочитав цю книгу вчора* (when the book is finished).
+2. **Future Tense Mismatch**: Forming future imperfective with perfective stems. E.g., *Я буду написати* (Incorrect) vs. *Я напишу* (Correct) or *Я буду писати* (Correct).
+3. **Imperative Choice**: Using the wrong aspect for commands. *Читай!* (General advice/ongoing) vs. *Прочитай!* (Specific task/once). Learners often struggle with the "politeness" vs. "urgency" aspectual nuances.
 
-While A1 introduces aspect sporadically (e.g., in basic imperatives), A2 requires a systematic understanding of how these pairs are formed and used to distinguish between a process and a completed result.
+## Cross-References
+- Builds on: a2-12 (Aspect introduction), a2-13 (Perfective past), a2-14 (Perfective future).
+- Prepares for: a2-16 (Aspect Mastery Pairs), a2-36 (Basic Motion Prefixes), a2-38 (Action Verb Prefixes).
 
-## 2. Vocabulary Frequency
-The following aspect pairs are high-frequency and essential for the A2 level. They represent the most common morphological patterns (prefixation and suffixation).
-
-| Imperfective (Process) | Perfective (Result) | Meaning | Pattern |
-| :--- | :--- | :--- | :--- |
-| **писати** | **написати** | to write | Prefix (на-) |
-| **читати** | **прочитати** | to read | Prefix (про-) |
-| **робити** | **зробити** | to do / make | Prefix (з-) |
-| **пити** | **випити** | to drink | Prefix (ви-) |
-| **їсти** | **з'їсти** | to eat | Prefix (з-) |
-| **готувати** | **приготувати** | to cook / prepare | Prefix (при-) |
-| **купувати** | **купити** | to buy | Suffix change |
-| **забувати** | **забути** | to forget | Suffix change |
-| **бачити** | **побачити** | to see | Prefix (по-) |
-| **говорити** | **сказати** | to speak / say | Suppletion |
-
-**Key Collocations for A2:**
-- **Написати листа/повідомлення** (to write a letter/message) — result-oriented.
-- **Зробити домашнє завдання** (to finish homework) — common student context.
-- **Приготувати обід** (to cook/finish lunch) — daily routine.
-- **Купити хліб** (to buy bread) — practical transaction.
-
-## 3. Cultural Hook
-### The "Mirror Check" (Забобони)
-In Ukrainian daily life, the verb **забути** (to forget, perfective) often triggers a specific cultural ritual. If a person has left their home but realizes they have forgotten something and must return, it is considered bad luck. To "neutralize" the bad luck, the person must look into a mirror (**подивитися у дзеркало**) before leaving again. This cultural moment highlights the "result" of forgetting and the immediate need for a corrective action, making the perfective aspect memorable.
-
-### Pysanky (Easter Eggs)
-The art of creating **писанки** provides a perfect visual for aspect. The long, intricate process of applying wax and dye is **писати писанку** (imperfective). However, the pride of the tradition is the finished, blessed egg—the **написана писанка** (perfective). In folk songs and stories, the transition from the process to the sacred result is often marked by this shift in verbal aspect.
-
-## 4. Pedagogical Notes
-- **Concept Over Tense:** English speakers often try to map aspect to English tenses (e.g., Imperfective = Continuous). While helpful, it is vital to emphasize that aspect is a property of the *verb*, not just the *time*.
-- **The "No Present Tense" Trap:** One of the most common learner errors is attempting to use a perfective verb in the present tense. Students must be taught the "Golden Rule": **Perfective verbs have NO present tense.** "Я напишу" is Future, not "I am writing."
-- **Learning in Pairs:** Verbs should never be taught in isolation at A2. Every new verb should be introduced with its "partner." This prevents students from being "stuck" in one aspectual mode.
-- **Morphological Predictability:** While many pairs are irregular, grouping them by common prefixes (на-, по-, з-) helps students build an intuitive "feel" for the perfective result.
-
-## 5. Scope Boundaries
-Based on the prior knowledge of A1 and early A2 (Cases, Tenses, Modals), the scope for this module is defined as follows:
-
-**In Scope:**
-- **Prefixation Patterns:** Focusing on the most transparent ones (на-, по-, з-, про-, ви-).
-- **Common Suffixation:** Specifically the `-увати` to `-ити` shift (купувати/купити).
-- **Core Suppletion:** The most essential irregular pairs like **говорити/сказати** and **брати/взяти**.
-- **Aspect in Past/Future:** Applying the aspectual choice to tenses the student already knows.
-
-**Out of Scope:**
-- **Complex Secondary Imperfectives:** Verbs where a perfective is made imperfective again through complex suffixation (e.g., *розповісти* -> *розповідати* is okay, but more obscure ones should be avoided).
-- **Verb of Motion Nuances:** The complex interaction of prefixes and aspect in verbs of motion (e.g., *приходити* vs. *прийти*) is better suited for later modules.
-- **Aspect in the Imperative:** While students know the forms, the nuanced choice between "Do it!" (Perf) and "Start doing it/Keep doing it!" (Imp) is too advanced for this stage.
-- **Frequentative Verbs:** Old frequentative forms (e.g., *читати* -> *читувати*) are excluded as they are archaic/rare.
-
-**Student Progress Marker:**
-The student has already passed the "All Cases Practice" and "Aspect Introduction." This module moves them from "knowing aspect exists" to "knowing how to build the forms themselves."
+## Notes for Content Writing
+- **The "Family" Analogy**: Use the "aspectual pair as a family" concept from the plan to make prefixation feel less like a random addition and more like a relationship.
+- **Prefix Predictability**: While A2 learners shouldn't be overwhelmed, highlighting that *по-* often means "for a little while" or "completion" and *з-* often means "making/doing" helps build intuition.
+- **Spelling Alert**: Ensure the *з-* vs *с-* rule (перед к, п, т, ф, х) is clearly explained as it's a high-frequency spelling error.
+- **Visuals**: A table comparing "Process (Imperfective)" and "Result (Perfective)" icons alongside the verbs will be very effective.

@@ -1,0 +1,74 @@
+module: b2-84
+level: B2
+sequence: 84
+slug: checkpoint-register-synthesis
+version: '2.0'
+title: 'Checkpoint: Register Synthesis (Синтез регістрів)'
+subtitle: Confirm register readiness before communication skills
+content_outline:
+- section: Огляд — Контрольна точка
+  points:
+  - Мета модуля — перевірити готовність до комунікаційних навичок
+  - Формат оцінювання
+  - Як працювати з контрольною точкою
+- section: 'Навичка 1: Офіційно-діловий регістр'
+  points:
+  - Характеристики офіційного стилю
+  - Типові формули (Шановний..., З повагою...)
+  - Тест на розпізнавання та продукування
+- section: 'Навичка 2: Публіцистичний регістр'
+  points:
+  - Характеристики публіцистики — інформативність, впливовість
+  - Мовні засоби (риторичні питання, емоційна лексика)
+  - Тест на аналіз медіатексту
+- section: 'Навичка 3: Науковий регістр'
+  points:
+  - Характеристики наукового стилю — об'єктивність, термінологія
+  - Безособові конструкції та пасив
+  - Тест на редагування тексту
+- section: 'Навичка 4: Перемикання регістрів'
+  points:
+  - Трансформація тексту з одного регістру в інший
+  - Вибір регістру залежно від ситуації та аудиторії
+  - Комплексна вправа — один зміст, три регістри
+- section: 'Навичка 5: Інтеграція регістрів у письмі'
+  points:
+  - Написання тексту у заданому регістрі
+  - Оцінювання за критеріями відповідності стилю
+  - Самоперевірка та рефлексія
+- section: Підсумок та результати
+  points:
+  - Інтерпретація результатів тесту
+  - Рекомендації щодо подальшої практики
+  - Підготовка до комунікаційного блоку (М85-93)
+focus: checkpoint
+pedagogy: Test
+objectives:
+- Demonstrate B2 level proficiency
+- Pass final comprehensive assessment
+grammar:
+- Comprehensive B2 Grammar
+phase: B2.4 Skills & Capstone
+vocabulary_hints:
+  required:
+  - термін (term)
+  - поняття (concept)
+  - процес (process)
+  - метод (method)
+  recommended:
+  - аналіз (analysis)
+  - синтез (synthesis)
+  - дослідження (research)
+activity_hints:
+- type: reading
+  focus: Аналіз тексту
+  items: 4
+- type: essay-response
+  focus: Практичне застосування
+- type: true-false
+  focus: Перевірка розуміння
+  items: 8
+persona:
+  voice: Professional Language Coach
+  role: Ghostwriter (Літературний негр)
+word_target: 4000

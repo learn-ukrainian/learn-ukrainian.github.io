@@ -1,68 +1,70 @@
 # A1 Module Status
 
-**Generated:** 2026-02-10 16:08:58
+**Generated:** 2026-02-17 11:44:04
 **Total Modules:** 44
-**Status:** 44 passing, 0 failing, 0 stubs, 0 errors
+**Status:** 38 passing, 1 failing, 0 stubs, 5 errors
 
 ## Quick Summary
 
-- ✅ **Passing:** 44/44 (100%)
-- ❌ **Failing:** 0/44
+- ✅ **Passing:** 38/44 (86%)
+- ❌ **Failing:** 1/44
 - 📝 **Stubs:** 0/44
+- ⚠️ **Errors:** 5/44
 
 ## Module Details
 
 | # | Slug | Status | Words | Issues |
 |---|------|--------|-------|--------|
-| 001 | 01-the-cyrillic-code-i | ✅ PASS | 1135/1019 | - |
-| 002 | 02-the-cyrillic-code-ii | ✅ PASS | 1628/1531 | - |
-| 003 | 03-the-gender-code | ✅ PASS | 1050/934 | - |
-| 004 | 04-this-is-i-am | ✅ PASS | 1467/1448 | - |
-| 005 | 05-my-world-objects | ✅ PASS | 1660/1412 | - |
-| 006 | 06-the-living-verb-i | ✅ PASS | 1469/1210 | - |
-| 007 | 07-questions-and-negation | ✅ PASS | 1163/1131 | - |
-| 008 | 08-the-living-verb-ii | ✅ PASS | 994/972 | - |
-| 009 | 09-reflexive-verbs | ✅ PASS | 1496/750 | - |
-| 010 | 10-checkpoint-first-contact | ✅ PASS | 1276/875 | - |
-| 011 | 11-the-accusative-i-things | ✅ PASS | 1004/855 | - |
-| 012 | 12-the-accusative-ii-people | ✅ PASS | 1479/1374 | - |
-| 013 | 13-the-locative-where-things-are | ✅ PASS | 2071/1331 | - |
-| 014 | 14-mine-and-yours | ✅ PASS | 1758/1307 | - |
-| 015 | 15-around-the-city | ✅ PASS | 1922/1602 | - |
-| 016 | 16-the-genitive-i-absence | ✅ PASS | 1151/1038 | - |
-| 017 | 17-numbers-and-money | ✅ PASS | 1154/1091 | - |
-| 018 | 18-food-and-shopping | ✅ PASS | 810/750 | - |
-| 019 | 19-at-the-cafe | ✅ PASS | 1165/1075 | - |
-| 020 | 20-checkpoint-navigation | ✅ PASS | 1439/1073 | - |
-| 021 | 21-yesterday-past-tense | ✅ PASS | 1134/1092 | - |
-| 022 | 22-tomorrow-future-tense | ✅ PASS | 1280/1082 | - |
-| 023 | 23-what-time-is-it | ✅ PASS | 1073/1064 | - |
-| 024 | 24-can-must-want-modals | ✅ PASS | 1183/1049 | - |
-| 025 | 25-my-daily-routine | ✅ PASS | 1036/750 | - |
-| 026 | 26-describing-things-adjectives | ✅ PASS | 1013/853 | - |
-| 027 | 27-colors-and-clothing | ✅ PASS | 1192/750 | - |
-| 028 | 28-description-adverbs | ✅ PASS | 1053/750 | - |
-| 029 | 29-weather-and-nature | ✅ PASS | 927/869 | - |
-| 030 | 30-prepositions-iii | ✅ PASS | 1154/936 | - |
-| 031 | 31-body-and-health | ✅ PASS | 904/820 | - |
-| 032 | 32-my-family | ✅ PASS | 1069/916 | - |
-| 033 | 33-holidays-and-traditions | ✅ PASS | 892/750 | - |
-| 034 | 34-checkpoint-core-grammar | ✅ PASS | 1351/962 | - |
-| 035 | 35-at-the-cafe-practical | ✅ PASS | 908/825 | - |
-| 036 | 36-at-the-restaurant | ✅ PASS | 1117/750 | - |
-| 037 | 37-at-the-market | ✅ PASS | 812/793 | - |
-| 038 | 38-at-the-store | ✅ PASS | 836/750 | - |
-| 039 | 39-buying-tickets | ✅ PASS | 986/750 | - |
-| 040 | 40-taking-transport | ✅ PASS | 827/750 | - |
-| 041 | 41-phone-basics | ✅ PASS | 813/750 | - |
-| 042 | 42-emergencies | ✅ PASS | 798/750 | - |
-| 043 | 43-combined-practice | ✅ PASS | 1101/750 | - |
-| 044 | 44-a1-final-exam | ✅ PASS | 1075/750 | - |
+| 001 | the-cyrillic-code-i | ✅ PASS | 2202/1019 | - |
+| 002 | the-cyrillic-code-ii | ✅ PASS | 1888/1531 | - |
+| 003 | the-gender-code | ✅ PASS | 3265/934 | - |
+| 004 | this-is-i-am | ✅ PASS | 1776/1448 | - |
+| 005 | my-world-objects | ✅ PASS | 3266/1412 | - |
+| 006 | the-living-verb-i | ✅ PASS | 1849/1210 | - |
+| 007 | questions-and-negation | ✅ PASS | 2976/1131 | - |
+| 008 | the-living-verb-ii | ✅ PASS | 1661/972 | - |
+| 009 | reflexive-verbs | ✅ PASS | 1723/830 | - |
+| 010 | checkpoint-first-contact | ✅ PASS | 1744/875 | - |
+| 011 | the-accusative-i-things | ✅ PASS | 2253/855 | - |
+| 012 | the-accusative-ii-people | ✅ PASS | 3691/1374 | - |
+| 013 | the-locative-where-things-are | ✅ PASS | 2090/1331 | - |
+| 014 | mine-and-yours | ✅ PASS | 2468/1307 | - |
+| 015 | around-the-city | ✅ PASS | 3528/1602 | - |
+| 016 | the-genitive-i-absence | ✅ PASS | 3127/1038 | - |
+| 017 | numbers-and-money | ✅ PASS | 3194/1091 | - |
+| 018 | food-and-shopping | ✅ PASS | 2860/750 | - |
+| 019 | at-the-cafe | ✅ PASS | 2768/1075 | - |
+| 020 | checkpoint-navigation | ✅ PASS | 3187/1073 | - |
+| 021 | yesterday-past-tense | ✅ PASS | 1889/1092 | - |
+| 022 | tomorrow-future-tense | ✅ PASS | 1624/1082 | - |
+| 023 | what-time-is-it | ✅ PASS | 2287/1064 | - |
+| 024 | can-must-want-modals | ✅ PASS | 1296/1049 | - |
+| 025 | my-daily-routine | ✅ PASS | 1189/750 | - |
+| 026 | describing-things-adjectives | ✅ PASS | 1141/853 | - |
+| 027 | colors-and-clothing | ✅ PASS | 1950/750 | - |
+| 028 | description-adverbs | ✅ PASS | 1112/750 | - |
+| 029 | weather-and-nature | ✅ PASS | 1929/869 | - |
+| 030 | prepositions-iii | ✅ PASS | 3237/936 | - |
+| 031 | body-and-health | ✅ PASS | 2175/820 | - |
+| 032 | my-family | ✅ PASS | 1166/916 | - |
+| 033 | holidays-and-traditions | ✅ PASS | 1498/750 | - |
+| 034 | checkpoint-core-grammar | ✅ PASS | 1435/962 | - |
+| 035 | at-the-cafe-practical | ✅ PASS | 2110/825 | - |
+| 036 | at-the-restaurant | ✅ PASS | 1459/750 | - |
+| 037 | at-the-market | ✅ PASS | 1993/793 | - |
+| 038 | at-the-store | ✅ PASS | 1821/750 | - |
+| 039 | buying-tickets | ❌ FAIL | 1375/750 | No Tier 1 (Beginner) review file at l2-uk-en/a1/review/buying-tickets-review.md. REDO: DELETE the existing review file and regenerate from scratch. Run /review-content-core-a using claude_extensions/commands/review-tiers/tier-1-beginner.md. Do NOT patch the existing review — start fresh. You MUST: (1) read every line of the .md and activities .yaml, (2) check every English explanation is B1-readable and encouraging, (3) verify every Ukrainian sentence + IPA transcription, (4) apply the 'Would I Continue?' test from the tier-1 guide, (5) score each dimension honestly and list at least 1 real issue. |
+| 040 | taking-transport | ⚠️ MISSING | 0/0 | no_file |
+| 041 | phone-basics | ⚠️ MISSING | 0/0 | no_file |
+| 042 | emergencies | ⚠️ MISSING | 0/0 | no_file |
+| 043 | combined-practice | ⚠️ MISSING | 0/0 | no_file |
+| 044 | a1-final-exam | ⚠️ MISSING | 0/0 | no_file |
 
 ---
 
 **Legend:**
 - ✅ PASS: All audit gates pass
+- 🔄 PROSE: Content gates pass; activities deferred (awaiting /hetman enrichment)
 - ❌ FAIL: Some audit gates fail
 - 📝 STUB: Empty or < 100 words
 - ⚠️ ERROR/MISSING: File not found or audit error

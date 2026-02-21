@@ -1,0 +1,104 @@
+module: b2-95
+level: B2
+sequence: 95
+slug: pluperfect-tense
+version: '2.0'
+title: Давноминулий час
+subtitle: The Pluperfect Tense
+content_outline:
+- section: Розминка — Час до минулого
+  points:
+  - State Standard §4.1.3.1 alignment — pluperfect (давноминулий) as B2 indicative
+    mood requirement
+  - 'Why Ukrainian has a "long ago past": expressing actions completed before another
+    past action'
+  - 'Cultural hook: the pluperfect in literature — Шевченко, Франко, and folk tales
+    use this form naturally'
+  - 'Register note: rare in everyday speech, common in literary/formal/historical
+    writing'
+- section: Утворення (Formation)
+  points:
+  - 'Formula: past tense of main verb + був/була/було/були'
+  - Він ходив був до школи, коли почався дощ. (He had been going to school when the
+    rain started.)
+  - Вона написала була листа, перш ніж він зателефонував. (She had written the letter
+    before he called.)
+  - 'Gender/number agreement: був/була/було/були agrees with subject, NOT with verb'
+  - 'Word order: був typically follows the main verb (ходив був), but can precede
+    in emphatic position'
+- section: Значення (Meaning & Usage)
+  points:
+  - 'Primary function: action completed BEFORE another past action (anterior past)'
+  - 'Contrast with simple past: Я прочитав книжку (I read the book) vs Я прочитав
+    був книжку, коли ти прийшов (I had read the book when you arrived)'
+  - 'In folk narratives: Жив-був один чоловік... (There once lived a man...)'
+  - 'In historical writing: Козаки відступили були до Чигирина... (The Cossacks had
+    retreated to Chyhyryn...)'
+  - 'Temporal markers: перш ніж (before), до того як (before), вже (already), ще (still/yet)'
+- section: Давноминулий vs минулий (Pluperfect vs Simple Past)
+  points:
+  - 'When pluperfect is required: two sequential past events, emphasizing the earlier
+    one'
+  - 'When simple past suffices: single past event or chronological narration'
+  - 'Learner error: overusing pluperfect (English speakers transfer "had" too liberally)'
+  - 'Learner error: wrong gender agreement (*Вона ходив був → Вона ходила була)'
+- section: Практика — Літературний час
+  points:
+  - Transform simple past sentences into pluperfect with temporal context
+  - Analyze folk tale openings for pluperfect forms
+  - Write a short historical narrative using pluperfect for backgrounding
+  - 'Text analysis: find pluperfect in authentic literary excerpt'
+- section: Підсумок
+  points:
+  - Formation summary table (all gender/number forms)
+  - Usage decision tree (when to use pluperfect vs simple past)
+  - Register guidance (literary/formal/folk vs conversational)
+focus: grammar
+pedagogy: PPP
+objectives:
+- Learner can form the pluperfect tense with correct gender/number agreement
+- Learner can use the pluperfect to express anterior past actions
+- Learner can distinguish pluperfect from simple past in context
+- Learner can recognize pluperfect in literary and folk texts
+grammar:
+- Pluperfect formation (past tense + був/була/було/були)
+- Gender and number agreement in pluperfect
+- Temporal sequencing with pluperfect
+- Pluperfect in literary and folk register
+vocabulary_hints:
+  required:
+  - давноминулий (pluperfect) — давноминулий час
+  - був/була/було/були (auxiliary was/were) — допоміжне дієслово
+  - перш ніж (before) — перш ніж він прийшов
+  - до того як (before) — до того як ми зустрілися
+  - вже (already) — я вже прочитав був
+  - оповідання (narrative/story) — народне оповідання
+  recommended:
+  - передування (precedence) — хронологічне передування
+  - послідовність (sequence) — послідовність подій
+  - народна казка (folk tale) — жив-був
+  - літературний (literary) — літературний стиль
+activity_hints:
+- type: quiz
+  focus: Choose pluperfect vs simple past in context
+  items: 15
+- type: fill-in
+  focus: Form pluperfect with correct agreement
+  items: 15
+- type: error-correction
+  focus: Fix gender agreement and formation errors
+  items: 10
+- type: match-up
+  focus: Match temporal sequence to correct tense pair
+  items: 12
+phase: B2.4 Communication Skills
+prerequisites:
+- b2-93 (Discussion & Debate)
+connects_to:
+- b2-96 (B2 Final Exam)
+register: літературний
+immersion: 100% Ukrainian
+persona:
+  voice: Professional Language Coach
+  role: Literary Historian
+word_target: 4000

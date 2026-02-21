@@ -1,0 +1,319 @@
+✅ Message sent to Gemini (ID: 12296) [auto-acked: self-addressed]
+✓ Message 12296 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12296...
+📨 Message #12296
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-petro-mohyla
+   Time: 2026-02-20T23:38:15.622687+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b2-hist-035
+level: B2-HIST
+sequence: 35
+slug: petro-mohyla
+version: '2.0'
+title: 'Петро Могила: Реформатор церкви'
+subtitle: 'Petro Mohyla: The Church Reformer'
+content_outline:
+- section: Вступ
+  points:
+  - Crisis of Orthodoxy post-Union — 1596 Union aftermath, hierarchy unrecognized,
+    churches seized
+  - 'Need for new strategy — beyond survival: modernization and intellectual defense'
+- section: Шлях до митри
+  points:
+  - Moldovan origins — son of hospodar Simeon Mohyla
+  - Western education — Lviv Brotherhood School, Zamość Academy, possibly Paris (Sorbonne)
+  - 'Military service — 1620-1621 Cecora and Khotyn battles; [!history-bite]: Mohyla
+    was a soldier before becoming a monk, bringing military discipline to the church'
+  - Tonsure at Lavra — 1627 elected archimandrite, start of publishing activity
+- section: Заснування Академії
+  points:
+  - Merger of schools (1632) — Lavra School (1631) + Brotherhood School = Kyiv-Mohyla
+    Collegium
+  - Latin curriculum for Orthodox defense — adopting Jesuit methods (language, rhetoric)
+    to defeat the enemy with their own weapons
+  - Resistance from traditionalists — conservative Cossacks and clergy feared 'Latinization'
+  - 'Role of ''spudei'' (students) — forming a new national elite; [!myth-buster]:
+    Myth: Mohyla ''Catholicized'' education. Reality: He used Latin tools for Orthodox
+    defense.'
+- section: Реформатор церкви
+  points:
+  - Legalization of hierarchy (1632/1633) — 'Articles of Pacification' from King Władysław
+    IV; consecration in Lviv
+  - 'Rebuilding St. Sophia and Desyatynna — 1633 restoration of Sophia (Octaviano
+    Mancini), 1635 excavations of Desyatynna; [!context]: Parallel with Counter-Reformation
+    — education + discipline + dogma'
+  - Liturgical reforms (Trebnyk) — 1646 'Euchologion', unification of rites, pastor's
+    manual
+  - Discipline and education of clergy — strict requirements for priests to be educated
+- section: Спадщина Могили
+  points:
+  - Kyiv as the 'New Jerusalem' — theological concept of Kyiv as a sacred center
+  - 'Baroque culture — [!culture]: ''Mohylian'' or ''Cossack'' Baroque style blending
+    European splendor with local tradition'
+  - Lasting impact on Ukrainian identity — integration into European cultural space
+- section: Читання
+  points:
+  - Primary sources assignment — excerpts from 'Trebnyk' Preface or 'Testament'
+- section: Первинні джерела
+  points:
+  - Testament of Mohyla — moral and educational instructions
+  - Inscription on Desyatynna — finding Rus' roots for legitimacy
+  - 'Linguistic analysis — [!quote]: ''Гарно й почесно бути свічкою... але свічка
+    має світити'' (Trebnyk, 1646) — metaphor of active service'
+- section: Деколонізаційний погляд
+  points:
+  - 'Myth of Latinization — [!decolonization]: Imperial historiography portrayed pre-Moscow
+    Orthodoxy as ''corrupted''; reality: peak intellectual sovereignty'
+  - Intellectual sovereignty — Kyiv exported scholars to Moscow, not vice versa
+  - Summary of achievements — standardized dogma ('Confession of Faith', 1640), recognized
+    by all patriarchs
+  - Reflection on 'Western tools for Eastern faith' — agency in self-reform without
+    waiting for Moscow or Constantinople
+- section: Потрібно більше практики?
+  points:
+  - Engagement — reflective questions on Mohyla's strategy
+vocabulary_hints:
+  required:
+  - митрополит (Metropolitan) — титул глави церкви
+  - академія (Academy) — Києво-Могилянська академія
+  - реформа (reform) — церковна реформа, освітня реформа
+  - колегіум (collegium) — за зразком єзуїтських колегіумів
+  - полеміка (polemics) — релігійна полеміка
+  - православ'я (Orthodoxy) — захист православ'я
+  - унія (Union) — Берестейська унія 1596
+  - руїна (ruin) — відбудова з руїн (rebuilding from ruins)
+  - канонізація (canonization) — Петро Могила канонізований у 1996
+  - друкарня (printing press) — Лаврська друкарня
+  recommended:
+  - спудей (student) — студент академії (archaic)
+  - риторика (rhetoric) — мистецтво красномовства
+  - латина (Latin) — мова науки
+  - бароко (Baroque) — українське бароко, козацьке бароко
+  - меценат (patron) — меценат освіти і культури
+activity_hints:
+- type: critical-analysis
+  focus: 'Верифікація фактів: facts'
+  items: 4
+focus: history
+pedagogy: CBI
+objectives:
+- Understand the significance of Petro Mohyla's educational reforms
+- Analyze the impact of the Kyiv-Mohyla Academy on Ukrainian culture
+- Discuss the 'Mohylian Era' in Ukrainian history
+- Use religious and educational terminology of the 17th century
+grammar:
+- Latinisms in Ukrainian language
+- Rhetorical style of Baroque
+- Passive voice in historical narrative
+sources:
+- name: Історія України-Руси
+  url: http://litopys.org.ua/hrushrus/iur.htm
+  type: secondary
+- name: Petro Mohyla (Encyclopedia of Ukraine)
+  url: http://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CM%5CO%5CMohylaPetro.htm
+  type: reference
+phase: HIST.4 [Lithuanian-Polish Era]
+persona:
+  voice: Senior Professor of History
+  role: Academy Professor
+word_target: 5000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Петро Могила: Реформатор церкви
+
+## Використані джерела
+1. [Петро Могила — Енциклопедія історії України](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Mogyla_P) — фундаментальна академічна стаття про життя та діяльність.
+2. [Требник Петра Могили — Ізборник](http://litopys.org.ua/volu/volu04.htm) — тексти та аналіз видавничої діяльності.
+3. [Духовний заповіт Петра Могили](http://litopys.org.ua/) — текст заповіту та контекст його написання.
+4. [Радіо Свобода: Петро Могила і деколонізація](https://www.radiosvoboda.org/) — матеріали про спадщину та боротьбу за київську церкву.
+
+## Хронологія
+- 1596, 21 грудня: Народився у сім’ї господаря Валахії та Молдови Симеона Могили.
+- 1620-1621: Участь у Цецорській та Хотинській битвах (військовий досвід перед чернецтвом).
+- 1627: Обраний архімандритом Києво-Печерської лаври.
+- 1631: Заснування школи при Києво-Печерській лаврі.
+- 1632: Об’єднання Лаврської та Братської шкіл у Києво-Могилянський колегіум.
+- 1633, 28 квітня: Висвячений на митрополита Київського, Галицького і всієї Русі у Львові (легалізація ієрархії королем Владиславом IV).
+- 1640: Скликання Київського собору, затвердження «Православного сповідання віри».
+- 1646: Видання «Требника» (Евхологіон) — уніфікація богослужбових обрядів.
+- 1647, 1 січня: Смерть Петра Могили, поховання у святій великій церкві Печерській.
+
+## Ключові факти та цитати
+- **Військове минуле**: До постригу був професійним військовим, що вплинуло на його стиль управління церквою (дисципліна, порядок).
+- **Цитата 1 (Требник)**: «Гарно й почесно бути свічкою, бути оком, бути сіллю, бути ангелом. Але свічка має світити, око має дивитися, сіль має діяти на гнилизну та її припиняти.»
+- **Цитата 2 (Заповіт)**: «У святій вірі, в якій я народився, був вихований і з волі та ласки Божої маю високе митрополиче звання, у ній же хочу, вік свій завершивши, стати перед величчям Господа свого...»
+
+## Engagement Hooks (mapped to sections)
+- Section "Шлях до митри": [!history-bite] — Петро Могила був воїном і брав участь у Хотинській битві, перш ніж стати ченцем. Його "суворий стиль" — це спадщина офіцерського минулого.
+- Section "Заснування Академії": [!myth-buster] — Міф про "католичення": Могила не зраджував православ'я, а озброював його латиною та наукою, щоб перемагати опонентів їхньою ж зброєю.
+- Section "Реформатор церкви": [!context] — Паралель з Контрреформацією: Могила робив у православ'ї те, що єзуїти робили в католицизмі — ставив на освіту та дисципліну.
+- Section "Спадщина Могили": [!culture] — "Могилянське бароко": це не просто архітектура, це стиль мислення — пишний, складний, синтетичний, що поєднує Схід і Захід.
+- Section "Первинні джерела": [!quote] — Метафора свічки з "Требника": пасивна віра не має сенсу, потрібна дія.
+- Section "Деколонізаційний погляд": [!decolonization] — "Інтелектуальний реверс": у XVII ст. Київ навчав Москву, а не навпаки. Могилянські вчені їхали на північ і несли туди освіту, яку пізніше імперія привласнила.
+
+## Деколонізаційний контекст
+- **Imperial/Soviet myth**: Петро Могила як "прихильник возз'єднання" або, навпаки, "західник-латинізатор", що зіпсував "чисте руське православ'я". Радянська історіографія маргіналізувала його релігійний вплив, зводячи все до "просвітництва".
+- **Ukrainian reality**: Петро Могила — творець суб'єктної Української Церкви, рівної Заходу. Він не чекав дозволу з Москви чи Константинополя на реформи. Його Київ був "Новим Єрусалимом", самодостатнім центром. "Латинізація" була інструментом захисту ідентичності, а не її втратою.
+
+## Contested Terms (if applicable)
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| "Західноруська" церква | Термін для відокремлення української традиції від "істинної" російської, натяк на полонізацію. | Київська митрополія як спадкоємиця давньої Русі, що розвивалася в європейському контексті. |
+| Латинізація освіти | "Зрада православ'я", вплив ворожого Заходу. | Інструментальне використання латини як міжнародної мови науки для інтелектуального захисту віри. |
+| "Малоросійське" бароко | Провінційний варіант російського бароко. | Українське (козацьке/могилянське) бароко — самобутнє явище, що передувало російському і вплинуло на нього. |
+
+## Section-Mapped Research Notes
+
+### Вступ
+- Криза православ'я після Берестейської унії 1596 року: ієрархія невизнана державою, храми передані уніатам, православні — "релігія хлопів".
+- Потреба нової стратегії: старі методи (консерватизм, ізоляція) не працюють проти освічених єзуїтів. Потрібна модернізація, а не просто виживання.
+
+### Шлях до митри
+- Походження: рід молдовських господарів Могил. Високий аристократичний статус, зв'язки з європейською знаттю.
+- Освіта: Львівська братська школа, Замойська академія, ймовірно навчання в Європі (Париж/Сорбонна — дискусійно, але рівень знань свідчить про західну школу).
+- Військова кар'єра: участь у битві під Цецорою (1620) та Хотином (1621).
+- 1627: різкий поворот — постриг у ченці і обрання архімандритом Лаври.
+
+### Заснування Академії
+- 1631: відкриття школи при Лаврі (латинського типу).
+- Конфлікт з братством: козаки і міщани підозрювали "латинську єресь".
+- 1632: компроміс і об'єднання. Лаврська + Братська школи = Києво-Могилянський колегіум.
+- Навчальна програма: "Сім вільних мистецтв", латина як мова викладання, але зміст — православний. Виховання нової еліти ("спудеїв").
+
+### Реформатор церкви
+- Політична перемога 1632/1633: "Пункти заспокоєння" короля Владислава IV. Легалізація православної ієрархії.
+- Відновлення святинь: реставрація Софії Київської (запрошення італійця Октавіано Манчіні), розкопки Десятинної церкви (пошук київських коренів для легітимності).
+- Дисципліна: суворі вимоги до священиків, перевірка знань, заборона "мандрівних дяків".
+- Видання "Требника" (1646): уніфікація обрядів, щоб усунути хаос і "різночитання".
+
+### Спадщина Могили
+- Концепція Києва як "Нового Єрусалиму" — сакрального центру, рівного іншим столицям.
+- Барокова культура: синтез європейської форми і українського змісту. Естетика, що вплинула на архітектуру, літературу, іконопис.
+- Створення інтелектуального фундаменту, на якому пізніше постане Гетьманщина Мазепи.
+
+### Читання
+- (Завдання для учнів прочитати уривки). Фокус на передмові до "Требника" або "Заповіті".
+
+### Первинні джерела
+- "Заповіт": піклування про Колегіум як про найважливіше дитя. Передача бібліотеки та коштів.
+- Напис на руїнах Десятинної церкви: фіксація історичної пам'яті про Володимира Великого.
+- "Требник": настанови пастирям бути активними ("свічка має світити").
+
+### Деколонізаційний погляд
+- Спростування міфу про "зіпсованість" українського православ'я латинськими впливами. Це була адаптація для перемоги.
+- Суб'єктність: Могила стандартизував догмати ("Православне сповідання віри", 1640), які затвердили східні патріархи. Київ диктував стандарт, а не Москва.
+- "Інструментальна вестернізація": використання західних інструментів для збереження східної ідентичності.
+
+### Потрібно більше практики?
+- Рефлексія над стратегією Могили: чи виправдана "мета засоби"?
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12354)
+✓ Message 12296 acknowledged
+✓ Message 12354 acknowledged

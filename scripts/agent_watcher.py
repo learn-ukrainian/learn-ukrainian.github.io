@@ -40,6 +40,32 @@ from pathlib import Path
 
 import yaml
 
+# ---------------------------------------------------------------------------
+# Login shell environment (captures GITHUB_TOKEN, GOOGLE_API_KEY, etc.)
+# Needed because launchd passes a sparse env to daemons.
+# ---------------------------------------------------------------------------
+def _get_login_env() -> dict:
+    """Capture full login shell env (has GITHUB_TOKEN, GOOGLE_API_KEY, etc.)."""
+    try:
+        result = subprocess.run(
+            ["bash", "-l", "-c", "env"],
+            capture_output=True, text=True, timeout=10
+        )
+        env = {}
+        for line in result.stdout.strip().split("\n"):
+            if "=" in line:
+                k, v = line.split("=", 1)
+                env[k] = v
+        # Ensure our venv Python is first in PATH
+        venv_bin = str(Path(__file__).parent.parent / ".venv" / "bin")
+        env["PATH"] = f"{venv_bin}:{env.get('PATH', '')}"
+        env["PYTHONUNBUFFERED"] = "1"
+        return env
+    except Exception:
+        return os.environ.copy()
+
+LOGIN_ENV = _get_login_env()
+
 # Configuration
 DB_PATH = Path(__file__).parent.parent / ".mcp/servers/message-broker/messages.db"
 PID_FILE = Path(__file__).parent.parent / ".mcp/servers/message-broker/watcher.pid"
@@ -53,8 +79,9 @@ COOLDOWN_AFTER_TRIGGER_SECONDS = 10  # Wait after triggering an agent
 USER_ACTIVITY_WINDOW_SECONDS = 60  # Consider user active if recent messages from user
 
 # Loop prevention
-MAX_TURNS_PER_TASK = 8  # Max agent responses per task before requiring human intervention
+MAX_TURNS_PER_TASK = 10  # Max agent responses per task before requiring human intervention
 MAX_CONSECUTIVE_ERRORS = 3  # Stop processing after consecutive errors
+MAX_DELIVERY_ATTEMPTS = 3   # Ack with error status after this many failed attempts
 
 # Setup logging
 logging.basicConfig(
@@ -159,7 +186,7 @@ def _save_stuck_report(task_id: str, turn_count: int, last_msg: dict):
         logger.info(f"Saved stuck report: {report_path}")
 
         # Send desktop notification for stuck task
-        _send_notification(
+        notify_human(
             "unknown", "human", last_msg.get("id", 0), task_id,
         )
     except Exception as e:
@@ -212,15 +239,18 @@ def get_unread_messages(for_agent: str = None):
     ]
 
 
-def acknowledge_message(message_id: int):
+def acknowledge_message(message_id: int, status: str = "delivered"):
     """Mark a message as acknowledged in the database."""
     conn = get_db()
     if not conn:
         return
     try:
-        conn.execute("UPDATE messages SET acknowledged = 1 WHERE id = ?", (message_id,))
+        conn.execute(
+            "UPDATE messages SET acknowledged = 1, status = ? WHERE id = ?",
+            (status, message_id),
+        )
         conn.commit()
-        logger.debug(f"Acknowledged message #{message_id}")
+        logger.debug(f"Acknowledged message #{message_id} (status={status})")
     except Exception as e:
         logger.error(f"Failed to acknowledge message #{message_id}: {e}")
     finally:
@@ -238,7 +268,7 @@ def count_task_turns(task_id: str) -> int:
 
     cursor = conn.cursor()
     cursor.execute("""
-        SELECT COUNT(*) FROM messages WHERE task_id = ?
+        SELECT COUNT(*) FROM messages WHERE task_id = ? AND message_type != 'error'
     """, (task_id,))
     count = cursor.fetchone()[0]
     conn.close()
@@ -297,7 +327,8 @@ def trigger_agent(agent: str, message_id: int, task_id: str = None, from_agent: 
             capture_output=True,
             text=True,
             timeout=360,  # 6 min (safety net for bridge's 5 min sync timeout)
-            cwd=str(Path(__file__).parent.parent)
+            cwd=str(Path(__file__).parent.parent),
+            env=LOGIN_ENV,
         )
 
         if result.returncode == 0:
@@ -305,8 +336,8 @@ def trigger_agent(agent: str, message_id: int, task_id: str = None, from_agent: 
             if result.stdout:
                 # Log first 500 chars of output
                 logger.debug(result.stdout[:500])
-            # Mark message as acknowledged so we don't re-process it
-            acknowledge_message(message_id)
+            # Mark message as acknowledged and delivered
+            acknowledge_message(message_id, status="delivered")
             return True
         else:
             logger.error(f"Agent {agent} failed: {result.stderr[:500] if result.stderr else 'No error output'}")
@@ -334,6 +365,8 @@ def run_watcher():
 
     # Track blocked tasks (hit turn limit)
     blocked_tasks = set()
+    # Track delivery attempts per message: {message_id: attempt_count}
+    delivery_attempts: dict[int, int] = {}
 
     while True:
         try:
@@ -373,6 +406,30 @@ def run_watcher():
                     logger.debug(f"Skipping error message #{msg['id']}")
                     continue
 
+                # Leave gemini→claude messages unread so Claude can read them
+                # via check_inbox / receive_messages. Auto-ack everything else.
+                if msg['to'] == 'claude':
+                    logger.debug(f"Leaving msg #{msg['id']} for Claude to read ({msg['from']}→claude)")
+                    continue
+
+                # Auto-ack all other messages (gemini→gemini self-dispatches,
+                # claude→gemini pipeline messages, etc). The build_module
+                # pipeline calls Gemini directly — watcher never dispatches.
+                logger.debug(f"Auto-acking msg #{msg['id']} ({msg['from']}→{msg['to']} task={msg.get('task_id', 'N/A')})")
+                acknowledge_message(msg['id'], status="auto-acked-monitor-only")
+                continue
+
+                # Check if max delivery attempts exceeded
+                attempts = delivery_attempts.get(msg['id'], 0)
+                if attempts >= MAX_DELIVERY_ATTEMPTS:
+                    logger.error(
+                        f"Message #{msg['id']} failed {attempts} delivery attempts — "
+                        f"marking as delivery_failed (from={msg['from']} to={msg['to']} task={msg['task_id']})"
+                    )
+                    acknowledge_message(msg['id'], status="delivery_failed")
+                    delivery_attempts.pop(msg['id'], None)
+                    continue
+
                 # Trigger appropriate agent
                 success = trigger_agent(msg['to'], msg['id'], msg['task_id'], from_agent=msg['from'])
 
@@ -380,10 +437,15 @@ def run_watcher():
                     consecutive_errors = 0
                     last_activity = datetime.now(timezone.utc)
                     processed = True
+                    delivery_attempts.pop(msg['id'], None)
                     # Cooldown after successful trigger
                     time.sleep(COOLDOWN_AFTER_TRIGGER_SECONDS)
                 else:
                     consecutive_errors += 1
+                    delivery_attempts[msg['id']] = attempts + 1
+                    logger.warning(
+                        f"Message #{msg['id']} delivery attempt {attempts + 1}/{MAX_DELIVERY_ATTEMPTS} failed"
+                    )
                     if consecutive_errors >= MAX_CONSECUTIVE_ERRORS:
                         logger.error(f"Too many consecutive errors ({consecutive_errors}) - pausing for 60s")
                         time.sleep(60)

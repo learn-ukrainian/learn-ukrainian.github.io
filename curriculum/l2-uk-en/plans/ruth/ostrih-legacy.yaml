@@ -1,4 +1,3 @@
----
 sequence: 45
 module: ruth-045
 module_number: 37
@@ -9,7 +8,6 @@ phase: 2
 phase_id: sacred-word
 phase_name: Sacred Word
 focus: Impact on Muscovite/Russian norms
-word_target: 4000
 content_outline:
 - section: Вступ
   description: Introduction to Ostrih Legacy
@@ -24,3 +22,6 @@ activity_types:
 - transcription
 - etymology-trace
 - grammar-identify
+persona:
+  voice: Baroque Scholar
+  role: Ostroh Academician

@@ -1,4 +1,3 @@
----
 sequence: 13
 module: ruth-013
 module_number: 11
@@ -9,7 +8,6 @@ phase: 1
 phase_id: chancery-legal
 phase_name: Chancery & Legal
 focus: Тестамент, Духовниця
-word_target: 4000
 content_outline:
 - section: Вступ
   description: Introduction to Wills & Testaments
@@ -24,3 +22,6 @@ activity_types:
 - transcription
 - etymology-trace
 - grammar-identify
+persona:
+  voice: Baroque Scholar
+  role: City Notary

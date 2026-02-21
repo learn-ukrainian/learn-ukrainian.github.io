@@ -1,4 +1,3 @@
----
 module: c1-hist-057
 level: c1-hist
 sequence: 57
@@ -10,30 +9,26 @@ objectives:
 - 'Analyze the causes and consequences of синтез: культурний геноцид'
 - Evaluate the historical significance of що ми дізналися
 content_outline:
-- section: "Вступ — Що ми дізналися"
-  words: 457
+- section: Вступ — Що ми дізналися
   subsections:
   - Огляд модулів 52-56
   - Від контексту до механізмів
   - Мета синтезу — інтеграція
   - Культурний геноцид як рамка
 - section: Паттерн знищення
-  words: 686
   subsections:
   - Дозвіл → Контроль → Знищення
   - Чому цей паттерн?
   - Порівняння з Голодомором
   - Синхронність подій
 - section: Що втрачено
-  words: 686
   subsections:
   - Літературна спадщина
   - Театральна школа
   - Наукова традиція
   - Альтернативний шлях розвитку
   - Що могло б бути
-- section: "Культурний геноцид — поняття"
-  words: 686
+- section: Культурний геноцид — поняття
   subsections:
   - Визначення
   - Чи застосовне до України?
@@ -41,7 +36,6 @@ content_outline:
   - Дебати про термін
   - Правові імплікації
 - section: Пам'ять і відновлення
-  words: 571
   subsections:
   - Як повертали забуте
   - Діаспора — збереження
@@ -49,19 +43,16 @@ content_outline:
   - Сучасна рецепція
   - Чи можна відновити втрачене?
 - section: Уроки для сьогодні
-  words: 571
   subsections:
   - Культура як мішень — 2022
   - Паралелі з минулим
   - Захист культури
   - Документування злочинів
 - section: Підсумок
-  words: 343
   subsections:
   - Розстріляне відродження — парадигма
   - Від знищення до відродження
   - Перехід до релігійної ідентичності
-word_target: 4000
 vocabulary:
 - синтез
 - культурний геноцид
@@ -91,11 +82,11 @@ activities:
   focus: Чи можна назвати знищення Розстріляного відродження культурним геноцидом?
 sources:
 - name: Розстріляне відродження (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Розстріляне_відродження"
+  url: https://uk.wikipedia.org/wiki/Розстріляне_відродження
   type: reference
   notes: Overview
 - name: Культурний геноцид
-  url: "https://uk.wikipedia.org/wiki/Культурний_геноцид"
+  url: https://uk.wikipedia.org/wiki/Культурний_геноцид
   type: reference
   notes: Concept
 vocabulary_hints:
@@ -114,7 +105,9 @@ activity_hints:
   items: 4
 - type: essay-response
   focus: Критичний аналіз
-  word_target: 300
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Literary Necropolis Keeper

@@ -1,4 +1,3 @@
----
 module: c1-hist-042
 level: c1-hist
 sequence: 42
@@ -10,29 +9,25 @@ objectives:
 - Analyze the causes and consequences of меморандум української гельсінської групи
 - Evaluate the historical significance of права людини як зброя
 content_outline:
-- section: "Вступ — Права людини як зброя"
-  words: 457
+- section: Вступ — Права людини як зброя
   subsections:
   - 1976 рік — контекст
   - Гельсінські угоди — можливість
   - УГГ — перша правозахисна організація
   - Значення меморандуму
 - section: Гельсінські угоди
-  words: 571
   subsections:
   - Що підписав СРСР
   - «Третій кошик» — права людини
   - Як дисиденти використали
   - Міжнародний тиск
 - section: Створення УГГ
-  words: 686
   subsections:
   - Засновники — хто вони
   - Руденко, Лук'яненко, Тихий
   - Мотивація — чому ризикували
   - Перші дії
-- section: "Меморандум — аналіз тексту"
-  words: 914
+- section: Меморандум — аналіз тексту
   subsections:
   - Текст (фрагменти з глосами)
   - Правова аргументація
@@ -40,26 +35,22 @@ content_outline:
   - Національні права
   - Адресати — хто мав читати
 - section: Діяльність групи
-  words: 571
   subsections:
   - Документи — що публікували
   - Міжнародні контакти
   - Репресії — арешти членів
   - Трагічні долі
 - section: Спадщина УГГ
-  words: 457
   subsections:
   - Від УГГ до Руху
   - Правозахисна традиція
   - Сучасні організації
   - Уроки
 - section: Підсумок
-  words: 344
   subsections:
   - Меморандум як документ епохи
   - Права людини і нація
   - Зв'язок із незалежністю
-word_target: 4000
 vocabulary:
 - Гельсінська група
 - меморандум
@@ -89,15 +80,15 @@ activities:
   focus: Як Гельсінські угоди стали зброєю дисидентів?
 sources:
 - name: Українська Гельсінська група (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Українська_Гельсінська_група"
+  url: https://uk.wikipedia.org/wiki/Українська_Гельсінська_група
   type: reference
   notes: Group overview
 - name: Установчий документ УГГ
-  url: "https://khpg.org/"
+  url: https://khpg.org/
   type: primary
   notes: Founding documents
 - name: Гельсінські угоди
-  url: "https://uk.wikipedia.org/wiki/Гельсінський_заключний_акт"
+  url: https://uk.wikipedia.org/wiki/Гельсінський_заключний_акт
   type: reference
   notes: Helsinki Accords context
 vocabulary_hints:
@@ -116,7 +107,9 @@ activity_hints:
   items: 4
 - type: essay-response
   focus: Критичний аналіз
-  word_target: 300
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Human Rights Archivist

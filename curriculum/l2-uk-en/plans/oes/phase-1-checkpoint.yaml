@@ -8,7 +8,6 @@ phase: 1
 phase_id: vernacular-foundations
 phase_name: Vernacular Foundations
 focus: Synthesis of Vernacular Foundations
-word_target: 4000
 content_outline:
 - section: Вступ
   description: Introduction to Phase 1 Checkpoint
@@ -23,3 +22,6 @@ activity_types:
 - transcription
 - etymology-trace
 - grammar-identify
+persona:
+  voice: Senior Paleographer
+  role: Senior Scribe

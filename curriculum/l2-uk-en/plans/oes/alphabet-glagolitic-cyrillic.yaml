@@ -1,4 +1,3 @@
----
 sequence: 2
 module: oes-002
 module_number: 2
@@ -9,7 +8,6 @@ phase: 1
 phase_id: vernacular-foundations
 phase_name: Vernacular Foundations
 focus: Early scripts in St. Sophia
-word_target: 4000
 content_outline:
 - section: Вступ
   description: 'Introduction to Alphabet: Glagolitic to Cyrillic'
@@ -24,3 +22,6 @@ activity_types:
 - transcription
 - etymology-trace
 - grammar-identify
+persona:
+  voice: Senior Paleographer
+  role: Scriptorium Novice

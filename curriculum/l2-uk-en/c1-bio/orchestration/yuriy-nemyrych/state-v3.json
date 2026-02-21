@@ -1,0 +1,13 @@
+{
+  "track": "c1-bio",
+  "slug": "yuriy-nemyrych",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T12:06:18Z",
+      "task_id": "v3-yuriy-nemyrych-pA",
+      "mode": "meta-only"
+    }
+  }
+}

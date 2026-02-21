@@ -77,13 +77,24 @@ def read_module_yaml_vocabulary(level: str, module_num: int) -> set:
     project_root = Path(__file__).parent.parent
     vocab_dir = project_root / 'curriculum' / 'l2-uk-en' / level.lower() / 'vocabulary'
 
-    # Find vocabulary file for this module
-    vocab_files = list(vocab_dir.glob(f'{module_num:02d}-*.yaml'))
-
-    if not vocab_files:
-        return set()
-
-    vocab_file = vocab_files[0]
+    # Find vocabulary file via manifest
+    try:
+        import sys
+        sys.path.insert(0, str(project_root / "scripts"))
+        from manifest_utils import get_module_by_number
+        mod = get_module_by_number(level.lower(), module_num)
+        if mod:
+            vocab_file = vocab_dir / f"{mod.slug}.yaml"
+            if not vocab_file.exists():
+                return set()
+        else:
+            return set()
+    except Exception:
+        # Fallback to glob
+        vocab_files = list(vocab_dir.glob(f'{module_num:02d}-*.yaml'))
+        if not vocab_files:
+            return set()
+        vocab_file = vocab_files[0]
 
     try:
         with open(vocab_file, 'r', encoding='utf-8') as f:

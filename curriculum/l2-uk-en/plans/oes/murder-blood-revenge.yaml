@@ -1,4 +1,3 @@
----
 sequence: 52
 module: oes-052
 module_number: 42
@@ -9,7 +8,6 @@ phase: 2
 phase_id: literary-tradition
 phase_name: Literary Tradition
 focus: The concept of Vyra (Weregild)
-word_target: 4000
 content_outline:
 - section: Вступ
   description: Introduction to Murder & Blood Revenge
@@ -24,3 +22,6 @@ activity_types:
 - transcription
 - etymology-trace
 - grammar-identify
+persona:
+  voice: Senior Paleographer
+  role: Avenger of Blood

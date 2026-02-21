@@ -1,124 +1,121 @@
-module: c1-bio-003
-level: C1-BIO
-version: '2.0'
-items:
-- lemma: хрещення
-  ipa:
-  - ˈxrɛʃt͡ʃenʲːɐ
+- ipa: '[ˈxrɛʃt͡ʃenʲːɐ]'
+  lemma: хрещення
+  pos: noun
   translation: baptism / Christianization
-  definition: Таїнство прийняття християнської віри; історичний процес впровадження християнства як державної релігії.
-- lemma: язичництво
-  ipa:
-  - jɐˈzɪt͡ʃnɪt͡stʋɔ
+- ipa: '[jɐˈzɪt͡ʃnɪt͡stʋɔ]'
+  lemma: язичництво
+  pos: noun
   translation: paganism
-  definition: Система вірувань, заснована на поклонінні багатьом богам, силам природи та ідолам.
-- lemma: пантеон
-  ipa:
-  - pɐnteˈɔn
+- ipa: '[xresˈtɪtelʲ]'
+  lemma: хреститель
+  pos: noun
+  translation: baptizer
+- ipa: '[rʲiu̯noɐˈpɔstolʲnɪi̯]'
+  lemma: рівноапостольний
+  pos: adj
+  translation: equal-to-the-apostles
+- ipa: '[pɐnteˈɔn]'
+  lemma: пантеон
+  pos: noun
   translation: pantheon
-  definition: Сукупність богів певної релігії або храм, присвячений їм усім.
-- lemma: ідол
-  ipa:
-  - ˈidɔl
+- ipa: '[ˈidɔl]'
+  lemma: ідол
+  pos: noun
   translation: idol
-  definition: Зображення божества (статуя), якому поклоняються язичники.
-- lemma: десятина
-  ipa:
-  - desʲɐˈtɪnɐ
+- ipa: '[desʲɐˈtɪnɐ]'
+  lemma: десятина
+  pos: noun
   translation: tithe
-  definition: Десята частина прибутків, яку віддавали на користь церкви.
-- lemma: усобиця
-  ipa:
-  - ʊˈsɔbɪt͡sʲɐ
-  translation: internecine war / strife
-  definition: Збройна боротьба за владу між членами одного роду або всередині однієї держави.
-- lemma: златник
-  ipa:
-  - ˈzɫɑtnɪk
-  translation: zlatnyk (gold coin)
-  definition: Перша золота монета Київської Русі, карбована Володимиром.
-- lemma: срібник
-  ipa:
-  - ˈsrʲibnɪk
-  translation: sribnyk (silver coin)
-  definition: Срібна монета Київської Русі.
-- lemma: тризуб
-  ipa:
-  - ˈtrɪzʊb
-  translation: trident
-  definition: Особистий знак князів Рюриковичів (зокрема Володимира), сучасний герб України.
-- lemma: варяг
-  ipa:
-  - ʋɐˈrʲɑh
+- ipa: '[uˈsɔbɪt͡sʲɐ]'
+  lemma: усобиця
+  pos: noun
+  translation: internecine war / feud
+- ipa: '[porfʲiroˈrɔdnɪi̯]'
+  lemma: порфірородний
+  pos: adj
+  translation: born in the purple (Porphyrogenitus)
+- ipa: '[ˈkɔrsunʲ]'
+  lemma: Корсунь
+  pos: noun
+  translation: Chersonesus
+- ipa: '[ˈklʲɑtʋɐ]'
+  lemma: клятва
+  pos: noun
+  translation: oath
+- ipa: '[sʲʋʲɐˈtɪnʲɐ]'
+  lemma: святиня
+  pos: noun
+  translation: shrine / sacred object
+- ipa: '[monɐsˈtɪr]'
+  lemma: монастир
+  pos: noun
+  translation: monastery
+- ipa: '[jeˈpɪskɔp]'
+  lemma: єпископ
+  pos: noun
+  translation: bishop
+- ipa: '[ˈɦrɑmotɐ]'
+  lemma: грамота
+  pos: noun
+  translation: literacy / charter
+- ipa: '[rɔˈbɪt͡ʃɪt͡ʃ]'
+  lemma: робичич
+  pos: noun
+  translation: son of a slave (historical term)
+- ipa: '[ʋɐˈrʲɑɦ]'
+  lemma: варяг
+  pos: noun
   translation: Varangian
-  definition: Скандинавський воїн-найманець або купець у Київській Русі.
-- lemma: канонізація
-  ipa:
-  - kɐnɔnʲizɐˈt͡sʲijɐ
+- ipa: '[ˈkɑpɪʃt͡ʃe]'
+  lemma: капище
+  pos: noun
+  translation: pagan shrine / temple
+- ipa: '[ˈzlɑtnɪk]'
+  lemma: златник
+  pos: noun
+  translation: zlatnyk (gold coin)
+- ipa: '[ˈsrʲibnɪk]'
+  lemma: срібник
+  pos: noun
+  translation: sribnyk (silver coin)
+- ipa: '[ˈtrɪzub]'
+  lemma: тризуб
+  pos: noun
+  translation: trident
+- ipa: '[lʲiˈtɔpɪs]'
+  lemma: літопис
+  pos: noun
+  translation: chronicle
+- ipa: '[ˈsmɛrtnɐ ˈkɑrɐ]'
+  lemma: смертна кара
+  pos: phrase
+  translation: capital punishment
+- ipa: '[ˈʋʲirɐ]'
+  lemma: віра
+  pos: noun
+  translation: wergild (historical fine)
+- ipa: '[pet͡ʃeˈnʲiɦ]'
+  lemma: печеніг
+  pos: noun
+  translation: Pecheneg
+- ipa: '[druˈʒɪnɐ]'
+  lemma: дружина
+  pos: noun
+  translation: retinue / squad
+- ipa: '[ˈʋʲit͡ʃe]'
+  lemma: віче
+  pos: noun
+  translation: veche (popular assembly)
+- ipa: '[mɪtropolˈɪt]'
+  lemma: митрополит
+  pos: noun
+  translation: metropolitan
+- ipa: '[kɐnonʲiˈzɑt͡sʲijɐ]'
+  lemma: канонізація
+  pos: noun
   translation: canonization
-  definition: Зарахування до лику святих.
-- lemma: літописання
-  ipa:
-  - lʲitɔpɪˈsɑnʲːɐ
-  translation: chronicle writing
-  definition: Процес створення історичних творів, де події викладаються за роками.
-- lemma: меценат
-  ipa:
-  - met͡seˈnɑt
-  translation: patron (of arts)
-  definition: Багатий покровитель наук і мистецтв (Володимир як будівничий церков і шкіл).
-- lemma: візантійський
-  ipa:
-  - ʋʲizɐnˈtʲii̯sʲkɪi̯
-  translation: Byzantine
-  definition: Такий, що стосується Візантійської імперії, її культури та обряду.
-- lemma: порфірородна
-  ipa:
-  - pɔrfʲirɔˈrɔdnɐ
-  translation: Porphyrogenita (Born in the Purple)
-  definition: Титул візантійських принцес, народжених у Порфіровій залі імператорського палацу (знак вищої легітимності).
-- lemma: легітимність
-  ipa:
-  - leɦiˈtɪmnʲisʲtʲ
-  translation: legitimacy
-  definition: Законність і визнання влади народом та іншими державами.
-- lemma: цивілізаційний
-  ipa:
-  - t͡sɪʋilʲizɐˈt͡sʲii̯nɪi̯
-  translation: civilizational
-  definition: Такий, що стосується рівня розвитку суспільства та його культурного вибору.
-- lemma: монотеїзм
-  ipa:
-  - mɔnɔteˈjizm
-  translation: monotheism
-  definition: Віра в єдиного Бога (на відміну від політеїзму).
-- lemma: ієрархія
-  ipa:
-  - ijeˈrɑrxʲijɐ
-  translation: hierarchy
-  definition: Порядок підпорядкування нижчих ланок вищим.
-- lemma: реформатор
-  ipa:
-  - refɔrˈmɑtɔr
-  translation: reformer
-  definition: Той, хто здійснює зміни в суспільному ладі.
-- lemma: капище
-  ipa:
-  - kɐˈpɪʃt͡ʃe
-  translation: pagan shrine
-  definition: Місце, де стояли ідоли і приносилися жертви.
-- lemma: ойкумена
-  ipa:
-  - ɔi̯kʊˈmɛnɐ
-  translation: oikumene
-  definition: Заселений світ; культурний простір, відомий давнім людям.
-- lemma: стратег
-  ipa:
-  - strɐˈtɛh
-  translation: strategist
-  definition: Полководець або політик, який мислить масштабно і планує на далеку перспективу.
-- lemma: милосердя
-  ipa:
-  - mɪɫɔˈsɛrdʲːɐ
-  translation: mercy / charity
-  definition: Співчутливе ставлення до людей, готовність допомогти (характеристика пізнього Володимира).
+- ipa: '[ʒɛrtʋoprɪˈnɔʃenʲːɐ]'
+  lemma: жертвоприношення
+  pos: noun
+  translation: sacrifice
+

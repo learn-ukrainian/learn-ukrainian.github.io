@@ -1,53 +1,44 @@
----
-module: c1-bio-141
+module: c1-bio-148
 level: C1-BIO
-sequence: 141
+sequence: 148
 slug: vasyl-shkliar
 version: '2.0'
 title: 'Василь Шкляр: Майстер історичного роману'
 content_outline:
-- section: "Вступ — Бестселер як національний феномен"
-  words: 400
+- section: Вступ — Бестселер як національний феномен
   points:
   - Чорний Ворон як культурне явище
   - Від журналіста до найпопулярнішого письменника
   - Історична проза як інструмент національної памяті
 - section: Журналістські роки та формування
-  words: 600
   points:
   - Народження в Черкаській області (1951)
   - Освіта та ранні кариєрні кроки
   - Робота в журналістиці
 - section: Шлях до літератури
-  words: 700
   points:
   - Перші прозові твори
   - Жанрові експерименти
   - Формування авторського стилю
 - section: Чорний Ворон та історична память
-  words: 800
   points:
   - Створення роману про повстанців
   - Тема боротьби з більшовиками
   - Рецепція та комерційний успіх
 - section: Залишенець та продовження циклу
-  words: 700
   points:
   - Розвиток теми антирадянського спротиву
   - Художні особливості прози
   - Роль у популяризації історії
 - section: Вплив на українську культуру
-  words: 600
   points:
   - Екранізації та адаптації
   - Громадська позиція автора
   - Місце в сучасній літературі
-- section: "Дискусія — Історична правда vs художня вигадка"
-  words: 200
+- section: Дискусія — Історична правда vs художня вигадка
   points:
   - Баланс між документальністю та белетристикою
   - Роль письменника у формуванні історичної памяті
-word_target: 4000
 vocabulary_hints:
   required:
   - бестселер (bestseller)
@@ -73,7 +64,6 @@ activity_hints:
   items: 3 passages
 - type: essay-response
   focus: Як художня література формує історичну памятка?
-  word_target: 300
   output: Аналітичний есей
 focus: biography
 prerequisites:
@@ -85,15 +75,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Василь Шкляр (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Шкляр_Василь_Миколайович"
+  url: https://uk.wikipedia.org/wiki/Шкляр_Василь_Миколайович
   type: primary
   notes: Основна біографічна інформація
 - name: Видавництво Клуб сімейного дозвілля
-  url: "https://www.bookclub.ua/"
+  url: https://www.bookclub.ua/
   type: reference
   notes: Бібліографія та видання
 - name: Літературна критика
-  url: "https://litakcent.com/"
+  url: https://litakcent.com/
   type: reference
   notes: Рецензії та аналіз творчості
 immersion: 100% Ukrainian
@@ -102,3 +92,6 @@ objectives:
 - 'Analyze the life and legacy of василь шкляр: майстер історичного роману'
 - Evaluate the contributions of бестселер як національний феномен
 - Trace the career and influence of історична правда vs художня вигадка
+persona:
+  voice: Senior Biographer
+  role: Partisan Chronicler

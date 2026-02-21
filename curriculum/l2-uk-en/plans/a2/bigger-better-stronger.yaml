@@ -1,0 +1,147 @@
+module: a2-18
+level: A2
+sequence: 18
+slug: bigger-better-stronger
+version: '2.0'
+title: Bigger, Better, Stronger
+subtitle: The Comparative Degree
+content_outline:
+- section: 'Вступ (Introduction: The Arena of Comparison)'
+  words: 500
+  points:
+  - 'Introduction of the ''Sports Commentator'' persona: setting the stage for comparing
+    athletes, landmarks, and daily items using Ukrainian comparatives.'
+  - 'Philosophical and cultural concept of comparison through proverbs: «Добре слово
+    краще, ніж готові гроші» (quality comparison) and «Краще один раз побачити, ніж
+    сто разів почути» (classic structure).'
+  - 'English vs Ukrainian comparative logic: explicitly addressing the common learner
+    error of double comparatives like «більш кращий» (more better) and teaching the
+    correct synthetic («кращий») or analytic («більш хороший») forms.'
+- section: 'Презентація: Творення ступенів (Presentation: Forming the Comparative)'
+  words: 800
+  points:
+  - 'Regular formation using suffixes -іший and -ший: guided discovery of when to
+    use each, aligned with State Standard §4.3.1 requirements for A2.'
+  - 'Deep dive into mandatory stem alternations (г→ж, к→ч, х→ш): specific focus on
+    ''дорогий→дорожчий'', ''близький→ближчий'', and ''тихий→тихіший'' to preempt the
+    ''alternation neglect'' error.'
+  - 'Irregular (suppletive) comparatives: ''The Big 10'' master list, prioritizing
+    high-frequency pairs like ''великий–більший'', ''малий–менший'', ''гарний–кращий'',
+    and ''поганий–гірший''.'
+  - 'Phonetic focus: training the ''Sports Commentator'' voice to emphasize the doubled
+    consonants or shifts in stressed syllables during rapid comparison.'
+- section: 'Структури порівняння: ніж vs за (Comparison Structures)'
+  words: 700
+  points:
+  - 'Contrastive analysis of ''ніж'' (than) vs ''за'' (than): explaining that ''ніж''
+    is followed by the Nominative case while ''за'' requires the Accusative case.'
+  - 'Error Correction Lab: focusing on the ''Case Confusion after за'' error (e.g.,
+    correcting *за він* to ''за нього'' and *за я* to ''за мене'').'
+  - 'Using intensifiers for nuanced commentary: ''набагато'' (much), ''трохи'' (a
+    little), and ''значно'' (significantly) to modify comparisons (e.g., ''набагато
+    дорожчий'', ''трохи дешевший'').'
+  - The dual comparative structure through the proverb «Чим старіший, тим мудріший»
+    (The older, the wiser).
+- section: 'Практика: Рекорди України (Practice: Ukrainian Records)'
+  words: 600
+  points:
+  - 'Situational drills comparing Ukrainian landmarks: ''Київська телевежа'' (385m)
+    is 60m taller (''вища'') than the Eiffel Tower; ''Батьківщина-Мати'' (102m) vs
+    other European monuments.'
+  - 'Retail and quality comparison drills: using frequency-based collocations like
+    ''більший розмір'' (larger size), ''краща якість'' (better quality), and ''дорожчий
+    товар'' (more expensive item).'
+  - 'Transformation drills: converting positive adjectives into comparative forms
+    with a focus on stem-shifting words found in sports (e.g., ''швидкий→швидший'',
+    ''дужий→дужчий'').'
+- section: Діалоги та Висновки (Dialogues and Summary)
+  words: 400
+  points:
+  - 'Market commentary dialogue: comparing prices, quality, and quantity between different
+    stalls using ''кращий спосіб'' and ''менша кількість''.'
+  - 'Family and age context: using ''старший за віком'' (older by age) and ''молодший
+    брат'' in natural conversation.'
+  - Final review of the 'Consonant Shift' checklist and a summary of 'ніж/за' case
+    requirements to ensure A2 competency.
+vocabulary_hints:
+  required:
+  - більший (bigger) — більший розмір (larger size), більша частина (greater part);
+    high frequency
+  - менший (smaller) — менша кількість (smaller quantity), менший розмір (smaller
+    size)
+  - кращий (better) — кращий результат (better result), краща якість (better quality),
+    кращий спосіб (better way)
+  - гірший (worse) — focus on quality and outcomes
+  - вищий (taller/higher) — вищий на зріст (taller), вищий за мене (taller than me);
+    use for buildings/people
+  - нижчий (lower/shorter) — physical height or level
+  - дорожчий (more expensive) — дорожчий товар (more expensive item), набагато дорожчий
+    (much more expensive); note stem shift г→ж
+  - дешевший (cheaper) — дешевший варіант (cheaper option), трохи дешевший (a little
+    cheaper)
+  - старший (older) — старший брат (older brother), старший за віком (older by age)
+  - молодший (younger) — family and social context
+  - довший (longer) — duration or physical length
+  - коротший (shorter) — duration or physical length
+  - ширший (wider) — physical dimensions
+  - вужчий (narrower) — physical dimensions; note stem shift зк→жч
+  - ніж (than) — comparison particle followed by Nominative case
+  recommended:
+  - за (than) — preposition requiring Accusative case (за мене, за нього); critical
+    learner error point
+  - набагато (much/far) — intensifier for comparative adjectives
+  - трохи (a little) — intensifier for comparative adjectives
+  - значно (significantly) — formal/analytical intensifier
+  - швидший (faster) — high relevance for sports persona; note к→ш shift
+activity_hints:
+- type: fill-in
+  focus: Transform positive to comparative
+  items: 15+
+- type: fill-in
+  focus: Comparison sentences with ніж/за
+  items: 12+
+- type: quiz
+  focus: Which is bigger/better/etc.?
+  items: 12+
+- type: match-up
+  focus: Adjective + comparative form
+  items: 12+
+- type: fill-in
+  focus: Irregular comparative forms
+  items: 10+
+focus: grammar
+pedagogy: PPP
+prerequisites:
+- A1 adjective agreement
+- a2-17 (Possessive sviy)
+- Basic sentence structure
+connects_to:
+- a2-19 (The Best, The Worst)
+- a2-20 (Preferences and Choices)
+- a2-24 (Smart Shopping)
+objectives:
+- Learner can form comparative adjectives
+- Learner can compare two objects using 'ніж' and 'за'
+- Learner can identify and use irregular comparative forms
+- Learner can describe differences in quality and quantity
+grammar:
+- comparative adjectives formation
+- regular comparatives (-іший)
+- irregular comparatives (кращий, більший)
+- comparison structures (ніж, за)
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Comparison
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Comparative adjective requirements for A2
+- name: Ukrainian Adjective Reference
+  url: https://uk.wikipedia.org/wiki/Прикметник
+  type: reference
+  notes: Complete comparison paradigms
+immersion: 50-60% Ukrainian
+phase: A2.2
+persona:
+  voice: Encouraging Cultural Guide
+  role: Sports Commentator
+word_target: 3000

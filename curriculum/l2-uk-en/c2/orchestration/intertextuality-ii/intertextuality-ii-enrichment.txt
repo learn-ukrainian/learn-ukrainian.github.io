@@ -1,0 +1,332 @@
+✅ Message sent to Gemini (ID: 11176) [auto-acked: self-addressed]
+✓ Message 11176 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #11176...
+📨 Message #11176
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-intertextuality-ii
+   Time: 2026-02-20T22:28:35.833921+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c2-030
+level: c2
+sequence: 30
+version: '2.0'
+title: Інтертекстуальність II — поглиблене вивчення
+focus: literature
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Інтертекстуальність у постмодернізмі
+  url: https://uk.wikipedia.org/wiki/Постмодернізм
+  type: reference
+  notes: Advanced intertextual strategies in postmodernism
+- name: Юрій Андрухович — твори
+  url: https://ukrlib.com.ua/
+  type: primary
+  notes: Master of Ukrainian intertextuality
+- name: Теорія гіпертексту — Женетт
+  url: https://uk.wikipedia.org/wiki/Жерар_Женетт
+  type: reference
+  notes: Genette's transtextual framework
+content_outline:
+- section: Вступ — від базової до глибинної інтертекстуальності
+  points:
+  - Повторення базових концепцій
+  - Багатошарова інтертекстуальність
+  - Постмодерна гра з текстами
+- section: Женеттівська транстекстуальність
+  points:
+  - П'ять типів транстекстуальності
+  - Гіпертекстуальність детально
+  - Метатекстуальність (критичний коментар)
+  - Архітекстуальність (жанрові очікування)
+- section: Інтертекстуальність в українському постмодернізмі
+  points:
+  - Бу-Ба-Бу та гра з традицією
+  - Андрухович і європейські претексти
+  - Жадан і рок-культурна інтертекстуальність
+  - Шкляр і історичні алюзії
+- section: Автоінтертекстуальність
+  points:
+  - Посилання автора на власні твори
+  - Самоцитування і саморефлексія
+  - Авторський міф
+  - Приклади в українській літературі
+- section: Інтермедіальність
+  points:
+  - Література і візуальне мистецтво
+  - Література і кіно
+  - Література і музика
+  - Екфразис у сучасній прозі
+- section: Практикум — багаторівневий аналіз
+  points:
+  - Виявлення всіх інтертекстуальних шарів
+  - Аналіз функцій кожного посилання
+  - Створення інтертекстуально насиченого тексту
+- section: Підсумок
+  points:
+  - Інтертекстуальність як аналітичний інструмент
+  - Інтертекстуальність як творчий метод
+  - Зв'язок з літературною критикою
+vocabulary:
+  required:
+  - транстекстуальність (transtextuality)
+  - гіпертекстуальність (hypertextuality)
+  - метатекстуальність (metatextuality)
+  - архітекстуальність (architextuality)
+  - автоінтертекстуальність (auto-intertextuality)
+  - інтермедіальність (intermediality)
+  - екфразис (ekphrasis)
+  - претекст (pretext/source text)
+  - постмодернізм (postmodernism)
+  - гра (play/game)
+  recommended:
+  - паратекстуальність (paratextuality)
+  - палімпсест (palimpsest)
+  - пастиш (pastiche)
+  - колаж (collage)
+  - децентрація (decentering)
+  forbidden: '[]'
+activities:
+  types_required:
+  - quiz
+  - critical-analysis
+  - comparative-study
+  - authorial-intent
+  - essay-response
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c2-31 (Literary Criticism Methods)
+- c2-36-37 (Creative Writing)
+- c2-38 (Contemporary Literature)
+vocabulary_hints:
+  required:
+  - концепція (concept)
+  - аналіз (analysis)
+  - дискурс (discourse)
+  - методологія (methodology)
+  recommended:
+  - інтерпретація (interpretation)
+  - контекстуалізація (contextualization)
+  - синтез (synthesis)
+activity_hints:
+- type: reading
+  focus: Поглиблений аналіз тексту
+  items: 4
+- type: essay-response
+  focus: Критичне осмислення
+- type: discussion
+  focus: Дискусія та аргументація
+  items: 1
+persona:
+  voice: Senior Specialist
+  role: Comparative Scholar
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Інтертекстуальність II — поглиблене вивчення
+
+## State Standard Reference
+§4.3.8: "Уміння утворювати вторинні тексти, зокрема реферати, повідомлення, довідково-інформаційні тексти."
+§4.3.3: "Стилістичні засоби лексики: ... перифраз: автор «Заповіту»..."
+Alignment: Цей модуль поглиблює розуміння "вторинності" текстів (метатекстуальність, гіпертекстуальність) та розвиває навички використання стилістичних засобів (алюзія, ремінісценція) на рівні С2, що є необхідним для створення складних вторинних текстів та літературознавчого аналізу.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| транстекстуальність | Low (Academic) | теорія транстекстуальності, види транстекстуальності |
+| гіпертекстуальність | Medium (Academic/Tech) | гіпертекстуальний зв'язок, пародія як гіпертекст |
+| метатекстуальність | Low (Academic) | метатекстуальний коментар, критична метатекстуальність |
+| архітекстуальність | Low (Academic) | жанрова архітекстуальність, архітекст твору |
+| автоінтертекстуальність | Low (Academic) | авторський міф, автоцитування, внутрішній діалог |
+| інтермедіальність | Medium (Cultural) | музична інтермедіальність, візуальний код |
+| екфразис | Low (Literary) | урбаністичний екфразис, живописний екфразис |
+
+## Cultural Hooks
+1. **Юрій Андрухович «Московіада» та «Рекреації»**: Класичні приклади українського постмодернізму, де інтертекстуальність є грою з читачем (алюзії на Котляревського, біблійні сюжети, світову класику).
+2. **Бу-Ба-Бу (Бурлеск-Балаган-Буфонада)**: Літературне угруповання (Андрухович, Ірванець, Неборак), що карнавалізувало серйозну традицію через інтертекстуальну гру.
+
+## Common Learner Errors
+1. **Плутанина між інтертекстуальністю та плагіатом**: Невміння розрізнити художнє запозичення (оммаж, пастиш) і крадіжку тексту. -> Пояснити функцію маркування "чужого" слова.
+2. **Ігнорування архітекстуальності**: Сприйняття твору поза його жанровим "пам'яттю". -> Наголосити на жанрових очікуваннях.
+3. **Вузьке розуміння екфразису**: Зведення його лише до опису картин. -> Розширити до опису будь-якого візуального об'єкта чи музичного твору словами.
+
+## Cross-References
+- Builds on: C2-29 (Літературна теорія - вступ), C2-05 (Постмодернізм)
+- Prepares for: C2-31 (Методи літературної критики), C2-36 (Creative Writing)
+
+## Notes for Content Writing
+- Використовувати класифікацію Женетта як "скелет" теоретичної частини.
+- Наводити приклади з сучасної літератури (Жадан, Дашвар, Андрухович), щоб уникнути "сухого" академізму.
+- Акцентувати на тому, що інтертекстуальність — це не просто "прикраса", а механізм творення смислу.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Повторення базових концепцій та перехід до створення 'вторинних текстів' згідно зі стандартом §4.3.8 (реферати, повідомлення, довідкові тексти)"
+  - "Розмежування художнього запозичення (оммаж, пастиш) та плагіату — важливість маркування 'чужого' слова як художнього прийому"
+  - "Інтертекстуальність як механізм творення смислу, а не просто декоративний елемент постмодерного письма"
+- section: "Транстекстуальність за Женеттом (Transtextuality by Genette)"
+  words: 700
+  points:
+  - "П'ять типів транстекстуальності за Ж. Женеттом: паратекстуальність, метатекстуальність, інтертекстуальність, гіпертекстуальність та архітекстуальність"
+  - "Гіпертекстуальність детально: трансформація претексту через пародію, травестію та пастиш"
+  - "Помилка ігнорування архітекстуальності: зв'язок твору з жанровою пам'яттю та очікуваннями читача"
+- section: "Український постмодернізм та Бу-Ба-Бу (Ukrainian Postmodernism and Bu-Ba-Bu)"
+  words: 900
+  points:
+  - "Карнавалізація традиції та гра з каноном у творчості угруповання Бу-Ба-Бу (Ю. Андрухович, О. Ірванець, В. Неборак)"
+  - "Аналіз інтертекстуальних шарів у творах 'Московіада' та 'Рекреації' Юрія Андруховича: алюзії на Котляревського, Біблію та європейську класику"
+  - "Перифраз (§4.3.3) як засіб інтертекстуальної ідентифікації: від класичних формул ('автор Заповіту') до іронічних постмодерних конструкцій"
+- section: "Автоінтертекстуальність та сучасна проза (Auto-intertextuality and Contemporary Prose)"
+  words: 600
+  points:
+  - "Автоінтертекстуальність як інструмент побудови авторського міфу: самоцитування, автопародія та внутрішній діалог у творчому доробку"
+  - "Сучасні інтертекстуальні коди: рок-культура у Сергія Жадана та гра з масовими жанрами у Люко Дашвар"
+  - "Метатекстуальність: роль критичного коментаря та саморефлексії всередині художнього наративу"
+- section: "Інтермедіальність та екфразис (Intermediality and Ekphrasis)"
+  words: 600
+  points:
+  - "Інтермедіальність: діалог літератури з музикою та візуальним мистецтвом як розширення концепції інтертексту"
+  - "Помилка вузького розуміння екфразису: розширення від опису живопису до урбаністичних об'єктів та музичних творів у прозі"
+  - "Практикум: аналіз функцій інтертекстуальних посилань у вибраних уривках сучасної прози"
+- section: "Підсумок (Summary)"
+  words: 300
+  points:
+  - "Інтертекстуальність як інструмент деколонізації: переосмислення імперських наративів через іронічне цитування та зміну контексту"
+  - "Синтез навичок для створення складних вторинних текстів та проведення професійного літературознавчого аналізу"
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "транстекстуальність (transtextuality) — теорія транстекстуальності, види транстекстуальності; низька частотність, академічний реєстр"
+  - "гіпертекстуальність (hypertextuality) — гіпертекстуальний зв'язок, пародія як гіпертекст; середня частотність, термін для трансформацій"
+  - "метатекстуальність (metatextuality) — метатекстуальний коментар, критична метатекстуальність; низька частотність, акцент на аналізі коментарів"
+  - "архітекстуальність (architextuality) — жанрова архітекстуальність, архітекст твору; низька частотність, зв'язок із жанровими очікуваннями"
+  - "автоінтертекстуальність (auto-intertextuality) — авторський міф, автоцитування, внутрішній діалог; низька частотність, посилання на власні твори"
+  - "інтермедіальність (intermediality) — музична інтермедіальність, візуальний код; середня частотність, культурний контекст"
+  - "екфразис (ekphrasis) — урбаністичний екфразис, живописний екфразис; низька частотність, літературний опис візуального"
+  - "претекст (pretext/source text) — звернення до претексту, європейські претексти; ключове поняття для аналізу джерел"
+  - "постмодернізм (postmodernism) — український постмодернізм, естетика постмодернізму; загальнокультурний термін"
+  - "гра (play/game) — інтертекстуальна гра, гра з читачем; центральний концепт постмодерної методології"
+  recommended:
+  - "паратекстуальність (paratextuality) — роль паратексту, заголовок як паратекст; елемент женеттівської схеми"
+  - "палімпсест (palimpsest) — текст-палімпсест, структура палімпсеста; метафора багатошаровості тексту"
+  - "пастиш (pastiche) — художній пастиш, стилістичний пастиш; свідомий оммаж на відміну від плагіату"
+  - "колаж (collage) — літературний колаж, техніка колажу; метод поєднання фрагментів різних текстів"
+  - "децентрація (decentering) — децентрація суб'єкта; філософське підґрунтя постмодерної гри"
+  - "концепція (concept) — концепція інтертекстуальності; академічна рамка аналізу"
+  - "контекстуалізація (contextualization) — контекстуалізація алюзій; процес вписування знаків у новий контекст"
+  - "синтез (synthesis) — аналітичний синтез; поєднання результатів розбору інтертексту"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4922 chars)
+✅ Message sent to Claude (ID: 11192)
+✓ Message 11192 acknowledged
+   Auto-acknowledged reply #11192 (stdout delivery — no inbox accumulation)
+✓ Message 11176 acknowledged

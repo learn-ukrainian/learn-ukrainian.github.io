@@ -1,0 +1,302 @@
+✅ Message sent to Gemini (ID: 13021) [auto-acked: self-addressed]
+✓ Message 13021 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #13021...
+📨 Message #13021
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-syntez-rozdorizhzhia
+   Time: 2026-02-20T23:43:55.045840+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-hist-094
+level: c1-hist
+sequence: 94
+version: '1.0'
+title: 'Синтез: Закономірність чи випадок?'
+focus: history
+pedagogy: seminar
+objectives:
+- 'Analyze the causes and consequences of синтез: закономірність чи випадок?'
+- Evaluate the historical significance of паттерни на роздоріжжях
+content_outline:
+- section: Вступ — Паттерни на роздоріжжях
+  subsections:
+  - Огляд модулів 89-93
+  - Чи є закономірності
+  - Роль вибору vs. структури
+  - Мета синтезу
+- section: Порівняння поворотних точок
+  subsections:
+  - 1654 → 1709 → 1917 → 1991 → 2004 → 2014
+  - Що спільного
+  - Що відрізняється
+  - Таблиця порівняння
+- section: Структурні фактори
+  subsections:
+  - Геополітичне положення
+  - Ресурси — завжди обмежені
+  - Зовнішні актори — завжди присутні
+  - Внутрішня єдність — варіативна
+- section: Роль агентності
+  subsections:
+  - Лідери мають вибір
+  - Помилки і правильні рішення
+  - Народ як актор (2004, 2014, 2022)
+  - Зростання агентності з часом
+- section: Чи можна передбачити
+  subsections:
+  - Закономірності — так
+  - Конкретний результат — ні
+  - Цінність історичного аналізу
+  - Підготовка до майбутнього
+- section: 2022 — найбільше роздоріжжя
+  subsections:
+  - Всі попередні досвіди
+  - Чому результат інший
+  - Новий етап історії?
+- section: Підсумок
+  subsections:
+  - Історія — не випадкова, але не детермінована
+  - Роль вибору зростає
+  - Перехід до Заходу
+vocabulary:
+- синтез
+- закономірність
+- випадок
+- поворотна точка
+- структурний фактор
+- агентність
+- детермінований
+- контрфактичний
+- паттерн
+- вибір
+- історичний аналіз
+- геополітичний
+- варіативний
+- передбачуваність
+- телеологія
+activities:
+- type: essay-response
+  focus: Create master turning points comparison
+- type: critical-analysis
+  focus: What patterns emerge across turning points?
+- type: critical-analysis
+  focus: How has Ukrainian agency grown over time?
+- type: essay-response
+  focus: What can and can't historical analysis predict?
+- type: essay-response
+  focus: Чи можна передбачити наступне роздоріжжя української історії?
+sources:
+- name: Історія України (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Історія_України
+  type: reference
+  notes: General history
+- name: Контрфактична історія (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Контрфактична_історія
+  type: reference
+  notes: Methodology
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
+persona:
+  voice: Academic Historiographer
+  role: Strategic Foresight Historian
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Синтез: Закономірність чи випадок?
+
+## Використані джерела
+1. **Ярослав Грицак, «Подолати минуле: глобальна історія України» (2021)** — Аналіз української історії через призму глобалізації та модернізації. Головна теза: минуле не є тюрмою, воно залишає простір для вибору (агентності). Історія України — це історія виживання та адаптації на «кривавих землях».
+2. **Сергій Плохій, «Брама Європи» (2015)** — Концепція України як «брами» між Сходом і Заходом. Аналіз геополітичної визначеності та ролі України як бар'єра та моста цивілізацій.
+3. **Енциклопедія Сучасної України (esu.com.ua)** — Статті про періодизацію історії та державотворення. Підтвердження тяглості історичного процесу попри розриви.
+4. **Матеріали Інституту історії України НАНУ (history.org.ua)** — Аналіз ключових поворотних моментів (1654, 1917, 1991).
+
+## Хронологія: Ланцюг роздоріж
+- **1654**: Переяславська рада. Вибір військового союзу з Москвою проти Польщі. Наслідок: поступова втрата автономії.
+- **1709**: Полтавська битва. Спроба Мазепи змінити геополітичний вектор (союз зі Швецією). Наслідок: поразка і пришвидшена інтеграція в імперію.
+- **1917-1921**: Українська революція. Спроба відновити державність. Наслідок: поразка через внутрішню незгоду та зовнішню агресію, але створення прецеденту УНР.
+- **1991**: Відновлення Незалежності. Мирний вихід з імперії. Вибір: демократія та суверенітет.
+- **2004**: Помаранчева революція. Перший масовий виступ суспільства за право вибору (проти фальсифікацій). Агентність народу.
+- **2014**: Революція Гідності. Геополітичне роздоріжжя: остаточний вибір європейського вектора. Початок війни за незалежність.
+- **2022**: Повномасштабне вторгнення. Екзистенційне роздоріжжя. Остаточний розрив з імперським минулим («Подолання минулого» за Грицаком).
+
+## Ключові факти та цитати
+- **Грицак**: «Історія — це не те, що ми пам'ятаємо, а те, що ми забули і що нас тримає». Але також: «Минуле не визначає майбутнє на 100%, завжди є простір для вибору».
+- **Плохій**: Україна — це «Брама Європи», яка століттями стримувала навали зі Сходу, захищаючи європейську цивілізацію.
+- **Закономірність**: Зростання суб'єктності (агентності). Якщо у 1709 вирішували еліти, то у 2014 вирішував мільйон людей на Майдані.
+- **Структурний фактор**: Географія (рівнина, відсутність природних кордонів на сході) робить Україну вразливою, але також робить її центром обміну (транзит).
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ — Паттерни на роздоріжжях": [!context] — Метафора «роздоріжжя» у фольклорі (камінь з написами) vs історична реальність.
+- Section "Порівняння поворотних точок: Імперські виклики": [!historiography] — Як російська історіографія трактує 1654 як «возз'єднання», а українська — як військовий союз.
+- Section "Порівняння поворотних точок: Модерний вибір": [!history-bite] — Контраст між пасивністю 1991 (еліти дали незалежність, народ підтримав) і активністю 2004/2014 (народ виборов).
+- Section "Структурні фактори": [!myth-buster] — Міф про «прокляття географії». Географія — це виклик, а не вирок. Приклад Ізраїлю чи Швейцарії.
+- Section "Роль агентності": [!quote] — Цитата Грицака про подолання минулого через модернізацію.
+- Section "2022 — найбільше роздоріжжя": [!decolonization] — Війна 2022 як завершення розпаду Російської імперії (процес, що триває з 1917).
+
+## Деколонізаційний контекст
+- **Imperial Myth**: Україна — «окраїна», об'єкт впливу великих держав, «failed state» без власної історії. Історія України — це хаос і випадковість.
+- **Ukrainian Reality**: Україна — суб'єкт, що формувався в боротьбі. Історія має чітку логіку (тяглість державотворчої традиції: Русь -> ВКЛ -> Гетьманщина -> УНР -> Україна). Виживання нації без держави століттями доводить силу внутрішньої структури (культури, мови).
+
+## Contested Terms Table
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| 1654 | «Возз'єднання братніх народів» | Військово-політичний союз двох держав (Протекторат) |
+| 1709 | «Зрада Мазепи» | Спроба врятувати автономію Гетьманщини |
+| 1991 | «Катастрофа», «розпад великої країни» | Відновлення історичної справедливості, звільнення |
+| 2014 | «Державний переворот» | Революція Гідності, захист демократичного вибору |
+| 2022 | «Спецоперація» | Велика Вітчизняна війна за незалежність (Народна війна) |
+
+## Section-Mapped Research Notes
+
+### Вступ — Паттерни на роздоріжжях
+Синтез попередніх модулів. Історія не як набір дат, а як набір виборів. Питання детермінізму: чи була незалежність неминучою? (Грицак каже: ні, це результат збігу обставин І волі людей). Концепція «Path Dependence» (залежність від шляху), але з можливістю «Critical Junctures» (критичних роздоріж).
+
+### Порівняння поворотних точок
+- **1654 vs 1991**: Входження в імперію vs Вихід з імперії.
+- **1917 vs 2014**: Невдача державотворення (розпорошеність) vs Успіх (консолідація нації).
+- **Спільне**: Зовнішній тиск завжди присутній (Росія).
+- **Відмінне**: Рівень національної свідомості та міжнародна підтримка (у 1917 — ізоляція, у 2022 — коаліція Рамштайн).
+
+### Структурні фактори
+- Географія: «Брама Європи» (Плохій). Коридор для кочівників, армій. Відкритий степ.
+- Ресурси: «Житниця Європи» — прокляття ресурсів?
+- Внутрішня єдність: Регіоналізм як слабкість (1917) і як різноманіття (сучасність).
+
+### Роль агентності
+- Еволюція від «елітарного» вибору (Хмельницький, Мазепа) до «масового» вибору (Майдан, волонтерський рух).
+- Помилки лідерів: Скоропадський (спроба федерації з Росією), Винниченко (пацифізм).
+- Правильні рішення: Кравчук (компроміс 1991), Зеленський (відмова евакуюватися 2022).
+
+### Чи можна передбачити
+- Історія не вчить *що* буде, а вчить *як* аналізувати.
+- Передбачуваність російської агресії (циклічність імперської експансії).
+- Непередбачуваність «Чорних лебедів» (Майдан, стійкість ЗСУ у перші дні 2022).
+
+### 2022 — найбільше роздоріжжя
+- Синтез всіх попередніх війн. Це і Конотоп (1659), і Крути (1918), і УПА (1940-ві).
+- Чому результат інший? Бо є Держава (інституції) і Нація (громадянське суспільство).
+- Кінець «багатовекторності». Остаточний цивілізаційний розрив з Євразією.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 13057)
+✓ Message 13021 acknowledged
+✓ Message 13057 acknowledged

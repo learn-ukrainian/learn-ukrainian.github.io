@@ -1,0 +1,122 @@
+module: c1-034
+level: C1
+sequence: 34
+slug: review
+version: '2.0'
+title: 'Огляд і повторення: Професійна комунікація'
+content_outline:
+- section: Огляд C1.2 — Підсумок (Review of C1.2 - Summary)
+  words: 500
+  points:
+  - 'Систематизація тем M21-M33 згідно з вимогами §3.13 Державного стандарту: огляд
+    лексики щодо робочого часу, оплати праці, кваліфікацій та ринку праці'
+  - 'Узагальнення ключових компетенцій рівня C1.2: від побудови логічної аргументації
+    до аналізу складних фахових текстів та офіційної документації'
+- section: Професійна комунікація та бізнес-етикет (Professional Communication and
+    Business Etiquette)
+  words: 900
+  points:
+  - 'Культурний аспект: динаміка бізнес-етикету в Україні — перехід від радянської
+    моделі «ім''я + по батькові» до європейської «Пан/Пані + ім''я» в IT-сфері та
+    креативних індустріях'
+  - 'Офіційний стиль мовлення (§4.4.1.1): шліфування навичок написання CV та супровідних
+    листів (Cover Letter) з фокусом на професійну термінологію'
+  - 'Ділові переговори та укладання угод: стратегії ведення дискусії, висловлення
+    незгоди в офіційній формі та цифрова комунікація в професійних мережах'
+- section: Політика, суспільство та медіаландшафт (Politics, Society and Media Landscape)
+  words: 800
+  points:
+  - 'Аналіз політичної системи та міжнародних відносин: огляд ключових термінів дипломатичного
+    протоколу та суспільно-політичного дискурсу'
+  - 'Роль медіа у формуванні суспільної думки: розвиток критичного мислення через
+    аналіз новинних заголовків та виявлення маніпулятивних технік у текстах'
+- section: 'Соціолінгвістика: від норми до суржику (Sociolinguistics: From Norm to
+    Surzhyk)'
+  words: 800
+  points:
+  - 'Феномен суржику в професійному середовищі: сприйняття як ознаки низької мовної
+    культури vs допустимість як стилістичного засобу (вступ до тем C1.3)'
+  - 'Діалекти української мови та діаспорна українська: розширення мовного кругозору
+    через знайомство з регіональними варіантами та мовою закордонного українства'
+- section: Аналіз типових помилок та кейс-стаді (Error Analysis and Case Studies)
+  words: 700
+  points:
+  - 'Подолання лексичних кальок: корекція вживання «аплайтися» на «подаватися на вакансію»
+    та «мітинг» на «нарада/зустріч» через контекстуальні вправи'
+  - 'Плутанина паронімів у професійному контексті: розрізнення «робочий» (час, стіл)
+    та «робітничий» (клас, рух) — drill з мінімальними парами'
+  - 'Неправильні звертання: аналіз помилок при переході на «Ти» без дозволу та змішування
+    форм «Ви» з формою «Пан/Пані»'
+- section: Самооцінка та підготовка до контролю (Self-Assessment and Preparation)
+  words: 300
+  points:
+  - 'Адекватна самооцінка прогресу: використання критеріїв CEFR C1 та рубрик оцінювання
+    для визначення готовності до C1.2 Checkpoint'
+  - 'Фінальна консолідація матеріалу: систематизація вивченого за блоком «Професійна
+    комунікація»'
+vocabulary_hints:
+  required:
+  - повторення (review) — повторення вивченого, курс повторення; High frequency
+  - узагальнення (generalization) — теоретичне узагальнення, широке узагальнення;
+    Academic register
+  - консолідація (consolidation) — консолідація суспільства, консолідація зусиль;
+    Formal register
+  - компетентність (competency) — професійна компетентність, набувати компетентності;
+    HR/Educational context
+  - самооцінка (self-assessment) — адекватна самооцінка, завищена самооцінка; Psychological
+    context
+  recommended:
+  - подаватися (to apply) — подаватися на вакансію; correct alternative to calque
+    'аплайтися'
+  - нарада (meeting) — проводити нараду; formal alternative to 'мітинг'
+  - робочий (working) — робочий час, робочий стіл; distinguish from 'робітничий'
+  - робітничий (worker's) — робітничий рух; distinguish from 'робочий'
+  - звертання (address) — офіційне звертання; key in etiquette
+  - суржик (surzhyk) — елементи суржику; sociolinguistic term
+activity_hints:
+- type: quiz
+  focus: Comprehensive C1.2 review
+  items: 30+
+- type: match-up
+  focus: Review key concepts M21-M33
+  items: 20+
+- type: fill-in
+  focus: Professional vocabulary review
+  items: 15+
+- type: cloze
+  focus: Sociolinguistic terminology
+  items: 12+
+- type: group-sort
+  focus: Classify concepts by module
+  items: 15+
+- type: error-correction
+  focus: Fix professional communication errors
+  items: 12+
+focus: review
+prerequisites:
+- c1-21 to c1-33 (Complete C1.2 content)
+- All professional and sociolinguistic skills
+connects_to:
+- c1-35 (C1.2 Checkpoint)
+- c1-36 (Metaphor & Simile - C1.3 start)
+- c1-55 (C1.3 Checkpoint)
+module_type: review
+sources:
+- name: CEFR C1 Assessment Criteria
+  url: https://www.coe.int/
+  type: reference
+  notes: C1 level review standards
+- name: Ukrainian State Standard C1 (2024)
+  url: https://mon.gov.ua/
+  type: reference
+  notes: National C1 competency requirements
+immersion: 100% Ukrainian
+phase: C1.2 Professional Communication
+objectives:
+- 'Understand and apply огляд і повторення: професійна комунікація'
+- Analyze and evaluate підсумок
+- Identify key concepts of самооцінка
+persona:
+  voice: Senior Specialist
+  role: Ментор
+word_target: 4000

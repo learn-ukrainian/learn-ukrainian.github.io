@@ -1,74 +1,41 @@
-# Research Notes: Taking Transport (A1 M40)
+# Дослідження: Taking Transport
 
-**Module**: Taking Transport (Navigating the City)
-**Level**: A1 (Beginner)
-**Track**: Core A
-**Status**: Research Phase complete
+## State Standard Reference
+§3.3: "Місто (заклади, транспорт і місця)... громадський транспорт; таксі"
+§3.7: "Подорожі... основні дії на позначення руху (іти, їхати – у базових фразах)"
+§4.2.3.2 (Знахідний): "в, у, на (указівка на кінцевий пункт руху або переміщення)"
+§4.2.3.3 (Місцевий): "у, в, на (позначення місця)"
+Alignment: This module directly addresses the State Standard's requirements for navigating city transport, using motion verbs (іти/їхати) and the distinction between location (Locative) and direction (Accusative).
 
-## 1. Grammar: State Standard 2024 Reference
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| метро | High / Common | їхати на метро, станція метро, жетон (archaic but cultural), карта метро |
+| маршрутка | High / Spoken | зупиніть на зупинці, передайте за проїзд, повна маршрутка |
+| зупинка | High / Common | наступна зупинка, на зупинці, автобусна зупинка |
+| пересадка | Medium / Transport | робити пересадку, станція пересадки, без пересадок |
+| валідатор | Rising / Modern | прикласти картку до валідатора, не працює валідатор |
 
-The module aligns with the following sections of the **Державний стандарт української мови (ДСТУ 2024)**:
+## Cultural Hooks
+1. **Kyiv Metro Depth**: Arsenalna station is the deepest in the world (105.5m). The long escalator ride is a specific Kyiv experience where people read, listen to music, or run down (though not allowed).
+2. **"Pass the fare" (Передайте за проїзд)**: In marshrutkas, passengers pass cash from hand to hand to the driver, often across the whole bus. It requires trust and social interaction ("За одного, будь ласка").
+3. **Kyiv Digital**: The shift from plastic tokens ("жетони") to QR-codes and NFC payments. The "Kyiv Digital" app is now central to city transport.
 
-*   **§3.3. Місто (заклади, транспорт і місця):**
-    > "громадський транспорт; таксі; організація міського простору (вулиця, парк, площа, проспект)." (Lines 495-503)
-*   **§4.2.3.3. Місцевий відмінок (Locative Case):**
-    > "у, в, на (позначення місця): Спортивний костюм у великій сумці... Гроші лежать на столі." (Line 690)
-    *   Essential for describing location at stops (на зупинці) and being on transport (в автобусі, на метро).
-*   **§4.3.1. Просте речення (Simple Sentence):**
-    > "Запитальні речення. Запитальні слова (хто, що, де, куди, коли...)." (Lines 729-739)
-    *   Focus on interrogative structures for navigation (Як доїхати до...?).
+## Common Learner Errors
+1. **Motion Verbs**: Confusing *іти* (to go by foot) and *їхати* (to go by vehicle).
+   *   *Error*: "Я йду на метро." → *Correction*: "Я їду на метро."
+2. **Case Confusion (Instrumental vs Locative)**:
+   *   *Error*: "Я їду автобус." (Direct translation)
+   *   *Correction*: "Я їду автобусом" (Instrumental - means) OR "Я їду на автобусі" (Locative - location).
+3. **Direction vs Location**:
+   *   *Error*: "Де ти йдеш?" (Where are you walking inside something?)
+   *   *Correction*: "Куди ти йдеш?" (Where are you going to?)
 
-## 2. Vocabulary Frequency
+## Cross-References
+- Builds on: `a1-15` (Around the City - locations), `a1-39` (Buying Tickets - basics)
+- Prepares for: `a1-41` (Phone Basics), `a1-42` (Emergencies - lost in city)
 
-### High Frequency (Crucial for A1)
-*   **метро** (metro/subway) — Universal in major cities.
-*   **автобус** (bus) — Primary urban transport.
-*   **таксі** (taxi).
-*   **зупинка** (stop/station) — Essential for navigation.
-*   **квиток** (ticket) — Practical necessity.
-*   **їхати** (to go by vehicle) — Core motion verb.
-*   **іти** (to go by foot).
-
-### Medium Frequency (Cultural/Specific)
-*   **маршрутка** (minibus taxi) — High cultural relevance, essential for practical life.
-*   **трамвай** (tram) / **тролейбус** (trolleybus).
-*   **станція** (station) — Used primarily for metro.
-*   **пересадка** (transfer).
-*   **водій** (driver).
-
-### Essential Phrases
-*   **Скільки коштує квиток?** (How much is the ticket?)
-*   **Як доїхати до...?** (How to get to...?)
-*   **Наступна зупинка...** (Next stop is...)
-*   **Де зупинка?** (Where is the stop?)
-
-## 3. Cultural Hooks
-
-### The "Marshrutka" Social Contract
-In Ukrainian cities, the *marshrutka* (yellow minibus) has a unique etiquette. Since it is often crowded and the driver is at the front, passengers hand their money to the person in front of them with the phrase **"Передайте, будь ласка"** (Please pass [this]). The money travels through several strangers' hands to the driver, and the ticket/change travels back the same way. This relies on high social trust and communal cooperation.
-
-### Arsenalna: Descent into the Depths
-The **Arsenalna station** in the Kyiv Metro was long the deepest in the world (now 2nd deepest at 105.5 meters). The descent on the escalators takes over 4 minutes. It features a unique "London-type" design (separate platforms with a short central hall) necessitated by the extreme pressure at that depth. For students, it is a quintessential Kyiv experience.
-
-## 4. Pedagogical Notes
-
-*   **Simplifying "By Transport":** While Standard Ukrainian often uses the **Instrumental case** for transport (*їхати автобусом*), at the A1 level, it is pedagogically standard to use **на + Locative** (*їхати на автобусі*) or simply **на + [Transport Name]** (*їхати на метро*). This allows students to use transport immediately without waiting for A2 grammar.
-*   **Direction vs. Location:** Students often confuse "Where" (*Де* + Locative) with "Whither/To Where" (*Куди* + Accusative/Genitive).
-    *   *Де зупинка?* (Where is the stop?) vs. *Як доїхати до станції?* (How to get to the station?).
-*   **The "Next Stop" Logic:** Teaching students to listen for **"Наступна зупинка..."** in announcements is the highest-value listening skill for city survival.
-
-## 5. Scope Boundaries
-
-### IN Scope (Prior Knowledge Applied)
-*   **Locative Case:** For location (*на зупинці*, *на станції*, *у вагоні*).
-*   **Genitive Case:** For destination with the preposition **до** (*до центру*, *до парку*).
-*   **Accusative Case:** For objects of verbs (*купити квиток*, *бачити водія*).
-*   **Numbers:** For counting stops or costs.
-*   **Present Tense:** Basic movement and needs (*Я їду*, *Він чекає*).
-
-### OUT of Scope (Wait for A2/B1)
-*   **Instrumental Case:** *Їхати автобусом* is strictly A2.
-*   **Dative Case:** *Мені потрібно вийти* (I need to exit) — while "мені" might be taught as a set phrase, the full case is A2.
-*   **Aspectual Motion Verbs:** Distinguishing *іти/ходити* or *їхати/їздити* in detail. Stick to simple present/future.
-*   **Prefixed Motion Verbs:** *Доїхати*, *переїхати*, *вийти* (except as a survival infinitive phrase).
-*   **Ordinal Numerals beyond basic:** (first/second stop).
+## Notes for Content Writing
+- **Decolonization**: Avoid Soviet-style terms if outdated. Focus on modern Ukrainian urban reality (QR codes, electronic tickets) but acknowledge the persisting "marshrutka culture".
+- **Pedagogy**: Explicitly scaffold the difference between "Де?" (Locative) and "Куди?" (Accusative) as it's a frequent sticking point.
+- **Tone**: Keep it practical. The "Marshrutka Veteran" persona aspect should be helpful/street-smart, not grumpy.

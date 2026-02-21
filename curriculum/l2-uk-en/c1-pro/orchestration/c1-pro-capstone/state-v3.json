@@ -1,0 +1,13 @@
+{
+  "track": "c1-pro",
+  "slug": "c1-pro-capstone",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-20T01:56:17Z",
+      "task_id": "v3-c1-pro-capstone-pA",
+      "mode": "full"
+    }
+  }
+}

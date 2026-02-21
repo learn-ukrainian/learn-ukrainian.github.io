@@ -1,0 +1,216 @@
+✅ Message sent to Gemini (ID: 12968) [auto-acked: self-addressed]
+✓ Message 12968 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12968...
+📨 Message #12968
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-slovo-svyatoslav-dream
+   Time: 2026-02-20T23:43:25.149263+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 81
+module: oes-081
+module_number: 81
+slug: slovo-svyatoslav-dream
+title_uk: 'Слово: Сон Святослава'
+title_en: 'Slovo: Svyatoslav''s Dream'
+phase: 4
+phase_id: literary-art
+phase_name: Literary Art
+focus: Symbolism (Pearls, wines, roofs)
+content_outline:
+- section: Вступ
+  description: 'Introduction to Slovo: Svyatoslav''s Dream'
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Senior Paleographer
+  role: Interpreter of Omens
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Слово: Сон Святослава (Slovo: Svyatoslav's Dream)
+
+## Використані джерела
+1. [Енциклопедія історії України: Святослав Всеволодович](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Sviatoslav_Vsevolodovych) — біографія та політична роль князя.
+2. [Ізборник: Слово о полку Ігоревім (текст і переклади)](http://litopys.org.ua/slovo67/slovo.htm) — оригінальний текст, ритмічний переклад, коментарі.
+3. [Літературне місто: Символіка сну Святослава](https://litmisto.org.ua/?p=19690) — аналіз фольклорних та міфологічних елементів.
+4. [Бібліотека української літератури: Образ Святослава](https://www.ukrlib.com.ua/styslo/printit.php?tid=3665) — літературознавчий аналіз персонажа.
+
+## Хронологія
+- **1123 (прибл.)**: Народження Святослава Всеволодовича.
+- **1176**: Святослав стає Великим князем Київським (остаточно утверджується у 1181).
+- **1184**: Переможний похід руських князів під проводом Святослава проти половців (хан Кобяк розбитий).
+- **1185 (квітень-травень)**: Невдалий похід Ігоря Святославича; поразка на Каялі.
+- **1185 (літо)**: "Сон Святослава" у Києві (літературна фіксація реакції на поразку).
+- **1194**: Смерть Святослава Всеволодовича.
+
+## Ключові факти та цитати
+- **Оригінал сну**: «А Святославъ мутенъ сонъ видѣ въ Кіевѣ на горахъ. "Си ночь съ вечера одѣвахъте мя, — рече, — чръною паполомою на кровати тисовѣ; чръпахуть ми синее вино, съ трудомъ смѣшено; сыпахуть ми тощими тулы поганыхъ тлъковинъ великій женчюгъ на лоно..."»
+- **Паполома**: Чорне покривало, похоронний саван. Символ смерті.
+- **Тисове ліжко**: Тис вважався деревом смерті (отруйний), з нього робили труни.
+- **Перли (женчюгъ)**: У слов'янському фольклорі снити перли — до сліз.
+- **Босуві ворони**: Загадковий епітет (можливо, "сірі" або пов'язані з демоном "Бусом"), що віщують біду, летять до моря (символ ворожої території).
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ: Князь і його епоха": [!history-bite] — Святослав не був "слабким дідом", як іноді вважають; він був організатором блискучої перемоги 1184 року, яку Ігор намагався "перевершити".
+- Section "Текст: "Мутен сон"": [!paleography] — Аналіз слова "мутенъ" (каламутний, неясний) vs "смутен" (сумний) у рукописах.
+- Section "Символіка смерті: Паполома і тис": [!culture] — Тисове дерево в українській міфології як міст у потойбіччя.
+- Section "Символіка сліз: Перли і вино": [!quote] — "Сипахуть ми... великій женчюгъ на лоно" — пряма паралель з голосінням.
+- Section "Архітектура руїни: Золотоверхий терем": [!paleography] — Дискусія навколо "доскы безъ киса" (без даху/князя) — лінгвістична загадка "киса/княса".
+- Section "Вісники біди: Босуві ворони": [!myth-buster] — "Плѣсньск" — це не вигадане місце, а реальне давньоруське місто, через яке проходив шлях ворогів.
+- Section "Висновки: Від сну до "Золотого слова"": [!context] — Сон — це не просто містика, це літературний прийом для легітимізації права Святослава судити молодших князів.
+
+## Деколонізаційний контекст
+- **Imperial Myth**: Російська історіографія часто трактує "Руську землю" як "Росію", а заклик до єдності — як предтечу московського самодержавства.
+- **Ukrainian Reality**: "Руська земля" у тексті — це конкретно Київщина, Чернігівщина та Переяславщина (державне ядро). Святослав виступає не як "цар", а як "старійшина" у федерації рівних князів, який прагне координації, а не підкорення.
+- **Imperial Myth**: Применшення ролі київського князя на користь владимиро-суздальських (Всеволода Велике Гніздо).
+- **Ukrainian Reality**: "Слово" ставить Київ і Святослава у центр всесвіту Русі; він "грізний великий київський", батько всіх руських князів (символічно).
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| Руська земля | Русская земля (Russia) | Руська земля (Kyivan Rus' state core) |
+| Святослав Всеволодович | Слабкий князь періоду роздробленості | Впливовий дуумвір, організатор оборони Русі |
+| Паполома | Покрывало (нейтрально) | Похоронний саван (обрядово) |
+
+## Section-Mapped Research Notes
+
+### Вступ: Князь і його епоха
+Святослав Всеволодович (Ольгович) — цікава постать. Він правив у дуумвіраті з Рюриком Ростиславичем. У "Слові" він ідеалізований як "батько" (хоча Ігорю він двоюрідний брат), щоб підкреслити ієрархію. Важливо протиставити його успіх 1184 р. (розгром Кобяка) авантюрі Ігоря 1185 р.
+
+### Текст: "Мутен сон"
+Ключове слово "мутенъ". Це означає не просто "сумний", а "неясний", "зловісний", "темний". Сон відбувається "в Києві на горах" — топографічна точність, що підкреслює центр держави.
+
+### Символіка смерті: Паполома і тис
+"Чорна паполома" — найвідоміший символ. Це похоронний атрибут. Одягання князя в саван за життя — пряма вказівка на метафоричну смерть або смертельну загрозу. "Кровать тисова" — тис (Taxus baccata) асоціювався зі смертю через отруйність хвої та темну деревину.
+
+### Символіка сліз: Перли і вино
+"Сидєніє" (вино) змішане з "трудом" (горем/отрутою). "Женчюгъ" (перли) у сні — стійкий фольклорний мотив сліз. Їх сиплють з "поганих тлъковинъ" (половецьких сагайдаків), що прямо вказує на джерело горя.
+
+### Архітектура руїни: Золотоверхий терем
+Фраза "доскы безъ киса" (дошки без даху/верха) викликає суперечки. "Кисъ" може бути пов'язаний з "князь" або "конь" (гребінь даху). Золотоверхий терем без даху — символ держави без захисту або князя, що втратив владу/честь.
+
+### Вісники біди: Босуві ворони
+"Босуві" — можливо, від назви половецького часу/демона або просто колір. Плісненськ — місто на заході Русі (Галичина), що показує масштаб біди (від Києва до заходу). Ворони летять до моря — туди, де сталася битва.
+
+### Тлумачення бояр: Реальність катастрофи
+Бояри не заспокоюють князя, а підтверджують найгірше. Вони розшифровують метафори: "два сокола" (Ігор і Всеволод) злетіли, але їм "підрізали крила". Сон стає реальністю.
+
+### Висновки: Від сну до "Золотого слова"
+Сон слугує емоційною прелюдією до "Золотого слова" — політичної промови Святослава. Сон показує трагедію, "Золоте слово" пропонує вихід (єднання).
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12985)
+✓ Message 12968 acknowledged
+✓ Message 12985 acknowledged

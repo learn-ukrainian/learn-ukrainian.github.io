@@ -1,4 +1,3 @@
----
 module: b2-hist-048
 level: B2-HIST
 sequence: 48
@@ -8,60 +7,77 @@ title: Козацьке військо та озброєння
 subtitle: Cossack Army and Weaponry
 content_outline:
 - section: 'Вступ: Феномен козацького війська'
-  words: 451
   points:
-  - Universal military service and democracy
-  - International reputation of Cossack mercenaries
+  - Universal military service and democracy — concept of 'Лицарський люд' (Knightly
+    people) and distinct social status
+  - International reputation of Cossack mercenaries — valued from France (Dunkirk)
+    to Persia; [!history-bite] about Thirty Years' War participation
 - section: 'Структура та Ієрархія: Від коша до полку'
-  words: 676
   points:
-  - The role of the Hetman and General Staff
-  - Territorial and functional divisions
-  - Discipline and military code
+  - The role of the Hetman and General Staff — Oboznyi (logistics), Suddia (justice),
+    Pysar (intelligence/records), Osavuly (aides), Khorunzhyi (flag-bearer)
+  - Territorial and functional divisions — [!context] Administrative division of Hetmanate
+    (regiments/hundreds) duplicated military structure; state as 'military camp'
+  - Discipline and military code — strict alcohol ban during campaigns; death penalty
+    for disobedience
 - section: 'Озброєння: Шабля, самопал та гармата'
-  words: 676
   points:
-  - 'Individual weaponry: fire and steel'
-  - The cult of the sabre (shablya)
-  - 'Artillery: mobility and psychological impact'
+  - 'Individual weaponry: fire and steel — priority of firearms (muskets/samopaly);
+    3-rank volley fire tactic (fire-pass-load)'
+  - The cult of the sabre (shablya) — [!myth-buster] Sabre as 'weapon of last resort'
+    or cavalry, while infantry relied on fire; curved eastern type
+  - 'Artillery: mobility and psychological impact — light field falconets transported
+    on wagons; high status of artillery masters'
 - section: 'Тактика бою: Козацький табір та розвідка'
-  words: 676
   points:
-  - The 'tabor' as a defensive fort
-  - Cossack 'plastuny' (scouts)
-  - Siege warfare and river raids
+  - The 'tabor' as a defensive fort — [!decolonization] Wagenburg (moving fortress
+    of chained wagons) as prototype of modern armored units
+  - 'Cossack ''plastuny'' (scouts) — special operations skills: underwater breathing
+    (reeds), camouflage in steppe'
+  - Siege warfare and river raids — use of 'chaika' boats for sea raids (e.g., Kafa);
+    engineering skills (mining, earthworks)
 - section: 'Символіка та Клейноди: Знаки влади'
-  words: 451
   points:
-  - Bulava, bunchuk, and seals
-  - The sacred meaning of the banner (khoruhva)
+  - Bulava, bunchuk, and seals — Bulava (Hetman), Bunchuk (horse tail command symbol),
+    Seal ('Knight with Musket')
+  - The sacred meaning of the banner (khoruhva) — [!culture] Loss of khoruhva equated
+    to defeat/shame; Crimson banner with Archangel Michael
 - section: 'Читання: Опис козацького вишколу'
-  words: 282
   points:
-  - Account of a foreign observer on Cossack training
+  - Account of a foreign observer on Cossack training — Guillaume Le Vasseur de Beauplan
+    on endurance, orientation, and gunpowder making
 - section: 'Первинні джерела: Голоси епохи'
-  words: 338
   points:
-  - Analysis of official documents and letters
+  - Analysis of official documents and letters — Khmelnytskyi's diplomatic correspondence
+    vs Cossack chronicles (Hrabianka/Velychko)
 - section: Деколонізаційний погляд
-  words: 450
   points:
-  - Cossacks as a modern professional army, not a 'rabble'
-  - Influence on European military science
-  - Ukraine's military subjectivity
-word_target: 4000
+  - Cossacks as a modern professional army, not a 'rabble' — debunking 'anarchy/bandit'
+    myths; 'Christian Republic' concept
+  - Influence on European military science — adoption of Cossack infantry tactics
+    and light cavalry models by Europe
+  - Ukraine's military subjectivity — [!perspective] 'Antemurale Christianitatis'
+    (Bulwark of Christianity); recognized by European monarchs and Pope
 vocabulary_hints:
   required:
-  - булава
-  - пернач
-  - самопал
-  - шабля
-  - гармата
-  - полк
-  - сотня
-  - кіш
-  - обоз
-  - хоругва
+  - булава (mace/baton) — символ влади гетьмана; вручалася на раді
+  - пернач (mace with flanges) — символ влади полковника
+  - самопал (musket/firearm) — основна зброя козацької піхоти; 'козак з самопалом'
+  - шабля (sabre) — символічна зброя; 'козацька шабля', 'гостра шабля'
+  - гармата (cannon) — 'козацька артилерія', 'влучити з гармати'
+  - полк (regiment) — адміністративно-військова одиниця; 'Київський полк'
+  - сотня (company/hundred) — підрозділ полку; 'козацька сотня'
+  - кіш (encampment/command) — 'Запорозький Кіш', центр управління
+  - обоз (baggage train) — 'військовий обоз', логістика
+  - хоругва (banner) — 'військова хоругва', символ честі
+  recommended:
+  - клейноди (regalia) — символи влади (булава, бунчук, печатка)
+  - реєстровець (registered Cossack) — професійний військовий на службі
+  - пластун (scout) — козацький розвідник
+  - чайка (boat) — бойовий човен для морських походів
+  - табір (camp/wagon fort) — 'рухома фортеця', тактичний прийом
+  - курінь (battalion/barracks) — військова одиниця на Січі
+  - довбиш (drummer) — відповідальний за литаври і скликання ради
 activity_hints:
 - type: reading
   focus: Primary sources on military structure
@@ -83,12 +99,16 @@ grammar:
 - Historical narrative register
 sources:
 - name: Military Art of Ukrainian Cossacks
-  url: "https://resource.history.org.ua/item/0002345"
+  url: https://resource.history.org.ua/item/0002345
   type: academic
   notes: Detailed analysis of tactics
 - name: Cossack Weaponry - Museum Project
-  url: "https://warmuseum.kyiv.ua"
+  url: https://warmuseum.kyiv.ua
   type: reference
   notes: Visual and technical details
 register: публіцистичний
-phase: "HIST.5 [Rise of Cossacks]"
+phase: HIST.5 [Rise of Cossacks]
+persona:
+  voice: Senior Professor of History
+  role: Artillery Master
+word_target: 5000

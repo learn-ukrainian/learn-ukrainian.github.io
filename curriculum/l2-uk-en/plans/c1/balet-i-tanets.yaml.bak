@@ -1,0 +1,40 @@
+module: c1-083
+level: C1
+sequence: 83
+slug: balet-i-tanets
+version: '2.0'
+title: Балет і танець
+subtitle: Ballet and Dance
+content_outline:
+- section: Розминка — Танець як мистецтво
+  points:
+  - Серж Лифар — українець, що змінив світовий балет
+  - Від народного танцю до академічного балету
+  - Сучасний танець в Україні
+- section: Content Areas
+  points:
+  - '**Серж Лифар** (1904-1986): Kyiv-born, Paris Opera director (1929-1958), transformed
+    20th century ballet'
+  - 'Classical ballet: Київський балет, Львівська балетна школа'
+  - 'Folk dance: Гопак, Аркан, ансамблі (Вірський)'
+  - 'Contemporary: Kyiv Modern Ballet, сучасний танець'
+- section: Практика — танцювальний дискурс
+  points:
+  - Написати біографію Сержа Лифаря
+  - Порівняти гопак як народний танець та сценічну версію Вірського
+  - Описати виставу Kyiv Modern Ballet
+  - Обговорити зв'язок між народним та академічним танцем
+focus: fine-arts
+pedagogy: CBI
+objectives:
+- Learner explores the legacy of Serge Lifar and his impact on world ballet.
+- Learner understands the distinction between folk dance (Hopak) and academic ballet.
+- Learner can describe contemporary dance trends in Ukraine.
+grammar:
+- Movement vocabulary
+- Choreographic description
+phase: C1.5 Folk Culture & Fine Arts
+persona:
+  voice: Senior Specialist
+  role: Хореограф-постановник
+word_target: 4000

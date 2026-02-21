@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Curriculum Dashboard - ukraine-ops</title>
+<style>
+:root {
+  --bg: #0d1117; --bg2: #161b22; --bg3: #21262d; --border: #30363d;
+  --text: #e6edf3; --text2: #8b949e; --text3: #6e7681;
+  --green: #3fb950; --blue: #58a6ff; --red: #f85149; --yellow: #d29922;
+  --gray: #484f58; --purple: #bc8cff;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; background: var(--bg); color: var(--text); }
+a { color: var(--blue); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+.topbar { display: flex; align-items: center; gap: 16px; padding: 12px 24px; background: var(--bg2); border-bottom: 1px solid var(--border); }
+.topbar h1 { font-size: 18px; font-weight: 600; }
+.topbar .nav { margin-left: auto; display: flex; gap: 12px; font-size: 13px; }
+.topbar .nav a { color: var(--text2); }
+.refresh-indicator { font-size: 11px; color: var(--text3); }
+
+.main { display: grid; grid-template-columns: 1fr 400px; height: calc(100vh - 49px); }
+@media (max-width: 1000px) { .main { grid-template-columns: 1fr; } }
+
+.left-panel { overflow-y: auto; padding: 16px 24px; }
+.right-panel { border-left: 1px solid var(--border); overflow-y: auto; padding: 16px; background: var(--bg2); }
+
+/* Treemap */
+.treemap { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 16px; }
+.treemap-cell { border-radius: 6px; padding: 8px; cursor: pointer; display: flex; flex-direction: column; justify-content: center; position: relative; overflow: hidden; min-height: 60px; transition: transform 0.1s; }
+.treemap-cell:hover { transform: scale(1.02); z-index: 1; }
+.treemap-cell .name { font-weight: 700; font-size: 13px; }
+.treemap-cell .count { font-size: 11px; opacity: 0.8; }
+.treemap-cell.selected { outline: 2px solid var(--blue); outline-offset: -2px; }
+
+/* Module table */
+.module-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.module-table th { text-align: left; padding: 6px 8px; border-bottom: 2px solid var(--border); color: var(--text2); font-size: 11px; text-transform: uppercase; position: sticky; top: 0; background: var(--bg); }
+.module-table td { padding: 6px 8px; border-bottom: 1px solid var(--border); }
+.module-table tr { cursor: pointer; }
+.module-table tr:hover { background: var(--bg2); }
+.module-table .status-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+.module-table .status-dot.pass { background: var(--green); }
+.module-table .status-dot.content-complete { background: var(--blue); }
+.module-table .status-dot.fail { background: var(--red); }
+.module-table .status-dot.unaudited { background: var(--yellow); }
+.module-table .status-dot.missing { background: var(--gray); }
+.module-table .word-mini { display: inline-block; height: 4px; border-radius: 2px; background: var(--green); min-width: 2px; }
+.module-table .rq-score { font-size: 11px; font-weight: 600; }
+.module-table .rq-score.exemplary { color: var(--green); }
+.module-table .rq-score.solid { color: var(--blue); }
+.module-table .rq-score.adequate { color: var(--yellow); }
+.module-table .rq-score.thin { color: #f0883e; }
+.module-table .rq-score.stub { color: var(--red); }
+.module-table .rq-coverage { color: var(--text3); font-size: 11px; }
+
+/* Dimension bar */
+.dim-bar { display: flex; gap: 2px; align-items: center; margin: 2px 0; }
+.dim-bar .dim-label { font-size: 11px; color: var(--text2); width: 28px; text-align: right; }
+.dim-bar .dim-fill { height: 6px; border-radius: 3px; }
+.dim-bar .dim-fill.filled { background: var(--green); }
+.dim-bar .dim-fill.empty { background: var(--bg3); }
+.dim-bar .dim-val { font-size: 10px; color: var(--text3); margin-left: 4px; }
+.refresh-banner { background: rgba(210,153,34,0.15); border: 1px solid var(--yellow); border-radius: 6px; padding: 8px 12px; margin-top: 8px; font-size: 12px; color: var(--yellow); }
+.gap-list { list-style: none; padding: 0; margin-top: 4px; }
+.gap-list li { font-size: 11px; color: var(--text2); padding: 1px 0; }
+.gap-list li::before { content: '\2022'; color: var(--red); margin-right: 6px; }
+
+/* Detail panel */
+.detail-card { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 16px; margin-bottom: 12px; }
+.detail-card h3 { font-size: 15px; margin-bottom: 8px; }
+.detail-card .meta-row { display: flex; justify-content: space-between; font-size: 12px; padding: 3px 0; }
+.detail-card .meta-row .label { color: var(--text2); }
+.detail-card .section-list { list-style: none; padding: 0; }
+.detail-card .section-list li { padding: 2px 0; font-size: 12px; color: var(--text2); }
+.detail-card .section-list li::before { content: ''; display: inline-block; width: 6px; height: 6px; background: var(--blue); border-radius: 50%; margin-right: 6px; }
+.obj-list { list-style: none; padding: 0; }
+.obj-list li { padding: 2px 0; font-size: 12px; }
+.obj-list li::before { content: ''; display: inline-block; width: 4px; height: 4px; background: var(--green); border-radius: 50%; margin-right: 6px; }
+
+.empty { color: var(--text3); font-size: 13px; padding: 24px; text-align: center; }
+.loading { text-align: center; padding: 40px; color: var(--text2); }
+.loading .spinner { display: inline-block; width: 24px; height: 24px; border: 2px solid var(--border); border-top-color: var(--blue); border-radius: 50%; animation: spin 0.8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.track-title { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
+.track-stats { display: flex; gap: 12px; font-size: 12px; color: var(--text2); margin-bottom: 12px; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <h1>Curriculum Dashboard</h1>
+  <span class="refresh-indicator" id="refresh-info"></span>
+  <div class="nav">
+    <a href="/">Home</a>
+    <a href="/audit-dashboard.html">Audit</a>
+    <a href="/progress.html">Progress</a>
+    <a href="/quality.html">Quality</a>
+    <a href="/comms.html">Comms</a>
+    <a href="/track-health.html">Health</a>
+  </div>
+</div>
+
+<div class="main">
+  <div class="left-panel" id="left-panel">
+    <div class="loading"><div class="spinner"></div></div>
+  </div>
+  <div class="right-panel" id="right-panel">
+    <div class="empty">Select a module to see details</div>
+  </div>
+</div>
+
+<script>
+const API = '/api/dashboard';
+let overviewData = null;
+let selectedTrack = null;
+let trackDetailCache = {};
+
+function pctColor(pct) {
+  if (pct >= 80) return 'rgba(63,185,80,0.5)';
+  if (pct >= 50) return 'rgba(210,153,34,0.5)';
+  if (pct >= 20) return 'rgba(248,81,73,0.3)';
+  return 'rgba(72,79,88,0.3)';
+}
+
+async function fetchOverview() {
+  const res = await fetch(`${API}/overview`);
+  overviewData = await res.json();
+  renderTreemap(overviewData.tracks);
+  document.getElementById('refresh-info').textContent = `Last refresh: ${new Date().toLocaleTimeString()}`;
+}
+
+function renderTreemap(tracks) {
+  const left = document.getElementById('left-panel');
+  const totalModules = tracks.reduce((s, t) => s + t.module_count, 0);
+
+  const treemapHtml = tracks.map(t => {
+    const w = Math.max(80, Math.round(t.module_count / totalModules * 1200));
+    const h = Math.max(60, Math.round(t.module_count / totalModules * 600));
+    const sel = selectedTrack === t.id ? 'selected' : '';
+    return `
+      <div class="treemap-cell ${sel}" style="width:${w}px;height:${h}px;background:${pctColor(t.pct_complete)}"
+           onclick="selectTrack('${t.id}')">
+        <span class="name">${t.id.toUpperCase()}</span>
+        <span class="count">${t.module_count} modules &middot; ${t.pct_complete}%</span>
+      </div>
+    `;
+  }).join('');
+
+  let html = `<div class="treemap">${treemapHtml}</div>`;
+
+  if (selectedTrack) {
+    html += `<div id="track-detail"><div class="loading"><div class="spinner"></div></div></div>`;
+  }
+
+  left.innerHTML = html;
+
+  if (selectedTrack) {
+    loadTrackDetail(selectedTrack);
+  }
+}
+
+async function selectTrack(trackId) {
+  selectedTrack = trackId;
+  renderTreemap(overviewData.tracks);
+}
+
+async function loadTrackDetail(trackId) {
+  const container = document.getElementById('track-detail');
+  if (!container) return;
+
+  let data = trackDetailCache[trackId];
+  if (!data) {
+    const res = await fetch(`${API}/track/${trackId}`);
+    data = await res.json();
+    trackDetailCache[trackId] = data;
+  }
+
+  const t = overviewData.tracks.find(t => t.id === trackId);
+  const s = t.stats;
+
+  const rs = s.research || {};
+  const hasRubric = !!rs.profile;
+
+  // Research stats line
+  let researchStat = '';
+  if (hasRubric) {
+    const parts = [];
+    for (const label of ['exemplary','solid','adequate','thin','stub']) {
+      if (rs[label] > 0) parts.push(`${rs[label]} ${label}`);
+    }
+    researchStat = `<span style="color:var(--purple)">${parts.join(', ')} | ${rs.total}/${data.module_count}</span>`;
+  } else {
+    researchStat = `<span style="color:var(--text3)">${rs.total || 0}/${data.module_count} researched</span>`;
+  }
+
+  container.innerHTML = `
+    <div class="track-title">${t.name}</div>
+    <div class="track-stats">
+      <span style="color:var(--green)">${s.pass} pass</span>
+      <span style="color:var(--blue)">${s.content_complete} prose</span>
+      <span style="color:var(--red)">${s.fail} fail</span>
+      <span style="color:var(--yellow)">${s.unaudited} unaudited</span>
+      <span style="color:var(--gray)">${s.missing} missing</span>
+      <span style="color:#58a6ff" title="Claude QA reviews done">🔵 ${s.final_review || 0} QA</span>
+      ${researchStat}
+    </div>
+    <table class="module-table">
+      <thead><tr><th>#</th><th>Module</th><th>Status</th><th>Words</th><th>Research</th><th>QA</th></tr></thead>
+      <tbody>
+        ${data.modules.map(m => {
+          const cls = m.status === 'content-complete' ? 'content-complete' : m.status;
+          const wordPct = m.word_target > 0 ? Math.min(m.word_count / m.word_target * 100, 100) : 0;
+          const r = m.research || {};
+          let rCol;
+          if (r.exists && r.score != null) {
+            rCol = `<td><span class="rq-score ${r.quality}">${r.score}/10</span></td>`;
+          } else if (r.exists) {
+            rCol = `<td><span class="rq-coverage">${r.words}w</span></td>`;
+          } else {
+            rCol = `<td style="color:var(--text3)">-</td>`;
+          }
+          const qaCol = m.has_final_review
+            ? `<td style="color:#58a6ff;font-weight:600" title="Claude QA done">✓</td>`
+            : (m.status === 'pass' ? `<td style="color:var(--text3)">⏳</td>` : `<td style="color:var(--text3)">-</td>`);
+          return `
+            <tr onclick="loadModuleDetail('${trackId}','${m.slug}')">
+              <td>${m.num}</td>
+              <td>${m.slug}</td>
+              <td><span class="status-dot ${cls}"></span> ${m.status}</td>
+              <td>${m.word_count.toLocaleString()}/${m.word_target.toLocaleString()} <span class="word-mini" style="width:${wordPct}%"></span></td>
+              ${rCol}
+              ${qaCol}
+            </tr>
+          `;
+        }).join('')}
+      </tbody>
+    </table>
+  `;
+}
+
+async function loadModuleDetail(trackId, slug) {
+  const panel = document.getElementById('right-panel');
+  panel.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
+
+  const res = await fetch(`${API}/module/${trackId}/${slug}`);
+  const m = await res.json();
+
+  let planHtml = '<div class="empty">No plan</div>';
+  if (m.plan) {
+    const outline = m.plan.content_outline || m.plan.outline || [];
+    const objectives = m.plan.objectives || [];
+    const grammar = m.plan.grammar || [];
+
+    planHtml = `
+      <div class="detail-card">
+        <h3>Plan</h3>
+        <div class="meta-row"><span class="label">Title</span><span>${m.plan.title || slug}</span></div>
+        <div class="meta-row"><span class="label">Word Target</span><span>${m.plan.word_target || 0}</span></div>
+        <div class="meta-row"><span class="label">Focus</span><span>${m.plan.focus || 'N/A'}</span></div>
+        <div class="meta-row"><span class="label">Pedagogy</span><span>${m.plan.pedagogy || 'N/A'}</span></div>
+        ${grammar.length > 0 ? `<div class="meta-row"><span class="label">Grammar</span><span>${grammar.join(', ')}</span></div>` : ''}
+      </div>
+
+      ${objectives.length > 0 ? `
+        <div class="detail-card">
+          <h3>Objectives</h3>
+          <ul class="obj-list">${objectives.map(o => `<li>${o}</li>`).join('')}</ul>
+        </div>
+      ` : ''}
+
+      ${outline.length > 0 ? `
+        <div class="detail-card">
+          <h3>Content Outline</h3>
+          <ul class="section-list">${outline.map(s => {
+            const label = typeof s === 'string' ? s : (s.section || s.title || JSON.stringify(s));
+            return `<li>${label}</li>`;
+          }).join('')}</ul>
+        </div>
+      ` : ''}
+    `;
+  }
+
+  let metaHtml = '';
+  if (m.meta) {
+    metaHtml = `
+      <div class="detail-card">
+        <h3>Meta</h3>
+        <div class="meta-row"><span class="label">Duration</span><span>${m.meta.duration || 'N/A'}</span></div>
+        <div class="meta-row"><span class="label">Pedagogy</span><span>${m.meta.pedagogy || 'N/A'}</span></div>
+        <div class="meta-row"><span class="label">Transliteration</span><span>${m.meta.transliteration || 'N/A'}</span></div>
+        ${m.meta.grammar ? `<div class="meta-row"><span class="label">Grammar</span><span>${Array.isArray(m.meta.grammar) ? m.meta.grammar.join(', ') : m.meta.grammar}</span></div>` : ''}
+      </div>
+    `;
+  }
+
+  let lessonHtml = '';
+  if (m.lesson) {
+    lessonHtml = `
+      <div class="detail-card">
+        <h3>Lesson</h3>
+        <div class="meta-row"><span class="label">Words</span><span>${m.lesson.word_count.toLocaleString()}</span></div>
+        <div class="meta-row"><span class="label">Sections</span><span>${m.lesson.sections.length}</span></div>
+        <div class="meta-row"><span class="label">Modified</span><span>${new Date(m.lesson.last_modified).toLocaleString()}</span></div>
+        ${m.lesson.sections.length > 0 ? `
+          <ul class="section-list" style="margin-top:8px">
+            ${m.lesson.sections.map(s => `<li>${s}</li>`).join('')}
+          </ul>
+        ` : ''}
+      </div>
+    `;
+  }
+
+  let researchHtml = '';
+  if (m.research) {
+    const r = m.research;
+    const qColors = {exemplary:'var(--green)',solid:'var(--blue)',adequate:'var(--yellow)',thin:'#f0883e',stub:'var(--red)'};
+
+    if (r.exists && r.score != null) {
+      // Rubric-scored research
+      let dimsHtml = '';
+      if (r.dimensions) {
+        dimsHtml = Object.entries(r.dimensions).map(([name, d]) => {
+          const filled = '<span class="dim-fill filled" style="width:' + (d.score * 14) + 'px"></span>';
+          const empty = '<span class="dim-fill empty" style="width:' + ((d.max - d.score) * 14) + 'px"></span>';
+          return `<div class="dim-bar"><span class="dim-label">${name.split('_').map(w=>w[0].toUpperCase()).join('')}</span>${filled}${empty}<span class="dim-val">${d.score}/${d.max}</span></div>`;
+        }).join('');
+      }
+      let gapsHtml = '';
+      if (r.gaps && r.gaps.length > 0) {
+        gapsHtml = `<ul class="gap-list">${r.gaps.map(g => `<li>${g}</li>`).join('')}</ul>`;
+      }
+      let alignHtml = '';
+      const ca = r.content_alignment;
+      if (ca && ca.refresh_recommended) {
+        alignHtml = `<div class="refresh-banner">Research upgraded \u2014 content may benefit from refresh<ul class="gap-list">${ca.reasons.map(r => `<li>${r}</li>`).join('')}</ul></div>`;
+      }
+      researchHtml = `
+        <div class="detail-card">
+          <h3>Research <span style="font-size:11px;color:var(--text3)">(${r.profile} rubric)</span></h3>
+          <div class="meta-row"><span class="label">Score</span><span style="color:${qColors[r.quality]||'var(--text2)'};font-weight:600">${r.score}/10 ${r.quality.toUpperCase()}</span></div>
+          <div class="meta-row"><span class="label">Words</span><span>${r.words}</span></div>
+          ${dimsHtml ? `<div style="margin-top:8px">${dimsHtml}</div>` : ''}
+          ${gapsHtml ? `<div style="margin-top:8px"><span style="font-size:11px;color:var(--text2)">Gaps:</span>${gapsHtml}</div>` : ''}
+          ${alignHtml}
+        </div>
+      `;
+    } else if (r.exists) {
+      // No rubric — coverage only
+      researchHtml = `
+        <div class="detail-card">
+          <h3>Research</h3>
+          <div class="meta-row"><span class="label">Status</span><span>${r.words} words | no rubric defined</span></div>
+        </div>
+      `;
+    } else {
+      researchHtml = `
+        <div class="detail-card">
+          <h3>Research</h3>
+          <div style="color:var(--red);font-size:12px;">No research file found.</div>
+        </div>
+      `;
+    }
+  }
+
+  const qaHtml = m.has_final_review
+    ? `<div class="detail-card"><h3>Claude QA</h3><div class="meta-row"><span class="label">Status</span><span style="color:#58a6ff;font-weight:600">✓ Reviewed</span></div></div>`
+    : (m.status?.overall?.status === 'pass'
+        ? `<div class="detail-card"><h3>Claude QA</h3><div class="meta-row"><span class="label">Status</span><span style="color:var(--yellow)">⏳ Pending — run with --final-review</span></div></div>`
+        : '');
+
+  panel.innerHTML = `
+    <h2 style="font-size:16px;margin-bottom:4px;">${slug}</h2>
+    <div style="color:var(--text2);font-size:12px;margin-bottom:16px;">${trackId}</div>
+    ${qaHtml}
+    ${researchHtml}
+    ${planHtml}
+    ${metaHtml}
+    ${lessonHtml}
+  `;
+}
+
+fetchOverview();
+setInterval(() => { trackDetailCache = {}; fetchOverview(); }, 30000);
+</script>
+</body>
+</html>

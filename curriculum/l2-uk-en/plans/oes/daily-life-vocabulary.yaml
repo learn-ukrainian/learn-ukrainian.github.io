@@ -1,4 +1,3 @@
----
 sequence: 24
 module: oes-024
 module_number: 20
@@ -9,7 +8,6 @@ phase: 1
 phase_id: vernacular-foundations
 phase_name: Vernacular Foundations
 focus: Bread, meat, horses, boats (Vernacular vs Liturgical)
-word_target: 4000
 content_outline:
 - section: Вступ
   description: Introduction to Daily Life Vocabulary
@@ -24,3 +22,6 @@ activity_types:
 - transcription
 - etymology-trace
 - grammar-identify
+persona:
+  voice: Senior Paleographer
+  role: Kyivan Innkeeper

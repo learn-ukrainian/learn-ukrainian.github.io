@@ -1,0 +1,92 @@
+module: b1-70
+level: B1
+sequence: 70
+slug: collocations-expressions
+version: '2.0'
+title: Колокації та вирази
+subtitle: Collocations and Expressions
+content_outline:
+- section: Вступ
+  points:
+  - What are collocations — defined as stylistic means per State Standard §4.5.1.1;
+    vocabulary is not just words, but connections
+  - 'Natural vs unnatural combinations — contrast literal translation vs. natural
+    Ukrainian usage; cultural hook: ''Surzhyk'' often stems from calquing Russian/English
+    collocations'
+  - Learning strategies — focus on synonym richness (e.g., 'горизонт' has 10+ synonyms)
+    and choosing the culturally precise word
+- section: Читання
+  points:
+  - Collocation texts — narrative texts using 'час' (проводити vs. гаяти vs. витрачати)
+    and 'досвід' (набувати vs. ділитися)
+  - 'Natural combinations — explicit instruction on correct forms: ''приймати рішення''
+    (not робити), ''брати участь'' (not приймати), ''звертати увагу'' (pay attention)'
+- section: Діалоги
+  points:
+  - 'Build natural collocations — scenarios involving expressing opinions (''думка'':
+    висловити, поділяти, змінити) and making impressions (''враження'': справляти)'
+  - 'Avoid calques — fix common errors: ''вірна'' vs. ''правильна'' (correct), ''відкривати''
+    vs. ''розплющувати'' (eyes), ''рахувати'' vs. ''вважати'' (think); address ''False
+    Friends'' (make/do)'
+vocabulary_hints:
+  required:
+  - колокація (collocation) — стале сполучення слів
+  - вираз (expression) — сталий вираз
+  - 'приймати рішення (to make a decision) — learner error: робити рішення (calque
+    from English)'
+  - 'брати участь (to participate) — learner error: приймати участь (calque from Russian)'
+  - 'мати право (to have the right) — collocations: законне право, повне право'
+  - 'робити вибір (to make a choice) — collocations: правильний вибір, складний вибір'
+  - 'звертати увагу (to pay attention) — collocations: приділяти увагу (devote), заслуговувати
+    на увагу'
+  - 'досягати успіху (to achieve success) — collocations: значний успіх, бажаний успіх'
+  recommended:
+  - 'встановлювати контакт (to establish contact) — collocations: тісний контакт,
+    зоровий контакт'
+  - 'виконувати обов''язки (to fulfill duties) — collocations: службові обов''язки'
+  - 'набувати досвіду (to gain experience) — collocations: життєвий досвід, обмін
+    досвідом, гіркий досвід'
+  - 'зберігати спокій (to keep calm) — collocations: повний спокій'
+  - 'справляти враження (to make an impression) — collocations: незабутнє враження,
+    гарне враження'
+  - 'висловлювати думку (to express an opinion) — collocations: поділяти думку, на
+    мою думку'
+  - 'дотримувати слова (to keep one''s word) — collocations: дати слово, чесне слово'
+  - 'проводити час (to spend time) — learner error: тратити час (waste); collocations:
+    вільний час, гаяти час'
+  - 'розплющувати очі (to open one''s eyes) — learner error: відкривати очі (open
+    a door/bottle)'
+activity_hints:
+- type: match-up
+  focus: Match verb to noun
+  items: 25
+- type: fill-in
+  focus: Complete collocations
+  items: 20
+- type: error-correction
+  focus: Fix unnatural collocations
+  items: 15
+- type: fill-in
+  focus: Use collocations in context
+  items: 10
+focus: vocabulary
+pedagogy: PPP
+prerequisites:
+- b1-69 (Synonymy Speaking Verbs)
+connects_to:
+- b1-71 (Emotional Intelligence)
+objectives:
+- Learner can use 25 common verb-noun collocations naturally
+- Learner can distinguish between similar verbs in collocations
+- Learner can form natural word combinations in professional and everyday contexts
+- Learner can recognize and avoid unnatural collocations
+grammar:
+- Verb-noun collocations
+- Adjective-noun collocations
+- Fixed and semi-fixed expressions
+register: розмовний
+phase: B1.6 [Vocabulary Expansion II]
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Literary Translator
+word_target: 4000

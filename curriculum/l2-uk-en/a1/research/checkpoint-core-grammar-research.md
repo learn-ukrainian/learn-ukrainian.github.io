@@ -1,77 +1,32 @@
-# Research Notes: A1 M34 "Checkpoint: Core Grammar"
+# Дослідження: Checkpoint: Core Grammar
 
-**Level**: A1 (Beginner)
-**Module**: M34
-**Topic**: Core Grammar Synthesis and Readiness Check
+## State Standard Reference
+§4.2.4.1: "Дійсний спосіб: дієвідмінювання дієслів у теперішньому часі... утворення форм минулого часу дієслова... утворення складеної форми майбутнього часу дієслів недоконаного виду"
+Alignment: This module consolidates the core morphological pillars required by the Standard for A1: gender agreement (§4.2.1), case usage (§4.2.3), and the full indicative verb system (§4.2.4).
 
-## 1. Grammar: State Standard 2024 Reference
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| бути (to be) | Top 10 (General) | бути вдома, не бути (absence) |
+| мати (to have) | Top 20 (General) | мати час, мати рацію (idiom), мати можливість |
+| хотіти (to want) | High (Modal) | хотіти їсти/пити, хотіти спати |
+| могти (can) | High (Modal) | я можу, ви можете |
+| йти (to go) | High (Motion) | йти додому, йти в кіно |
+| знати (to know) | High (Cognitive) | я не знаю, знати українську |
 
-The Ukrainian State Standard 2024 (Державний стандарт української мови як іноземної) defines the linguistic competence for the A1 level in **Section 2.4.1.4 (Каталог В. Зміст мовної компетентності)**:
+## Cultural Hooks
+1. **The "Melodious" Contest**: A widely cited cultural fact (often attributed to a 1934 Paris linguistic contest) ranks Ukrainian as the 2nd or 3rd most melodious language after Italian. While historically debated, it's a key part of Ukrainian linguistic pride and relates to the euphonic rules (чергування у/в) taught at A1.
+2. **Politeness (Ви/ти)**: The grammatical distinction in verb conjugation (2nd person singular vs plural) directly reflects the deep cultural value of respect (шанобливість) towards elders and strangers.
 
-> «Особа вміє розпізнавати та використовувати граматично правильні мовні форми для вираження власних намірів у межах тем, зазначених у Каталозі Б. Знання з граматики української мови мають спорадичний характер, базуються на відтворенні готових комунікативних моделей. Розуміння деяких мовних особливостей української мови (родові форми слів, відмінювання, дієвідмінювання, часи, узгодження форм між собою і т. д.) особа показує під час застосування мови для реалізації комунікативних потреб, зазначених у Каталозі А.» (p. 15)
+## Common Learner Errors
+1. **The "To Be" Trap**: *Я є студент* (Redundant 'є') → *Я студент* (Correct) — Influence of English "I am".
+2. **Gender Mismatch**: *Гарний книга* (M adj + F noun) → *Гарна книга* — Failure to check noun ending first.
+3. **Direction vs Location**: *Я йду в магазині* (Locative for motion) → *Я йду в магазин* (Accusative) — Confusing 'where at' with 'where to'.
 
-The checkpoint specifically synthesizes the morphological requirements listed in **Section 4.2**, including:
-- **4.2.1.1. Nouns**: Gender recognition, Nominative plural, Accusative and Locative singular.
-- **4.2.4. Verbs**: Present tense conjugation (Group 1 and 2), Past tense, and compound Future tense.
+## Cross-References
+- **Builds on**: a1-01 (Alphabet), a1-10 (Verbs), a1-11 (Accusative), a1-13 (Locative), a1-33 (Recap).
+- **Prepares for**: a1-35 (At the Café - practical application of these structures).
 
-## 2. Vocabulary Frequency
-
-At the end of A1, students should be consolidated on high-frequency "survival" vocabulary. 
-
-### High-Frequency Nouns/Pronouns
-- **Personal**: я, ти, він/вона/воно, ми, ви, вони.
-- **Possessive**: мій, твій, наш, ваш, його/її.
-- **People**: мама, тато, друг/подруга, студент, викладач, чоловік, жінка.
-- **Places**: місто, центр, школа, університет, дім, офіс, магазин, парк, вулиця.
-
-### High-Frequency Verbs
-- **Identity/State**: бути (to be), звати (to be called), жити (to live).
-- **Activity**: читати (read), писати (write), знати (know), розуміти (understand), працювати (work), відпочивати (rest).
-- **Movement**: іти (go by foot), їхати (go by vehicle).
-- **Modals**: хотіти (want), могти (can/be able), мусити (must/have to).
-
-### Common Collocations (A1 Consolidation)
-- **Як справи?** (How are you?) — **Добре, дякую.** (Fine, thanks.)
-- **Мене звати...** (My name is...)
-- **Приємно познайомитись.** (Nice to meet you.)
-- **Скільки це коштує?** (How much does it cost?)
-- **Я не розумію.** (I don't understand.)
-- **Скажіть, будь ласка...** (Tell me, please...)
-
-## 3. Cultural Hook
-
-### The Formal/Informal Divide ("Ви" vs "Ти")
-In Ukrainian culture, the distinction between formal (*Ви*) and informal (*Ти*) address is strictly observed. Even among young people, *Ви* is the default for strangers, service staff, and teachers. A key cultural "fail" for foreigners is using *Ти* with a waiter or a bus driver, which can be perceived as patronizing.
-
-### Patronymics and Respect
-In formal settings (work, official institutions), Ukrainians traditionally use the **Name + Patronymic** (*Ім'я та По батькові*) construction (e.g., *Олено Петрівно*, *Іване Миколайовичу*). While modern urban environments and international companies are shifting toward Pan/Pani + Name, the patronymic remains the standard for showing high respect to elders and superiors.
-
-## 4. Pedagogical Notes
-
-### Core Challenges for English Speakers
-- **Gender Agreement**: Unlike English where only people have gender, every object in Ukrainian has a gender that dictates the ending of adjectives and possessive pronouns. Learners often forget to change *мій* to *моя* for feminine nouns.
-- **Stress Mobility**: Stress in Ukrainian is not fixed. When a word changes case or number, the stress can shift (e.g., *ру́ки* Nom. Pl. vs *руки́* Gen. Sg.).
-- **Omitting "To Be"**: English speakers struggle with the zero-copula in the present tense (e.g., *Я студент* instead of *I am a student*).
-
-### Teaching Sequence Recommendation
-The checkpoint should focus on **functional application** rather than abstract tables. 
-1. **Identity**: Combining gender + identity nouns + adjectives.
-2. **Possession**: Using Genitive for absence (*У мене немає...*) and possession.
-3. **Action**: Mixing tenses (What I did yesterday vs. what I will do tomorrow).
-
-## 5. Scope Boundaries
-
-### IN Scope (Consolidation Targets)
-- **Gender**: Masc, Fem, Neut.
-- **Nouns**: Nominative (subject), Accusative (direct object/destination), Locative (location), Genitive (possession/negation).
-- **Verbs**: Present (both groups), Past, Future (compound).
-- **Modals**: Хочу, можу, мушу.
-- **Pronouns**: Personal and Possessive.
-- **Numbers**: 1–100.
-
-### OUT Scope (Do Not Introduce)
-- **Dative Case**: Indirect objects (*кому*) are not yet required for full mastery.
-- **Instrumental Case**: Means/Instruments (*чим*) or accompaniment (*з ким*) should be avoided in this module's exercises.
-- **Perfective/Imperfective Aspect**: While students know specific past/future forms, the systemic "aspect pair" logic is usually fully tackled in A2.
-- **Participles/Gerunds**: Strictly literary/advanced forms.
-- **Conditional Mood**: *Я би хотів...* is out of scope.
+## Notes for Content Writing
+- **Visuals**: Essential to use side-by-side tables for "Wrong vs Right" to correct the fossilized errors identified above.
+- **Scaffolding**: As this is A1.3 (Checkpoint), use English for all grammatical explanations, but maximize Ukrainian in the "Test" portions of the TTT structure.

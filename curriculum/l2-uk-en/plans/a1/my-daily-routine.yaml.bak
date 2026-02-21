@@ -1,0 +1,94 @@
+module: a1-25
+level: A1
+sequence: 25
+slug: my-daily-routine
+version: '2.0'
+title: My Daily Routine
+subtitle: Reflexive Verbs and Daily Activities
+content_outline:
+- section: Warm-up
+  points:
+  - 'Як розповісти про свій день — State Standard §3.4: ''типові щоденні заняття''
+    (typical daily activities)'
+  - 'Послідовність дій — focus on simple chronological markers; include concepts from
+    State Standard §3.5: ''робочий день; вихідний день; обідня перерва'''
+- section: Presentation
+  points:
+  - 'Ранкові дії (прокидатися, вмиватися, снідати, одягатися) — learner error: Omission
+    of -ся/-сь (Я вмиваю vs Я вмиваюся); cultural hook: Traditional breakfasts like
+    syrnyky, kasha, and mlyntsi with smetana'
+  - 'Денні дії (працювати, обідати, відпочивати) — cultural hook: The Ukrainian ''Obid''
+    is the main/heaviest meal of the day (often 12:00-13:00); collocation: обідня
+    перерва; note: distinguish ''мити руки'' (transitive) vs ''вмиватися'' (reflexive)'
+  - 'Вечірні дії (вечеряти, дивитися телевізор, лягати спати) — collocation: лягати
+    спати; learner error: confusing reflexive endings (-ся vs -сь); focus on conjugation
+    of ''дивитися'' (дивлюся, дивишся...) per State Standard §4.2.4.1'
+  - Прислівники послідовності (спочатку, потім, після цього, нарешті) — use to structure
+    the routine narrative
+  - 'Прислівники частоти (завжди, зазвичай, іноді, рідко, ніколи) — collocation: зазвичай
+    прокидаюся'
+- section: Practice
+  points:
+  - Діалог про типовий день (О котрій ти встаєш?) — use reflexives in context; prompt
+    use of 'зазвичай' (usually)
+  - Діалог про вихідні (Що ти робиш у суботу?) — contrast with weekday routine
+  - Порівняння робочого дня та вихідного — focus on 'прокидатися пізно' vs 'прокидатися
+    рано'
+- section: Practice 2
+  points:
+  - Опис свого типового дня — synthesis of sequence adverbs and reflexive verbs
+vocabulary_hints:
+  required:
+  - прокидатися (to wake up) — прокидатися рано, прокидатися о сьомій
+  - 'вмиватися (to wash oneself) — вмиватися холодною водою; learner error: confusion
+    with ''мити руки'''
+  - 'одягатися (to dress oneself) — швидко одягатися, одягатися тепло; note: -ся after
+    consonants, -сь often after vowels'
+  - снідати (to have breakfast) — зазвичай снідати, снідати вдома
+  - обідати (to have lunch) — обідати на роботі, обідня перерва
+  - вечеряти (to have dinner) — пізно вечеряти, вечеряти з сім'єю
+  - 'лягати (to lie down) — collocation: лягати спати'
+  - спати (to sleep) — міцно спати
+  recommended:
+  - спочатку (first) — sequence marker
+  - потім (then) — sequence marker
+  - нарешті (finally) — sequence marker
+  - зазвичай (usually) — зазвичай прокидаюся, зазвичай о восьмій
+  - щодня (every day) — frequency marker
+  - відпочивати (to rest) — active rest vs passive rest
+activity_hints:
+- type: quiz
+  focus: Order daily activities
+  items: 20
+- type: fill-in
+  focus: Complete routine descriptions
+  items: 20
+- type: match-up
+  focus: Match activities to times
+  items: 15
+- type: fill-in
+  focus: Describe your typical day
+  items: 6
+focus: practical
+pedagogy: PPP
+prerequisites:
+- a1-09 (Reflexive Verbs)
+- a1-23 (What Time Is It)
+connects_to:
+- a1-26 (Describing Things - Adjectives)
+- a1-30 (Checkpoint Consolidation)
+objectives:
+- Learner can conjugate common reflexive verbs
+- Learner can describe daily routine activities
+- Learner can use sequence words to order events
+- Learner can talk about habits and regular activities
+grammar:
+- Reflexive verbs (-ся/-сь) in context
+- Sequence adverbs (спочатку, потім, нарешті)
+- Daily routine expressions
+register: розмовний
+phase: A1.3 [Consolidation]
+persona:
+  voice: Patient Supportive Tutor
+  role: Time Management Coach
+word_target: 2000

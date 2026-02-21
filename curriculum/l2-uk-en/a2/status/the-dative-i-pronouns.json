@@ -1,15 +1,16 @@
 {
-  "module": "01-the-dative-i-pronouns",
+  "module": "the-dative-i-pronouns",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-10T19:11:03.738840Z",
+  "last_audit": "2026-02-21T01:00:32.952146Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-08T22:58:07.895529Z",
-    "meta": "2026-02-07T10:03:50.719902Z",
-    "activities": "2026-02-08T22:58:07.896021Z",
-    "vocabulary": "2026-02-07T10:03:50.794640Z",
-    "plan": "2026-02-09T12:52:14.126681Z"
+    "md": "2026-02-21T01:00:30.222963Z",
+    "meta": "2026-02-20T01:59:53.829795Z",
+    "activities": "2026-02-21T01:00:30.223563Z",
+    "vocabulary": "2026-02-21T01:00:30.224513Z",
+    "plan": "2026-02-20T20:59:22.435683Z",
+    "research": "2026-02-20T01:58:18.941469Z"
   },
   "gates": {
     "meta": {
@@ -20,22 +21,32 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1316/1000 (raw: 1497)"
+      "message": "3504/3000 (raw: 3832)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "10/10"
+      "message": "12/10"
     },
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "152/1"
+      "message": "33/1"
     },
     "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "ipa": {
       "status": "pass",
       "violations": 0,
-      "message": "8/10 (High)"
+      "message": "Clean IPA"
+    },
+    "research": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Content aligned with research"
     },
     "review": {
       "status": "pass",
@@ -46,7 +57,8 @@
   "overall": {
     "status": "pass",
     "blocking_issues": [],
-    "pass_count": 6,
-    "fail_count": 0
+    "pass_count": 7,
+    "fail_count": 0,
+    "deferred_count": 0
   }
 }

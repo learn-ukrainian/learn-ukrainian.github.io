@@ -1,4 +1,3 @@
----
 sequence: 5
 module: oes-005
 module_number: 5
@@ -9,7 +8,6 @@ phase: 1
 phase_id: vernacular-foundations
 phase_name: Vernacular Foundations
 focus: The unique sound of ѣ and its Ukrainian path
-word_target: 4000
 content_outline:
 - section: Вступ
   description: Introduction to The Yat' Mystery
@@ -24,3 +22,6 @@ activity_types:
 - transcription
 - etymology-trace
 - grammar-identify
+persona:
+  voice: Senior Paleographer
+  role: Keeper of the Old Vowels

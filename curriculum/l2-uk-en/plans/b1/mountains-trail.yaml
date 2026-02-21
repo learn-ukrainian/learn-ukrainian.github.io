@@ -1,0 +1,120 @@
+module: b1-82
+level: B1
+sequence: 82
+slug: mountains-trail
+version: '2.0'
+title: Гори та трейлраннінг
+subtitle: Hiking and Trail Running in the Carpathians
+content_outline:
+- section: 'Вступ: Світ українських Карпат (Introduction: World of the Ukrainian Carpathians)'
+  words: 600
+  points:
+  - 'Українські гори як терапевтичний простір та місце активного відпочинку — alignment:
+    §3.14 (Природне середовище) та §3.4 (Дозвілля)'
+  - 'Еволюція гірської культури в Україні: від класичного туризму до сучасного трейлраннінгу
+    (гірського бігу)'
+  - 'Вступне слово від персонажа ''Гірський провідник'': правила етикету в горах та
+    повага до природи'
+- section: Вершини та легенди Чорногори (Summits and Legends of Chornohora)
+  words: 1000
+  points:
+  - 'Найвищі точки України: Говерла (2061 м) та Петрос як головні виклики для мандрівників
+    — collocations: підкорити вершину, найвища точка'
+  - 'Культурний гачок: обсерваторія ''Білий Слон'' на горі Піп Іван Чорногірський
+    — історія будівлі та її вигляд узимку під льодом і снігом'
+  - 'Географічне розмежування: альпійські хребти Чорногори проти кам''янистих розсипів
+    (ґорґанів) у центральних Карпатах'
+  - 'Карпатські полонини як унікальний біоценоз та центр гуцульського вівчарства —
+    collocations: вийти на полонину, зелена полонина, вівці на полонині'
+- section: 'Трейлраннінг: Спорт на межі (Trail Running: Sport on the Edge)'
+  words: 800
+  points:
+  - 'Chornohora Sky Marathon: легендарний забіг через усі шість українських ''двотисячників''
+    (60 км з великим набором висоти)'
+  - 'Спільнота трейлраннерів в Україні: популярні старти та культура підготовки до
+    змагань — context: growing community vocabulary'
+  - 'Психологія бігу в горах: пошук натхнення та подолання власних меж на маркованих
+    маршрутах'
+- section: Спорядження, мова та безпека (Equipment, Language, and Safety)
+  words: 800
+  points:
+  - 'Аналіз спорядження: наплічник (purist alternative) проти рюкзака — collocations:
+    складати наплічник, туристичне спорядження'
+  - 'Рятувальні служби: обов''язкова реєстрація у гірських рятувальників перед виходом
+    на складний маршрут'
+  - 'Мовний фільтр (Anti-Russisms): викорінення суржику в гірському контексті — намет
+    (not палатка), вогнище (not костєр), пляшка (not бутилка)'
+  - 'Екологічна свідомість: правило ''забери сміття з собою'' та збереження чистоти
+    гірських джерел'
+- section: Практична граматика та продукція (Practical Grammar and Production)
+  words: 800
+  points:
+  - 'Дієслова руху: розрізнення односпрямованого ''йти'' та регулярного/хабітуального
+    ''ходити'' — learner error: ''Я йду в гори щоліта'' (Incorrect) vs ''Я ходжу в
+    гори щоліта'' (Correct)'
+  - 'Правила милозвучності: вживання прийменника ''у'' після приголосного — learner
+    error: ''похід в гори'' (Incorrect) vs ''похід у гори'' (Correct)'
+  - 'Продукція: рольова гра ''Планування маршруту та перевірка спорядження'' між туристом
+    і гірським рятувальником'
+  - 'Підсумок: гори як місце сили та повернення до себе (терапевтичний ефект)'
+vocabulary_hints:
+  required:
+  - 'гора (mountain) — high frequency; collocations: підніжжя гори, снігова гора'
+  - 'вершина (summit) — collocations: підкорити вершину, дістатися вершини, найвища
+    вершина'
+  - 'стежка (trail) — collocations: гірська стежка, вузька стежка, маркована стежка'
+  - 'маршрут (route) — high frequency (tourism); collocations: прокладати маршрут,
+    складний маршрут, зійти з маршруту'
+  - 'спорядження (equipment) — collocations: туристичне спорядження, орендувати спорядження,
+    перевірити спорядження'
+  - 'наплічник (backpack) — purist alternative to рюкзак; collocations: складати наплічник,
+    нести наплічник'
+  - 'намет (tent) — essential standard term; learner error: avoid ''палатка'''
+  - 'вогнище (campfire) — standard term; learner error: avoid ''костєр'''
+  - 'полонина (alpine meadow) — high frequency (Carpathian specific); collocations:
+    вийти на полонину, зелена полонина'
+  - 'похід (hike/trip) — usage: похід у гори (mind euphony)'
+  recommended:
+  - 'трейлраннінг (trail running) — niche sport context; collocations: займатися трейлраннінгом,
+    змагання з трейлраннінгу'
+  - гірський біг (mountain running) — synonym for trail running
+  - 'рятувальники (rescuers) — context: гірська рятувальна служба'
+  - 'пляшка (bottle) — standard term; learner error: avoid ''бутилка'''
+  - 'двотисячник (two-thousander) — peak over 2000m; cultural context: Chornohora
+    range'
+  - 'маркування (marking) — context: маркований маршрут, біло-червоне маркування'
+  - Білий слон (White Elephant) — nickname for the Pip Ivan observatory
+activity_hints:
+- type: reading
+  focus: Trail descriptions and guides
+  items: 15
+- type: match-up
+  focus: Match equipment to activities
+  items: 20
+- type: fill-in
+  focus: Complete hiking plans
+  items: 15
+- type: quiz
+  focus: Plan mountain trips
+  items: 10
+focus: culture
+pedagogy: CBI
+prerequisites:
+- b1-81 (Running in Ukraine)
+connects_to:
+- b1-83 (Cycling and Water Sports)
+objectives:
+- Learner can discuss hiking and mountain activities in Ukrainian
+- Learner can understand trail descriptions and mountain weather reports
+- Learner can use vocabulary for equipment and nature
+- Learner can plan a hiking trip to the Carpathians
+grammar:
+- Mountain and trail vocabulary
+- Weather and nature descriptions
+- Planning and directions
+register: розмовний
+phase: B1.7 [Contemporary Ukraine]
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Carpathian Trail Guide
+word_target: 4000

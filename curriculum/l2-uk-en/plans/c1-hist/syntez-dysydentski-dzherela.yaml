@@ -1,4 +1,3 @@
----
 module: c1-hist-044
 level: c1-hist
 sequence: 44
@@ -10,23 +9,20 @@ objectives:
 - 'Analyze the causes and consequences of синтез: голоси опору'
 - Evaluate the historical significance of від самвидаву до незалежності
 content_outline:
-- section: "Вступ — Від самвидаву до незалежності"
-  words: 457
+- section: Вступ — Від самвидаву до незалежності
   subsections:
   - Огляд модулів 39-43
   - Різні голоси одного руху
   - Мета синтезу
   - Лінія від опору до держави
 - section: Типологія дисидентських джерел
-  words: 686
   subsections:
   - Самвидавні видання
   - Приватне листування
   - Офіційні документи (УГГ)
   - Літературні твори
   - Таблиця порівняння
-- section: "Голоси опору — хто говорив?"
-  words: 686
+- section: Голоси опору — хто говорив?
   subsections:
   - Інтелігенція — письменники, вчені
   - Правозахисники
@@ -34,7 +30,6 @@ content_outline:
   - Жінки в русі
   - Хто мовчав?
 - section: Стратегії опору
-  words: 686
   subsections:
   - Культурний опір — мова, література
   - Правовий опір — посилання на закони
@@ -42,26 +37,22 @@ content_outline:
   - Міжнародний тиск
   - Що спрацювало?
 - section: Від опору до влади
-  words: 571
   subsections:
   - Перебудова — нові можливості
   - Рух — від підпілля до партії
   - Дисиденти в політиці — Чорновіл, Лук'яненко
   - Парадокс — комуністи голосують за незалежність
 - section: Методологічні уроки
-  words: 571
   subsections:
   - Читання цензурованих текстів
   - Реконструкція вирізаного
   - Голос vs. мовчання
   - Героїзація vs. критика
 - section: Підсумок
-  words: 343
   subsections:
   - Завершення «Джерельної» фази
   - Від джерел до тематики
   - Чек-ліст для дисидентських джерел
-word_target: 4000
 vocabulary:
 - синтез
 - опір
@@ -89,7 +80,7 @@ activities:
   focus: Як дисидентський рух підготував незалежність?
 sources:
 - name: Дисидентський рух в Україні (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Дисидентський_рух_в_Україні"
+  url: https://uk.wikipedia.org/wiki/Дисидентський_рух_в_Україні
   type: reference
   notes: Overview
 vocabulary_hints:
@@ -108,7 +99,9 @@ activity_hints:
   items: 4
 - type: essay-response
   focus: Критичний аналіз
-  word_target: 300
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: KGB Archives Researcher

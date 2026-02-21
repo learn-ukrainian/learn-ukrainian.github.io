@@ -1,0 +1,14 @@
+{
+  "slug": "rozstriliane-kontekst",
+  "track": "c1-hist",
+  "module_num": 52,
+  "mode": "e2e",
+  "phases": {
+    "0": {
+      "status": "complete",
+      "timestamp": "2026-02-20T22:50:44Z",
+      "task_id": "yw-rozstriliane-kontekst-p0"
+    }
+  },
+  "last_updated": "2026-02-20T22:50:44Z"
+}

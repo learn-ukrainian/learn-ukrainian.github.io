@@ -1,0 +1,237 @@
+✅ Message sent to Gemini (ID: 11913) [auto-acked: self-addressed]
+✓ Message 11913 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #11913...
+📨 Message #11913
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-zerov-ad-fontes
+   Time: 2026-02-20T23:34:32.876824+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 15
+module: lit-essay-15
+level: LIT.ESSAY
+slug: zerov-ad-fontes
+version: '2.0'
+title: Zerov Ad Fontes
+subtitle: Zerov Ad Fontes
+content_outline:
+- section: Вступ та контекст
+  points: []
+- section: Аналіз ключових творів
+  points: []
+- section: Стилістика та мова автора
+  points: []
+- section: Деколонізаційна перспектива
+  points:
+  - Як цей автор руйнує імперські міфи
+  - Українська суб'єктність у тексті
+- section: Підсумок та спадщина
+  points: []
+vocabulary_hints:
+  required:
+  - історіографія
+  - наратив
+  - суб'єктність
+  recommended:
+  - деколонізація
+activity_hints:
+- type: reading
+  focus: Аналіз першоджерела
+- type: essay-response
+  focus: Критичне есе
+- type: critical-analysis
+  focus: Деконструкція тексту
+focus: literature
+pedagogy: literature
+immersion: 100% Ukrainian
+phase: LIT Expansion
+objectives:
+- Проаналізувати творчість Zerov Ad Fontes у контексті української літератури
+- Дослідити вплив автора на формування національної ідентичності
+persona:
+  voice: Senior Specialist
+  role: Neoclassical Professor
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Zerov Ad Fontes
+
+## Використані джерела
+1. [Енциклопедія Сучасної України (ЕСУ)](https://esu.com.ua/article/16068) — стаття про Миколу Зерова, його участь у русі неокласиків та літературно-критичну діяльність.
+2. [Інститут історії України НАНУ](http://history.org.ua) — історичний контекст Літературної дискусії 1925–1928 років та доби Розстріляного відродження.
+3. [Ізборник (litopys.org.ua)](http://litopys.org.ua) — оригінальні тексти та матеріали Літературної дискусії, згадки про концепцію європеїзації української літератури.
+
+## Хронологія
+- 1890: Народження Миколи Зерова в Зінькові.
+- 1925: Початок Літературної дискусії, під час якої Зеров підтримує позицію Миколи Хвильового («Психологічна Європа»).
+- 1926: Видання збірки літературно-критичних та полемічних статей «До джерел».
+- 1935: Арешт Миколи Зерова радянськими репресивними органами (НКВС).
+- 1937 (3 листопада): Розстріл Зерова та інших представників української інтелігенції в урочищі Сандармох (Карелія) до 20-річчя Жовтневої революції.
+
+## Ключові факти та цитати
+- Зеров вимагав відмови від провінційності та орієнтації на європейські стандарти: «Ми хочемо такої літературної обстановки, в якій би виростали міцні фаланги письменників, а не аматорів...»
+- Гасло «Ad fontes!» (до джерел) символізувало потребу засвоєння першоджерел європейської цивілізації, зокрема античної спадщини, як фундаменту для розвитку модерної української культури.
+- Неокласики на чолі із Зеровим кинули виклик пролетарській "масовізації" літератури, обстоюючи елітарність, ерудицію та бездоганне володіння формою.
+
+## Engagement Hooks (mapped to sections)
+- Section "Деколонізаційна перспектива: Руйнування імперських міфів": [!myth-buster] — Деконструкція радянського міфу про неокласиків як "аполітичних, відірваних від життя естетів". Насправді їхній естетизм і класицизм були формою глибокого інтелектуального спротиву примітивізації культури, яку нав'язував тоталітарний режим.
+- Section "Аналіз ключових творів: Засвоєння європейської спадщини": [!history-bite] — Микола Зеров перекладав Овідія, Вергілія та Горація безпосередньо з латини українською мовою, практично доводячи, що українська мова здатна функціонувати в найвищих філософських та естетичних регістрах світової культури.
+- Section "Вступ та контекст: Літературна дискусія 1925–1928 років": [!context] — Літературна дискусія 1920-х була не лише естетичною суперечкою, але й битвою за цивілізаційний вектор України, де Зеров і Хвильовий обстоювали незалежний європейський шлях.
+- Section "Аналіз ключових творів: Полеміка проти "масовізму" та провінційності": [!quote] — Цитата Зерова: «Ми хочемо такої літературної обстановки, в якій би виростали міцні фаланги письменників, а не аматорів».
+- Section "Деколонізаційна перспектива: Українська суб'єктність та шлях в обхід Москви": [!decolonization] — Гасло «Ad fontes» стверджувало прямий культурний зв'язок української літератури з європейською античністю та Ренесансом, повністю оминаючи Росію як "культурного посередника".
+- Section "Стилістика та мова автора: Інтелектуалізм та ерудиція": [!culture] — Діяльність неокласиків заклала основи елітарного модернізму в українській літературі, орієнтованого на переклад і засвоєння найкращих світових зразків.
+
+## Деколонізаційний контекст
+- Imperial/Soviet myth: Українська література є похідною від "великої російської", її доля — оспівувати село або пролетарські будні у спрощених формах. Неокласики — це шкідливі "буржуазні націоналісти", відірвані від мас.
+- Ukrainian reality: Микола Зеров показав, що українська література є самодостатньою європейською літературою, яка має спиратися на власну та світову класичну спадщину. Його погляд руйнував монополію Москви на культурне домінування.
+
+## Contested Terms (if applicable)
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| Неокласицизм | Відірване від життя естетство, «буржуазний націоналізм», ескапізм | Високий модернізм, європеїзація, інтелектуальний спротив провінціалізації та тоталітаризму |
+| Літературна дискусія 1925–1928 | Класова боротьба пролетаріату проти "реакційних" елементів | Захист національної суб'єктності, боротьба за європейський вектор та професіоналізм |
+
+## Section-Mapped Research Notes
+
+### Вступ та контекст: Епоха Розстріляного відродження
+Епоха 1920-х років в Україні — час небувалого культурного ренесансу. Формування групи київських неокласиків («п'ятірне гроно»). Микола Зеров виступає як безумовний інтелектуальний лідер, професор, поет і критик, який задає найвищу планку літературної дискусії.
+
+### Вступ та контекст: Літературна дискусія 1925–1928 років
+Дискусія розпочалася з виступів Миколи Хвильового проти масовізації та графоманії. Зеров став головним академічним союзником Хвильового. Його голос додав дискусії теоретичної глибини. Протистояння з пролетарськими організаціями (напр., ВУСПП) та панфутуристами.
+
+### Вступ та контекст: Філософія гасла "Ad fontes"
+Значення гасла (лат. "до джерел"). Заклик звертатися до першоджерел європейської культури — античності, Відродження, класицизму. Відмова від хуторянства. Вимога до письменників бути високоосвіченими людьми, а не просто виразниками пролетарського інстинкту.
+
+### Аналіз ключових творів: Полеміка проти "масовізму" та провінційності
+Збірка «До джерел» (1926) об'єднала критичні статті Зерова. Центральний пафос — боротьба з «аматорством» та зниженням естетичних критеріїв. Вимога професіоналізації письменницької праці, навчання ремеслу.
+
+### Аналіз ключових творів: Засвоєння європейської спадщини
+Зеров обґрунтовує необхідність перекладів світової класики. Власним прикладом (переклади Овідія, Горація) він доводить, що українська мова створена для високих смислів. Трансляція європейського досвіду на український ґрунт.
+
+### Аналіз ключових творів: Нове прочитання української класики
+У збірці містяться статті про Лесю Українку, П. Куліша, М. Рильського. Зеров трактує їх не через вузьконародницьку призму, а як творців європейського рівня. Він деконструює спрощені погляди на українську літературу ХІХ ст.
+
+### Стилістика та мова автора: Інтелектуалізм та ерудиція
+Тексти Зерова насичені алюзіями, цитатами багатьма мовами, історичними паралелями. Елітарний, академічний, але водночас живий і полемічний стиль викладу. Строга логіка та архітектоніка есею.
+
+### Стилістика та мова автора: Риторичні стратегії та іронія
+Зеров як майстер літературної полеміки. Використання тонкої іронії, сарказму, філігранної аргументації проти опонентів. Збереження високого академічного тону навіть у найгарячіших дебатах.
+
+### Деколонізаційна перспектива: Руйнування імперських міфів
+Спростування міфу про неокласиків як аполітичних творців. Їхня орієнтація на форму та вічні цінності була прямим політичним спротивом ідеологізації та русифікації мистецтва. "Естетство" як форма збереження національної гідності.
+
+### Деколонізаційна перспектива: Українська суб'єктність та шлях в обхід Москви
+Концепція Зерова стверджувала, що українська культура може безпосередньо комунікувати з Європою. Встановлення містка "Київ — Рим/Париж" руйнувало імперську модель "Київ — Москва — Європа". Ствердження абсолютної культурної самодостатності.
+
+### Підсумок та спадщина: Трагедія Сандармоху
+Репресії проти неокласиків. Арешт Зерова у 1935 році за сфабрикованою справою. Його показовий розстріл у 1937 році в Сандармосі. Знищення Зерова було актом імперського терору проти українського інтелекту.
+
+### Підсумок та спадщина: Актуальність ідей Зерова сьогодні
+Повернення творчості Зерова після десятиліть заборони. Гасло «Ad fontes» як ніколи актуальне в умовах сучасної деколонізації та повернення України до європейського цивілізаційного простору. Зеров як символ інтелектуальної незламності.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 11964)
+✓ Message 11913 acknowledged
+✓ Message 11964 acknowledged

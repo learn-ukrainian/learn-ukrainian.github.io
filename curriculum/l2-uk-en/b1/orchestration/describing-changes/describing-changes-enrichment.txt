@@ -1,0 +1,319 @@
+✅ Message sent to Gemini (ID: 10395) [auto-acked: self-addressed]
+✓ Message 10395 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10395...
+📨 Message #10395
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-describing-changes
+   Time: 2026-02-20T20:30:38.097175+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b1-58
+level: B1
+sequence: 58
+slug: describing-changes
+version: '2.0'
+title: Опис змін
+subtitle: Describing Changes
+content_outline:
+- section: Вступ
+  points:
+  - 'Why change vocabulary matters — tone set by ''Climate Scientist'' persona: describing
+    environment and society'
+  - Dynamic vs static descriptions — distinguish process (*процес*) from result (*результат*)
+  - Temporal perspective — gradual (*поступово*) vs sudden (*різко*) change
+- section: Вживання
+  points:
+  - Collocations with adverbs — *стрімко зростати*, *поступово змінюватися*, *різко
+    падати*
+  - Typical constructions — *перетворюватися на...* (transform into), *змінюватися
+    на краще* (change for better)
+  - Application domains — Climate (*потепління*), Economy (*ціни*), Society (*звичаї*)
+- section: Читання
+  points:
+  - Economic review — use of *зростати* (abstract) vs *рости* (physical); learner
+    error warning included
+  - 'Weather forecast — Climate Scientist focus: *температура підвищується/знижується*,
+    *погода змінюється*'
+  - 'Social changes blog — cultural hook: Kyiv transformation (UNESCO status, de-russification)
+    and street renaming as *зміна*'
+- section: Діалоги
+  points:
+  - 'Work meeting (formal) — Discussing project changes; learner error: *змінювати
+    план* (Accusative) NOT *змінювати до плану*'
+  - Weather discussion (informal) — *Погода змінюється* (intransitive) vs *Вітер змінює
+    напрямок* (transitive)
+  - Economic discussion, doctor visit — *Ціни зростають* (prices rise) and *Зір погіршується*
+    (eyesight worsens)
+- section: Лексика
+  points:
+  - Six vocabulary groups — Motion, State, Quantity, Quality, Time, Abstract
+  - General change verbs, improvement/decline — *змінювати/ся*, *покращувати/ся*,
+    *погіршувати/ся*
+  - 'Growth/decrease, expansion, speed adverbs — cultural hook: *Дія* creates *стрімкий
+    розвиток* (rapid development)'
+- section: Підсумок
+  points:
+  - Key vocabulary recap — *зростати* vs *рости*, *змінювати* vs *змінюватися*
+  - Practice recommendations — Describe local weather or city changes using new adverbs
+vocabulary_hints:
+  required:
+  - 'зростати (to grow/increase) — *попит/економіка/ціни/напруга зростають*; learner
+    error: use *рости* only for physical growth (kids, plants)'
+  - зменшуватися (to decrease) — *кількість/відстань/ризик зменшується*
+  - 'змінюватися (to change) — *погода/ситуація/часи/світ змінюється*; learner error:
+    confused with transitive *змінювати* (change something)'
+  - 'перетворюватися (to transform) — *перетворюватися на (щось)*; context: cities
+    transforming'
+  - підвищуватися (to rise) — *температура/рівень/тиск підвищується*
+  - знижуватися (to lower/decline) — *температура/ціни/рівень знижується*
+  - поступово (gradually) — *поступово змінюватися/звикати/відновлюватися*
+  - різко (sharply) — *різко змінитися/впасти/піднятися*
+  recommended:
+  - 'стрімко (rapidly) — *стрімко розвиватися/зростати/падати*; context: digital state/Diia'
+  - значно (significantly) — *значно впливати/змінити/покращити*
+  - падати (to fall) — *курс валют/ціни/температура падає*
+  - ставати (to become) — *ставати кращим/гіршим/більш доступним*
+activity_hints:
+- type: match-up
+  focus: Verb + adverb combinations
+  items: 25
+- type: fill-in
+  focus: Describe changes in context
+  items: 20
+- type: fill-in
+  focus: Rephrase change descriptions
+  items: 15
+- type: fill-in
+  focus: Narrate trends
+  items: 10
+focus: vocabulary
+pedagogy: PPP
+prerequisites:
+- b1-57 (Discourse Markers Advanced)
+connects_to:
+- b1-59 (Media News)
+objectives:
+- Learner can use 25 verbs and expressions for describing changes
+- Learner can distinguish between gradual and sudden change vocabulary
+- Learner can form natural collocations with change-related adverbs
+- Learner can narrate transformations over time
+grammar:
+- Verb collocations for describing change
+- Adverbs of manner with change verbs
+- Temporal expressions for change processes
+register: розмовний
+phase: B1.5 [Vocabulary Expansion I]
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Climate Scientist
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Опис змін
+
+## State Standard Reference
+§3.14: "Природне середовище: погода, пори року, клімат; природні об’єкти..."
+§3.6: "Суспільні відносини: суспільні проблеми... суспільно-політичні події."
+§4.3.2: "Ступені порівняння якісно-означальних прислівників: ...більш сучасно, менш холодно..."
+Alignment: Модуль забезпечує лексичний інструментарій для опису динамічних процесів у природі (зміни клімату), економіці (зростання цін) та суспільстві (трансформація міст), що відповідає тематичним та граматичним вимогам стандарту B1.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| **Зростати** | High (News/Econ) | попит зростає, економіка зростає, ціни зростають, стрімко зростати, напруга зростає |
+| **Зменшуватися** | High (General) | кількість зменшується, відстань зменшується, ризик зменшується, поступово зменшуватися |
+| **Змінюватися** | Very High | погода змінюється, ситуація змінилася, часи змінюються, світ змінюється |
+| **Перетворюватися** | Medium | перетворюватися на (щось), місто перетворюється |
+| **Стрімко** | Medium/High | стрімко розвиватися, стрімко зростати, стрімко падати |
+| **Поступово** | High | поступово змінюватися, поступово звикати, поступово відновлюватися |
+
+## Cultural Hooks
+1. **Трансформація Києва**: Київ отримав статус "UNESCO City of Music" (2025) та активно проводить дерусифікацію (перейменування вулиць, демонтаж пам'ятників), що є ідеальним контекстом для дієслів *змінюватися*, *перетворюватися*, *відмовлятися* (від минулого).
+2. **Цифрова держава**: Україна стрімко (*стрімко розвивається*) цифровізується через "Дію", змінюючи спосіб взаємодії громадян з державою (зникнення паперової бюрократії).
+
+## Common Learner Errors
+1. **Змінювати vs Змінюватися**:
+   - *Error*: "Погода змінює." (Weather changes [something]).
+   - *Correction*: "Погода змінюється." (Weather changes [itself]).
+   - *Reason*: Confusion between transitive (active agent) and intransitive/reflexive forms.
+2. **Рости vs Зростати**:
+   - *Error*: "Економіка росте." (Colloquial/Physical).
+   - *Correction*: "Економіка зростає." (Abstract/Statistical).
+   - *Reason*: *Рости* is often physical (plants, kids); *Зростати* is preferred for abstract quantitative increase.
+3. **Case Governance**:
+   - *Error*: "Це змінює до плану." (Changes to the plan).
+   - *Correction*: "Це змінює план." (Accusative).
+   - *Reason*: Influence of English structure "changes to".
+
+## Cross-References
+- Builds on: `b1-57` (Discourse Markers Advanced - logic flow)
+- Prepares for: `b1-59` (Media News - analyzing reports on economic/social trends)
+
+## Notes for Content Writing
+- **Tone**: The "Climate Scientist" persona matches perfectly with describing environmental changes (*клімат змінюється*, *температура підвищується*). Use this frame for the main text.
+- **Focus**: Distinguish clearly between *gradual* (*поступово*) and *sudden* (*різко/стрімко*) change, as this nuance is critical for B1 proficiency.
+- **Contexts**: Use "De-russification of street names" as a concrete example of *змінювати* (active) vs *змінюватися* (passive/state).
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Мова динаміки (Introduction: The Language of Dynamics)"
+  words: 400
+  points:
+  - "Introduction to the Climate Scientist persona: setting a professional tone for describing environmental and social shifts according to State Standard §3.14."
+  - "Distinguishing between dynamic processes (*процес*) and static results (*результат*) in Ukrainian descriptive grammar."
+  - "Temporal perspectives: defining the scale of change from gradual (*поступово*) to sudden (*різко*) or rapid (*стрімко*)."
+- section: "Презентація та граматичні нюанси (Presentation and Grammatical Nuances)"
+  words: 1000
+  points:
+  - "Lexical groups for change: Motion, State, Quantity, Quality, and Abstract concepts as mandated by Standard §3.6."
+  - "Comparison of adverbs: using *більш сучасно* or *менш холодно* to describe shifting states (State Standard §4.3.2)."
+  - "Learner Error Focus 1: Distinguishing *рости* (physical growth of plants/children) from *зростати* (abstract/statistical growth like *економіка зростає*)."
+  - "Learner Error Focus 2: Transitive *змінювати* (active agent) vs reflexive *змінюватися* (intransitive state); drill correct Accusative governance *змінювати план* vs incorrect *змінювати до плану*."
+  - "Collocations with speed adverbs: *стрімко зростати*, *поступово змінюватися*, *різко падати*."
+- section: "Читання: Клімат та трансформація міст (Reading: Climate and City Transformation)"
+  words: 1000
+  points:
+  - "Climate Scientist Report: analytical text on environmental trends using *температура підвищується/знижується* and *клімат змінюється*."
+  - "Cultural Hook: The transformation of Kyiv into a 'UNESCO City of Music' (2025) as a context for verbs of improvement (*покращуватися*, *розвиватися*)."
+  - "Social Context: De-russification and street renaming as an active process of *змінювати назви*, contrasting with how the urban landscape *змінюється* (passive/state)."
+- section: "Діалоги: Від прогнозів до цифровізації (Dialogues: From Forecasts to Digitalization)"
+  words: 800
+  points:
+  - "Formal workplace dialogue: negotiating project changes and adjustments using transitive verbs and Accusative case."
+  - "Informal weather discussion: practicing the distinction between *погода змінюється* (intransitive) and *вітер змінює напрямок* (transitive)."
+  - "Digital State Discussion: Cultural hook on how the 'Diia' ecosystem *стрімко розвивається*, transforming bureaucratic processes into digital services."
+- section: "Виробництво та підсумок (Production and Summary)"
+  words: 800
+  points:
+  - "Guided production: learners describe a significant change in their hometown or professional field using at least 10 verbs/adverbs from the required list."
+  - "Refining nuances: choosing between *поступово*, *різко*, and *стрімко* to accurately convey the speed of transformation."
+  - "Final recap of case governance (*перетворюватися на...*) and the contrast between physical and abstract growth verbs."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "зростати (to grow/increase) — *попит/економіка/ціни/напруга зростають*; high frequency in news/econ; contrast with physical *рости*"
+  - "зменшуватися (to decrease) — *кількість/відстань/ризик зменшується*; common for gradual reduction"
+  - "змінюватися (to change [itself]) — *погода/ситуація/часи змінюються*; intransitive/reflexive; contrast with transitive *змінювати*"
+  - "змінювати (to change [something]) — *змінювати план/назву/пароль*; transitive, requires Accusative; error: do not use 'до'"
+  - "перетворюватися на (to transform into) — *місто перетворюється на культурний хаб*; requires Accusative governance"
+  - "підвищуватися (to rise/increase) — *температура/рівень/тиск підвищується*; specific to measurements and scales"
+  - "знижуватися (to lower/decline) — *температура/ціни/рівень знижується*; antonym to *підвищуватися*"
+  - "поступово (gradually) — *поступово змінюватися/звикати/відновлюватися*; high frequency for steady processes"
+  - "різко (sharply/suddenly) — *різко змінитися/впасти/піднятися*; indicates a sudden break in trend"
+  recommended:
+  - "стрімко (rapidly) — *стрімко розвиватися/зростати/падати*; used for digitalization (Diia) and fast economic shifts"
+  - "значно (significantly) — *значно впливати/змінити/покращити*; adds emphasis to the scale of change"
+  - "падати (to fall) — *курс валют/ціни/температура падає*; common for rapid or negative trends"
+  - "ставати (to become) — *ставати кращим/гіршим/доступнішим*; used with comparative adjectives/adverbs"
+  - "покращуватися (to improve) — *ситуація/здоров'я/якість покращується*; reflexive form for positive change"
+  - "погіршуватися (to worsen) — *зір/погода/відносини погіршуються*; reflexive form for negative change"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4842 chars)
+✅ Message sent to Claude (ID: 10398)
+✓ Message 10398 acknowledged
+   Auto-acknowledged reply #10398 (stdout delivery — no inbox accumulation)
+✓ Message 10395 acknowledged

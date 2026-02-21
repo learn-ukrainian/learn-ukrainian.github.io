@@ -1,0 +1,246 @@
+✅ Message sent to Gemini (ID: 10815) [auto-acked: self-addressed]
+✓ Message 10815 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10815...
+📨 Message #10815
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-klasychna-muzyka-1-vytoky
+   Time: 2026-02-20T21:30:13.423794+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-076
+level: C1
+sequence: 76
+slug: klasychna-muzyka-1-vytoky
+version: '2.0'
+title: Класична музика I — Витоки
+subtitle: Classical Music I — Origins (1745-1863)
+content_outline:
+- section: Розминка — Українці у світовій музиці
+  points:
+  - Українські композитори XVIII-XIX ст. на європейській сцені
+  - Від церковної музики до національної опери
+  - Значення для формування національної ідентичності
+- section: Content Areas
+  points:
+  - 'Максим Березовський (1745-1777): "Демофонт" — first Ukrainian opera composer,
+    tragic genius'
+  - 'Дмитро Бортнянський (1751-1825): Sacred choral works, Imperial court composer,
+    European influence'
+  - 'Семен Гулак-Артемовський (1813-1873): **"Запорожець за Дунаєм"** (1863) — first
+    NATIONAL Ukrainian opera'
+- section: Практика — аналіз музики
+  points:
+  - Прослухати фрагмент "Демофонта" — описати музичними термінами
+  - Порівняти хоровий стиль Бортнянського та західноєвропейських сучасників
+  - Написати есе про значення "Запорожця за Дунаєм" для української культури
+  - Обговорити трагічну долю Березовського
+focus: fine-arts
+pedagogy: CBI
+objectives:
+- Learner understands the role of Ukrainian composers in European Baroque and Classical
+  eras
+- Learner can describe the significance of Berezovsky, Bortnyansky, and Vedel
+- Learner analyzes the birth of national opera with Gulak-Artemovsky
+grammar:
+- Musicology register
+- Complex participial constructions
+phase: C1.5 Folk Culture & Arts
+persona:
+  voice: Senior Specialist
+  role: Історик музики
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Класична музика I — Витоки
+
+## State Standard Reference
+§4.3.2: "просте речення з дієприкметниковим зворотом: Він посміхнувся лише очима, стомленими, але безмежно уважними" (Lines 4492-4493)
+Alignment: Модуль використовує дієприкметникові звороти для опису музичних творів та біографічних фактів (наприклад, "опера, написана в Італії", "талант, визнаний сучасниками").
+Тематична відповідність: §3.4 "Культурне дозвілля і відпочинок" (філармонія, театр).
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| **композитор** | High (General/Art) | видатний композитор, сучасний композитор, творчість композитора |
+| **партитура** | Medium (Music) | диригентська партитура, читати партитуру, оригінальна партитура |
+| **духовний** | High (General) | духовна музика, духовний концерт, духовне відродження |
+| **світський** | Medium (General) | світська музика, світське життя, світський захід |
+| **капела** | Low (Music/History) | придворна капела, хорова капела, співати в капелі |
+
+## Cultural Hooks
+1. **Максим Березовський ("Український Моцарт")**: Його ім'я викарбуване золотими літерами в Болонській філармонічній академії поруч з ім'ям Моцарта, але його життя закінчилося трагічно і загадково (версія про самогубство зараз піддається сумніву).
+2. **"Запорожець за Дунаєм"**: Перша опера на лібрето українською мовою, яка легітимізувала українську культуру на імперській сцені, використавши народний гумор та козацький міф.
+
+## Common Learner Errors
+1. **Музичний vs Музикальний**: *Він дуже музичний* (Error) → *Він дуже музикальний* (Correct: про людину з талантом). *Музичний інструмент* (Correct).
+2. **Увертюра vs Опера**: Плутанина між вступом (увертюра) і цілим твором.
+3. **Participial Agreement**: *Опера написаний композитором* (Error) → *Опера, написана композитором* (Correct: узгодження роду).
+
+## Cross-References
+- Builds on: B2-HIST (Baroque era context)
+- Prepares for: Класична музика II (Лисенко, Леонтович), C1-BIO (modules on specific artists)
+
+## Notes for Content Writing
+- **Register**: Використовувати музикознавчу термінологію (арія, речитатив, поліфонія, a cappella).
+- **Syntax**: Активно вживати дієприкметникові та дієприслівникові звороти ("Слухаючи музику...", "Твір, створений у...").
+- **Decolonization**: Чітко окреслювати українську ідентичність Березовського і Бортнянського, попри їхню працю в імперському Петербурзі. Уникати наративу про "російських композиторів".
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Український внесок у європейську класику (Introduction: Ukrainian Contribution to European Classics)"
+  words: 600
+  points:
+  - "Огляд ролі українських композиторів XVIII-XIX ст. на європейській сцені, що закладає фундамент для розуміння національної ідентичності (CBI approach)"
+  - "Деколонізаційний дискурс: повернення імен Березовського та Бортнянського в український контекст, спростування імперського наративу про «російських композиторів»"
+  - "Лексичний фокус: розмежування понять «духовна музика» (sacred) та «світська музика» (secular) у контексті епохи"
+- section: "Максим Березовський — «Український Моцарт» (Maksym Berezovsky — 'The Ukrainian Mozart')"
+  words: 900
+  points:
+  - "Творчий шлях до Болоньї: аналіз успіху Березовського, чиє ім'я викарбуване золотими літерами в Болонській філармонічній академії поруч з Моцартом"
+  - "Опера «Демофонт»: перша опера українського композитора, аналіз музичної мови (арія, речитатив) та італійського впливу"
+  - "Трагічна доля та міфи: обговорення загадкової смерті композитора та сучасних досліджень, що піддають сумніву версію про самогубство"
+  - "Граматика в дії: вживання дієприкметникових зворотів для опису партитур та біографічних фактів (наприклад, «талант, визнаний сучасниками»)"
+- section: "Дмитро Бортнянський та хорова спадщина (Dmytro Bortnyansky and the Choral Heritage)"
+  words: 900
+  points:
+  - "Постать Бортнянського як реформатора духовної музики та керівника придворної співацької капели, виховання українських голосів у Петербурзі"
+  - "Хорові концерти: аналіз поліфонії та гармонії, що поєднують українську традицію з класичними канонами європейського стилю"
+  - "Музикознавчий реєстр: робота з термінами «партитура», «хорова капела», «a cappella» та їх застосування в аналітичному тексті"
+- section: "Семен Гулак-Артемовський: народження національної опери (Semen Gulak-Artemovsky: The Birth of National Opera)"
+  words: 1000
+  points:
+  - "Аналіз опери «Запорожець за Дунаєм» (1863) як першого твору на лібрето українською мовою, що легітимізував культуру на великій сцені"
+  - "Використання народного гумору та козацького міфу для формування національного самосприйняття в умовах імперських обмежень"
+  - "Синтаксична складність: активне вживання дієприслівникових зворотів («Слухаючи музику Гулака-Артемовського...») для опису динаміки сценічної дії"
+- section: "Практика: Мистецтвознавчий аналіз та корекція помилок (Practice: Art Analysis and Error Correction)"
+  words: 600
+  points:
+  - "Порівняльний аналіз фрагментів «Демофонта» та хорового стилю Бортнянського з використанням вивченого музикознавчого реєстру"
+  - "Подолання типових лексичних помилок: розмежування значень «музичний» (інструмент, слух) та «музикальний» (талант, людина), а також уточнення понять «увертюра» vs «опера»"
+  - "Тренінг з узгодження дієприкметникових зворотів (Participial Agreement) на основі описів музичних творів, виправлення помилок кшталту «опера написаний»"
+  - "Підсумкове есе: аргументація значення «Запорожця за Дунаєм» для сучасної української культури через призму деколонізації"
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "композитор (composer) — видатний композитор, творчість композитора; High frequency in art register"
+  - "партитура (score) — диригентська партитура, читати партитуру; Essential for musicology"
+  - "духовна музика (sacred music) — духовний концерт, духовне відродження; Contrast with 'світська'"
+  - "світська музика (secular music) — світське життя, світський захід; Key historical distinction"
+  - "хорова капела (choral chapel/choir) — придворна капела, співати в капелі; Historical context of Berezovsky/Bortnyansky"
+  recommended:
+  - "арія (aria) — сольна частина в опері"
+  - "речитатив (recitative) — вокальна форма, що імітує мовлення"
+  - "поліфонія (polyphony) — багатоголосся"
+  - "a cappella (a cappella) — хоровий спів без інструментального супроводу"
+  - "музикальний (musical/talented) — вживається про людину з хистом; Contrast with 'музичний' (instrument, sound)"
+  - "лібрето (libretto) — текст опери"
+  - "увертюра (overture) — інструментальний вступ до опери"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4224 chars)
+✅ Message sent to Claude (ID: 10818)
+✓ Message 10818 acknowledged
+   Auto-acknowledged reply #10818 (stdout delivery — no inbox accumulation)
+✓ Message 10815 acknowledged

@@ -1,0 +1,334 @@
+✅ Message sent to Gemini (ID: 11106) [auto-acked: self-addressed]
+✓ Message 11106 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #11106...
+📨 Message #11106
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-ofitsiynyi-styl-mastery
+   Time: 2026-02-20T22:24:12.804930+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c2-004
+level: c2
+sequence: 4
+version: '2.0'
+title: Офіційний стиль — Юридичні документи
+focus: stylistics
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Кодекс України — Законодавство
+  url: https://zakon.rada.gov.ua/
+  type: primary
+  notes: Official legal document examples
+- name: Зразки юридичних документів
+  url: https://minjust.gov.ua/
+  type: reference
+  notes: Ministry of Justice document templates
+- name: Ukrainian State Standard 2024 — Official style
+  url: https://mon.gov.ua/
+  type: reference
+  notes: C2 requirements for official document production
+content_outline:
+- section: Вступ — Офіційний стиль на рівні юриста
+  points:
+  - Характеристика офіційно-ділового стилю
+  - Правова мова як підстиль
+  - Вимоги до юридичних документів
+- section: Договори та угоди
+  points:
+  - Структура договору (преамбула, предмет, умови)
+  - Формульні вирази — "Цим засвідчується..."
+  - Права та обов'язки сторін
+  - Санкції та відповідальність
+- section: Процесуальні документи
+  points:
+  - Позовна заява — структура та мова
+  - Скарга — апеляційна, касаційна
+  - Клопотання та заяви
+  - Судові рішення — структура ознайомлення
+- section: Адміністративні документи
+  points:
+  - Доручення (power of attorney)
+  - Акти та протоколи
+  - Службові записки
+  - Накази та розпорядження
+- section: Мовні особливості правової мови
+  points:
+  - Юридична термінологія
+  - Безособові та пасивні конструкції
+  - Умовні речення — "У разі..."
+  - Посилання — "Згідно зі статтею..."
+- section: Редагування юридичних текстів
+  points:
+  - Типові помилки в юридичних документах
+  - Юридична точність vs зрозумілість
+  - Адаптація міжнародних документів
+  - Переклад правових текстів
+- section: Практикум — Створення документів
+  points:
+  - Складання простого договору
+  - Написання скарги
+  - Аналіз реального судового рішення
+  - Редагування юридичного тексту
+vocabulary:
+  required:
+  - договір (contract)
+  - угода (agreement)
+  - позов (lawsuit/claim)
+  - скарга (complaint)
+  - доручення (power of attorney)
+  - засвідчувати (to certify)
+  - сторона (party)
+  - відповідальність (responsibility/liability)
+  - санкція (sanction)
+  - клопотання (petition/motion)
+  recommended:
+  - преамбула (preamble)
+  - апеляція (appeal)
+  - касація (cassation)
+  - чинний (valid/in force)
+  - уповноважений (authorized)
+  forbidden: '[]'
+activities:
+  types_required:
+  - quiz
+  - fill-in
+  - error-correction
+  - critical-analysis
+  - essay-response
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c2-11 (Transforming official to journalistic)
+- c2-61 (Legal Ukrainian specialization)
+- c2-56 (Professional correspondence)
+vocabulary_hints:
+  required:
+  - концепція (concept)
+  - аналіз (analysis)
+  - дискурс (discourse)
+  - методологія (methodology)
+  recommended:
+  - інтерпретація (interpretation)
+  - контекстуалізація (contextualization)
+  - синтез (synthesis)
+activity_hints:
+- type: reading
+  focus: Поглиблений аналіз тексту
+  items: 4
+- type: essay-response
+  focus: Критичне осмислення
+- type: discussion
+  focus: Дискусія та аргументація
+  items: 1
+persona:
+  voice: Senior Specialist
+  role: State Secretary
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Офіційний стиль — Юридичні документи
+
+## State Standard Reference
+§4.3.1.1 (C1): "Стилі української мови: ... офіційний..."
+§4.3.3 (C1): "Стилістичні засоби лексики: ... канцеляризми: згідно з…; відповідно до…; у зв’язку з…".
+§4.3.6 (C1): "Уміння створити текст певного стилю за планом."
+Alignment: Модуль безпосередньо реалізує вимогу до оволодіння офіційно-діловим стилем, зокрема його юридичним підстилем, та розвиває навички створення вторинних текстів (скарги, договори).
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| Договір | High (Legal/Business) | укласти, розірвати, підписати, порушити умови договору |
+| Угода | High (Legal/General) | двостороння, додаткова, мирова, досягти угоди |
+| Позов | Medium (Legal) | подати, задовольнити, відхилити, цивільний |
+| Скарга | Medium (Admin/Legal) | касаційна, апеляційна, написати, розглянути |
+| Доручення | Medium (Admin) | видати, нотаріально засвідчене, діяти за дорученням |
+| Засвідчувати | High (Legal) | підписом, печаткою, нотаріусом, факт |
+| Відповідальність | High (General/Legal) | нести, кримінальна, адміністративна, притягнути до |
+
+## Cultural Hooks
+1. **Конституція Пилипа Орлика (1710)**: Перша у світі конституція з поділом влади, написана латиною та староукраїнською мовою. Символ української правової думки.
+2. **Руська Правда**: Збірник стародавнього права часів Ярослава Мудрого, який заклав основи правової системи Київської Русі (вири, штрафи, майнові права).
+
+## Common Learner Errors
+1. **Калькування прийменників**: "згідно наказу" (помилка) → "згідно з наказом" (правильно), "відповідно з" (помилка) → "відповідно до" (правильно).
+2. **Суржик у термінології**: вживання "повестка" замість "повістка", "справка" замість "довідка", "іск" замість "позов".
+3. **Лексична неточність**: "приймати міри" (калька) → "вживати заходів", "приймати участь" → "брати участь".
+
+## Cross-References
+- Builds on: C1 Stylistics (general functional styles), B2 Professional modules.
+- Prepares for: C2-11 (Stylistic transformation), C2-61 (Legal specialization).
+
+## Notes for Content Writing
+- Акцентувати на безособових конструкціях ("встановлено", "передбачено") та пасивному стані, який є нормою для цього стилю (на відміну від художнього).
+- Використовувати реальні шаблони документів як ілюстративний матеріал.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 500
+  points:
+  - "Характеристика офіційно-ділового стилю на рівні C2: юридична точність, лаконізм та стандартизація мовних засобів"
+  - "Історичні витоки української правничої думки: аналіз термінології 'Руської Правди' Ярослава Мудрого (майнові права, штрафи)"
+  - "Конституція Пилипа Орлика (1710) як символ правової суб'єктності: структура документа та аналіз мовних формул XVIII століття"
+- section: "Договори та угоди (Contracts and Agreements)"
+  words: 700
+  points:
+  - "Структура та реквізити договору: аналіз преамбули, предмета угоди та форс-мажорних обставин"
+  - "Частотна лексика та сполучуваність: укладання, розірвання та порушення умов договору; розмежування понять «договір» та «угода»"
+  - "Формульні вирази в преамбулах: «Цим засвідчується...», «Сторони дійшли згоди...» та використання кліше для юридичної однозначності"
+- section: "Процесуальні документи (Procedural Documents)"
+  words: 700
+  points:
+  - "Позовна заява: мовні вимоги до викладу обставин справи та формулювання вимог (подати, задовольнити або відхилити позов)"
+  - "Апеляційні та касаційні скарги: специфіка аргументації та використання юридичних кліше для оскарження рішень"
+  - "Клопотання та судові ухвали: аналіз структури судового рішення та способів його мовного оформлення"
+- section: "Адміністративні та нотаріальні акти (Administrative and Notarial Acts)"
+  words: 600
+  points:
+  - "Доручення (Power of Attorney): нотаріальне засвідчення факту та повноважень; діяти «на підставі доручення»"
+  - "Службові записки, накази та розпорядження: ієрархія адміністративної документації та мовні засоби вираження наказовості"
+  - "Протоколи та акти: фіксація фактів за допомогою стандартних виразів; вимоги до об'єктивності та точності опису"
+- section: "Мовні норми та корекція помилок (Linguistic Norms and Error Correction)"
+  words: 600
+  points:
+  - "Корекція калькованих прийменникових конструкцій: вживання «згідно з» (Inst.) та «відповідно до» (Gen.) замість помилкових «згідно наказу»"
+  - "Де-русифікація юридичної термінології: розрізнення понять «позов» (claim) vs суржикове «іск», «повістка» vs «повестка»"
+  - "Лексична точність: подолання кальок «приймати міри/участь» шляхом вживання нормативних «вживати заходів» та «брати участь»"
+- section: "Стилістичні особливості правової мови (Stylistic Features of Legal Language)"
+  words: 500
+  points:
+  - "Безособові конструкції як маркер об'єктивності: використання форм «встановлено», «передбачено», «визначено» у тексті документа"
+  - "Пасивний стан та його функція в юридичному дискурсі: аналіз переваг пасивних конструкцій над активними для створення офіційного тону"
+  - "Синтаксис юридичного тексту: використання складних речень з чітким логічним зв'язком та умови («У разі...»)"
+- section: "Практикум: Складання документів (Workshop: Document Composition)"
+  words: 400
+  points:
+  - "Творче завдання: складання проекту двосторонньої угоди з дотриманням усіх структурних частин та формульних виразів"
+  - "Аналіз та редагування реального судового рішення: виявлення мовних недоліків та їх усунення згідно з нормами сучасного стилю"
+  - "Моделювання ситуації: написання апеляційної скарги з використанням аргументаційних стратегій та юридичної термінології"
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "договір (contract) — укласти, розірвати, порушити умови; висока частотність у діловому обігу"
+  - "позов (claim/lawsuit) — подати, задовольнити, відхилити; ключовий термін цивільного та кримінального процесів"
+  - "засвідчувати (to certify) — підписом, печаткою, нотаріусом; офіційне підтвердження факту або документа"
+  - "відповідальність (liability/responsibility) — нести, кримінальна, адміністративна, притягнути до; юридичні наслідки діяння"
+  - "згідно з (according to) — вимагає орудного відмінка (Instr.); критично важлива конструкція офіційного стилю"
+  recommended:
+  - "відповідно до (in accordance with) — вимагає родового відмінка (Gen.); стандартна формула посилання на норми"
+  - "угода (agreement) — додаткова, мирова, досягти угоди; часто вживається для позначення результату переговорів"
+  - "доручення (power of attorney) — видати, нотаріально засвідчене; передача повноважень іншій особі"
+  - "скарга (complaint/appeal) — апеляційна, касаційна; термін для процесу оскарження рішень у судах"
+  - "вживати заходів (to take measures) — нормативна сполучуваність; заміна калькованого «приймати міри»"
+  - "брати участь (to participate) — нормативна сполучуваність; заміна калькованого «приймати участь»"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4641 chars)
+✅ Message sent to Claude (ID: 11119)
+✓ Message 11119 acknowledged
+   Auto-acknowledged reply #11119 (stdout delivery — no inbox accumulation)
+✓ Message 11106 acknowledged

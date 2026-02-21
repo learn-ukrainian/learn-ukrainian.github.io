@@ -1,0 +1,206 @@
+✅ Message sent to Gemini (ID: 12762) [auto-acked: self-addressed]
+✓ Message 12762 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12762...
+📨 Message #12762
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-baroque-syntax
+   Time: 2026-02-20T23:42:07.915436+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 71
+module: ruth-071
+module_number: 57
+slug: baroque-syntax
+title_uk: Бароковий синтаксис
+title_en: Baroque Syntax
+phase: 3
+phase_id: baroque-fight
+phase_name: Baroque Fight
+focus: Complex, winding sentences
+content_outline:
+- section: Вступ
+  description: Introduction to Baroque Syntax
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Baroque Scholar
+  role: Period Constructor
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Baroque Syntax (Український бароковий синтаксис)
+
+## Використані джерела
+1. **[Ізборник](http://litopys.org.ua/)** — Першоджерела української літератури XI-XVIII ст. (Вишенський, Смотрицький).
+2. **[Енциклопедія Сучасної України](https://esu.com.ua/)** — Статті про українське бароко та полемічну літературу.
+3. **[Українська література XI-XVIII ст.](http://ukrlit.org.ua/)** — Аналіз стилістики та поетики бароко.
+
+## Хронологія
+- **1598**: Іван Вишенський пише «Послання до єпископів» — яскравий зразок полемічного стилю з «нанизуванням» синонімів.
+- **1610**: Публікація «Треносу» Мелетія Смотрицького — умовний початок зрілого бароко, складний латинізований синтаксис.
+- **1619**: Вихід «Грамматіки» Мелетія Смотрицького — кодифікація норм, що вплинули на синтаксичну будову книжної мови.
+- **1644**: Реформи Петра Могили в Києво-Могилянській колегії — посилення латинського впливу на риторику та синтаксис.
+- **1674**: Видання «Синопсису Київського» — зразок історіографічного барокового наративу.
+- **1720**: Завершення першого тому Літопису Самійла Величка — вершина козацького барокового літописання з пишними, розлогими періодами.
+
+## Ключові факти та цитати
+- **Характеристики синтаксису**: Орнаментальність, схильність до гіперболізації, використання довгих речень-періодів, інверсія (порушення прямого порядку слів), ампліфікація (нагромадження однорідних членів).
+- **Цитата (Вишенський)**: «Чи не бачите вашу сліпоту, адже в погибель світолюбства погрузли! Чи не бачите вашу премудрість, адже у звабах цього віку потонули!» (Приклад риторичних питань та паралелізму).
+- **Цитата (Смотрицький, «Тренос»)**: «Горе мені, бідній! Горе мені, нещасній! Ой, леле мені, з усіх боків пограбованій! Руки в кайданах, ярмо на шиї, пута на ногах, ланцюг на стегнах, меч над головою обосічний...» (Приклад градації та емоційної експресії).
+- **Латинський вплив**: Використання дієприкметникових зворотів, складних сполучникових конструкцій, що імітують латинський перід.
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ": [!history-bite] — Бароковий текст мав не просто інформувати, а «вражати і полонити» читача, подібно до барокової архітектури.
+- Section "Основний матеріал: I — Архітектура речення": [!context] — Зв'язок між «виткими» лініями в архітектурі (напр., Софія Київська після перебудови Мазепи) та «виткими» реченнями в літературі.
+- Section "Основний матеріал: II — Риторичні фігури": [!culture] — Використання фігурної поезії (акростихи, лабіринти) як візуального вияву синтаксичних ігор.
+- Section "Основний матеріал: III — Полемічний стиль": [!quote] — Уривок з Вишенського як приклад «вогняного» стилю.
+- Section "Практика": [!myth-buster] — Спростування міфу про «зіпсованість» української мови польськими/латинськими впливами; це був знак високої європейської освіченості.
+- Section "Підсумок": [!legacy] — Вплив барокового синтаксису на стиль пізніших українських письменників (напр., Забужко).
+
+## Деколонізаційний контекст
+- **Imperial/Soviet myth**: Українське бароко — це провінційне наслідування російського або «зіпсована полонізмами» культура. Козацька ера — період хаосу.
+- **Ukrainian reality**: Українське бароко (зокрема «козацьке бароко») — самобутнє явище, інтегроване в європейський контекст. Латинські впливи свідчать про приналежність до західної освітньої традиції, на відміну від московської ізоляції того часу.
+- **Термінологія**: Вживання терміну «староукраїнська мова» замість радянського «западнорусский язык».
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| Мова XVI-XVII ст. | «Западнорусский язык» (діалект російської) | Староукраїнська літературна мова |
+| Вплив Заходу | «Окатоличення», «Полонізація» (негативно) | Європеїзація, освітній прогрес, діалог культур |
+| Полемічна література | Боротьба за «возз'єднання» з Росією | Боротьба за релігійну та національну ідентичність |
+
+## Section-Mapped Research Notes
+
+### Вступ
+Огляд естетики бароко: рух, динаміка, контраст. Синтаксис як засіб впливу на емоції. Відхід від простоти до вишуканості.
+
+### Основний матеріал: I — Архітектура речення
+Поняття «періоду» — складного синтаксичного цілого. Латинські корені українського періоду. Інверсія як засіб створення урочистості. Довжина речень (іноді на цілу сторінку).
+
+### Основний матеріал: II — Риторичні фігури
+Нагромадження (ампліфікація) — улюблений прийом Вишенського (списки гріхів, чеснот). Антитеза (світло/тінь, Бог/диявол). Градація (посилення емоційної напруги).
+
+### Основний матеріал: III — Полемічний стиль
+Синтаксис «бою». Риторичні запитання та оклики. Звертання до читача/опонента. Емоційна насиченість («пафос»).
+
+### Практика
+Аналіз конкретних уривків. Пошук фігур у тексті. Спроби побудувати власні речення в бароковому стилі (стилізація).
+
+### Підсумок
+Значення барокового досвіду для розвитку гнучкості української мови. Відлуння бароко в сучасній літературі.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12783)
+✓ Message 12762 acknowledged
+✓ Message 12783 acknowledged

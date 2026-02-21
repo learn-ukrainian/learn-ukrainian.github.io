@@ -1,0 +1,13 @@
+{
+  "track": "ruth",
+  "slug": "parable-sower",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-20T19:31:11Z",
+      "task_id": "v3-parable-sower-pA",
+      "mode": "full"
+    }
+  }
+}

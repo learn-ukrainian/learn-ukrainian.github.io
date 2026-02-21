@@ -1,0 +1,14 @@
+{
+  "slug": "hranitna-revoliutsiia",
+  "track": "c1-hist",
+  "module_num": 128,
+  "mode": "e2e",
+  "phases": {
+    "0": {
+      "status": "complete",
+      "timestamp": "2026-02-20T23:19:31Z",
+      "task_id": "yw-hranitna-revoliutsiia-p0"
+    }
+  },
+  "last_updated": "2026-02-20T23:19:31Z"
+}

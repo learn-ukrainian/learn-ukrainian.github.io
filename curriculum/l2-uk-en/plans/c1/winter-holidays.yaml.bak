@@ -1,0 +1,47 @@
+module: c1-069
+level: C1
+sequence: 69
+slug: winter-holidays
+version: '2.0'
+title: Українські свята - зимовий цикл
+subtitle: Ukrainian Holidays - Winter Cycle
+content_outline:
+- section: Розминка — Зимові свята
+  points:
+  - Зимовий цикл — від Миколая до Стрітення
+  - Синкретизм язичництва та християнства
+  - Аграрна та родинна магія зимових свят
+- section: Різдвяно-Новорічний період
+  points:
+  - 'Святий Миколай (19 грудня): подарунки, традиції'
+  - 'Святвечір та Різдво: кутя, дідух, 12 страв'
+  - 'Колядування: колядки, вертеп, зірка'
+  - 'Маланка та Новий рік: щедрівки, маски'
+- section: Від Водохреща до Стрітення
+  points:
+  - 'Водохреще (Йордан): освячення води, купання'
+  - Голодна кутя
+  - 'Стрітення: зустріч зими та весни'
+  - Прикмети та ворожіння
+- section: Практика — зимова обрядовість
+  points:
+  - Порівняти колядку та щедрівку — структура, тематика
+  - Пояснити символіку вертепу
+  - Написати есе про трансформацію зимових свят
+  - Обговорити сучасне святкування
+focus: cultural
+pedagogy: CBI
+objectives:
+- Learner can describe the main holidays of the winter cycle (St. Nicholas, Christmas,
+  Malanka, Epiphany)
+- Learner can explain the difference between koliadky and shchedrivky
+- Learner can discuss the symbolism of vertep and Malanka characters
+- Learner can recite a traditional holiday greeting
+grammar:
+- holiday greetings
+- ritual descriptions
+phase: C1.5 Folk Culture & Arts
+persona:
+  voice: Senior Specialist
+  role: Колядник
+word_target: 4000

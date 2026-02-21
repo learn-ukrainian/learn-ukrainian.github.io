@@ -1,66 +1,40 @@
-# Research: B1 M83 "Велосипед та водні види"
+# Дослідження: Велосипед та водні види
 
-## 1. Grammar: State Standard 2024 Reference
-**Sphere of Communication:** Personal, Public (Сфера особистісна, публічна)
-**Topic:** Free time, leisure, hobbies, sports (Вільний час, дозвілля, захоплення, спорт)
+## State Standard Reference
+§3.4, §3.5, §3.12, §3.14: "види спорту і спортивних споруд (стадіон, басейн...); засоби пересування; спортзал, басейн; природні об’єкти (...річка... море)."
+Alignment: Module directly addresses the thematic requirements for "Leisure, rest" (§3.4), "Travel" (§3.5), and "Nature" (§3.14) by covering cycling as a means of transport/leisure and water sports in natural and artificial environments.
 
-Relevant section from the Standard (B1 Level):
-> **Змістова лінія «Спорт»**: Види спорту, спортивне спорядження, активний відпочинок, здоровий спосіб життя.
-> **Grammar**:
-> - Творий відмінок іменників для позначення знаряддя дії (чим? — *велосипедом*, *каяком*) та спільності (з ким? — *з інструктором*).
-> - Дієслова руху (безпрефіксні та префіксні): *їздити/їхати*, *плавати/плисти*, *кататися*.
-> - Конструкції з прийменниками *на* (види діяльності): *кататися на велосипеді*, *плавати на сапі*.
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| **велосипед** | High (Primary term) | їхати на велосипеді, кататися на велосипеді, гірський велосипед, велосипедна доріжка, прокат велосипедів |
+| **плавання** | High | займатися плаванням, спортивне плавання, уроки плавання, синхронне плавання |
+| **каяк** | Medium (Specific interest) | орендувати каяк, сплав на каяках, надувний каяк, прогулянка на каяку |
+| **пляж** | High | піщаний пляж, міський пляж, відпочивати на пляжі, засмагати на пляжі |
+| **оренда** | High | пункт оренди, оренда спорядження, взяти в оренду, погодинна оренда |
 
-## 2. Vocabulary Frequency
+## Cultural Hooks
+1. **Kyiv Cycling Culture**: Kyiv has a growing cycling community with events like "Veloden" (All-Ukrainian Cycling Day) and an expanding network of rental stations (Bikenow/Nextbike) and cycling lanes (Velotrek, Trukhaniv Island).
+2. **Dnipro Kayaking**: Kayaking on the Dnipro river in Kyiv (e.g., Hydropark, Obolon) is a massive summer trend. It offers a unique perspective of the city (Motherland Monument from the water).
+3. **Carpathian Rafting**: Rafting on the Cheremosh or Black Tysa rivers is a popular adrenaline activity for Ukrainians, often combined with traditional camping.
 
-### High Frequency (Core B1)
-- **велосипед** (bicycle)
-- **плавати** (to swim)
-- **річка** (river)
-- **море** (sea)
-- **оренда / прокат** (rental)
-- **спорт** (sport)
-- **берег** (shore/bank)
-- **безпека** (safety)
+## Common Learner Errors
+1. **Motion Verbs (Swimming)**: Confusing *плавати* (multidirectional/ability/habitual) and *плисти* (unidirectional/current process).
+   - *Error*: "Я пливу в басейні щосуботи." → *Correct*: "Я **плаваю** в басейні щосуботи." (Habitual)
+   - *Error*: "Дивись, качка плаває до берега." → *Correct*: "Дивись, качка **пливе** до берега." (Unidirectional)
+2. **Case Usage with Vehicles**: Using incorrect cases for "riding a bike".
+   - *Error*: "Я їду велосипедом." (Grammatically possible instrumental, but locative *на велосипеді* is more common for "riding on").
+   - *Correct*: "Я їду **на велосипеді**."
+3. **Prepositions with Water**: Confusing *у/в* and *на*.
+   - *Error*: "Ми їдемо в море." (Direction vs destination area).
+   - *Correct*: "Ми їдемо **на море**." (To the seaside).
+   - *Correct*: "Ми купаємося **в морі**." (In the water).
 
-### Thematic Vocabulary (Specific)
-- **шолом** (helmet) - Essential for safety segments
-- **рятувальний жилет** (life jacket) - Critical for water sports
-- **велодоріжка** (bike path) - Urban infrastructure context
-- **каяк / байдарка** (kayak) - Common water activities
-- **маршрут** (route)
-- **спорядження** (equipment)
-- **засмагати** (to sunbathe)
+## Cross-References
+- **Builds on**: b1-82 (Mountains and Trail - outdoor vocabulary)
+- **Prepares for**: b1-84 (Winter Sports - contrast in seasonal activities)
 
-### Common Collocations
-- **кататися на велосипеді** (to ride a bike)
-- **брати напрокат** (to rent)
-- **дотримуватися правил** (to follow rules)
-- **активний відпочинок** (active leisure)
-
-## 3. Cultural Hook
-1.  **Kyiv Cycle Track (Київський велотрек)**: A historic cycling track built in 1913, recently restored as a cultural hub in the center of Kyiv. It symbolizes the growing urban cycling culture.
-2.  **Dnipro Kayaking**: Kayaking on the Dnipro river in Kyiv (around Trukhaniv Island) is a massive summer trend. It offers a unique view of the city (Motherland Monument) from the water.
-3.  **Veloden (Велодень)**: An annual massive cycling parade held in major Ukrainian cities (Kyiv, Kharkiv) in late May to promote cycling infrastructure and safety.
-
-## 4. Pedagogical Notes
--   **Motion Verbs Nuance**:
-    -   Learners often confuse *йти* (walk) with *їхати* (ride). Emphasize *їхати велосипедом*.
-    -   Distinction between *плавати* (ability or multidirectional/recreational) and *плисти* (unidirectional progress). Context: "Ми *плавали* в річці" (recreation) vs "Ми *пливли* на інший берег" (crossing).
--   **"Ride" translations**: English "ride" maps to *кататися* (recreational) or *їхати* (transport). *Кататися на велосипеді* implies leisure/process; *Їхати на роботу велосипедом* implies transport/destination.
--   **Instrumental Case**: Use Instrumental for the *means* of transport (*їхати велосипедом*), but Prepositional/Locative for the *activity* (*кататися на велосипеді*).
-
-## 5. Scope Boundaries
-
-### IN Scope (B1 Level)
--   **Instrumental Case**: Instrumental of means (transport/tools).
--   **Motion Verbs**: *їздити/їхати*, *плавати/плисти*, *бігати/бігти*, *кататися*.
--   **Imperative Mood**: For safety rules (*надягайте шолом*, *не пливіть*).
--   **Locative Case**: Describing locations (*на пляжі*, *у річці*, *на воді*).
--   **Aspect**: Basic pairs for past events (*поплавали*, *взяли*).
-
-### OUT of Scope (Too Advanced/Technical)
--   **Complex Technical Jargon**: Internal bike mechanics (derailleur, sprocket, suspension types) — keep it to parts user interacts with (wheels, brakes, seat).
--   **Advanced Nautical Terms**: Starboard/port, knot tying specifics, hydrodynamics.
--   **Obscure Slang**: Cyclist subculture slang unrelated to general communication.
--   **Stylistic Nuances**: Poetic descriptions of water textures (C1/C2).
+## Notes for Content Writing
+- Focus on the distinction between *плавати* and *плисти* as a key grammar point in the "Practice" section.
+- Use the "Dnipro Kayak Guide" persona to frame the rental and safety instructions naturally (e.g., "Don't stand up in the kayak!").
+- Include a specific tip about "Bikenow" or app-based rentals as a cultural reality of modern Ukrainian cities.

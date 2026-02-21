@@ -1,0 +1,213 @@
+✅ Message sent to Gemini (ID: 12720) [auto-acked: self-addressed]
+✓ Message 12720 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12720...
+📨 Message #12720
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-witnesses-oaths
+   Time: 2026-02-20T23:41:50.433012+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 59
+module: oes-059
+module_number: 59
+slug: witnesses-oaths
+title_uk: Свідки та присяги
+title_en: Witnesses & Oaths
+phase: 3
+phase_id: legal-tradition
+phase_name: Legal Tradition
+focus: Dual — "Two witnesses"
+content_outline:
+- section: Вступ
+  description: Introduction to Witnesses & Oaths
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Senior Paleographer
+  role: Church Jurist
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Witnesses Oaths
+
+## Використані джерела
+1. [Руська Правда (Тексти)](http://litopys.org.ua/pravda/pravda.htm) — Основне джерело (Коротка, Розширена, Скорочена редакції).
+2. [Енциклопедія історії України: Руська Правда](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Ruska_Pravda) — Академічний огляд правової системи.
+3. [Словник староукраїнської мови XIV-XV ст.](http://litopys.org.ua/djvu/ssum.htm) — Етимологія термінів "видок", "послух", "рота".
+4. [Історія держави і права України (Підручник)](http://radnuk.info/pidruchniki/istoria-prava/478-muzychenko/6669-23------.html) — Процесуальні норми та судочинство.
+
+## Хронологія
+- **1016**: Укладення "Правди Ярослава" (найдавніша частина Короткої редакції), де вперше фіксуються норми про свідків ("видоків").
+- **1072**: "Правда Ярославичів" (Ізяслава, Святослава, Всеволода) — розширення поняття "послух" та введення "вири" (штрафу).
+- **Поч. XII ст.**: "Устав Володимира Мономаха" (розширена редакція) — детальне регулювання боргових зобов'язань та ролі свідків у торгівлі.
+- **1130-ті**: Поширення практики "хрестоцілування" як основної форми роти (присяги) у судочинстві.
+- **XV ст.**: Трансформація термінів у Литовських статутах — злиття понять "видок" і "послух" у єдине "свідок".
+
+## Ключові факти та цитати
+- **Цитата 1 (Коротка Правда, ст. 2)**: "Оже придеть кровавъ мужь на дворъ, или синь, то видока ему не искати, но платити ему продажи 3 гривны; аще ли не будеть на немь знамения, то привести ему видокъ слово противу слова".
+- **Цитата 2 (Розширена Правда, ст. 10)**: "Оже ли будеть варягъ или колбягъ, то полная видока вывести, и идеть на роту".
+- **Факт**: "Видок" — це самовидець злочину (eyewitness), "Послух" — свідок доброї слави, який підтверджує репутацію або факт (character witness/oath helper).
+- **Факт**: Процедура "Роти" (присяги) була вирішальною за відсутності речових доказів. У язичницькі часи клялися зброєю ("на щит"), у християнські — цілували хрест.
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ": [!context] — Правосуддя в Русі було змагальним (accusatorial), а не інквізиційним. Суддя лише стежив за дотриманням правил ("Правди").
+- Section "Основний матеріал: I — Видок і Послух": [!paleography] — Еволюція терміна: від кореня *вид-* (бачити) до *слyx-* (чути). Як це відображає зміну доказової бази.
+- Section "Основний матеріал: II — Двоїна": [!grammar-alert] — "Два видока", "два послуха" — збереження двоїни у юридичних формулах навіть коли вона почала зникати з розмовної мови.
+- Section "Основний матеріал: III — Рота": [!history-bite] — "Іти на роту" означало не просто сказати слова, а пройти ритуал, який міг включати випробування (водою, залізом) якщо присяги було недостатньо.
+- Section "Основний матеріал: IV — Чужинці": [!myth-buster] — "Варяг чи Колбяг" мали привілеї? Ні, навпаки, їм дозволяли менше свідків (2 замість 7) не через привілей, а через те, що знайти 7 місцевих послухів для чужинця було неможливо. Це прагматизм, а не дискримінація.
+- Section "Підсумок": [!decolonization] — Руська Правда — це не "російське право". Це кодекс, створений у Києві та Новгороді (коли той був частиною політичної системи Русі), що став основою для українського та білоруського (ВКЛ) права, тоді як Московія пішла шляхом ординського деспотизму (Судебники).
+
+## Деколонізаційний контекст
+- **Міф**: Радянська історіографія зображала Руську Правду як інструмент "класового гноблення феодалів над смердами".
+- **Реальність**: Це був кодекс, що захищав *порядок* і *життя* (високі штрафи за вбивство), базувався на звичаєвому праві та мав паралелі з Салічною правдою (Lex Salica) та іншими "варварськими правдами" Європи, підкреслюючи європейську приналежність Русі.
+- **Термінологія**: Відмова від терміну "давньоросійське право" на користь "давньоруське право" або "право Київської Русі".
+
+## Contested Terms
+| Concept | Imperial/Soviet framing | Ukrainian framing |
+|---------|-------------------------|-------------------|
+| **Руська Правда** | "Русская Правда" — початок російського законодавства | Кодекс Київської Русі, джерело українського права (Литовських Статутів) |
+| **Вира** | Штраф на користь князя (феодальна рента) | Компенсація за порушення миру, частина звичаєвого права (wergild) |
+| **Смерд** | Закріпачений селянин | Вільний общинник, залежний лише від князя (держави) |
+
+## Section-Mapped Research Notes
+
+### Вступ
+- Правова культура Русі базувалася на усному звичаї, який Ярослав Мудрий кодифікував.
+- Відсутність смертної кара (на відміну від Візантії) — гуманізм або прагматизм (штрафи збагачували скарбницю).
+
+### Основний матеріал: I — Видок і Послух
+- Етимологія *vydok* (viděti) vs *poslukh* (slushati).
+- Видок зникає з документів швидше (вже у XV ст. майже не вживається), послух стає універсальним свідком.
+- Вимога 7 свідків для звинувачення у вбивстві без явних доказів (ст. 17 Розширеної Правди).
+
+### Основний матеріал: II — Двоїна (Граматика)
+- Форми двоїни іменників чоловічого роду на *-а* (*староста*, *холопа*, *брата*).
+- Узгодження з числівником *два*: *два щита*, *два меча*.
+- Дієслова у двоїні: *ідета*, *ведетa*.
+- Приклади з тексту: "а видока два выведеть".
+
+### Основний матеріал: III — Рота і Божий Суд
+- Ритуал присяги (*рота*).
+- "Божий суд" (*ордалії*): випробування залізом (*желѣзо*) та водою (*вода*).
+- Ст. 21: "Аже не будеть видока, то ити ему на желѣзо".
+- Церковний вплив на процедуру (присутність священника).
+
+### Основний матеріал: IV — Соціальний вимір
+- Варяги і Колбяги: особливий статус іноземних найманців/купців.
+- "Дика вира": колективна відповідальність верві (громади) за вбивство, якщо вбивцю не знайдено або громада не хоче його видати.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12746)
+✓ Message 12720 acknowledged
+✓ Message 12746 acknowledged

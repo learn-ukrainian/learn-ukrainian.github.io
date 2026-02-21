@@ -1,0 +1,74 @@
+{
+  "slug": "greeks-crimea-olbia",
+  "track": "b2-hist",
+  "module_num": 3,
+  "mode": "v3",
+  "phases": {
+    "0": {
+      "status": "complete",
+      "timestamp": "2026-02-18T15:12:45Z",
+      "note": "adopted-existing-research"
+    },
+    "0.5": {
+      "status": "complete",
+      "timestamp": "2026-02-18T15:12:45Z",
+      "note": "already-enriched"
+    },
+    "1": {
+      "status": "complete",
+      "timestamp": "2026-02-18T15:17:39Z",
+      "task_id": "yw-greeks-crimea-olbia-p1"
+    },
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-02-18T15:30:26Z",
+      "words": 4357,
+      "attempts": 2
+    },
+    "3": {
+      "status": "complete",
+      "timestamp": "2026-02-19T10:52:12Z",
+      "note": "v3-audit"
+    },
+    "3a": {
+      "status": "complete",
+      "timestamp": "2026-02-18T15:47:10Z",
+      "note": "adopted-existing"
+    },
+    "3b": {
+      "status": "complete",
+      "timestamp": "2026-02-18T15:47:10Z",
+      "note": "adopted-existing"
+    },
+    "6": {
+      "status": "complete",
+      "timestamp": "2026-02-19T10:54:07Z",
+      "note": "v3-phase-D"
+    },
+    "6b": {
+      "status": "complete",
+      "timestamp": "2026-02-19T10:54:07Z",
+      "note": "v3-phase-D"
+    },
+    "5-enrich": {
+      "status": "complete",
+      "timestamp": "2026-02-19T10:52:12Z",
+      "note": "v3-audit"
+    },
+    "7-final": {
+      "status": "complete",
+      "timestamp": "2026-02-19T10:54:07Z",
+      "note": "v3-phase-D"
+    },
+    "9-final-review": {
+      "status": "complete",
+      "timestamp": "2026-02-19T10:57:53Z",
+      "verdict": "APPROVE"
+    },
+    "8": {
+      "status": "complete",
+      "timestamp": "2026-02-19T10:58:00Z"
+    }
+  },
+  "last_updated": "2026-02-19T10:58:00Z"
+}

@@ -1,4 +1,3 @@
----
 module: c1-hist-103
 level: c1-hist
 sequence: 103
@@ -10,48 +9,41 @@ objectives:
 - 'Analyze the causes and consequences of економіка імперії: україна як житниця'
 - Evaluate the historical significance of колонія ресурсів
 content_outline:
-- section: "Вступ — Колонія ресурсів"
-  words: 533
+- section: Вступ — Колонія ресурсів
   subsections:
   - Україна — «житниця Європи»
   - Економічна колонізація
   - Ресурсний вимір залежності
   - Структура модуля
 - section: Зерновий експорт XVIII-XIX ст.
-  words: 933
   subsections:
   - Чорноземи — багатство
   - Хто отримував прибуток
   - Одеса — порт імперії
   - Селяни — виробники, не бенефіціари
 - section: Кріпацтво як економічна система
-  words: 800
   subsections:
   - Безкоштовна робоча сила
   - Латифундії — російських і польських панів
   - Скасування 1861 — що змінилось
   - Борги і залежність
 - section: Цукрова промисловість
-  words: 666
   subsections:
   - Українські цукроварні
   - Хто володів
   - Прибутки — куди йшли
   - Терещенки — виняток чи правило
 - section: Залізниці і порти
-  words: 666
   subsections:
   - Інфраструктура — для експорту
   - Не для розвитку України
   - Колоніальна модель
   - Порівняння з іншими колоніями
 - section: Підсумок
-  words: 402
   subsections:
   - Україна — економічна колонія
   - Багатство — експортоване
   - Перехід до радянської індустріалізації
-word_target: 4000
 vocabulary:
 - житниця
 - економічна колонія
@@ -72,7 +64,7 @@ activities:
 - type: critical-analysis
   focus: Where did Ukrainian grain profits go?
 - type: comparative-study
-  focus: "Ukraine vs. other colonies — economic extraction"
+  focus: Ukraine vs. other colonies — economic extraction
 - type: critical-analysis
   focus: Railways for empire, not for Ukraine
 - type: critical-analysis
@@ -81,15 +73,15 @@ activities:
   focus: Чи була Україна економічною колонією Російської імперії?
 sources:
 - name: Економіка Російської імперії (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Економіка_Російської_імперії"
+  url: https://uk.wikipedia.org/wiki/Економіка_Російської_імперії
   type: reference
   notes: Imperial economy
 - name: Кріпацтво в Україні (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Кріпацтво_в_Україні"
+  url: https://uk.wikipedia.org/wiki/Кріпацтво_в_Україні
   type: reference
   notes: Serfdom
 - name: Експорт зерна (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Експорт_зерна_з_України"
+  url: https://uk.wikipedia.org/wiki/Експорт_зерна_з_України
   type: reference
   notes: Grain export
 vocabulary_hints:
@@ -108,7 +100,9 @@ activity_hints:
   items: 4
 - type: essay-response
   focus: Критичний аналіз
-  word_target: 300
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Colonial Economy Specialist

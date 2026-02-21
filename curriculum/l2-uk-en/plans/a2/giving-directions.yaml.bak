@@ -1,0 +1,91 @@
+module: a2-65
+level: A2
+sequence: 65
+slug: giving-directions
+version: '2.0'
+title: Giving Directions
+subtitle: Navigating the City
+content_outline:
+- section: Introduction / Вступ
+  points:
+  - City layout basics — focus on standard urban vocabulary (street, square, intersection)
+    aligned with State Standard §3.5
+  - 'Navigation culture — cultural hook: meeting at iconic spots like the Arsenalna
+    Metro Station (deepest in the world, famous for its 5-minute escalator ride) or
+    Lviv Rynok Square Fountains («біля Нептуна»)'
+- section: Presentation / Презентація
+  points:
+  - Вибачте, як пройти до...? — standard polite formulas for initiating navigation
+    inquiries
+  - 'прямо, направо, наліво — learner error: confusing adjective «лівий/правий» with
+    adverb «ліворуч/наліво» (Correct: «Ідіть наліво»)'
+  - 'Directions vocabulary — distinction between motion verbs «іти» (on foot) and
+    «їхати» (by vehicle); learner error: using «йти» for transport'
+- section: Practice / Практика
+  points:
+  - Ask and give directions — focus on Imperative mood («ідіть», «поверніть») as per
+    Standard §4.4.1.3
+- section: Dialogues / Діалоги
+  points:
+  - Direction conversations — modeling usage of prepositions «в/на» + Accusative for
+    destination versus «біля» + Genitive for static location; aligned with Standard
+    §4.2.2.4
+  - 'Step-by-step instructions — sequencing words (then, after that) to structure
+    complex routes; learner error: using Nominative after «до» (Correct: «до парку»)'
+- section: Narrative / Розповідь
+  points:
+  - Navigation story — a route description involving specific landmarks (e.g., from
+    a metro station to a museum), integrating «повернути за ріг» and «пройти два квартали»
+- section: Need More Practice?
+  points:
+  - Summary and links — reinforce key motion verbs and spatial prepositions
+vocabulary_hints:
+  required:
+  - напрямок (direction) — general term for navigation
+  - 'прямо (straight) — collocation: йти прямо'
+  - 'направо (to the right) — collocation: повернути направо'
+  - 'наліво (to the left) — collocation: повернути наліво; distinguish from adjective
+    лівий'
+  - 'повернути (to turn) — collocation: повернути за ріг (turn around the corner)'
+  - 'вулиця (street) — collocation: на вулиці, через вулицю, по вулиці'
+  - 'площа (square) — cultural context: Площа Ринок (Lviv), Майдан Незалежності (Kyiv)'
+  - 'перехрестя (intersection) — collocation: на перехресті, до перехрестя'
+  recommended:
+  - 'міст (bridge) — collocation: через міст (across the bridge)'
+  - 'світлофор (traffic light) — collocation: на світлофорі (at the traffic light)'
+  - 'зупинка (stop) — collocation: автобусна зупинка, наступна зупинка'
+  - орієнтир (landmark) — useful for giving directions relative to visible objects
+  - 'поруч (nearby) — synonym for близько; usage: тут поруч (it''s nearby)'
+  - 'навпроти (opposite) — usage: навпроти банку (opposite the bank)'
+activity_hints:
+- type: match-up
+  focus: Directions vocabulary
+  items: 25
+- type: match-up
+  focus: Ask for directions
+  items: 15
+- type: quiz
+  focus: Give directions to places
+  items: 10
+focus: practical
+pedagogy: PPP
+prerequisites:
+- a2-64 (Scheduling Interviews)
+connects_to:
+- a2-66 (Asking for Directions)
+objectives:
+- Learner can ask for directions in a city
+- Learner can give simple directions to others
+- Learner can understand location descriptions
+- Learner can use landmarks for navigation
+grammar:
+- Asking for directions (як пройти?)
+- Giving instructions (йдіть прямо, поверніть)
+- Prepositions of place and movement
+register: розмовний
+immersion: 75-90% Ukrainian
+phase: A2.6 [Practical]
+persona:
+  voice: Encouraging Cultural Guide
+  role: Kyiv Metro Navigator
+word_target: 3000

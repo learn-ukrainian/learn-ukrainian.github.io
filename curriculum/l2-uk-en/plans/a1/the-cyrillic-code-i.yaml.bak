@@ -1,0 +1,95 @@
+module: a1-01
+level: A1
+sequence: 1
+slug: the-cyrillic-code-i
+version: '2.0'
+title: The Cyrillic Code I
+subtitle: Cracking the Ukrainian Alphabet
+content_outline:
+- section: Warm-up
+  points:
+  - 'Why Ukrainian uses Cyrillic — cultural hook: named after Saint Cyril (9th c.),
+    though he likely created Glagolitic; developed by his students in the First Bulgarian
+    Empire.'
+  - 'Good news: Many letters are familiar — leaning on internationalisms like ''таксі'',
+    ''піца'', ''метро'' to build immediate confidence.'
+  - 'Strategy: True Friends vs False Friends — pedagogical approach to categorize
+    letters by visual/auditory similarity to Latin script.'
+- section: Presentation
+  points:
+  - 'True Friends (А, Е, І, О, К, М, Т) - look AND sound like English — State Standard
+    §4.1.1 alignment: introducing ''Україна'', ''Олена''.'
+  - 'False Friends (В, Н, Р, С, У, Х) - look familiar but sound different — learner
+    error: ''В'' trap (Vehicle /v/), ''Н'' trap (Hen /n/), ''Р'' trap (Roaring engine
+    /r/ or a ''Purring cat'').'
+  - 'New Letters (Б, Д, З, Л, П, Ф) - unique to Cyrillic — visual aids: ''Д'' looks
+    like a little house; explicitly clear that ''ё'', ''ы'', ''э'' (Russian-only)
+    do NOT exist in Ukrainian.'
+- section: Practice
+  points:
+  - 'Reading international words (банк, метро, кафе) — collocations: ''національний
+    банк'', ''станція метро'', ''ідемо в кафе''.'
+  - Mini-dialogues at metro station and café — focusing on 'так, будь ласка' (yes,
+    please) and 'так, звісно' (yes, of course).
+- section: Cultural Insight
+  points:
+  - 'Why Ukrainian uses Cyrillic (not Russian alphabet) — decolonization angle: Ukrainian
+    is unique for retaining ''І/і'' alongside ''И/и'', giving it a more ''European''
+    look compared to Russian.'
+  - Unique Ukrainian letters (І, Ї, Є, Ґ) — the 'І' identity and its role in distinguishing
+    the Ukrainian script from neighbors.
+- section: Production
+  points:
+  - Decoding international words — emphasizing that 'це факт' (it's a fact) uses 'Ф'
+    (False Friend for some, New Letter for others).
+  - Reading practice with IPA — focusing on the 'P' Trap (rolled /r/ like a 'Purring
+    cat') and 'B' Trap (voiced /v/).
+vocabulary_hints:
+  required:
+  - 'так (yes) — collocation: ''так, будь ласка'' (yes, please); ''так, звісно'' (yes,
+    of course)'
+  - 'банк (bank) — collocation: ''у банку'' (in the bank); ''національний банк'''
+  - 'метро (metro) — collocation: ''станція метро'' (metro station); ''у метро'''
+  - 'кафе (café) — collocation: ''у кафе'' (in the cafe); ''ідемо в кафе'''
+  - 'такт (tact) — usage note: international cognate'
+  - 'кіт (cat) — collocation: ''чорний кіт''; ''мій кіт'''
+  - 'мама (mom) — collocation: ''моя мама''; ''люблю маму'''
+  - 'тато (dad) — usage note: basic family term'
+  recommended:
+  - 'парк (park) — usage note: clear internationalism'
+  - 'bar (bar) — usage note: clear internationalism'
+  - 'факт (fact) — collocation: ''це факт'' (it''s a fact); ''цікавий факт'''
+  - 'план (plan) — collocation: ''бізнес-план''; ''маю план'' (I have a plan)'
+activity_hints:
+- type: match-up
+  focus: Match letters to sounds
+  items: 15
+- type: quiz
+  focus: Letter identification
+  items: 20
+- type: match-up
+  focus: Sort True Friends vs False Friends
+  items: 12
+- type: quiz
+  focus: Unscramble simple words
+  items: 10
+focus: grammar
+pedagogy: PPP
+prerequisites: '[]'
+connects_to:
+- a1-02 (The Cyrillic Code II)
+objectives:
+- Learner can recognize True Friends (letters that look AND sound like English)
+- Learner can decode False Friends (letters that look familiar but sound different)
+- Learner can read 19 Cyrillic letters
+- Learner can pronounce basic international words in Ukrainian
+grammar:
+- Letter recognition
+- Sound-letter correspondence
+- Basic pronunciation rules
+register: розмовний
+phase: A1.1 [First Contact]
+persona:
+  voice: Patient Supportive Tutor
+  role: Typography Artist
+word_target: 2000

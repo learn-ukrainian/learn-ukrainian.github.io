@@ -39,8 +39,8 @@ phases:
 
   - id: B2.4
     name: "Communication Skills"
-    modules: "[85, 94]"
-    focus: "Presentations, discussions, negotiations"
+    modules: "[85, 96]"
+    focus: "Presentations, discussions, negotiations, pluperfect tense"
 
 grammar_scope:
   - Passive voice (full system)
@@ -54,3 +54,7 @@ notes: |
   B2 develops professional-level Ukrainian with focus on register
   and stylistic appropriateness. Introduces formal written styles
   and domain-specific vocabulary.
+
+  M95 added in 2026-02 gap analysis: pluperfect tense (§4.1.3.1).
+  Final exam renumbered from b2-94 to b2-96.
+  96 modules total (94 original + 2 gap analysis additions).

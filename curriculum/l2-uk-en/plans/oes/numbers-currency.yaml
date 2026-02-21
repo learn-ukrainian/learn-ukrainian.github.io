@@ -1,4 +1,3 @@
----
 sequence: 14
 module: oes-014
 module_number: 12
@@ -9,7 +8,6 @@ phase: 1
 phase_id: vernacular-foundations
 phase_name: Vernacular Foundations
 focus: 'Куни, ногати, гривні (Zvenyhorod #1)'
-word_target: 4000
 content_outline:
 - section: Вступ
   description: Introduction to Numbers & Currency
@@ -24,3 +22,6 @@ activity_types:
 - transcription
 - etymology-trace
 - grammar-identify
+persona:
+  voice: Senior Paleographer
+  role: Royal Treasurer

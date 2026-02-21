@@ -1,4 +1,3 @@
----
 module: c1-hist-004
 level: c1-hist
 sequence: 4
@@ -11,15 +10,13 @@ objectives:
 - Evaluate the historical significance of історія на службі партії
 - Trace the development of спадщина радянської історіографії
 content_outline:
-- section: "Вступ — Історія на службі партії"
-  words: 457
+- section: Вступ — Історія на службі партії
   subsections:
   - Марксизм-ленінізм як єдина методологія
   - Партійність історії — що можна, чого не можна
   - Історик як ідеологічний працівник
   - Ціна непослуху — репресії
 - section: Заборонені теми
-  words: 686
   subsections:
   - Голодомор — табу до 1980-х
   - ОУН-УПА — тільки «бандерівці»
@@ -27,22 +24,19 @@ content_outline:
   - Розстріляне відродження — забуті імена
   - Депортації — «переселення»
 - section: Обов'язкові наративи
-  words: 686
   subsections:
   - «Возз'єднання 1654» — найбільший міф
   - «Дружба народів» — ієрархічна рівність
   - Прогресивність приєднання до Росії
   - Негативний образ козацької старшини
   - Позитивний образ Богдана Хмельницького
-- section: "Тези 1954 року — аналіз документа"
-  words: 571
+- section: Тези 1954 року — аналіз документа
   subsections:
   - Контекст — 300-річчя Переяслава
   - Основні положення
   - Як документ формував підручники
   - Вплив на покоління радянських українців
 - section: Механізми контролю
-  words: 571
   subsections:
   - Цензура — Головліт
   - Самоцензура — страх
@@ -50,20 +44,17 @@ content_outline:
   - Архіви — що було закрито
   - Видавництва — хто вирішував
 - section: Опір і альтернативи
-  words: 571
   subsections:
   - Діаспорна історіографія як альтернатива
   - Шістдесятники — між рядків
   - Самвидав — підпільна історія
   - Що читали таємно
 - section: Спадщина радянської історіографії
-  words: 458
   subsections:
   - Що залишилося в головах
   - Декомунізація — чи достатньо?
   - Підручники 1990-х — перехідний період
   - Сучасні виклики
-word_target: 4000
 vocabulary:
 - партійність
 - цензура
@@ -86,20 +77,20 @@ activities:
 - type: critical-analysis
   focus: Compare Soviet textbook treatment of 1932-33 (if mentioned at all) vs. modern
 - type: critical-analysis
-  focus: "Analyze a Soviet-era historical text — identify required narratives"
+  focus: Analyze a Soviet-era historical text — identify required narratives
 - type: essay-response
   focus: Як радянська історіографія вплинула на українську історичну пам'ять?
 sources:
 - name: Радянська історіографія (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Радянська_історіографія"
+  url: https://uk.wikipedia.org/wiki/Радянська_історіографія
   type: reference
   notes: Overview of Soviet historical writing
 - name: Тези про 300-річчя возз'єднання (1954)
-  url: "https://uk.wikipedia.org/wiki/Тези_про_300-річчя_возз'єднання_України_з_Росією"
+  url: https://uk.wikipedia.org/wiki/Тези_про_300-річчя_возз'єднання_України_з_Росією
   type: primary
   notes: Official Soviet interpretation of 1654
 - name: Декомунізація в Україні
-  url: "https://uk.wikipedia.org/wiki/Декомунізація_в_Україні"
+  url: https://uk.wikipedia.org/wiki/Декомунізація_в_Україні
   type: reference
   notes: Post-Soviet revision context
 vocabulary_hints:
@@ -118,7 +109,9 @@ activity_hints:
   items: 4
 - type: essay-response
   focus: Критичний аналіз
-  word_target: 300
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Revisionist Historiographer

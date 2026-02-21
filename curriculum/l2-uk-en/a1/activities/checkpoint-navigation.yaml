@@ -1,0 +1,397 @@
+- type: group-sort
+  title: 'Куди чи Де?'
+  instruction: 'Визначте, чи фраза відповідає на питання "Куди?" (Напрямок) чи "Де?" (Місце).'
+  groups:
+    - name: 'Куди? (Напрямок)'
+      items:
+        - 'у парк'
+        - 'в банк'
+        - 'на концерт'
+        - 'у школу'
+        - 'на роботу'
+    - name: 'Де? (Місце)'
+      items:
+        - 'у парку'
+        - 'у банку'
+        - 'на концерті'
+        - 'у школі'
+        - 'на роботі'
+
+- type: match-up
+  title: 'Словник навігації'
+  instruction: 'Знайдіть переклад для кожного слова.'
+  pairs:
+    - left: 'наліво'
+      right: 'to the left'
+    - left: 'направо'
+      right: 'to the right'
+    - left: 'прямо'
+      right: 'straight'
+    - left: 'зупинка'
+      right: 'stop'
+    - left: 'метро'
+      right: 'metro'
+    - left: 'карта'
+      right: 'map'
+    - left: 'квиток'
+      right: 'ticket'
+    - left: 'поїзд'
+      right: 'train'
+
+- type: quiz
+  title: 'Перевірка правил'
+  instruction: 'Виберіть правильну відповідь на питання про граматику.'
+  items:
+    - question: 'Яку форму слова ми використовуємо після слова "немає"?'
+      explanation: 'Після слова "немає" завжди використовується Родовий відмінок (Genitive Case).'
+      options:
+        - text: 'Родовий відмінок'
+          correct: true
+        - text: 'Називний відмінок'
+          correct: false
+        - text: 'Знахідний відмінок'
+          correct: false
+        - text: 'Місцевий відмінок'
+          correct: false
+    - question: 'Яке питання ми ставимо, коли йдемо в якесь місце (напрямок)?'
+      explanation: 'Коли ми рухаємося (напрямок), ми питаємо "Куди?" (Where to?).'
+      options:
+        - text: 'Куди?'
+          correct: true
+        - text: 'Де?'
+          correct: false
+        - text: 'Звідки?'
+          correct: false
+        - text: 'Кого?'
+          correct: false
+    - question: 'Яке закінчення зазвичай мають іменники в Місцевому відмінку (локація)?'
+      explanation: 'Більшість іменників у Місцевому відмінку мають закінчення -і (у школі, у місті). Але є винятки: у парку (-у).'
+      options:
+        - text: '-і'
+          correct: true
+        - text: '-у'
+          correct: false
+        - text: '-а'
+          correct: false
+        - text: '-ом'
+          correct: false
+    - question: 'Який прийменник вказує на походження (origin)?'
+      explanation: 'Прийменник "з" вказує на походження: Я з України.'
+      options:
+        - text: 'з'
+          correct: true
+        - text: 'в'
+          correct: false
+        - text: 'на'
+          correct: false
+        - text: 'про'
+          correct: false
+    - question: 'Чи змінюється слово "метро" у відмінках?'
+      explanation: 'Слово "метро" є незмінним в українській мові.'
+      options:
+        - text: 'Ні, не змінюється'
+          correct: true
+        - text: 'Так, змінюється'
+          correct: false
+        - text: 'Тільки в множині'
+          correct: false
+        - text: 'Тільки в родовому'
+          correct: false
+    - question: 'Який відмінок ми використовуємо для прямого додатка (Direct Object)?'
+      explanation: 'Для прямого додатка (Я бачу...) ми використовуємо Знахідний відмінок.'
+      options:
+        - text: 'Знахідний'
+          correct: true
+        - text: 'Називний'
+          correct: false
+        - text: 'Місцевий'
+          correct: false
+        - text: 'Орудний'
+          correct: false
+    - question: 'Як ми кажемо "in the park" (Місцевий відмінок)?'
+      explanation: 'У Місцевому відмінку додаємо закінчення -у для "парк" (виняток) або -і для інших.'
+      options:
+        - text: 'у парку'
+          correct: true
+        - text: 'у парк'
+          correct: false
+        - text: 'з парку'
+          correct: false
+        - text: 'парк'
+          correct: false
+    - question: 'Який займенник означає "your" (один)?'
+      explanation: '"Твій" означає "your" (singular/informal).'
+      options:
+        - text: 'твій'
+          correct: true
+        - text: 'мій'
+          correct: false
+        - text: 'його'
+          correct: false
+        - text: 'наш'
+          correct: false
+
+- type: fill-in
+  title: 'Чий це предмет?'
+  instruction: 'Виберіть правильний присвійний займенник.'
+  items:
+    - sentence: 'Це ____ паспорт. (My)'
+      answer: 'мій'
+      options: ['мій', 'моя', 'моє', 'мої']
+      explanation: 'Паспорт — він (чоловічий рід), тому "мій".'
+    - sentence: 'Це ____ карта. (My)'
+      answer: 'моя'
+      options: ['моя', 'мій', 'моє', 'мої']
+      explanation: 'Карта — вона (жіночий рід), тому "моя".'
+    - sentence: 'Це ____ місто. (Your)'
+      answer: 'твоє'
+      options: ['твоє', 'твій', 'твоя', 'твої']
+      explanation: 'Місто — воно (середній рід), тому "твоє".'
+    - sentence: 'Де ____ квиток? (His)'
+      answer: 'його'
+      options: ['його', 'її', 'їхній', 'твій']
+      explanation: 'Слово "його" (his) не змінюється.'
+    - sentence: 'Це ____ кава. (Her)'
+      answer: 'її'
+      options: ['її', 'його', 'моя', 'твоя']
+      explanation: 'Слово "її" (her) не змінюється.'
+    - sentence: 'Це ____ готель. (Our)'
+      answer: 'наш'
+      options: ['наш', 'наша', 'наше', 'наші']
+      explanation: 'Готель — він, тому "наш".'
+    - sentence: 'Це ____ телефон. (My)'
+      answer: 'мій'
+      options: ['мій', 'моя', 'моє', 'мої']
+      explanation: 'Телефон — він, тому "мій".'
+    - sentence: 'Це ____ сестра. (His)'
+      answer: 'його'
+      options: ['його', 'її', 'твій', 'наша']
+      explanation: '"Його" (his) не змінюється.'
+
+- type: unjumble
+  title: 'Складіть речення'
+  instruction: 'Розставте слова у правильному порядку.'
+  items:
+    - words: ['Вибачте,', 'де', 'тут', 'метро?']
+      answer: 'Вибачте, де тут метро?'
+    - words: ['Ідіть', 'прямо,', 'потім', 'направо.']
+      answer: 'Ідіть прямо, потім направо.'
+    - words: ['Скільки', 'коштує', 'ця', 'кава?']
+      answer: 'Скільки коштує ця кава?'
+    - words: ['Я', 'йду', 'в', 'парк.']
+      answer: 'Я йду в парк.'
+    - words: ['Ми', 'зараз', 'у', 'парку.']
+      answer: 'Ми зараз у парку.'
+    - words: ['Я', 'з', 'України.']
+      answer: 'Я з України.'
+
+- type: fill-in
+  title: 'Правильне закінчення'
+  instruction: 'Виберіть слово з правильним закінченням.'
+  items:
+    - sentence: 'Я бачу ____.'
+      answer: 'студента'
+      options: ['студента', 'студент', 'студенту', 'студентом']
+      explanation: 'Знахідний відмінок для істот (чоловічий рід): додаємо -а.'
+    - sentence: 'Я живу в ____.'
+      answer: 'Лондоні'
+      options: ['Лондоні', 'Лондон', 'Лондона', 'Лондону']
+      explanation: 'Місцевий відмінок: закінчення -і.'
+    - sentence: 'У мене немає ____.'
+      answer: 'часу'
+      options: ['часу', 'час', 'часом', 'часі']
+      explanation: 'Родовий відмінок (відсутність): закінчення -у для абстрактних понять.'
+    - sentence: 'Він іде в ____.'
+      answer: 'аптеку'
+      options: ['аптеку', 'аптека', 'аптеці', 'аптекою']
+      explanation: 'Знахідний відмінок (куди?): закінчення -у для жіночого роду.'
+    - sentence: 'Ми зараз в ____.'
+      answer: 'аптеці'
+      options: ['аптеці', 'аптека', 'аптеку', 'аптекою']
+      explanation: 'Місцевий відмінок (де?): к змінюється на ц + і.'
+    - sentence: 'Вона з ____.'
+      answer: 'Америки'
+      options: ['Америки', 'Америка', 'Америку', 'Америці']
+      explanation: 'Родовий відмінок (походження): закінчення -и.'
+    - sentence: 'Я знаю ____. (Марія)'
+      answer: 'Марію'
+      options: ['Марію', 'Марія', 'Марії', 'Марією']
+      explanation: 'Знахідний відмінок (жіночий рід): -я змінюється на -ю.'
+    - sentence: 'Він у ____. (парк)'
+      answer: 'парку'
+      options: ['парку', 'парк', 'парка', 'парком']
+      explanation: 'Місцевий відмінок: виняток -у для слова "парк".'
+
+- type: quiz
+  title: 'Числа та іменники'
+  instruction: 'Виберіть правильну форму іменника після числа.'
+  items:
+    - question: 'Виберіть правильну форму слова після числа 2: Два ____'
+      explanation: 'Після чисел 2, 3, 4 вживаємо Називний відмінок множини: студент → студенти.'
+      options:
+        - text: 'студенти'
+          correct: true
+        - text: 'студент'
+          correct: false
+        - text: 'студентів'
+          correct: false
+        - text: 'студента'
+          correct: false
+    - question: 'Яка форма правильна після числа 3: Три ____'
+      explanation: 'Гривня (жіночий рід) у Називному відмінку множини: гривня → гривні.'
+      options:
+        - text: 'гривні'
+          correct: true
+        - text: 'гривня'
+          correct: false
+        - text: 'гривень'
+          correct: false
+        - text: 'гривню'
+          correct: false
+    - question: 'Оберіть закінчення після числа 4: Чотири ____'
+      explanation: 'Квиток у Називному відмінку множини: квиток → квитки.'
+      options:
+        - text: 'квитки'
+          correct: true
+        - text: 'квиток'
+          correct: false
+        - text: 'квитків'
+          correct: false
+        - text: 'квитка'
+          correct: false
+    - question: 'Після числа 1 ми використовуємо: Один ____'
+      explanation: 'Після числа 1 вживаємо Називний відмінок.'
+      options:
+        - text: 'студент'
+          correct: true
+        - text: 'студента'
+          correct: false
+        - text: 'студенти'
+          correct: false
+        - text: 'студентів'
+          correct: false
+    - question: 'Після числа 5 (і більше) вживаємо: П''ять ____'
+      explanation: 'Після 5 і більше вживаємо Родовий множини (гривень).'
+      options:
+        - text: 'гривень'
+          correct: true
+        - text: 'гривні'
+          correct: false
+        - text: 'гривня'
+          correct: false
+        - text: 'гривню'
+          correct: false
+    - question: 'Правильна форма для слова "день" після числа 2: Два ____'
+      explanation: 'День у Називному відмінку множини: день → дні.'
+      options:
+        - text: 'дні'
+          correct: true
+        - text: 'день'
+          correct: false
+        - text: 'днів'
+          correct: false
+        - text: 'дня'
+          correct: false
+    - question: 'Яку форму ми використовуємо після числа 6: Шість ____'
+      explanation: 'Після 5 і більше вживаємо Родовий множини (гривень).'
+      options:
+        - text: 'гривень'
+          correct: true
+        - text: 'гривні'
+          correct: false
+        - text: 'гривня'
+          correct: false
+        - text: 'гривню'
+          correct: false
+    - question: 'Оберіть правильний варіант після числа 10: Десять ____'
+      explanation: 'Родовий множини від "студент" - студентів.'
+      options:
+        - text: 'студентів'
+          correct: true
+        - text: 'студенти'
+          correct: false
+        - text: 'студент'
+          correct: false
+        - text: 'студента'
+          correct: false
+
+- type: match-up
+  title: 'Де це?'
+  instruction: 'З''єднайте українське слово з англійським перекладом.'
+  pairs:
+    - left: 'парк'
+      right: 'park'
+    - left: 'аптека'
+      right: 'pharmacy'
+    - left: 'магазин'
+      right: 'store'
+    - left: 'зупинка'
+      right: 'stop'
+    - left: 'вхід'
+      right: 'entrance'
+    - left: 'вихід'
+      right: 'exit'
+    - left: 'лікарня'
+      right: 'hospital'
+    - left: 'вокзал'
+      right: 'station'
+
+- type: group-sort
+  title: 'Він, Вона, Воно'
+  instruction: 'Розподіліть слова за родами (Gender).'
+  groups:
+    - name: 'Він (masculine)'
+      items:
+        - 'паспорт'
+        - 'квиток'
+        - 'парк'
+        - 'банк'
+    - name: 'Вона (feminine)'
+      items:
+        - 'карта'
+        - 'кава'
+        - 'віза'
+        - 'піца'
+    - name: 'Воно (neuter)'
+      items:
+        - 'місто'
+        - 'метро'
+        - 'таксі'
+        - 'авто'
+
+- type: fill-in
+  title: 'Доповніть діалог'
+  instruction: 'Вставте пропущені слова в діалог.'
+  items:
+    - sentence: '- Вибачте, ____ метро?'
+      answer: 'де'
+      options: ['де', 'куди', 'хто', 'що']
+      explanation: 'Ми питаємо про місцезнаходження: Де?'
+    - sentence: '- Ідіть ____.'
+      answer: 'прямо'
+      options: ['прямо', 'центр', 'парк', 'метро']
+      explanation: 'Напрямок руху: прямо.'
+    - sentence: '- ____ коштує вода?'
+      answer: 'Скільки'
+      options: ['Скільки', 'Як', 'Де', 'Хто']
+      explanation: 'Питання про ціну: Скільки?'
+    - sentence: '- Дві ____.'
+      answer: 'гривні'
+      options: ['гривні', 'гривня', 'гривень', 'долар']
+      explanation: 'Після числа 2: гривні.'
+    - sentence: '- Ви ____ Києва?'
+      answer: 'з'
+      options: ['з', 'в', 'на', 'у']
+      explanation: 'Походження: з Києва.'
+    - sentence: '- Ні, я з ____.'
+      answer: 'Лондона'
+      options: ['Лондона', 'Лондон', 'Лондоні', 'Лондону']
+      explanation: 'Походження (Родовий відмінок): з Лондона.'
+    - sentence: 'Вставте слово у правильній формі: - Я йду в ____.'
+      answer: 'парк'
+      options: ['парк', 'парку', 'парком', 'парки']
+      explanation: 'Куди? (Знахідний відмінок) - неістота не змінюється.'
+    - sentence: 'Це ____ квиток. (my)'
+      answer: 'мій'
+      options: ['мій', 'моя', 'моє', 'мої']
+      explanation: 'Квиток - чоловічий рід.'

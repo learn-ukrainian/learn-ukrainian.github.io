@@ -1,0 +1,279 @@
+✅ Message sent to Gemini (ID: 12881) [auto-acked: self-addressed]
+✓ Message 12881 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12881...
+📨 Message #12881
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-petro-bolbochan
+   Time: 2026-02-20T23:42:50.639559+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-bio-83
+level: C1-BIO
+sequence: 83
+slug: petro-bolbochan
+version: '2.0'
+title: 'Петро Болбочан: Полковник-герой'
+content_outline:
+- section: Вступ — Герой Криму
+  points:
+  - Болбочан як один із найталановитіших полководців УНР
+  - Легендарний Кримський похід 1918 року
+  - Трагічна доля та несправедливий вирок
+- section: Ранні роки та військова освіта (1883-1914)
+  points:
+  - Народження в Бессарабії
+  - Навчання в Одеському юнкерському училищі
+  - Служба в російській армії
+  - Офіцерська кар'єра до Першої світової
+- section: Перша світова війна (1914-1917)
+  points:
+  - Участь у бойових діях на фронті
+  - Відзнаки та підвищення
+  - Український рух в армії
+  - Формування національних частин
+- section: Кримський похід (1918)
+  points:
+  - Командування Запорозькою дивізією
+  - Блискавичний похід на Крим
+  - Визволення Криму від більшовиків
+  - Стратегічний геній операції
+- section: Конфлікт з владою та арешт (1918-1919)
+  points:
+  - Повернення з Криму та зміна уряду
+  - Конфлікт з Директорією
+  - Несправедливі звинувачення у зраді
+  - Арешт та ув'язнення
+- section: Страта та реабілітація
+  points:
+  - Військово-польовий суд
+  - Розстріл у липні 1919 року
+  - Реабілітація в незалежній Україні
+  - Пам'ять про героя Кримського походу
+vocabulary_hints:
+  required:
+  - полковник (colonel)
+  - полководець (military commander)
+  - Кримський похід (Crimean Campaign)
+  - дивізія (division)
+  - блискавичний (lightning-fast)
+  - стратегія (strategy)
+  - зрада (treason)
+  - військово-польовий суд (court-martial)
+  - розстріл (execution by shooting)
+  - реабілітація (rehabilitation)
+  recommended:
+  - Запорозька дивізія (Zaporozhian Division)
+  - Директорія (Directorate)
+  - більшовики (Bolsheviks)
+  - юнкер (junker/cadet)
+  - ув'язнення (imprisonment)
+activity_hints:
+- type: reading
+  focus: Військова біографія та Кримський похід
+  source: Історичні дослідження та мемуари
+  items: 3 passages
+- type: essay-response
+  focus: Чи була страта Болбочана справедливою?
+  output: Історичне есе
+focus: biography
+prerequisites:
+- c1-bio-44 (Симон Петлюра)
+connects_to:
+- c1-bio-49 (Олександр Греків)
+- c1-bio-51 (В'ячеслав Липинський)
+- c1-bio-52 (Дмитро Донцов)
+module_type: biography
+sources:
+- name: Петро Болбочан (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Болбочан_Петро_Федорович
+  type: primary
+  notes: Біографія, Кримський похід, трагічна доля
+- name: Інститут історії України НАНУ
+  url: https://www.history.org.ua
+  type: reference
+  notes: Дослідження Української революції
+- name: Музей визвольної боротьби України
+  url: https://mvbu.org.ua
+  type: reference
+  notes: Військова історія УНР
+immersion: 100% Ukrainian
+phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of петро болбочан: полковник-герой'
+- Evaluate the contributions of герой криму
+- Trace the career and influence of страта та реабілітація
+persona:
+  voice: Senior Biographer
+  role: Liberator of Crimea
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Петро Болбочан: Полковник-герой
+
+## Використані джерела
+1. [Енциклопедія Сучасної України](https://esu.com.ua/article-37025) — академічна біографічна довідка.
+2. [Інститут історії України НАНУ](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Bolbochan_P_F) — деталі військової кар'єри та політичного контексту.
+3. [Історична Правда](https://www.istpravda.com.ua) — статті про Кримський похід та обставини страти.
+4. [Спогади Бориса Монкевича](https://chtyvo.org.ua/authors/Monkevych_Borys/) — «Похід Болбочана на Крим», першоджерело.
+
+## Хронологія
+- **5 (17) жовтня 1883**: Народився в с. Гиждеу (нині Ярівка), Бессарабія.
+- **1909**: Закінчив Чугуївське піхотне юнкерське училище.
+- **Листопад 1917**: Сформував 1-й Український Республіканський полк.
+- **Березень 1918**: 2-й Запорізький курінь Болбочана першим увійшов до Києва.
+- **Квітень 1918**: Кримський похід, форсування Сиваша, звільнення Сімферополя.
+- **Січень 1919**: Арешт за наказом Директорії (звинувачення у здачі Харкова).
+- **28 червня 1919**: Розстріляний за вироком військово-польового суду на ст. Балин.
+
+## Ключові факти та цитати
+- **Цитата (Болбочан):** «Ми перед батьківщиною свій обов'язок виконали чесно, а як хто нас буде в чім небудь обвинувачувати, хай робе це той, хто більше нас зробив для батьківщини...» (10 січня 1919).
+- **Цитата (Болбочан до німців):** «Тільки за згодою уряду, за його формальним наказом і зі зброєю в руках залишить моя група територію Криму».
+- **Цитата (Монкевич про Болбочана):** «Йому вірили всі надзвичайно, бо знали, що він сам є зразком чесноти і порядку... Запорожці щиро любили його».
+- **Факт:** Болбочан був переконаним державником-самостійником, що призвело до конфлікту з соціалістичним керівництвом УНР (Винниченко, Петлюра), які вбачали в ньому "реакціонера" та "Бонапарта".
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ — Герой Криму": [!history-bite] — Болбочан звільнив Крим задовго до того, як це стало мейнстрімом сучасної політики, провівши блискавичну операцію.
+- Section "Ранні роки...": [!context] — Бессарабія як регіон формування української ідентичності в умовах імперії.
+- Section "Кримський похід (1918)": [!myth-buster] — Міф про те, що УНР не мала боєздатної армії. Запорозька дивізія була елітою.
+- Section "Кримський похід (1918)": [!quote] — Ультиматум німцям про зброю в руках.
+- Section "Конфлікт з владою...": [!analysis] — Ідеологічна прірва: державність проти партійності. Трагедія української еліти.
+- Section "Страта та реабілітація": [!reflection] — Паралель з сучасністю: як внутрішні чвари вбивають героїв.
+
+## Деколонізаційний контекст
+- **Радянський міф:** Болбочан — "буржуазний націоналіст", "петлюрівський бандит", або взагалі замовчувана фігура.
+- **Українська реальність:** Талановитий професійний військовий, який ставив інтереси Держави вище партійних. Його поразка — це поразка професіоналізму перед популізмом.
+- **Російський наратив:** Заперечення українського характеру Криму. Похід Болбочана руйнує тезу про "исконно русский Крым", демонструючи військово-політичну претензію УНР на півострів.
+
+## Contested Terms
+| Concept | Imperial/Soviet framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| Кримська операція 1918 | Авантюра, німецька окупація | Блискуча військова операція УНР, встановлення контролю над Чорноморським флотом |
+| Петро Болбочан | Реакціонер, контрреволюціонер | Державник, творець регулярної армії |
+| Взяття Києва (1918) | Німецька окупація | Звільнення столиці українськими військами |
+
+## Section-Mapped Research Notes
+
+### Вступ — Герой Криму
+Огляд постаті. "Залізний полковник". Символ нереалізованого потенціалу українського війська. Акцент на контрасті між військовим генієм і трагічною політичною долею.
+
+### Ранні роки та військова освіта
+Народження в родині священика. Духовна семінарія -> Юнкерське училище. Організація українського гуртка (рідкість для імперської армії). Формування характеру: дисципліна, честь, патріотизм.
+
+### Перша світова війна
+Участь у боях, 37 операцій. Нагороди. Лютнева революція 1917 р. як шанс. Українізація частин (Богданівський полк, Республіканський полк). Конфлікти з російським командуванням і солдатськими комітетами.
+
+### Кримський похід (1918)
+Центральна подія. Формування Запорозької дивізії. Наказ зайняти Крим раніше німців. Форсування Сиваша на дрезинах (унікальна тактика). Взяття Джанкоя і Сімферополя. Німці блокують українців. Політична поразка при військовій перемозі.
+
+### Конфлікт з владою та арешт
+Антигетьманське повстання. Болбочан підтримує Директорію, але критикує її лівий ухил. Оборона Лівобережжя. Здача Харкова (під тиском переважаючих сил). Арешт сотником Омеляном Волохом (майбутнім більшовиком-зрадником). Петлюра бачить конкурента.
+
+### Страта та реабілітація
+Суд у Чорному Острові. Звинувачення у зраді (абсурдні). Лист Болбочана до Петлюри (без відповіді). Розстріл біля ями. Слова перед смертю. Реабілітація лише в 1990-х. Пам'ятники (Київ, Харків). Вулиця Болбочана.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12906)
+✓ Message 12881 acknowledged
+✓ Message 12906 acknowledged

@@ -1,0 +1,36 @@
+module: c1-091
+level: C1
+sequence: 91
+slug: c1-5-checkpoint
+version: '2.0'
+title: C1.5 Контрольна точка
+subtitle: C1.5 Checkpoint
+content_outline:
+- section: Тест — Народна культура
+  points:
+  - Музичний фольклор — колискові, думи, кобзарі
+  - Танці та ремесла — гопак, аркан, писанки, вишивка
+  - Вірування та обряди — міфологія, календарні свята
+- section: Тест — Високе мистецтво
+  points:
+  - Класична музика — від Бортнянського до Сильвестрова
+  - Образотворче мистецтво — від ікони до авангарду
+  - Театр і кіно — Курбас, Довженко, сучасність
+- section: Практика — комплексний аналіз
+  points:
+  - Написати порівняльне есе — народне vs високе мистецтво
+  - Проаналізувати культурний феномен на вибір
+  - Обговорити роль мистецтва в національній ідентичності
+focus: checkpoint
+pedagogy: Assessment
+objectives:
+- Assess knowledge of Ukrainian folk culture and fine arts
+- Evaluate ability to analyze cultural phenomena at C1 level
+- Verify mastery of cultural and artistic terminology
+grammar:
+- Comprehensive Review
+phase: C1.5 Folk Culture & Fine Arts
+persona:
+  voice: Senior Specialist
+  role: Культуролог-екзаменатор
+word_target: 4000

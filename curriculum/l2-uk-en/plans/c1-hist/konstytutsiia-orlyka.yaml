@@ -1,4 +1,3 @@
----
 module: c1-hist-025
 level: c1-hist
 sequence: 25
@@ -10,56 +9,48 @@ objectives:
 - 'Analyze the causes and consequences of конституція орлика: перша європейська'
 - Evaluate the historical significance of конституція в екзилі
 content_outline:
-- section: "Вступ — Конституція в екзилі"
-  words: 457
+- section: Вступ — Конституція в екзилі
   subsections:
   - 1710 рік — контекст
   - Після Полтави — еміграція
   - Чому «перша європейська»?
   - Значення документа
 - section: Історичний контекст
-  words: 571
   subsections:
   - Полтава 1709 — катастрофа
   - Мазепа помирає
   - Орлик — новий гетьман в екзилі
   - Потреба легітимації
 - section: Автор і обставини
-  words: 571
   subsections:
   - Пилип Орлик — біографія
   - Еміграція — Туреччина, Швеція
   - Укладення Конституції в Бендерах
   - Підписанти — хто погодився
 - section: Структура і зміст
-  words: 800
   subsections:
   - Преамбула — історична легітимація
   - Обмеження влади гетьмана
   - Рада старшин — законодавча влада
   - Права козаків
   - Захист від тиранії
-- section: "Фрагмент — Обмеження гетьманської влади"
-  words: 686
+- section: Фрагмент — Обмеження гетьманської влади
   subsections:
   - Текст (з глосами)
   - Розподіл влади
   - Вибори — процедура
   - Підзвітність гетьмана
-- section: "Чому \"конституція\"?"
-  words: 571
+- section: Чому "конституція"?
   subsections:
   - Порівняння з іншими документами
   - Республіканські ідеї
   - Вплив польського конституціоналізму
   - Чи застосовувалася?
 - section: Підсумок
-  words: 344
   subsections:
   - Символічне значення
   - Конституція як аргумент
   - Зв'язок із сучасністю
-word_target: 4000
 vocabulary:
 - конституція
 - екзиль
@@ -89,15 +80,15 @@ activities:
   focus: Чи можна назвати документ Орлика 'конституцією'?
 sources:
 - name: Конституція Пилипа Орлика (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Конституція_Пилипа_Орлика"
+  url: https://uk.wikipedia.org/wiki/Конституція_Пилипа_Орлика
   type: reference
   notes: Overview
 - name: Текст Конституції
-  url: "https://uk.wikisource.org/wiki/Конституція_Пилипа_Орлика"
+  url: https://uk.wikisource.org/wiki/Конституція_Пилипа_Орлика
   type: primary
   notes: Full text
 - name: Пилип Орлик
-  url: "https://uk.wikipedia.org/wiki/Пилип_Орлик"
+  url: https://uk.wikipedia.org/wiki/Пилип_Орлик
   type: reference
   notes: Author biography
 vocabulary_hints:
@@ -116,7 +107,9 @@ activity_hints:
   items: 4
 - type: essay-response
   focus: Критичний аналіз
-  word_target: 300
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Early Modern Legal Historian

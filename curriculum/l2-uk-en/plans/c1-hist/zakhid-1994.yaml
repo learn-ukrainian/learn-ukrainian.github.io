@@ -1,4 +1,3 @@
----
 module: c1-hist-098
 level: c1-hist
 sequence: 98
@@ -10,55 +9,47 @@ objectives:
 - 'Analyze the causes and consequences of будапештський меморандум: гарантії без гарантій'
 - Evaluate the historical significance of угода без зубів
 content_outline:
-- section: "Вступ — Угода без зубів"
-  words: 457
+- section: Вступ — Угода без зубів
   subsections:
   - 1994 — Україна віддає ядерну зброю
   - Що отримала натомість
   - 2014 — цінність «гарантій»
   - Структура модуля
-- section: "Контекст — Третій ядерний арсенал"
-  words: 686
+- section: Контекст — Третій ядерний арсенал
   subsections:
   - Україна після СРСР — 1700+ боєголовок
   - Тиск на роззброєння
   - Західні страхи — проліферація
   - Українські сумніви
 - section: Переговори
-  words: 686
   subsections:
   - Що хотіла Україна
   - Що пропонували США, Британія, Росія
   - Компроміс — меморандум
   - Чому не договір
 - section: Текст меморандуму
-  words: 800
   subsections:
   - «Гарантії» безпеки — які саме
   - Зобов'язання сторін
   - Юридична сила — жодної
   - Що насправді підписали
-- section: "2014 — Провал"
-  words: 571
+- section: 2014 — Провал
   subsections:
   - Росія порушує
   - США і Британія — що зробили
   - «Гарантії» = консультації
   - Урок — папір без сили
 - section: Чи могла Україна інакше
-  words: 457
   subsections:
   - Залишити зброю — реалістично?
   - Тиск — надто сильний
   - Але могла вимагати більше
   - Уроки для переговорів
 - section: Підсумок
-  words: 343
   subsections:
   - Меморандум — пастка
   - Довіра — помилка
   - Перехід до Чорноморського флоту
-word_target: 4000
 vocabulary:
 - Будапештський меморандум
 - гарантії безпеки
@@ -86,11 +77,11 @@ activities:
   focus: Чи була Україна обдурена Будапештським меморандумом?
 sources:
 - name: Будапештський меморандум (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Будапештський_меморандум"
+  url: https://uk.wikipedia.org/wiki/Будапештський_меморандум
   type: reference
   notes: Memorandum text and context
 - name: Ядерне роззброєння України (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Ядерне_роззброєння_України"
+  url: https://uk.wikipedia.org/wiki/Ядерне_роззброєння_України
   type: reference
   notes: Nuclear disarmament
 vocabulary_hints:
@@ -109,7 +100,9 @@ activity_hints:
   items: 4
 - type: essay-response
   focus: Критичний аналіз
-  word_target: 300
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Nuclear Disarmament Analyst

@@ -1,4 +1,3 @@
----
 module: c1-hist-082
 level: c1-hist
 sequence: 82
@@ -10,54 +9,46 @@ objectives:
 - 'Analyze the causes and consequences of переяславський цикл: хмельницький → руїна'
 - Evaluate the historical significance of класичний цикл
 content_outline:
-- section: "Вступ — Класичний цикл"
-  words: 457
+- section: Вступ — Класичний цикл
   subsections:
   - 1654 — початок
   - Чому це приклад циклу
   - Від обіцянок до знищення
   - Структура модуля
-- section: "Фаза 1 — Підкуп (1654)"
-  words: 800
+- section: Фаза 1 — Підкуп (1654)
   subsections:
   - Що обіцяли — Березневі статті
   - Автономія — реальна
   - 60,000 реєстр
   - Захист від Польщі
-- section: "Фаза 2 — Залежність (1654-1667)"
-  words: 686
+- section: Фаза 2 — Залежність (1654-1667)
   subsections:
   - Московські воєводи
   - Обмеження контактів
   - Війна за Україну
   - Андрусівський мир — перший розподіл
-- section: "Фаза 3 — Зрада (1667-1686)"
-  words: 686
+- section: Фаза 3 — Зрада (1667-1686)
   subsections:
   - Розподіл України — без питання
   - Передача Києва — за 200,000
   - 1686 — церква під Москвою
   - Статті — систематичне порушення
-- section: "Фаза 4 — Знищення (поступове)"
-  words: 571
+- section: Фаза 4 — Знищення (поступове)
   subsections:
   - Скасування козацьких прав
   - Руїна — внутрішня війна
   - Московська маніпуляція
   - До Мазепи — що залишилось
 - section: Аналіз циклу
-  words: 457
   subsections:
   - Що можна було зробити інакше
   - Альтернативи Переяславу
   - Уроки для майбутнього
 - section: Підсумок
-  words: 343
   subsections:
   - Перший повний цикл
   - Паттерн встановлено
   - Перехід до Мазепи
-word_target: 4000
 vocabulary:
 - Переяславська рада
 - статті
@@ -87,15 +78,15 @@ activities:
   focus: На якому етапі Переяславська угода була приречена на провал?
 sources:
 - name: Переяславська рада (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Переяславська_рада"
+  url: https://uk.wikipedia.org/wiki/Переяславська_рада
   type: reference
   notes: 1654 agreement
 - name: Руїна (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Руїна_(історія_України)"
+  url: https://uk.wikipedia.org/wiki/Руїна_(історія_України)
   type: reference
   notes: Ruin period
 - name: Статті Богдана Хмельницького (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Статті_Богдана_Хмельницького"
+  url: https://uk.wikipedia.org/wiki/Статті_Богдана_Хмельницького
   type: reference
   notes: Agreement articles
 vocabulary_hints:
@@ -114,7 +105,9 @@ activity_hints:
   items: 4
 - type: essay-response
   focus: Критичний аналіз
-  word_target: 300
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Ruina Period Specialist

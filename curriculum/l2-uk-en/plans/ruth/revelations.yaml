@@ -1,4 +1,3 @@
----
 sequence: 42
 module: ruth-042
 module_number: 34
@@ -9,7 +8,6 @@ phase: 2
 phase_id: sacred-word
 phase_name: Sacred Word
 focus: Apocalyptic imagery — Rare lexicon
-word_target: 4000
 content_outline:
 - section: Вступ
   description: Introduction to Revelations
@@ -24,3 +22,6 @@ activity_types:
 - transcription
 - etymology-trace
 - grammar-identify
+persona:
+  voice: Baroque Scholar
+  role: Apocalyptic Exegete

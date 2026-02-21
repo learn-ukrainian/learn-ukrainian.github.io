@@ -1,0 +1,299 @@
+✅ Message sent to Gemini (ID: 12002) [auto-acked: self-addressed]
+✓ Message 12002 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12002...
+📨 Message #12002
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-halytsko-volynskyi-litopys-ii
+   Time: 2026-02-20T23:35:08.454700+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-hist-016
+level: c1-hist
+sequence: 16
+version: '1.0'
+title: 'Галицько-Волинський літопис II: Стиль і світогляд'
+focus: history
+pedagogy: seminar
+objectives:
+- 'Analyze the causes and consequences of галицько-волинський літопис ii: стиль і
+  світогляд'
+- Evaluate the historical significance of література як історія
+content_outline:
+- section: Вступ — Література як історія
+  subsections:
+  - Від змісту до форми
+  - Галицько-Волинський літопис як літературний твір
+  - Чому стиль важливий для історика?
+- section: Літературні особливості
+  subsections:
+  - Поетичний стиль — «військова повість»
+  - Риторичні прийоми
+  - Епічні порівняння
+  - Діалоги — чи реальні?
+  - Відмінність від ПМЛ
+- section: Західні впливи
+  subsections:
+  - Рицарська культура
+  - Образ ідеального князя
+  - Порівняння з європейськими хроніками
+  - Латинські джерела — чи знав автор?
+- section: Світогляд літописця
+  subsections:
+  - Християнська провіденційність
+  - Політичні ідеали — єдність, сила
+  - Відношення до «поганих» — татар, литовців
+  - Руська ідентичність — що це означало?
+- section: Фрагмент — Опис битви
+  subsections:
+  - Текст (з глосами)
+  - Епічний стиль
+  - Героїзація князів
+  - Військова лексика
+- section: Волинська частина
+  subsections:
+  - Зміна стилю і перспективи
+  - Правління Василька та Льва
+  - Занепад князівства
+  - Останні записи — що сталося далі?
+- section: Підсумок
+  subsections:
+  - Літопис як культурний документ
+  - Західна Русь — європейська перспектива
+  - Значення для пізнішої історії Галичини
+vocabulary:
+- стиль
+- військова повість
+- риторика
+- рицарська культура
+- провіденційність
+- ідентичність
+- епічний
+- світогляд
+- героїзація
+- занепад
+- гіпербола
+- порівняння
+- формула
+- топос
+- латинізм
+activities:
+- type: reading
+  focus: Analyze stylistic features of a battle description
+- type: comparative-study
+  focus: Compare GVL style with PVL style — what's different?
+- type: reading
+  focus: Find parallels with Western European chronicles
+- type: essay-response
+  focus: Translate passage into modern journalistic style
+- type: essay-response
+  focus: Чим Галицько-Волинський літопис відрізняється від Повісті минулих літ?
+sources:
+- name: Галицько-Волинський літопис (текст)
+  url: https://litopys.org.ua/hvlitop/hvl.htm
+  type: primary
+  notes: Full text
+- name: Лев Данилович
+  url: https://uk.wikipedia.org/wiki/Лев_I_Данилович
+  type: reference
+  notes: Danylo's successor
+- name: Середньовічна українська література
+  url: https://uk.wikipedia.org/wiki/Українська_середньовічна_література
+  type: reference
+  notes: Literary context
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
+persona:
+  voice: Academic Historiographer
+  role: Medieval Chronicler
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Галицько-Волинський літопис II: Стиль і світогляд
+
+## Використані джерела
+1. [Літопис Руський (за Іпатським списком)](http://litopys.org.ua/litop/lit.htm) — повний текст першоджерела.
+2. [Енциклопедія Сучасної України: Галицько-Волинський літопис](https://esu.com.ua/article-28355) — академічний огляд, структурування частин.
+3. [Інститут історії України: Галицько-Волинський літопис](http://history.org.ua) — історіографічний аналіз.
+4. [Ізборник: Коментарі до Галицько-Волинського літопису](http://litopys.org.ua/litop/lit24.htm) — аналіз стилю та авторства.
+
+## Хронологія
+- **1201 (1205)**: Початок викладу подій у літописі (смерть Романа Мстиславича).
+- **1223**: Битва на Калці — детальний опис військової доблесті та поранення Данила («поранений був у груди»).
+- **1245**: Битва під Ярославом — кульмінація «військового стилю», опис турнірних елементів.
+- **1253**: Коронація Данила в Дорогичині — утвердження статусу Regnum Russiae.
+- **1261/1262**: Умовна межа між Галицькою (авторства «дружинника») та Волинською (авторства «книжника») частинами.
+- **1292**: Завершення літописних записів.
+
+## Ключові факти та цитати
+- **Характеристика Романа**: «Він бо кинувся був на поганих, як той лев, сердитий же був, як та рись... бо він ревно наслідував предка свого Мономаха».
+- **Коронація**: «Прийняв вінець від Папи... щоб утвердити державу свою».
+- **Стиль**: Галицька частина — орнаментальна, близька до лицарського роману; Волинська — стриманіша, фактографічна, насичена церковною риторикою.
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ — Література як історія": `[!context]` — Літопис не мав дат в оригіналі; хронологічна сітка була накладена пізніше і часто помилкова.
+- Section "Літературні особливості — Поетика": `[!culture]` — Паралелі зі «Словом о полку Ігоревім» (орнаментальний стиль).
+- Section "Західні впливи": `[!historiography]` — Порівняння образу Данила з образом короля Артура або європейських лицарів (турніри, зброя).
+- Section "Світогляд літописця": `[!myth-buster]` — Радянський міф про «феодальну роздробленість» проти реальності консолідованої монархії.
+- Section "Фрагмент — Опис битви": `[!quote]` — «І стяг Данилів не могли порізнити...» (опис битви під Ярославом).
+- Section "Волинська частина": `[!history-bite]` — Опис хвороби та смерті Володимира Васильковича як приклад агіографічного стилю в літописанні.
+
+## Деколонізаційний контекст
+- **Imperial/Soviet myth**: Зведення статусу Галицько-Волинської держави до одного з багатьох «удільних князівств» (feudal fragmentation narrative), ігнорування королівського титулу. Трактування західних впливів як «католицької експансії».
+- **Ukrainian reality**: **Regnum Russiae** (Королівство Русі) як повноправна європейська монархія. Літопис фіксує суб'єктність України-Русі, яка не переривається після 1240 року. Інтегрованість у західноєвропейський культурний простір (лицарська культура).
+
+## Contested Terms
+| Concept | Imperial/Soviet framing | Ukrainian (decolonized) framing |
+|---------|-------------------------|---------------------------------|
+| Держава | Галицько-Волинське князівство (уділ) | Королівство Русі (Regnum Russiae) |
+| Політика | Феодальна роздробленість | Монархічна консолідація |
+| Культура | «Зіпсована» Заходом православна традиція | Органічна частина європейського культурного простору |
+
+## Section-Mapped Research Notes
+
+### Вступ — Література як історія
+Літопис — це не сухий звіт, а політичний памфлет і художній твір. Головна мета — легітимізація влади Романовичів. Хронологія вторинна (і часто хибна), первинним є зміст і мораль.
+
+### Літературні особливості — Поетика
+Стиль «військової повісті». Гіперболи («як лев», «як рись»), складні епітети. Відмінність від київської традиції (ПМЛ) — менше релігійного моралізаторства, більше світського пафосу слави.
+
+### Літературні особливості — Риторика
+Використання вигаданих або реконструйованих промов князів для пояснення їхньої мотивації. Епічні діалоги. Це наближає літопис до античної історіографії та західних хронік.
+
+### Західні впливи
+Описи озброєння (фальшіони, шоломи, кінські обладунки), згадки про турніри (під Ярославом). Образ «ідеального володаря» корелює з європейським лицарським кодексом честі, а не лише з візантійським образом благочестивого правителя.
+
+### Світогляд літописця
+Ідея «Руської землі» як єдиного цілого, попри кордони. Вороги (татари) — «безбожні», але ставлення прагматичне (візити до Орди). Провіденціалізм: успіхи і невдачі пояснюються Божою волею, але значна увага приділяється особистій доблесті.
+
+### Фрагмент — Опис битви
+Битва під Ярославом (1245) або Калка (1223). Деталізація тактики, особистих поєдинків. Героїзація Данила: він завжди в центрі, завжди попереду. Лексика: «сулиці», «стяги», «ломлення списів».
+
+### Волинська частина
+Зміна тональності після 1260-х. Автор — ймовірно, духовна особа (єпископ Євсигній?). Стиль стає спокійнішим, фактографічнішим. Більше уваги будівництву церков, переписуванню книг (Володимир Василькович як інтелектуал).
+
+### Підсумок
+Літопис як доказ культурної та політичної тяглості Русі на Заході. Європейський вектор розвитку української культури XIII ст.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12061)
+✓ Message 12002 acknowledged
+✓ Message 12061 acknowledged

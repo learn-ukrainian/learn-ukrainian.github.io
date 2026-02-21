@@ -1,0 +1,13 @@
+{
+  "track": "b2-hist",
+  "slug": "pylyp-orlyk-konstytutsiia",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T15:58:29Z",
+      "task_id": "v3-pylyp-orlyk-konstytutsiia-pA",
+      "mode": "meta-only"
+    }
+  }
+}

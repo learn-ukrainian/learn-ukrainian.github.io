@@ -1,0 +1,13 @@
+{
+  "track": "lit-essay",
+  "slug": "snyder-dialogues",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-20T23:23:37Z",
+      "task_id": "v3-snyder-dialogues-pA",
+      "mode": "full"
+    }
+  }
+}

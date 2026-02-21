@@ -1,0 +1,215 @@
+✅ Message sent to Gemini (ID: 12635) [auto-acked: self-addressed]
+✓ Message 12635 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12635...
+📨 Message #12635
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-stylistic-levels
+   Time: 2026-02-20T23:41:16.325955+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 58
+module: ruth-058
+module_number: 58
+slug: stylistic-levels
+title_uk: Стилістичні рівні
+title_en: Stylistic Levels
+phase: 3
+phase_id: baroque-fight
+phase_name: Baroque Fight
+focus: High vs Low style distinctions
+content_outline:
+- section: Вступ
+  description: Introduction to Stylistic Levels
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+- register-identify
+persona:
+  voice: Baroque Scholar
+  role: Lector
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Stylistic Levels (Стилістичні рівні української мови XVI-XVIII ст.)
+
+## Використані джерела
+1. [Ізборник (litopys.org.ua)](http://litopys.org.ua/) — Першоджерела: Літопис Величка, твори Лазаря Барановича, граматика Смотрицького.
+2. [Енциклопедія Сучасної України (esu.com.ua)](https://esu.com.ua/) — Статті про "Просту мову", "Слов'яноруську мову", "Бароко".
+3. [Інститут історії України (history.org.ua)](http://resource.history.org.ua/) — Дослідження мовної ситуації в Речі Посполитій та Гетьманщині.
+4. [Чтиво (chtyvo.org.ua)](https://chtyvo.org.ua/) — Академічні праці про інтермедії та шкільну драму.
+
+## Хронологія
+- 1596: Берестейська унія — вибух полемічної літератури, активне використання "простої мови" для релігійних дискусій.
+- 1619: Вихід "Грамматіки Словенския" Мелетія Смотрицького — кодифікація "високого" (слов'яноруського) стилю.
+- 1619: Постановка драми Якуба Ґаватовича з першими українськими інтермедіями (фіксація "низького" стилю).
+- 1666: Вихід збірки "Меч духовний" Лазаря Барановича — зразок високого барокового стилю.
+- 1720: Указ Петра I про заборону друку українською мовою (початок витіснення української книжної мови).
+
+## Ключові факти та цитати
+
+### Високий стиль (Слов'яноруська мова)
+- **Характеристика**: Штучна, книжна мова, насичена церковнослов'янізмами, складною риторикою, алегоріями. Використовувалася в теології, урочистій поезії.
+- **Цитата (Лазар Баранович, "Меч духовний")**: «Цей Меч Духовний, як Слово Боже, вимагає більше, як вуха. "Хто має вуха, нехай слухає", як каже Меч Духовний, який виходить із вуст Христових».
+
+### Середній стиль (Проста мова / Книжна українська)
+- **Характеристика**: Мова канцелярії, літописів, мемуарів. База — староукраїнська з полонізмами та латинізмами, але граматично ближча до живої мови.
+- **Цитата (Самійло Величко, Передмова)**: «Цікавому норову людському не може нічого бути сподобнішого, ласкавий читальнику, як читати книги й дізнаватися про давні людські діяння та вчинки... Спізнав я те сам, коли мав скорботу».
+
+### Низький стиль (Жива народна мова)
+- **Характеристика**: Розмовна мова селян, міщан, козаків. Використовувалася в інтермедіях, вертепах для комічного ефекту.
+- **Цитата (Інтермедія до драми Ґаватовича)**: «Що Тут ти, побратиме, собі порабляєш? Кажи міні — як живеш, та и як ся маєш? Я тут не роблю ничого. Ось иду до дому свого».
+
+## Engagement Hooks (mapped to sections)
+- **Section "Вступ: Мовна мозаїка..."**: `[!context]` — Пояснення концепції диглосії/поліглосії (багатомовна людина бароко: молитва — церковнослов'янською, суд — "простою", наука — латиною, жарти — народною).
+- **Section "Теорія трьох стилів..."**: `[!myth-buster]` — Спростування міфу про "нерозвиненість" української мови до Котляревського. Існувала складна ієрархія стилів, аналогічна європейським.
+- **Section "Високий стиль..."**: `[!culture]` — Роль Києво-Могилянської академії у формуванні елітарного стилю ("латинська наука на руській мові").
+- **Section "Середній стиль..."**: `[!history-bite]` — Канцелярська мова ВКЛ та Гетьманщини як державна мова ("Руська мова" у Литовському Статуті).
+- **Section "Низький стиль..."**: `[!quote]` — Аналіз гумору в інтермедіях (Климко і Стецько) як доказ живості народної мови.
+- **Section "Мовне пограниччя..."**: `[!decolonization]` — "Макаронічна мова" не як ознака безграмотності, а як ознака високої освіченості та вільного володіння кількома мовними кодами (мовна гра).
+
+## Деколонізаційний контекст
+- **Imperial Myth**: Російська імперія та радянська наука часто трактували "слов'яноруську мову" як "спільну російську" або "староросійську", ігноруючи її українську редакцію (київський ізвод).
+- **Ukrainian Reality**: Слов'яноруська мова українського бароко мала унікальну фонетику (читали "ять" як [і], "г" як [h]) та лексику, що відрізняло її від московського варіанту церковнослов'янської.
+- **Contested Term**: "Руська мова" (Ruthenian) vs "Русский язык" (Russian). Важливо чітко розмежовувати ці поняття.
+
+## Contested Terms Table
+| Concept | Imperial framing | Ukrainian (decolonized) framing |
+|---------|------------------|---------------------------------|
+| Слов'яноруська мова | Спільна мова "братніх народів", діалект російської | Штучна літературна мова української еліти, київська редакція церковнослов'янської |
+| Проста мова | "Західноруська" письмова мова, зіпсована полонізмами | Староукраїнська літературна мова, державна мова ВКЛ та Гетьманщини |
+| Макаронізми | Ознака занепаду та "польського гніту" | Ознака включеності в європейський латинський контекст, барокова мовна гра |
+
+## Section-Mapped Research Notes
+
+### Вступ: Мовна мозаїка барокової України
+Поліглосія як норма. Освічений українець XVII ст. живе у світі чотирьох мов: церковнослов'янської (Sacrum), латини (Scientia), польської (Politicum) та руської/простої (Privatum/Administrativum).
+
+### Теорія трьох стилів: Витоки та суть
+Античні корені (Вергілій: Енеїда-Георгіки-Буколіки) та їх рецепція в Україні. Граматики (Смотрицький, Ужевич) як теоретичне підґрунтя. Стиль залежав від жанру, а не від "національності" автора.
+
+### Високий стиль: Слов'яноруська мова
+"Слов'янороська" мова — це не просто церковнослов'янська, це її українізований варіант. Використання: панегірики, драми, богословські трактати. Мелетій Смотрицький як архітектор цього стилю. Особливості: складний синтаксис (інверсії), архаїзми.
+
+### Середній стиль: Проста мова (Руська)
+Термін "проста мова" означає не "примітивна", а "зрозуміла" (на противагу "темній" слов'янській). Мова закону (Литовські статути, Універсали Хмельницького) та історії (Козацькі літописи). Сплав народної основи з книжними запозиченнями.
+
+### Низький стиль: Живе народне слово
+Єдина сфера, де фіксувалася жива розмовна стихія — інтермедії та вертеп. Демократизація літератури. Гумор будувався на мовних контрастах. Ґаватович і його "Климко і Стецько" — прабатьки Котляревського.
+
+### Мовне пограниччя: Макаронізми та поліглосія
+Бароко любило химерність. Змішування мов (українсько-латинсько-польський суржик) у поезії та шкільній драмі. Це була свідома естетична стратегія, а не помилка.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12666)
+✓ Message 12635 acknowledged
+✓ Message 12666 acknowledged

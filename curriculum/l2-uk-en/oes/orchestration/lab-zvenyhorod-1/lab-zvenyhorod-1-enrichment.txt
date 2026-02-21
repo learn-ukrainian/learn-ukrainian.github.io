@@ -1,0 +1,216 @@
+✅ Message sent to Gemini (ID: 12117) [auto-acked: self-addressed]
+✓ Message 12117 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12117...
+📨 Message #12117
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-lab-zvenyhorod-1
+   Time: 2026-02-20T23:36:15.201198+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 17
+module: oes-017
+module_number: 15
+slug: lab-zvenyhorod-1
+title_uk: 'Лабораторія: Звенигород №1'
+title_en: 'Lab: Zvenyhorod Letter #1'
+phase: 1
+phase_id: vernacular-foundations
+phase_name: Vernacular Foundations
+focus: Detailed breakdown of the Govinova letter
+content_outline:
+- section: Вступ
+  description: 'Introduction to Lab: Zvenyhorod Letter #1'
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+- grammar-lab
+persona:
+  voice: Senior Paleographer
+  role: Archaeologist
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Lab Zvenyhorod 1 (Говінова грамота)
+
+## Використані джерела
+1. [Літопис.org.ua — Звенигородська берестяна грамота](http://litopys.org.ua/berest/berest.htm) — текст грамоти, переклад, коментарі.
+2. [Локальна Історія — Звенигород: колиска Галицької державности](https://localhistory.org.ua/texts/statti/zvenigorod-koliska-galitskoyi-derzhavnosti/) — археологічний контекст, відкриття І. Свєшнікова.
+3. [Район.Історія — Звенигородська берестяна грамота](https://history.rayon.in.ua/topics/413490-zvenigorodska-berestyana-gramota-ye-yedinim-povnistyu-zberezhenim-dokumentom-na-teritoriyi-pivdennoyi-rusi) — детальний опис, зв'язок з "Руською Правдою".
+4. [Енциклопедія Сучасної України — Берестяні грамоти](https://esu.com.ua/search_articles.php?id=39401) — загальний огляд, місце Звенигородських знахідок.
+
+## Хронологія
+- **1086-1087**: Перші згадки про Звенигород як столицю Володаря Ростиславича.
+- **1110–1137**: Археологічне датування культурного шару, де знайдено грамоту (найімовірніше 1110-1124).
+- **1988**: Експедиція Ігоря Свєшнікова знаходить перші фрагменти берести у Звенигороді (Львівська обл.).
+- **1989 (28 липня)**: Знахідка цілої берестяної грамоти (№2, "Говінової") у споруді багатого боярина/купця.
+- **1990-ті**: Лінгвістичний аналіз В. Німчука та А. Залізняка, підтвердження автентичності та унікальності діалекту.
+
+## Ключові факти та цитати
+- **Оригінал (реконструкція)**: «отъ говѣновои ко нѣжьньцю даи 60 кунъ лодиєныхъ съказалъ говѣнъ и подалъ на судъ а попъ пьсалъ а даи луцѣ а коли не даси то я у князя поємъ отрока а то ти въ болє створи».
+- **Переклад**: «Від Говінової до Ніженця. Дай 60 кун лодійних. Сказав Говін [перед смертю] і подав на суд, а піп писав. А дай [гроші] Луці. Якщо ж не даси, то я візьму у князя отрока [для стягнення], і це тобі стане в більшу суму».
+- **Унікальність**: Єдина *повністю* збережена берестяна грамота з території України (станом на 2025 рік знайдено 3 у Звенигороді, але інші фрагментарні).
+- **Правовий аспект**: Пряме посилання на норми "Руської Правди":
+    - Ст. 79 (Простора редакція): про повернення боргу.
+    - Ст. 74: про оплату послуг княжого "отрока" (виконавця вироку) — саме цим погрожує Говінова ("въ болє створи" — стане дорожче).
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ": [!myth-buster] — "Міф про новгородську монополію". Радянська історіографія стверджувала, що на Русі писали лише в Новгороді (через болотяний ґрунт). Звенигород довів: писали скрізь, просто не скрізь береста збереглася.
+- Section "Основний матеріал: I — Археологічний детектив": [!history-bite] — "Паперовий тигр". Береста була "чернеткою" середньовіччя. Важливі документи писали на пергаменті, а бересту викидали після прочитання. Те, що ми знайшли лист Говінової — це як знайти чийсь SMS у смітнику через 900 років.
+- Section "Основний матеріал: II — Голос Говінової": [!paleography] — "Почерк попа". Фраза "а попъ пьсалъ" вказує, що Говінова диктувала, а писав священик. Це змінює наше уявлення про канцелярію того часу.
+- Section "Основний матеріал: III — Мовний портрет": [!context] — "Південно-західний діалект". Грамота містить риси, які згодом стануть ознаками української мови (наприклад, перехід *ѣ* в *і* в новозакритих складах — дискусійно, але "нѣжьньцю" дає підстави для аналізу).
+- Section "Основний матеріал: IV — Соціальна драма": [!decolonization] — "Агентність жінки". Говінова не просить, а *вимагає*. Вона погрожує княжим судом. Це руйнує міф про безправність жінок у середньовічній Україні. Вона розпоряджається майном чоловіка.
+- Section "Підсумок": [!culture] — "Лодійні куни". Термін, що зустрічається лише тут. Вказує на розвинене судноплавство і податкову систему Галичини.
+
+## Деколонізаційний контекст
+- **Imperial Myth**: "Давньоруська мова" була єдиною і монолітною (фактично староросійською).
+- **Ukrainian Reality**: Звенигородська грамота демонструє чіткі локальні діалектні риси південно-західної Русі (майбутньої України/Галичини), відмінні від новгородських чи суздальських (цокання, ѣ/є). Це доказ існування діалектного континууму, з якого виросла українська мова.
+- **Imperial Myth**: Культурна перифеійність Галичини до "піднесення Москви".
+- **Ukrainian Reality**: Звенигород був потужним культурним центром з поширеною грамотністю ще до заснування Москви (перша згадка 1147).
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| Мова грамоти | "Древнерусский язык" (спільний предок) | Давньоукраїнська (руська) мова / Галицько-волинський діалект |
+| Етнічна приналежність | "Русские люди" (загально) | Русини / Предки українців (локальна ідентичність) |
+| Право | "Русская Правда" як кодекс "Російської держави" | "Руська Правда" як кодекс Київської Русі (України) |
+
+## Section-Mapped Research Notes
+
+### Вступ: Послання з минулого
+Відкриття 1989 року змінило карту грамотності Русі. Це не просто шматок кори, а голос живої людини.
+
+### Основний матеріал: I — Археологічний детектив
+Експедиція Свєшнікова. Умови збереження (торф'яники). Контекст садиби багатого містянина. Чому грамота збереглася (консервація).
+
+### Основний матеріал: II — Голос Говінової
+Повний текст. Розбір фрази "а попъ пьсалъ". Графічні особливості (літери, "єр" та "єрь").
+
+### Основний матеріал: III — Мовний портрет
+Відсутність "цокання" (на відміну від Новгорода). Специфіка відмінювання ("Говінова" — присвійний прикметник, що став прізвищем?). Лексика: "куни", "отрок", "суд".
+
+### Основний матеріал: IV — Соціальна драма
+Хто такий Говін? (можливо, з половців або угорців?). Хто такий Ніженець? (боржник). Роль Луки. Юридична процедура стягнення боргу. Жінка як суб'єкт права.
+
+### Практика: I — Епіграфічна майстерня
+Як читати "суцільний рядок" (scriptio continua). Прорисовка літер.
+
+### Практика: II — Граматичні паралелі
+Порівняння відмінків грамоти з сучасною мовою (Кличний відмінок? Давальний?).
+
+### Підсумок: Спадщина Звенигорода
+Значення для історії української мови. Звенигород як символ втраченої величі.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12179)
+✓ Message 12117 acknowledged
+✓ Message 12179 acknowledged

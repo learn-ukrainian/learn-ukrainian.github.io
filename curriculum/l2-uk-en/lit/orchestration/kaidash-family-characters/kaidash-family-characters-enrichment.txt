@@ -1,0 +1,291 @@
+✅ Message sent to Gemini (ID: 12075) [auto-acked: self-addressed]
+✓ Message 12075 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12075...
+📨 Message #12075
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-kaidash-family-characters
+   Time: 2026-02-20T23:35:51.998566+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 27
+module: lit-27
+level: LIT
+slug: kaidash-family-characters
+version: '2.0'
+title: 'Кайдашева сім''я: Галерея Характерів'
+subtitle: 'Kaidash Family: A Gallery of Characters'
+content_outline:
+- section: Вступ — Сім'я як мікрокосм
+  points:
+  - Родина в українській літературі
+  - Чому "Кайдашева сім'я" стала класикою
+  - Історичний контекст (після 1861 року)
+- section: Омелько Кайдаш — патріарх
+  points:
+  - Характеристика голови родини
+  - Слабкості та чесноти
+  - Конфлікт традиції та змін
+- section: Маруся Кайдашиха — справжня влада
+  points:
+  - Образ свекрухи в українській культурі
+  - Мотиви поведінки Кайдашихи
+  - Сатира vs співчуття
+- section: Сини і невістки
+  points:
+  - Карпо та Лаврін — два типи синів
+  - Мотря і Мелашка — два типи невісток
+  - Конфлікти поколінь
+- section: Другорядні персонажі
+  points:
+  - Село як колективний персонаж
+  - Сусіди та їхня роль
+  - Функція гумору
+- section: Підсумок — Від типу до індивідуальності
+  points:
+  - Як Нечуй створює живих людей
+  - Порівняння з персонажами Квітки та Шевченка
+  - Перехід до конфліктів повісті
+vocabulary_hints:
+  required:
+  - патріарх (patriarch)
+  - свекруха (mother-in-law)
+  - невістка (daughter-in-law)
+  - архетип (archetype)
+  - характер (character)
+  - мотивація (motivation)
+  - сатира (satire)
+  - психологізм (psychological depth)
+  - традиція (tradition)
+  - конфлікт (conflict)
+  recommended:
+  - індивідуальність (individuality)
+  - типаж (type/character type)
+  - колективний (collective)
+  - гумор (humor)
+  - співчуття (sympathy)
+activity_hints:
+- type: reading
+  focus: Ключові сцени з персонажами
+  source: UkrLib tid=907
+  items: 5+
+- type: essay-response
+  focus: Архетип свекрухи в українській культурі
+  output: Літературознавче есе
+focus: literature
+pedagogy: Seminar
+prerequisites:
+- lit-26 (Нечуй-Левицький біографія)
+connects_to:
+- lit-28 (Кайдашева сім'я — конфлікти)
+- lit-05 (Наталка Полтавка — порівняння персонажів)
+objectives:
+- Проаналізувати систему персонажів повісті
+- Зрозуміти архетипи української сільської родини
+- Дослідити психологічну мотивацію героїв
+- Порівняти персонажів з попередніми творами курсу
+grammar:
+- Character analysis vocabulary
+- Family relationship terms
+- Psychological motivation
+module_type: literature
+sources:
+- name: Кайдашева сім'я — повний текст
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=907
+  type: primary
+  notes: Для цитат і аналізу
+- name: Аналіз "Кайдашевої сім'ї"
+  url: https://www.ukrlib.com.ua/review/printit.php?tid=18137
+  type: primary
+  notes: Літературознавчий аналіз
+- name: Кайдашева сім'я — скорочено
+  url: https://www.ukrlib.com.ua/styslo/printit.php?tid=3505
+  type: reference
+  notes: Для швидкого повторення сюжету
+immersion: 100% Ukrainian
+phase: LIT.5 Realism
+persona:
+  voice: Senior Philologist & Critic
+  role: Character Analyst
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Кайдашева сім'я: Галерея Характерів
+
+## Використані джерела
+1. [Енциклопедія сучасної України](https://esu.com.ua/) — Стаття про Івана Нечуя-Левицького, контекст його реалістичної соціально-побутової прози.
+2. [Інститут історії України НАН України](http://history.org.ua/) — Аналіз наслідків Селянської реформи 1861 року, земельний голод, руйнування патріархату як історичне тло повісті.
+3. [Літопис](http://litopys.org.ua/) — Історія української літератури: соціально-побутова повість, характеристика персонажів, психологізм Нечуя-Левицького.
+
+## Хронологія
+- 1861: Селянська реформа в Російській імперії (скасування кріпацтва), що стала економічним і соціальним каталізатором конфліктів у повісті.
+- 1878: Публікація повісті "Кайдашева сім'я" в журналі "Правда" у Львові.
+- 1887: Вихід твору окремою книжкою у Києві (з істотними цензурними втручаннями).
+- 2007: Встановлення пам'ятника родині Мазурів (прототипам Кайдашів) у селі Семигори на Київщині.
+- 2020: Прем'єра сучасного серіалу "Спіймати Кайдаша", що підтвердила актуальність архетипів повісті у XXI столітті.
+
+## Ключові факти та цитати
+- Твір базується на реальних подіях: прототипами Кайдашів стала відома на все село Семигори родина Мазурів, яка славилася постійними сварками за межу та майно.
+- Цитата Нечуя-Левицького про комічне: "Сміх — це сонце: воно проганяє зиму з людського обличчя". Повість є класичним прикладом принципу "сміх крізь сльози".
+- Омелько Кайдаш (стельмах) гине не від старості, а від пияцтва, що було типовою втечею селянина від жорстокої постімперської реальності.
+- Цитата про Кайдашиху: "Кайдашиха була баба нівроку, добра трудівниця... але мала один хиб: дуже любила панів і сама себе мала за паню".
+- Цитата з опису сварки (епічна стилізація): "Не чорна хмара з синього моря наступала, то виступала Мотря з Карпом з-за своєї хати до тину".
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ — Сім'я як мікрокосм: I — Історичний контекст": [!context] — Пояснення, чому саме відсутність землі після 1861 року, а не "поганий характер", змушувала селян ділити хати та битися за кожну грушу.
+- Section "Омелько Кайдаш — патріарх: II — Трагедія та слабкості": [!history-bite] — Злам патріархального авторитету. У традиційному суспільстві батько був беззаперечним лідером, але нові економічні умови дозволили синам вимагати незалежності і відкрито зневажати батька.
+- Section "Маруся Кайдашиха — справжня влада: I — Архетип свекрухи": [!culture] — Аналіз фольклорного коріння лихої свекрухи, відображеного в народних піснях, який Нечуй геніально адаптував для прози.
+- Section "Сини і невістки: II — Два типи невісток": [!myth-buster] — Спростування поширеного міфу про те, що Мелашка є ідеалом доброти до кінця. Звернення уваги на її моральну деградацію в токсичному середовищі ("кайдашівщині").
+- Section "Другорядні персонажі: II — Сусіди і функція гумору": [!quote] — Цитування комічної епічної сцени сутички, що пародіює Гомера, демонструючи блискучий гумор Нечуя.
+- Section "Підсумок — Від типу до індивідуальності": [!decolonization] — Підкреслення того, що українські селяни в літературі — це не покірна "сіра маса", а індивідуалісти з власним відчуттям гідності, приватної власності та честі, що відрізняє їх від селянських образів у російській літературі.
+
+## Деколонізаційний контекст
+- Imperial/Soviet myth: Радянське літературознавство трактувало "Кайдашеву сім'ю" виключно як ілюстрацію "темряви, неосвіченості та ідіотизму дрібновласницького селянського життя", зводячи конфлікт до класової боротьби бідних проти багатих.
+- Ukrainian reality: Повість є глибоким психологічним дослідженням індивідуалізму українців, кризової втрати патріархальних традицій під тиском економічного зубожіння Російської імперії, та відображає високе почуття гідності й боротьбу за особисті кордони (навіть якщо вони виражені межею на городі).
+
+## Contested Terms (if applicable)
+| Concept | Imperial/Soviet framing | Ukrainian (decolonized) framing |
+|---------|-----------------|-------------------|
+| Сільські сварки | Ознака культурної відсталості та "дрібновласницьких інстинктів" | Відчайдушна боротьба за особистий простір, власність і виживання в умовах імперського земельного голоду |
+| Український селянин | Забитий, темний, комічний простак (малорос) | Глибоко психологічна, гонорова особистість з яскраво вираженим індивідуалізмом та мовним багатством |
+
+## Section-Mapped Research Notes
+
+### Вступ — Сім'я як мікрокосм: I — Історичний контекст
+Дія повісті розгортається у пореформений період (після 1861 року). Скасування кріпацтва принесло омріяну свободу, але селяни отримали замало землі, за яку ще й мусили платити викуп. Сім'я Кайдашів є мікрокосмом суспільства: земельний голод штовхає рідних людей до жорстокої конкуренції. Конфлікт виникає не лише через складні характери, а передусім через соціально-економічний тиск імперської політики.
+
+### Вступ — Сім'я як мікрокосм: II — Літературна класика
+"Кайдашева сім'я" стала вершинним твором реалістичної соціально-побутової повісті-хроніки. Нечуй-Левицький використовує принцип "сміх крізь сльози", що робить твір унікальним: за побутовим комізмом ховається справжня життєва трагедія. Прототипами родини стали реальні селяни Мазури із Семигор.
+
+### Омелько Кайдаш — патріарх: I — Характеристика голови родини
+Омелько втілює традиційний образ українського батька-господаря. Він є стельмахом (робить вози), надзвичайно працьовитою людиною. Для нього характерна глибока побожність, що переплітається з язичницькими забобонами (суворо постить у п'ятницю, щоб "не потонути наглій смерті"). Це архетип людини минулої епохи.
+
+### Омелько Кайдаш — патріарх: II — Трагедія та слабкості
+Трагедія Омелька полягає у втраті батьківського авторитету. У нових умовах сини вимагають незалежності та частки майна, відкрито піднімають на нього руку. Нездатний впоратися з руйнуванням традицій і постійними сварками жінок, Омелько знаходить порятунок у шинку. Його алкоголізм — це соціальний ескапізм, що призводить до фізичної та моральної загибелі героя.
+
+### Маруся Кайдашиха — справжня влада: I — Архетип свекрухи
+Маруся втілює класичний фольклорний архетип "лихої свекрухи". Основна риса її соціального портрета — лицемірство. У молодості вона довго служила ("терлася") при панах, тому перейняла панські манери і зверхність. "На словах, як на цимбалах грає", але насправді деспотична, скупа і жорстока до невісток.
+
+### Маруся Кайдашиха — справжня влада: II — Мотиви та психологізм
+Нечуй-Левицький розкриває психологію тирана: Кайдашиха знущається з невісток, бо сама мала важке життя і тепер намагається компенсувати це владою над іншими. Її страх втратити статус "головної жінки" в домі керує всіма її вчинками. Автор подає її образ з нищівною сатирою, роблячи її комічною у своєму марнославстві.
+
+### Сини і невістки: I — Два типи синів
+Сини представляють два протилежні типи української вдачі. Карпо — похмурий, раціональний, жорсткий ("з нього буде добрий посіпака"), готовий іти напролом заради свого. Лаврін — на початку ліричний, мрійливий, грає на сопілці, втілює романтичну душу народу. Проте еволюція показує, як побутове болото зрівнює обох: Лаврін також стає жорстоким і дріб'язковим у сварках за межу.
+
+### Сини і невістки: II — Два типи невісток
+Мотря — "з перцем", має твердий характер, багачка, відмовляється коритися свекрусі, виборює свою незалежність. Мелашка — дівчина з бідної родини, покірна, лагідна, лірична. Найбільший психологічний драматизм повісті полягає в метаморфозі Мелашки: під впливом "кайдашівщини" ця янгольська душа перетворюється на таку ж злу та сварливу жінку, як і Мотря.
+
+### Другорядні персонажі: I — Село як колективний персонаж
+Село Семигори виступає як повноцінний колективний персонаж повісті. Громадська думка ("що скажуть люди", "щоб не сміялися сусіди") керує вчинками героїв більше, ніж власні бажання. Це публічний суд, перед яким кожен Кайдаш намагається виглядати краще, ховаючи реальні проблеми.
+
+### Другорядні персонажі: II — Сусіди і функція гумору
+Баба Палажка та баба Параска — геніальні комічні персонажі, що уособлюють народні плітки та забобонність. Завдяки їм будь-яка родинна суперечка стає надбанням усього села. Нечуй-Левицький застосовує прийом макаронічної пародії та героїчного епосу (як у "Енеїді"), описуючи битви за поросят чи грушу в монументальному стилі, що створює неповторний гумор.
+
+### Підсумок — Від типу до індивідуальності
+Значення повісті полягає в майстерному переході від пласких літературних типів (які домінували у попередників, наприклад, у Квітки-Основ'яненка) до складних, живих індивідуальностей з суперечливою психологією. Кайдаші не є ані абсолютно поганими, ані ідеальними — вони живі люди, скалічені обставинами, чия індивідуальність робить їхні проблеми актуальними і в сучасному українському суспільстві.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12157)
+✓ Message 12075 acknowledged
+✓ Message 12157 acknowledged

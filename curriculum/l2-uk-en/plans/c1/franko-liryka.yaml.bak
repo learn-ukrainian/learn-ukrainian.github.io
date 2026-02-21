@@ -1,0 +1,41 @@
+module: c1-097
+level: C1
+sequence: 97
+slug: franko-liryka
+version: '2.0'
+title: 'Франко: Громадянська та філософська лірика'
+subtitle: Franko's Civic and Philosophical Lyric
+content_outline:
+- section: Розминка — Каменяр української поезії
+  points:
+  - '"Каменярі" — революційний дух та образи праці'
+  - '"Зів''яле листя" — трагічне кохання'
+  - '"Мойсей" — філософська поема про вождя та народ'
+- section: Content Areas
+  points:
+  - 'Каменярі: revolutionary spirit and labor imagery'
+  - 'Зів''яле листя: tragic love and lyrical drama'
+  - 'Мойсей: philosophical poem analysis'
+  - 'Вічний революціонер: anthem of progress'
+  - Scientific realism in poetry
+- section: Практика — поезія Франка
+  points:
+  - Проаналізувати "Каменярі" — алегорія та революційний пафос
+  - Порівняти ліричну драму "Зів'яле листя" з Шевченком
+  - Написати есе про філософські теми "Мойсея"
+  - Обговорити науковий реалізм у поезії Франка
+focus: literature
+pedagogy: Literary Analysis
+objectives:
+- Learner can analyze the imagery and revolutionary spirit of "Kameniari".
+- Learner can interpret the philosophical themes of "Moisei".
+- Learner can discuss Franko’s contribution to the development of Ukrainian modernist
+  poetry.
+grammar:
+- Literary syntax
+- Rhetorical figures
+phase: C1.6 Literature
+persona:
+  voice: Senior Specialist
+  role: Філософ
+word_target: 4000

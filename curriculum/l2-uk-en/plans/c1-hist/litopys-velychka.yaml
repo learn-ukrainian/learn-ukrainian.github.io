@@ -1,4 +1,3 @@
----
 module: c1-hist-022
 level: c1-hist
 sequence: 22
@@ -10,22 +9,19 @@ objectives:
 - 'Analyze the causes and consequences of літопис величка: барокова історія'
 - Evaluate the historical significance of найповніший козацький літопис
 content_outline:
-- section: "Вступ — Найповніший козацький літопис"
-  words: 457
+- section: Вступ — Найповніший козацький літопис
   subsections:
   - Самійло Величко — канцелярист
   - Найбільший за обсягом
   - Документальний підхід
   - Трагічна доля тексту
 - section: Автор і обставини написання
-  words: 571
   subsections:
   - Біографія Величка
   - Служба в канцелярії
   - Доступ до документів
   - Сліпота і завершення праці
 - section: Структура і джерела
-  words: 800
   subsections:
   - Чотири томи
   - Від 1648 до 1700 року
@@ -33,34 +29,29 @@ content_outline:
   - Компіляція різних джерел
   - Що втрачено — рукопис неповний
 - section: Документи в літописі
-  words: 686
   subsections:
   - Універсали гетьманів
   - Дипломатичне листування
   - Договори
   - Чому це революційний підхід
   - Верифікація — чи автентичні?
-- section: "Фрагмент — Переяславська рада"
-  words: 686
+- section: Фрагмент — Переяславська рада
   subsections:
   - Текст (з глосами)
   - Як Величко описує 1654
   - Документи vs. інтерпретація
   - Позиція автора
 - section: Критика джерела
-  words: 457
   subsections:
   - Компіляція — що звідки
   - Можливі інтерполяції
   - Пізніші редакції
   - Як використовувати критично
 - section: Підсумок
-  words: 343
   subsections:
   - Найважливіший козацький літопис
   - Архів у літописі
   - Порівняння з іншими
-word_target: 4000
 vocabulary:
 - канцелярист
 - документальний
@@ -81,7 +72,7 @@ activities:
 - type: reading
   focus: Pereiaslav Council passage with inserted documents
 - type: critical-analysis
-  focus: "Verify one inserted document — is it authentic?"
+  focus: Verify one inserted document — is it authentic?
 - type: comparative-study
   focus: Compare Velychko's Pereiaslav with Samovydets and Hrabianka
 - type: critical-analysis
@@ -90,15 +81,15 @@ activities:
   focus: Чому Величко вставляв документи в літопис?
 sources:
 - name: Літопис Самійла Величка (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Літопис_Самійла_Величка"
+  url: https://uk.wikipedia.org/wiki/Літопис_Самійла_Величка
   type: reference
   notes: Overview
 - name: Літопис Величка (текст)
-  url: "https://litopys.org.ua/velichko/vel.htm"
+  url: https://litopys.org.ua/velichko/vel.htm
   type: primary
   notes: Full text (partial)
 - name: Величко Самійло Васильович
-  url: "https://uk.wikipedia.org/wiki/Величко_Самійло_Васильович"
+  url: https://uk.wikipedia.org/wiki/Величко_Самійло_Васильович
   type: reference
   notes: Author biography
 vocabulary_hints:
@@ -117,7 +108,9 @@ activity_hints:
   items: 4
 - type: essay-response
   focus: Критичний аналіз
-  word_target: 300
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Baroque Cancellist

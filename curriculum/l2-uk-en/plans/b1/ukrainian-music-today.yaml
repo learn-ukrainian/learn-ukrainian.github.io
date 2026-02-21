@@ -1,0 +1,108 @@
+module: b1-76
+level: B1
+sequence: 76
+slug: ukrainian-music-today
+version: '2.0'
+title: Українська музика сьогодні
+subtitle: Contemporary Ukrainian Music Scene
+content_outline:
+- section: 'Вступ: Музика як м''яка сила (Introduction: Music as Soft Power)'
+  words: 500
+  points:
+  - Обговорення ролі музики як інструменту культурної дипломатії та ідентичності (identifying
+    'soft power').
+  - Вживання терміна «гурт» замість росіянізму «група» в контексті музичних колективів.
+  - 'Діалог про музичні вподобання: використання активного дієслова «слухати» (Active
+    listening) замість «чути».'
+- section: Від Квітки до Євробачення (From Kvitka to Eurovision)
+  words: 800
+  points:
+  - 'Постать Квітки Цісик (Kvitka Cisyk): її роль у збереженні української пісні,
+    техніка «білого голосу» та альбоми «Квітка», «Два кольори».'
+  - 'Історія тріумфів на Євробаченні: Руслана (2004) та Kalush Orchestra (2022) з
+    піснею «Stefania».'
+  - Синтез репу та фольклорних мотивів (сопілка) як сучасний тренд української естради.
+- section: Сучасна сцена та жанрове різноманіття (Contemporary Scene and Genre Diversity)
+  words: 1000
+  points:
+  - 'Огляд топ-виконавців: Поп (Монатік), Реп (Alyona Alyona), Рок (Океан Ельзи, Бумбокс,
+    Антитіла).'
+  - 'Електронна та альтернативна музика: Електро-фолк (ONUKA) та етно-хаос (ДахаБраха).'
+  - 'Утворення назв осіб за діяльністю (Держстандарт): від дієслова «співати» до іменника
+    «співак/співачка».'
+- section: 'Символи незламності: Пісні про війну (Symbols of Resilience: Songs of
+    War)'
+  words: 800
+  points:
+  - Історія гімну Січових Стрільців (1914) «Ой у лузі червона калина» та її нове життя
+    після виконання Андрієм Хливнюком у 2022 році.
+  - Роль музики у підтримці духу армії та благодійні концерти як засіб збору коштів.
+  - Аналіз тексту пісень, що стали символами опору, та їхнього впливу на світову спільноту.
+- section: 'Граматична майстерня: Граємо та слухаємо (Grammar Workshop: Playing and
+    Listening)'
+  words: 700
+  points:
+  - 'Керування дієслів: розрізнення конструкцій «грати на гітарі» (Locative case для
+    інструментів) та «грати в футбол» (Accusative case для ігор).'
+  - 'Узгодження роду іменників: типові помилки «мій пісня» → «моя пісня» (Feminine)
+    та «ця альбом» → «цей альбом» (Masculine).'
+  - 'Лексичні колоквіації: очолити хіт-парад, лідер гурту, видатний виконавець.'
+- section: 'Підсумок: Культурне дозвілля (Summary: Cultural Leisure)'
+  words: 200
+  points:
+  - Обговорення способів проведення вільного часу (філармонія, фестивалі) згідно з
+    Держстандартом §3.4.
+  - 'Рефлексія: порівняння української музичної сцени з культурою країни студента.'
+vocabulary_hints:
+  required:
+  - гурт (band) — лідер гурту, легендарний гурт; prefer over 'група' (Russianism)
+  - співак / співачка (singer) — відомий співак, оперна співачка; derived from 'співати'
+  - виконавець / виконавиця (performer) — молодий виконавець, топ виконавців
+  - пісня (song) — народна пісня, хітова пісня; feminine (моя улюблена пісня)
+  - альбом (album) — сольний альбом, цей альбом; masculine (цей альбом)
+  - концерт (concert) — благодійний концерт, квиток на концерт
+  - жанр (genre) — музичний жанр, змішування жанрів
+  - музика (music) — слухати музику (active process) vs чути музику (passive)
+  recommended:
+  - хіт (hit) — очолити хіт-парад, світовий хіт
+  - грати на (to play an instrument) — грати на гітарі, грати на піаніно (+ Locative)
+  - сопілка (sopilka) — народний інструмент, фольклорні мотиви
+  - фольклор (folklore) — сучасний фольклор, етно-хаос
+  - реп (rap)
+  - рок (rock)
+  - поп (pop)
+  - електронна музика (electronic music)
+activity_hints:
+- type: reading
+  focus: Texts about Ukrainian artists
+  items: 15
+- type: quiz
+  focus: Understand song themes
+  items: 15
+- type: match-up
+  focus: Match artists to genres
+  items: 20
+- type: quiz
+  focus: Share music preferences
+  items: 10
+focus: culture
+pedagogy: CBI
+prerequisites:
+- b1-75 (Regions Center)
+connects_to:
+- b1-77 (Ukrainian Cinema and TV)
+objectives:
+- Learner can discuss Ukrainian music genres and artists in context
+- Learner can understand authentic texts about Ukrainian music scene
+- Learner can use music-related vocabulary to express preferences
+- Learner can compare Ukrainian music with their own musical culture
+grammar:
+- Music and arts vocabulary
+- Cultural commentary patterns
+- Expressing preferences
+register: розмовний
+phase: B1.7 [Contemporary Ukraine]
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Radio DJ
+word_target: 4000

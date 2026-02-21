@@ -6,6 +6,7 @@ name: review-content-v4
 description: Deep content review with thorough linguistic verification
 version: '4.2'
 category: quality
+model: claude-opus-4-6
 dependencies: audit_module.py
 changelog: v4.2 - Restored 12 dimensions as post-review checklist
 ---
@@ -226,6 +227,11 @@ C1 and above MUST demonstrate modal hedging and intellectual nuance:
 - **7-8**: Good, minor issues found
 - **5-6**: Needs work, multiple issues
 - **<5**: Serious problems, major rewrite needed
+
+**MANDATORY SCORE CAPS (Anti-Gaming):**
+1. **Word Count Deficit**: If the audited word count is < 90% of the target floor, **Experience Quality, Coherence, and Relevance** are HARD CAPPED at 5/10. NO EXCEPTIONS. 'Strategic choice for quality' is a FAIL.
+2. **Missing Quotes (LIT/HIST)**: If less than 3 primary source quotes are used in a Seminar module, **Richness** is HARD CAPPED at 6/10.
+3. **Russianisms**: Presence of even 1 Russianism (кушати, etc.) caps **Language** at 4/10.
 
 **IMPORTANT:** Scores must reflect what you actually found during deep review. If you found 3 grammar errors, Language cannot be 9. If activities had wrong answers, Activities cannot be 8.
 

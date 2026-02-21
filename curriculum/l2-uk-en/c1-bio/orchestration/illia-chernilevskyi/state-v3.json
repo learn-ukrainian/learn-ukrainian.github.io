@@ -1,0 +1,13 @@
+{
+  "track": "c1-bio",
+  "slug": "illia-chernilevskyi",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T11:37:09Z",
+      "task_id": "v3-illia-chernilevskyi-pA",
+      "mode": "meta-only"
+    }
+  }
+}

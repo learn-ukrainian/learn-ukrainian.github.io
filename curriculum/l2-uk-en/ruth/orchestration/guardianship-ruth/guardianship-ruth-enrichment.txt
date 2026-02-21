@@ -1,0 +1,206 @@
+✅ Message sent to Gemini (ID: 11915) [auto-acked: self-addressed]
+✓ Message 11915 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #11915...
+📨 Message #11915
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-guardianship-ruth
+   Time: 2026-02-20T23:34:32.916382+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 14
+module: ruth-014
+module_number: 12
+slug: guardianship-ruth
+title_uk: Опіка
+title_en: Guardianship
+phase: 1
+phase_id: chancery-legal
+phase_name: Chancery & Legal
+focus: Опека — Protecting orphans
+content_outline:
+- section: Вступ
+  description: Introduction to Guardianship
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Baroque Scholar
+  role: Family Guardian
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Guardianship Ruth (Опіка)
+
+## Використані джерела
+1. [Історія українського права. Литовські Статути](http://litopys.org.ua/) — аналіз правових норм ВКЛ.
+2. [Наталя Старченко. Честь, кров і риторика. Конфлікт у шляхетському середовищі Волині](http://history.org.ua/) — соціальний аспект опіки та статус вдів.
+3. [Наталія Білоус. Тестаменти киян середини XVI – першої половини XVII ст.](http://history.org.ua/) — джерелознавча база тестаментів.
+4. [Енциклопедія історії України: Литовські Статути](http://resource.history.org.ua/) — загальний огляд законодавства.
+
+## Хронологія
+- **1529**: Перший Литовський Статут — закладення основ інституту опіки.
+- **1566**: Другий Литовський Статут — розширення прав шляхти, уточнення віку повноліття (дівчата 15 років).
+- **1588**: Третій Литовський Статут (Розділ V) — остаточна кодифікація норм сімейного та спадкового права.
+- **1600-ті**: Зростання кількості тестаментів, де детально прописуються умови опіки (вплив соціокультурних змін).
+- **XVII ст.**: Формування практики "родинних рад" для контролю над опікунами.
+
+## Ключові факти та цитати
+- **Вік повноліття**: Хлопці — 18 років, дівчата — 13 (за I Статутом), пізніше 15 років (за II та III Статутами).
+- **Пріоритет опікунства**: "Природні" опікуни (батьки, діди/баби, брати) мали перевагу над призначеними.
+- **Статус вдови**: "Кожна вдова є собі панією, і нічиїй владі не підлегла" (цитата з судових справ, Н. Старченко). Вдова-шляхтянка мала значну автономію, якщо не виходила заміж вдруге.
+- **Майнові гарантії**: Обов'язкове складання "реєстру" (інвентарю) майна сироти у присутності возного. Заборона опікуну відчужувати "отчизну" (родові землі).
+- **Формула тестаменту**: "Тіло моє грішне землі віддати, а душу Богу... Діток моїх в опіку і оборону передаю...".
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ": [!context] — Опіка як дзеркало суспільних відносин (це не просто захист дітей, це захист кланової власності).
+- Section "Основний матеріал: I — Правова база": [!history-bite] — Еволюція віку повноліття дівчат (з 13 до 15 років) як свідчення зміни соціальних ролей.
+- Section "Основний матеріал: III — Права вдів та сиріт": [!myth-buster] — Спростування міфу про безправність жінок. Вдова-шляхтянка могла керувати величезними маєтками і судитися з магнатами.
+- Section "Основний матеріал: IV — Тестаменти": [!quote] — Типова формула призначення опікуна з тестаменту XVI ст.
+- Section "Основний матеріал: V — Майнові питання": [!culture] — Значення "реєстру" (інвентарю) як документа матеріальної культури (опис одягу, зброї, посуду).
+- Section "Основний матеріал: VI — Судова практика": [!decolonization] — Порівняння руського права (ВКЛ) з московським: у ВКЛ опіка — це правовий обов'язок з контролем, у Московщині — часто необмежена влада глави роду.
+
+## Деколонізаційний контекст
+- **Міф**: "Литовські Статути — це іноземне право". **Реальність**: Це кодифікація руського (давньоукраїнського) звичаєвого права з елементами римського права. Мова Статутів — руська (староукраїнська).
+- **Міф**: "Жінка в середньовіччі — річ". **Реальність**: Руська шляхтянка, особливо вдова, мала суб'єктність, якої не мали жінки в Московській державі того часу.
+- **Термінологія**: Вживання терміну "Русь" виключно на позначення українських/білоруських земель, чітке розмежування з "Москвою".
+
+## Contested Terms
+| Concept | Imperial/Soviet framing | Ukrainian (decolonized) framing |
+|---------|------------------------|---------------------------------|
+| Литовський Статут | Пам'ятка "феодального права Литви" | Кодекс українського права, вершина правової думки Русі |
+| Шляхта | "Експлуататори", "польські пани" | Політична нація, носії правової культури та традиції |
+| Руська мова | "Западнорусский язык" (діалект російської) | Староукраїнська ділова мова, державна мова ВКЛ |
+
+## Section-Mapped Research Notes
+
+### Вступ
+Окреслити поняття опіки не як благодійність, а як механізм збереження родової власності та статусу.
+
+### Основний матеріал: I — Правова база
+Детальний розбір Розділу V (або VI в ред. 1566) Литовського Статуту. Ключові статті: хто призначає, коли припиняється.
+
+### Основний матеріал: III — Права вдів та сиріт
+Акцент на суб'єктності вдови. Вона — головний опікун, якщо не одружиться. Якщо одружиться — рада роду призначає іншого (щоб вітчим не розграбував).
+
+### Основний матеріал: IV — Тестаменти
+Тестамент як "его-документ". Психологія вмираючого шляхтича: страх за майбутнє роду. Риторичні фігури прохання про захист ("до ласки вашої милості віддаю").
+
+### Основний матеріал: VII — Термінологія
+- *Опікун* vs *Протектор* (в магнатських клієнтелах).
+- *Доживоття* (право користування майном до смерті).
+- *Віно* (забезпечення жінки).
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 11962)
+✓ Message 11915 acknowledged
+✓ Message 11962 acknowledged

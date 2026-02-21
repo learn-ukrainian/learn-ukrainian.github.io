@@ -1,0 +1,64 @@
+{
+  "module": "body-and-health",
+  "level": "A1",
+  "plan_version": "2.0",
+  "last_audit": "2026-02-21T01:01:44.782338Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-02-20T22:43:07.230015Z",
+    "meta": "2026-02-20T00:28:11.688176Z",
+    "activities": "2026-02-20T22:41:44.611420Z",
+    "vocabulary": "2026-02-20T15:19:19.465131Z",
+    "plan": "2026-02-20T20:42:13.741057Z",
+    "research": "2026-02-20T00:28:11.681694Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "2480/2000 (raw: 2648)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "10/8"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "22/1"
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "ipa": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Clean IPA"
+    },
+    "research": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Content aligned with research"
+    },
+    "review": {
+      "status": "pass",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 7,
+    "fail_count": 0,
+    "deferred_count": 0
+  }
+}

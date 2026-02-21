@@ -1,0 +1,101 @@
+- ipa: '[tsei̯]'
+  lemma: цей
+  notes: Used for masculine nouns near the speaker
+  pos: pronoun
+  translation: this (masc.)
+- ipa: '[tsʲɑ]'
+  lemma: ця
+  notes: Used for feminine nouns near the speaker
+  pos: pronoun
+  translation: this (fem.)
+- ipa: '[tse]'
+  lemma: це
+  notes: Used for neuter nouns near speaker OR general identification (This is...)
+  pos: pronoun
+  translation: this (neut.) / this is
+- ipa: '[tʲsʲi]'
+  lemma: ці
+  notes: Plural form for near objects
+  pos: pronoun
+  translation: these
+- ipa: '[tɔi̯]'
+  lemma: той
+  notes: Used for masculine nouns far from the speaker
+  pos: pronoun
+  translation: that (masc.)
+- ipa: '[tɑ]'
+  lemma: та
+  notes: Used for feminine nouns far from the speaker
+  pos: pronoun
+  translation: that (fem.)
+- ipa: '[te̞]'
+  lemma: те
+  notes: Used for neuter nouns far from the speaker
+  pos: pronoun
+  translation: that (neut.)
+- ipa: '[tʲi]'
+  lemma: ті
+  notes: Plural form for far objects
+  pos: pronoun
+  translation: those
+- ipa: '[sʲtʲil]'
+  lemma: стіл
+  notes: Masculine
+  pos: noun
+  translation: table
+- ipa: '[sʲtʲiˈlɛtʲsʲ]'
+  lemma: стілець
+  notes: Masculine
+  pos: noun
+  translation: chair
+- ipa: '[dɪˈʋɑn]'
+  lemma: диван
+  notes: Masculine
+  pos: noun
+  translation: sofa
+- ipa: '[te̞le̞ˈfɔn]'
+  lemma: телефон
+  notes: Masculine
+  pos: noun
+  translation: phone
+- ipa: '[ˈʃɑfɑ]'
+  lemma: шафа
+  notes: Feminine
+  pos: noun
+  translation: wardrobe
+- ipa: '[ˈknɪɦɐ]'
+  lemma: книга
+  notes: Feminine
+  pos: noun
+  translation: book
+- ipa: '[kimˈnɑtɑ]'
+  lemma: кімната
+  notes: Feminine
+  pos: noun
+  translation: room
+- ipa: '[ˈlɑmpɑ]'
+  lemma: лампа
+  notes: Feminine
+  pos: noun
+  translation: lamp
+- ipa: '[vʲikˈnɔ]'
+  lemma: вікно
+  notes: Neuter
+  pos: noun
+  translation: window
+- ipa: '[ˈlʲiʒkɔ]'
+  lemma: ліжко
+  notes: Neuter
+  pos: noun
+  translation: bed
+- ipa: '[ˈkrʲislɔ]'
+  lemma: крісло
+  notes: Neuter
+  pos: noun
+  translation: armchair
+- ipa: '[ˈdʋɛrʲi]'
+  lemma: двері
+  notes: Always plural in Ukrainian
+  pos: noun
+  translation: door / doors
+

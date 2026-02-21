@@ -1,0 +1,46 @@
+module: c1-070
+level: C1
+sequence: 70
+slug: spring-holidays
+version: '2.0'
+title: Українські свята - весняний цикл
+subtitle: Ukrainian Holidays - Spring Cycle
+content_outline:
+- section: Розминка — Весняне пробудження
+  points:
+  - Весна — перемога життя над зимою
+  - Закликання весни — веснянки та гаївки
+  - Великдень як центральне весняне свято
+- section: Великодній цикл
+  points:
+  - 'Великий піст: обмеження, духовна підготовка'
+  - 'Вербна неділя: освячення верби'
+  - 'Страсний тиждень: чистий четвер, велика п''ятниця'
+  - 'Великдень: паска, писанки, кошик, Христос воскрес!'
+- section: Від Великодня до Трійці
+  points:
+  - 'Проводи (Гробки): відвідування могил'
+  - 'Вознесіння: 40-й день після Великодня'
+  - 'Зелені свята (Трійця): клечання, русальний тиждень'
+  - Поминальні традиції весни
+- section: Практика — весняна обрядовість
+  points:
+  - Проаналізувати веснянку — структура, образи
+  - Пояснити символіку писанки
+  - Порівняти українську та західну Пасху
+  - Написати есе про синкретизм весняних свят
+focus: cultural
+pedagogy: CBI
+objectives:
+- Learner can describe the rituals of the spring cycle (Stritennia, Easter)
+- Learner can explain the symbolism of pysanka and paska
+- Learner can analyze the lyrics of vesnianky (spring songs)
+- Learner can discuss the concept of "summoning spring"
+grammar:
+- ritual songs analysis
+- imperative in invocations
+phase: C1.5 Folk Culture & Arts
+persona:
+  voice: Senior Specialist
+  role: Зазивальник весни
+word_target: 4000

@@ -1,75 +1,38 @@
-# Research: Motion Practice Integration (B1 M24)
+# Дослідження: Дієслова руху: практика та інтеграція
 
-## 1. Grammar: State Standard 2024 Reference
+## State Standard Reference
+§4.3.8: "Утворення префіксальних дієслів руху: іти – прийти, перейти, дійти, відійти, зайти, вийти; їхати – приїхати, переїхати, доїхати, від’їхати, заїхати, поїхати, виїхати, об’їхати."
+§4.2.2.4: "Знахідний відмінок... Із прийменниками: в, у, на, за (кінцевий пункт руху суб’єкта, кінцева мета руху)... через (шлях руху)."
+Alignment: Module focuses on integrating these prefixed verbs with correct prepositions (в/на/до/через) in complex travel narratives (Theme §3.5 Подорожі).
 
-**Topic:** Motion Verbs (Integration & Prefixes)
-**Level:** B1 (Independent User)
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| спочатку | High (Core) | спочатку... а потім; спочатку поверніть |
+| потім | High (Core) | і потім; а потім |
+| нарешті | High (Core) | ну нарешті; і нарешті ми прийшли |
+| напрямок | High | у напрямку до; змінити напрямок |
+| маршрут | Medium (Transport) | прокласти маршрут; туристичний маршрут |
+| повернути | High | повернути праворуч/ліворуч; повернути за ріг |
+| прямо | High | йдіть прямо; прямо і направо |
+| траєкторія | Medium (Scientific/Tech) | траєкторія руху; зміна траєкторії |
 
-According to the **State Standard for Ukrainian as a Foreign Language (2024)** (derived from CEFR B1 descriptors), the student at this level is expected to:
+## Cultural Hooks
+1. **Чумацький Шлях (The Milky Way / The Chumak Way)**: Verified historical duality. It is both the Galaxy and the historic trade route of Chumaks (salt traders) to Crimea. Legend: Chumaks spilled salt across the sky to guide their way. Perfect metaphor for "navigation" and "long journeys".
+2. **Kyiv's Vertical Geography**: The iconic route connecting **Podil** (Lower City, trade, river) to **Verkhnie Misto** (Upper City, history, churches). Key connectors: *Andriivskyi Uzviz* (walking) and the *Funicular* (transport). Navigating this requires understanding "up" (піднятися) and "down" (спуститися).
 
-> **§ Functional Competence (Space & Movement):**
-> "Understand and use specific vocabulary and grammatical structures to describe movement, direction, and location. Correctly employ prefixed motion verbs (піти/йти, поїхати/їхати, вийти, зайти, перейти, etc.) to express nuances of direction (entry, exit, crossing, arrival) and manner of motion (on foot vs. by vehicle)."
+## Common Learner Errors
+1. **Wrong Preposition for Destination**: Using *на* instead of *в* or vice versa (e.g., *йти на парк* instead of *йти в парк*; *їхати в вокзал* instead of *їхати на вокзал*).
+   - *Fix:* Specific lexical drill (locations taking *на*: post office, station, square, street).
+2. **Case Confusion (Locative vs Accusative)**: Using Locative for destination (*Я йду в парку*) instead of Accusative (*Я йду в парк*).
+   - *Fix:* Contrastive examples: *Де? (в парку)* vs *Куди? (в парк)*.
+3. **Calques from English**: "Take a bus" (*брати автобус* - wrong) instead of *сісти на автобус* (sit on bus) or *їхати автобусом* (go by bus).
 
-> **§ Grammatical Competence:**
-> "Mastery of the interaction between motion verb prefixes (в-, ви-, під-, від-, за-, пере-, про-) and their corresponding prepositions (до, з, в, на, через)."
+## Cross-References
+- Builds on: b1-16 (Motion verbs full system), b1-22 (Motion full prefix integration)
+- Prepares for: b1-25 (Checkpoint), B2 narrative modules (travel stories)
 
-## 2. Vocabulary Frequency
-
-**High Frequency (Core A1/A2 Review & B1 Activation):**
-*   **йти / ходити** (to go on foot) - *Top 100 verbs*
-*   **їхати / їздити** (to go by vehicle) - *Top 100 verbs*
-*   **бігти / бігати** (to run)
-*   **прямо** (straight)
-*   **назад** (back)
-
-**B1 Frequency (Target for Module):**
-*   **маршрут** (route)
-*   **напрямок** (direction)
-*   **траєкторія** (trajectory) - *Lower frequency, context-specific*
-*   **пішохідний перехід** (pedestrian crossing)
-*   **перехрестя** (intersection)
-*   **світлофор** (traffic light)
-*   **квартал** (block - city unit)
-
-**Common Collocations (B1):**
-*   *повернути праворуч/ліворуч* (turn right/left)
-*   *перейти через дорогу* (cross the road)
-*   *зайти в магазин* (stop by/enter the shop)
-*   *вийти з автобуса* (get off the bus)
-*   *їхати на роботу* (go to work - habitual)
-
-## 3. Cultural Hook
-
-1.  **Чумацький Шлях (The Chumak Way):**
-    Historically, "chumaky" were Ukrainian salt traders who traveled long distances from the Black Sea to central Ukraine. Their route was so iconic that the Galaxy (Milky Way) is called **Чумацький Шлях** in Ukrainian, symbolizing an endless road filled with salt (stars). This connects the concept of *long-distance travel* (їхати/подорожувати) with deep national identity.
-
-2.  **Asking for Directions (Etiquette):**
-    In Ukraine, it is polite to address strangers with "Вибачте, як пройти до...?" (Excuse me, how do I get to...?). Using the imperative "Скажіть..." (Tell me...) is common but sounds slightly more demanding unless softened with "будь ласка". Ukrainians often give directions using landmarks ("біля аптеки", "за церквою") rather than strict cardinal directions (North/South) or distances in meters.
-
-## 4. Pedagogical Notes
-
-**Key Differences from English:**
-*   **Manner vs. Direction:** English often uses "go" + particle (go out, go in). Ukrainian strictly encodes this in the **prefix** (вийти, зайти) and reinforces it with a preposition.
-*   **Foot vs. Vehicle:** The strict binary between *йти* (foot) and *їхати* (vehicle) is persistent even with prefixes (*війти* vs *в'їхати*). English speakers often generalize "go".
-*   **Unidirectional vs. Multidirectional:** At B1, students struggle to maintain the aspectual distinction (Single trip vs. Repeated/General ability) when prefixes are added (Simple Perfective vs. Derived Imperfective).
-
-**Teaching Sequence (Integration Phase):**
-1.  **Recall:** Quick review of pure motion verbs (Group 1: йти/їхати vs Group 2: ходити/їздити).
-2.  **Matrix Match:** Connect Prefix to Preposition (в- $	o$ в/на; під- $	o$ до). This is the key "logic puzzle" for students.
-3.  **Contextual Logic:** Distinguish "travel" (*подорожувати* - general activity) from "go" (*їхати* - specific movement).
-4.  **Figurative Use:** Introduce idioms like "час летить" (time flies) or "справи йдуть добре" (things are going well).
-
-## 5. Scope Boundaries
-
-**IN SCOPE (B1 Prerequisites met):**
-*   All basic motion pairs (йти/ходити, їхати/їздити, бігти/бігати, нести/носити, вести/водити, везти/возити).
-*   Prefixed forms for direction (в-, ви-, під-, від-, за-, пере-, про-, до-, при-).
-*   Prepositions: в, на, до, з, через, повз.
-*   Aspect: Perfective (one-time specific) vs. Imperfective (process/repeated).
-*   Imperative mood for giving directions (*йдіть*, *поверніть*).
-
-**OUT OF SCOPE (Save for B2/C1):**
-*   Archaic or highly literary motion verbs (*брести*, *чалапати*).
-*   Complex metaphorical prefixes that change meaning entirely (e.g., *находити* in the sense of "to find by walking a lot" or *доходити* in the sense of "reaching a state of ruin").
-*   Passive participles derived from motion verbs (except basic ones like *пройдений етап*).
-*   Nuances of strict technical navigation (aviation/nautical terms).
+## Notes for Content Writing
+- **Odessey Concept**: Frame the "Kyiv Odyssey" text around the Podil-Upper City route. It's a real-world workout for motion verbs (up/down/across).
+- **Idioms**: Include *на роздоріжжі* (at a crossroads - life choice) and *глухий кут* (dead end - impasse).
+- **Maps**: Use text-based "mental maps" in exercises to force visualization of *праворуч/ліворуч*.

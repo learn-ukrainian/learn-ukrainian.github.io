@@ -1,0 +1,81 @@
+- ipa: '[ɔˈdɪn]'
+  lemma: один
+  pos: num
+  translation: one
+- ipa: '[dʋɑ]'
+  lemma: два
+  pos: num
+  translation: two
+- ipa: '[trɪ]'
+  lemma: три
+  pos: num
+  translation: three
+- ipa: '[t͡ʃɔˈtɪrɪ]'
+  lemma: чотири
+  pos: num
+  translation: four
+- ipa: '[pjatʲ]'
+  lemma: п'ять
+  pos: num
+  translation: five
+- ipa: '[ˈdɛsʲɑtʲ]'
+  lemma: десять
+  pos: num
+  translation: ten
+- ipa: '[ɔdɪˈnɑdt͡sʲɑtʲ]'
+  lemma: одинадцять
+  pos: num
+  translation: eleven
+- ipa: '[ˈdʋɑdt͡sʲɑtʲ]'
+  lemma: двадцять
+  pos: num
+  translation: twenty
+- ipa: '[stɔ]'
+  lemma: сто
+  pos: num
+  translation: one hundred
+- ipa: '[ˈɦrɪʋnʲɑ]'
+  lemma: гривня
+  pos: noun
+  translation: hryvnia
+- ipa: '[kɔˈpijka]'
+  lemma: копійка
+  pos: noun
+  translation: kopeck
+- ipa: '[ˈskilʲkɪ]'
+  lemma: скільки
+  pos: adv
+  translation: how much
+- ipa: '[kɔʃtuˈʋɑtɪ]'
+  lemma: коштувати
+  pos: verb
+  translation: to cost
+- ipa: '[t͡siˈnɑ]'
+  lemma: ціна
+  pos: noun
+  translation: price
+- ipa: '[ˈdɔrɔɦɔ]'
+  lemma: дорого
+  pos: adv
+  translation: expensive
+- ipa: '[ˈdɛʃɛʋɔ]'
+  lemma: дешево
+  pos: adv
+  translation: cheap
+- ipa: '[ˈzdɑt͡ʃɑ]'
+  lemma: здача
+  pos: noun
+  translation: change (money)
+- ipa: '[ɦɔˈtiu̯kɑ]'
+  lemma: готівка
+  pos: noun
+  translation: cash
+- ipa: '[ˈkɑrtkɑ]'
+  lemma: картка
+  pos: noun
+  translation: card (payment)
+- ipa: '[pɑˈkɛt]'
+  lemma: пакет
+  pos: noun
+  translation: bag (shopping)
+

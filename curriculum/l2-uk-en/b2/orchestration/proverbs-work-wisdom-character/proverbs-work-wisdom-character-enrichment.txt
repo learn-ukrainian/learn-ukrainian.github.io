@@ -1,0 +1,280 @@
+✅ Message sent to Gemini (ID: 10557) [auto-acked: self-addressed]
+✓ Message 10557 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10557...
+📨 Message #10557
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-proverbs-work-wisdom-character
+   Time: 2026-02-20T20:41:51.330997+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b2-45
+level: B2
+sequence: 45
+slug: proverbs-work-wisdom-character
+version: '2.0'
+title: 'Прислів''я I: Праця, мудрість і характер'
+subtitle: 'Proverbs I: Work, Wisdom & Character'
+content_outline:
+- section: Розминка — Народна мудрість про працю
+  points:
+  - Роль прислів'їв у культурі — короткі істини поколінь
+  - Теми модуля — праця, мудрість, характер
+  - Як використовувати прислів'я в мовленні — контекст та регістр
+- section: Прислів'я про працю
+  points:
+  - Без труда нема плода
+  - Хто рано встає, тому Бог дає
+  - Робота — не вовк, у ліс не втече
+  - Терпіння і труд все перетруть
+  - Де є бджола, там є мед
+- section: Прислів'я про мудрість
+  points:
+  - Сім разів відміряй, один раз відріж
+  - Хто питає, той не блудить
+  - Вік живи — вік учись
+  - Не все те золото, що блищить
+  - Краще один раз побачити, ніж сто разів почути
+- section: Прислів'я про характер
+  points:
+  - Яке дерево, такий і клин; який батько, такий і син
+  - Горда птиця не живе в стаді
+  - Слово — не горобець: вилетить — не впіймаєш
+  - Не той друг, хто медом маже, а той, хто правду каже
+- section: Практика — вживання прислів'їв
+  points:
+  - Підібрати прислів'я до ситуації
+  - Пояснити значення прислів'я та навести приклад
+  - Порівняти українське прислів'я з англійським аналогом
+  - Написати діалог з використанням 3-4 прислів'їв
+focus: phraseology
+pedagogy: CBI
+objectives:
+- Learner can recognize and interpret 16 core Ukrainian proverbs about work, wisdom,
+  and character
+- Learner can use proverbs appropriately in context to express advice, commentary,
+  or wisdom
+- Learner understands the cultural values embedded in Ukrainian folk wisdom
+grammar:
+- Fixed expressions (фразеологічні одиниці)
+- Proverb structure and variation
+immersion: 100
+register: varies
+phase: B2.2 [Phraseology & Synonymy]
+vocabulary_hints:
+  required:
+  - термін (term)
+  - поняття (concept)
+  - процес (process)
+  - метод (method)
+  recommended:
+  - аналіз (analysis)
+  - синтез (synthesis)
+  - дослідження (research)
+activity_hints:
+- type: reading
+  focus: Аналіз тексту
+  items: 4
+- type: essay-response
+  focus: Практичне застосування
+- type: true-false
+  focus: Перевірка розуміння
+  items: 8
+persona:
+  voice: Professional Language Coach
+  role: Village Elder (Старійшина)
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Прислів'я I: Праця, мудрість і характер
+
+## State Standard Reference
+§4.4.1.2: "Стилістичні засоби лексики: ... метафори: ідуть дощі, сонце сідає... епітети... синоніми... антоніми"
+§3.19: "Традиції, звичаї, свята: ... українські звичаї і традиції"
+Alignment: Модуль розвиває лексичну та стилістичну компетентність (рівень B2), фокусуючись на фразеології як елементі національної мовної картини світу та традицій. Хоча стандарт B2 зазначає розуміння текстів, "якщо вони не ускладнені стилістично (не містять сталих висловів)", активне опанування базового корпусу прислів'їв є необхідною умовою переходу до C1 та розуміння культурного контексту ("Традиції").
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| **праця** | High (General Corpus) | *сродна праця* (cultural), *важка праця*, *плідна праця*, *наймана праця*, *оплата праці* |
+| **дослідження** | High (Academic/Publicistic) | *проводити дослідження*, *наукове дослідження*, *результати дослідження*, *ґрунтовне дослідження*, *об'єкт дослідження* |
+| **мудрість** | Medium | *народна мудрість*, *житейська мудрість*, *сивина в бороду — біс у ребро* (ironic context), *перлина мудрості* |
+| **характер** | High | *важкий характер*, *загартовувати характер*, *риси характеру*, *має характер* (strong-willed) |
+| **плід** | Medium | *пожинати плоди*, *заборонений плід*, *плоди праці* |
+
+## Cultural Hooks
+1.  **Григорій Сковорода та "Сродна праця" (Congenial Work):** Філософська концепція, що справжнє щастя людини полягає у праці, яка відповідає її природним нахилам. Це ідеальний "філософський якір" для теми праці, що піднімає дискусію над рівнем побутових приказок.
+2.  **Прислів'я як "Неписані закони":** В українській культурі прислів'я досі функціонують як аргументи в суперечці або фінальні вердикти ("Очі бояться, а руки роблять" — як спосіб подолати страх перед великим завданням). Це не архаїка, а живий інструмент комунікації.
+
+## Common Learner Errors
+1.  **Калькування англійських ідіом:** Спроба перекласти "It's raining cats and dogs" дослівно замість використання українського відповідника ("Ллє як з відра").
+2.  **Стилістичний дисонанс:** Використання рустикальних/народних прислів'їв ("Хто не робить, той не їсть") у суто офіційно-діловому контексті, де доречніше вжити "Ефективність праці".
+3.  **Контамінація (змішування):** Помилкове поєднання частин двох різних прислів'їв (наприклад, "Не все те золото, що не тоне" — суміш "Не все те золото, що блищить" і "Правда у воді не тоне").
+
+## Cross-References
+- **Builds on:** B1.6 (General Work/Profession vocabulary), A2 (Basic Imperatives).
+- **Prepares for:** C1 Literature (Module on Skovoroda), C1 Stylistics (Use of idioms in diverse registers).
+
+## Notes for Content Writing
+- Використати концепцію "Сродної праці" Сковороди у вступі або аналітичній частині, щоб надати глибини.
+- У розділі "Характер" чітко розмежувати позитивні (працьовитість, мудрість) та негативні (лінь, дурість) риси через призму прислів'їв.
+- **Tone:** Persona (Village Elder) should treat proverbs not as "funny old sayings" but as timeless algorithms for survival and success.
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Народна мудрість як алгоритм успіху (Introduction: Folk Wisdom as an Algorithm for Success)"
+  words: 600
+  points:
+  - "Роль прислів'їв як «неписаних законів» та живих інструментів комунікації в сучасному українському дискурсі (згідно зі стандартом §3.19)."
+  - "Представлення персонажа (Старійшина) та філософської рамки: прислів'я — це не архаїка, а перевірені часом алгоритми виживання та успіху."
+  - "Концепція «Сродної праці» Григорія Сковороди як ідейний фундамент модуля: щастя через працю за покликанням."
+- section: "Філософія праці та «Сродна праця» (Philosophy of Work and «Congenial Work»)"
+  words: 1000
+  points:
+  - "Аналіз лексеми «праця» та її ключових сполук: «сродна праця», «плідна праця», «наймана праця» (стандарт §4.4.1.2)."
+  - "Розбір базового корпусу: «Без труда нема плода» та «Хто рано встає, тому Бог дає» — етика зусиль."
+  - "Метафоричне значення праці: «Де є бджола, там є мед» — аналіз плодів діяльності."
+  - "Дискусія про «сродність»: як знайти своє місце в житті через призму народної мудрості."
+- section: "Мудрість: Відміряй сім разів (Wisdom: Measure Seven Times)"
+  words: 800
+  points:
+  - "Стратегії прийняття рішень: «Сім разів відміряй, один раз відріж» та «Хто питає, той не блудить»."
+  - "Семантичні нюанси поняття «мудрість»: від «народної мудрості» до іронічного контексту «сивина в бороду — біс у ребро»."
+  - "«Вік живи — вік учись» як підготовка до академічного рівня C1 та концепція безперервної освіти."
+  - "Критичне мислення: «Не все те золото, що блищить» — аналіз зовнішнього та внутрішнього."
+- section: "Характер та слово: Не горобець (Character and Word: Not a Sparrow)"
+  words: 800
+  points:
+  - "Прислів'я про ідентичність та спадковість: «Яке дерево, такий і клин; який батько, такий і син»."
+  - "Відповідальність за мовлення: «Слово — не горобець: вилетить — не впіймаєш» — розбір наслідків необережних висловів."
+  - "Психологія характеру: розрізнення «мати характер» (сильна воля) та «важкий характер» (нестерпність)."
+  - "Дружба та щирість: «Не той друг, хто медом маже...» — цінність правди в міжособистісних стосунках."
+- section: "Типові помилки та стилістичний регістр (Typical Errors and Stylistic Register)"
+  words: 800
+  points:
+  - "Робота над помилками: подолання калькування англійських ідіом (напр. «Ллє як з відра» замість дослівного перекладу дощу з котами)."
+  - "Аналіз явища контамінації: виправлення помилкових сумішей на кшталт «Не все те золото, що не тоне» (відновлення оригінальних форм)."
+  - "Стилістичний дисонанс: коли доречно вживати народні прислів'я, а коли варто перейти на офіційний термін «ефективність праці»."
+  - "Практикум: підбір українських відповідників до англійських паремій за семантичною схожістю, а не лексичним складом."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "праця (work) — сродна праця, плідна праця, наймана праця; High frequency, core cultural concept."
+  - "мудрість (wisdom) — народна мудрість, житейська мудрість, перлина мудрості; Medium frequency."
+  - "характер (character) — загартовувати характер, мати характер (be strong-willed), риси характеру; High frequency."
+  - "плід (fruit/result) — пожинати плоди, плоди праці, заборонений плід; Medium frequency, often metaphorical."
+  - "поняття (concept) — ключове поняття фразеології; Standard academic usage."
+  recommended:
+  - "дослідження (research) — ґрунтовне дослідження, об'єкт дослідження; High frequency in academic/publicistic styles."
+  - "аналіз (analysis) — проводити аналіз, системний аналіз; Essential for B2 critical tasks."
+  - "синтез (synthesis) — синтез знань; Used in summary sections."
+  - "процес (process) — робочий процес, творчий процес; High frequency."
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (3799 chars)
+✅ Message sent to Claude (ID: 10562)
+✓ Message 10562 acknowledged
+   Auto-acknowledged reply #10562 (stdout delivery — no inbox accumulation)
+✓ Message 10557 acknowledged

@@ -21,18 +21,41 @@ PLANS_DIR = CURRICULUM_DIR / "plans"
 PHASES_DIR = PROJECT_ROOT / "claude_extensions" / "phases" / "gemini"
 QUICK_REF_DIR = PROJECT_ROOT / "claude_extensions" / "quick-ref"
 
+# Model Tiering — Gemini
+FLASH_MODEL = "gemini-3-flash-preview"
+PRO_MODEL = "gemini-3-pro-preview"
+
+# Model Tiering — Claude (used by build_module_v3.py --use-claude phases)
+# Change these to switch models across the entire pipeline without touching CLI flags.
+# Phase A (research):      seminar tracks → Opus, core tracks → Sonnet
+# Phase C (activities):    seminar tracks → Opus, core tracks → Sonnet
+# Phase F (final review):  always Opus (deep semantic QA)
+CLAUDE_SONNET = "claude-sonnet-4-6"
+CLAUDE_OPUS   = "claude-opus-4-6"
+
+CLAUDE_MODEL_CORE_RESEARCH    = CLAUDE_SONNET   # Phase A, core tracks
+CLAUDE_MODEL_CORE_ACTIVITIES  = CLAUDE_SONNET   # Phase C, core tracks
+CLAUDE_MODEL_SEMINAR_RESEARCH   = CLAUDE_OPUS   # Phase A, seminar tracks
+CLAUDE_MODEL_SEMINAR_ACTIVITIES = CLAUDE_OPUS   # Phase C, seminar tracks
+CLAUDE_MODEL_FINAL_REVIEW       = CLAUDE_OPUS   # Phase F, all tracks
+
 # Seminar tracks get research (phase 0) + review (phase 5)
 SEMINAR_TRACKS = {
     "c1-bio", "b2-hist", "c1-hist", "lit", "oes", "ruth",
     "lit-essay", "lit-hist-fic", "lit-fantastika", "lit-war", "lit-humor", "lit-juvenile",
 }
 
+# Professional tracks: need external research (not covered by State Standard)
+# Use phase-A-pro.md (terminology, ДСТУ norms, authentic examples) not phase-A-seminar.md
+PRO_TRACKS = {"b2-pro", "c1-pro"}
+
 # Track definitions
 TRACK_CONFIGS = {
-    # --- Seminar tracks (6 phases) ---
+    # --- Seminar tracks (Pro Model MANDATORY) ---
     "c1-bio": {
         "type": "seminar",
-        "phases": [0, 2, 3, 5],  # Research, Content, Activities, Review
+        "model": PRO_MODEL,
+        "phases": [0, 2, 3, 5],
         "templates": {
             0: PHASES_DIR / "phase-0-research-seminar.md",
             2: PHASES_DIR / "phase-2-content.md",
@@ -43,10 +66,11 @@ TRACK_CONFIGS = {
             "fix-activities": PHASES_DIR / "phase-fix-activities.md",
         },
         "quick_ref": QUICK_REF_DIR / "C1-BIO.md",
-        "validation_phases": [2, 3],  # Phases that trigger audit
+        "validation_phases": [2, 3],
     },
     "b2-hist": {
         "type": "seminar",
+        "model": PRO_MODEL,
         "phases": [0, 2, 3, 5],
         "templates": {
             0: PHASES_DIR / "phase-0-research-seminar.md",
@@ -62,6 +86,7 @@ TRACK_CONFIGS = {
     },
     "c1-hist": {
         "type": "seminar",
+        "model": PRO_MODEL,
         "phases": [0, 2, 3, 5],
         "templates": {
             0: PHASES_DIR / "phase-0-research-seminar.md",
@@ -77,6 +102,7 @@ TRACK_CONFIGS = {
     },
     "lit": {
         "type": "seminar",
+        "model": PRO_MODEL,
         "phases": [0, 2, 3, 5],
         "templates": {
             0: PHASES_DIR / "phase-0-research-seminar.md",
@@ -90,9 +116,9 @@ TRACK_CONFIGS = {
         "quick_ref": QUICK_REF_DIR / "LIT.md",
         "validation_phases": [2, 3],
     },
-    # --- Literature variant tracks (seminar, inherit LIT config) ---
     "lit-essay": {
         "type": "seminar",
+        "model": PRO_MODEL,
         "phases": [0, 2, 3, 5],
         "templates": {
             0: PHASES_DIR / "phase-0-research-seminar.md",
@@ -108,6 +134,7 @@ TRACK_CONFIGS = {
     },
     "lit-hist-fic": {
         "type": "seminar",
+        "model": PRO_MODEL,
         "phases": [0, 2, 3, 5],
         "templates": {
             0: PHASES_DIR / "phase-0-research-seminar.md",
@@ -123,6 +150,7 @@ TRACK_CONFIGS = {
     },
     "lit-fantastika": {
         "type": "seminar",
+        "model": PRO_MODEL,
         "phases": [0, 2, 3, 5],
         "templates": {
             0: PHASES_DIR / "phase-0-research-seminar.md",
@@ -138,6 +166,7 @@ TRACK_CONFIGS = {
     },
     "lit-war": {
         "type": "seminar",
+        "model": PRO_MODEL,
         "phases": [0, 2, 3, 5],
         "templates": {
             0: PHASES_DIR / "phase-0-research-seminar.md",
@@ -153,6 +182,7 @@ TRACK_CONFIGS = {
     },
     "lit-humor": {
         "type": "seminar",
+        "model": PRO_MODEL,
         "phases": [0, 2, 3, 5],
         "templates": {
             0: PHASES_DIR / "phase-0-research-seminar.md",
@@ -168,6 +198,7 @@ TRACK_CONFIGS = {
     },
     "lit-juvenile": {
         "type": "seminar",
+        "model": PRO_MODEL,
         "phases": [0, 2, 3, 5],
         "templates": {
             0: PHASES_DIR / "phase-0-research-seminar.md",
@@ -183,6 +214,7 @@ TRACK_CONFIGS = {
     },
     "oes": {
         "type": "seminar",
+        "model": PRO_MODEL,
         "phases": [0, 2, 3, 5],
         "templates": {
             0: PHASES_DIR / "phase-0-research-seminar.md",
@@ -198,6 +230,7 @@ TRACK_CONFIGS = {
     },
     "ruth": {
         "type": "seminar",
+        "model": PRO_MODEL,
         "phases": [0, 2, 3, 5],
         "templates": {
             0: PHASES_DIR / "phase-0-research-seminar.md",
@@ -211,11 +244,13 @@ TRACK_CONFIGS = {
         "quick_ref": QUICK_REF_DIR / "RUTH.md",
         "validation_phases": [2, 3],
     },
-    # --- Core tracks (4 phases) ---
+    # --- Core tracks (all Pro — flash too weak for quality content) ---
     "a1": {
         "type": "core",
-        "phases": [2, 3, 5],  # Content, Activities, Review
+        "model": PRO_MODEL,
+        "phases": [1, 2, 3, 5],
         "templates": {
+            1: PHASES_DIR / "phase-1-research-core.md",
             2: PHASES_DIR / "phase-2-content.md",
             3: PHASES_DIR / "phase-3-activities.md",
             5: PHASES_DIR / "phase-5-review.md",
@@ -228,8 +263,10 @@ TRACK_CONFIGS = {
     },
     "a2": {
         "type": "core",
-        "phases": [2, 3, 5],
+        "model": PRO_MODEL,
+        "phases": [1, 2, 3, 5],
         "templates": {
+            1: PHASES_DIR / "phase-1-research-core.md",
             2: PHASES_DIR / "phase-2-content.md",
             3: PHASES_DIR / "phase-3-activities.md",
             5: PHASES_DIR / "phase-5-review.md",
@@ -240,11 +277,76 @@ TRACK_CONFIGS = {
         "quick_ref": QUICK_REF_DIR / "A2.md",
         "validation_phases": [2, 3],
     },
+    "b1": {
+        "type": "core",
+        "model": PRO_MODEL,
+        "phases": [1, 2, 3, 5],
+        "templates": {
+            1: PHASES_DIR / "phase-1-research-core.md",
+            2: PHASES_DIR / "phase-2-content.md",
+            3: PHASES_DIR / "phase-3-activities.md",
+            5: PHASES_DIR / "phase-5-review.md",
+            "fix": PHASES_DIR / "phase-fix.md",
+            "fix-content": PHASES_DIR / "phase-fix-content.md",
+            "fix-activities": PHASES_DIR / "phase-fix-activities.md",
+        },
+        "quick_ref": QUICK_REF_DIR / "B1.md",
+        "validation_phases": [2, 3],
+    },
+    "b2": {
+        "type": "core",
+        "model": PRO_MODEL,
+        "phases": [1, 2, 3, 5],
+        "templates": {
+            1: PHASES_DIR / "phase-1-research-core.md",
+            2: PHASES_DIR / "phase-2-content.md",
+            3: PHASES_DIR / "phase-3-activities.md",
+            5: PHASES_DIR / "phase-5-review.md",
+            "fix": PHASES_DIR / "phase-fix.md",
+            "fix-content": PHASES_DIR / "phase-fix-content.md",
+            "fix-activities": PHASES_DIR / "phase-fix-activities.md",
+        },
+        "quick_ref": QUICK_REF_DIR / "B2.md",
+        "validation_phases": [2, 3],
+    },
+    "c1": {
+        "type": "core",
+        "model": PRO_MODEL,
+        "phases": [1, 2, 3, 5],
+        "templates": {
+            1: PHASES_DIR / "phase-1-research-core.md",
+            2: PHASES_DIR / "phase-2-content.md",
+            3: PHASES_DIR / "phase-3-activities.md",
+            5: PHASES_DIR / "phase-5-review.md",
+            "fix": PHASES_DIR / "phase-fix.md",
+            "fix-content": PHASES_DIR / "phase-fix-content.md",
+            "fix-activities": PHASES_DIR / "phase-fix-activities.md",
+        },
+        "quick_ref": QUICK_REF_DIR / "C1.md",
+        "validation_phases": [2, 3],
+    },
+    "c2": {
+        "type": "core",
+        "model": PRO_MODEL,
+        "phases": [1, 2, 3, 5],
+        "templates": {
+            1: PHASES_DIR / "phase-1-research-core.md",
+            2: PHASES_DIR / "phase-2-content.md",
+            3: PHASES_DIR / "phase-3-activities.md",
+            5: PHASES_DIR / "phase-5-review.md",
+            "fix": PHASES_DIR / "phase-fix.md",
+            "fix-content": PHASES_DIR / "phase-fix-content.md",
+            "fix-activities": PHASES_DIR / "phase-fix-activities.md",
+        },
+        "quick_ref": QUICK_REF_DIR / "C2.md",
+        "validation_phases": [2, 3],
+    },
 }
 
 # Default for unlisted tracks
 DEFAULT_CONFIG = {
     "type": "core",
+    "model": FLASH_MODEL,
     "phases": [2, 3, 5],
     "templates": {
         2: PHASES_DIR / "phase-2-content.md",
@@ -341,36 +443,19 @@ def get_track_config(track_name: str) -> dict:
 
 
 def get_module_paths(track: str, slug: str) -> dict:
-    """Resolve all file paths for a module, handling numeric prefixes."""
+    """Resolve all file paths for a module. All tracks use bare slugs."""
+    bare_slug = to_bare_slug(slug)
     track_dir = CURRICULUM_DIR / track
-
-    # Try direct match first, then glob for numeric prefix
-    md_path = track_dir / f"{slug}.md"
-    file_slug = slug  # slug used in filenames
-
-    if not md_path.exists():
-        matches = list(track_dir.glob(f"*-{slug}.md"))
-        if matches:
-            md_path = matches[0]
-            file_slug = md_path.stem  # e.g., "01-the-cyrillic-code-i"
-
-    # Plans: core tracks use numbered prefix, seminar tracks use bare slug
-    is_seminar = track in SEMINAR_TRACKS
-    plan_slug = slug if is_seminar else file_slug
-    plan_path = PLANS_DIR / track / f"{plan_slug}.yaml"
-
-    # Seminar tracks: meta/activities/vocabulary use bare slug
-    # Core tracks with numeric prefix: use file_slug
-    yaml_slug = slug if is_seminar else file_slug
+    plans_track_dir = PLANS_DIR / track
 
     return {
-        "md": md_path,
-        "meta": track_dir / "meta" / f"{yaml_slug}.yaml",
-        "activities": track_dir / "activities" / f"{yaml_slug}.yaml",
-        "vocabulary": track_dir / "vocabulary" / f"{yaml_slug}.yaml",
-        "plan": plan_path,
-        "research": track_dir / "research" / f"{slug}-research.md",
-        "orchestration": track_dir / "orchestration" / slug,
-        "review": _review_path(track_dir, slug),
-        "status": _status_path(track_dir, slug),
+        "md": track_dir / f"{bare_slug}.md",
+        "meta": track_dir / "meta" / f"{bare_slug}.yaml",
+        "activities": track_dir / "activities" / f"{bare_slug}.yaml",
+        "vocabulary": track_dir / "vocabulary" / f"{bare_slug}.yaml",
+        "plan": plans_track_dir / f"{bare_slug}.yaml",
+        "research": track_dir / "research" / f"{bare_slug}-research.md",
+        "orchestration": track_dir / "orchestration" / bare_slug,
+        "review": _review_path(track_dir, bare_slug),
+        "status": _status_path(track_dir, bare_slug),
     }

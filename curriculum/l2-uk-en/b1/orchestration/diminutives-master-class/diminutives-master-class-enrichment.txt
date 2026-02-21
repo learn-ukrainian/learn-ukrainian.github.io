@@ -1,0 +1,315 @@
+✅ Message sent to Gemini (ID: 10375) [auto-acked: self-addressed]
+✓ Message 10375 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10375...
+📨 Message #10375
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-diminutives-master-class
+   Time: 2026-02-20T20:29:27.188244+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b1-48
+level: B1
+sequence: 48
+slug: diminutives-master-class
+version: '2.0'
+title: 'Демінутиви: майстер-клас'
+subtitle: Diminutives - Forms, Usage, and Nuance
+content_outline:
+- section: Тест
+  points:
+  - Why diminutives matter — Ukraine is unique among Slavic languages for having verbal/adverbial
+    diminutives (спатоньки, тихенько)
+  - Cultural significance — reflects 'cordocentrism' (heart-centeredness) of Ukrainian
+    culture; contrast with professional 'hospital register' (укольчик, ручка)
+- section: Пояснення
+  points:
+  - 'Noun diminutive suffixes — bridge A2 forms to B1 mastery; learner error: tautology
+    (маленький килимок)'
+  - Adjective diminutives — highly productive -еньк- forms (гарненький, тихенький)
+  - Pragmatic functions — primary tool for irony/sarcasm in adult speech (e.g., 'Ну
+    ти й розумничок!')
+  - Context-dependent meaning — semantic shifts where diminutive becomes neutral (ручка
+    = pen/handle, not small hand)
+- section: Практика
+  points:
+  - Form diminutives — focus on correct suffix choice and avoiding double diminutives
+    unless intentional
+  - Choose for context — distinguish between genuine politeness and 'bribing/manipulative'
+    tone (документики, підписочок)
+- section: Діалоги
+  points:
+  - Real-world diminutive usage — family tenderness (матуся, сонечко) vs. urban coffee
+    culture (кавуся)
+  - 'Register shifts — learner error: using diminutives in formal/official contexts
+    (perceived as unprofessional)'
+- section: Потрібно більше практики?
+  points:
+  - Additional exercises — reinforce distinction between literal size and emotional
+    attitude
+vocabulary_hints:
+  required:
+  - 'матуся (mommy) — high frequency, family context; collocations: рідна матуся,
+    люба матуся'
+  - 'сонечко (sun/darling) — term of endearment; collocations: моє сонечко, ясне сонечко'
+  - 'гарненько (nicely/well) — adverbial diminutive; collocations: сядь гарненько,
+    зроби гарненько'
+  - 'хлібчик (bread) — hospitality context; collocations: свіжий хлібчик, шматочок
+    хлібчика'
+  - ручка (hand/pen/handle) — desemanticized or polite medical context
+  - 'кавуся (coffee) — urban culture; collocations: попити кавусі, смачна кавуся'
+  - демінутив (diminutive) — linguistic term
+  - зменшувальний (diminutive - adj) — grammatical category
+  - ніжність (tenderness) — key emotional driver for usage
+  - ввічливість (politeness) — pragmatic function
+  - іронія (irony) — pragmatic function, contrary to sweetness
+  - суфікс (suffix) — morphological builder
+  - відтінок (nuance/shade) — stylistic distinction
+  - прагматика (pragmatics) — context-dependent usage rules
+  recommended:
+  - 'спатоньки (to sleep) — unique verbal diminutive; collocations: хотіти спатоньки'
+  - 'їстоньки (to eat) — unique verbal diminutive; collocations: пора їстоньки'
+  - ніжка (leg/table leg) — desemanticized or medical context
+  - пестливий (affectionate) — emotional quality
+  - емоційний (emotional) — usage driver
+  - зневажливий (dismissive) — possible negative nuance
+  - інтенсифікація (intensification) — grammatical function
+activity_hints:
+- type: fill-in
+  focus: Create diminutives from base forms
+  items: 25
+- type: quiz
+  focus: Identify pragmatic function
+  items: 20
+- type: fill-in
+  focus: Complete with appropriate diminutive
+  items: 15
+- type: fill-in
+  focus: Match diminutive to situation
+  items: 10
+focus: grammar
+pedagogy: TTT
+prerequisites:
+- b1-47 (Passive Constructions)
+connects_to:
+- b1-49 (Numerals Collectives Fractions)
+objectives:
+- Learner can form diminutives from nouns and adjectives
+- Learner understands different pragmatic functions of diminutives
+- 'Learner can distinguish nuances: tenderness, irony, politeness'
+- Learner can use diminutives appropriately in context
+grammar:
+- 'Суфікси демінутивів: -ик, -ок, -очок, -еньк-, -оньк-, -ечк-'
+- Прагматичні функції демінутивів
+- Регістрові та стилістичні відтінки
+register: розмовний
+phase: B1.4b [Word Formation]
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Kindergarten Teacher
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Демінутиви: майстер-клас
+
+## State Standard Reference
+§4.4.1.2 (A2) / §4.5.1 (B1) / §4.4.1.2 (B2): "Стилістичні засоби лексики: ... зменшувально-пестливі форми: хлопець – хлопчик, дощ – дощик, донька – донечка"
+Alignment: This module bridges the A2 introduction of forms with B1/B2 pragmatic mastery, focusing on register distinction (B1 §4.5.1) and the unique Ukrainian feature of verbal/adverbial diminutives.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| **матуся / матусенька** | High (Everyday/Family) | рідна матуся, люба матуся |
+| **сонечко** | High (Term of endearment) | моє сонечко, ясне сонечко |
+| **гарненько** | High (Adverbial) | сядь гарненько, зроби гарненько |
+| **спатоньки / їстоньки** | Medium (Unique verb forms) | хотіти спатоньки, пора їстоньки |
+| **хлібчик** | High (Food/Hospitality) | свіжий хлібчик, шматочок хлібчика |
+| **ручка / ніжка** | High (Body parts/Objects) | (polite/medical context for patients), дверна ручка (desemanticized) |
+| **кава / кавуся** | Medium (Urban culture) | попити кавусі, смачна кавуся |
+
+## Cultural Hooks
+1.  **Verbal Diminutives**: Ukrainian is unique among Slavic languages for having diminutive forms of verbs (*спатоньки*, *їстоньки*, *ходитоньки*) and adverbs (*тихенько*, *швиденько*). This reflects the deep-seated "cordocentrism" (heart-centeredness) of Ukrainian culture.
+2.  **Irony & Sarcasm**: Contrary to the "sweetness" stereotype, diminutives are a primary tool for sarcasm in adult speech (e.g., "Ну ти й розумничок!" can mean "You idiot" depending on intonation).
+3.  **Professional "Softening"**: Medical staff often use diminutives (*ручка*, *ніжка*, *укольчик*) to reduce patient anxiety, known as "hospital register".
+
+## Common Learner Errors
+1.  **Register Mismatch**: Using diminutives in formal/official contexts (e.g., *документики*, *підписочок*) → Perceived as unprofessional or bribing/manipulative behavior.
+2.  **Tautology**: *Маленький килимок* (Small small-rug) → *Килимок* or *Маленький килим*.
+3.  **Over-sweetening**: Overusing forms like *смачненький борщик* in neutral contexts → Sounds infantilizing or obsequious.
+4.  **Desemanticization confusion**: Thinking *ручка* (pen) is always a small hand, or *ніжка* (table leg) is a small leg.
+
+## Cross-References
+- Builds on: **A2** (Basic noun declension), **B1-47** (Passive - contrast in register)
+- Prepares for: **B1-49** (Numerals - collective forms often trigger diminutives: *двоє діток*), **B2** (Stylistics & Irony)
+
+## Notes for Content Writing
+- **Focus Shift**: Move beyond simple Noun suffixes. Dedicate significant space to **Pragmatics** (when *not* to use them).
+- **Unique Feature**: Must teach *Adjective* (-еньк-) and *Adverb* (-енько) forms as they are highly productive in B1 speech.
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Світ українських демінутивів (Introduction: The World of Ukrainian Diminutives)"
+  words: 500
+  points:
+  - "Introduction to diminutives as a stylistic tool (§4.5.1) and their high frequency in daily Ukrainian life compared to English pragmatics."
+  - "The concept of 'cordocentrism' (heart-centeredness) — how the abundance of diminutive forms reflects the emotional architecture of Ukrainian culture."
+  - "The unique Ukrainian linguistic phenomenon: diminutive forms for verbs (спатоньки, їстоньки) and adverbs (тихенько, швиденько) — distinguishing 'B1 mastery' from 'A2 basics'."
+- section: "Морфологія: Від іменників до дієслів (Morphology: From Nouns to Verbs)"
+  words: 1000
+  points:
+  - "Morphological review: Productive noun suffixes (-ик, -ок, -ець) and B1 mastery of complex emotive suffixes (-очок, -ечк-, -оньк-)."
+  - "Adjective diminutives (-еньк-): Formation and function of forms like 'гарненький' or 'біленький' as tools for intensification and aesthetic nuance."
+  - "Mechanics of unique verbal (спатоньки) and adverbial (гарненько) diminutives: when and where they are grammatically and socially permissible."
+  - "Correcting learner errors: Avoiding tautology (e.g., 'маленький килимок' is redundant) and choosing between the base form and the diminutive based on size vs. emotion."
+- section: "Прагматика та соціальні регістри (Pragmatics and Social Registers)"
+  words: 1000
+  points:
+  - "The Professional Register: Decoding 'hospital register' where staff use 'ручка', 'ніжка', 'укольчик' to soften communication and reduce patient anxiety."
+  - "Desemanticization challenges: Recognizing when a diminutive form loses its 'smallness' and becomes a neutral noun (ручка = pen, ніжка = table leg)."
+  - "Social pitfalls: Avoiding register mismatch in formal/official settings (e.g., 'документики', 'підписочок') which can be perceived as manipulative or unprofessional."
+  - "Pragmatic boundaries: Distinguishing between sincere politeness (ввічливість) and 'over-sweetening' language that can sound infantilizing or obsequious."
+- section: "Культурний код та іронія (Cultural Code and Irony)"
+  words: 1000
+  points:
+  - "The Ironic Dimension: Diminutives as a primary tool for sarcasm in adult speech (e.g., 'Ну ти й розумничок!' to signal idiocy via intonation)."
+  - "Urban Rapport: The role of diminutives in modern coffee culture (кавуся, чайок) as a social lubricant in urban interactions."
+  - "Hierarchy of Endearment: Mapping family terms from neutral to extremely affectionate (мати -> матуся -> матусенька) and the nuances of 'сонечко'."
+  - "National Aesthetic: How diminutives contribute to the 'tenderness' (ніжність) and lyricism of the Ukrainian language in folk and poetic contexts."
+- section: "Підсумок: Мистецтво доречності (Summary: The Art of Appropriateness)"
+  words: 500
+  points:
+  - "Synthesizing usage rules: The 'Who-Where-Why' checklist for deploying diminutives without causing social friction."
+  - "Identifying 'Service Industry Diminutives': Recognizing when 'хлібчик' or 'рахуночок' is used for marketing vs. genuine hospitality."
+  - "Final production goal: Integrating diminutives into B1 speech to sound more authentic while maintaining professional boundaries where necessary."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "матуся / матусенька (mommy) — high frequency in family context; collocations: рідна матуся, люба матуся"
+  - "сонечко (sun/darling) — ubiquitous term of endearment; collocations: моє сонечко, ясне сонечко"
+  - "гарненько (nicely/well) — high frequency adverbial diminutive; collocations: сядь гарненько, зроби гарненько"
+  - "хлібчик (bread) — hospitality/food context; collocations: свіжий хлібчик, шматочок хлібчика"
+  - "ручка (hand/pen/handle) — polysemous; neutral as 'pen', emotive or medical as 'patient's hand'"
+  - "кавуся (coffee) — urban/modern culture; collocations: попити кавусі, смачна кавуся"
+  - "демінутив (diminutive) — linguistic terminology"
+  - "зменшувально-пестливий (diminutive-affectionate) — official grammatical category (§4.5.1)"
+  - "ніжність (tenderness) — core emotional driver for diminutive usage"
+  - "ввічливість (politeness) — primary pragmatic function"
+  - "іронія (irony) — paradoxical pragmatic use for sarcasm"
+  - "суфікс (suffix) — morphological builder"
+  - "відтінок (nuance/shade) — stylistic or emotional distinction"
+  recommended:
+  - "спатоньки / їстоньки (to sleep / to eat) — unique verbal diminutives; collocations: хотіти спатоньки, пора їстоньки"
+  - "ніжка (leg/table leg) — medical context or desemanticized furniture part"
+  - "пестливий (affectionate) — emotional quality of word formation"
+  - "зневажливий (dismissive) — potential negative nuance in ironic contexts"
+  - "розумничок (clever clogs) — quintessential example of sarcastic usage: 'Ну ти й розумничок!'"
+  - "укольчик (injection/shot) — key example of 'hospital register' for reducing anxiety"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (5039 chars)
+✅ Message sent to Claude (ID: 10382)
+✓ Message 10382 acknowledged
+   Auto-acknowledged reply #10382 (stdout delivery — no inbox accumulation)
+✓ Message 10375 acknowledged

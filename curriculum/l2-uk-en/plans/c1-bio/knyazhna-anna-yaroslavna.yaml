@@ -1,48 +1,39 @@
----
-module: c1-bio-005
+module: c1-bio-5
 level: C1-BIO
 sequence: 5
 slug: knyazhna-anna-yaroslavna
 version: '2.0'
 title: 'Анна Ярославна: Королева Франції'
-word_target: 4300
 content_outline:
-- section: "Вступ — Руська княжна на престолі Франції"
-  words: 600
+- section: Вступ — Руська княжна на престолі Франції
   points:
   - Анна як символ культурних зв'язків Русі та Європи
   - Значення її постаті для міжнародного престижу династії
-  - "Реймське Євангеліє"
+  - Реймське Євангеліє
 - section: Життєпис
-  words: 1600
   points:
   - Дитинство в Києві, освіта при дворі Ярослава
   - Дипломатичне посольство Генріха I
   - Подорож до Франції
   - Коронація та життя в Парижі
 - section: Історичний контекст
-  words: 600
   points:
   - Династія Ярослава Мудрого - "тесть Європи"
   - Стан Франції в XI ст.
 - section: Внесок
-  words: 400
   points:
   - Культурний вплив на французький двір
   - Заснування монастиря святого Вікентія в Санлісі
 - section: Останні роки
-  words: 400
   points:
   - Регентство при синові Філіпові I
   - Другий шлюб з Раулем де Крепі
   - Смерть та вшанування пам'яті
 - section: Спадщина
-  words: 400
   points:
   - Образ Анни у французькій та українській культурі
   - Династичні зв'язки Капетингів з Руссю
 - section: Підсумок
-  words: 300
   points:
   - Анна як міст між цивілізаціями
 focus: biography
@@ -63,11 +54,11 @@ grammar:
 module_type: biography
 sources:
 - name: Анна Ярославна (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Анна_Ярославна"
+  url: https://uk.wikipedia.org/wiki/Анна_Ярославна
   type: primary
   notes: Основні факти
 - name: Реймське Євангеліє
-  url: "https://archives.marne.fr/"
+  url: https://archives.marne.fr/
   type: reference
   notes: Артефакт
 immersion: 100% Ukrainian
@@ -83,3 +74,6 @@ activity_hints:
   source: Diplomatic documents
 - type: creative-writing
   focus: Лист Анни до батька (уявний)
+persona:
+  voice: Senior Biographer
+  role: Queen of France

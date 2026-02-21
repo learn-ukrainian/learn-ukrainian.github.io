@@ -1,0 +1,305 @@
+✅ Message sent to Gemini (ID: 12960) [auto-acked: self-addressed]
+✓ Message 12960 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12960...
+📨 Message #12960
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-yanukovych-tsykl
+   Time: 2026-02-20T23:43:25.053894+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-hist-087
+level: c1-hist
+sequence: 87
+version: '1.0'
+title: 'Янукович: Сучасна версія циклу'
+focus: history
+pedagogy: seminar
+objectives:
+- 'Analyze the causes and consequences of янукович: сучасна версія циклу'
+- Evaluate the historical significance of цикл у xxi столітті
+content_outline:
+- section: Вступ — Цикл у XXI столітті
+  subsections:
+  - Янукович — не перший і не останній
+  - Чому це кооптація
+  - Сучасна версія старого паттерну
+  - Структура модуля
+- section: Фаза 1 — Підкуп (2010-2013)
+  subsections:
+  - 15 мільярдів від Путіна
+  - Харківські угоди — флот
+  - Знижка на газ
+  - Що обіцяли натомість
+- section: Фаза 2 — Залежність
+  subsections:
+  - Газова залежність
+  - Кредитна залежність
+  - Політичний тиск
+  - Шлях до ЄС — закритий
+- section: Фаза 3 — Вілнюс 2013
+  subsections:
+  - Угода про асоціацію — готова
+  - Відмова — чому
+  - Тиск Росії
+  - Точка неповернення
+- section: Фаза 4 — Крах
+  subsections:
+  - Майдан
+  - Втеча
+  - Анексія Криму
+  - Війна на Донбасі
+- section: Чому цикл зламався
+  subsections:
+  - Громадянське суспільство
+  - Досвід 2004
+  - Європейський вибір
+  - Народ — не еліта
+- section: Підсумок
+  subsections:
+  - Янукович — останній «гетьман»?
+  - Цикл vs. революція
+  - Перехід до синтезу
+vocabulary:
+- Янукович
+- кооптація
+- Харківські угоди
+- угода про асоціацію
+- Майдан
+- анексія
+- залежність
+- підкуп
+- громадянське суспільство
+- цикл
+- Євромайдан
+- олігархічний
+- газовий шантаж
+- Вільнюський саміт
+- революція
+activities:
+- type: critical-analysis
+  focus: Map Yanukovych through co-optation cycle
+- type: critical-analysis
+  focus: 2010-2014 — how Russia's cycle worked
+- type: critical-analysis
+  focus: Why did the cycle break in 2014?
+- type: comparative-study
+  focus: Yanukovych vs. historical figures — same pattern
+- type: essay-response
+  focus: Чим Янукович схожий на Хмельницького, Мазепу, Розумовського?
+sources:
+- name: Віктор Янукович (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Віктор_Янукович
+  type: reference
+  notes: Biography
+- name: Революція гідності (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Революція_гідності
+  type: reference
+  notes: 2014 revolution
+- name: Харківські угоди (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Харківські_угоди
+  type: reference
+  notes: 2010 agreements
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
+persona:
+  voice: Academic Historiographer
+  role: Kleptocracy Researcher
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Янукович: Сучасна версія циклу
+
+## Використані джерела
+1. [Енциклопедія Сучасної України (ЕСУ) — Революція Гідності](https://esu.com.ua/) — Академічний аналіз передумов, перебігу та наслідків Євромайдану, ролі громадянського суспільства у зламі автократичного режиму.
+2. [Інститут історії України НАНУ — Харківські угоди 2010](http://resource.history.org.ua/) — Історична оцінка угод як акту здачі національних інтересів в обмін на економічні преференції (продовження базування ЧФ РФ до 2042 року).
+3. [Радіо Свобода / Збруч — Аналітика щодо Вільнюського саміту та тиску РФ](https://www.radiosvoboda.org/) — Дослідження механізмів російського економічного та політичного шантажу восени 2013 року, що передували відмові Януковича від підписання Угоди про асоціацію.
+
+## Хронологія
+- **21 квітня 2010**: Підписання «Харківських угод» (продовження терміну перебування Чорноморського флоту РФ у Криму до 2042 року в обмін на умовну знижку на російський газ).
+- **Серпень-Листопад 2013**: Торговельні війни з боку Росії, економічний тиск, таємні зустрічі Януковича з Путіним щодо блокування курсу на ЄС.
+- **21 листопада 2013**: «Чорний четвер» — уряд Азарова ухвалює розпорядження про призупинення підготовки до підписання Угоди про асоціацію з ЄС; початок Євромайдану.
+- **28–29 листопада 2013**: Вільнюський саміт «Східного партнерства» — офіційний провал Януковича, відмова від підписання Угоди.
+- **16 січня 2014**: Ухвалення неконституційних «диктаторських законів», які намагалися скопіювати російські репресивні практики.
+- **18–20 лютого 2014**: Розстріли Небесної Сотні на вулиці Інститутській у Києві.
+- **21–22 лютого 2014**: Втеча Віктора Януковича до Росії; перехід влади до парламенту.
+
+## Ключові факти та цитати
+- Харківські угоди часто в українській історіографії порівнюють з «новим Переяславом» — здачею суверенітету за тактичні, оманливі вигоди. Після окупації Криму у 2014 році Росія в односторонньому порядку денонсувала ці угоди, підтвердивши їхню роль як інструменту гібридної війни.
+- Відмова від Асоціації подавалася Росією як порятунок від «катастрофічних соціально-економічних наслідків», що стало класичним прикладом інформаційної війни.
+- Російський кредит у 15 мільярдів доларів, домовлений у грудні 2013 року (отримано лише 3 млрд), розглядається як прямий «хабар» за відмову від європейського курсу та згортання суверенітету.
+- Сучасні історики характеризують Януковича як фігуру, що намагалася грати у «багатовекторність», але врешті-решт стала інструментом кооптації, цілком залежним від метрополії.
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ — Цикл у XXI столітті": `[!context]` Концепція «кооптації еліт» — порівняння донецького клану з козацькою старшиною XVIII ст., яку так само купували привілеями (дворянством) в обмін на лояльність до імперії.
+- Section "Фаза 1: Харківський 'Переяслав' (2010)": `[!history-bite]` Чому знижка на газ у 100 доларів була ілюзією: Україна все одно платила одну з найвищих цін у Європі, але натомість легалізувала російський військовий плацдарм для майбутньої анексії Криму.
+- Section "Фаза 2: Епоха залежності та концентрації влади": `[!quote]` Використати заяви російських посадовців про "нерозривність економік", щоб проілюструвати створення штучного боргового зашморгу.
+- Section "Фаза 3: Точка біфуркації — Вільнюс 2013": `[!myth-buster]` Спростування російського міфу про те, що Угода про асоціацію «знищила б українську промисловість». Реальність: це була вимога РФ для втягування України у Митний союз.
+- Section "Фаза 4: Крах режиму та ціна свободи": `[!decolonization]` Диктаторські закони 16 січня як калька з російського законодавства. Спроба Януковича застосувати російський патерн підкорення суспільства, який в умовах України зазнав нищівного краху.
+- Section "Аналіз: Чому цикл зламався у 2014-му": `[!culture]` Феномен українського горизонтального суспільства. Патерналізм («добрий цар» і «сильна рука») зіткнувся із традицією січового самоврядування і волонтерства.
+
+## Деколонізаційний контекст
+- **Імперський/радянський міф**: Янукович був легітимним президентом, якого скинув фінансований Заходом «державний переворот» (Майдан), після чого Росія була «змушена» втрутитися для захисту російськомовних.
+- **Українська реальність (деколонізована)**: Режим Януковича був спробою Росії відновити імперський цикл через кооптацію української верхівки. Корупція, Харківські угоди та відмова від ЄС були свідомими кроками до втрати суверенітету. Революція Гідності — це не "переворот", а національно-визвольна, антиколоніальна революція, яка остаточно розірвала багатовіковий цикл підпорядкування Москві. Суб'єктом історії виступив український народ.
+
+## Contested Terms (if applicable)
+| Concept | Imperial/Russian framing | Ukrainian (decolonized) framing |
+|---------|-----------------|-------------------|
+| Харківські угоди | Взаємовигідне економічне та безпекове партнерство | "Харківський Переяслав", троянський кінь, акт державної зради та підготовка плацдарму для агресії |
+| Революція Гідності | Державний переворот, інспірований Заходом; "фашистський заколот" | Національно-визвольна революція, захист демократичного та цивілізаційного вибору |
+| Фінансова допомога (кредит 15 млрд $) | Допомога братньому народу для порятунку економіки | Політичний хабар, плата за відмову від євроінтеграції та втрату суб'єктності |
+| Відмова від ЄС (Вільнюс 2013) | Захист національних економічних інтересів від Заходу | Капітуляція перед економічним та політичним шантажем Кремля |
+
+## Section-Mapped Research Notes
+
+### Вступ — Цикл у XXI столітті
+- **Ключові факти**: Янукович представляв спробу застосувати класичну російську стратегію «кооптації» еліт у нових умовах. Замість роздачі дворянських титулів (як у XVIII ст.) імперія запропонувала економічні схеми, дешевий газ та підтримку клептократичної вертикалі в обмін на політичну лояльність.
+- **Джерела**: Історичні паралелі з попередніми спробами балансування між полюсами, що закінчувалися втратою автономії.
+
+### Фаза 1: Харківський 'Переяслав' (2010)
+- **Ключові факти**: 21 квітня 2010 року. Пролонгація базування Чорноморського флоту РФ до 2042 року. Ця подія маркує початок демонтажу суверенітету. Знижка на газ не реформувала економіку, а законсервувала енергозатратну промисловість Донбасу і збагатила олігархів.
+- **Аналіз**: Харківські угоди були першим етапом гібридної війни, що забезпечив військово-стратегічний фундамент для захоплення Криму у 2014 році.
+
+### Фаза 2: Епоха залежності та концентрації влади
+- **Ключові факти**: Формування «Сім'ї» (вузького кола наближених до президента), арешт лідерів опозиції (Тимошенко, Луценко). Зростання державного боргу і критична залежність від російських ринків. 
+- **Аналіз**: Декларації про євроінтеграцію зберігалися лише як ширма для заспокоєння суспільства та торгів із Росією, тоді як реальна політика вела до авторитаризму російського зразка.
+
+### Фаза 3: Точка біфуркації — Вільнюс 2013
+- **Ключові факти**: Влітку 2013 року РФ розпочинає жорстку торговельну війну. Згодом відбуваються таємні візити Януковича до Сочі та Москви. 21 листопада уряд М. Азарова зупиняє підготовку до Асоціації. 28-29 листопада — провал Вільнюського саміту.
+- **Аналіз**: Це був момент відкритого ультиматуму Росії. Янукович обрав збереження власної влади (за підтримки РФ) замість європейських правил гри, які б змусили його зменшити рівень корупції.
+
+### Фаза 4: Крах режиму та ціна свободи
+- **Ключові факти**: Від студентських протестів до мільйонних вічів. Спроба "закрутити гайки" через диктаторські закони 16 січня (калька з РФ) лише радикалізує протест. Отримання 3 млрд доларів з обіцяних 15 млрд російського кредиту-хабаря. Розстріли на Інститутській (18-20 лютого) та втеча Януковича 21-22 лютого.
+- **Аналіз**: Анексія Криму і війна на Донбасі стали російською помстою не лише за повалення лояльного режиму, а й за вихід України з імперського геополітичного "циклу".
+
+### Аналіз: Чому цикл зламався у 2014-му
+- **Ключові факти**: Історичні паралелі з Хмельницьким та Мазепою демонструють, що раніше еліти йшли на компроміс з імперією через відсутність сильної підтримки низів. У 2014 році ключовим фактором стало зріле громадянське суспільство, яке виступило самостійним політичним суб'єктом.
+- **Аналіз**: Українці відкинули патерналістську модель («поганий боярин — добрий цар») на користь відповідальності. Європейський вибір був артикульований як ціннісний (гідність, права людини), а не просто економічний.
+
+### Підсумок: Кінець пострадянської доби
+- **Ключові факти**: Втеча Януковича символізує остаточний крах радянської/пострадянської парадигми управління в Україні.
+- **Аналіз**: Ціною розриву з імперією стала збройна агресія РФ. Відбувся перехід від пострадянської транзитної держави до формування модерної політичної нації, загартованої у боротьбі.
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12983)
+✓ Message 12960 acknowledged
+✓ Message 12983 acknowledged

@@ -1,0 +1,72 @@
+module: b2-47
+level: B2
+sequence: 47
+slug: set-expressions-i-body-animals
+version: '2.0'
+title: 'Сталі вирази I: Частини тіла та тварини'
+subtitle: 'Set Expressions I: Body & Animals'
+content_outline:
+- section: Розминка — Тіло та тварини у фразеології
+  points:
+  - Соматичні фразеологізми — вирази з частинами тіла
+  - Зоофразеологізми — вирази з назвами тварин
+  - Переносне значення — чому "золоті руки" не з золота
+- section: Сталі вирази з частинами тіла
+  points:
+  - Морочити голову (плутати, обманювати)
+  - Тримати язик за зубами (мовчати)
+  - Брати ноги в руки (тікати)
+  - Махнути рукою (відмовитися)
+  - На чужий коштовий позирати, а свого не мати (заздрити)
+  - Не бачити далі свого носа (бути обмеженим)
+- section: Сталі вирази з тваринами
+  points:
+  - Робити з мухи слона (перебільшувати)
+  - Собаку з'їв (бути експертом)
+  - Вовка ноги годують (треба працювати)
+  - Як кіт наплакав (дуже мало)
+  - Купувати кота в мішку (брати невідоме)
+  - Сидіти як миша під віником (тихо, непомітно)
+- section: Практика — вирази в контексті
+  points:
+  - Вибрати правильний вираз для ситуації
+  - Пояснити значення та навести приклад вживання
+  - Знайти англійський еквівалент (якщо є)
+  - Написати короткий діалог з 3-4 виразами
+focus: phraseology
+pedagogy: CBI
+objectives:
+- Learner can recognize and interpret 16 core Ukrainian idioms with body parts and
+  animals
+- Learner can use somatic and zoomorphic idioms appropriately in context
+- Learner understands the cultural symbolism of body parts and animals in Ukrainian
+  phraseology
+grammar:
+- Fixed expressions (фразеологічні одиниці)
+- Somatic and zoomorphic idioms
+immersion: 100
+register: varies
+phase: B2.2 [Phraseology & Synonymy]
+vocabulary_hints:
+  required:
+  - термін (term)
+  - поняття (concept)
+  - процес (process)
+  - метод (method)
+  recommended:
+  - аналіз (analysis)
+  - синтез (synthesis)
+  - дослідження (research)
+activity_hints:
+- type: reading
+  focus: Аналіз тексту
+  items: 4
+- type: essay-response
+  focus: Практичне застосування
+- type: true-false
+  focus: Перевірка розуміння
+  items: 8
+persona:
+  voice: Professional Language Coach
+  role: Folk Tale Narrator (Казкар)
+word_target: 4000

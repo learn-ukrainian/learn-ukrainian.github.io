@@ -1,0 +1,105 @@
+module: b2-91
+level: B2
+sequence: 91
+slug: presentation-skills-basics
+version: '2.0'
+title: 'Презентації: Основи'
+subtitle: Структура та подання професійних презентацій
+content_outline:
+- section: Вступ та психологія (Introduction & Psychology)
+  words: 600
+  points:
+  - 'Психологічна підготовка до виступу: методи подолання страху публічності через
+    дихальні вправи та візуалізацію успішного результату.'
+  - Визначення цільової аудиторії (target audience) та адаптація змісту презентації
+    під професійні потреби слухачів згідно зі стандартом B2.
+- section: Риторична спадщина та структура (Rhetorical Heritage & Structure)
+  words: 800
+  points:
+  - 'Культурний гачок: риторична традиція Києво-Могилянської академії (Феофан Прокопович)
+    як коріння українського публічного слова проти радянського бюрократичного стилю.'
+  - 'Класична трискладова побудова презентації: привернення уваги у вступі, доказова
+    основна частина та запам’ятовуваний висновок.'
+  - 'Формулювання та захист основної тези презентації: перехід від загальних описів
+    до конкретних професійних аргументів.'
+- section: 'Мовна навігація: Signposting (Linguistic Navigation: Signposting)'
+  words: 1000
+  points:
+  - 'Систематизація вступних маркерів та фраз для оголошення структури: «Сьогодні
+    я розповім про...», «Метою мого виступу є...».'
+  - 'Оволодіння фразами для логічних переходів між слайдами: «Це підводить нас до...»,
+    «Зупинимося детальніше на...», «Наступний важливий момент...».'
+  - 'Використання активного стану (Agency Pass) для підкреслення авторської відповідальності:
+    заміна «Було розглянуто» на «Ми розглянули / Я пропоную».'
+  - 'Маркери підбиття підсумків та заклику до дії: «Отже», «Підсумовуючи сказане»,
+    «Тож я запрошую вас до...».'
+- section: Візуальна культура та ідентичність (Visual Culture & Identity)
+  words: 800
+  points:
+  - 'Принципи ефективного дизайну слайдів: правило 6x6, робота з графіками та діаграмами
+    для візуалізації даних.'
+  - 'Культурний елемент: використання сучасних українських шрифтів (наприклад, Mariupol
+    або AlfaBravo) як засіб професійної самоідентифікації.'
+  - 'Аналіз візуальних помилок: перевантаження слайда текстом, дрібний шрифт та невідповідність
+    зображень змісту виступу.'
+- section: Техніка виступу та робота над помилками (Delivery Technique & Error Correction)
+  words: 800
+  points:
+  - 'Управління паралінгвістичними засобами: гучність, чіткість дикції, темп мовлення
+    та важливість стратегічних пауз.'
+  - 'Корекція типових лексичних помилок: розрізнення «власне / насправді» (замість
+    калькованого «актуально») та «отже / тож» (замість «так» у значенні ''so'').'
+  - Боротьба зі словами-паразитами («ну», «е-е-е», «як би») та підвищення професіоналізму
+    мовлення через впевнену артикуляцію.
+focus: skills
+pedagogy: CBI
+objectives:
+- Learner can structure a professional presentation with clear opening, body, and
+  conclusion
+- Learner can use signposting language to guide the audience through presentation
+  sections
+- Learner can apply basic delivery techniques including eye contact, pacing, and volume
+  control
+- Learner understands how to create effective visual aids for Ukrainian-language presentations
+grammar:
+- Imperative mood for instructions
+- Modal constructions for recommendations
+immersion: 100
+register: публіцистичний
+phase: B2.4 [Communication Skills]
+vocabulary_hints:
+  required:
+  - 'презентація (presentation) — High frequency; collocations: ефективна презентація,
+    робити презентацію, слайди презентації'
+  - 'виступ (speech/performance) — High frequency; collocations: публічний виступ,
+    готувати виступ, впевнений виступ'
+  - 'аудиторія (audience) — Medium frequency; collocations: увага аудиторії, контакт
+    з аудиторією, цільова аудиторія'
+  - 'теза (thesis/point) — Medium frequency; collocations: основна теза, аргументувати
+    тезу, формулювати тези'
+  - 'висновок (conclusion) — High frequency; collocations: зробити висновок, у висновку,
+    підсумовуючи'
+  recommended:
+  - 'слайд (slide) — High frequency; collocations: наступний слайд, текст на слайді,
+    перемикати слайди'
+  - власне (actually/specifically) — Used to correct English-influenced errors where
+    learners say 'actually' as 'akytualno'
+  - отже (so/therefore) — Essential signposting marker to avoid English-style 'so'
+    calques
+  - підсумовуючи (summarizing) — Formal participle for transition to the conclusion
+    phase
+  - аргументувати (to argue/provide evidence) — Professional verb for the body section
+    of a presentation
+activity_hints:
+- type: reading
+  focus: Аналіз тексту
+  items: 4
+- type: essay-response
+  focus: Практичне застосування
+- type: true-false
+  focus: Перевірка розуміння
+  items: 8
+persona:
+  voice: Professional Language Coach
+  role: Sales Representative (Торговий представник)
+word_target: 4000

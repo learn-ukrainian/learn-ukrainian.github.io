@@ -1,0 +1,218 @@
+✅ Message sent to Gemini (ID: 13050) [auto-acked: self-addressed]
+✓ Message 13050 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #13050...
+📨 Message #13050
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-skovoroda-language
+   Time: 2026-02-20T23:43:59.942418+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 97
+module: ruth-097
+module_number: 97
+slug: skovoroda-language
+title_uk: Мова Сковороди
+title_en: Skovoroda's Language
+phase: 4
+phase_id: cossack-word
+phase_name: Cossack Word
+focus: Mix of CS, Ruthenian, and Russian features
+content_outline:
+- section: Вступ
+  description: Introduction to Skovoroda's Language
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Baroque Scholar
+  role: Vernacular Innovator
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Мова Сковороди (Skovoroda Language)
+
+## Використані джерела
+1. [Григорій Сковорода: семінарій](http://litopys.org.ua/skovoroda/skov.htm) — повне зібрання творів та дослідження (Чижевський, Багалій).
+2. [Енциклопедія Сучасної України: Сковорода Григорій Савич](https://esu.com.ua/article-855) — академічний огляд життя і творчості.
+3. [Шевельов Ю. Попередні зауваги до вивчення мови та стилю Сковороди](http://litopys.org.ua/shevelov/shev06.htm) — фундаментальна праця про мовну концепцію.
+4. [Ушкалов Л. Григорій Сковорода: семінарій](http://litopys.org.ua/ushkalov/ush.htm) — сучасна інтерпретація та деколонізаційний погляд.
+
+## Хронологія
+- **1722**: Народження у Чорнухах (Лубенський полк), мовне середовище Гетьманщини.
+- **1734–1753**: Навчання у Києво-Могилянській академії (з перервами), опанування латини, грецької, староєврейської, церковнослов'янської.
+- **1741–1744**: Перебування у придворній капелі в Петербурзі (знайомство з російською розмовною мовою, але збереження української вимови).
+- **1750–1753**: Викладання поетики у Переяславському колегіумі, написання підручника, вигнання за "невідповідність старій системі".
+- **1769–1774**: Написання "Байок Харківських" — найбільш наближених до народної мови творів.
+- **1794**: Смерть у Пан-Іванівці, заповіт (написаний книжною мовою з елементами народної).
+
+## Ключові факти та цитати
+- **Поліглосія**: Сковорода вільно володів латиною (писав нею листи), грецькою, церковнослов'янською. Його "руська" мова — це химерний сплав книжної традиції (слов'янороська) та живої полтавської говірки.
+- **Цитата про мову**: «А панская морда як у перевертня, так і у всех ляхів — скрізь на "щ" та на "ъ" забиває, а наш брат все на "г" та на "и"» (з народних переказів про Сковороду, фіксує його усвідомлення фонетичної різниці).
+- **Концепція Шевельова**: Мова Сковороди — це не "зіпсована російська" і не "сурмажик", а свідома літературна конструкція, барокова гра, що базується на традиції Києво-Могилянської академії. Це "мова, якої ніколи не було у вжитку", штучна мова високої культури.
+- **Лексика**:
+    - **Латинізми/Грецизми**: *філософія серця*, *сродна праця*, *мікрокосм*.
+    - **Українізми (в тексті)**: *болванѣти* (виднітися), *іста* (сутність), *нужнѣйшій* (потрібний), дієслівні форми на *-ти* (а не *-ть*).
+    - **Слов'янізми**: *абіє*, *паче*, *зело*.
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ: Мовна мозаїка": [!context] — Пояснити мовну ситуацію Гетьманщини XVIII ст.: диглосія (висока книжна vs низька народна).
+- Section "Слов'янороська мова": [!myth-buster] — Спростування міфу, що Сковорода писав "російською". Це була "словенороська" — спільна книжна мова православних слов'ян у київській редакції.
+- Section "Латина та Грецька": [!culture] — Роль Києво-Могилянської академії як "латинського острова" у православному морі.
+- Section "Народна стихія": [!quote] — Цитата з "Байок Харківських" (наприклад, про "Свиню і Бджолу") для демонстрації простоти синтаксису.
+- Section "Деколонізація": [!decolonization] — Як імперія привласнила Сковороду, ігноруючи його український ґрунт (вимова, синтаксис, ментальність).
+- Section "Підсумок": [!history-bite] — Сковорода відмовився від кар'єри та статків заради "свободи духу", що відобразилося і в його вільній, неканонічній мові.
+
+## Деколонізаційний контекст
+- **Імперський міф**: Сковорода — "перший російський філософ", писав "общерусским языком".
+- **Українська реальність**: Сковорода — мислитель українського Бароко. Його мова — це останній спалах староукраїнської книжної традиції перед появою нової літературної мови Котляревського. Російські елементи в ній — це данина "високому штилю", а не ознака національної ідентичності. Його фонетика (читання *ѣ* як *і*, *г* як *h*) була суто українською.
+
+## Contested Terms (if applicable)
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| Мова Сковороди | "Русский язык", "малороссийское наречие" як діалект | Словенороська (книжна українська) мова; Бароковий лінгвістичний код |
+| Національність | "Русский философ" | Український любомудр (філософ), "український Сократ" |
+| Стиль | "Сбивчивый", "архаичный" | Бароковий, символічний, емблематичний |
+
+## Section-Mapped Research Notes
+
+### Вступ: Мовна мозаїка XVIII століття
+Гетьманщина як простір мовного розмаїття. Книжна мова (староукраїнська/церковнослов'янська) vs Народна розмовна. Вплив латини як мови освіти. Сковорода як продукт цієї епохи.
+
+### Теорія "Трьох Світів" і "Трьох Мов"
+Зв'язок онтології (Макрокосм, Мікрокосм, Символічний світ) з мовою. Біблія як "символічний світ" потребує особливої мови. Мова Бога (істина) vs Мова людей (буденність).
+
+### Слов'янороська мова: Високий стиль
+Аналіз терміну "словенороська". Це штучна мова інтелектуалів. Спільна лексична база з російською, але інша вимова та синтаксис. Приклади "книжних" конструкцій у Сковороди.
+
+### Латина та Грецька: Ключі до мудрості
+Сковорода як latinitas. Листування латиною з Ковалинським. Вплив античної риторики на структуру речень (інверсії, періоди). Цитування античних авторів в оригіналі.
+
+### Народна стихія: "Байки Харківські"
+Найпростіша, "найукраїнськіша" частина спадщини. Використання приказок ("Не в свої сани не сідай"). Синтаксис ближчий до розмовного. Чому байка потребувала "простоти"?
+
+### Лексичні особливості та Правопис
+Правописна традиція (традиційні літери *ѣ*, *ы*). Як це читалося вголос? (Докази української вимови у римах: *мнѣ* — *мені*, *вони* — *звони*). Специфічні слова-маркери (*іста*, *сродність*).
+
+### Деколонізація: Чия мова?
+Деконструкція радянського/російського наративу. Чому Сковорода не писав "як селянин"? (Бо був елітарним філософом). Його "русскість" — це приналежність до православної традиції Русі (Києва), а не Російської імперії.
+
+### Практика: Аналіз текстів
+Порівняння уривку з трактату (високий стиль) та байки (низький стиль). Пошук українізмів у "російськоподібному" тексті.
+
+### Підсумок: Предтеча Котляревського?
+Чи вплинув Сковорода на Котляревського? (Прямо — ні, Котляревський пішов шляхом бурлеску та живої мови). Сковорода — завершувач епохи Бароко, а не починатель Нової літератури, але його ідеї пронизали українську культуру.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 13080)
+✓ Message 13050 acknowledged
+✓ Message 13080 acknowledged

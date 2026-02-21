@@ -1,0 +1,225 @@
+✅ Message sent to Gemini (ID: 12640) [auto-acked: self-addressed]
+✓ Message 12640 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12640...
+📨 Message #12640
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-law-intro
+   Time: 2026-02-20T23:41:16.691338+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 51
+module: oes-051
+module_number: 41
+slug: law-intro
+title_uk: Вступ до права
+title_en: Intro to Law
+phase: 2
+phase_id: literary-tradition
+phase_name: Literary Tradition
+focus: Pravda, Zakon, Sud — "If" (Ashche) clauses
+content_outline:
+- section: Вступ
+  description: Introduction to Intro to Law
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Senior Paleographer
+  role: Vyrnyk (Fine Collector)
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Law Intro (Вступ до права)
+
+## Використані джерела
+1. [Енциклопедія історії України: Руська Правда](http://www.history.org.ua/?termin=Ruska_Pravda) — фундаментальний огляд історії створення, редакцій та значення пам'ятки.
+2. [Ізборник: Руська Правда (Тексти)](http://litopys.org.ua/yushkov/yu.htm) — оригінальні тексти Короткої та Розширеної редакцій, переклади та коментарі С. Юшкова.
+3. [Енциклопедія Сучасної України: Руська Правда](https://esu.com.ua/search_articles.php?id=8834) — сучасний погляд на пам'ятку в контексті української державності.
+4. [Mova History: Давньоруська мова](https://movahistory.org.ua) — лінгвістичний контекст та особливості правничої термінології.
+
+## Хронологія
+- **1016 (або 1030-ті)**: Укладення «Правди Ярослава» (ст. 1–18 Короткої редакції) — перша кодифікація, обмеження кровної помсти.
+- **1054–1072**: Укладення «Правди Ярославичів» (ст. 19–41 Короткої редакції) князями Ізяславом, Святославом та Всеволодом. Скасування кровної помсти, захист князівської адміністрації.
+- **1113**: Прийняття «Уставу» Володимира Мономаха після повстання у Києві — регулювання лихварства та полегшення становища закупів.
+- **XII ст.**: Формування Розширеної редакції (121 стаття) — найповніший кодекс феодального права Русі.
+- **14–16 ст.**: Вплив норм Руської Правди на Литовські Статути та українське звичаєве право.
+
+## Ключові факти та цитати
+- **Цитата (Оригінал, К.П. ст. 1)**: «Убьеть мужь мужа, то мьстить брату брата, или сынови отца, любо отцю сына, или братучаду, любо сестрину сынови; аще не будетъ кто мьстя, то положить за голову 40 гривенъ».
+- **Цитата (Оригінал, К.П. ст. 12)**: «Аще кто поѣдеть на чюжемь конѣ, не прошавъ его, то положити 3 гривнѣ».
+- **Цитата (Оригінал, Р.П. ст. 3)**: «Аще кто оубиеть княжа мужа в разбои, а головника не ищуть, то виревную платить, в чьей же верви голова лежит, то 80 гривен».
+- **Факт**: «Руська Правда» — це не просто кримінальний кодекс, а «суспільний договір» еліт, що фіксував перехід від звичаєвого права (помсти) до державного штрафу (віри).
+- **Термін «Віра»**: Це не просто штраф, а компенсація, що замінила архаїчний інститут кровної помсти, наближаючи правову культуру Русі до германських «варварських прав» (Salic Law).
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ: Правовий ландшафт Русі": [!myth-buster] — Спростування міфу про «дикість» слов'янського права до приходу варягів; існування «Закону Руського» ще до 1016 року (згадки в договорах з греками).
+- Section "Руська Правда: Генеза тексту": [!history-bite] — Історія про те, як Ярослав Мудрий дав першу «Правду» новгородцям, щоб залагодити конфлікт після вбивства варягів.
+- Section "Соціальна ієрархія та «Віра»": [!context] — Порівняння вартості життя (віри): 80 гривень за княжого мужа vs 5 гривень за смерда. Що можна було купити за 1 гривню? (Наприклад, бойового коня).
+- Section "Граматика права: Логіка «Аще»": [!paleography] — Аналіз графічного оформлення умовних конструкцій у списках (кіноварні ініціали «А», «О»).
+- Section "Судовий процес": [!culture] — Інститут «послухів» (свідків доброї слави) як прообраз сучасного суду присяжних або поручителів.
+- Section "Європейський контекст": [!decolonization] — Порівняння Руської Правди з Салічною Правдою (Lex Salica) франків, а не з візантійським правом, підкреслюючи європейську, а не «євразійську» ідентичність Русі.
+
+## Деколонізаційний контекст
+- **Imperial/Soviet myth**: Трактування «Руської Правди» як спільного джерела «трьох братніх народів» з акцентом на московську правонаступність (Судебники). Використання терміну «давньоросійське право».
+- **Ukrainian reality**: Пряма тяглість правової традиції від «Руської Правди» до Литовських Статутів та козацького права. Московська традиція пішла шляхом деспотії та тілесних покарань (яких не знала Руська Правда), тоді як українська зберегла договірний та компенсаційний характер права.
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian (decolonized) framing |
+|---------|-----------------|-------------------------------|
+| Назва держави | Киевская Русь / Древняя Русь | Русь / Русь-Україна / Київська держава |
+| Назва права | Древнерусское право | Право Русі / Давньоукраїнське право |
+| Етнічна приналежність | Общерусское наследие | Спадщина українського народу, узурпована імперією |
+| Віра (штраф) | Примитивная форма права | Гуманістична альтернатива кровній помсті (європейський контекст) |
+| Ярослав Мудрий | Русский князь | Київський князь, тесть Європи |
+
+## Section-Mapped Research Notes
+
+### Вступ: Правовий ландшафт Русі
+Концепція переходу від усного «Закону Руського» (звичаєве право) до писаної «Правди». Вплив скандинавського права (varin -> віра?). Значення слова «Правда» як справедливості та кодексу.
+
+### Джерела права: Термінологія
+Розрізнення понять:
+- **Правда**: Кодифікований закон, справедливість.
+- **Закон**: У церковній традиції — релігійний закон (Закон Божий), у світській — іноді синонім звичаю або постанови.
+- **Покон/Обичай**: Традиційні норми.
+- **Суд**: І процес, і орган, і рішення.
+
+### Руська Правда: Генеза тексту
+Детальний розбір трьох етапів: Ярослав (політична необхідність), Ярославичі (реакція на соціальні виклики), Мономах (економічні реформи). Палеографічні особливості найдавніших списків.
+
+### Соціальна ієрархія та «Віра»
+Аналіз соціальної структури через ціну життя. Княжі мужі (80 гр), вільні люди (40 гр), сільські старости, смерди, холопи (5 гр). Поняття «головництва» (вбивства) та «обіди» (злочину).
+
+### Граматика права: Логіка «Аще»
+Синтаксичний аналіз юридичної формули:
+- Протазис (Умова): «Аще/Оже + суб'єкт + дія...» (Якщо хтось уб'є...)
+- Аподозис (Наслідок): «...то + покарання» (то платити 40 гривень).
+Роль сполучників *аще, оже, а, і*.
+
+### Судовий процес і докази
+Процесуальні терміни:
+- **Звод**: Процес пошуку вкраденого (слідство по ланцюжку).
+- **Видок**: Свідок-очевидець (бачив на власні очі).
+- **Послух**: Свідок доброї слави (character witness).
+- **Ордалії**: Випробування залізом і водою (Божий суд) як останній аргумент.
+
+### Європейський паралелізм
+Зіставлення з *Lex Salica* (франки), *Lex Saxonum* (сакси). Спільні риси: вергельд (віра), клятви, відсутність смертної кари. Відмінність від візантійського (римського) права, яке передбачало тілесні покарання та страту.
+
+### Підсумок: Спадщина
+Руська Правда як фундамент українського права. Трансформація її норм у Литовських Статутах (наприклад, збереження штрафів-голосщини). Відмінність від московського права, що пішло шляхом татарського впливу (жорстокість покарань).
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12671)
+✓ Message 12640 acknowledged
+✓ Message 12671 acknowledged

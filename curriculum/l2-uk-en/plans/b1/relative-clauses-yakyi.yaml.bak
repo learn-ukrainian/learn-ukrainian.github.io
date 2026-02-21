@@ -1,0 +1,89 @@
+module: b1-26
+level: B1
+sequence: 26
+slug: relative-clauses-yakyi
+version: '2.0'
+title: 'Підрядні означальні: який'
+subtitle: Relative Clauses with який
+content_outline:
+- section: Тест
+  points: []
+- section: Теорія
+  points:
+  - 'Принцип узгодження — teach the Agreement Algorithm: 1) Look BACK for Gender/Number
+    (Antecedent), 2) Look FORWARD for Case (Function in sub-clause); covers State
+    Standard §4.4.3'
+  - 'Повна парадигма який у всіх відмінках — clarify stylistic nuance: ''який'' (descriptive
+    quality) vs ''котрий'' (selection from a set)'
+- section: Поглиблення
+  points:
+  - 'Який у кожному відмінку з прикладами — cultural hook: Folklore ''Hero Definition''
+    pattern (e.g., ''Козак, який мав шаблю...'')'
+  - 'Типові помилки та як їх уникнути — learner error: Case Logic Failure (agreeing
+    with antecedent case instead of role), Gender/Number Discord, Ambiguous Antecedent,
+    Overuse of invariant ''що'''
+- section: Практика
+  points: []
+- section: Діалоги
+  points:
+  - 'Діалог 1: Про нового колегу — use collocation ''людина, яка...'''
+  - 'Діалог 2: Про подорож — use collocation ''місто, в якому...'''
+  - 'Діалог 3: Про книгу — use collocation ''той, який...'''
+  - 'Діалог 4: Про навчання'
+  - 'Діалог 5: Про ресторан'
+- section: Потрібно більше практики?
+  points:
+  - Інтеграція знань
+  - Реальне застосування
+  - Онлайн-ресурси
+vocabulary_hints:
+  required:
+  - 'який (which/that/who) — Top 50; collocations: людина, яка...; місто, в якому...;
+    той, який...'
+  - яка (which - feminine) — agreement with feminine antecedent
+  - яке (which - neuter) — agreement with neuter antecedent
+  - які (which - plural) — agreement with plural antecedent
+  - 'підрядний (subordinate) — grammar term: підрядне речення'
+  - 'означальний (attributive) — grammar term: означальне речення'
+  - 'речення (sentence) — High freq: головне речення, складне речення'
+  - 'антецедент (antecedent) — academic: узгодження з антецедентом'
+  recommended:
+  - 'узгодження (agreement) — Medium freq: принцип узгодження'
+  - 'відмінок (case) — Medium freq: у називному відмінку, непрямі відмінки'
+  - сполучник (conjunction) — grammar context
+  - головне речення (main clause) — context of complex sentences
+activity_hints:
+- type: fill-in
+  focus: який case selection
+  items: 25
+- type: error-correction
+  focus: Combine sentences with який
+  items: 20
+- type: error-correction
+  focus: Fix agreement errors
+  items: 15
+- type: translate
+  focus: English to Ukrainian
+  items: 15
+focus: grammar
+pedagogy: TTT
+prerequisites:
+- b1-25 (Checkpoint Aspect Integration)
+connects_to:
+- b1-27 (Relative Clauses де/куди/звідки)
+- b1-28 (Relative Clauses коли/що)
+objectives:
+- Learner understands який agreement patterns
+- Learner can use який in all seven cases
+- Learner can combine sentences using який
+- Learner can identify antecedent and relative clause role
+grammar:
+- який/яка/яке/які forms and agreement
+- Case selection based on role in subordinate clause
+- Agreement with antecedent in gender and number
+register: розмовний
+phase: B1.3a [Complex Sentences]
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Portrait Photographer
+word_target: 4000

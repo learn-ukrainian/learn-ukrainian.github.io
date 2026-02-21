@@ -1,0 +1,335 @@
+✅ Message sent to Gemini (ID: 11274) [auto-acked: self-addressed]
+✓ Message 11274 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #11274...
+📨 Message #11274
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-medical-ukrainian-iii
+   Time: 2026-02-20T22:34:22.632465+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c2-068
+level: c2
+sequence: 68
+version: '2.0'
+title: Медична українська III — Медична документація
+focus: domain
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Накази МОЗ щодо медичної документації
+  url: https://moz.gov.ua/dokumenti
+  type: primary
+  notes: Форми медичної документації
+- name: Електронна система охорони здоров'я
+  url: https://ehealth.gov.ua/
+  type: primary
+  notes: Електронна медична документація
+- name: Національний класифікатор захворювань
+  url: https://moz.gov.ua/
+  type: reference
+  notes: МКХ-10 українською
+content_outline:
+- section: Вступ — Система медичної документації в Україні
+  points:
+  - Правові основи ведення документації
+  - Перехід до електронної системи
+  - eHealth та його компоненти
+  - Відповідальність за ведення документації
+- section: Первинна медична документація
+  points:
+  - Медична карта амбулаторного хворого (форма 025/о)
+  - Карта стаціонарного хворого (форма 003/о)
+  - Записи в електронній медичній карті
+  - Стандарти оформлення
+- section: Виписки та довідки
+  points:
+  - Виписка з амбулаторної карти
+  - Епікриз (виписний, етапний, посмертний)
+  - Медичні довідки різних форм
+  - Лікарняні листки
+- section: Направлення та рецепти
+  points:
+  - Направлення на консультацію
+  - Направлення на госпіталізацію
+  - Направлення на обстеження
+  - Рецепти (електронні та паперові)
+- section: Протоколи та висновки
+  points:
+  - Протоколи діагностичних обстежень
+  - Висновки консиліумів
+  - Заключення МСЕК
+  - Судово-медичні висновки
+- section: Статистична звітність
+  points:
+  - Форми статистичної звітності
+  - Кодування діагнозів за МКХ-10
+  - Звіти про надані послуги
+  - Контроль якості даних
+- section: Практикум — Заповнення медичної документації
+  points:
+  - Ведення записів у медичній карті
+  - Складання виписного епікризу
+  - Оформлення електронного рецепта
+vocabulary:
+  required:
+  - медична карта (medical record)
+  - епікриз (discharge summary/epicrisis)
+  - виписка (extract/discharge summary)
+  - направлення (referral)
+  - рецепт (prescription)
+  - лікарняний лист (sick leave certificate)
+  - протокол (protocol/report)
+  - висновок (conclusion/opinion)
+  - МСЕК (medical-social expert commission)
+  - МКХ-10 (ICD-10)
+  recommended:
+  - eHealth (eHealth system)
+  - електронна карта (electronic record)
+  - кодування (coding)
+  - статистична звітність (statistical reporting)
+  - форма (form)
+  forbidden: '[]'
+activities:
+  types_required:
+  - reading
+  - quiz
+  - fill-in
+  - match-up
+  - error-correction
+  - essay-response
+  - comparative-study
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c2-69 (Medical Ukrainian IV — clinical scenarios)
+- c2-70 (Medical Ukrainian V — medical research)
+- c2-71 (Professional Portfolio I)
+vocabulary_hints:
+  required:
+  - концепція (concept)
+  - аналіз (analysis)
+  - дискурс (discourse)
+  - методологія (methodology)
+  recommended:
+  - інтерпретація (interpretation)
+  - контекстуалізація (contextualization)
+  - синтез (synthesis)
+activity_hints:
+- type: reading
+  focus: Поглиблений аналіз тексту
+  items: 4
+- type: essay-response
+  focus: Критичне осмислення
+- type: discussion
+  focus: Дискусія та аргументація
+  items: 1
+persona:
+  voice: Senior Specialist
+  role: Medical Registrar
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Медична українська III — Медична документація
+
+## State Standard Reference
+§3.11 (Тематичний каталог: Здоров’я й особиста гігієна): "система охорони здоров’я і медичне страхування; діагностика (аналізи й обстеження); візит до лікаря".
+§4.3.3 (Стилістичні засоби лексики): "професіоналізми (у межах обраного фаху); канцеляризми: згідно з…; відповідно до…; у зв’язку з…".
+Alignment: Модуль деталізує тему §3.11 через призму офіційно-ділового стилю (§4.3.1.1) та професійної лексики (§4.3.3), формуючи компетенцію ведення документації.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| епікриз | High (Medical) | виписний епікриз, посмертний епікриз, етапний епікриз |
+| анамнез | High (Medical) | збирати анамнез, анамнез життя, анамнез хвороби, обтяжений анамнез |
+| направлення | High (General/Med) | електронне направлення, направлення на госпіталізацію, видати направлення |
+| рецепт | High (General/Med) | виписати рецепт, електронний рецепт, рецептурний бланк, відпуск за рецептом |
+| висновок | High (Official) | консультативний висновок, висновок комісії, судово-медичний висновок |
+
+## Cultural Hooks
+1. **eHealth & Helsi**: Перехід України від паперової бюрократії до цифрової системи eHealth (та інтерфейсів типу Helsi.me). Це культурний зсув у сприйнятті медицини.
+2. **Реформа Супрун**: Зміна підходу до "лікарняних" (тепер це електронні медичні висновки про тимчасову непрацездатність) та скасування застарілих форм (наприклад, "форми 026/о" для школи).
+
+## Common Learner Errors
+1. **Calques from Russian**: "лікарняний лист" (calque from "больничный лист") → офіційно: **листок непрацездатності** (або електронний медичний висновок).
+2. **Prepositions in official style**: "згідно інструкції" (error) → **згідно з інструкцією** (correct); "у відповідності до" (clumsy) → **відповідно до**.
+3. **Terminological confusion**: "Виписка" vs "Епікриз". "Виписка" is colloquial/general; "Виписний епікриз" is the document title.
+
+## Cross-References
+- Builds on: B2 Medical modules, C2-67 (Anatomy/Physiology context)
+- Prepares for: C2-69 (Clinical Scenarios), C2-71 (Professional Portfolio)
+
+## Notes for Content Writing
+- Focus heavily on the **structure** of documents. C2 learners need to know *how* to write these, not just read them.
+- Distinguish clearly between the *paper legacy* (still exists in archives/some regions) and the *digital reality* (eHealth).
+- Use strict **official-business style** (офіційно-діловий стиль) for the document examples, contrasting it with professional communication between colleagues.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Система медичної документації в Україні (Introduction: Medical Documentation System in Ukraine)"
+  words: 500
+  points:
+  - "Правові основи та законодавче регулювання медичного документообігу в Україні згідно з актуальними наказами МОЗ"
+  - "Культурний та інфраструктурний зсув: впровадження системи eHealth та платформи Helsi.me як інструментів цифровізації медицини"
+  - "Трансформація системи: скасування застарілих паперових форм та впровадження електронних медичних висновків про тимчасову непрацездатність"
+- section: "Первинна медична документація та збір анамнезу (Primary Medical Documentation and Anamnesis)"
+  words: 600
+  points:
+  - "Стандарти ведення форми 025/о (амбулаторна карта) та 003/о (стаціонарна карта) в умовах цифрової трансформації"
+  - "Професійна термінологія при зборі анамнезу: збирати анамнез життя, анамнез хвороби та обтяжений анамнез як складники діагностики"
+  - "Вимоги до лаконічності та точності записів в електронній медичній карті (ЕМК) пацієнта відповідно до стандартів eHealth"
+- section: "Виписки, епікризи та листки непрацездатності (Extracts, Epicrises and Sick Leave Certificates)"
+  words: 600
+  points:
+  - "Термінологічна точність: розрізнення розмовного поняття «виписка» та офіційного документа «виписний епікриз» у медичній практиці"
+  - "Методологія складання епікризів: етапний, виписний та посмертний епікриз — структура та ключові мовленнєві кліше професійного стилю"
+  - "Ліквідація лексичних кальок: перехід від суржикового «лікарняного листа» до офіційного терміна «листок непрацездатності»"
+- section: "Направлення та електронні рецепти (Referrals and Electronic Prescriptions)"
+  words: 600
+  points:
+  - "Оформлення електронних направлень на консультацію та госпіталізацію відповідно до стандартів НСЗУ"
+  - "Дискурс рецептурного призначення: правила заповнення електронних рецептів та особливості використання паперових рецептурних бланків"
+  - "Граматичні норми офіційного стилю: правильне вживання конструкцій «згідно з інструкцією» (Instrumental case) та «відповідно до протоколу»"
+- section: "Протоколи, консиліуми та експертні висновки (Protocols, Case Conferences and Expert Opinions)"
+  words: 600
+  points:
+  - "Структура протоколів діагностичних обстежень та написання консультативних висновків вузьких спеціалістів"
+  - "Особливості оформлення заключень МСЕК (Медико-соціальної експертної комісії) та складання судово-медичних висновків"
+  - "Мовні засоби вираження експертної оцінки та аргументації в офіційно-діловому медичному дискурсі"
+- section: "Статистична звітність та класифікатор МКХ-10 (Statistical Reporting and ICD-10 Classification)"
+  words: 500
+  points:
+  - "Кодування діагнозів за міжнародним класифікатором МКХ-10: термінологічна уніфікація та точність українського перекладу"
+  - "Форми статистичної звітності про надані медичні послуги та контроль якості внесених даних до загальнонаціональної системи"
+  - "Роль стандартизованої термінології у забезпеченні юридичної та статистичної достовірності медичної документації"
+- section: "Практикум: Культура медичного письма та ведення документації (Workshop: Medical Writing Culture and Documentation)"
+  words: 600
+  points:
+  - "Диференціація стилів: розрізнення офіційно-ділового стилю документації та професійного сленгу медичних працівників"
+  - "Редагування та корекція типових помилок: усунення канцеляризмів та суржикових конструкцій у медичних записах"
+  - "Створення зразка виписного епікризу та електронного рецепта з дотриманням усіх лексико-граматичних норм української мови"
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "епікриз (discharge summary/epicrisis) — виписний, етапний, посмертний; висока частотність у C2 дискурсі"
+  - "анамнез (anamnesis) — збирати анамнез (життя, хвороби), обтяжений анамнез; фундаментальна діагностична категорія"
+  - "листок непрацездатності (sick leave certificate) — офіційний термін; уникати кальки «лікарняний лист»"
+  - "направлення (referral) — електронне направлення, видати направлення на госпіталізацію чи обстеження"
+  - "висновок (conclusion/opinion) — консультативний, судово-медичний висновок, заключення МСЕК"
+  - "МКХ-10 (ICD-10) — міжнародний класифікатор хвороб; основа кодування та статистичної звітності"
+  recommended:
+  - "згідно з (according to) — вимагає орудного відмінка (згідно з наказом); типова помилка «згідно інструкції»"
+  - "відповідно до (in accordance with) — маркер офіційно-ділового стилю; «відповідно до протоколу»"
+  - "eHealth (eHealth system) — цифрова екосистема охорони здоров'я та база медичних даних"
+  - "медичний висновок (medical opinion) — офіційне заключення у цифровій формі про стан пацієнта"
+  - "рецептурний бланк (prescription form) — паперовий носій для відпуску ліків за певних умов"
+  - "анамнез хвороби (history of present illness) — деталізація перебігу захворювання в документації"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4961 chars)
+✅ Message sent to Claude (ID: 11287)
+✓ Message 11287 acknowledged
+   Auto-acknowledged reply #11287 (stdout delivery — no inbox accumulation)
+✓ Message 11274 acknowledged

@@ -1,0 +1,13 @@
+{
+  "track": "lit-essay",
+  "slug": "stus-phenomenon",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-20T23:04:10Z",
+      "task_id": "v3-stus-phenomenon-pA",
+      "mode": "full"
+    }
+  }
+}

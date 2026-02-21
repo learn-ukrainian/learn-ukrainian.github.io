@@ -1,0 +1,13 @@
+{
+  "track": "b2-hist",
+  "slug": "franko-lesia-hrinchenko",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T16:36:11Z",
+      "task_id": "v3-franko-lesia-hrinchenko-pA",
+      "mode": "meta-only"
+    }
+  }
+}

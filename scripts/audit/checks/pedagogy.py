@@ -219,13 +219,13 @@ def run_pedagogical_checks(
     all_violations.extend(check_matchup_misuse(content))
 
     # 13. Activity level restrictions
-    all_violations.extend(check_activity_level_restrictions(content, level_code, module_num))
+    all_violations.extend(check_activity_level_restrictions(content, level_code, module_num, yaml_activities=yaml_activities))
 
     # 14. Activity focus alignment (B1/B2)
     all_violations.extend(check_activity_focus_alignment(content, level_code, module_num, frontmatter_str))
 
-    # 15. Anagram minimum letters (must have 3+ letters)
-    all_violations.extend(check_anagram_min_letters(content))
+    # 15. Anagram validation (format, letter match, min length)
+    all_violations.extend(check_anagram_min_letters(content, yaml_activities=yaml_activities))
 
     # 16. Content quality (LLM-based evaluation - optional, enabled via env var)
     all_violations.extend(check_content_quality(content, level_code, module_num))

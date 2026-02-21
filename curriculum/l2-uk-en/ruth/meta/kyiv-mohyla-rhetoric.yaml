@@ -1,40 +1,47 @@
----
-# Module Meta: Kyiv-Mohyla Rhetoric
-# Track: RUTH
-# Module: 058
-# Generated: 2026-02-04
-id: ruth-072
-module: ruth-072
-
-module_number: 58
 slug: kyiv-mohyla-rhetoric
-title: "Риторика Могилянки"
-title_en: "Kyiv-Mohyla Rhetoric"
-
-type: lesson
-phase: 3
-phase_id: baroque-fight
-
-# Pedagogy
-pedagogy: theory-first
-duration_minutes: 60
-word_target: 4000
-immersion_level: 100
-
-# Focus
-grammar_focus: "Loci Communes — The 5 Canons"
-vocabulary_focus: []
-cultural_focus: []
-
-# Activity hints (minimum counts)
-activity_hints:
-  - type: transcription
-    min_items: 2
-  - type: etymology-trace
-    min_items: 2
-  - type: grammar-identify
-    min_items: 3
-
-# Prerequisites
-prerequisites:
-  - module: 57
+title: Kyiv Mohyla Rhetoric
+word_target: 5000
+content_outline:
+- section: 'Вступ: Риторика як цариця наук'
+  words: 600
+  points:
+  - Києво-Могилянська академія як інтелектуальний центр Східної Європи
+  - 'Мовна ситуація: латина як lingua franca, польська культура, руська (українська)
+    основа'
+  - Статус риторики в системі семи вільних мистецтв (trivium)
+  - 'Риторика vs Поетика: взаємозв''язок дисциплін'
+- section: 'Йосиф Кононович-Горбацький: Першопроходець'
+  words: 800
+  points:
+  - Курс «Orator Mohyleianus» (1635) — найдавніша пам'ятка київської риторики
+  - Орієнтація на Цицерона та гуманістичні традиції
+  - 'Структура навчання: від теорії до шкільної драми'
+  - Роль Кононовича-Горбацького у формуванні навчального канону КМА
+- section: 'Іоаникій Галятовський: «Ключ розуміння»'
+  words: 1000
+  points:
+  - Перший друкований підручник з гомілетики (1659)
+  - 'Барокова естетика: емблеми, символи та алегорії в проповіді'
+  - Теорія «концепту» (дотепного задуму) як основи промови
+  - 'Аналіз уривків: «Світ як море» — метафорична картина світу'
+- section: 'Феофан Прокопович: «De arte rhetorica»'
+  words: 1000
+  points:
+  - 'Курс 1706 року: перехід від високого бароко до раннього Просвітництва'
+  - Критика «зіпсованого смаку» та штучної ускладненості
+  - Вимога «природності» та ясності викладу
+  - Структура 10 книг риторики Прокоповича
+- section: П'ять канонів риторики в дії
+  words: 1000
+  points:
+  - 'Inventio (Винахід): техніка loci communes (загальних місць)'
+  - 'Dispositio (Розташування): архітектура переконливої промови'
+  - 'Elocutio (Прикрашання): система тропів та фігур'
+  - 'Memoria та Actio: мистецтво пам''яті та сценічної дії'
+- section: 'Підсумок: Спадщина та вплив'
+  words: 600
+  points:
+  - 'Експорт київської вченості: вплив на Московію та формування російської освіти'
+  - Українська риторика як міст між Заходом і Сходом
+  - Занепад латинської схоластики та перехід до нових форм у кінці XVIII ст.
+  - Значення риторичної спадщини для сучасної української культури

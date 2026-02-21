@@ -1,0 +1,284 @@
+✅ Message sent to Gemini (ID: 10215) [auto-acked: self-addressed]
+✓ Message 10215 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10215...
+📨 Message #10215
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-adjective-suffixes-types
+   Time: 2026-02-20T20:03:08.705520+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: a2-40
+level: A2
+sequence: 40
+slug: adjective-suffixes-types
+version: '2.0'
+title: Adjective Suffixes — Types
+subtitle: Materials and Origins
+content_outline:
+- section: Introduction / Вступ
+  points:
+  - 'From Nouns to Identity: The magic of the material bridge — introduce core suffixes
+    -ськ- and -н- aligned with State Standard §4.2.1.2'
+  - 'Why ''wooden'' is more than a word in Ukrainian — use high-frequency example
+    «дерев''яний» to illustrate the concept; collocations: дерев''яний стіл, дерев''яний
+    будинок'
+- section: Presentation / Презентація
+  points:
+  - '''The Materialist Logic: -Ов- (Standard) vs -Ян- (Natural/Traditional)'' — explicit
+    heuristic: -ян- for natural/traditional materials (вовняний, дерев''яний) vs -ов-
+    for standard/processed (металевий, пластиковий); learner error: stress-dependent
+    confusion between -ов- and -ев- (дубовий vs польовий)'
+  - '''The Geography of Suffixes: -Ськ- and its many faces'' — key geographic adjectives:
+    київський, львівський, український; cultural context: Київська Русь, львівська
+    ґвара'
+  - '''Consonant Mutations: Crossing the bridge from Prague to Odesa'' — focus on
+    the ''Big Three'' mutations (к/ч/ц -> цьк, г/ж/з -> зьк, х/ш/с -> ськ); mnemonic
+    anchor: Прага -> Празький; learner error: mutation failure (e.g., *Прагський*
+    instead of Празький)'
+  - '''Abstract Logic: -Ічн- vs -Н-'' — highlight «домашній» (very high frequency)
+    as prime example for -н-; collocations: домашнє завдання, домашній затишок'
+  - '''Prefix-Suffix Combinations (Intro): Настільний, Підземний'' — brief introduction
+    to simultaneous derivation'
+- section: Practice / Практика
+  points:
+  - 'Material conversion drills — focus on converting nouns to adjectives: скло ->
+    скляний (скляна пляшка), залізо -> залізний (залізні двері)'
+  - City-to-Adjective mutation challenge — targeted drills on the k->ts, h->z, kh->s
+    patterns; emphasize the г/ж/з -> зьк mutation using Prague example
+- section: Dialogues / Діалоги
+  points:
+  - 'At the handicraft fair: Discussing wooden toys and woolen shawls — cultural hook:
+    context of «яворівська забавка» (wooden toy made of aspen/осика) and «гуцульський
+    ліжник» (woolen blanket with ''biting'' texture)'
+focus: grammar
+pedagogy: PPP
+objectives:
+- Learner can describe what things are made of
+- Learner can describe origin and nationality
+- Learner can form abstract adjectives
+- Learner can classify adjectives by meaning
+- Learner can handle consonant mutations in origin suffixes
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Adjective Morphology
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Standards for material and origin adjective suffixes at A2
+- name: Ukrainian Word Formation - Consonant Changes
+  url: https://uk.wikipedia.org/wiki/Чергування_приголосних_при_творенні_прикметників
+  type: reference
+  notes: Rules for mutations like k->ts, h->z when adding -sk-
+immersion: 60-75% Ukrainian
+phase: A2.3
+persona:
+  voice: Encouraging Cultural Guide
+  role: Art Gallery Curator
+vocabulary_hints:
+  required:
+  - дерев'яний (wooden) — дерев'яний стіл, дерев'яний будинок, дерев'яна ложка
+  - скляний (glass adj.) — скляна пляшка, скляний посуд, скляні двері
+  - залізний (iron adj.) — залізні двері, залізний характер (idiom), залізниця
+  - київський (Kyiv adj.) — київський торт, київський князь, Київська Русь
+  - львівський (Lviv adj.) — львівська кава, львівський сирник, львівська ґвара
+  - домашній (home/domestic) — домашнє завдання, домашня тварина, домашній затишок
+  - вовняний (woolen) — вовняний светр, вовняна ковдра, вовняні шкарпетки
+  recommended:
+  - осика (aspen) — traditional wood for Yavoriv toys, believed to drive away evil
+  - ліжник (lizhnyk) — Hutsul woven blanket made of sheep's wool, famous for therapeutic
+    'biting' texture
+word_target: 3000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Adjective Suffixes — Types
+
+## State Standard Reference
+§4.2.1.2: "Прикметник: прикметники чоловічого роду із закінченням -ий: високий, дешевий, український; ... -ій: домашній, осінній..."
+Alignment: The Standard explicitly lists adjectives with suffixes `-ськ-` (український) and `-н-` (домашній, осінній) as core A2 morphology. While the *theory* of word formation is detailed in B1 (§4.3.6), the *usage* of these high-frequency derived adjectives is required for A2 communicative intentions (describing objects, origins) and themes (shopping, home, travel).
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| дерев'яний | High / Web | дерев'яний стіл, дерев'яний будинок, дерев'яна ложка |
+| скляний | Medium / Web | скляна пляшка, скляний посуд, скляні двері |
+| залізний | High / Web | залізні двері, залізний характер (fig.), залізниця (noun derived) |
+| київський | High / Web | київський торт, київський князь, Київська Русь |
+| львівський | High / Web | львівська кава, львівський сирник, львівська ґвара |
+| домашній | Very High / Web | домашнє завдання, домашня тварина, домашній затишок |
+| вовняний | Medium / Web | вовняний светр, вовняна ковдра, вовняні шкарпетки |
+
+## Cultural Hooks
+1. **Яворівська забавка (Yavoriv Toy):** Unique wooden toys from Lviv region, traditionally made of aspen (осика) which was believed to drive away evil. Decorated with "verbivka" (willow branch) patterns in green, red, blue, and yellow.
+2. **Гуцульський ліжник (Hutsul Lizhnyk):** Heavy woolen blanket made of sheep's wool (овеча вовна). Used as bedding, clothing, and in ceremonies (weddings, funerals). Famous for "biting" texture which acts as a natural massage.
+
+## Common Learner Errors
+1. **Mutation Failure (-ськ-):** Learners often simply add `-ськ-` without changing the stem consonant.
+   *   *Error:* Прага -> *Прагський*
+   *   *Correct:* Прага -> Празький (г -> зьк)
+2. **Suffix Confusion (-ов- vs -ев-):** Difficulty choosing based on stress and stem softness.
+   *   *Error:* *дубевий* or *польовий* (stress dependent)
+   *   *Correct:* дубовий (hard stem), поле -> польовий (soft stem + stress)
+
+## Cross-References
+- Builds on: `noun-declension` (stems), `adj-declension-hard-soft`
+- Prepares for: `word-formation-b1` (systematic suffix rules), `geography-ukraine` (place adjectives)
+
+## Notes for Content Writing
+- **Pedagogy:** A2 learners don't need the full table of all mutations. Focus on the big three: `к/ч/ц` -> `цьк`, `г/ж/з` -> `зьк`, `х/ш/с` -> `ськ`.
+- **Mnemonic:** Use "Prague -> Prazkyi" as the anchor for the `г -> з` mutation, as it's a common travel destination.
+- **Material Bridge:** Explicitly contrast "Natural/Traditional" (-ян-, e.g., wooden, clay) vs "Standard" (-ов-, e.g., metal, plastic) as a heuristic, even if not 100% linguistically rigorous, it helps learners guess.
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 450
+  points:
+  - "From Nouns to Identity: The magic of the material bridge — introduce core suffixes -ськ- and -н- aligned with State Standard §4.2.1.2 requirements for A2 communicative intentions (describing objects and origins)"
+  - "Why 'wooden' is more than a word: Use the high-frequency example «дерев'яний» to illustrate the concept; connect to the theme of traditional craftsmanship and collocations like «дерев'яний стіл», «дерев'яний будинок», and «дерев'яна ложка»"
+- section: "Презентація: Матеріали та походження (Presentation: Materials and Origins)"
+  words: 850
+  points:
+  - "The Materialist Logic: Heuristic for choosing suffixes — use -ян- for natural or traditional materials (вовняний, дерев'яний, скляний) vs -ов- for standard/processed materials (металевий, пластиковий, дубовий)"
+  - "The Geography of Suffixes: -Ськ- and its many faces — focus on high-frequency city adjectives: київський (київський торт, київський князь), львівський (львівська кава, львівський сирник); introduce cultural context of Київська Русь and львівська ґвара"
+  - "The 'Big Three' Consonant Mutations: Crossing the bridge from Prague to Odesa — focus on A2-appropriate mutations: к/ч/ц -> цьк, г/ж/з -> зьк, х/ш/с -> ськ; use the mnemonic anchor: Прага -> Празький to prevent common mutation failures"
+  - "Suffix Selection Heuristics: Managing -ов- vs -ев- — explain dependency on hard/soft stems and stress (e.g., hard stem 'дуб' -> дубовий vs soft stem 'поле' -> польовий); highlight «домашній» as a very high-frequency soft-suffix example"
+- section: "Культурний контекст: Традиційні вироби (Cultural Context: Traditional Crafts)"
+  words: 600
+  points:
+  - "Яворівська забавка (Yavoriv Toy): A wooden hook — explain the use of «осика» (aspen) in traditional wooden toys from the Lviv region, believed to drive away evil and decorated with «вербівка» patterns"
+  - "Гуцульський ліжник (Hutsul Lizhnyk): The warmth of wool — describe the heavy woolen blanket made of «овеча вовна» (sheep's wool), famous for its therapeutic 'biting' texture and role in weddings and ceremonies"
+- section: "Практика та аналіз помилок (Practice and Error Analysis)"
+  words: 700
+  points:
+  - "Material conversion drills: Focus on converting nouns to adjectives with correct suffix choices — скло -> скляний (скляна пляшка), залізо -> залізний (залізні двері), вовна -> вовняний"
+  - "City-to-Adjective mutation challenge: Targeted drills on the 'Big Three' patterns; focus on preventing the common error of simply adding -ськ- without mutation (e.g., correct *Празький* vs error *Прагський*)"
+  - "Stress and Stem Sensitivity: Drills contrasting hard and soft stems for -ов-/-ев- selection (дубовий vs польовий) to minimize stress-dependent confusion"
+- section: "Діалог та продукція (Dialogue and Production)"
+  words: 400
+  points:
+  - "At the handicraft fair: Discussing wooden toys and woolen shawls — production task using materials vocabulary to describe artisanal items (яворівська забавка, гуцульський ліжник)"
+  - "Identity and Origins: Describing one's home and city using -ськ- and -н- adjectives — describing 'домашній затишок' (home comfort) and local landmarks with origin suffixes"
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "дерев'яний (wooden) — дерев'яний стіл, дерев'яний будинок, дерев'яна ложка; High frequency"
+  - "скляний (glass adj.) — скляна пляшка, скляний посуд, скляні двері; Medium frequency"
+  - "залізний (iron adj.) — залізні двері, залізний характер (idiom), залізниця (noun); High frequency"
+  - "київський (Kyiv adj.) — київський торт, київський князь, Київська Русь; High frequency"
+  - "львівський (Lviv adj.) — львівська кава, львівський сирник, львівська ґвара; High frequency"
+  - "домашній (home/domestic) — домашнє завдання, домашня тварина, домашній затишок; Very High frequency"
+  - "вовняний (woolen) — вовняний светр, вовняна ковдра, вовняні шкарпетки; Medium frequency"
+  recommended:
+  - "осика (aspen) — traditional wood for Yavoriv toys, believed to drive away evil"
+  - "ліжник (lizhnyk) — Hutsul woven blanket made of sheep's wool, famous for therapeutic 'biting' texture"
+  - "овеча вовна (sheep's wool) — the raw material for traditional Ukrainian textiles"
+  - "яворівська забавка (Yavoriv toy) — traditional wooden toy decorated with willow branch patterns"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4463 chars)
+✅ Message sent to Claude (ID: 10222)
+✓ Message 10222 acknowledged
+   Auto-acknowledged reply #10222 (stdout delivery — no inbox accumulation)
+✓ Message 10215 acknowledged

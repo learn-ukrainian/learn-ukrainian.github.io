@@ -1,85 +1,32 @@
-# Research: Winter Sports (B1 M84)
+# Дослідження: Зимові види спорту
 
-**Note:** The prompt incorrectly identified this as an A1 module with "alphabet-only" prior knowledge. This research is calibrated for **Level B1 (Module 84)**, assuming knowledge of all cases, aspects, and motion verbs, consistent with the B1 curriculum plan.
+## State Standard Reference
+§3.4: "Дозвілля, відпочинок: види спорту і спортивних споруд (стадіон, басейн, корт, ковзанка)"
+Alignment: Module covers winter sports (skiing/snowboarding) and resort facilities, directly addressing the leisure and sports requirements.
 
-## 1. Grammar: State Standard 2024 Reference
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| лижі | High (Historic term) | кататися на лижах, гірські лижі, лижний костюм, лижні черевики |
+| сноуборд | Medium (Anglicism) | катання на сноуборді, сноубордист, дошка для сноуборду |
+| схил | High | крутий схил, навчальний схил, північний схил |
+| витяг | High (Native term for 'lift') | крісельний витяг, бугельний витяг, черга на витяг |
+| курорт | High | гірськолижний курорт, зимовий курорт, їхати на курорт |
 
-According to **Державний стандарт української мови як іноземної (2024)**, Level B1 proficiency includes the ability to discuss leisure, hobbies, and travel.
+## Cultural Hooks
+1. **Буковель**: The largest ski resort in Eastern Europe, located at 920m. Famous for the artificial "Lake of Youth" (Озеро Молодості) and 68km of slopes.
+2. **Драгобрат**: The highest ski resort in Ukraine (1300-1700m) in the Svydovets massif. Known for natural snow from November to May and being a hub for freeriding.
 
-> **Розділ IV. Зміст навчання. Рівень B1 (Рубіжний)**
-> **Соціокультурна компетенція:**
-> *   «Сфери спілкування: Дозвілля, відпочинок, інтереси... Подорожі Україною.»
-> *   «Тематика: Види спорту. Активний відпочинок. Туризм.»
->
-> **Мовна компетенція:**
-> *   «Вміння описувати події, враження, плани на майбутнє.»
-> *   «Використання дієслів руху з префіксами (з'їхати, піднятися).»
+## Common Learner Errors
+1. **Wrong Preposition**: *кататися з лижами* → *кататися на лижах* — Confusion with instrumental "with".
+2. **Case Error**: *на лиж* (Acc) or *на лижами* (Instr) → *на лижах* (Locative Plural) — Locative case required for the instrument of transport in this context.
+3. **Verb Choice**: *їздити на лижах* vs *кататися на лижах* — *Кататися* implies recreational loop movement, while *їздити* is more general/transport-focused.
 
-## 2. Vocabulary Frequency
+## Cross-References
+- Builds on: b1-83 (Cycling and Water Sports - leisure vocab)
+- Prepares for: b1-85 (Ukrainian Cuisine - ordering food at the resort)
 
-### High Frequency (Core B1)
-*   **зима** (winter)
-*   **сніг** (snow)
-*   **гора / у горах** (mountain / in the mountains)
-*   **лижі / кататися на лижах** (skis / to ski)
-*   **спорт** (sports)
-*   **холодно** (cold)
-
-### Theme-Specific (Target Vocabulary)
-*   **сноуборд** (snowboard)
-*   **курорт** (resort)
-*   **схил** (slope)
-*   **траса** (track/run)
-*   **підйомник** (ski lift)
-*   **спорядження** (equipment/gear)
-*   **шолом** (helmet)
-*   **інструктор** (instructor)
-*   **лавина** (avalanche)
-*   **санчата** (sled)
-
-### Common Collocations
-*   **кататися на лижах / на сноуборді** (to ski / to snowboard) — *Note: always use 'кататися на' + Locative.*
-*   **гірськолижний курорт** (ski resort)
-*   **їхати в Карпати** (to go to the Carpathians)
-*   **оренда спорядження** (equipment rental)
-*   **синій/червоний/чорний схил** (blue/red/black slope)
-
-## 3. Cultural Hook
-
-### Bukovel vs. Drahobrat
-*   **Bukovel (Буковель):** The largest and most modern ski resort in Eastern Europe (Ivano-Frankivsk region). Culturally, it represents "modern, European-service Ukraine" but is also stereotyped for high prices («Буковельські ціни»). It is a status symbol for winter vacations.
-*   **Drahobrat (Драгобрат):** The highest ski resort in Ukraine (1300-1700m). Accessible only by specialized truck (GAZ-66/UAZ) due to lack of paved roads. It has a cult following among freeriders and those seeking "wild" nature. It often has snow when others don't (until May).
-
-### Winter Traditions
-*   Winter sports are deeply integrated with the New Year/Christmas holiday season (January). Many Ukrainians take vacations to the Carpathians («в Карпати») specifically during the winter holidays.
-
-## 4. Pedagogical Notes
-
-### Key Differences & Challenges
-*   **Verb Choice:** English speakers say "to ski". Ukrainian uses the phrase **кататися на лижах** (literally "to roll/ride on skis"). The verb *лижувати* exists but is rare/dialectal; *кататися* is the standard.
-*   **Preposition & Case:**
-    *   Activity: *на* + Locative (*на лижах*, *на сноуборді*, *на санчатах*).
-    *   Location: *у* + Locative (*у горах*, *у Карпатах*) but often *на* + Locative for the resort name (*на Буковелі*, *на Драгобраті*).
-*   **Motion Verbs:**
-    *   *піднятися* (to go up/ascend) — taking the lift.
-    *   *спуститися / з'їхати* (to go down/descend) — skiing down.
-    *   *впасти* (to fall) — frequent context for beginners.
-
-### Teaching Sequence
-1.  Review **Locative case** (plural for mountains/skis).
-2.  Introduce **equipment vocabulary**.
-3.  Drill **кататися на + [Locative]**.
-4.  Introduce **resort infrastructure** (lift, pass, hotel).
-5.  Practice **booking dialogues** (renting gear, buying ski pass).
-6.  Discuss **safety/conditions** (weather, slopes).
-
-## 5. Scope Boundaries
-
-### IN Scope (Reinforcement & Expansion)
-*   **Grammar:** Locative case (Plural), Accusative case (Direction), Past tense (Perfective for completed trips), Motion verbs (prefixed: *з'-, під-, ви-*).
-*   **Topics:** Vacation planning, renting equipment, describing weather/nature, expressing preference.
-
-### OUT Scope (Too Advanced)
-*   **Highly technical slang:** Terms like "piste basher" or specific trick names (unless loanwords).
-*   **Complex medical terminology:** Deep details of injuries (stick to basic "broken leg" or "hurt").
-*   **Nuanced meteorological data:** Keep weather descriptions practical (fog, wind, snowstorm).
+## Notes for Content Writing
+- Use "витяг" preferentially over "підйомник" as the more standard Ukrainian term for ski lift, though both are used.
+- Highlight the contrast between Bukovel (developed, family-friendly, expensive) and Drahobrat (wild, high-altitude, freeride, harder access).
+- Include specific mentions of "колиба" (mountain hut restaurant) as a culturally specific facility type on resorts.

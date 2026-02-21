@@ -1,0 +1,103 @@
+module: a1-26
+level: A1
+sequence: 26
+slug: describing-things-adjectives
+version: '2.0'
+title: Describing Things - Adjectives
+subtitle: Adjective Agreement in Gender and Number
+content_outline:
+- section: Warm-up
+  points:
+  - Опис предметів навколо — start with simple, tangible objects in the immediate
+    environment
+  - Питання Який? Яка? Яке? — reinforce the connection to gender questions from A1-03
+- section: Presentation
+  points:
+  - 'Тверда група (-ий/-а/-е/-і) — State Standard §4.2.1.2: focus on Nominative case
+    forms'
+  - 'Приклади (новий дім, нова книга, нове вікно) — use collocations: «новий будинок»,
+    «новий рік»'
+  - 'Узгодження з родом іменника — learner error: Gender Mismatch (e.g., «новий машина»
+    instead of «нова машина»)'
+- section: Presentation 2
+  points:
+  - 'Закінчення -ій/-я/-є/-і — learner error: Hard/Soft Stem Confusion (e.g., «синий»
+    instead of «синій»)'
+  - 'Приклади (синій, синя, синє, сині) — content note: focus primarily on «синій»
+    to keep soft stem introduction manageable at A1'
+- section: Presentation 3
+  points:
+  - Прикметник перед іменником (гарний день) — use collocation «гарна погода»
+  - Прикметник після бути (День гарний) — contrast predicative position
+- section: Presentation 4
+  points:
+  - 'Великий ↔ малий, новий ↔ старий — cultural hook: describe St. Sophia''s Cathedral
+    (Софійський собор) as «великий» and «старий» symbol of Kyivan Rus'' architecture'
+  - Добрий ↔ поганий, дорогий ↔ дешевий — use collocations «добрий день», «погана
+    погода»
+- section: Presentation 5
+  points:
+  - Опис кімнати (велика кімната, біле вікно) — practice gender agreement with physical
+    spaces
+  - 'Опис людей (молода жінка, добрий чоловік) — cultural hook: use folklore figure
+    «Мавка» to practice «молода», «гарна», «цікава»'
+- section: Practice
+  points:
+  - Діалог про новий телефон — practice «новий» with masculine noun
+  - Діалог про квартиру — practice «новий», «великий», «старий» with feminine noun
+- section: Practice 2
+  points:
+  - Опис свого дому/кімнати — synthesize all forms in a coherent description
+vocabulary_hints:
+  required:
+  - 'новий (new) — collocations: новий будинок, новий рік, новий друг'
+  - 'старий (old) — collocations: старий будинок, старий друг, стара книга'
+  - 'гарний (beautiful, nice) — collocations: гарна погода, гарний день, гарна квітка'
+  - 'великий (big) — collocations: велике місто, велика родина, великий дім'
+  - 'малий (small) — collocations: малий будинок, мала дитина, мале вікно'
+  - 'добрий (good, kind) — collocations: добрий день, добра людина, добрий ранок'
+  - 'поганий (bad) — collocations: погана погода, поганий настрій'
+  - 'цікавий (interesting) — collocations: цікава книга, цікавий фільм, цікава людина'
+  recommended:
+  - синій (blue) — primary example for soft stem adjectives
+  - червоний (red) — common hard stem adjective
+  - молодий (young) — useful for describing people (Mavka)
+  - дорогий (expensive) — useful for shopping context
+  - дешевий (cheap) — useful for shopping context
+  - смачний (tasty) — useful for food context
+activity_hints:
+- type: fill-in
+  focus: Change adjective gender
+  items: 25
+- type: fill-in
+  focus: Complete with correct adjective form
+  items: 20
+- type: match-up
+  focus: Match adjectives to nouns
+  items: 15
+- type: fill-in
+  focus: Describe pictures using adjectives
+  items: 8
+focus: grammar
+pedagogy: PPP
+prerequisites:
+- a1-03 (The Gender Code)
+- a1-25 (My Daily Routine)
+connects_to:
+- a1-27 (Colors and Clothing)
+- a1-28 (Description - Adverbs)
+objectives:
+- Learner can use correct adjective endings for masculine nouns
+- Learner can use correct adjective endings for feminine nouns
+- Learner can use correct adjective endings for neuter nouns
+- Learner can form plural adjective forms
+grammar:
+- Adjective endings for gender (m/f/n)
+- Hard stem adjectives (-ий/-а/-е/-і)
+- Soft stem adjectives (-ій/-я/-є/-і)
+register: розмовний
+phase: A1.3 [Consolidation]
+persona:
+  voice: Patient Supportive Tutor
+  role: Real Estate Agent
+word_target: 2000

@@ -1,4 +1,3 @@
----
 module: c1-hist-078
 level: c1-hist
 sequence: 78
@@ -10,55 +9,47 @@ objectives:
 - 'Analyze the causes and consequences of крим: багатошарова історія'
 - Evaluate the historical significance of шари історії
 content_outline:
-- section: "Вступ — Шари історії"
-  words: 457
+- section: Вступ — Шари історії
   subsections:
   - Крим — не тільки росіяни
   - Греки, татари, українці, росіяни
   - Кожен шар — своя історія
   - Структура модуля
 - section: Античний Крим
-  words: 571
   subsections:
   - Грецькі колонії
   - Скіфи і таври
   - Боспорське царство
   - Візантійська спадщина
 - section: Кримське ханство (1441-1783)
-  words: 800
   subsections:
   - Татарська держава
   - Відносини з Україною — набіги, але й торгівля
   - Кримськотатарська культура
   - Анексія Росією — 1783
 - section: Російський Крим (1783-1991)
-  words: 686
   subsections:
   - Колонізація — виселення татар
   - Севастополь — імперський символ
   - «Потьомкінські села»
   - Українці в Криму
 - section: Депортація 1944
-  words: 571
   subsections:
   - Звинувачення в колаборації
   - Масова депортація
   - Смертність
   - Повернення після 1989
 - section: 1954 і 2014
-  words: 571
   subsections:
   - Передача Україні — що це було
   - Автономія в Україні
   - Анексія 2014
   - Окупація
 - section: Підсумок
-  words: 344
   subsections:
   - Крим — не російський
   - Багатошарова спадщина
   - Перехід до Півдня
-word_target: 4000
 vocabulary:
 - Крим
 - Кримське ханство
@@ -79,24 +70,24 @@ activities:
 - type: critical-analysis
   focus: Map Crimea's historical layers
 - type: reading
-  focus: "Crimean Khanate — beyond raids"
+  focus: Crimean Khanate — beyond raids
 - type: critical-analysis
-  focus: "1944 deportation — mechanism and legacy"
+  focus: 1944 deportation — mechanism and legacy
 - type: critical-analysis
   focus: 1954 transfer vs. 2014 annexation
 - type: essay-response
   focus: Чий Крим? Історичні аргументи різних сторін
 sources:
 - name: Крим (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Крим"
+  url: https://uk.wikipedia.org/wiki/Крим
   type: reference
   notes: Regional overview
 - name: Кримське ханство (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Кримське_ханство"
+  url: https://uk.wikipedia.org/wiki/Кримське_ханство
   type: reference
   notes: Tatar state
 - name: Кримські татари (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Кримські_татари"
+  url: https://uk.wikipedia.org/wiki/Кримські_татари
   type: reference
   notes: Crimean Tatars
 vocabulary_hints:
@@ -115,7 +106,9 @@ activity_hints:
   items: 4
 - type: essay-response
   focus: Критичний аналіз
-  word_target: 300
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Crimean Tatar Historian

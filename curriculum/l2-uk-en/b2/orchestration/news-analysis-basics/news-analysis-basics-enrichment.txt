@@ -1,0 +1,341 @@
+✅ Message sent to Gemini (ID: 10645) [auto-acked: self-addressed]
+✓ Message 10645 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10645...
+📨 Message #10645
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-news-analysis-basics
+   Time: 2026-02-20T20:46:46.131335+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b2-89
+level: B2
+sequence: 89
+slug: news-analysis-basics
+version: '2.0'
+title: 'Аналіз новин: Основи'
+subtitle: Reading news critically
+content_outline:
+- section: Вступ
+  points:
+  - 'Роль новин у сучасному суспільстві - інформування, формування громадської думки
+    — modern context: Telegram channels vs traditional media'
+  - Відмінність між якісною журналістикою та інфотейнментом
+  - Медіаграмотність як критична навичка в епоху інформаційного перевантаження
+  - 'Українські новинні джерела - ландшафт медіа після 2014 року — cultural hook:
+    Gazette de Leopol (1776) as first periodical in Lviv'
+  - Перехід від професійних звітів (М87-88) до критичного читання публіцистики
+- section: Імерсивна розповідь
+  subsections:
+  - name: Структура новинної статті
+    points:
+    - 'Заголовок: привернення уваги vs інформативність'
+    - 'Лід (перший абзац): відповідає на 5W1H (хто, що, де, коли, чому, як)'
+    - 'Тіло статті: перевернута піраміда - від найважливішого до деталей'
+    - 'Цитати джерел: пряма мова, атрибуція'
+    - 'Висновок або контекст: широкий погляд, наслідки'
+  - name: Головна думка vs деталі
+    points:
+    - Головна думка зазвичай у ліді - що сталося і чому це важливо
+    - 'Деталі, що підтримують: факти, цифри, цитати експертів'
+    - Відмінність між основною інформацією та фоновим контекстом
+    - Як швидко сканувати статтю для розуміння суті
+    - 'Перевірка: чи відповідає заголовок змісту статті?'
+  - name: Факт vs думка
+    points:
+    - 'Факт: можна перевірити, має джерело, нейтральна мова'
+    - 'Думка: оцінне судження, інтерпретація, може бути суб''єктивною'
+    - 'Маркери думок: на мою думку, експерти вважають, ймовірно'
+    - Факти в контексті аналітичних статей та колонок
+    - 'Змішані форми: репортаж з елементами коментаря'
+  - name: Упередженість та забарвлена мова
+    points:
+    - 'Упередженість (bias): систематичне схилення до певної позиції'
+    - 'Забарвлена мова: емоційні слова замість нейтральних (терорист vs боєць)'
+    - 'Вибіркове цитування: показ тільки однієї сторони дискусії'
+    - 'Заголовки-кліки: сенсаційність замість точності'
+    - 'Баланс джерел: чи представлені різні погляди?'
+  points: []
+- section: Аналіз
+  subsections:
+  - name: Медіаграмотність у практиці
+    points:
+    - Перевірка джерел - хто автор, чи є експертиза, чи авторитетне видання
+    - Крос-референція - порівняння з іншими джерелами
+    - Розпізнавання фейків - нереалістичні заголовки, відсутність дат, фотошоп
+    - Розуміння бізнес-моделі медіа - від кого залежить фінансування
+  - name: Публіцистичний стиль у новинах
+    points:
+    - 'Публіцистичний регістр: баланс інформативності та впливовості'
+    - 'Стандартні формули: за даними, як повідомляють, джерела стверджують'
+    - 'Активний vs пасивний стан: хто виконує дію'
+    - 'Термінологія vs зрозумілість: коли спрощувати для масової аудиторії'
+  - name: Типи новинних матеріалів
+    points:
+    - 'Репортаж: факти без оцінки'
+    - 'Аналітична стаття: контекст, причини, наслідки'
+    - 'Колонка (opinion piece): авторська позиція'
+    - 'Інтерв''ю: запитання та відповіді з експертом або діячем'
+    - 'Розслідування: журналістське дослідження з викриттям'
+  points: []
+- section: Граматика в контексті
+  subsections:
+  - name: Цитування та пряма мова
+    points:
+    - 'Дієслова мовлення: повідомити, заявити, зазначити, підкреслити'
+    - 'Атрибуція цитат: джерело перед або після цитати'
+    - 'Непряма мова: трансформація цитат у переказ'
+    - 'Лапки та пунктуація: правила оформлення прямої мови'
+    - 'Advanced reported speech (State Standard §4.3.5): reporting thoughts vs words,
+      mixed sentence type reporting, free indirect discourse (невласне пряма мова)
+      in literary journalism'
+  - name: Модальність та ймовірність
+    points:
+    - 'Модальні слова: ймовірно, можливо, очевидно, безумовно'
+    - 'Умовний спосіб: якби, міг би, варто було б'
+    - Вираження невпевненості vs категоричності у твердженнях
+    - 'Атрибуція невизначеності: за неофіційними даними, джерела припускають'
+  points: []
+- section: Підсумок
+  points:
+  - 'Синтез навичок: від структурованих звітів до критичного читання новин'
+  - 'Ключові принципи медіаграмотності: перевірка джерел, факт vs думка, баланс'
+  - 'Перехід до поглибленого аналізу (М90): риторика, маніпуляції, дезінформація'
+focus: skills
+pedagogy: CBI
+objectives:
+- Learner can identify main ideas and supporting details in news articles
+- Learner can distinguish between facts and opinions in news reporting
+- Learner can recognize basic news article structure (headline, lead, body)
+- Learner can identify potential bias and loaded language in news texts
+- Learner can apply basic media literacy principles to Ukrainian news sources
+phase: B2.4 Communication Skills
+vocabulary_hints:
+  required:
+  - джерело (source) — надійне джерело, офіційне джерело, посилатися на джерело
+  - заголовок (headline) — гучний заголовок, кричущий заголовок, винести в заголовок
+  - упередженість (bias) — політична упередженість, явна упередженість, уникнути упередженості
+  - спростування (refutation/denial) — офіційне спростування, вимагати спростування
+  - фейк (fake) — поширювати фейки, розвінчувати фейки, діпфейк, фейкові новини
+  - експерт (expert) — на думку експертів, залучити експертів, військовий експерт
+  - репортаж (reportage) — вести репортаж, репортаж з місця подій
+  recommended:
+  - аналіз (analysis) — глибокий аналіз, критичний аналіз
+  - синтез (synthesis) — синтез інформації
+  - дослідження (research) — журналістське розслідування
+activity_hints:
+- type: reading
+  focus: Аналіз тексту
+  items: 4
+- type: essay-response
+  focus: Практичне застосування
+- type: true-false
+  focus: Перевірка розуміння
+  items: 8
+persona:
+  voice: Professional Language Coach
+  role: Fact-Checker (Фактчекер)
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Аналіз новин: Основи
+
+## State Standard Reference
+§3.18: "Медіа й соціальні мережі: преса; радіо; телебачення; інтернет і соціальні мережі."
+§4.3.5: "Пряма і непряма мова (сполучники що, щоб, частка чи в разі заміни прямої мови непрямою): Студент відповів: «Я пропустив заняття через хворобу». – Студент відповів, що пропустив заняття через хворобу."
+
+Alignment: Module B2-89 focuses on critical reading of news media (§3.18) and the grammatical transformation of citations using direct/indirect speech (§4.3.5), which is essential for analyzing sources and reporting.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| **джерело** (source) | High (MOVA.info Publicistic) | надійне джерело, офіційне джерело, посилатися на джерело, згідно з джерелами |
+| **заголовок** (headline) | Medium-High | гучний заголовок, кричущий заголовок, винести в заголовок |
+| **упередженість** (bias) | Medium (Academic/Media) | політична упередженість, явна упередженість, уникнути упередженості |
+| **спростування** (refutation/denial) | Medium | офіційне спростування, вимагати спростування, опублікувати спростування |
+| **фейк** (fake) | High (Modern Media) | поширювати фейки, розвінчувати фейки, діпфейк, фейкові новини |
+| **експерт** (expert) | High | на думку експертів, залучити експертів, військовий експерт |
+| **репортаж** (reportage) | Medium | вести репортаж, репортаж з місця подій, спеціальний репортаж |
+
+## Cultural Hooks
+1. **Gazette de Leopol (1776)**: The first periodical on Ukrainian lands was published in Lviv in French. It marks the beginning of the press tradition, showing Ukraine's long-standing integration into European information space.
+2. **Georgiy Gongadze & Ukrayinska Pravda**: The tragic story of journalist Georgiy Gongadze (founder of "Ukrayinska Pravda" in 2000) is a pivotal moment in Ukrainian media history, symbolizing the fight for freedom of speech and the high cost of truth.
+3. **War Correspondence**: Since 2014, Ukrainian journalism has evolved significantly, with figures like Andriy Tsapliyenko or Mykhailo Tkach setting standards for reporting from conflict zones and investigative journalism under extreme conditions.
+
+## Common Learner Errors
+1. **Pronoun Retention in Indirect Speech**: *Він сказав: «Я не згоден»* → *Він сказав, що я не згоден* (Incorrect). Should be: *Він сказав, що **він** не згоден*.
+   *Why*: Learners forget to shift perspective from 1st/2nd person to 3rd person.
+2. **Punctuation with Quotes**: Placing punctuation inside vs. outside quotes. Ukrainian rule: Period goes *after* the closing quote (unlike US English). *Він сказав: «Це правда».*
+3. **Calquing Passive Voice**: Using *Було повідомлено* (It was reported) instead of active *Повідомили* or *ЗМІ повідомили*. Ukrainian publicistic style prefers active structures or generalized personal sentences.
+
+## Cross-References
+- **Builds on**: B2-87 (Professional Reports), B2-88 (Formal Writing).
+- **Prepares for**: B2-90 (Advanced Analysis/Rhetoric), C1 Media Modules.
+
+## Notes for Content Writing
+- **Tone**: The "Professional Language Coach" persona should emphasize critical thinking ("Don't just read, analyze").
+- **Stylistics**: Explicitly contrast "neutral reporting" (informative) with "opinion pieces" (publicistic/emotional) using lexical markers.
+- **Grammar in Context**: Use actual news headlines or snippets (adapted) to demonstrate direct $\to$ indirect speech transformations.
+- **Modern Context**: Mention Telegram channels as a modern (and often unverified) source of news, contrasting them with traditional editorial media.
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction: The Power of Information)"
+  words: 600
+  points:
+  - "Роль новин у сучасному суспільстві: від інформування до формування порядку денного (agenda-setting)"
+  - "Історичний контекст (Cultural Hook): Gazette de Leopol (1776) як перше періодичне видання у Львові, що засвідчує європейську тяглість українського медіапростору"
+  - "Сучасний ландшафт (State Standard §3.18): Традиційні медіа vs Telegram-канали та соціальні мережі як неперевірені джерела"
+  - "Медіаграмотність як екзистенційна навичка: відмінність між якісною журналістикою та інфотейнментом в умовах інформаційної війни"
+- section: "Імерсивна розповідь (Immersive Narrative: The Anatomy of News)"
+  words: 1000
+  points:
+  - "Анатомія статті: структура 'перевернутої піраміди', правило 5W1H (хто, що, де, коли, чому, як) та роль ліда (першого абзацу)"
+  - "Символ свободи слова (Cultural Hook): Історія Георгія Гонгадзе та заснування 'Української правди' як поворотний момент у боротьбі за чесну журналістику"
+  - "Факт проти думки: маркери суб'єктивності ('на мою думку', 'ймовірно') та нейтральна лексика фактчекінгу"
+  - "Упередженість та забарвлена мова: аналіз емоційних маніпуляцій та використання 'ярликів' замість об'єктивної атрибуції"
+- section: "Аналіз та критичне мислення (Analysis and Critical Thinking)"
+  words: 1000
+  points:
+  - "Типологія матеріалів: репортаж (факти), аналітика (контекст), колонка (позиція) та журналістське розслідування"
+  - "Стандарти в екстремальних умовах (Cultural Hook): Робота воєнних кореспондентів (А. Цаплієнко, М. Ткач) та еволюція українського репортажу з 2014 року"
+  - "Практика медіагігієни: крос-референція джерел, розпізнавання діпфейків та перевірка фінансування медіаструктур"
+  - "Публіцистичний регістр: баланс між інформативністю та впливом на аудиторію, використання специфічної термінології"
+- section: "Граматика та стилістика (Grammar and Stylistics)"
+  words: 1000
+  points:
+  - "Трансформація цитат (State Standard §4.3.5): Правила переходу від прямої до непрямої мови за допомогою сполучників 'що', 'щоб' та частки 'чи'"
+  - "Подолання помилок (Learner Error 1): Усунення збереження займенників 1-ї особи в непрямій мові (заміна 'Я' на 'Він/Вона')"
+  - "Пунктуаційна точність (Learner Error 2): Правильне оформлення лапок та крапки (крапка ставиться ПІСЛЯ закритих лапок)"
+  - "Уникнення кальок (Learner Error 3): Заміна пасивних конструкцій ('Було повідомлено') активними формами ('Повідомили', 'ЗМІ повідомляють')"
+  - "Модальність та ймовірність: Використання слів 'ймовірно', 'за неофіційними даними', 'джерела припускають' для маркування ступеня достовірності"
+- section: "Підсумок та синтез (Summary and Synthesis)"
+  words: 400
+  points:
+  - "Синтез навичок: від розуміння структури до виявлення прихованої упередженості"
+  - "Чек-лист фактчекера (Persona: Fact-Checker): Перевірка автора, джерел, дати та емоційного забарвлення тексту"
+  - "Підготовка до наступного етапу (Connects to B2-90): Перехід до аналізу риторичних стратегій та методів маніпуляції"
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "джерело (source) — надійне джерело, офіційне джерело, посилатися на джерело, згідно з джерелами (High Frequency)"
+  - "заголовок (headline) — гучний заголовок, кричущий заголовок, винести в заголовок (Publicistic Register)"
+  - "упередженість (bias) — політична упередженість, явна упередженість, уникнути упередженості (Academic/Media Context)"
+  - "спростування (refutation/denial) — офіційне спростування, вимагати спростування, опублікувати спростування"
+  - "фейк (fake) — поширювати фейки, розвінчувати фейки, діпфейк, фейкові новини (Modern High Frequency)"
+  - "експерт (expert) — на думку експертів, залучити експертів, військовий експерт (High Frequency in Media)"
+  - "репортаж (reportage) — вести репортаж, репортаж з місця подій, спеціальний репортаж"
+  recommended:
+  - "медіаграмотність (media literacy) — рівень медіаграмотності, підвищувати медіаграмотність"
+  - "маніпуляція (manipulation) — емоційна маніпуляція, маніпуляція фактами"
+  - "атрибуція (attribution) — точна атрибуція цитат"
+  - "достовірність (reliability/authenticity) — перевіряти достовірність інформації"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4281 chars)
+✅ Message sent to Claude (ID: 10654)
+✓ Message 10654 acknowledged
+   Auto-acknowledged reply #10654 (stdout delivery — no inbox accumulation)
+✓ Message 10645 acknowledged

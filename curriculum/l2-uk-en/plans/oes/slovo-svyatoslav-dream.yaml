@@ -1,4 +1,3 @@
----
 sequence: 81
 module: oes-081
 module_number: 81
@@ -9,7 +8,6 @@ phase: 4
 phase_id: literary-art
 phase_name: Literary Art
 focus: Symbolism (Pearls, wines, roofs)
-word_target: 4000
 content_outline:
 - section: Вступ
   description: 'Introduction to Slovo: Svyatoslav''s Dream'
@@ -24,3 +22,6 @@ activity_types:
 - transcription
 - etymology-trace
 - grammar-identify
+persona:
+  voice: Senior Paleographer
+  role: Interpreter of Omens

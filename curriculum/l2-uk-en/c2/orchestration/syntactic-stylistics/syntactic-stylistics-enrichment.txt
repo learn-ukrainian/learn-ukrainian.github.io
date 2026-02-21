@@ -1,0 +1,324 @@
+✅ Message sent to Gemini (ID: 11132) [auto-acked: self-addressed]
+✓ Message 11132 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #11132...
+📨 Message #11132
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-syntactic-stylistics
+   Time: 2026-02-20T22:25:52.373066+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c2-013
+level: c2
+sequence: 13
+version: '2.0'
+title: Синтаксична стилістика — Різноманітність речень
+focus: stylistics
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Пономарів О. Стилістика сучасної української мови
+  url: https://r2u.org.ua/
+  type: primary
+  notes: Canonical Ukrainian stylistics textbook
+- name: Синтаксис української мови — НАН
+  url: https://www.nbuv.gov.ua/
+  type: reference
+  notes: Academic analysis of Ukrainian syntax
+- name: Ukrainian State Standard 2024 — Syntactic mastery
+  url: https://mon.gov.ua/
+  type: reference
+  notes: C2 requirements for sentence variety
+content_outline:
+- section: Вступ — Синтаксис як інструмент стилю
+  points:
+  - Зв'язок синтаксису та ритму
+  - Вплив структури речення на сприйняття
+  - Синтаксична норма та відхилення
+- section: Просте vs складне речення
+  points:
+  - Функції простих речень
+  - Коли використовувати складні
+  - Чергування для ритму
+  - Авторський вибір
+- section: Довжина речення
+  points:
+  - Короткі речення — наголос, драма
+  - Довгі речення — плин думки
+  - Варіювання для ефекту
+  - Аналіз прозаїків
+- section: Інверсія та порядок слів
+  points:
+  - Нейтральний порядок слів
+  - Інверсія для наголосу
+  - Тема-рема структура
+  - Стилістичні функції порядку
+- section: Спеціальні конструкції
+  points:
+  - Еліпсис — пропуск для стислості
+  - Повтор — для підсилення
+  - Паралелізм — для ритму
+  - Градація — для наростання
+- section: Риторичні фігури
+  points:
+  - Риторичні запитання
+  - Окличні речення
+  - Звертання
+  - Парцеляція
+- section: Практикум — Робота з реченням
+  points:
+  - Трансформація простих у складні
+  - Створення абзацу з синтаксичною різноманітністю
+  - Аналіз синтаксису літературного тексту
+  - Редагування монотонного синтаксису
+vocabulary:
+  required:
+  - інверсія (inversion)
+  - еліпсис (ellipsis)
+  - паралелізм (parallelism)
+  - градація (gradation)
+  - парцеляція (parcellation)
+  - риторичний (rhetorical)
+  - тема (theme/topic)
+  - рема (rheme/comment)
+  - анафора (anaphora)
+  - епіфора (epiphora)
+  recommended:
+  - асиндетон (asyndeton)
+  - полісиндетон (polysyndeton)
+  - хіазм (chiasmus)
+  - антиклімакс (anticlimax)
+  - апосіопеза (aposiopesis)
+  forbidden: '[]'
+activities:
+  types_required:
+  - quiz
+  - fill-in
+  - error-correction
+  - critical-analysis
+  - essay-response
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c2-22 (Rhythm & prosody builds on syntax)
+- c2-16 (Text coherence uses syntactic linking)
+- c2-14 (Individual voice through syntactic preferences)
+vocabulary_hints:
+  required:
+  - концепція (concept)
+  - аналіз (analysis)
+  - дискурс (discourse)
+  - методологія (methodology)
+  recommended:
+  - інтерпретація (interpretation)
+  - контекстуалізація (contextualization)
+  - синтез (synthesis)
+activity_hints:
+- type: reading
+  focus: Поглиблений аналіз тексту
+  items: 4
+- type: essay-response
+  focus: Критичне осмислення
+- type: discussion
+  focus: Дискусія та аргументація
+  items: 1
+persona:
+  voice: Senior Specialist
+  role: Syntax Architect
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Синтаксична стилістика — Різноманітність речень
+
+## State Standard Reference
+§4.3.4: "Стилістичні засоби синтаксису: звертання... еліпсис... повтор... порівняння... уточнення... елементи структурування тексту (вставні слова)... риторичні запитання."
+Alignment: This module directly addresses the requirement for "Complete syntactic stylistics" at C2 level (lines 5714-5729), covering all listed figures plus parceling and period, which are implied by "modernist syntax".
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| інверсія | Academic/Literary | стилістична інверсія, порядок слів, логічний наголос |
+| парцеляція | Literary/Linguistic | явище парцеляції, розчленування речення, інтонаційний розрив |
+| еліпсис | Literary/Spoken | еліптичне речення, динамізм мовлення, пропуск присудка |
+| градація | Rhetoric/Poetry | висхідна градація (клімакс), спадна градація (антиклімакс), емоційне напруження |
+| синтаксичний паралелізм | Folk/Poetry | народнопоетичний паралелізм, строфічний паралелізм, симетрія рядків |
+
+## Cultural Hooks
+1. **Marusia Churai & Folk Songs**: Syntactic parallelism is the heartbeat of Ukrainian folk poetry. Example: «Як ми кохалися, як зерно в горісі, / Тепер розійшлися, як туман по лісі!» (Psychological parallelism).
+2. **Impressionism & Parceling**: Mykhailo Kotsiubynsky ("Intermezzo") and Vasyl Stefanyk are masters of parceling (chopped syntax) to convey psychological stress or dynamic action. Example: «А повз неї тупали тисячі ніг... Великі, середні й маленькі...»
+3. **Shevchenko's Gradation**: Taras Shevchenko used ascending gradation masterfully to build emotional pressure: «І в'яне, сохне, гине, гине твоя єдиная дитина.»
+
+## Common Learner Errors
+1. **Overuse of direct word order (SVO)**: Learners often stick to rigid English-like SVO structure, missing the nuance of Ukrainian "Theme-Rheme" inversion for logical stress.
+2. **Choppy Syntax (Lack of flow)**: Avoiding complex sentences results in "telegraphic style". Correction: Use subordinate clauses and participial constructions to create rhythmic "periods".
+3. **Misuse of Parceling**: Breaking sentences randomly instead of logically isolating the rheme (new information) for emphasis.
+
+## Cross-References
+- Builds on: c2-16 (Text coherence), c2-14 (Individual voice)
+- Prepares for: c2-22 (Rhythm & prosody), c2-26 (Literary analysis)
+
+## Notes for Content Writing
+- **Stylistic contrast**: Contrast the "choppy" dynamic style of Stefanyk with the flowing, melodic "periods" of Nechuy-Levytsky.
+- **Rhythm**: Emphasize that syntax is not just grammar, but *rhythm* (breath).
+- **State Standard alignment**: Ensure explicitly covered figures include: звертання (address), уточнення (clarification/apposition), and вставні слова (parenthetical words) as text structurers.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Синтаксис як інструмент стилю (Introduction: Syntax as a Tool of Style)"
+  words: 500
+  points:
+  - "Аналіз синтаксису як 'дихання' тексту: зв'язок між структурою речення, ритмом та емоційним сприйняттям читача."
+  - "Відповідність вимогам Державного стандарту (§4.3.4): огляд синтаксичних засобів (звертання, вставні слова, уточнення) як елементів структурування тексту."
+  - "Поняття синтаксичної норми та стилістичного відхилення: коли порушення граматичного очікування стає мистецьким прийомом."
+- section: "Порядок слів: Тема, Рема та Стилістична інверсія (Word Order: Theme, Rheme, and Stylistic Inversion)"
+  words: 800
+  points:
+  - "Дослідження структури 'Тема-Рема': як логічний наголос визначає порядок слів у гнучкому українському синтаксисі."
+  - "Learner error: Rigid adherence to English-like SVO (Subject-Verb-Object) order; drill the transformation of neutral sentences into expressive structures to avoid 'foreign' sounding mono-rhythm."
+  - "Функції інверсії: винесення реми на початок або кінець речення для створення смислової напруги (collocation: 'стилістична інверсія')."
+- section: "Фігури стиснення та накопичення: Еліпсис та Градація (Figures of Compression and Accumulation: Ellipsis and Gradation)"
+  words: 700
+  points:
+  - "Еліпсис у літературному та розмовному дискурсі: використання пропущеного присудка для створення динамізму мовлення та ефекту присутності."
+  - "Градація як засіб емоційного нагнітання: аналіз висхідної градації (клімаксу) у творчості Тараса Шевченка («І в'яне, сохне, гине...»)."
+  - "Розрізнення клімаксу та антиклімаксу: використання спадної градації для створення іронічного або трагічного ефекту."
+- section: "Ритм та симетрія: Паралелізм у народній та авторській поезії (Rhythm and Symmetry: Parallelism in Folk and Authorial Poetry)"
+  words: 750
+  points:
+  - "Cultural hook: Дослідження синтаксичного паралелізму на прикладі пісень Марусі Чурай («Як ми кохалися...»); поняття психологічного паралелізму."
+  - "Синтаксична симетрія: використання анафори та епіфори для структурування складних періодів та посилення ораторського пафосу."
+  - "Learner error: 'Choppy syntax' (lack of flow); correction through the use of subordinate clauses and participial constructions to create melodic rhythmic 'periods' (following Nechuy-Levytsky's style)."
+- section: "Емоційний синтаксис: Парцеляція та риторичні фігури (Emotional Syntax: Parcellation and Rhetorical Figures)"
+  words: 750
+  points:
+  - "Парцеляція як інструмент імпресіонізму: аналіз 'рваного' синтаксису Михайла Коцюбинського та Василя Стефаника для передачі психологічного стресу."
+  - "Learner error: Misuse of parcellation; drill the logical isolation of the rheme (new information) instead of random sentence breaking."
+  - "Риторичні запитання та вигуки: використання синтаксичних фігур для залучення читача до діалогу та створення експресивного підсумку."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "інверсія (inversion) — стилістична інверсія; зміна нейтрального порядку слів для логічного наголосу"
+  - "еліпсис (ellipsis) — еліптичне речення; пропуск члена речення для динамізму, характерний для прози та розмови"
+  - "паралелізм (parallelism) — психологічний паралелізм; симетрична побудова суміжних частин тексту, часто у фольклорі"
+  - "градація (gradation) — висхідна градація (клімакс), спадна градація (антиклімакс); розташування слів за наростанням чи спаданням значень"
+  - "парцеляція (parcellation) — явище парцеляції, розчленування речення; інтонаційний розрив для виділення важливої деталі"
+  - "риторичний (rhetorical) — риторичне запитання, риторичне звертання; фігура, що не потребує відповіді, а підсилює увагу"
+  - "тема (theme/topic) — відома інформація в реченні, основа для повідомлення нового"
+  - "рема (rheme/comment) — ядро повідомлення, нова інформація, що несе основне логічне навантаження"
+  - "анафора (anaphora) — єдинопочаток; повторення слів на початку речень для ритмізації"
+  - "епіфора (epiphora) — повторення однакових слів у кінці речень для емоційного акценту"
+  recommended:
+  - "асиндетон (asyndeton) — безсполучниковість; пропуск сполучників для швидкого темпу (collocation: 'динамічний асиндетон')"
+  - "полісиндетон (polysyndeton) — багатосполучниковість; надмірне вживання сполучників для сповільнення ритму та урочистості"
+  - "хіазм (chiasmus) — перехресне повторення елементів двох речень; створює ефект інтелектуальної гри чи завершеності"
+  - "антиклімакс (anticlimax) — спадна градація; раптове зниження емоційного тону, часто з іронічною метою"
+  - "апосіопеза (aposiopesis) — риторичне замовчування; переривання мовлення через хвилювання або з розрахунком на здогадку читача"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4791 chars)
+✅ Message sent to Claude (ID: 11141)
+✓ Message 11141 acknowledged
+   Auto-acknowledged reply #11141 (stdout delivery — no inbox accumulation)
+✓ Message 11132 acknowledged

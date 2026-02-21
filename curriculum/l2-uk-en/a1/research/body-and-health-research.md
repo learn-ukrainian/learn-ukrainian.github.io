@@ -1,59 +1,38 @@
-# Research Notes: Body & Health (A1 M31)
+# Дослідження: Body & Health
 
-**Track**: Core A1
-**Module**: 31-body-and-health
-**Level**: A1 (Beginner)
-**Researched**: 2026-02-08
+## State Standard Reference
+§4.2.1.4: "Займенник. Уживання відмінкових форм особових займенників: я (мене, мені), ти (тебе, тобі), ми (нас, нам), ви (вас, вам)."
+§4.3.2: "Складні (складнопідрядні) речення з підрядною частиною причини (сполучники тому що, бо): Віктор не може говорити, тому що він хворий."
+§3.10: "Здоров’я: частини тіла; самопочуття; хворобливі стани (болить, хворий, травма, висока температура); аптека."
+Alignment: Module teaches body parts (§3.10), "Мені погано" (Dative pronouns §4.2.1.4), and causal explanations for illness (§4.3.2).
 
-## 1. Grammar: State Standard 2024 Reference
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| голова | High (Top 100 nouns) | болить голова, головний біль, на голові |
+| рука | High | права/ліва рука, мити руки, на руках |
+| живіт | Med | болить живіт, спати на животі |
+| температура | Med | висока температура, міряти температуру, у мене температура |
+| ліки | Med | ліки від кашлю, пити ліки, купити ліки |
+| хворіти | Med | часто хворіти, хворіти на грип |
+| лікар | High | сімейний лікар, записатися до лікаря |
 
-According to the **Державний стандарт української мови як іноземної (2024)**, the topic of health and body parts is explicitly included in the A1 curriculum under:
+## Cultural Hooks
+1. **Tea Culture**: Ukrainians treat colds with tea involving raspberry (малина), viburnum (калина), or honey and lemon. "Пити чай з малиною" is the standard home remedy.
+2. **Pharmacy Signs**: The omnipresent green cross. The distinction between a full "Аптека" and a smaller "Аптечний пункт".
+3. **Proverb**: «У здоровому тілі — здоровий дух» (In a healthy body, healthy spirit) — widely used in education and sports contexts.
 
-> **§3.10. Здоров’я:**
-> - частини тіла;
-> - самопочуття;
-> - хворобливі стани (болить, хворий, травма, висока температура);
-> - аптека.
->
-> **§4.2.1.4. Займенник:** Уживання відмінкових форм особових займенників: я (мене, **мені**), ти (тебе, **тобі**), ми (нас, **нам**), ви (вас, **вам**).
+## Common Learner Errors
+1. **Agreement Error**: "У мене болять голова" (Subject is 'head', must be singular 'болить') → Correct: "У мене болить голова".
+2. **Case Error**: "Я погано" (Direct translation of 'I am bad') → Correct: "Мені погано" (Dative of state).
+3. **Verb Confusion**: "Я болю" (I hurt/cause pain) vs "У мене болить..." (It hurts me).
+4. **Vocabulary Confusion**: "Лікарня" (Hospital) vs "Лікар" (Doctor). Learners often say "Я йду в лікар" instead of "до лікаря".
 
-While a full "Visit to the Doctor" thematic category is formally mapped to A2 (§3.12), the A1 standard requires students to fulfill basic communication roles as a "patient" (пацієнт / пацієнтка) and handle emergency/basic medical needs (e.g., "Мені треба лікаря / ліки").
+## Cross-References
+- Builds on: a1-30 (Prepositions) — crucial for "у мене", "в аптеці".
+- Prepares for: a1-42 (Emergencies) — foundational symptoms vocabulary.
 
-## 2. Vocabulary Frequency
-
-### High Frequency (Essential A1)
-- **Parts of the Body**: голова (head), рука (arm/hand), нога (leg/foot), живіт (stomach), спина (back), око/очі (eye/eyes), вухо/вуха (ear/ears), горло (throat), зуб/зуби (tooth/teeth).
-- **Health/Medical**: лікар (doctor), аптека (pharmacy), ліки (medicine), температура (fever/temperature), біль (pain), кашель (cough).
-- **Adjectives/Verbs**: болить/болять (hurts), хворий (sick), здоровий (healthy), погано (badly/poorly), добре (well).
-
-### Common Collocations
-- **У мене болить...** (I have a pain in / my ... hurts).
-- **Висока температура** (High fever).
-- **Пити ліки** (To take medicine).
-- **Викликати швидку** (To call an ambulance - 103).
-
-## 3. Cultural Hook
-
-- **The "Apteka" Culture**: In Ukraine, pharmacies (*аптеки*) are ubiquitous and often serve as the first point of medical consultation. It is culturally standard to ask a pharmacist for advice on over-the-counter medication for common ailments like the flu or headaches. Many pharmacies in larger cities are open 24/7 (labeled *Цілодобово*).
-- **"Будьте здорові!"**: While used similarly to "Bless you" after a sneeze, this phrase is a core part of Ukrainian social etiquette, used in toasts and as a general well-wish for health, reflecting the deep cultural value placed on physical well-being.
-- **Emergency Number 103**: The specific number for the ambulance (*швидка допомога*) is a vital piece of survival information for foreigners in Ukraine.
-
-## 4. Pedagogical Notes
-
-- **"Болить" vs. "Болять"**: A common error for English speakers is using the singular *болить* for plural body parts (e.g., eyes, legs). Emphasis should be placed on the agreement with the subject: *Голова болить* (singular) vs. *Ноги болять* (plural).
-- **The "At me" Construction**: Students must transition from "I have a pain" to the Ukrainian possessive structure *У мене болить...*. This reinforces the Genitive case patterns learned in previous modules (M22-23).
-- **Formulaic Dative**: Since the full Dative case is not yet learned for nouns, phrases like *Мені погано* (I feel bad) and *Мені потрібно...* (I need...) should be taught as "chunks" or "formulaic expressions," relying on the personal pronoun forms (*мені, тобі, нам*) which are in the A1 standard.
-
-## 5. Scope Boundaries
-
-### IN Scope
-- **Cases**: Nominative (subject of *болить*), Genitive (possession *У мене*), Accusative (for objects like "to buy medicine"), and basic Personal Pronoun Dative (*Мені*).
-- **Tenses**: Present (*болить*), Past (*хворів*), and Future (*буду пити*).
-- **Modals**: *Хочу*, *можу*, *мушу* (e.g., "Я мужу йти до лікаря").
-- **Imperatives**: Simple medical commands like *Відкрийте рот* (Open your mouth) or *Дихайте* (Breathe).
-
-### OUT of Scope
-- **Instrumental Case**: Phrases like *хворіти на...* (to be sick with) or using the Instrumental for the illness. Stick to *У мене [Nouns]*.
-- **Full Dative Case**: Declining nouns in the Dative (e.g., *Дайте лікареві*).
-- **Complex Anatomy**: Internal organs (except *серце* or *живіт*) or complex skeletal/muscular terminology.
-- **Specialized Medical Jargon**: Diagnosis names beyond *грип* or *застуда*.
+## Notes for Content Writing
+- A1 Level constraint: Ensure "Мені погано" is taught as a set phrase or lexical chunk, not deep Dative case theory (which is A2).
+- Use visual aids description for body parts (singular vs plural: око/очі).
+- Emphasize the structure "У мене [Subject]" where the subject is the body part.

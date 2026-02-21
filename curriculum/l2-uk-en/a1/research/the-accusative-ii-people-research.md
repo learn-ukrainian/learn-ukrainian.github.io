@@ -1,49 +1,32 @@
-# Research Notes: The Accusative II: People
+# Дослідження: The Accusative II: People
 
-**Track**: a1
-**Module**: 12-the-accusative-ii-people
-**Researched**: 2026-02-08
-**Sources consulted**: 4
+## State Standard Reference
+§4.2.1.1: "форми знахідного та місцевого відмінків іменників чоловічого роду...: син (сина...), тато (тата...); учитель (учителя...); форми знахідного... іменників жіночого роду...: мама (маму...), сестра (сестру...)"
+Alignment: This module explicitly teaches the forms listed in §4.2.1.1 for animate nouns, covering the deviation for masculine nouns (Acc=Gen) and the standard pattern for feminine nouns.
 
-## Основні факти
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| брат | High (Core A1) | рідний брат, старший брат, мій брат |
+| сестра | High (Core A1) | рідна сестра, молодша сестра |
+| друг | High (Core A1) | найкращий друг, старий друг (old friend) |
+| мама | Very High | люблю маму, чекаю маму |
+| тато | Very High | бачу тата, знаю тата |
+| лікар | High (Professions) | чекати лікаря, викликати лікаря |
 
-- **Знахідний відмінок істот (Accusative Animate)**: Вживається для людей та тварин.
-- **Мапування форм**:
-  - Чоловічий рід однини: Знахідний = Родовий (закінчення -а, -я). Приклад: брат -> бачу брат**а**, лікар -> бачу лікар**я**.
-  - Жіночий рід однини: Знахідний має закінчення -у, -ю (як і у неістот). Приклад: сестра -> бачу сестр**у**.
-  - Множина (для довідки): Також збігається з родовим для істот.
-- **Тварини**: В українській мові тварини граматично є істотами. Приклад: кіт -> бачу кот**а**, пес -> бачу пс**а**.
+## Cultural Hooks
+1. **Friend vs. Acquaintance**: The word `друг` implies a much deeper bond in Ukrainian than "friend" in English. It is reserved for people you trust explicitly ("soulmates"). Casual contacts are `знайомий`.
+2. **Diminutives**: Adult Ukrainians frequently use diminutive forms for parents (`матуся`, `татусь`) and siblings (`братик`, `сестричка`) within the family circle, indicating warmth and closeness.
 
-## Хронологія (навчальна логіка)
+## Common Learner Errors
+1. **The Masculine Animate Trap**: `Я бачу *брат*` (Incorrect) → `Я бачу брата` (Correct). Learners often fail to apply the specific animate rule for masculine nouns, leaving them in Nominative like objects (`стіл`).
+2. **Feminine Overthinking**: `Я бачу *сестри*` (Incorrect) → `Я бачу сестру` (Correct). Learners wrongly generalize the "Accusative = Genitive" rule to feminine nouns, where it does NOT apply (Feminine Accusative is unique: -у/-ю).
+3. **Animal Animacy Confusion**: `Я маю *кіт*` (Incorrect) → `Я маю кота` (Correct). Learners forget that animals are grammatically "people" (animate).
 
-1. Протиставлення неістот (бачу стіл) та істот (бачу брата).
-2. Пояснення правила "Знахідний = Родовий" для чоловічого роду.
-3. Повторення правила для жіночого роду (воно однакове для істот і неістот).
-4. Введення дієслів взаємодії з людьми: знати, любити, чекати, розуміти.
-5. Практика з іменами (Андрій -> Андрія, Марія -> Марію).
+## Cross-References
+- Builds on: `a1-11` (The Accusative I - Things), `a1-05` (Genders & Nouns)
+- Prepares for: `a1-13` (The Locative - uses similar endings for some forms), `a1-32` (My Family - expands vocabulary)
 
-## Первинні джерела (цитати українською)
-
-> "Іменники — назви істот чоловічого роду в знахідному відмінку однини мають форму родового відмінка." — Український правопис 2019, § 66.
-
-> "Я люблю маму, я люблю тата, я люблю кота." — Поширений приклад для початківців.
-
-## Деколонізаційні нотатки
-
-- Акцент на українських іменах: Тарас, Оксана, Богдан, Соломія.
-- Спростування міфу, що тварини в українській мові — це "it" (як в англійській). В українській вони мають рід і є істотами (імена тварин також відмінюються).
-- Використання прикладів з українськими культурними діячами або персонажами.
-
-## Термінологічне мапування (Contested Terms)
-
-| Поняття | Англійський термін | Український термін | Коментар |
-| ------- | ---------------- | ------------------ | ----------------------- |
-| Animate | Animate | Істота | Люди та тварини |
-| Genitive Connection | Genitive Connection | Зв'язок з родовим | Acc = Gen for masculine |
-
-## Використані джерела
-
-1. [Український правопис 2019](https://mon.gov.ua/storage/app/media/zagalna%20serednya/Pravopys.2019.pdf)
-2. [Енциклопедія Сучасної України](https://esu.com.ua/)
-3. [Державний стандарт української мови як іноземної (2024)](https://mkiip.gov.ua/)
-4. [Словник української мови (СУМ)](http://sum.in.ua/)
+## Notes for Content Writing
+- **Scaffolding**: This is A1.2. Use clear English explanations for the "Animate Rule" logic.
+- **Visuals**: Use the "Heart Words" (Animate) vs "Stone Words" (Inanimate) metaphor suggested in the plan to make the grammatical category concrete.

@@ -1,0 +1,280 @@
+✅ Message sent to Gemini (ID: 12567) [auto-acked: self-addressed]
+✓ Message 12567 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12567...
+📨 Message #12567
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-ivan-franko
+   Time: 2026-02-20T23:40:55.639778+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-bio-53
+level: C1-BIO
+sequence: 53
+slug: ivan-franko
+version: '2.0'
+title: 'Іван Франко: Каменяр'
+content_outline:
+- section: Вступ — Титан праці
+  points:
+  - Письменник, поет, вчений, громадський діяч
+  - Символ Галичини і всієї України
+  - Автор понад 6000 творів
+- section: Юність у Нагуєвичах (1856-1874)
+  points:
+  - Народження в родині сільського коваля
+  - Рання освіта та таланти
+  - Смерть батька та вплив мачухи
+  - Дрогобицька гімназія
+- section: Студентські роки (1874-1880)
+  points:
+  - Львівський університет
+  - Участь у соціалістичному русі
+  - Перші арешти
+  - Початок літературної діяльності
+- section: Каменяр української культури (1880-1905)
+  points:
+  - «Мойсей», «Захар Беркут», «Перехресні стежки»
+  - Наукова діяльність та докторат
+  - Журналістика та редакторська робота
+  - Номінація на Нобелівську премію (1916)
+- section: Хвороба та останні роки (1905-1916)
+  points:
+  - Прогресуюча хвороба
+  - Продовження творчої роботи
+  - Перша світова війна
+  - Смерть у Львові
+- section: Спадщина — Вічний каменяр
+  points:
+  - Вплив на українську літературу
+  - Франко як національний символ
+  - Університет та інститути його імені
+  - Актуальність ідей Франка сьогодні
+vocabulary_hints:
+  required:
+  - каменяр (stonemason/pioneer)
+  - титан (titan)
+  - письменник (writer)
+  - громадський діяч (public figure)
+  - соціалізм (socialism)
+  - наукова діяльність (scholarly activity)
+  - журналіст (journalist)
+  - редактор (editor)
+  - поема (long poem)
+  - повість (novella)
+  recommended:
+  - позитивізм (positivism)
+  - народництво (populism)
+  - просвіта (enlightenment)
+  - Галичина (Galicia)
+  - національне відродження (national revival)
+activity_hints:
+- type: reading
+  focus: Українська література XIX ст.
+  source: Literary history sources
+  items: 3 passages
+- type: essay-response
+  focus: Чому Франка називають «титаном праці»?
+  output: Analytical essay
+focus: biography
+prerequisites:
+- c1-bio-27
+connects_to:
+- c1-bio-20
+- c1-bio-40
+module_type: biography
+sources:
+- name: Іван Франко (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Франко_Іван_Якович
+  type: primary
+  notes: Comprehensive biography of the titan of Ukrainian culture
+- name: Інститут Івана Франка НАН України
+  url: https://ifnan.gov.ua/
+  type: reference
+  notes: Academic institution dedicated to Franko studies
+immersion: 100% Ukrainian
+phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of іван франко: каменяр'
+- Evaluate the contributions of титан праці
+- Trace the career and influence of вічний каменяр
+persona:
+  voice: Senior Biographer
+  role: Intellectual Titan
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Іван Франко: Каменяр
+
+## Використані джерела
+1. [Енциклопедія Сучасної України (esu.com.ua)](https://esu.com.ua) — фундаментальна біографічна стаття, верифікація дат та бібліографії.
+2. [Інститут історії України (history.org.ua)](http://history.org.ua) — деталі громадсько-політичної діяльності та арештів.
+3. [Ізборник (litopys.org.ua)](http://litopys.org.ua) — першоджерела: текст поеми "Мойсей", передмова "Дещо про себе самого".
+4. [Локальна історія (localhistory.org.ua)](https://localhistory.org.ua) — деталі про хворобу та побут останніх років.
+
+## Хронологія
+- 27 серпня 1856: Народився у с. Нагуєвичі в родині коваля Якова Франка.
+- 1867: Смерть батька (Івану було 11 років).
+- 1875: Закінчив Дрогобицьку гімназію з похвальним свідоцтвом.
+- 1877: Перший арешт за підозрою в участі у таємному соціалістичному товаристві.
+- 1893: Захист докторської дисертації у Віденському університеті («Варлаам і Йоасаф»).
+- 1905: Написання поеми «Мойсей»; початок тяжкої хвороби (інфекційний ревматоїдний поліартрит).
+- 1913: Святкування 40-річчя творчої діяльності.
+- 26 листопада 1915: Номінація на Нобелівську премію з літератури (подання Йосипа Застиреця).
+- 28 травня 1916: Помер у Львові, похований на Личаківському цвинтарі.
+
+## Ключові факти та цитати
+- **Титан праці**: Понад 6000 творів у бібліографії, 100+ томів спадщини. Писав навіть із паралізованими руками (лівою рукою, потім диктував).
+- **Цитата 1 («Мойсей», Пролог)**: 
+> «Народе мій, замучений, розбитий, / Мов паралітик той на роздорожжу, / Людським презирством, ніби струпом, вкритий! / Твоїм будущим душу я тривожу...»
+- **Цитата 2 («Дещо про себе самого»)**: 
+> «...навіть нашої Русі не люблю так і в такій мірі, як це роблять або вдають, що роблять, патентовані патріоти... я занадто гаряче люблю загальнолюдські ідеали справедливості, братерства й волі, щоб не відчувати, як мало в історії Русі прикладів справжнього громадянського духу...»
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ — Титан праці": [!history-bite] — Про неймовірну працездатність: "Якби хтось хотів переписати всі твори Франка вручну, йому знадобилося б кілька років щоденної праці".
+- Section "Юність у Нагуєвичах": [!context] — Атмосфера батьківської кузні як місця першого пізнання світу («У кузні») vs міф про бідного селянського сина (батько був заможним ковалем).
+- Section "Студентські роки": [!myth-buster] — Міф про "вічного революціонера-марксиста". Франко критикував марксизм як "релігію ненависті", його соціалізм еволюціонував у націонал-демократію.
+- Section "Каменяр української культури": [!quote] — Уривок з листа, де він описує свою мотивацію до наукової праці попри перешкоди польської адміністрації університету.
+- Section "Хвороба та останні роки": [!biography] — Деталі хвороби: як він тримав олівець зубами або прив'язував до пальців, коли руки відмовили.
+- Section "Спадщина": [!decolonization] — Як радянська влада "каструвала" Франка, зробивши з європейського інтелектуала лише "борця з панами".
+
+## Деколонізаційний контекст
+- **Радянський міф**: Франко — атеїст, матеріаліст, предтеча комунізму. Акцент лише на творах "Борислав сміється" та "Каменярі".
+- **Реальність**: Франко — глибокий інтелектуал європейського рівня, доктор філософії Віденського університету. Критик Енгельса і Маркса. Поема "Мойсей" — глибоко біблійна і філософська, а не лише "революційна". Його національна позиція була чіткою: "Все, що йде поза рами нації, се або фарисейство... або сентиментальна фантазія".
+
+## Contested Terms
+| Concept | Imperial/Soviet framing | Ukrainian (decolonized) framing |
+|---------|-------------------------|---------------------------------|
+| Каменяр | Пролетар, що руйнує старий світ | Будівничий, що прокладає шлях (sculptor of nation) |
+| Соціалізм Франка | Предтеча більшовизму | Європейський демократичний соціалізм, еволюціонував у націонал-демократію |
+| "Вічний революціонер" | Борець за класову рівність | Борець за національне і духовне визволення ("Дух, що тіло рве до бою") |
+| Відносини з владою | Жертва режиму | Активний політичний гравець, засновник РУРП, кандидат до парламенту |
+
+## Section-Mapped Research Notes
+
+### Вступ — Титан праці
+Вступ має окреслити масштаб постаті. "Академія наук в одній особі". Полімат: поет, прозаїк, драматург, фольклорист, етнограф, економіст, філософ.
+
+### Юність у Нагуєвичах
+Вплив батька-коваля (метафора "кування характеру"). Навчання у школі василіян (сувора дисципліна) та Дрогобицькій гімназії (феноменальна пам'ять, знання напам'ять Кобзаря).
+
+### Студентські роки
+Львівський університет. Вплив М. Драгоманова ("апостол правди і науки", але пізніше — ідейний розрив). Перший арешт (1877) як травма і гарт. "В тюрмі я побачив світ". Перехід від москвофільства до народовства і радикалізму.
+
+### Каменяр української культури
+Найплідніший період.
+- Література: "Захар Беркут" (історичний міф нації), "Перехресні стежки" (модернізм, психоаналіз до Фрейда).
+- Наука: Докторат у Відні (1893). Недопуск до викладання у Львівському університеті (польська інтрига).
+- Громадська діяльність: Створення РУРП (перша політична партія).
+
+### Хвороба та останні роки
+Драматизм 1908-1916 рр. Поліартрит. Втрата функцій рук. "Ліва рука" (писання). Допомога синів. Перша світова війна, російська окупація Львова, загроза арешту, бідність. Притулок для січових стрільців у домі Франка.
+
+### Спадщина
+Франко як код нації. Інститути (Львівський університет). Актуальність його критики "москвофільства" та "соціал-демократизму" (стаття "Що таке поступ?").
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12612)
+✓ Message 12567 acknowledged
+✓ Message 12612 acknowledged

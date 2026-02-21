@@ -1,0 +1,326 @@
+✅ Message sent to Gemini (ID: 11825) [auto-acked: self-addressed]
+✓ Message 11825 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #11825...
+📨 Message #11825
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-volodymyr-khreshchennia
+   Time: 2026-02-20T23:33:26.108215+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b2-hist-011
+level: B2-HIST
+sequence: 11
+slug: volodymyr-khreshchennia
+version: '2.0'
+title: Володимир і Хрещення Русі
+content_outline:
+- section: Розминка
+  points:
+  - 'Вступ до теми через контраст: Володимир-язичник (жорстокий воїн) vs Володимир-християнин
+    (будівничий держави)'
+  - 'Ключові слова: вибір (choice), віра (faith), цивілізація (civilization)'
+- section: 'Читання: Князь Володимир: від язичника до святого'
+  points:
+  - Історичне тло — 980 рік, спроба язичницької реформи (Пантеон богів), криза старої
+    ідеології
+  - Хронологія вибору віри — легенда про «вибір віри» (посли до булгар, німців, греків);
+    прагматизм відмови від ісламу та юдаїзму
+  - Наслідки — вибір візантійського обряду як шлях до імперської величі («не знали,
+    на небі ми чи на землі»)
+  - 'Engagement hook: [!history-bite] — Про «гарем» Володимира (800 наложниць) і його
+    радикальну трансформацію після хрещення'
+- section: Корсунська кампанія і шлюб із Анною
+  points:
+  - Військова акція як дипломатія — допомога Василію II проти Варди Фоки (6000 варягів);
+    облога Корсуня (Херсонеса) як тиск
+  - Шлюб із Анною — принцеса-багрянородна (porphyrogenita); шлюб рівних, а не васалітет
+  - Хрещення Володимира та його військо — легенда про зцілення від сліпоти в Корсуні;
+    [!myth-buster] Хрещення не було «подарунком» Візантії, а вибороне силою
+- section: Первинні джерела
+  points:
+  - 'Документ 1: «Повість минулих літ» про хрещення киян — 990 рік, річка Почайна,
+    повалення ідолів (Перуна волочили конем)'
+  - 'Документ 2: Митрополит Іларіон про Володимира — «Слово про Закон і Благодать»;
+    [!quote] Іларіон називає Володимира «каганом», підкреслюючи суверенність Русі'
+- section: Деколонізаційний погляд
+  points:
+  - Міфи та реальність — [!decolonization] Спростування російського міфу про «спільну
+    колиску»; Корсунь як частина історії України (Криму), а не «сакральне місце Росії»
+  - Сучасна Україна — Тризуб Володимира на монетах (златники/срібники) як прообраз
+    сучасного Герба України
+- section: Значення хрещення для культури
+  points:
+  - Глибший аналіз рішення Володимира — входження до сім'ї європейських народів (Oecumene)
+  - 'Процес християнізації — тривалий процес, опір волхвів, складна внутрішня політика;
+    [!context] Сінхронізація: християнізація Скандинавії, Польщі, Угорщини в цей же
+    час'
+  - Церковна організація — створення Київської митрополії; Десятина як перший церковний
+    податок
+  - Вплив на суспільство — [!culture] Нова етика, зміна шлюбних традицій (моногамія),
+    благодійність
+  - Мистецтво і архітектура — Десятинна церква (996) — перший кам'яний храм; візантійські
+    майстри
+  - Писемність і література — кирилиця, школи для дітей знаті, початок книжкової культури
+  - Міжнародне значення — Русь як суб'єкт міжнародного права; династичні шлюби нащадків
+- section: Потрібно більше практики?
+  points:
+  - 🔄 Інтеграція знань
+  - 🎯 Реальне застосування
+  - 🌐 Онлайн-ресурси — віртуальні тури (Софія Київська, фундаменти Десятинної церкви)
+vocabulary_hints:
+  required:
+  - хрещення (baptism) — хрещення Русі, прийняти хрещення
+  - християнство (Christianity) — запровадження християнства, східний обряд
+  - язичництво (paganism) — язичницькі боги, ідоли, кумири
+  - Перун (Perun) — скинути Перуна, золоті вуса
+  - ідол (idol) — повалення ідолів, дерев'яні ідоли
+  - митрополія (metropolitanate) — Київська митрополія
+  - церква (church) — Десятинна церква, будувати церкву
+  - святий (saint) — Володимир Святий, канонізація
+  - рівноапостольний (equal-to-apostles) — князь Володимир як рівноапостольний
+  - Херсонес (Chersonesus) — облога Херсонеса (Корсуня)
+  - Візантія (Byzantium) — союз з Візантією, візантійський вплив
+  - віра (faith) — вибір віри, нова віра
+  recommended:
+  - Десятинна церква (Church of the Tithes) — 996 рік, перший кам'яний храм
+  - Почайна (Pochayna river) — хрещення в Почайні
+  - Корсунь (Korsun/Chersonesus) — взяття Корсуня
+  - імператор (emperor) — візантійський імператор Василій II
+  - цивілізаційний вибір (civilizational choice) — європейський вибір
+  - каган (kagan) — титул володаря (згадка у Іларіона)
+  - літопис (chronicle) — «Повість минулих літ»
+activity_hints:
+- type: reading
+  focus: Chronicle account of the choice of faith
+  source: Provide in module
+- type: comparative-study
+  focus: Rus before and after Christianization
+  output: Two-column analysis
+- type: essay-response
+  focus: Чи був вибір православ'я історичною необхідністю?
+focus: history
+pedagogy: CBI
+prerequisites:
+- b2-hist-10 (Olha and Sviatoslav)
+- b2-hist-03 (Greek city-states — Chersonesus)
+connects_to:
+- b2-hist-12 (Yaroslav the Wise)
+- b2-hist-14 (St. Sophia Cathedral)
+- 'b2-hist-20 (Synthesis: Kyivan Rus)'
+objectives:
+- Understand the significance of 988
+- Analyze the political reasons for baptism
+- Discuss the cultural impact of Christianization
+grammar:
+- Past tense narrative
+- Religious terminology
+sources:
+- name: Володимир Великий (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Володимир_Великий
+  type: reference
+  notes: Overview of Volodymyr the Great
+- name: Хрещення Русі (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Хрещення_Русі
+  type: reference
+  notes: Overview of Christianization
+- name: Повість минулих літ — про хрещення
+  url: https://litopys.org.ua/pvl/pvl.htm
+  type: primary
+  notes: Chronicle account of baptism
+phase: B2-HIST.1 [Kyivan Rus]
+module_type: history
+immersion: 100% Ukrainian
+persona:
+  voice: Senior Professor of History
+  role: Byzantine Priest
+word_target: 5000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Володимир і Хрещення Русі
+
+## Використані джерела
+1. [Енциклопедія Сучасної України: Володимир Великий](https://esu.com.ua/search_articles.php?id=27552) — академічна стаття про життя та діяльність князя.
+2. [Інститут історії України: Хрещення Русі](http://resource.history.org.ua/) — матеріали про запровадження християнства.
+3. [Літопис руський (за Іпатським списком)](http://litopys.org.ua/ipatlet/ipat.htm) — першоджерело («Повість минулих літ»).
+4. [Іларіон Київський. Слово про Закон і Благодать](http://litopys.org.ua/oldukr2/oldukr38.htm) — пам'ятка давньоукраїнської літератури.
+5. [Радіо Свобода: Міфи про хрещення Русі](https://www.radiosvoboda.org/) — аналіз історичних міфів.
+
+## Хронологія
+- **980**: Володимир Святославич стає єдиновладним правителем Києва після міжусобиць. Спроба реформи язичництва (Пантеон богів).
+- **987**: Укладення союзу з візантійським імператором Василієм II. Умова допомоги — шлюб з принцесою Анною та хрещення.
+- **989 (весна-літо)**: Облога та взяття Корсуня (Херсонеса) військами Володимира як тиск на Візантію для виконання умов угоди.
+- **989 (осінь)**: Хрещення Володимира та шлюб з Анною в Корсуні.
+- **990**: Масове хрещення киян у річці Почайна (притока Дніпра) та початок християнізації Русі.
+- **996**: Завершення будівництва та освячення Десятинної церкви — першого кам'яного храму Києва.
+
+## Ключові факти та цитати
+- **Факт**: Вибір християнства був продиктований не лише духовними пошуками, а й прагматичною геополітикою: входження до кола цивілізованих європейських держав.
+- **Факт**: До шлюбу з Анною Володимир мав великий гарем («триста наложниць у Вишгороді, триста в Бєлгороді...»).
+- **Цитата (Іларіон, «Слово про Закон і Благодать»)**: «І не в убогій і невідомій землі панували, а в Руській, що знана і чута є в усіх чотирьох кінцях землі».
+- **Цитата («Повість минулих літ» про хрещення)**: «І коли прибув, повелів він поскидати кумирів — тих порубати, а других вогню оддати. Перуна ж повелів він прив’язати коневі до хвоста і волочити з Гори...».
+
+## Engagement Hooks (mapped to sections)
+- Section "Читання: Князь Володимир: від язичника до святого": [!history-bite] — Про «гарем» Володимира і його радикальну трансформацію після хрещення.
+- Section "Корсунська кампанія і шлюб із Анною": [!myth-buster] — Хрещення не було «подарунком» Візантії; Володимир виборов його силою зброї, захопивши Корсунь.
+- Section "Первинні джерела": [!quote] — Уривок з Іларіона, де він називає Володимира «каганом» (титул степових володарів), підкреслюючи суверенність Русі.
+- Section "Деколонізаційний погляд": [!decolonization] — Спростування російського міфу про «спільну колиску» та привласнення постаті Володимира (пам'ятник у Москві).
+- Section "Значення хрещення для культури": [!culture] — Християнство принесло не лише віру, а й кириличну писемність, кам'яну архітектуру та шкільну освіту.
+- Section "Значення хрещення для культури": [!context] — Сінхронізація: у цей час у Європі також тривали процеси християнізації (Скандинавія, Польща, Угорщина), Русь була в тренді.
+
+## Деколонізаційний контекст
+- **Imperial/Soviet myth**: Хрещення Русі — це початок історії «Росії» та «Русского мира». Корсунь — «сакральне місце Росії» (нарратив Путіна).
+- **Ukrainian reality**: Володимир правив у Києві, коли Москви не існувало навіть як поселення. Корсунь (Херсонес) — це історія Криму та України. Хрещення інтегрувало Русь у Європу, а не відокремило її в «особливий шлях».
+- **Imperial/Soviet myth**: «Мирне» та одномоментне хрещення.
+- **Ukrainian reality**: Процес був тривалим і складним, подекуди з опором (повстання волхвів), що свідчить про складну внутрішню політику, а не ідилічну картинку.
+
+## Contested Terms (if applicable)
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| Володимир | Владимир (Святой), креститель «всея Руси» | Володимир Великий, князь Київський |
+| Держава | Древнерусское государство (спільна колиска) | Київська Русь / Русь-Україна |
+| Херсонес | Корсунь (русская святыня) | Херсонес Таврійський / Корсунь (кримська спадщина) |
+| Титул | Князь | Князь, каган (у Іларіона) |
+
+## Section-Mapped Research Notes
+
+### Розминка
+- Вступ до теми через контраст: Володимир-язичник (жорстокий воїн) vs Володимир-християнин (будівничий держави).
+- Ключові слова: вибір, віра, цивілізація.
+
+### Читання: Князь Володимир: від язичника до святого
+- **Історичне тло**: 980 рік, спроба язичницької реформи (Перун із золотими вусами). Криза язичництва як ідеології для об'єднання племен.
+- **Хронологія вибору**: Легенда про «вибір віри» (посли до булгар, німців, греків). Прагматизм: іслам відкинуто через заборону вина («Русі єсть веселіє пити»), юдаїзм — через відсутність держави («розсіяв вас Бог по землі»).
+- **Наслідки**: Вибір візантійського обряду як шлях до імперської величі та краси («не знали, на небі ми чи на землі»).
+
+### Корсунська кампанія і шлюб із Анною
+- **Військова акція**: Імператор Василій II потребував допомоги проти заколотника Варди Фоки. Володимир обіцяв 6000 варягів в обмін на руку сестри імператора Анни (порфірородної).
+- **Зрада і тиск**: Греки зволікали з відправкою Анни. Володимир обложив і взяв Корсунь (перекрив водопровід за порадою зрадника Анастаса).
+- **Шлюб і хрещення**: Тільки після падіння Корсуня Анна прибула, і Володимир охрестився (легенда про зцілення від сліпоти). Це був шлюб рівних, а не васалітет.
+
+### Первинні джерела
+- **«Повість минулих літ»**: Опис повалення ідолів. Плач киян за Перуном. Хрещення у Дніпрі/Почайні: чоловіки, жінки, діти.
+- **Митрополит Іларіон**: «Слово про Закон і Благодать» — перший оригінальний твір. Іларіон ставить Володимира в один ряд з апостолами та імператором Костянтином. Акцент на тому, що Русь прийняла християнство добровільно і свідомо.
+
+### Деколонізаційний погляд
+- **Міфи**: Російська історіографія привласнює Володимира (пам'ятник біля Кремля).
+- **Реальність**: Володимир — київський князь, похований у Києві (Десятинна церква). Його спадщина — це європейська інтеграція України (шлюбні зв'язки дітей з королівськими домами Європи).
+- **Крим**: Корсунь — це частина української історії Криму, місце тріумфу київської зброї та дипломатії.
+
+### Значення хрещення для культури
+- **Цивілізаційний вибір**: Входження до сім'ї християнських народів (Oecumene).
+- **Церковна організація**: Створення Київської митрополії (спочатку підпорядкованої Константинополю). Десятина — податок на церкву.
+- **Писемність**: Поширення кирилиці, створення шкіл для дітей знаті (навчання грамоти). Поява перших книг.
+- **Архітектура**: Десятинна церква (візантійські майстри + місцеві елементи). Золоті та срібні монети (златники і срібники) з тризубом — знаком княжої влади.
+- **Міжнародне значення**: Русь стала суб'єктом міжнародного права, з яким рахувалися імперії.
+
+### Потрібно більше практики?
+- Ресурси для заглиблення: віртуальні тури (Софія Київська, Десятинна церква), сучасні дослідження.
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 11870)
+✓ Message 11825 acknowledged
+✓ Message 11870 acknowledged

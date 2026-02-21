@@ -1,0 +1,288 @@
+✅ Message sent to Gemini (ID: 12031) [auto-acked: self-addressed]
+✓ Message 12031 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12031...
+📨 Message #12031
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-contract-reading
+   Time: 2026-02-20T23:35:30.111470+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b2-pro-22
+level: B2-PRO
+sequence: 22
+slug: contract-reading
+version: '2.0'
+title: Читання договорів
+subtitle: Contract Reading
+content_outline:
+- section: Розминка — Навіщо читати договір перед підписанням
+  points:
+  - Чому "підпишу, не читаючи" — погана ідея
+  - На що звертати увагу в першу чергу
+  - Коли потрібна консультація юриста
+- section: Структура типового договору
+  points:
+  - 'Преамбула: сторони, дата, місце укладення'
+  - 'Предмет договору: що саме домовляються робити'
+  - 'Права та обов''язки: що має робити кожна сторона'
+  - 'Ціна та порядок розрахунків: скільки, коли, як платити'
+  - 'Відповідальність та санкції: що буде за порушення'
+  - 'Форс-мажор: обставини непереборної сили'
+  - 'Строк дії та умови розірвання: коли закінчується, як розірвати'
+- section: Типові пастки в договорах
+  points:
+  - 'Автоматичне продовження: якщо не повідомили за 30 днів...'
+  - 'Односторонні зміни: компанія має право змінити умови...'
+  - 'Юрисдикція: спори вирішуються в суді м. [далеко]'
+  - 'Прихована відповідальність: штраф за дострокове розірвання'
+  - Дрібний шрифт та примітки
+- section: Практика читання реальних договорів
+  points:
+  - 'Договір оренди: на що звернути увагу'
+  - 'Трудовий договір: ключові положення'
+  - 'Договір надання послуг: права та обов''язки'
+- section: Зразок договору з аналізом
+  points:
+  - Типовий договір надання послуг (фрагменти)
+  - Позначення ключових положень
+  - Питання, які варто поставити перед підписанням
+- section: Практика — аналіз договору
+  points:
+  - 'Завдання: Прочитати договір і знайти ключові положення'
+  - Скласти список питань до другої сторони
+  - Визначити потенційні ризики
+vocabulary_hints:
+  required:
+  - преамбула договору (preamble)
+  - предмет договору (subject of the contract)
+  - порядок розрахунків (payment procedure)
+  - строк дії договору (term of the contract)
+  - умови розірвання (termination conditions)
+  - автоматичне продовження (automatic renewal)
+  - дострокове розірвання (early termination)
+  - юрисдикція (jurisdiction)
+  recommended:
+  - односторонні зміни (unilateral changes)
+  - істотні умови (essential terms)
+  - додаткова угода (supplementary agreement)
+  - акт приймання-передачі (acceptance certificate)
+  - гарантійний строк (warranty period)
+  - конфіденційність (confidentiality)
+activity_hints:
+- type: document-analysis
+  focus: Проаналізувати договір — знайти ключові положення та потенційні ризики
+  items: 2
+- type: reading-comprehension
+  focus: Прочитати договір і відповісти на питання про права та обов'язки
+  items: 8
+- type: vocabulary-domain
+  focus: Підібрати визначення до юридичних термінів договору
+  items: 12
+- type: fill-in
+  focus: Вставити правильні терміни в текст договору
+  items: 10
+- type: error-detection
+  focus: Знайти потенційно проблемні положення в договорі
+  items: 6
+- type: writing-task
+  focus: Скласти список питань перед підписанням договору
+  items: 1
+focus: professional
+pedagogy: ESP
+prerequisites:
+- b2-pro-21 (Юридична лексика)
+connects_to:
+- b2-pro-23 (Медична лексика)
+objectives:
+- Учень може читати та розуміти структуру типового договору
+- Учень може визначити ключові положення та потенційні ризики
+- Учень знає типові пастки в договорах та як їх розпізнати
+- Учень може сформулювати питання перед підписанням договору
+grammar:
+- Юридичні конструкції (цим договором, надалі — Сторона, у разі якщо)
+- Умовні речення в юридичному контексті (у випадку порушення, за умови виконання)
+- Модальні конструкції для зобов'язань (зобов'язується, має право, не має права)
+register: юридичний
+phase: B2-PRO.2
+persona:
+  voice: Senior Specialist
+  role: Нотаріус
+word_target: 2000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Читання договорів
+
+## Використані джерела
+1. [Портал Дія.Бізнес — Як правильно читати договір](https://business.diia.gov.ua) — Практичні поради для підприємців щодо юридичної грамотності.
+2. [Цивільний кодекс України (ЦКУ)](https://zakon.rada.gov.ua/laws/show/435-15) — Статті 626–654, що визначають загальні положення про договір.
+3. [Господарський кодекс України (ГКУ)](https://zakon.rada.gov.ua/laws/show/436-15) — Статті 179–192 щодо господарських договорів.
+4. [ДСТУ 4163:2020](http://online.budstandart.com/ua/catalog/doc-page?id_doc=89090) — Державний стандарт щодо оформлення організаційно-розпорядчої документації.
+
+## Термінологічна база
+
+| Українська (норма) | Русизм/ненорма | English | Контекст вживання |
+|--------------------|---------------|---------|-------------------|
+| Преамбула | Вступна частина | Preamble | Початок договору, ідентифікація сторін |
+| Предмет договору | Тема контракту | Subject of the contract | Опис товарів, робіт або послуг |
+| Істотні умови | Важливі пункти | Essential terms | Умови, без яких договір вважається неукладеним |
+| Порядок розрахунків | Як платити | Payment procedure | Умови оплати, строки, рахунки |
+| Форс-мажор | Обставини сили | Force majeure | Обставини непереборної сили |
+| Строк дії | Термін | Term of validity | Період, протягом якого діє угода |
+| Пролонгація | Продовження | Prolongation / Renewal | Автоматичне або узгоджене продовження строку |
+| Акт приймання-передачі | Документ здачі | Acceptance certificate | Підтвердження виконання робіт/послуг |
+| Пеня та штраф | Санкції | Penalty and fine | Види матеріальної відповідальності |
+| Відповідно до (згідно з) | Згідно договору | In accordance with | Посилання на законодавство або договір |
+
+## Мовні норми та стандарти
+- **ДСТУ 4163:2020**: Вимагає чіткого зазначення реквізитів сторін, дати та місця укладення.
+- **Цивільний кодекс**: Наголошує на свободі договору, але вимагає обов'язкового погодження предмета, ціни та строку.
+- **Офіційний стиль**: Використання пасивних конструкцій («Сторони домовилися») та модальних дієслів зобов’язання («Зобов’язується», «Має право»).
+
+## Аутентичні приклади
+1. [Вступ]: «Цей Договір укладено між Стороною 1 та Стороною 2, які надалі іменуються разом "Сторони", а кожна окремо — "Сторона".»
+2. [Оплата]: «Оплата за надання Послуг здійснюється Замовником шляхом перерахування грошових коштів на поточний рахунок Виконавця протягом 5 (п’яти) банківських днів з дати підписання Акта приймання-передачі.»
+3. [Форс-мажор]: «Належним доказом виникнення та тривалості обставин непереборної сили є довідка, видана Торгово-промисловою палатою України.»
+
+## Типові помилки
+1. ❌ **Заключити договір** → ✅ **Укласти договір** — в українській юридичній мові договори укладають, а не заключають.
+2. ❌ **Згідно договору** → ✅ **Згідно з договором** — прийменник «згідно» вимагає орудного відмінка з часткою «з».
+3. ❌ **У випадку якщо** → ✅ **У разі якщо** — офіційно-діловий стиль віддає перевагу конструкції «у разі».
+4. ❌ **Вирішувати спори** → ✅ **Врегулювати спори** — більш точний юридичний термін для процесу досягнення згоди.
+5. ❌ **По наданню послуг** → ✅ **Щодо надання послуг** — уникання кальки з російської «по предоставлению».
+
+## Engagement Hooks (mapped to sections)
+- Розминка: [!pro-tip] — Завжди перевіряйте повноваження підписанта через безкоштовний витяг з ЄДР (Мінюст).
+- Структура: [!language-note] — Юридична конструкція "надалі — Сторона" дозволяє уникнути повторення назв компаній у всьому тексті.
+- Пастки: [!common-error] — "Автоматичне продовження" може стати пасткою, якщо ви хочете змінити постачальника, але забули попередити за місяць.
+- Практика: [!context] — У договорах оренди найважливішим є пункт про умови повернення застави та порядок фіксації пошкоджень майна.
+
+## Section-Mapped Research Notes
+
+### Розминка — Навіщо читати договір перед підписанням
+Досліджено ризики підписання документів без вивчення. Ключові аспекти: юридична відповідальність підписанта, фінансові наслідки помилок, важливість перевірки "дрібного шрифту".
+
+### Структура договору: Преамбула та предмет
+Вивчено ДСТУ 4163:2020 щодо оформлення шапки договору. Важливо: точне найменування сторін (згідно зі статутом), ідентифікаційні коди (ЄДРПОУ), чітке визначення предмета договору (істотна умова).
+
+### Структура договору: Права, обов'язки та розрахунки
+Досліджено механізми оплати: передоплата, пост-оплата, етапність. Використання актів приймання-передачі як єдиного юридичного підтвердження виконання зобов'язань.
+
+### Структура договору: Відповідальність та строк дії
+Аналіз санкцій: пеня (за кожен день прострочення) та штраф (фіксована сума). Формулювання пунктів про форс-мажор з посиланням на Торгово-промислову палату.
+
+### Типові пастки в договорах
+Виявлено схеми "прихованих платежів", зміну ціни в односторонньому порядку та передачу спорів до територіально віддалених судів.
+
+### Практика читання реальних договорів
+Зібрано особливості для трьох типів: Оренда (індексація, ремонт), Праця (випробувальний термін, NDA), Послуги (SLA, терміни реакції).
+
+### Зразок договору з аналізом та практика
+Підготовлено фрагменти типового договору надання консультаційних послуг для критичного аналізу студентами.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12104)
+✓ Message 12031 acknowledged
+✓ Message 12104 acknowledged

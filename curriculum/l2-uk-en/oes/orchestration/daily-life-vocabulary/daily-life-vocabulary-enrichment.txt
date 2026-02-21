@@ -1,0 +1,211 @@
+✅ Message sent to Gemini (ID: 12251) [auto-acked: self-addressed]
+✓ Message 12251 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12251...
+📨 Message #12251
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-daily-life-vocabulary
+   Time: 2026-02-20T23:38:10.330753+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 24
+module: oes-024
+module_number: 20
+slug: daily-life-vocabulary
+title_uk: Побутова лексика
+title_en: Daily Life Vocabulary
+phase: 1
+phase_id: vernacular-foundations
+phase_name: Vernacular Foundations
+focus: Bread, meat, horses, boats (Vernacular vs Liturgical)
+content_outline:
+- section: Вступ
+  description: Introduction to Daily Life Vocabulary
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Senior Paleographer
+  role: Kyivan Innkeeper
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Daily Life Vocabulary (Побутова лексика)
+
+## Використані джерела
+1. [Енциклопедія історії України (history.org.ua)](http://www.history.org.ua) — статті про харчування, транспорт та побут Київської Русі.
+2. [Ізборник (litopys.org.ua)](http://litopys.org.ua) — тексти «Руської Правди» та «Повісті минулих літ».
+3. [Археологія (iananu.org.ua)](https://iananu.org.ua) — матеріали про Звенигородські берестяні грамоти.
+4. [Львівський музей історії релігії](https://museum.lviv.ua) — дані про знахідки у Звенигороді.
+
+## Хронологія
+- **911 рік**: Договір Русі з греками згадує «лодії» та морські походи.
+- **1016–1054 роки**: Укладання «Руської Правди», що фіксує штрафи за крадіжку коней («конь») та човнів («лодья»).
+- **1110–1137 роки**: Написання Звенигородських берестяних грамот (зокрема грамоти №2 про «куни лодієві»).
+- **XII століття**: Розквіт річкової торгівлі, масове використання «насадів» та «стругів».
+- **1240 рік**: Монгольська навала, що змінила структуру побуту та перервала розвиток багатьох ремесел.
+
+## Ключові факти та цитати
+- **Звенигородська грамота №2**: «От Говенової до Ніженця. Дай 60 кун лодієвих...» (унікальне свідчення про фінансові розрахунки за водний транспорт).
+- **Руська Правда (про коня)**: «А кто пакощами конь порежеть...» (свідчення високої цінності коня).
+- **Руська Правда (про човен)**: «Аже лодью украдеть, то платитии за лодью...» (правовий захист власності на засоби пересування).
+- **Хліб**: Слово «жито» позначало не лише злак, а й їжу загалом або багатство. «Хліб» — сакральний продукт.
+- **М'ясо**: Свинина була основним м'ясним продуктом; яловичина вживалася рідше (тяглову худобу берегли).
+
+## Engagement Hooks (mapped to sections)
+- Section "Хліб насущний: від зерна до столу": [!culture] — Символізм хліба та «жита» як синоніма життя.
+- Section "Транспорт суходолу: коні та вози": [!myth-buster] — Спростування міфу про примітивність давньоруських доріг (існування системи ямів та мостів).
+- Section "Водний шлях: човни та насади": [!quote] — Звенигородська берестяна грамота №2 (про «куни лодієві»).
+- Section "Мовна диглосія: побут проти книги": [!context] — Чому в літописах ми бачимо «град», а в графіті та грамотах — «город».
+
+## Деколонізаційний контекст
+- **Imperial myth**: Ствердження про єдину «давньоруську народність» з єдиною мовою.
+- **Ukrainian reality**: Наявність чітких діалектних рис (зокрема у Звенигородських грамотах), що стали основою української мови (повноголосся, закінчення -ові/-еві). Побутова лексика демонструє тяглість української традиції (стріха, клуня, глечик, а не «изба» чи «кувшин»).
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian framing |
+|---------|------------------|-------------------|
+| Мова побуту | «Общерусский язык» | Давньоукраїнські діалекти (протоукраїнська мова) |
+| Житло | «Изба» (як спільний тип) | «Хата», «дім» (специфіка південної Русі) |
+| Човен | «Ладья» (російська вимова) | «Лодья» (давньоруська), «човен» (автохтонне) |
+
+## Section-Mapped Research Notes
+
+### Вступ
+- Огляд теми: мова як дзеркало побуту.
+- Важливість розрізнення книжної (церковнослов'янської) та живої (давньоруської) лексики.
+
+### Хліб насущний: від зерна до столу
+- **Терміни**: *жито* (хліб, їжа), *пьшениця*, *мука*, *квас*.
+- **М'ясо**: *мясо*, *свинина* (найпопулярніше), *говяда* (худоба), *дичина* (полювання).
+- **Кухня**: *варево*, *юха* (суп), *каша*.
+- **Джерела**: Археологічні дані про кістки тварин (перевага свинини в містах).
+
+### Транспорт суходолу: коні та вози
+- **Коні**: *конь* (бойовий), *комонь*, *лоша* (лоша), *кобила*.
+- **Спорядження**: *сѣдло*, *уззда*, *стремя*.
+- **Транспорт**: *воз* (віз), *сани* (використовувалися навіть влітку для урочистих подій, наприклад, похорону), *колеса*.
+- **Право**: Статті «Руської Правди» про захист коней.
+
+### Водний шлях: човни та насади
+- **Судна**: *лодья* (основне судно), *насад* (з набитими бортами), *струг*, *скедія* (візантійський тип).
+- **Елементи**: *весло*, *парус* (вітрило), *корм* (кермо), *ніс*.
+- **Документ**: Звенигородська берестяна грамота про «куни лодієві» — податок або плата за перевезення.
+
+### Мовна диглосія: побут проти книги
+- Контраст між високим стилем (*глад*, *враг*, *злато*) та живим мовленням (*голод*, *ворог*, *золото*).
+- Побутова лексика як доказ автохтонності української мови (тяглість назв предметів побуту).
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12373)
+✓ Message 12251 acknowledged
+✓ Message 12373 acknowledged

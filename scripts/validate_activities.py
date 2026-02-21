@@ -231,10 +231,21 @@ class ActivityValidator:
             yaml_path = Path(
                 f'curriculum/{self.curriculum}/{self.level}/activities/'
             )
-            yaml_files = list(yaml_path.glob(f'{module_num:02d}-*.yaml'))
-            
-            if not yaml_files:
-                yaml_files = list(yaml_path.glob(f'{module_num}-*.yaml'))
+            # Try manifest lookup first, then fallback to glob
+            try:
+                sys.path.insert(0, str(Path(__file__).parent))
+                from manifest_utils import get_module_by_number
+                mod = get_module_by_number(self.level, module_num)
+                if mod:
+                    yaml_files = [yaml_path / f"{mod.slug}.yaml"]
+                    if not yaml_files[0].exists():
+                        yaml_files = []
+                else:
+                    yaml_files = []
+            except Exception:
+                yaml_files = list(yaml_path.glob(f'{module_num:02d}-*.yaml'))
+                if not yaml_files:
+                    yaml_files = list(yaml_path.glob(f'{module_num}-*.yaml'))
 
             if not yaml_files:
                 continue
@@ -259,12 +270,8 @@ class ActivityValidator:
                     print(f"     ⚠️  {warn}")
 
             # 2. MDX validation (use slug from yaml filename)
-            # yaml_file.stem is like "01-some-slug" - extract slug
-            slug = '-'.join(yaml_file.stem.split('-')[1:]) if '-' in yaml_file.stem else yaml_file.stem
+            slug = yaml_file.stem
             mdx_path = Path(f'docusaurus/docs/{self.level}/{slug}.mdx')
-            # Fallback to old numbered format if slug-based doesn't exist
-            if not mdx_path.exists():
-                mdx_path = Path(f'docusaurus/docs/{self.level}/module-{module_num:02d}.mdx')
             mdx_results = self.validate_mdx(mdx_path)
             if not mdx_results['pass']:
                 print(f"  ❌ MDX: {len(mdx_results['errors'])} errors")

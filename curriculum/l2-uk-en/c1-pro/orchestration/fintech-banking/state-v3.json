@@ -1,0 +1,13 @@
+{
+  "track": "c1-pro",
+  "slug": "fintech-banking",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-20T01:08:27Z",
+      "task_id": "v3-fintech-banking-pA",
+      "mode": "full"
+    }
+  }
+}

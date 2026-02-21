@@ -1,0 +1,95 @@
+sequence: 1
+module: lit-01
+level: LIT
+slug: introduction-to-kotliarevsky
+version: '2.0'
+title: Феномен Івана Котляревського
+subtitle: Ivan Kotliarevsky
+content_outline:
+- section: Вступ — Чому 1798 рік?
+  points:
+  - Історичний контекст появи "Енеїди"
+  - Стан української культури наприкінці XVIII століття
+  - Чому цей "жарт" став початком нової літератури
+- section: Біографія як драма вибору
+  points:
+  - Дитинство та освіта в Полтаві
+  - Військова кар'єра та масонство
+  - Театральна діяльність і просвітництво
+- section: Феномен "Котляревщини"
+  points:
+  - Що таке бурлеск і травестія
+  - Жива народна мова vs книжна мова
+  - Роль сміху як культурної зброї
+- section: '"Енеїда" в європейському контексті'
+  points:
+  - Традиція травестії Вергілія в Європі
+  - Унікальність українського варіанту
+  - Козак замість римлянина
+- section: Роль особистості в культурі
+  points:
+  - Асиміляція vs опір
+  - '"Людина вчинку" — Котляревський як архетип'
+  - Вплив на наступні покоління
+- section: Підсумок — Від жарту до нації
+  points:
+  - Значення Котляревського для українського відродження
+  - Його місце в літературному каноні
+  - Перехід до аналізу "Енеїди"
+vocabulary_hints:
+  required:
+  - бурлеск (burlesque)
+  - травестія (travesty)
+  - національне відродження (national revival)
+  - асиміляція (assimilation)
+  - просвітництво (enlightenment)
+  - масонство (freemasonry)
+  - кріпацтво (serfdom)
+  - класицизм (classicism)
+  - сатира (satire)
+  - архаїзм (archaism)
+  recommended:
+  - меценат (patron)
+  - канон (canon)
+  - пародія (parody)
+  - імперія (empire)
+  - губернія (province)
+activity_hints:
+- type: reading
+  focus: Уривки з біографії Котляревського
+  source: UkrLib biography
+  items: 3+
+- type: essay-response
+  focus: Роль особистості в історії культури
+  output: Аргументативне есе
+focus: literature
+pedagogy: literature
+prerequisites:
+- C1 Core completion required
+- Academic writing proficiency
+- Vocabulary ~8,500+ words
+connects_to:
+- lit-02 (Eneida Part I — сюжет і структура)
+- lit-05 (Natalka Poltavka — перехід до сентименталізму)
+module_type: biography
+sources:
+- name: Іван Котляревський — біографія
+  url: https://www.ukrlib.com.ua/bio/printit.php?tid=1697
+  type: primary
+  notes: Офіційна біографія автора на UkrLib
+- name: Енеїда — повний текст
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=51
+  type: primary
+  notes: Для контексту появи твору
+- name: Аналіз творчості Котляревського
+  url: https://www.ukrlib.com.ua/analiz/printit.php?tid=51
+  type: secondary
+  notes: Літературознавчий аналіз
+immersion: 100% Ukrainian
+phase: LIT.1 Burlesque & Folk Origins
+objectives:
+- Analyze literary techniques in феномен івана котляревського
+- Interpret themes and motifs of чому 1798 рік?
+persona:
+  voice: Senior Philologist & Critic
+  role: Literature Founder

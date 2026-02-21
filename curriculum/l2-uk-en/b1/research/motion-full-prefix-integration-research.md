@@ -1,80 +1,35 @@
-# Research: Motion - Full Prefix Integration (B1 M22)
+# Дослідження: Рух: інтеграція префіксів
 
-**Module:** B1 M22 "Рух: інтеграція префіксів"
-**Topic:** Integration of spatial prefixes with motion verbs (*іти/ходити, їхати/їздити*)
-**Level:** B1 (Intermediate)
-**Note:** The prompt context erroneously labeled this as "A1". This research reflects the actual B1 module plan and State Standard requirements for B1.
+## State Standard Reference
+§4.3.8: "Утворення префіксальних дієслів руху: іти – прийти, перейти, дійти, відійти, зайти, вийти; їхати – приїхати, переїхати, доїхати, від’їхати, заїхати, поїхати, виїхати, об’їхати."
+Alignment: This module explicitly covers the formation and usage of these prefixed motion verbs, including their spatial and figurative meanings, directly fulfilling the B1 requirement for morphological competence.
 
-## 1. Grammar: State Standard 2024 Reference
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| **перейти** | High / Web Corpus | перейти вулицю (cross street), перейти на українську (switch to Ukrainian), перейти межу (cross the line) |
+| **вийти** | High / Web Corpus | вийти з дому (leave home), вийти заміж (marry), нічого не вийшло (nothing worked out), вийти сухим із води (get away with it) |
+| **прийти** | High / Web Corpus | прийти вчасно (arrive on time), прийти до тями (regain consciousness), прийти до висновку (conclude) |
+| **зайти** | Med-High / Web Corpus | зайти в магазин (enter shop), зайти в гості (drop by), сонце зайшло (sun set), зайти далеко (go far - fig.) |
+| **дійти** | Med / Web Corpus | дійти до центру (reach center), дійти згоди (reach agreement), руки не доходять (never get around to it) |
+| **пройти** | High / Web Corpus | пройти повз (walk past), біль пройшов (pain passed), пройти курс (complete a course) |
 
-The topic corresponds to **Section 4.3.8** of the *Ukrainian State Standard for Ukrainian as a Foreign Language (2024)*, specifically within the B1 Grammar ("Catalog V") section.
+## Cultural Hooks
+1. **Kyiv Metro (Arsenalna)**: The deepest metro station in the world/Europe (105.5m). A perfect context for *сходити* (go down), *виходити* (exit), *переходити* (transfer). The descent takes ~5 minutes.
+2. **Kamianets-Podilskyi Castle**: The legend of Sultan Osman II, who asked "Who built this?" and upon hearing "God," replied "Let God take it" (*відійти* - retreat). Also the "wet spot" legend of Khotyn (*пролити* - spill/shed).
 
-> **4.3.8. Утворення префіксальних дієслів руху:**
-> *іти – прийти, перейти, дійти, відійти, зайти, вийти;*
-> *їхати – приїхати, переїхати, доїхати, від’їхати, заїхати, поїхати, виїхати, об’їхати.*
+## Common Learner Errors
+1. **при- vs. до-**: *Прийти до парку* (enter/arrive at) vs. *Дійти до парку* (reach the edge of).
+    *   *Correction*: Use **до-** for reaching a limit/point, **при-** for arrival/presence.
+2. **в- vs. за-**: *Ввійшов у кімнату* (entered) vs. *Зайшов у кімнату* (entered briefly/dropped by).
+    *   *Correction*: **За-** often implies a short visit or deviation, while **в-** is neutral entry.
+3. **Unidirectional Base**: Using *по-* with multidirectional base (*походити*) instead of unidirectional (*піти*) for "to start going/set off".
+    *   *Correction*: *Піти* = set off; *Походити* = walk around for a bit.
 
-This section explicitly requires students to master the formation and meaning of prefixed motion verbs derived from *іти* and *їхати*.
+## Cross-References
+- **Builds on**: b1-16 (System), b1-17 (Coming/Going), b1-18 (Passing), b1-19 (Starting), b1-20 (Approaching), b1-21 (Figurative).
+- **Prepares for**: b1-23 (Motion patterns in other verbs), b1-25 (Checkpoint).
 
-## 2. Vocabulary Frequency
-
-At B1 level, students move from recognizing these forms to actively producing them.
-
-### High Frequency (Core Active Vocabulary)
-These must be mastered for production:
-*   **прийти / приїхати** (to arrive) — *Essential for all past/future appointments.*
-*   **піти / поїхати** (to leave/set off) — *The standard way to say "I left" or "Let's go".*
-*   **зайти / заїхати** (to stop by/enter briefly) — *Critical for "visiting" or "picking something up".*
-*   **вийти / виїхати** (to exit) — *Essential for navigation (leaving a room, building, city).*
-*   **увійти / зайти** (to enter) — *Note: "зайти" is often preferred in spoken language for casual entry.*
-
-### Medium Frequency (Receptive/Guided Production)
-*   **перейти** (to cross) — *Used with "вулицю" (street).*
-*   **дійти** (to reach/walk as far as) — *Used with "до" (up to).*
-*   **повернутися** (to return) — *While not a prefix of "йти", it's the primary synonym for "to come back".*
-
-### Collocations
-*   **Вийти заміж** (to marry - for women) — *Literal: "to go out behind husband". High frequency idiom.*
-*   **Перейти вулицю** (to cross the street).
-*   **Зайти в гості** (to come for a visit/drop by).
-*   **Піти додому** (to go home).
-
-## 3. Cultural Hook
-
-1.  **Hospitality & "Заходьте!"**
-    In Ukraine, the concept of "dropping by" is culturally central. The phrase **"Заходьте!"** (Come in!) is the universal welcome greeting when opening a door to a guest. It uses the prefix *за-* (movement into/behind), implying crossing a threshold. It is polite to say "Я зайду на хвилинку" (I'll drop by for a minute), even if the visit lasts hours.
-
-2.  **"Поїхали!" vs "Пішли!"**
-    Ukrainians strictly distinguish between starting movement on foot vs. by vehicle.
-    *   **"Ну, поїхали!"** (Well, let's ride!) — Famous associated with starting a journey (or Gagarin's launch, though that's Soviet context, the phrase is universal).
-    *   **"Пішли!"** (Let's go/walk!) — Used for leaving a location on foot.
-    *   *Cultural Note:* Using "Поїхали" when walking sounds humorous or confused.
-
-## 4. Pedagogical Notes
-
-### Key Differences from English
-*   **Satellite-framed vs. Verb-framed:** English uses particles (*go **out**, come **in**, walk **away***). Ukrainian uses prefixes (* **ви**ходити, **за**ходити, **від**ходити*).
-*   **Aspectual Shift:** This is the hardest concept.
-    *   *Basic:* йти (impf) -> **при**йти (perf).
-    *   *The Trap:* Adding a prefix to a unidirectional motion verb usually makes it **Perfective**.
-    *   *Exception:* **при**ходити is Imperfective. The pattern is *приходити (impf) - прийти (perf)*.
-
-### Common Learner Errors
-*   **Using "йти" for arrival:** *"Я йшов до офісу о 9:00"* (I was walking to the office) vs *"Я прийшов до офісу о 9:00"* (I arrived). Students often overuse the base form.
-*   **Confusing *по-* and *пі-*:**
-    *   *піти* = to leave / start walking (perfective of *йти*).
-    *   *походити* = to walk around for a while (delimitative).
-*   **Case Mismatches:**
-    *   *Зайти* + Accusative (destination) vs *Зайти* + Instrumental (fetch something/someone - "за хлібом").
-
-## 5. Scope Boundaries
-
-### IN Scope (B1)
-*   **Spatial Meanings:** In, Out, Across, Up, Down, Arrival, Departure.
-*   **Basic Aspect Pairs:** *приходити/прийти, виходити/вийти*.
-*   **Concrete Motion:** Moving physical bodies in space.
-*   **Simple Figurative:** *Час іде/летить* (Time flies/goes), *Вийти заміж*.
-
-### OUT of Scope (Save for B2/C1)
-*   **Abstract/Slang Meanings:** *Наїхати* (to bully), *Дійти* (to understand/reach a conclusion - nuances), *Виходити* (to work out/result in).
-*   **Rare Prefixes:** *Над-* (approaching slightly), *Зне-* (to fatigue by walking).
-*   **Complex Aspect Nuances:** Secondary imperfectivization of rare verbs.
+## Notes for Content Writing
+- **Narrative**: The "Castle Excursion" dialogue is an excellent opportunity to introduce figurative meanings (legends, history "passing", armies "retreating").
+- **Pedagogy**: Explicitly contrast *при-* and *до-* in the analysis section, as this is a high-friction point for English speakers. Use the TTT approach: let them try to choose the prefix in the diagnostic before explaining the strict logic.

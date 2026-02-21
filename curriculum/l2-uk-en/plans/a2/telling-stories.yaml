@@ -1,0 +1,105 @@
+module: a2-26
+level: A2
+sequence: 26
+slug: telling-stories
+version: '2.0'
+title: Telling Stories
+subtitle: Sequencing Events in Narrative
+content_outline:
+- section: Вступ (Introduction)
+  words: 500
+  points:
+  - The transition from listing events to a cohesive narrative as mandated by State
+    Standard §1.4.1.1.1 (simple sequences).
+  - 'The ''Robot Style'' problem: why beginners overuse «і» (and) for every action
+    and how sequencing words create natural flow.'
+  - 'Cultural Hook: The Village Storyteller (Казкар) — an introduction to the communal
+    art of oral tradition and the storyteller''s role as a cultural anchor.'
+- section: 'Презентація: Дорожні знаки часу (Presentation: Road Signs of Time)'
+  words: 700
+  points:
+  - 'Visual Metaphor: The «Timeline Road» using «спочатку», «потім», and «нарешті»
+    as the cars of a train connecting the story.'
+  - 'Learner Error: Confusing the adverb «спочатку» (at first) with the prepositional
+    phrase «з початку» (from the start) — drill pattern: «Спочатку я поснідав» vs.
+    «З початку книги».'
+  - 'Word Order Rule: Time markers as ''Theme'' — placing markers at the start of
+    sentences (e.g., «Потім я пішов...») to avoid the common error of trailing them
+    like English ''afterwards''.'
+- section: 'Презентація: Драма та несподіванки (Presentation: Drama and Surprises)'
+  words: 600
+  points:
+  - 'The ''Plot Twist'' button: Using «раптом» and «несподівано» to break expectation
+    and add drama to a narrative.'
+  - 'Relative time markers for depth: «раніше», «недавно», «давно» and their roles
+    in setting the backstory context.'
+  - 'Narrative Registers: Fairytale opening formulas like «Жили-були...» (Once upon
+    a time) and how they signal the start of a story.'
+- section: 'Практика: Сміхова культура (Practice: Laughter Culture)'
+  words: 600
+  points:
+  - 'Cultural Hook: Ukrainian Laughter (Сміхова культура) — drilling the timing of
+    «потім» and «раптом» using the ''Anekdot'' format to land punchlines.'
+  - 'Drill: Replacing ''Robot Style'' chains of «і» with varied sequencing connectors
+    in a chaotic morning routine scenario.'
+  - Minimal pair drills for «спочатку» vs «з початку» in context-dependent sentences.
+- section: Продукція та підсумок (Production and Summary)
+  words: 600
+  points:
+  - 'Task: Telling a fishing story or travel adventure using at least five different
+    sequencing markers with correct sentence-initial placement.'
+  - 'Final review of the Village Storyteller persona: the importance of oral storytelling
+    in maintaining moral and historical narratives.'
+  - 'Checklist for learners: Did I avoid «і» chains? Are my time markers at the start?
+    Did I use a ''Plot Twist'' marker?'
+focus: vocabulary
+pedagogy: PPP
+objectives:
+- Learner can sequence events using connectors
+- Learner can tell a simple story with a beginning, middle, and end
+- Learner can describe unexpected events
+- Learner can use time markers to structure narrative
+grammar:
+- sequencing words (спочатку, потім, нарешті)
+- time markers (раптом, одного разу)
+- narrative tenses
+- structuring a story
+module_type: vocabulary
+sources:
+- name: Ukrainian State Standard 2024 - Narration
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Narrative and sequence requirements for A2
+- name: Stylistics of Ukrainian Language - Narrative Flow
+  url: https://uk.wikipedia.org/wiki/Оповідь
+  type: reference
+  notes: Logical connectors in Ukrainian prose
+immersion: 60-75% Ukrainian
+phase: A2.2
+persona:
+  voice: Encouraging Cultural Guide
+  role: Village Storyteller
+vocabulary_hints:
+  required:
+  - 'спочатку (at first) — спочатку я..., спочатку було...; High frequency; Note:
+    avoid confusion with «з початку» (from the start)'
+  - 'потім (then/afterwards) — а потім, потім ми...; High frequency; Note: typically
+    starts the sentence in natural narration'
+  - нарешті (finally) — нарешті прийшов, нарешті сталося; High frequency; signals
+    the narrative conclusion
+  - раптом (suddenly) — і раптом побачив, раптом почався; Medium frequency; the 'Plot
+    Twist' or drama marker
+  - одного разу (once/one day) — одного разу влітку, одного разу я...; Medium frequency;
+    standard narrative opening
+  - несподівано (unexpectedly) — несподівано з'явився, несподівано для всіх; used
+    for adding narrative tension
+  - 'казка (fairytale) — читати казку, народна казка; key opening formula: «Жили-були...»'
+  - анекдот (joke/anecdote) — розповідати анекдот, смішний анекдот; requires precise
+    timing of connectors
+  recommended:
+  - казкар (storyteller) — шанований казкар; refers to the traditional oral storyteller
+    persona
+  - несподіванка (a surprise) — приємна несподіванка; noun form related to «несподівано»
+  - раніше (earlier/before) — раніше я не знав; used for relative time reference
+  - давно (long ago) — дуже давно; indicates distant past in storytelling
+word_target: 3000

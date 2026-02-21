@@ -1,0 +1,130 @@
+module: b1-19
+level: B1
+sequence: 19
+slug: motion-starting-returning
+version: '2.0'
+title: 'Рух: початок і повернення'
+subtitle: Motion - Starting & Returning
+content_outline:
+- section: Вступ та Діагностика (Introduction & Diagnostics)
+  words: 600
+  points:
+  - Introduction to the logic of starting, visiting, and dispersing in Ukrainian movement
+    verbs, building on the passing concepts from b1-18.
+  - 'Diagnostic dialogue: A chaotic morning commute scenario involving trying to ''зайти''
+    into a full marshrutka and needing to ''заскочити'' into a kiosk.'
+  - 'Intuition check: Evaluating the learner''s initial grasp of the ''по-'' prefix
+    for starting movement (''піти'' vs ''йти'') and the transport distinction (''піти''
+    vs ''поїхати'').'
+- section: Семантика префіксів за державним стандартом (Prefix Semantics per State
+    Standard)
+  words: 1000
+  points:
+  - 'Detailed breakdown of по-, за-, and роз- prefixes based on State Standard §4.3.8:
+    semantics of starting (по-), entering/visiting (за-), and dispersing (роз-).'
+  - 'Comparative analysis: ''зайти'' (casual entry/drop in) vs ''увійти'' (formal
+    physical entry) to establish natural register awareness in social contexts.'
+  - 'Semantics of dispersal: ''розійтися'' (on foot) vs ''роз''їхатися'' (by vehicle)
+    with high-frequency collocations like ''розійтися по домівках''.'
+  - 'Standardized patterns: listing prefixed pairs for ''іти'' and ''їхати'' as mandated
+    by §4.3.8 to ensure competency in formation.'
+- section: Мовні нюанси та запобігання помилкам (Linguistic Nuances & Error Prevention)
+  words: 900
+  points:
+  - 'Learner error focus: correcting the overuse of formal ''увійти'' for social visits
+    where the natural ''зайти до друга'' is required.'
+  - 'Prepositional clarity: ''зайти в'' (to enter a space) vs ''зайти за'' (to go
+    behind/hide), using minimal pairs to prevent common preposition confusion.'
+  - 'Social coordination logic: distinguishing ''зайти за кимось'' (picking someone
+    up on foot) vs ''заїхати за кимось'' (picking someone up by car).'
+  - 'Distance check: addressing the common error ''піти до Львова'' by enforcing the
+    transport-specific ''поїхати'' for long-distance travel.'
+- section: Культурний контекст та транспортний етикет (Cultural Context & Transport
+    Etiquette)
+  words: 800
+  points:
+  - 'Transport etiquette: The golden rule of Ukrainian public transit — ''Спочатку
+    виходять, потім заходять'' (Exit first, then enter) — as a social norm.'
+  - 'Travel ritual: ''Присісти на дорогу'' (sitting before leaving) — exploring its
+    historical roots in folklore and its modern role as a psychological reset.'
+  - 'Hospitality ritual: The ''На коня'' tradition (the stirrup cup) — the final toast
+    before guests ''розходяться'' (disperse).'
+- section: Комплексна практика та підсумок (Comprehensive Practice & Summary)
+  words: 700
+  points:
+  - Prefix selection drills focusing on the choice between 'йти' and 'їхати' when
+    combined with 'по-', 'за-', and 'роз-' semantics.
+  - 'Colloquial usage: mastering the ''pop-in'' culture through high-frequency usage
+    of ''заскочити'' for quick coffee or errands.'
+  - 'Summary of the movement arc: from ''початок'' (departure rituals) through intermediate
+    stops to the final dispersal of a group.'
+vocabulary_hints:
+  required:
+  - 'піти/виходити (to leave on foot/exit) — collocations: вийти з дому, вийти на
+    зупинці, вийти заміж (marry - f.)'
+  - 'поїхати/виїжджати (to leave by vehicle/exit) — high frequency; usage: поїхати
+    у відпустку, поїхати з міста'
+  - 'зайти/заходити (to stop by on foot) — high frequency; collocations: зайти в гості,
+    зайти в магазин, зайти по дорозі'
+  - 'заїхати/заїжджати (to stop by in vehicle) — medium frequency; usage: заїхати
+    за кимось (pick someone up), заїхати на заправку'
+  - 'розійтися/розходитися (to disperse on foot) — medium frequency; collocations:
+    розійтися по домівках, думки розійшлися'
+  - 'роз''їхатися/роз''їжджатися (to disperse by vehicle) — usage: гості роз''їхалися
+    після вечірки'
+  - 'початок (beginning) — context: початок руху (Standard §4.3.8); starting point'
+  - 'зупинка (stop) — collocation: вийти на зупинці; public transport stop'
+  - 'розходження (dispersal) — context: шляхи розійшлися; literal and metaphorical'
+  - 'напрямок (direction) — context: змінити напрямок руху; heading'
+  recommended:
+  - 'побігти (to start running) — usage: побігти на автобус (start running for the
+    bus)'
+  - 'забігти (to run in briefly) — usage: забігти в аптеку (pop into the pharmacy)'
+  - 'розбігтися (to scatter running) — usage: діти розбіглися по майданчику'
+  - 'заскочити (to pop in quickly) — colloquial register: заскочити на каву (pop in
+    for coffee)'
+  - 'затриматися (to linger/be delayed) — usage: затриматися на роботі (to stay late
+    at work)'
+activity_hints:
+- type: quiz
+  focus: по- vs за- vs роз- selection
+  items: 15+
+- type: fill-in
+  focus: Narratives about meetings and departures
+  items: 12+
+- type: fill-in
+  focus: Start → stop by → disperse sequence
+  items: 10+
+- type: fill-in
+  focus: Story about a gathering
+  items: 12+
+focus: grammar
+pedagogy: TTT
+prerequisites:
+- b1-18 (Motion - passing & crossing)
+connects_to:
+- b1-20 (Motion - approaching & departing)
+- b1-22 (Motion full prefix integration)
+objectives:
+- Learner can use по- for starting movement
+- Learner can use за- for stopping by
+- Learner can use роз- for dispersing
+grammar:
+- Prefixes по-, за-, роз-
+- Starting, stopping by, dispersing patterns
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Motion Prefixes
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Official prefix meanings for starting/returning
+- name: Ukrainian Verbal Prefixes
+  url: https://uk.wikipedia.org/wiki/Дієслівні_префікси
+  type: reference
+  notes: по-, за-, роз- semantics
+immersion: 100% Ukrainian
+phase: B1.2 Motion
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Commuter
+word_target: 4000

@@ -1,53 +1,44 @@
----
-module: c1-bio-139
+module: c1-bio-146
 level: C1-BIO
-sequence: 139
+sequence: 146
 slug: volodymyr-ivasyuk
 version: '2.0'
 title: 'Володимир Івасюк: Автор Червоної рути'
 content_outline:
-- section: "Вступ — Пісня, яка стала гімном"
-  words: 400
+- section: Вступ — Пісня, яка стала гімном
   points:
   - Червона рута як символ українського відродження
   - Від студента-медика до легенди
   - Трагічна загадкова смерть
 - section: Буковинське дитинство
-  words: 600
   points:
   - Народження в Кіцмані (1949)
   - Музична родина
   - Ранній талант до музики
 - section: Студентські роки та перші пісні
-  words: 700
   points:
   - Медичний інститут у Чернівцях
   - Початок композиторської діяльності
   - Перші успіхи
 - section: Тріумф Червоної рути
-  words: 800
   points:
   - Створення легендарної пісні (1968)
   - Фестиваль у Чернівцях
   - Національний та міжнародний успіх
 - section: Творча спадщина
-  words: 700
   points:
   - Інші відомі пісні (Водограй, Два перстені)
   - Вплив на українську естраду
   - Синтез фольклору та сучасності
 - section: Загадкова смерть
-  words: 600
   points:
   - Переслідування КДБ
   - Загибель у 1979 році
   - Версії про причини смерті
-- section: "Дискусія — Мистецтво як опір"
-  words: 200
+- section: Дискусія — Мистецтво як опір
   points:
   - Чому пісня стала небезпечною для влади
   - Івасюк у національній пам'яті
-word_target: 4000
 vocabulary_hints:
   required:
   - композитор (composer)
@@ -73,7 +64,6 @@ activity_hints:
   items: 3 passages
 - type: essay-response
   focus: Чому Червона рута стала символом?
-  word_target: 300
   output: Культурологічний есей
 focus: biography
 prerequisites:
@@ -85,15 +75,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Володимир Івасюк (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Івасюк_Володимир_Михайлович"
+  url: https://uk.wikipedia.org/wiki/Івасюк_Володимир_Михайлович
   type: primary
   notes: Основна біографічна інформація
 - name: Музей Володимира Івасюка
-  url: "https://ivasyuk.org.ua/"
+  url: https://ivasyuk.org.ua/
   type: reference
   notes: Архівні матеріали та творча спадщина
 - name: Фестиваль Червона рута
-  url: "https://chervona-ruta.org/"
+  url: https://chervona-ruta.org/
   type: reference
   notes: Культурний вплив
 immersion: 100% Ukrainian
@@ -102,3 +92,6 @@ objectives:
 - 'Analyze the life and legacy of володимир івасюк: автор червоної рути'
 - Evaluate the contributions of пісня, яка стала гімном
 - Trace the career and influence of мистецтво як опір
+persona:
+  voice: Senior Biographer
+  role: Pop Composer

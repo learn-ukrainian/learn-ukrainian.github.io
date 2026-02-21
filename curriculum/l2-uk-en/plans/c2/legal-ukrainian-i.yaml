@@ -1,67 +1,76 @@
----
 module: c2-061
 level: c2
 sequence: 61
 version: '2.0'
-title: "Юридична українська I — Основи правничої термінології"
+title: Юридична українська I — Основи правничої термінології
 focus: vocabulary
 pedagogy: TTT
 objectives:
 - TBD
 sources:
-- name: "Верховна Рада України — законодавство"
-  url: "https://zakon.rada.gov.ua/"
+- name: Верховна Рада України — законодавство
+  url: https://zakon.rada.gov.ua/
   type: primary
-  notes: "Official Ukrainian legislation database — primary source for legal texts"
+  notes: Official Ukrainian legislation database — primary source for legal texts
 - name: Конституція України
-  url: "https://zakon.rada.gov.ua/laws/show/254%D0%BA/96-%D0%B2%D1%80"
+  url: https://zakon.rada.gov.ua/laws/show/254%D0%BA/96-%D0%B2%D1%80
   type: primary
-  notes: "Constitution of Ukraine — foundational legal document"
+  notes: Constitution of Ukraine — foundational legal document
 - name: Юридична енциклопедія
-  url: "https://cyclop.com.ua/content/view/1284/"
+  url: https://cyclop.com.ua/content/view/1284/
   type: reference
   notes: Ukrainian legal encyclopedia for terminology
 content_outline:
-- section: "Вступ — Правнича мова як система"
-  words: 541
+- section: 'Вступ: Історія та природа правничої мови (Introduction: History and Nature
+    of Legal Language)'
+  words: 700
   points:
-  - Особливості юридичної української
-  - Історія розвитку правничої термінології
-  - Вплив латини та інших мов
-- section: Структура правової системи України
-  words: 757
+  - 'Historical foundations of Ukrainian law: Analysis of ''Ruska Pravda'' and the
+    Constitution of Pylyp Orlyk (1710) as early European models of the separation
+    of powers concept.'
+  - 'Characteristics of the Official-Business Style (§4.3.1.1): The balance between
+    informative precision and prescriptive authority in legal discourse.'
+- section: Державний устрій та ієрархія нормативних актів (State Structure and Hierarchy
+    of Normative Acts)
+  words: 900
   points:
-  - Конституційне право
-  - Галузі права (цивільне, кримінальне, адміністративне)
-  - Судова система
-  - Правові акти та їх ієрархія
-- section: Базова правнича термінологія
-  words: 865
+  - 'Branches of power in Ukraine (§3.8): The roles of the legislative (Verkhovna
+    Rada), executive, and judicial branches in maintaining the legal order.'
+  - 'The hierarchy of normative acts: Exploring the supremacy of the Constitution
+    over statutes (закони) and bylaws (підзаконні акти), and the Constitutional Court''s
+    oversight.'
+- section: Суб'єкти права та правовідносини (Subjects of Law and Legal Relations)
+  words: 900
   points:
-  - Суб'єкти права (фізичні та юридичні особи)
-  - Правові відносини
-  - Права та обов'язки
-  - Відповідальність та санкції
-- section: Читання правових текстів
-  words: 649
+  - 'Defining legal subjects (§3.7): Rights and obligations of natural persons (фізичні
+    особи), legal entities (юридичні особи), and the status of FOP (фізична особа-підприємець).'
+  - 'Legal capacity and participation: Mapping the scope of civil rights and the nature
+    of legal relations (правовідносини) in the modern Ukrainian context.'
+- section: Правнича термінологія та культура мовлення (Legal Terminology and Speech
+    Culture)
+  words: 900
   points:
-  - Структура закону
-  - Розуміння статей та пунктів
-  - Юридичні конструкції та формулювання
-  - Посилання на законодавство
-- section: Юридична лексика в повсякденному житті
-  words: 649
+  - 'Learner error focus: Correcting prepositional governance — «згідно із законом»
+    (Instrumental) vs. common mistake «згідно закону»; distinguishing «вивчати право»
+    (system) from «вивчати закон» (statute).'
+  - 'Lexical precision for C2: Differentiating ''юрист'' from ''адвокат''; refining
+    the register by preferring active official voice (''суд ухвалив'') over passive
+    bureaucratic forms (''було вирішено'').'
+- section: 'Робота з першоджерелами: Закони та договори (Working with Primary Sources:
+    Laws and Contracts)'
+  words: 900
   points:
-  - Поширені правові терміни
-  - Юридичний жаргон vs. офіційна термінологія
-  - Правові документи громадян (паспорт, свідоцтво, договір)
-- section: Практичні вправи
-  words: 539
+  - 'Anatomy of a Ukrainian legal act: Mastering the interpretation of articles (статті),
+    parts (частини), and clauses (пункти) in legislative codes.'
+  - 'Contractual analysis: Identifying essential clauses, liabilities (відповідальність),
+    and dispute resolution mechanisms in standard civil agreements.'
+- section: Правопорядок та підсумковий аналіз (Law Order and Final Analysis)
+  words: 700
   points:
-  - Читання статей Конституції
-  - Аналіз простого договору
-  - Побудова юридичного глосарію
-word_target: 4000
+  - 'State Standard focus (§3.7): Discussing law enforcement agencies, corruption,
+    and the transition toward a transparent justice system in post-decolonized Ukraine.'
+  - 'Professional synthesis: Creating a bilingual legal glossary and analyzing the
+    linguistic differences between high-level legislative texts and practical documents.'
 vocabulary:
   required:
   - право (law/right)
@@ -80,7 +89,7 @@ vocabulary:
   - нормативний акт (normative act)
   - підсудність (jurisdiction)
   - правоздатність (legal capacity)
-  forbidden: "[]"
+  forbidden: '[]'
 activities:
   types_required:
   - group-sort
@@ -99,21 +108,48 @@ connects_to:
 - c2-65 (Legal Ukrainian V — Case analysis)
 vocabulary_hints:
   required:
-  - концепція (concept)
-  - аналіз (analysis)
-  - дискурс (discourse)
-  - методологія (methodology)
+  - 'право (law/right) — collocations: верховенство права (rule of law), суб''єкт
+    права, мати право; denotes the system or an entitlement.'
+  - 'закон (statute/law) — collocations: згідно із законом (Instrumental case), ухвалити
+    закон, чинне законодавство; denotes a specific legislative act.'
+  - 'юридична особа (legal entity) — official term for organizations/corporations;
+    Frequency: High.'
+  - фізична особа (natural person) — official term for individuals; note 'фізична
+    особа-підприємець' (FOP).
+  - 'договір (contract) — collocations: укласти договір (to enter into), розірвати
+    договір (to terminate); legal term of art.'
+  - 'позов (lawsuit/claim) — collocations: подати позов, позовна заява, задовольнити
+    позов; Frequency: High (Official).'
+  - 'суд (court) — collocations: Конституційний Суд України, Верховний Суд, судове
+    засідання (court hearing).'
+  - 'відповідальність (liability/responsibility) — collocations: нести відповідальність,
+    притягнути до відповідальності, кримінальна відповідальність.'
+  - концепція (concept) — abstract register for legal theory.
+  - аналіз (analysis) — key action for C2 legal discourse.
+  - дискурс (discourse) — academic/professional register marker.
+  - методологія (methodology) — used in discussing legal research/theory.
   recommended:
-  - інтерпретація (interpretation)
-  - контекстуалізація (contextualization)
-  - синтез (synthesis)
+  - згідно із (according to) — Mandatory Instrumental governance; major learner error
+    focus.
+  - адвокат (lawyer/advocate) — specific to bar-qualified members; contrast with general
+    'юрист'.
+  - законодавство (legislation) — the body of law as a whole; 'чинне законодавство'.
+  - правовідносини (legal relations) — formal interactions regulated by legal norms.
+  - правоохоронні органи (law enforcement agencies) — State Standard (§3.7) terminology.
+  - державний устрій (state structure) — State Standard (§3.8) terminology.
+  - інтерпретація (interpretation) — specifically 'юридична інтерпретація'.
+  - контекстуалізація (contextualization) — analyzing law within historical/social
+    frameworks.
+  - синтез (synthesis) — summarizing legal arguments.
 activity_hints:
 - type: reading
   focus: Поглиблений аналіз тексту
   items: 4
 - type: essay-response
   focus: Критичне осмислення
-  word_target: 400
 - type: discussion
   focus: Дискусія та аргументація
   items: 1
+persona:
+  voice: Senior Specialist
+  role: Legal Clerk

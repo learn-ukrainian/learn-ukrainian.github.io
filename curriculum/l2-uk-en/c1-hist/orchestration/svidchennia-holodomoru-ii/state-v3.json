@@ -1,0 +1,13 @@
+{
+  "track": "c1-hist",
+  "slug": "svidchennia-holodomoru-ii",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T15:05:41Z",
+      "task_id": "v3-svidchennia-holodomoru-ii-pA",
+      "mode": "full"
+    }
+  }
+}

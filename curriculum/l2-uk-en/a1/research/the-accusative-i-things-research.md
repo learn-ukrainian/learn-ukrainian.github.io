@@ -1,50 +1,33 @@
-# Research Notes: The Accusative I: Things
+# Дослідження: The Accusative I: Things
 
-**Track**: a1
-**Module**: 11-the-accusative-i-things
-**Researched**: 2026-02-08
-**Sources consulted**: 4
+## State Standard Reference
+§4.2.3.2.1: "Без прийменника (об’єкт дії): Віра читає цікаву книжку."
+Alignment: This module focuses specifically on the direct object function without prepositions for inanimate nouns, aligning perfectly with the first subsection of the Accusative case standard for A1.
 
-## Основні факти
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| бачити | High (Core A1) | бачити проблему, я бачу... |
+| чути | High (Core A1) | чути музику, чути голос |
+| брати | High (Core A1) | брати участь, брати трубку, брати каву |
+| мати | Very High (Core A1) | мати рацію, мати час, мати можливість |
+| хотіти | Very High (Core A1) | хотіти їсти, хотіти спати, я хочу... |
+| купувати | High (Core A1) | купувати продукти, купувати одяг |
+| книга | High (Core A1) | читати цікаву книгу |
 
-- **Знахідний відмінок (Accusative Case)**: Вживається для позначення прямого додатка (об'єкта, на який спрямована дія).
-- **Питання**: Що? (для неістот), Кого? (для істот). У цьому модулі фокус на неістотах.
-- **Закінчення (Неістоти)**:
-  - Чоловічий рід: Нульове закінчення або основа (збігається з називним). Приклад: стіл -> бачу стіл.
-  - Жіночий рід (-а/-я): Змінюється на -у/-ю. Приклад: книга -> читаю книгу, пісня -> слухаю пісню.
-  - Середній рід: Без змін (збігається з називним). Приклад: вікно -> бачу вікно.
+## Cultural Hooks
+1. **"Пакет потрібен?"**: The quintessential question at every Ukrainian supermarket checkout. It's a cultural meme and a practical necessity.
+2. **Базар vs Супермаркет**: The "bazar" is not just a market but a social hub where interaction is key, whereas supermarkets are more impersonal but convenient.
 
-## Хронологія (навчальна логіка)
+## Common Learner Errors
+1. **Conceptual Nominative**: Learners leaving feminine nouns in the nominative case (e.g., *Я читаю книга* instead of *Я читаю книгу*) because they focus on the meaning, not the grammar.
+2. **Masculine Inanimate Confusion**: Learners trying to add endings to masculine inanimate objects (e.g., *Я бачу стола*) by over-applying the animate rule (which comes later in A1-12) or confusing it with Genitive.
 
-1. Повторення називного відмінка (Що це?).
-2. Введення дієслів, що вимагають знахідного (бачити, мати, читати, купувати).
-3. Пояснення незмінності чоловічого та середнього роду.
-4. Пояснення зміни жіночого роду (найважливіший момент для А1).
-5. Практика в контексті покупок та повсякденних речей.
+## Cross-References
+- Builds on: a1-10 (Checkpoint - First Contact), a1-01 (Cyrillic), a1-06 (Verbs I)
+- Prepares for: a1-12 (The Accusative II - People), a1-18 (Food and Shopping)
 
-## Первинні джерела (цитати українською)
-
-> "Знахідний відмінок неістот однини всіх родів, крім жіночого на -а, -я, має форму, спільну з називним відмінком." — Український правопис 2019, § 66.
-
-> "Я бачу стіл (ч.р.), я бачу вікно (с.р.), але я бачу книгу (ж.р.)." — Академічна граматика.
-
-## Деколонізаційні нотатки
-
-- Уникати порівняння з російською мовою (де також є подібні зміни), натомість акцентувати на внутрішній логіці української мови.
-- Використовувати питомо українську лексику (горнятко замість чашка, книгарня тощо).
-- Спростовувати міф про "схожість до ступеня нерозрізнення" — в українській мові чітка диференціація через IPA та акцентуацію.
-
-## Термінологічне мапування (Contested Terms)
-
-| Поняття | Англійський термін | Український термін | Коментар |
-| ------- | ---------------- | ------------------ | ----------------------- |
-| Direct Object | Direct Object | Прямий додаток | Об'єкт дії |
-| Accusative | Accusative | Знахідний відмінок | Відповідає на "Що?" |
-| Inanimate | Inanimate | Неістота | Неживий предмет |
-
-## Використані джерела
-
-1. [Український правопис 2019](https://mon.gov.ua/storage/app/media/zagalna%20serednya/Pravopys.2019.pdf)
-2. [Енциклопедія Сучасної України](https://esu.com.ua/)
-3. [Літопис - Граматика](http://litopys.org.ua/)
-4. [Державний стандарт української мови як іноземної (2024)](https://mkiip.gov.ua/)
+## Notes for Content Writing
+- Keep strict separation between inanimate (this module) and animate (next module) to avoid confusion.
+- Use distinct visual cues (tables) to contrast the changing Feminine forms vs the stable Masculine/Neuter forms.
+- Ensure English scaffolding is clear for the concept of "Direct Object" as this is the first case change learners encounter.

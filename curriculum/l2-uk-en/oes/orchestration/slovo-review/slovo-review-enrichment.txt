@@ -1,0 +1,202 @@
+✅ Message sent to Gemini (ID: 13045) [auto-acked: self-addressed]
+✓ Message 13045 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #13045...
+📨 Message #13045
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-slovo-review
+   Time: 2026-02-20T23:43:59.762923+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 90
+module: oes-090
+module_number: 90
+slug: slovo-review
+title_uk: 'Слово: Підсумок'
+title_en: 'Slovo: Review'
+phase: 4
+phase_id: literary-art
+phase_name: Literary Art
+focus: Recitation & Comprehension
+content_outline:
+- section: Вступ
+  description: 'Introduction to Slovo: Review'
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Senior Paleographer
+  role: Epic Reciter
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Slovo Review (Слово: Підсумок)
+
+## Використані джерела
+1. [Енциклопедія Сучасної України: Слово о полку Ігоревім](https://esu.com.ua/search_articles.php?id=SLOVO) — загальний огляд, історія відкриття, значення.
+2. [Ізборник: Текст і переклади Слова](http://litopys.org.ua/slovo67/slovo.htm) — оригінальні тексти, коментарі, переклади українською.
+3. [Радіо Свобода: Чиє «Слово о полку Ігоревім»?](https://www.radiosvoboda.org/a/slovo-o-polku-ihorevim-ukrayinska-mova/30656914.html) — інтерв'ю з Г. Півтораком про мовні особливості та українське походження.
+4. [Вікіпедія: Слово о полку Ігоревім](https://uk.wikipedia.org/wiki/Слово_о_полку_Ігоревім) — хронологія, персоналії, основні гіпотези.
+
+## Хронологія
+- **1185 (квітень-травень)**: Невдалий похід новгород-сіверського князя Ігоря Святославича проти половців.
+- **1187 (орієнтовно)**: Створення «Слова» (на основі згадок про певних князів).
+- **1791–1792**: Віднайдення рукопису О. Мусіним-Пушкіним у збірнику Спасо-Ярославського монастиря.
+- **1800**: Перше друковане видання «Слова» у Москві.
+- **1812**: Знищення оригінального рукопису під час пожежі в Москві (за офіційною версією).
+
+## Ключові факти та цитати
+- **Цитата 1**: «О Руська земле! Уже за шеломянем єси!» (символ туги і розлуки з батьківщиною).
+- **Цитата 2**: «Лучче ж би потяту бути, аніж полоненому бути» (ідеал воїнської честі).
+- **Цитата 3**: «Слово» — це не просто літопис, а «трудна повість», тобто військовий епос високого стилю.
+- **Факт**: Автор використовує народнопоетичну символіку (сонце тьмяніє, вовки виють, лисиці брешуть на щити), поєднуючи її з книжною риторикою.
+- **Факт**: Центральна ідея — заклик до єднання князів перед загрозою степу («золоте слово» Святослава).
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ": [!context] — Унікальність «Слова» як єдиного вцілілого зразка героїчного епосу Русі такого рівня.
+- Section "Основний матеріал: I — Історична канва...": [!history-bite] — Ігор Святославич був не ідеальним героєм, а призвідником усобиць, але автор «Слова» перетворює його поразку на урок для всіх.
+- Section "Основний матеріал: II — Мовний код...": [!myth-buster] — Спростування міфу про «спільну східнослов'янську мову». Лексика «Слова» рясніє суто українськими рисами (яруги, кожух, не доста, туга).
+- Section "Основний матеріал: III — Поетика...": [!culture] — Образ Ярославни як символ не лише дружини, а й самої природи/батьківщини, що плаче за своїми синами.
+- Section "Основний матеріал: IV — Загадка авторства...": [!decolonization] — Чому оригінал «згорів» саме тоді, коли постало питання української ідентичності тексту? Скептицизм як інструмент імперської науки.
+
+## Деколонізаційний контекст
+- **Imperial/Soviet myth**: «Слово» — пам'ятка «російської» літератури (на тій підставі, що оригінал знайдено в Росії, а Київська Русь — «колиска трьох народів»).
+- **Ukrainian reality**: Твір написано на українських землях (Чернігівщина/Київщина), про події на українських землях, мовою, що є прямим предком української (повноголосся, закінчення -ові/-еві, лексика). Це частина українського культурного коду, привласнена імперією.
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| Мова твору | Давньоросійська (Old Russian) | Давньоукраїнська / Давньоруська (Old Ukrainian / Rusian) |
+| Ігор Святославич | Герой общерусской історії | Чернігівський князь, учасник феодальних воєн на теренах України |
+| Оригінал | Втрачений «общерусский» скарб | Пам'ятка, що фіксує стан української мови XII ст. |
+
+## Section-Mapped Research Notes
+
+### Вступ
+Значення «Слова» як вершини давнього письменства. Загадка його поодинокості (чи були інші?).
+
+### Основний матеріал: I — Історична канва та політичний маніфест
+Похід 1185 р. Феодальна роздробленість. «Золоте слово» Святослава Київського як ідеологічний центр твору — засудження сепаратизму та бездумного героїзму заради слави.
+
+### Основний матеріал: II — Мовний код: українська природа твору
+Аналіз лексики (нечуваної для великоросів: *яруга*, *смага*, *лисиці брешуть*). Граматичні ознаки: кличний відмінок (*Бояне*, *княже*), давальний (*Ігореві*, *Дунаєві*), майбутній час (*будуть*). Дослідження Г. Півторака та Ю. Шевельова.
+
+### Основний матеріал: III — Поетика двовір'я та образність
+Міфологічний пласт: Дажбог, Велес, Стрибог, Див, Карна і Жля. Співіснування християнської риторики («братіє») та язичницького світовідчуття (природа як жива істота). Плач Ярославни — зв'язок з народними голосіннями.
+
+### Основний матеріал: IV — Загадка авторства та історія тексту
+Гіпотези про автора: Петро Бориславич, книжник Тимофій, сам князь Ігор? Історія знахідки Мусіна-Пушкіна. Скептична школа (Зімін) та докази автентичності (Залізняк): лінгвістика підтверджує, що підробити таку граматику у XVIII ст. було неможливо.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 13072)
+✓ Message 13045 acknowledged
+✓ Message 13072 acknowledged

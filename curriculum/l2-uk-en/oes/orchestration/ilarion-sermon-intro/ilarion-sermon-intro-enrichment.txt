@@ -1,0 +1,215 @@
+✅ Message sent to Gemini (ID: 13102) [auto-acked: self-addressed]
+✓ Message 13102 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #13102...
+📨 Message #13102
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-ilarion-sermon-intro
+   Time: 2026-02-20T23:44:26.299984+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 96
+module: oes-096
+module_number: 96
+slug: ilarion-sermon-intro
+title_uk: 'Проповідь Іларіона: Вступ'
+title_en: Ilarion's Sermon (Intro)
+phase: 4
+phase_id: literary-art
+phase_name: Literary Art
+focus: Law (Moses) vs Grace (Jesus)
+content_outline:
+- section: Вступ
+  description: Introduction to Ilarion's Sermon (Intro)
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Senior Paleographer
+  role: Metropolitan
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Проповідь Іларіона (Вступ)
+
+## Використані джерела
+1. [Енциклопедія історії України: Іларіон](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Ilarion) — академічна стаття про життя та діяльність митрополита Іларіона.
+2. [Ізборник: Слово про закон і благодать (текст)](http://litopys.org.ua/oldukr/ilarion.htm) — оригінальний текст та переклад В. Крекотня.
+3. [Енциклопедія Сучасної України: Слово про закон і благодать](https://esu.com.ua/article-13295) — аналіз ідейного змісту та історичного значення твору.
+
+## Хронологія
+- **1037 (бл.)**: Традиційна дата початку будівництва Софії Київської (за іншими даними раніше), розквіт правління Ярослава Мудрого.
+- **1040-ві**: Імовірний час написання «Слова про закон і благодать» (між 1037 і 1050).
+- **1051**: Обрання Іларіона митрополитом Київським собором руських єпископів (перший русин на кафедрі).
+- **1054**: Смерть Ярослава Мудрого, кінець епохи стабільності, в яку творив Іларіон.
+- **1448**: Посилання на прецедент обрання Іларіона при встановленні автокефалії московської церкви (історична апропріація).
+
+## Ключові факти та цитати
+- **Ідея рівності народів**: Іларіон заперечує богообраність одного народу (іудеїв у Старому Завіті, греків у Новому) і стверджує рівність усіх християнських народів, зокрема Русі.
+- **Титанічна фігура**: Іларіон — перший відомий на ім'я давньоруський письменник і перший митрополит-русин (не грек).
+- **Цитата 1 (Закон vs Благодать)**: «Закон бо предтечею був і слугою благодаті і істині, істина ж і благодать слуга майбутньому віку, життю нетлінному».
+- **Цитата 2 (Похвала Володимиру)**: «Встань, о чесна главо, з гробу твого! Встань, струси сон! Бо не вмер ти, а спиш до загального всім встання. Встань, не вмер ти! Не гоже бо тобі вмерти, вірувавши в Христа, життя всьому світу».
+- **Цитата 3 (Гедеон)**: «Рече же паки Гедеон до Бога: "Да будеть суша на руні токмо, по всей же землі роса". І бисть тако. Іудейство бо преста і закон отиде... По всей же землі роса, по всей бо землі віра простреся».
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ: Автор і доба": [!history-bite] — Іларіон був пресвітером у церкві Спаса на Берестовому, де молився у печері, що згодом стала початком Києво-Печерської лаври.
+- Section "Основний матеріал: Богослов'я Закону і Благодаті": [!context] — Пояснення символіки «місячного світла» (Закон) та «сонячного сяйва» (Благодать) у середньовічній уяві.
+- Section "Основний матеріал: Алегорія Агари та Сарри": [!quote] — Біблійна цитата про рабиню Агару та вільну Сарру як ключ до розуміння політичної свободи Русі.
+- Section "Основний матеріал: Хрещення Русі": [!myth-buster] — Спростування міфу про «вторинність» руського християнства. Іларіон наполягає на безпосередньому Божому втручанні, а не місіонерстві греків.
+- Section "Основний матеріал: Похвала кагану Володимиру": [!decolonization] — Використання титулу «каган» для Володимира та Ярослава як виклик візантійській імперській монополії.
+- Section "Підсумок: Маніфест руської ідентичності": [!culture] — Вплив «Слова» на подальшу літературу, зокрема «Слово о полку Ігоревім» та літописання.
+
+## Деколонізаційний контекст
+- **Імперський міф**: Російська історіографія часто розглядає «Слово» як пам'ятку «общерусской» культури або просто наслідування візантійських зразків. Також поширена теза про «три братні народи» як спадкоємців Русі.
+- **Українська реальність**: Іларіон говорить про «наш язик (народ) руський» і «Руську землю» як самодостатній суб'єкт історії. Титул «каган» підкреслює незалежність від Константинополя. Твір є маніфестом політичної та церковної суверенності Києва.
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| **Титул правителя** | Князь (підлеглий імператору) / Prince | **Каган** (рівний імператору, суверен) |
+| **Хрещення** | Вплив Візантії, культурна колонізація | **Благодать Божа**, пряме одкровення, власний вибір |
+| **Народ** | «Русскій народ» (у значенні російський) | **Руський язик/народ** (політична нація Русі-України) |
+| **Закон vs Благодать** | Лише богословська полеміка | Політична алегорія: **Закон (Візантія/Старе)** vs **Благодать (Русь/Нове)** |
+
+## Section-Mapped Research Notes
+
+### Вступ: Автор та історичний контекст
+Іларіон — інтелектуал епохи Ярослава Мудрого. Його обрання митрополитом у 1051 р. без санкції Константинополя (собором єпископів) стало актом церковної незалежності. Твір написаний для еліти («не невігласам бо пишемо, а тим, що наситилися книжкової солодощі»).
+
+### Вступ: Жанр, структура та аудиторія
+Це не просто проповідь, а урочисте «Слово», богословсько-політичний трактат. Композиція тричастинна: 1) Богословська (Закон/Благодать), 2) Історична (Хрещення/Похвала), 3) Молитовна. Ритмічна проза, складний синтаксис.
+
+### Основний матеріал: Богослов'я Закону і Благодаті
+Центральна антитеза: Старий Завіт (Закон, рабство, тінь, холод, іудеї) vs Новий Завіт (Благодать, свобода, істина, сонце, християни). Ідея зміни епох: Закон був тимчасовим, Благодать — вічна та універсальна.
+
+### Основний матеріал: Алегорія Агари та Сарри
+Екзегеза (тлумачення) історії про Авраама, дружину Сарру (вільну) та служницю Агару (рабиню). Ізмаїл (син рабині) — це іудейство/Закон. Ісаак (син вільної) — це християнство/Благодать. Русь, прийнявши християнство, стала спадкоємицею вільної Сарри, а не рабині.
+
+### Основний матеріал: Хрещення Русі як прояв Благодаті
+Русь хрестилася не через апостолів (як греки чи римляни), а з власної волі Володимира, якого натхнув сам Бог. Це ставить Русь в один ряд з іншими християнськими народами. Відсутність апостольської проповіді компенсується силою Божої Благодаті («добрий помисел» Володимира).
+
+### Основний матеріал: Похвала кагану Володимиру
+Панегірик. Володимир порівнюється з Костянтином Великим («подібний великому Костянтину»). Вживання титулу «каган» для Володимира і Ярослава (Георгія) — демонстрація суверенності. Згадка про предків (Ігоря, Святослава), які панували не в «худій» землі, а у відомій усьому світу.
+
+### Основний матеріал: Мовний стиль та риторика
+Високий стиль («плетіння словес»). Використання риторичних запитань, вигуків, анафор, ізоколонів (рівноскладових речень). Мова — церковнослов'янська з виразними східнослов'янізмами.
+
+### Практика: Рецепція та історичне значення
+Твір цитували літописці. Ідеї Іларіона лягли в основу києво-центричної ідеології. Вплив на формування національної свідомості: ми не гірші за інших, ми маємо власне місце в історії спасіння.
+
+### Підсумок: Маніфест руської ідентичності
+«Слово» — перший маніфест національної ідентичності. Твердження, що Русь має право на власну церкву, власну історію і власну святість.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 13129)
+✓ Message 13102 acknowledged
+✓ Message 13129 acknowledged

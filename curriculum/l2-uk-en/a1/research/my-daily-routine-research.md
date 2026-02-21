@@ -1,76 +1,35 @@
-# Research Notes: A1 M25 "My Daily Routine"
+# Дослідження: My Daily Routine
 
-**Module**: A1 M25 "My Daily Routine"  
-**Subtitle**: Reflexive Verbs and Daily Activities  
-**Level**: A1 (Beginner)  
+## State Standard Reference
+§3.4 "Побут": "типові щоденні заняття" (typical daily activities).
+§3.5 "Діяльність": "робочий день; вихідний день; обідня перерва; початок і кінець робочого дня".
+§4.2.4.1 "Дійсний спосіб": Explicitly lists "дивитися (дивлюся, дивишся, дивиться, дивимося, дивитеся, дивляться)" as a core conjugation pattern to master.
 
-## 1. Grammar: State Standard 2024 Reference
+Alignment: This module directly addresses the §3.4 and §3.5 thematic requirements for describing daily life and specifically targets the §4.2.4.1 morphological requirement for Class II reflexive verbs like *дивитися*.
 
-According to the **Державний стандарт української мови як іноземної (2024)**, the grammar for this module is covered under:
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| прокидатися | High (Core A1) | рано прокидатися, прокидатися о сьомій |
+| вмиватися | Medium (Daily context) | вмиватися холодною водою, йти вмиватися |
+| снідати / обідати / вечеряти | High (Core A1) | смачно снідати, обідати на роботі, пізно вечеряти |
+| лягати (спати) | High (Core A1) | лягати спати, лягати пізно |
+| зазвичай | High (Adverb) | я зазвичай встаю, як зазвичай |
 
-*   **§4.2.4.1. Дійсний спосіб (Indicative Mood):**
-    > "дієвідмінювання дієслів у теперішньому часі: ... дивитися (дивлюся, дивишся, дивиться, дивимося, дивитеся, дивляться)"
-    > "утворення форм минулого часу дієслова: ... сміявся, сміялася, сміялося, сміялися"
-    > "утворення складеної форми майбутнього часу дієслів недоконаного виду: ... буде сміятися"
+## Cultural Hooks
+1. **Обід (Lunch)**: In Ukraine, *обід* (13:00–14:00) is traditionally the main meal of the day, often consisting of a "first course" (soup/borshch) and a "second course" (meat/garnish). It is substantial, unlike a light sandwich lunch.
+2. **Evening Routines**: "Вечеря" is typically a family time. It is common to change into specific "home clothes" (домашній одяг) immediately upon returning home, separating the "public" day from the "private" evening.
 
-*   **Catalog B (Topics) §3.4 Побут (Daily Life):**
-    > "типові щоденні заняття" (typical daily activities)
-    > "окреслення часу (пори року, місяці, дні тижня, години і хвилини – телеграфний стиль)"
+## Common Learner Errors
+1. **Reflexive vs. Transitive**: Confusing *вмиватися* (washing one's face) with *мити руки* (washing hands). Learners often say *Я мию* without an object when they mean *Я вмиваюся*.
+2. **Conjugation of -ся**: Dropping the particle or failing to agree it (using *-ся* after vowels instead of *-сь*, though *-ся* is increasingly common in speech, standard is *-сь* after vowels: *я дивлюсь*).
+3. **Motion Verb Confusion**: Using *йти* for all transport. Must distinguish *йти на роботу* (walk) vs *їхати на роботу* (transport), though *йти* is often used generally for "going to start work".
+4. **Case with Time**: Incorrect preposition for time. Correct: *о сьомій годині* (Locative/Time), not *в сьому*.
 
-*   **Catalog B (Topics) §3.5 Діяльність (Activity):**
-    > "робочий день; вихідний день; обідня перерва; початок і кінець робочого дня."
+## Cross-References
+- **Builds on**: `a1-09` (Reflexive Verbs intro), `a1-23` (What Time Is It).
+- **Prepares for**: `a1-26` (Adjectives - describing *how* the routine was), `a1-30` (Checkpoint).
 
-## 2. Vocabulary Frequency
-
-### Key Vocabulary (High Frequency)
-*   **вставати / прокидатися** (to get up / to wake up)
-*   **снідати, обідати, вечеряти** (to have breakfast, lunch, dinner)
-*   **працювати / вчитися** (to work / to study)
-*   **відпочивати** (to rest)
-*   **йти / їхати** (to go by foot / by vehicle)
-*   **лягати спати** (to go to bed)
-
-### Reflexive Daily Routine Verbs (Topic-Specific)
-*   **вмиватися** (to wash oneself)
-*   **вдягатися / одягатися** (to get dressed)
-*   **чистити зуби** (to brush teeth - *not reflexive, but essential*)
-*   **голитися** (to shave)
-*   **зачісуватися** (to comb one's hair)
-
-### Common Collocations at A1
-*   **о восьмій годині** (at 8 o'clock)
-*   **вранці, вдень, ввечері, вночі** (in the morning, afternoon, evening, night)
-*   **кожного дня** (every day)
-*   **завжди, часто, зазвичай, рідко** (always, often, usually, rarely)
-
-## 3. Cultural Hook
-
-1.  **The Ukrainian Breakfast:** While "канапки" (open-faced sandwiches) are a staple for a quick morning, many Ukrainians prefer a substantial warm breakfast like **сирники** (sweet cheese pancakes) or **каша** (porridge).
-2.  **The Work Day Structure:** A standard work day in Ukraine typically begins at **09:00** and ends at **18:00**, with a mandatory **обідня перерва** (lunch break) from 13:00 to 14:00. Describing this schedule is a core skill for social integration.
-3.  **Evening Walks:** In Ukrainian culture, "гуляти" (to walk/stroll) in the evening is a common way to end the day, especially in cities with vibrant parks and pedestrian zones.
-
-## 4. Pedagogical Notes
-
-*   **Reflexive Suffix -ся/-сь:** Learners often struggle with the fact that `-ся` is attached directly to the verb ending. It is crucial to show that it follows the standard conjugation rules (e.g., *я вмиваю + ся = вмиваюся*). 
-*   **The -ся vs -сь Rule:** Explain that `-ся` is used after consonants (вмиваєшся) and `-сь` is typically used after vowels (вмиваюся -> вмиваюсь), though at A1, sticking to `-ся` is often acceptable for simplicity.
-*   **Transitivity:** Briefly explain that "вмивати" means washing something else (like a car or a child), while "вмиватися" is reflexive (washing oneself).
-*   **Teaching Sequence:**
-    1.  Review Present Tense Group 1 and 2.
-    2.  Introduce the concept of "self" (-ся).
-    3.  Model the daily sequence (chronological order) from morning to night.
-    4.  Integrate time expressions using the Locative case (*о восьмій*).
-
-## 5. Scope Boundaries
-
-### In Scope
-*   **Present Tense:** Full conjugation of reflexive verbs.
-*   **Past Tense:** Reflexive endings in the past (*вмивався, вмивалася*).
-*   **Future Tense:** Composite future with reflexive verbs (*буду вмиватися*).
-*   **Locative Case:** For time expressions (*о шостій годині*) and locations (*на роботі, в офісі*).
-*   **Frequency Adverbs:** зазвичай, часто, рідко.
-
-### Out Scope
-*   **Aspectual Pairs:** Do not focus on the difference between *прокидатися* (imp) and *прокинутися* (perf) beyond using the most natural form for a routine.
-*   **Dative Case:** Avoid "мені подобається" or "мені хочеться" unless taught as fixed phrases. 
-*   **Instrumental Case:** Avoid "з ким" (with whom) constructions (e.g., "снідаю з другом").
-*   **Complex Time:** Avoid "за чверть до" (quarter to) or "пів на" (half past). Stick to "о [hour] годині".
+## Notes for Content Writing
+- **Scaffolding**: Since this is A1, ensure the distinction between "working day" and "day off" is very clear visually (e.g., side-by-side comparison).
+- **Immersion**: Keep grammar explanations (reflexive rules, conjugation steps) in English. Dialogues and examples in Ukrainian.

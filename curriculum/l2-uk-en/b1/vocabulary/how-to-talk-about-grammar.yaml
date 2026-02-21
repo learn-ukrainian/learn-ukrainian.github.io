@@ -1,0 +1,72 @@
+- word: іменник
+  translation: noun
+  ipa: [iˈmɛnːɪk]
+  context: "Іменник відповідає на питання хто? або що?"
+- word: дієслово
+  translation: verb
+  ipa: [dʲijɛˈslɔʋɔ]
+  context: "Дієслово означає дію."
+- word: прикметник
+  translation: adjective
+  ipa: [prɪkˈmɛtnɪk]
+  context: "Прикметник узгоджується з іменником."
+- word: займенник
+  translation: pronoun
+  ipa: [zɐjˈmɛnːɪk]
+  context: "Займенник замінює іменник."
+- word: числівник
+  translation: numeral
+  ipa: [t͡ʃɪsˈlʲiu̯nɪk]
+  context: "Числівник позначає кількість."
+- word: прислівник
+  translation: adverb
+  ipa: [prɪsˈlʲiu̯nɪk]
+  context: "Прислівник не змінюється."
+- word: сполучник
+  translation: conjunction
+  ipa: [spɔˈlut͡ʃnɪk]
+  context: "Сполучник з'єднує слова."
+- word: прийменник
+  translation: preposition
+  ipa: [prɪjˈmɛnːɪk]
+  context: "Прийменник стоїть перед іменником."
+- word: частка
+  translation: particle
+  ipa: [ˈt͡ʃastkɐ]
+  context: "Частка додає відтінок значення."
+- word: вигук
+  translation: interjection
+  ipa: [ˈʋɪɦuk]
+  context: "Вигук виражає емоції."
+- word: відмінок
+  translation: case
+  ipa: [ʋidˈminɔk]
+  context: "В українській мові сім відмінків."
+- word: рід
+  translation: gender
+  ipa: [rid]
+  context: "Іменники мають чоловічий, жіночий або середній рід."
+- word: число
+  translation: number
+  ipa: [t͡ʃɪsˈlɔ]
+  context: "Число може бути одниною або множиною."
+- word: підмет
+  translation: subject
+  ipa: [ˈpidmɛt]
+  context: "Підмет — це головний член речення."
+- word: присудок
+  translation: predicate
+  ipa: [ˈprɪsudɔk]
+  context: "Присудок відповідає на питання що робить підмет?"
+- word: корінь
+  translation: root
+  ipa: [ˈkɔrʲinʲ]
+  context: "Корінь — це спільна частина споріднених слів."
+- word: закінчення
+  translation: ending
+  ipa: [zɐˈkint͡ʃɛnʲːɐ]
+  context: "Закінчення змінюється при відмінюванні."
+- word: метамова
+  translation: metalanguage
+  ipa: [mɛtɐˈmɔʋɐ]
+  context: "Метамова — це мова про мову."

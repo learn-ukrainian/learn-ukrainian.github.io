@@ -1,50 +1,36 @@
-# Research Notes: M05 — My World: Objects
+# Дослідження: My World: Objects
 
-**Module:** A1 M05 | **Topic:** Demonstrative pronouns + household vocabulary
-**Research Date:** 2026-02-07
+## State Standard Reference
+§4.2.2: "Утворення та вживання родових і числових форм деяких займенників... утворення родових форм вказівних займенників: той, та, те; цей, ця, це... утворення форм множини присвійних і вказівних займенників: мої, твої, наші, ваші, їхні, ті, ці."
+Alignment: This module directly addresses the formation and usage of gendered demonstrative pronouns (цей/той) and their plural forms as explicitly required by the standard.
 
-## State Standard References
-
-### §4.3.3 — Demonstrative Pronouns (Вказівні займенники)
-
-Ukrainian demonstrative pronouns distinguish proximal (near) and distal (far):
-
-- **Proximal:** цей (m), ця (f), це (n), ці (pl) — "this/these"
-- **Distal:** той (m), та (f), те (n), ті (pl) — "that/those"
-
-Demonstratives agree with the noun in gender and number (nominative case).
-
-### §4.2.1 — Gender Agreement
-
-Demonstrative + noun agreement follows standard gender patterns:
-- Masculine nouns (consonant ending): цей стілець, той ніж
-- Feminine nouns (-а/-я ending): ця чашка, та лампа
-- Neuter nouns (-о/-е ending): це вікно, те крісло
-- Plurals (any gender): ці ключі, ті двері
-
-### §4.3.4 — Dual Function of «це»
-
-«Це» serves two roles:
-1. Neuter demonstrative: це вікно (this window)
-2. Predicative particle: Це книга (This is a book) — from M04 zero copula
-
-This dual function is a common source of confusion for A1 learners.
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| цей / ця / це / ці | High (Top 100) | цей стіл, ця кімната, це вікно, ці речі |
+| той / та / те / ті | High (Top 200) | той будинок, та жінка, те місце, ті люди |
+| стіл | High (Household) | на столі, за столом, письмовий стіл, обідній стіл |
+| шафа | High (Household) | у шафі, книжкова шафа, шафа для одягу |
+| ліжко | Medium (Household) | у ліжку, лягати в ліжко, двоспальне ліжко |
+| вікно | High (General) | біля вікна, дивитися у вікно, відчинити вікно |
 
 ## Cultural Hooks
+1. **"В гостях добре, а вдома краще"**: A quintessential Ukrainian proverb equivalent to "East or West, home is best," reflecting the deep cultural value placed on the home (дім/хата) as a sanctuary.
+2. **Pokuttia (Покуття)**: The traditional "Red Corner" in a Ukrainian home, placed diagonally from the stove (піч), where icons and rushnyky were kept. While modern apartments lack the stove, the concept of a spiritual focal point remains relevant in design and tradition.
 
-### Хрущовки (Khrushchyovkas)
-Soviet-era apartment blocks built 1958-1985, named after Nikita Khrushchev. Standardized 1-3 bedroom layouts. Still the most common housing type in Ukrainian cities. Typical features: small kitchens (5-7 m²), low ceilings (2.5m), thin walls. Being gradually modernized or replaced in major cities.
+## Common Learner Errors
+1. **Identificational vs. Demonstrative "Це"**: Confusing "Це стіл" (This is a table - Identification) with "Цей стіл" (This specific table - Specification).
+   *   *Correction*: Teach that "Це" acts as a subject placeholder ("It/This is"), while "Цей/Ця/Це" acts as an adjective modifying a noun.
+2. **Gender Mismatch**: Using "цей" for all genders (e.g., "Цей книга").
+   *   *Correction*: Reinforce the rhyme/sound association (Ця -> КнигА).
+3. **Proximity Confusion**: Using "цей" for distant objects instead of "той".
+   *   *Correction*: Use clear physical gestures (touching vs. pointing) and the mnemonic "T" for "There/That".
 
-### Ukrainian Home Culture
-- Removing shoes at the entrance is universal; hosts offer тапочки (slippers)
-- Kitchen (кухня) is the social hub for conversation over tea
-- Gifts (flowers, chocolates) expected when visiting
-- Modern Ukrainian homes blend Soviet-era layouts with European renovation styles
+## Cross-References
+- **Builds on**: a1-03 (Genders), a1-04 (This Is / I Am)
+- **Prepares for**: a1-06 (The Living Verb I), a1-15 (Around the City)
 
-## Vocabulary Verification
-
-Key frequency items verified against corpus data:
-- чашка, ложка, виделка, ніж — high-frequency kitchen vocabulary
-- телефон, комп'ютер — technology vocabulary (borrowed, masculine by consonant-ending pattern)
-- мікрохвильовка — feminine by -ка suffix (productive feminine suffix in Ukrainian)
-- стілець, диван, крісло, ліжко — furniture representing all three genders
+## Notes for Content Writing
+- **Visual Scaffolding**: Essential to clearly distinguish near/far. Use icons of a hand touching (near) vs. a finger pointing (far).
+- **Immersion Control**: A1 level requires heavy English scaffolding for the grammar explanation of the two different "This" concepts (Identification vs. Demonstration).
+- **Nuance**: Briefly mention that "двері" is always plural, avoiding confusion when a learner tries to say "ця двері".

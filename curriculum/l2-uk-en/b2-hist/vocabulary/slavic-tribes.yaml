@@ -1,65 +1,104 @@
----
-module: slavic-tribes
-level: B2-HIST
-version: '2.0'
 items:
-- lemma: поляна
-  ipa: /pɔˈlʲɑnɪ/
-  translation: Polyany
-  pos: noun
-  gender: f
-- lemma: древлянин
-  ipa: /drɛˈwlʲɑnɪ/
-  translation: Derevlyany
-  pos: noun
-  gender: m
-- lemma: сіверянин
-  ipa: /sʲiˈwɛrʲɑnɪ/
-  translation: Siveryany
-  pos: noun
-  gender: m
-- lemma: улич
-  ipa: /ˈulɪt͡ʃʲi/
-  translation: Ulychi
-  pos: noun
-  gender: m
-- lemma: тиверець
-  ipa: /ˈtɪwɛrt͡sʲi/
-  translation: Tyvertsi
-  pos: noun
-  gender: m
-- lemma: волинянин
-  ipa: /wɔlɪˈnʲɑnɪ/
-  translation: Volhynians
-  pos: noun
-  gender: m
-- lemma: племінний союз
-  ipa: /plɛmʲiˈnːɪj sɔˈjuz/
-  translation: tribal union
-  pos: noun
-  gender: m
-- lemma: данина
-  ipa: /dɑˈnɪnɑ/
-  translation: tribute
-  pos: noun
-  gender: f
-- lemma: святилище
-  ipa: /swʲɑˈtɪlɪʃt͡ʃɛ/
-  translation: sanctuary
-  pos: noun
-  gender: n
-- lemma: обряд
-  ipa: /ɔˈbrʲɑd/
-  translation: ritual
-  pos: noun
-  gender: m
-- lemma: городище
-  ipa: /ɦɔrɔˈdɪʃt͡ʃɛ/
-  translation: fortified settlement
-  pos: noun
-  gender: n
-- lemma: літопис
-  ipa: /ˈlʲitɔpɪs/
-  translation: chronicle
-  pos: noun
-  gender: m
+  - lemma: "поляни"
+    translation: "Polyany (tribe)"
+    pos: "noun"
+    notes: "Slovene tribe inhabiting the Kyiv region; known for agriculture and state-building"
+  - lemma: "древляни"
+    translation: "Derevlyany (tribe)"
+    pos: "noun"
+    notes: "Forest dwellers north-west of Kyiv; known for the 945 rebellion"
+  - lemma: "сіверяни"
+    translation: "Siveryany (tribe)"
+    pos: "noun"
+    notes: "Inhabitants of the Left Bank (Desna basin); guarded the steppe frontier"
+  - lemma: "уличі"
+    translation: "Ulychi (tribe)"
+    pos: "noun"
+    notes: "Southern tribe between Dnipro and Bug; resisted assimilation"
+  - lemma: "тиверці"
+    translation: "Tyvertsi (tribe)"
+    pos: "noun"
+    notes: "South-western tribe between Dniester and Prut rivers"
+  - lemma: "волиняни"
+    translation: "Volhynians (tribe)"
+    pos: "noun"
+    notes: "Inhabitants of Volhynia; successors of the Dulebe union"
+  - lemma: "дуліби"
+    translation: "Duleby (tribe)"
+    pos: "noun"
+    notes: "Ancient tribal union in Volhynia, destroyed by Avars"
+  - lemma: "білі хорвати"
+    translation: "White Croats (tribe)"
+    pos: "noun"
+    notes: "Inhabitants of the Carpathians; builders of the Stilsko megacity"
+  - lemma: "племінний союз"
+    translation: "tribal union"
+    pos: "noun"
+    notes: "Political organization of several tribes; proto-state"
+  - lemma: "данина"
+    translation: "tribute"
+    pos: "noun"
+    notes: "Tax paid to the ruler, originally in goods like fur or honey"
+  - lemma: "святилище"
+    translation: "sanctuary / shrine"
+    pos: "noun"
+    notes: "Sacred place for pagan rituals"
+  - lemma: "обряд"
+    translation: "ritual / ceremony"
+    pos: "noun"
+    gender: "m"
+  - lemma: "городище"
+    translation: "fortified settlement"
+    pos: "noun"
+    gender: "n"
+  - lemma: "літопис"
+    translation: "chronicle"
+    pos: "noun"
+    gender: "m"
+  - lemma: "Іскоростень"
+    translation: "Iskorosten (city)"
+    pos: "noun"
+    notes: "Capital of the Drevlyans (modern Korosten)"
+  - lemma: "варяги"
+    translation: "Varangians / Vikings"
+    pos: "noun"
+    notes: "Norsemen who travelled trade routes through Slavic lands"
+  - lemma: "ковальство"
+    translation: "blacksmithing"
+    pos: "noun"
+    gender: "n"
+  - lemma: "поховання"
+    translation: "burial"
+    pos: "noun"
+    gender: "n"
+  - lemma: "болотна руда"
+    translation: "marsh ore"
+    pos: "noun"
+    notes: "Source of iron for early Slavs"
+  - lemma: "скроневі кільця"
+    translation: "temporal rings"
+    pos: "noun"
+    notes: "Temple ornaments worn by Slavic women; key tribal identifier"
+  - lemma: "підсічно-вогневе землеробство"
+    translation: "slash-and-burn agriculture"
+    pos: "noun"
+    notes: "Method of clearing forest for farming"
+  - lemma: "віче"
+    translation: "veche / assembly"
+    pos: "noun"
+    gender: "n"
+    notes: "Popular assembly in medieval Slavic states"
+  - lemma: "верв"
+    translation: "verv / commune"
+    pos: "noun"
+    gender: "f"
+    notes: "Peasant community with collective responsibility"
+  - lemma: "князь"
+    translation: "prince / duke"
+    pos: "noun"
+    gender: "m"
+  - lemma: "дружина"
+    translation: "retinue / squad"
+    pos: "noun"
+    gender: "f"
+    notes: "Prince's personal army"

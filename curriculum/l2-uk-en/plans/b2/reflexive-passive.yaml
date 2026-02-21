@@ -1,0 +1,142 @@
+module: b2-04
+level: B2
+sequence: 4
+slug: reflexive-passive
+version: '2.0'
+title: Зворотний пасив із -ся
+content_outline:
+- section: 'Вступ: Поняття зворотності та пасиву (Introduction: Concept of Reflexivity
+    and Passive)'
+  words: 500
+  points:
+  - 'Аналіз §4.1.3.1 Державного стандарту: вживання зворотних дієслів недоконаного
+    виду як морфологічної бази для пасивних конструкцій.'
+  - Роль частки -ся як маркера пасивного стану, що вказує на об'єкт, який стає граматичним
+    підметом.
+  - 'Стилістичне обмеження: вивчення вживання конструкції виключно в науковому, офіційно-діловому
+    та публіцистичному стилях.'
+- section: Морфологія та правила утворення (Morphology and Formation Rules)
+  words: 800
+  points:
+  - 'Чергування часток -ся та -сь: вживання -ся після приголосних та -сь після голосних
+    у формах третьої особи («будується», «досліджуються»).'
+  - 'Видові пари в пасиві: акцент на недоконаному виді для позначення тривалої дії,
+    що перебуває в процесі виконання.'
+  - 'Трансформація активних речень у пасивні: перехід прямого додатка в позицію підмета
+    («Науковці вивчають проблему» → «Проблема вивчається науковцями»).'
+- section: Семантика процесу та роль Агента (Process Semantics and the Role of the
+    Agent)
+  words: 900
+  points:
+  - 'Відмінність між процесом (-ся) та результатом (-но/-то): опис дії, що триває
+    в часі («Будинок будується вже рік»).'
+  - 'Правила вираження агента в орудному відмінку без прийменників: мастеринг Instrumental
+    Case для наукового контексту.'
+  - 'Діагностика контексту: коли агент є обов''язковим для розуміння змісту, а коли
+    його можна опустити в технічних інструкціях.'
+- section: 'Культура: Українські винаходи крізь призму пасиву (Culture: Ukrainian
+    Inventions through the Passive Lens)'
+  words: 1000
+  points:
+  - 'Іван Пулюй та X-промені: опис наукового пріоритету через конструкцію «промені
+    досліджуються Пулюєм».'
+  - 'Катерина Ющенко та перша мова програмування: використання пасиву для опису технологічних
+    досягнень («мова програмування створюється жінкою»).'
+  - 'Ігор Сікорський та київська авіаконструкторська школа: опис розробки гелікоптера
+    («гелікоптер розробляється винахідником»).'
+  - 'Практичне застосування в технічній документації: «Програма встановлюється», «Технологія
+    застосовується».'
+- section: Стилістика та запобігання помилкам (Stylistics and Error Prevention)
+  words: 800
+  points:
+  - 'Learner Error: використання прийменника «від» для позначення агента («Книга читається
+    від студентів» → корекція на «Книга читається студентами»).'
+  - 'Passive Overuse: запобігання вживанню пасиву в розмовній мові («Піца їсться мною»);
+    заміна на активні конструкції («Я їм піцу»).'
+  - 'Корекція змішування видів: чому конструкція «Будинок збудується» є граматично
+    некоректною у порівнянні з «Будинок збудовано».'
+  - 'Підсумковий огляд та підготовка до наступного етапу: перехід до пасиву третьої
+    особи множини (модуль 05).'
+vocabulary_hints:
+  required:
+  - 'проводиться (is being conducted) — High frequency in Academic/Official styles;
+    collocations: експеримент проводиться, зустріч проводиться.'
+  - 'вивчається (is being studied) — Academic register; collocations: проблема вивчається
+    науковцями, мова вивчається.'
+  - 'застосовується (is applied) — Tech/Legal register; collocations: закон застосовується,
+    метод застосовується.'
+  - 'будується (is being built) — General/News register; collocations: будинок будується,
+    система будується.'
+  - 'аналізується (is being analyzed) — Academic focus; collocations: ситуація аналізується,
+    дані аналізуються.'
+  - 'досліджується (is being researched) — Academic/Scientific register; collocations:
+    явище досліджується, тема досліджується вченими.'
+  - зворотний (reflexive) — grammatical term for -ся verbs.
+  - процес (process) — key semantic concept for this passive type.
+  - науковець (scientist) — common agent in passive constructions.
+  - експеримент (experiment) — frequent subject in scientific passive.
+  recommended:
+  - 'розробляється (is being developed) — technical/inventive context; collocations:
+    проєкт розробляється, гелікоптер розробляється.'
+  - 'створюється (is being created) — creative/scientific context; collocations: мова
+    створюється, система створюється.'
+  - 'встановлюється (is being installed/established) — tech/legal; collocations: програма
+    встановлюється, зв''язок встановлюється.'
+  - винахідник (inventor) — cultural context agent (Sikorsky, Puliui).
+  - проміння (rays/radiation) — scientific vocabulary related to Puliui's research.
+activity_hints:
+- type: fill-in
+  focus: Active → -ся passive
+  items: 12+
+- type: fill-in
+  focus: Complete scientific sentences with -ся verbs
+  items: 14+
+- type: quiz
+  focus: Process description identification
+  items: 12+
+- type: group-sort
+  focus: -ся vs -но/-то — choose appropriate form
+  items: 10+
+- type: match-up
+  focus: Context → appropriate -ся verb
+  items: 12+
+- type: error-correction
+  focus: Fix agent expression errors
+  items: 8+
+- type: essay-response
+  focus: Write scientific process description
+  output: Model answer provided
+focus: grammar
+prerequisites:
+- b2-01 (Passive Voice System)
+- b2-02 (Past Passive Participles)
+- b2-03 (Impersonal -но/-то)
+- Instrumental case mastery
+connects_to:
+- b2-05 (3rd Person Plural Passive)
+- b2-06 (Passive in Context)
+- 'b2-21 (Register: Technical/Scientific)'
+- b2-10 (B2.1a Checkpoint)
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Reflexive Verbs
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Official requirements for -ся passive usage
+- name: Науковий стиль української мови
+  url: https://uk.wikipedia.org/wiki/Науковий_стиль
+  type: secondary
+  notes: Scientific writing conventions
+- name: Технічна документація українською
+  url: https://uk.wikipedia.org/wiki/Технічна_документація
+  type: secondary
+  notes: Technical writing patterns
+immersion: 100% Ukrainian
+phase: B2.1a [Passive Voice]
+objectives:
+- Identify and correctly use зворотний пасив із -ся
+- Form and apply зворотний пасив
+persona:
+  voice: Professional Language Coach
+  role: Nature Documentary Narrator (Оповідач документального фільму)
+word_target: 4000

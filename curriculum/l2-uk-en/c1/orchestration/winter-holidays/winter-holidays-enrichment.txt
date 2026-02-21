@@ -1,0 +1,259 @@
+✅ Message sent to Gemini (ID: 10801) [auto-acked: self-addressed]
+✓ Message 10801 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10801...
+📨 Message #10801
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-winter-holidays
+   Time: 2026-02-20T21:29:27.849303+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-069
+level: C1
+sequence: 69
+slug: winter-holidays
+version: '2.0'
+title: Українські свята - зимовий цикл
+subtitle: Ukrainian Holidays - Winter Cycle
+content_outline:
+- section: Розминка — Зимові свята
+  points:
+  - Зимовий цикл — від Миколая до Стрітення
+  - Синкретизм язичництва та християнства
+  - Аграрна та родинна магія зимових свят
+- section: Різдвяно-Новорічний період
+  points:
+  - 'Святий Миколай (19 грудня): подарунки, традиції'
+  - 'Святвечір та Різдво: кутя, дідух, 12 страв'
+  - 'Колядування: колядки, вертеп, зірка'
+  - 'Маланка та Новий рік: щедрівки, маски'
+- section: Від Водохреща до Стрітення
+  points:
+  - 'Водохреще (Йордан): освячення води, купання'
+  - Голодна кутя
+  - 'Стрітення: зустріч зими та весни'
+  - Прикмети та ворожіння
+- section: Практика — зимова обрядовість
+  points:
+  - Порівняти колядку та щедрівку — структура, тематика
+  - Пояснити символіку вертепу
+  - Написати есе про трансформацію зимових свят
+  - Обговорити сучасне святкування
+focus: cultural
+pedagogy: CBI
+objectives:
+- Learner can describe the main holidays of the winter cycle (St. Nicholas, Christmas,
+  Malanka, Epiphany)
+- Learner can explain the difference between koliadky and shchedrivky
+- Learner can discuss the symbolism of vertep and Malanka characters
+- Learner can recite a traditional holiday greeting
+grammar:
+- holiday greetings
+- ritual descriptions
+phase: C1.5 Folk Culture & Arts
+persona:
+  voice: Senior Specialist
+  role: Колядник
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Українські свята - зимовий цикл
+
+## State Standard Reference
+§3.21: "Традиції, звичаї, свята: вихідні дні, релігійні й державні свята; ... українські звичаї і традиції; релігійні звичаї і традиції." (lines 4130-4135)
+§4.1.2.7: "Кличний відмінок: риторичний, літературний, офіційний, інтимний." (lines 4391-4399) — Важливо для вітань.
+§4.4.3: "Лексичні стилістичні засоби: тропи, фігури..." — Важливо для опису обрядів.
+
+Alignment: Модуль детально розкриває тему §3.21, використовуючи стилістичні засоби (§4.4.3) для опису обрядів та кличний відмінок (§4.1.2.7) для автентичних вітань.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| святвечір | Висока (сезонна) | сідати до святвечора, пісний святвечір, готувати святвечір |
+| дідух | Середня (культурологічна) | ставити дідуха, плести дідуха, символ роду |
+| колядка | Висока | співати колядки, стародавня колядка, різдвяна колядка |
+| щедрівка | Висока | виконувати щедрівки, щедрувати, щедрий вечір |
+| вертеп | Середня | живий вертеп, ляльковий вертеп, учасники вертепу |
+| кутя | Висока | багата кутя, голодна кутя, носити кутю |
+| павук | Низька (етнографічна) | солом'яний павук, різдвяний павук (як оберіг) |
+
+## Cultural Hooks
+1. **Дідух vs Ялинка**: Дідух (сніп пшениці) — це первісний український символ Різдва, що уособлює дух предків та врожай. Ялинка прийшла значно пізніше (XIX ст.) із західноєвропейської традиції.
+2. **Щедрик**: Всесвітньо відома "Carol of the Bells" — це обробка української народної щедрівки Миколою Леонтовичем. Це приклад язичницької пісні (ластівка прилітає взимку — ознака старого Нового року навесні), що адаптувалася до сучасного свята.
+3. **Водіння Кози**: Обряд на Маланку (Щедрий вечір), що має глибоке аграрне коріння (коза помирає і воскресає = природа завмирає і оживає).
+
+## Common Learner Errors
+1. **Плутанина колядок і щедрівок**: Колядки співають на Різдво (про народження Христа або створення світу), щедрівки — на Щедрий вечір/Новий рік (бажають добробуту господарям).
+   *Помилка*: Співати "Щедрик" на Різдво. *Правильно*: На Новий рік (Маланку).
+2. **Привітання**: Калькування з англійської.
+   *Помилка*: "Веселого Різдва" як універсальне вітання. *Правильно*: Традиційне "Христос рождається! — Славімо Його!" або "Христос народився!".
+3. **Відмінювання у вітаннях**:
+   *Помилка*: "Вітаю з Нового року". *Правильно*: "Вітаю з Новим роком" (Орудний відмінок).
+
+## Cross-References
+- Builds on: B2 Modules on Traditions (general overview)
+- Prepares for: C1-086+ Literature (using folklore motifs in texts), C1-BIO Modules (Leontovych biography)
+
+## Notes for Content Writing
+- **Stylistics**: Use "high" style adjectives (урочистий, сакральний, предковічний) when describing rituals.
+- **Syntax**: Use Vocative case heavily in the greetings section.
+- **Tone**: Academic but reverent (Ethnographer persona fits perfectly here).
+- **Format**: Ensure dates follow the revised Julian calendar (Dec 25 for Christmas, Dec 6 for St. Nicholas) but acknowledge the transition period if relevant contextually, though strictly adhering to the new calendar is better for Standard 2024 compliance. *Note: State Standard implies modern usage, so use new calendar dates as primary.*
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Сакральність зимового циклу (Introduction: Sacrality of the Winter Cycle)"
+  words: 600
+  points:
+  - "Огляд великого зимового кола: від святого Миколая (6 грудня) до Стрітення (2 лютого) за новоюліанським календарем згідно зі Стандартом §3.21"
+  - "Філософський синкретизм: глибоке поєднання дохристиянської аграрної магії (культ предків, закликання врожаю) із християнськими канонами"
+  - "Стилістичний регістр опису: використання 'високої' лексики (предковичний, урочистий, сакральний) для передачі духовної значущості обрядів (§4.4.3)"
+- section: "Різдвяна обрядовість: Символи та сенси (Christmas Rituals: Symbols and Meanings)"
+  words: 950
+  points:
+  - "Святвечір: концепція 'Багатої куті', традиція 12 пісних страв та ієрархія родинної вечері"
+  - "Культурний гачок: 'Дідух проти Ялинки' — аналіз дідуха як снопа-оберега, що уособлює дух роду, на противагу пізнішій західній традиції ялинки"
+  - "Етнографічний декор: символіка солом'яного 'павука' як моделі всесвіту та оберега оселі"
+  - "Мовленнєвий етикет: практичне застосування Кличного відмінка у різдвяних вітаннях 'Христос рождається! — Славімо Його!' (§4.1.2.7)"
+- section: "Музичний код: Колядки та Щедрівки (Musical Code: Koliadky and Shchedrivky)"
+  words: 900
+  points:
+  - "Жанрова диференціація: розмежування колядок (Різдво, народження світу) та щедрівок (Новий рік, побажання добробуту) для уникнення помилок у вживанні"
+  - "Феномен Леонтовича: історія 'Щедрика' як архаїчної язичницької пісні про ластівку, що стала світовим гімном Різдва (Carol of the Bells)"
+  - "Вертепна драма: структура лялькового та живого вертепу, символіка персонажів та роль релігійної інтерлюдії у народному театрі"
+- section: "Маланка та Водохреще: Магія переходу (Malanka and Epiphany: Magic of Transition)"
+  words: 750
+  points:
+  - "Щедрий вечір (Маланка): обряд 'водіння кози' як стародавня метафора вмирання та воскресіння природи (прихід весни взимку)"
+  - "Традиції карнавалу: маскування на Маланку, роль імпровізації та сатири у народних гуляннях"
+  - "Йордан: освячення води та концепція 'Голодної куті' як завершального етапу очищення в зимовому циклі"
+- section: "Практика: Мовна автентичність (Practice: Linguistic Authenticity)"
+  words: 800
+  points:
+  - "Корекція типових помилок: вживання Орудного відмінка у вітанні 'З Новим роком!' на противагу калькованому 'З Нового року'"
+  - "Аналіз художніх засобів: виявлення епітетів та метафор у текстах обрядових пісень згідно з компетенціями Стандарту §4.4.3"
+  - "Творче завдання: написання різдвяного віншування (вітання господарям) з дотриманням стилістики сакрального тексту та правил Кличного відмінка"
+  - "Дискусія: сучасна трансформація зимових свят в Україні — відродження дідуха та перехід на новий календарний стиль"
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "святвечір (Christmas Eve) — сідати до святвечора, пісний святвечір; центральний момент різдвяного циклу"
+  - "дідух (didukh) — ставити дідуха, плести дідуха; символ духу предків та врожаю (Didukh vs Christmas tree)"
+  - "колядка (koliadka) — співати колядки, різдвяна колядка; пов'язана виключно з Різдвом"
+  - "щедрівка (shchedrivka) — виконувати щедрівки, щедрувати; виконується на Щедрий вечір (Маланку)"
+  - "вертеп (vertep) — живий вертеп, ляльковий вертеп; пересувний ляльковий театр або жива вистава"
+  - "кутя (kutia) — багата кутя, голодна кутя, носити кутю; ритуальна страва з пшениці, маку та меду"
+  recommended:
+  - "павук (straw spider) — солом'яний павук як традиційний різдвяний оберіг оселі"
+  - "віншування (holiday greeting/toast) — традиційне побажання, що виголошується після колядування"
+  - "новоюліанський календар (Revised Julian calendar) — контекст переходу на святкування 25 грудня"
+  - "синкретизм (syncretism) — поєднання язичницьких та християнських елементів в обряді"
+  - "предковичний (ancestral/immemorial) — книжний прикметник високого стилю для опису традицій"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4024 chars)
+✅ Message sent to Claude (ID: 10808)
+✓ Message 10808 acknowledged
+   Auto-acknowledged reply #10808 (stdout delivery — no inbox accumulation)
+✓ Message 10801 acknowledged

@@ -1,0 +1,114 @@
+module: b1-57
+level: B1
+sequence: 57
+slug: discourse-markers-advanced
+version: '2.0'
+title: 'Дискурсивні маркери II: складна організація'
+subtitle: 'Discourse Markers II: Advanced Text Organization'
+content_outline:
+- section: Вступ (Introduction)
+  words: 500
+  points:
+  - Align text organization strategies with State Standard §4.4.2/§4.5.1 regarding
+    advanced 'вставні слова' (inserted words) and the transition from simple B1 connectors
+    to complex argument structures.
+  - 'Cultural hook: The Kyiv-Mohyla Academy rhetoric tradition (17th-18th c.), where
+    masters like Hryhorii Skovoroda and Theophan Prokopovych taught transitional logic
+    and clear speech as essential signs of intellectual wisdom.'
+- section: Презентація лексики (Vocabulary Presentation)
+  words: 1000
+  points:
+  - 'Categorize 25+ markers into six functional clusters: Sequencing (по-перше), Addition
+    (крім того, передусім), Contrast (проте, з одного боку... з іншого боку), Clarification
+    (загалом), Result (таким чином), and Conclusion (отже, нарешті).'
+  - 'Focus on frequency-informed collocations and paired usage: Drill ''по-перше,
+    хочу зазначити'' and ''підсумовуючи результати'', while emphasizing the mandatory
+    pair ''з одного боку... з іншого боку'' to avoid broken logic.'
+  - 'Visualize decision logic using a flowchart approach: Training students to select
+    markers based on intent (Adding? → крім того; Contrasting? → проте; Concluding?
+    → отже).'
+- section: Граматика та вживання (Grammar and Usage)
+  words: 1000
+  points:
+  - 'Register differentiation: Clearly separate formal/academic markers (отже, таким
+    чином, підсумовуючи) from conversational discourse markers (ну, знаєш, до речі,
+    словом).'
+  - 'Learner error clinic: Addressing punctuation omission with comma-placement drills
+    after markers (e.g., ''По-перше, я не знав'') and correcting the semantic confusion
+    between temporal ''нарешті'' and spatial ''накінець''.'
+  - 'De-Russification focus: Identifying and replacing common calques like ''во-пєрвих''
+    with ''по-перше'' and surzhyk ''короче'' with professional alternatives like ''словом''
+    or ''підсумовуючи''.'
+- section: Аналіз та читання (Analysis and Reading)
+  words: 1000
+  points:
+  - 'Reading: ''How to Win a Debate'' — an analytical article framed around conference
+    presentations and parliamentary debate traditions (viche), using authority markers
+    like ''шановне товариство'' and ''дозвольте зауважити''.'
+  - 'Modeling persuasive structure: Analyzing how to move from simple sentences to
+    organized, authoritative discourse using the ''Keynote Speaker'' persona.'
+- section: Практика та підсумок (Practice and Summary)
+  words: 500
+  points:
+  - 'Production Task: Delivering a structured argument in the ''Keynote Speaker''
+    voice, modeling authority and logical flow through a recap of the 25 target markers.'
+  - 'Self-correction workshop: Identifying register mismatches and broken pairs in
+    peer arguments, bridging directly to the descriptive organization required for
+    b1-58 (Describing Changes).'
+vocabulary_hints:
+  required:
+  - по-перше (firstly) — по-перше, хочу зазначити; High frequency academic starter
+  - по-друге (secondly) — по-друге, варто наголосити; Sequencing marker
+  - нарешті (finally) — нарешті ми дійшли згоди; і, нарешті, останній пункт; High
+    frequency; temporal focus
+  - підсумовуючи (summarizing) — підсумовуючи вищесказане; підсумовуючи результати;
+    Academic/Formal register
+  - таким чином (thus) — таким чином, ми бачимо; діяти таким чином; High frequency
+    formal result marker
+  - особливо (especially) — used for emphasizing key points within complex arguments
+  - передусім (above all) — передусім потрібно; це стосується передусім; Medium frequency
+    emphasis marker
+  - загалом (in general) — загалом кажучи; загалом це вірно; High frequency clarification/generalization
+  recommended:
+  - насамкінець (in conclusion) — formal academic closing marker
+  - головне (the main thing) — signals priority within a hierarchical argument
+  - з одного боку (on one hand) — paired with з іншого боку; mandatory logical pair
+  - з іншого боку (on the other hand) — paired with з одного боку; contrast marker
+  - проте (however) — contrastive discourse marker; formal register
+  - отже (so/therefore) — concluding marker for logical derivation
+  - крім того (besides/furthermore) — additive marker for expanding complex texts
+  - словом (in a word) — conversational/semi-formal summary marker to replace 'короче'
+activity_hints:
+- type: true-false
+  focus: Structure arguments with markers
+  items: 20
+- type: fill-in
+  focus: Complete academic texts
+  items: 20
+- type: fill-in
+  focus: Write structured essays
+  items: 15
+- type: fill-in
+  focus: Improve text organization
+  items: 15
+focus: vocabulary
+pedagogy: PPP
+prerequisites:
+- b1-56 (Discourse Markers Basic)
+connects_to:
+- b1-58 (Describing Changes)
+objectives:
+- Learner can use 25 advanced discourse markers to organize complex arguments
+- Learner can sequence ideas using ordinal markers
+- Learner can express addition, contrast, and conclusion in academic writing
+- Learner can structure extended discourse effectively
+grammar:
+- Advanced discourse markers for text organization
+- Academic and formal connectors
+- Structuring arguments and conclusions
+register: розмовний
+phase: B1.5 [Vocabulary Expansion I]
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Keynote Speaker
+word_target: 4000

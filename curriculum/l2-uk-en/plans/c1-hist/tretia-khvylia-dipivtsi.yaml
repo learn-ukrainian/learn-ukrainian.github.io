@@ -1,4 +1,3 @@
----
 module: c1-hist-066
 level: c1-hist
 sequence: 66
@@ -10,22 +9,19 @@ objectives:
 - 'Analyze the causes and consequences of третя хвиля: діпі (1945-1950)'
 - Evaluate the historical significance of хто такі діпі?
 content_outline:
-- section: "Вступ — Хто такі ДіПі?"
-  words: 457
+- section: Вступ — Хто такі ДіПі?
   subsections:
   - Displaced Persons — визначення
   - Масштаби — мільйони людей
   - Хто серед українців
   - Структура модуля
 - section: Як опинилися на Заході
-  words: 686
   subsections:
   - Остарбайтери — примусові робітники
   - Біженці 1944 — хто тікав
   - Вояки — дивізія, УПА
   - Політична еміграція
 - section: Табори ДіПі
-  words: 800
   subsections:
   - Німеччина — основний регіон
   - Австрія — менша кількість
@@ -33,33 +29,28 @@ content_outline:
   - Культурне життя — школи, театри, преса
   - «Маленька Україна» в таборах
 - section: Загроза репатріації
-  words: 686
   subsections:
   - Ялтинські угоди — примусова репатріація
   - Операція «Кіл Хаул»
   - Як уникали видачі
   - Трагедії — хто не уник
 - section: Еміграція до «третіх країн»
-  words: 571
   subsections:
   - США — закон 1948
   - Канада — повоєнна імміграція
   - Австралія — нові громади
   - Південна Америка — продовження
 - section: Спадщина третьої хвилі
-  words: 457
   subsections:
   - Інтелектуальний потенціал
   - Інституції — УВАН, НТШ
   - Політична активність
   - Антирадянська діяльність
 - section: Підсумок
-  words: 343
   subsections:
   - ДіПі — найосвіченіша хвиля
   - Збереження культури
   - Вплив на незалежність 1991
-word_target: 4000
 vocabulary:
 - переміщена особа
 - ДіПі
@@ -78,7 +69,7 @@ vocabulary:
 - антирадянський
 activities:
 - type: critical-analysis
-  focus: "Daily life in DP camps — sources"
+  focus: Daily life in DP camps — sources
 - type: critical-analysis
   focus: How did Yalta agreements affect Ukrainians?
 - type: comparative-study
@@ -89,15 +80,15 @@ activities:
   focus: Чому третю хвилю називають 'найосвіченішою'?
 sources:
 - name: Переміщені особи (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Переміщені_особи"
+  url: https://uk.wikipedia.org/wiki/Переміщені_особи
   type: reference
   notes: DP overview
 - name: Табори ДіПі (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Табори_переміщених_осіб"
+  url: https://uk.wikipedia.org/wiki/Табори_переміщених_осіб
   type: reference
   notes: DP camps
 - name: Українські ДіПі (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Українці_серед_переміщених_осіб"
+  url: https://uk.wikipedia.org/wiki/Українці_серед_переміщених_осіб
   type: reference
   notes: Ukrainian DPs specifically
 vocabulary_hints:
@@ -116,7 +107,9 @@ activity_hints:
   items: 4
 - type: essay-response
   focus: Критичний аналіз
-  word_target: 300
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Displaced Persons Researcher

@@ -1,0 +1,274 @@
+✅ Message sent to Gemini (ID: 10569) [auto-acked: self-addressed]
+✓ Message 10569 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10569...
+📨 Message #10569
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-idioms-body
+   Time: 2026-02-20T20:42:40.509416+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b2-51
+level: B2
+sequence: 51
+slug: idioms-body
+version: '2.0'
+title: 'Фразеологізми: Душа і Серце'
+content_outline:
+- section: Розминка — Душа та серце в мові
+  points:
+  - Душа — внутрішній світ, емоції, характер
+  - Серце — почуття, кохання, совість
+  - Культурний контекст — "душа" як ключове поняття української ментальності
+- section: Фразеологізми з "душа"
+  points:
+  - Душа в п'яти (сильний страх)
+  - Душа болить (переживання, співчуття)
+  - Вкладати душу (працювати з повною віддачею)
+  - Віддати Богу душу (померти — евфемізм)
+  - Камінь на душі (важкі переживання)
+- section: Фразеологізми з "серце"
+  points:
+  - Серце кров'ю обливається (глибокий жаль)
+  - Брати за серце (зворушувати)
+  - Від щирого серця (щиро, без задньої думки)
+  - Мати серце (бути милосердним)
+  - Положити руку на серце (бути чесним)
+  - Серце не камінь (людина здатна на співчуття)
+- section: Практика — емоційні вирази
+  points:
+  - Обрати вираз для опису емоційного стану
+  - Порівняти з виразами M49-50 (голова, руки, ноги)
+  - Написати емоційний діалог з 4-5 виразами
+  - Знайти англійські аналоги (heart idioms)
+focus: phraseology
+pedagogy: CBI
+objectives:
+- Вивчити 8 ключових фразеологізмів зі словами 'душа' і 'серце'
+- Розрізняти емоційні відтінки фразеологізмів (страх, полегшення, жаль, щирість)
+- Вживати нові вирази в контексті для збагачення мови
+grammar:
+- Fixed expressions
+- Idiom structure and variation
+register: varies
+phase: B2.2 [Phraseology & Synonymy]
+vocabulary_hints:
+  required:
+  - термін (term)
+  - поняття (concept)
+  - процес (process)
+  - метод (method)
+  recommended:
+  - аналіз (analysis)
+  - синтез (synthesis)
+  - дослідження (research)
+activity_hints:
+- type: reading
+  focus: Аналіз тексту
+  items: 4
+- type: essay-response
+  focus: Практичне застосування
+- type: true-false
+  focus: Перевірка розуміння
+  items: 8
+persona:
+  voice: Professional Language Coach
+  role: Poet (Поет)
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Фразеологізми: Душа і Серце
+
+## State Standard Reference
+§4.4.1.2: "Стилістичні засоби лексики: ...метафори (ідуть дощі, сонце сідає)... епітети (теплий день, смачний торт)..."
+§3.1 (Каталог Б): "Людина: ...риси характеру, звички і прагнення..."
+Alignment: Модуль розвиває лексичну компетентність рівня B2, фокусуючись на метафоричних фразеологізмах (серце, душа) для опису емоційного стану та характеру людини, що відповідає вимогам стандарту щодо стилістично забарвленої лексики та тематики "Людина".
+
+## Vocabulary Frequency
+| Word/Phrase | Frequency / Source | Key collocations |
+|-------------|-------------------|------------------|
+| **Душа в п'яти (пішла)** | Висока (розмовний, художній) | Душа в п'яти сховалася; від страху душа в п'яти пішла. |
+| **Камінь на душі** | Середня (емоційний стан) | Лежить камінь на душі; зняти камінь з душі; носити камінь на душі. |
+| **Серце кров'ю обливається** | Висока (співчуття, біль) | Дивитися на це — серце кров'ю обливається; серце крається. |
+| **Брати за серце** | Середня (зворушення) | Пісня бере за серце; розповідь бере за душу; за живе. |
+| **Віддати Богу душу** | Середня (евфемізм) | Тихий, урочистий контекст; про старих людей. |
+| **Вкладати душу** | Висока (діяльність) | Вкладати душу в роботу; робити з душею. |
+| **Мати серце** | Низька (книжний) | Мати добре серце; не мати серця (бути жорстоким). |
+
+## Cultural Hooks
+1. **Кордоцентризм ("Філософія серця")**: Унікальна риса української ментальності (Г. Сковорода, П. Куліш, П. Юркевич). Серце розглядається не лише як орган почуттів, а як центр духовного життя і пізнання ("голова всього в людині").
+2. **"Сродна праця"**: Ідея Сковороди про працю, що "лягає на серце" (відповідає покликанню душі). Це можна пов'язати з фразеологізмом "вкладати душу".
+
+## Common Learner Errors
+1. **Плутанина виразів**: "Брати за серце" (хвилювати, зворушувати — об'єкт діє на мене) vs "Брати до серця" (хворобливо реагувати, перейматися — моя реакція на об'єкт).
+2. **Стилістична недоречність**: Вживання "віддати Богу душу" щодо неживих предметів (комп'ютер, телефон) — це звучить комічно або неграмотно.
+3. **Калькування**: Спроби перекласти англійські ідіоми дослівно (наприклад, "have a heart" як "мати серце" у значенні прохання про помилування — в українській це скоріше "мати совість" або "змилосердитися").
+
+## Cross-References
+- Builds on: B1.2 (Emotion vocab), B2.1 (Participles in idioms)
+- Prepares for: C1 Stylistics (Metaphor/Metonymy), C1 Literature (Skovoroda module)
+
+## Notes for Content Writing
+- **Persona**: Use the "Poet" role to weave in the philosophy of Cordocentrism gently. Connect idioms to the idea that for Ukrainians, the heart is the "inner sun".
+- **Nuance**: Distinctly separate "Soul" (inner world, conscience, depth) from "Heart" (active emotional center, empathy, pain).
+- **Tone**: Keep B2 level — avoid overly archaic religious contexts for "віддати Богу душу", фокусуючись на літературному вжитку.
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Кордоцентризм — українська філософія серця (Introduction: Cordocentrism — Ukrainian Philosophy of the Heart)"
+  words: 650
+  points:
+  - "Пояснити концепцію кордоцентризму (Г. Сковорода, П. Юркевич) як ключову рису української ментальності, де серце — це центр духовного життя та пізнання («голова всього в людині»)."
+  - "Інтегрувати ідею Сковороди про «сродну працю» — роботу, що «лягає на серце», пов’язавши її з фразеологізмом «вкладати душу»."
+  - "Описати роль метафори у фразеології згідно з вимогами стандарту §4.4.1.2, фокусуючись на описі внутрішнього світу людини (Каталог Б, §3.1)."
+- section: "Фразеологізми з компонентом «душа» (Idioms with the 'Soul' Component)"
+  words: 950
+  points:
+  - "Детальний аналіз виразів: «душа в п'яти» (сильний страх) та «душа болить» (співчуття), з акцентом на розмовному вжитку та типових колокаціях («від страху душа в п'яти пішла»)."
+  - "Опрацювання фразеологізму «камінь на душі» — емоційний стан важких переживань та варіанти «зняти камінь з душі», «носити камінь на душі»."
+  - "Вживання евфемізму «віддати Богу душу» у відповідному контексті (урочистий, тихий тон щодо людей похилого віку) та розмежування з іншими синонімами смерті."
+- section: "Фразеологізми з компонентом «серце» (Idioms with the 'Heart' Component)"
+  words: 950
+  points:
+  - "Вивчення виразу «серце кров'ю обливається» (глибокий жаль) та синоніма «серце крається» у контексті емоційної реакції на чужий біль."
+  - "Аналіз середньочастотного виразу «брати за серце» (зворушувати) та типових об'єктів дії: пісня, розповідь, щирість."
+  - "Опис етичних категорій через вирази «від щирого серця» (без задньої думки), «мати серце» (милосердя) та «положити руку на серце» (чесність)."
+- section: "Типові помилки та стилістичні нюанси (Common Errors and Stylistic Nuances)"
+  words: 750
+  points:
+  - "Дриль для розрізнення: «брати за серце» (хвилювати, діяти на почуття) vs «брати до серця» (хворобливо реагувати, перейматися) — навести 3 контрастні пари контекстів."
+  - "Стилістичне застереження: пояснити комічність вживання «віддати Богу душу» щодо техніки (телефон, комп'ютер), наголошуючи на анімованості концепту душі."
+  - "Корекція калькування: порівняння англійського «have a heart» з українським «мати совість» або «змилосердитися», замість дослівного «мати серце» у значенні прохання про пощаду."
+- section: "Практика: Емоційні стани та діалоги (Practice: Emotional States and Dialogues)"
+  words: 700
+  points:
+  - "Написання емоційного діалогу (100-150 слів) з використанням 4-5 нових виразів, дотримуючись ролі Поета (серце як «внутрішнє сонце»)."
+  - "Порівняльний аналіз із виразами M49-50 (голова, руки, ноги), створюючи цілісну картину опису стану людини через соматичні фразеологізми."
+  - "Творче завдання на пошук відповідників: знайти англійські аналоги для «від щирого серця» (from the bottom of my heart) та «мати камінь на душі» (have a heavy heart), аналізуючи культурні відмінності."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "термін (term) — наукова назва поняття"
+  - "поняття (concept) — абстрактна ідея або категорія"
+  - "процес (process) — послідовна зміна станів або явищ"
+  - "метод (method) — шлях дослідження або спосіб дії"
+  - "душа в п'яти (one's heart sinks into one's boots) — колокації: від страху душа в п'яти пішла; вказує на сильний переляк"
+  - "вкладати душу (to put one's soul into) — колокації: вкладати душу в роботу; високочастотний вираз для самовідданої праці"
+  - "кордоцентризм (cordocentrism) — термін на позначення філософії серця в українській культурі"
+  recommended:
+  - "аналіз (analysis) — розчленування цілого на частини"
+  - "синтез (synthesis) — поєднання частин у ціле"
+  - "дослідження (research) — наукове вивчення явища"
+  - "камінь на душі (heavy heart) — колокації: зняти камінь з душі, носити камінь; описує емоційний тягар"
+  - "серце кров'ю обливається (one's heart bleeds) — вживається у контексті співчуття та глибокого жалю"
+  - "брати за серце (to touch the heart) — колокації: пісня/розповідь бере за серце; вживається щодо джерела зворушення"
+  - "віддати Богу душу (to pass away) — евфемізм для смерті; вживається у поважному або літературному контексті"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4294 chars)
+✅ Message sent to Claude (ID: 10580)
+✓ Message 10580 acknowledged
+   Auto-acknowledged reply #10580 (stdout delivery — no inbox accumulation)
+✓ Message 10569 acknowledged

@@ -1,0 +1,102 @@
+module: a1-18
+level: A1
+sequence: 18
+slug: food-and-shopping
+version: '2.0'
+title: Food, Drinks & Shopping
+subtitle: Practical Vocabulary for Market and Store
+content_outline:
+- section: 'Розминка: Їжа та напої (Warm-up: Food and Drinks)'
+  words: 400
+  points:
+  - 'Улюблена їжа та напої — State Standard alignment (§4.2.3.2.1): Focus on Accusative
+    for direct objects (e.g., ''Я люблю піцу'')'
+  - 'Cultural hook: ''Хліб — усьому голова'' (Bread is the head of everything) — explain
+    the sanctity of bread in Ukraine, why it is never thrown away, and the tradition
+    of giving leftovers to birds'
+- section: 'Презентація: У магазині (Presentation: At the Store)'
+  words: 600
+  points:
+  - 'Категорії продуктів: Овочі, фрукти, м’ясо, риба, молочні продукти — State Standard
+    §3.8 thematic requirements'
+  - 'Learner error: Accusative Feminine correction — drill the change from -а to -у
+    (e.g., ''Я купую воду'' not ''вода'') to prevent Nominative overuse'
+  - 'Cultural hook: ''Паляниця'' (Palianytsia) — a type of Ukrainian bread used as
+    a shibboleth and symbol of identity due to its specific pronunciation'
+  - 'Linguistic nuance: The ''Soup Verb'' — drill that in Ukrainian you ''їсти'' (eat)
+    soup with a spoon, you do not ''пити'' (drink) it'
+- section: Одиниці виміру та граматика (Units of Measurement and Grammar)
+  words: 600
+  points:
+  - 'Одиниці виміру: кілограм, літр, пляшка, пачка, пакет — State Standard §3.8 competency
+    for units of weight and volume'
+  - 'Formulaic Genitive for quantities: Teach ''quantity + noun'' as fixed patterns
+    (e.g., ''пляшка води'', ''кілограм яблук'') to support A1 thematic needs without
+    deep case theory'
+  - 'Learner error: Missing Genitive after quantities — drill the distinction between
+    ''пляшка вода'' (wrong) and ''пляшка води'' (correct)'
+  - 'Price expressions and bargaining: Build on a1-17 (Numbers and Money) using authentic
+    visual shopping lists and price tags'
+- section: Традиції та практика (Traditions and Practice)
+  words: 400
+  points:
+  - 'Діалоги в магазині: ''Скільки коштує?'', ''Я купую...'', ''Дайте, будь ласка...''
+    — State Standard §4.2.3.2.1 (Accusative object)'
+  - 'Cultural hook: Hospitality tradition of ''хліб-сіль'' (bread and salt) — guests
+    welcomed with bread on a ''rushnyk'' (embroidered towel)'
+  - 'Production: Creating a visual shopping list and performing a basic transaction
+    dialogue'
+vocabulary_hints:
+  required:
+  - хліб (bread) — свіжий хліб, купувати хліб, хліб і сіль; sacred 'усьому голова'
+    symbol
+  - вода (water) — питна вода, пляшка води (Genitive formula), склянка води; High
+    frequency (Core A1)
+  - молоко (milk) — пакет молока, пити молоко, кава з молоком; High frequency (Core
+    A1)
+  - купувати (to buy) — я купую продукти, скільки коштує?; High frequency (§3.8)
+  - їсти (to eat) — я хочу їсти, смачно їсти; remember 'їсти суп' (not drink)
+  - кілограм (kilogram) — один кілограм яблук, два кілограми; essential for §3.8 weight
+    units
+  recommended:
+  - 'картопля (potato) — learner error: often mistaken in Accusative (картоплю)'
+  - паляниця (palianytsia) — cultural shibboleth and symbol of identity
+  - яблуко (apple) — кілограм яблук (Genitive plural form)
+  - пляшка (bottle) — пляшка води; requires Genitive noun formula
+  - сіль (salt) — хліб-сіль tradition
+  - пакет (packet/bag) — пакет молока, купити пакет
+activity_hints:
+- type: match-up
+  focus: Food and drink names
+  items: 30
+- type: match-up
+  focus: Sort food by type
+  items: 20
+- type: fill-in
+  focus: Shopping conversations
+  items: 8
+- type: fill-in
+  focus: Complete with quantities
+  items: 15
+focus: vocabulary
+pedagogy: PPP
+prerequisites:
+- a1-17 (Numbers and Money)
+connects_to:
+- a1-19 (At the Café)
+- a1-37 (At the Market)
+objectives:
+- Learner can order food items using accusative case
+- Learner can request quantities using genitive case
+- Learner can ask prices and make purchases
+- Learner can distinguish between food and drink categories
+grammar:
+- Accusative for direct objects (review)
+- Genitive for quantities
+- Price expressions
+register: розмовний
+phase: A1.2 [Navigation]
+persona:
+  voice: Patient Supportive Tutor
+  role: Personal Chef
+word_target: 2000

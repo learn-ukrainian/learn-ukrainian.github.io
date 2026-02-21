@@ -1,0 +1,94 @@
+- ipa: '[ɦɔʋɔˈrɪtɪ]'
+  lemma: говорити
+  notes: Type 2 (-ити)
+  pos: verb
+  translation: to speak
+- ipa: '[rɔˈbɪtɪ]'
+  lemma: робити
+  notes: Type 2 (-ити); Labial L mutation (я роблю)
+  pos: verb
+  translation: to do / to make
+- ipa: '[lʲuˈbɪtɪ]'
+  lemma: любити
+  notes: Type 2 (-ити); Labial L mutation (я люблю)
+  pos: verb
+  translation: to love
+- ipa: '[ˈbɑt͡ʃɪtɪ]'
+  lemma: бачити
+  notes: Type 2 (-ити)
+  pos: verb
+  translation: to see
+- ipa: '[xɔˈdɪtɪ]'
+  lemma: ходити
+  notes: Type 2 (-ити); Mutation d→dzh (я ходжу)
+  pos: verb
+  translation: to walk / to go (on foot)
+- ipa: '[sɪˈdʲitɪ]'
+  lemma: сидіти
+  notes: Type 2 (-ити); Mutation d→dzh (я сиджу)
+  pos: verb
+  translation: to sit
+- ipa: '[plɑˈtɪtɪ]'
+  lemma: платити
+  notes: Type 2 (-ити); Mutation t→ch (я плачу)
+  pos: verb
+  translation: to pay
+- ipa: '[ˈʋt͡ʃɪtɪ]'
+  lemma: вчити
+  notes: Type 2 (-ити)
+  pos: verb
+  translation: to teach / to learn
+- ipa: '[ˈjistɪ]'
+  lemma: їсти
+  notes: Irregular verb (я їм, ти їси)
+  pos: verb
+  translation: to eat
+- ipa: '[ˈpɪtɪ]'
+  lemma: пити
+  notes: Irregular Type 1 pattern (я п'ю)
+  pos: verb
+  translation: to drink
+- ipa: '[xɔˈtʲitɪ]'
+  lemma: хотіти
+  notes: Type 1 mixed pattern (я хочу, ти хочеш)
+  pos: verb
+  translation: to want
+- ipa: '[ˈspɑtɪ]'
+  lemma: спати
+  notes: Type 2 behavior; Labial L mutation (я сплю)
+  pos: verb
+  translation: to sleep
+- ipa: '[ˈkɑʋɑ]'
+  lemma: кава
+  notes: 'Fem. (Acc: каву)'
+  pos: noun
+  translation: coffee
+- ipa: '[pɔˈmɪlkɑ]'
+  lemma: помилка
+  pos: noun
+  translation: mistake
+- ipa: '[sʲʋit]'
+  lemma: світ
+  pos: noun
+  translation: world
+- ipa: '[ˈprɑu̯dɑ]'
+  lemma: правда
+  pos: noun
+  translation: truth
+- ipa: '[pɑrk]'
+  lemma: парк
+  pos: noun
+  translation: park
+- ipa: '[ˈʋɪbʲir]'
+  lemma: вибір
+  pos: noun
+  translation: choice
+- ipa: '[sʲurˈprɪz]'
+  lemma: сюрприз
+  pos: noun
+  translation: surprise
+- ipa: '[ʃt͡ʃɔˈdnʲɑ]'
+  lemma: щодня
+  pos: adverb
+  translation: every day
+

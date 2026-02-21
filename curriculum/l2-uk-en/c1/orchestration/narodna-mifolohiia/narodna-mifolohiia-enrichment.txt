@@ -1,0 +1,250 @@
+✅ Message sent to Gemini (ID: 10775) [auto-acked: self-addressed]
+✓ Message 10775 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10775...
+📨 Message #10775
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-narodna-mifolohiia
+   Time: 2026-02-20T21:28:07.352659+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-056
+level: C1
+sequence: 56
+slug: narodna-mifolohiia
+version: '2.0'
+title: Народна міфологія
+subtitle: Ukrainian Folk Mythology
+content_outline:
+- section: Розминка — Світ українських духів
+  points:
+  - Українська міфологія — дохристиянські вірування
+  - Синкретизм — поєднання язичництва та християнства
+  - Роль міфології у фольклорі та літературі
+- section: Міфологічні істоти
+  points:
+  - 'Домашні духи: домовик, хатній, дідько'
+  - 'Природні духи: лісовик, водяник, польовик, русалка'
+  - 'Демонічні істоти: упир, відьма, вовкулака, чорт'
+  - 'Долеподібні істоти: доля, недоля, смерть'
+- section: Міфологічні вірування
+  points:
+  - Культ предків (діди, поминальні обряди)
+  - Анімізм — душа в природі
+  - Обереги та ритуали захисту
+  - Міфологія в народних святах
+- section: Практика — аналіз міфології
+  points:
+  - Проаналізувати міфологічні мотиви у "Тінях забутих предків"
+  - Порівняти українську русалку з європейськими аналогами
+  - Написати есе про міфологію в сучасній культурі
+  - Обговорити роль міфів у національній ідентичності
+focus: vocabulary
+pedagogy: Immersion & Analysis
+objectives:
+- Learner understands the hierarchy and functions of supernatural beings in Ukrainian
+  folklore
+- Learner can analyze mythological motifs in classical literature
+- Learner can discuss the role of mythology in forming national identity
+grammar:
+- Mythological terminology
+- Narrative registers
+phase: C1.5 Folk Culture & Fine Arts
+persona:
+  voice: Senior Specialist
+  role: Етнолог
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Народна міфологія
+
+## State Standard Reference
+§3.21: "Традиції, звичаї, свята: ...забобони; українські звичаї і традиції; релігійні звичаї і традиції."
+Alignment: This module directly addresses the C1 requirement to discuss customs, superstitions, and traditions, elevating the discourse to the level of mythological origins and syncretism (dual faith).
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| **Забобон** | High / Speech | вірити в забобони, народний забобон, безглуздий забобон |
+| **Повір'я** | Med / Literary | давнє повір'я, згідно з повір'ям, існує повір'я |
+| **Домовик** | Med / Folklore | задобрити домовика, дух хати, охоронець домашнього вогнища |
+| **Мавка** | Med / Literary | лісова мавка, чари мавки, "Лісова пісня" |
+| **Синкретизм** | Low / Academic | релігійний синкретизм, поєднання вірувань, двовір'я |
+| **Оберіг** | High / Cultural | носити оберіг, вишитий оберіг, захисний оберіг |
+
+## Cultural Hooks
+1. **Тіні забутих предків** (М. Коцюбинський / С. Параджанов): The definitive text/film for Hutsul demonology (molfars, spirits).
+2. **Лісова пісня** (Леся Українка): Encyclopedia of Volyn mythology (Mavka, Lisovyk, Perelesnyk).
+3. **Двовір'я (Dual Faith)**: The unique Ukrainian phenomenon where pagan rituals (Ivana Kupala) seamlessly merged with Christian holidays (Birth of John the Baptist).
+
+## Common Learner Errors
+1. **Міф vs Казка**: Learners often use *казка* (fairy tale, fiction) when they mean *міф* (sacred narrative explaining the world).
+   * *Error*: Це просто стара казка. -> *Correction*: Це давній міф про створення світу.
+2. **Gender of spirits**: Assuming *русалка* corresponds to the Western "Mermaid" (Disney style). Ukrainian *русалка* is often a dangerous spirit of a drowned girl, not necessarily with a fish tail.
+3. **Відьма connotation**: Viewing *відьма* only negatively. Etymologically connected to *відати* (to know) — a wise woman, though often feared.
+
+## Cross-References
+- Builds on: **B2-021 (Ukrainians and Nature)**, **B2-022 (Superstitions)**
+- Prepares for: **C1-086 (Lesya Ukrainka)**, **C1-090 (Kotsiubynsky)**
+
+## Notes for Content Writing
+- Maintain a respectful, ethnographic tone (Persona: Ethnographer).
+- Distinctly separate "Lower Mythology" (spirits of nature/home) from the "Higher Pantheon" (Perun, Dazhboh), focusing on the former as it survived better in folklore.
+- Emphasize the *protective* function of many rituals, not just fear.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Світ українських духів та феномен двовір’я (Introduction: The World of Ukrainian Spirits and Dual Faith)"
+  words: 600
+  points:
+  - "Пояснення концепції релігійного синкретизму (двовір’я) в українській культурі: як язичницькі ритуали (напр. Івана Купала) органічно поєдналися з християнськими святами."
+  - "Розрізнення 'нижчої міфології' (духи природи та дому) та 'вищого пантеону' (Перун, Дажбог); акцент на тому, чому нижча міфологія краще збереглася у фольклорі."
+  - "Обговорення ролі міфології у формуванні національної ідентичності та деколонізаційний погляд на народні вірування як на автентичну світоглядну систему."
+- section: "Демонологія дому та природи (Demonology of Home and Nature)"
+  words: 900
+  points:
+  - "Домашні духи: детальний аналіз образу домовика як охоронця домашнього вогнища. Практика вживання колокції 'задобрити домовика' та вивчення ролі 'хатнього'."
+  - "Природні духи: лісовик, водяник, польовик. Специфіка образу мавки (лісової німфи) на основі 'Лісової пісні' Лесі Українки та її зв'язок з волинською міфологією."
+  - "Аналіз образу русалки: виправлення хибних уявлень (Disney-style mermaid) — українська русалка як небезпечний дух потопленої дівчини, часто без риб'ячого хвоста."
+- section: "Демонічні та долеподібні істоти (Demonic and Fate-like Beings)"
+  words: 900
+  points:
+  - "Демонічні істоти: упир, вовкулака, чорт. Етимологічне дослідження слова 'відьма' (від давньослов’янського 'відати' — знати); переосмислення образу відьми як мудрої, хоча й грізної жінки."
+  - "Долеподібні істоти: доля, недоля, смерть як персоніфіковані сили, що керують життям людини. Анімізм та віра в присутність душі в кожному елементі природи."
+  - "Культ предків та захисні практики: роль 'дідових днів' (поминальних обрядів) та функція оберегів (вишиванка, лялька-мотанка) як засобів ритуального захисту."
+- section: "Міфологічні мотиви в літературі та мистецтві (Mythological Motifs in Literature and Arts)"
+  words: 900
+  points:
+  - "Глибокий аналіз гуцульської демонології (мольфари, щезники, чугайстри) у повісті М. Коцюбинського «Тіні забутих предків» та її візуалізація у фільмі С. Параджанова."
+  - "Порівняльний аналіз: українські міфологічні істоти проти європейських аналогів (напр. русалка vs німфа). Робота з текстом 'Лісової пісні' як енциклопедією міфів."
+  - "Лексичний практикум: розмежування термінів «міф» (сакральна історія про устрій світу) та «казка» (вигадка). Корекція помилки 'Це просто стара казка' на 'Це давній народний міф'."
+- section: "Практика: Аналіз та сучасна рецепція (Practice: Analysis and Modern Reception)"
+  words: 700
+  points:
+  - "Аналітична дискусія про сучасні забобони та повір’я у повсякденному житті українців: що є пережитком минулого, а що — частиною культурного коду."
+  - "Творче завдання: написання есе про трансформацію міфологічних образів у сучасному українському фентезі, музиці (напр. Go_A) чи дизайні."
+  - "Підсумкове обговорення: міфологія як інструмент збереження народної мудрості та її роль у сучасному процесі деколонізації культури."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "Забобон (superstition) — вірити в забобони, народний забобон, безглуздий забобон; висока частотність у побутовому мовленні."
+  - "Повір'я (folk belief) — давнє повір'я, згідно з повір'ям, існує повір'я; книжний та літературний регістр."
+  - "Домовик (brownie/house spirit) — задобрити домовика, охоронець домашнього вогнища; ключовий персонаж нижчої міфології."
+  - "Мавка (forest nymph) — лісова мавка, чари мавки, мавка-невидимка; культурний гук до творчості Лесі Українки."
+  - "Синкретизм (syncretism) — релігійний синкретизм, поєднання вірувань; академічний термін для опису двовір'я."
+  - "Оберіг (amulet/talisman) — носити оберіг, вишитий оберіг, захисний оберіг; широке культурне вживання."
+  recommended:
+  - "Двовір'я (dual faith) — феномен співіснування християнства та язичництва."
+  - "Анімізм (animism) — віра в одухотвореність природи."
+  - "Відьма (witch) — етимологічний зв'язок із дієсловом 'відати' (знати)."
+  - "Міф (myth) — сакральна оповідь, на противагу художній казці."
+  - "Мольфар (molfar/sorcerer) — гуцульський маг, персонаж повісті 'Тіні забутих предків'."
+  - "Шезник (evil spirit) — персонаж карпатської демонології, дух, що зникає."
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4375 chars)
+✅ Message sent to Claude (ID: 10782)
+✓ Message 10782 acknowledged
+   Auto-acknowledged reply #10782 (stdout delivery — no inbox accumulation)
+✓ Message 10775 acknowledged

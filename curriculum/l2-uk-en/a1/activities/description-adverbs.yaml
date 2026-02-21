@@ -1,0 +1,369 @@
+- type: group-sort
+  title: 'Прикметник чи Прислівник?'
+  instruction: 'Розподіліть слова на дві групи: "Який?" (Прикметник) та "Як?" (Прислівник).'
+  groups:
+    - name: 'Який? (Adjective)'
+      items:
+        - "гарний"
+        - "швидка"
+        - "добрий"
+        - "тихе"
+        - "голосний"
+        - "весела"
+    - name: 'Як? (Adverb)'
+      items:
+        - "гарно"
+        - "швидко"
+        - "добре"
+        - "тихо"
+        - "голосно"
+        - "весело"
+
+- type: fill-in
+  title: 'Утворення прислівників'
+  instruction: 'Оберіть правильний прислівник, утворений від прикметника.'
+  items:
+    - sentence: "Він спокійний. Він сидить {{answer}}."
+      answer: "спокійно"
+      options: ["спокійно", "спокійний", "спокійна", "спокій"]
+    - sentence: "Вона активна. Вона живе {{answer}}."
+      answer: "активно"
+      options: ["активно", "активний", "активна", "активні"]
+    - sentence: "Це легке завдання. Я роблю його {{answer}}."
+      answer: "легко"
+      options: ["легко", "легкий", "легка", "легке"]
+    - sentence: "Мій друг добрий. Він все робить {{answer}}."
+      answer: "добре"
+      options: ["добре", "добрий", "добро", "добра"]
+      explanation: "Good (kind) is 'добрий', but well is 'добре'."
+    - sentence: "Музика голосна. Вона грає {{answer}}."
+      answer: "голосно"
+      options: ["голосно", "голосна", "голосний", "голосне"]
+    - sentence: "Цей тест важкий. Мені {{answer}} писати."
+      answer: "важко"
+      options: ["важко", "важкий", "важка", "важке"]
+    - sentence: "Він сумний. Він дивиться {{answer}}."
+      answer: "сумно"
+      options: ["сумно", "сумний", "сумна", "сумне"]
+    - sentence: "Це правильна відповідь. Ти пишеш {{answer}}."
+      answer: "правильно"
+      options: ["правильно", "правильний", "правильна", "правильне"]
+
+- type: match-up
+  title: 'Протилежності'
+  instruction: 'Знайдіть пари слів з протилежним значенням.'
+  pairs:
+    - left: "швидко"
+      right: "повільно"
+    - left: "добре"
+      right: "погано"
+    - left: "голосно"
+      right: "тихо"
+    - left: "легко"
+      right: "важко"
+    - left: "рано"
+      right: "пізно"
+    - left: "завжди"
+      right: "ніколи"
+    - left: "цікаво"
+      right: "нудно"
+    - left: "правильно"
+      right: "неправильно"
+
+- type: quiz
+  title: 'Як часто?'
+  instruction: 'Оберіть правильний варіант відповіді відповідно до шкали частоти.'
+  items:
+    - question: "Яке слово означає 100% часу?"
+      options:
+        - text: "завжди"
+          correct: true
+        - text: "часто"
+          correct: false
+        - text: "іноді"
+          correct: false
+        - text: "ніколи"
+          correct: false
+      explanation: "'Завжди' means always (100%)."
+    - question: "Яке слово означає 0% часу?"
+      options:
+        - text: "ніколи"
+          correct: true
+        - text: "рідко"
+          correct: false
+        - text: "зазвичай"
+          correct: false
+        - text: "часто"
+          correct: false
+      explanation: "'Ніколи' means never (0%)."
+    - question: "Що частіше: 'рідко' чи 'часто'?"
+      options:
+        - text: "часто"
+          correct: true
+        - text: "рідко"
+          correct: false
+        - text: "однаково"
+          correct: false
+        - text: "не знаю"
+          correct: false
+      explanation: "'Часто' (often) is more frequent than 'рідко' (rarely)."
+    - question: "Де наголос у слові 'завжди'?"
+      options:
+        - text: "завЖДИ"
+          correct: true
+        - text: "ЗАВжди"
+          correct: false
+        - text: "завжДИ"
+          correct: false
+        - text: "на першому складі"
+          correct: false
+      explanation: "The stress is on the second syllable: zav-ZHDY."
+    - question: "Як ми перекладемо слово 'usually'?"
+      options:
+        - text: "зазвичай"
+          correct: true
+        - text: "завжди"
+          correct: false
+        - text: "іноді"
+          correct: false
+        - text: "рідко"
+          correct: false
+    - question: "Як ми перекладемо слово 'sometimes'?"
+      options:
+        - text: "іноді"
+          correct: true
+        - text: "ніколи"
+          correct: false
+        - text: "завжди"
+          correct: false
+        - text: "часто"
+          correct: false
+    - question: "Якщо я роблю це 80% часу, це..."
+      options:
+        - text: "зазвичай"
+          correct: true
+        - text: "ніколи"
+          correct: false
+        - text: "рідко"
+          correct: false
+        - text: "завжди"
+          correct: false
+    - question: "Якщо я роблю це 30% часу, це..."
+      options:
+        - text: "іноді"
+          correct: true
+        - text: "завжди"
+          correct: false
+        - text: "часто"
+          correct: false
+        - text: "зазвичай"
+          correct: false
+
+- type: unjumble
+  title: 'Порядок слів: Спосіб дії'
+  instruction: 'Складіть речення. Пам''ятайте: прислівник способу (Як?) зазвичай стоїть після дієслова.'
+  items:
+    - words: ["читає", "Він", "швидко"]
+      answer: "Він читає швидко"
+    - words: ["готує", "смачно", "Мама"]
+      answer: "Мама готує смачно"
+    - words: ["добре", "Я", "розумію"]
+      answer: "Я добре розумію"
+    - words: ["сидимо", "Ми", "тихо"]
+      answer: "Ми сидимо тихо"
+    - words: ["грають", "Діти", "весело"]
+      answer: "Діти грають весело"
+    - words: ["Вона", "гарно", "співає"]
+      answer: "Вона співає гарно"
+
+- type: unjumble
+  title: 'Порядок слів: Частота'
+  instruction: 'Складіть речення. Пам''ятайте: прислівник частоти (Як часто?) зазвичай стоїть перед дієсловом.'
+  items:
+    - words: ["часто", "гуляю", "Я"]
+      answer: "Я часто гуляю"
+    - words: ["завжди", "Він", "спізнюється"]
+      answer: "Він завжди спізнюється"
+    - words: ["Ми", "п'ємо", "рідко", "каву"]
+      answer: "Ми рідко п'ємо каву"
+    - words: ["іноді", "Вони", "забувають"]
+      answer: "Вони іноді забувають"
+    - words: ["зазвичай", "снідаю", "вдома", "Я"]
+      answer: "Я зазвичай снідаю вдома"
+    - words: ["ніколи", "не", "Вона", "палить"]
+      answer: "Вона ніколи не палить"
+
+- type: fill-in
+  title: 'Ніколи не...'
+  instruction: 'Доповніть речення, використовуючи правило подвійного заперечення.'
+  items:
+    - sentence: "Я ніколи {{answer}} їм м'ясо."
+      answer: "не"
+      options: ["не", "ні", "так", "є"]
+      explanation: "With 'ніколи', you must use 'не' before the verb."
+    - sentence: "Він ніколи {{answer}} запізнюється."
+      answer: "не"
+      options: ["не", "ні", "на", "до"]
+    - sentence: "Ми ніколи {{answer}} були там."
+      answer: "не"
+      options: ["не", "ні", "ми", "ви"]
+    - sentence: "Вони ніколи {{answer}} слухають рок."
+      answer: "не"
+      options: ["не", "ні", "так", "ще"]
+    - sentence: "Ти ніколи {{answer}} спиш вдень."
+      answer: "не"
+      options: ["не", "ні", "на", "за"]
+    - sentence: "Вона ніколи {{answer}} плаче."
+      answer: "не"
+      options: ["не", "ні", "так", "це"]
+    - sentence: "Я ніколи {{answer}} п'ю молоко."
+      answer: "не"
+      options: ["не", "ні", "на", "так"]
+    - sentence: "Ми ніколи {{answer}} співаємо."
+      answer: "не"
+      options: ["не", "ні", "ви", "ми"]
+
+- type: quiz
+  title: 'Інтенсивність: Дуже чи Трохи?'
+  instruction: 'Оберіть найбільш логічний варіант.'
+  items:
+    - question: "Я _____ люблю це. (Strong feeling)"
+      options:
+        - text: "дуже"
+          correct: true
+        - text: "трохи"
+          correct: false
+        - text: "майже"
+          correct: false
+        - text: "зовсім"
+          correct: false
+      explanation: "'Дуже' means very/really."
+    - question: "Я _____ втомився. (Small feeling)"
+      options:
+        - text: "трохи"
+          correct: true
+        - text: "дуже"
+          correct: false
+        - text: "зовсім"
+          correct: false
+        - text: "завжди"
+          correct: false
+      explanation: "'Трохи' means a little bit."
+    - question: "Він _____ готовий. (Not yet, but close)"
+      options:
+        - text: "майже"
+          correct: true
+        - text: "ніколи"
+          correct: false
+        - text: "часто"
+          correct: false
+        - text: "рідко"
+          correct: false
+      explanation: "'Майже' means almost."
+    - question: "Це _____ не цікаво. (Negative emphasis)"
+      options:
+        - text: "зовсім"
+          correct: true
+        - text: "часто"
+          correct: false
+        - text: "завжди"
+          correct: false
+        - text: "майже"
+          correct: false
+      explanation: "'Зовсім не' means not at all."
+    - question: "Вона говорить _____ тихо. (Amplifier)"
+      options:
+        - text: "дуже"
+          correct: true
+        - text: "добре"
+          correct: false
+        - text: "швидко"
+          correct: false
+        - text: "часто"
+          correct: false
+    - question: "Ми зараз знаходимося _____ вдома. (Limit)"
+      options:
+        - text: "майже"
+          correct: true
+        - text: "дуже"
+          correct: false
+        - text: "трохи"
+          correct: false
+        - text: "рідко"
+          correct: false
+    - question: "Він бігає _____ швидко! (Champion)"
+      options:
+        - text: "дуже"
+          correct: true
+        - text: "трохи"
+          correct: false
+        - text: "зовсім"
+          correct: false
+        - text: "рідко"
+          correct: false
+    - question: "Я знаю це _____ погано. (Not well)"
+      options:
+        - text: "зовсім"
+          correct: true
+        - text: "дуже"
+          correct: false
+        - text: "часто"
+          correct: false
+        - text: "майже"
+          correct: false
+
+- type: match-up
+  title: 'Знайдіть пару'
+  instruction: 'З''єднайте частини речень, щоб утворити логічні висловлювання.'
+  pairs:
+    - left: "Тихіше їдеш —"
+      right: "далі будеш."
+    - left: "Я ніколи"
+      right: "не палю."
+    - left: "Він дуже"
+      right: "добре співає."
+    - left: "Ми часто"
+      right: "гуляємо в парку."
+    - left: "Вона говорить"
+      right: "дуже тихо."
+    - left: "Я знаю це"
+      right: "зовсім погано."
+    - left: "Він говорить"
+      right: "дуже голосно."
+    - left: "Ми живемо"
+      right: "весело і дружно."
+
+- type: fill-in
+  title: 'Логічний вибір'
+  instruction: 'Оберіть слово, яке найкраще підходить за змістом.'
+  items:
+    - sentence: "Я поспішаю, тому я йду {{answer}}."
+      answer: "швидко"
+      options: ["швидко", "повільно", "тихо", "погано"]
+      explanation: "If you hurry (поспішаю), you go fast (швидко)."
+    - sentence: "Це бібліотека. Тут треба говорити {{answer}}."
+      answer: "тихо"
+      options: ["тихо", "голосно", "швидко", "рано"]
+      explanation: "In a library, you must speak quietly (тихо)."
+    - sentence: "Я прокидаюся {{answer}}, о 6:00."
+      answer: "рано"
+      options: ["рано", "пізно", "повільно", "погано"]
+      explanation: "6:00 is early (рано)."
+    - sentence: "Я не знаю це слово. Я розумію {{answer}}."
+      answer: "погано"
+      options: ["погано", "добре", "швидко", "голосно"]
+      explanation: "If you don't know the word, you understand poorly (погано)."
+    - sentence: "Це просте завдання. Я роблю його {{answer}}."
+      answer: "легко"
+      options: ["легко", "важко", "пізно", "тихо"]
+      explanation: "Simple task = easily (легко)."
+    - sentence: "Він {{answer}} снідає вдома, майже кожен день."
+      answer: "зазвичай"
+      options: ["зазвичай", "ніколи", "рідко", "погано"]
+      explanation: "Almost every day implies usually (зазвичай)."
+    - sentence: "Він сміється. Йому {{answer}}."
+      answer: "весело"
+      options: ["весело", "сумно", "тихо", "важко"]
+    - sentence: "Вона не поспішає. Вона йде {{answer}}."
+      answer: "повільно"
+      options: ["повільно", "швидко", "голосно", "рано"]

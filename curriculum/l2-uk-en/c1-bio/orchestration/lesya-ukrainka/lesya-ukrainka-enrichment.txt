@@ -1,0 +1,291 @@
+✅ Message sent to Gemini (ID: 12763) [auto-acked: self-addressed]
+✓ Message 12763 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12763...
+📨 Message #12763
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-lesya-ukrainka
+   Time: 2026-02-20T23:42:07.937257+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-bio-70
+level: C1-BIO
+sequence: 70
+slug: lesya-ukrainka
+version: '2.0'
+title: 'Леся Українка: Прометей української літератури'
+subtitle: 'Lesya Ukrainka: Prometheus of Ukrainian Literature'
+content_outline:
+- section: Вступ — Прометей у жіночій подобі
+  points:
+  - Леся Українка як символ незламності духу
+  - Від ліричної поетеси до драматурга світового рівня
+  - Боротьба з хворобою та імперією водночас
+- section: Дитинство та родина (1871-1884)
+  points:
+  - Народження у Новограді-Волинському в родині Косачів
+  - Мати Олена Пчілка — письменниця та громадська діячка
+  - Дядько Михайло Драгоманов — ідейний наставник
+  - Домашня освіта та ранній літературний талант
+- section: Хвороба та творчий злет (1884-1900)
+  points:
+  - Діагноз — кістковий туберкульоз у 13 років
+  - Поїздки на лікування — Крим, Єгипет, Грузія
+  - Перші поетичні збірки та переклади
+  - Знайомство з Сергієм Мержинським
+- section: Драматургія та ідеї (1900-1913)
+  points:
+  - Створення драматичних поем — «Лісова пісня», «Оргія», «Кассандра»
+  - Антиколоніальний та феміністичний дискурс у творах
+  - Міфологічні сюжети як засіб говорити про сучасність
+  - Шлюб з Климентом Квіткою — етнографом та музикознавцем
+- section: Останні роки та спадщина (1909-1913)
+  points:
+  - Погіршення здоров'я та переїзд до Грузії
+  - Інтенсивна творчість попри фізичні страждання
+  - Смерть у Сурамі 1 серпня 1913 року
+  - Похорон у Києві та національна жалоба
+- section: Вплив на сучасність
+  points:
+  - Канонізація як національної святині
+  - Вплив на українську драматургію XX століття
+  - Леся Українка у сучасній культурі
+  - 200-гривнева банкнота та численні пам'ятники
+vocabulary_hints:
+  required:
+  - драматургія (dramaturgy)
+  - драматична поема (dramatic poem)
+  - туберкульоз (tuberculosis)
+  - незламність (indomitability)
+  - антиколоніальний (anti-colonial)
+  - міфологія (mythology)
+  - канонізація (canonization)
+  - спадщина (legacy)
+  - муза (muse)
+  - генійка (female genius)
+  recommended:
+  - прометеїзм (Prometheanism)
+  - неоромантизм (neo-romanticism)
+  - символізм (symbolism)
+  - маргіналізація (marginalization)
+  - еміграція (emigration)
+activity_hints:
+- type: reading
+  focus: Уривки з «Лісової пісні» та «Contra spem spero»
+  source: Оригінальні твори
+  items: 3 passages
+- type: essay-response
+  focus: Як хвороба вплинула на творчість Лесі Українки?
+  output: Reflective essay
+- type: critical-analysis
+  focus: Discuss the anti-colonial motifs in "Cassandra"
+  output: Literary analysis
+focus: biography
+pedagogy: seminar
+prerequisites:
+- c1-bio-22-mykhailo-drahomanov
+- c1-bio-24-olena-pchilka
+connects_to:
+- c1-bio-28-ivan-franko
+- c1-bio-31-olha-kobylianska
+objectives:
+- Analyze the evolution of Lesya Ukrainka's work from lyricism to world-class drama
+- Evaluate the anti-colonial and feminist discourses in her major dramatic poems
+- Discuss the impact of her physical struggle on her creative indomitability
+grammar:
+- Academic literary analysis
+- Sophisticated modal structures
+module_type: biography
+sources:
+- name: Леся Українка (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Леся_Українка
+  type: primary
+  notes: Основна біографія, творчість, хвороба
+- name: Драматургія Лесі Українки
+  url: https://uk.wikipedia.org/wiki/Драматургія_Лесі_Українки
+  type: reference
+  notes: Аналіз драматичних творів
+- name: Родина Косачів
+  url: https://uk.wikipedia.org/wiki/Косачі
+  type: reference
+  notes: Літературна родина та виховання
+immersion: 100% Ukrainian
+phase: C1-BIO
+persona:
+  voice: Senior Biographer
+  role: Dramatist
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Леся Українка: Прометей української літератури
+
+## Використані джерела
+1. [Енциклопедія Сучасної України: Леся Українка](https://esu.com.ua/article-53457) — фундаментальна біографічна стаття, аналіз творчості та періодизація.
+2. [Інститут історії України: Косач-Квітка Лариса Петрівна](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Lesia_Ukrainka) — академічний історичний огляд, деталі громадської діяльності.
+3. [Ізборник: Леся Українка. Драматичні твори](http://litopys.org.ua/ukrainka/les.htm) — тексти творів, критичні статті та коментарі.
+4. [Локальна історія: Як радянська пропаганда ліпила з Лесі Українки «друга робітничого класу»](https://localhistory.org.ua/texts/statti/yak-radianska-propaganda-lipila-z-lesi-ukrayinki-druga-robitnichogo-klasu/) — аналіз міфів та деколонізаційний погляд.
+
+## Хронологія
+- **25 лютого 1871**: Народилася у Новограді-Волинському.
+- **1881**: Початок хвороби (туберкульоз кісток) після водохреща на річці Стир.
+- **1893**: Вихід першої збірки «На крилах пісень» у Львові (за сприяння І. Франка).
+- **1901**: Смерть Сергія Мержинського у Мінську; написання поеми «Одержима» за одну ніч.
+- **1907**: Одруження з Климентом Квіткою.
+- **1911**: Написання драми-феєрії «Лісова пісня» у Кутаїсі.
+- **1 серпня 1913**: Смерть у м. Сурамі (Грузія).
+- **1913**: Похорон на Байковому кладовищі у Києві.
+
+## Ключові факти та цитати
+- **Цитата (з «Кассандри»)**: «Тоненька смужка брехню від правди ділить у минулім, але в прийдешньому нема вже й смужки.»
+- **Цитата (з листів)**: «Я честь віддам титану Прометею, що не творив своїх людей рабами.» (Motto of her life).
+- **Факт**: Знала понад 7 мов (англійська, німецька, французька, італійська, польська, болгарська, давньогрецька, латина). Була першою українською жінкою, яка вийшла за межі етнографічного реалізму в європейський модернізм.
+
+## Engagement Hooks (mapped to sections)
+- Section "Дитинство та родина": [!context] — Вплив дядька Михайла Драгоманова на формування європейського світогляду Лесі («європеїзм» замість хуторянства).
+- Section "Хвороба та творчий злет": [!history-bite] — Операція в Берліні та як фізичний біль трансформувався у «творчу лихоманку».
+- Section "Драматургія та ідеї: I — Драматичні поеми та антиколоніалізм": [!decolonization] — Аналіз «Оргії»: Рим як алегорія Російської імперії, а Греція — України. Проблема культурного ренегатства.
+- Section "Драматургія та ідеї: II — «Лісова пісня» та особистий вимір": [!myth-buster] — Спростування радянського міфу про «атеїзм» Лесі; її духовність була пантеїстичною та глибоко філософською, а не примітивно-матеріалістичною.
+- Section "Останні роки та спадщина": [!quote] — Уривок з останніх листів про «Honor» (честь) боротьби до кінця.
+- Section "Вплив на сучасність": [!culture] — Інтерпретації образу в сучасній культурі (театр, кіно, 200 гривень як символ).
+
+## Деколонізаційний контекст
+- **Imperial/Soviet myth**: Леся Українка — «революціонерка-демократка», «друга робітничого класу», послідовниця марксизму.
+- **Ukrainian reality**: Аристократка духу, модерністка, інтелектуалка, яка ставила національну гідність вище класової боротьби. Її «соціалізм» був драгоманівського (етичного), а не більшовицького типу.
+- **Imperial/Soviet myth**: «Співачка досвітніх вогнів» (акцент лише на ранній громадянській ліриці).
+- **Ukrainian reality**: Геніальний драматург рівня Ібсена та Гауптмана, чиї пізні драми («Кассандра», «Оргія», «Руфін і Прісцилла») були свідомо маргіналізовані радянською школою як «складні» та «ідеалістичні».
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| Ідеологія | Революційний демократизм, марксизм | Національний модернізм, неоромантизм |
+| Статус | «Хвора дівчина», «Дочка Прометея» (як страждальниця) | Інтелектуальний лідер нації, творець нових смислів |
+| Контекст | «Дружба народів» (з російськими демократами) | Входження в європейський культурний простір напряму, оминаючи російське посередництво |
+
+## Section-Mapped Research Notes
+
+### Вступ — Прометей у жіночій подобі
+Символ незламності («Contra spem spero!»). Унікальність фігури: жінка, яка в патріархальному суспільстві стала інтелектуальним лідером. Відхід від народництва до елітарної культури.
+
+### Дитинство та родина (1871-1884)
+Родина Косачів — центр українського життя. Вплив матері (Олени Пчілки) — жорстке виховання в українському дусі, мовна стійкість. Вплив Драгоманова — інтеграція в європейський контекст. Приватна освіта, феноменальні здібності до мов.
+
+### Хвороба та творчий злет (1884-1900)
+1881 — початок хвороби. Подорожі як спосіб лікування та пізнання світу (Крим, Відень, Італія, Єгипет). Розширення горизонтів: переклади Гейне, Байрона. Лірика: від «Конвалій» до глибокої філософії. Особиста драма: Сергій Мержинський, «Одержима» як вибух болю.
+
+### Драматургія та ідеї: I — Драматичні поеми та антиколоніалізм
+Вершина творчості. «Кассандра» (1907): трагедія пророка, якого не чують; аналогія з українською інтелігенцією. «Оргія» (1913): тема митця в колоніальній ситуації; Антей, який обирає смерть замість служіння Риму. «Бояриня»: пряма критика Переяславської угоди та московського побуту (заборонена в СРСР).
+
+### Драматургія та ідеї: II — «Лісова пісня» та особистий вимір
+«Лісова пісня» (1911): шедевр неоромантизму, написаний у Кутаїсі за 12 днів. Глибокий філософський конфлікт природи (свободи) та соціуму (неволі). Феміністичний аспект: Мавка як активний суб'єкт, Лукаш як пасивний. Шлюб з Климентом Квіткою: партнерство, спільна праця над збереженням фольклору (запис дум на фонограф).
+
+### Останні роки та спадщина (1909-1913)
+Життя між курортами (Грузія, Єгипет). Фізичне згасання при неймовірній творчій продуктивності. Смерть у Сурамі. Перевезення тіла до Києва. Похорон під наглядом жандармів (побоювання демонстрацій).
+
+### Вплив на сучасність
+Актуальність антиколоніальних текстів сьогодні. Леся Українка як символ фемінізму. Переосмислення образу: від «радянської ікони» до живої, модерної людини. Візуальна присутність (купюри, графіті, меми).
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12784)
+✓ Message 12763 acknowledged
+✓ Message 12784 acknowledged

@@ -1,102 +1,74 @@
-# Research Notes: Language Question & Alphabet Wars (1863-1905)
+# Дослідження: Мовне питання
 
-## Contested Terms / Historiographical Mapping
+## Використані джерела
+1. [Енциклопедія історії України (ЕІУ)](http://www.history.org.ua/) — статті про Валуєвський циркуляр (1863), Емський указ (1876) та Пантелеймона Куліша.
+2. [Енциклопедія Сучасної України (ЕСУ)](https://esu.com.ua/) — статті про український правопис, ярижку та кулішівку.
+3. [Ізборник (litopys.org.ua)](http://litopys.org.ua/) — праці з історії української літературної мови (В. Русанівський, І. Огієнко) щодо становлення фонетичного правопису.
 
-| Concept              | Imperial/Russian Framing                                                              | Ukrainian (Decolonized)                                                      |
-| :------------------- | :------------------------------------------------------------------------------------ | :--------------------------------------------------------------------------- |
-| **Українська мова**  | "Малоросійське наріччя", "южнорусское наречие", "зіпсута польським впливом російська" | **Українська мова** (окрема слов'янська мова з власною історією та системою) |
-| **Єдність**          | "Общерусский язык", "триєдиний руський народ"                                         | **Імперська асиміляція**, лінгвоцид, колоніальне підкорення                  |
-| **Правописна війна** | "Сєпаратизм", "польська інтрига", "штучний розкол"                                    | **Боротьба за культурний суверенітет**, візуальна деколонізація              |
-| **Валуєв/Емс**       | "Заходи проти польського впливу", "тимчасові обмеження"                               | **Акти лінгвоциду**, державна заборона мови, інструмент русифікації          |
+## Хронологія
+- 1827: Видання «Малоросійських пісень» Михайлом Максимовичем, де застосовано етимологічний правопис («максимовичівка»).
+- 1856–1857: Пантелеймон Куліш у «Записках о Южной Руси» та «Граматці» запроваджує фонетичний правопис («кулішівку»).
+- 1859: «Азбучна війна» в Галичині — опір української інтелігенції спробам уряду ввести латинську абетку (проєкт Й. Їречека).
+- 1863 (18 липня): Таємний Валуєвський циркуляр — заборона видання україномовних освітніх та релігійних книг.
+- 1876 (18 травня): Емський указ Олександра II — повна заборона друку українською мовою в Російській імперії, ввезення книг та використання кулішівки; примусове впровадження «ярижки».
+- 1905: Після революції часткове скасування заборон, повернення до фонетичного правопису (зокрема у словнику Б. Грінченка — «грінченківка»).
 
-## 1. Ярижка (Yaryzhka) — The Chains
+## Ключові факти та цитати
+- Правопис у XIX столітті перетворився з суто лінгвістичного питання на маркер національної ідентичності. Вибір літер означав вибір цивілізаційного вектора.
+- Принцип кулішівки «пиши як чуєш, а читай як бачиш» демократизував українську літературу, зробивши її доступною для селянства, що злякало імперський уряд.
+- Цитата з Валуєвського циркуляра (в українському перекладі для аналізу): «Ніякої окремої малоросійської мови не було, немає і бути не може...». Цей документ доводить, що лінгвістична політика Росії мала характер відкритого лінгвоциду.
+- Юрій Шевельов (про значення українського слова): «Мова — це не тільки засіб спілкування, це форма нашого життя... Емський указ був спрямований не проти літер, а проти самої нації».
 
-- **Definition**: Russian orthography applied to Ukrainian language. Named after letter `ы` (yer).
-- **History**: Used since 18th century (Kotliarevsky, early Shevchenko). Made MANDATORY by Ems Ukaz (1876-1905).
-- **Characteristics**:
-  - `ы` for [и] (_дымъ_).
-  - `ѣ` (yat) for [i] or [je] (_хлѣбъ_, _свѣтъ_).
-  - `ъ` (hard sign) at end of masculine nouns (_дубъ_).
-  - `ё`, `ii`, `іо` weird combinations regarding iotated vowels.
-  - No `ї` or `є`.
-- **Psychological Effect**:
-  - Made Ukrainian look like "broken Russian" or "funny peasant dialect".
-  - Visual connection to Empire ("Unity").
-  - Reading difficulty: distorted pronunciation when read by Russians (reading `ѣ` as `ye` instead of `i`).
-- **Quote/Fact**: Kotsiubynsky called it "Romanivka" (ironically linking to Romanov dynasty).
+## Engagement Hooks (mapped to sections)
+- Section "Вступ: I — Мова як поле битви у XIX столітті": [!context] — Пояснення, чому в епоху романтизму орфографія стала питанням державного виживання.
+- Section "Кулішівка: I — Принципи фонетичного правопису": [!history-bite] — Цікавий факт про те, як Куліш прибрав твердий знак («ъ») і замінив літеру «ы», радикально змінивши візуальний вигляд тексту.
+- Section "«Війни алфавітів»: II — Ярижка та російський вплив": [!decolonization] — Аналіз «ярижки» як інструменту візуальної асиміляції (зробити український текст схожим на російський).
+- Section "Імперські заборони: II — Емський указ та лінгвоцид": [!quote] — Цитата про руйнівні наслідки Емського указу для українського книговидання (падіння друку до нуля).
+- Section "Фонетика vs етимологія: I — Концептуальний конфлікт": [!myth-buster] — Спростування імперського міфу, що українська мова "не має правил" — показати складну інтелектуальну дискусію навколо кодифікації.
 
-## 2. Кулішівка (Kulishivka) — The Revolution (1850s)
+## Деколонізаційний контекст
+- **Imperial/Soviet myth**: Українське мовне питання подавалося як провінційна «сварка» місцевих інтелігентів («хлопоманів»), а репресивні закони (Валуєвський циркуляр) виправдовувалися боротьбою з "польською інтригою".
+- **Ukrainian reality**: Це була цілеспрямована боротьба за національну суб'єктність. Українські вчені (Максимович, Куліш, Житецький) творили модерну європейську націю через кодифікацію мови, а Російська імперія здійснювала класичний лінгвоцид, боячись сепаратизму.
 
-- **Author**: Panteleimon Kulish ("Notes on Southern Rus", 1856; "Gramatka", 1857).
-- **Principle**: Phonetic — "Write as you hear" (Пиши як чуєш).
-- **Innovations**:
-  - Abolished `ы`, `ѣ`, `ъ` (at end).
-  - Introduced/Standardized `і`, `ї`, `є`.
-  - `g` for `ґ` (in some versions).
-- **Impact**:
-  - Visual Sovereignty: Text looked DIFFERENT from Russian.
-  - Educational: Easier for peasants to learn (logical).
-  - Politics: Used by "Osnova" journal (1861-1862).
-- **Fate**: Banned by Ems Ukaz (1876). Used in Galicia/Austria (modified).
+## Contested Terms
 
-## 3. Валуєвський Циркуляр (Valuev Circular) — 1863
+| Concept | Imperial framing | Ukrainian (decolonized) framing |
+|---------|-----------------|-------------------------------|
+| Валуєвський циркуляр | "Тимчасовий адмінзахід проти польської пропаганди" | Акт державного лінгвоциду, спрямований проти українського націєтворення |
+| Ярижка | "Загальноросійський правопис для малоросійського наріччя" | Репресивна транслітерація для візуальної асиміляції української мови |
+| Мовне питання | "Штучна вигадка купки інтелігентів" | Екзистенційна боротьба за право мати власну модерну ідентичність |
 
-- **Context**: Polish Uprising 1863. Fear of "separatism".
-- **Key Phrase**: "Ніякої окремої малоросійської мови не було, немає і бути не може" (No separate Little Russian language existed, exists, or can exist).
-- **Prohibitions**:
-  - Religious texts (Spiritual).
-  - Educational (Textbooks).
-  - Popular/Primary reading for commoners.
-  - **Allowed**: Only "Belles-lettres" (fiction) for educated elite (believed harmless).
-- **Motivation**: Stop education of peasantry in native language. Keep ukrainian as "house dialect".
+## Section-Mapped Research Notes
 
-## 4. Емський Указ (Ems Ukaz) — 1876
+### Вступ: I — Мова як поле битви у XIX столітті
+XIX століття — час народження модерних націй у Європі. Мова стає не просто засобом комунікації, а маркером кордонів. У Російській та Австро-Угорській імперіях правопис перетворився на зброю: як ти пишеш, означає ким ти є.
 
-- **Context**: Branding Ukrainian movement as "harmful". Signed by Alexander II in Bad Ems (Germany).
-- **Severity**: Total Ban. Much harsher than Valuev.
-- **Prohibitions**:
-  - Import of books from abroad (Galicia).
-  - Printing ANY original works or translations (except historical documents and some fiction, but strictly in Yaryzhka).
-  - Theater performances.
-  - Lyrics (Music notes).
-  - Teaching in schools.
-- **Specific Orthography Ban**: Explicitly forbade "Kulishivka". Required "All-Russian orthography" (Yaryzhka).
-- **Consequence**: "Ems Thirty Years" (1876-1905). Ukrainian culture forced underground or to emigration (Geneva, Lviv).
+### Вступ: II — Зв'язок орфографії та ідентичності
+Вибір між кирилицею та латиницею (в Галичині), або між етимологічним та фонетичним правописом (в Наддніпрянщині) визначав культурну орієнтацію нації.
 
-## 5. Драгоманівка (Drahomanivka) — Radical Experiment (1870s)
+### Кулішівка: I — Принципи фонетичного правопису
+Куліш запровадив принцип "пиши як чуєш" (1856 р.). Він скасував літери «ы», «ъ», запровадив «і» та «є». Це зробило читання легким для неосвіченого селянства, що було демократичним кроком.
 
-- **Author**: Mykhailo Drahomanov (Kyiv/Geneva).
-- **Principle**: "One sound, one letter". Influenced by Serbian (Vuk Karadzic).
-- **Features**:
-  - Latinized Cyrillic: `j` instead of `й`.
-  - `ja`, `ju`, `je`, `ji` for iotated vowels (_Украjіна_, _jаблоко_).
-  - `шч` instead of `щ`.
-- **Reception**: Rejected by most Ukrainians.
-  - East: "Polonization/Latinization".
-  - West (Galicia): "Too radical/anti-tradition".
-- **Usage**: "Geneva circle", Franko (correspondence), Panas Myrny (early editions).
-- **Legacy**: Failed as standard, but pushed the boundary of modernization.
+### Кулішівка: II — Практичне застосування та відмінності
+Кулішівка відірвала український текст від старослов'янської та російської традиції візуально. Вона застосовувалася у перших підручниках і часописах ("Основа"), ставши фундаментом сучасного правопису.
 
-## 6. Желехівка (Zhelekhivka) — Galician Front (1886)
+### «Війни алфавітів»: I — Максимовичівка vs Кулішівка
+Дискусія між консервативним напрямком (М. Максимович), який зберігав етимологічний (історичний) принцип для єднання з давньоруською спадщиною, та прогресивним (П. Куліш).
 
-- **Author**: Yevhen Zhelekhivsky ("Malorusko-nimetskyi slovar").
-- **Context**: Austrian Ukraine (Galicia). No prohibitions compared to Russia.
-- **Status**: Official in Austrian schools (1893).
-- **Features**: Phonetic base, consolidated Ukrainian literary language in West.
+### «Війни алфавітів»: II — Ярижка та транслітерація
+Після заборони кулішівки уряд нав'язав "ярижку" (запис українських слів російськими літерами: замість "хліб" — "хлебъ" або "хлибъ"). Мета: зробити українську мову візуально невідрізненною від російської (деколонізаційний фокус).
 
-## 7. Victory: Dictionary of Hrinchenko (1907-1909)
+### «Війни алфавітів»: III — Азбучна війна в Галичині та вплив імперій
+Спроба намісника Галичини А. Ґолуховського та філолога Й. Їречека у 1859 р. перевести українську мову на латиницю. Відмова українців як захист від полонізації, незважаючи на тиск.
 
-- **Context**: 1905 Revolution -> Cancellation of bans.
-- **Work**: 4 Volumes, 68,000 words. "Slovar ukrainskoi movy".
-- **Orthography**: "Hrinchenkivka" — synthesis of Kulishivka and Zhelekhivka.
-- **Result**: Codified the Norm. Ended the "wars".
-- **Legacy**: Basis of modern orthography (1918, 1928, 2019). We write like Hrinchenko today (with minor changes).
+### Імперські заборони: I — Валуєвський циркуляр 1863 року
+Реакція Росії на січневе повстання та зростання українського руху. Заборона друку наукової, релігійної, освітньої літератури. Цитата Валуєва підтверджує шовіністичну політику імперії.
 
-## Engagement Hooks
+### Імперські заборони: II — Емський указ та лінгвоцид
+1876 рік — тотальна заборона на використання української мови у друці, театрі, музиці. Спрямований на повну асиміляцію. Призвів до перенесення центру видавничої діяльності до австрійської Галичини.
 
-- **[!myth-buster]**: "Language was invented by Austrians/Poles". Debunk with Kotliarevsky/Shevchenko dates vs. 19th-century reforms.
-- **[!history-bite]**: 300 books in Empire (30 years) vs 3000 in Galicia.
-- **[!visual-evidence]**: Table showing _Стіл_ vs _Столъ_.
-- **[!quote]**: Valuev's "No language exists".
-- **[!context]**: Why alphabet matters (Visual Identity = Political Independence).
-- **[!irony]**: Kulish rejecting Kulishivka later in life, but nation kept it.
+### Фонетика vs етимологія: I — Концептуальний конфлікт
+Аналіз інтелектуального вибору: фонетика (орієнтація на живу народну мову, демократизація) проти етимології (зв'язок з минулим, елітарність).
+
+### Підсумок — Мова як нація: Внесок Куліша
+Значення реформ Куліша. Правопис став фундаментом, на якому Кирило-Мефодіївське братство і наступні покоління будували українську модерну ідентичність аж до XXI століття.

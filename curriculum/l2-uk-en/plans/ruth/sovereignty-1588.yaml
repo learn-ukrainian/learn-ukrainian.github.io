@@ -1,4 +1,3 @@
----
 sequence: 17
 module: ruth-017
 module_number: 15
@@ -9,7 +8,6 @@ phase: 1
 phase_id: chancery-legal
 phase_name: Chancery & Legal
 focus: GDL independence rhetoric
-word_target: 4000
 content_outline:
 - section: Вступ
   description: Introduction to Sovereignty
@@ -24,3 +22,6 @@ activity_types:
 - transcription
 - etymology-trace
 - grammar-identify
+persona:
+  voice: Baroque Scholar
+  role: Crown Jurist

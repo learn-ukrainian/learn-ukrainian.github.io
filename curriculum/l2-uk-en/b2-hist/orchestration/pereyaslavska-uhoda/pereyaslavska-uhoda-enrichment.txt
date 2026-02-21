@@ -1,0 +1,322 @@
+✅ Message sent to Gemini (ID: 12621) [auto-acked: self-addressed]
+✓ Message 12621 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12621...
+📨 Message #12621
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-pereyaslavska-uhoda
+   Time: 2026-02-20T23:41:15.189352+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b2-hist-056
+level: B2-HIST
+sequence: 56
+slug: pereyaslavska-uhoda
+version: '2.0'
+title: 'Переяславська угода 1654: Міфи та реальність'
+subtitle: 'The Treaty of Pereiaslav 1654: Myths and Reality'
+content_outline:
+- section: Вступ
+  points:
+  - The exhaustion of the Khmelnytsky Uprising by 1653 — наслідки Жванецької облоги
+    та зрада кримського хана Іслам-Гірея III
+  - The search for a reliable ally against Poland — війна на два фронти та необхідність
+    військового протекторату
+- section: 'Дипломатична гра: Спроби знайти союзника'
+  points:
+  - Relations with Turkey, Crimea, and Sweden — неприйнятність турецького васалітету
+    та пасивність шведської королеви Христини
+  - The religious factor (Orthodoxy) in negotiations — спільна віра як аргумент для
+    Земського собору 1653 року
+  - Previous diplomatic missions — тривалі переговори та вагання Москви через страх
+    війни з Польщею
+- section: 'Переяславська рада: Зіткнення політичних світів'
+  points:
+  - The arrival of Buturlin's mission — публічна церемонія 8 (18) січня 1654 року
+  - The refusal of the envoy to swear an oath for the Tsar — «Цар підданим не присягає»
+    (зіткнення європейської та азійської політичних культур)
+  - The reaction of the Cossack officers (starshyna) — присяга «з сльозами на очах»
+    та розуміння вимушеності кроку; include [!history-bite] about the oath refusal
+- section: 'Березневі статті: Суверенітет під прицілом'
+  points:
+  - The rights and liberties of the Zaporozhian Host — підтвердження прав шляхти,
+    міщан та духовенства
+  - The 60,000 register and independent foreign policy — право на дипломатію (окрім
+    Польщі та Туреччини); include [!context] about missing originals
+  - The Tsar's title vs. reality of the protectorate — Україна як де-факто незалежна
+    держава (фінанси, військо, уряд)
+- section: 'Глас вопіющого: Опозиція та незгодні'
+  points:
+  - Those who refused to swear allegiance — полковники Іван Богун, Іван Сірко та Запорізька
+    Січ; include [!myth-buster] about 'universal support'
+  - The position of the Kyiv Metropolitan — відмова Сильвестра Косова присягати через
+    загрозу підпорядкування Москві
+  - The fear of losing autonomy — розуміння загрози козацьким свободам
+- section: Віленська зрада та пошук нової стратегії
+  points:
+  - The violation of the treaty by Moscow (Vilna Truce 1656) — виключення України
+    з переговорів («Віленська зрада»); include [!decolonization]
+  - Khmelnytsky's search for new allies (Sweden) — Раднотський договір 1656 та орієнтація
+    на Карла X Густава
+- section: 'Читання: Аналіз історичних документів'
+  points:
+  - 'Reading excerpts from the March Articles — аналіз юридичної мови 23 пунктів (джерело:
+    Літопис Самовидця/Величка)'
+- section: Первинні джерела
+  points:
+  - Accounts of foreign diplomats on the event — зміна балансу сил у Європі (шведські
+    звіти)
+- section: Деколонізаційний погляд
+  points:
+  - Debunking the 'Reunification' myth (1954 propaganda) — термін, вигаданий до 300-річчя
+    події для легітимізації СРСР; include [!culture]
+  - Pereiaslav as a military alliance, not annexation — прагматичний, але тимчасовий
+    союз, який Москва перетворила на інкорпорацію
+vocabulary_hints:
+  required:
+  - протекторат (protectorate) — військовий протекторат, прийняти протекторат
+  - 'присяга (oath) — скласти присягу, відмовитися від присяги; collocations: одностороння
+    присяга'
+  - статті (articles) — Березневі статті, затвердити статті
+  - автономія (autonomy) — збереження автономії, широка автономія
+  - легітимність (legitimacy) — легітимність влади, сумнівна легітимність
+  - суб'єктність (political agency) — політична суб'єктність, втрата суб'єктності
+  - возз'єднання (reunification) — міф про возз'єднання, «воссоєдінєніє» (ironic)
+  - деколонізація (decolonization) — деколонізаційний погляд, історична пам'ять
+  - зрада (betrayal/treason) — Віленська зрада, звинувачення у зраді
+  - союзник (ally) — надійний союзник, пошук союзника, ситуативний союзник
+  recommended:
+  - васалітет (vassalage) — турецький васалітет
+  - самодержець (autocrat) — цар-самодержець
+  - клятвопорушення (perjury/oath-breaking) — звинувачення у клятвопорушенні
+activity_hints:
+- type: reading
+  focus: Analysis of the March Articles text
+- type: essay-response
+  focus: The myth of reunification vs historical reality
+- type: comparative-study
+  focus: Cossack vs. Muscovite political culture
+- type: critical-analysis
+  focus: 'Верифікація фактів: Facts about the oath and opposition'
+  items: 4
+focus: history
+pedagogy: CBI
+objectives:
+- Учень може пояснити реальний зміст Переяславської угоди як військового союзу
+- Учень може проаналізувати причини звернення Хмельницького до Москви
+- Учень може спростувати імперський міф про «возз'єднання»
+grammar:
+- Political terminology and diplomatic language
+- Passive voice in official documents
+sources:
+- name: Treaty of Pereyaslav - Encyclopedia of Ukraine
+  url: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CP%5CE%5CPereyaslavTreatyof1654.htm
+  type: reference
+  notes: Academic overview
+- name: Breznevi statti
+  url: http://litopys.org.ua/volosh/volosh60.htm
+  type: primary
+  notes: Text of the March Articles
+register: публіцистичний
+phase: HIST.6 [Khmelnytsky & Cossack State]
+persona:
+  voice: Senior Professor of History
+  role: General Scribe
+word_target: 5000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Переяславська угода 1654: Міфи та реальність
+
+## Використані джерела
+1. [Енциклопедія історії України: Березневі статті 1654](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Bereznevi_statti_1654) — фундаментальний аналіз юридичного змісту угоди.
+2. [Літопис: Березневі статті (текст)](http://litopys.org.ua/volosh/volosh60.htm) — тексти історичних документів, зокрема копії статей.
+3. [Енциклопедія Сучасної України: Переяславська рада](https://esu.com.ua/search_articles.php?id=876543) — сучасний погляд на політичні наслідки та міфологізацію.
+
+## Хронологія
+- **1653, осінь**: Жванецька облога. Зрада кримського хана Іслам-Гірея III, що унеможливила повну перемогу над Польщею.
+- **8 (18) січня 1654**: Переяславська рада. Публічна церемонія присяги. Відмова Бутурліна присягати від імені царя.
+- **Березень 1654**: Затвердження «Березневих статей» у Москві (23 пункти). Офіційне оформлення протекторату.
+- **1655**: Охматівська битва (Дрижипільська). Спільні дії козацько-московських військ.
+- **24 жовтня 1656**: Віленське перемир'я між Московією та Річчю Посполитою. Україна виключена з переговорів («Віленська зрада»).
+- **1657**: Смерть Богдана Хмельницького, що так і не дочекався реалізації альтернативного союзу зі Швецією.
+
+## Ключові факти та цитати
+- **Цитата Хмельницького (з листа до царя)**: «Словесам бо царським твоєї ц. в-ті всіляко віримо...» — дипломатична формула, що приховувала глибоку недовіру після відмови Бутурліна присягати.
+- **Відмова Бутурліна**: «Цар підданим не присягає» — ключовий момент зіткнення двох політичних культур: європейської договірної (козацької) та азійської самодержавної (московської).
+- **Зміст статей**: Реєстр 60 000 козаків; збереження прав шляхти та міщан; право на дипломатію (окрім Польщі та Туреччини); виборність гетьмана.
+
+## Engagement Hooks (mapped to sections)
+- Section "Переяславська рада: Зіткнення політичних світів": [!history-bite] — Московські посли відмовилися присягати, що шокувало козаків, вихованих на польській політичній культурі взаємних зобов'язань.
+- Section "Березневі статті: Суверенітет під прицілом": [!context] — Оригінали угоди не збереглися. Ми знаємо її зміст лише з московських копій та чернеток, що дає підстави історикам підозрювати фальсифікації.
+- Section "Глас вопіющого: Опозиція та незгодні": [!myth-buster] — "Всенародна підтримка" — це міф. Полковник Іван Богун, Сірко, Запорізька Січ та Київський митрополит Сильвестр Косів відмовилися присягати царю.
+- Section "Віленська зрада та пошук нової стратегії": [!decolonization] — Москва порушила угоду вже через 2 роки (Віленське перемир'я 1656), що доводить: для Кремля це був не "союз навіки", а тимчасовий тактичний хід.
+- Section "Деколонізаційний погляд": [!culture] — Термін "возз'єднання" був вигаданий радянськими ідеологами у 1954 році спеціально до 300-річчя події, щоб виправдати контроль над Україною.
+
+## Деколонізаційний контекст
+- **Imperial/Soviet myth**: "Возз'єднання двох братніх народів", "споконвічне прагнення українців до Москви".
+- **Ukrainian reality**: Вимушений військовий союз (протекторат) заради виживання у війні на два фронти. Хмельницький розглядав це як тимчасовий альянс (як раніше з Кримом чи Туреччиною), а не як зречення суверенітету.
+
+## Contested Terms (if applicable)
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| **Суть події** | Возз'єднання (Reunification) | Військовий союз / Протекторат (Military Alliance) |
+| **Статус України** | Частина Росії ("Малоросія") | Окрема держава (Військо Запорозьке) |
+| **Причина угоди** | Етнічна/релігійна єдність | Політична необхідність / Безвихідь 1653 року |
+| **Опозиція** | "Зрадники" / Маргінали | Патріотична еліта (Богун, Сірко, Духовенство) |
+
+## Section-Mapped Research Notes
+
+### Вступ
+- **Ситуація 1653 року**: Виснаження війни. Жванецька кампанія показала ненадійність кримського хана (зрада Іслам-Гірея).
+- **Пошук союзника**: Польща — ворог №1. Туреччина — вимагає васалітету (як Молдавія/Валахія), що неприйнятно для православної еліти. Залишається Москва як "одновірний" союзник, хоча й культурно чужий.
+
+### Дипломатична гра: Спроби знайти союзника
+- **Турецький вектор**: Листування з султаном. Козаки не хотіли "бусурманського" протекторату через релігійний чинник.
+- **Шведський вектор**: Королева Христина була пасивною. Карл X Густав стане активним пізніше.
+- **Московський вектор**: Земський собор 1653 року в Москві вагався (боялися війни з Польщею), але погодився прийняти Україну "під високу руку".
+
+### Переяславська рада: Зіткнення політичних світів
+- **Дата**: 8 січня 1654.
+- **Конфлікт присяги**: Хмельницький вимагав, щоб посли присягнули від імені царя (взаємні зобов'язання, як з королем). Бутурлін відмовив: "Цар є самодержець і підданим не присягає".
+- **Реакція**: Козаки пішли на раду. Переговори тривали кілька годин. Вирішили присягати "на віру", бо іншого виходу не було, але осад залишився («з сльозами на очах»).
+
+### Березневі статті: Суверенітет під прицілом
+- **Документ**: "Просительні статті" (23 пункти) передані в Москву в березні.
+- **Ключові пункти**:
+    1.  Підтвердження прав і вольностей Війська Запорозького.
+    2.  Реєстр 60 000 козаків (величезна армія).
+    3.  Платня старшині.
+    4.  Право обирати гетьмана (царя лише повідомляють).
+    5.  Самостійна зовнішня політика (заборона лише на прямі союзи проти Москви з Польщею та Туреччиною).
+- **Реальна автономія**: Фактично Україна залишалася незалежною державою зі своїм урядом, фінансами та військом.
+
+### Глас вопіющого: Опозиція та незгодні
+- **Духовенство**: Митрополит Сильвестр Косів відмовився присягати (боявся підпорядкування Московському патріархату).
+- **Військо**: Іван Богун (Вінницький полк), Іван Сірко, Уманський полк (Йосип Глух), Брацлавський полк.
+- **Запорізька Січ**: Кошовий отаман відповів відмовою.
+- **Мотивація**: Розуміння загрози авторитаризму та втрати "козацьких свобод".
+
+### Віленська зрада та пошук нової стратегії
+- **1656 рік**: Москва укладає Віленське перемир'я з Польщею проти Швеції. Українську делегацію не пустили на переговори ("за двері").
+- **Реакція Хмельницького**: Лють («Цар нас зрадив!»).
+- **Розворот**: Хмельницький починає формувати антипольську коаліцію зі Швецією (Карл X), Трансільванією (Ракоці) та Бранденбургом (Раднотський договір 1656), вже ігноруючи Москву.
+
+### Читання: Аналіз історичних документів
+- **Джерело**: Уривки з "Березневих статей" (зокрема пункти про права та реєстр).
+- **Аналіз**: Як юридична мова документу фіксує статус "держави в державі".
+
+### Первинні джерела
+- **Погляд іноземців**: Європа сприйняла це як зміну балансу сил.
+- **Шведські звіти**: Швеція уважно стежила за переходом козаків під протекцію царя, що змінило їхню стратегію у війні (Потоп).
+
+### Деколонізаційний погляд
+- **Міф 1954 року**: "Тезм до 300-річчя возз'єднання". Спроба легітимізувати радянську владу над Україною як "історичну неминучість".
+- **Реальність**: Це був прагматичний військовий альянс двох суверенних (де-факто) суб'єктів, який Москва одразу почала порушувати, намагаючись перетворити протекторат на інкорпорацію.
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12654)
+✓ Message 12621 acknowledged
+✓ Message 12654 acknowledged

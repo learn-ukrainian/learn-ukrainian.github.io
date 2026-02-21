@@ -1,4 +1,3 @@
----
 module: b2-hist-124
 level: B2-HIST
 sequence: 124
@@ -8,13 +7,11 @@ title: 'Епоха Януковича: Реванш'
 subtitle: 'The Yanukovych Era: The Revanche'
 content_outline:
 - section: 'Вступ: Повернення'
-  words: 400
   points:
   - '2010: обрання Януковича'
   - Реванш після Помаранчевої революції
   - Хто такий Янукович
 - section: Політика режиму
-  words: 1000
   points:
   - 'Харківські угоди: флот за газ'
   - Закон про мови Ківалова-Колесніченка
@@ -22,31 +19,26 @@ content_outline:
   - Авторитарні тенденції
   - Контроль над медіа та судами
 - section: «Сім'я» та корупція
-  words: 800
   points:
   - Олександр Янукович — «Сім'я»
   - Межигір'я як символ
   - Масштаби корупції
   - Олігархи при владі
 - section: Первинні джерела
-  words: 800
   points:
   - Журналістські розслідування
   - Документи з Межигір'я
   - Записи переговорів
 - section: Деколонізаційний погляд
-  words: 500
   points:
   - Російський вплив на Україну
   - Янукович як проросійська сила
   - Шлях до Євромайдану
 - section: 'Підсумок: Листопад 2013'
-  words: 500
   points:
   - Відмова від Угоди про асоціацію
   - Початок Євромайдану
   - Кінець режиму
-word_target: 4000
 vocabulary_hints:
   required:
   - президент (president)
@@ -74,7 +66,6 @@ activity_hints:
   items: 5
 - type: essay-response
   focus: Як політика Януковича призвела до Революції Гідності?
-  word_target: 250
 focus: history
 pedagogy: CBI
 prerequisites:
@@ -92,4 +83,8 @@ grammar:
 - Політична лексика
 - Складнопідрядні речення
 register: публіцистичний
-phase: "HIST.12 [Independence & Modern Era]"
+phase: HIST.12 [Independence & Modern Era]
+persona:
+  voice: Senior Professor of History
+  role: Investigative Journalist
+word_target: 5000

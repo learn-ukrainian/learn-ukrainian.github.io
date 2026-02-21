@@ -1,20 +1,16 @@
----
-module: c1-bio-057
+module: c1-bio-57
 level: C1-BIO
 sequence: 57
 slug: volodymyr-vernadskyi
 version: '2.0'
 title: 'Володимир Вернадський: Батько української науки'
-word_target: 4300
 content_outline:
-- section: "Вступ — Вчений, який змінив науку"
-  words: 600
+- section: Вступ — Вчений, який змінив науку
   points:
   - Вернадський як мислитель планетарного масштабу
   - Поєднання геології, біології та філософії
   - Роль у світовому інтелектуальному прогресі
 - section: Життєпис
-  words: 1600
   points:
   - Походження (козацький рід) та освіта
   - Аристократичне виховання
@@ -22,29 +18,24 @@ content_outline:
   - Заснування Української академії наук 1918 р.
   - Повернення до СРСР та робота в умовах терору
 - section: Історичний контекст
-  words: 600
   points:
   - Революція та боротьба за державність 1917–1921 рр.
   - Стан світової науки на поч. XX ст.
 - section: Внесок
-  words: 400
   points:
   - Вчення про біосферу
   - Концепція ноосфери (сфери розуму)
   - Геохімія та радіогеологія
 - section: Останні роки
-  words: 400
   points:
   - Робота під час Другої світової війни
   - Спадщина у щоденниках та листах
   - Смерть 1945 р.
 - section: Спадщина
-  words: 400
   points:
   - Національна бібліотека імені Вернадського
   - Символ інтелектуальної України (1000 гривень)
 - section: Підсумок
-  words: 300
   points:
   - Вернадський як архітектор майбутнього людства
 focus: biography
@@ -65,11 +56,11 @@ grammar:
 module_type: biography
 sources:
 - name: Володимир Вернадський (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Вернадський_Володимир_Іванович"
+  url: https://uk.wikipedia.org/wiki/Вернадський_Володимир_Іванович
   type: primary
   notes: Життєпис та вчення
 - name: Праці В.І. Вернадського
-  url: "http://vernadsky.lib.ru/"
+  url: http://vernadsky.lib.ru/
   type: reference
   notes: Наукові тексти
 immersion: 100% Ukrainian
@@ -81,7 +72,10 @@ vocabulary_hints:
   - Академія наук (Academy of Sciences)
 activity_hints:
 - type: reading
-  focus: "Аналіз уривків з праці \"Біосфера\""
+  focus: Аналіз уривків з праці "Біосфера"
   source: Original text (adapted)
 - type: critical-analysis
   focus: Співвідношення науки та політики в житті вченого
+persona:
+  voice: Senior Biographer
+  role: Noosphere Theorist

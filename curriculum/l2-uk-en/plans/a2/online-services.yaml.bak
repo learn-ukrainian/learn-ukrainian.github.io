@@ -1,0 +1,100 @@
+module: a2-69
+level: A2
+sequence: 69
+slug: online-services
+version: '2.0'
+title: Online Services
+subtitle: Apps and Delivery
+content_outline:
+- section: Introduction / Вступ
+  points:
+  - 'Online services in Ukraine — cultural hook: ''State in a Smartphone'' concept
+    and Diia app as central to daily life; aligns with State Standard §3.11 (services)
+    and §3.4 (internet)'
+  - 'Popular apps — mention widespread use of Monobank, Privat24, and delivery services;
+    context: cashless economy even at small vendors (Apple Pay/Google Pay ubiquity)'
+- section: Presentation / Презентація
+  points:
+  - 'Service vocabulary — focus on UI elements (buttons like ''Оплатити'', icons for
+    ''Кошик'') and Imperative mood for app commands (Натисніть, Оберіть); content
+    note: describe UI elements clearly'
+  - 'замовлення, кошик, доставка — collocations: оформити замовлення, додати в кошик,
+    мобільний додаток; learner error: ''замовлення'' is neuter (моє, не моя), ''в
+    кошик'' (Accusative for direction) vs ''в кошику'' (Locative)'
+- section: Practice / Практика
+  points:
+  - 'Order food delivery — context: distinguishing ''номер'' (ID/phone) vs ''кількість''
+    (quantity); use terms like ''безкоштовна доставка'' (free delivery), ''час доставки''
+    (delivery time)'
+  - 'Taxi apps (Uklon, Bolt) — functional vocabulary: ''замовити таксі'', ''місце
+    посадки'' (pickup), ''місце призначення'' (destination); state standard §3.11
+    alignment'
+- section: Dialogues / Діалоги
+  points:
+  - 'Customer support conversation — use polite imperative forms; cover ''скарга''
+    and ''повернення''; cultural note: standard polite forms in chat support'
+  - 'App interactions — banking context: ''перевірити баланс'', ''поповнити баланс'',
+    ''номер картки''; cultural hook: common phrase ''skinuty na kartu'' (скинути на
+    картку)'
+- section: Narrative / Розповідь
+  points:
+  - 'Online services story — cultural hook: the ''Monobank jar'' (banka) for collective
+    fundraising and ''скинути на картку'' culture; emphasizes digital philanthropy'
+- section: Need More Practice?
+  points:
+  - Summary and links — prepares for a2-70 (Introduction to Participles) and a2-71
+    (A2 Final Exam)
+vocabulary_hints:
+  required:
+  - 'замовлення (order) — оформити замовлення, номер замовлення, скасувати замовлення;
+    learner error: neuter gender agreement (моє замовлення)'
+  - кошик (cart) — додати в кошик (motion, Acc), ваш кошик порожній (state, Loc);
+    common UI term
+  - доставка (delivery) — служба доставки, безкоштовна доставка, час доставки
+  - оплата (payment) — оплата карткою, Apple Pay/Google Pay context
+  - переказ (transfer) — грошовий переказ, скинути на картку (very common phrase)
+  - баланс (balance) — перевірити баланс, поповнити баланс
+  - додаток (app) — мобільний додаток, завантажити додаток, через додаток
+  - картка (card) — банківська картка, номер картки, скинути на картку
+  - сповіщення (notification) — отримати сповіщення, налаштування сповіщень
+  recommended:
+  - підтвердження (confirmation) — код підтвердження, чекати на підтвердження
+  - відстеження (tracking) — номер для відстеження, відстежити замовлення
+  - підтримка (support) — служба підтримки, написати в підтримку
+  - скарга (complaint) — подати скаргу, книга скарг
+  - повернення (refund) — оформити повернення коштів
+  - промокод (promo code) — ввести промокод, активний промокод
+  - таксі (taxi) — замовити таксі, водій
+activity_hints:
+- type: match-up
+  focus: Online services vocabulary
+  items: 25
+- type: quiz
+  focus: Understand app interfaces (reading comprehension)
+  items: 15
+- type: fill-in
+  focus: Complete service requests
+  items: 15
+focus: practical
+pedagogy: PPP
+prerequisites:
+- a2-68 (Texting and Messaging)
+connects_to:
+- a2-70 (Introduction to Participles)
+- a2-53 (Shopping and Services)
+objectives:
+- Learner can use Ukrainian delivery apps
+- Learner can handle online banking basics
+- Learner can communicate with support
+- Learner can understand app notifications
+grammar:
+- App interface vocabulary (кошик, замовити)
+- Banking terms (картка, переказ, баланс)
+- Customer support phrases
+register: розмовний
+immersion: 75-90% Ukrainian
+phase: A2.6 [Practical]
+persona:
+  voice: Encouraging Cultural Guide
+  role: IT Support Specialist
+word_target: 3000

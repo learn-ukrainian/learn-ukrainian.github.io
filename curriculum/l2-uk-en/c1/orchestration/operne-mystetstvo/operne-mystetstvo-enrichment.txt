@@ -1,0 +1,242 @@
+✅ Message sent to Gemini (ID: 10821) [auto-acked: self-addressed]
+✓ Message 10821 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10821...
+📨 Message #10821
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-operne-mystetstvo
+   Time: 2026-02-20T21:30:37.690883+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-079
+level: C1
+sequence: 79
+slug: operne-mystetstvo
+version: '2.0'
+title: Оперне мистецтво
+subtitle: Opera Art
+content_outline:
+- section: Розминка — Українська опера
+  points:
+  - Львівська та Київська опери — центри оперного мистецтва
+  - Українські голоси на світовій сцені
+  - Від Крушельницької до Оксани Линів
+- section: Content Areas
+  points:
+  - 'Opera houses: Львівська опера (1900), Київська опера (1901) — history and significance'
+  - 'Repertoire: Ukrainian operas still performed today'
+  - 'Great singers: Соломія Крушельницька, Борис Гмиря, Анатолій Солов''яненко, Анатолій
+    Кочерга'
+  - 'Contemporary: Оксана Линів (conductor), сучасні постановки'
+- section: Практика — оперний дискурс
+  points:
+  - Написати біографічну довідку про Соломію Крушельницьку
+  - Порівняти архітектуру Львівської та Віденської опер
+  - Обговорити досягнення Оксани Линів як диригентки
+  - Написати рецензію на оперну виставу
+focus: fine-arts
+pedagogy: CBI
+objectives:
+- Learner knows the history of major Ukrainian opera houses.
+- Learner can identify world-renowned Ukrainian opera singers.
+- Learner uses professional terminology to evaluate operatic performances.
+grammar:
+- Narrative of institutional history
+- Evaluative discourse on performance
+phase: C1.5 Folk Culture & Fine Arts
+persona:
+  voice: Senior Specialist
+  role: Лібретист
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Оперне мистецтво
+
+## State Standard Reference
+§3.4: "Культурне дозвілля і відпочинок: ... театр, кінотеатр, філармонія; фестивалі."
+§4.4.3: "Стилістичні засоби лексики: епітети, метафори."
+Alignment: Модуль розвиває компетенції обговорення оперного мистецтва, використовуючи професійну лексику та оцінні судження (епітети, метафори) для рецензування вистав, що відповідає вимогам C1 до стилістичної вправності.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| партитура (score) | Середня (проф.) | читати партитуру, складна партитура, диригентська партитура |
+| лібрето (libretto) | Середня | автор лібрето, писати лібрето, лібрето опери |
+| арія (aria) | Висока (мист.) | виконувати арію, славетна арія, арія з опери |
+| диригент (conductor)| Висока | головний диригент, диригентська паличка, під орудою диригента |
+| постановка (production)| Висока | прем'єрна постановка, сучасна постановка, режисер постановки |
+| аншлаг (full house) | Середня | повний аншлаг, зібрати аншлаг |
+| сопрано/бас | Середня | драматичне сопрано, глибокий бас, ліричне сопрано |
+
+## Cultural Hooks
+1. **Соломія Крушельницька та "Мадам Баттерфляй"**: Саме українська співачка врятувала оперу Пуччіні після провальної прем'єри, ставши "найкращою Баттерфляй" за визнанням самого композитора.
+2. **Оксана Линів у Байройті**: Перша жінка-диригентка за 145-річну історію Байройтського фестивалю — українка Оксана Линів (2021 рік).
+3. **"Запорожець за Дунаєм"**: Перша українська опера, яка відкрила еру національного оперного мистецтва, поєднує трагічне та комічне.
+
+## Common Learner Errors
+1. **Плутанина "музичний" vs "музикальний"**: *Музичний інструмент* (пов'язаний з музикою) vs *музикальна людина* (має талант).
+2. **Калькування "грати на..."**: Помилково: *грати на ролі* (правильно: *виконувати роль* або *грати роль*).
+3. **Вживання "спектакль" замість "вистава"**: Хоча "спектакль" допустиме, в українській театральній традиції стилістично краще вживати "вистава" (оперна вистава).
+
+## Cross-References
+- Builds on: B2-Cultural modules (Theatre basics), C1-056 (Folk culture context).
+- Prepares for: C1-Literature modules (Lesya Ukrainka, drama analysis).
+
+## Notes for Content Writing
+- Focus on the contrast between the "Golden Age" (Krushelnytska) and the "Modern Renaissance" (Lyniv).
+- Use rich evaluative adjectives for the "Review" section to satisfy the C1 stylistic requirement.
+- Ensure "Agency Pass": emphasize active contributions of Ukrainians to world opera (Krushelnytska didn't just "participate", she "defined" roles).
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Історія та архітектура оперних центрів (Introduction: History and Architecture of Opera Centers)"
+  words: 600
+  points:
+  - "Історія заснування Львівської (1900) та Київської (1901) опер як символів європейської ідентичності України; порівняння архітектурних стилів із Віденською оперою."
+  - "Перша національна опера «Запорожець за Дунаєм»: синтез трагічного та комічного, що заклав фундамент українського оперного канону."
+- section: "Золотий вік: Соломія Крушельницька та світове визнання (The Golden Age: Solomiya Krushelnytska and World Recognition)"
+  words: 950
+  points:
+  - "Культурний гачок: Як українська примадонна врятувала «Мадам Баттерфляй» Пуччіні після фіаско в Ла Скала, ставши ідеалом образу Чіо-Чіо-сан."
+  - "Українська агентність: Крушельницька не просто брала участь у виставах, а формувала оперні стандарти свого часу на провідних сценах світу."
+  - "Видатні голоси минулого: Борис Гмиря та Анатолій Солов'яненко — майстерність виконання та збереження національної традиції."
+- section: "Сучасний ренесанс: Оксана Линів та диригентська майстерність (Modern Renaissance: Oksana Lyniv and Conducting Mastery)"
+  words: 850
+  points:
+  - "Оксана Линів як символ сучасної української музичної дипломатії: історичний виступ у Байройті (2021) — перша жінка за 145 років."
+  - "Професійна термінологія: обговорення ролі диригента, читання партитури та керування оркестром («під орудою диригента»)."
+  - "Світові баси сучасності: внесок Анатолія Кочерги в інтерпретацію класичного репертуару."
+- section: "Культура мовлення: Музична точність та стилістика (Speech Culture: Musical Precision and Stylistics)"
+  words: 700
+  points:
+  - "Типові помилки: розмежування паронімів «музичний інструмент» (пов'язаний з музикою) та «музикальна людина» (талановита)."
+  - "Стилістична вправність за Держстандартом (§4.4.3): використання епітетів та метафор для опису вокальної майстерності (драматичне сопрано, глибокий бас)."
+  - "Уникнення кальок: заміна «грати на ролі» на «виконувати/грати роль» та перевага терміну «вистава» над «спектакль» у театральному контексті."
+- section: "Мистецький дискурс: Рецензування та оперний аншлаг (Artistic Discourse: Reviewing and Opera Full House)"
+  words: 900
+  points:
+  - "Практика написання професійної рецензії на виставу за схемою: лібрето, постановка, вокальні арії та сценографія."
+  - "Обговорення феномену «повного аншлагу» та важливості сучасної оперної режисури для залучення нової аудиторії."
+  - "Підсумкова дискусія: майбутнє української опери як частини світового культурного дозвілля (Держстандарт §3.4)."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "партитура (score) — читати партитуру, диригентська паличка; ключовий елемент роботи диригента"
+  - "лібрето (libretto) — автор лібрето, писати лібрето; літературна основа оперної вистави"
+  - "арія (aria) — виконувати славетну арію; сольний номер у опері"
+  - "диригент (conductor) — головний диригент, під орудою диригента; висока частотність у мист. контексті"
+  - "постановка (production) — прем'єрна постановка, сучасна постановка; режисерська інтерпретація"
+  - "аншлаг (full house) — зібрати повний аншлаг; показник успіху вистави"
+  recommended:
+  - "сопрано/бас (soprano/bass) — драматичне сопрано, глибокий бас; типи голосів"
+  - "вистава (performance/show) — оперна вистава; стилістично правильний термін замість 'спектакль'"
+  - "музикальний (musical/talented) — музикальна дитина; про наявність хисту"
+  - "музичний (musical/related to music) — музичний інструмент; про належність до галузі"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (3655 chars)
+✅ Message sent to Claude (ID: 10828)
+✓ Message 10828 acknowledged
+   Auto-acknowledged reply #10828 (stdout delivery — no inbox accumulation)
+✓ Message 10821 acknowledged

@@ -1,0 +1,212 @@
+✅ Message sent to Gemini (ID: 12375) [auto-acked: self-addressed]
+✓ Message 12375 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12375...
+📨 Message #12375
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-pvl-sviatoslav
+   Time: 2026-02-20T23:38:59.001647+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 31
+module: oes-031
+module_number: 25
+slug: pvl-sviatoslav
+title_uk: 'ПВЛ: Святослав'
+title_en: 'PVL: Sviatoslav'
+phase: 1
+phase_id: vernacular-foundations
+phase_name: Vernacular Foundations
+focus: The Warrior Prince — "Idu na vy"
+content_outline:
+- section: Вступ
+  description: 'Introduction to PVL: Sviatoslav'
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Senior Paleographer
+  role: Campaign Logistics Officer
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Pvl Sviatoslav
+
+## Використані джерела
+1. [Енциклопедія історії України: Святослав Ігорович](http://resource.history.org.ua/) — Академічна стаття про життя та діяльність князя.
+2. [Літопис руський (за Іпатським списком)](http://litopys.org.ua/) — Першоджерело, текст "Повісті минулих літ".
+3. [Енциклопедія Сучасної України](https://esu.com.ua/) — Сучасний погляд на історичну постать.
+
+## Хронологія
+- **964**: Початок східних походів, підкорення в'ятичів.
+- **965**: Розгром Хозарського каганату, взяття міст Саркел (Біла Вежа) та Ітіль.
+- **968**: Перший балканський похід, облога Києва печенігами (під час відсутності Святослава).
+- **969**: Смерть княгині Ольги; Святослав садить синів на намісництво (Ярополка в Києві, Олега в Деревах, Володимира в Новгороді).
+- **970**: Битва під Аркадіополем (зазначена в грецьких джерелах, у ПВЛ — перемога русів).
+- **971 (липень)**: Облога Доростола візантійцями, знаменита промова «Мертві бо сорому не мають».
+- **971 (липень)**: Укладення мирного договору з імператором Іоанном Цимісхієм.
+- **972 (весна)**: Загибель Святослава у бою з печенігами на Дніпрових порогах; хан Куря робить чашу з його черепа.
+
+## Ключові факти та цитати
+- **Характеристика ("Пардус")**: «Сам був хоробрий і легкий. Ходячи, яко пардус, багато воєн він чинив. Возів же за собою він не возив, ні котла... але, потонку нарізавши конину... пік на вуглях».
+- **«Іду на ви»**: Легендарна формула оголошення війни: «І посилав він до інших земель послів, кажучи: "Хочу на ви іти"».
+- **Доростольська промова**: «Хай не осоромимо землі Руської, ляжемо тут кістьми, бо мертві сорому не мають. Якщо ж побіжимо — сором нам буде».
+- **Договір 971 року**: «А коли ми не дотримаємось цього... то хай будемо прокляті Богом, у котрого віруємо, — в Перуна і у Волоса, бога худоби».
+- **Легенда про чашу**: На черепі напис (за переказами): «Чужого шукаючи — своє втратив».
+
+## Engagement Hooks (mapped to sections)
+- Section "Основний матеріал: I — Образ князя-воїна": [!paleography] — Аналіз слова «пардус» (гепард/леопард) як запозичення та символу швидкості.
+- Section "Основний матеріал: II — Хозарський похід": [!history-bite] — Знищення Саркела (Білої Вежі) змінило геополітику степу, відкривши шлях печенігам.
+- Section "Основний матеріал: III — Балканська епопея": [!myth-buster] — Святослав не був «мандрівним вікінгом», він будував імперію торгових шляхів (Волга-Дон-Дунай).
+- Section "Основний матеріал: III — Балканська епопея": [!quote] — «Не любо мені в Києві жити. Хочу жити в Переяславці на Дунаї, бо то є середина землі моєї».
+- Section "Основний матеріал: IV — Договір з греками": [!context] — Унікальна згадка бога Волоса (Велеса) поруч з Перуном у державному документі.
+- Section "Основний матеріал: V — Загибель на порогах": [!culture] — Степовий звичай робити чаші з черепів ворогів (свідчення поваги до сили супротивника).
+
+## Деколонізаційний контекст
+- **Імперський міф**: Російська історіографія часто називає його «князь російський» або зображує як дикуна-язичника на противагу «святій» Ользі та Володимиру.
+- **Українська реальність**: Святослав — творець геополітичної суб'єктності Русі-України. Його «варварство» — це слідування лицарському кодексу честі («Іду на ви»). Він консолідував землі і вперше провів адміністративну реформу, посадивши синів намісниками.
+- **Термінологія**: «Русь» (як держава і народ), а не «Росія». «Східні слов'яни», а не «давньоруська народність» (радянський конструкт).
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| "Князь російський" | Використання прикметника "російський" для X ст. | "Князь київський", "Князь Русі" (державно-політичний термін). |
+| "Іду на ви" | Часто трактується як "благородне попередження" | Формула ультиматуму, демонстрація впевненості та психологічний тиск. |
+| Хазарський похід | "Звільнення від данини" | Знищення буферу, що стримував кочівників (печенігів), стратегічна помилка або необхідність. |
+
+## Section-Mapped Research Notes
+
+### Вступ
+Огляд постаті Святослава як кульмінації язичницької епохи Русі. Його контраст з матір'ю Ольгою (християнкою).
+
+### Основний матеріал: I — Образ князя-воїна (Літописний портрет)
+Детальний розбір уривку з ПВЛ (6472/964 рік). Лексика: «пардус», «возів не возив», «сідло», «потник». Спартанський побут як ідеал дружинника. Відмова хреститися: «дружина моя сміятися почне».
+
+### Основний матеріал: II — Хозарський похід («Іду на ви»)
+Геополітика: контроль над Волгою і Доном. Знищення Ітіля і Саркела. Формула «Хочу на ви іти» — граматичний аналіз (знахідний відмінок займенника). Підкорення в'ятичів.
+
+### Основний матеріал: III — Балканська епопея і промова у Доростолі
+Мрія про Дунайську імперію. Переяславець як новий центр («середина землі»). Конфлікт з Візантією. Облога Доростола. Аналіз промови: «Мертві бо срама не імам» — етичний кодекс воїна.
+
+### Основний матеріал: IV — Договір з греками 971 року
+Текст договору з ПВЛ. Юридична формула: «ми від роду руського...». Клятва язичницькими богами (Перун, Волос). Порівняння з договорами 911 і 944 років (відсутність християнської частини клятви, на відміну від договору Ігоря).
+
+### Основний матеріал: V — Загибель на порогах
+Повернення до Києва. Засідка печенігів. Роль Свенельда (радив йти на конях). Смерть князя. Чаша Курі — символізм. Кінець епохи вікінгів-завойовників, перехід до епохи державотворення (Володимир).
+
+### Підсумок
+Святослав як символ воїнської звитяги. Його спадщина: розширена територія, але виснажені ресурси. Міст до наступної теми (міжусобиці синів).
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12436)
+✓ Message 12375 acknowledged
+✓ Message 12436 acknowledged

@@ -1,4 +1,3 @@
----
 module: c1-hist-090
 level: c1-hist
 sequence: 90
@@ -10,54 +9,46 @@ objectives:
 - 'Analyze the causes and consequences of полтава 1709: якби мазепа переміг?'
 - Evaluate the historical significance of доля європи на одному полі
 content_outline:
-- section: "Вступ — Доля Європи на одному полі"
-  words: 457
+- section: Вступ — Доля Європи на одному полі
   subsections:
   - Полтава — вирішальна битва
   - Що планував Мазепа
   - Контрфактичний підхід
   - Структура модуля
 - section: План Мазепи-Карла
-  words: 686
   subsections:
   - Союз зі Швецією — умови
   - Конституція Орлика — підготовка
   - Військовий план
   - Що мало статися
 - section: Чому програли
-  words: 686
   subsections:
   - Батурин — втрата бази
   - Зима 1708-1709
   - Недостатня підтримка козаків
   - Помилки Карла XII
 - section: Сценарій перемоги
-  words: 800
   subsections:
   - Якби Швеція перемогла
   - Росія без виходу в Європу
   - Українська автономія під Швецією
   - Європейський баланс — інший
 - section: Наслідки для України
-  words: 571
   subsections:
   - Конституція Орлика — можлива реальність
   - Залежність від Швеції — краща чи гірша?
   - Шведська імперія — що з нею стало
   - Довгострокові сценарії
 - section: Наслідки для Європи
-  words: 457
   subsections:
   - Росія як імперія — без Полтави?
   - Балтика — шведське озеро
   - XVIII століття — інший сценарій
 - section: Підсумок
-  words: 343
   subsections:
   - Полтава — поворотний момент
   - Альтернативна історія — уроки
   - Перехід до УНР
-word_target: 4000
 vocabulary:
 - Полтава
 - контрфактичний
@@ -76,26 +67,26 @@ vocabulary:
 - гегемонія
 activities:
 - type: essay-response
-  focus: "Swedish victory at Poltava — full scenario"
+  focus: Swedish victory at Poltava — full scenario
 - type: critical-analysis
   focus: Why did Mazepa-Charles lose?
 - type: critical-analysis
-  focus: "Orlik Constitution — would it have worked?"
+  focus: Orlik Constitution — would it have worked?
 - type: critical-analysis
   focus: Russia without Poltava victory
 - type: essay-response
   focus: Як змінилася б Європа, якби Мазепа переміг під Полтавою?
 sources:
 - name: Полтавська битва (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Полтавська_битва"
+  url: https://uk.wikipedia.org/wiki/Полтавська_битва
   type: reference
   notes: Battle context
 - name: Північна війна (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Північна_війна"
+  url: https://uk.wikipedia.org/wiki/Північна_війна
   type: reference
   notes: War context
 - name: Іван Мазепа (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Іван_Мазепа"
+  url: https://uk.wikipedia.org/wiki/Іван_Мазепа
   type: reference
   notes: Mazepa's plan
 vocabulary_hints:
@@ -114,7 +105,9 @@ activity_hints:
   items: 4
 - type: essay-response
   focus: Критичний аналіз
-  word_target: 300
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Geopolitical Analyst

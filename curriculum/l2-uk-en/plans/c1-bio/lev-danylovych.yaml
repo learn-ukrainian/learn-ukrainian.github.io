@@ -1,5 +1,4 @@
----
-module: c1-bio-011
+module: c1-bio-11
 level: C1-BIO
 sequence: 11
 slug: lev-danylovych
@@ -7,52 +6,44 @@ version: '2.0'
 title: 'Лев Данилович: Будівничий Львова'
 subtitle: 'Lev Danylovych: Builder of Lviv'
 content_outline:
-- section: "Вступ — Князь, що дав місту своє ім'я"
-  words: 432
+- section: Вступ — Князь, що дав місту своє ім'я
   points:
   - Львів як спадщина Лева Даниловича
   - Значення перенесення столиці
   - Продовження династії Романовичів
 - section: Молодість та прихід до влади
-  words: 540
   points:
   - Народження як син Данила Галицького
   - Князювання в Белзі (1245-1264)
   - Успадкування Галича після смерті батька
-- section: "Львів — нова столиця"
-  words: 756
+- section: Львів — нова столиця
   points:
   - Перенесення столиці з Галича (1272)
   - Розбудова міста
   - Стратегічне розташування
   - Торговельне значення
 - section: Територіальна експансія
-  words: 756
   points:
   - Приєднання частини Закарпаття (1280)
   - Захоплення Люблінської землі (1292)
   - Відносини з Польщею та Угорщиною
   - Союз із Тевтонським орденом
 - section: Відносини з Ордою
-  words: 648
   points:
   - Визнання монгольської зверхності
   - Участь у монгольських походах
   - Баланс між підкоренням та автономією
   - Захист православної церкви
 - section: Внутрішня політика
-  words: 540
   points:
   - Відносини з боярством
   - Німецькі колоністи та Магдебурзьке право
   - Культурне життя при дворі
-- section: "Підсумок — Князь-будівничий"
-  words: 328
+- section: Підсумок — Князь-будівничий
   points:
   - Оцінка правління Лева
   - Львів як його головна спадщина
   - Роль у збереженні державності
-word_target: 4000
 vocabulary_hints:
   required:
   - столиця (capital)
@@ -78,7 +69,6 @@ activity_hints:
   items: 3 passages
 - type: essay-response
   focus: Why did Lev move the capital to Lviv?
-  word_target: 250
   output: Strategic analysis
 focus: biography
 pedagogy: seminar
@@ -100,16 +90,19 @@ grammar:
 module_type: biography
 sources:
 - name: Лев Данилович (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Лев_Данилович"
+  url: https://uk.wikipedia.org/wiki/Лев_Данилович
   type: primary
   notes: Biography, reign, capital transfer to Lviv
 - name: Львів
-  url: "https://uk.wikipedia.org/wiki/Історія_Львова"
+  url: https://uk.wikipedia.org/wiki/Історія_Львова
   type: primary
   notes: History of the city
 - name: Галицько-Волинське князівство
-  url: "https://uk.wikipedia.org/wiki/Галицько-Волинське_князівство"
+  url: https://uk.wikipedia.org/wiki/Галицько-Волинське_князівство
   type: reference
   notes: Political context
 immersion: 100% Ukrainian
 phase: C1-BIO
+persona:
+  voice: Senior Biographer
+  role: City Founder

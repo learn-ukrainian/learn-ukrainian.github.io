@@ -1,0 +1,13 @@
+{
+  "track": "c1-pro",
+  "slug": "change-management",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-20T00:23:04Z",
+      "task_id": "v3-change-management-pA",
+      "mode": "full"
+    }
+  }
+}

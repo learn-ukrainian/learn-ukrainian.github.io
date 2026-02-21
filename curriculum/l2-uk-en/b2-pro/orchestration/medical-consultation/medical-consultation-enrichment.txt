@@ -1,0 +1,283 @@
+✅ Message sent to Gemini (ID: 12055) [auto-acked: self-addressed]
+✓ Message 12055 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12055...
+📨 Message #12055
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-medical-consultation
+   Time: 2026-02-20T23:35:38.596725+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b2-pro-24
+level: B2-PRO
+sequence: 24
+slug: medical-consultation
+version: '2.0'
+title: Медичні консультації
+subtitle: Medical Consultation
+content_outline:
+- section: Розминка — Комунікація з лікарем по-українськи
+  points:
+  - Особливості спілкування з лікарями в Україні
+  - Формальність vs довіра — баланс у медичній комунікації
+  - Приватна клініка vs державна — різниця в спілкуванні
+- section: Запис на прийом та реєстрація
+  points:
+  - 'Запис по телефону: Добрий день, хочу записатися до... / Коли є вільний час?'
+  - 'Онлайн-запис: вибір спеціаліста, дата, час, підтвердження'
+  - 'Реєстрація: паспорт, поліс, медична картка'
+  - Черга та очікування — як перепитати
+- section: На прийомі у лікаря
+  points:
+  - 'Опис скарг: Мене турбує... / У мене болить... / Це почалося...'
+  - 'Анамнез: Чи були у вас раніше...? / Чи приймаєте якісь ліки? / Чи є алергія?'
+  - 'Огляд: Роздягніться до пояса / Дихайте глибоко / Покажіть, де болить'
+  - 'Діагноз та призначення: У вас... / Я призначаю... / Вам потрібно...'
+- section: Розуміння призначень лікаря
+  points:
+  - 'Рецепт: назва препарату, дозування, частота, тривалість'
+  - 'Направлення: на аналізи, на УЗД, до спеціаліста'
+  - 'Рекомендації: режим, дієта, обмеження'
+  - Як перепитати, якщо щось незрозуміло
+- section: Зразок діалогу на прийомі
+  points:
+  - Повний діалог пацієнта з терапевтом
+  - Аналіз фраз та структури
+  - Альтернативні формулювання
+- section: Практика — рольова гра
+  points:
+  - 'Сценарій 1: Прийом у терапевта з простудою'
+  - 'Сценарій 2: Консультація з результатами аналізів'
+  - Оцінка точності опису симптомів
+vocabulary_hints:
+  required:
+  - записатися на прийом (to make an appointment)
+  - що вас турбує (what is troubling you)
+  - коли це почалося (when did it start)
+  - чи є у вас алергія на (are you allergic to)
+  - я призначаю вам (I am prescribing you)
+  - приймати по одній таблетці (take one tablet)
+  - направлення на аналізи (referral for tests)
+  - повторний прийом (follow-up appointment)
+  recommended:
+  - роздягніться до пояса (undress to the waist)
+  - дихайте глибоко (breathe deeply)
+  - натщесерце (on an empty stomach)
+  - протипоказання (contraindications)
+  - побічна дія (side effect)
+  - курс лікування (course of treatment)
+activity_hints:
+- type: document-analysis
+  focus: Проаналізувати діалог на прийомі — визначити етапи консультації
+  items: 1
+- type: role-play
+  focus: Провести рольову гру пацієнт-лікар
+  items: 2
+- type: vocabulary-domain
+  focus: Підібрати визначення до медичних термінів
+  items: 12
+- type: fill-in
+  focus: Вставити правильні фрази в діалог з лікарем
+  items: 10
+- type: listening-comprehension
+  focus: Прослухати призначення лікаря та записати ключову інформацію
+  items: 6
+- type: matching
+  focus: З'єднати симптом зі спеціалістом, до якого треба звернутися
+  items: 8
+focus: professional
+pedagogy: ESP
+prerequisites:
+- b2-pro-23 (Медична лексика)
+connects_to:
+- b2-pro-25 (HR-лексика)
+objectives:
+- Учень може записатися на прийом до лікаря українською
+- Учень може чітко описати симптоми та скарги
+- Учень може зрозуміти призначення та рекомендації лікаря
+- Учень може перепитати та уточнити незрозумілу інформацію
+grammar:
+- Питальні конструкції для уточнення (Чи можете повторити? / Що це означає?)
+- Наказовий спосіб (приймайте, уникайте, зверніться)
+- Безособові конструкції для симптомів (нудить, паморочиться, лихоманить)
+register: напівформальний
+phase: B2-PRO.2
+persona:
+  voice: Senior Specialist
+  role: Лікар-терапевт
+word_target: 2000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Медичні консультації
+
+## Використані джерела
+1. [Закон України «Основи законодавства України про охорону здоров'я»](https://zakon.rada.gov.ua/laws/show/2801-12) — Стаття 78: Обов'язки медичних і фармацевтичних працівників щодо дотримання деонтологічних норм.
+2. [Етичний кодекс лікаря України](https://moz.gov.ua/) — Стандарти взаємовідносин лікаря та пацієнта, право на інформовану згоду.
+3. [Наказ МОЗ №110 від 14.02.2012](https://zakon.rada.gov.ua/laws/show/z0661-12) — Про затвердження форм первинної облікової документації (медична карта пацієнта).
+4. [Helsi.me — Інструкція для пацієнта](https://helsi.me/) — Сучасний стандарт онлайн-запису до лікаря в Україні.
+5. [Культура медичного мовлення (ЛНМУ ім. Данила Галицького)](https://meduniv.lviv.ua/) — Методичні рекомендації щодо термінології та мовного етикету лікаря.
+
+## Термінологічна база
+
+| Українська (норма) | Русизм/ненорма | English | Контекст вживання |
+|--------------------|---------------|---------|-------------------|
+| Листок непрацездатності | Лікарняний лист | Sick leave | Офіційний документ / Звітність |
+| Обстеження | Обслідування | Examination | Діагностичний процес |
+| Скарги | Жалоби | Complaints | Збір анамнезу (Medical history) |
+| Напад | Приступ | Attack / Fit | Опис гострих станів (серцевий напад) |
+| Одужувати | Виздоровлювати | To recover | Прогноз та завершення лікування |
+| Нежить | Насморк | Runny nose | Опис симптомів ГРВІ |
+| Запаморочення | Головокруженіє | Dizziness | Неврологічні та загальні скарги |
+| Набряк | Опухоль | Swelling | Опис симптомів (запалення) |
+| Тиск (артеріальний) | Давлєніє | Blood pressure | Життєві показники |
+| УЗД | УЗІ | Ultrasound | Направлення на діагностику |
+
+## Мовні норми та стандарти
+- **ДСТУ 4163:2020**: Використовується для оформлення офіційної документації (назви установ, підписи, дати на довідках).
+- **Наказ МОЗ №110**: Регулює структуру медичної карти — розділи «Скарги», «Анамнез захворювання», «Об'єктивні дані», «Діагноз».
+- **Інформована згода**: Згідно зі статтею 39 Основ законодавства, лікар зобов'язаний пояснити стан пацієнта доступною мовою, уникаючи надмірного жаргону.
+
+## Аутентичні приклади
+1. [Запис на прийом]: «Доброго дня! Хочу записатися на прийом до сімейного лікаря через систему Helsi. Чи є вільні вікна на вівторок після 14:00?»
+2. [Опис скарг]: «Мене турбує ниючий біль у попереку, який посилюється ввечері. Також відчуваю загальну слабкість та озноб.»
+3. [Призначення]: «На основі огляду я призначаю вам загальний аналіз крові натщесерце та повторну консультацію за результатами аналізів.»
+
+## Типові помилки
+1. ❌ `Приймати приступ` → ✅ `Купірувати напад` — «Приступ» є калькою, «купірувати» — професійний термін для зупинки симптому.
+2. ❌ `Жалоби на болі` → ✅ `Скарги на біль` — «Жалоба» в українській мові має юридичний або емоційний відтінок (скарга в суд або плач).
+3. ❌ `Виписати направку` → ✅ `Надати направлення` — «Направка» є розмовним суржиком.
+4. ❌ `Лікарство від голови` → ✅ `Ліки проти головного болю` — Препарати призначаються «проти» хвороби, а не «від» неї.
+5. ❌ `Міряти давлєніє` → ✅ `Вимірювати тиск` — Використання правильної дієслівної форми та терміна.
+
+## Engagement Hooks (mapped to sections)
+- Section "Розминка — Комунікація з лікарем по-українськи": [!context] — Пояснення різниці між державною (E-Health) та приватною медициною в Україні щодо реєстрації.
+- Section "Запис на прийом та реєстрація": [!pro-tip] — Як користуватися додатком Helsi для швидкого запису та перегляду результатів аналізів.
+- Section "На прийомі у лікаря": [!language-note] — Різниця між `біль` (pain) та `болі` (pains/plurality) у професійному контексті опису симптомів.
+- Section "Розуміння призначень лікаря": [!common-error] — Плутанина між `натщесерце` (on empty stomach) та `до їди` (before meal) у рецептах.
+
+## Section-Mapped Research Notes
+
+### Розминка — Комунікація з лікарем по-українськи
+Спілкування базується на балансі формальності (використання «Ви», патріархальна повага до професії) та зростаючої довіри. Важливо розрізняти звернення в державних поліклініках (часто через реєстратуру) та приватних медичних центрах (рецепція).
+
+### Запис на прийом та реєстрація
+Ключові фрази: «записатися на консультацію», «вільне вікно», «підтвердження запису». Документи: паспорт, ідентифікаційний код, декларація з лікарем.
+
+### На прийомі у лікаря: Анамнез та скарги
+Професійний збір анамнезу включає питання про початок симптомів («Коли вперше відчули...?»), характер болю (гострий, ниючий, тупий, пульсуючий) та спадковість.
+
+### На прийомі у лікаря: Огляд та встановлення діагнозу
+Стандартні команди лікаря: «роздягніться до пояса», «зробіть глибокий вдих», «затримайте дихання». Встановлення діагнозу: «попередній діагноз», «клінічна картина».
+
+### Розуміння призначень лікаря: Рецепти та направлення
+Аналіз структури рецепта: діюча речовина (міжнародна непатентована назва), дозування (мг, мл), кратність (двічі на добу). Направлення на додаткові обстеження (МРТ, КТ, ЕКГ).
+
+### Розуміння призначень лікаря: Рекомендації та режим
+Поради щодо способу життя: «ліжковий режим», «дієтичний стіл №...», «уникати фізичних навантажень». Модальні конструкції: «вам варто...», «категорично заборонено...».
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12133)
+✓ Message 12055 acknowledged
+✓ Message 12133 acknowledged

@@ -1,0 +1,46 @@
+module: c1-066
+level: C1
+sequence: 66
+slug: traditional-clothing
+version: '2.0'
+title: Традиційний український одяг
+subtitle: Traditional Ukrainian Clothing
+content_outline:
+- section: Розминка — Одяг як ідентичність
+  points:
+  - Традиційний костюм як етнічний маркер
+  - Соціальна інформація в одязі (статус, регіон, вік)
+  - Ритуальна та буденна функція одягу
+- section: Жіночий костюм
+  points:
+  - 'Основні елементи: сорочка, спідниця, запаска, плахта'
+  - 'Головні убори: очіпок, намітка, вінок'
+  - 'Прикраси: намисто, дукачі, сережки'
+  - Регіональні варіанти (Полтава, Поділля, Гуцульщина)
+- section: Чоловічий костюм
+  points:
+  - 'Основні елементи: сорочка, штани, пояс, свита'
+  - 'Головні убори: шапка, брилем, кресаня'
+  - Козацький одяг (жупан, шаровари, оселедець)
+  - Обрядовий одяг (весільний, святковий)
+- section: Практика — опис костюма
+  points:
+  - Описати регіональний костюм за зображенням
+  - Порівняти українські та європейські костюми
+  - Написати есе про відродження традиційного одягу
+  - Обговорити вишиванку як сучасний символ
+focus: cultural
+pedagogy: CBI
+objectives:
+- Learner can describe the elements of traditional Ukrainian costume
+- Learner can explain the symbolism of embroidery and accessories
+- Learner can distinguish regional variations (Poltava vs. Hutsul vs. Podillia)
+- Learner can discuss the modern interpretation of traditional clothing
+grammar:
+- ethnographic terminology
+- descriptions of appearance
+phase: C1.5 Folk Culture & Arts
+persona:
+  voice: Senior Specialist
+  role: Реконструктор одягу
+word_target: 4000

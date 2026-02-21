@@ -1,4 +1,3 @@
----
 module: c1-hist-112
 level: c1-hist
 sequence: 112
@@ -10,55 +9,47 @@ objectives:
 - Analyze the causes and consequences of українські контрнаративи
 - Evaluate the historical significance of боротьба за наратив
 content_outline:
-- section: "Вступ — Боротьба за наратив"
-  words: 457
+- section: Вступ — Боротьба за наратив
   subsections:
   - Україна не тільки захищається
   - Контрнаратив — активна позиція
   - Від реактивності до стратегії
   - Структура модуля
 - section: Державні інструменти
-  words: 686
   subsections:
   - Центр протидії дезінформації
   - Ukraine Crisis Media Center
   - Дипломатичний корпус
   - Зеленський як комунікатор
 - section: Громадянське суспільство
-  words: 800
   subsections:
   - StopFake — піонери
   - Texty.org.ua — дата-журналістика
   - VoxCheck — фактчекінг
   - Волонтерська армія
 - section: NAFO і соцмережі
-  words: 686
   subsections:
   - Що таке NAFO
   - Гумор як зброя
   - Міжнародна спільнота
   - Ефективність
 - section: Культурна дипломатія
-  words: 571
   subsections:
   - Eurovision — Kalush Orchestra
   - Кінофестивалі
   - Мистецтво як послання
   - «Україна — це...»
 - section: Виклики і межі
-  words: 457
   subsections:
   - Ресурсна асиметрія
   - Втомленість аудиторії
   - Ризики — пропаганда vs правда
   - Етичні питання
 - section: Підсумок
-  words: 343
   subsections:
   - Контрнаратив — необхідність
   - Успіхи і обмеження
   - Перехід до синтезу
-word_target: 4000
 vocabulary:
 - контрнаратив
 - фактчекінг
@@ -79,20 +70,20 @@ activities:
 - type: critical-analysis
   focus: Ukrainian counter-disinformation infrastructure
 - type: comparative-study
-  focus: "NAFO — how humor fights disinformation"
+  focus: NAFO — how humor fights disinformation
 - type: critical-analysis
   focus: What works and what doesn't
 - type: critical-analysis
-  focus: "Counter-narrative vs. propaganda — where's the line?"
+  focus: Counter-narrative vs. propaganda — where's the line?
 - type: essay-response
   focus: Чи може Україна виграти інформаційну війну?
 sources:
 - name: Інформаційна політика України (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Інформаційна_політика_України"
+  url: https://uk.wikipedia.org/wiki/Інформаційна_політика_України
   type: reference
   notes: Ukraine's information policy
 - name: NAFO (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/NAFO"
+  url: https://uk.wikipedia.org/wiki/NAFO
   type: reference
   notes: NAFO phenomenon
 vocabulary_hints:
@@ -111,7 +102,9 @@ activity_hints:
   items: 4
 - type: essay-response
   focus: Критичний аналіз
-  word_target: 300
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Narrative Strategist

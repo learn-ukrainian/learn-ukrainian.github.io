@@ -1,0 +1,292 @@
+✅ Message sent to Gemini (ID: 11839) [auto-acked: self-addressed]
+✓ Message 11839 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #11839...
+📨 Message #11839
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-son
+   Time: 2026-02-20T23:33:32.148173+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 14
+module: lit-14
+level: LIT
+slug: son
+version: '2.0'
+title: 'Політична Сатира: Сон'
+subtitle: 'LIT-014: Сміхове руйнування влади'
+content_outline:
+- section: Вступ Політична сатира та жанр комедії
+  points:
+  - Політична сатира
+  - Жанр комедії
+- section: Частина Сюжетна подорож Від України до Петербурга
+  points:
+  - Україна
+  - Сибір
+  - Петербург
+- section: Частина Імперський гротеск Сцена у палаці
+  points:
+  - Гротеск
+  - Мордобиття
+- section: Частина Цар і Цариця Образи тиранів
+  points:
+  - Микола I
+  - Цариця
+- section: Частина Фінал Пробудження та сенс
+  points:
+  - Пробудження
+  - Сенс
+- section: Частина Історичний контекст Братство
+  points:
+  - Братство
+  - 1844 рік
+- section: Частина Рецепція та наслідки Арешт
+  points:
+  - Арешт
+  - Значення
+vocabulary_hints:
+  required:
+  - сатира (satire)
+  - гротеск (grotesque)
+  - іронія (irony)
+  - десакралізація (desacralization)
+  - карикатура (caricature)
+  - імперія (empire)
+  - цар (tsar)
+  - заслання (exile)
+  - пейзаж (landscape)
+  - контраст (contrast)
+  recommended:
+  - парадокс (paradox)
+  - абсурд (absurd)
+  - бал (ball)
+  - маніфест (manifesto)
+  - критика (criticism)
+activity_hints:
+- type: reading
+  focus: Повний текст поеми "Сон"
+  source: UkrLib tid=18
+  items: '1'
+- type: essay-response
+  focus: Роль сатири в десакралізації влади
+  output: Політологічне есе
+focus: literature
+pedagogy: literature
+prerequisites:
+- lit-11 to lit-13 (Shevchenko biography and early works)
+- lit-08 (Konotop Witch — для порівняння сатири)
+connects_to:
+- lit-15 (Zapovit — політичний заповіт)
+- lit-25 (Cyrillo-Methodian Brotherhood — контекст арешту)
+objectives:
+- Analyze the political satire in "The Dream"
+- Deconstruct the myth of the "Good Tsar"
+- Compare Shevchenko's view with Pushkin's
+grammar:
+- Satirical stylistic devices
+- Grotesque and caricature
+- Political rhetoric
+module_type: literature
+sources:
+- name: Сон — повний текст
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=18
+  type: primary
+  notes: Поема для детального аналізу
+- name: Аналіз "Сну"
+  url: https://www.ukrlib.com.ua/analiz/printit.php?tid=18
+  type: secondary
+  notes: Літературознавчий аналіз
+- name: Російська імперія — контекст
+  url: https://uk.wikipedia.org/wiki/Російська_імперія
+  type: reference
+  notes: Політичний контекст 1844 року
+immersion: 100% Ukrainian
+phase: LIT.3 The Prophet (Taras Shevchenko)
+persona:
+  voice: Senior Philologist & Critic
+  role: Satirical Dreamer
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Політична Сатира: Сон
+
+## Використані джерела
+1. [Енциклопедія Сучасної України (ЕСУ)](https://esu.com.ua/) — статті про Тараса Шевченка та поему "Сон".
+2. [Ізборник (litopys.org.ua)](http://litopys.org.ua/) — повний текст поеми, академічні коментарі до "Кобзаря" та біографічні матеріали.
+3. [Інститут історії України НАНУ](http://history.org.ua/) — матеріали щодо слідства над Кирило-Мефодіївським товариством та історичного контексту Російської імперії часів Миколи I.
+
+## Хронологія
+- 1843–1844: Перша поїздка Шевченка в Україну після викупу з кріпацтва, усвідомлення масштабів національного та соціального гноблення.
+- 1844 (липень, Санкт-Петербург): Написання поеми "Сон" ("У всякого своя доля...").
+- 1845–1847: Читання та поширення поеми в рукописних копіях серед членів Кирило-Мефодіївського братства та інтелігенції.
+- 1847 (5 квітня): Арешт Тараса Шевченка. Поема "Сон" вилучена під час обшуку і стає головним доказом звинувачення.
+- 1847 (травень): Вирок Миколи I — заслання Шевченка рядовим солдатом до Окремого Оренбурзького корпусу "із найсуворішою забороною писати й малювати" (особиста помста за сатиру на царицю).
+- 1865: Перше друковане видання поеми "Сон" (у Львові).
+
+## Ключові факти та цитати
+- **Цитата 1 (Вступ)**: "У всякого своя доля / І свій шлях широкий..." (філософський зачин про різноманіття людських пороків).
+- **Цитата 2 (Україна)**: "А онде під тином / Опухла дитина — голоднеє мре, / А мати пшеницю на панщині жне." (контраст краси природи та соціального пекла).
+- **Цитата 3 (Антиколоніальний вирок)**: "То той Первий, що розпинав / Нашу Україну, / А Вторая доконала / Вдову сиротину." (про Петра I та Катерину II).
+- **Цитата 4 (Сатира на царицю)**: "Цариця-небога, / Мов опеньок засушений, / Тонка, довгонога, / Та ще, на лихо, сердешне / Хита головою."
+- **Цитата 5 (Механізм влади)**: "Дивлюсь, цар підходить / До найстаршого... та в пику / Його як затопить!.." (сцена "генерального мордобиття").
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ: Політична сатира та жанр комедії — Дантівська традиція": [!context] — Підзаголовок "комедія" у Шевченка вказує не на смішний чи розважальний характер твору, а є прямою алюзією на "Божественну комедію" Данте — це мандрівка ліричного героя колами імперського пекла.
+- Section "Сюжетна подорож: Антиімперський пейзаж Петербурга": [!decolonization] — Деконструкція імперського міфу про Петербург як величну "Північну Пальміру". Шевченко показує місто як некрополь, збудований на кістках козаків, прямо полемізуючи з "Мідним вершником" Алєксандра Пушкіна.
+- Section "Імперський гротеск: Пам'ятник Петру I": [!quote] — "А Вторая доконала / Вдову сиротину" — найсильніший в тогочасній літературі лаконічний вирок російському колоніалізму, який юридично й фактично знищив Гетьманщину.
+- Section "Імперський гротеск: Десакралізація влади": [!myth-buster] — Руйнування міфу про "царя-батюшку". Російська імперія тримається не на законі чи божественному праві, а на абсурдній системі кругової поруки страху і насильства (мордобиття по низхідній ієрархії).
+- Section "Образи тиранів: Карикатура на Миколу I та царицю": [!history-bite] — Саме натуралістичне висміювання фізичних вад дружини Миколи I (Олександри Федорівни, яка мала нервовий тик — "хита головою") викликало найбільшу лють імператора і зумовило безпрецедентно жорстокий вирок поетові (заслання без права писати й малювати).
+- Section "Рецепція та наслідки: Арешт і значення для нації": [!culture] — Завдяки цій поемі Шевченко здійснив акт національної психотерапії: він навчив українців сміятися з імперії. Сміх знищив сакральний страх перед царатом.
+
+## Деколонізаційний контекст
+- **Imperial/Soviet myth**: Поема трактувалася в радянські часи виключно як антикріпосницький та антимонархічний твір, зводячи її зміст до "класової боротьби". Пушкінський образ імперії вважався канонічним і цивілізаторським.
+- **Ukrainian reality**: Поема "Сон" — це насамперед радикальний антиколоніальний маніфест. Це перша в українській (і східноєвропейській загалом) літературі глобальна візія Російської імперії як тоталітарної "тюрми народів". Шевченко деконструює не лише класову, а й імперсько-національну ієрархію, утверджуючи суб'єктність України.
+
+## Contested Terms (if applicable)
+| Concept | Imperial / Soviet framing | Ukrainian (decolonized) framing |
+|---------|-----------------|-------------------|
+| Петербург | Символ прогресу, "вікно в Європу", геніальне творіння Петра I | Місто на кістках, некрополь, збудований ціною життів українських козаків |
+| Приєднання України | "Возз'єднання братніх народів", благодіяння царів | Анексія, порушення договорів, деспотія ("Первий... розпинав", "Вторая доконала") |
+| Петро I та Катерина II | Великі реформатори, "збирачі земель" | Тирани, кати українського народу, руйнівники державності |
+
+## Section-Mapped Research Notes
+
+### Вступ: Політична сатира та жанр комедії — Передумови написання
+1843 рік — поворотний момент. Повернувшись в Україну вільною людиною, Шевченко побачив жахіття кріпацтва та русифікації, що спричинило різкий перехід від раннього романтизму до гострої політичної поезії. "Сон" стає концентрацією цього прозріння.
+
+### Вступ: Політична сатира та жанр комедії — Дантівська традиція
+Форма сну — класичний літературний прийом (візія), що дозволяє долати простір і час та обходити цензуру. Жанр "комедія" тут застосовано іронічно: це алюзія на інфернальну мандрівку Данте.
+
+### Сюжетна подорож: Візія поневоленої України
+Контраст між ідилічним пейзажем (солов'ї, зорі, сади) та соціальним пеклом (голодні діти, панщина, сироти). Природа протиставляється антилюдському устрою.
+
+### Сюжетна подорож: Сибірська каторга
+Символічний простір мучеництва. Образ "царя волі", якого "в кайдани кували", є даниною поваги борцям проти тиранії (зокрема декабристам), чия жертовність протиставлена імперському мороку.
+
+### Сюжетна подорож: Антиімперський пейзаж Петербурга
+Прибуття до імперської столиці. Деконструкція пушкінського міфу "Мідного вершника". Місто збудоване на болоті й просякнуте кров'ю. Шевченко бачить душі закатованих козаків, що будували Петербург за наказом Петра I.
+
+### Імперський гротеск: Десакралізація влади та сцена в палаці
+Кульмінація поеми — сцена прийому у палаці. Влада тримається не на величі, а на абсурдній жорстокості. Удар царя по обличчю підлеглого передається вниз по ланцюгу (генеральне мордобиття) — це блискуча гротескна метафора тоталітарної ієрархії Російської імперії.
+
+### Імперський гротеск: Пам'ятник Петру I як символ колоніалізму
+Шевченко зупиняється біля фалічного символу імперії — пам'ятника Фальконе. Автор виносить історичний вирок руйнівникам України, зводячи їхню "велич" до рівня катів.
+
+### Образи тиранів: Карикатура на Миколу I та царицю
+Нищівне висміювання правителів. Микола I — як ведмідь, цариця — як "засушений опеньок". Це повна десакралізація влади: помазаники божі виявляються жалюгідними і потворними істотами, коли спадає завіса страху.
+
+### Фінал: Пробудження та екзистенційний вимір сатири
+Коли цар кричить і ніхто його не боїться — імперія розсипається, ідол стає "кошеням". Ліричний герой прокидається. Сміх тут виступає як філософська категорія: він є зброєю вільної людини проти рабства.
+
+### Історичний контекст: Кирило-Мефодіївське братство
+Поширення поеми у списках. Вона стала ідейним каталізатором для гуртківців, формуючи радикальне, безкомпромісне ставлення до самодержавства, відкидаючи будь-які ілюзії щодо можливих реформ згори.
+
+### Рецепція та наслідки: Арешт і значення для нації
+Під час розгрому Братства у 1847 році "Сон" став головним пунктом звинувачення. Особиста реакція Миколи I на сатиру призвела до трагічної долі поета. Але для української нації "Сон" назавжди залишився еталоном антиімперського імунітету.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 11888)
+✓ Message 11839 acknowledged
+✓ Message 11888 acknowledged

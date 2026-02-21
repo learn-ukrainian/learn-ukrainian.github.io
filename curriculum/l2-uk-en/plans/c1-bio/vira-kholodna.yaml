@@ -1,53 +1,44 @@
----
-module: c1-bio-099
+module: c1-bio-98
 level: C1-BIO
-sequence: 99
+sequence: 98
 slug: vira-kholodna
 version: '2.0'
 title: 'Віра Холодна: Королева німого кіно'
 content_outline:
-- section: "Вступ — Зірка, яка згасла зарано"
-  words: 400
+- section: Вступ — Зірка, яка згасла зарано
   points:
   - Холодна як перша справжня кінозірка
   - Феномен популярності в епоху німого кіно
   - Загадкова смерть у 25 років
 - section: Дитинство та юність
-  words: 600
   points:
   - Народження в Полтаві (1893)
   - Переїзд до Москви
   - Ранній інтерес до театру та балету
 - section: Шлях до екрану
-  words: 700
   points:
   - Перші ролі в кіно
   - Співпраця з режисерами
   - Формування екранного образу
 - section: Королева екрану
-  words: 800
   points:
   - Найпопулярніші фільми
   - Феномен Віри Холодної
   - Масова любов публіки
 - section: Мистецтво німого кіно
-  words: 700
   points:
   - Особливості акторської гри
   - Вираження емоцій без слів
   - Вплив на розвиток кінематографу
 - section: Трагічний фінал
-  words: 600
   points:
   - Революція та громадянська війна
   - Перебування в Одесі
   - Загадкова смерть (1919)
-- section: "Дискусія — Легенда та реальність"
-  words: 200
+- section: Дискусія — Легенда та реальність
   points:
   - Версії про причини смерті
   - Холодна в українській культурній памяті
-word_target: 4000
 vocabulary_hints:
   required:
   - німе кіно (silent cinema)
@@ -73,7 +64,6 @@ activity_hints:
   items: 3 passages
 - type: essay-response
   focus: Чому німе кіно створювало такі сильні емоції?
-  word_target: 300
   output: Культурологічний есей
 focus: biography
 prerequisites:
@@ -85,15 +75,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Віра Холодна (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Холодна_Віра_Василівна"
+  url: https://uk.wikipedia.org/wiki/Холодна_Віра_Василівна
   type: primary
   notes: Основна біографічна інформація
 - name: Історія українського кіно
-  url: "https://kinokolo.ua/"
+  url: https://kinokolo.ua/
   type: reference
   notes: Контекст раннього кінематографу
 - name: Фільмографія
-  url: "https://www.imdb.com/"
+  url: https://www.imdb.com/
   type: reference
   notes: Список фільмів
 immersion: 100% Ukrainian
@@ -102,3 +92,6 @@ objectives:
 - 'Analyze the life and legacy of віра холодна: королева німого кіно'
 - Evaluate the contributions of зірка, яка згасла зарано
 - Trace the career and influence of легенда та реальність
+persona:
+  voice: Senior Biographer
+  role: Silent Film Star

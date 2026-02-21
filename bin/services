@@ -1,0 +1,89 @@
+#!/usr/bin/env bash
+
+# Learn Ukrainian - Service Management Script
+# Manages background processes for Dispatcher and Agent Watcher.
+
+REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+VENV_PYTHON="${REPO_ROOT}/.venv/bin/python"
+DB_DIR="${REPO_ROOT}/.mcp/servers/message-broker"
+WATCHER_PID="${DB_DIR}/watcher.pid"
+DISPATCHER_PID="${REPO_ROOT}/batch_state/dispatcher.pid"
+
+mkdir -p "${DB_DIR}"
+mkdir -p "${REPO_ROOT}/batch_state"
+
+status() {
+    echo "--- Service Status ---"
+    if [ -f "$WATCHER_PID" ] && ps -p $(cat "$WATCHER_PID") > /dev/null; then
+        echo "✅ Watcher: Running (PID $(cat "$WATCHER_PID"))"
+    else
+        echo "❌ Watcher: Stopped"
+    fi
+
+    if [ -f "$DISPATCHER_PID" ] && ps -p $(cat "$DISPATCHER_PID") > /dev/null; then
+        echo "✅ Dispatcher: Running (PID $(cat "$DISPATCHER_PID"))"
+    else
+        echo "❌ Dispatcher: Stopped"
+    fi
+}
+
+stop() {
+    echo "Stopping services..."
+    if [ -f "$WATCHER_PID" ]; then
+        PID=$(cat "$WATCHER_PID")
+        echo "Stopping Watcher (PID $PID)..."
+        kill $PID 2>/dev/null
+        rm -f "$WATCHER_PID"
+    fi
+
+    if [ -f "$DISPATCHER_PID" ]; then
+        PID=$(cat "$DISPATCHER_PID")
+        echo "Stopping Dispatcher (PID $PID)..."
+        kill $PID 2>/dev/null
+        rm -f "$DISPATCHER_PID"
+    fi
+    echo "Services stopped."
+}
+
+start() {
+    stop
+    echo "Starting services..."
+    
+    echo "Starting Watcher..."
+    $VENV_PYTHON scripts/agent_watcher.py --daemon
+    
+    echo "Starting Dispatcher (Continuous Mode)..."
+    # Run in background and save PID
+    nohup $VENV_PYTHON scripts/batch_dispatcher.py run > logs/dispatcher.log 2>&1 &
+    echo $! > "$DISPATCHER_PID"
+    
+    echo "Services started."
+}
+
+cleanup_queue() {
+    echo "Cleaning up message queue..."
+    sqlite3 "${DB_DIR}/messages.db" "DELETE FROM messages WHERE status = 'pending' OR acknowledged = 0;"
+    echo "Queue cleared."
+}
+
+case "$1" in
+    start)
+        start
+        ;;
+    stop)
+        stop
+        ;;
+    restart)
+        stop
+        start
+        ;;
+    status)
+        status
+        ;;
+    cleanup)
+        cleanup_queue
+        ;;
+    *)
+        echo "Usage: $0 {start|stop|restart|status|cleanup}"
+        exit 1
+esac

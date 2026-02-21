@@ -1,92 +1,37 @@
-# Research: B1 M16 "Motion Verbs: Full System"
+# Дослідження: Дієслова руху: повна система
 
-**Module ID:** B1 M16
-**Topic:** Motion Verbs (Unidirectional vs. Multidirectional, Prefixation)
-**Level:** B1 (Intermediate)
-*Note: The prompt specified A1/Alphabet-only prior knowledge, which contradicts the module ID (B1) and title ("Full System"). This research assumes the actual B1 context where students already know cases and basic aspect.*
+## State Standard Reference
+§4.2.3.1: "Дійсний спосіб: ... дієвідмінювання дієслів... (їхати/ходити)"
+§4.3.8: "Утворення префіксальних дієслів руху: іти – прийти, перейти... їхати – приїхати..."
+§4.2.2.4: "Знахідний відмінок... Із прийменниками: в, у, на, за (кінцевий пункт руху суб’єкта...)"
 
-## 1. Grammar: State Standard 2024 Reference
+Alignment: This module systematizes the core 14 motion verb pairs (unidirectional/multidirectional) required by §4.2.3.1 and reinforces the Accusative directionality rules from §4.2.2.4, laying the foundation for the prefix system (§4.3.8) covered in subsequent modules.
 
-According to the **State Standard for Ukrainian as a Foreign Language (2024)** and the Common European Framework of Reference for Languages (CEFR) for level **B1 (Independent User)**:
+## Vocabulary Frequency
+| Word Pair | Frequency Notes | Key Collocations |
+|-----------|-----------------|------------------|
+| **лізти / лазити** | High freq. in both literal and figurative senses. | *лізти вгору* (climb up), *лізти в кишеню* (pickpocket/reach in), *лазити по деревах* (climb trees), *лазити в інтернеті* (surf the net - slang). |
+| **повзти / повзати** | Medium freq. Often used for slow movement or rumors/fog. | *повзти на колінах* (crawl on knees), *туман повзе* (fog creeps), *чутки повзуть* (rumors spread), *дитина повзає* (baby crawls). |
+| **брести / бродити** | Medium-Low freq. Poetic or specific "wandering" context. | *бродити по лісу* (wander forest), *бродити вулицями* (roam streets), *брести по воді* (wade through water), *думки бродять* (thoughts wander). |
+| **тягти / тягати** | High freq. Logistic/physical effort context. | *тягти час* (stall/drag time), *тягати залізо* (lift weights - slang), *ледь ноги тягти* (barely drag feet). |
 
-> **Section: Lexical and Grammatical Competence (B1)**
-> "The user can understand and use a sufficient range of vocabulary and grammatical structures to describe unpredictable situations, explain the main points of an idea or problem with reasonable precision, and express thoughts on abstract or cultural topics..."
->
-> **Specific Grammatical Topics (B1):**
-> *   "Verbs of motion without prefixes (pairs: determined/non-determined)."
-> *   "Verbs of motion with prefixes (spatial and temporal meanings)."
-> *   "Use of prepositions with verbs of motion to denote direction (*в/на + Accusative*, *до + Genitive*) and starting point (*з/із/від + Genitive*)."
+## Cultural Hooks
+1. **The Logistics of the "Breadbasket":** Ukraine moves massive amounts of grain to ports (Odesa, Danube). The verbs *везти/возити* (to transport) and *пливти* (ships sailing) are vital to the national economy. *Fact:* Ukraine has ~169,000 km of roads (all toll-free), making truck logistics (*фури*) a key part of the "circulatory system" of the country.
+2. **Nova Poshta & Ukrzaliznytsia:** These two entities are cultural icons of reliability and motion. "Iron Diplomacy" (*Залізна дипломатія*) relies on *їздити* (trains). Nova Poshta relies on *розносити/розвозити* (delivering).
+3. **Proverbial Wisdom:** "Під лежачий камінь вода не тече" (Water doesn't flow under a lying stone) – emphasizes the cultural value of action and movement (*рух*).
 
-This module specifically targets the transition from memorized phrases ("Я йду додому") to the systemic understanding of the 14 verb pairs and the logic of prefixation.
+## Common Learner Errors
+1. **The "Round Trip" Trap:** Learners use unidirectional *йти* for a completed round trip (*Я йшов у банк вчора* instead of *Я ходив*).
+   *   *Correction:* Use multidirectional for "went and came back" (general fact in past).
+2. **The "Vehicle vs. Foot" Confusion:** Using *йти* for vehicles (like English "go").
+   *   *Correction:* Strict separation: *йти* (legs) vs. *їхати* (wheels/transport).
+3. **Adverbial Blindness:** Ignoring keywords like *часто* (often), *кожен день* (every day), *завжди* (always) which demand multidirectional verbs.
+   *   *Correction:* Highlight trigger words that force the *ходити/їздити* choice.
 
-## 2. Vocabulary Frequency
+## Cross-References
+- **Builds on:** A2 Motion Basics (simple *йти/їхати*), A2 Accusative Case (direction).
+- **Prepares for:** B1-17 (Prefixed Motion Verbs), B1-25 (Motion Checkpoint), B1-35 (Complex Sentences with "where to").
 
-### Core Verb Pairs (High Frequency)
-These are essential for B1 fluency.
-
-| Determined (Unidirectional) | Non-determined (Multidirectional) | English Approx. | Frequency |
-| --------------------------- | --------------------------------- | --------------- | --------- |
-| **іти**                     | **ходити**                        | to walk/go      | High      |
-| **їхати**                   | **їздити**                        | to ride/drive   | High      |
-| **бігти**                   | **бігати**                        | to run          | High      |
-| **нести**                   | **носити**                        | to carry (hand) | Med-High  |
-| **везти**                   | **возити**                        | to transport    | Med-High  |
-| **вести**                   | **водити**                        | to lead         | Med-High  |
-| **летіти**                  | **літати**                        | to fly          | Medium    |
-| **плисти**                  | **плавати**                       | to swim/float   | Medium    |
-
-### Common Prefixes (B1 Scope)
-*   **по-**: Start of motion (perfective) - *піти, поїхати*.
-*   **при-**: Arrival - *прийти, приїхати*.
-*   **ви-**: Exit/Out - *вийти, виїхати*.
-*   **за-**: Entry/Stop by - *зайти, заїхати*.
-*   **пере-**: Crossing/Transfer - *перейти, переїхати*.
-*   **до-**: Reaching a limit - *дійти, доїхати*.
-*   **під-**: Approaching - *підійти, під'їхати*.
-*   **від-**: Moving away - *відійти, від'їхати*.
-
-### Common Collocations
-*   **Public Transport:** їхати автобусом / в автобусі (instrumental/locative distinction).
-*   **Time:** Час іде / летить (Time goes/flies).
-*   **Prepositions:** іти **на** роботу (direction), ходити **по** парку (location/process).
-
-## 3. Cultural Hook
-
-### "Посидіти на дорогу" (Sit for the road)
-Before a long journey (leaving a home), it is a widespread Ukrainian tradition to sit down in silence for a minute ("на доріжку"). This superstition implies tricking the house spirits into thinking you aren't leaving, or simply taking a moment to calm down and remember forgotten items (passports, tickets).
-*   *Relevance:* Using verbs like *виїжджати* (departing) vs. *повертатися* (returning).
-
-### Public Transport Etiquette (Маршрутка)
-The culture of the *marshrutka* involves specific motion verbs. You don't just "get on/off"; you *заходити* (enter) and *виходити* (exit). Passing money ("Передайте, будь ласка") is a classic interaction.
-
-## 4. Pedagogical Notes
-
-### Key Difficulties for English Speakers
-1.  **The "Go" Collapse:** English uses "go" for walking, driving, flying, and swimming. Ukrainian demands the specific mode of transport.
-    *   *Teaching Tip:* Use icons (feet vs. wheels) strictly.
-2.  **Vector vs. General:** The distinction between *іти* (right now, A to B) and *ходити* (regularly, round trip, or aimless) is conceptual.
-    *   *Analogy:* *Іти* is a vector (arrow). *Ходити* is a circle or a scribble.
-3.  **Prefix Logic:** Students often confuse *ви-* (out) and *від-* (away from).
-    *   *Visual:* *Ви-* is exiting a container (door). *Від-* is increasing distance from an object.
-
-### Teaching Sequence
-1.  **Refresher:** Contrast *іти* vs. *їхати* (Mode of transport).
-2.  **The Core Concept:** Unidirectional (*іти*) vs. Multidirectional (*ходити*). Focus on "Right now" vs. "Every day".
-3.  **Expansion:** Introduce the other pairs (*бігти/бігати*, *летіти/літати*).
-4.  **Prefixes:** Introduce spatial prefixes in pairs (*в-/ви-*, *при-/по-*, *під-/від-*).
-
-## 5. Scope Boundaries
-
-### IN Scope (B1)
-*   **All 14 standard pairs** of motion verbs.
-*   **Spatial Prefixes:** *в-, ви-, при-, по-, від-, під-, до-, пере-, за-, про-*.
-*   **Cases:**
-    *   Accusative for Direction (*куди?*).
-    *   Genitive for Origin (*звідки?*).
-    *   Instrumental for Transport (*чим?*).
-*   **Tenses:** Past, Present, Future (using *буду* + imperf or perfective forms).
-
-### OUT of Scope (Reserved for B2/C1)
-*   **Metaphorical/Idiomatic Meanings:** *водити за нос* (to fool), *нести дурницю* (to talk nonsense), *виходити заміж* (to marry - though high freq, treat as lexical chunk, not motion logic).
-*   **Complex Prefixes:** *на-* (cumulative quantity), *з-* (gathering together), *роз-* (dispersing) - touch upon lightly if needed, but focus is on spatial movement.
-*   **Rare Pairs:** *брести/бродити* (to wander/trudge), *лізти/лазити* (to climb/crawl) - mention only if context demands (e.g. "hiking").
+## Notes for Content Writing
+- **Visuals:** Use the "Vector vs. Circle" analogy. Unidirectional = Arrow (→). Multidirectional = Circle/Chaos (↺ or 〰️).
+- **Immersion:** Ensure all explanations of the "physics" of motion are in clear, simple Ukrainian.

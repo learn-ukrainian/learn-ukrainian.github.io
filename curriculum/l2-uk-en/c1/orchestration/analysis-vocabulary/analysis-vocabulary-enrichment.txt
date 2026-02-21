@@ -1,0 +1,318 @@
+✅ Message sent to Gemini (ID: 10666) [auto-acked: self-addressed]
+✓ Message 10666 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10666...
+📨 Message #10666
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-analysis-vocabulary
+   Time: 2026-02-20T21:22:07.696026+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-004
+level: C1
+sequence: 4
+slug: analysis-vocabulary
+version: '2.0'
+title: Словник аналізу та критики
+content_outline:
+- section: Вступ — Мова критичного мислення
+  points:
+  - Роль аналітичної лексики в науці
+  - Зв'язок з критичним мисленням
+  - Категорії аналітичних термінів
+- section: Іменники аналізу
+  points:
+  - Аналіз, синтез, оцінка, інтерпретація
+  - Критика, порівняння, зіставлення
+  - Класифікація, систематизація, узагальнення
+- section: Прикметники для характеристики
+  points:
+  - Детальний, ґрунтовний, всебічний
+  - Критичний, порівняльний, системний
+  - Об'єктивний, суб'єктивний, обґрунтований
+- section: Прикметники оцінки
+  points:
+  - Переконливий, вагомий, достовірний
+  - Суперечливий, неоднозначний, спірний
+  - Актуальний, релевантний, доречний
+- section: Словосполучення та колокації
+  points:
+  - Детальний аналіз, ґрунтовне дослідження
+  - Критична оцінка, всебічний огляд
+  - Системний підхід, комплексний аналіз
+- section: Контексти використання
+  points:
+  - В рецензіях та оглядах
+  - В аналітичних статтях
+  - В наукових дискусіях
+- section: Практика в академічному письмі
+  points:
+  - Побудова аналітичних речень
+  - Варіювання лексики
+  - Точність формулювань
+vocabulary_hints:
+  required:
+  - аналіз (analysis)
+  - синтез (synthesis)
+  - інтерпретація (interpretation)
+  - класифікація (classification)
+  - систематизація (systematization)
+  - детальний (detailed)
+  - ґрунтовний (thorough)
+  - всебічний (comprehensive)
+  - критичний (critical)
+  - обґрунтований (substantiated)
+  recommended:
+  - зіставлення (comparison)
+  - узагальнення (generalization)
+  - комплексний (complex)
+  - системний (systematic)
+  - релевантний (relevant)
+activity_hints:
+- type: match-up
+  focus: Analysis noun to definition
+  items: 15+
+- type: quiz
+  focus: Choose appropriate adjective for context
+  items: 15+
+- type: fill-in
+  focus: Complete analysis sentences with vocabulary
+  items: 12+
+- type: group-sort
+  focus: Adjectives by positive/neutral/negative connotation
+  items: 15+
+- type: cloze
+  focus: Academic review passage completion
+  items: 12+
+- type: essay-response
+  focus: Write critical paragraph using analysis vocabulary
+focus: vocabulary
+prerequisites:
+- c1-02 (Academic Style Markers)
+- c1-03 (Research Verbs)
+connects_to:
+- c1-05 (Logical Connectors)
+- c1-11 (Summary & Paraphrase)
+- c1-14 (Literature Review)
+module_type: vocabulary
+sources:
+- name: Академічний тлумачний словник української мови
+  url: https://sum.in.ua/
+  type: reference
+  notes: Definitions of analytical terms
+- name: Ukrainian Academic Writing Corpus
+  url: https://mova.info/
+  type: secondary
+  notes: Usage patterns in academic texts
+immersion: 100% Ukrainian
+phase: C1.1 Academic Ukrainian
+objectives:
+- Understand and apply словник аналізу та критики
+- Analyze and evaluate мова критичного мислення
+- Identify key concepts of практика в академічному письмі
+persona:
+  voice: Senior Specialist
+  role: Рецензент
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Словник аналізу та критики
+
+## State Standard Reference
+§4.4.4: "Стилістичні засоби синтаксису... елементи структурування тексту: вставні слова по-перше, по-друге, по-третє, отже та ін."
+§4.4.1.1: "Стилі української мови: науковий; публіцистичний"
+Alignment: Цей модуль розвиває лексичну компетентність для створення текстів наукового та публіцистичного стилів, фокусуючись на засобах структурування аналітичної думки та критичної оцінки, що є вимогою рівня C1.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| **Аналіз** | High (General/Academic) | *глибокий аналіз, детальний аналіз, порівняльний аналіз, проводити аналіз, піддавати аналізу* |
+| **Критика** | Medium (General/Academic) | *літературна критика, конструктивна критика, нищівна критика, витримувати критику* |
+| **Синтез** | Medium (Academic) | *аналіз і синтез, синтез мистецтв, органічний синтез* |
+| **Обґрунтований** | Medium (Academic) | *науково обґрунтований, економічно обґрунтований, цілком обґрунтований сумнів* |
+| **Релевантний** | Medium (Professional) | *релевантний досвід, релевантна інформація, суспільно релевантний* |
+
+## Cultural Hooks
+1. **Іван Дзюба "Інтернаціоналізм чи русифікація?" (1965)**: Класичний приклад блискучого аналітичного тексту. Дзюба використовує скрупульозний аналіз марксистських джерел для критики радянської національної політики. Це зразок того, як "суха" аналітична лексика стає зброєю.
+2. **Українська полемічна література (Іван Вишенський)**: Історичний корінь української критичної думки. Хоча мова архаїчна, сам пристрасний стиль аргументації та "критики" суспільних вад є частиною культурного коду.
+
+## Common Learner Errors
+1. **Калькування "make an analysis"**: *Робити аналіз* (небажано) → *Проводити аналіз* або *Аналізувати* (правильно). "Робити" — занадто "бідне" дієслово для наукового стилю.
+2. **Плутанина "вірний" / "правильний"**: *Вірний висновок* (калька з рос. "верный") → *Правильний / Слушний / Обґрунтований висновок*. "Вірний" в українській мові частіше означає "loyal" (вірний друг).
+3. **Зловживання пасивом**: *Мною було проаналізовано* → *Я проаналізував / Ми проаналізували*. Українська наукова мова (на відміну від радянської традиції) толерує активний стан (Agency Pass).
+
+## Cross-References
+- Builds on: **c1-02 (Academic Style Markers)**, **c1-03 (Research Verbs)** — базові інструменти академічного письма.
+- Prepares for: **c1-05 (Logical Connectors)** — зв'язність тексту; **c1-11 (Summary & Paraphrase)** — реферування; **c1-14 (Literature Review)** — написання оглядів.
+
+## Notes for Content Writing
+- Дотримуватися принципу **Agency Pass**: навіть в описі абстрактних понять (аналіз, критика) використовувати активні конструкції ("Дослідник аналізує...", "Критика виявляє...").
+- Використовувати приклади з реальних рецензій або наукових статей (адаптованих), щоб показати лексику в дії.
+- Чітко розмежувати "критику" як *оцінку* (criticism/review) і "критику" як *засудження* (blame).
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 500
+  points:
+  - "Роль аналітичної лексики в науці та публіцистиці згідно з вимогами рівня C1 та державним стандартом §4.4.1.1."
+  - "Зв'язок мови з критичним мисленням: шлях від простого опису до глибокої інтерпретації та синтезу."
+  - "Огляд категорій аналітичних термінів: іменники аналізу, прикметники оцінки та засоби структурування думки."
+- section: "Презентація: Аналітична лексика та культурний контекст (Presentation: Analytical Vocabulary and Cultural Context)"
+  words: 800
+  points:
+  - "Основні поняття: аналіз, синтез, оцінка, інтерпретація, класифікація, узагальнення; частотність використання в академічному середовищі."
+  - "Культурний взірець 1: Іван Дзюба «Інтернаціоналізм чи русифікація?» як приклад перетворення аналітичної лексики на інтелектуальну зброю."
+  - "Культурний взірець 2: Українська полемічна література (Іван Вишенський) як історичне коріння традиції критичної аргументації."
+  - "Багатозначність терміна «критика»: розрізнення наукової оцінки (criticism/review) та побутового засудження (blame)."
+- section: "Характеристика та оцінка: Прикметники та словосполучення (Characterization and Evaluation: Adjectives and Collocations)"
+  words: 800
+  points:
+  - "Прикметники для характеристики процесу: детальний, ґрунтовний, всебічний, системний; конотації та контексти."
+  - "Прикметники для оцінки результату: переконливий, вагомий, достовірний, релевантний; частота в сучасному професійному дискурсі."
+  - "Стійкі колокації: «глибокий аналіз», «науково обґрунтований», «всебічний огляд», «піддавати аналізу»."
+  - "Розрізнення відтінків значень у складних випадках оцінки: суперечливий, неоднозначний, спірний."
+- section: "Культура мовлення: Виправлення типових помилок (Speech Culture: Correcting Common Errors)"
+  words: 900
+  points:
+  - "Помилка калькування: уникнення небажаного «робити аналіз» (make an analysis) на користь нормативного «проводити аналіз» або дієслова «аналізувати»."
+  - "Семантична норма: виправлення кальки «вірний висновок» (loyal) на «правильний / слушний / обґрунтований висновок»."
+  - "Стилістична трансформація: відмова від пасивних конструкцій («мною було проаналізовано») на користь активних («Я проаналізував», «Дослідження показує»)."
+  - "Елементи структурування тексту за стандартом §4.4.4: вставні слова «по-перше», «отже», «таким чином» для логічного зв'язку."
+- section: "Практика: Побудова аналітичного тексту та рецензування (Practice: Constructing Analytical Text and Reviewing)"
+  words: 1000
+  points:
+  - "Методи побудови складних аналітичних речень: дотримання точності формулювань та варіювання синонімічного ряду."
+  - "Написання критичного параграфа: практичне застосування принципу Agency Pass для посилення авторської позиції."
+  - "Аналіз адаптованих текстів реальних рецензій: ідентифікація засобів створення об'єктивного та системного тону."
+  - "Фінальне оцінювання тексту на відповідність критеріям релевантності, достовірності та обґрунтованості."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "аналіз (analysis) — глибокий аналіз, проводити аналіз; висока частотність у науковому та публіцистичному стилях"
+  - "синтез (synthesis) — аналіз і синтез, органічний синтез; ключовий термін для академічного викладу"
+  - "інтерпретація (interpretation) — суб'єктивна інтерпретація, пропонувати інтерпретацію; оцінна лексика"
+  - "класифікація (classification) — детальна класифікація, піддавати класифікації; термін для структурування даних"
+  - "систематизація (systematization) — систематизація даних, потребувати систематизації; логічне впорядкування"
+  - "детальний (detailed) — детальний огляд, детальний аналіз; характеристика глибини дослідження"
+  - "ґрунтовний (thorough) — ґрунтовне дослідження, ґрунтовна відповідь; позитивна оцінка якості"
+  - "всебічний (comprehensive) — всебічний розгляд, всебічне висвітлення; системна характеристика об'єкта"
+  - "критичний (critical) — критичний підхід, критичне мислення; ключовий прикметник для аналізу"
+  - "обґрунтований (substantiated) — науково обґрунтований, цілком обґрунтований сумнів; нормативна заміна кальки «вірний»"
+  recommended:
+  - "зіставлення (comparison) — порівняння та зіставлення; засіб виявлення спільних та відмінних рис"
+  - "узагальнення (generalization) — теоретичне узагальнення, робити узагальнення; фінальний етап аналізу"
+  - "комплексний (complex) — комплексний підхід, комплексне розв'язання; системне охоплення проблеми"
+  - "системний (systematic) — системний погляд, системна критика; характеристика методології"
+  - "релевантний (relevant) — релевантна інформація, суспільно релевантний; актуальність та відповідність контексту"
+  - "правильний / слушний (correct/apt) — правильний висновок; нормативна лексика (уникати кальки «вірний»)"
+  - "проводити (to conduct) — проводити аналіз, проводити дослідження; стилістично виправдане вживання замість «робити»"
+  - "отже / по-перше (therefore / firstly) — елементи структурування тексту згідно зі стандартом §4.4.4"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (5102 chars)
+✅ Message sent to Claude (ID: 10674)
+✓ Message 10674 acknowledged
+   Auto-acknowledged reply #10674 (stdout delivery — no inbox accumulation)
+✓ Message 10666 acknowledged

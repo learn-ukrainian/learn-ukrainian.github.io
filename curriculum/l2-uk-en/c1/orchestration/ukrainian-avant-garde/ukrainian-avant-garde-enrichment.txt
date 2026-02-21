@@ -1,0 +1,250 @@
+✅ Message sent to Gemini (ID: 10793) [auto-acked: self-addressed]
+✓ Message 10793 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10793...
+📨 Message #10793
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-ukrainian-avant-garde
+   Time: 2026-02-20T21:29:04.813116+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-065
+level: C1
+sequence: 65
+slug: ukrainian-avant-garde
+version: '2.0'
+title: Український авангард
+subtitle: Ukrainian Avant-Garde
+content_outline:
+- section: Розминка — Українські модерністи
+  points:
+  - Український авангард 1910-1930-х років
+  - Зв'язок з європейським модернізмом
+  - Трагічна доля митців за Сталіна
+- section: Ключові постаті та напрямки
+  points:
+  - 'Казимир Малевич: супрематизм, "Чорний квадрат"'
+  - 'Олександра Екстер: кубофутуризм, театральний дизайн'
+  - 'Давид Бурлюк: футуризм, "батько українського авангарду"'
+  - 'Михайло Бойчук: монументалізм, бойчукізм'
+  - Олександр Архипенко: скульптурний кубізм
+- section: Спадщина авангарду
+  points:
+  - Зв'язок авангарду з народним мистецтвом
+  - Репресії "Розстріляного відродження"
+  - Сучасне перевідкриття та музеї
+  - Вплив на світове мистецтво
+- section: Практика — аналіз мистецтва
+  points:
+  - Проаналізувати твір Малевича — форма, колір, ідея
+  - Порівняти український та російський авангард
+  - Написати есе про трагедію "Розстріляного відродження"
+  - Обговорити вплив народного мистецтва на авангард
+focus: cultural
+pedagogy: CBI
+objectives:
+- Learner can discuss the Ukrainian Avant-Garde movement and its key figures
+- Learner can analyze avant-garde artworks using appropriate terminology
+- Learner can explain the impact of Ukrainian artists on world modernism
+- Learner can describe the connection between folk art and avant-garde
+grammar:
+- art analysis vocabulary
+- stylistic descriptions
+phase: C1.5 Folk Culture & Arts
+persona:
+  voice: Senior Specialist
+  role: Футурист
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Український авангард
+
+## State Standard Reference
+§3.4: "Культурне дозвілля і відпочинок: музеї, картинні галереї та виставкові зали".
+§4.4.1.1: "Стилі мови: художній стиль".
+Alignment: Модуль розвиває вміння аналізувати твори мистецтва (галереї/музеї) та використовувати засоби художнього стилю (епітети, метафори) для опису візуальних образів, що відповідає вимогам рівня С1 щодо тематики дозвілля та стилістичної компетентності.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| авангард | High (Art/General) | український авангард, світовий авангард, представник авангарду |
+| безпредметний | Med (Art) | безпредметне мистецтво, безпредметний живопис, світ безпредметності |
+| супрематизм | Med (Art) | засновник супрематизму, філософія супрематизму, супрематична композиція |
+| кубофутуризм | Low (Specialized) | яскравий кубофутуризм, естетика кубофутуризму, синтез мистецтв |
+| монументалізм | Med (Art) | школа монументалізму, бойчукісти-монументалісти, фресковий живопис |
+| колористика | High (Art) | народна колористика, яскрава колористика, локальні кольори |
+| репресований | High (History) | репресоване мистецтво, репресовані митці, жертви терору |
+
+## Cultural Hooks
+1. **Київський період Малевича**: Казимир Малевич народився у Києві, викладав у Київському художньому інституті (1928–1930) і стверджував, що його "кольорове бачення" сформувалося під впливом українського народного мистецтва (вишивки, писанкарства).
+2. **Спецфонд НХМУ**: У 1930-х роках тисячі творів авангардистів були визнані "формалістичними" і підлягали знищенню. Однак музейники сховали їх у "Спецфонді" (Спеціальному секретному фонді) Національного художнього музею, врятувавши для нащадків.
+
+## Common Learner Errors
+1. **Confusion of terms**: Using "модерн" (Art Nouveau/Secession) instead of "модернізм" (Modernism, broad movement including Avant-Garde).
+   *Correction*: Модерн — це стиль початку XX ст. (Клімт, Муха), а авангард — це радикальні експерименти 1910-30-х.
+2. **National Identity**: Labeling Malevich or Archipenko as purely "Russian" artists due to Soviet historiography.
+   *Correction*: Emphasize their Kyiv roots, self-identification, and distinct "Ukrainian text" in their art (colors, themes).
+3. **Descriptive Vocabulary**: Using simple adjectives ("гарний", "цікавий") instead of analytical C1 terminology ("динамічний", "експресивний", "лаконічний").
+
+## Cross-References
+- Builds on: B2-HIST (Modules covering the 1920s/Executed Renaissance).
+- Prepares for: C1.5 Folk Culture & Arts (deep dive into folk influences).
+
+## Notes for Content Writing
+- Maintain a balance between biography and art analysis. The focus should be on *visual analysis* skills suitable for C1.
+- Use the "Executed Renaissance" narrative to add emotional weight and historical context.
+- Ensure "Boychukism" is explained clearly as a unique Ukrainian phenomenon (Neo-Byzantinism + Folk).
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Поняття та контекст (Introduction: Concept and Context)"
+  words: 500
+  points:
+  - "Introduce the Ukrainian Avant-Garde (1910-1930s) as a radical synthesis of global modernism and local folk traditions, aligning with State Standard §3.4 on museum and gallery culture."
+  - "Learner error correction: distinguish «модерн» (Art Nouveau/Secession style) from «модернізм» (the broader 20th-century movement) to ensure stylistic precision at the C1 level."
+- section: "Київське коріння світового авангарду (Kyiv Roots of the World Avant-Garde)"
+  words: 900
+  points:
+  - "Detailed study of Kazimir Malevich’s «Kyiv period» (1928-1930) and his claims that folk embroidery and «pysankarstvo» shaped his suprematist color vision."
+  - "Pedagogical correction of the «Russian-only» label for Malevich and Archipenko by highlighting their Kyiv roots, self-identification, and the «Ukrainian text» in their art."
+  - "Alexandra Exter’s cubofuturism: exploring the bridge between folk theatricality, peasant embroidery patterns, and radical stage design."
+- section: "Напрямки та школи: Бурлюк, Архипенко, Бойчук (Movements and Schools: Burlyuk, Archipenko, Boychuk)"
+  words: 1000
+  points:
+  - "David Burlyuk as the «father of Ukrainian futurism» and Alexander Archipenko’s revolutionary sculptural cubism that changed world aesthetics."
+  - "Mykhailo Boychuk and the phenomenon of «Boychukism»: blending Neo-Byzantinism with folk monumentalism to create a unique national artistic language."
+  - "Drill: Using descriptive C1 vocabulary such as «динамічний» (dynamic), «експресивний» (expressive), and «лаконічний» (laconic) instead of generic adjectives like «гарний»."
+- section: "Трагедія «Спецфонду» та Розстріляне відродження (The Tragedy of the 'Special Fund' and Executed Renaissance)"
+  words: 1000
+  points:
+  - "The tragic narrative of the «Executed Renaissance»: the systemic destruction of avant-garde artists during Stalinist repressions (Cross-ref: B2-HIST)."
+  - "The «Special Fund» (Спецфонд) of the National Art Museum: how courageous museum workers hid «formalist» art to save it for future generations."
+  - "Historical analysis of the term «репресоване мистецтво» (repressed art) and the process of its contemporary 're-discovery' and rehabilitation."
+- section: "Практика: Мистецтвознавчий аналіз (Practice: Art History Analysis)"
+  words: 600
+  points:
+  - "Guided visual analysis of a suprematist composition: focus on «безпредметність» (objectlessness), «колористика» (coloristics), and geometric rhythm."
+  - "Creative production: Write a comparative essay on the distinctive features of Ukrainian avant-garde (color, folk ties) vs. the broader international movement."
+  - "State Standard §4.4.1.1 practice: employ the «artistic style» of language (epithets, metaphors) to describe the emotional and aesthetic impact of a specific artwork."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "авангард (avant-garde) — український авангард, представник авангарду; high frequency in art discourse"
+  - "безпредметний (non-objective/abstract) — безпредметне мистецтво, світ безпредметності; key term for abstract philosophy"
+  - "супрематизм (suprematism) — засновник супрематизму, супрематична композиція; Malevich-specific terminology"
+  - "кубофутуризм (cubo-futurism) — естетика кубофутуризму, синтез мистецтв; specialized register for 1920s experiments"
+  - "монументалізм (monumentalism) — школа монументалізму, бойчукісти-монументалісти; refers to grand-scale public art"
+  - "колористика (coloristics) — народна колористика, локальні кольори; high frequency for analytical descriptions"
+  - "репресований (repressed) — репресоване мистецтво, репресовані митці; critical historical and political register"
+  recommended:
+  - "формалізм (formalism) — ідеологічне звинувачення в СРСР; used in the context of state censorship"
+  - "динаміка (dynamics) — внутрішня динаміка твору; used for describing visual movement"
+  - "лаконічність (laconicism/brevity) — лаконічність форми; indicator of C1-level stylistic description"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4169 chars)
+✅ Message sent to Claude (ID: 10800)
+✓ Message 10800 acknowledged
+   Auto-acknowledged reply #10800 (stdout delivery — no inbox accumulation)
+✓ Message 10793 acknowledged

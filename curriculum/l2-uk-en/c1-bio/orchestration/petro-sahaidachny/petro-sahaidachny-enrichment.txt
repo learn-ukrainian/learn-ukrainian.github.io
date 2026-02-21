@@ -1,0 +1,261 @@
+✅ Message sent to Gemini (ID: 12015) [auto-acked: self-addressed]
+✓ Message 12015 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12015...
+📨 Message #12015
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-petro-sahaidachny
+   Time: 2026-02-20T23:35:17.434787+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-bio-20
+level: C1-BIO
+sequence: 20
+slug: petro-sahaidachny
+version: '2.0'
+title: 'Петро Сагайдачний: Гетьман-Державник'
+subtitle: 'Petro Sahaidachny: The Statesman Hetman'
+content_outline:
+- section: Вступ — Меч і Хрест
+  points:
+  - Найвидатніший гетьман до Хмельницького
+  - Перетворення козацтва на регулярне військо
+  - Союз меча (козаків) і хреста (церкви)
+- section: Життєпис
+  points:
+  - Походження (шляхтич з Самбора)
+  - Освіта в Острозькій академії (М14)
+  - Морські походи на Кафу, Синоп, Варну (звільнення невільників)
+  - Похід на Москву (1618)
+  - Відновлення православної ієрархії (1620)
+  - Хотинська битва (1621) — порятунок Європи
+  - Смерть від рани у Києві
+- section: Історичний контекст
+  points:
+  - Доба героїчних морських походів
+  - Тридцятилітня війна в Європі
+  - Занепад православ'я після унії
+- section: Внесок та Спадщина
+  points:
+  - Реформа війська (дисципліна, мушкети)
+  - '"Військо Запорозьке" вступає до Київського братства'
+  - Київ знову стає культурним центром (Могилянка)
+- section: Порівняльний аналіз
+  points:
+  - Сагайдачний vs. Наливайко (лояльність vs бунт)
+  - Сагайдачний vs. Дорошенко (стратегічне бачення)
+vocabulary_hints:
+  required:
+  - чайка (chaika/boat)
+  - реєстр (register)
+  - дисципліна (discipline)
+  - ієрархія (hierarchy)
+  - патріарх (patriarch)
+  - братство (brotherhood)
+  - облога (siege)
+  - штурм (assault)
+  - невільник (captive/slave)
+  - меценат (philanthropist)
+activity_hints:
+- type: reading
+  focus: '"Verses on the Funeral of Sahaidachny" (1622)'
+- type: essay-response
+  focus: Why Sahaidachny supported the Church?
+focus: biography
+pedagogy: CBI
+objectives:
+- Analyze Sahaidachny's reforms of the Cossack army
+- Evaluate the restoration of the Orthodox hierarchy (1620)
+- Discuss the Battle of Khotyn (1621)
+grammar:
+- Political vocabulary
+- Military strategy terms
+sources:
+- name: Петро Конашевич-Сагайдачний (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Петро_Конашевич-Сагайдачний
+  type: primary
+- name: Хотинська битва 1621
+  url: https://uk.wikipedia.org/wiki/Хотинська_битва_(1621)
+  type: primary
+immersion: 100% Ukrainian
+phase: C1-BIO
+persona:
+  voice: Senior Biographer
+  role: Naval Commander
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Петро Сагайдачний: Гетьман-Державник
+
+## Використані джерела
+1. [Енциклопедія історії України: Сагайдачний Петро Конашевич](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Sagajdachnyj_P) — фундаментальна академічна стаття.
+2. [Ізборник: Касіян Сакович "Вірші на жалісний погреб..."](http://litopys.org.ua/old17/old17_08.htm) — першоджерело, панегірик 1622 року.
+3. [Енциклопедія Сучасної України: Хотинська війна 1621](https://esu.com.ua/article-87989) — деталі Хотинської кампанії.
+4. [Сас П. М. Петро-Конашевич – Сагайдачний: Молоді роки](http://resource.history.org.ua/item/0007629) — дослідження раннього періоду та Острозької академії.
+
+## Хронологія
+- бл. 1582: Народження в с. Кульчиці (Руське воєводство).
+- 1592–1598: Навчання в Острозькій академії (курс "семи вільних мистецтв").
+- 1616: Здобуття Кафи, звільнення тисяч невільників. Обрання гетьманом.
+- 1618: Похід на Москву («Сагайдачний, що Москві подих перехопив»), Деулінське перемир'я.
+- жовтень 1620: Вступ усього Війська Запорозького до Київського братства.
+- 1620: Відновлення православної ієрархії (висвячення Йова Борецького патріархом Феофаном III).
+- 1621: Хотинська битва. Вирішальна роль козаків у порятунку Речі Посполитої.
+- 10 (20) квітня 1622: Смерть у Києві від ран. Поховання у Братському монастирі.
+
+## Ключові факти та цитати
+- **Вступ до братства**: «Року 1620 гетьман Петро Сагайдачний з усім Військом Запорозьким до Братства вписався» — політичний маніфест союзу "меча і хреста".
+- **Характеристика (Яків Собеський)**: «Був це чоловік великого духу, що сам шукав небезпеки, легковажив життям, у битві був першим, у відвороті останнім».
+- **Цитата з "Віршів" Саковича**:
+  > «Не особою гетьман, а військом є славний, / Також гетьманом — військо, і доказ то явний».
+- **Цитата про вольність**:
+  > «Золотою у світі її [вольність] називають, / Доступитись до неї всі пильно жадають: / Та не кожному може вона бути дана, / Тільки нам, що боронять вітчизну і Пана».
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ — Меч і Хрест": [!myth-buster] — Сагайдачний не був "слугою Польщі", він будував "державу в державі", використовуючи легальні механізми.
+- Section "Життєпис": [!history-bite] — Про "козацький флот": чайки Сагайдачного контролювали Чорне море краще за османські галери.
+- Section "Життєпис" (Москва): [!decolonization] — Російські підручники називають це "польською інтервенцією", замовчуючи, що ударною силою були 20 тисяч українців, які "розписалися" на стінах Кремля.
+- Section "Життєпис" (Хотин): [!legacy] — Якби не Сагайдачний під Хотином, Віденська битва 1683 року могла б не знадобитися — турки були б у Центральній Європі на 60 років раніше.
+- Section "Внесок та Спадщина": [!context] — Острозька академія як "український Оксфорд", де формувався світогляд гетьмана.
+- Section "Порівняльний аналіз": [!analysis] — Сагайдачний vs Наливайко: еволюція від бунту до системної політики.
+
+## Деколонізаційний контекст
+- **Imperial Myth**: Сагайдачний як провідник "возз'єднання" (радянський наратив про місію 1620 року до Москви).
+- **Ukrainian Reality**: Місія 1620 року була дипломатичним зондажем, а не проханням про підданство. Сагайдачний будував суб'єктність України як "третього члена" Речі Посполитої (поряд з Польщею та Литвою).
+- **Термінологія**: Вживання терміну "руський" (ruthenian) народ/віра, а не "російський". Відновлення Київської митрополії — це акт незалежності від Москви (яка претендувала на гегемонію).
+
+## Contested Terms
+| Concept | Imperial/Soviet framing | Ukrainian (decolonized) framing |
+|---------|------------------------|-------------------------------|
+| Похід 1618 року | "Польська інтервенція", замовчування участі козаків | Найуспішніший український наступ на Москву; демонстрація військової переваги козацького ладу. |
+| Лояльність королю | "Зрада інтересів народу", "шляхетський підлабузник" | Прагматичний легітимізм; використання королівської влади для легалізації православної церкви та розширення козацьких прав. |
+| "Захист віри" | Інструмент класової боротьби (в радянській історіографії) | Фундамент національної ідентичності; перетворення козацтва з найманців на "лицарів православ'я". |
+
+## Section-Mapped Research Notes
+
+### Вступ — Меч і Хрест
+Сагайдачний трансформував козацтво з розрізнених ватаг у регулярне військо з залізною дисципліною. Його формула успіху: союз військової сили (козаки) та інтелектуальної еліти (духовенство, братства). Це перетворило козаччина на національно-політичний чинник.
+
+### Життєпис
+- **Освіта**: Вплив Острозької академії. Знання латини, риторики. Це не був "простий рубака".
+- **Морські походи**: Геополітика "ударів по тилах". Звільнення невільників як сакральна місія (підвищувало авторитет). Взяття Кафи — удар по работоргівлі.
+- **Московська кампанія 1618**: Блискавичний рейд. Взяття міст "списом і шаблею". Врятування армії Владислава. Деулінське перемир'я повернуло Чернігівщину (етнічні українські землі) до складу Речі Посполитої, що згодом дозволило створити там козацький полковий устрій.
+- **Хотин 1621**: Кульмінація. Сагайдачний прибув під Хотин вже пораненим, але його авторитет тримав оборону. Тактика "рухомого табору" і нічних вилазок.
+
+### Історичний контекст
+Європа у вогні Тридцятилітньої війни (1618–1648). Католицька реакція (Контрреформація). Берестейська унія 1596 року залишила православних "поза законом". Сагайдачний діяв у час екзистенційної загрози для української ідентичності.
+
+### Внесок та Спадщина
+- **Церква**: 1620 рік — відновлення ієрархії. Йов Борецький — перший митрополит після унії. Це легалізувало структуру церкви.
+- **Освіта**: Вступ "усім військом" до братства — це фінансова і фізична протекція. Меценатство (заповіт на школи).
+- **Військова реформа**: Заміна луків на вогнепальну зброю (мушкети), піхотна тактика, маневреність, "табір".
+
+### Порівняльний аналіз
+- **vs Наливайко**: Наливайко — стихія, бунт, трагічний кінець. Сагайдачний — система, компроміс, політичні здобутки.
+- **vs Дорошенко**: Обидва "державники", але Дорошенко шукав опори в Туреччині ("Сонце Руїни"), Сагайдачний — в Речі Посполитій (поки це було можливо).
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12094)
+✓ Message 12015 acknowledged
+✓ Message 12094 acknowledged

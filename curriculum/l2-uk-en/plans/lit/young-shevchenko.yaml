@@ -1,0 +1,99 @@
+sequence: 11
+module: lit-11
+level: LIT
+slug: young-shevchenko
+version: '2.0'
+title: 'Тарас Шевченко: Від Кріпака до Пророка'
+subtitle: 'LIT-011: Анатомія Генія'
+content_outline:
+- section: Вступ — Світ кріпацтва
+  points:
+  - Історичний контекст (1814-1840)
+  - Що таке кріпацтво і як воно працювало
+  - Шанси кріпака стати вільним
+- section: Дитинство і юність (1814-1831)
+  points:
+  - Село Моринці та родина
+  - Дякова школа і перші малюнки
+  - '"Козачок" пана Енгельгардта'
+- section: Петербург — місто контрастів
+  points:
+  - Переїзд до столиці імперії
+  - Зустріч з Іваном Сошенком
+  - Літній сад — доленосна зустріч
+- section: Викуп — детективна історія
+  points:
+  - Брюллов, Жуковський, Венеціанов
+  - Лотерея з портретом Жуковського
+  - 2500 рублів — ціна свободи
+- section: Академія і "Кобзар"
+  points:
+  - Навчання у Брюллова
+  - 1840 рік — вихід "Кобзаря"
+  - Психологія "вільної людини"
+- section: Підсумок — Шанс, Талант, Солідарність
+  points:
+  - Формула успіху Шевченка
+  - Роль випадку в історії
+  - Перехід до аналізу творчості
+vocabulary_hints:
+  required:
+  - кріпацтво (serfdom)
+  - кріпак (serf)
+  - поміщик (landowner)
+  - панщина (corvée)
+  - викуп (ransom/redemption)
+  - дяк (church clerk/teacher)
+  - академія (academy)
+  - лотерея (lottery)
+  - пророк (prophet)
+  - геній (genius)
+  recommended:
+  - козачок (servant boy)
+  - меценат (patron)
+  - портрет (portrait)
+  - живопис (painting)
+  - свобода (freedom)
+activity_hints:
+- type: reading
+  focus: Біографічні матеріали про Шевченка
+  source: UkrLib biography
+  items: 4+
+- type: essay-response
+  focus: Роль випадку в долі генія
+  output: Біографічне есе
+focus: biography
+pedagogy: literature
+prerequisites:
+- lit-01 to lit-10 (Kotliarevsky and Kvitka phases)
+- Understanding of early 19th century Ukraine
+connects_to:
+- lit-12 (The Ballads — рання творчість)
+- lit-17 (The Artist — Шевченко-маляр)
+objectives:
+- Outline Shevchenko's path to freedom
+- Analyze the role of the 1838 lottery
+- Explore the "Romantic Hero" image
+grammar:
+- Historical narrative style
+- Biography lexicon
+- Art and freedom vocabulary
+module_type: biography
+sources:
+- name: Тарас Шевченко — біографія
+  url: https://www.ukrlib.com.ua/bio/printit.php?tid=1749
+  type: primary
+  notes: Офіційна біографія на UkrLib
+- name: Кобзар — повний текст
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=1
+  type: secondary
+  notes: Для контексту ранньої творчості
+- name: Шевченко і Академія мистецтв
+  url: https://uk.wikipedia.org/wiki/Тарас_Шевченко
+  type: reference
+  notes: Петербурзький період
+immersion: 100% Ukrainian
+phase: LIT.3 The Prophet (Taras Shevchenko)
+persona:
+  voice: Senior Philologist & Critic
+  role: Young Artist

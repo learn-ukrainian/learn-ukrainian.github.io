@@ -1,4 +1,3 @@
----
 sequence: 96
 module: ruth-096
 module_number: 96
@@ -9,7 +8,6 @@ phase: 4
 phase_id: cossack-word
 phase_name: Cossack Word
 focus: Visible vs Invisible world
-word_target: 4000
 content_outline:
 - section: Вступ
   description: Introduction to The Two Natures
@@ -24,3 +22,6 @@ activity_types:
 - transcription
 - etymology-trace
 - grammar-identify
+persona:
+  voice: Baroque Scholar
+  role: Dualist Theologian

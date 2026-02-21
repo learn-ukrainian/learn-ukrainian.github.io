@@ -1,64 +1,38 @@
-# Research: B1 M20 "Рух: наближення і віддалення"
+# Дослідження: Рух: наближення і віддалення
 
-**Level Analysis**: While the provided prompt context listed "A1 (beginner)", the module code (B1 M20) and topic (Prefixed Motion Verbs) belong strictly to the **B1 level**. This research reflects the B1 complexity required for this topic, as A1 students with only "basic alphabet" knowledge cannot grammatically handle motion verb prefixes and case governance.
+## State Standard Reference
+§4.3.8: "Утворення префіксальних дієслів руху: іти – прийти, перейти, дійти, відійти, зайти, вийти; їхати – приїхати, переїхати, доїхати, від’їхати, заїхати, поїхати, виїхати, об’їхати."
+Alignment: This module explicitly targets the formation and usage of `від-`, `до-`, and `під-` (implied in the category and standard prefix list) variants of motion verbs, strictly adhering to the B1 requirement for prefixed motion verbs.
 
-## 1. Grammar: State Standard 2024 reference
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| підійти | High (Core) | підійти до вікна, підійти ближче, час підійти (to approach) |
+| відійти | High (Core) | відійти від краю, поїзд відійшов, відійти в минуле (figurative) |
+| дійти | High (Core) | дійти додому, дійти згоди (figurative), дійшли чутки |
+| наближення | Medium (Academic/News) | наближення свята, міра наближення (math), почуття наближення |
+| віддалення | Medium (Academic/Formal) | ефект віддалення, у міру віддалення, поступове віддалення |
 
-According to the **State Standard of Ukrainian Language as a Foreign Language (2024)** (Annex 2, Level B1):
+## Cultural Hooks
+1. **Присісти на дорогу** (Sit for the road): A persistent Ukrainian superstition/tradition where travelers sit in silence for a moment before leaving the house. Originally to "trick" house spirits (domovyk) into thinking no one is leaving so they don't follow, now a practical moment to collect thoughts and check for passports/tickets.
+2. **Проводи** (Farewells): Traditional railway station culture in Ukraine involves long goodbyes on the platform, waiting until the train physically moves (`поїзд рушив/відійшов`) before leaving. The verb `відходити` is strongly associated with the train schedule (`поїзд відходить о...`).
 
-> **Lexical and Grammatical Competence (B1)**:
-> "Verbs of motion without prefixes and with prefixes (*в-, ви-, при-, по-, під-, від-, до-, пере-, про-, за-, об-*) to denote direction, overcoming space, beginning and end of movement."
+## Common Learner Errors
+1. **під- vs. при-**: Learners often use *підійти* (approach/come up to) when they mean *прийти* (arrive/come).
+    *   *Error*: Я підійшов додому о 6-й. (I approached home at 6).
+    *   *Correction*: Я прийшов додому о 6-й. (I arrived home at 6).
+    *   *Reason*: Confusion between "coming up to" vs "arriving at".
+2. **до- vs. при-**: Confusion between reaching a limit (`дійти до`) and general arrival.
+    *   *Error*: Я дійшов до парку. (Grammatically correct but implies a long trek/effort).
+    *   *Context*: Use `дійти` when emphasizing the *process* of walking all the way there, or reaching a specific point, not just generic arrival.
+3. **від- vs. ви-**: Confusing "away from" (`від-`) with "out of" (`ви-`).
+    *   *Error*: Я відійшов з кімнати. (I stepped away from the room - awkward).
+    *   *Correction*: Я вийшов з кімнати. (I went out of the room).
 
-Specifically for this module:
-*   **Prefix під- (approximation)**: *підходити, під’їжджати* (+ preposition *до* + Genitive case).
-*   **Prefix від- (distancing)**: *відходити, від’їжджати* (+ preposition *від* + Genitive case).
+## Cross-References
+- **Builds on**: b1-19 (Motion - starting & returning)
+- **Prepares for**: b1-21 (Motion - figurative uses), b1-22 (Motion full prefix integration)
 
-## 2. Vocabulary frequency
-
-### High Frequency (Core B1)
-These pairs are essential for daily navigation and logistics.
-
-*   **підхо́дити / підійт́и** (to approach on foot)
-    *   Collocations: *підійти до каси* (approach the checkout), *підійти до карти* (approach the map), *поїзд підходить* (the train is approaching/arriving).
-*   **відхо́дити / відійт́и** (to move away on foot; to depart)
-    *   Collocations: *відійти від вікна* (move away from the window), *поїзд відходить* (the train is departing).
-*   **під’їжджа́ти / під’ї́хати** (to approach by vehicle; to drive up)
-    *   Collocations: *таксі під’їхало* (the taxi pulled up), *під’їхати до входу* (drive up to the entrance).
-*   **від’їжджа́ти / від’ї́хати** (to drive away; to depart by vehicle)
-    *   Collocations: *автобус від’їжджає* (the bus is leaving).
-
-### Lower Frequency (Contextual)
-*   **наближа́тися / набли́зитися** (to draw near - more abstract/formal)
-*   **віддаля́тися / віддали́тися** (to move into the distance - often literary or visual context)
-
-## 3. Cultural hook
-
-*   **Public Transport Etiquette**: In crowded Ukrainian transport (metro/bus), "approach" and "move away" logic is critical. People specifically ask *"Ви виходите?"* (Are you getting off/leaving?) to signal they need to move towards the door.
-*   **"Running Late" Culture**: The usage of *поїзд відходить* (the train is departing) is often heard in station announcements. Unlike the static "departure time", the continuous aspect *відходить* implies the immediate action of leaving, creating urgency.
-*   **Social Distance**: In Ukrainian culture, *підійти* implies entering someone's personal space to speak. It is polite to make eye contact before you *підійти*.
-
-## 4. Pedagogical notes
-
-*   **The "Towards" Trap**: English speakers often want to use the Dative case (logic: giving to someone) or just Accusative. In Ukrainian, **під- requires *до* + Genitive**.
-    *   *Error*: Я підійшов *другу*. (Incorrect)
-    *   *Correct*: Я підійшов **до друга**. (Correct)
-*   **The "From" Symmetry**: The prefix *від-* mirrors the preposition *від*. This symmetry helps memorization.
-    *   *Rule*: **від**ходить **від** (moves away from).
-*   **Foot vs. Vehicle Distinction**: Students must strictly maintain the *ходити* vs *їздити* root distinction. "The car walked up to the house" (*машина підійшла*) sounds comical; it must be *під’їхала*.
-*   **Figurative Meanings**: Be careful with *підходити* in the sense of "to suit" (e.g., "This color suits you" — *Тобі підходить цей колір*). While high frequency, it usually governs the Dative case in that meaning, which confuses the spatial rule (*до* + Genitive). It is best to teach the spatial meaning first.
-
-## 5. Scope boundaries
-
-### IN Scope (B1 Level)
-*   **Morphology**: Formation of perfective aspect using prefixes *під-* and *від-*.
-*   **Syntax**:
-    *   *під-* + verb + *до* + Genitive (Object).
-    *   *від-* + verb + *від* + Genitive (Object).
-*   **Contexts**: Physical movement relative to an object (building, person, vehicle).
-*   **Imperative**: *Підійдіть сюди!* (Come here!), *Відійди!* (Step back!).
-
-### OUT of Scope (Save for B2)
-*   **Figurative "Suitability"**: *Це мені не підходить* (This doesn't suit/fit me) — distinct grammatical governance (Dative).
-*   **Complex Prefixes**: *Попід-* (under/along), *з-під* (from under).
-*   **Abstract "Approaching"**: Approaching a problem/topic (*підійти до вирішення проблеми*).
-*   **Nuanced Motion**: *Відступити* (to step back/retreat - military/tactical), *насуватися* (to loom/approach threateningly).
+## Notes for Content Writing
+- **Prepositions**: Ensure strict enforcement of preposition usage: `підійти ДО` (genitive), `відійти ВІД` (genitive). This is a critical grammatical anchor.
+- **Nuance**: Highlight that `підійти` implies getting *close* to something (proximity), whereas `дійти` implies reaching the *end* of a path (destination).

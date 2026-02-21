@@ -1,0 +1,64 @@
+{
+  "module": "holidays-and-traditions",
+  "level": "A1",
+  "plan_version": "2.0",
+  "last_audit": "2026-02-21T01:01:46.130321Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-02-20T23:08:48.595695Z",
+    "meta": "2026-02-20T01:41:22.143981Z",
+    "activities": "2026-02-20T23:08:48.597301Z",
+    "vocabulary": "2026-02-20T01:39:18.493233Z",
+    "plan": "2026-02-20T20:42:31.275306Z",
+    "research": "2026-02-20T01:36:36.226218Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "2601/2000 (raw: 2852)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "10/8"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "20/1"
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "ipa": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Clean IPA"
+    },
+    "research": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Content aligned with research"
+    },
+    "review": {
+      "status": "pass",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 7,
+    "fail_count": 0,
+    "deferred_count": 0
+  }
+}

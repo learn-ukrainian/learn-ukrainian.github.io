@@ -1,0 +1,301 @@
+✅ Message sent to Gemini (ID: 10177) [auto-acked: self-addressed]
+✓ Message 10177 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10177...
+📨 Message #10177
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-numerals-and-nouns
+   Time: 2026-02-20T20:00:54.682293+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: a2-21
+level: A2
+sequence: 21
+slug: numerals-and-nouns
+version: '2.0'
+title: Numerals and Nouns
+subtitle: Counting Things Correctly
+content_outline:
+- section: Introduction / Вступ
+  points:
+  - 'The concept of ''Zones'' in Ukrainian counting — use the mental model of Zone
+    1 (1), Zone 2 (2-4), Zone 3 (5-20) to simplify logic — Zone 1: ''1'' (Gender agreement);
+    Zone 2: ''2-4'' (Nominative Plural); Zone 3: ''5-20'' (Genitive Plural)'
+  - 'Why English logic fails here — mention State Standard §4.2.1.3 regarding quantitative
+    designation — learner error: assuming plural ''s'' works for all numbers > 1'
+- section: Presentation / Презентація
+  points:
+  - 'Zone 1: One (Agreement in gender) — learner error: forgetting gender agreement
+    for ''один''/''одна''/''одне'' (e.g., ''два пляшки'' instead of ''дві пляшки'');
+    collocations: один долар, одна година, одне вікно'
+  - 'Zone 2: Two, Three, Four (The dual trace - Genitive Singular) — cultural hook:
+    The Dual Legacy (Двоїна) explains the specific stress patterns that echo the old
+    dual number; learner error: L1 Interference (Russian) often leads to using Genitive
+    Singular (два стола) instead of Ukrainian Nominative Plural (два столи)'
+  - 'Zone 3: Five to Twenty (The Genitive Plural zone) — learner error: The ''11-14''
+    Trap — learners often apply the ''Last Digit Rule'' (1-4) to teens, forgetting
+    they belong entirely to Zone 3; collocations: п''ять гривень, десять євро, двадцять
+    хвилин'
+  - 'Compound Numbers: The ''Last Digit'' Rule — emphasize that only the *last word*
+    determines the agreement zone (e.g., 21 -> Zone 1, 22 -> Zone 2)'
+  - 'Exceptions: 11-14 — reinforce that 11-14 belong strictly to Zone 3 (Genitive
+    Plural) despite ending in 1-4'
+- section: Practice / Практика
+  points:
+  - Market counting drills — use market context (ринок) for natural repetition of
+    counting currency (гривні) and products (яблука, пляшки)
+  - 'Currency agreement (Gryvnia/Dollar) — cultural hook: Kyivan Rus Currency — ''Gryvnia''
+    was a unit of weight in IX-XIII centuries; collocations: дві гривні vs п''ять
+    гривень, один долар vs три долари'
+- section: Dialogues / Діалоги
+  points:
+  - 'Buying products in specific quantities at a market — include Animacy distinction
+    (Accusative case): ''Бачу два столи'' (inanimate = Nom) vs ''Бачу двох друзів''
+    (animate = Gen-like form)'
+activity_hints:
+- type: quiz
+  focus: Accusative with numerals (animate vs inanimate)
+  items: 8
+- type: fill-in
+  focus: Dative with numerals
+  items: 8
+- type: true-false
+  focus: Numeral case rules
+  items: 8
+focus: grammar
+pedagogy: PPP
+objectives:
+- Learner can use correct noun forms with numerals 1, 2-4, and 5+
+- Learner can identify agreement zones for compound numbers
+- Learner can use numerals in shopping contexts
+- Learner can count years and age
+- Learner can use numerals in accusative (animate vs inanimate)
+- Learner can use numerals in dative case
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Numerals
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Numeral-noun agreement requirements for A2
+- name: Historical Ukrainian Grammar - Dual Number
+  url: https://uk.wikipedia.org/wiki/Двоїна
+  type: reference
+  notes: Context for the 2-4 agreement pattern
+immersion: 60-75% Ukrainian
+phase: A2.2
+persona:
+  voice: Encouraging Cultural Guide
+  role: Inventory Manager
+vocabulary_hints:
+  required:
+  - один / одна / одне (one) — один долар, одна година, одне вікно
+  - 'два / дві (two) — два квитки, дві гривні, дві пляшки — learner error: gender
+    agreement'
+  - три (three) — три дні, три гривні — Zone 2 agreement
+  - чотири (four) — чотири роки — Zone 2 agreement
+  - п'ять (five) — п'ять гривень, п'ять доларів — Zone 3 agreement
+  - десять (ten) — десять євро, десять хвилин — Zone 3 agreement
+  - двадцять (twenty) — двадцять хвилин — Zone 3 agreement
+  - 'гривня (hryvnia) — три гривні, п''ять гривень, десять гривень — Cultural note:
+    Kyivan Rus currency'
+  - долар (dollar) — один долар, три долари, п'ять доларів
+  - євро (euro) — десять євро — Indeclinable noun
+word_target: 3000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Numerals and Nouns
+
+## State Standard Reference
+§4.2.1.3 & §4.2.2.2: "позначення кількості та міри в поєднанні з кількісними числівниками: Ми маємо вісімдесят гривень. ... суб’єкт кількісної вікової ознаки: Дідусеві вісімдесят років."
+Alignment: This module systematically addresses the morphological agreement and case usage requirements for A2 learners, specifically focusing on the cardinal numeral paradigms and their interaction with noun cases (Nominative and Genitive).
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| один / одна / одне | Very High (Core) | один долар, одна година, одне вікно |
+| два / дві | Very High (Core) | два квитки, дві гривні, дві пляшки |
+| три, чотири | High (Core) | три дні, чотири роки, три гривні |
+| п'ять, десять, двадцять | High (Core) | п'ять гривень, десять євро, двадцять хвилин |
+| гривня | High (Market context) | три гривні, п'ять гривень, десять гривень |
+| долар / євро | High (Travel/Finance) | один долар, три долари, п'ять доларів |
+
+## Cultural Hooks
+1. **The Dual Legacy (Двоїна)**: Historically, Ukrainian had a dual number (separate from singular and plural). While it officially disappeared, it left a "trace" in the modern agreement of numerals 2, 3, and 4. In standard Ukrainian, these take the Nominative Plural, but with a specific stress pattern that often echoes the old dual (e.g., дві кни́ги). (Source: Wikipedia - Двоїна в українській мові)
+2. **Kyivan Rus Currency**: The "Gryvnia" (гривня) isn't just modern money; it was a unit of weight and currency in Kyivan Rus (IX-XIII centuries). Using it for counting drills connects learners to a millennium of history. (Source: National Bank of Ukraine - History of the Hryvnia)
+
+## Common Learner Errors
+1. **L1 Interference (Russian)**: Learners with Russian background often use Genitive Singular for 2, 3, 4 (e.g., *два стола* instead of *два столи*). Ukrainian requires the Nominative Plural in these zones.
+2. **Gender Agreement Failure**: Forgetting that numerals '1' and '2' must agree with the noun's gender (e.g., *два пляшки* instead of *дві пляшки*).
+3. **The "11-14" Trap**: Learners often apply the "Last Digit Rule" (1, 2-4 zones) to 11, 12, 13, 14, forgetting that these "teens" belong entirely to the Genitive Plural zone (Zone 3).
+
+## Cross-References
+- Builds on: `a1-01` (Nominative), `a1-11` (Accusative), `a1-12` (Basic Numerals 1-20).
+- Prepares for: `b1-numerals-declension` (Full declension in all cases), `b2-business-ukrainian` (Complex financial counting).
+
+## Notes for Content Writing
+- **The "Zone" Concept**: Use the "Zone" mental model (Zone 1: '1'; Zone 2: '2,3,4'; Zone 3: '5-20') as it simplifies the logic for A2 learners better than listing 20 individual rules.
+- **Last Digit Rule**: Emphasize that for compound numbers (21, 54, etc.), only the *last word* determines the agreement zone.
+- **Market Context**: Use the market (ринок) as the primary setting for examples. It allows for natural repetition of counting currency (гривні) and products (яблука, пляшки, кілограми).
+- **Animacy**: Briefly touch upon the Accusative case distinction: "Бачу два столи" (inanimate = Nom) vs "Бачу двох друзів" (animate = Gen-like form), as per the plan objectives.
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 450
+  points:
+  - "The concept of 'Zones' in Ukrainian counting — introduction of the mental model: Zone 1 (1), Zone 2 (2-4), and Zone 3 (5-20) to replace the binary English singular/plural logic."
+  - "State Standard §4.2.1.3 Alignment: Understanding the systemic requirements for designating quantity and measure in connection with cardinal numerals at the A2 level."
+  - "Cultural Hook: Kyivan Rus Currency — The 'Gryvnia' (гривня) as a IX-XIII century unit of weight and currency, grounding modern counting drills in a millennium of history."
+- section: "Презентація: Зони 1 та 2 (Presentation: Zones 1 and 2)"
+  words: 750
+  points:
+  - "Zone 1: The 'One' Rule — Focus on mandatory gender agreement (один долар, одна година, одне вікно); specific drill to prevent the error of using masculine for feminine nouns (e.g., 'один гривня')."
+  - "Zone 2: Two, Three, Four (The Nominative Plural Zone) — Explanation of why Ukrainian differs from Russian; L1 Interference Alert: Russian speakers often use Genitive Singular (*два стола*), but Ukrainian requires Nominative Plural (два столи)."
+  - "Cultural Hook: The Dual Legacy (Двоїна) — Explaining why numbers 2-4 trigger unique patterns; mention the specific stress 'traces' left in modern Ukrainian (e.g., дві кни́ги vs дві книжкИ) that reflect the ancient dual number."
+  - "Gendered 'Two': Distinguishing between 'два' (masc/neut) and 'дві' (fem); correcting the common learner error of 'два пляшки' to 'дві пляшки'."
+- section: "Презентація: Зона 3 та Складні Числівники (Presentation: Zone 3 and Compound Numerals)"
+  words: 750
+  points:
+  - "Zone 3: Five to Twenty (The Genitive Plural Zone) — Establishing the pattern for п'ять, десять, двадцять (п'ять гривень, десять євро); focus on the phonetics of soft endings."
+  - "The '11-14' Trap: Reinforcing that numerals 11-14 belong strictly to Zone 3 (Genitive Plural) despite ending in digits 1-4; preventing the over-application of the 'Last Digit Rule'."
+  - "Compound Numerals and the 'Last Digit' Rule: Demonstrating that in numbers like 21, 34, or 55, only the final word determines the agreement zone (e.g., 21 follows Zone 1 logic; 24 follows Zone 2)."
+  - "State Standard §4.2.2.2: Subject of Age — Using numerals to express age (Дідусеві вісімдесят років), focusing on the specific Genitive Plural forms required for 'years' (років vs роки)."
+- section: "Практика на Ринку (Market Practice)"
+  words: 600
+  points:
+  - "Market Context (Ринок): Immersion drills for natural repetition of counting currency and products (яблука, пляшки, кілограми) in a transactional setting."
+  - "Currency Agreement: Drills comparing 'дві гривні' (Zone 2) vs 'п'ять гривень' (Zone 3) and 'один долар' vs 'три долари'."
+  - "The 'Euro' Exception: Introducing 'євро' as an indeclinable noun that remains constant regardless of the numeral (одне євро, десять євро), providing a cognitive break from complex agreement rules."
+- section: "Діалоги та Одушевленість (Dialogues and Animacy)"
+  words: 450
+  points:
+  - "Animacy Distinction in Accusative: Introducing the shift for animate objects with numerals; 'Бачу два столи' (inanimate = Nominative form) vs 'Бачу двох друзів' (animate = Genitive-like form)."
+  - "Shopping Dialogues: Roleplay involving specific quantities, prices, and ages of products (e.g., 'Цьому вину п'ять років'), integrating all three zones."
+  - "Summary: Recapping the 'Zone' model as a tool for self-correction when moving from A2 building blocks to B1 complexity."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "один / одна / одне (one) — Very High frequency; collocations: один долар, одна година, одне вікно"
+  - "два / дві (two) — High frequency; collocations: два квитки, дві гривні, дві пляшки; note gender agreement"
+  - "три (three) — High frequency; три дні, три гривні; Zone 2 agreement"
+  - "чотири (four) — High frequency; чотири роки; Zone 2 agreement"
+  - "п'ять (five) — High frequency; п'ять гривень, п'ять доларів; Zone 3 agreement"
+  - "десять (ten) — High frequency; десять євро, десять хвилин; Zone 3 agreement"
+  - "двадцять (twenty) — High frequency; двадцять хвилин; Zone 3 agreement"
+  - "гривня (hryvnia) — High frequency (Market); Cultural note: unit of weight in Kyivan Rus"
+  - "долар (dollar) — High frequency (Travel/Finance); один долар, три долари, п'ять доларів"
+  - "євро (euro) — High frequency (Finance); десять євро; Note: indeclinable"
+  recommended:
+  - "ринок (market) — primary context for counting drills"
+  - "кілограм (kilogram) — collocation for market counting"
+  - "пляшка (bottle) — collocation for 'два/дві' gender drill"
+  - "рік / роки / років (year/years) — for age expressions per State Standard"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4830 chars)
+✅ Message sent to Claude (ID: 10183)
+✓ Message 10183 acknowledged
+   Auto-acknowledged reply #10183 (stdout delivery — no inbox accumulation)
+✓ Message 10177 acknowledged

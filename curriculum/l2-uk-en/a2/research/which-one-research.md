@@ -1,64 +1,41 @@
-# Research: A2 M32 "Який? (Which One?): Relative Clauses"
+# Дослідження: Which One?
 
-## 1. Grammar: State Standard 2024 reference
-According to the **State Standard for Ukrainian as a Foreign Language (Level A2)**:
+## State Standard Reference
+§4.4.2: "Складнопідрядні речення... зі сполучними словами де, куди, звідки... що... тому що, бо... щоб" (Lines 1403-1416).
+**Alignment**: The official A2 text lists common conjunctions but *omits* `який`. Formal introduction of `який` as a relative pronoun appears in B1 (§4.2.1.4, line 2112). However, the **Curriculum Mapping** explicitly assigns `який/яка/яке` to this A2 section (line 1403 in mapping). This module serves as a bridge, introducing the concept of "defining relative clauses" early to enable richer descriptions before the formal B1 deep dive.
 
-> **§ Синтаксис. Складне речення**
-> "Складнопідрядні речення з означальними підрядними частинами. Сполучні слова: *який, яка, яке, які*; *хто, що*."
-> *(Complex sentences with attributive subordinate clauses. Connective words: which, who, that.)*
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| який | Top 20 (General) | який це?, який гарний!, той, який... (the one who/which) |
+| яка | Top 50 | яка різниця? (what's the difference?), дівчина, яка... |
+| яке | Top 100 | яке сьогодні число? (what is the date today?) |
+| які | Top 100 | люди, які... (people who...), які плани? |
+| той | Top 200 | той, хто... (he who...), той самий (the same one) |
 
-This module specifically addresses the competency to describe objects or people using subordinate clauses, moving beyond simple adjectival modification (e.g., "The book is interesting" -> "The book **that I am reading** is interesting").
+## Cultural Hooks
+1. **Folk Wisdom**: "Який пан, такий жупан" (Like master, like coat/jacket) — illustrates how `який` matches the noun it describes, just as a coat matches its owner's status.
+2. **Naming Traditions**: "Як ви човен назвете, так він і попливе" (As you name the boat, so it shall float) — often used to emphasize the importance of defining characteristics (though uses `як` and `так`, it relates to the theme of quality/definition).
+3. **The "Selection" Culture**: At a Ukrainian market (ринок), the question "Який?" is constant. "Який вам зважити?" (Which one should I weigh for you?), "Які помідори найсолодші?" (Which tomatoes are the sweetest?).
 
-## 2. Vocabulary frequency
-### Core Connectives (High Frequency)
-- **який / яка / яке / які** (which/that/who) - The primary relative pronoun. Must be mastered in all genders/numbers.
-- **той / та / те / ті** (that/the one) - Used as a correlative word in the main clause.
-- **хто** (who) - Specifically for "той, хто..." constructions (anyone who / he who).
-- **що** (that/which) - Can replace *який* in Nominative/Accusative (inanimate), common in colloquial speech but less precise for learners initially.
+## Common Learner Errors
+1. **"Who" vs. "Which"**: Using `хто` for people in relative clauses instead of `який`.
+   *   *Error*: Чоловік, **хто** живе тут... (Direct translation of "The man **who** lives here")
+   *   *Correct*: Чоловік, **який** живе тут...
+   *   *Why*: In Ukrainian, `хто` is used in "He who..." (`Той, хто...`) structures, but `який` is used for relative clauses modifying a noun.
+2. **Case Agreement**: Failing to decline `який` within the clause.
+   *   *Error*: Я бачу хлопця, **який** я знаю. (Nominative `який` instead of Accusative)
+   *   *Correct*: Я бачу хлопця, **якого** я знаю.
+   *   *Why*: `Який` must take the case required by the *verb inside the relative clause* (знаю кого? -> якого), not the antecedent.
+3. **The Mandatory Comma**: Omitting the comma before `який`.
+   *   *Error*: Це книга яка мені подобається.
+   *   *Correct*: Це книга, яка мені подобається.
+   *   *Why*: Unlike English restrictive clauses, Ukrainian relative clauses are almost always preceded by a comma.
 
-### Common Collocations (A1/A2 Contexts)
-- **Людина, яка...** (The person who...)
-- **Студент, який...** (The student who...)
-- **Місто, яке...** (The city which...)
-- **Той, хто...** (The one who...)
-- **Все, що...** (Everything that...)
+## Cross-References
+- **Builds on**: A2 Adjective Agreement (Gender/Number), A2 Case System (Nominative/Accusative basis).
+- **Prepares for**: B1 Relative Pronouns (Full Declension), B1 Complex Syntax (`для того, щоб`, `тому що`).
 
-## 3. Cultural hook
-**Proverbs & Wisdom**
-The structure *Той, хто...* (The one who...) is fundamental to Ukrainian proverbs, defining character through action rather than static adjectives.
-- **Example**: *"Не той друг, хто медом маже, а той, хто правду каже."*
-  - *Translation*: A friend is not the one who smears honey [flatters], but the one who tells the truth.
-  - *Context*: Ukrainians value blunt honesty and loyalty over superficial politeness. This grammatical structure is the vehicle for expressing such wisdom.
-
-## 4. Pedagogical notes
-### Key Linguistic Differences (English vs. Ukrainian)
-1.  **Declension of "Which"**: In English, "which/who/that" are invariable. In Ukrainian, *який* behaves like an adjective.
-2.  **The "Double Logic" Rule**:
-    - **Gender/Number** of *який* are determined by the **Antecedent** (the noun in the main clause).
-    - **Case** of *який* is determined by its **Role** in the **Subordinate Clause**.
-    - *Example*: "I see the girl (Acc.) **who** helps (Nom.)" vs "I see the girl (Acc.) **whom** I know (Acc.)".
-
-### Common Learner Errors
-- Using *що* universally for "that" (like English), even when declension is required.
-- Copying the case of the antecedent noun to the relative pronoun (e.g., *Я бачу дівчину (Acc), яку (Acc) допомагає (Subject -> should be Nom)*).
-- Incorrect word order: separating the relative clause from the noun it modifies.
-
-### Teaching Sequence
-1.  **Identification**: Recognize the clause.
-2.  **Gender/Number Agreement**: Match *який* to the noun.
-3.  **Case Selection (Subject)**: *який* as the subject of the sub-clause (Nominative).
-4.  **Case Selection (Object)**: *який* as the direct object (Accusative).
-5.  **Correlatives**: *Той, хто...* constructions.
-
-## 5. Scope boundaries
-### IN Scope
-- **Relative Pronoun *який***: In Nominative, Accusative, and Genitive cases (most frequent). Locative is also possible (*будинок, у якому я живу*).
-- **Correlative *той, хто***: Basic definitions of people.
-- **Punctuation**: Mandatory comma before the relative clause.
-- **Antecedents**: Nouns and pronouns (*він, хто...* / *все, що...*).
-
-### OUT of Scope (Save for B1)
-- **Oblique Cases of *який***: Instrumental or Dative usage should be minimized unless context is very clear, as it adds cognitive load.
-- **Participle Phrases**: Transforming "студент, який читає" into "читаючий студент" is B1/B2.
-- **Possessive Relative *чий***: "The man **whose** car..." (*чий*) is a separate topic.
-- **Adverbial Relatives**: *де*, *куди*, *звідки* as relative connectors (e.g., "The house **where** I live") should be mentioned only as simple alternatives to *в якому*.
+## Notes for Content Writing
+- **Scaffolding Strategy**: Start with Nominative `який` (Subject of the clause) as it matches the form learners know. Introduce Accusative `якого/яку` only in the second half.
+- **Visual Aid**: Use a "Mirror" analogy. `Який` reflects the noun it follows (Gender/Number) but dresses for the job it does inside the new sentence (Case).

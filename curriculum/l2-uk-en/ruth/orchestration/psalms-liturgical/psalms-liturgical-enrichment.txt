@@ -1,0 +1,212 @@
+✅ Message sent to Gemini (ID: 12357) [auto-acked: self-addressed]
+✓ Message 12357 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12357...
+📨 Message #12357
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-psalms-liturgical
+   Time: 2026-02-20T23:38:54.363822+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 38
+module: ruth-038
+module_number: 38
+slug: psalms-liturgical
+title_uk: Псалми
+title_en: Psalms
+phase: 2
+phase_id: sacred-word
+phase_name: Sacred Word
+focus: Poetic structure — Liturgical standard
+content_outline:
+- section: Вступ
+  description: Introduction to Psalms
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Baroque Scholar
+  role: Church Cantor (Dyak)
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Psalms Liturgical
+
+## Використані джерела
+1. [Litopys.org.ua: Історія української культури](http://litopys.org.ua/) — Загальний контекст розвитку книжної культури та церковнослов'янської мови.
+2. [Parafia.org.ua: Псалтир 1643 року](https://parafia.org.ua/) — Інформація про видання Петра Могили та особливості української вимови.
+3. [Mefodiy.org.ua: Київський Псалтир 1397](http://mefodiy.org.ua/) — Аналіз рукописної пам'ятки та мініатюр.
+4. [Diasporiana: Граматика Мелетія Смотрицького](https://diasporiana.org.ua/) — Норми української редакції церковнослов'янської мови.
+5. [ESU.com.ua: Псалтир](https://esu.com.ua/) — Енциклопедичний огляд історії Псалтиря в Україні.
+
+## Хронологія
+- **1397**: Створення Київського Псалтиря протодияконом Спиридонієм (пергаментний рукопис з мініатюрами).
+- **1581**: Видання Острозької Біблії, що включала Псалтир (новий стандарт друку).
+- **1619**: Вихід «Граматики» Мелетія Смотрицького, що кодифікувала українську вимову церковнослов'янської мови.
+- **1625**: Видання Четвертинського Псалтиря (перша друкована книга на Волині).
+- **1643**: Видання Псалтиря у складі «Полууставу» Києво-Печерської лаври за редакцією Петра Могили (взірець для православного світу).
+- **1680**: Видання «Псалтирі рифмотворної» Симеона Полоцького (барокова версифікація).
+
+## Ключові факти та цитати
+
+### Київський ізвод (Вимова)
+Українська редакція церковнослов'янської мови («київський ізвод») мала чіткі фонетичні відмінності від московської, які зберігалися у богослужінні до кінця XVIII ст.:
+- **Ять (ѣ)** читався як [і], а не [є]. Приклад: *«во вѣки вѣковъ»* — [во віки віков] (укр) vs [во вєкі вєков] (рос).
+- **Г** вимовлявся як фрикативний [h] (як у слові *голова*), а не вибуховий [g].
+- **Іменники**: збереження кличного відмінка (*Боже, Господи*), тверді губні (*семь* -> *сім*, а не *сем*).
+- **Наголоси**: *ім'я́* (укр) vs *и́мя* (рос).
+
+### Роль Псалтиря
+> «Псалтир був не лише богослужбовою книгою, а й першим підручником грамоти. За ним училися читати вдома і в школах. Псалтир супроводжував людину від народження до смерті».
+
+### Симеон Полоцький (Цитата, реконструкція стилю)
+Полоцький переклав Псалтир віршами (силобатоніка), наближаючи сакральний текст до барокової поезії.
+> *«Блажен муж, иже злых не идет на совет, / И на пути грешных не ста, ниже живет...»* (приклад версифікації Псалма 1).
+
+## Engagement Hooks (mapped to sections)
+- **Section "Літургійна мова: Київський ізвод"**: `[!context]` — Пояснення, що українці століттями читали церковні тексти інакше, ніж росіяни (феномен «української латини»).
+- **Section "Книжна традиція: Від рукопису до друку"**: `[!history-bite]` — Про Київський Псалтир 1397 року, який росіяни намагалися привласнити як «московський», хоча він створений у Києві задовго до піднесення Москви.
+- **Section "Псалтир як школа життя"**: `[!culture]` — Традиція «читання Псалтиря» над померлими як містичний захист душі (згадка про «Вія» Гоголя).
+- **Section "Бароковий експеримент"**: `[!myth-buster]` — Спростування міфу, що Симеон Полоцький — «російський» поет. Він вихованець Києво-Могилянської академії, який приніс київську вченість у Москву.
+- **Section "Вступ"**: `[!quote]` — Цитата з передмови до Псалтиря (або про Псалтир) про його універсальність: «Очищення душі і тіла».
+
+## Деколонізаційний контекст
+- **Міф**: Існування єдиної «давньоруської» церковнослов'янської мови з московською вимовою.
+- **Реальність**: Існував «Київський ізвод» — унікальна українська традиція читання, яку Російська імперія заборонила у 1720 році та пізніших указах, примушуючи українців читати «голосом, властивим російському наріччю».
+- **Міф**: Культурна відсталість українських земель.
+- **Реальність**: Українські друкарні (Острог, Київ, Львів) видавали Псалтирі, які були взірцями для всього слов'янського світу, а київські вчені (як Полоцький) експортували культуру на північ.
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| Церковнослов'янська мова | Єдина мова з російською вимовою | Мова з різними редакціями; українська редакція (Київський ізвод) базувалася на живій українській фонетиці |
+| Симеон Полоцький | Російський поет і просвітитель | Українсько-білоруський діяч, вихованець КМА, представник київської барокової школи |
+| Київський Псалтир 1397 | Пам'ятка "російської" культури | Шедевр українського книжкового мистецтва, створений у Києві |
+
+## Section-Mapped Research Notes
+
+### Літургійна мова: Київський ізвод
+Фокус на фонетиці. Правила читання літери "ять" [і], "г" [h], наголосів. Це доказ тяглості української мови. Граматика Смотрицького як теоретична база.
+
+### Книжна традиція: Від рукопису до друку
+Еволюція носія. Київський Псалтир 1397 (розкіш, мініатюри) -> Острозький та Лаврські друки (доступність, стандартизація). Роль Петра Могили у виправленні текстів.
+
+### Псалтир як школа життя
+Соціальна функція. "Навчитися Псалтиря" = стати грамотним. Використання у побуті (лікування, похорон). Псалтир як єдина книга в хаті.
+
+### Бароковий експеримент: Рифмотворна Псалтир
+Симеон Полоцький. Перехід від сакрального тексту до поезії. Вплив західної традиції (польських віршованих псалтирів Яна Кохановського). Поєднання теології та естетики.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12414)
+✓ Message 12357 acknowledged
+✓ Message 12414 acknowledged

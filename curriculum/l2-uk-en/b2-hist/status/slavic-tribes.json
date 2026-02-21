@@ -1,15 +1,16 @@
 {
   "module": "slavic-tribes",
   "level": "B2",
-  "plan_version": "2.0",
-  "last_audit": "2026-02-07T11:39:39.463608Z",
+  "plan_version": "1.0",
+  "last_audit": "2026-02-21T15:10:39.329271Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-07T11:38:26.467928Z",
-    "meta": "2026-02-07T10:03:51.226050Z",
-    "activities": "2026-02-07T10:03:51.291004Z",
-    "vocabulary": "2026-02-07T10:03:51.356818Z",
-    "plan": null
+    "md": "2026-02-19T10:32:58.976531Z",
+    "meta": "2026-02-19T10:43:10.754516Z",
+    "activities": "2026-02-19T10:32:58.977202Z",
+    "vocabulary": "2026-02-18T23:27:44.325254Z",
+    "plan": "2026-02-18T19:03:37.260808Z",
+    "research": "2026-02-19T11:46:59.947251Z"
   },
   "gates": {
     "meta": {
@@ -18,30 +19,46 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "4583/4000 (raw: 4892)"
+      "status": "fail",
+      "violations": 1,
+      "message": "5027/5000 (raw: 5291) | pedagogy: 10 violations"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "6/3"
+      "message": "7/3"
     },
     "vocabulary": {
-      "status": "warn",
-      "violations": 0,
-      "message": "12 < 20 (soft target)"
-    },
-    "naturalness": {
       "status": "pass",
       "violations": 0,
-      "message": "9/10 (High)"
+      "message": "25/20"
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "ipa": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Clean IPA"
+    },
+    "research": {
+      "status": "warn",
+      "violations": 0,
+      "message": "Refresh recommended: Content predates research (research file is newer)"
+    },
+    "review": {
+      "status": "skipped",
+      "violations": 0,
+      "message": ""
     }
   },
   "overall": {
-    "status": "pass",
+    "status": "fail",
     "blocking_issues": [],
     "pass_count": 4,
-    "fail_count": 0
+    "fail_count": 1,
+    "deferred_count": 0
   }
 }

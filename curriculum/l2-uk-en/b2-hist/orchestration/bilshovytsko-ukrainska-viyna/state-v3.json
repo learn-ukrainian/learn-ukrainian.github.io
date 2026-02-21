@@ -1,0 +1,13 @@
+{
+  "track": "b2-hist",
+  "slug": "bilshovytsko-ukrainska-viyna",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T16:45:39Z",
+      "task_id": "v3-bilshovytsko-ukrainska-viyna-pA",
+      "mode": "meta-only"
+    }
+  }
+}

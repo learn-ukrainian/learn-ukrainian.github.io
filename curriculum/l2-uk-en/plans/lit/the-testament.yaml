@@ -1,0 +1,96 @@
+sequence: 15
+module: lit-15
+level: LIT
+slug: the-testament
+version: '2.0'
+title: Заповіт
+subtitle: The Testament
+content_outline:
+- section: Вступ — Найвідоміший вірш України
+  points:
+  - Історія написання (1845)
+  - '"Заповіт" як неофіційний гімн'
+  - Переклади на 150+ мов
+- section: Граматичний аналіз
+  points:
+  - Наказовий спосіб як політична інструкція
+  - Майбутній час і мрія про волю
+  - Умовні речення
+- section: Поетика тексту
+  points:
+  - Структура (три частини)
+  - Ритм і рима
+  - Лексичний аналіз
+- section: Політичний зміст
+  points:
+  - '"Вставайте, кайдани порвіте" — заклик до дії'
+  - '"І вражою злою кров''ю" — питання насильства'
+  - Концепція "сім'ї великої, вольної, нової"
+- section: Рецепція і використання
+  points:
+  - '"Заповіт" у радянській ідеології'
+  - '"Заповіт" у діаспорі'
+  - Сучасне прочитання
+- section: Підсумок — Текст як нація
+  points:
+  - Чому цей вірш став символом
+  - Шевченко і національна ідентичність
+  - Перехід до біблійних тем
+vocabulary_hints:
+  required:
+  - заповіт (testament)
+  - наказовий спосіб (imperative mood)
+  - воля (freedom)
+  - кайдани (chains)
+  - ворог (enemy)
+  - гімн (anthem)
+  - рецепція (reception)
+  - символ (symbol)
+  - ідентичність (identity)
+  - політичний (political)
+  recommended:
+  - могила (grave)
+  - Дніпро (Dnipro)
+  - рев (roar)
+  - степ (steppe)
+  - сім'я (family)
+activity_hints:
+- type: reading
+  focus: Повний текст "Заповіту" з граматичним розбором
+  source: UkrLib tid=2
+  items: '1'
+- type: essay-response
+  focus: Чи закликає Шевченко до насильства?
+  output: Інтерпретаційне есе
+focus: literature
+pedagogy: Analysis
+prerequisites:
+- lit-11 to lit-14 (Shevchenko modules)
+- Strong grammar foundation
+connects_to:
+- lit-16 (Biblical Themes — високий стиль)
+- lit-20 (Cult of Shevchenko — рецепція)
+objectives:
+- Analyze the grammar of the imperative mood in a political context
+- Understand the historical context of 1845
+- Discuss the concept of 'righteous violence' in the poem
+- Recite key lines from memory
+grammar:
+- Imperative Mood
+- Future Tense
+- Conditional Sentences
+module_type: literature
+sources:
+- name: Заповіт — повний текст
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=2
+  type: primary
+  notes: Вірш для детального аналізу
+- name: Аналіз "Заповіту"
+  url: https://www.ukrlib.com.ua/analiz/printit.php?tid=2
+  type: secondary
+  notes: Літературознавчий аналіз
+immersion: 100% Ukrainian
+phase: LIT.3 The Prophet (Taras Shevchenko)
+persona:
+  voice: Senior Philologist & Critic
+  role: National Prophet

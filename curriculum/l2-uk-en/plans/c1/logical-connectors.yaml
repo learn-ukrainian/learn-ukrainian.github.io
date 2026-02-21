@@ -1,0 +1,138 @@
+module: c1-005
+level: C1
+sequence: 5
+slug: logical-connectors
+version: '2.0'
+title: Логічні сполучники та зв'язки
+content_outline:
+- section: Вступ — Роль сполучників у структурі тексту (Introduction — Role of Connectors
+    in Text Structure)
+  words: 500
+  points:
+  - Роль логічних зв'язків у забезпеченні когезії та когерентності тексту відповідно
+    до Держстандарту (§4.4.4)
+  - 'Огляд категорій логічних зв''язків: причинові, наслідкові, допустові, протиставні
+    та підсилювальні'
+  - Вплив правильного вибору сполучника на читабельність та сприйняття аргументації
+    в академічному дискурсі
+- section: Причинові та наслідкові сполучники (Causal and Consequential Connectors)
+  words: 800
+  points:
+  - Вживання 'оскільки' (висока частотність) та 'позаяк' (книжний/інтелектуальний
+    регістр) у формальних текстах
+  - 'Наслідкові конструкції: ''отже'' для логічних висновків та ''внаслідок цього''
+    для офіційно-ділового стилю'
+  - 'Типова помилка: усунення кальки ''так як'' та заміна її на нормативні ''оскільки''
+    або ''бо'''
+  - Диференціація 'завдяки' (позитивний контекст) та 'через' (нейтральний/негативний
+    контекст) для вираження причини
+- section: Допустові та протиставні відношення (Concessive and Contrastive Relations)
+  words: 800
+  points:
+  - Вживання 'хоча', 'незважаючи на' та 'попри' для вираження допустовості в аналітичних
+    статтях
+  - Протиставлення через 'натомість' (аналітичний стиль) та 'водночас' для багатогранного
+    аналізу явища
+  - Стилістичні нюанси 'утім' (літературно-публіцистичний) як альтернативи 'проте'
+    та 'однак'
+  - 'Learner error: заміна кальки ''тим не менш'' на нормативні ''утім'', ''проте''
+    або ''однак'''
+- section: Додаткові, підсилювальні та уточнювальні засоби (Additional, Intensive,
+    and Clarifying Tools)
+  words: 700
+  points:
+  - Використання 'зокрема', 'насамперед' та 'передусім' для структурування аргументів
+    за важливістю
+  - Логічне уточнення через 'власне' та 'загалом' у межах академічного абзацу
+  - Нейтральний сполучник 'зате' як засіб вираження компенсації (на противагу суто
+    протиставним формам)
+- section: Стилістична майстерність та культурний контекст (Stylistic Mastery and
+    Cultural Context)
+  words: 600
+  points:
+  - 'Аналіз ''довгих речень'' Оксани Забужко: використання складних сполучникових
+    зв''язків для утримання складної думки (на прикладі ''Notre Dame d''Ukraine'')'
+  - 'Історичний екскурс: логічні конструкції в українській полемічній літературі XVII
+    ст. (І. Вишенський, М. Смотрицький)'
+  - 'Ритміка та логіка: як сполучники формують інтелектуальний темпоритм есеїстики'
+- section: Практика аргументації та редагування (Argumentation Practice and Editing)
+  words: 600
+  points:
+  - 'Побудова логічних ланцюжків: від тези через причину до наслідку з використанням
+    C1 вокабуляру'
+  - 'Трансформація тексту: переписування уривків зі зміною логічних акцентів (напр.,
+    з причинового на допустовий)'
+  - Вправи на виправлення калькованих сполучникових конструкцій у професійних перекладах
+vocabulary_hints:
+  required:
+  - 'оскільки (since, because) — High frequency, formal; collocation: «оскільки відомо,
+    що...»'
+  - позаяк (since, as) — Medium frequency, bookish/intellectual register
+  - отже (therefore) — High frequency; primary marker for academic inference and conclusions
+  - 'внаслідок (as a result) — Medium frequency, official context; collocation: «внаслідок
+    цього рішення»'
+  - натомість (instead, in contrast) — Medium frequency, analytical/journalistic register;
+    implies alternative
+  - утім / втім (however, still) — Medium frequency, literary/publicistic; effective
+    stylistic alternative to «проте»
+  - завдяки (thanks to) — Strictly positive context; distinguish from neutral/negative
+    «через»
+  - попри (despite) — High frequency in formal discourse; used with accusative case
+  - водночас (at the same time) — Essential for marking simultaneous logical perspectives
+  - крім того (moreover, besides) — Standard additive connector for expanding arguments
+  recommended:
+  - зате (but, on the other hand) — High frequency, neutral; emphasizes compensation
+    or contrast
+  - дарма що (even though) — Concessive connector with a slight literary/expressive
+    nuance
+  - передусім (first of all) — Key marker for prioritizing points in a logical list
+  - власне (actually, strictly speaking) — Used for logical narrowing and precise
+    identification
+  - звідси (hence, from this) — Marker of logical derivation often used in academic
+    abstracts
+activity_hints:
+- type: group-sort
+  focus: Connectors by function (causal/consequential/concessive/contrastive)
+  items: 20+
+- type: fill-in
+  focus: Choose appropriate connector for context
+  items: 15+
+- type: cloze
+  focus: Academic argument passage with connectors
+  items: 12+
+- type: quiz
+  focus: Identify connector function in sentences
+  items: 12+
+- type: essay-response
+  focus: Rewrite text using different connectors
+- type: error-correction
+  focus: Fix inappropriate connector usage
+  items: 10+
+focus: grammar
+prerequisites:
+- c1-04 (Analysis Vocabulary)
+- Complex sentence structures
+connects_to:
+- c1-06 (Hedging & Modality)
+- c1-08 (Essay Structure)
+- c1-10 (Counterarguments)
+module_type: grammar
+sources:
+- name: Граматика сучасної української мови
+  url: https://r2u.org.ua/
+  type: reference
+  notes: Comprehensive grammar of connectors
+- name: Ukrainian Academic Discourse Analysis
+  url: https://mova.info/
+  type: secondary
+  notes: Connector usage in academic texts
+immersion: 100% Ukrainian
+phase: C1.1 Academic Ukrainian
+objectives:
+- Identify and correctly use логічні сполучники та зв'язки
+- Form and apply роль сполучників у тексті
+- Distinguish between практика в аргументації
+persona:
+  voice: Senior Specialist
+  role: Логік
+word_target: 4000

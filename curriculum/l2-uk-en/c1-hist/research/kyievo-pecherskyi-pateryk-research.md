@@ -1,80 +1,63 @@
-# Research Notes: C1-HIST Module 13 (Kyievo-Pecherskyi Pateryk)
+# Дослідження: Києво-Печерський патерик
 
-## 1. General Overview
+## Використані джерела
+1. [Історія української літератури. Том 1. Давня українська література (XI–XVIII ст.)](http://litopys.org.ua/istukr/istukr09.htm) — Аналіз структури, авторства та жанрової специфіки Патерика як пам'ятки агіографії.
+2. [Енциклопедія історії України: Києво-Печерський патерик](http://history.org.ua/LiberUA/978-966-00-0734-5/978-966-00-0734-5.pdf) — Академічна стаття про джерелознавчу цінність, редакції та рукописну традицію.
+3. [Велика українська енциклопедія: Києво-Печерський патерик](https://vue.gov.ua/Києво-Печерський_патерик) — Огляд змісту, основних редакцій (Касіянівські, Йосифа Тризни) та значення для української культури.
 
-- **Title**: Києво-Печерський патерик (The Kyiv-Pechersk Patericon).
-- **Genre**: Hagiography (агіографія), Patericon (патерик) - collection of lives of fathers/monks.
-- **Date**: Compiled in early 13th century (1215-1230s). Basis: Correspondence between Simon and Polycarp.
-- **Significance**: "Golden Book" of Ukrainian literature (Hrushevsky). Main source for history of KP Lavra and daily life/mentalité of Rus'.
+## Хронологія
+- **1214–1226**: Листування єпископа Симона з ченцем Полікарпом — створення основи Патерика.
+- **1226**: Смерть єпископа Симона, одного з авторів.
+- **1406**: Арсеніївська редакція — найдавніша збережена рукописна збірка, створена з ініціативи тверського єпископа Арсенія (вихідця з Києва).
+- **1460, 1462**: Перша та Друга Касіянівські редакції, укладені крилошанином Касіяном у Києво-Печерському монастирі (найпоширеніші версії).
+- **1635**: Сильвестрівська редакція (Польща), підготовка до друку Петром Могилою.
+- **1661**: Перше друковане видання церковнослов'янською мовою в друкарні Києво-Печерської лаври.
 
-## 2. Text History & Authorship
+## Ключові факти та цитати
+- **Цитата Симона (про любов до Лаври)**: «Одного прошу я у Господа, того тільки шукаю, щоб перебувати мені в домі Господньому всі дні життя мого, відвідувати святий храм Його». (Свідчення духовної вищості Києва над Владимиро-Суздальським князівством).
+- **Цитата про Полікарпа**: «Сидиш у келії, а думками літаєш по світу», — докір Симона марнославному ченцю, що прагнув єпископства.
+- **Факт**: Патерик не є хронікою; це збірка новел з повчальною метою, де історичні факти підпорядковані агіографічному канону.
+- **Факт**: Симон, будучи єпископом у Владимирі-на-Клязьмі, писав, що готовий проміняти свій високий сан на можливість бути «мітлою» (прибиральником) у Печерському монастирі.
 
-- **Primary Authors**:
-  1.  **Simon** (Симон): Bishop of Vladimir-Suzdal (d. 1226). Wrote 9 stories + letter to Polycarp. Role: Mentor, rebuking Polycarp's vanity.
-  2.  **Polycarp** (Полікарп): Monk of KP Lavra (d. 1182?). Wrote 11 stories + letter to Akindin. Role: Ambitious monk seeking bishopric, chastised by Simon. His stories are more vivid, folkloric.
-  3.  **Nestor the Chronicler**: Wrote "Life of Theodosius" (integral part of later redactions).
-- **Redactions**:
-  - **Arsenian (1406)**: Oldest surviving copy. Commissioned by Bishop Arseniy of Tver (originally from Kyiv).
-  - **Cassian (1460, 1462)**: Cassian (Kasiyan) rearranged the text chronologically/thematically. Most influential redaction.
-  - **Printed editions**: 1635 (Sylvester Kosov, Polish), 1661 (Inokentiy Gizel, Church Slavonic - first printed in Kyiv).
+## Engagement Hooks (mapped to sections)
+- Section "Вступ — Агіографія як джерело": [!context] — Пояснення, що середньовічна людина сприймала дива як реальність, а не алегорію.
+- Section "Історія тексту: I — Листування Симона і Полікарпа": [!myth-buster] — Спростування тези про "єдиний руський світ": єпископ з півночі (Симон) визнає духовну першість Києва, а не свого міста.
+- Section "Історія тексту: II — Редакції та друк": [!history-bite] — Про те, як Патерик став бестселером XVII століття, випередивши світські книги за тиражами.
+- Section "Структура патерика: I — Житія засновників": [!quote] — Цитата з "Житія Феодосія" про спільну працю з братією (пече хліб, носить воду).
+- Section "Патерик як історичне джерело: I — Соціально-політичний вимір": [!decolonization] — Аналіз того, як монастир виступав опозицією до князівської влади (конфлікт Феодосія з Святославом).
+- Section "Критика джерела: I — Агіографічні топоси": [!historiography] — Порівняння візантійських шаблонів чудес з оригінальними київськими реаліями.
 
-## 3. Structure & Key Narratives
+## Деколонізаційний контекст
+- **Imperial/Soviet myth**: Патерик — частина "загальноросійської" літератури, що доводить єдність "Святої Русі" з центром, який згодом "переїхав" до Москви.
+- **Ukrainian reality**: Патерик фіксує унікальну київську ідентичність. Симон, хоч і служить на півночі (Залісся), вважає ту землю чужою, а Київ — єдиним духовним домом. Це свідчення *відмінності* двох культурних центрів ще у XIII ст.
+- **Soviet historiography**: Трактування Патерика виключно як "церковного мракобісся" або фольклорної казки, ігнорування його як джерела з історії ментальності.
 
-- **Structure**: Not linear history, but collection of "Slovo" (Words/Tales).
-- **Themes**:
-  - **Asceticism vs World**: Struggle with demons (besoborstvo), fasting, seclusion.
-  - **Obedience**: Monastic discipline vs pride (Polycarp's arc).
-  - **Miracles**: Healing, prophecy, visions.
-- **Key Figures**:
-  - **Anthony**: Founder, cave-dweller, mystic.
-  - **Theodosius**: Organizer, coenobitic rule (Studite), social activist.
-  - **Alipij the Iconographer**: Patron of artists.
-  - **Agapitus the Healer**: Patron of doctors (conflict with Armenian doctor).
-  - **Prokhor the Orach-eater**: Miracles during famine (bread from pigweed).
-  - **Moses the Hungarian**: Chastity vs Polish lust.
+## Contested Terms (if applicable)
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| "Руські святі" | Всі святі Києва автоматично зараховуються до "російських" (РПЦ). | Святі Русі-України; носії київської духовної традиції, відмінної від московського чернецтва. |
+| "Перенесення" святості | Святість Києва перейшла до Владимира, потім до Москви. | Київ залишається "Другим Єрусалимом", святість прив'язана до місця (locus sanctus), її не можна вивезти. |
+| Єпископ Симон | "Російський" церковний діяч. | Київський інтелектуал на службі в Заліссі, носій києвоцентричного світогляду. |
 
-## 4. Historical Value (Source Criticism)
+## Section-Mapped Research Notes
 
-- **Political**:
-  - Critical of princes (Svyatoslav II).
-  - Monk's moral authority > Prince's power.
-  - "Kyiv-centric" patriotism even in later redactions.
-- **Social/Economic**:
-  - Monastery as landowner.
-  - Trade relations (salt, variety of goods).
-  - Social origins of monks (boyars, merchants, commoners).
-  - Famines and social unrest.
-- **Daily Life**:
-  - Food, clothing, cells, liturgy.
-  - Medical practices (Agapitus vs secular medicine).
-  - Crafts (icon painting, construction).
+### Вступ — Агіографія як джерело
+Жанр "Patericon" (отцівник) — збірка повчальних оповідань. Особливість КПП: це не просто переклад грецьких взірців, а оригінальні київські сюжети. Важливо: агіографія не має на меті фактичну точність, її мета — показати шлях до спасіння.
 
-## 5. Life of Theodosius (Fragment Focus)
+### Історія тексту
+Унікальна форма виникнення: приватне листування. Симон намагався втішити та напоумити Полікарпа, наводячи приклади з історії монастиря. Пізніші редакції (Касіянівські) впорядкували ці листи у хронологічну збірку. Роль Петра Могили у популяризації (підготовка друкованого видання).
 
-- **Author**: Nestor.
-- **Childhood Narrative**:
-  - Born in Vasylkiv, moved to Kursk.
-  - **Topos**: "Old child" (старець дитя) - serious, avoided games, loved church.
-  - **Conflict with Mother**:
-    - Mother: Strong, "masculine" in body and voice. Wanted him to be a boyar/official.
-    - Conflict: She beat him, chained him, hid his clothes to stop him from going to church/baking prosphora.
-    - Resolution: He escaped to Kyiv to Anthony.
-  - **Significance**:
-    - Clash of values: Worldly success (Mother) vs Spiritual calling (Theodosius).
-    - Psychological depth: Mother's love depicted as possessive and violent.
-- **Studite Rule**: Introduced by Theodosius. Community life (sleeping, eating together) vs Anthony's hermitage.
+### Структура патерика
+Дві частини: Симонові послання (9 оповідей) і Полікарпові (11 оповідей). Симон пише про чудотворців минулого, Полікарп — про сучасніші йому події та спокуси ченців (сребролюбство, владолюбство). Житія Антонія (аскеза) і Феодосія (спільножитний устав) як фундамент.
 
-## 6. Resources & Citation Links
+### Фрагмент — Житіє Феодосія Печерського
+Твір Нестора Літописця (включений до пізніх редакцій Патерика). Мати Феодосія як цікавий психологічний тип (протидія покликанню сина). Топос "святого дитяти" vs реальні деталі побуту Курська та Києва XI ст.
 
-- **Primary Text**: http://litopys.org.ua/paterikon/pat.htm
-- **Encyclopedia**: http://resource.history.org.ua/
-- **VUE**: https://vue.gov.ua/
+### Патерик як історичне джерело
+Соціальний зріз: ченці з бояр, князів (Микола Святоша) та простолюдинів. Політична роль: монастир як моральний арбітр у князівських усобицях. Економіка: пожертви, земельні володіння, торгівля сіллю (сюжет про Прохора Лободника).
 
-## 7. Decolonization Angles
+### Критика джерела
+Проблема "топосів": чи справді святий боровся з бісами, чи це метафора внутрішньої боротьби? Чи справді він міг жити без їжі 40 днів? Розрізнення запозичених сюжетів (з єгипетських патериків) та унікальних київських реалій (лазня, одяг, їжа).
 
-- **Russian Appropriation**: Russia claims KPP as "Russian" literature. Need to emphasize:
-  - Written in Kyiv.
-  - Language features (Old Ukrainian redaction).
-  - Simon and Polycarp were thoroughly "Kyivan" in mindset, even if Simon was bishop in Suzdal (he wished to be buried in Kyiv).
-- **Myth Busting**: The "Norman" influence is minimal; focus on local Byzantine-Slavic synthesis.
-- **Language**: Stress the continuity of Ukrainian words in the text (redaction dependent).
+### Підсумок
+Патерик як "золота книга" українського письменства (М. Грушевський). Формування національного пантеону святих. Вплив на барокову літературу та малярство.

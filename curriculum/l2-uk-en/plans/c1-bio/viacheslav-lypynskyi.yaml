@@ -1,53 +1,44 @@
----
-module: c1-bio-081
+module: c1-bio-81
 level: C1-BIO
 sequence: 81
 slug: viacheslav-lypynskyi
 version: '2.0'
 title: 'В''ячеслав Липинський: Консерватор-державник'
 content_outline:
-- section: "Вступ — Український консерватизм як ідея"
-  words: 400
+- section: Вступ — Український консерватизм як ідея
   points:
   - Липинський як найоригінальніший український мислитель XX ст.
   - Від польського шляхтича до українського ідеолога
   - Чому його ідеї актуальні сьогодні
 - section: Шляхетське коріння
-  words: 600
   points:
   - Народження в польській родині (1882)
   - Освіта в Києві та за кордоном
   - Шлях до української ідентичності
 - section: Історик як державотворець
-  words: 700
   points:
   - Дослідження козаччини
   - Переосмислення української історії
   - Роль шляхти в українському русі
 - section: Гетьманат та політична діяльність
-  words: 800
   points:
   - Посол Української Держави у Відні
   - Підтримка Скоропадського
   - Концепція класократії
 - section: Листи до братів-хліборобів
-  words: 800
   points:
   - Головний теоретичний твір
   - Ідея територіального патріотизму
   - Критика народництва та інтелігенції
 - section: Еміграція та останні роки
-  words: 500
   points:
   - Життя в Австрії та Чехословаччині
   - Важка хвороба (туберкульоз)
   - Смерть та інтелектуальна спадщина
-- section: "Дискусія — Консерватизм vs народництво"
-  words: 200
+- section: Дискусія — Консерватизм vs народництво
   points:
   - Два шляхи українського державотворення
   - Релевантність Липинського для XXI століття
-word_target: 4000
 vocabulary_hints:
   required:
   - консерватизм (conservatism)
@@ -73,7 +64,6 @@ activity_hints:
   items: 3 passages
 - type: essay-response
   focus: Чи актуальний консерватизм для України?
-  word_target: 300
   output: Аргументований есей
 focus: biography
 prerequisites:
@@ -85,15 +75,15 @@ connects_to:
 module_type: biography
 sources:
 - name: В'ячеслав Липинський (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Липинський_В%27ячеслав_Казимирович"
+  url: https://uk.wikipedia.org/wiki/Липинський_В%27ячеслав_Казимирович
   type: primary
   notes: Основна біографічна інформація
 - name: Інститут В'ячеслава Липинського
-  url: "https://lipynsky.org/"
+  url: https://lipynsky.org/
   type: reference
   notes: Наукова спадщина та дослідження
 - name: Твори Липинського
-  url: "https://diasporiana.org.ua/"
+  url: https://diasporiana.org.ua/
   type: reference
   notes: Повні тексти праць
 immersion: 100% Ukrainian
@@ -102,3 +92,6 @@ objectives:
 - 'Analyze the life and legacy of в''ячеслав липинський: консерватор-державник'
 - Evaluate the contributions of український консерватизм як ідея
 - Trace the career and influence of консерватизм vs народництво
+persona:
+  voice: Senior Biographer
+  role: Monarchist Philosopher

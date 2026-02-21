@@ -1,4 +1,3 @@
----
 module: c1-hist-118
 level: c1-hist
 sequence: 118
@@ -10,48 +9,41 @@ objectives:
 - Analyze the causes and consequences of євреї в україні до 1917
 - Evaluate the historical significance of спільна земля
 content_outline:
-- section: "Вступ — Спільна земля"
-  words: 515
+- section: Вступ — Спільна земля
   subsections:
   - Євреї в Україні — 1000 років
   - Найбільша єврейська громада світу
   - Співіснування і конфлікт
   - Структура модуля
 - section: Середньовіччя і Козацька доба
-  words: 774
   subsections:
   - Євреї в Речі Посполитій
   - Орендарі і посередники
   - Хмельниччина 1648
   - Гайдамаччина
-- section: "Штетл — життя"
-  words: 903
+- section: Штетл — життя
   subsections:
   - «Смуга осілості»
   - Культура ідиш
   - Професії — обмеження
   - Взаємодія з українцями
 - section: Погроми XIX-початок XX ст.
-  words: 774
   subsections:
   - 1881-1884
   - 1903-1906
   - Роль держави
   - Роль місцевого населення
 - section: Громадянська війна 1917-1921
-  words: 645
   subsections:
   - Масштаб погромів
   - Хто чинив — всі сторони
   - Петлюра — суперечлива фігура
   - Наслідки
 - section: Підсумок
-  words: 389
   subsections:
   - Складна історія
   - Не тільки погроми
   - Перехід до Голокосту
-word_target: 4000
 vocabulary:
 - єврей
 - штетл
@@ -72,24 +64,24 @@ activities:
 - type: critical-analysis
   focus: 1000 years of Jewish presence in Ukraine
 - type: comparative-study
-  focus: "Why Jews became middlemen — structural analysis"
+  focus: Why Jews became middlemen — structural analysis
 - type: critical-analysis
   focus: Who was responsible for pogroms?
 - type: comparative-study
   focus: Shtetl life and Ukrainian-Jewish interaction
 - type: essay-response
-  focus: "Чи український антисемітизм — 'особливий'?"
+  focus: Чи український антисемітизм — 'особливий'?
 sources:
 - name: Історія євреїв в Україні (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Історія_євреїв_в_Україні"
+  url: https://uk.wikipedia.org/wiki/Історія_євреїв_в_Україні
   type: reference
   notes: Jewish history overview
 - name: Погроми в Україні (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Погроми_в_Україні"
+  url: https://uk.wikipedia.org/wiki/Погроми_в_Україні
   type: reference
   notes: Pogroms
 - name: Штетл (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Штетл"
+  url: https://uk.wikipedia.org/wiki/Штетл
   type: reference
   notes: Shtetl life
 vocabulary_hints:
@@ -108,7 +100,9 @@ activity_hints:
   items: 4
 - type: essay-response
   focus: Критичний аналіз
-  word_target: 300
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Judaica Scholar

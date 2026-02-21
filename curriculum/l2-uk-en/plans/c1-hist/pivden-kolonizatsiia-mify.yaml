@@ -1,4 +1,3 @@
----
 module: c1-hist-079
 level: c1-hist
 sequence: 79
@@ -10,56 +9,48 @@ objectives:
 - 'Analyze the causes and consequences of південь: колонізація та міфи «новоросії»'
 - Evaluate the historical significance of що це?
 content_outline:
-- section: "Вступ — «Новоросія» — що це?"
-  words: 457
+- section: Вступ — «Новоросія» — що це?
   subsections:
   - Імперська назва
   - Сучасне відродження міфу
   - Чому потрібна деконструкція
   - Структура модуля
 - section: До «Новоросії»
-  words: 686
   subsections:
   - Дике поле — не пусте
   - Козацька присутність
   - Запорозька Січ
   - Кримськотатарські землі
 - section: Російська колонізація
-  words: 800
   subsections:
   - Потьомкін і Катерина
   - Заселення — хто приїхав
   - Українці — більшість
   - Греки, болгари, німці
   - Росіяни — меншість
-- section: "Одеса — імперське місто"
-  words: 686
+- section: Одеса — імперське місто
   subsections:
   - Заснування — 1794
   - Мультикультурне місто
   - Українці в Одесі
   - Одеський міф — «не українське місто»?
 - section: Херсон, Миколаїв, Маріуполь
-  words: 571
   subsections:
   - Інші міста Півдня
   - Українська присутність
   - Русифікація XX ст.
   - Збереження ідентичності
 - section: «Новоросія» 2014
-  words: 457
   subsections:
   - Російський проект — провал
   - Чому не спрацювало
   - 2022 — Херсон, Запоріжжя
   - Спротив Півдня
 - section: Підсумок
-  words: 343
   subsections:
   - Південь — не російський
   - «Новоросія» — імперський міф
   - Перехід до синтезу
-word_target: 4000
 vocabulary:
 - Новоросія
 - колонізація
@@ -78,26 +69,26 @@ vocabulary:
 - регіональний міф
 activities:
 - type: critical-analysis
-  focus: "«Novorossiya» — imperial construct analysis"
+  focus: «Novorossiya» — imperial construct analysis
 - type: comparative-study
-  focus: "Who settled Southern Ukraine — ethnic breakdown"
+  focus: Who settled Southern Ukraine — ethnic breakdown
 - type: critical-analysis
-  focus: 'Odesa — Ukrainian or \"other\"?'
+  focus: Odesa — Ukrainian or \"other\"?
 - type: critical-analysis
-  focus: '2014 vs. 2022 — why \"Novorossiya\" project failed'
+  focus: 2014 vs. 2022 — why \"Novorossiya\" project failed
 - type: essay-response
   focus: Чому російський проект 'Новоросії' провалився?
 sources:
 - name: Новоросія (історичний регіон) (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Новоросія_(історичний_регіон)"
+  url: https://uk.wikipedia.org/wiki/Новоросія_(історичний_регіон)
   type: reference
   notes: Historical region
 - name: Одеса (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Одеса"
+  url: https://uk.wikipedia.org/wiki/Одеса
   type: reference
   notes: City history
 - name: Українці на Півдні України (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Українці"
+  url: https://uk.wikipedia.org/wiki/Українці
   type: reference
   notes: Ukrainian presence
 vocabulary_hints:
@@ -116,7 +107,9 @@ activity_hints:
   items: 4
 - type: essay-response
   focus: Критичний аналіз
-  word_target: 300
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Historical Demographer

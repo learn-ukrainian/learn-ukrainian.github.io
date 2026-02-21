@@ -1,0 +1,291 @@
+✅ Message sent to Gemini (ID: 10613) [auto-acked: self-addressed]
+✓ Message 10613 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10613...
+📨 Message #10613
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-nauka-i-doslidzhennia
+   Time: 2026-02-20T20:44:56.134533+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b2-73
+level: B2
+sequence: 73
+slug: nauka-i-doslidzhennia
+version: '2.0'
+title: Наука і дослідження
+subtitle: Science & Research
+content_outline:
+- section: Розминка — Українська наука
+  points:
+  - НАН України та університети як наукові центри
+  - Видатні українські вчені (Вернадський, Патон, Сікорський)
+  - Наука під час війни — виклики та адаптація
+- section: Структура наукового дослідження
+  points:
+  - Етапи дослідження (гіпотеза, методологія, експеримент, висновки)
+  - Типи досліджень (експериментальне, теоретичне, прикладне)
+  - Наукова етика та доброчесність
+  - Рецензування та публікація
+- section: Наукова термінологія
+  points:
+  - Загальнонаукова лексика (дослідження, аналіз, синтез, кореляція)
+  - Природничі науки (фізика, хімія, біологія) — базові терміни
+  - Технічні науки (інженерія, матеріалознавство)
+  - Суспільні науки (соціологія, психологія, економіка)
+- section: Читання наукових текстів
+  points:
+  - Структура наукової статті (анотація, вступ, методи, результати)
+  - Розуміння графіків та таблиць
+  - Критичне читання — оцінка надійності джерел
+  - Науково-популярна література vs академічні тексти
+- section: Обговорення наукових тем
+  points:
+  - Формулювання наукових питань
+  - Аргументація на основі даних
+  - Вираження невпевненості (можливо, ймовірно, за нашими даними)
+  - Дискусія про наукові відкриття
+- section: Підсумок та практика
+  points:
+  - Аналіз науково-популярної статті
+  - Представлення наукового відкриття — усна презентація
+  - Підготовка до capstone проєкту
+focus: domain
+pedagogy: CBI
+objectives:
+- Використовувати наукову термінологію українською
+- Описувати дослідницький процес
+- Орієнтуватися в українській науковій спільноті
+grammar:
+- Academic register
+- Scientific terminology
+phase: B2.4 Skills & Capstone
+vocabulary_hints:
+  required:
+  - термін (term)
+  - поняття (concept)
+  - процес (process)
+  - метод (method)
+  recommended:
+  - аналіз (analysis)
+  - синтез (synthesis)
+  - дослідження (research)
+activity_hints:
+- type: reading
+  focus: Аналіз тексту
+  items: 4
+- type: essay-response
+  focus: Практичне застосування
+- type: true-false
+  focus: Перевірка розуміння
+  items: 8
+persona:
+  voice: Professional Language Coach
+  role: Lab Researcher (Лаборант-дослідник)
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Наука і дослідження
+
+## State Standard Reference
+§3.17: "Наука і та техніка: розвиток науки і техніки (комп’ютеризація, телекомунікація); наукові відкриття; винаходи, що змінили світ."
+Alignment: Module focuses on the "Science & Research" domain, covering the structure of research, terminology, and key figures, directly addressing the thematic requirement. It also supports §3.10 (Education) regarding "scientific degrees, academic titles".
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| **дослідження** (research) | High (Academic/Publicistic) | проводити дослідження, ґрунтовне дослідження, результати дослідження, об'єкт дослідження |
+| **гіпотеза** (hypothesis) | Medium (Scientific) | висунути гіпотезу, підтвердити/спростувати гіпотезу, робоча гіпотеза |
+| **експеримент** (experiment) | Medium (Scientific) | ставити експеримент, невдалий експеримент, у ході експерименту |
+| **аналіз** (analysis) | High (General/Academic) | глибокий аналіз, порівняльний аналіз, піддавати аналізу, на основі аналізу |
+| **висновок** (conclusion) | High (General/Academic) | дійти висновку, зробити висновки, головний висновок, попередні висновки |
+| **рецензування** (peer review) | Low (Specific Academic) | процес рецензування, сліпе рецензування, пройти рецензування |
+
+## Cultural Hooks
+1. **Volodymyr Vernadsky (1863–1945)**: Founder of the Ukrainian Academy of Sciences and creator of the **Noosphere** concept (human reason as a geological force). Notably refused Russian citizenship during the Ukrainian National Republic era to support Ukrainian independence.
+2. **Borys Paton (1918–2020)**: Pioneered **electric welding in space** (first used by cosmonauts) and developed method for **welding soft live tissues** (bloodless surgery). First Hero of Ukraine.
+3. **Ihor Sikorsky (1889–1972)**: Built the **first helicopter in Kyiv** (1910) before emigrating. Creator of the "Ilya Muromets" plane and founder of the US helicopter industry.
+
+## Common Learner Errors
+1. **Calques ("Russianisms")**: "В якості науковця..." (Wrong) → "Як науковець..." (Correct). *Cause: Calque from Russian "в качестве".*
+2. **Passive Voice Overuse**: "Нами було проведено аналіз..." (Clunky) → "Ми проаналізували..." (Natural). *Cause: Misconception that passive = academic. Ukrainian prefers active structures.*
+3. **Wrong Collocations**: "Зустрічаються помилки" (Wrong) → "Трапляються помилки" (Correct). *Cause: "Зустрічатися" is for people meeting.*
+4. **Pleonasm**: "Дисертаційне дослідження" (Redundant) → "Дисертація" or "Дослідження". *Cause: Trying to sound more formal.*
+
+## Cross-References
+- **Builds on**: B2.3 (Integration), B2.1 (Passive Voice - knowing when NOT to use it).
+- **Prepares for**: B2-PRO (Professional tracks), C1 Academic Track (full mastery of scientific style), C1-BIO (biographies of scientists).
+
+## Notes for Content Writing
+- **Stylistics Gap**: The B2 standard implies scientific style but doesn't explicitly define it like C1 does. Use this module to *bridge* that gap: introduce the concept of "Academic Register" explicitly vs. Conversational.
+- **Agency**: Ensure the "Passive Voice" section emphasizes that while passive exists, active voice ("Ми виявили") is often stronger and more Ukrainian, even in science.
+- **Terminology**: Clarify the difference between "вчений" (scientist - generic) and "науковець" (researcher/scientist - more active/modern term).
+- **Structure**: Use the "IMRAD" structure (Introduction, Methods, Results, And Discussion) as a teaching point for reading scientific texts.
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Українська наука та видатні вчені (Introduction: Ukrainian Science and Distinguished Scientists)"
+  words: 600
+  points:
+  - "Introduction to the National Academy of Sciences (NAS) of Ukraine and universities as central hubs for research and innovation."
+  - "Cultural Hook: Volodymyr Vernadsky (1863–1945) — his refusal of Russian citizenship, the concept of the Noosphere, and his legacy as the founder of the Ukrainian Academy of Sciences."
+  - "Cultural Hook: Borys Paton — pioneering electric welding in space and the development of bloodless surgery through soft tissue welding."
+  - "Cultural Hook: Ihor Sikorsky — his early Kyiv-based inventions, including the first helicopter (1910) and the 'Ilya Muromets' aircraft."
+- section: "Структура наукового дослідження та академічна етика (Structure of Scientific Research and Academic Ethics)"
+  words: 700
+  points:
+  - "Stages of research: from formulating a hypothesis (висунути гіпотезу) and choosing methodology to conducting experiments and reaching conclusions (дійти висновку)."
+  - "Defining the standard IMRAD structure (Introduction, Methods, Results, and Discussion) for organizing academic content and reading efficiency."
+  - "Scientific ethics: understanding academic integrity (доброчесність) and the peer review process (рецензування), including blind review (сліпе рецензування)."
+  - "Terminology nuance: distinguishing between the generic 'вчений' (scientist) and the more active/professional 'науковець' (researcher/scholar)."
+- section: "Наукова термінологія та академічний регістр (Scientific Terminology and Academic Register)"
+  words: 700
+  points:
+  - "Bridging the stylistics gap: differentiating between the Academic Register (Академічний стиль) and Conversational Register (Розмовний стиль)."
+  - "General scientific vocabulary across disciplines: analysis, synthesis, correlation, and conducting research (проводити ґрунтовне дослідження)."
+  - "Learner Error: Correcting the common Russianism 'В якості науковця...' to the idiomatic Ukrainian 'Як науковець...'."
+  - "Grammar in Science: Prioritizing the active voice ('Ми проаналізували') over the clunky passive calques ('Нами було проведено аналіз') common in learner output."
+- section: "Критичне читання наукових текстів (Critical Reading of Scientific Texts)"
+  words: 700
+  points:
+  - "Analysis of abstracts and introductions: identifying the object, subject, and goals of a study within the text."
+  - "Decoding visual information: understanding graphs and tables and describing data trends using academic vocabulary."
+  - "Naturalness Check: Avoiding the collocation error 'Зустрічаються помилки' (meeting people) in favor of the correct 'Трапляються помилки' (occurring errors)."
+  - "Stylistic precision: identifying and removing pleonasms like 'дисертаційне дослідження' in favor of the concise 'дисертація'."
+- section: "Обговорення наукових тем та представлення результатів (Discussing Scientific Topics and Presenting Results)"
+  words: 700
+  points:
+  - "Formulating research questions and expressing degrees of certainty or hedging (можливо, ймовірно, за нашими даними) during academic discussion."
+  - "State Standard §3.17: Discussing scientific discoveries and inventions that changed the world (комп’ютеризація, телекомунікація)."
+  - "Science under pressure: a thematic discussion on the challenges and adaptation of Ukrainian science during the war."
+- section: "Підсумок та практика (Summary and Practice)"
+  words: 600
+  points:
+  - "Practical task: Analyzing a popular science article vs. an academic abstract to identify register shifts."
+  - "Production: Delivering a short oral presentation on a scientific topic or a planned research project (§3.10: academic titles and degrees)."
+  - "Final review of key scientific collocations and preparatory notes for the B2 Capstone project."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "дослідження (research) — проводити ґрунтовне дослідження, результати дослідження, об'єкт дослідження; high frequency academic term"
+  - "термін (term) — науковий термін, тлумачення терміна; defines the building blocks of academic register"
+  - "поняття (concept) — ключове поняття, вводити поняття; used for theoretical frameworks"
+  - "метод (method) — метод аналізу, експериментальний метод; essential for describing research design"
+  - "процес (process) — процес дослідження, складний процес; describes ongoing scientific or technical activities"
+  - "гіпотеза (hypothesis) — висунути гіпотезу, підтвердити/спростувати гіпотезу; core component of the scientific method"
+  recommended:
+  - "аналіз (analysis) — глибокий аналіз, піддавати аналізу, на основі аналізу; high frequency in data description"
+  - "синтез (synthesis) — синтез результатів, теоретичний синтез; often contrasted with analysis in research methodology"
+  - "висновок (conclusion) — дійти висновку, зробити висновки, попередні висновки; crucial for summary sections"
+  - "експеримент (experiment) — ставити експеримент, у ході експерименту; used in empirical and natural sciences"
+  - "рецензування (peer review) — процес рецензування, сліпе рецензування; specific to academic publishing and quality control"
+  - "науковець (scientist/researcher) — молодий науковець, відомий науковець; modern preferred term over 'вчений'"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (5425 chars)
+✅ Message sent to Claude (ID: 10622)
+✓ Message 10622 acknowledged
+   Auto-acknowledged reply #10622 (stdout delivery — no inbox accumulation)
+✓ Message 10613 acknowledged

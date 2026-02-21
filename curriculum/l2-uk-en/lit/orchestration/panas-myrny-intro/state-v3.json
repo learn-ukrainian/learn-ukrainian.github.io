@@ -1,0 +1,13 @@
+{
+  "track": "lit",
+  "slug": "panas-myrny-intro",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-20T00:20:04Z",
+      "task_id": "v3-panas-myrny-intro-pA",
+      "mode": "full"
+    }
+  }
+}

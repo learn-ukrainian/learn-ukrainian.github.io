@@ -93,6 +93,33 @@ The following audit errors were found. Fix ALL of them:
 - {If any fix was unclear or contradictory, explain here}
 ===CHANGES_END===
 
+## Mandatory Self-Check (run BEFORE outputting)
+
+After writing your fixed activities, perform these 5 structural checks mentally. Any failure here = audit will fail with a critical error.
+
+**1. SELECT min_correct match**
+For every `select` activity, every question's `min_correct` must equal the number of options with `correct: true`. Count them. They must match exactly.
+
+**2. QUIZ single correct**
+For every `quiz` activity, every question must have exactly 1 option with `correct: true`. Not 0, not 2. Exactly 1.
+
+**3. FILL-IN answer in options**
+For every `fill-in` activity, every item's `answer` value must appear verbatim in its `options` list. If the answer is not in the options, the student can never select it.
+
+**4. TRANSLATE single correct**
+For every `translate` activity, every item must have exactly 1 option with `correct: true`.
+
+**5. MARK-THE-WORDS answers in text**
+For every `mark-the-words` activity, every string in `answers` must appear verbatim in the `text` field. If an answer word is not in the text, the student cannot mark it.
+
+**6. UNJUMBLE no run-ons**
+For every `unjumble` activity, every `answer` must be a single sentence. If a capital letter appears mid-answer without preceding punctuation (`.  !  ?  :`), you have merged two sentences. Split into two separate items instead.
+
+**7. UNJUMBLE vocabulary scope**
+For every `unjumble` activity, every word in every `words` array must come from the plan's `vocabulary_hints` OR be a common function word (preposition, conjunction, particle). Do NOT introduce grammar forms not yet taught. If this module teaches dative PRONOUNS only, do not use possessive adjective dative forms (моїй, твоїй, нашій…) — those are dative NOUNS scope (a separate module).
+
+If any check fails: fix it BEFORE outputting. Do not declare fixes complete if these checks fail.
+
 ## Boundaries
 
 - Do NOT output content — this phase is ACTIVITIES/VOCABULARY ONLY

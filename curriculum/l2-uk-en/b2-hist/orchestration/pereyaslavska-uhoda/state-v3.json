@@ -1,0 +1,13 @@
+{
+  "track": "b2-hist",
+  "slug": "pereyaslavska-uhoda",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T15:23:51Z",
+      "task_id": "v3-pereyaslavska-uhoda-pA",
+      "mode": "meta-only"
+    }
+  }
+}

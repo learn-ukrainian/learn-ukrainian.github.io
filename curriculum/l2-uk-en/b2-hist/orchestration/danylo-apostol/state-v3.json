@@ -1,0 +1,13 @@
+{
+  "track": "b2-hist",
+  "slug": "danylo-apostol",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T16:04:35Z",
+      "task_id": "v3-danylo-apostol-pA",
+      "mode": "meta-only"
+    }
+  }
+}

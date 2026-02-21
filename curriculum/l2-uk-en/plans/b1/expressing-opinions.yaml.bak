@@ -1,0 +1,97 @@
+module: b1-54
+level: B1
+sequence: 54
+slug: expressing-opinions
+version: '2.0'
+title: Вираження думок та поглядів
+subtitle: Expressing Opinions — Vocabulary & Phrases
+content_outline:
+- section: Вступ
+  points:
+  - 'Why opinion language matters — cultural hook: «Де два українці, там три гетьмани»
+    implies cultural value of debate'
+  - Strength of opinion spectrum — gradation from weak (мабуть/здається) to strong
+    (безсумнівно/переконаний)
+  - 'Register considerations — politeness strategies: hedging in formal contexts vs
+    directness in informal ones'
+- section: Вивчення слів
+  points:
+  - Six vocabulary groups
+  - 'Verbs of thinking, certainty words — learner error: using «я рахую» (counting)
+    instead of «я вважаю» (opining)'
+  - 'Evaluation verbs, opinion phrases — punctuation note: mandatory commas with introductory
+    phrases like «На мою думку»'
+- section: Вживання
+  points:
+  - 'Collocations patterns — high frequency combinations: «глибоко переконаний», «цілком
+    впевнений»'
+  - Register considerations — contrasting «kitchen talk» (emotional/direct) vs «work
+    meeting» (diplomatic/hedged)
+  - 'Certainty scale, cultural aspects — cultural nuance: using «я розумію, але» as
+    a politeness marker'
+- section: Читання
+  points:
+  - Technology discussion
+  - Editorial article
+  - Conversational blog
+- section: Діалоги
+  points:
+  - Work meeting (formal) — focus on polite disagreement and argumentation
+  - News discussion (informal) — focus on expressing strong personal convictions
+  - Academic seminar, family discussion
+- section: Підсумок
+  points:
+  - Key vocabulary recap
+  - Practice recommendations
+vocabulary_hints:
+  required:
+  - 'думка (opinion/thought) — collocations: на мою думку, висловити думку, поділяти
+    думку, громадська думка'
+  - 'погляд (view) — collocations: на мій погляд, з точки зору, обмінятися поглядами;
+    distinguish from visual ''gaze'''
+  - 'вважати (to consider) — collocations: я вважаю що, вважати за потрібне; error
+    warning: avoid Russism ''рахувати'''
+  - гадати (to think/suppose) — softer synonym for thinking/guessing
+  - 'переконаний (convinced) — collocations: глибоко переконаний, твердо переконаний'
+  - 'впевнений (sure/certain) — collocations: цілком впевнений, впевнений у собі'
+  - можливо (possibly) — key hedging word for polite disagreement
+  - безсумнівно (undoubtedly) — strong assertion, formal/academic register
+  recommended:
+  - мабуть (probably) — weak assumption/probability
+  - очевидно (obviously) — implies clear evidence
+  - здаватися (to seem) — subjective impression constructions (мені здається)
+  - стверджувати (to claim) — formal statement of position
+activity_hints:
+- type: fill-in
+  focus: Adjust opinion strength
+  items: 25
+- type: fill-in
+  focus: Complete opinion sentences
+  items: 20
+- type: fill-in
+  focus: Express opinions in scenarios
+  items: 15
+- type: fill-in
+  focus: Write opinion paragraphs
+  items: 10
+focus: vocabulary
+pedagogy: PPP
+prerequisites:
+- b1-53 (Abstract Concepts Processes)
+connects_to:
+- b1-55 (Agreement Disagreement)
+objectives:
+- Learner can express personal opinions using various constructions
+- Learner can distinguish between strong and weak opinion expressions
+- Learner can use appropriate opinion phrases in formal and informal contexts
+- Learner can hedge and soften opinions appropriately
+grammar:
+- Opinion verb constructions
+- Opinion phrase patterns
+- Hedging and intensifying expressions
+register: розмовний
+phase: B1.5 [Vocabulary Expansion I]
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Talk Show Guest
+word_target: 4000

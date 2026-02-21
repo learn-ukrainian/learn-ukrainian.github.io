@@ -31,6 +31,59 @@
 
 ---
 
+## Communication Protocol v2 (GitHub-First)
+
+> **Effective: 2026-02-12. Updated 2026-02-17: watcher disabled, direct bridge calls replace broker notifications.**
+
+### Core Principle
+
+**GitHub issues and comments are the primary communication channel.** Inter-agent calls use `ai_agent_bridge.py ask-gemini` / `ask-claude` for direct dispatch, or `send` / MCP `send_message` for passive inbox drops. The agent watcher (`agent_watcher.py`) is disabled — agents check their own inbox at session start.
+
+### Teams (Adversarial by Design)
+
+| Team | Agent | Role | Bias |
+|------|-------|------|------|
+| 💙 **Синя команда** (Blue) | Claude | Architect, reviewer, quality gate | Won't approve until bar is met |
+| 💛 **Жовта команда** (Gold) | Gemini | Content builder, implementer | Iterates toward passing |
+
+**Both teams critique each other.** An LLM must NEVER review its own work. The purpose is quality through finding mistakes, not through agreement.
+
+### Channel Rules
+
+| Channel | Use For | Max Length |
+|---------|---------|------------|
+| **GitHub issues** | Task specs, proposals, architecture plans | Unlimited |
+| **GitHub comments** | Reviews, feedback, progress, disagreements | Unlimited |
+| **Broker messages** | Notifications ONLY: "read #559", "review on #558" | < 200 chars |
+
+### The Pattern
+
+```
+Agent A                    GitHub                      Agent B
+  │                          │                            │
+  ├──▶ Post comment ────────▶│                            │
+  │    (substantive content)  │                            │
+  │                          │                            │
+  ├──▶ Broker ping ──────────┼──────────────────────────▶│
+  │    "Review posted #559"  │                            │
+  │                          │                            │
+  │                          │◀──── Read GH comment ──────┤
+  │                          │                            │
+  │                          │◀──── Post response ────────┤
+  │                          │      (on same issue)       │
+  │◀──── Broker ping ────────┼────────────────────────────┤
+  │    "Response on #559"    │                            │
+```
+
+### Cross-Review Rules
+
+- **Claude reviews Gemini's content** on GitHub. Points out specific problems, quotes issues, suggests fixes.
+- **Gemini reviews Claude's architecture** on GitHub. Challenges assumptions, offers alternatives.
+- **Disagreements are posted as counter-arguments** on GitHub — not silently accepted.
+- **An LLM never rubber-stamps.** If you can't find problems, look harder or admit the scope was too narrow to evaluate.
+
+---
+
 ## Vision: LLM Committee System
 
 **Not just handoff, but mutual review and collaboration.**

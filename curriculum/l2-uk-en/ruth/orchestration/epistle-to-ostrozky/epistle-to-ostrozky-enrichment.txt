@@ -1,0 +1,202 @@
+✅ Message sent to Gemini (ID: 12724) [auto-acked: self-addressed]
+✓ Message 12724 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12724...
+📨 Message #12724
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-epistle-to-ostrozky
+   Time: 2026-02-20T23:41:50.616496+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 67
+module: ruth-067
+module_number: 55
+slug: epistle-to-ostrozky
+title_uk: Лист до Острозького
+title_en: Epistle to Ostrozky
+phase: 3
+phase_id: baroque-fight
+phase_name: Baroque Fight
+focus: Political theology
+content_outline:
+- section: Вступ
+  description: Introduction to Epistle to Ostrozky
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Baroque Scholar
+  role: Synodal Scribe
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Epistle To Ostrozky
+
+## Використані джерела
+1. [Litopys.org.ua: Іван Вишенський. Твори](http://litopys.org.ua/vishen/vish.htm) — Повний текст творів та аналітичні статті.
+2. [Ізборник: Послання до князя Василя Острозького](http://litopys.org.ua/old16/old16_06.htm) — Оригінальний текст та коментарі.
+3. [Енциклопедія Сучасної України: Вишенський Іван](https://esu.com.ua/article-34246) — Академічна біографія та аналіз творчості.
+4. [History.org.ua: Берестейська церковна унія 1596](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Beresteiska_tserkovna_uniia_1596) — Історичний контекст.
+
+## Хронологія
+- 1595: Єпископи Іпатій Потій та Кирило Терлецький вирушають до Риму.
+- 1596 (жовтень): Берестейські собори (православний та уніатський), розкол Київської митрополії.
+- 1598: Іван Вишенський пише «Послання до князя Василя Острозького» з Афону.
+- 1598: Публікація «Книжки» Вишенського (включаючи це послання) в Острозі.
+- 1608: Смерть князя Василя-Костянтина Острозького, занепад Острозького осередку.
+
+## Ключові факти та цитати
+- **Цитата 1:** «...оплачте, православнії, нагле здохлий труп римської церкви, папської гордості й пихи!» (про духовну смерть західної церкви через гординю).
+- **Цитата 2:** «...комедійскоє и машкарскоє набоженство» (про театральність та зовнішню пишність католицького обряду, яку Вишенський протиставляє істинній вірі).
+- **Цитата 3:** «Чи не ліпше тобі в церкві благочестивій... безносому, безрукому, безногому й безхокому з ласки божої спастися, ніж у єретицькій — здоровому, в багряниці, в бісорі й золоті засудженому бути?» (апологія страждання та бідності).
+- **Жанр:** Полемічне послання з елементами «плачу» (треносу).
+- **Адресат:** Князь Василь-Костянтин Острозький — «стовп православ'я», але водночас представник тієї еліти, яку Вишенський критикує за розкіш.
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ": [!context] — Афон як «духовна фортеця» vs Острог як «культурна фортеця». Два центри опору унії.
+- Section "Основний матеріал: I — Історичний контекст": [!history-bite] — Той факт, що Вишенський, будучи монахом-аскетом, насмілювався повчати найбагатшого магната Східної Європи, свідчить про унікальний статус «пророка» в руській культурі.
+- Section "Основний матеріал: II — Риторика": [!culture] — Барокова естетика «світу як театру» у фразі про «комедійне набоженство».
+- Section "Основний матеріал: III — Анатомія зради": [!myth-buster] — Міф про те, що Унія була виключно «польською інтригою». Вишенський показує, що це була внутрішня криза руської еліти та її ціннісна переорієнтація.
+- Section "Основний матеріал: IV — Соціальний вимір": [!decolonization] — Вишенський не був «соціалістом» (радянський міф), він був «християнським егалітаристом». Рівність перед Богом, а не класова боротьба.
+- Section "Підсумок": [!legacy] — Вплив стилю Вишенського на подальшу барокову літературу (емоційна напруга, нагромадження синонімів).
+
+## Деколонізаційний контекст
+- **Радянський міф:** Іван Вишенський — предтеча комунізму, борець проти феодалів, мало не атеїст-революціонер.
+- **Українська реальність:** Вишенський — глибоко віруючий ісихаст, консерватор, чий радикалізм був наслідком абсолютного слідування євангельським ідеалам, а не політичною програмою. Його критика багатства — це заклик до спасіння душі, а не до перерозподілу майна.
+
+## Contested Terms
+| Concept | Imperial/Soviet framing | Ukrainian (decolonized) framing |
+|---------|-------------------------|---------------------------------|
+| Возз'єднання церков | «Прогресивний крок» (в польській історіографії) або «Зрада народу» (в радянській/російській) | Складна внутрішня трансформація Київської Церкви; спроба модернізації (через унію) vs спроба збереження ідентичності (через традицію). |
+| Класова боротьба Вишенського | Вишенський як захисник «пригнічених мас» проти панів | Вишенський як захисник «православної істини» проти «світської суєти». Його «простий народ» — це носії істини, а не просто бідняки. |
+
+## Section-Mapped Research Notes
+
+### Вступ
+Контекст 1590-х років. Криза ідентичності руської шляхти. Острог як центр «Острозького відродження». Постать Василя-Костянтина Острозького — некоронованого короля Русі.
+
+### Основний матеріал: I — Аскет і Магнат
+Діалог двох світів: Афон (містичний центр, втеча від світу) та Острог (культурно-політичний центр, активна дія у світі). Чому Вишенський пише князю? Надія на його захист, але й докір за компроміси.
+
+### Основний матеріал: II — Поетика гніву і плачу
+Стиль послання. Використання біблійної риторики. Жанр «послання-плач». Емоційність як ознака раннього бароко. Метафора «мертвого тіла» церкви.
+
+### Основний матеріал: III — Критика Владик
+Персональна атака на ініціаторів унії (Потія, Терлецького). Звинувачення у симонії (продажу благодаті), розкоші, зраді пастви заради «шляхетських привилеїв». Протиставлення «ситого» життя єпископів «голодному» Христу.
+
+### Основний матеріал: IV — Концепція «Соборності»
+Ідея рівності всіх християн. «Хлоп» і «Князь» рівні в церкві. Критика шляхетської пихи. Це не демократія в сучасному сенсі, а повернення до ранньохристиянської общини. Важливість «мирянського руху» (братств).
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12748)
+✓ Message 12724 acknowledged
+✓ Message 12748 acknowledged

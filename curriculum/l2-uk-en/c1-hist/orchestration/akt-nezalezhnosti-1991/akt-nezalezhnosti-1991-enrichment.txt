@@ -1,0 +1,311 @@
+✅ Message sent to Gemini (ID: 12493) [auto-acked: self-addressed]
+✓ Message 12493 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12493...
+📨 Message #12493
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-akt-nezalezhnosti-1991
+   Time: 2026-02-20T23:40:09.386105+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-hist-043
+level: c1-hist
+sequence: 43
+version: '1.0'
+title: 'Акт проголошення незалежності: Текст і контекст'
+focus: history
+pedagogy: seminar
+objectives:
+- 'Analyze the causes and consequences of акт проголошення незалежності: текст і контекст'
+- Evaluate the historical significance of найважливіший документ
+content_outline:
+- section: Вступ — Найважливіший документ
+  subsections:
+  - 24 серпня 1991
+  - Контекст — путч у Москві
+  - Значення документа
+  - Чому такий короткий текст
+- section: Контекст серпня 1991
+  subsections:
+  - Путч 19-21 серпня
+  - Верховна Рада УРСР
+  - Хто голосував — комуністи!
+  - Чому раптом підтримали
+- section: Текст Акту — детальний аналіз
+  subsections:
+  - Повний текст (з коментарями)
+  - Тисячолітня традиція державотворення
+  - Посилання на Декларацію суверенітету
+  - Юридична формула незалежності
+- section: Хто голосував і чому
+  subsections:
+  - Голосування — 321 за
+  - Комуністи vs. націоналісти
+  - Мотивації різних груп
+  - Кравчук — перевертень?
+- section: Референдум 1 грудня
+  subsections:
+  - Чому потрібен був референдум
+  - 90.32% — що означає
+  - Регіональний розподіл
+  - Крим і Донбас теж голосували «так»
+- section: Міжнародне визнання
+  subsections:
+  - Перші країни
+  - США і Росія — коли визнали
+  - Розпад СРСР — наслідок
+- section: Підсумок
+  subsections:
+  - Акт як фундамент
+  - Від документа до реальності
+  - Зв'язок із 2022
+vocabulary:
+- акт
+- незалежність
+- проголошення
+- путч
+- референдум
+- суверенітет
+- Верховна Рада
+- визнання
+- державотворення
+- голосування
+- правонаступництво
+- легітимність
+- ратифікація
+- денонсація
+- розпад
+activities:
+- type: reading
+  focus: Full text with commentary
+- type: critical-analysis
+  focus: Who voted yes and why? Analyze motivations
+- type: critical-analysis
+  focus: Map regional referendum results — what patterns?
+- type: comparative-study
+  focus: Compare with Baltic independence declarations
+- type: essay-response
+  focus: Чому 90% українців проголосували за незалежність?
+sources:
+- name: Акт проголошення незалежності України (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Акт_проголошення_незалежності_України
+  type: reference
+  notes: Overview
+- name: Текст Акту
+  url: https://zakon.rada.gov.ua/laws/show/1427-12
+  type: primary
+  notes: Official text
+- name: Референдум 1991
+  url: https://uk.wikipedia.org/wiki/Всеукраїнський_референдум_1991
+  type: reference
+  notes: Confirmation referendum
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
+persona:
+  voice: Academic Historiographer
+  role: Parliamentary Chronicler
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Акт проголошення незалежності: Текст і контекст
+
+## Використані джерела
+1. [Акт проголошення незалежності України — текст](https://zakon.rada.gov.ua/laws/show/1427-12) — Офіційний текст документа на сайті ВРУ.
+2. [Історія прийняття Акту (Інститут історії України)](http://resource.history.org.ua/) — Академічний огляд подій 24 серпня 1991 року.
+3. [Результати Всеукраїнського референдуму (ЦВК)](https://cvk.gov.ua/) — Офіційна статистика голосування по регіонах.
+4. [Чому комуністи голосували за незалежність (Історична Правда)](https://www.istpravda.com.ua/) — Аналіз мотивацій "Групи 239".
+5. [Хронологія визнання незалежності (МЗС України)](https://mfa.gov.ua/) — Дати визнання іноземними державами.
+
+## Хронологія
+- **16 липня 1990**: Прийняття Декларації про державний суверенітет України.
+- **19-21 серпня 1991**: Спроба державного перевороту в Москві (ГКЧП/ДКНС).
+- **24 серпня 1991**: Верховна Рада УРСР приймає Акт проголошення незалежності (346 голосів "за" — конституційна більшість, всього 392).
+- **1 грудня 1991**: Всеукраїнський референдум (90.32% "за") та вибори Президента (перемога Л. Кравчука).
+- **2 грудня 1991**: Польща і Канада першими визнають незалежність України.
+- **8 грудня 1991**: Біловезька угода — констатація розпаду СРСР (внаслідок українського референдуму).
+- **25 грудня 1991**: Відставка Горбачова, визнання незалежності з боку США.
+
+## Ключові факти та цитати
+- **Цитата з преамбули**: «Виходячи із смертельної небезпеки, яка нависла була над Україною в зв'язку з державним переворотом в СРСР 19 серпня 1991 року...»
+- **Цитата про тяглість**: «...продовжуючи тисячолітню традицію державотворення в Україні...» (Ключова фраза, що пов'язує з Руссю та УНР).
+- **Результати референдуму**: Крим — 54.19%, Донецька обл. — 83.90%, Луганська обл. — 83.86%.
+- **Голосування в Раді**: Комуністична більшість ("Група 239") голосувала "за" під тиском вулиці та страхом перед Єльциним/Росією.
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ — Найважливіший документ": [!context] — Акт складається всього з 93 слів (у основній частині), це один з найлаконічніших установчих документів у світі.
+- Section "Контекст серпня 1991": [!history-bite] — "Лебедине озеро" на всіх телеканалах як символ путчу.
+- Section "Текст Акту — детальний аналіз": [!quote] — "Територія України є неподільною і недоторканною" — юридична база для оборони в 2014/2022 роках.
+- Section "Хто голосував і чому": [!myth-buster] — Міф: "Незалежність впала з неба". Реальність: Це був результат компромісу між націонал-демократами та наляканою номенклатурою під тиском тисяч людей під Радою.
+- Section "Референдум 1 грудня": [!myth-buster] — Міф: "Схід і Крим не хотіли незалежності". Реальність: Більшість у ВСІХ регіонах, включаючи Крим (54%) і Донбас (83%), проголосували ЗА.
+- Section "Міжнародне визнання": [!decolonization] — Світ не хотів розпаду СРСР (згадайте промову "Chicken Kiev" Буша), але український референдум не залишив вибору.
+
+## Деколонізаційний контекст
+- **Imperial Myth**: Україна отримала незалежність "у подарунок" через розвал СРСР, "випадкова країна".
+- **Ukrainian Reality**: Саме проголошення незалежності Україною (і підтвердження на референдумі) стало *причиною* остаточного розвалу СРСР. Без України імперія не могла існувати.
+- **Terminology**: Акт *відновив* державність (посилання на традицію), а не створив її з нуля.
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| 24 серпня 1991 | "Розвал великої країни", геополітична катастрофа | Відновлення історичної справедливості, порятунок від тоталітаризму |
+| Голосування комуністів | Зрада ідеалів, перефарбовування | Ситуативний союз заради виживання, перемога національної ідеї над ідеологією |
+| Референдум 1 грудня | Емоційний порив, люди не розуміли за що голосують | Свідомий вибір, легітимізація держави, "смерть СРСР" |
+
+## Section-Mapped Research Notes
+
+### Вступ — Найважливіший документ
+Унікальність документа: стислість (щоб не було правок і дебатів). Його писав Левко Лук'яненко в шкільному зошиті (чернетка). Це юридичний фундамент сучасної держави.
+
+### Контекст серпня 1991
+Путч ГКЧП (Янаєв, Павлов, Крючков) мав на меті згорнути "перебудову" і повернути жорсткий контроль. Для України це означало загрозу введення військ і репресій. Кравчук зайняв вичікувальну позицію ("поміж крапель"), але 24 серпня вже не мав вибору.
+
+### Текст Акту — детальний аналіз
+Аналіз кожного пункту.
+1. "Смертельна небезпека" — обґрунтування (casus belli для виходу).
+2. "Тисячолітня традиція" — легітимність від Русі, Козаччини, УНР.
+3. "Самовизначення" — посилання на статут ООН (міжнародне право).
+4. "Неподільність території" — унітарність.
+
+### Хто голосував і чому
+"Народна Рада" (опозиція) — 125 голосів. "Група 239" (комуністи) — більшість.
+Чому комуністи? 1) Страх перед російським керівництвом (Єльцин заборонив КПРС). 2) Бажання зберегти владу в "своїй" республіці. 3) Тиск натовпу під стінами Ради. 4) Робота Кравчука, який переконав їх.
+Результат: 346 голосів (за іншими даними 392 разом з тими, хто долучився пізніше, але на табло було 346).
+
+### Референдум 1 грудня
+Кравчук наполіг на референдумі, щоб мати повну легітимність перед світом і Москвою.
+Бюлетень: "Чи підтверджуєте Ви Акт...".
+Явка 84%. "За" 90.32%.
+Це "вбило" СРСР. Горбачов втратив країну.
+
+### Міжнародне визнання
+Перші: Польща (сусід), Канада (діаспора).
+Потім Угорщина, Литва.
+Росія визнала 5 грудня (після референдуму, змушена).
+США — 25 грудня (дуже обережно).
+Це показує суб'єктність України: світ визнав не "сепаратистів", а нову державу.
+
+### Підсумок
+Акт 1991 року — це не фініш, а старт. Реальна незалежність виборювалася далі (Майдан, війна 2014-2022). Але без цього папірця не було б за що боротися юридично.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12534)
+✓ Message 12493 acknowledged
+✓ Message 12534 acknowledged

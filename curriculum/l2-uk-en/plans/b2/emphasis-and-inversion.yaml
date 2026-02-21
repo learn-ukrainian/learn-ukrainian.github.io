@@ -1,0 +1,148 @@
+module: b2-13
+level: B2
+sequence: 13
+slug: emphasis-and-inversion
+version: '2.0'
+title: Емфаза та інверсія
+content_outline:
+- section: 'Вступ — Порядок слів в українській мові (Introduction: Word Order in Ukrainian)'
+  words: 500
+  points:
+  - Вільний чи гнучкий? Спростування міфу про повну хаотичність — роль граматичного
+    зв'язку (узгодження, керування).
+  - 'Прагматичний вплив: як зміна місця слова змінює логічний центр повідомлення.'
+  - Різниця між нейтральним (об'єктивним) та емфатичним (суб'єктивним) порядком згідно
+    з §4.3.1.1 Держстандарту.
+  - 'Культурний гачок: Аналіз поетичної інверсії у Т. Шевченка «Садок вишневий коло
+    хати» (прикметник після іменника) для ритмомелодики.'
+- section: 'Актуальне членування речення: Тема та Рема (Topic-Comment Structure)'
+  words: 700
+  points:
+  - Поняття Теми (відома інформація/дане) та Реми (нова інформація/ядро повідомлення).
+  - 'Нейтральний порядок: Тема → Рема (рух від відомого до невідомого).'
+  - 'Правило «Рема в кінці»: чому найважливіше слово зазвичай замикає нейтральне речення
+    (на відміну від англійського вокального наголосу).'
+  - 'Контекстуальний вплив: як одне й те саме речення змінює структуру залежно від
+    поставленого питання.'
+- section: Емфатичний порядок та логічний наголос (Emphatic Order and Logical Stress)
+  words: 800
+  points:
+  - Винесення Реми на початок речення для сильного емоційного виділення (інверсія
+    Теми і Реми).
+  - 'Виділення підмета, додатка або обставини: порівняльний аналіз «Я прочитав цю
+    книгу» (нейтрально) vs «Цю книгу я прочитав» (акцент на конкретному об''єкті).'
+  - 'Логічний та емфатичний наголос у мовленні: фонетичні засоби підсилення синтаксичних
+    конструкцій.'
+  - 'Літературний приклад: Емоційна емфаза у В. Сосюри «Так ніхто не кохав» — препозиція
+    прислівника «так».'
+- section: Інверсія та стилістичні ефекти (Inversion and Stylistic Effects)
+  words: 700
+  points:
+  - 'Типи інверсії: повна та часткова; синтаксична та стилістична.'
+  - 'Інверсія в художньому стилі: створення піднесеності, урочистості або інтимності.'
+  - 'Публіцистичний та розмовний реєстри: інверсія як засіб залучення уваги або передачі
+    спонтанних емоцій.'
+  - 'Типова помилка: англомовний SVO-flatness (втрата емоційності через надмірне дотримання
+    прямого порядку слів).'
+- section: Лексичні та граматичні засоби виділення (Lexical and Grammatical Tools
+    for Highlighting)
+  words: 700
+  points:
+  - 'Сила часток: використання «саме», «якраз», «навіть», «тільки» як доступних інструментів
+    емфази.'
+  - Конструкція «це... що/який» (аналог англійських cleft sentences) для ідентифікації
+    суб'єкта.
+  - 'Повтор як засіб підсилення: лексична анафора та синтаксичний паралелізм.'
+  - 'Парцеляція (розчленування речення): як штучні паузи створюють драматичний ефект
+    у текстах B2+.'
+- section: 'Практика: Корекція та Синтез (Practice: Correction and Synthesis)'
+  words: 600
+  points:
+  - 'Робота над помилками: виправлення «суржикової» синтаксичної структури (копіювання
+    російських патернів в офіційному стилі).'
+  - 'Трансформаційні вправи: перетворення нейтральних абзаців на емфатичні тексти
+    різних регістрів.'
+  - 'Аналіз автентичних медіа-текстів: пошук засобів актуального членування та оцінка
+    їхньої ефективності.'
+  - 'Підготовка до модуля B2-14: роль порядку слів у забезпеченні логічної зв''язності
+    (cohesion).'
+vocabulary_hints:
+  required:
+  - емфаза (emphasis) — логічна ~, емоційна ~, засоби ~; академічний та стилістичний
+    термін
+  - інверсія (inversion) — поетична ~, стилістична ~, використовувати інверсію; непрямий
+    порядок слів
+  - порядок слів (word order) — прямий ~, непрямий ~, вільний ~, порушення ~; основа
+    синтаксису
+  - тема (theme/topic) — ~ повідомлення, відома інформація; початок нейтрального речення
+  - рема (rheme/comment) — ~ висловлювання, нова інформація, ядро речення; кінець
+    нейтрального речення
+  - виділення (highlighting/emphasis) — засоби виділення, логічне ~; акцентування
+    уваги
+  - саме (exactly/precisely) — саме той, саме зараз, саме це; підсилювальна частка,
+    висока частотність
+  - якраз (just/exactly) — якраз вчасно, якраз те; розмовний та нейтральний синонім
+    до «саме»
+  - нейтральний (neutral) — ~ порядок слів, ~ стиль; об'єктивний виклад
+  - наголос (stress/emphasis) — логічний ~, емфатичний ~, змістовий ~; фонетичний
+    засіб виділення
+  recommended:
+  - парцеляція (parcellation) — стилістичне розчленування речення для підсилення
+  - прагматика (pragmatics) — ~ мовлення; вивчення впливу контексту на значення
+  - контекст (context) — контекстуальний вплив; визначає порядок слів
+  - художній стиль (artistic style) — сфера найширшого використання інверсії
+  - прямий порядок (direct order) — підмет перед присудком, означення перед іменником
+activity_hints:
+- type: quiz
+  focus: Identify neutral vs emphatic word order
+  items: 15+
+- type: fill-in
+  focus: Change neutral sentence to emphatic
+  items: 12+
+- type: match-up
+  focus: Sentence → communicative effect
+  items: 12+
+- type: group-sort
+  focus: Analyze different word orders of same sentence
+  items: 10+
+- type: fill-in
+  focus: Complete sentences with emphatic constructions
+  items: 12+
+- type: reading
+  focus: Identify emphatic structures in literary text
+  items: 3 texts
+- type: essay-response
+  focus: Rewrite paragraph with emphatic structures
+  output: Model answer with analysis
+focus: grammar
+prerequisites:
+- b2-11 (Multi-clause Sentences)
+- b2-12 (Parenthetical Expressions)
+- Basic word order
+connects_to:
+- b2-14 (Stylistic Connectors)
+- 'b2-22 (Register: Literary Ukrainian)'
+- b2-25 (B2.1b Checkpoint)
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Word Order
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Stylistic word order variations at B2
+- name: Сучасна українська літературна мова - Стилістика
+  url: https://uk.wikipedia.org/wiki/Стилістика
+  type: secondary
+  notes: Emphatic constructions in Ukrainian
+- name: CEFR B2 Stylistic Competence
+  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  type: reference
+  notes: B2 style and register awareness
+immersion: 100% Ukrainian
+phase: B2.1b [Participles & Register Intro]
+objectives:
+- Identify and correctly use емфаза та інверсія
+- Form and apply порядок слів в українській мові
+persona:
+  voice: Professional Language Coach
+  role: Public Speaker (Оратор)
+word_target: 4000

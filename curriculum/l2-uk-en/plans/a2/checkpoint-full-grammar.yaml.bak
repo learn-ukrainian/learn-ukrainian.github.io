@@ -1,0 +1,103 @@
+module: a2-56
+level: A2
+sequence: 56
+slug: checkpoint-full-grammar
+version: '2.0'
+title: Checkpoint — Full Grammar
+subtitle: A2 Mastery Review
+content_outline:
+- section: Огляд
+  points:
+  - Overview of checkpoint — summative assessment for A2 morphological curriculum
+    (Standard §4.2.2) — verifies ability to form all 7 cases and use aspectual pairs
+    (Lines 1258-1359)
+  - Self-assessment focus — emphasis on self-correction ('виправити помилку') and
+    Euphony as Logic — explain that 'irregularities' are often language trying to
+    sound better
+- section: 'Skill 1: Daily Life'
+  points:
+  - Daily life vocabulary review — focus on Euphony (Mylozvuchnist) rules (u/v, i/y)
+    for smooth speech — scientifically recognized melodic quality (like Italian)
+  - 'Practical situations — learner error: Motion Verb Transport (confusing ''іти''
+    vs ''їхати'') — Error: ''Я йду до Львова поїздом'' -> Correction: ''Я їду...'''
+- section: 'Skill 2: Work & Education'
+  points:
+  - Work and education vocabulary — introduce basic grammatical meta-language (іменник,
+    дієслово) — prepare for B1 Bridge strategy
+  - 'Professional situations — learner error: Aspect Mismatch (using Imperfective
+    for completed specific actions) — Error: ''Вчора я писав лист і відправив'' ->
+    Correction: ''Вчора я написав...'''
+- section: 'Skill 3: Health & Body'
+  points:
+  - Health vocabulary review — focus on correct case usage for body parts and conditions
+  - 'Body and wellness — cultural hook: The ''Soul'' of the Cases and Vocative case
+    personification — even nature (Zemle-matty, lisi, zori) is addressed directly'
+- section: 'Skill 4: Shopping & Travel'
+  points:
+  - Shopping and travel vocabulary — differentiating 'вибирати' (process) vs 'вибрати'
+    (result) — High frequency A2 General vocabulary
+  - 'Practical transactions — learner error: Case Confusion (Genitive vs. Accusative,
+    especially in negation) — Error: ''Я не маю час'' -> Correction: ''Я не маю часу'''
+- section: Integration Challenge
+  points:
+  - Comprehensive assessment — selecting correct case and aspect in complex sentences
+  - Mixed skills practice — verify ability to 'перевіряти себе' (check oneself) and
+    apply rules — reinforce collocations like 'перевіряти знання'
+- section: Підсумок
+  points:
+  - Summary and next steps — transition to B1 Metalanguage Bridge — prepares for A2-57
+vocabulary_hints:
+  required:
+  - повторення (review) — key concept for checkpoint
+  - відмінок (case) — Називний, Родовий, Давальний, Знахідний, Орудний, Місцевий,
+    Кличний
+  - дієслово (verb) — meta-language introduction
+  - граматика (grammar) — rules and exceptions
+  - речення (sentence) — complex structures
+  - слово (word) — vocabulary choice
+  - правильно (correctly) — self-correction focus
+  - помилка (mistake) — робити помилку, виправити помилку, груба помилка
+  recommended:
+  - вид (aspect) — completed vs process
+  - доконаний (perfective) — result focus
+  - недоконаний (imperfective) — process focus
+  - вправа (exercise) — practice context
+  - правило (rule) — запам'ятати правило, за правилом, виняток з правила
+  - вибирати (to choose) — вибирати правильну відповідь, вибирати подарунок
+  - перевіряти (to check) — перевіряти себе, перевіряти вправу, перевіряти знання
+activity_hints:
+- type: quiz
+  focus: A2 grammar comprehensive test
+  items: 30
+- type: fill-in
+  focus: Case and aspect selection
+  items: 25
+- type: error-correction
+  focus: Fix common mistakes
+  items: 15
+- type: quiz
+  focus: Demonstrate A2 proficiency
+  items: 10
+focus: checkpoint
+pedagogy: TTT
+prerequisites:
+- a2-54 (Sports and Fitness)
+- a2-55 (Health & Wellness)
+connects_to:
+- a2-57 (Practical Intro)
+objectives:
+- Learner can integrate A2 vocabulary in conversation
+- Learner can use all grammatical cases correctly
+- Learner can navigate common daily situations
+- Learner can demonstrate A2 proficiency
+grammar:
+- A2 vocabulary review (all thematic areas)
+- Case system review (all 7 cases)
+- Verb aspect review (perfective/imperfective)
+register: розмовний
+immersion: 75-90% Ukrainian
+phase: A2.5 [Vocabulary Expansion]
+persona:
+  voice: Encouraging Cultural Guide
+  role: Literary Editor
+word_target: 3000

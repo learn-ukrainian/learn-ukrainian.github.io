@@ -1,0 +1,144 @@
+module: a2-01
+level: A2
+sequence: 1
+slug: the-dative-i-pronouns
+version: '2.0'
+title: The Dative I — Pronouns
+subtitle: I Like, I Need, and How I Feel
+content_outline:
+- section: 'Вступ: Роль адресата (Introduction: The Role of Recipient)'
+  words: 500
+  points:
+  - Introduction to the Dative case (давальний відмінок) per State Standard §4.2.2.3,
+    focusing on the person/object for whose benefit or harm an action occurs (recipient
+    role)
+  - 'Functional application: asking the key questions — Кому? (To whom?) and Чому?
+    (To what?)'
+  - 'The subject of quantitative age traits as a mandatory A2 competency: explaining
+    the logic behind «Мені двадцять років» or «Дідусеві вісімдесят років»'
+  - Overview of dative pronouns as the primary tool for expressing internal states,
+    needs, and social interactions
+- section: 'Презентація: Форми та базові сполучення (Presentation: Forms and Basic
+    Collocations)'
+  words: 700
+  points:
+  - Full paradigm of personal pronouns in the Dative case (мені, тобі, йому, їй, нам,
+    вам, їм) aligned with State Standard §4.2.1.4
+  - 'High-frequency verbal collocations for immediate use: «дай мені» (give me), «скажи
+    мені» (tell me), «дзвони йому» (call him), and «допоможи їй» (help her)'
+  - Visual mapping of Nominative vs. Dative forms to prevent confusion between subject
+    and recipient roles
+  - 'Register note: using «Вам» for formal address in hospitality and professional
+    contexts (e.g., «Що Вам запропонувати?»)'
+- section: 'Подобатися та Потрібно: Пастка інверсії (Likes and Needs: The Inversion
+    Trap)'
+  words: 800
+  points:
+  - Detailed breakdown of the «Мені подобається» construction (State Standard §4.2.2.1);
+    addressing the 'I Like' Trap by contrasting English SVO (I like it) with Ukrainian
+    Dative Inversion
+  - 'Addressing the ''I Need'' Trap: correcting the learner error «Я треба» to the
+    required «Мені треба» or «Мені потрібно»'
+  - 'Syntactic mapping: explaining that in «Мені подобається музика», the music is
+    the Nominative subject doing the ''pleasing'', while ''me'' is the Dative recipient'
+  - 'Drills for indirect object alignment: explaining why «допомагати» (to help) and
+    «дякувати» (to thank) require Dative (кому?), unlike English direct objects'
+- section: 'Стани та емоції: Світ відчуттів (States and Emotions: The World of Feelings)'
+  words: 500
+  points:
+  - 'Impersonal constructions for physical states: «мені холодно» (I am cold), «йому
+    жарко» (he is hot), «нам нудно» (we are bored)'
+  - 'Expressing emotions and mental states: «їй весело» (she is having fun), «нам
+    сумно» (we are sad), «мені здається» (it seems to me)'
+  - 'The logic of convenience and suitability: «мені зручно» (it''s comfortable for
+    me) and «їй пасує» (it suits her/looks good on her)'
+- section: Культурний код та етикет (Cultural Code and Etiquette)
+  words: 500
+  points:
+  - 'The etiquette of meeting: «Мені приємно» (It is pleasant to me) as the standard
+    response to «Дуже радий познайомитися»'
+  - 'The Threshold Taboo (Поріг): Cultural instruction on the phrase «Не через поріг!»
+    (Not across the threshold!) regarding shaking hands or giving gifts'
+  - 'Hospitality and Offering: Practicing the phrase «Вам каву чи чай?» and the cultural
+    expectation of offering food/drink to guests using Dative pronouns'
+  - 'Gift-giving norms: Using Dative pronouns when offering flowers (odd numbers 3,
+    5, 7) or the traditional bread and salt'
+vocabulary_hints:
+  required:
+  - мені (to me) — High frequency; core for states (мені холодно) and requests (дай
+    мені)
+  - тобі (to you) — Informal; used in common questions (як тобі?, що тобі треба?)
+  - йому (to him/it) — Used for age (йому 30 років) and contact (дзвони йому)
+  - їй (to her/it) — Used for help (допоможи їй) and appearance (їй пасує)
+  - нам (to us) — Common for shared needs (нам треба) and time (нам час)
+  - вам (to you pl./formal) — Essential for polite hospitality (що вам дати?)
+  - їм (to them) — Used for success (їм вдалося) and indifference (їм байдуже)
+  - 'подобатися (to like/please) — Requires Dative recipient; learner error: avoid
+    «я подобаю»'
+  - потрібно / треба (need/necessary) — Used with Dative for the person who needs
+  - допомагати (to help) — High frequency; takes Dative (допоможи мені), not Accusative
+  - 'дякувати (to thank) — Takes Dative (дякую тобі); common error: confuse with Accusative'
+  - 'дзвонити (to call) — Takes Dative (дзвони йому); frequency: high'
+  - давати (to give) — Fundamental dative verb (дай мені)
+  - 'здаватися (to seem) — Collocation: «мені здається» (it seems to me)'
+  recommended:
+  - 'приємно (pleasant) — Cultural hook: «Мені приємно» (Nice to meet you)'
+  - 'холодно (cold) — Physical state: «мені холодно»'
+  - 'весело (fun) — Emotional state: «їй весело»'
+  - 'нудно (boring) — Emotional state: «нам нудно»'
+  - 'важко (difficult) — State: «йому важко»'
+  - 'легко (easy) — State: «вам легко»'
+  - 'поріг (threshold) — Cultural context: «не через поріг»'
+activity_hints:
+- type: quiz
+  focus: Choose correct dative pronoun for context
+  items: 12+
+- type: fill-in
+  focus: Transform nominative pronouns to dative
+  items: 10+
+- type: match-up
+  focus: Match nominative pronoun to dative form
+  items: 8+
+- type: fill-in
+  focus: Complete sentences with подобатися structure
+  items: 10+
+- type: quiz
+  focus: Physical/emotional states with dative
+  items: 10+
+focus: grammar
+pedagogy: PPP
+prerequisites:
+- A1 completion (personal pronouns in nominative)
+- Basic sentence structure
+- Present tense conjugation
+connects_to:
+- a2-02 (Dative II - Nouns)
+- a2-03 (Dative Verbs)
+- a2-07 (Spatial Prepositions)
+objectives:
+- Learner can use dative pronouns correctly
+- Learner can express likes using подобатися
+- Learner can express needs using потрібно
+- Learner can describe physical and emotional states
+grammar:
+- dative pronouns
+- impersonal constructions
+- подобатися
+- потрібно
+- states
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Dative Case
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Official dative pronoun paradigm and usage requirements for A2
+- name: CEFR A2 Grammar Descriptors
+  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  type: reference
+  notes: A2 level grammar complexity expectations
+immersion: 50-60% Ukrainian
+phase: A2.1
+persona:
+  voice: Encouraging Cultural Guide
+  role: Empathic Psychologist
+word_target: 3000

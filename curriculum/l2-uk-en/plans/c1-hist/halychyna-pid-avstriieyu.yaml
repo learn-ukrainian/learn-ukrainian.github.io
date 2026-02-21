@@ -1,4 +1,3 @@
----
 module: c1-hist-070
 level: c1-hist
 sequence: 70
@@ -10,55 +9,47 @@ objectives:
 - 'Analyze the causes and consequences of галичина під австрією: особлива доля'
 - Evaluate the historical significance of інший шлях
 content_outline:
-- section: "Вступ — Інший шлях"
-  words: 457
+- section: Вступ — Інший шлях
   subsections:
   - Галичина — не під Росією
   - 1772 — поділ Польщі
   - Габсбурзька імперія — інша система
   - Структура модуля
 - section: Правовий статус
-  words: 686
   subsections:
   - Королівство Галичини та Володимирії
   - Конституційний період (після 1867)
   - Права українців — порівняно з Росією
   - Обмеження — польська домінація
 - section: Освіта і церква
-  words: 800
   subsections:
   - Греко-католицька церква — легальна
   - Семінарії — українською
   - Університет — доступ
   - Порівняння з Наддніпрянщиною
 - section: «Весна народів» 1848
-  words: 686
   subsections:
   - Головна Руська Рада
   - Перша легальна організація
   - Скасування панщини
   - Чому не вдалося більше
 - section: Польсько-український конфлікт
-  words: 571
   subsections:
   - Польська шляхта — домінація
   - Сейм — нерівність
   - Конкуренція за Галичину
   - «Полякування» vs. українізація
 - section: Порівняння з Росією
-  words: 457
   subsections:
   - Що можна в Австрії
   - Чого не можна в Росії
   - Різні траєкторії
   - Чому це важливо
 - section: Підсумок
-  words: 343
   subsections:
   - Австрія — не ідеал, але краще
   - Галичина — «Український П'ємонт»
   - Підготовка до національного руху
-word_target: 4000
 vocabulary:
 - Галичина
 - Габсбурги
@@ -88,15 +79,15 @@ activities:
   focus: Чому Галичину називали 'українським П'ємонтом'?
 sources:
 - name: Галичина (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Галичина"
+  url: https://uk.wikipedia.org/wiki/Галичина
   type: reference
   notes: Regional overview
 - name: Королівство Галичини та Володимирії (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Королівство_Галичини_та_Володимирії"
+  url: https://uk.wikipedia.org/wiki/Королівство_Галичини_та_Володимирії
   type: reference
   notes: Habsburg period
 - name: Українці в Австро-Угорщині (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Українці_в_Австро-Угорщині"
+  url: https://uk.wikipedia.org/wiki/Українці_в_Австро-Угорщині
   type: reference
   notes: Ukrainian status
 vocabulary_hints:
@@ -115,7 +106,9 @@ activity_hints:
   items: 4
 - type: essay-response
   focus: Критичний аналіз
-  word_target: 300
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Habsburg Era Historian

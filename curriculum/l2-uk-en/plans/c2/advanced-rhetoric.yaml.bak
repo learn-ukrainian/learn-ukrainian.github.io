@@ -1,0 +1,93 @@
+module: c2-101
+level: C2
+sequence: 101
+slug: advanced-rhetoric
+version: '2.0'
+title: 'Поглиблена риторика'
+subtitle: 'Advanced Rhetoric: The Mechanics of Great Speeches'
+content_outline:
+- section: Вступ — Від риторики до красномовства
+  points:
+  - 'State Standard §4.3.5 alignment — rhetoric, argumentation, persuasion, public
+    speaking at C2 mastery level'
+  - 'Ukrainian oratorical tradition: from Kyiv-Mohyla Academy to parliamentary debate'
+  - 'Distinction from C1 persuasive-speech: C2 focuses on ADVANCED figures and their
+    compositional interaction'
+- section: 'Складні фігури мовлення (Complex Figures of Speech)'
+  points:
+  - 'Хіазм (chiasmus): mirror structure — Не життя для роботи, а робота для життя'
+  - 'Зевгма (zeugma): one verb governing incongruent objects — Він підняв прапор і
+    дух армії'
+  - 'Оксиморон (oxymoron): contradictory pairing — гірка радість, живий мрець'
+  - 'Асиндетон (asyndeton) vs полісиндетон (polysyndeton): rhythm through omission
+    or repetition of conjunctions'
+  - 'Еліпсис (ellipsis): strategic omission — Ми — за мир. (We are for peace.)'
+- section: 'Ритм і композиція промови (Rhythm & Speech Composition)'
+  points:
+  - 'Tricolon: three-part parallel structure for memorability'
+  - 'Антиметабола (antimetabole): reversed repetition — Ask not what your country can
+    do for you...'
+  - 'Кільцева композиція (ring composition): ending where you began'
+  - 'Building to a peroration: the climactic final paragraph'
+- section: 'Аналіз великих промов (Analysis of Great Speeches)'
+  points:
+  - 'Analyze Ukrainian political speeches for rhetorical devices'
+  - 'Analyze literary speeches (Franko, Lesya Ukrainka dramatic monologues)'
+  - 'Analyze religious oratory (Skovoroda, Mohyla Academy sermons)'
+  - 'Compare Ukrainian and Western rhetorical traditions'
+- section: 'Практика — Мистецтво промови'
+  points:
+  - 'Write a speech using at least 5 different rhetorical figures'
+  - 'Analyze a transcript: identify ALL figures of speech'
+  - 'Rewrite a flat text using rhetorical devices for maximum impact'
+  - 'Debate exercise: argue both sides of a proposition'
+- section: Підсумок
+  points:
+  - Complete taxonomy of rhetorical figures with Ukrainian examples
+  - Self-assessment checklist for speech effectiveness
+vocabulary_hints:
+  required:
+  - хіазм (chiasmus) — дзеркальна структура
+  - зевгма (zeugma) — одне дієслово, різні об'єкти
+  - оксиморон (oxymoron) — поєднання протилежностей
+  - асиндетон (asyndeton) — безсполучниковість для ритму
+  - полісиндетон (polysyndeton) — багатосполучниковість
+  - антиметабола (antimetabole) — зворотне повторення
+  - красномовство (eloquence) — мистецтво красномовства
+  recommended:
+  - перорація (peroration) — завершальна частина промови
+  - еліпсис (ellipsis) — стилістичний еліпсис
+  - кільцева композиція (ring composition)
+  - інвектива (invective) — гостра критика
+activity_hints:
+- type: quiz
+  focus: Identify advanced rhetorical figures
+  items: 15
+- type: fill-in
+  focus: Complete sentences using specific figures
+  items: 12
+- type: essay-response
+  focus: Write a speech with 5+ rhetorical devices
+- type: match-up
+  focus: Match figure of speech to definition and example
+  items: 15
+focus: style
+pedagogy: Academic
+prerequisites:
+- c2-100 (C2 Level Completion)
+objectives:
+- Learner can identify and name advanced rhetorical figures in authentic texts
+- Learner can compose speeches using chiasmus, zeugma, and antimetabole
+- Learner can analyze the rhetorical structure of political and literary speeches
+- Learner can deploy rhetorical devices for maximum persuasive impact
+grammar:
+- Advanced rhetorical figures (chiasmus, zeugma, oxymoron, antimetabole)
+- Asyndeton vs polysyndeton
+- Ring composition and peroration
+- Interaction of multiple figures in speech composition
+register: літературний
+immersion: 100% Ukrainian
+phase: C2.4 [Meta-Skills & Capstone]
+persona:
+  voice: Senior Specialist
+  role: Professor of Rhetoric

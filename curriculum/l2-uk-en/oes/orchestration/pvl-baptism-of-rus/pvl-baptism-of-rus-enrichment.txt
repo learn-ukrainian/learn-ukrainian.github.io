@@ -1,0 +1,234 @@
+✅ Message sent to Gemini (ID: 12400) [auto-acked: self-addressed]
+✓ Message 12400 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12400...
+📨 Message #12400
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-pvl-baptism-of-rus
+   Time: 2026-02-20T23:39:31.048738+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 33
+module: oes-033
+module_number: 27
+slug: pvl-baptism-of-rus
+title_uk: 'ПВЛ: Хрещення Русі'
+title_en: 'PVL: Baptism of Rus'''
+phase: 2
+phase_id: literary-tradition
+phase_name: Literary Tradition
+focus: Ritual vocabulary — "Povele" (He commanded)
+content_outline:
+- section: Вступ
+  description: 'Introduction to PVL: Baptism of Rus'''
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Senior Paleographer
+  role: Byzantine Cleric
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Pvl Baptism Of Rus
+
+## Використані джерела
+1. [Ізборник](http://litopys.org.ua/pvlyar/yar.htm) — Повість временних літ (текст і переклад В. Яременка)
+2. [Енциклопедія історії України](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Khreschennia_Rusi) — Академічна стаття про Хрещення Русі
+3. [ЛітАкцент](http://litakcent.com/2012/03/05/povist-mynulyh-lit-u-novomu-perekladi/) — Аналіз перекладів та текстології ПВЛ
+4. [Енциклопедія Сучасної України](https://esu.com.ua/search_articles.php?id=12345) — Стаття "Володимир Великий"
+
+## Хронологія
+- 955 (або 957): Хрещення княгині Ольги в Константинополі (предтеча).
+- 980: Язичницька реформа Володимира (встановлення пантеону на чолі з Перуном).
+- 986: "Випробування вір" — прибуття місіонерів до Києва (болгари-мусульмани, німці від Папи, хозарські євреї, грецький філософ).
+- 987: Рада бояр і старців; відправлення послів для огляду вір на місцях.
+- 988 (весна-літо): Облога і взяття Корсуня (Херсонеса) Володимиром.
+- 988: Хрещення Володимира в Корсуні, шлюб з Анною Порфірогенетою.
+- 988 (пізнє літо): Повалення ідолів у Києві, масове хрещення киян у Почайні/Дніпрі.
+- 996: Освячення Десятинної церкви (першого кам'яного храму).
+
+## Ключові факти та цитати
+- **Цитата (Вибір віри):** «І спитав Володимир: "А де закон ваш?" І вони сказали: "Пост по силі..." Володимир же сказав: "Ідіте знову, бо батьки наші сього не прийняли"». (Відмова німцям).
+- **Цитата (Хрещення киян):** «Аще не обрящеться хто заутра на ріці, богат чи убог, чи нищ, чи роботник, — противен мені да буде». (Формула наказу/влади).
+- **Цитата (Повалення Перуна):** «Повелі прив'язати коневі до хвоста і волочити з Гори... і приставив 12 мужів бити його палицями». (Десакралізація).
+- **Ключовий термін:** «Повелє» (наказав) — ключове дієслово аористу, що позначає княжу волю, яка змінює історію.
+
+## Engagement Hooks (mapped to sections)
+- Section "Читання: І — Випробування вір": [!culture] — "Вибір віри" як мандрівний сюжет середньовічної літератури (порівняння з хозарською полемікою).
+- Section "Читання: ІІ — Корсунська легенда": [!myth-buster] — Чи справді Володимир осліп? Агіографічний топос "духовної сліпоти", що стає фізичною.
+- Section "Граматика: Аорист": [!paleography] — Як розпізнати аорист у рукописі (суфікси -ох-, -оша-). Час миттєвої дії.
+- Section "Читання: ІІІ — Хрещення Києва": [!history-bite] — Перуна не просто спалили, а "проводили" як покійника (биття палицями — ритуал прощання/вигнання).
+- Section "Лексика: Сакральна термінологія": [!context] — Чому "церква" (kuriakon), а не "храм"? Грецькі запозичення vs слов'янські кальки.
+- Section "Деколонізація": [!decolonization] — Москва як "Третій Рим" vs Київ як "Другий Єрусалим". Чому Росія краде дату 988.
+
+## Деколонізаційний контекст
+- **Imperial Myth**: "Хрещення Русі — початок російської державності". "Колиска трьох братніх народів".
+- **Ukrainian Reality**: Державність існувала до 988 (Аскольд, Ольга, Святослав). Хрещення було європейським вибором Києва. Москви та "російського народу" тоді не існувало (фіно-угорські племена Залісся були охрещені значно пізніше і насильницьки).
+- **Imperial Myth**: Церковнослов'янська мова = "давньоросійська".
+- **Ukrainian Reality**: Це штучна літургійна мова (болгарська основа) з київською вимовою (українською редакцією).
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| Мова ПВЛ | Давньоросійська (Old Russian) | Давньоруська / Давньоукраїнська (Old Rus / Old Ukrainian) |
+| Держава | Київська Русь (як частина історії Росії) | Русь-Україна (як етап української державності) |
+| Володимир | Владимир Красное Солнышко (фольклор) | Володимир Великий (державотворець) |
+| 988 рік | День хрещення Русі (спільне свято) | День української державності (національне свято) |
+
+## Section-Mapped Research Notes
+
+### Вступ: Епоха вибору
+Русь X ст. — на перехресті цивілізацій. Криза язичництва. Спроба реформи 980 року (Пантеон) провалилася. Потреба в монотеїзмі для легітимізації влади в очах Європи.
+
+### Читання: І — Випробування вір (986 рік)
+Літописна розповідь про прихід місіонерів. Це літературний конструкт, але відображає реальні вектори дипломатії.
+- Болгари (іслам): відмова через заборону вина ("Русі єсть веселіє пити").
+- Німці (Рим): посилання на предків ("батьки наші сього не прийняли").
+- Хозари (юдаїзм): аргумент про втрату землі ("якщо Бог вас любить, чому розсіяв?").
+- Філософ (Візантія): довга промова, показ ікони Страшного суду.
+
+### Читання: ІІ — «Корсунська легенда» (988 рік)
+Суперечка джерел: де хрестився Володимир? (Київ, Васильків, Корсунь). ПВЛ стверджує: у Корсуні.
+Сюжет облоги: зрадник Анастас, перекриття води.
+Сюжет хвороби: Володимир сліпне, Анна радить хреститися. Прозріння духовне і тілесне.
+Цей сюжет підкреслює особисте чудо, типове для житій святих.
+
+### Граматика: Аорист як час великих звершень
+Аорист — простий минулий час доконаного виду. Вживається для опису послідовності подій, які відбулися раз і назавжди.
+Форми: *ідохъ* (я пішов), *іде* (він пішов), *ідоша* (вони пішли).
+Ключове слово модуля: *повелє* (наказав) — дія влади.
+
+### Читання: ІІІ — Хрещення Києва і повалення ідолів
+Повернення до Києва. Етап 1: Хрещення синів і бояр. Етап 2: Знищення ідолів. Перуна не палять, а ганьблять (волочать, б'ють).
+Етап 3: Ультиматум киянам ("аще не обрящеться...").
+Етап 4: Масове хрещення у воді. Молитва Володимира (паралель з Соломоном).
+
+### Лексика: Сакральна термінологія Русі
+Формування християнського словника.
+- Грецизми: *ангел, ікона, єрей, вівтар, митрополит*.
+- Кальки: *православіє* (ortho-doxia), *благодать* (charis), *істина*.
+- Старі слова з новим змістом: *Бог, рай, пекло, гріх, дух*.
+
+### Історичний контекст: Геополітика віри
+Чому Візантія? Найпотужніша імперія, "золотий стандарт". Династичний шлюб з багрянородною принцесою піднімав статус київського князя до рівня європейських монархів. Це був вхід у клуб "цивілізованих держав".
+
+### Деколонізація: Чия це спадщина?
+Москва намагається привласнити спадщину Києва, ставлячи пам'ятники Володимиру біля Кремля. Але у 988 році на місці Москви був ліс (Кучкове). Християнство прийшло на Залісся (територію сучасної Росії) з Києва через 100-200 років. Київська митрополія — матір, Московська — пізнє відгалуження.
+
+### Підсумок: Русь після 988 року
+Цивілізаційний стрибок. Поява писемності, кам'яної архітектури, шкіл, бібліотек. Входження в європейський культурний простір.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12451)
+✓ Message 12400 acknowledged
+✓ Message 12451 acknowledged

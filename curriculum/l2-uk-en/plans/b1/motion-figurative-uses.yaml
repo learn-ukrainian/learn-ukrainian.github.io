@@ -1,0 +1,143 @@
+module: b1-21
+level: B1
+sequence: 21
+slug: motion-figurative-uses
+version: '2.0'
+title: Переносні значення дієслів руху
+subtitle: Figurative uses of motion verbs
+content_outline:
+- section: 'Тест (Initial Test: Literal vs Figurative)'
+  words: 400
+  points:
+  - 'Діагностика знань: розрізнення буквального та переносного значення дієслів руху
+    через короткі контексти для визначення рівня володіння метафоричною мовою.'
+  - 'Самооцінка: перевірка розуміння базових метафор (напр., «час іде», «сонце сходить»)
+    перед зануренням у складніші ідіоми та префіксальні конструкції.'
+- section: 'Пояснення: Логіка префіксів та культурний код (Explanation: Prefix Logic
+    and Cultural Code)'
+  words: 1000
+  points:
+  - 'Метафорична логіка за Стандартом §4.3.8: розгляд префікса «До-» як досягнення
+    мети або межі (дійти висновку), префікса «Ви-» як виходу зі стану або кризи (вийти
+    з ситуації) та «Пере-» як переходу до нової діяльності (перейти до справи).'
+  - 'Диференціація лексики за §4.5.1.1: розрізнення нейтральних метафор (напр., «прийшла
+    осінь») та фразеологічних одиниць («водити за ніс»), що потребують специфічного
+    культурного контексту.'
+  - 'Культурні гачки: етимологія та вживання ідіом «Гоголем ходити» (гордовита постава
+    як у птаха), «П''ятами накивати» (швидка втеча) та «Вискочити як Пилип з конопель»
+    (недоречна або несподівана поява).'
+- section: 'Аналіз помилок: Пастки переносних значень (Error Analysis: Figurative
+    Traps)'
+  words: 800
+  points:
+  - 'Prefix Mismatch: розбір типової помилки «прийти до висновку» (arrival) та заміна
+    на правильне «дійти до висновку» (reaching a limit/result).'
+  - 'Пастка буквального перекладу: чому не можна казати «йти божевільним» (go crazy)
+    і як правильно вживати «зійти з розуму» (off the track) або «збожеволіти».'
+  - 'Вживання дієслів руху vs прямі дієслова: корекція помилки «ця проблема йде часто»
+    на «ця проблема виникає часто», пояснення меж метафоричного вживання.'
+- section: 'Практика: Метафори в контексті (Practice: Metaphors in Context)'
+  words: 1000
+  points:
+  - 'Ситуативне моделювання: вживання професійної лексики (підійти до питання, перейти
+    до справи) та повсякденних виразів (до мене дійшло, обійтися без) у діалогах.'
+  - 'Тренування колокацій: вправи на поєднання частотних виразів з обставинами (дійти
+    до логічного висновку, вийти на якісно новий рівень, трохи відійти від теми).'
+  - 'Логіка подолання перешкод: використання виразів «пройти через випробування» та
+    «знайти спосіб вийти з кризи» для опису складних життєвих ситуацій.'
+- section: Читання та рефлексія (Reading and Reflection)
+  words: 800
+  points:
+  - 'Аналіз тексту: опрацювання статті «Метафори в нашому житті» з фокусом на виявлення
+    абстрактних значень дієслів руху та їх стилістичної ролі.'
+  - 'Рефлексія та медіа-аналіз: пошук та аналіз заголовків новин («переговори зайшли
+    в глухий кут», «стосунки вийшли на новий рівень») для закріплення зв''язку з реальним
+    вживанням.'
+vocabulary_hints:
+  required:
+  - виходить, що (it turns out that) — виходить, що так; з цього виходить; як не крути,
+    а виходить; High frequency in logical discourse
+  - 'дійти до висновку (reach a conclusion) — дійти до логічного/невтішного висновку;
+    врешті-решт дійти до висновку; Learner error: avoid «прийти»'
+  - зайти занадто далеко (go too far) — жарт зайшов занадто далеко; ми зайшли занадто
+    далеко; Medium frequency in conflict/drama contexts
+  - відійти від теми (digress) — трохи відійти від теми; дозвольте відійти від теми;
+    не будемо відходити від суті; High frequency in formal discussions
+  - підійти до питання (approach a question) — серйозно підійти до питання; комплексно
+    підійти до проблеми; з іншого боку підійти; Professional register
+  - обійтися без (do without) — не можу обійтися без кави; обійтися без допомоги;
+    обійдеться вам дорого (price variation); Daily use
+  - перейти до справи (get down to business) — одразу перейти до справи; перейдемо
+    до суті; досить розмов, переходьмо до справи; High frequency in business
+  - пройти через (go through - experience) — пройти через пекло; пройти через випробування;
+    ми через це вже проходили; Emotional register
+  - вийти з ситуації (get out of a situation) — гідно вийти з ситуації; знайти спосіб
+    вийти з кризи; сухим із води вийти (idiom)
+  - зайти в глухий кут (reach a dead end) — переговори зайшли в глухий кут; розслідування
+    зайшло в глухий кут; Common in news/debates
+  recommended:
+  - до мене дійшло (it dawned on me) — нарешті до мене дійшло; тільки зараз дійшло;
+    до нього довго доходить; Colloquial high frequency
+  - вийти на новий рівень (reach a new level) — вийти на якісно новий рівень; стосунки
+    вийшли на новий рівень; Marketing/Growth contexts
+  - переносне значення (figurative meaning) — термін для пояснення метафор (Стандарт
+    §4.5.1.1)
+  - буквальний зміст (literal meaning) — протиставлення переносним значенням для контекстного
+    аналізу
+  - фразеологізм (phraseological unit) — сталі вирази як «накивати п'ятами», «Гоголем
+    ходити», «вискочити як Пилип з конопель»
+activity_hints:
+- type: match-up
+  focus: Expression -> meaning
+  items: 15+
+- type: fill-in
+  focus: Use figurative expressions in context
+  items: 12+
+- type: quiz
+  focus: Literal vs figurative motion
+  items: 15+
+- type: fill-in
+  focus: Dialogue with figurative expressions
+  items: 12+
+- type: true-false
+  focus: Literal motion vs figurative expression
+  items: 14+
+focus: grammar
+pedagogy: TTT
+prerequisites:
+- b1-16 (Motion verbs full system)
+- b1-17 (Motion - coming & going)
+- b1-18 (Motion - passing & crossing)
+- b1-19 (Motion - starting & returning)
+- b1-20 (Motion - approaching & departing)
+connects_to:
+- b1-22 (Motion full prefix integration)
+- b1-25 (Checkpoint - motion verbs)
+objectives:
+- Learner can recognize figurative uses of motion verbs
+- Learner can use common idiomatic expressions with motion verbs
+- Learner understands the metaphorical extensions of motion prefixes
+grammar:
+- Idiomatic expressions with motion verbs
+- Figurative vs literal motion
+- Abstract movement vocabulary
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Figurative Language
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Official guidance on idiomatic expressions
+- name: Ukrainian Idioms with Motion Verbs
+  url: https://uk.wikipedia.org/wiki/Фразеологізми
+  type: reference
+  notes: Common figurative expressions with motion verbs
+- name: Slovnyk.UA - Motion Verb Idioms
+  url: https://slovnyk.ua/
+  type: reference
+  notes: Dictionary entries with figurative meanings
+immersion: 100% Ukrainian
+phase: B1.2 Motion
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Lviv Poet
+word_target: 4000

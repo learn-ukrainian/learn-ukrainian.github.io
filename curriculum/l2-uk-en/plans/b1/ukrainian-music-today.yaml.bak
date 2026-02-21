@@ -1,0 +1,84 @@
+module: b1-76
+level: B1
+sequence: 76
+slug: ukrainian-music-today
+version: '2.0'
+title: Українська музика сьогодні
+subtitle: Contemporary Ukrainian Music Scene
+content_outline:
+- section: Вступ — Музика як ідентичність
+  points:
+  - Українська музика від народних пісень до сьогодення
+  - Чому музика важлива для нації
+- section: Від Квітки до Євробачення
+  points:
+  - Історія української естради
+  - Руслана і перемога 2004 року
+  - Kalush Orchestra і "Stefania" (2022)
+- section: Сучасна сцена — Хто на топі?
+  points:
+  - Поп і реп (Монатік, Alyona Alyona, Kalush)
+  - Рок і альтернатива (Океан Ельзи, Бумбокс, Антитіла)
+  - Електронна музика (ONUKA, Запорожець)
+- section: Пісні про війну
+  points:
+  - Як музика підтримує армію
+  - '"Ой у лузі червона калина" — хіт 2022 року'
+  - Благодійні концерти
+- section: Слухаємо українською
+  points:
+  - Як говорити про музику
+  - Жанри і стилі українською
+- section: Підсумок — Україна співає
+  points:
+  - Музика як м'яка сила
+- section: Потрібно більше практики?
+vocabulary_hints:
+  required:
+  - музика (music)
+  - співак/співачка (singer m/f)
+  - гурт (band)
+  - пісня (song)
+  - альбом (album)
+  - концерт (concert)
+  - жанр (genre)
+  - виконавець (performer)
+  recommended:
+  - реп (rap)
+  - рок (rock)
+  - поп (pop)
+  - електронна музика (electronic music)
+activity_hints:
+- type: reading
+  focus: Texts about Ukrainian artists
+  items: 15
+- type: quiz
+  focus: Understand song themes
+  items: 15
+- type: match-up
+  focus: Match artists to genres
+  items: 20
+- type: quiz
+  focus: Share music preferences
+  items: 10
+focus: culture
+pedagogy: CBI
+prerequisites:
+- b1-75 (Regions Center)
+connects_to:
+- b1-77 (Ukrainian Cinema and TV)
+objectives:
+- Learner can discuss Ukrainian music genres and artists in context
+- Learner can understand authentic texts about Ukrainian music scene
+- Learner can use music-related vocabulary to express preferences
+- Learner can compare Ukrainian music with their own musical culture
+grammar:
+- Music and arts vocabulary
+- Cultural commentary patterns
+- Expressing preferences
+register: розмовний
+phase: B1.7 [Contemporary Ukraine]
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Radio DJ
+word_target: 4000

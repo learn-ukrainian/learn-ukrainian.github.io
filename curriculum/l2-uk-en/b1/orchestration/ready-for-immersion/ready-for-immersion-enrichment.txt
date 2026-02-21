@@ -1,0 +1,336 @@
+✅ Message sent to Gemini (ID: 10287) [auto-acked: self-addressed]
+✓ Message 10287 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10287...
+📨 Message #10287
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-ready-for-immersion
+   Time: 2026-02-20T20:18:06.855104+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b1-05
+level: B1
+sequence: 5
+slug: ready-for-immersion
+version: '2.0'
+title: Готові до занурення
+subtitle: Metalanguage mastery checkpoint
+content_outline:
+- section: Presentation
+  points:
+  - 'Why This Module Matters — Tone Shift: explicit warning that the ''English safety
+    net'' is being removed in M06 (The Airlock)'
+  - 'Proverb and cultural context — Proverb: «Слово — не горобець, вилетить — не спіймаєш»
+    (precision); Cultural hook: The Forbidden Letter ''Ґ'' and the 1933 purge (orthography/identity)'
+- section: Diagnostic Assessment
+  points:
+  - Initial test of M01-04 metalanguage
+  - Identify areas needing review
+- section: Parts of Speech Review
+  points:
+  - 'All 10 parts of speech in Ukrainian — Visual analogy: ''Tree of Speech'' (Self-standing
+    vs. Service parts)'
+  - 'Quick identification exercises — learner error: confusing ''буква'' (letter)
+    and ''звук'' (sound)'
+- section: Verb Terminology Review
+  points:
+  - 'Aspect and tense terms — Focus: recognition of labels ''доконаний''/''недоконаний''
+    for dictionary use (pedagogy note); State Standard §4.2.3.1 alignment'
+- section: Grammar Explanation Patterns
+  points:
+  - 'Reading authentic grammar texts — State Standard §4.5.1: formal (instructional)
+    vs. informal registers'
+- section: Sentence Structure Review
+  points:
+  - 'Sentence parts identification — Ensure coverage of: підмет, присудок, додаток,
+    означення, обставина (Core A requirement)'
+- section: Full Grammar Explanation Comprehension
+  points:
+  - Extended grammar text in Ukrainian
+  - Comprehension questions
+- section: Practice
+  points:
+  - The Real Test
+  - Pop Culture Moment
+- section: Mini-Dialogues
+  points:
+  - Practical application
+  - Key term usage in context
+- section: Summary
+  points:
+  - Final self-assessment
+  - Readiness confirmation
+vocabulary_hints:
+  required:
+  - граматичне поняття (grammatical concept)
+  - мовознавство (linguistics)
+  - морфологія (morphology)
+  - синтаксис (syntax)
+  - правопис (orthography)
+  - 'наголос (stress/accent) — collocations: поставити наголос, логічний наголос,
+    змінний наголос; learner error: пла́чу vs плачу́'
+  - вимова (pronunciation)
+  - 'правило (rule) — collocations: за правилом, виняток з правила, порушувати правило;
+    learner error: confusing with ''право'' (law/right)'
+  - закономірність (pattern/regularity)
+  - система (system)
+  recommended:
+  - категорія (category)
+  - ознака (feature/characteristic)
+  - властивість (property)
+  - 'значення (meaning) — collocations: лексичне значення, граматичне значення, мати
+    значення'
+  - функція (function)
+  - 'виняток (exception) — collocations: без винятку, становити виняток, єдиний виняток'
+activity_hints:
+- type: fill-in
+  focus: Complete a full grammar explanation passage
+  items: 15+
+- type: quiz
+  focus: Comprehensive metalanguage review
+  items: 20+
+- type: match-up
+  focus: Term → definition (all in Ukrainian)
+  items: 15+
+focus: integration
+pedagogy: TTT
+prerequisites:
+- b1-01 (Grammar terminology)
+- b1-02 (Verb terminology)
+- b1-03 (Reading grammar rules)
+- b1-04 (Sentence structure)
+connects_to:
+- b1-06 (Aspect complete system - first full immersion module)
+- b1-15 (Aspect mastery checkpoint)
+objectives:
+- Learner can read and understand grammar explanations in Ukrainian
+- Learner can answer questions about grammar rules in Ukrainian
+- Learner can demonstrate metalanguage mastery for full immersion
+- Learner can use negation and verb form terminology
+- Learner can understand activity instruction verbs
+- Learner can apply analytical terms and style/register concepts
+grammar:
+- Integration of all metalanguage from M01-04
+- Reading grammar in Ukrainian
+- Comprehension test
+module_type: checkpoint
+sources:
+- name: Ukrainian Grammar Textbook Samples
+  url: https://mon.gov.ua/
+  type: primary
+  notes: Authentic grammar explanations for comprehension testing
+- name: CEFR B1 Descriptors
+  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  type: reference
+  notes: Proficiency standards for checkpoint assessment
+immersion: 70-85% Ukrainian
+phase: B1.0 Bridge
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Exchange Student Mentor
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Готові до занурення
+
+## State Standard Reference
+§4.5.1: "Стилістичні засоби лексики... Стилістичні засоби синтаксису"
+Alignment: This module explicitly prepares learners to distinguish the "instructional/formal" register of grammar explanations from the "conversational" register they have used so far. It also covers §4.1.5 (Abbreviations) essential for reading dictionary entries and grammar rules (див., пор., напр.).
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| **правило** | High (General) | за правилом, виняток з правила, золоте правило |
+| **виняток** | Medium (Academic) | без винятку, становити виняток, рідкісний виняток |
+| **наголос** | Medium (Linguistic) | поставити наголос, змінний наголос, логічний наголос |
+| **значення** | High (General) | лексичне значення, мати значення, переносне значення |
+| **частина мови** | Low (Term) | самостійна частина мови, службова частина мови |
+
+## Cultural Hooks
+1. **The Forbidden Letter 'Ґ'**: Abolished in the 1933 orthography reform (to harmonise Ukrainian with Russian), restored in 1990. It represents linguistic resilience and the fight for identity. Perfect metaphor for "precision" in language.
+2. **Proverb**: «Слово — не горобець, вилетить — не спіймаєш» (A word is not a sparrow; if it flies out, you won't catch it). Emphasises the permanence and weight of spoken words, aligning with the "precision" theme of the module.
+
+## Common Learner Errors
+1. **Letter vs Sound**: Confusing `буква` (written character) and `звук` (phoneme). *Example*: "In 'я', there are two sounds but one letter."
+2. **Stress shifting meaning**: `пла́чу` (I am crying) vs `плачу́` (I am paying). Critical for self-correction.
+3. **False Friends**: `Правило` (rule) vs `Право` (law/right). Learners often say "У мене є правило" when they mean "I have the right".
+
+## Cross-References
+- **Builds on**: b1-01 (Grammar terminology), b1-02 (Verb terminology), b1-03 (Reading rules), b1-04 (Syntax).
+- **Prepares for**: b1-06 (Aspect complete system - First 100% immersion module), b1-15 (Aspect checkpoint).
+
+## Notes for Content Writing
+- **Tone Shift**: This is the "Airlock". It must feel supportive but firm. The English safety net is ending.
+- **Visuals**: Use the "Tree of Speech" analogy for Parts of Speech (Roots = Meaningful, Branches = Service).
+- **Immersion**: This is B1.0. Intro can have English bridging (max 2 paragraphs). The rest must be Ukrainian, but the *subject* is how to read Ukrainian.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Стрибок у занурення (Introduction: The Immersion Leap)"
+  words: 400
+  points:
+  - "Why This Module Matters — The 'Airlock' Tone Shift: Explicit warning that the 'English safety net' is being removed in M06. Supportive but firm transition to full immersion."
+  - "Cultural Hook: The Forbidden Letter 'Ґ'. Discuss the 1933 orthography reform purge, its restoration in 1990, and its role as a symbol of linguistic resilience and identity."
+  - "Proverb Analysis: «Слово — не горобець, вилетить — не спіймаєш» (A word is not a sparrow). Establishing the theme of precision and the permanence of linguistic choices."
+- section: "Діагностика та дієслівна термінологія (Diagnostic & Verb Terminology)"
+  words: 600
+  points:
+  - "TTT Diagnostic Assessment: Comprehensive test of metalanguage from M01-04 to identify specific gaps before the immersion phase."
+  - "Verb Label Mastery: Focus on dictionary/textbook recognition of 'доконаний' (perfective) and 'недоконаний' (imperfective) labels. Alignment with State Standard §4.2.3.1 for independent study skills."
+- section: "Дерево частин мови та типові помилки (Tree of Parts of Speech & Common Errors)"
+  words: 700
+  points:
+  - "Visual Analogy: 'The Tree of Speech'. Mapping all 10 parts of speech where roots represent meaningful (self-standing) parts and branches represent service parts."
+  - "Learner Error Clinic 1: 'Буква' (Letter) vs 'Звук' (Sound). Explicitly drilling the difference using examples like 'я' (one letter, two sounds) to ensure phonetic precision."
+  - "Learner Error Clinic 2: Stress shifting meaning. Comparative drill of minimal pairs like 'пла́чу' (I am crying) vs 'плачу́' (I am paying) to illustrate phonetic self-correction."
+- section: "Стилістичні реєстри та граматичні тексти (Stylistic Registers & Grammar Texts)"
+  words: 800
+  points:
+  - "Register Distinction (State Standard §4.5.1): Comparing 'instructional/formal' linguistic register used in grammar rules with the 'conversational' register used in previous modules."
+  - "Full Grammar Explanation Comprehension: Deep reading of an extended, authentic Ukrainian grammar passage. Identifying key instructional verbs and analytical markers."
+- section: "Синтаксис та мовне право (Syntax & Linguistic Rights)"
+  words: 500
+  points:
+  - "Sentence Parts Identification: Systematic review of підмет (subject), присудок (predicate), додаток (object), означення (attribute), and обставина (adverbial). Core A competency check."
+  - "Learner Error Clinic 3: 'Правило' (Rule) vs 'Право' (Law/Right). Correcting the common false friend error 'У мене є правило' when the learner means 'I have the right'."
+- section: "Практичне читання та скорочення (Practical Reading & Abbreviations)"
+  words: 600
+  points:
+  - "Mastering Academic Abbreviations (State Standard §4.1.5): Essential drill for reading dictionary entries and grammar notes using див. (see), пор. (compare), and напр. (for example)."
+  - "The Real Test: Intensive fill-in-the-blank activity where learners must complete a 15+ item technical grammar explanation passage entirely in Ukrainian."
+- section: "Підсумок та готовність (Summary & Readiness Confirmation)"
+  words: 400
+  points:
+  - "Final Self-Assessment: Evaluating comfort levels with Ukrainian-only instructions and grammatical metalanguage."
+  - "Readiness Confirmation: Final sign-off for the M06 'The Airlock' transition. Reviewing the 'gold rules' of immersion learning."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "граматичне поняття (grammatical concept) — High frequency in instructional texts"
+  - "мовознавство (linguistics) — Standard academic term for the field"
+  - "морфологія (morphology) — Structural category for parts of speech"
+  - "синтаксис (syntax) — Critical for sentence structure analysis"
+  - "правопис (orthography) — Related to the 'Forbidden Letter Ґ' and 1933 reforms"
+  - "наголос (stress/accent) — collocations: поставити наголос, логічний наголос, змінний наголос; Error: пла́чу vs плачу́"
+  - "вимова (pronunciation) — Focus on phonetic precision"
+  - "правило (rule) — High frequency; collocations: за правилом, виняток з правила, золоте правило; Error: vs право"
+  - "закономірність (pattern/regularity) — Used for describing systemic language behavior"
+  - "система (system) — Standard term for language as a whole"
+  - "частина мови (part of speech) — collocations: самостійна частина мови, службова частина мови"
+  recommended:
+  - "категорія (category) — Used for grouping grammatical features"
+  - "ознака (feature/characteristic) — Describing specific qualities of a word or rule"
+  - "властивість (property) — Formal term for linguistic attributes"
+  - "значення (meaning) — collocations: лексичне значення, граматичне значення, мати значення, переносне значення"
+  - "функція (function) — Describing the role of words in a sentence"
+  - "виняток (exception) — Medium frequency; collocations: без винятку, становити виняток, рідкісний виняток"
+  - "буква (letter) — Contrast with 'звук'; written character"
+  - "звук (sound) — Contrast with 'буква'; phoneme"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (5191 chars)
+✅ Message sent to Claude (ID: 10294)
+✓ Message 10294 acknowledged
+   Auto-acknowledged reply #10294 (stdout delivery — no inbox accumulation)
+✓ Message 10287 acknowledged

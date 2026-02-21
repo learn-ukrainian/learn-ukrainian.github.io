@@ -1,0 +1,13 @@
+{
+  "track": "b2-hist",
+  "slug": "bohdan-khmelnytskyi",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T15:20:08Z",
+      "task_id": "v3-bohdan-khmelnytskyi-pA",
+      "mode": "meta-only"
+    }
+  }
+}

@@ -1,82 +1,35 @@
-# Research: B1 M73 "Українські регіони: Схід"
+# Дослідження: Українські регіони: Схід
 
-**Level**: B1 (Intermediate)
-**Topic**: The East of Ukraine (Donbas, Slobozhanshchyna)
+## State Standard Reference
+§3.13: "Місця: тип і розташування місцевості; інституції та громадські місця; пам’ятки культури і пам’ятники; туристичні принади."
+§3.15: "Традиції, звичаї, свята: українські звичаї і традиції."
+Alignment: Модуль розкриває тему "Місця" через опис східних регіонів (Харків, Донбас) та тему "Традиції" через історію слобідського козацтва та робітничу культуру.
 
-## 1. Grammar: State Standard 2024 reference
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| **промисловість** | Висока (Web) | важка/легка промисловість, провідна галузь, розвиток промисловості, індустріальний центр |
+| **спадщина** | Середня (Web) | культурна спадщина, збереження спадщини, нематеріальна спадщина, історична спадщина |
+| **ідентичність** | Середня (Web) | національна ідентичність, формування ідентичності, українська ідентичність, мовна ідентичність |
+| **стійкість** | Висока (Media) | символ стійкості, незламна стійкість, проявляти стійкість |
+| **регіон** | Висока (Web) | східний регіон, промисловий регіон, особливості регіону |
 
-According to the **State Standard for Ukrainian as a Foreign Language (2024)**, Level B1 (Independent User):
+## Cultural Hooks
+1. **Харків — перша столиця УРСР (1919–1934)**. Важливо: це була столиця радянської України, тоді як Київ залишався духовним та історичним центром. Цей період залишив у спадок величну архітектуру (Держпром) та статус наукового центру.
+2. **Харківський університет імені В. Н. Каразіна** засновано у 1804 році (відкрито 1805). Це один із найстаріших університетів Східної Європи, що зробило Харків студентським містом задовго до індустріалізації.
+3. **Юзівка (Донецьк)** заснована британським підприємцем Джоном Юзом у 1869 році. Це підкреслює європейське коріння промисловості Донбасу, всупереч радянським міфам про ізольований розвиток.
+4. **Слобожанщина — земля вільних людей**. Назва походить від "слобода" (свобода), оскільки поселенці (козаки) звільнялися від податків. Це регіон козацьких полків (Харківський, Сумський, Ізюмський та ін.), а не просто "промислова зона".
 
-> **Додаток 2. Тематика спілкування / Themes of Communication**
-> **Сфера: Суспільна / Public Sphere**
-> **Тема 4. Подорожі / Travel**
-> *Підтема: Подорожі Україною, визначні місця, географія.*
->
-> **Сфера: Освітня / Educational Sphere**
-> **Тема: Країнознавство / Ukrainian Studies**
-> *Підтема: Регіони України, їх особливості, великі міста.*
+## Common Learner Errors
+1. **Вживання прийменників**: *в Донбасі* (помилка) → *на Донбасі* (правильно). "Донбас" — це регіон (як "на Полтавщині"), а не місто чи країна. Вживання "в" часто є кальклю з російської або політично забарвленою помилкою.
+2. **Плутанина понять**: *східна Україна* (географічний термін) vs *Схід України* (політизований термін). Краще вживати "східні області" або "східний регіон".
+3. **Родовий відмінок**: *Харківа* (помилка) → *Харкова* (правильно). У назвах міст на -ів суфікс часто випадає або змінюється (Львів — Львова, Київ — Києва, Харків — Харкова).
 
-Learners at B1 are expected to:
-- Describe geographical locations ("на сході", "біля кордону").
-- Characterize regions using adjectives ("промисловий", "степовий").
-- Discuss cultural and historical features of the region.
+## Cross-References
+- **Builds on**: `b1-72` (Regions West) — контраст і доповнення до західних регіонів.
+- **Prepares for**: `b1-74` (Regions South) — продовження подорожі Україною.
 
-## 2. Vocabulary frequency
-
-**High Frequency (B1 Core):**
-- **схід** (east) / **східний** (eastern)
-- **область** (region/oblast)
-- **район** (district/area)
-- **місто** (city)
-- **промисловість** (industry) / **завод** (factory)
-- **степ** (steppe)
-- **вугілля** (coal)
-- **кордон** (border)
-
-**Medium Frequency (Topic Specific):**
-- **шахта** (mine) / **шахтар** (miner)
-- **сіль** (salt)
-- **соняшник** (sunflower)
-- **Слобожанщина** (Slobozhanshchyna - historical region)
-- **Донбас** (Donbas - Donets Basin)
-- **терекон** (spoil tip/slag heap - iconic landscape feature)
-
-**Common Collocations:**
-- **на сході України** (in the east of Ukraine)
-- **Донецька область / Луганська область / Харківська область**
-- **промисловий центр** (industrial center)
-- **кам'яне вугілля** (hard coal)
-
-## 3. Cultural hook
-
-1.  **Slobozhanshchyna (Kharkiv region)**: The name comes from "sloboda" (settlement), meaning "freedom". It was settled by free Cossacks and peasants. Kharkiv is known as the "Student Capital" and for its Constructivist architecture (Derzhprom building - the first Soviet skyscraper).
-2.  **Donbas (Donets Basin)**: Historically the "industrial heart" of Ukraine due to vast coal reserves. The landscape is dotted with "terekons" (artificial mountains from mining). Key cultural symbol: **Soledar Salt Mines** (massive underground halls involving salt sculptures and symphonies, before 2022).
-3.  **The Steppe**: The endless horizon of the Ukrainian East, symbolizing freedom and vastness, famously described in literature (e.g., Zhadan).
-
-## 4. Pedagogical notes
-
-**Key Grammar Points:**
-- **Prepositions with Locations**:
-    - **НА** Донбасі (Regions ending in -щина/bas often take НА, though "У Донбасі" is arguably becoming acceptable, "НА" is standard for the region concept).
-    - **НА** Слобожанщині.
-    - **У** Харкові, **У** Донецьку (Cities take У/В).
-    - **НА** сході (Directions take НА).
-- **Adjectival Agreements**: Names of oblasts are adjectives: *Донецьк**а** область* (Fem.), but *Донецьк* (Masc.). Students often confuse the city and oblast gender.
-
-**Common Learner Errors:**
-- Using "in" (у) for directions: *У сході* (Incorrect) -> *На сході* (Correct).
-- Confusing "Схід" (East) with "Схід" (Sunrise/Ascent) contextually, though words are same/related.
-- Declining "Donbas" incorrectly (it works like a standard masculine noun).
-
-## 5. Scope boundaries
-
-**IN Scope (B1):**
-- **Locative Case**: Essential for location (*на заводі, у шахті*).
-- **Genitive Case**: Essential for "Region OF..." (*схід України*, *видобуток вугілля*).
-- **Relational Adjectives**: *харківський, донецький, луганський*.
-- **Passive Participles (Intro)**: *розташований* (located), *заснований* (founded) - usually taught as adjectives at this stage.
-
-**OUT of Scope (Too complex for B1 module focus):**
-- **Deep Political/Military Analysis**: While the war is the defining reality, B1 language focus should remain on *geography, identity, and description* rather than complex geopolitical argumentation (C1).
-- **Technical Mining Terminology**: Keep it to *шахта, вугілля, сіль*. Avoid specific machinery terms.
-- **Archaic dialect words**: Stick to standard literary Ukrainian, noting regional flavor only if iconic (e.g., *тремпель* for Kharkiv hanger is a fun "bonus", not core).
+## Notes for Content Writing
+- **Avoid Stereotypes**: Не зводити Схід лише до війни чи заводів. Підкреслити інтелектуальний потенціал Харкова (студенти, IT, література — будинок "Слово") та європейське коріння промисловості Донбасу.
+- **Tone**: Патріотичний, але об'єктивний. Акцент на українській суті Слобожанщини (козацьке коріння), яку намагалися стерти радянською русифікацією.
+- **Immersion**: Усі власні назви (John Hughes) писати кирилицею (Джон Юз).

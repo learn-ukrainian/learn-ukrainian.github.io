@@ -1,0 +1,100 @@
+- ipa: '[dɛ]'
+  lemma: де
+  notes: question word for location
+  pos: adverb
+  translation: where
+- ipa: '[ˈsʲkʲilʲkɪ]'
+  lemma: скільки
+  pos: adverb
+  translation: how much / how many
+- ipa: '[nɛˈmɑjɛ]'
+  lemma: немає
+  notes: requires Genitive case
+  pos: predicative
+  translation: there is no
+- ipa: '[mʲij]'
+  lemma: мій
+  notes: masculine form
+  pos: pronoun
+  translation: my
+- ipa: '[nɑˈlʲiʋɔ]'
+  lemma: наліво
+  notes: direction
+  pos: adverb
+  translation: to the left
+- ipa: '[nɑˈprɑʋɔ]'
+  lemma: направо
+  notes: direction
+  pos: adverb
+  translation: to the right
+- ipa: '[ˈprʲɑmɔ]'
+  lemma: прямо
+  notes: direction
+  pos: adverb
+  translation: straight
+- ipa: '[ˈkɑʋɑ]'
+  lemma: кава
+  notes: feminine
+  pos: noun
+  translation: coffee
+- ipa: '[ˈɦrɪu̯nʲɑ]'
+  lemma: гривня
+  notes: Ukrainian currency
+  pos: noun
+  translation: hryvnia
+- ipa: '[mɑɦɑˈzɪn]'
+  lemma: магазин
+  notes: masculine
+  pos: noun
+  translation: store / shop
+- ipa: '[mɛˈtrɔ]'
+  lemma: метро
+  notes: neuter, indeclinable
+  pos: noun
+  translation: metro / subway
+- ipa: '[pɑrk]'
+  lemma: парк
+  notes: masculine
+  pos: noun
+  translation: park
+- ipa: '[ˈʋulɪt͡sʲɑ]'
+  lemma: вулиця
+  notes: feminine
+  pos: noun
+  translation: street
+- ipa: '[t͡sɛntr]'
+  lemma: центр
+  notes: masculine
+  pos: noun
+  translation: center / downtown
+- ipa: '[kʋɪˈtɔk]'
+  lemma: квиток
+  notes: masculine
+  pos: noun
+  translation: ticket
+- ipa: '[ˈkɑrtɑ]'
+  lemma: карта
+  notes: feminine
+  pos: noun
+  translation: map / card
+- ipa: '[jˈtɪ]'
+  lemma: йти
+  notes: determinate aspect
+  pos: verb
+  translation: to go (on foot)
+- ipa: '[ˈbɑt͡ʃɪtɪ]'
+  lemma: бачити
+  notes: + Accusative
+  pos: verb
+  translation: to see
+- ipa: '[znɑˈxɔdɪtɪsʲɑ]'
+  lemma: знаходитися
+  notes: formal location
+  pos: verb
+  translation: to be located
+- ipa: '[ˈkɔʃtuʋɑtɪ]'
+  lemma: коштувати
+  notes: used with price
+  pos: verb
+  translation: to cost
+

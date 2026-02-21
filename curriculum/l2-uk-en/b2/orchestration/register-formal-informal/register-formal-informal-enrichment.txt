@@ -1,0 +1,337 @@
+✅ Message sent to Gemini (ID: 10499) [auto-acked: self-addressed]
+✓ Message 10499 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10499...
+📨 Message #10499
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-register-formal-informal
+   Time: 2026-02-20T20:38:44.122893+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b2-16
+level: B2
+sequence: 16
+slug: register-formal-informal
+version: '2.0'
+title: Формальне та неформальне спілкування
+content_outline:
+- section: Вступ — Формальність у спілкуванні
+  points:
+  - Що визначає формальність
+  - Соціальні фактори (вік, статус, знайомство)
+  - Культурні норми в Україні
+- section: Ти/Ви-розрізнення
+  points:
+  - Коли "ти" (друзі, родина, діти, однолітки)
+  - Коли "Ви" (незнайомі, старші, офіційні ситуації)
+  - Перехід від "Ви" до "ти"
+  - Типові помилки іноземців
+- section: Форми звертання
+  points:
+  - Пан/Пані (Mr./Mrs.)
+  - Шановний/Шановна (Respected)
+  - Вельмишановний (Most respected - very formal)
+  - По батькові — коли і як використовувати
+  - Колегіальні звертання
+- section: Формальні/неформальні лексичні пари
+  points:
+  - Нейтральні vs розмовні слова
+  - Книжні vs розмовні синоніми
+  - Вибір відповідного варіанту
+- section: Трансформація регістру
+  points:
+  - З неформального у формальний
+  - З формального у неформальний
+  - Збереження значення при зміні тону
+- section: Соціальні ситуації
+  points:
+  - Робоче середовище
+  - Університет
+  - Магазини та сервіс
+  - Офіційні заходи
+- section: Практика і підсумок
+  points:
+  - Рольові ситуації
+  - Критерії вибору
+  - Підготовка до модуля 17
+vocabulary_hints:
+  required:
+  - формальний (formal)
+  - неформальний (informal)
+  - звертання (form of address)
+  - пан/пані (Mr./Mrs.)
+  - шановний (respected/dear - formal)
+  - по батькові (patronymic)
+  - етикет (etiquette)
+  - ввічливість (politeness)
+  - офіційний (official)
+  - розмовний (colloquial)
+  recommended:
+  - колегіальний (collegial)
+  - субординація (subordination)
+  - соціальна дистанція (social distance)
+  - тон (tone)
+  - доречність (appropriateness)
+activity_hints:
+- type: quiz
+  focus: Choose appropriate address form for situation
+  items: 15+
+- type: fill-in
+  focus: Convert informal text to formal (and vice versa)
+  items: 12+
+- type: match-up
+  focus: Situation → appropriate register
+  items: 15+
+- type: fill-in
+  focus: Complete sentences with appropriate address forms
+  items: 12+
+- type: error-correction
+  focus: Fix register-inappropriate language
+  items: 12+
+- type: essay-response
+  focus: Write same request formally and informally
+  output: Model answers for both registers
+focus: style
+prerequisites:
+- b2-15 (Register Introduction)
+- Basic pronoun usage
+- Social context awareness
+connects_to:
+- 'b2-17 (Register: Business Ukrainian)'
+- 'b2-18 (Register: Academic Ukrainian)'
+- 'b2-19 (Register: Official-Legal)'
+- b2-25 (B2.1b Checkpoint)
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Address Forms
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Ти/Ви distinction and forms of address
+- name: Етикет українського спілкування
+  url: https://uk.wikipedia.org/wiki/Мовленнєвий_етикет
+  type: secondary
+  notes: Speech etiquette in Ukrainian culture
+- name: CEFR B2 Sociolinguistic Competence
+  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  type: reference
+  notes: B2 politeness conventions
+immersion: 100% Ukrainian
+phase: B2.1b [Participles & Register Intro]
+objectives:
+- Understand and apply формальне та неформальне спілкування
+- Analyze and evaluate формальність у спілкуванні
+persona:
+  voice: Professional Language Coach
+  role: Protocol Officer (Офіцер протоколу)
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Формальне та неформальне спілкування
+
+## State Standard Reference
+§4.4.1.3: "Стилістичні засоби синтаксису: звертання (Вікторе, прочитайте цю книжку); еліпсис (Смачного! – Дякую, і тобі); ... елементи структурування тексту (по-перше, по-друге...)"
+§4.5.1 (B1 review): "Офіційне й неофіційне спілкування: звертання (Олено Петрівно...); синоніми (друг, приятель, товариш)..."
+Alignment: Modul expands on B1 register basics by introducing complex syntactic devices (ellipsis, clarification) and nuanced address forms expected at B2 level.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| **пан / пані** | High (Universal) | шановний пане, пані та панове, пане Президенте |
+| **звертання** | Medium (Meta) | форма звертання, офіційне звертання |
+| **шановний** | High (Formal) | шановна громадо, вельмишановний (very formal) |
+| **ви** (address) | High | переходити на "ви", звертатися на "ви" |
+| **спілкування** | High | ділове спілкування, невимушене спілкування |
+
+## Cultural Hooks
+1. **The "Pan" Renaissance**: The return of "пан/пані" is not just a loan from Polish, but a restoration of authentic Ukrainian etiquette suppressed during the Soviet era (replaced by "товариш"). It emphasizes the dignity of a free person.
+2. **The "Vy" Verb Trap**: When addressing one person as "Ви", you MUST use the plural verb («Ви знали?» not «Ви знав?»), but adjectives can be singular if they are predicates in specific exclamations («Яка Ви красива!»).
+3. **Name vs. Patronymic**: While "Pan + First Name" (Пане Андрію) is the modern standard, "Name + Patronymic" (Андрію Петровичу) remains common in schools, hospitals, and conservative institutions, often *without* "Pan". Mixing "Pan + Name + Patronymic" (Пане Андрію Петровичу) is historically controversial/redundant but heard in practice; purists prefer one or the other.
+
+## Common Learner Errors
+1. **Capitalization Overkill**: Writing "Ви" with a capital letter in chats or comments.
+   *   *Correction*: Only capitalize "Ви" in formal individual correspondence (letters, emails to one person).
+2. **The "Pan" Mismatch**: Using "Pan" with a patronymic or alone without a name/title.
+   *   *Correction*: Use "Пане Іване" or "Пане Директоре". Avoid just "Пане!" to a stranger (better: "Перепрошую...").
+3. **Grammar Agreement**: Using singular verbs with polite "Ви".
+   *   *Correction*: «Ви вже прийшли?» (Plural verb) even when addressing one person.
+
+## Cross-References
+- **Builds on**: B2.1b Phase (Participles), B1 Register basics.
+- **Prepares for**: B2-17 (Business), B2-18 (Academic), B2-19 (Legal) — this module provides the general sociolinguistic foundation for those specific domains.
+
+## Notes for Content Writing
+- **Tone**: The module itself should model the registers. The "Theory" section can be more academic/formal, while "Examples" should clearly contrast registers.
+- **Scenario**: Use a workplace setting (new employee vs. boss) or a university setting (student vs. professor) to demonstrate the "Vy -> Ty" transition naturally.
+- **Nuance**: Explicitly teach that "жіночко/чоловіче" is rude/outdated.
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ — Формальність у спілкуванні (Introduction — Formality in Communication)"
+  words: 500
+  points:
+  - "Поняття мовленнєвого етикету та соціолінгвістичної компетенції на рівні B2: аналіз контексту, статусу та віку співрозмовника"
+  - "Культурний контекст: Ренесанс форми «пан/пані» як відновлення української ідентичності та гідності вільної людини (протиставлення радянському «товариш»)"
+  - "Огляд Державного стандарту (§4.4.1.3): стилістичні засоби синтаксису та елементи структурування тексту (по-перше, водночас)"
+- section: "Займенники та граматичне узгодження (Pronouns and Grammatical Agreement)"
+  words: 800
+  points:
+  - "Типологія вживання «ти» та «Ви»: від сімейного кола до офіційного прийому"
+  - "Культурна пастка: Граматичне узгодження дієслів з ввічливим «Ви» — обов'язкове вживання множини («Ви знали?», а не «Ви знав?»)"
+  - "Синтаксичні нюанси: Узгодження прикметників-предикатів у вигуках («Яка Ви красива!» vs «Ви сьогодні дуже заклопотані»)"
+  - "Типова помилка: Гіперкорекція з великою літерою — пояснення, що «Ви» пишеться з великої лише в офіційному індивідуальному листуванні, а в чатах та коментарях це помилка"
+- section: "Етикетні форми звертання (Etiquette Forms of Address)"
+  words: 900
+  points:
+  - "Система звертань за Державним стандартом (§4.5.1): використання кличного відмінка (Вікторе, Олено Петрівно)"
+  - "Моделі звертання: «Пан + ім’я» (Пане Андрію) як сучасний стандарт vs «Ім’я + по батькові» у консервативних інституціях"
+  - "Уникнення помилок: Чому «Пан + по батькові» вважається надлишковим та як уникнути «Pan mismatch»"
+  - "Табуйовані та застарілі форми: Чому звертання «жіночко/чоловіче» до незнайомих людей є грубим і як правильно використовувати нейтральне «Перепрошую...»"
+  - "Градація офіційності: від «Шановний пане» до «Вельмишановний» (Most Respected) — випадки використання в офіційному протоколі"
+- section: "Формальна та неформальна лексика (Formal and Informal Lexis)"
+  words: 700
+  points:
+  - "Лексичні синоніми: аналіз пар «друг — приятель — товариш — колега» згідно з контекстом спілкування"
+  - "Еліпсис у неформальному мовленні за Держстандартом: приклади на кшталт «Смачного! – Дякую, і тобі», «Привіт! – Навзаєм!»"
+  - "Трансформація регістру: як перетворити розмовні фразеологізми на книжні конструкції без втрати змісту"
+- section: "Соціальні сценарії та перехід між регістрами (Social Scenarios and Register Transition)"
+  words: 700
+  points:
+  - "Робоче середовище: спілкування з керівником та колегами; межа між субординацією та колегіальністю"
+  - "Етикет переходу з «Ви» на «ти»: хто має ініціювати зміну та як зробити це ввічливо в українській культурі"
+  - "Університетське та офіційне середовище: звертання до викладачів та посадових осіб («Пане Директоре», «Пане Професоре»)"
+- section: "Практика, корекція та підсумок (Practice, Correction, and Summary)"
+  words: 400
+  points:
+  - "Аналіз кейсів: виправлення помилок у граматичному узгодженні та формах звертання (Adversarial Error Correction)"
+  - "Рольова гра: подання одного і того ж прохання офіційно (email) та неофіційно (messenger)"
+  - "Підготовка до Модуля 17: введення в термінологію ділової української мови"
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "формальний (formal) — офіційний стиль спілкування"
+  - "неформальний (informal) — невимушений, розмовний стиль"
+  - "звертання (form of address) — офіційне звертання; форма звертання"
+  - "пан / пані (Mr. / Mrs.) — шановний пане, пані та панове; універсальна ввічлива форма"
+  - "шановний (respected / dear) — шановна громадо, вельмишановний (найвищий ступінь формальності)"
+  - "по батькові (patronymic) — специфічна форма ідентифікації; вживається без слова «пан»"
+  - "етикет (etiquette) — мовленнєвий етикет; правила ввічливості"
+  - "ввічливість (politeness) — соціолінгвістична ввічливість"
+  - "офіційний (official) — офіційний візит; офіційний документ"
+  - "розмовний (colloquial) — розмовний стиль; побутова лексика"
+  recommended:
+  - "колегіальний (collegial) — рівноправний стиль між колегами"
+  - "субординація (subordination) — дотримання ієрархії у спілкуванні"
+  - "соціальна дистанція (social distance) — межа між офіційністю та близькістю"
+  - "тон (tone) — нейтральний тон; офіційно-діловий тон"
+  - "доречність (appropriateness) — вживання мовних засобів відповідно до ситуації"
+  - "переходити на «ви» (to address as 'Vy') — встановлювати офіційну дистанцію"
+  - "звертатися на «ти» (to address as 'Ty') — спілкуватися неформально"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4590 chars)
+✅ Message sent to Claude (ID: 10504)
+✓ Message 10504 acknowledged
+   Auto-acknowledged reply #10504 (stdout delivery — no inbox accumulation)
+✓ Message 10499 acknowledged

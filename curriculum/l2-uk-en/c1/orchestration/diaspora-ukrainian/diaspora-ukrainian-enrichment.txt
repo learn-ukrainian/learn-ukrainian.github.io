@@ -1,0 +1,319 @@
+✅ Message sent to Gemini (ID: 10725) [auto-acked: self-addressed]
+✓ Message 10725 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10725...
+📨 Message #10725
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-diaspora-ukrainian
+   Time: 2026-02-20T21:25:35.965023+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-031
+level: C1
+sequence: 31
+slug: diaspora-ukrainian
+version: '2.0'
+title: Українська діаспора
+content_outline:
+- section: Вступ — Історія еміграції
+  points:
+  - Хвилі еміграції
+  - Причини переселення
+  - Географія діаспори
+- section: Основні громади
+  points:
+  - Канада (найбільша діаспора)
+  - США (великі громади)
+  - Бразилія (історичні спільноти)
+  - Австралія (повоєнна еміграція)
+  - Європа (нова хвиля)
+- section: Мовні особливості
+  points:
+  - Збереження архаїзмів
+  - Вплив місцевих мов
+  - Особливості heritage speakers
+- section: Культурне життя
+  points:
+  - Українські школи
+  - Церква і громада
+  - Культурні організації
+- section: Мовна ідентичність
+  points:
+  - Збереження мови за кордоном
+  - Виклики для нових поколінь
+  - Зв'язок з Україною
+- section: Сучасна діаспора
+  points:
+  - Нова еміграція (після 2022)
+  - Діджитал-зв'язок
+  - Підтримка України
+- section: Практичне завдання
+  points:
+  - Аналіз діаспорного тексту
+  - Порівняння з сучасною мовою
+  - Дискусія про збереження
+vocabulary_hints:
+  required:
+  - діаспора (diaspora)
+  - еміграція (emigration)
+  - іміграція (immigration)
+  - громада (community)
+  - heritage speaker (носій спадкової мови)
+  - архаїзм (archaism)
+  - збереження мови (language maintenance)
+  - асиміляція (assimilation)
+  - ідентичність (identity)
+  - хвиля еміграції (wave of emigration)
+  recommended:
+  - переселенець (settler)
+  - репатріація (repatriation)
+  - двомовність (bilingualism)
+  - мовний зсув (language shift)
+  - інтерференція (interference)
+activity_hints:
+- type: quiz
+  focus: Diaspora communities and history
+  items: 15+
+- type: match-up
+  focus: Region → language features
+  items: 12+
+- type: fill-in
+  focus: Diaspora vocabulary
+  items: 12+
+- type: cloze
+  focus: Heritage language characteristics
+  items: 10+
+- type: group-sort
+  focus: Waves of emigration
+  items: 12+
+- type: essay-response
+  focus: Heritage language maintenance
+focus: linguistics
+prerequisites:
+- c1-28 (Dialects)
+- c1-29 (Surzhyk)
+- c1-30 (History of Language)
+connects_to:
+- c1-32 (Professional Scenarios)
+- c1-35 (C1.2 Checkpoint)
+- c1-49 (Church Slavonicisms)
+module_type: cultural
+sources:
+- name: Українська діаспора
+  url: https://diasporaua.org/
+  type: reference
+  notes: Diaspora community information
+- name: Heritage Language Studies
+  url: https://mova.info/
+  type: secondary
+  notes: Research on diaspora language
+immersion: 100% Ukrainian
+phase: C1.2 Professional Communication
+objectives:
+- Understand and apply українська діаспора
+- Analyze and evaluate історія еміграції
+- Identify key concepts of практичне завдання
+persona:
+  voice: Senior Specialist
+  role: Представник діаспори
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Українська діаспора
+
+## State Standard Reference
+§3.9: "зовнішньополітичні відносини: ... українці за кордоном – стереотипи і проблеми"
+Alignment: Цей модуль розкриває тему української діаспори, її історії, культурного життя та мовних особливостей, що відповідає вимогам стандарту щодо обізнаності з українцями за кордоном.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| діаспора | Висока (ЗМІ, офіційна) | українська діаспора, світова діаспора, життя діаспори |
+| громада | Дуже висока | українська громада, церковна громада, активна громада |
+| еміграція | Висока | хвилі еміграції, трудова еміграція, політична еміграція |
+| асиміляція | Середня (наукова) | мовна асиміляція, культурна асиміляція, загроза асиміляції |
+| ідентичність | Висока | національна ідентичність, збереження ідентичності |
+
+## Cultural Hooks
+1. **Пласт (Plast)**: Національна скаутська організація, заснована в 1911 році, яка стала хребтом виховання молоді в діаспорі (США, Канада, Австралія) та зберегла структуру під час радянської заборони.
+2. **Суботні школи (Saturday Schools)**: Феномен української освіти за кордоном (наприклад, школи українознавства), де діти вивчають мову, історію та культуру у вихідні дні.
+3. **Квітка Цісик**: Американська співачка українського походження, чиї альбоми стали символом збереження української пісні в діаспорі та повернення її в Україну.
+
+## Common Learner Errors
+1. **Архаїзми та діалектизми**: Вживання застарілих слів ("фотоґрафія", "кляса") або діалектизмів ("ровер", "кобіта") як стандартних літературних форм.
+2. **Калькування з англійської ("Ukish")**: Вживання слів типу "кара" (car) замість "машина", "трак" (truck) замість "вантажівка", "бізи" (busy) замість "зайнятий".
+3. **Втрата відмінкових закінчень**: Heritage speakers часто нейтралізують відмінкові закінчення або плутають роди іменників під впливом домінуючої мови середовища.
+
+## Cross-References
+- Builds on: c1-28 (Dialects), c1-29 (Surzhyk), c1-30 (History of Language)
+- Prepares for: c1-32 (Professional Scenarios), c1-49 (Church Slavonicisms)
+
+## Notes for Content Writing
+- Важливо розрізняти "стару" діаспору (канадійську/американську) та "нову" (європейську, трудову).
+- Варто згадати про роль церкви (УГКЦ та УПЦ) як центру гуртування громад.
+- У розділі про мову слід делікатно пояснити різницю між діаспорним варіантом та сучасною літературною нормою, не називаючи діаспорну мову "неправильною", а "архаїчною" або "збереженою".
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Історія та хвилі еміграції (Introduction: History and Waves of Emigration)"
+  words: 500
+  points:
+  - "Аналіз чотирьох хвиль еміграції: від перших переселенців кінця XIX ст. до масового виїзду після 2022 року."
+  - "Причини розсіювання: політичні репресії (дипісти), економічна скрута та сучасна втеча від збройної агресії."
+  - "Географія діаспори: формування потужних громад у Канаді, США, Бразилії та Австралії, їхній внесок у збереження державності."
+- section: "Культурні інституції та ідентичність (Cultural Institutions and Identity)"
+  words: 800
+  points:
+  - "Роль 'Пласту' (Plast) як хребта національного виховання молоді в екзилі та збереження структури організації."
+  - "Феномен суботніх шкіл (Saturday schools) українознавства: методика викладання мови та історії в іншомовному середовищі."
+  - "Церква (УГКЦ та УПЦ) як осередок гуртування та соціальної підтримки громади, роль релігійних свят у збереженні традицій."
+  - "Культурний міст Квітки Цісик: вплив її творчості на популяризацію української пісні у світі та її повернення в Україну."
+- section: "Мовні особливості: архаїзми та збережений стандарт (Linguistic Features: Archaisms and Preserved Standard)"
+  words: 900
+  points:
+  - "Використання архаїзмів та правопису 1928 року (Харківський правопис) як ознака тяглості традиції (напр., 'фотоґрафія', 'кляса')."
+  - "Діалектна основа діаспорної мови: вплив західноукраїнських говірок (ровер, кобіта) на мовленнєвий етикет за кордоном."
+  - "Методика делікатного розрізнення діаспорного варіанта та сучасної літературної норми без стигматизації 'неправильності'."
+- section: "Проблеми інтерференції та Heritage Speakers (Interference Issues and Heritage Speakers)"
+  words: 800
+  points:
+  - "Аналіз явища 'Ukish': лексичне калькування з англійської (кара/car, трак/truck, бізи/busy) та способи очищення мовлення."
+  - "Типові граматичні помилки heritage speakers: нейтралізація відмінкових закінчень та труднощі з категорією роду іменників."
+  - "Мовна асиміляція та мовний зсув: виклики для другого та третього поколінь емігрантів у збереженні активного словникового запасу."
+- section: "Сучасна діаспора та стереотипи (Modern Diaspora and Stereotypes)"
+  words: 600
+  points:
+  - "Українці за кордоном згідно з Держстандартом (§3.9): аналіз стереотипів, соціальних проблем та питань інтеграції."
+  - "Діалог між 'старою' (політичною) та 'новою' (трудовою та воєнною) еміграцією: спільні цінності та розбіжності."
+  - "Цифрова діаспора: використання діджитал-інструментів для підтримки України та координації волонтерських рухів."
+- section: "Практикум: Аналіз діаспорних текстів (Workshop: Analysis of Diaspora Texts)"
+  words: 400
+  points:
+  - "Робота з першоджерелами: порівняння мови діаспорної періодики середини XX ст. із сучасними українськими медіа."
+  - "Дискусія про збереження національної ідентичності: баланс між успішною інтеграцією в іноземне суспільство та недопущенням асиміляції."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "діаспора (diaspora) — світова/українська діаспора; висока частотність у контексті зовнішньої політики"
+  - "громада (community) — церковна/активна громада; ключовий термін для соціальної організації за кордоном"
+  - "еміграція (emigration) — хвилі еміграції (політична, трудова, воєнна); історичний процес виїзду"
+  - "асиміляція (assimilation) — мовна/культурна асиміляція; загроза розчинення в іншому етносі"
+  - "ідентичність (identity) — національна ідентичність; збереження самобутності в іншомовному середовищі"
+  - "heritage speaker (носій спадкової мови) — особа, що вивчила мову вдома, але живе в іншому мовному оточенні"
+  - "архаїзм (archaism) — застарілі слова або граматичні конструкції, збережені діаспорою"
+  - "збереження мови (language maintenance) — комплекс заходів для запобігання мовному зсуву"
+  recommended:
+  - "Пласт (Plast) — національна скаутська організація; символ тяглості виховання"
+  - "суботня школа (Saturday school) — освітній заклад для вивчення українознавчих дисциплін за кордоном"
+  - "інтерференція (interference) — мовне втручання, що призводить до появи Ukish-кальків"
+  - "мовний зсув (language shift) — поступова заміна рідної мови мовою більшості"
+  - "репатріація (repatriation) — процес повернення на батьківщину"
+  - "двомовність (bilingualism) — здатність спілкуватися двома мовами; характерна риса діаспори"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4464 chars)
+✅ Message sent to Claude (ID: 10734)
+✓ Message 10734 acknowledged
+   Auto-acknowledged reply #10734 (stdout delivery — no inbox accumulation)
+✓ Message 10725 acknowledged

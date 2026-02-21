@@ -1,0 +1,101 @@
+module: a2-34
+level: A2
+sequence: 34
+slug: health-basics
+version: '2.0'
+title: Health Basics
+subtitle: Body Parts, Symptoms & Pain Expressions
+content_outline:
+- section: Introduction / Вступ
+  points:
+  - 'Health as a conversation topic — cultural hook: «У здоровому тілі — здоровий
+    дух» as universal Ukrainian wisdom; health smalltalk norms'
+  - Why health vocabulary comes first — foundational body parts and the боліти construction
+    are prerequisites for all later health modules
+- section: Частини тіла
+  points:
+  - 'Core body parts — голова, рука, нога, живіт, спина, горло, око/очі, вухо/вуха;
+    visual aid: body map with labels'
+  - 'Singular vs plural pairs — learner error: irregular plurals (око→очі, вухо→вуха);
+    gender agreement patterns with adjectives'
+  - 'Internal organs (basic) — серце, легені, шлунок; cultural note: «серце» in Ukrainian
+    idioms (від щирого серця)'
+- section: Конструкція «У мене болить»
+  points:
+  - 'Impersonal pain construction — У мене болить + Nominative singular (голова, живіт,
+    горло); learner error: «Я болить голову» instead of «У мене болить голова»'
+  - 'Plural agreement — У мене болять + Nominative plural (ноги, очі, зуби); learner
+    error: «У мене болить ноги» (number mismatch)'
+  - 'Extended pain expressions — standard ref: §4.2.1.4; крутиться голова, болить
+    серце, пече в грудях'
+- section: Симптоми і стани
+  points:
+  - 'Common symptoms — температура, кашель, нежить, біль; collocations: висока температура,
+    сильний кашель, гострий біль'
+  - 'State expressions — Мені погано/добре/нудно; learner error: «Я погано» instead
+    of «Мені погано» (Dative for states)'
+  - 'Хворий vs боліти vs хворіти — learner error: confusing adjective (хворий), body-pain
+    verb (боліти), person-sick verb (хворіти)'
+- section: Practice / Практика
+  points:
+  - Describing what hurts — fill-in drills with болить/болять agreement
+  - Symptom description mini-dialogues — «Що з тобою?» «У мене болить горло і кашель»
+- section: Діалоги / Dialogues
+  points:
+  - 'Calling a friend about feeling sick — casual register; cultural hook: health
+    proverbs in everyday speech'
+  - First aid phrases — Тобі погано? Тримайся! Давай виклику лікаря
+focus: vocabulary
+pedagogy: PPP
+objectives:
+- Learner can name major body parts
+- Learner can use the боліти construction correctly
+- Learner can describe basic symptoms
+- Learner can express physical states (Мені погано/добре)
+grammar:
+- body parts (gender, singular/plural)
+- impersonal pain construction (у мене болить/болять)
+- state expressions with Dative (Мені погано)
+- хворий/боліти/хворіти distinction
+module_type: vocabulary
+sources:
+- name: Ukrainian State Standard 2024 - Health and Hygiene
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Standards for describing physical conditions at A2
+immersion: 60-75% Ukrainian
+phase: A2.3
+persona:
+  voice: Encouraging Cultural Guide
+  role: School Nurse
+vocabulary_hints:
+  required:
+  - 'голова (head) — collocations: болить голова, головний біль, крутиться голова'
+  - 'рука (arm/hand) — note: права/ліва рука, зламати руку'
+  - 'нога (leg/foot) — collocations: болять ноги, зламати ногу'
+  - 'живіт (stomach) — usage: болить живіт'
+  - 'горло (throat) — collocations: червоне горло, болить горло'
+  - 'боліти (to hurt) — impersonal: у мене болить X (sg) / болять Y (pl)'
+  - 'температура (fever) — collocations: висока температура, міряти температуру'
+  - 'кашель (cough) — collocations: сильний кашель, сухий кашель'
+  recommended:
+  - нежить (runny nose) — мати нежить, засоби від нежитю
+  - хворий (sick, adj.) — він хворий, хвора дитина
+  - здоровий (healthy) — у здоровому тілі — здоровий дух
+  - спина (back) — болить спина, біль у спині
+  - зуб (tooth) — болить зуб, зубний біль
+  - серце (heart) — від щирого серця (idiom)
+activity_hints:
+- type: match-up
+  focus: Body parts vocabulary
+  items: 25
+- type: fill-in
+  focus: болить/болять agreement
+  items: 20
+- type: fill-in
+  focus: Symptom descriptions
+  items: 15
+- type: fill-in
+  focus: State expressions (Мені погано/добре)
+  items: 8
+word_target: 3000

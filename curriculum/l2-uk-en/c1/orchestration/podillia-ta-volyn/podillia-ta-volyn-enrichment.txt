@@ -1,0 +1,250 @@
+✅ Message sent to Gemini (ID: 10813) [auto-acked: self-addressed]
+✓ Message 10813 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10813...
+📨 Message #10813
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-podillia-ta-volyn
+   Time: 2026-02-20T21:30:11.618568+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-075
+level: C1
+sequence: 75
+slug: podillia-ta-volyn
+version: '2.0'
+title: Поділля та Волинь
+subtitle: Podillia and Volyn
+content_outline:
+- section: Розминка — Серце України
+  points:
+  - Поділля та Волинь — центральні регіони
+  - Історичний вплив Польщі та Литви
+  - Унікальні культурні маркери
+- section: Поділля
+  points:
+  - 'Географія та історія: Вінниччина, Хмельниччина'
+  - 'Вишивка: чорно-червона, рослинні мотиви'
+  - 'Архітектура: білі мазанки'
+  - 'Гастрономія: вареники, галушки'
+  - Подільські пісні та танці
+- section: Волинь
+  points:
+  - 'Географія та історія: Луцьк, Рівне'
+  - 'Релігійна традиція: православ''я'
+  - 'Народне мистецтво: ікона, різьба'
+  - Волинські трагедії XX століття
+- section: Практика — регіони України
+  points:
+  - Порівняти Поділля та Волинь — спільне та відмінне
+  - Описати особливості подільської вишивки
+  - Написати есе про регіональну ідентичність
+  - Обговорити вплив історії на культуру
+focus: culture
+pedagogy: CBI
+objectives:
+- Learner understands the unique cultural identities of Podillia and Volyn
+- Learner can describe regional embroidery and architecture
+- Learner can compare wedding traditions of Central-Western Ukraine
+grammar:
+- Folk terminology
+- Regional dialect markers
+phase: C1.5 Folk Culture & Arts
+persona:
+  voice: Senior Specialist
+  role: Краєзнавець
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Поділля та Волинь
+
+## State Standard Reference
+§3.21: "Традиції, звичаї, свята: українські звичаї і традиції; релігійні звичаї і традиції."
+§3.17: "Місця: пам’ятки культури; туристичні принади (замки, палаци, парки, площі); місця пам’яті та пам’ятники."
+Alignment: This module directly addresses the C1 requirement to discuss regional traditions, cultural landmarks (castles, churches), and historical memory (places of memory) with high lexical precision.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| **Вишивка** | High / General | вишивати хрестиком/гладдю, традиційна вишивка, орнаментальні мотиви, код нації |
+| **Мазанка** | Medium / Cultural | білена мазанка, стріха, традиційне житло, архітектурна спадщина |
+| **Фортеця** | High / History | неприступна фортеця, оборонні мури, Кам'янецька фортеця, Хотинська фортеця |
+| **Ікона** | High / Religious | Волинська ікона, чудотворна ікона, іконописна школа, сакральне мистецтво |
+| **Діалект** | Medium / Ling. | подільський говір, волинський діалект, фонетичні особливості, архаїзми |
+
+## Cultural Hooks
+1. **З'їзд європейських монархів (1429):** Луцький замок (Волинь) приймав саміт монархів Європи, де вирішували питання захисту від Османської імперії — свідчення геополітичної ваги регіону.
+2. **Подільські Товтри:** Єдиний у світі гірський кряж, що утворився не тектонічно, а як бар'єрний риф стародавнього Сарматського моря (аналог Великого бар'єрного рифу, але на суші).
+
+## Common Learner Errors
+1. **Confusion of Regions:** Confusing *Podillia* (Central-West: Vinnytsia, Khmelnytskyi) with *Polissia* (North: forests, swamps).
+   *Correction:* Link Podillia to "dolyna" (valleys, canyons) and Polissia to "lis" (forests).
+2. **Surzhyk in Architectural Terms:** Using "дом" instead of "хата", "садиба" or "обійстя" in ethnographic contexts.
+   *Correction:* Enforce specific terminology: *хата-мазанка*, *ґражда* (Hutsul, but useful contrast), *садиба*.
+3. **Improper Agreement with "Товтри":** Treating it as singular.
+   *Correction:* *Товтри* is plural only (pluralia tantum).
+
+## Cross-References
+- **Builds on:** B1 M72 (Regions of Ukraine - Intro), B2 History modules (Polish-Lithuanian period).
+- **Prepares for:** C1.4 Folk Culture modules (specific arts), C1 Literature (Lesia Ukrainka - Volyn).
+
+## Notes for Content Writing
+- **Tone:** Academic yet evocative (Ethnographer persona). Use stylistic devices (metaphor, epithet) as required by C1 standard.
+- **Dialect:** Introduce dialect features *descriptively* (as C1 sociolinguistics content), do not use them in the narrator's voice unless quoting.
+- **Sensitivity:** When discussing Volyn tragedy, focus on "places of memory" and historical complexity without engaging in political polemics, aligned with the "culture/history" focus.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Серце України та історичні перехрестя (Introduction: The Heart of Ukraine and Historical Crossroads)"
+  words: 500
+  points:
+  - "Поділля та Волинь як стратегічні центральні регіони; історичний вплив Речі Посполитої та Великого князівства Литовського у контексті Держстандарту (§3.17)."
+  - "Культурний гачок: З’їзд європейських монархів у Луцькому замку (1429) як свідчення геополітичної ваги регіону та приклад саміту середньовічної Європи."
+  - "Лінгвістична диференціація: розмежування понять Поділля (від «долина») та Полісся (від «ліс») для запобігання типовій помилці змішування регіонів."
+- section: "Поділля: Між каньйонами та білими мазанками (Podillia: Between Canyons and White Mazankas)"
+  words: 1000
+  points:
+  - "Географічна унікальність: Подільські Товтри як бар'єрний риф Сарматського моря; граматичний акцент на вживанні назви як pluralia tantum."
+  - "Етнографічна архітектура: традиційна хата-мазанка, поняття «обійстя» та «садиба» як заміна суржиковому «дом» у професійному мовленні."
+  - "Мистецький код: подільська вишивка (техніка низь, чорно-червоні рослинні мотиви) та її сприйняття як «коду нації»."
+  - "Оборонна спадщина: Кам'янець-Подільська та Хотинська фортеці як пам’ятки культури та неприступні оборонні мури (§3.17)."
+- section: "Волинь: Озерний край та сакральна спадщина (Volyn: Land of Lakes and Sacred Heritage)"
+  words: 900
+  points:
+  - "Культурний ландшафт Луцька та Рівного; літературні паралелі з творчістю Лесі Українки та волинською ідентичністю."
+  - "Сакральне мистецтво: Волинська іконописна школа (§3.21), специфіка чудотворних ікон та розвиток іконопису як високого мистецтва."
+  - "Історична пам'ять: Волинські трагедії XX століття через призму «місць пам’яті»; делікатне обговорення історичної складності за стандартами C1."
+  - "Народні промисли: волинська різьба по дереву та ткацтво як невід’ємні складники регіонального побуту."
+- section: "Лінгвістичний ландшафт: Говори та діалекти (Linguistic Landscape: Dialects and Vernaculars)"
+  words: 700
+  points:
+  - "Аналіз подільського говору та волинського діалекту: фонетичні особливості та архаїзми як об’єкт соціолінгвістичного вивчення на рівні C1."
+  - "Етнографічна термінологія та регіоналізми: назви страв (вареники, галушки) та предметів побуту в автентичному контексті."
+- section: "Практика та синтез: Порівняльна етнологія (Practice and Synthesis: Comparative Ethnology)"
+  words: 900
+  points:
+  - "Порівняльний аналіз традицій, звичаїв та весільних обрядів Поділля та Волині згідно з вимогами Держстандарту (§3.21)."
+  - "Написання есе про регіональну ідентичність та вплив прикордонного статусу на формування культури регіонів."
+  - "Дискусія на тему збереження архітектурної спадщини: від фортець до традиційних мазанок."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "вишивка (embroidery) — орнаментальні мотиви, код нації, вишивати гладдю; ключовий етнографічний термін"
+  - "мазанка (cob house/mazanka) — білена мазанка, традиційне житло; протиставляти суржиковому «дом»"
+  - "фортеця (fortress) — неприступна фортеця, оборонні мури; вживати з назвами Кам'янецька та Хотинська"
+  - "ікона (icon) — сакральне мистецтво, іконописна школа, чудотворна ікона; специфіка волинського мистецтва"
+  - "діалект (dialect) — подільський говір, волинський діалект, фонетичні особливості; для соціолінгвістичного аналізу"
+  recommended:
+  - "обійстя (farmstead/estate) — синонім до садиба; високий етнографічний регістр"
+  - "Товтри (Tovtry) — гірський кряж; вживати лише у формі множини (pluralia tantum)"
+  - "низь (nyz/low-stitch) — специфічна техніка вишивки, характерна для Поділля"
+  - "архаїзм (archaism) — використання застарілих слів для відтворення колориту"
+  - "місце пам’яті (place of memory) — термін для опису історичних локацій за §3.17"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (3898 chars)
+✅ Message sent to Claude (ID: 10820)
+✓ Message 10820 acknowledged
+   Auto-acknowledged reply #10820 (stdout delivery — no inbox accumulation)
+✓ Message 10813 acknowledged

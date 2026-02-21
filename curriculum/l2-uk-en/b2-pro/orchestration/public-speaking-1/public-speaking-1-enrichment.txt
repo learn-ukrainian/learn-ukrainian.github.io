@@ -1,0 +1,278 @@
+✅ Message sent to Gemini (ID: 12270) [auto-acked: self-addressed]
+✓ Message 12270 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12270...
+📨 Message #12270
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-public-speaking-1
+   Time: 2026-02-20T23:38:12.017390+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b2-pro-34
+level: B2-PRO
+sequence: 34
+slug: public-speaking-1
+version: '2.0'
+title: 'Ораторство I: Структура'
+subtitle: 'Public Speaking: Structure'
+content_outline:
+- section: Розминка — Публічні виступи українською
+  points:
+  - Чому ораторські навички важливі для професіонала
+  - Особливості української риторичної традиції
+  - Публічні виступи vs презентації — спільне та відмінне
+- section: Структура публічного виступу
+  points:
+  - 'Вступ: привернути увагу, представити тему, окреслити структуру'
+  - 'Прийоми захоплення: запитання, історія, статистика, цитата'
+  - 'Основна частина: 3-5 ключових тез з аргументами'
+  - 'Переходи: сигнальні фрази між частинами'
+  - 'Висновок: підсумок, заклик до дії, запам''ятовувана фраза'
+- section: Підготовка виступу
+  points:
+  - 'Аналіз аудиторії: хто слухатиме, що їм важливо'
+  - 'Визначення мети: інформувати, переконати, надихнути'
+  - 'Ключове повідомлення: одне речення, яке запам''ятають'
+  - Структурування матеріалу — від хаосу до логіки
+- section: Мова публічного виступу
+  points:
+  - 'Усна мова vs письмова: коротші речення, повтори, риторичні запитання'
+  - 'Образність: метафори, порівняння, приклади з життя'
+  - 'Ритм: варіювання довжини речень, паузи'
+  - 'Звертання до аудиторії: ви, ми, уявіть собі'
+- section: Зразок виступу з аналізом
+  points:
+  - Текст 5-хвилинного виступу на професійну тему
+  - Аналіз структури та мовних засобів
+  - Альтернативні прийоми для вступу та висновку
+- section: Практика — Підготовка виступу
+  points:
+  - 'Завдання: Підготувати 3-хвилинний виступ на обрану тему'
+  - 'Вимоги: чіткий вступ, 3 тези, запам''ятовуваний висновок'
+  - Чек-лист для самоперевірки
+vocabulary_hints:
+  required:
+  - публічний виступ (public speech)
+  - привернути увагу (to capture attention)
+  - ключове повідомлення (key message)
+  - сигнальна фраза (signposting phrase)
+  - заклик до дії (call to action)
+  - риторичне запитання (rhetorical question)
+  - цільова аудиторія (target audience)
+  - структура виступу (speech structure)
+  recommended:
+  - вступне слово (opening remarks)
+  - тези виступу (speech points)
+  - жива мова (lively language)
+  - зоровий контакт (eye contact)
+  - мова тіла (body language)
+  - репетиція (rehearsal)
+activity_hints:
+- type: document-analysis
+  focus: Проаналізувати структуру зразкового виступу — визначити вступ, тези, висновок
+  items: 2
+- type: writing-task
+  focus: Написати вступ до виступу (3 варіанти з різними прийомами)
+  items: 1
+- type: fill-in
+  focus: Вставити сигнальні фрази для переходів між частинами
+  items: 10
+- type: register-transform
+  focus: Перетворити письмовий текст на усний виступ
+  items: 5
+- type: writing-task
+  focus: Підготувати повний текст 3-хвилинного виступу
+  items: 1
+- type: matching
+  focus: З'єднати мету виступу з відповідним прийомом вступу
+  items: 6
+focus: professional
+pedagogy: ESP
+prerequisites:
+- b2-pro-33 (Журналістське письмо)
+connects_to:
+- 'b2-pro-35 (Ораторство II: Переконання)'
+objectives:
+- Учень знає структуру ефективного публічного виступу
+- Учень може підготувати вступ, що привертає увагу
+- Учень може використовувати сигнальні фрази для структурування виступу
+- Учень може адаптувати письмовий текст для усного виступу
+grammar:
+- Риторичні запитання (Чи замислювалися ви...? Що б ви зробили?)
+- Імперативні конструкції (Уявіть собі, Подумайте, Згадайте)
+- Інклюзивне «ми» (Ми всі знаємо, Давайте разом подивимося)
+register: публіцистичний
+phase: B2-PRO.3
+persona:
+  voice: Senior Specialist
+  role: Викладач риторики
+word_target: 2000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Ораторство I: Структура
+
+## Використані джерела
+1. [Полтавський державний аграрний університет (ПДАУ)](https://www.pdau.edu.ua/) — Навчальний курс «Ораторське мистецтво» з акцентом на професійну комунікацію.
+2. [Волинський національний університет імені Лесі Українки](https://vnu.edu.ua/) — Методичні рекомендації щодо підготовки публічних виступів.
+3. [Дія.Бізнес](https://business.diia.gov.ua/) — Поради щодо ефективної презентації та публічних виступів для підприємців.
+4. [Loyer.com.ua](https://loyer.com.ua/) — Професійні поради для юристів та бізнесменів щодо публічної риторики.
+
+## Термінологічна база
+
+| Українська (норма) | Русизм/ненорма | English | Контекст вживання |
+|--------------------|---------------|---------|-------------------|
+| Публічний виступ | Публічне виступлення | Public speaking | Загальний термін |
+| Порушити питання | Підняти питання | To raise a question | Офіційна дискусія |
+| Ключове повідомлення | Ключовий меседж | Key message | Стратегія виступу |
+| Цільова аудиторія | Цельова аудиторія | Target audience | Аналіз слухачів |
+| Брати участь | Приймати участь | To participate | Участь у панелях/дискусіях |
+| Сигнальні фрази | Фрази-переходи | Signposting phrases | Структурування мови |
+| Заклик до дії | Призив до дії | Call to action (CTA) | Завершення виступу |
+| Ставити запитання | Задавати питання | To ask questions | Взаємодія з аудиторією |
+
+## Мовні норми та стандарти
+- **ДСТУ 4163:2020**: Хоча стандарт стосується документації, професійне ораторство в Україні вимагає дотримання офіційно-ділового стилю в термінології та звертаннях.
+- **Мовна стійкість**: Використання виключно української мови без запозичень з російської (кальок) є ознакою професійної етики.
+- **Композиційна норма**: Класична пропорція — Вступ (15%), Основна частина (75%), Висновок (10%).
+
+## Аутентичні приклади
+1. [Вступ]: «Шановні колеги! Сьогодні ми зібралися, щоб обговорити критично важливі зміни у нашому секторі...»
+2. [Перехід]: «Враховуючи вищесказане, дозвольте перейти до наступного аспекту нашої стратегії...»
+3. [Висновок]: «Отже, підсумовуючи, ми бачимо три чіткі кроки вперед. Я закликаю кожного з вас долучитися до реалізації цього плану.»
+
+## Типові помилки
+1. ❌ "Я рахую, що..." → ✅ "Я вважаю, що..." — помилка використання дієслова «рахувати» для вираження думки.
+2. ❌ "На протязі години" → ✅ "Протягом години" — катування часової тривалості.
+3. ❌ "Слідуюче питання" → ✅ "Наступне питання" — типовий русизм у структурованому виступі.
+4. ❌ "Більша половина" → ✅ "Більша частина" — логічна помилка (половина завжди рівна).
+5. ❌ "Вибачаюсь" → ✅ "Перепрошую / Прошу вибачення" — використання зворотної частки -ся, що вказує на дію спрямовану на себе.
+
+## Engagement Hooks (mapped to sections)
+- Section "Розминка": [!context] — Історія української риторики від Києво-Могилянської академії до сучасності.
+- Section "Структура": [!pro-tip] — «Правило трьох»: аудиторія найкраще запам’ятовує саме три тези.
+- Section "Підготовка": [!language-note] — Чому важливо використовувати «ми-підхід» замість «я-підхід» у професійних презентаціях.
+- Section "Мова": [!common-error] — Помилка «читання з папірця» та як жива мова підвищує довіру на 40%.
+
+## Section-Mapped Research Notes
+
+### Розминка — Публічні виступи українською
+Ораторське мистецтво — це не просто «красномовство», а інструмент управління та переконання. В Україні професійне ораторство розвивалося в контексті академічних диспутів та церковної риторики. Сучасний контекст вимагає відходу від радянського «канцеляриту» до динамічного західного стилю презентації.
+
+### Структура публічного виступу
+Вступ має включати «гачок» (hook): статистику, риторичне запитання або сторітелінг. Основна частина будується за дедуктивним або індуктивним методом. Сигнальні фрази («З одного боку...», «По-перше...», «Зверніть увагу...») є «навігацією» для слухача.
+
+### Підготовка виступу
+Аналіз аудиторії (емоційний стан, рівень знань, очікування). Визначення «Ключового повідомлення» (One Big Message), яке має вміститися у 140 символів. Логіка виступу: Проблема → Вирішення → Результат.
+
+### Мова публічного виступу
+Перехід від письмового тексту до усної мови: використання коротких речень (до 15 слів), активних дієслів та риторичних запитань для залучення аудиторії. Ритм мовлення: зміна темпу та використання пауз (пауза як інструмент акцентування).
+
+### Зразок виступу з аналізом
+Аналіз 5-хвилинного виступу на тему «Впровадження цифрових інструментів у бізнес». Демонстрація переходів між аргументами та використання заклику до дії (Call to Action).
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12320)
+✓ Message 12270 acknowledged
+✓ Message 12320 acknowledged

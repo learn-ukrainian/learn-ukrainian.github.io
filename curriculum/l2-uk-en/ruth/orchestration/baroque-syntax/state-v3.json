@@ -1,0 +1,13 @@
+{
+  "track": "ruth",
+  "slug": "baroque-syntax",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-20T11:39:19Z",
+      "task_id": "v3-baroque-syntax-pA",
+      "mode": "full"
+    }
+  }
+}

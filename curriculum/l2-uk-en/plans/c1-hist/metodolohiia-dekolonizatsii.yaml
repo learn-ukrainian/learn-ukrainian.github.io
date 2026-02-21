@@ -1,4 +1,3 @@
----
 module: c1-hist-008
 level: c1-hist
 sequence: 8
@@ -10,15 +9,13 @@ objectives:
 - Analyze the causes and consequences of методологія деколонізації
 - Evaluate the historical significance of що таке деколонізація?
 content_outline:
-- section: "Вступ — Що таке деколонізація?"
-  words: 457
+- section: Вступ — Що таке деколонізація?
   subsections:
   - Колоніалізм — не тільки заморський
   - Росія як імперія — особливий випадок
   - Чому «постколоніальні студії» для України
   - Від політики до свідомості
 - section: Теоретичні основи
-  words: 686
   subsections:
   - Едвард Саїд — «Орієнталізм» (1978)
   - Гомі Баба — гібридність
@@ -26,7 +23,6 @@ content_outline:
   - Франц Фанон — психологія колонізованого
   - Як це застосувати до України
 - section: Українська постколоніальна критика
-  words: 686
   subsections:
   - Тамара Гундорова — теорія
   - Марко Павлишин — критика
@@ -34,7 +30,6 @@ content_outline:
   - Українська специфіка — «Друга Русь»
   - Чому Захід не бачив Україну як колонію
 - section: Методи деколоніального аналізу
-  words: 800
   subsections:
   - Деконструкція імперського наративу
   - Виявлення «замовчаного»
@@ -43,26 +38,22 @@ content_outline:
   - Мова як поле битви
   - Географія і топоніміка
 - section: Практичне застосування
-  words: 571
   subsections:
   - Аналіз тексту — як виявити колоніальний дискурс
   - Приклад — аналіз радянського тексту
   - Приклад — аналіз сучасного російського тексту
   - Самодеколонізація — критика власних стереотипів
 - section: Критика і межі методу
-  words: 457
   subsections:
   - Ризик надмірної політизації
   - Чи все — колоніалізм?
   - Баланс — критика і конструктив
   - Що далі — за горизонтом деколонізації
 - section: Підсумок
-  words: 343
   subsections:
   - Деколонізація як метод і як практика
   - Інструменти для критичного аналізу
   - Від теорії до дії
-word_target: 4000
 vocabulary:
 - деколонізація
 - постколоніальний
@@ -81,30 +72,30 @@ vocabulary:
 - емансипація
 activities:
 - type: reading
-  focus: "Excerpt from Said's Orientalism (translated/summarized) — core concepts"
+  focus: Excerpt from Said's Orientalism (translated/summarized) — core concepts
 - type: critical-analysis
   focus: Apply decolonial analysis to a Russian text about Ukraine
 - type: critical-analysis
-  focus: "Analyze your own assumptions — what colonial stereotypes might you hold?"
+  focus: Analyze your own assumptions — what colonial stereotypes might you hold?
 - type: essay-response
   focus: Чому Україну не сприймали як колонію?
 - type: reading
   focus: Rewrite a colonial description of an event in decolonial frame
 sources:
 - name: Деколонізація (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Деколонізація"
+  url: https://uk.wikipedia.org/wiki/Деколонізація
   type: reference
   notes: General concept
 - name: Постколоніальні студії
-  url: "https://uk.wikipedia.org/wiki/Постколоніальні_студії"
+  url: https://uk.wikipedia.org/wiki/Постколоніальні_студії
   type: reference
   notes: Theoretical framework
-- name: "Едвард Саїд — Орієнталізм"
-  url: "https://uk.wikipedia.org/wiki/Орієнталізм_(книга)"
+- name: Едвард Саїд — Орієнталізм
+  url: https://uk.wikipedia.org/wiki/Орієнталізм_(книга)
   type: reference
   notes: Foundational postcolonial text
-- name: "Тамара Гундорова — Післячорнобильська бібліотека"
-  url: "https://uk.wikipedia.org/wiki/Гундорова_Тамара_Іванівна"
+- name: Тамара Гундорова — Післячорнобильська бібліотека
+  url: https://uk.wikipedia.org/wiki/Гундорова_Тамара_Іванівна
   type: reference
   notes: Ukrainian postcolonial scholar
 vocabulary_hints:
@@ -123,7 +114,9 @@ activity_hints:
   items: 4
 - type: essay-response
   focus: Критичний аналіз
-  word_target: 300
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Postcolonial Theorist

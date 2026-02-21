@@ -1,4 +1,3 @@
----
 sequence: 43
 module: oes-043
 module_number: 35
@@ -9,7 +8,6 @@ phase: 2
 phase_id: literary-tradition
 phase_name: Literary Tradition
 focus: Bogolyubsky — The shift of power
-word_target: 4000
 content_outline:
 - section: Вступ
   description: Introduction to Sack of Kyiv
@@ -24,3 +22,6 @@ activity_types:
 - transcription
 - etymology-trace
 - grammar-identify
+persona:
+  voice: Senior Paleographer
+  role: Refugee

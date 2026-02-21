@@ -1,0 +1,234 @@
+✅ Message sent to Gemini (ID: 12218) [auto-acked: self-addressed]
+✓ Message 12218 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12218...
+📨 Message #12218
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-riabchuk-two-ukraines
+   Time: 2026-02-20T23:37:34.038851+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 28
+module: lit-essay-28
+level: LIT.ESSAY
+slug: riabchuk-two-ukraines
+version: '2.0'
+title: Riabchuk Two Ukraines
+subtitle: Riabchuk Two Ukraines
+content_outline:
+- section: Вступ та контекст
+  points: []
+- section: Аналіз ключових творів
+  points: []
+- section: Стилістика та мова автора
+  points: []
+- section: Деколонізаційна перспектива
+  points:
+  - Як цей автор руйнує імперські міфи
+  - Українська суб'єктність у тексті
+- section: Підсумок та спадщина
+  points: []
+vocabulary_hints:
+  required:
+  - історіографія
+  - наратив
+  - суб'єктність
+  recommended:
+  - деколонізація
+activity_hints:
+- type: reading
+  focus: Аналіз першоджерела
+- type: essay-response
+  focus: Критичне есе
+- type: critical-analysis
+  focus: Деконструкція тексту
+focus: literature
+pedagogy: literature
+immersion: 100% Ukrainian
+phase: LIT Expansion
+objectives:
+- Проаналізувати творчість Riabchuk Two Ukraines у контексті української літератури
+- Дослідити вплив автора на формування національної ідентичності
+persona:
+  voice: Senior Specialist
+  role: Societal Analyst
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Дві України (Микола Рябчук)
+
+## Використані джерела
+1. [Енциклопедія Сучасної України (ЕСУ) — Рябчук Микола Юрійович](http://esu.com.ua/) — біографічні відомості та огляд есеїстики.
+2. [Інститут історії України НАНУ — Сучасна українська публіцистика та політологія](http://history.org.ua/) — аналіз впливу концепції на політичний дискурс.
+3. [Чтиво / Litopys — Рябчук Микола: Дві України: реальні межі, віртуальні війни (2003)](http://chtyvo.org.ua/) — першоджерело для аналізу тексту та цитування.
+
+## Хронологія
+- **1953**: Народження Миколи Рябчука в Луцьку, що вплинуло на його формування в середовищі із сильною українською ідентичністю.
+- **1997**: Заснування часопису «Критика», де Рябчук стає одним із ключових авторів та редакторів, формуючи новий інтелектуальний дискурс.
+- **2003**: Вихід друком збірки есеїв «Дві України: реальні межі, віртуальні війни», яка стає фундаментальною для української політології та соціології.
+- **2004**: Помаранчева революція, яка стає практичною ілюстрацією зіткнення «двох Україн» (громадянської та патерналістської).
+- **2014**: Революція Гідності, яка свідчить про поступову перемогу «європейської» моделі ідентичності над «малоросійською».
+
+## Ключові факти та цитати
+- Концепція «Двох Україн» не є суто географічним поділом (Схід-Захід), а скоріше ціннісним конфліктом між «українською» (європейською, громадянською, демократичною) та «малоросійською» (радянською, патерналістською, креольською) ідентичностями.
+- Рябчук використовує постколоніальну методологію для аналізу українського суспільства, застосовуючи терміни «креоли» та «аборигени».
+- **Цитата 1**: «Ми маємо справу не так із двома різними етносами чи двома різними мовами, як із двома різними системами цінностей — умовно кажучи, європейською і євразійською, демократичною і патерналістською».
+- **Цитата 2**: «"Дві України" — це не дві половини розколотої країни, це дві різні моделі націотворення».
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ та історичний контекст": [!context] — Пояснення політичної ситуації в Україні початку 2000-х (епоха Кучми), коли писалася книга.
+- Section "Аналіз концепту «Двох Україн»": [!myth-buster] — Спростування міфу про суто мовний чи географічний розкол України (Захід vs Схід); фокус на ціннісному конфлікті.
+- Section "Ключові есеї: «Малоросія» проти «Європи»": [!quote] — Цитати Рябчука про сутність креольського націоналізму та патерналізму.
+- Section "Стилістика та мова автора": [!culture] — Вплив західної есеїстичної традиції та постколоніальних студій (Едвард Саїд, Франц Фанон) на український контекст.
+- Section "Деколонізаційна перспектива: Подолання імперського міфу": [!decolonization] — Як Рябчук повертає суб'єктність Україні, доводячи, що її проблеми — це типові проблеми подолання колоніального спадку, а не якась «споконвічна меншовартість».
+- Section "Підсумок та спадщина: Революції та консолідація": [!history-bite] — Як події 2014 та 2022 років довели, що "європейська" Україна поглинає "малоросійську", консолідуючи політичну націю.
+
+## Деколонізаційний контекст
+- **Imperial/Soviet myth**: Україна — це штучне утворення, глибоко і безнадійно розколоте на "бандерівський Захід" та "російськомовний, проросійський Схід", які ніколи не домовляться, що виправдовує імперське втручання або розчленування.
+- **Ukrainian reality**: Розкол є не етнічним, а спадком колоніалізму. Рябчук доводить, що це типовий конфлікт між постколоніальною (креольською/совєтською) елітою та національно-демократичним рухом. Перемога останнього є неминучим етапом модернізації та деколонізації, що формує єдину політичну націю.
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian (decolonized) framing |
+|---------|-----------------|-------------------------------|
+| Розкол України | Географічна та мовна несумісність, загроза громадянської війни | Ціннісний конфлікт між постколоніальним (радянським) та модерним (європейським) проєктами |
+| Малоросійство | Природний стан лояльності до "старшого брата" | Залишкова колоніальна ідентичність, травма пригноблення, що перешкоджає модернізації |
+| Націоналізм | Радикальна ідеологія, що веде до розколу | Громадянський рух за побудову сучасної європейської політичної нації |
+
+## Section-Mapped Research Notes
+
+### Вступ та історичний контекст
+- Фокус на інтелектуальному кліматі України кінця 1990-х - початку 2000-х років.
+- Епоха пізнього кучмізму: розчарування суспільства, багатовекторність, збереження радянських практик елітами.
+- Поява часопису «Критика» та формування нового дискурсу навколо проблем ідентичності.
+
+### Аналіз концепту «Двох Україн»
+- Ключова теза Рябчука: наявність двох паралельних суспільств в одній державі.
+- Характеристика "Першої України": україномовна/двомовна, орієнтована на Європу, громадянське суспільство, демократію.
+- Характеристика "Другої України": російськомовна/суржикомовна, орієнтована на патерналізм, пострадянську євразійську модель.
+- Помилковість зведення цього поділу лише до мови чи географії (Збруч чи Дніпро).
+
+### Ключові есеї: «Малоросія» проти «Європи»
+- Аналіз тексту з погляду постколоніальної теорії (впровадження концептів "креолів" та "аборигенів").
+- «Креольська еліта» — російськомовна еліта, що привласнила державу, але залишається культурно лояльною до колишньої метрополії.
+- Пошук компромісу: чи можлива "креольська" держава, чи вона приречена на перетворення в "аборигенну" (національну).
+
+### Стилістика та мова автора
+- Особливості есеїстичного стилю Рябчука: ерудиція, іронія, полемічність.
+- Баланс між суворим академізмом (посилання на соціологію, західних теоретиків) та публіцистичною гостротою.
+- Майстерність у конструюванні метафор («віртуальні війни», «реальні межі»).
+
+### Деколонізаційна перспектива: Подолання імперського міфу
+- Як цей автор руйнує імперські міфи про "одвічну єдність з Росією" або "дві різні нації".
+- Українська суб'єктність у тексті: розгляд України як нормальної постколоніальної держави, що проходить важкий, але закономірний шлях трансформації.
+- Відкидання російського погляду на українські проблеми як на "внутрішній російський" конфлікт.
+
+### Підсумок та спадщина: Революції та консолідація
+- Пророчий характер есеїв: як Помаранчева революція (2004) та Євромайдан (2013-2014) підтвердили тези Рябчука.
+- Еволюція поглядів самого автора в пізніших роботах («Подолання амбівалентності»).
+- Значення збірки для формування сучасної української політологічної думки та національної ідентичності в умовах війни.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12294)
+✓ Message 12218 acknowledged
+✓ Message 12294 acknowledged

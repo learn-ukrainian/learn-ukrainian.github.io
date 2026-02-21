@@ -1,0 +1,136 @@
+module: b1-07
+level: B1
+sequence: 7
+slug: aspect-past-single-repeated
+version: '2.0'
+title: 'Вид у минулому: одного разу vs щодня'
+subtitle: 'Aspect in Past: Single vs Repeated Actions'
+content_outline:
+- section: 'Тест: Два спогади (Test: Two Memories)'
+  words: 600
+  points:
+  - 'Memoirist persona: Contrast a recurring childhood habit (repeated action) with
+    a single, life-altering event (single action).'
+  - 'Visual timeline deduction: Introduce the ''Dots on a line'' (habits) vs ''One
+    big X'' (events) visualization to help learners identify frequency markers.'
+  - 'Initial identification of time markers found in research: «щодня» vs «того разу»
+    as triggers for aspect selection.'
+- section: 'Презентація: Теорія та культурний контекст (Presentation: Theory and Cultural
+    Context)'
+  words: 1000
+  points:
+  - 'Alignment with State Standard §4.2.3.1: Systematic review of past tense formation
+    for imperfective (хотів) and perfective (побачив) verbs.'
+  - 'The Folk Tale Hook: Deep dive into «Одного разу...» (Once upon a time) as the
+    canonical folk-tale opener that shifts language into narrative storytelling mode.'
+  - 'Habitual Hospitality Hook: Cultural associations with «щонеділі» (every Sunday)
+    and «на свята» (on holidays) as triggers for imperfective verb rituals (gathering,
+    cooking, visiting).'
+  - 'Semantic contrast table: Explicitly compare «читав» (process or habit) vs «прочитав»
+    (achievement or result) using high-frequency collocations.'
+  - 'Deconstructing ''Used to'' confusion: Explain how the Ukrainian past imperfective
+    fully encompasses the English ''used to'' concept without requiring extra structures.'
+- section: Грамматичні нюанси та типові помилки (Grammatical Nuances and Common Errors)
+  words: 800
+  points:
+  - 'Learner Error Correction: Addressing the ''Perfective for Habituals'' trap (Він
+    прочитав книгу щодня -> Він читав...) by focusing on the frequency marker over
+    completion.'
+  - 'Process vs Achievement: Distinguishing between ''Я складав іспит'' (the act of
+    taking) and ''Я склав іспит'' (the success of passing) as a marker of single achievement.'
+  - 'Selection algorithm: A step-by-step guide for choosing aspect based on frequency
+    adverbs (часто, іноді, зазвичай) vs specific sequence markers (вперше, востаннє).'
+- section: 'Практика: Минуле в деталях (Practice: Past in Detail)'
+  words: 1000
+  points:
+  - 'School memories narrative: Practice contrasting teachers'' routines (habitual)
+    with a specific memory of a graduation ceremony (single event).'
+  - 'The ''One Summer'' Transformation: Drill transforming a habitual description
+    (''Кожного літа ми їздили...'') into a specific narrative (''Того літа ми поїхали...'').'
+  - 'Professional Memoir Dialogue: Scenario-based practice discussing repeated daily
+    work tasks versus a single major career milestone.'
+- section: 'Підсумок: Резюме маркерів (Summary: Marker Recap)'
+  words: 600
+  points:
+  - 'Master table of frequency markers: Grouping ''always/often/usually'' (Imp) vs
+    ''once/that day/that time'' (Perf) for quick reference.'
+  - 'Persona reflection: A final narrative summary by the Memoirist, weaving together
+    habits and specific events to showcase the beauty of Ukrainian aspectual flow.'
+  - 'Self-check assessment: 10-item diagnostic identifying the ''Storytelling Mode''
+    triggered by narrative markers.'
+vocabulary_hints:
+  required:
+  - 'одного разу (once) — High frequency; collocations: одного разу вранці/вночі;
+    canonical folk-tale opener'
+  - 'щодня (every day) — High frequency; synonym: кожного дня; collocations: робити
+    щодня, бачити щодня'
+  - 'часто (often) — Very High frequency; collocations: досить часто, дуже часто,
+    як часто'
+  - 'іноді (sometimes) — High frequency; collocations: тільки іноді, іноді навіть,
+    іноді буває'
+  - 'зазвичай (usually) — High frequency; usage: зазвичай ми, він зазвичай, як зазвичай'
+  - 'того разу (that time) — Medium frequency; specific event marker; collocations:
+    пам''ятаю того разу, саме того разу'
+  - того дня (that day) — Specific perfective trigger for narrative events
+  - 'завжди (always) — Very High frequency; collocations: назавжди (forever), завжди
+    був, завжди казав'
+  - ніколи (never) — Negative frequency marker; usually requires past imperfective
+    for habits
+  - рідко (rarely) — Frequency marker for repeated actions
+  recommended:
+  - регулярно (regularly) — Formal register frequency marker
+  - постійно (constantly) — High intensity habitual marker
+  - вперше (for the first time) — Achievement/single event marker
+  - востаннє (for the last time) — Final occurrence marker
+  - неодноразово (repeatedly) — Formal register for multiple occurrences
+  - щонеділі (every Sunday) — Cultural hook associated with family rituals and imperfective
+    aspect
+  - на свята (on holidays) — Context for habitual hospitality and recurring actions
+activity_hints:
+- type: fill-in
+  focus: Time marker → aspect selection
+  items: 15+
+- type: fill-in
+  focus: Single event → habitual (and vice versa)
+  items: 10+
+- type: quiz
+  focus: Which aspect for which context?
+  items: 12+
+- type: fill-in
+  focus: Narrative with aspect choices
+  items: 10+
+- type: match-up
+  focus: Time marker → aspect
+  items: 12+
+focus: grammar
+pedagogy: TTT
+prerequisites:
+- b1-06 (Aspect complete system)
+connects_to:
+- b1-08 (Aspect in past - result vs process)
+- b1-14 (Aspect integration practice)
+objectives:
+- Learner can distinguish single from repeated past actions
+- Learner can select correct aspect based on time markers
+- Learner understands how frequency affects aspect choice
+- Learner can transform between single and habitual narratives
+grammar:
+- Aspect selection with time markers
+- Single events vs habitual actions
+- Frequency adverbs and aspect
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Past Tense Aspect
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Official rules for aspect in past tense contexts
+- name: Ukrainian Aspectual Pairs
+  url: https://uk.wikipedia.org/wiki/Видові_пари_дієслів
+  type: reference
+  notes: Comprehensive list of aspectual pairs
+immersion: 100% Ukrainian
+phase: B1.1 Aspect
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Memoirist
+word_target: 4000

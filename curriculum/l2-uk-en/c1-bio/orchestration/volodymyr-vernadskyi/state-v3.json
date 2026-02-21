@@ -1,0 +1,13 @@
+{
+  "track": "c1-bio",
+  "slug": "volodymyr-vernadskyi",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T16:13:25Z",
+      "task_id": "v3-volodymyr-vernadskyi-pA",
+      "mode": "full"
+    }
+  }
+}

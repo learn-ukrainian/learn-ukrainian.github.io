@@ -1,0 +1,280 @@
+✅ Message sent to Gemini (ID: 12053) [auto-acked: self-addressed]
+✓ Message 12053 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12053...
+📨 Message #12053
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-nechuy-levytsky
+   Time: 2026-02-20T23:35:37.760541+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 26
+module: lit-26
+level: LIT
+slug: nechuy-levytsky
+version: '2.0'
+title: 'Іван Нечуй-Левицький: Літописець Українського Села'
+subtitle: 'Ivan Nechuy-Levytsky: Chronicler of the Ukrainian Village'
+content_outline:
+- section: Вступ — Від Куліша до Нечуя
+  points:
+  - Перехід від романтизму до реалізму
+  - Чому Нечуй-Левицький важливий
+  - Структура фінального етапу курсу
+- section: Дитинство і середовище (1838-1859)
+  points:
+  - Село Стеблів і родина священика
+  - Київська семінарія та духовна академія
+  - Перші враження від сільського життя
+- section: Учительські роки і перші твори
+  points:
+  - Робота вчителем (1865-1885)
+  - '"Дві московки" — дебют (1868)'
+  - Співпраця з Кулішем і львівською "Правдою"
+- section: Золота доба творчості (1878-1884)
+  points:
+  - '"Микола Джеря" (1878) — епос кріпацтва'
+  - '"Кайдашева сім''я" (1879) — сімейна сага'
+  - '"Старосвітські батюшки та матушки" (1884)'
+- section: Візуальний стиль Нечуя
+  points:
+  - Етнографічна точність
+  - Мова як інструмент реалізму
+  - Конфлікт з "галицькою" нормою
+- section: Підсумок — Останні роки і спадщина
+  points:
+  - Київський період (1885-1918)
+  - Злиденна смерть генія
+  - Чому його читають досі
+vocabulary_hints:
+  required:
+  - реалізм (realism)
+  - етнографія (ethnography)
+  - побут (everyday life)
+  - село (village)
+  - кріпацтво (serfdom)
+  - священик (priest)
+  - повість (novella)
+  - оповідання (short story)
+  - семінарія (seminary)
+  - академія (academy)
+  recommended:
+  - псевдонім (pseudonym)
+  - дебют (debut)
+  - хроніка (chronicle)
+  - злидні (poverty)
+  - спадщина (legacy)
+activity_hints:
+- type: reading
+  focus: Біографічні матеріали про Нечуя-Левицького
+  source: UkrLib biography
+  items: 4+
+- type: essay-response
+  focus: Роль Нечуя у становленні реалізму
+  output: Літературознавче есе
+focus: literature
+pedagogy: Seminar
+prerequisites:
+- lit-21 to lit-25 (Kulish phase)
+connects_to:
+- lit-27 (Кайдашева сім'я — персонажі)
+- lit-30 (Микола Джеря)
+objectives:
+- Зрозуміти роль Нечуя-Левицького у становленні українського реалізму
+- Проаналізувати біографічні фактори, що вплинули на творчість
+- Дослідити особливості "візуального" стилю письма
+- Оцінити внесок у зображення сільського життя
+grammar:
+- Realism as a method
+- Descriptive prose style
+- Ethnographic detail
+module_type: literature
+sources:
+- name: Біографія Івана Нечуя-Левицького
+  url: https://www.ukrlib.com.ua/bio/printit.php?tid=1646
+  type: primary
+  notes: Офіційна біографія на UkrLib
+- name: Життя та творчість Івана Нечуя-Левицького
+  url: https://www.ukrlib.com.ua/bio/printit.php?tid=1647
+  type: primary
+  notes: Розширена біографічна стаття
+- name: Нечуй-Левицький — Вікіпедія
+  url: https://uk.wikipedia.org/wiki/Нечуй-Левицький_Іван_Семенович
+  type: reference
+  notes: Загальний контекст
+immersion: 100% Ukrainian
+phase: LIT.5 Realism
+persona:
+  voice: Senior Philologist & Critic
+  role: Landscape Painter
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Іван Нечуй-Левицький: Літописець Українського Села
+
+## Використані джерела
+1. [Енциклопедія історії України (ЄІУ)](http://www.history.org.ua) — фундаментальна біографічна та історична довідка про письменника.
+2. [Енциклопедія Сучасної України (ЕСУ)](https://esu.com.ua) — аналіз творчої спадщини та літературного стилю.
+3. [Ізборник (Історія української літератури)](http://litopys.org.ua) — літературознавчий контекст, оцінки сучасників (І. Франко, П. Куліш).
+
+## Хронологія
+- 1838: Народився в містечку Стеблів на Київщині в сім'ї священника Семена Левицького.
+- 1859: Закінчив Київську духовну семінарію.
+- 1865: Здобув вищу освіту в Київській духовній академії, відмовився приймати сан і розпочав кар'єру вчителя в російських гімназіях (Полтава, Каліш, Седлець, Кишинів).
+- 1868: Опублікував свою першу повість «Дві московки» у львівському часописі «Правда» під псевдонімом І. Нечуй.
+- 1878: Написав знакову повість «Микола Джеря» — епос українського кріпацтва.
+- 1879: Створив класичну соціально-побутову повість «Кайдашева сім'я».
+- 1885: Вийшов у відставку, переїхав до Києва, щоб присвятити весь час літературній діяльності.
+- 1918: Помер у злиднях у київській богадільні на тлі хаосу та наступу більшовицьких військ.
+
+## Ключові факти та цитати
+- Іван Франко називав його «великим артистом зору», «всеобіймаючим оком України», що найкраще підкреслює візуальну майстерність прози Нечуя-Левицького.
+- Письменник був палким борцем за чистоту української літературної мови на народній основі. Його кредо: «Писати треба так, як люди говорять».
+- Життя Левицького було вкрай упорядкованим: він гуляв і лягав спати хвилину в хвилину. Через такий розклад він одного разу рівно о десятій вечора пішов із власного ювілейного бенкету.
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ — Від Куліша до Нечуя": [!context] — Умови Валуєвського циркуляра (1863) та Емського указу (1876), під час яких Нечуй-Левицький формував нову українську літературну мову та реалістичний канон.
+- Section "Дитинство і середовище (1838-1859)": [!history-bite] — Хоча батько Івана був священником, він організував у своєму домі селянську школу і глибоко шанував українську козацьку старовину, що сформувало світогляд майбутнього письменника.
+- Section "Учительські роки і перші твори": [!culture] — Вибір псевдоніма «Нечуй». Левицький мусив приховувати свою українську літературну діяльність, працюючи вчителем російської словесності у державних гімназіях імперії.
+- Section "Золота доба творчості: Епос кріпацтва": [!decolonization] — "Микола Джеря" — це не просто опис страждань, а розповідь про активний спротив, бунтарство та волелюбний дух українського селянина, який відмовляється бути рабом.
+- Section "Золота доба творчості: Сімейна сага": [!myth-buster] — "Кайдашева сім'я" часто сприймається виключно як комедія, але насправді це глибоко трагічний твір про руйнування патріархального укладу та психологічну деградацію через бідність і відсутність землі після реформи 1861 року.
+- Section "Візуальний стиль Нечуя": [!quote] — Знамениті слова Івана Франка про «всеобіймаюче око», які підкреслюють не просто етнографізм, а високий художній, кінематографічний рівень письма Нечуя-Левицького.
+
+## Деколонізаційний контекст
+- **Радянський міф**: Зведення Нечуя-Левицького до статусу обмеженого «побутописця», сільського етнографа без глибоких соціально-філософських узагальнень.
+- **Українська реальність**: Нечуй-Левицький був потужним антиімперським письменником, який критикував російську освітню систему (наприклад, у творах про гімназію) та зросійщене духовенство. Його проза — це акт збереження національної ідентичності та створення повноцінної літературної мови всупереч заборонам.
+
+## Contested Terms (if applicable)
+| Concept | Imperial/Soviet framing | Ukrainian framing |
+|---------|-------------------------|-------------------|
+| Тематика творів | Звужений "етнографічний побутопис" | Фундаментальний соціально-психологічний реалізм |
+| Ставлення до церкви | Класовий "антиклерикалізм" | Критика русифікації та імперської трансформації православної церкви |
+
+## Section-Mapped Research Notes
+
+### Вступ — Від Куліша до Нечуя
+Перехідний етап від романтизму П. Куліша до жорсткого соціального реалізму. Нечуй-Левицький — творець «великої прози», фундатор українського реалістичного роману та повісті. Значення його творчості в епоху Емського указу, коли українське слово витіснялося в нелегальне поле.
+
+### Дитинство і середовище (1838-1859)
+Стеблів, мальовнича природа Надросся. Родина освіченого священника Семена Левицького, який цікавився історією та фольклором. Навчання Івана у духовному училищі в Богуславі, потім у Київській семінарії. Атмосфера школярської муштри, яка згодом стане об'єктом його гострої сатири.
+
+### Учительські роки: Робота та спостереження (1865-1885)
+Завершення Київської духовної академії (1865). Відмова від духовної кар'єри на користь викладання. Двадцять років вчителювання в російських гімназіях (Полтава, Польща, Кишинів). Подвійне життя під наглядом поліції. Співпраця з П. Кулішем та публікація дебютної повісті "Дві московки" у Львові.
+
+### Золота доба творчості: Епос кріпацтва (1878)
+Повість "Микола Джеря" як зразок епічного реалізму. Життя українського селянства напередодні реформи 1861 року. Тема втечі "на низ", на цукрові заводи як форми протесту. Психологічна еволюція Миколи Джері від покірного кріпака до вільного і свідомого бунтаря.
+
+### Золота доба творчості: Сімейна сага (1879-1884)
+"Кайдашева сім'я" та "Старосвітські батюшки та матушки". Деконструкція ідеалізованого міфу про гармонійне українське село. Пореформена реальність: безземелля, зубожіння, індивідуалізм. Блискуче розкриття психології персонажів (Омелько, Кайдашиха, Мотря, Мелашка) через їхні побутові конфлікти.
+
+### Візуальний стиль Нечуя
+Його літературна манера: розлогі пейзажі, точний портретний живопис, етнографічна деталізація. Мовознавча позиція: орієнтація виключно на народну наддніпрянську говірку, гостра полеміка щодо створення єдиного літературного стандарту, опір штучній "галицькій" лексиці.
+
+### Підсумок — Останні роки і спадщина
+Повернення до Києва у 1885 році. Усамітнений, педантичний стиль життя, зосередженість на написанні та виданні творів. Трагічна смерть самотнього письменника у 1918 році на тлі воєнних дій. Значення його доробку для сучасної літератури як неперевершеного літописця українського народного життя.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12128)
+✓ Message 12053 acknowledged
+✓ Message 12128 acknowledged

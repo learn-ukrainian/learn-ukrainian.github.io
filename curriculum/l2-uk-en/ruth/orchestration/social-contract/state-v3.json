@@ -1,0 +1,13 @@
+{
+  "track": "ruth",
+  "slug": "social-contract",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-20T13:16:59Z",
+      "task_id": "v3-social-contract-pA",
+      "mode": "full"
+    }
+  }
+}

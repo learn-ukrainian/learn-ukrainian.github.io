@@ -1,0 +1,107 @@
+module: a2-24
+level: A2
+sequence: 24
+slug: smart-shopping
+version: '2.0'
+title: Smart Shopping
+subtitle: Comparisons and Choices
+content_outline:
+- section: Вступ (Introduction)
+  words: 400
+  points:
+  - 'The philosophy of a ''Bazar'' vs a ''Supermarket'' — cultural hook: bargaining
+    in Ukrainian markets is less about aggressive haggling and more about building
+    rapport with a ''regular'' vendor (свій продавець) to secure ''friendly'' prices.'
+  - 'The ''Freshness Hierarchy'' — cultural hook: products from ''grannies'' (бабусі)
+    selling from their own gardens are perceived as superior to supermarket organic
+    brands; introduction of traditional units like ''стакан'' (glass) for berries
+    and ''пучок'' (bunch) for herbs.'
+- section: Презентація (Presentation)
+  words: 800
+  points:
+  - 'Core transaction vocabulary based on §3.9 of the State Standard: ''Ціна'' (вигідна,
+    зі знижкою), ''Знижка'' (надати знижку, акційна ціна), ''Решта'' (дати решту,
+    правильна решта), and ''Чек'' (касовий чек, видати чек, зберігати чек).'
+  - 'Grammar of comparison (§4.3.1): introduction of simple forms (солодший, важливіший)
+    and compound forms (більш солодкий, менш кислий) for the comparative degree.'
+  - 'Grammar of superlatives (§4.3.1): introduction of simple forms (найсолодший,
+    найважливіший) and compound forms (найбільш солодкий, найменш кислий) for the
+    superlative degree.'
+  - 'Digital Shopping Essentials: high-frequency modern terms including ''кошик''
+    (cart), ''оформити замовлення'' (checkout), and ''доставка'' (delivery).'
+- section: Практика (Practice)
+  words: 700
+  points:
+  - 'Grammar Drill: focus on phonetic stem changes (г+ш -> жч) to avoid common learner
+    errors like *дорожший* (correct: дорожчий) and *ближший* (correct: ближчий).'
+  - 'Correction Exercise: targeting ''Double Comparison'' contamination, ensuring
+    learners use either ''більш дешевий'' or ''дешевий'', but never *більш дешевший*.'
+  - 'Comparative Particles Drill: practicing the correct use of ''ніж'' (than) and
+    the preposition ''за'' + Accusative (дешевший за...) while explicitly avoiding
+    the incorrect use of ''як'' for direct comparisons.'
+- section: Продукція (Production)
+  words: 700
+  points:
+  - 'Role-play scenario: Market negotiation vs. Supermarket checkout. Contrast the
+    dynamic negotiation of ''ринок'' (Чи можна дешевше?) with the standard fixed prices
+    of ''магазин''.'
+  - 'Refusal and decision-making etiquette: practicing polite phrases like ''Я ще
+    подумаю'' and using comparative forms for quality decisions (кращий варіант, найкраща
+    якість).'
+- section: Підсумок (Summary)
+  words: 400
+  points:
+  - 'Review of communicative requirements for shopping as per State Standard §3.9:
+    handling currency, units of volume, and consumer goods.'
+  - Final summary of adjective degrees (§4.3.1) and a checklist for polite shopping
+    interactions in both physical and digital Ukrainian contexts.
+focus: vocabulary
+pedagogy: PPP
+objectives:
+- Learner can compare products using comparative adjectives
+- Learner can ask for recommendations and advice
+- Learner can negotiate prices and ask for discounts
+- Learner can express purchase decisions politely
+grammar:
+- comparison in context
+- asking for advice
+- negotiation phrases
+- decision making
+module_type: vocabulary
+sources:
+- name: Ukrainian State Standard 2024 - Shopping
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Communicative requirements for shopping and negotiation
+- name: Cultural Guide to Ukrainian Markets
+  url: https://uk.wikipedia.org/wiki/Ринок
+  type: reference
+  notes: Social etiquette of bargaining in Ukraine
+immersion: 60-75% Ukrainian
+phase: A2.2
+persona:
+  voice: Encouraging Cultural Guide
+  role: Personal Shopper
+vocabulary_hints:
+  required:
+  - ціна (price) — вигідна ціна, ціна зі знижкою, фіксована ціна; high-frequency thematic
+    term
+  - знижка (discount) — сезонна знижка, акційна ціна, надати знижку; high-frequency
+    thematic term
+  - решта (change) — дати решту, правильна решта, дрібна решта; essential for practical
+    transactions
+  - чек (receipt) — касовий чек, видати чек, зберігати чек; high-frequency practical
+    term
+  - кращий (better) — набагато кращий, кращий варіант, найкраща якість; high-frequency
+    irregular form
+  - дешевий (cheap) — дешевший за..., найбільш дешевий товар; primary grammar anchor
+    for comparisons
+  recommended:
+  - ринок (market) — базар, свій продавець; cultural marker for dynamic negotiation
+  - кошик (basket/cart) — додати в кошик; essential for digital shopping register
+  - оформити (to process/checkout) — оформити замовлення; essential for digital shopping
+    register
+  - доставка (delivery) — high-frequency term in modern Ukrainian infrastructure
+  - стакан (glass) — traditional unit for measuring berries/seeds at markets
+  - пучок (bunch) — traditional unit for measuring herbs/greens at markets
+word_target: 3000

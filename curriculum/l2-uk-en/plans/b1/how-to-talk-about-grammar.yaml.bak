@@ -1,0 +1,124 @@
+module: b1-01
+level: B1
+sequence: 1
+slug: how-to-talk-about-grammar
+version: '3.0'
+title: Як говорити про граматику
+subtitle: Learning grammar terminology in Ukrainian
+content_outline:
+- section: 'Вступ: сила метамови'
+  points:
+  - Benefits of learning grammar terminology in target language
+  - Preparation for full immersion in B1.1+
+  - Key structural terms (слово, речення, частина мови, граматика, правило, приклад)
+  - English scaffolding paragraph (bridge module — immersion 70%)
+- section: 'Частини мови: самостійні категорії'
+  points:
+  - іменник, дієслово, прикметник, прислівник, займенник, числівник
+  - Each POS gets its own H3 with definition, questions, 2+ examples, usage note
+  - Equal depth for all 6 — no afterthoughts
+- section: 'Частини мови: службові слова'
+  points:
+  - сполучник, прийменник, частка, вигук
+  - Each gets its own H3 with role in sentence structure
+  - Equal depth for all 4 — same pattern as самостійні
+- section: 'Відмінки: сім ключів'
+  points:
+  - називний, родовий, давальний, знахідний, орудний, місцевий, кличний
+  - Each case gets its own H3 with question, main role, 2+ examples
+  - Equal depth with Додаткова інформація for every case
+  - На Різдво Дід Загубив Горішки Між Ковбасками mnemonic (or verified equivalent)
+  - Etymology or mnemonic aids where helpful
+- section: Граматичні категорії та будова слова
+  points:
+  - морфеміка (корінь, суфікс тощо) — own H3
+  - рід, число, особа, час, вид — own H3
+  - Syntactic roles (підмет, присудок, додаток, означення, обставина) — own H3
+  - Each sub-topic gets its own H3, not a wall of text
+- section: 'Практика: читаємо граматику українською'
+  points:
+  - Simple grammar explanations in Ukrainian
+  - Recognizing patterns in textbook language
+  - Cultural anchoring (Шевченко, Леся Українка, Франко quotes)
+  - Teacher-student dialogues woven into content
+- section: Підсумок і самоперевірка
+  points:
+  - Key terms review
+  - Readiness check for M02
+  - Self-assessment questions (6+)
+immersion: 70-85% Ukrainian
+vocabulary_hints:
+  required:
+  - дієслово (verb)
+  - іменник (noun)
+  - прикметник (adjective)
+  - прислівник (adverb)
+  - займенник (pronoun)
+  - числівник (numeral)
+  - називний відмінок (nominative case)
+  - родовий відмінок (genitive case)
+  - давальний відмінок (dative case)
+  - знахідний відмінок (accusative case)
+  - орудний відмінок (instrumental case)
+  - місцевий відмінок (locative case)
+  - кличний відмінок (vocative case)
+  recommended:
+  - сполучник (conjunction)
+  - прийменник (preposition)
+  - частка (particle)
+  - вигук (interjection)
+  - граматика (grammar)
+  - правило (rule)
+  - приклад (example)
+  - метамова (metalanguage)
+  - підмет (subject)
+  - присудок (predicate)
+  - додаток (object)
+  - означення (attribute)
+  - обставина (adverbial)
+activity_hints:
+- type: match-up
+  focus: Ukrainian term → English equivalent
+  items: 12+
+- type: quiz
+  focus: Identify part of speech by Ukrainian name
+  items: 10+
+- type: fill-in
+  focus: Complete sentences about grammar using Ukrainian terms
+  items: 8+
+- type: error-correction
+  focus: Fix common metalanguage mistakes
+  items: 8+
+focus: integration
+pedagogy: PPP
+prerequisites:
+- A2 completion required
+- Familiarity with all 7 cases (conceptually)
+- Basic understanding of grammar concepts
+connects_to:
+- b1-02 (Verb-specific terminology)
+- b1-03 (Reading grammar rules)
+- b1-05 (Metalanguage checkpoint)
+objectives:
+- Learner can identify parts of speech using Ukrainian terminology
+- Learner can name all seven grammatical cases in Ukrainian
+- Learner can describe basic sentence elements using Ukrainian terms
+grammar:
+- Parts of speech names in Ukrainian
+- Case names in Ukrainian
+- Basic sentence structure terms
+module_type: bridge
+sources:
+- name: Ukrainian State Standard 2024 - Grammar Terminology
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Official metalanguage terms for Ukrainian grammar education
+- name: Ukrainian Grammar (Wikipedia)
+  url: https://uk.wikipedia.org/wiki/Граматика_української_мови
+  type: reference
+  notes: Overview of Ukrainian grammatical terminology
+phase: B1.0 Bridge
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Linguistics Professor
+word_target: 4000

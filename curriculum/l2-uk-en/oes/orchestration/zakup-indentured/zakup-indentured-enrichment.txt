@@ -1,0 +1,216 @@
+✅ Message sent to Gemini (ID: 12756) [auto-acked: self-addressed]
+✓ Message 12756 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12756...
+📨 Message #12756
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-zakup-indentured
+   Time: 2026-02-20T23:42:07.773483+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 63
+module: oes-063
+module_number: 51
+slug: zakup-indentured
+title_uk: Закупи
+title_en: The Zakup (Indentured)
+phase: 3
+phase_id: legal-tradition
+phase_name: Legal Tradition
+focus: Debt slavery laws
+content_outline:
+- section: Вступ
+  description: Introduction to The Zakup (Indentured)
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Senior Paleographer
+  role: Manumission Scribe
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Zakup Indentured
+
+## Використані джерела
+1. [Літопис Руський](http://litopys.org.ua/litop/lit01.htm) — Першоджерело (Іпатіївський список), контекст повстання 1113 року.
+2. [Руська Правда (Розширена редакція)](http://litopys.org.ua/oldukr2/oldukr01.htm) — Текст «Уставу Володимира Всеволодовича», зокрема статті про закупів.
+3. [Енциклопедія історії України: Закупи](http://history.org.ua/LiberUA/978-966-00-0734-5/978-966-00-0734-5.pdf) — Академічний аналіз статусу закупів та історіографії.
+4. [Етимологічний словник української мови (ЕСУМ)](https://goroh.pp.ua/) — Походження слів «купа» та «закуп».
+
+## Хронологія
+- **1016–1072**: Укладання «Правди Ярослава» та «Правди Ярославичів» — рання кодифікація, де статус закупів ще не був детально врегульований.
+- **Квітень 1113**: Смерть князя Святополка Ізяславича та велике народне повстання в Києві проти лихварів та боярської адміністрації.
+- **1113**: Прихід Володимира Мономаха на київський стіл та видання «Уставу» (частина Розширеної Правди), що суттєво обмежив відсотки за боргами та захистив права закупів.
+- **XII ст.**: Остаточне закріплення інституту закупництва як перехідного стану між вільними та холопами в правовій системі Русі.
+- **1240**: Занепад правової системи «Руської Правди» після монгольської навали, хоча її норми діяли в Литовській метриці ще століттями.
+
+## Ключові факти та цитати
+- **Текст (Руська Правда, ст. 56 Розширеної редакції)**: «Аже закупъ бѣжить отъ господы, то обѣль; идеть ли искатъ кунъ, а явлено ходить, или ко князю или к судиямъ бѣжить обиды дѣля своего господина, то про то не работять его, но дати ему правду.»
+- **Суть статусу**: Закуп — це напіввільна людина, що потрапила в залежність через борг («купу»).
+- **Етимологія**: «Купа» в давньоруській мові означала не лише «сукупність», а й позику, суму грошей. Походить від праслов'янського *kupa.
+- **Права**: Закуп зберігав громадянські права (міг позиватися до суду на пана), мав власне господарство, але був обмежений у пересуванні (втеча перетворювала його на повного раба — «обѣль»).
+- **Реформа Мономаха**: Заборонила перетворювати закупа на холопа без вини, обмежила лихварські відсотки (різи), що стало відповіддю на соціальний запит (повстання).
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ: Соціальна стратифікація": [!context] — Повстання 1113 року як каталізатор правових реформ (народ змусив владу писати закони).
+- Section "Етимологія: «Купа» як борг": [!history-bite] — «Купа» як фінансовий термін: чому ми кажемо «купувати», але це не зовсім про «купу» грошей (зв'язок з германськими мовами).
+- Section "Першоджерело: Статут Володимира Мономаха": [!decolonization] — Спростування міфу про «класову боротьбу» як єдиний рушій; акцент на здатності руського суспільства до правового саморегулювання та компромісу.
+- Section "Аналіз тексту: Втеча закупа": [!paleography] — Аналіз терміну «обѣль» (повний раб) та його рідкість у текстах.
+- Section "Правовий захист": [!myth-buster] — Міф про «безправність» селян у Русі. Закуп міг судитися з князем проти свого пана! Це рівень правової свідомості, недосяжний для Московського царства пізніших епох.
+- Section "Відмінність від холопства": [!culture] — Закуп як економічний суб'єкт: він мав свого коня, знаряддя праці і відповідав за них матеріально (штрафи за псування).
+
+## Деколонізаційний контекст
+- **Imperial/Soviet myth**: Радянська історіографія зображала закупів виключно як жертв феодальної експлуатації, провісників кріпацтва, акцентуючи на «класовій ненависті».
+- **Ukrainian reality**: «Руська Правда» демонструє високу правову культуру Русі. Відносини «пан-закуп» були *договірними* (ряд). Це був контракт, а не рабство. Втручання держави (Мономаха) для захисту слабшої сторони контракту свідчить про розвинену правову систему, а не просто «гніт». Кріпацтво (hereditary serfdom) — це пізніше явище, часто нав'язане зовнішніми впливами (в тому числі російським після 1654 року).
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| **Повстання 1113 року** | «Класова боротьба» пригноблених проти експлуататорів. | Громадянський виступ за відновлення справедливості, що призвів до легітимних законодавчих реформ (Устав Мономаха). |
+| **Закуп** | Майбутній кріпак, безправна жертва. | Тимчасово залежний боржник, суб'єкт права, захищений законом від свавілля. |
+| **Руська Правда** | Пам'ятка «общерусского» права. | Пам'ятка києво-руської правової традиції, що заклала основи українського (і литовського) права, відмінного від московського деспотизму. |
+
+## Section-Mapped Research Notes
+
+### Вступ: Соціальна мозаїка Русі
+Вступ має окреслити, що Русь не була чорно-білим суспільством «пани vs раби». Існувало багато проміжних станів: смерди, ізгої, рядовичі, закупи. Це свідчить про складну соціальну структуру.
+
+### Етимологія та статус: Що таке «купа»?
+Розбір слова «купа». Праслов'янське коріння. Зв'язок з поняттям позики. Закуп — той, хто взяв позику і відпрацьовує її (самовідданий у заставу). Важливо: це *добровільний* акт (хоч і вимушений злиднями), на відміну від полону.
+
+### Першоджерело: Статут Володимира Мономаха (1113)
+Контекст появи законодавства про закупів. Повстання 1113 року після смерті Святополка. Роль лихварів. Мономах як кризовий менеджер. Його «Устав» — це по суті «Закон про захист прав боржників» XII століття.
+
+### Аналіз тексту: «Аже закупъ бѣжить...»
+Детальний розбір ст. 56. Ключова дихотомія:
+1. Втеча без причини = холопство (обѣль).
+2. Втеча до суду/князя зі скаргою = правосуддя.
+Це революційна норма: раб не міг скаржитися на господаря, а закуп — міг!
+
+### Правовий захист закупа: Межі влади пана
+Аналіз ст. 59-62. Пану заборонено:
+- Продати закупа в холопи (якщо продасть — закуп вільний, а пан платить штраф 12 гривень).
+- Бити закупа «без вини» (якщо за діло — можна, але без каліцтва).
+- Віднімати майно закупа.
+Це свідчить про те, що закуп лишався *особистістю* з майновими правами.
+
+### Закуп vs Холоп: Економічна суб'єктність
+Різниця принципова. Холоп — «річ» (об'єкт права). Закуп — «особа» (суб'єкт права, хоч і обмежений). Закуп відповідає за крадіжку (пана штрафують, але закуп відпрацьовує). Закуп відповідає за загубленого коня (якщо з власної вини).
+
+### Підсумок: Спадщина правової культури
+Закупництво зникло, але принцип *договірних* відносин і захисту особи від свавілля залишився в Литовських статутах і українській правовій свідомості, на противагу московському холопству, де всі були рабами царя.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12789)
+✓ Message 12756 acknowledged
+✓ Message 12789 acknowledged

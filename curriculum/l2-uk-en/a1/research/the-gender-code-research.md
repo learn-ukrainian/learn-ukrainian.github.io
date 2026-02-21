@@ -1,61 +1,33 @@
-# Research Notes: M03 — The Gender Code
+# Дослідження: The Gender Code
 
-**Level:** A1 | **Module:** 03
-**Research Date:** 2026-02-07
-**Researcher:** Claude (review-content-core-a v1.0)
+## State Standard Reference
+§4.2.1.1: "загальні родові значення іменників в однині (чоловічий рід, жіночий рід, середній рід): чоловік, жінка, місто"
+Alignment: This module directly teaches the three-gender system required by the standard.
 
-## State Standard 2024 References
+§4.2.2: "утворення родових форм присвійних займенників: мій, моя, моє"
+Alignment: The module introduces gender agreement with "мій/моя/моє" as the primary diagnostic tool.
 
-### §4.2.1 — Noun Categories (Рід іменника)
-
-Ukrainian nouns have three grammatical genders:
-- **Чоловічий рід** (masculine): nouns ending in a consonant, -о (rare: батько, Дніпро)
-- **Жіночий рід** (feminine): nouns ending in -а/-я, or consonant (3rd declension)
-- **Середній рід** (neuter): nouns ending in -о/-е/-я (4th declension: ім'я, теля)
-
-Gender is determined by morphological ending, with ~95% predictability.
-
-### §4.2.2 — Declension System (Відміни)
-
-Four declension families (відміни):
-1. **Перша відміна** (1st declension): nouns ending in -а/-я — mostly feminine, includes some masculine (суддя, Микола)
-2. **Друга відміна** (2nd declension): masculine consonant + neuter -о/-е — the largest family
-3. **Третя відміна** (3rd declension): feminine consonant endings — small but important group (ніч, любов, сіль, подорож)
-4. **Четверта відміна** (4th declension): neuter nouns with stem alternations -ат-/-ят-/-ен- (ім'я → імені, теля → теляти, курча → курчати)
-
-### §4.2.3 — Gender Agreement
-
-Gender determines:
-- Adjective agreement (новий стіл m, нова книга f, нове вікно n)
-- Pronoun reference (він, вона, воно)
-- Past tense verb agreement (він читав, вона читала, воно стояло)
-- Case ending patterns differ by gender and declension family
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| стіл (M) | High (Core A1) | великий стіл, новий стіл, дерев'яний стіл |
+| книга (F) | High (Core A1) | цікава книга, стара книга, електронна книга |
+| вікно (N) | High (Core A1) | відкрите вікно, велике вікно, чисте вікно |
+| день (M) | Very High | гарний день, кожен день, цілий день |
+| ніч (F) | High | темна ніч, добра ніч, холодна ніч |
+| тато (M) | High (Family) | мій тато, добрий тато, любий тато |
+| ім'я (N) | High (Identity) | моє ім'я, гарне ім'я, повне ім'я |
 
 ## Cultural Hooks
+1. **The Neuter Sun**: Unlike Romance languages where the sun is masculine (*el sol*, *le soleil*), in Ukrainian *сонце* is Neuter. It acts as an impartial, gentle life-giver, historically associated with Dazhbog but linguistically neutral.
+2. **S.T.A.L.K.E.R. Legacy**: A modern cultural touchpoint for gender classification: *Артефакт* (Masculine), *Зона* (Feminine), *Укриття* (Neuter).
 
-### Hook 1: S.T.A.L.K.E.R. Game Series (Verified)
-
-The S.T.A.L.K.E.R. video game series (2007-2024) was developed by Ukrainian studio GSC Game World based in Kyiv. The games are set in the Chornobyl Exclusion Zone. S.T.A.L.K.E.R. 2: Heart of Chornobyl was released in November 2024 and includes full Ukrainian voice acting. The game features locations like Прип'ять (Pripyat, f.), місто (city, n.), будинок (building, m.) — showcasing all three genders.
-
-### Hook 2: Ukrainian Folklore — Gendered Personification (Verified)
-
-In Ukrainian folk tradition and poetry:
-- **Земля** (earth, f.) is personified as mother — «Земля-матінка» (Mother Earth)
-- **Місяць** (moon, m.) is personified as a male wanderer/protector in folk songs
-- **Сонце** (sun, n.) represents life and warmth without gendered personification
-
-This reflects how grammatical gender shapes cultural perception in Ukrainian worldview. Taras Shevchenko frequently used gendered personification in his poetry.
-
-## Key Vocabulary Frequency Notes
-
-High-frequency nouns used in module (all verified in ULIF corpus):
-- стіл, книга, вікно — top-500 frequency
-- дім, місто, вода — top-200 frequency
-- хліб, молоко, море — top-1000 frequency
-- ніч, любов — top-500 frequency (important 3rd declension examples)
+## Common Learner Errors
+1. **The "It" Trap**: Learners treat all objects as "it" (neuter). Correction: Objects have gender (стіл = він, книга = вона).
+2. **The "Soft Sign" Ambiguity**: Confusion between words ending in -ь. *День* is Masculine, *Ніч* is Feminine. Must be memorized.
+3. **The "Natural Gender" Override**: *Тато* ends in -o but is Masculine because it refers to a male person. Biological gender overrides grammatical ending.
+4. **The "Name" Trap**: *Ім'я* ends in -я but is Neuter (Family 4 exception). Learners often mistake it for Feminine.
 
 ## Cross-References
-
-- **Builds on:** M01-M02 (Cyrillic alphabet — learner can now read all examples)
-- **Prepares for:** M04 (This Is, I Am — pronouns reference gender), M26 (Adjectives — gender agreement in detail)
-- **Key connection:** Gender is the foundation for all case endings (M11-M16)
+- Builds on: a1-02 (Cyrillic Code II - reading skills)
+- Prepares for: a1-04 (This Is, I Am), a1-26 (Adjectives)

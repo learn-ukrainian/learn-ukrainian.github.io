@@ -1,0 +1,81 @@
+- ipa: '[tɑk]'
+  lemma: так
+  pos: adv
+  translation: 'yes'
+- ipa: '[bɑnk]'
+  lemma: банк
+  pos: noun
+  translation: bank
+- ipa: '[meˈtrɔ]'
+  lemma: метро
+  pos: noun
+  translation: metro
+- ipa: '[kɑˈfɛ]'
+  lemma: кафе
+  pos: noun
+  translation: café
+- ipa: '[tɑkt]'
+  lemma: такт
+  pos: noun
+  translation: tact
+- ipa: '[kʲit]'
+  lemma: кіт
+  pos: noun
+  translation: cat
+- ipa: '[ˈmɑmɑ]'
+  lemma: мама
+  pos: noun
+  translation: mom
+- ipa: '[ˈtɑtɔ]'
+  lemma: тато
+  pos: noun
+  translation: dad
+- ipa: '[pɑrk]'
+  lemma: парк
+  pos: noun
+  translation: park
+- ipa: '[bɑr]'
+  lemma: бар
+  pos: noun
+  translation: bar
+- ipa: '[fɑkt]'
+  lemma: факт
+  pos: noun
+  translation: fact
+- ipa: '[plɑn]'
+  lemma: план
+  pos: noun
+  translation: plan
+- ipa: '[ˈfɔtɔ]'
+  lemma: фото
+  pos: noun
+  translation: photo
+- ipa: '[rɛstɔˈrɑn]'
+  lemma: ресторан
+  pos: noun
+  translation: restaurant
+- ipa: '[t͡sɛ]'
+  lemma: це
+  pos: particle
+  translation: it is / this is
+- ipa: '[dɛ]'
+  lemma: де
+  pos: adv
+  translation: where
+- ipa: '[i]'
+  lemma: і
+  pos: conj
+  translation: and
+- ipa: '[budʲ ˈlɑskɑ]'
+  lemma: будь ласка
+  pos: phrase
+  translation: please
+- ipa: '[ˈzʋʲisnɔ]'
+  lemma: звісно
+  pos: adv
+  translation: of course
+- ipa: '[ˈdruzʲi]'
+  lemma: друзі
+  pos: noun
+  translation: friends
+

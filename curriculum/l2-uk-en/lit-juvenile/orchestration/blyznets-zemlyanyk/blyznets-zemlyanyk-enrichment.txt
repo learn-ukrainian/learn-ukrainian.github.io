@@ -1,0 +1,242 @@
+✅ Message sent to Gemini (ID: 11789) [auto-acked: self-addressed]
+✓ Message 11789 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #11789...
+📨 Message #11789
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-blyznets-zemlyanyk
+   Time: 2026-02-20T23:31:31.415733+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 9
+module: lit-juvenile-09
+level: LIT.JUVENILE
+slug: blyznets-zemlyanyk
+version: '2.0'
+title: Blyznets Zemlyanyk
+subtitle: Blyznets Zemlyanyk
+content_outline:
+- section: Вступ та контекст
+  points: []
+- section: Аналіз ключових творів
+  points: []
+- section: Стилістика та мова автора
+  points: []
+- section: Деколонізаційна перспектива
+  points:
+  - Як цей автор руйнує імперські міфи
+  - Українська суб'єктність у тексті
+- section: Підсумок та спадщина
+  points: []
+vocabulary_hints:
+  required:
+  - історіографія
+  - наратив
+  - суб'єктність
+  recommended:
+  - деколонізація
+activity_hints:
+- type: reading
+  focus: Аналіз першоджерела
+- type: essay-response
+  focus: Критичне есе
+- type: critical-analysis
+  focus: Деконструкція тексту
+focus: literature
+pedagogy: literature
+immersion: 100% Ukrainian
+phase: LIT Expansion
+objectives:
+- Проаналізувати творчість Blyznets Zemlyanyk у контексті української літератури
+- Дослідити вплив автора на формування національної ідентичності
+persona:
+  voice: Senior Specialist
+  role: Nature Philosopher
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Віктор Близнець (Blyznets Zemlyanyk / Земля світлячків)
+
+## Використані джерела
+1. [Енциклопедія Сучасної України (ЕСУ)](https://esu.com.ua/) — стаття про Віктора Близнеця, його внесок в українську літературу, зокрема дитячу прозу та розвиток "химерного" жанру.
+2. [Історія української літератури ХХ століття](http://litopys.org.ua/) — аналіз прози шістдесятників, опис міфопоетики та екоцентризму в текстах Близнеця.
+3. [Бібліотека української літератури (УкрЛіб)](https://www.ukrlib.com.ua/) — першоджерела: повісті «Звук павутинки», «Земля світлячків», «Женя і Синько», спогади сучасників.
+
+## Хронологія
+- 1933: Народження Віктора Близнеця в селі Володимирівка на Кіровоградщині. Формування міфологічного сприйняття степової природи.
+- 1957: Закінчення факультету журналістики Київського університету, початок роботи в пресі.
+- 1969: Вихід друком повісті «Звук павутинки», яка стала проривом в українській психологічній прозі для дітей.
+- 1974: Публікація повісті «Женя і Синько», де яскраво проявився екоцентризм письменника.
+- 1979: Видання повісті-казки «Земля світлячків» (химерний, міфопоетичний текст про підземних/земляних жителів — стовусів, чугайстрів).
+- 1981: Трагічна смерть письменника в Києві.
+- 1988: Посмертне присудження літературної премії імені Лесі Українки.
+
+## Ключові факти та цитати
+- В українську літературу для дітей Близнець привніс глибокий психологізм та "химерну" поетику, яка протистояла офіційному радянському канону піонерського реалізму.
+- > "Кожна травинка, кожна комашка має свою душу, свою нерозгадану таємницю..." — лейтмотив екофілософії Віктора Близнеця.
+- > "Ми, стовуси, народ мирний. Ми любимо тишу, ліс і чисту воду..." (з повісті «Земля світлячків»). Цитата ілюструє пантеїстичний зв'язок українського міфологічного наративу з природою.
+- Автор активно використовував фольклорні архетипи, оживлюючи українську демонологію та природу (лісовики, земляні чоловічки, чугайстри).
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ: Біографічний контекст": [!history-bite] — Замість типової героїки шістдесятників, Близнець обрав ескапізм у світ дитинства, де міг бути максимально вільним від ідеології.
+- Section "Контекст: Химерна проза шістдесятників": [!context] — Поняття "химерної прози" зазвичай застосовують до дорослої літератури (Дрозд, Ільченко), але Близнець адаптував цей жанр для дітей.
+- Section "Аналіз творів: Психологізм «Звуку павутинки»": [!quote] — Цитати з тексту, що ілюструють крихкість дитячої душі в порівнянні з павутинкою.
+- Section "Аналіз творів: Міфопоетика «Землі світлячків»": [!myth-buster] — Спростування радянського міфу про те, що казки мають бути виключно дидактичними і матеріалістичними; у Близнеця домінує чиста фольклорна магія і містика землі.
+- Section "Деколонізація: Руйнування радянських міфів про дитинство": [!decolonization] — Радянська педагогіка вимагала від героя-дитини колективізму; герої Близнеця — яскраво виражені індивідуалісти, інтроверти, здатні чути природу.
+- Section "Підсумок: Віктор Близнець як екофілософ": [!culture] — Землецентризм (культ землі) як базова категорія української ментальності, що пронизує всю творчість письменника.
+
+## Деколонізаційний контекст
+- **Imperial/Soviet myth**: Дитяча література має бути утилітарною, виховувати радянського громадянина-піонера, орієнтуватися на технократичне освоєння природи.
+- **Ukrainian reality**: Проза Віктора Близнеця повертала дитину в лоно природи, утверджувала український кордоцентризм (філософію серця) та екоцентризм. Його твори вчать не "підкорювати" природу, а жити з нею в гармонії, чути її мову (через образи химерних істот, земляних жителів).
+
+## Contested Terms
+
+| Concept | Imperial framing | Ukrainian (decolonized) framing |
+|---------|-----------------|-------------------------------|
+| Дитяча література | Утилітарно-дидактичний інструмент ідеологічного виховання (соцреалізм). | Простір психологічної свободи, міфопоетики та філософського осмислення буття. |
+| Ставлення до природи | Технократичне підкорення, "Мічурінська" трансформація природи. | Пантеїзм, екоцентризм, гармонійне співіснування (діалог з рослинним і тваринним світом). |
+| Фольклорні елементи | Анахронізм, "пережиток минулого" або декоративна стилізація. | Жива основа національної пам'яті, джерело української суб'єктності та ідентичності. |
+
+## Section-Mapped Research Notes
+
+### Вступ: Біографічний контекст
+Народився 1933 року, дитинство припало на воєнні та повоєнні роки (Голодомор 1946-1947). Це травматичне тло змусило письменника шукати розраду в гармонії природи. Навчання в Київському університеті; приналежність до покоління шістдесятників.
+
+### Контекст: Химерна проза шістдесятників
+Українська "химерна проза" як феномен опору соцреалізму. Близнець стає новатором, переносячи химерність (зміщення реального та фантастичного) в дитячу літературу, що дозволяло оминати цензуру та говорити про глибокі філософські речі.
+
+### Аналіз творів: Психологізм «Звуку павутинки»
+Аналіз повісті 1969 року. Змалювання внутрішнього світу самотньої дитини (Льонька), яка сприймає світ через мікрозвуки та мікроявища природи. Символіка "звуку павутинки" як метафори вразливості та емпатії.
+
+### Аналіз творів: Екоцентризм у «Женя і Синько»
+Повість (1974), де місто і село, природа і цивілізація вступають у конфлікт. Образ химерного хлопчика Синька — як уособлення природної стихії. Фокус на відповідальності людини перед навколишнім середовищем.
+
+### Аналіз творів: Міфопоетика «Землі світлячків»
+Найвідоміша казка-повість (1979) про лісових/підземних жителів стовусів. Міфологічні паралелі. Сюжетна лінія захисту своєї землі від печерних чудовиськ (Магава Перший) як алегорія захисту рідного краю.
+
+### Аналіз творів: Химерні персонажі та земляний фольклор
+Дослідження архетипів, які створює Близнець: стовуси, тривуси, земляні чоловічки. Їх генеза в українській демонології та казковій традиції. "Земляність" як зв'язок з українським ґрунтом.
+
+### Стилістика: Анімалізм та мова природи
+Особливості авторського стилю. Вміння передавати "мову" звірів, птахів, дерев. Синестезія (поєднання звукових, зорових, тактильних образів) як головний художній прийом.
+
+### Стилістика: Метафорика та фольклорні джерела
+Як письменник працює зі словом: багата метафорика, використання діалектизмів, ритмізована проза. Трансформація народної казки в модерну авторську казку-притчу.
+
+### Деколонізація: Руйнування радянських міфів про дитинство
+Відмова від колективістського пафосу. Герої Близнеця — мрійники, самітники, діти-філософи. Це підривало радянську парадигму виховання та стверджувало цінність людської індивідуальності.
+
+### Деколонізація: Українська суб'єктність та пантеїзм
+Через глибокий зв'язок з рідною землею формується українська суб'єктність героїв. Вони не безликі гвинтики імперії, а органічні частки українського космосу, носії автентичної свідомості.
+
+### Спадщина: Вплив на сучасну дитячу літературу
+Як тексти Близнеця проклали шлях для сучасних українських фентезі та еко-казок (наприклад, твори Зірки Мензатюк, Марини Павленко, Сашка Дерманського). Його роль у деідеологізації дитячої літератури.
+
+### Підсумок: Віктор Близнець як екофілософ
+Загальний висновок про значення творчості письменника. Віктор Близнець не просто дитячий автор, а глибокий мислитель, чиї твори є щепленням від духовної черствості та руйнації природи.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 11830)
+✓ Message 11789 acknowledged
+✓ Message 11830 acknowledged

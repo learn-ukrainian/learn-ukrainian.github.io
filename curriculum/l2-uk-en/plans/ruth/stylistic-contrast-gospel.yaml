@@ -1,4 +1,3 @@
----
 sequence: 8
 module: ruth-008
 module_number: 8
@@ -9,7 +8,6 @@ phase: 1
 phase_id: chancery-legal
 phase_name: Chancery & Legal
 focus: Peresopnytsia Gospel vs Chancery style
-word_target: 4000
 content_outline:
 - section: Вступ
   description: Introduction to Stylistic Contrast
@@ -26,3 +24,6 @@ activity_types:
 - grammar-identify
 - parallel-text
 - register-identify
+persona:
+  voice: Baroque Scholar
+  role: Biblical Philologist

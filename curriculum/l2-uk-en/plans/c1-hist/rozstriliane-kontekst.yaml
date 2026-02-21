@@ -1,4 +1,3 @@
----
 module: c1-hist-052
 level: c1-hist
 sequence: 52
@@ -10,15 +9,13 @@ objectives:
 - 'Analyze the causes and consequences of розстріляне відродження: контекст 1920-х'
 - Evaluate the historical significance of парадокс 1920-х
 content_outline:
-- section: "Вступ — Парадокс 1920-х"
-  words: 457
+- section: Вступ — Парадокс 1920-х
   subsections:
   - Найбільший культурний вибух в УРСР
   - І його знищення
   - Термін «Розстріляне відродження»
   - Чому важливо вивчати
 - section: Політика українізації
-  words: 800
   subsections:
   - Ленінська «коренізація» — що це
   - Чому більшовики дозволили
@@ -26,7 +23,6 @@ content_outline:
   - Масштаби — освіта, преса, культура
   - 1920-ті — золота доба?
 - section: Культурний вибух
-  words: 686
   subsections:
   - Література — нові таланти
   - Театр — Курбас і Березіль
@@ -34,33 +30,28 @@ content_outline:
   - Образотворче мистецтво
   - Наука — ВУАН
 - section: Хто вони були
-  words: 571
   subsections:
   - Молоде покоління — після 1917
   - Селянське походження
   - Віра в революцію
   - Трагічна наївність
 - section: Чому Москва дозволила
-  words: 571
   subsections:
   - Тактичні міркування
   - Нейтралізація націоналізму
   - Ілюзія вибору
   - Готування до повороту
 - section: Тіні над 1920-ми
-  words: 571
   subsections:
   - Уже в 1920-х — сигнали
   - Процеси СВУ
   - Критика «націоналізму»
   - Самовбивство Хвильового — символ
 - section: Підсумок
-  words: 344
   subsections:
   - 1920-ті як парадокс
   - Від розквіту до знищення
   - Підготовка до літературної дискусії
-word_target: 4000
 vocabulary:
 - Розстріляне відродження
 - українізація
@@ -79,7 +70,7 @@ vocabulary:
 - попутник
 activities:
 - type: critical-analysis
-  focus: "Map the Ukrainization policy — what was allowed, what not"
+  focus: Map the Ukrainization policy — what was allowed, what not
 - type: reading
   focus: Research 3 key figures of the era
 - type: critical-analysis
@@ -88,15 +79,15 @@ activities:
   focus: Чому 1920-ті були 'золотою добою' української культури?
 sources:
 - name: Розстріляне відродження (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Розстріляне_відродження"
+  url: https://uk.wikipedia.org/wiki/Розстріляне_відродження
   type: reference
   notes: Overview
 - name: Українізація (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Українізація"
+  url: https://uk.wikipedia.org/wiki/Українізація
   type: reference
   notes: Ukrainization policy
-- name: "Юрій Лавріненко — Розстріляне відродження"
-  url: "https://uk.wikipedia.org/wiki/Лавріненко_Юрій_Андрійович"
+- name: Юрій Лавріненко — Розстріляне відродження
+  url: https://uk.wikipedia.org/wiki/Лавріненко_Юрій_Андрійович
   type: reference
   notes: Term originator
 vocabulary_hints:
@@ -115,7 +106,9 @@ activity_hints:
   items: 4
 - type: essay-response
   focus: Критичний аналіз
-  word_target: 300
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Avant-Garde Specialist

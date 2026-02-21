@@ -1,0 +1,213 @@
+✅ Message sent to Gemini (ID: 13060) [auto-acked: self-addressed]
+✓ Message 13060 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #13060...
+📨 Message #13060
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-ruth-capstone
+   Time: 2026-02-20T23:44:10.654790+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 100
+module: ruth-100
+module_number: 100
+slug: ruth-capstone
+title_uk: Капстоун RUTH
+title_en: RUTH Capstone
+phase: 4
+phase_id: cossack-word
+phase_name: Cossack Word
+focus: Tracing a word from 1529 to 1794
+content_outline:
+- section: Вступ
+  description: Introduction to RUTH Capstone
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+- historical-writing
+persona:
+  voice: Baroque Scholar
+  role: Ruthenian Polymath
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Ruth Capstone
+
+## Використані джерела
+1. [Ізборник](http://litopys.org.ua) — Основний масив першоджерел (літописи, статути, твори Сковороди).
+2. [Енциклопедія Сучасної України](https://esu.com.ua) — Статті про староукраїнську мову та Пересопницьке Євангеліє.
+3. [History.org.ua](http://history.org.ua) — Академічні публікації про Литовські статути та козацьку добу.
+
+## Хронологія
+- 1529: Перший Литовський Статут (руська мова як офіційна).
+- 1556–1561: Створення Пересопницького Євангелія (вплив живої народної мови).
+- 1566: Другий Литовський Статут.
+- 1588: Третій Литовський Статут.
+- 1619: «Грамматіка» Мелетія Смотрицького (кодифікація).
+- 1648+: Початок Козацької революції, розквіт козацького бароко.
+- 1702: Написання Літопису Самовидця (орієнтовно).
+- 1710: Конституція Пилипа Орлика (латина + староукраїнська редакція).
+- 1794: Смерть Григорія Сковороди (завершення епохи бароко).
+
+## Ключові факти та цитати
+- **Статут 1588**: «А писар земский маеть по-руску литерами и словы рускими вси листы выписывати».
+- **Пересопницьке Євангеліє**: Використання глос (тлумачень) живою мовою: «чресла — стегна», «бдѣти — пильновати».
+- **Смотрицький**: Встановив норми церковнослов'янської мови, які вплинули на всю Slavia Orthodoxa.
+- **Козацькі літописи**: Синтез канцеляризму, народної мови та барокової патетики («зіло», «обоз», «свобода»).
+- **Сковорода**: «Слов'яно-руська» мова — книжний мікс, що відбивав тогочасну освіченість, але вже відривався від живого мовлення.
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ: Руська мова як державна": [!myth-buster] — Спростування міфу про "полонізацію" (руська мова була державною мовою ВКЛ, а не діалектом).
+- Section "Законодавче слово: Литовські Статути": [!history-bite] — Про те, що Статути діяли на території України аж до XIX століття (1840 року).
+- Section "Сакральне слово: Пересопницьке Євангеліє": [!culture] — Євангеліє як символ інавгурації президентів України.
+- Section "Козацьке слово: Літописи": [!context] — Порівняння козацької канцелярії з дипломатичною мовою Європи.
+- Section "Філософське слово: Григорій Сковорода": [!quote] — Цитата зі Сковороди про "сродну працю" в оригіналі.
+- Section "Криза та трансформація": [!decolonization] — Чому книжна мова занепала (заборона друку, русифікація церкви) і чому Котляревський обрав вертепну мову.
+
+## Деколонізаційний контекст
+- **Imperial Myth**: Староукраїнська мова — це "западнорусский письменный язык", зіпсований польськими впливами.
+- **Ukrainian Reality**: Це самобутня мовна система, що обслуговувала всі сфери життя (державну, релігійну, літературну) і мала власну еволюцію, окрему від московської приказної мови.
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| Руська мова (XIV-XVIII) | Западнорусский язык / Діалект російської | Староукраїнська мова (державна мова ВКЛ) |
+| Литва (у контексті ВКЛ) | Прибалтійська держава | Литовсько-Руська держава (спільна спадщина) |
+| Язычіє (пізнє) | Штучний мікс | Спроба збереження книжної традиції |
+
+## Section-Mapped Research Notes
+
+### Вступ
+Окреслення статусу "руської мови" (lingua ruthena) у ВКЛ. Відмінність від церковнослов'янської та польської.
+
+### Законодавче слово
+Аналіз юридичної термінології Статутів. Терміни: "позов", "уряд", "злодѣй", "гвалт". Прозорість для сучасного українця.
+
+### Сакральне слово
+Пересопницьке Євангеліє як спроба демократизації церкви. Глоси як свідчення живої мови.
+
+### Полемічне слово
+Вплив Реформації та Берестейської унії. Необхідність захищати віру словом. Вишенський: мікс церковнослов'янської з лайкою та живою емоцією.
+
+### Козацьке слово
+Мова документів Гетьманщини. Барокова пишномовність у Літописах (Величко, Граб'янка). Військова термінологія.
+
+### Філософське слово
+Специфічна мова Сковороди. Чому вона складна для читання сьогодні, але була зрозуміла освіченим людям того часу.
+
+### Криза та трансформація
+Чому староукраїнська мова не стала основою для модерної (як чеська чи німецька)? Політичні заборони (Петро I, Катерина II) + розрив між елітою та народом.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 13092)
+✓ Message 13060 acknowledged
+✓ Message 13092 acknowledged

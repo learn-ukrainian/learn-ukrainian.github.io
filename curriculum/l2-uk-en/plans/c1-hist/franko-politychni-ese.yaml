@@ -1,4 +1,3 @@
----
 module: c1-hist-033
 level: c1-hist
 sequence: 33
@@ -10,22 +9,19 @@ objectives:
 - 'Analyze the causes and consequences of франко: політичні есе'
 - Evaluate the historical significance of франко як мислитель
 content_outline:
-- section: "Вступ — Франко як мислитель"
-  words: 457
+- section: Вступ — Франко як мислитель
   subsections:
   - Не тільки поет — публіцист
   - Політичні есе — окремий жанр
   - «Поза межами можливого» — головний текст
   - Чому важливо читати сьогодні
-- section: "Контекст — Галичина кінця XIX ст."
-  words: 571
+- section: Контекст — Галичина кінця XIX ст.
   subsections:
   - Австрійська Галичина — інші умови
   - Політичні партії — як виникали
   - Франко — соціаліст чи націоналіст?
   - Еволюція поглядів
 - section: «Поза межами можливого» (1900)
-  words: 914
   subsections:
   - Текст (фрагменти з глосами)
   - Критика «реальної політики»
@@ -33,33 +29,28 @@ content_outline:
   - Духовна суверенність
   - Роль інтелігенції
 - section: Аналіз аргументації
-  words: 686
   subsections:
   - Логіка есе
   - Полеміка з опонентами
   - Що таке «можливе»?
   - Роль мрії в політиці
 - section: Інші політичні есе
-  words: 571
   subsections:
   - Що таке поступ?
   - Ukraina irredenta
   - Критика москвофільства
   - Критика полонофільства
 - section: Франко vs. Драгоманов
-  words: 457
   subsections:
   - Два підходи
   - Федералізм vs. незалежність
   - Поколінній конфлікт
   - Хто виявився правий?
 - section: Підсумок
-  words: 344
   subsections:
   - Франко — ідеолог незалежності
   - Від публіцистики до політики
   - Актуальність сьогодні
-word_target: 4000
 vocabulary:
 - есе
 - публіцистика
@@ -78,7 +69,7 @@ vocabulary:
 - прагматизм
 activities:
 - type: reading
-  focus: "Excerpt from \"Poza mezhamy mozhlyvoho\""
+  focus: Excerpt from "Poza mezhamy mozhlyvoho"
 - type: critical-analysis
   focus: Map Franko's argument structure
 - type: critical-analysis
@@ -87,15 +78,15 @@ activities:
   focus: Що означає 'поза межами можливого' для Франка?
 sources:
 - name: Іван Франко (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Іван_Франко"
+  url: https://uk.wikipedia.org/wiki/Іван_Франко
   type: reference
   notes: Biography
 - name: Поза межами можливого
-  url: "https://uk.wikisource.org/wiki/Поза_межами_можливого"
+  url: https://uk.wikisource.org/wiki/Поза_межами_можливого
   type: primary
   notes: Key political essay
 - name: Франко-публіцист
-  url: "https://uk.wikipedia.org/wiki/Публіцистика_Івана_Франка"
+  url: https://uk.wikipedia.org/wiki/Публіцистика_Івана_Франка
   type: reference
   notes: Publicistic works overview
 vocabulary_hints:
@@ -114,7 +105,9 @@ activity_hints:
   items: 4
 - type: essay-response
   focus: Критичний аналіз
-  word_target: 300
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Intellectual Historian

@@ -1,0 +1,315 @@
+- type: match-up
+  title: "Letter to Sound Match"
+  instruction: "Match the Ukrainian letter to its English sound equivalent."
+  pairs:
+    - left: "Г"
+      right: "h (voiced, like 'ahead')"
+    - left: "Ґ"
+      right: "g (hard, like 'go')"
+    - left: "Ж"
+      right: "s (like 'pleasure')"
+    - left: "Ш"
+      right: "sh (like 'shoe')"
+    - left: "Ч"
+      right: "ch (like 'chair')"
+    - left: "Ц"
+      right: "ts (like 'cats')"
+    - left: "Щ"
+      right: "shch (fresh cheese)"
+    - left: "Є"
+      right: "ye (like 'yes')"
+    - left: "Ї"
+      right: "yi (like 'yield')"
+    - left: "Ю"
+      right: "yu (like 'universe')"
+    - left: "Я"
+      right: "ya (like 'yard')"
+    - left: "Ь"
+      right: "soft sign (softens previous consonant)"
+
+- type: group-sort
+  title: "Consonants vs. Vowels"
+  instruction: "Sort the new letters into the correct category: Consonants or Vowels."
+  groups:
+    - name: "Consonants (Приголосні)"
+      items: ["Г", "Ґ", "Ж", "Ш", "Щ", "Ч", "Ц"]
+    - name: "Vowels (Голосні)"
+      items: ["Є", "Ї", "Ю", "Я", "И", "І"]
+
+- type: quiz
+  title: "Identity Letters Challenge"
+  instruction: "Choose the correct answer for each question about the unique Ukrainian letters."
+  items:
+    - question: "Which letter represents the voiced [ɦ] sound (like in 'ahead')?"
+      explanation: "Г is the standard voiced 'h' sound in Ukrainian. Ґ is the hard 'g'."
+      options:
+        - text: "Г"
+          correct: true
+        - text: "Ґ"
+          correct: false
+        - text: "Х"
+          correct: false
+        - text: "К"
+          correct: false
+    - question: "Which letter creates the 'sh' sound as in 'shoe'?"
+      explanation: "Ш makes the 'sh' sound. Щ makes 'shch'."
+      options:
+        - text: "Ш"
+          correct: true
+        - text: "Щ"
+          correct: false
+        - text: "Ч"
+          correct: false
+        - text: "Ж"
+          correct: false
+    - question: "What is the function of the Soft Sign (Ь)?"
+      explanation: "The soft sign (Ь) has no sound of its own; it softens the previous consonant."
+      options:
+        - text: "It softens the previous consonant"
+          correct: true
+        - text: "It makes a 'b' sound"
+          correct: false
+        - text: "It hardens the previous consonant"
+          correct: false
+        - text: "It is silent and does nothing"
+          correct: false
+    - question: "Which vowel requires you to smile (wide mouth) to pronounce it correctly?"
+      explanation: "І (Soft I) requires a smile. И (Hard I) requires a relaxed, dropped jaw."
+      options:
+        - text: "І"
+          correct: true
+        - text: "И"
+          correct: false
+        - text: "А"
+          correct: false
+        - text: "О"
+          correct: false
+    - question: "Which letter combination does Щ represent?"
+      explanation: "Щ represents two sounds: Sh + Ch (Ш + Ч)."
+      options:
+        - text: "Sh + Ch (Ш + Ч)"
+          correct: true
+        - text: "S + Ch (С + Ч)"
+          correct: false
+        - text: "Z + H (З + Г)"
+          correct: false
+        - text: "T + S (Т + С)"
+          correct: false
+    - question: "Which letter was repressed in 1933 to make Ukrainian look more like Russian?"
+      explanation: "The letter Ґ was banned to erase the distinction between the two 'G' sounds."
+      options:
+        - text: "Ґ"
+          correct: true
+        - text: "Г"
+          correct: false
+        - text: "Ї"
+          correct: false
+        - text: "Є"
+          correct: false
+
+- type: fill-in
+  title: "Г or Ґ?"
+  instruction: "Complete the words by choosing the correct letter: Г (soft h) or Ґ (hard g)."
+  items:
+    - sentence: "Це дуже ___арний день. (It is a very beautiful day.)"
+      answer: "гарний"
+      explanation: "The word 'гарний' uses the standard soft Г."
+      options: ["гарний", "ґарний", "харний", "карний"]
+    - sentence: "Я сиджу на ___анку. (I am sitting on the porch.)"
+      answer: "ґанку"
+      explanation: "The word 'ґанок' (porch) is one of the few words that uses the hard Ґ."
+      options: ["ґанку", "ганку", "ханку", "канку"]
+    - sentence: "У мене є ___удзик. (I have a button.)"
+      answer: "ґудзик"
+      explanation: "The word 'ґудзик' (button) uses the hard Ґ."
+      options: ["ґудзик", "гудзик", "худзик", "кудзик"]
+    - sentence: "Він ___рає в футбол. (He plays football.)"
+      answer: "грає"
+      explanation: "The word 'грати' (to play) uses the standard soft Г."
+      options: ["грає", "ґрає", "крає", "храє"]
+    - sentence: "Це моя ___олова. (This is my head.)"
+      answer: "голова"
+      explanation: "The word 'голова' (head) uses the standard soft Г."
+      options: ["голова", "ґолова", "колова", "холова"]
+    - sentence: "Це велика ___ора. (This is a big mountain.)"
+      answer: "гора"
+      explanation: "The word 'гора' (mountain) uses the standard soft Г."
+      options: ["гора", "ґора", "кора", "хора"]
+
+- type: fill-in
+  title: "И or І?"
+  instruction: "Complete the words by choosing the correct vowel: И (hard) or І (soft)."
+  items:
+    - sentence: "Ми хочемо ж___ти в мирі. (We want to live in peace.)"
+      answer: "жити"
+      explanation: "Жити (to live) uses the hard И because Ж is a hard consonant."
+      options: ["жити", "жіти", "жати", "жети"]
+    - sentence: "Це мої д___ти. (These are my children.)"
+      answer: "діти"
+      explanation: "Діти (children) uses the soft І, which softens the D sound."
+      options: ["діти", "дити", "дати", "дети"]
+    - sentence: "Я люблю л___то. (I love summer.)"
+      answer: "літо"
+      explanation: "Літо (summer) uses the soft І, which softens the L sound."
+      options: ["літо", "лито", "лато", "лето"]
+    - sentence: "Я хочу п___ти чай. (I want to drink tea.)"
+      answer: "пити"
+      explanation: "Пити (to drink) uses the hard И."
+      options: ["пити", "піти", "пати", "пети"]
+    - sentence: "К___їв — столиця України. (Kyiv is the capital of Ukraine.)"
+      answer: "Київ"
+      explanation: "Kyiv starts with a hard K, so it uses И."
+      options: ["Київ", "Кіїв", "Каїв", "Кеїв"]
+    - sentence: "В___ тут? (Are you here?)"
+      answer: "Ви"
+      explanation: "Ви (you) uses the hard И."
+      options: ["Ви", "Ві", "Ва", "Во"]
+
+- type: anagram
+  title: "Vocabulary Scramble"
+  instruction: "Rearrange the letters to form words from the lesson."
+  items:
+    - scrambled: "ш к о л а"
+      answer: "школа"
+      hint: "Place where you learn"
+    - scrambled: "ц е н т р"
+      answer: "центр"
+      hint: "Middle of the city"
+    - scrambled: "я б л у к о"
+      answer: "яблуко"
+      hint: "A fruit"
+    - scrambled: "Є в р о п а"
+      answer: "Європа"
+      hint: "Continent"
+    - scrambled: "г а р н и й"
+      answer: "гарний"
+      hint: "Beautiful"
+    - scrambled: "ч а й"
+      answer: "чай"
+      hint: "Drink"
+    - scrambled: "д е н ь"
+      answer: "день"
+      hint: "Not night"
+    - scrambled: "ж и т и"
+      answer: "жити"
+      hint: "To live"
+
+- type: unjumble
+  title: "Sentence Builder"
+  instruction: "Arrange the words to form correct sentences."
+  items:
+    - words: ["Добрий", "день"]
+      answer: "Добрий день"
+    - words: ["Гарна", "школа"]
+      answer: "Гарна школа"
+    - words: ["Я", "хочу", "чай"]
+      answer: "Я хочу чай"
+    - words: ["Київ", "центр"]
+      answer: "Київ центр"
+    - words: ["Ми", "любимо", "літо"]
+      answer: "Ми любимо літо"
+    - words: ["Це", "смачне", "яблуко"]
+      answer: "Це смачне яблуко"
+
+- type: true-false
+  title: "Alphabet Facts"
+  instruction: "Decide if the statement about the Ukrainian alphabet is true or false."
+  items:
+    - statement: "The letter Ґ represents the hard 'g' sound as in 'go'."
+      correct: true
+      explanation: "Correct. Ґ is hard [g], while Г is soft [ɦ]."
+    - statement: "The letter Ї is unique because it always has two dots and makes the 'yi' sound."
+      correct: true
+      explanation: "Correct. Ї is a distinct letter symbolising 'yi'."
+    - statement: "The letter Ь is pronounced like a hard 'b'."
+      correct: false
+      explanation: "Incorrect. Ь (soft sign) has no sound; it modifies the previous consonant."
+    - statement: "Kyiv is spelled with 'ie' in Ukrainian."
+      correct: false
+      explanation: "Incorrect. It is spelled Київ (Kyiv), not Kiev."
+    - statement: "To say the letter І, you should smile."
+      correct: true
+      explanation: "Correct. І requires a wide smile position."
+    - statement: "The letter Ш sounds like 'ch' in 'chair'."
+      correct: false
+      explanation: "Incorrect. Ш is 'sh' (shoe). Ч is 'ch' (chair)."
+
+- type: group-sort
+  title: "Hard vs Soft Vowels"
+  instruction: "Sort the vowels into Hard (creating hard consonants) or Soft (creating soft consonants)."
+  groups:
+    - name: "Hard (Тверді)"
+      items: ["А", "Е", "У", "О", "И"]
+    - name: "Soft/Iotated (М'які)"
+      items: ["Я", "Є", "Ю", "І", "Ї"]
+
+- type: quiz
+  title: "Word Recognition"
+  instruction: "Select the correct translation for the Ukrainian word."
+  items:
+    - question: "What does 'школа' mean?"
+      explanation: "Школа means School."
+      options:
+        - text: "School"
+          correct: true
+        - text: "Shop"
+          correct: false
+        - text: "Street"
+          correct: false
+        - text: "Sky"
+          correct: false
+    - question: "What does 'день' mean?"
+      explanation: "День means Day."
+      options:
+        - text: "Day"
+          correct: true
+        - text: "Night"
+          correct: false
+        - text: "Morning"
+          correct: false
+        - text: "Evening"
+          correct: false
+    - question: "What does 'гарний' mean?"
+      explanation: "Гарний means Beautiful."
+      options:
+        - text: "Beautiful"
+          correct: true
+        - text: "Bad"
+          correct: false
+        - text: "Big"
+          correct: false
+        - text: "Small"
+          correct: false
+    - question: "What does 'жити' mean?"
+      explanation: "Жити means To live."
+      options:
+        - text: "To live"
+          correct: true
+        - text: "To love"
+          correct: false
+        - text: "To eat"
+          correct: false
+        - text: "To sleep"
+          correct: false
+    - question: "What does 'чай' mean?"
+      explanation: "Чай means Tea."
+      options:
+        - text: "Tea"
+          correct: true
+        - text: "Coffee"
+          correct: false
+        - text: "Water"
+          correct: false
+        - text: "Juice"
+          correct: false
+    - question: "What does 'яблуко' mean?"
+      explanation: "Яблуко means Apple."
+      options:
+        - text: "Apple"
+          correct: true
+        - text: "Pear"
+          correct: false
+        - text: "Plum"
+          correct: false
+        - text: "Peach"
+          correct: false

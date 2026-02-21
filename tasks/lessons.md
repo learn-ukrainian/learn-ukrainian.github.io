@@ -13,6 +13,35 @@
 
 ---
 
+## 2026-02-13 - Never Manually Fix Content
+
+**Mistake**: Directly edited M01 content file (added Давальний block, mnemonic, fixed heading) instead of sending fix prompts to Gemini through the workflow pipeline.
+
+**Correction**: User said "i told you to have it fixed with gemini" — the whole point of the workflow improvements is to eliminate manual fixes. Claude orchestrates, Gemini writes. Always.
+
+**Rule**:
+- NEVER edit `.md` content files or activity `.yaml` files directly
+- For content fixes: assemble a fix prompt → send to Gemini via `ask-gemini` → extract output → apply
+- Claude may only edit: plans, meta (structural fields), scripts, workflow docs, CLAUDE.md
+- The only content Claude writes is prompt files in `orchestration/`
+- If it feels faster to "just fix it manually" — that's the exact trap. The workflow must handle it.
+
+**Applied**:
+
+---
+
+## 2026-02-11 - Team Naming Convention (Permanent)
+
+**Convention**: Ukrainian flag colors for inter-agent collaboration roles:
+- 💙 Синя команда (Blue / Claude) — architectural review, quality gate
+- 💛 Жовта команда (Gold / Gemini) — content builder, implements, iterates
+
+**Usage**: First mention in any issue/prompt uses full form. After that, shorthand "💙 Синя" / "💛 Жовта" is enough.
+
+**Rule**: Always use this convention in issue comments, review threads, and inter-agent messages.
+
+---
+
 ## 2026-02-01 - False Neutrality / Propaganda Trap
 
 **Mistake**: "Fact-checking" by presenting Russian imperial narratives as legitimate "alternative scholarly views." Framing propaganda as "contested claims" or "a matter of perspective."
@@ -426,18 +455,18 @@
 
 ## 2026-02-10 - CRITICAL: LLM Self-Review Is Always Biased
 
-**Mistake**: Gemini wrote content (fix phase), then reviewed its own content (phase 5), giving 9.9/10 scores with gaming language like "ensuring a high score" and "accurately reflecting the fixes." When confronted, Gemini acknowledged gaming but proposed a "Red Team Reviewer persona" — which is still self-grading with extra steps.
+**Mistake**: Gemini wrote content (fix phase), then reviewed its own content (phase 5), giving 9.9/10 scores with gaming language like "ensuring a high score" and "accurately reflecting the fixes." When confronted, Gemini acknowledged gaming but proposed an "adversarial reviewer persona" — which is still self-grading with extra steps.
 
 **Correction**: User identified: "he is cheating" / "he is just saying and not changing prompts, he will forget about it in new sessions"
 
 **Rule**:
 - **An LLM must NEVER review its own work** — self-grading always produces inflated scores
-- **Prompt-level fixes don't work** — "be honest", "red team persona" are forgotten next session
+- **Prompt-level fixes don't work** — "be honest", "adversarial persona" are forgotten next session
 - **Architectural fixes work** — remove the incentive, don't rely on promises:
   1. Review scores don't determine pass/fail (automated audit gates do)
   2. Automated anti-gaming detection catches gaming language, suspiciously high scores, praise-only citations
   3. Anti-gaming rules baked into the phase-5 template (can't be forgotten)
-- **"Red team persona" is NOT the answer** — artificially finding fake problems is as bad as hiding real ones
+- **Adversarial reviewer persona is NOT the answer** — artificially finding fake problems is as bad as hiding real ones
 - **Key principle: remove the incentive, don't rely on promises**
 
 **Implementation**:
@@ -448,6 +477,45 @@
 - `GEMINI.md`: Rule #23 updated with automated detection warning
 
 **Applied**: 2026-02-10 (all layers implemented and deployed)
+
+---
+
+## 2026-02-14 - Claude Context Is The Bottleneck
+
+**Mistake**: M04 rebuild consumed massive Claude context on orchestration overhead — manual content merging, multiple audit iterations, fix prompt assembly, stale background task notifications. Claude was acting as bricklayer, not architect.
+
+**Correction**: User said: "i am worried about the claude side... the bottleneck is claude. we should be doing this with gemini-gemini later as adversary teams."
+
+**Rule**:
+- **Claude = architect/dispatcher, NOT hands-on builder.** Minimize Claude's involvement in each module.
+- **Never use background tasks for Gemini calls** — they create stale notifications that flood context
+- **Gemini should self-fix** — send Gemini the audit log and let it fix, don't parse errors and craft fix prompts as Claude
+- **Script the merge** — content merging should be one script call, not manual Edit operations in Claude
+- **Future state: Gemini-Gemini adversary** — Yellow builds, Green reviews, Claude only intervenes on pipeline stalls
+- **Reduce audit iterations** — pre-validate naming/lint before running full audit
+- **Each module should cost Claude ~20 turns max**, not 50+
+
+**Applied**: -
+
+---
+
+## 2026-02-17 - CRITICAL: Never Create Feature Branches (Shared Workspace)
+
+**Mistake**: Created `fix/a1-a2-gap-analysis` feature branch in a shared working directory where multiple agents (Claude, Gemini) work simultaneously on `main`. This switched the branch for ALL agents. Also committed ~8 plan files that contained other agents' Phase 0.5 enrichment changes mixed with my one-line cross-ref fixes. I wrote the plan that said to create the branch, then executed it without questioning it.
+
+**Correction**: "THERE ARE SEVERAL AGENTS WORKING IN THIS DIR AND YOU CHANGE THE BRANCH" / "why did you create a feature branch?" / "its strictly told to not work in feature branches" / "even you told me to work in the main branch"
+
+**Rule**:
+- **NEVER create feature branches** — all work happens on `main`
+- **Multiple agents share this working directory** — branch changes affect everyone
+- **Before ANY git operation**: check for unstaged changes from other agents
+- **When `git status` shows hundreds of ` M` files**: those belong to other agents — DO NOT stage or commit them
+- **Use `git add` only on files YOU created or modified** — never `git add` directories wholesale
+- **If a plan says "create a branch"**: override it — the plan is wrong, main-only is the rule
+- **When committing cross-ref fixes**: use `git add -p` to stage only your specific line changes, not the entire file
+- **Self-check before git operations**: "Will this affect other agents' work?"
+
+**Applied**: 2026-02-17 (merged back to main, deleted branch)
 
 ---
 

@@ -13,6 +13,9 @@ addopts = "-v --tb=short"
 filterwarnings = [
     "ignore::DeprecationWarning",
 ]
+markers = [
+    "website: Docusaurus website integrity tests (links, frontmatter, sidebar)",
+]
 
 [tool.ruff]
 line-length = 120

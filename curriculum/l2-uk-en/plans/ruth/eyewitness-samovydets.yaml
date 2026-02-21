@@ -1,41 +1,27 @@
----
-# Module Plan: The Eye Witness
-# Track: RUTH
-# Module: 062
-# Source: Gemini Research (ISSUE-495)
-# Generated: 2026-02-04
 sequence: 76
 module: ruth-076
-
 module_number: 62
 slug: eyewitness-samovydets
-title_uk: "Самовидець"
-title_en: "The Eye Witness"
-
+title_uk: Самовидець
+title_en: The Eye Witness
 phase: 3
 phase_id: baroque-fight
-phase_name: "Baroque Fight"
-
-focus: 'Intro to genre — "Year 1648"'
-
-word_target: 4000
-
-# Content outline to be expanded during content generation
+phase_name: Baroque Fight
+focus: Intro to genre — "Year 1648"
 content_outline:
-  - section: "Вступ"
-    description: "Introduction to The Eye Witness"
-  - section: "Основний матеріал"
-    description: "Primary source analysis and grammar focus"
-  - section: "Практика"
-    description: "Exercises and activities"
-  - section: "Підсумок"
-    description: "Summary and connection to next module"
-
-# Vocabulary hints (to be populated during content generation)
-vocabulary_hints: "[]"
-
-# Activity types appropriate for this module
+- section: Вступ
+  description: Introduction to The Eye Witness
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
 activity_types:
-  - transcription
-  - etymology-trace
-  - grammar-identify
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Baroque Scholar
+  role: War Correspondent (17th c.)

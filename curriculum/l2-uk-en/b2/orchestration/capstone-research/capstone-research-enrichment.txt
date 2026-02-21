@@ -1,0 +1,286 @@
+✅ Message sent to Gemini (ID: 10625) [auto-acked: self-addressed]
+✓ Message 10625 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10625...
+📨 Message #10625
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-capstone-research
+   Time: 2026-02-20T20:45:37.462224+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b2-79
+level: B2
+sequence: 79
+slug: capstone-research
+version: '2.0'
+title: 'Підсумковий проєкт: Дослідження'
+subtitle: 'Capstone Project: Research'
+content_outline:
+- section: Огляд — Capstone проєкт
+  points:
+  - Мета capstone — інтеграція всіх навичок B2
+  - Формат проєкту (дослідження + презентація)
+  - Критерії оцінювання
+- section: Вибір теми дослідження
+  points:
+  - Критерії хорошої теми (актуальність, доступність джерел, особистий інтерес)
+  - Формулювання дослідницького питання
+  - Звуження теми — від загального до конкретного
+  - Обґрунтування вибору теми
+- section: Пошук та оцінка джерел
+  points:
+  - Типи джерел (первинні, вторинні, третинні)
+  - Українськомовні ресурси (бібліотеки, бази даних, ЗМІ)
+  - Оцінка надійності джерела (автор, видання, дата)
+  - Ведення бібліографії
+- section: Складання плану-проспекту
+  points:
+  - Структура плану (вступ, розділи, висновок)
+  - Формулювання тези та основних аргументів
+  - Розподіл джерел по розділах
+  - Часовий графік роботи
+- section: Написання чернетки
+  points:
+  - Від плану до тексту — як розгорнути пункти
+  - Інтеграція джерел у текст (цитування, парафраз)
+  - Баланс власного аналізу та зовнішніх джерел
+  - Редагування та вдосконалення
+- section: Підсумок та завдання
+  points:
+  - Контрольний список готовності дослідження
+  - Завдання — подати план-проспект
+  - Підготовка до презентації (М82)
+focus: checkpoint
+pedagogy: integration
+objectives:
+- Учень вміє обрати актуальну тему дослідження та обґрунтувати її вибір
+- Учень може самостійно знайти та опрацювати українськомовні джерела
+- Учень здатен скласти розгорнутий план-проспект майбутньої презентації
+grammar:
+- Узагальнення всіх граматичних тем рівня B2
+- Формальний стиль наукового звіту
+phase: B2.4 Skills & Capstone
+vocabulary_hints:
+  required:
+  - термін (term)
+  - поняття (concept)
+  - процес (process)
+  - метод (method)
+  recommended:
+  - аналіз (analysis)
+  - синтез (synthesis)
+  - дослідження (research)
+activity_hints:
+- type: reading
+  focus: Аналіз тексту
+  items: 4
+- type: essay-response
+  focus: Практичне застосування
+- type: true-false
+  focus: Перевірка розуміння
+  items: 8
+persona:
+  voice: Professional Language Coach
+  role: Research Fellow (Науковий співробітник)
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Підсумковий проєкт: Дослідження
+
+## State Standard Reference
+§ Каталог В (Вступ до рівня В2): "Особа вміє... виразити власну і покликатися на чужу думку, розвинути аргументацію без помітних труднощів щодо пошуку слів, використавши складні синтаксичні форми."
+Alignment: Цей модуль безпосередньо реалізує вимогу стандарту щодо розвитку аргументації та покликанні на чужі думки (робота з джерелами), інтегруючи це в формат дослідницького проєкту.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| дослідження (research) | High / Academic | проводити дослідження, наукове дослідження, результати дослідження |
+| джерело (source) | High / Academic | першоджерело, надійне джерело, покликання на джерело |
+| теза (thesis) | Mid / Academic | висувати тезу, аргументувати тезу, головна теза |
+| аргумент (argument) | High / General | вагомий аргумент, наводити аргументи, контраргумент |
+| висновок (conclusion) | High / General | робити висновки, дійти висновку, у висновку |
+| плагіат (plagiarism) | Mid / Academic | уникати плагіату, академічна доброчесність |
+
+## Cultural Hooks
+1. **Мала академія наук України (МАН)**: Унікальна українська інституція для учнівської молоді, де школярі пишуть справжні наукові роботи та захищають їх. Це культурний контекст "молодої науки" в Україні.
+2. **Наукова школа Вернадського**: Згадка про Володимира Вернадського як приклад системного підходу до науки та організації знань (біосфера, ноосфера) як натхнення для структурного мислення.
+
+## Common Learner Errors
+1. **Calques from English**: Вживання "Я думаю/Я вірю" (I believe) в академічному тексті замість безособових конструкцій "Вважається", "Варто зазначити", "Дослідження показують".
+2. **Citation confusion**: Нерозуміння різниці між "цитуванням" (quotation) та "парафразом" (paraphrase), або використання англійських лапок "" замість українських «».
+3. **False friends**: Плутанина між "дослід" (experiment) та "дослідження" (research/study).
+
+## Cross-References
+- **Builds on**: Вся граматика B2 (пасивний стан, дієприкметники, складні речення), лексика з попередніх тем.
+- **Prepares for**: M82 (Презентація проєкту), C1 (Академічне письмо).
+
+## Notes for Content Writing
+- Стиль має бути "науково-популярним" або "академічним початковим" — формальний, але зрозумілий.
+- Важливо наголосити на академічній доброчесності (academic integrity) як важливій цінності сучасної української освіти.
+- Використовувати безособові конструкції як маркер наукового стилю.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Огляд Capstone проєкту (Introduction: Capstone Project Overview)"
+  words: 500
+  points:
+  - "Мета Capstone проєкту: інтеграція всіх мовних навичок рівня B2 для реалізації вимог Державного стандарту щодо аргументації та використання складних синтаксичних форм."
+  - "Культурний контекст: знайомство з Малою академією наук України (МАН) як унікальною інституцією, що залучає молодь до наукового пошуку."
+  - "Формат роботи (дослідження + презентація) та критерії оцінювання: від логіки викладу до мовної грамотності."
+- section: "Вибір теми та науковий підхід (Topic Selection and Scientific Approach)"
+  words: 700
+  points:
+  - "Критерії вдалої теми: актуальність, практична цінність та наявність доступних україномовних джерел."
+  - "Натхнення від Володимира Вернадського: системне мислення та організація знань як основа наукового методу."
+  - "Формулювання дослідницького питання: перехід від широкої області до вузької, конкретної тези."
+  - "Обґрунтування вибору: як довести важливість вашого дослідження академічною мовою."
+- section: "Робота з джерелами та академічна доброчесність (Working with Sources and Academic Integrity)"
+  words: 900
+  points:
+  - "Типологія джерел: розрізнення першоджерел, наукових публікацій та третинних ресурсів (довідників)."
+  - "Академічна доброчесність: чому важливо уникати плагіату та поважати інтелектуальну власність у сучасному українському контексті."
+  - "Технічні нюанси цитування: правильне використання українських лапок «» замість англійських \"\" та оформлення покликань."
+  - "Парафраз чи цитата: як передати чужу думку, зберігаючи автентичність джерела та власну аргументацію."
+- section: "Планування та структура плану-проспекту (Planning and Structure of the Prospectus)"
+  words: 700
+  points:
+  - "Архітектура наукового тексту: логічний зв'язок між вступом, основними аргументами та висновками."
+  - "Використання безособових конструкцій (Вважається, Варто зазначити, Дослідження показують) для надання тексту об’єктивного наукового звучання."
+  - "Розподіл зібраного матеріалу за розділами плану та створення часового графіка роботи над чернеткою."
+- section: "Написання чернетки та подолання мовних помилок (Writing the Draft and Correcting Errors)"
+  words: 800
+  points:
+  - "Уникнення кальок з англійської мови: заміна суб’єктивного 'Я вірю' (I believe) на академічні форми 'На нашу думку' або 'Як свідчать факти'."
+  - "Робота з хибними друзями перекладача: чітке розрізнення термінів «дослід» (experiment) та «дослідження» (study/research)."
+  - "Інтеграція граматики B2: активне використання пасивного стану, дієприкметників та складних підрядних речень для глибини аналізу."
+  - "Редагування: баланс між власною оцінкою та цитованими даними."
+- section: "Підсумок та підготовка до презентації (Summary and Preparation for Presentation)"
+  words: 400
+  points:
+  - "Контрольний список (checklist) готовності: перевірка тези, джерел та мовного стилю."
+  - "Завдання: подання фінального плану-проспекту для отримання зворотного зв'язку."
+  - "Анонс модуля М82: поради щодо візуалізації результатів дослідження у презентації."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "дослідження (research) — High frequency; collocations: проводити дослідження, результати дослідження"
+  - "джерело (source) — High frequency; collocations: надійне джерело, покликання на джерело"
+  - "теза (thesis) — Mid frequency; collocations: висувати тезу, головна теза дослідження"
+  - "аргумент (argument) — High frequency; collocations: вагомий аргумент, наводити аргументи"
+  - "термін (term) — основна одиниця наукового тексту"
+  - "поняття (concept) — абстрактна одиниця знання"
+  recommended:
+  - "плагіат (plagiarism) — використання чужих думок без посилання; питання академічної доброчесності"
+  - "висновок (conclusion) — High frequency; collocations: робити висновки, дійти висновку"
+  - "аналіз (analysis) — метод розкладання цілого на частини"
+  - "синтез (synthesis) — метод поєднання частин у ціле"
+  - "покликання (citation/reference) — вказівка на джерело інформації"
+  - "обґрунтування (justification) — доведення важливості обраної теми"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4232 chars)
+✅ Message sent to Claude (ID: 10630)
+✓ Message 10630 acknowledged
+   Auto-acknowledged reply #10630 (stdout delivery — no inbox accumulation)
+✓ Message 10625 acknowledged

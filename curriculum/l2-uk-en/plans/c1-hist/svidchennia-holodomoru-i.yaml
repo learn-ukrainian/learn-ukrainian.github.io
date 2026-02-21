@@ -1,4 +1,3 @@
----
 module: c1-hist-036
 level: c1-hist
 sequence: 36
@@ -10,15 +9,13 @@ objectives:
 - 'Analyze the causes and consequences of свідчення голодомору i: усна історія'
 - Evaluate the historical significance of голоси вижилих
 content_outline:
-- section: "Вступ — Голоси вижилих"
-  words: 457
+- section: Вступ — Голоси вижилих
   subsections:
   - Усна історія — що це?
   - Чому важлива для Голодомору
   - Свідчення як джерело
   - Методологічні питання
 - section: Методологія усної історії
-  words: 686
   subsections:
   - Як збирають свідчення
   - Інтерв'ю — техніка
@@ -26,14 +23,12 @@ content_outline:
   - Обмеження методу
   - Етичні питання
 - section: Проєкти збору свідчень
-  words: 571
   subsections:
   - UCRDC — Україно-канадський дослідницький центр
   - Комісія конгресу США (1980-ті)
   - Українські проєкти після 1991
   - Що збережено
 - section: Типові теми свідчень
-  words: 686
   subsections:
   - Голод — як описують
   - Конфіскація зерна
@@ -41,26 +36,22 @@ content_outline:
   - Виживання — стратегії
   - Табу і замовчування
 - section: Фрагменти свідчень
-  words: 800
   subsections:
   - Свідчення 1 — дитина 1932
   - Свідчення 2 — мати
   - Свідчення 3 — село
   - Як читати травму
 - section: Критика джерела
-  words: 457
   subsections:
   - Ретроспективність — через десятиліття
   - Вплив пізніших наративів
   - Репрезентативність — хто вижив
   - Як верифікувати
 - section: Підсумок
-  words: 343
   subsections:
   - Усна історія як доповнення
   - Голос жертв
   - Зв'язок із документами
-word_target: 4000
 vocabulary:
 - усна історія
 - свідчення
@@ -90,15 +81,15 @@ activities:
   focus: Як усна історія допомагає зрозуміти Голодомор?
 sources:
 - name: Голодомор (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Голодомор"
+  url: https://uk.wikipedia.org/wiki/Голодомор
   type: reference
   notes: Overview
 - name: Архів свідчень Голодомору (UCRDC)
-  url: "https://ucrdc.org/"
+  url: https://ucrdc.org/
   type: primary
   notes: Testimony archive
 - name: Усна історія (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Усна_історія"
+  url: https://uk.wikipedia.org/wiki/Усна_історія
   type: reference
   notes: Methodology
 vocabulary_hints:
@@ -117,7 +108,9 @@ activity_hints:
   items: 4
 - type: essay-response
   focus: Критичний аналіз
-  word_target: 300
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Oral History Archivist

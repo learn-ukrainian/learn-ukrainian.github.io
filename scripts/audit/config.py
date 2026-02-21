@@ -31,7 +31,7 @@ GRAMMAR_CONSTRAINTS = {
         'aspect': 'full',
         'participles': True,
         'subordinate_clauses': 'complex',
-        'max_words_per_sentence': 25,
+        'max_words_per_sentence': 30,
         'max_clauses': 4,
     },
     'B2': {
@@ -233,26 +233,26 @@ STAGE_ORDER = {
 ACTIVITY_COMPLEXITY = {
     'quiz': {
         'A1': {'min_len': 5, 'max_len': 10, 'options': [3, 4], 'min_items': 8},
-        'A2': {'min_len': 7, 'max_len': 15, 'options': [4], 'min_items': 8},  # CEFR: smooth +2 from A1
-        'B1': {'min_len': 9, 'max_len': 20, 'options': [4], 'min_items': 8},  # CEFR: smooth +2 from A2 (was 12, meets existing content)
-        'B1-vocab': {'min_len': 8, 'max_len': 18, 'options': [4], 'min_items': 8},  # Context-specific: -1 from standard
-        'B1-culture': {'min_len': 8, 'max_len': 18, 'options': [4], 'min_items': 8},  # Context-specific: -1 from standard
+        'A2': {'min_len': 5, 'max_len': 15, 'options': [4], 'min_items': 8},  # Lowered min_len to 5: short quiz prompts are valid
+        'B1': {'min_len': 5, 'max_len': 20, 'options': [4], 'min_items': 8},  # Lowered min_len from 9→5: short quiz prompts are valid at B1
+        'B1-vocab': {'min_len': 5, 'max_len': 18, 'options': [4], 'min_items': 8},  # Lowered min_len to 5
+        'B1-culture': {'min_len': 5, 'max_len': 18, 'options': [4], 'min_items': 8},  # Lowered min_len to 5
         'B2': {'min_len': 5, 'max_len': 25, 'options': [4], 'min_items': 8},  # Relaxed to 5 for factual questions (Issue #441)
-        'B2-history': {'min_len': 8, 'max_len': 20, 'options': [4], 'min_items': 8},  # Context-specific: -2 from standard (was 6, better alignment)
-        'B2-biography': {'min_len': 8, 'max_len': 20, 'options': [4], 'min_items': 8},  # Context-specific: -2 from standard
+        'B2-history': {'min_len': 5, 'max_len': 20, 'options': [4], 'min_items': 8},  # Lowered min_len to 5
+        'B2-biography': {'min_len': 5, 'max_len': 20, 'options': [4], 'min_items': 8},  # Lowered min_len to 5
         'B2-skills': {'min_len': 5, 'max_len': 20, 'options': [4], 'min_items': 8},  # Skills: allow short factual questions (5+ words)
-        'C1': {'min_len': 8, 'max_len': 30, 'options': [4], 'min_items': 5},  # CEFR: relaxed from 12 to 8
-        'C2': {'min_len': 10, 'max_len': 35, 'options': [4], 'min_items': 5},  # CEFR: relaxed from 14 to 10
+        'C1': {'min_len': 5, 'max_len': 30, 'options': [4], 'min_items': 5},  # Lowered min_len to 5
+        'C2': {'min_len': 5, 'max_len': 35, 'options': [4], 'min_items': 5},  # Lowered min_len to 5
         # Seminar tracks - quiz is supplementary, focus is analytical work
-        'lit': {'min_len': 8, 'max_len': 30, 'options': [4], 'min_items': 5},
-        'b2-hist': {'min_len': 8, 'max_len': 25, 'options': [4], 'min_items': 5},
-        'c1-hist': {'min_len': 8, 'max_len': 30, 'options': [4], 'min_items': 5},
-        'c1-bio': {'min_len': 8, 'max_len': 30, 'options': [4], 'min_items': 5},
+        'lit': {'min_len': 5, 'max_len': 30, 'options': [4], 'min_items': 5},
+        'b2-hist': {'min_len': 5, 'max_len': 25, 'options': [4], 'min_items': 5},
+        'c1-hist': {'min_len': 5, 'max_len': 30, 'options': [4], 'min_items': 5},
+        'c1-bio': {'min_len': 5, 'max_len': 30, 'options': [4], 'min_items': 5},
     },
     'match-up': {
-        'A1': {'pairs_min': 8, 'pairs_max': 10, 'min_items': 8},
+        'A1': {'pairs_min': 8, 'pairs_max': 20, 'min_items': 8},
         'A2': {'pairs_min': 10, 'pairs_max': 12, 'min_items': 8},
-        'B1': {'pairs_min': 12, 'pairs_max': 14, 'min_items': 8},
+        'B1': {'pairs_min': 12, 'pairs_max': 16, 'min_items': 8},
         'B2': {'pairs_min': 12, 'pairs_max': 16, 'min_items': 8},
         'C1': {'pairs_min': 8, 'pairs_max': 18, 'min_items': 6},
         'C2': {'pairs_min': 10, 'pairs_max': 18, 'min_items': 6},
@@ -504,7 +504,7 @@ EXCLUDE_KEYWORDS = ["activities", "activity", "production", "vocabulary", "check
 # Level-specific configuration
 LEVEL_CONFIG = {
     'A1': {
-        'target_words': 750,
+        'target_words': 2000,  # Feb 2026: raised from 750 — word targets are MINIMUMS
         'min_activities': 8,
         'min_items_per_activity': 12,
         'min_types_unique': 4,
@@ -515,7 +515,7 @@ LEVEL_CONFIG = {
         'priority_types': {'fill-in', 'match-up', 'anagram', 'unjumble', 'quiz'}
     },
     'A2': {
-        'target_words': 1000,
+        'target_words': 3000,  # Feb 2026: raised from 1000 — word targets are MINIMUMS
         'min_activities': 10,
         'min_items_per_activity': 12,
         'min_types_unique': 4,
@@ -526,7 +526,7 @@ LEVEL_CONFIG = {
         'priority_types': {'error-correction', 'unjumble', 'fill-in'}
     },
     'A1-checkpoint': {
-        'target_words': 500,  # Checkpoints can be shorter
+        'target_words': 1500,  # Checkpoints: proportional to A1 base (2000)
         'min_activities': 8,
         'min_items_per_activity': 10,
         'min_types_unique': 4,
@@ -537,7 +537,7 @@ LEVEL_CONFIG = {
         'priority_types': {'quiz', 'fill-in', 'match-up'}
     },
     'A2-checkpoint': {
-        'target_words': 800,  # Checkpoints can be shorter
+        'target_words': 2500,  # Checkpoints: proportional to A2 base (3000)
         'min_activities': 10,
         'min_items_per_activity': 10,
         'min_types_unique': 4,
@@ -549,30 +549,30 @@ LEVEL_CONFIG = {
     },
     'B1-bridge': {
         # Bridge modules (M01-05) teach grammar metalanguage
-        'target_words': 1200,  # Lower target for metalanguage teaching
-        'min_activities': 12,
-        'min_items_per_activity': 14,
-        'min_types_unique': 5,
+        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
+        'min_activities': 4,   # Feb 2026: reduced — quality over quantity, 7 reliable types
+        'min_items_per_activity': 6,
+        'min_types_unique': 3,
         'min_vocab': 20,  # Metalanguage vocabulary
         'min_engagement': 4,
         # NO immersion gate - bridge modules teach terminology bilingually
         'transliteration_allowed': False,
-        'priority_types': {'quiz', 'match-up', 'fill-in', 'translate'}
+        'priority_types': {'quiz', 'match-up', 'fill-in', 'error-correction', 'mark-the-words', 'essay-response', 'critical-analysis'}
     },
     'B1-grammar': {
-        'target_words': 1500,
-        'min_activities': 8,  # Reduced from 12 (Jan 2026) - quality over quantity
-        'min_items_per_activity': 12,  # Reduced from 14 (Jan 2026)
-        'min_types_unique': 4,
+        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
+        'min_activities': 4,   # Feb 2026: reduced — quality over quantity, 7 reliable types
+        'min_items_per_activity': 6,
+        'min_types_unique': 3,
         'min_vocab': 25,  # Increased for grammar terminology
         'min_engagement': 5,
         'min_immersion': 90,  # Relaxed to 90% to allow necessary English context
         'max_immersion': 100,  # 100% Ukrainian immersion (English only in vocab table)
         'transliteration_allowed': False,
-        'priority_types': {'error-correction', 'fill-in', 'unjumble', 'cloze'}
+        'priority_types': {'quiz', 'match-up', 'fill-in', 'error-correction', 'mark-the-words', 'essay-response', 'critical-analysis'}
     },
     'B1-vocab': {
-        'target_words': 1500,
+        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
         'min_activities': 8,  # Reduced from 12 (Jan 2026) - quality over quantity
         'min_items_per_activity': 12,  # Reduced from 14 (Jan 2026)
         'min_types_unique': 4,
@@ -584,7 +584,7 @@ LEVEL_CONFIG = {
         'priority_types': {'match-up', 'mark-the-words', 'translate', 'quiz'}
     },
     'B1': {
-        'target_words': 3000,  # Updated Jan 2026 - longer modules preferred
+        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
         'min_activities': 8,  # Reduced from 12 (Jan 2026) - quality over quantity
         'min_items_per_activity': 12,  # Reduced from 14 (Jan 2026)
         'min_types_unique': 4,
@@ -596,7 +596,7 @@ LEVEL_CONFIG = {
         'priority_types': {'fill-in', 'unjumble', 'error-correction'}
     },
     'B1-culture': {
-        'target_words': 1500,  # Cultural modules focus on authentic content
+        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
         'min_activities': 8,  # Reduced from 12 (Jan 2026) - quality over quantity
         'min_items_per_activity': 12,  # Reduced from 14 (Jan 2026)
         'min_types_unique': 4,
@@ -608,7 +608,7 @@ LEVEL_CONFIG = {
         'priority_types': {'fill-in', 'match-up', 'reading', 'quiz'}  # Reading-focused
     },
     'B1-skills': {
-        'target_words': 1500,
+        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
         'min_activities': 10,
         'min_items_per_activity': 12,
         'min_types_unique': 4,
@@ -620,7 +620,7 @@ LEVEL_CONFIG = {
         'priority_types': {'fill-in', 'cloze', 'mark-the-words'}
     },
     'B1-checkpoint': {
-        'target_words': 1200,
+        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
         'min_activities': 10,
         'min_items_per_activity': 12,
         'min_types_unique': 4,
@@ -631,7 +631,7 @@ LEVEL_CONFIG = {
         'priority_types': {'quiz', 'fill-in', 'error-correction'}
     },
     'B1-capstone': {
-        'target_words': 1500,
+        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
         'min_activities': 5,  # Reduced from 12 (Jan 2026) - capstone has 5-8 traditional activities + 5 tasks
         'min_items_per_activity': 12,  # Reduced from 14 (Jan 2026)
         'min_types_unique': 4,
@@ -643,7 +643,7 @@ LEVEL_CONFIG = {
         'priority_types': {'quiz', 'fill-in', 'cloze', 'error-correction'}
     },
     'B2-grammar': {
-        'target_words': 1750,
+        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
         'min_activities': 10,  # Reduced from 13 (Jan 2026) - quality over quantity
         'min_items_per_activity': 14,  # Reduced from 16 (Jan 2026)
         'min_types_unique': 4,
@@ -655,7 +655,7 @@ LEVEL_CONFIG = {
         'priority_types': {'error-correction', 'fill-in', 'unjumble', 'cloze'}
     },
     'B2-vocab': {
-        'target_words': 1750,
+        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
         'min_activities': 10,  # Reduced from 13 (Jan 2026) - quality over quantity
         'min_items_per_activity': 14,  # Reduced from 16 (Jan 2026)
         'min_types_unique': 4,
@@ -667,7 +667,7 @@ LEVEL_CONFIG = {
         'priority_types': {'match-up', 'mark-the-words', 'translate', 'quiz'}
     },
     'B2': {
-        'target_words': 1750,
+        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
         'min_activities': 10,  # Reduced from 13 (Jan 2026) - quality over quantity
         'min_items_per_activity': 14,  # Reduced from 16 (Jan 2026)
         'min_types_unique': 4,
@@ -680,7 +680,7 @@ LEVEL_CONFIG = {
     },
     'B2-history': {
         # B2-HIST Track: History seminar style
-        'target_words': 4000,
+        'target_words': 5000,  # Feb 2026: seminars raised to 5000 minimum
         'min_activities': 3,
         'max_activities': 9,
         'min_items_per_activity': 1,
@@ -697,7 +697,7 @@ LEVEL_CONFIG = {
         'essay_max_words': 250
     },
     'B2-biography': {
-        'target_words': 3000,
+        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
         'min_activities': 10,
         'min_items_per_activity': 14,
         'min_types_unique': 4,
@@ -709,7 +709,7 @@ LEVEL_CONFIG = {
         'priority_types': {'cloze', 'fill-in', 'true-false', 'quiz'}
     },
     'B2-checkpoint': {
-        'target_words': 1750,
+        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
         'min_activities': 15,
         'min_items_per_activity': 14,
         'min_types_unique': 4,
@@ -723,7 +723,7 @@ LEVEL_CONFIG = {
     'B2-skills': {
         # Communication skills modules (M85-94: B2.4 phase)
         # Focus on practical language use in professional/real-world contexts
-        'target_words': 1750,
+        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
         'min_activities': 14,  # Higher than base B2 (practical scenarios need variety)
         'min_items_per_activity': 14,
         'min_types_unique': 5,  # Variety important for skills practice
@@ -737,7 +737,7 @@ LEVEL_CONFIG = {
     'B2-synthesis': {
         # Synthesis modules replace checkpoints in B2.3 History (M83, M107, M119, M125, M131)
         # Focus on cross-era analysis and historical argumentation, not recall
-        'target_words': 3000,
+        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
         'min_activities': 10,  # Reduced from 13 (Jan 2026) - quality over quantity
         'min_items_per_activity': 14,  # Increased from 12 (Jan 2026) for consistency
         'min_types_unique': 4,
@@ -749,7 +749,7 @@ LEVEL_CONFIG = {
         'priority_types': {'quiz', 'select', 'cloze', 'true-false'}  # Analysis-focused
     },
     'B2-capstone': {
-        'target_words': 1750,
+        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
         'min_activities': 10,  # Reduced from 12 (Jan 2026) - quality over quantity
         'min_items_per_activity': 14,  # Kept at 14 (Jan 2026)
         'min_types_unique': 4,
@@ -763,7 +763,7 @@ LEVEL_CONFIG = {
     'B2-professional': {
         # B2-PRO Professional Track (M01-40) - Seminar style
         # ESP (English for Specific Purposes adapted for Ukrainian)
-        'target_words': 3000,
+        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
         'min_activities': 3,
         'max_activities': 9,
         'min_items_per_activity': 1,
@@ -778,7 +778,7 @@ LEVEL_CONFIG = {
         'essay_max_words': 300
     },
     'C1': {
-        'target_words': 3000,
+        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
         'min_activities': 12,
         'min_items_per_activity': 12,
         'min_types_unique': 4,
@@ -790,7 +790,7 @@ LEVEL_CONFIG = {
         'priority_types': {'fill-in', 'unjumble', 'error-correction'}
     },
     'C1-academic': {
-        'target_words': 3000,
+        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
         'min_activities': 12,
         'min_items_per_activity': 12,
         'min_types_unique': 4,
@@ -804,7 +804,7 @@ LEVEL_CONFIG = {
     'C1-professional': {
         # C1-PRO Professional Mastery Track (M01-50) - Seminar style
         # ESP + CLIL approach for executives, academics, specialists
-        'target_words': 3000,
+        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
         'min_activities': 3,
         'max_activities': 9,
         'min_items_per_activity': 1,
@@ -819,7 +819,7 @@ LEVEL_CONFIG = {
         'essay_max_words': 400
     },
     'C1-stylistics': {
-        'target_words': 3000,
+        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
         'min_activities': 12,
         'min_items_per_activity': 12,
         'min_types_unique': 4,
@@ -831,7 +831,7 @@ LEVEL_CONFIG = {
         'priority_types': {'fill-in', 'error-correction', 'cloze'}
     },
     'C1-folk': {
-        'target_words': 3000,
+        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
         'min_activities': 12,
         'min_items_per_activity': 12,
         'min_types_unique': 4,
@@ -846,7 +846,7 @@ LEVEL_CONFIG = {
         # C1-BIO Track: Biography seminar style (C1 level)
         # Structure: Advanced Analysis + Conceptual Quiz only
         # Focus: biographical analysis, legacy evaluation, era context
-        'target_words': 4000,
+        'target_words': 5000,  # Feb 2026: seminars raised to 5000 minimum
         'min_activities': 3,
         'max_activities': 9,
         'min_items_per_activity': 1,
@@ -866,7 +866,7 @@ LEVEL_CONFIG = {
         # C1-HIST Track: History seminar style (C1 level)
         # Structure: Advanced Analysis + Conceptual Quiz only
         # Focus: historical analysis, source criticism, historiographical debate
-        'target_words': 4000,
+        'target_words': 5000,  # Feb 2026: seminars raised to 5000 minimum
         'min_activities': 3,
         'max_activities': 9,
         'min_items_per_activity': 1,
@@ -883,7 +883,7 @@ LEVEL_CONFIG = {
         'essay_max_words': 500
     },
     'C1-literature': {
-        'target_words': 3500,
+        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
         'min_activities': 12,
         'min_items_per_activity': 12,
         'min_types_unique': 4,
@@ -895,7 +895,7 @@ LEVEL_CONFIG = {
         'priority_types': {'cloze', 'fill-in', 'quiz'}
     },
     'C1-checkpoint': {
-        'target_words': 1750,
+        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
         'min_activities': 14,
         'min_items_per_activity': 14,
         'min_types_unique': 4,
@@ -907,7 +907,7 @@ LEVEL_CONFIG = {
         'priority_types': {'quiz', 'fill-in', 'error-correction', 'cloze'}
     },
     'C1-capstone': {
-        'target_words': 1750,
+        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
         'min_activities': 12,
         'min_items_per_activity': 12,
         'min_types_unique': 4,
@@ -920,7 +920,7 @@ LEVEL_CONFIG = {
     },
     'C2': {
         # C2 Track: Seminar style - production-focused
-        'target_words': 3000,
+        'target_words': 5000,  # Feb 2026: seminars raised to 5000 minimum
         'min_activities': 3,
         'max_activities': 9,
         'min_items_per_activity': 1,
@@ -936,7 +936,7 @@ LEVEL_CONFIG = {
     },
     'C2-stylistic': {
         # C2 Stylistic Track: Seminar style - style mastery
-        'target_words': 3000,
+        'target_words': 5000,  # Feb 2026: seminars raised to 5000 minimum
         'min_activities': 3,
         'max_activities': 9,
         'min_items_per_activity': 1,
@@ -952,7 +952,7 @@ LEVEL_CONFIG = {
     },
     'C2-literary': {
         # C2 Literary Track: Seminar style - literary production
-        'target_words': 3000,
+        'target_words': 5000,  # Feb 2026: seminars raised to 5000 minimum
         'min_activities': 3,
         'max_activities': 9,
         'min_items_per_activity': 1,
@@ -968,7 +968,7 @@ LEVEL_CONFIG = {
     },
     'C2-professional': {
         # C2 Professional Track: Seminar style - professional mastery
-        'target_words': 3000,
+        'target_words': 5000,  # Feb 2026: seminars raised to 5000 minimum
         'min_activities': 3,
         'max_activities': 9,
         'min_items_per_activity': 1,
@@ -983,7 +983,7 @@ LEVEL_CONFIG = {
         'essay_max_words': 500
     },
     'C2-checkpoint': {
-        'target_words': 2000,
+        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
         'min_activities': 12,  # Reduced from 16 (Jan 2026) - quality over quantity
         'min_items_per_activity': 18,  # Increased from 14 (Jan 2026) - higher than C1
         'min_types_unique': 4,
@@ -994,7 +994,7 @@ LEVEL_CONFIG = {
         'priority_types': {'quiz', 'fill-in', 'error-correction', 'cloze'}
     },
     'C2-capstone': {
-        'target_words': 2000,
+        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
         'min_activities': 12,  # Reduced from 16 (Jan 2026) - quality over quantity
         'min_items_per_activity': 18,  # Increased from 12 (Jan 2026) - higher than C1
         'min_types_unique': 4,
@@ -1009,7 +1009,7 @@ LEVEL_CONFIG = {
         # LIT Track: Pure seminar style (post-C1)
         # Activities: reading + essay-response + critical-analysis + comparative-study
         # NO traditional activities (quiz, match-up, fill-in)
-        'target_words': 4500,  # LIT is longer (literary analysis)
+        'target_words': 5000,  # Feb 2026: seminars raised to 5000 minimum
         'min_activities': 3,
         'max_activities': 9,
         'min_items_per_activity': 1,  # Analytical tasks are deep, single-item responses are sufficient
@@ -1026,7 +1026,7 @@ LEVEL_CONFIG = {
     # --- Literature variant tracks (inherit LIT config with minor adjustments) ---
     'LIT-ESSAY': {
         # Essay/non-fiction track: longer analytical pieces
-        'target_words': 4500,
+        'target_words': 5000,  # Feb 2026: seminars raised to 5000 minimum
         'min_activities': 3,
         'max_activities': 9,
         'min_items_per_activity': 1,
@@ -1042,7 +1042,7 @@ LEVEL_CONFIG = {
     },
     'LIT-HIST-FIC': {
         # Historical fiction: narrative analysis focus
-        'target_words': 4500,
+        'target_words': 5000,  # Feb 2026: seminars raised to 5000 minimum
         'min_activities': 3,
         'max_activities': 9,
         'min_items_per_activity': 1,
@@ -1058,7 +1058,7 @@ LEVEL_CONFIG = {
     },
     'LIT-FANTASTIKA': {
         # Sci-fi/fantasy: genre analysis
-        'target_words': 4000,
+        'target_words': 5000,  # Feb 2026: seminars raised to 5000 minimum
         'min_activities': 3,
         'max_activities': 9,
         'min_items_per_activity': 1,
@@ -1074,7 +1074,7 @@ LEVEL_CONFIG = {
     },
     'LIT-WAR': {
         # War literature: urgent, contemporary focus
-        'target_words': 4500,
+        'target_words': 5000,  # Feb 2026: seminars raised to 5000 minimum
         'min_activities': 3,
         'max_activities': 9,
         'min_items_per_activity': 1,
@@ -1089,8 +1089,8 @@ LEVEL_CONFIG = {
         'forbidden_types': {'quiz', 'match-up', 'fill-in', 'unjumble', 'anagram', 'cloze', 'mark-the-words'}
     },
     'LIT-HUMOR': {
-        # Humor/satire: shorter modules, lighter touch
-        'target_words': 3500,
+        # Humor/satire
+        'target_words': 5000,  # Feb 2026: seminars raised to 5000 minimum
         'min_activities': 3,
         'max_activities': 9,
         'min_items_per_activity': 1,
@@ -1105,8 +1105,8 @@ LEVEL_CONFIG = {
         'forbidden_types': {'quiz', 'match-up', 'fill-in', 'unjumble', 'anagram', 'cloze', 'mark-the-words'}
     },
     'LIT-JUVENILE': {
-        # Children's/YA lit: slightly shorter, accessible
-        'target_words': 3500,
+        # Children's/YA lit
+        'target_words': 5000,  # Feb 2026: seminars raised to 5000 minimum
         'min_activities': 3,
         'max_activities': 9,
         'min_items_per_activity': 1,
@@ -1123,7 +1123,7 @@ LEVEL_CONFIG = {
     'OES': {
         # OES Track: Historical Linguistics (post-B2)
         # Source: Gemini Research ISSUE-490, ISSUE-491, ISSUE-492, ISSUE-501
-        'target_words': 4000,
+        'target_words': 5000,  # Feb 2026: seminars raised to 5000 minimum
         'min_activities': 6,
         'max_activities': 9,
         'min_items_per_activity': 1,
@@ -1147,7 +1147,7 @@ LEVEL_CONFIG = {
     'RUTH': {
         # RUTH Track: Ruthenian/Middle Ukrainian (post-B2)
         # Source: Gemini Research ISSUE-493, ISSUE-494, ISSUE-495, ISSUE-496
-        'target_words': 4000,
+        'target_words': 5000,  # Feb 2026: seminars raised to 5000 minimum
         'min_activities': 6,
         'max_activities': 9,
         'min_items_per_activity': 1,
@@ -1175,7 +1175,7 @@ LEVEL_CONFIG = {
         # B2-HIST Track: Transitional seminar style (B2 level)
         # Activities: reading + essay-response (shorter) + critical-analysis + true-false (factual)
         # Easier than LIT: shorter essays, some factual checks allowed
-        'target_words': 3000,
+        'target_words': 5000,  # Feb 2026: seminars raised to 5000 minimum
         'min_activities': 3,
         'max_activities': 9,
         'min_items_per_activity': 1,
@@ -1195,7 +1195,7 @@ LEVEL_CONFIG = {
         # C1-HIST Track: Academic seminar style (C1 level)
         # Activities: reading + essay-response (full) + critical-analysis + comparative-study
         # Academic rigor: longer essays, source criticism, historiographical analysis
-        'target_words': 3500,
+        'target_words': 5000,  # Feb 2026: seminars raised to 5000 minimum
         'min_activities': 3,
         'max_activities': 9,
         'min_items_per_activity': 1,
@@ -1379,37 +1379,38 @@ def get_a1_immersion_range(module_num: int) -> tuple[int, int]:
 def get_a2_immersion_range(module_num: int) -> tuple[int, int]:
     """Returns (min%, max%) for A2 based on module number.
 
-    Phase-based immersion progression per A2-CURRICULUM-PLAN.md:
-    - A2.1 (01-20): 35-50% (widened from 40-45% to accommodate content variation)
-    - A2.2 (21-40): 40-55% (widened from 45-50%)
-    - A2.3 (41-50): 50%+ (Pre-B1 runway)
+    3-band graduated immersion per #576 final decision:
+    - Band 1 (M01-20): 50-60% — Core grammar, English for theory
+    - Band 2 (M21-50): 60-75% — Applied grammar, English only for abstracts
+    - Band 3 (M51-70): 75-90% — Consolidation, near-full immersion
     """
-    if module_num <= 15:
-        return (40, 50)  # A2.1: Core case endings
-    elif module_num <= 35:
-        return (50, 65)  # A2.2: Aspect/Consolidation
-    elif module_num <= 44:
-        return (65, 75)  # A2.3/4: Advanced integration
+    if module_num <= 20:
+        return (50, 60)   # Band 1: Core grammar
+    elif module_num <= 50:
+        return (60, 75)   # Band 2: Applied grammar
     else:
-        return (75, 85)  # A2.5: Final Pre-B1 Runway
+        return (75, 90)   # Band 3: Consolidation / Pre-B1
 
 
 def get_b1_immersion_range(module_num: int) -> tuple[int, int]:
     """Returns (min%, max%) for B1 based on module number.
 
     B1 Immersion Philosophy:
-    - M01-05 (B1.0 Bridge): NO immersion limit — teach grammar terminology in English/Ukrainian
-    - M06-85 (B1.1+): 90-95% Ukrainian — grammar explained IN Ukrainian using metalanguage
+    - M01-05 (B1.0 Bridge): 60-85% — metalanguage bridge; max 2 paragraphs of English intro,
+      rest in Ukrainian. Floor ensures continuity from A2 Band 3 (75-90%).
+    - M06-85 (B1.1+): 85-100% Ukrainian — grammar explained IN Ukrainian using metalanguage
 
     The bridge modules (M01-05) prepare students to understand grammar explanations
     in Ukrainian by teaching them the necessary metalanguage vocabulary first.
+    These modules should NOT drop below A2 Band 3 levels (75-90%).
     """
     if module_num <= 5:
-        # Bridge modules: no immersion gate
-        # These modules teach grammar terminology and can use as much English as needed
-        return (0, 100)
+        # Bridge modules: English allowed for max 2 intro paragraphs, then Ukrainian
+        # Floor of 60% maintains continuity from A2 Band 3 (75-90% late A2)
+        # No ceiling: being MORE Ukrainian than required is always acceptable
+        return (60, 100)
 
-    # All other B1 modules target 90-95% Ukrainian immersion
+    # All other B1 modules target 85-100% Ukrainian immersion
     return (85, 100)  # B1 is fully immersed - no upper limit
 
 
@@ -1424,13 +1425,6 @@ def get_level_config(level_code: str, module_focus: str = None) -> dict:
 
 
 def get_word_target(level_code: str, module_num: int, module_focus: str = None) -> int:
-    """Get word target for a level, with A1 graduation."""
+    """Get word target for a level. Word targets are MINIMUMS."""
     config = get_level_config(level_code, module_focus)
-    if level_code == 'A1':
-        if module_num <= 5:
-            return 300
-        elif module_num <= 10:
-            return 500
-        else:
-            return 750
     return config['target_words']

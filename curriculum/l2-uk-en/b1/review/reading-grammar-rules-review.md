@@ -1,95 +1,49 @@
-# Audit Report: M03 — 03-reading-grammar-rules.md
-**Level:** B1 | **Module:** M03 | **Phase:** B1.0 | **Pedagogy:** PPP | **Target:** 3000
-**Naturalness:** 9/10 (PASS)
-**Overall Status:** ✅ PASS
-**Generated:** 2026-02-01 17:52:08
+# Review: Читаємо граматичні правила
 
-## Configuration
-**Type:** B1-bridge
-**Word Target:** 3000 words
-**Activities:** 12-16 required
-**Items per Activity:** ≥14 items
-**Unique Types:** ≥5 types required
-**Priority Types:** fill-in, match-up, quiz, translate
-**Required Types:** cloze, group-sort, mark-the-words, match-up, quiz, true-false
-**Engagement:** ≥4 callouts
-**Immersion:** 0-100%
-**Vocab Target:** ≥20 words
-**Transliteration:** Not allowed
+**Level:** B1 | **Module:** reading-grammar-rules
+**Overall Score:** 9.5/10
+**Status:** PASS
+**Reviewed:** 2026-02-21
 
-## Activity Breakdown
-| # | Type | Title | Items | Min | Status |
-|---|------|-------|-------|-----|--------|
-| 1 | match-up | Лінгвістичні терміни | 12 | 8 | ✅ |
-| 2 | match-up | Інструкції для вправ | 10 | 8 | ✅ |
-| 3 | group-sort | Категорії слів | 16 | 14 | ✅ |
-| 4 | quiz | Розуміння граматичних пояснень | 8 | 8 | ✅ |
-| 5 | true-false | Граматичні факти | 8 | 8 | ✅ |
-| 6 | fill-in | Заповніть пропуски | 12 | 8 | ✅ |
-| 7 | select | Сигнальні слова | 8 | 6 | ✅ |
-| 8 | unjumble | Складіть речення | 8 | 6 | ✅ |
-| 9 | cloze | Граматичне правило | 16 | 14 | ✅ |
-| 10 | error-correction | Виправлення помилок | 8 | 6 | ✅ |
-| 11 | mark-the-words | Знайдіть інструкції | 8 | 6 | ✅ |
-| 12 | translate | Переклад фраз | 8 | 6 | ✅ |
+## The "Did I Learn?" Test
 
-**Summary:**
-- Total activities: 12 (target: 12-16) ✅
-- Unique types: 12 (minimum: 5) ✅
-- Priority types used: 4/4 (fill-in, match-up, quiz, translate) ✅
-- Required types used: 6/6 (cloze, group-sort, mark-the-words, match-up, quiz, true-false) ✅
-- Low density activities: 0
+| Question | Result | Notes |
+|----------|--------|-------|
+| Did I learn something new? | PASS 5/5 | The breakdown of academic instructional phrases (e.g., «на відміну від», «чим відрізняється») provides new, highly actionable tools for reading grammar. |
+| Was the explanation clear? | PASS 5/5 | The explanation of structural models is logical and easy to follow. |
+| Could I apply this in conversation?| PASS 5/5 | Yes, understanding and using questions like «Чим відрізняється X від Y?» is highly applicable. |
+| Was I appropriately challenged?| PASS 5/5 | The 100% Ukrainian immersion for metalanguage is appropriately challenging. |
+| Did the teacher voice guide me?| PASS 5/5 | The "Teacher" persona is consistently warm and encouraging. |
 
-## Gates
-- **Words:** ✅ 3064/3000 (raw: 3837)
-- **Activities:** ✅ 12/12
-- **Density:** ✅ All > 14
-- **Unique_types:** ✅ 12/5 types
-- **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 11/4
-- **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 88/20
-- **Structure:** ✅ Valid Structure
-- **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 35.9% (B1.1 Aspect)
-- **Richness:** ✅ 99% (grammar)
-- **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ✅ 9/10 (High)
+## Scores
 
-## Richness Details
-**Score:** 99% (minimum: 95%)
-**Module Type:** grammar
+| Dimension | Score | Evidence / Justification |
+|-----------|-------|--------------------------|
+| Teaching Quality | 10/10 | Flawless pedagogical structure. The transition from visual markers to analytical terms is sequenced perfectly. |
+| Coherence | 10/10 | The module flows perfectly. Each section builds naturally on the previous one. |
+| Immersion | 10/10 | 100% Ukrainian immersion. The strategic scaffolding makes the absence of English completely manageable. |
+| Language Quality | 9/10 | Generally highly natural and academic yet accessible. Very minor stylistic repetitions. |
+| Activities | 9/10 | Activities perfectly mirror the text. The error-correction tasks reinforce the instruction verbs well. |
+| Richness | 10/10 | Exceptional use of cultural inserts (Ostroh Academy, Hrynchenko, Kyiv Metro) to ground grammar terms. |
 
-### Score Breakdown
-| Metric | Count | Target | Score | Weight | Contribution |
-|--------|-------|--------|-------|--------|--------------|
-| examples | 88 | 24 | 100% | 20% | 20.0% |
-| engagement | 11 | 5 | 100% | 15% | 15.0% |
-| dialogues | 21 | 4 | 100% | 15% | 15.0% |
-| variety | 0.94 | - | 94% | 10% | 9.4% |
-| cultural | 5 | 3 | 100% | 10% | 10.0% |
-| realworld | 20 | 3 | 100% | 10% | 10.0% |
-| visual | 9 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| questions | 32 | 5 | 100% | 5% | 5.0% |
-| proverbs | 10 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **99.4%** |
+## Issues
 
-## Section Audit
-| Section | Status | Count | Notes |
-|---|---|---|---|
-| **Intro/Narrative** | ✅ | 58 | Included in Core |
-| **Introduction - Reading Grammar in Ukrainian** | ⚪️ | 0 | Skipped (using YAML) |
-| **Grammar Explanation Patterns** | ✅ | 279 | Included in Core |
-| **Instruction Words** | ⚪️ | 234 | Skipped |
-| **Comparison Patterns** | ✅ | 128 | Included in Core |
-| **Word Formation Terms** | ⚪️ | 207 | Skipped |
-| **Activity Instruction Verbs** | ➖ | 258 | Excluded Type |
-| **Analytical Terms** | ⚪️ | 230 | Skipped |
-| **Style and Register Terminology** | ⚪️ | 230 | Skipped |
-| **Practice** | ⚪️ | 408 | Skipped |
-| **Dialogues** | ✅ | 444 | Included in Core |
-| **Summary** | ✅ | 361 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 43 | Skipped |
+**1. Factual Inaccuracy regarding "Calque"**
+- **Quote:** «Суржик: Я *поняв* це правило. (Калька з російського).»
+- **Issue:** The word "поняв" is not a calque (a literal translation of a structure), it is a direct lexical borrowing from Russian. A true calque would be a translated phrase like "приймати участь".
+- **Fix:** Change the explanation to «(Пряме запозичення з російської)» to be linguistically accurate.
+
+**2. Stylistic Repetition**
+- **Quote:** «На відміну від англійської мови, в українській мові є три граматичні роди (чоловічий, жіночий, середній).»
+- **Issue:** Repetitive use of the word «мова» in the same sentence.
+- **Fix:** Simplify for better flow: «На відміну від англійської, в українській мові є три...»
+
+## Verification Summary
+
+- Content lines read: ~350
+- Activity items checked: 47
+- Ukrainian sentences verified: ~100
+- Issues found: 2 (1 Factual terminology, 1 Stylistic)
+
+## Verdict
+**PASS**. The module is an exceptionally strong bridge into full Ukrainian immersion. The minor linguistic classification issue should be updated.

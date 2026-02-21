@@ -1,0 +1,59 @@
+{
+  "slug": "at-the-cafe",
+  "track": "a1",
+  "module_num": 19,
+  "mode": "v3",
+  "phases": {
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-02-18T21:48:45Z",
+      "words": 2519,
+      "attempts": 1
+    },
+    "3a": {
+      "status": "complete",
+      "timestamp": "2026-02-18T21:50:27Z",
+      "note": "v3-phase-C"
+    },
+    "3b": {
+      "status": "complete",
+      "timestamp": "2026-02-18T21:50:27Z",
+      "note": "v3-phase-C"
+    },
+    "3": {
+      "status": "complete",
+      "timestamp": "2026-02-20T13:32:53Z",
+      "note": "v3-audit-autofix"
+    },
+    "5-enrich": {
+      "status": "complete",
+      "timestamp": "2026-02-20T13:32:53Z",
+      "note": "v3-audit-autofix"
+    },
+    "6": {
+      "status": "complete",
+      "timestamp": "2026-02-20T13:34:23Z",
+      "note": "v3-phase-D"
+    },
+    "6b": {
+      "status": "complete",
+      "timestamp": "2026-02-20T13:34:23Z",
+      "note": "v3-phase-D"
+    },
+    "7-final": {
+      "status": "complete",
+      "timestamp": "2026-02-20T13:34:23Z",
+      "note": "v3-phase-D"
+    },
+    "9-final-review": {
+      "status": "complete",
+      "timestamp": "2026-02-20T22:37:16Z",
+      "verdict": "APPROVE"
+    },
+    "8": {
+      "status": "complete",
+      "timestamp": "2026-02-20T22:37:19Z"
+    }
+  },
+  "last_updated": "2026-02-20T22:37:19Z"
+}

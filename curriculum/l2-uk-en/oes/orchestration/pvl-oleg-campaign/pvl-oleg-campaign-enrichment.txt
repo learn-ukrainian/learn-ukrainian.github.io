@@ -1,0 +1,205 @@
+✅ Message sent to Gemini (ID: 12328) [auto-acked: self-addressed]
+✓ Message 12328 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12328...
+📨 Message #12328
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-pvl-oleg-campaign
+   Time: 2026-02-20T23:38:50.789105+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 28
+module: oes-028
+module_number: 28
+slug: pvl-oleg-campaign
+title_uk: 'ПВЛ: Похід Олега'
+title_en: 'PVL: Oleg''s Campaign'
+phase: 2
+phase_id: literary-tradition
+phase_name: Literary Tradition
+focus: Military vocab — "Oleg ide na Greky"
+content_outline:
+- section: Вступ
+  description: 'Introduction to PVL: Oleg''s Campaign'
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Senior Paleographer
+  role: Veteran Varangian
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Похід Олега на Царгород (907) за «Повістю минулих літ»
+
+## Використані джерела
+1. **Літопис Руський** (пер. Л. Махновця) — *litopys.org.ua* — Основне першоджерело, текст Іпатського списку.
+2. **Енциклопедія історії України (history.org.ua)** — Стаття «Олег, київський князь», аналіз достовірності походу 907 року.
+3. **Енциклопедія Сучасної України (esu.com.ua)** — Статті про договори Русі з греками та військову організацію Русі.
+4. **М. Грушевський «Історія України-Руси»** — Том I, аналіз відносин з Візантією.
+
+## Хронологія
+- **882** — Олег захоплює Київ, вбиває Аскольда і Діра, проголошує Київ «матір'ю градам руським».
+- **907** — Великий похід Олега на Константинополь (Царгород). Облога міста, «кораблі на колесах», щит на вратах.
+- **907** — Попередній усний (або короткий письмовий) договір з Візантією (сплата данини, право безмитної торгівлі).
+- **911** — Великий русько-візантійський договір (перший розлогий юридичний документ Східної Європи).
+- **912** — Смерть Олега (легенда про коня і змію).
+
+## Ключові факти та цитати (Primary Sources)
+
+1.  **Збір племен (ПВЛ, 907 рік):**
+    > «Пішов Олег на греків, Ігоря зоставивши в Києві. Узяв же він множество варягів, і словен, і чуді, і кривичів, і мері, і полян, і сіверян, і деревлян, і радимичів, і хорватів, і дулібів, і тиверців, котрі є толковинами...»
+    *Лінгвістичний аспект*: Каталог племен демонструє географію підвладних Києву земель. Термін «толковини» (перекладачі/союзники).
+
+2.  **Кораблі на колесах:**
+    > «І повелів Олег воям своїм зробити колеса і поставити на них кораблі. І з попутним вітром напнули вони паруси, і пішли з поля до города.»
+    *Інтерпретація*: Можливо, перетягування волоком, яке візантійці сприйняли як диво, або літературна гіпербола літописця.
+
+3.  **Щит на вратах:**
+    > «І повісив щит свій на вратах на знак перемоги, і пішов од Царгорода.»
+    *Символізм*: Юридичний акт взяття під захист або знак підкорення.
+
+4.  **Клятва (Договір):**
+    > «А Олега з мужами його водили до роти по руському закону: клялися вони оружжям своїм, і Перуном, богом своїм, і Волосом, скотієм богом...»
+    *Релігійний аспект*: Фіксація язичницького пантеону до християнізації.
+
+## Engagement Hooks
+- **Вступ: Історичне тло**: `[!context]` — Геополітична ситуація X ст.: Русь як нова сила, що кидає виклик імперії ромеїв.
+- **Текст ПВЛ: Збір війська**: `[!history-bite]` — "Велика Скуфь" (Велика Скіфія) — як греки називали це військо, підкреслюючи спадкоємність степових імперій.
+- **Військова хитрість**: `[!myth-buster]` — "Кораблі на колесах": чи справді вони їхали? Технологія волоку (drageid) у вікінгів та слов'ян vs літературний топос.
+- **Договір і право**: `[!paleography]` — Аналіз імен послів (Карли, Фарлоф, Велмуд, Рулав) — скандинавське походження еліти при слов'янській масі війська.
+- **Символізм щита**: `[!culture]` — Щит як символ: від Олега до сучасних українських геральдичних знаків.
+- **Деколонізація**: `[!decolonization]` — Спростування тези про "нормандське завоювання" як цивілізаційний старт; варяги як каталізатор, а не творці державності на порожньому місці.
+
+## Деколонізаційний контекст
+- **Міф**: Олег — "перший російський князь" (російська історіографія).
+- **Реальність**: Олег — київський князь, який об'єднав протоукраїнські племена (полян, сіверян, деревлян, дулібів, білих хорватів, тиверців). Його діяльність зосереджена навколо Києва та шляху "із варягів у греки". Термін "Росія" з'явиться через багато століть.
+- **Міф**: Русь — це виключно скандинавське утворення.
+- **Реальність**: Хоча верхівка (Олег та посли) мали скандинавські імена, військо і демографічна база були слов'янськими (українськими), що підтверджується клятвою "по руському закону" з використанням слов'янських богів Перуна і Волоса, а не Одіна і Тора.
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| **Русь** | "Древняя Русь" як спільна колиска трьох народів; синонім "стародавньої Росії". | **Русь** (Київська Русь) — середньовічна держава з центром у Києві; прямий предок України. |
+| **Олег** | "Вещий Олег", збирач "русских" земель. | **Олег Віщий**, київський князь, архітектор ранньої Руської держави. |
+| **Племена** | "Племена восточных славян" (безликі предки "русского народа"). | Конкретні племінні союзи (поляни, деревляни, сіверяни і т.д.) як етнічний субстрат українського народу. |
+
+## Лінгвістичні нотатки (для розділу VI)
+- **Військова лексика**: *вої (воїни), дружина, насад (корабель), щит, меч, броня*.
+- **Топоніміка**: *Царгород* (слов'янська калька з грец. Βασιλεύς + πόλις vs *Константинополь*).
+- **Граматика**: Давньоруські повноголосні форми (*город*, *берег*, *молоко*) vs старослов'янські (*град*, *брег*, *млеко*).
+- **Фразеологія**: *"Іду на ви"*, *"мертві сорому не імуть"* (хоча це Святослав, контекст військового етосу спільний).
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12388)
+✓ Message 12328 acknowledged
+✓ Message 12388 acknowledged

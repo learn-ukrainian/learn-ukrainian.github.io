@@ -1,0 +1,120 @@
+module: a2-50
+level: A2
+sequence: 50
+slug: technology-media
+version: '2.0'
+title: Technology and Media
+subtitle: Digital World
+content_outline:
+- section: 'Вступ: Україна як IT-хаб (Introduction: Ukraine as an IT Hub)'
+  words: 500
+  points:
+  - Introduction to Ukraine's digital landscape, highlighting the 'IT Nation' context
+    with major hubs in Kyiv, Lviv, and Kharkiv.
+  - 'Overview of basic terminology: the ubiquity of ''смартфон'' alongside the traditional
+    ''телефон'' in daily communication.'
+  - 'Aligning with State Standard §3.4: Discussing the role of the internet, press,
+    and social media as essential components of modern leisure and daily life.'
+- section: Цифровий словник та культура (Digital Vocabulary and Culture)
+  words: 700
+  points:
+  - 'Essential hardware: ''комп''ютер'', ''ноутбук'', ''планшет'', and the importance
+    of ''смартфон'' in the ''State in a smartphone'' philosophy.'
+  - 'The ''Diia'' (Дія) phenomenon: Explaining how Ukraine became the first country
+    to equate digital and physical passports, using it as a prime example for ''мобільний
+    додаток''.'
+  - 'Internet basics: ''вебсайт'', ''посилання'', and ''пароль''. Highlighting the
+    importance of a ''надійний пароль'' (reliable password) in a digital-first society.'
+- section: Граматичні пастки та вибір слів (Grammatical Traps and Word Choice)
+  words: 600
+  points:
+  - 'Addressing the common prepositional error: Correcting the English calque ''на
+    інтернеті'' to the proper Locative form ''в інтернеті''.'
+  - 'Standard vs. Colloquial: Guiding learners to prefer ''завантажити'' (download)
+    over the colloquial/Russian-influenced ''скачати''.'
+  - 'Case governance with tech brands: Mastering the Locative case for search engines
+    — ''шукати в ґуґлі'' (declined) vs. ''шукати в Google'' (original).'
+  - 'Directional verbs: Distinguishing between ''завантажити'' (download) and the
+    actions of ''викласти'' or ''опублікувати'' (upload/post).'
+- section: 'Практика: Життя в мережі (Practice: Life Online)'
+  words: 700
+  points:
+  - 'Remote work dialogues: Using collocations like ''надіслати посилання'' and ''перейти
+    за посиланням'' in a professional context, building on a2-49 (Work and Professions).'
+  - 'The Digital Grandma scenario: A narrative about teaching an older relative to
+    use ''Дія'' for state services, practicing ''встановити додаток'' and ''ввести
+    пароль''.'
+  - 'Social media storytelling: Describing the process of becoming a blogger, using
+    ''соціальна мережа'', ''підписка'', and ''оновлення''.'
+- section: Підсумок та поради (Summary and Tips)
+  words: 500
+  points:
+  - Review of key tech collocations and their frequency, emphasizing the transition
+    to more advanced social media topics in a2-67.
+  - 'Final check on register: ensuring the use of ''розмовний'' (conversational) style
+    for digital interactions.'
+  - 'Self-reflection: Learners describe their most-used ''додатки'' and digital habits
+    in Ukrainian.'
+vocabulary_hints:
+  required:
+  - комп'ютер (computer) — High frequency; essential office/home equipment
+  - телефон (phone) — High frequency; used interchangeably with 'смартфон' in modern
+    contexts
+  - 'інтернет (internet) — High frequency; collocations: ''в інтернеті'' (Locative),
+    ''доступ до інтернету'', ''безлімітний інтернет'''
+  - 'сайт (website) — High frequency; collocations: ''вебсайт'', ''офіційний сайт'',
+    ''зайти на сайт'''
+  - пошта (email) — Essential for 'remote work' contexts
+  - 'завантажити (to download) — Standard Ukrainian; prefer over ''скачати''. Collocations:
+    ''завантажити файл'', ''завантажити додаток'''
+  - відправити (to send) — Basic verb for digital communication (emails, messages)
+  - 'шукати (to search) — Key collocation: ''шукати в ґуґлі'' (Locative) or ''шукати
+    в Google'''
+  recommended:
+  - 'додаток (app) — High frequency (tech context); collocations: ''мобільний додаток'',
+    ''встановити додаток''. Cultural hook: ''Дія'''
+  - 'пароль (password) — Medium frequency; collocations: ''ввести пароль'', ''забути
+    пароль'', ''надійний пароль'''
+  - акаунт (account) — Common loanword in digital contexts
+  - оновлення (update) — Essential for describing software/app maintenance
+  - підписка (subscription) — Relevant for social media and media services
+  - 'мережа (network) — High frequency; collocations: ''соціальна мережа'', ''у мережі''
+    (online), ''немає мережі'''
+  - 'посилання (link) — Medium frequency; collocations: ''активне посилання'', ''надіслати
+    посилання'', ''перейти за посиланням'''
+activity_hints:
+- type: match-up
+  focus: Technology terms
+  items: 30
+- type: match-up
+  focus: Match actions to devices
+  items: 20
+- type: fill-in
+  focus: Complete tech descriptions
+  items: 15
+- type: cloze
+  focus: Tech support conversation
+  items: 8
+focus: vocabulary
+pedagogy: PPP
+prerequisites:
+- a2-49 (Work and Professions)
+connects_to:
+- a2-51 (Hobbies and Leisure)
+- a2-67 (Social Media Ukrainian)
+objectives:
+- Learner can talk about computers and phones
+- Learner can describe internet activities
+- Learner can use social media vocabulary
+- Learner can discuss technology in daily life
+grammar:
+- Technology verbs (завантажити, відправити)
+- Internet vocabulary
+- Social media and digital terms
+register: розмовний
+immersion: 60-75% Ukrainian
+phase: A2.5 [Vocabulary Expansion]
+persona:
+  voice: Encouraging Cultural Guide
+  role: Tech Blogger
+word_target: 3000

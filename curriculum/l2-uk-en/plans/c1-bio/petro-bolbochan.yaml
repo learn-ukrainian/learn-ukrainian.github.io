@@ -1,53 +1,45 @@
----
-module: c1-bio-083
+module: c1-bio-83
 level: C1-BIO
 sequence: 83
 slug: petro-bolbochan
 version: '2.0'
 title: 'Петро Болбочан: Полковник-герой'
 content_outline:
-- section: "Вступ — Герой Криму"
-  words: 400
+- section: Вступ — Герой Криму
   points:
   - Болбочан як один із найталановитіших полководців УНР
   - Легендарний Кримський похід 1918 року
   - Трагічна доля та несправедливий вирок
 - section: Ранні роки та військова освіта (1883-1914)
-  words: 600
   points:
   - Народження в Бессарабії
   - Навчання в Одеському юнкерському училищі
   - Служба в російській армії
   - Офіцерська кар'єра до Першої світової
 - section: Перша світова війна (1914-1917)
-  words: 700
   points:
   - Участь у бойових діях на фронті
   - Відзнаки та підвищення
   - Український рух в армії
   - Формування національних частин
 - section: Кримський похід (1918)
-  words: 900
   points:
   - Командування Запорозькою дивізією
   - Блискавичний похід на Крим
   - Визволення Криму від більшовиків
   - Стратегічний геній операції
 - section: Конфлікт з владою та арешт (1918-1919)
-  words: 700
   points:
   - Повернення з Криму та зміна уряду
   - Конфлікт з Директорією
   - Несправедливі звинувачення у зраді
   - Арешт та ув'язнення
 - section: Страта та реабілітація
-  words: 700
   points:
   - Військово-польовий суд
   - Розстріл у липні 1919 року
   - Реабілітація в незалежній Україні
   - Пам'ять про героя Кримського походу
-word_target: 4000
 vocabulary_hints:
   required:
   - полковник (colonel)
@@ -73,7 +65,6 @@ activity_hints:
   items: 3 passages
 - type: essay-response
   focus: Чи була страта Болбочана справедливою?
-  word_target: 300
   output: Історичне есе
 focus: biography
 prerequisites:
@@ -85,15 +76,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Петро Болбочан (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Болбочан_Петро_Федорович"
+  url: https://uk.wikipedia.org/wiki/Болбочан_Петро_Федорович
   type: primary
   notes: Біографія, Кримський похід, трагічна доля
 - name: Інститут історії України НАНУ
-  url: "https://www.history.org.ua"
+  url: https://www.history.org.ua
   type: reference
   notes: Дослідження Української революції
 - name: Музей визвольної боротьби України
-  url: "https://mvbu.org.ua"
+  url: https://mvbu.org.ua
   type: reference
   notes: Військова історія УНР
 immersion: 100% Ukrainian
@@ -102,3 +93,6 @@ objectives:
 - 'Analyze the life and legacy of петро болбочан: полковник-герой'
 - Evaluate the contributions of герой криму
 - Trace the career and influence of страта та реабілітація
+persona:
+  voice: Senior Biographer
+  role: Liberator of Crimea

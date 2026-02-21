@@ -1,0 +1,122 @@
+module: b1-63
+level: B1
+sequence: 63
+slug: health-wellness
+version: '2.0'
+title: Здоров'я та самопочуття
+subtitle: Health and Wellness
+content_outline:
+- section: Вступ (Introduction)
+  words: 600
+  points:
+  - 'Introduction of the core concepts: ''здоров''я'' (health) vs. ''самопочуття''
+    (well-being/state). Connect to module b1-62 by discussing how environmental factors
+    like ecology impact one''s ''стан здоров''я''.'
+  - 'Establish the ''Active Patient'' persona: learners practice asking ''Як ваше
+    самопочуття?'' and ''На що ви скаржитеся?'' while taking an active role in describing
+    their condition rather than passively receiving advice.'
+- section: Термінологія та симптоми (Terminology and Symptoms)
+  words: 1000
+  points:
+  - 'Linguistic accuracy focus: Correction of the common Russism ''хворіти грипом''
+    (Instrumental) to the correct Ukrainian construction ''хворіти на грип'' (на +
+    Accusative). Drill with various diseases (кір, ангіна, застуда).'
+  - 'Grammar of Sensation: Clarify the distinction between ''почуватися'' (to feel
+    as a state) and ''відчувати'' (to sense/perceive). Explicitly correct the error
+    ''Я відчуваю добре'' to ''Я почуваюся добре''.'
+  - 'Pain Construction: Detailed drill on the structure [У мене] (Genitive) + [болить/болять]
+    (Verb) + [частина тіла] (Nominative). Contrast with English ''I have a...'' to
+    ensure proper syntax.'
+- section: 'Культурний контекст: Протяг та траволікування (Cultural Context: Drafts
+    and Herbal Wisdom)'
+  words: 800
+  points:
+  - 'The Cult of ''Protyah'': Explore the uniquely Ukrainian fear of drafts (''протяг'').
+    Discuss social scenarios like closing windows in public transport and the belief
+    that ''протяг'' is a primary cause of ''нездужання'' even in summer.'
+  - 'Herbalism and Home Remedies: Introduction to ''народна медицина''. Focus on ''калина''
+    (viburnum) for colds, ''ромашка'' (chamomile) for inflammation, and ''м''ята''
+    (mint) for digestion. Note the ubiquity of pharmacies (''аптеки'') that sell these
+    alongside modern drugs.'
+- section: 'Практика: У лікаря та в аптеці (Practice: At the Doctor and Pharmacy)'
+  words: 1000
+  points:
+  - 'Medical Competencies (State Standard §3.7): Functional language for ''діагностика''
+    (diagnostics), including ''здавати аналізи'' (to take tests) and ''проходити обстеження''
+    (to undergo examination).'
+  - 'Register Differentiation: Practice formal interaction with a doctor (describing
+    history, receiving a ''діагноз'') vs. informal registers (complaining to a friend
+    or asking for advice on ''лікування'' at the pharmacy).'
+  - 'Pharmacy Scenarios: Asking for ''ліки'' (medicine) and ''засоби профілактики''
+    (preventative measures), focusing on ''зміцнення імунітету'' (strengthening immunity).'
+- section: Підсумок та поради (Summary and Advice)
+  words: 600
+  points:
+  - 'Wellness Advice: Using ''варто/треба'' with health verbs. Focus on ''профілактика''
+    as ''краще ніж лікування''. Discuss ''здорове харчування'' and ''режим дня'' for
+    ''міцне здоров''я''.'
+  - 'Social Etiquette and Wishes: Proper use of the toast/response ''На здоров''я!''
+    and the standard wish for a sick person ''Бажаю швидкого одужання!''.'
+vocabulary_hints:
+  required:
+  - здоров'я (health) — міцне здоров'я, берегти здоров'я, стан здоров'я; High-frequency
+    core term
+  - самопочуття (well-being) — погане/гарне самопочуття, скаржитися на самопочуття;
+    Essential for B1 state description
+  - хворіти на... (to be ill with) — хворіти на грип/застуду; Must use 'на' + Accusative,
+    avoid Instrumental case
+  - почуватися (to feel [state]) — я почуваюся добре/кепсько; Reflects internal state,
+    reflexive verb
+  - боліти (to hurt) — у мене болить голова, у мене болять зуби; Verb agrees with
+    the body part (subject)
+  - одужувати (to recover) — швидко одужувати, бажаю одужання; Medium frequency, vital
+    for social empathy
+  - протяг (draft) — боятися протягу, зачинити вікно через протяг; High cultural relevance
+    in Ukraine
+  - лікування (treatment) — проходити курс лікування, ефективне лікування; Focus on
+    the process of recovery
+  - аптека (pharmacy) — купувати трави в аптеці, зайти в аптеку по ліки; Ubiquitous
+    medical point of contact
+  recommended:
+  - діагностика (diagnostics) — аналізи й обстеження; State Standard §3.7 competency
+  - профілактика (prevention) — профілактика захворювань, краще ніж лікування; Formal
+    register
+  - імунітет (immunity) — зміцнювати імунітет, слабкий імунітет; Common wellness topic
+  - калина (viburnum) — чай з калини, народний засіб від застуди; Cultural icon of
+    health
+  - ромашка (chamomile) — полоскати горло ромашкою; Standard home remedy
+  - діагноз (diagnosis) — поставити діагноз, попередній діагноз; Doctor-patient interaction
+activity_hints:
+- type: match-up
+  focus: Health noun phrases
+  items: 25
+- type: fill-in
+  focus: Complete health sentences
+  items: 20
+- type: fill-in
+  focus: Health consultation scenarios
+  items: 15
+- type: quiz
+  focus: Discuss wellness topics
+  items: 10
+focus: vocabulary
+pedagogy: PPP
+prerequisites:
+- b1-62 (Environment Ecology)
+connects_to:
+- b1-64 (Emotions Deep Dive)
+objectives:
+- Learner can use 30 health and wellness words in context
+- Learner can distinguish between здоров'я/самопочуття/стан
+- Learner can form natural collocations with health-related nouns
+- Learner can discuss health topics fluently
+grammar:
+- Noun collocations with health vocabulary
+- Adjective-noun agreement in health contexts
+- Expressing physical states
+register: розмовний
+phase: B1.6 [Vocabulary Expansion II]
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Family Doctor
+word_target: 4000

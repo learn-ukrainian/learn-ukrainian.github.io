@@ -1,4 +1,3 @@
----
 sequence: 77
 module: ruth-077
 module_number: 63
@@ -9,7 +8,6 @@ phase: 3
 phase_id: baroque-fight
 phase_name: Baroque Fight
 focus: Describing chaos — Vocabulary of war/destruction
-word_target: 4000
 content_outline:
 - section: Вступ
   description: Introduction to The Ruin
@@ -24,3 +22,6 @@ activity_types:
 - transcription
 - etymology-trace
 - grammar-identify
+persona:
+  voice: Baroque Scholar
+  role: Lament Writer

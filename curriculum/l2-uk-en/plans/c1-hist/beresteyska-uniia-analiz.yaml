@@ -1,4 +1,3 @@
----
 module: c1-hist-059
 level: c1-hist
 sequence: 59
@@ -10,15 +9,13 @@ objectives:
 - 'Analyze the causes and consequences of берестейська унія: глибокий аналіз'
 - Evaluate the historical significance of розкол, що визначив історію
 content_outline:
-- section: "Вступ — Розкол, що визначив історію"
-  words: 457
+- section: Вступ — Розкол, що визначив історію
   subsections:
   - 1596 рік — що відбулося
   - Чому це важливо
   - Наслідки на століття
   - Структура модуля
-- section: "Контекст — чому унія стала можливою"
-  words: 686
+- section: Контекст — чому унія стала можливою
   subsections:
   - Криза православної церкви
   - Занепад освіти
@@ -26,7 +23,6 @@ content_outline:
   - Флорентійська унія — прецедент
   - Політичні мотиви єпископів
 - section: Що підписали в Бересті
-  words: 686
   subsections:
   - Умови унії
   - Збереження обряду
@@ -34,7 +30,6 @@ content_outline:
   - Хто підписав, хто відмовився
   - Два собори — унійний і православний
 - section: Хто підтримав, хто відкинув
-  words: 800
   subsections:
   - Єпископи — за
   - Козаки — проти
@@ -43,26 +38,22 @@ content_outline:
   - Магнати — переважно за
   - Класовий і регіональний розподіл
 - section: Наслідки розколу
-  words: 686
   subsections:
   - Конфлікт на століття
   - Козацькі війни — релігійний вимір
   - Православне відродження (Могила)
   - Два українські народи?
 - section: Унія в історичній пам'яті
-  words: 457
   subsections:
   - Православна інтерпретація — зрада
   - Греко-католицька інтерпретація — порятунок
   - Сучасний погляд — складність
   - Екуменічні спроби
 - section: Підсумок
-  words: 228
   subsections:
   - Унія як розлом
   - Два шляхи — захід і схід
   - Підготовка до православної ідентичності
-word_target: 4000
 vocabulary:
 - унія
 - Берестейська унія
@@ -92,15 +83,15 @@ activities:
   focus: Чи була Берестейська унія 'зрадою' чи 'порятунком'?
 sources:
 - name: Берестейська унія (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Берестейська_унія"
+  url: https://uk.wikipedia.org/wiki/Берестейська_унія
   type: reference
   notes: Overview
 - name: Греко-католицька церква (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Українська_греко-католицька_церква"
+  url: https://uk.wikipedia.org/wiki/Українська_греко-католицька_церква
   type: reference
   notes: UGCC history
 - name: Православна опозиція унії
-  url: "https://uk.wikipedia.org/wiki/Берестейська_унія#Опозиція_унії"
+  url: https://uk.wikipedia.org/wiki/Берестейська_унія#Опозиція_унії
   type: reference
   notes: Opposition
 vocabulary_hints:
@@ -119,7 +110,9 @@ activity_hints:
   items: 4
 - type: essay-response
   focus: Критичний аналіз
-  word_target: 300
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Ecclesiastical Historian

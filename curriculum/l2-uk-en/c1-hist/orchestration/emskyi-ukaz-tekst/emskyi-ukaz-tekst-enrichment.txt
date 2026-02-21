@@ -1,0 +1,303 @@
+✅ Message sent to Gemini (ID: 12311) [auto-acked: self-addressed]
+✓ Message 12311 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12311...
+📨 Message #12311
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-emskyi-ukaz-tekst
+   Time: 2026-02-20T23:38:24.309606+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-hist-032
+level: c1-hist
+sequence: 32
+version: '1.0'
+title: 'Емський указ: Повний текст'
+focus: history
+pedagogy: seminar
+objectives:
+- 'Analyze the causes and consequences of емський указ: повний текст'
+- Evaluate the historical significance of суворіший за валуєва
+content_outline:
+- section: Вступ — Суворіший за Валуєва
+  subsections:
+  - 1876 рік — 13 років після циркуляра
+  - Чому потрібен новий документ?
+  - Що нового заборонено
+  - Значення для культури
+- section: Історичний контекст
+  subsections:
+  - Зростання українського руху
+  - Київська громада
+  - Драгоманов і закордонна діяльність
+  - Імперська реакція
+- section: Текст указу — детальний аналіз
+  subsections:
+  - Текст (з глосами)
+  - Заборона ввезення книг
+  - Заборона театру і концертів
+  - Звільнення вчителів
+  - Закриття Київського відділу Географічного товариства
+- section: Порівняння з Валуєвським циркуляром
+  subsections:
+  - Що спільного
+  - Що нового — суворіше
+  - Таблиця порівняння
+  - Логіка ескалації
+- section: Фрагмент — Заборона театру
+  subsections:
+  - Текст (з глосами)
+  - Чому театр небезпечний?
+  - Культура як загроза
+  - Абсурдність заборони
+- section: Наслідки і опір
+  subsections:
+  - Еміграція інтелігенції
+  - Галичина як притулок
+  - Женева — Драгоманов
+  - Підпільна діяльність
+  - Як указ похоронив себе
+- section: Підсумок
+  subsections:
+  - Указ як свідчення сили руху
+  - Заборона не спрацювала
+  - Уроки для сьогодення
+vocabulary:
+- указ
+- заборона
+- ввезення
+- театр
+- концерт
+- звільнення
+- еміграція
+- підпільний
+- ескалація
+- репресія
+- інтелігенція
+- громада
+- притулок
+- культурний рух
+- контрабанда
+activities:
+- type: reading
+  focus: Full text with glosses
+- type: comparative-study
+  focus: 'Create detailed comparison table: Valuev vs. Ems'
+- type: critical-analysis
+  focus: How did the ban backfire?
+- type: reading
+  focus: Find examples of resistance to the decree
+- type: essay-response
+  focus: Чому заборони не знищили українську культуру?
+sources:
+- name: Емський указ (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Емський_указ
+  type: reference
+  notes: Overview
+- name: Текст указу
+  url: https://uk.wikisource.org/wiki/Емський_указ
+  type: primary
+  notes: Full text
+- name: Олександр II
+  url: https://uk.wikipedia.org/wiki/Олександр_II
+  type: reference
+  notes: Emperor context
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
+persona:
+  voice: Academic Historiographer
+  role: Language Policy Historian
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Емський указ: Повний текст
+
+## Використані джерела
+1. [Енциклопедія історії України (history.org.ua)](http://resource.history.org.ua/) — Академічна стаття про обставини, зміст та наслідки Емського указу.
+2. [Ізборник (litopys.org.ua)](http://litopys.org.ua/) — Текст указу (оригінал та переклад) у хронології мовних подій.
+3. [Український інститут національної пам'яті (uinp.gov.ua)](https://uinp.gov.ua/) — Аналітичні матеріали про репресивну політику Російської імперії.
+
+## Хронологія
+- **1863**: Валуєвський циркуляр — перша заборона («не було, немає і бути не може»).
+- **1873**: Відкриття Південно-Західного відділу Російського географічного товариства у Києві (легальний центр українофільства).
+- **1874**: Проведення одноденного перепису населення та Археологічного з'їзду (тріумф української науки).
+- **1875**: Михайло Юзефович подає доповідну записку («меморандум») про небезпеку «українофільства», створено спеціальну комісію.
+- **18 (30) травня 1876**: Олександр II підписує таємний указ у м. Бад-Емс (Німеччина).
+- **1878**: Михайло Драгоманов починає видавати журнал «Громада» у Женевi (перша політична еміграція).
+- **1881**: Олександр III вносить «поправки» (дозвіл на словники та ноти, але з російським правописом).
+- **1905**: Фактичне скасування дії указу після Маніфесту 17 жовтня.
+
+## Ключові факти та цитати
+- **Цитата (оригінал)**: «Не допускать ввоза в пределы Империи... каких бы то ни было книг и брошюр, издаваемых за границей на малорусском наречии».
+- **Цитата (оригінал)**: «Воспретить в Империи печатание на том же наречии каких бы то ни было оригинальных произведений или переводов».
+- **Цитата (театр)**: «Воспретить также различные сценические представления и чтения на малорусском наречии, а равно и печатание на таковом же текстов к музыкальным нотам».
+- **Факт**: Указ був таємним, його текст не публікувався офіційно, а розсилався як інструкція.
+- **Факт**: Закрито газету «Киевский телеграф» і Географічне товариство.
+- **Факт**: Вислано з краю Михайла Драгоманова та Павла Чубинського.
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ — Суворіший за Валуєва": [!context] — Указ підписано на курорті, «між водами», що підкреслює цинізм імперської бюрократії.
+- Section "Історичний контекст": [!myth-buster] — Міф про «польську інтригу». Юзефович переконав царя, що український рух — це польська змова, хоча насправді це був автохтонний розвиток.
+- Section "Текст указу — детальний аналіз": [!quote] — «Государь Император высочайше повелеть соизволил...» — аналіз бюрократичної мови етноциду.
+- Section "Порівняння з Валуєвським циркуляром": [!history-bite] — «Кулішівка» під забороною. Указ вимагав використовувати тільки російську абетку («ярижку») для українських текстів.
+- Section "Фрагмент — Заборона театру": [!culture] — Заборона «Малоросійського театру» призвела до парадоксу: українські п'єси грали російською, або перекладали французькі водевілі «на малоросійське наріччя» для комічного ефекту, бо серйозне було заборонене.
+- Section "Наслідки і опір": [!decolonization] — Емський указ створив українську політичну націю в еміграції (Женевський гурток).
+
+## Деколонізаційний контекст
+- **Imperial Myth**: Українська мова — це «діалект», зіпсований польським впливом; український рух загрожує єдності імперії («сепаратизм»).
+- **Ukrainian Reality**: Емський указ — це свідомий лінгвоцид. Заборона перекладів *на* українську (навіть Євангелія) свідчить про страх перед перетворенням «народної говірки» на мову високої культури.
+- **Reframing**: Указ став каталізатором переходу від культурництва до політики. Замість асиміляції імперія отримала професійних революціонерів.
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| Мова | Малорусское наречие (діалект) | Українська мова (самодостатня система) |
+| Рух | Українофільство, сепаратизм, інтрига | Національне відродження, визвольний рух |
+| Територія | Юго-Западный край, Малороссия | Україна, українські землі |
+| Правопис | Ярижка (общерусская орфография) | Кулішівка (фонетичний правопис) |
+
+## Section-Mapped Research Notes
+
+### Вступ — Суворіший за Валуєва
+Пояснити, чому Валуєвського циркуляру 1863 року виявилося замало. Той стосувався переважно релігійної та навчальної літератури, а Емський указ вдарив по "красному письменству" (художній літературі) і сцені.
+
+### Історичний контекст
+Київська громада 1870-х («Стара Громада») була інтелектуальним центром. Діяльність Географічного товариства (Чубинський, Антонович) показала, що українці — окремий етнос з власною культурою. Це налякало владу більше, ніж повстання. Юзефович як «провокатор» і «зрадник» (хоча сам був малоросом).
+
+### Текст указу — детальний аналіз
+Розібрати три пункти заборони: ввезення, друк, сцена. Особливий цинізм пункту про «кулішівку» — вимога друкувати українські тексти російськими літерами («ярижкою»), щоб візуально стерти різницю між мовами. Заборона перекладів з іноземних мов — щоб закрити вікно в Європу.
+
+### Порівняння з Валуєвським циркуляром
+Валуєв: «призупинити». Емс: «заборонити і викорінити». Валуєв — реакція на польське повстання. Емс — реакція на український науковий успіх. Валуєв діяв через цензуру, Емс — через поліцію і таємний нагляд.
+
+### Фрагмент — Заборона театру
+Театр був єдиною публічною сферою, де звучала жива мова. Заборона концертів (навіть пісень!) свідчить про тотальний характер репресій. Виняток для «побутових п'єс» пізніше призвів до появи шароварщини, яку влада толерувала як «етнографічний курйоз».
+
+### Наслідки і опір
+«Немає лиха без добра». Центр друку перемістився до Львова (Галичина — «П'ємонт»). Драгоманов у Женеві виводить українське питання на європейський рівень. Формування підпільної мережі перевезення літератури.
+
+### Підсумок
+Указ діяв 29 років, але не зміг знищити мову. Навпаки, він загартував інтелігенцію. Цитата (можлива) з Чикаленка чи Грушевського про цей період.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12378)
+✓ Message 12311 acknowledged
+✓ Message 12378 acknowledged

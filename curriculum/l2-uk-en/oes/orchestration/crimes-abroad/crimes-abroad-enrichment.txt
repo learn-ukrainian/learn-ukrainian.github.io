@@ -1,0 +1,214 @@
+✅ Message sent to Gemini (ID: 12882) [auto-acked: self-addressed]
+✓ Message 12882 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12882...
+📨 Message #12882
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-crimes-abroad
+   Time: 2026-02-20T23:42:50.643668+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 73
+module: oes-073
+module_number: 59
+slug: crimes-abroad
+title_uk: Злочини за кордоном
+title_en: Crimes Abroad
+phase: 3
+phase_id: legal-tradition
+phase_name: Legal Tradition
+focus: Extradition & International justice
+content_outline:
+- section: Вступ
+  description: Introduction to Crimes Abroad
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Senior Paleographer
+  role: Merchant Envoy
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Crimes Abroad (Злочини за кордоном)
+
+## Використані джерела
+1. [Літопис руський (Іпатіївський список)](http://litopys.org.ua/ipatlet/ipat01.htm) — Першоджерело текстів договорів 911 та 944 років.
+2. [Енциклопедія історії України: Русько-візантійські договори](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Rusko_vizantijski_dohovory) — Академічний аналіз юридичного змісту угод.
+3. [Толочко П. П. «Київська Русь»](http://litopys.org.ua/tolochko/tol.htm) — Аналіз соціально-політичного контексту договорів та статусу купців.
+4. [Бібіков М. В. «Русь у візантійській дипломатії»] — Дослідження статусу «роів» (русів) у візантійських джерелах.
+
+## Хронологія
+- 907 рік: Похід Олега на Константинополь, попередні домовленості (усний договір).
+- 2 вересня 911 року: Укладення першого розгорнутого письмового договору (Олег). Встановлення норм екстрадиції та майнової відповідальності.
+- 941 рік: Невдалий похід князя Ігоря (спалення флоту «грецьким вогнем»).
+- 944 рік: Укладення нового договору (Ігор). Введення обов'язкових княжих грамот («паспортів») для купців та обмеження перебування.
+- ХІ ст.: Інтеграція норм міжнародного права в «Руську Правду» (статті про «варягів» та купців).
+
+## Ключові факти та цитати (Primary Sources)
+- **Екстрадиція (911 р.)**: «Аще украдет русин що-любо у крестияна... или аще украдет крестиянин у русина, да имуть и... аще ли не обрящется... да возвращен будеть в Русь». (Якщо злодій втече, його мають повернути силою).
+- **Вбивство (911 р.)**: «Аще убьєт хрестиянина русин или хрестиянин русина — умрети, идеже аще убиєт». (Смертна кара на місці злочину).
+- **Відшкодування (944 р.)**: Обмеження на вивіз тканин («паволок») — не більше 50 золотників.
+- **Паспортизація (944 р.)**: «Ношаху сли печати злати, а гостье сребрени. Ныне же уведел есть князь ваш посылати грамоты...». (Раніше носили золоті печаті, тепер потрібні письмові грамоти).
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ": [!context] — Міжнародне право існувало задовго до Гааги; Русь була суб'єктом, а не об'єктом цього права.
+- Section "Договір 911 року": [!quote] — Цитата про «любов, що була межи хрестияни і руссю», як юридична преамбула.
+- Section "Екстрадиція": [!history-bite] — Механізм примусового повернення злочинців у Х ст. працював ефективніше, ніж у деяких сучасних юрисдикціях.
+- Section "Торговельне право": [!myth-buster] — Руські купці не були «дикими варварами», а мали чітко регламентовані права, включно з безкоштовною лазнею у Царгороді.
+- Section "Мовний аналіз": [!paleography] — Аналіз скандинавських імен послів (Карли, Інегелд, Фарлаф) у слов'янському фонетичному оформленні.
+- Section "Підсумок": [!decolonization] — Спростування радянського міфу про «спільну колиску» через призму міжнародних угод, де Русь виступає як окрема суверенна держава Півночі.
+
+## Деколонізаційний контекст
+- **Imperial/Soviet myth**: Трактування договорів як доказу «споконвічної єдності» східних слов'ян або применшення ролі скандинавського елементу (норманізм як табу).
+- **Ukrainian reality**: Договори фіксують момент перетворення військово-торговельної корпорації «Русь» на державну структуру. Це історія української дипломатії, що мала прямі контакти з Візантією без посередництва Москви (якої не існувало).
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| Закон Руський | Звичаєве право «давньоруської народності» | Корпоративне право руської дружини та купецтва, що стало основою державного права України-Русі |
+| Гості (купці) | Просто торгівці | Привілейований стан, міжнародні дипломати, що мали державний захист |
+| Русини (у договорах) | Етнічні росіяни/східні слов'яни | Політонім для підданих Київського князя, включаючи слов'ян та варягів |
+
+## Section-Mapped Research Notes
+
+### Вступ: Русь у системі міжнародного права
+Русь не була ізольованою «варварською» країною. Вона активно входила в орбіту візантійської цивілізації через правові механізми. Договори — це не просто перемир'я, а складні юридичні документи.
+
+### Договір 911 року: Тріумф дипломатії Олега
+Після походів 907 р. Олег диктує умови. Екстериторіальність руських купців. Право на безмитну торгівлю. Юридичний захист майна русинів у Візантії.
+
+### Договір 944 року: Обмеження та паспортизація
+Поразка Ігоря змінила баланс. Введення «княжих грамот» — прообраз закордонних паспортів. Обмеження перебування (одна зима). Заборона зимувати в гирлі Дніпра (Білобережжя).
+
+### Екстрадиція та розшук злочинців
+Унікальні для того часу норми про видачу злочинців. Якщо злодій тікає додому — його держава зобов'язана його знайти і повернути або компенсувати збитки. Це принцип міжнародної відповідальності держави за своїх громадян.
+
+### Майнові злочини та відшкодування
+Детальна регламентація крадіжок. Повернення вкраденого у потрійному розмірі. Якщо злодій бідний — він відпрацьовує борг (фактично стає челядином/рабом до виплати).
+
+### Злочини проти особи
+Кровна помста ще існує, але обмежується. Введення грошових штрафів за удари (5 літрів срібла). Смертна кара за вбивство на чужині — виняток із звичаєвого права (де зазвичай платили віру).
+
+### «Закон Руський»
+Згадка «Закону Руського» в договорах свідчить про існування усного звичаєвого права ще до Руської Правди. Взаємодія цього права з візантійським Еклогом.
+
+### Торговельне право
+Місячне утримання купців за рахунок імперії (слібне). Право митися в лазні. Заборона входити в місто групами більше 50 осіб і без зброї.
+
+### Мовний аналіз договорів
+Імена послів 911 р. (Карли, Інегелд, Фарлаф, Веремуд) — скандинавські. Імена 944 р. (Вуєфаст, Сфандр, але вже і слов'янські — Синко, Борич). Еволюція еліти. Термінологія: «челядин», «тать» (злодій), «гость».
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12905)
+✓ Message 12882 acknowledged
+✓ Message 12905 acknowledged

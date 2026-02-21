@@ -1,4 +1,3 @@
----
 module: c1-hist-061
 level: c1-hist
 sequence: 61
@@ -10,22 +9,19 @@ objectives:
 - 'Analyze the causes and consequences of греко-католицька церква: між сходом і заходом'
 - Evaluate the historical significance of унікальна церква
 content_outline:
-- section: "Вступ — Унікальна церква"
-  words: 457
+- section: Вступ — Унікальна церква
   subsections:
   - УГКЦ — що це
   - Між Римом і Константинополем
   - Чому важлива для ідентичності
   - Структура модуля
 - section: Від Берестя до Галичини
-  words: 686
   subsections:
   - Перші століття — боротьба за виживання
   - Втрата території на сході
   - Зосередження в Галичині
   - Під Австрією — золота доба
 - section: Церква і національний рух
-  words: 800
   subsections:
   - Священики — національні лідери
   - Селянство і церква
@@ -33,7 +29,6 @@ content_outline:
   - Москвофіли vs. народовці
   - Церква як нація-замінник
 - section: Андрей Шептицький
-  words: 686
   subsections:
   - Біографія — польський граф стає українським митрополитом
   - 44 роки служіння
@@ -41,7 +36,6 @@ content_outline:
   - Складні відносини з ОУН
   - Спадщина
 - section: Знищення і підпілля
-  words: 686
   subsections:
   - 1946 — Львівський псевдособор
   - Примусове «возз'єднання» з РПЦ
@@ -49,19 +43,16 @@ content_outline:
   - Переслідування священиків
   - Діаспора — збереження
 - section: Відродження
-  words: 457
   subsections:
   - 1989 — легалізація
   - Повернення храмів
   - Сучасна УГКЦ
   - Роль у війні 2022
 - section: Підсумок
-  words: 228
   subsections:
   - УГКЦ — маркер ідентичності
   - Між Сходом і Заходом
   - Підготовка до радянської антирелігійної політики
-word_target: 4000
 vocabulary:
 - УГКЦ
 - греко-католицький
@@ -80,26 +71,26 @@ vocabulary:
 - примас
 activities:
 - type: reading
-  focus: "Sheptytsky — complex figure analysis"
+  focus: Sheptytsky — complex figure analysis
 - type: comparative-study
-  focus: "Analyze 1946 pseudo-council — how liquidation worked"
+  focus: Analyze 1946 pseudo-council — how liquidation worked
 - type: comparative-study
   focus: UGCC vs. Orthodox in identity formation
 - type: critical-analysis
-  focus: "UGCC role in 2022 — what changed?"
+  focus: UGCC role in 2022 — what changed?
 - type: essay-response
   focus: Чому УГКЦ стала символом галицької української ідентичності?
 sources:
 - name: УГКЦ (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Українська_греко-католицька_церква"
+  url: https://uk.wikipedia.org/wiki/Українська_греко-католицька_церква
   type: reference
   notes: Church history
 - name: Андрей Шептицький (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Шептицький_Андрей"
+  url: https://uk.wikipedia.org/wiki/Шептицький_Андрей
   type: reference
   notes: Key 20th century figure
 - name: Львівський собор 1946
-  url: "https://uk.wikipedia.org/wiki/Львівський_собор_(1946)"
+  url: https://uk.wikipedia.org/wiki/Львівський_собор_(1946)
   type: reference
   notes: Soviet liquidation
 vocabulary_hints:
@@ -118,7 +109,9 @@ activity_hints:
   items: 4
 - type: essay-response
   focus: Критичний аналіз
-  word_target: 300
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Church Union Historian

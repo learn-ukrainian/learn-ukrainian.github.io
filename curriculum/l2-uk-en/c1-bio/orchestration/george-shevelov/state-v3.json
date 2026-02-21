@@ -1,0 +1,13 @@
+{
+  "track": "c1-bio",
+  "slug": "george-shevelov",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-21T00:08:55Z",
+      "task_id": "v3-george-shevelov-pA",
+      "mode": "meta-only"
+    }
+  }
+}

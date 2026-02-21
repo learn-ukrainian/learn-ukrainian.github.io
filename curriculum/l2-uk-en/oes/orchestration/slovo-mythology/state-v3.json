@@ -1,0 +1,13 @@
+{
+  "track": "oes",
+  "slug": "slovo-mythology",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-20T12:24:34Z",
+      "task_id": "v3-slovo-mythology-pA",
+      "mode": "full"
+    }
+  }
+}

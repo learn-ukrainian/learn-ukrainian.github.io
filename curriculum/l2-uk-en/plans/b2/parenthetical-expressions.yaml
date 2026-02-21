@@ -1,0 +1,137 @@
+module: b2-12
+level: B2
+sequence: 12
+slug: parenthetical-expressions
+version: '2.0'
+title: Вставні слова та вирази
+content_outline:
+- section: 'Вступ: Природа вставних конструкцій (Introduction: Nature of Parenthetical
+    Structures)'
+  words: 600
+  points:
+  - 'Визначення згідно з Держстандартом §4.3.2: просте речення зі вставними словами
+    та їхня роль у синтаксичній побудові тексту'
+  - 'Візуалізація «Decision Tree»: Як відрізнити вставне слово від члена речення (критерій
+    можливості вилучення з контексту без руйнування граматичної структури)'
+  - 'Загальна класифікація семантичних груп: впевненість, ставлення, джерело інформації,
+    організація висловлювання'
+- section: Впевненість та емоційне ставлення (Certainty and Emotional Attitude)
+  words: 1000
+  points:
+  - 'Градація впевненості: від безумовної («безперечно», «звісно», «безумовно») до
+    припущеної («здається», «очевидно», «мабуть»)'
+  - 'Cultural Hook: «Polite Uncertainty» — використання «мабуть» або «напевно» навіть
+    за наявності впевненості для пом''якшення тверджень та уникнення категоричності'
+  - 'Емоційна оцінка подій: вираження полегшення («на щастя», «на радість») та жалю
+    («на жаль», «на біду»)'
+  - 'Learner error warning: правопис «на жаль» (завжди окремо) та «мабуть» (стандартне
+    написання з «т» на кінці)'
+- section: Джерела інформації та логіка викладу (Information Sources and Logical Sequence)
+  words: 1000
+  points:
+  - 'Cultural Hook: «Collective Wisdom» — вставне слово «кажуть» як специфічний маркер
+    спільного знання або чуток, що апелює до авторитету спільноти'
+  - 'Посилання на джерело: диференціація «на мою думку», «за словами...», «як відомо...»
+    залежно від офіційності ситуації'
+  - 'Організація дискурсу: послідовність думок («по-перше», «по-друге», «нарешті»)
+    та логічні висновки («отже», «взагалі», «таким чином»)'
+  - 'Topic switching: використання «до речі» для перемикання теми; правопис слів типу
+    «по-перше» (обов''язковий дефіс)'
+- section: Пунктуація та пастки гомонімії (Punctuation and Homonymy Traps)
+  words: 800
+  points:
+  - Правила виділення комами залежно від позиції у реченні (препозиція, інтерпозиція,
+    постпозиція)
+  - 'Homonymy Trap: диференціація дієслова та вставного слова на прикладі «Він може
+    прийти» (can) vs «Він, може, прийде» (maybe)'
+  - 'Warning Box: «False Parentheticals» — слова «навіть», «майже», «адже», «принаймні»,
+    які ніколи не виділяються комами'
+- section: Практика в ролі ведучого ток-шоу (Practice in the Role of a Talk Show Host)
+  words: 600
+  points:
+  - 'Persona integration: застосування вставних конструкцій для керування динамікою
+    розмови, висловлення модальності та реакції на репліки гостей'
+  - 'Стилістичні ефекти: порівняння «сухих» фактів та речень, збагачених модальністю,
+    для досягнення переконливості'
+  - Підсумковий дріл на розрізнення функцій та підготовка до Модуля 13 (Інверсія та
+    емфаза)
+vocabulary_hints:
+  required:
+  - вставне слово (parenthetical word) — grammatical term for markers of modality
+    and discourse
+  - мабуть (probably) — marks uncertainty or politeness; high frequency; standard
+    spelling with «т»
+  - на жаль (unfortunately) — emotional evaluation; high frequency; always written
+    separately (not «нажаль»)
+  - по-перше (firstly) — logical sequence marker; always hyphenated; used in structured
+    speech
+  - кажуть (they say) — colloquial source marker; implies collective wisdom or community
+    rumor
+  - безумовно (undoubtedly) — strong certainty marker; high register; «безумовно,
+    ви праві»
+  - на щастя (fortunately) — marks relief or positive evaluation; «на щастя, все обійшлося»
+  - до речі (by the way) — topic switching marker; high frequency; «до речі, про це
+    вже згадували»
+  recommended:
+  - звісно (of course) — marker of agreement or certainty; common synonym of «звичайно»
+  - мабуть, так (probably so) — common collocation for polite agreement
+  - напевно (surely / probably) — marker of high probability; used interchangeably
+    with «мабуть»
+  - отже (so / therefore) — conclusion marker; used to summarize arguments
+  - зокрема (in particular) — specification marker; used to highlight specific examples
+  - навіть (even) — FALSE parenthetical warning; particle that never takes commas
+  - принаймні (at least) — FALSE parenthetical warning; marker that never takes commas
+activity_hints:
+- type: quiz
+  focus: Identify function of parenthetical expression
+  items: 15+
+- type: fill-in
+  focus: Insert appropriate parenthetical expressions
+  items: 15+
+- type: group-sort
+  focus: Sort by function (certainty, attitude, source, sequence)
+  items: 20+
+- type: fill-in
+  focus: Add parenthetical expressions to neutral sentences
+  items: 12+
+- type: error-correction
+  focus: Fix punctuation with parenthetical expressions
+  items: 10+
+- type: match-up
+  focus: Parenthetical expression → function
+  items: 16+
+- type: essay-response
+  focus: Write opinion text using varied parenthetical expressions
+  output: Model answer provided
+focus: grammar
+prerequisites:
+- b2-11 (Multi-clause Sentences)
+- Comma usage basics
+- Sentence structure
+connects_to:
+- b2-13 (Emphasis and Inversion)
+- b2-14 (Stylistic Connectors)
+- b2-25 (B2.1b Checkpoint)
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Discourse Markers
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Requirements for discourse organization at B2
+- name: Сучасна українська літературна мова - Синтаксис
+  url: https://uk.wikipedia.org/wiki/Синтаксис
+  type: secondary
+  notes: Parenthetical expressions classification
+- name: CEFR B2 Discourse Competence
+  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  type: reference
+  notes: B2 discourse organization requirements
+immersion: 100% Ukrainian
+phase: B2.1b [Participles & Register Intro]
+objectives:
+- Identify and correctly use вставні слова та вирази
+- Form and apply вставні слова та вирази
+persona:
+  voice: Professional Language Coach
+  role: Talk Show Host (Ведучий ток-шоу)
+word_target: 4000

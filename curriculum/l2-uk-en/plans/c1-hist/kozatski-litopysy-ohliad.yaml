@@ -1,4 +1,3 @@
----
 module: c1-hist-019
 level: c1-hist
 sequence: 19
@@ -10,22 +9,19 @@ objectives:
 - 'Analyze the causes and consequences of козацькі літописи: огляд традиції'
 - Evaluate the historical significance of козацька історіографія
 content_outline:
-- section: "Вступ — Козацька історіографія"
-  words: 457
+- section: Вступ — Козацька історіографія
   subsections:
   - Новий тип літописання
   - Від монастиря до канцелярії
   - Три головні літописи
   - Чому важливо вивчати разом
 - section: Історичний контекст
-  words: 571
   subsections:
   - Козацька держава — Гетьманщина
   - Освічена еліта — хто писав історію?
   - Кінець XVII — поч. XVIII ст.
   - Криза автономії — мотив писати
-- section: "Три літописи — порівняння"
-  words: 800
+- section: Три літописи — порівняння
   subsections:
   - Самовидець — очевидець, стислий
   - Грабянка — патріотичний, барочний
@@ -33,7 +29,6 @@ content_outline:
   - Хронологія і охоплення
   - Таблиця порівняння
 - section: Спільні риси
-  words: 686
   subsections:
   - Козацький патріотизм
   - Легітимація автономії
@@ -41,26 +36,22 @@ content_outline:
   - Образ Хмельницького
   - Елітарна перспектива — старшина
 - section: Відмінності
-  words: 686
   subsections:
   - Стиль — простий vs. барочний
   - Джерела — спогади vs. документи
   - Політична позиція — різні фракції
   - Відношення до Москви
 - section: Як читати козацькі літописи
-  words: 457
   subsections:
   - Упередження авторів
   - Що вони хотіли довести?
   - Критичний підхід
   - Порівняння з іншими джерелами
 - section: Підсумок
-  words: 343
   subsections:
   - Три перспективи однієї доби
   - Підготовка до детального вивчення
   - План наступних модулів
-word_target: 4000
 vocabulary:
 - козацький літопис
 - Гетьманщина
@@ -81,26 +72,26 @@ activities:
 - type: comparative-study
   focus: Create comparison table of three chronicles
 - type: reading
-  focus: "Opening passages of each chronicle — first impressions"
+  focus: Opening passages of each chronicle — first impressions
 - type: critical-analysis
   focus: What is the purpose of each chronicle? Who benefits?
 - type: essay-response
   focus: Чому козацька старшина відчувала потребу писати історію?
 sources:
 - name: Козацькі літописи (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Козацькі_літописи"
+  url: https://uk.wikipedia.org/wiki/Козацькі_літописи
   type: reference
   notes: Overview of Cossack chronicles
 - name: Літопис Самовидця
-  url: "https://uk.wikipedia.org/wiki/Літопис_Самовидця"
+  url: https://uk.wikipedia.org/wiki/Літопис_Самовидця
   type: reference
   notes: Eyewitness chronicle
 - name: Літопис Григорія Граб'янки
-  url: "https://uk.wikipedia.org/wiki/Літопис_Григорія_Граб'янки"
+  url: https://uk.wikipedia.org/wiki/Літопис_Григорія_Граб'янки
   type: reference
   notes: Hrabianka chronicle
 - name: Літопис Самійла Величка
-  url: "https://uk.wikipedia.org/wiki/Літопис_Самійла_Величка"
+  url: https://uk.wikipedia.org/wiki/Літопис_Самійла_Величка
   type: reference
   notes: Velychko chronicle
 vocabulary_hints:
@@ -119,7 +110,9 @@ activity_hints:
   items: 4
 - type: essay-response
   focus: Критичний аналіз
-  word_target: 300
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Baroque Literature Specialist

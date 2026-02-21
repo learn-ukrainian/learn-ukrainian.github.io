@@ -1,4 +1,3 @@
----
 sequence: 65
 module: oes-065
 module_number: 53
@@ -9,7 +8,6 @@ phase: 3
 phase_id: legal-tradition
 phase_name: Legal Tradition
 focus: Family terms + Dative Case
-word_target: 4000
 content_outline:
 - section: Вступ
   description: Introduction to Inheritance Law
@@ -24,3 +22,6 @@ activity_types:
 - transcription
 - etymology-trace
 - grammar-identify
+persona:
+  voice: Senior Paleographer
+  role: Probate Clerk

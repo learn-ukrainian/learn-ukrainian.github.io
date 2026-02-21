@@ -1,0 +1,236 @@
+✅ Message sent to Gemini (ID: 11890) [auto-acked: self-addressed]
+✓ Message 11890 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #11890...
+📨 Message #11890
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-malkovych-poems
+   Time: 2026-02-20T23:34:18.144813+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 13
+module: lit-juvenile-13
+level: LIT.JUVENILE
+slug: malkovych-poems
+version: '2.0'
+title: Malkovych Poems
+subtitle: Malkovych Poems
+content_outline:
+- section: Вступ та контекст
+  points: []
+- section: Аналіз ключових творів
+  points: []
+- section: Стилістика та мова автора
+  points: []
+- section: Деколонізаційна перспектива
+  points:
+  - Як цей автор руйнує імперські міфи
+  - Українська суб'єктність у тексті
+- section: Підсумок та спадщина
+  points: []
+vocabulary_hints:
+  required:
+  - історіографія
+  - наратив
+  - суб'єктність
+  recommended:
+  - деколонізація
+activity_hints:
+- type: reading
+  focus: Аналіз першоджерела
+- type: essay-response
+  focus: Критичне есе
+- type: critical-analysis
+  focus: Деконструкція тексту
+focus: literature
+pedagogy: literature
+immersion: 100% Ukrainian
+phase: LIT Expansion
+objectives:
+- Проаналізувати творчість Malkovych Poems у контексті української літератури
+- Дослідити вплив автора на формування національної ідентичності
+persona:
+  voice: Senior Specialist
+  role: Master Publisher
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Дитяча поезія Івана Малковича
+
+## Використані джерела
+1. [Енциклопедія Сучасної України (ЕСУ) — Іван Малкович](https://esu.com.ua/) — біографічна та літературознавча довідка, етапи творчості та видавничої діяльності.
+2. [Історія української літератури ХХ – початку ХХІ ст. (history.org.ua)](http://resource.history.org.ua/) — аналіз постмодерної та необарокової естетики у творах вісімдесятників, розбудова українського книжкового ринку.
+3. [Літопис (litopys.org.ua) — Поезія шістдесятників і вісімдесятників](http://litopys.org.ua/) — контекст поетичної генерації, до якої належить І. Малкович, та повернення до релігійно-філософських мотивів.
+4. [Читомо — Аналітика книжкового ринку та дитячої літератури](https://chytomo.com/) — вплив видавництва «А-БА-БА-ГА-ЛА-МА-ГА» на формування смаків юних читачів та витіснення російської книжки.
+
+## Хронологія
+- **1961 (10 травня)**: Народження Івана Малковича в селі Нижній Березів на Івано-Франківщині.
+- **1984**: Вихід першої поетичної збірки «Білий камінь», яка засвідчила появу унікального ліричного голосу з необароковими елементами.
+- **1988**: Публікація збірки «Ключ», утвердження поетики, що поєднує фольклор та християнську етику.
+- **1992**: Заснування першого в незалежній Україні приватного дитячого видавництва «А-БА-БА-ГА-ЛА-МА-ГА». Вихід «Української абетки», яка починається словом «Ангел».
+- **1997**: Вихід знаменитого вірша «З янголом на плечі» (у складі однойменної збірки).
+- **2017**: Здобуття Національної премії України імені Тараса Шевченка за книгу поезій «Подорожник з новими віршами».
+
+## Ключові факти та цитати
+- **Факт**: Малкович-поет належить до покоління «вісімдесятників», але його дитяча поезія та видавнича діяльність створили окремий культурний феномен, що вплинув на кілька поколінь українців.
+- **Факт**: Поезія Малковича для дітей і підлітків відзначається музичністю (автор має скрипкову освіту), зверненням до християнських цінностей та національних архетипів.
+- **Цитата 1**: «Хай це можливо і не найсуттєвіше / але ти дитино / покликана захищати своїми долоньками / крихітну свічечку букви «ї»...» (Вірш «Свічечка букви ї», маніфест збереження мовної ідентичності).
+- **Цитата 2**: «Краєм світу, уночі, / при Господній при свічі / хтось бреде собі самотно / із янголом на плечі.» (Вірш «Із янголом на плечі», символ духовної підтримки та морального орієнтиру).
+- **Цитата 3**: «Дитяча книжка має бути такою, щоб її хотілося з'їсти» (Іван Малкович про естетику дитячої літератури).
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ та контекст: I": [!context] — Покоління вісімдесятників та перехід від герметичної лірики до творення масового українського культурного продукту для дітей.
+- Section "Аналіз ключових творів: II": [!quote] — Глибокий розбір метафори «свічечка букви ї» як акту дитячого спротиву асиміляції.
+- Section "Стилістика та мова автора: I": [!culture] — Вплив музичної освіти (клас скрипки) на ритміку та фоніку його дитячих віршів.
+- Section "Деколонізаційна перспектива: I": [!myth-buster] — Спростування міфу, що дитяча література має бути лише дидактичною (радянська модель). Малкович повернув у неї ангелів, Різдво та естетичну гру.
+- Section "Деколонізаційна перспектива: II": [!history-bite] — «Українська абетка» 1992 року починалася з літери «А» — Ангел. Це був свідомий розрив із 70-річною традицією державного атеїзму, де «А» зазвичай означало «Автобус» або «Аврора».
+- Section "Підсумок та спадщина: Значення": [!decolonization] — Якісна україномовна дитяча книга стала головною зброєю проти російської мовної експансії в 90-х та 2000-х роках: діти самі просили читати українською, бо книжки були красивішими.
+
+## Деколонізаційний контекст
+- **Imperial/Soviet myth**: Радянська дитяча література конструювала образ «маленького будівника комунізму» (піонера), позбавленого національного та релігійного коріння. Мова творів часто була збідненою, функціональною, спрямованою на класову дидактику. Російськомовна дитяча книга вважалася еталоном якості на пострадянському просторі.
+- **Ukrainian reality**: Іван Малкович деконструював цю модель. Він повернув українській дитині духовний вимір (образ Янгола), Різдво, глибоку музичність української мови та фольклорні архетипи. Створивши видавництво «А-БА-БА-ГА-ЛА-МА-ГА», він довів, що українська книга може бути візуально та поліграфічно кращою за російську, виховуючи не лише патріотизм, а й високий естетичний смак.
+
+## Contested Terms (if applicable)
+| Concept | Imperial/Soviet framing | Ukrainian (decolonized) framing |
+|---------|-----------------|-------------------|
+| Дитяча поезія | Засіб ідеологічного виховання, піонерська мораль, примітивна дидактика. | Естетичний простір формування світогляду, духовність, гра, прищеплення смаку. |
+| Буква «Ї» | Зайвий/регіональний символ, що ускладнює уніфікацію мов (тенденції зросійщення). | Унікальний маркер української фонетики та ідентичності, «свічечка», яку треба берегти. |
+| Ангел | Релігійний пережиток, заборонений образ у дитячій літературі. | Універсальний символ захисту, моральний дороговказ («із янголом на плечі»). |
+
+## Section-Mapped Research Notes
+
+### Вступ та контекст: I — Феномен Малковича у дитячій літературі
+Відхід від ідеологізованої радянської поезії. Формування нового канону для дітей, де повага до юного читача проявляється через високу естетику. Дитяча література як повноцінний, серйозний жанр.
+
+### Вступ та контекст: II — Біографічний та історичний вимір
+Народження в Карпатах (Нижній Березів), вплив автентичного середовища, музична освіта. Належність до генерації вісімдесятників, перехід від «чистої поезії» до культуртрегерства у 1990-х (заснування видавництва).
+
+### Аналіз ключових творів: I — «З янголом на плечі» як моральний дороговказ
+Аналіз метафорики подорожі та життєвих випробувань. Янгол як символ совісті, духовної опеки. Етичний вимір для юного читача (подолання самотності та страху). 
+
+### Аналіз ключових творів: II — «Свічечка букви ї»: фонетика як ідентичність
+Клоуз-рідінг (close reading) тексту. Символіка букви «Ї» як свічки, що розганяє темряву асиміляції. Звернення до дитини як до хранителя нації («захищати долоньками»). Розбір метафор: «місячний серпик букви є», «зрізаний профетичний голос».
+
+### Аналіз ключових творів: III — Казкові мотиви та фольклорні архетипи
+Огляд інших знакових віршів (напр., «Золоча», різдвяні поезії). Переосмислення карпатського міфу та української казки. Синтез реального і фантастичного (fantasy elements).
+
+### Стилістика та мова автора: I — Необарокова естетика та музичність слова
+Вплив скрипкової гри на ритміку віршів. Алітерації, асонанси («хтось бреде собі самотно...»). Необарокові поєднання непоєднуваного, вишукана метафорика, нетипова для традиційної дитячої лірики.
+
+### Стилістика та мова автора: II — Ігрова поетика: словотвір та ритміка
+Робота зі словом як із конструктором. Дитяча гра як літературний прийом. Авторські неологізми, зменшувально-пестливі форми (димінутиви), які не звучать інфантильно, а створюють атмосферу затишку.
+
+### Деколонізаційна перспектива: I — Деконструкція радянської моделі дитинства
+Протиставлення поезії Малковича піонерським маршам. Повернення до індивідуального, приватного, родинного виміру замість колективного, державного.
+
+### Деколонізаційна перспектива: II — Повернення до національних архетипів
+Різдво, Коляда, Ангел, українська абетка — як ці концепти були повернені у дитячий світ у 1990-ті. Роль Малковича у мовній деокупації свідомості цілого покоління українців.
+
+### Підсумок та спадщина: Значення видавництва «А-БА-БА-ГА-ЛА-МА-ГА»
+Оскільки автор живий і активно працює, розглядаємо «спадщину» як уже сформований вплив. Злиття поета і видавця: як його поетичне чуття створило найуспішніше дитяче видавництво, що зупинило експансію російської книги на ринку України.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 11937)
+✓ Message 11890 acknowledged
+✓ Message 11937 acknowledged

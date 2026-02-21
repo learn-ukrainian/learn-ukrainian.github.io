@@ -1,4 +1,3 @@
----
 module: c1-hist-084
 level: c1-hist
 sequence: 84
@@ -10,55 +9,47 @@ objectives:
 - 'Analyze the causes and consequences of розумовський цикл: останній гетьман'
 - Evaluate the historical significance of фаворит, що скасував себе
 content_outline:
-- section: "Вступ — Фаворит, що скасував себе"
-  words: 457
+- section: Вступ — Фаворит, що скасував себе
   subsections:
   - Розумовський — брат фаворита
   - Гетьман з ласки цариці
   - Як він завершив гетьманат
   - Структура модуля
-- section: "Фаза 1 — Кооптація через родину"
-  words: 800
+- section: Фаза 1 — Кооптація через родину
   subsections:
   - Олексій Розумовський — коханець Єлизавети
   - Кирило — президент Академії в 18 років
   - Гетьманство — 1750
   - Найвищий статус українця в імперії
-- section: "Фаза 2 — Ілюзія автономії"
-  words: 686
+- section: Фаза 2 — Ілюзія автономії
   subsections:
   - Реформи гетьмана
   - Батурин — нова столиця
   - Культурне життя
   - Але під контролем Петербурга
-- section: "Фаза 3 — Спроба спадковості"
-  words: 571
+- section: Фаза 3 — Спроба спадковості
   subsections:
   - Клопотання про спадкове гетьманство
   - Катерина II — відмова
   - «Що за гетьмани?»
   - Виклик до Петербурга
-- section: "Фаза 4 — Добровільна (?) капітуляція"
-  words: 686
+- section: Фаза 4 — Добровільна (?) капітуляція
   subsections:
   - 1764 — зречення
   - Що отримав натомість
   - Компенсація чи примус
   - Кінець Гетьманщини
-- section: "Аналіз — чому погодився"
-  words: 457
+- section: Аналіз — чому погодився
   subsections:
   - Особиста безпека
   - Родинні інтереси
   - Відсутність альтернатив
   - Урок для еліт
 - section: Підсумок
-  words: 343
   subsections:
   - Розумовський — кооптована еліта
   - Цикл завершився ліквідацією
   - Перехід до радянського періоду
-word_target: 4000
 vocabulary:
 - Розумовський
 - останній гетьман
@@ -79,24 +70,24 @@ activities:
 - type: critical-analysis
   focus: Map Rozumovsky through co-optation cycle
 - type: critical-analysis
-  focus: "Rozumovsky brothers — different paths"
+  focus: Rozumovsky brothers — different paths
 - type: critical-analysis
-  focus: "1764 — what were Rozumovsky's real options?"
+  focus: 1764 — what were Rozumovsky's real options?
 - type: comparative-study
   focus: Compare Mazepa (resistance) vs. Rozumovsky (capitulation)
 - type: essay-response
   focus: Чи міг Розумовський врятувати Гетьманщину?
 sources:
 - name: Кирило Розумовський (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Кирило_Розумовський"
+  url: https://uk.wikipedia.org/wiki/Кирило_Розумовський
   type: reference
   notes: Biography
 - name: Ліквідація Гетьманщини (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Ліквідація_Гетьманщини"
+  url: https://uk.wikipedia.org/wiki/Ліквідація_Гетьманщини
   type: reference
   notes: End of Hetmanate
 - name: Олексій Розумовський (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Олексій_Розумовський"
+  url: https://uk.wikipedia.org/wiki/Олексій_Розумовський
   type: reference
   notes: Brother context
 vocabulary_hints:
@@ -115,7 +106,9 @@ activity_hints:
   items: 4
 - type: essay-response
   focus: Критичний аналіз
-  word_target: 300
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Enlightenment Aristocrat

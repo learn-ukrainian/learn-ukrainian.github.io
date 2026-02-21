@@ -1,0 +1,322 @@
+✅ Message sent to Gemini (ID: 11150) [auto-acked: self-addressed]
+✓ Message 11150 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #11150...
+📨 Message #11150
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-c2-1-checkpoint
+   Time: 2026-02-20T22:26:58.432792+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c2-020
+level: c2
+sequence: 20
+version: '2.0'
+title: Контрольна точка C2.1 — Стилістична майстерність
+focus: checkpoint
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: C2 assessment rubrics
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Official C2 assessment criteria
+- name: CEFR C2 descriptors
+  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  type: reference
+  notes: European C2 standards for comparison
+- name: Ukrainian State Standard 2024 — C2 checkpoint
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Formal assessment requirements
+content_outline:
+- section: Вступ — Формат контрольної точки
+  points:
+  - Структура екзамену
+  - Критерії оцінювання
+  - Час на виконання
+- section: Частина 1 — Аналіз стилю (20%)
+  points:
+  - Ідентифікація стилю тексту
+  - Виявлення стилістичних засобів
+  - Аналіз авторських рішень
+  - Письмова відповідь
+- section: Частина 2 — Трансформація (25%)
+  points:
+  - Вихідний текст (офіційний)
+  - Трансформація в публіцистичний
+  - Критерії збереження змісту
+  - Оцінка стилістичної точності
+- section: Частина 3 — Творче письмо (30%)
+  points:
+  - Написання тексту заданого стилю
+  - Вимоги до обсягу (500 слів)
+  - Рубрика оцінювання
+  - Модельна відповідь
+- section: Частина 4 — Усний екзамен (25%)
+  points:
+  - Переключення регістрів у розмові
+  - Пояснення стилістичних рішень
+  - Спонтанна трансформація
+  - Критерії усного оцінювання
+- section: Самооцінка та зворотний зв'язок
+  points:
+  - Чек-лист майстерності C2.1
+  - Інтерпретація результатів
+  - Рекомендації для слабких зон
+  - Підготовка до C2.2
+- section: Модельні відповіді
+  points:
+  - Зразок аналізу стилю
+  - Зразок трансформації
+  - Зразок творчого тексту
+  - Коментарі до оцінювання
+vocabulary:
+  required:
+  - оцінювання (assessment/evaluation)
+  - екзамен (exam)
+  - контроль (control/test)
+  - перевірка (verification)
+  - бал (score/point)
+  - результат (result)
+  - критерій (criterion)
+  - стандарт (standard)
+  - рівень (level)
+  - рубрика (rubric)
+  recommended:
+  - чек-лист (checklist)
+  - модельний (model)
+  - зразковий (exemplary)
+  - порогове (threshold)
+  - сертифікат (certificate)
+  forbidden: '[]'
+activities:
+  types_required:
+  - essay-response
+  - quiz
+  - critical-analysis
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c2-21 (Stylistic devices mastery — post-checkpoint)
+- c2-25 (C2.1 Final Checkpoint)
+- c2-26 (C2.2 Literary mastery begins)
+vocabulary_hints:
+  required:
+  - концепція (concept)
+  - аналіз (analysis)
+  - дискурс (discourse)
+  - методологія (methodology)
+  recommended:
+  - інтерпретація (interpretation)
+  - контекстуалізація (contextualization)
+  - синтез (synthesis)
+activity_hints:
+- type: reading
+  focus: Поглиблений аналіз тексту
+  items: 4
+- type: essay-response
+  focus: Критичне осмислення
+- type: discussion
+  focus: Дискусія та аргументація
+  items: 1
+persona:
+  voice: Senior Specialist
+  role: Quality Controller
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Контрольна точка C2.1 — Стилістична майстерність
+
+## State Standard Reference
+§4.3.1.1: "Стилі української мови: розмовний; офіційний; науковий; публіцистичний; художній; релігійний; епістолярний."
+§4.3.7: "Уміння трансформувати текст з одного стилю в інший, зокрема науковий у науково-популярний, офіційний у публіцистичний тощо."
+Alignment: Цей модуль безпосередньо реалізує вимогу §4.3.7 через завдання на трансформацію тексту (Частина 2) та §4.3.6 (створення тексту певного стилю) у Частині 3.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| **оцінювання** | High (Academic/Official) | критерії оцінювання, система оцінювання, об'єктивне оцінювання |
+| **екзамен** | High (General) | складати екзамен, провалити екзамен, державний екзамен |
+| **критерій** | High (Academic) | ключовий критерій, задовольняти критерії, чіткі критерії |
+| **дискурс** | Medium (Academic/C2) | політичний дискурс, публічний дискурс, аналіз дискурсу |
+| **стилістика** | Medium (Academic) | функціональна стилістика, засоби стилістики, стилістика тексту |
+| **трансформація** | Medium (Academic) | структурна трансформація, стилістична трансформація |
+
+## Cultural Hooks
+1. **Розстріляне відродження**: Згадка про те, як у 1920-х роках формувався модерний український урбаністичний стиль (В. Підмогильний, М. Семенко), і як він був знищений, що вплинуло на розвиток мови.
+2. **Оксана Забужко та сучасна есеїстика**: Приклад складного, інтелектуального синтаксису (довгі речення, вставні конструкції) як зразка високого публіцистичного/художнього стилю C2.
+
+## Common Learner Errors
+1. **Змішування регістрів**: Використання розмовної лексики (наприклад, "класний", "супер") в офіційно-діловому або науковому тексті.
+2. **Калькування канцеляризмів**: Вживання пасивних конструкцій ("було зроблено") замість активних ("ми зробили"), що є нормою для української мови навіть в офіційному стилі, на відміну від англійської.
+3. **Відсутність модальності (hedging)**: Категоричні твердження в науковому тексті замість обережних припущень ("можливо", "ймовірно", "можна припустити").
+
+## Cross-References
+- Builds on: C1 Stylistics (M138-141) — базові поняття стилів.
+- Prepares for: C2.2 Literary Mastery (M26-40) — глибокий аналіз художнього тексту.
+
+## Notes for Content Writing
+- Модуль має бути "суворим" та академічним. Це екзамен. Тон — офіційний, інструктивний, але підтримуючий.
+- У моделях відповідей обов'язково показати *процес* мислення (think-aloud protocol), а не лише результат.
+- Чітко розмежувати критерії для кожного завдання, щоб студент міг себе перевірити.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Формат та критерії контрольної точки (Introduction: Checkpoint Format and Criteria)"
+  words: 400
+  points:
+  - "Огляд структури екзамену та деталізація критеріїв оцінювання відповідно до Державного стандарту 2024 (§4.3.1.1)."
+  - "Інструктаж щодо розподілу часу між письмовою та усною частинами та пояснення системи балів за кожен блок."
+- section: "Частина 1: Аналіз дискурсу та стилістичних засобів (Part 1: Discourse and Stylistic Devices Analysis)"
+  words: 800
+  points:
+  - "Методологія ідентифікації функціональних стилів (розмовний, офіційний, науковий, публіцистичний, художній, релігійний, епістолярний)."
+  - "Аналіз дискурсу на прикладі текстів «Розстріляного відродження» (В. Підмогильний, М. Семенко) як зразків формування модерного урбаністичного стилю."
+  - "Виявлення авторських стилістичних рішень та їхнього впливу на сприйняття тексту читачем."
+- section: "Частина 2: Стилістична трансформація та модальність (Part 2: Stylistic Transformation and Hedging)"
+  words: 900
+  points:
+  - "Практика трансформації офіційно-ділового тексту в публіцистичний відповідно до компетенцій стандарту (§4.3.7)."
+  - "Корекція типових помилок: усунення калькованих канцеляризмів та заміна пасивних конструкцій («було зроблено») на питомі активні («ми зробили»)."
+  - "Застосування засобів модальності (hedging) для вираження обережних припущень у науковому стилі («можливо», «ймовірно», «можна припустити»)."
+- section: "Частина 3: Творче письмо та інтелектуальний синтаксис (Part 3: Creative Writing and Intellectual Syntax)"
+  words: 1000
+  points:
+  - "Написання тексту обсягом 500 слів із дотриманням параметрів заданого стилю (State Standard §4.3.6)."
+  - "Опанування складного інтелектуального синтаксису за зразком есеїстики Оксани Забужко: робота з довгими реченнями та вставними конструкціями."
+  - "Використання специфічної термінології та абстрактної лексики для досягнення стилістичної точності на рівні C2."
+- section: "Частина 4: Усний екзамен та переключення регістрів (Part 4: Oral Exam and Register Switching)"
+  words: 600
+  points:
+  - "Демонстрація вміння спонтанно переключати мовні регістри залежно від комунікативної ситуації."
+  - "Усне обґрунтування стилістичних рішень та вибору лексичних одиниць під час захисту своєї позиції."
+- section: "Підсумок: Самооцінка та моделі відповідей (Summary: Self-Assessment and Model Answers)"
+  words: 300
+  points:
+  - "Робота з чек-листом майстерності C2.1 та інтерпретація результатів тестування для планування подальшого навчання."
+  - "Аналіз модельних відповідей із демонстрацією «процесу мислення» (think-aloud protocol) для кожного типу завдань."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "оцінювання (assessment) — критерії оцінювання, об'єктивне оцінювання; висока частотність в академічному контексті"
+  - "критерій (criterion) — ключовий критерій, задовольняти критерії; база для рубрик оцінювання C2"
+  - "дискурс (discourse) — публічний дискурс, аналіз дискурсу; ключове поняття для стилістичного аналізу"
+  - "трансформація (transformation) — стилістична трансформація; обов'язкова навичка згідно зі стандартом §4.3.7"
+  - "стилістика (stylistics) — функціональна стилістика, засоби стилістики; теоретичний фундамент модуля"
+  - "методологія (methodology) — методологія аналізу; термін для опису підходу до екзаменаційних завдань"
+  recommended:
+  - "інтерпретація (interpretation) — інтерпретація результатів; використовується в блоці самооцінки"
+  - "контекстуалізація (contextualization) — контекстуалізація тексту; для глибинного аналізу авторських рішень"
+  - "синтез (synthesis) — синтез стилів; для опису складних творчих робіт"
+  - "модальність (modality) — засоби модальності; лексика для реалізації 'hedging' (ймовірно, можливо)"
+  - "канцеляризм (officialism) — калькування канцеляризмів; для роботи над стилістичними помилками"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (3958 chars)
+✅ Message sent to Claude (ID: 11162)
+✓ Message 11162 acknowledged
+   Auto-acknowledged reply #11162 (stdout delivery — no inbox accumulation)
+✓ Message 11150 acknowledged

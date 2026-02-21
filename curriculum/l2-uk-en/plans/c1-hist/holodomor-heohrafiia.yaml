@@ -1,4 +1,3 @@
----
 module: c1-hist-048
 level: c1-hist
 sequence: 48
@@ -10,15 +9,13 @@ objectives:
 - 'Analyze the causes and consequences of географія голодомору: регіональні відмінності'
 - Evaluate the historical significance of голодомор на карті
 content_outline:
-- section: "Вступ — Голодомор на карті"
-  words: 457
+- section: Вступ — Голодомор на карті
   subsections:
   - Не всі регіони постраждали однаково
   - Чому географія важлива
   - Що нам говорять карти
   - Структура модуля
 - section: Найбільш постраждалі регіони
-  words: 800
   subsections:
   - Київщина — епіцентр
   - Харківщина — другий центр
@@ -26,40 +23,34 @@ content_outline:
   - Степова Україна
   - Карта з даними
 - section: Менш постраждалі регіони
-  words: 571
   subsections:
   - Західна Україна — під Польщею
   - Донбас — промисловий регіон
   - Міста vs. села
   - Чому різниця?
 - section: Кубань і етнічні українці
-  words: 686
   subsections:
   - Українці за межами УРСР
   - Кубань — особливий випадок
   - Знищення українськості
   - Паралелі з Україною
 - section: Чому саме ці регіони
-  words: 686
   subsections:
   - Зернові райони — більший тиск
   - Опір колективізації
   - Національний фактор
   - «Покарання» vs. «політика»
 - section: Демографічні наслідки
-  words: 571
   subsections:
   - Скільки загинуло — дискусія
   - 3.9 мільйона — консервативна оцінка
   - Вплив на населення — до сьогодні
   - Втрачені покоління
 - section: Підсумок
-  words: 229
   subsections:
   - Географія як доказ
   - Від карт до свідчень
   - Підготовка до усної історії
-word_target: 4000
 vocabulary:
 - географія
 - регіон
@@ -78,7 +69,7 @@ vocabulary:
 - депопуляція
 activities:
 - type: critical-analysis
-  focus: "Analyze Holodomor mortality map — what patterns?"
+  focus: Analyze Holodomor mortality map — what patterns?
 - type: comparative-study
   focus: Compare mortality rates in different oblasts
 - type: critical-analysis
@@ -89,15 +80,15 @@ activities:
   focus: Що географія Голодомору говорить нам про його характер?
 sources:
 - name: Втрати населення в Голодомор
-  url: "https://uk.wikipedia.org/wiki/Втрати_України_в_Голодоморі"
+  url: https://uk.wikipedia.org/wiki/Втрати_України_в_Голодоморі
   type: reference
   notes: Casualty estimates
 - name: Регіональний розподіл Голодомору
-  url: "https://uk.wikipedia.org/wiki/Голодомор#Географія"
+  url: https://uk.wikipedia.org/wiki/Голодомор#Географія
   type: reference
   notes: Regional breakdown
 - name: Карти Голодомору
-  url: "https://ucrdc.org/"
+  url: https://ucrdc.org/
   type: reference
   notes: UCRDC mapping projects
 vocabulary_hints:
@@ -116,7 +107,9 @@ activity_hints:
   items: 4
 - type: essay-response
   focus: Критичний аналіз
-  word_target: 300
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Historical Cartographer

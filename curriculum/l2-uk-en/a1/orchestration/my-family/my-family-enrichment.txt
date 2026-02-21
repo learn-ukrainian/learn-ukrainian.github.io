@@ -1,0 +1,307 @@
+✅ Message sent to Gemini (ID: 10110) [auto-acked: self-addressed]
+✓ Message 10110 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10110...
+📨 Message #10110
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-my-family
+   Time: 2026-02-20T19:42:01.034275+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: a1-32
+level: A1
+sequence: 32
+slug: my-family
+version: '2.0'
+title: My Family
+subtitle: Родина
+content_outline:
+- section: Warm-up
+  points:
+  - 'Члени сім''ї (мама, тато, брат, сестра) — core vocabulary introduction (State
+    Standard §3.1); State Standard §4.2.1.1 examples: мама (маму, на мамі), тато (тата,
+    на татові)'
+  - Питання про сім'ю — e.g., «Хто це?»
+- section: Presentation
+  points:
+  - 'Близька родина (батьки, діти, брати, сестри) — use «У мене є...» construction
+    as primary way to talk about family count; learner error: avoid «Я маю...» which
+    is less natural for A1'
+  - 'Розширена родина (дідусь, бабуся, дядько, тітка) — cultural hook: multi-generational
+    households are common in Ukraine, grandparents often help raise children'
+  - 'Родинні стосунки (чоловік, дружина, онук, онука) — learner error: чоловік = man
+    AND husband (avoid «жінка» for wife)'
+- section: Presentation 2
+  points:
+  - Вік (Моєму братові 25 років)
+  - 'Професія (Мій тато — лікар) — State Standard §3.1: status of others (colleague,
+    neighbor)'
+  - Характер (Моя сестра дуже добра) — reuse adjectives from A1-31 (kind, happy)
+  - Зовнішність (Моя мама має темне волосся) — reuse vocabulary from A1-31 (dark hair,
+    kind eyes)
+- section: Practice
+  points:
+  - 'Представлення своєї сім''ї — cultural hook: nuance between «сім''я» (unit) and
+    «родина» (lineage/ancestry)'
+  - 'Розповідь про родину — learner error: possessive agreement (Мій мама -> Моя мама)'
+- section: Practice 2
+  points:
+  - Діалог про сім'ю друга
+  - Діалог про родинне свято — prepares for module A1-33 (Holidays)
+  - Показ сімейних фото — highlight Vocative forms (Мамо, Тату) per content notes;
+    often skipped by beginners but essential for daily address
+- section: Practice 3
+  points:
+  - Опис своєї сім'ї
+vocabulary_hints:
+  required:
+  - мама (mom) — рідна мама, молода мама
+  - тато (dad) — рідний тато, мій тато
+  - брат (brother) — старший брат, молодший брат, рідний брат
+  - сестра (sister) — старша сестра, молодша сестра, рідна сестра
+  - дідусь (grandfather) — мудрий дідусь, мій дідусь
+  - бабуся (grandmother) — добра бабуся
+  - син (son)
+  - донька (daughter)
+  recommended:
+  - дядько (uncle)
+  - тітка (aunt)
+  - онук (grandson)
+  - дружина (wife)
+  - чоловік (husband)
+  - родина (family) — велика родина, українська родина
+activity_hints:
+- type: match-up
+  focus: Family member names
+  items: 25
+- type: match-up
+  focus: Match relationships
+  items: 20
+- type: fill-in
+  focus: Complete family descriptions
+  items: 15
+- type: fill-in
+  focus: Describe your family
+  items: 6
+- type: match-up
+  focus: Vocative forms (Nominative → Vocative)
+  items: 10
+- type: fill-in
+  focus: Calling family members (vocative practice)
+  items: 8
+focus: vocabulary
+pedagogy: PPP
+prerequisites:
+- a1-14 (Mine and Yours)
+- a1-31 (Body and Health)
+connects_to:
+- a1-33 (Holidays and Traditions)
+- a1-34 (Checkpoint Core Grammar)
+objectives:
+- Learner can name family members
+- Learner can describe family relationships
+- Learner can talk about their own family
+- Learner can use possessives with family terms
+- Learner can use basic vocative forms to address family members
+grammar:
+- Family vocabulary
+- Possessives with family members
+- Genitive for relationships (батько + name)
+- Basic vocative forms (мамо, тату, бабусю, дідусю)
+register: розмовний
+phase: A1.3 [Consolidation]
+persona:
+  voice: Patient Supportive Tutor
+  role: Family Genealogist
+word_target: 2000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: My Family (A1.32)
+
+## State Standard Reference
+§3.1 (Людина): "сім’я і члени сім’ї, родичі; статус інших людей з оточення (друг / подруга, колега, сусід / сусідка)."
+§4.2.1.1 (Іменник): "форми знахідного та місцевого відмінків іменників... мама (маму, на мамі), тато (тата, на татові)... уживання форм кличного відмінка: Остапе, Олено..."
+§4.2.2 (Займенник): "утворення родових форм присвійних займенників: мій, моя, моє; твій, твоя, твоє..."
+
+Alignment: This module directly addresses the §3.1 theme "Family" and implements the morphological requirements for noun cases (Nominative basics, Vocative intro) and possessive pronoun agreement (§4.2.2).
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| сім'я | High / Core A1 | велика сім'я, моя сім'я |
+| родина | High / Core A1 | вся родина, збиратися родиною |
+| мама / тато | Very High | рідна мама, мій тато |
+| брат / сестра | High | старший брат, молодша сестра, рідні брати |
+| дідусь / бабуся | High | любий дідусь, добра бабуся |
+| чоловік / дружина | High | мій чоловік, моя дружина |
+
+## Cultural Hooks
+1. **Сім'я vs Родина**: "Сім'я" typically refers to the immediate nuclear unit living together, while "родина" implies the extended family lineage and kinship network.
+2. **Grandparents' Role**: In Ukraine, grandparents (бабуся і дідусь) play a very active role in raising grandchildren, often living with or very close to the young family.
+3. **Vocative Importance**: Addressing parents as "мамо" and "тату" (not "мама" and "тато") is a hallmark of natural Ukrainian speech, even for beginners.
+
+## Common Learner Errors
+1. **Possessive Gender Agreement**: "Мій сестра" instead of "Моя сестра". (Cause: generalizing 'my' from English).
+2. **Lexical Confusion**: Using "чоловік" for "husband" is correct, but beginners may confuse it with generic "man". Using "жінка" for "wife" is common colloquially but "дружина" is the standard neutral term taught first.
+3. **Construction Choice**: Overusing "Я маю..." (calque from "I have...") instead of natural "У мене є..." for introducing family members.
+
+## Cross-References
+- **Builds on**: A1-14 (Mine and Yours — possessives), A1-31 (Body and Health — physical description adjectives).
+- **Prepares for**: A1-33 (Holidays — family gathering contexts).
+
+## Notes for Content Writing
+- **Scaffolding**: Immersion target is ~35-40%. English must be used for all grammar explanations (Possessives, Vocative rules).
+- **Activity Focus**: Ensure "family tree" logic is clear. Use simple "Who is who?" logic puzzles.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Моя сім'я (Introduction: My Family)"
+  words: 400
+  points:
+  - "Введення базової лексики: мама, тато, брат, сестра (Державний стандарт §3.1). Питання «Хто це?» для ідентифікації членів родини."
+  - "Культурний контекст: Різниця між поняттями «сім'я» (ядерна родина, що живе разом) та «родина» (ширше коло родичів, лінія предків та походження)."
+- section: "Презентація: Близька та розширена родина (Presentation: Immediate and Extended Family)"
+  words: 600
+  points:
+  - "Побудова речень через конструкцію «У мене є...» (Державний стандарт §4.2.1.1). Виправлення помилки-кальки з англійської «Я маю...», яка є менш природною для рівня А1."
+  - "Розширена родина (дідусь, бабуся, дядько, тітка). Культурний аспект: активна роль бабусь та дідусів у вихованні онуків в Україні та традиція проживання кількома поколіннями."
+  - "Узгодження присвійних займенників (мій, моя) з назвами родичів (Державний стандарт §4.2.2). Drill: запобігання помилці «мій сестра» через акцент на жіночому роді іменника «сестра»."
+- section: "Презентація: Характеристики та стосунки (Presentation: Characteristics and Relationships)"
+  words: 500
+  points:
+  - "Терміни для подружжя: чоловік (husband/man) та дружина (wife). Розрізнення значень слова «чоловік» та вибір терміна «дружина» як нейтрального стандарту замість розмовного «жінка»."
+  - "Опис зовнішності та характеру родичів з використанням прикметників (добрий, мудрий, темне волосся). Вживання форм давального відмінка для віку: «моєму братові...» (Державний стандарт §4.2.1.1)."
+- section: "Практика: Звертання та спілкування (Practice: Address and Communication)"
+  words: 500
+  points:
+  - "Кличний відмінок як основа природного мовлення: навчання форм «мамо», «тату», «бабусю», «дідусю» для звертання до рідних (Державний стандарт §4.2.1.1)."
+  - "Підготовка до теми свят (А1-33): обговорення сімейних зборів та традицій через вираз «збиратися всією родиною»."
+  - "Створення та опис сімейного дерева: застосування знань про родинні зв'язки (онук, онука) та присвійні форми (батько Олени, мама Остапа)."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "мама (mom) — рідна мама, молода мама; найвища частотність, клична форма: мамо!"
+  - "тато (dad) — рідний тато, мій тато; клична форма: тату!"
+  - "брат (brother) — старший брат, молодший брат, рідний брат"
+  - "сестра (sister) — старша сестра, молодша сестра, рідна сестра"
+  - "дідусь (grandfather) — мудрий дідусь, мій дідусь; клична форма: дідусю!"
+  - "бабуся (grandmother) — добра бабуся; клична форма: бабусю!"
+  - "син (son) — мій син, єдиний син"
+  - "донька (daughter) — моя донька, доросла донька"
+  recommended:
+  - "сім'я (family) — велика сім'я, моя сім'я; ядерний підрозділ"
+  - "родина (family) — вся родина, збиратися родиною; ширший контекст роду та зв'язків"
+  - "чоловік (husband) — мій чоловік; важливо розрізняти зі значенням 'man'"
+  - "дружина (wife) — моя дружина; стандартний нейтральний термін"
+  - "дядько (uncle) — добрий дядько"
+  - "тітка (aunt) — рідна тітка"
+  - "онук (grandson) — мій онук"
+  - "онука (granddaughter) — маленька онука"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (3197 chars)
+✅ Message sent to Claude (ID: 10118)
+✓ Message 10118 acknowledged
+   Auto-acknowledged reply #10118 (stdout delivery — no inbox accumulation)
+✓ Message 10110 acknowledged

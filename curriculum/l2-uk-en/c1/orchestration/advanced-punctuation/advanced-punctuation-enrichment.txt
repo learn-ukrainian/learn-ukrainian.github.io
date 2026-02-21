@@ -1,0 +1,321 @@
+✅ Message sent to Gemini (ID: 10692) [auto-acked: self-addressed]
+✓ Message 10692 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10692...
+📨 Message #10692
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-advanced-punctuation
+   Time: 2026-02-20T21:23:41.874372+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-016
+level: C1
+sequence: 16
+slug: advanced-punctuation
+version: '2.0'
+title: Поглиблена пунктуація
+content_outline:
+- section: Вступ — Пунктуація як інструмент
+  points:
+  - Роль пунктуації в науковому тексті
+  - Відмінності від розмовного стилю
+  - Типові помилки в академічному письмі
+- section: Кома в складних реченнях
+  points:
+  - Кома перед сполучниками (і, а, але, що, який)
+  - Кома в підрядних реченнях
+  - Кома при відокремлених членах
+- section: Тире — функції та правила
+  points:
+  - Тире між підметом і присудком
+  - Тире для підкреслення
+  - Тире у безсполучникових реченнях (semantic depth covered in c1-107 Asyndetic Semantics)
+- section: Двокрапка і крапка з комою
+  points:
+  - Двокрапка перед переліком
+  - Двокрапка в безсполучниковому реченні
+  - Крапка з комою в складних переліках
+- section: Лапки та цитування
+  points:
+  - Типи лапок в українській мові
+  - Лапки в цитатах
+  - Лапки для іронії/умовності
+- section: Дужки та інші знаки
+  points:
+  - Круглі дужки для пояснень
+  - Квадратні дужки в цитатах
+  - Три крапки (еліпсис)
+- section: Практика редагування
+  points:
+  - Виправлення пунктуаційних помилок
+  - Стилістичне варіювання пунктуації
+  - Розстановка знаків у науковому тексті
+vocabulary_hints:
+  required:
+  - кома (comma)
+  - тире (dash)
+  - двокрапка (colon)
+  - крапка з комою (semicolon)
+  - лапки (quotation marks)
+  - дужки (brackets)
+  - відокремлення (separation)
+  - перелік (list)
+  - підрядне речення (subordinate clause)
+  - еліпсис (ellipsis)
+  recommended:
+  - пунктуаційний знак (punctuation mark)
+  - інтонаційний (intonational)
+  - граматичний (grammatical)
+  - факультативний (optional)
+  - обов'язковий (obligatory)
+activity_hints:
+- type: error-correction
+  focus: Fix punctuation errors in academic text
+  items: 15+
+- type: fill-in
+  focus: Insert appropriate punctuation
+  items: 15+
+- type: quiz
+  focus: Choose correct punctuation option
+  items: 15+
+- type: match-up
+  focus: Punctuation mark to rule
+  items: 12+
+- type: cloze
+  focus: Punctuate academic passages
+  items: 10+
+- type: group-sort
+  focus: Classify punctuation functions
+  items: 12+
+focus: grammar
+prerequisites:
+- c1-05 (Logical Connectors)
+- Complex sentence structures
+connects_to:
+- c1-17 (Irregular Verbs Complete)
+- c1-18 (Essay Writing Practice)
+- c1-48 (Literary Syntax)
+- c1-107 (Asyndetic Semantics — semantic logic of dash/colon/comma)
+module_type: grammar
+sources:
+- name: Український правопис 2019
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Official punctuation rules
+- name: Пунктуація сучасної української мови
+  url: https://r2u.org.ua/
+  type: secondary
+  notes: Comprehensive punctuation guide
+immersion: 100% Ukrainian
+phase: C1.1 Academic Ukrainian
+objectives:
+- Identify and correctly use поглиблена пунктуація
+- Form and apply пунктуація як інструмент
+- Distinguish between практика редагування
+persona:
+  voice: Senior Specialist
+  role: Коректор
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Поглиблена пунктуація
+
+## State Standard Reference
+§4.3.4.1: "Складнопідрядні речення з різними типами обставинних відношень (сполучники і сполучні слова)... Складносурядні речення з протиставними відношеннями..."
+§4.3.4.2: "Складні безсполучникові речення відкритої структури... закритої структури."
+Alignment: Модуль систематизує правила вживання розділових знаків у складних синтаксичних конструкціях, що є вимогою для рівня С1 (синтаксична компетентність та стилістична вправність).
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| пунктуація | Висока (наук.) | правила пунктуації, пунктуаційна помилка, сучасна пунктуація |
+| тире | Середня | ставити тире, авторське тире, інтонаційне тире |
+| двокрапка | Середня | після узагальнювального слова, перед переліком |
+| лапки | Висока | брати в лапки, цитата в лапках, іронічні лапки |
+| відокремлення | Висока (грам.) | відокремлені члени речення, кома для відокремлення |
+
+## Cultural Hooks
+1. **Історичний контекст**: У давньоруських рукописах (XI–XIII ст.) розділові знаки (крапка, хрестик, змійка) ставилися довільно або для позначення пауз під час читання вголос. Сучасна системність з'явилася значно пізніше, зокрема під впливом європейського книгодрукування (Альд Мануцій).
+2. **Правопис 1928 року («Харківський»)**: Вперше виділив окремий розділ для правил пунктуації, що стало важливим кроком у стандартизації української мови та відмежуванні її від російських кальок.
+
+## Common Learner Errors
+1. **Кома-зрощення (Comma Splice)** → Вживання коми між двома граматичними основами без сполучника. *Корекція*: Використовувати крапку з комою або сполучник.
+2. **Тире замість дефіса (і навпаки)** → Плутанина графічних знаків. *Корекція*: Дефіс — орфограма (всередині слова), тире — пунктограма (між словами).
+3. **Зайва кома між підметом і присудком** → Ставиться через інтонаційну паузу в усному мовленні ("Моя родина, це моє багатство"). *Корекція*: Усунення коми або заміна на тире, якщо присудок — іменник.
+
+## Cross-References
+- Builds on: c1-05 (Logical Connectors), Complex sentence structures
+- Prepares for: c1-18 (Essay Writing Practice), c1-48 (Literary Syntax), c1-107 (Asyndetic Semantics)
+
+## Notes for Content Writing
+- Акцент на *науковому* та *публіцистичному* стилях, де точність є критичною.
+- Використовувати приклади з реальних академічних текстів або високоякісної публіцистики.
+- Чітко розмежовувати *факультативні* (авторські) та *обов'язкові* розділові знаки.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ — Пунктуація як інструмент (Introduction — Punctuation as a Tool)"
+  words: 400
+  points:
+  - "Роль пунктуації в науковому та публіцистичному текстах: відмінність між граматичною та інтонаційною функціями"
+  - "Пунктуаційна норма як засіб усунення двозначності в академічному письмі"
+  - "Аналіз тексту: як розділові знаки структурують логіку викладу (builds on c1-05 Logical Connectors)"
+- section: "Складні речення та відокремлення (Complex Sentences and Separation)"
+  words: 900
+  points:
+  - "Кома в складнопідрядних реченнях (§4.3.4.1): вживання перед сполучниками (і, а, але, що, який) та обставинними сполучними словами"
+  - "Пунктуація у складносурядних реченнях з протиставними відношеннями"
+  - "Відокремлені члени речення (означення, обставини, додатки): правила та умови обов'язкового відокремлення"
+  - "Типова помилка: 'Кома-зрощення' (Comma Splice) — аналіз вживання коми між граматичними основами без сполучника та методи виправлення через крапку з комою"
+- section: "Тире та двокрапка: смислова глибина (Dash and Colon: Semantic Depth)"
+  words: 950
+  points:
+  - "Тире між підметом і присудком (§4.3.4.2): випадки обов'язкового вживання (іменник-іменник, інфінітив-інфінітив)"
+  - "Двокрапка та тире у безсполучникових реченнях: вираження причиново-наслідкових та пояснювальних зв'язків (prepares for c1-107)"
+  - "Тире для підкреслення та авторське (інтонаційне) тире у публіцистиці"
+  - "Learner error: графічна плутанина тире (пунктограма) та дефіса (орфограма) — правила розрізнення та написання"
+  - "Усунення зайвої коми через інтонаційну паузу між підметом і присудком (напр., 'Моя родина — це...')"
+- section: "Цитування та допоміжні знаки (Citations and Auxiliary Marks)"
+  words: 650
+  points:
+  - "Типи лапок в українській мові: традиційні «лапки-ялинки» для основного тексту та „лапки-лапки“ для внутрішніх цитат"
+  - "Пунктуація при цитуванні: оформлення прямої мови, квадратні дужки для кон'єктур та три крапки (еліпсис) для пропусків"
+  - "Круглі дужки для пояснень та ремарок: стилістичне використання в науковому апараті"
+  - "Вживання лапок для іронії та умовності: межа між стилістичним прийомом та надмірністю"
+- section: "Історичний контекст та стандартизація (Historical Context and Standardization)"
+  words: 500
+  points:
+  - "Культурний гачок: еволюція знаків у давньоруських рукописах (XI–XIII ст.) — від довільних хрестиків і змійок до системності Альда Мануція"
+  - "Значення 'Харківського правопису' (1928 р.) у стандартизації української пунктуації та її відмежуванні від зовнішніх кальок"
+  - "Реформи пунктуації у правописі 2019 року: актуалізація правил для сучасних медіа-текстів"
+- section: "Практика редагування (Editing Practice)"
+  words: 600
+  points:
+  - "Алгоритм самоперевірки: розрізнення факультативних (авторських) та обов'язкових розділових знаків"
+  - "Трансформація речень: заміна безсполучникових конструкцій на сполучникові зі зміною пунктуації"
+  - "Редагування академічного есе: виправлення пунктуаційних огріхів у складних синтаксичних конструкціях (prepares for c1-18)"
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "пунктуація (punctuation) — правила пунктуації, пунктуаційна помилка; висока частотність у науковому стилі"
+  - "кома (comma) — кома-зрощення (comma splice), ставити кому; базовий знак відокремлення"
+  - "тире (dash) — інтонаційне тире, авторське тире, тире між підметом і присудком"
+  - "двокрапка (colon) — після узагальнювального слова, перед переліком"
+  - "лапки (quotation marks) — брати в лапки, іронічні лапки; розрізнення «ялинок» та „лапок“"
+  - "відокремлення (separation) — відокремлені члени речення (appositives/modifiers); граматичний термін С1"
+  - "підрядне речення (subordinate clause) — пунктуація на межі частин складного речення"
+  - "еліпсис (ellipsis) — три крапки на місці пропущеного слова або частини цитати"
+  recommended:
+  - "пунктограма (punctuation rule/unit) — одиниця пунктуаційного правила"
+  - "орфограма (spelling rule/unit) — для контрасту при вивченні тире/дефіса"
+  - "факультативний (optional) — про авторські знаки, що не є обов'язковими за правописом"
+  - "інтонаційний (intonational) — опис паузи, що зумовлює вибір знака"
+  - "калька (calque) — у контексті уникнення чужорідних пунктуаційних моделей"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4365 chars)
+✅ Message sent to Claude (ID: 10697)
+✓ Message 10697 acknowledged
+   Auto-acknowledged reply #10697 (stdout delivery — no inbox accumulation)
+✓ Message 10692 acknowledged

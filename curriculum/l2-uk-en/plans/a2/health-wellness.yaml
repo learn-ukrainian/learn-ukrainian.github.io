@@ -1,0 +1,115 @@
+module: a2-55
+level: A2
+sequence: 55
+slug: health-wellness
+version: '2.0'
+title: Health & Wellness
+subtitle: Wellness, Traditional Medicine & Healthy Lifestyle
+content_outline:
+- section: 'Вступ: Здоров''я — найбільше багатство (Introduction: Health is the Greatest
+    Wealth)'
+  words: 400
+  points:
+  - Transition from a2-34 (symptoms/body) to holistic wellness; introducing the proverb
+    «Здоров'я — найбільше багатство» as a cultural motivator for self-care.
+  - 'Overview of the Ukrainian wellness concept: physical, mental, and spiritual health
+    as an interconnected trinity; comparison with Western fitness concepts.'
+- section: 'Презентація: Моє тіло та самопочуття (Presentation: My Body and Well-being)'
+  words: 700
+  points:
+  - 'Core grammatical construction: «У мене болить [частина тіла]» vs learner error
+    «Я болить»; mandatory drill on plural agreement: «болить зуб» vs «болять зуби».'
+  - 'Describing state and symptoms per §3.12: «міряти температуру», «червоне горло»,
+    «крутиться голова»; using Dative case (§4.2.2.3) for impersonal states: «мені
+    погано», «мені краще».'
+  - Body part review (голова, рука, нога, живіт) integrated with symptoms; distinguishing
+    between acute pain and general 'unwellness' (нездужання).
+- section: Здоровий спосіб життя та ментальне здоров'я (Healthy Lifestyle and Mental
+    Health)
+  words: 600
+  points:
+  - 'Daily routine vocabulary: «правильне харчування» (nutrition), «здоровий сон»,
+    «робити зарядку»; focus on collocations like «вести здоровий спосіб життя».'
+  - 'Mental health awareness: «стрес», «настрій», «відпочинок»; cultural note on the
+    growing importance of mental health in Ukraine post-2022; using «треба/варто»
+    to give advice: «варто більше відпочивати».'
+  - 'Fitness culture: «пробіжка», «йога», and the cultural phenomenon of «вуличні
+    тренажери» (outdoor gym equipment) found in Ukrainian public parks.'
+- section: Народна медицина та традиційні практики (Traditional Medicine and Traditional
+    Practices)
+  words: 600
+  points:
+  - 'Herbal tea culture as primary medicine: «чай з малиною» (universal cold remedy),
+    «калина» (viburnum), and «липа» (linden); cultural hook: why every Ukrainian has
+    raspberry jam in the fridge.'
+  - 'Traditional remedies: «гірчичники» (mustard plasters) and «банки» (cupping);
+    addressing learner surprise that these are contemporary practices, not just historical
+    folklore.'
+  - 'Wellness traditions: «баня» (steam bath) and «сауна» culture; essential vocabulary
+    for the ritual: «паритися в бані», «березовий віник» (birch whisk).'
+- section: Система охорони здоров'я та аптека (Healthcare System and Pharmacy)
+  words: 700
+  points:
+  - 'Navigating the system: distinguishing «лікар» (the person) from «лікарня» (the
+    hospital) to fix common learner errors like «я йду в лікарню» for a check-up.'
+  - 'Modern healthcare context: «сімейний лікар», «декларація», and «приватна клініка»;
+    comparing the Soviet ''free'' model with current medical insurance («медичне страхування»).'
+  - 'Pharmacy (аптека) interactions: asking for «ліки від грипу/кашлю»; identifying
+    «цілодобова аптека» (24/7) and the concept of «чергова аптека».'
+focus: vocabulary
+pedagogy: PPP
+objectives:
+- Learner can discuss healthy lifestyle in Ukrainian
+- Learner can describe traditional Ukrainian remedies
+- Learner can navigate the healthcare system vocabulary
+- Learner can give and understand wellness advice
+grammar:
+- wellness vocabulary and collocations
+- advice structures (треба, варто, потрібно + infinitive)
+- comparison of practices (більш/менш корисний)
+- healthcare system terminology
+module_type: vocabulary
+sources:
+- name: Ukrainian State Standard 2024 - Health and Hygiene
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Standards for health vocabulary and wellness at A2
+immersion: 75-90% Ukrainian
+phase: A2.5
+persona:
+  voice: Encouraging Cultural Guide
+  role: Yoga Instructor
+vocabulary_hints:
+  required:
+  - 'здоров''я (health) — collocations: міцне здоров''я, піклуватися про здоров''я'
+  - здоровий (healthy) — здоровий спосіб життя (lifestyle), здорове харчування (nutrition)
+  - 'боліти (to hurt) — high frequency; construction: у мене болить + Nom.; plural:
+    болять'
+  - 'голова (head) — collocations: болить голова, крутиться голова (dizzy)'
+  - лікар (doctor) — vs лікарня (hospital); йти до лікаря, викликати лікаря
+  - ліки (medicine) — пити ліки, ліки від грипу (cold), народні ліки
+  - аптека (pharmacy) — цілодобова аптека, чергова аптека
+  - температура (fever/temperature) — міряти температуру, висока температура
+  recommended:
+  - малина (raspberry) — чай з малиною (universal cold remedy)
+  - калина (viburnum) — traditional remedy and cultural symbol
+  - гірчичники (mustard plasters) — traditional remedy for coughs
+  - харчування (nutrition) — правильне харчування, здорове харчування
+  - зарядка (morning exercise) — робити зарядку
+  - відпочинок (rest/relaxation) — повноцінний відпочинок, активний відпочинок
+  - стрес (stress) — знімати стрес, боротися зі стресом
+  - страхування (insurance) — медичне страхування (health insurance)
+activity_hints:
+- type: match-up
+  focus: Wellness vocabulary
+  items: 25
+- type: fill-in
+  focus: Health advice with треба/варто
+  items: 15
+- type: quiz
+  focus: Traditional vs modern remedies
+  items: 15
+- type: fill-in
+  focus: Healthcare system navigation
+  items: 10
+word_target: 3000

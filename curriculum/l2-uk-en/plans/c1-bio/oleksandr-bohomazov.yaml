@@ -1,53 +1,45 @@
----
-module: c1-bio-078
+module: c1-bio-78
 level: C1-BIO
 sequence: 78
 slug: oleksandr-bohomazov
 version: '2.0'
 title: 'Олександр Богомазов: Український футурист'
 content_outline:
-- section: "Вступ — Український Пікассо"
-  words: 400
+- section: Вступ — Український Пікассо
   points:
   - Богомазов як один із найяскравіших представників українського авангарду
   - Поєднання кубофутуризму та спектралізму
   - Трагічна доля та повернення імені
 - section: Ранні роки та освіта (1880-1908)
-  words: 600
   points:
   - Народження в Ямполі на Херсонщині
   - Навчання в Київському художньому училищі
   - Вплив імпресіонізму та постімпресіонізму
   - Формування власного стилю
 - section: Московський період (1908-1914)
-  words: 700
   points:
   - Переїзд до Москви
   - Знайомство з російськими футуристами
   - Участь у виставках авангарду
   - Розвиток теоретичних ідей
 - section: Київський розквіт (1914-1922)
-  words: 800
   points:
   - Повернення до Києва
   - Створення найвідоміших робіт («Потяг», «Пилярі»)
   - Трактат «Живопис та елементи»
   - Викладання в Київському художньому інституті
 - section: Теорія спектралізму
-  words: 700
   points:
   - Філософія кольору та руху
   - Вплив музики на живопис
   - Поняття «живописних елементів»
   - Новаторство порівняно із західним авангардом
 - section: Останні роки та спадщина (1922-1930)
-  words: 800
   points:
   - Хвороба на туберкульоз
   - Продовження творчості до останніх днів
   - Смерть та забуття в радянські часи
   - Відкриття наприкінці XX століття
-word_target: 4000
 vocabulary_hints:
   required:
   - футуризм (futurism)
@@ -73,7 +65,6 @@ activity_hints:
   items: 3 passages
 - type: essay-response
   focus: Чим український авангард відрізнявся від західного?
-  word_target: 300
   output: Порівняльне есе
 focus: biography
 prerequisites:
@@ -85,15 +76,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Олександр Богомазов (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Богомазов_Олександр_Костянтинович"
+  url: https://uk.wikipedia.org/wiki/Богомазов_Олександр_Костянтинович
   type: primary
   notes: Біографія, творчість, теоретичні праці
 - name: Національний художній музей України
-  url: "https://namu.kyiv.ua"
+  url: https://namu.kyiv.ua
   type: reference
   notes: Колекція робіт та виставки
 - name: «Живопис та елементи» (трактат)
-  url: "https://archives.gov.ua"
+  url: https://archives.gov.ua
   type: reference
   notes: Теоретична спадщина
 immersion: 100% Ukrainian
@@ -102,3 +93,6 @@ objectives:
 - 'Analyze the life and legacy of олександр богомазов: український футурист'
 - Evaluate the contributions of український пікассо
 - Trace the career and influence of останні роки та спадщина (1922-1930)
+persona:
+  voice: Senior Biographer
+  role: Art Theorist

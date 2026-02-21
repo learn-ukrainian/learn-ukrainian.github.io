@@ -565,6 +565,7 @@ This command:
 | `validate_meta_yaml.py`   | Meta YAML schema validation    | `.venv/bin/python scripts/validate_meta_yaml.py --level lit` |
 | `manifest_utils.py`       | Manifest validation & lookup   | `.venv/bin/python scripts/manifest_utils.py validate`        |
 | `validate_plan_config.py` | Plan vs config.py validation   | `.venv/bin/python scripts/validate_plan_config.py b1`        |
+| `assess_research.py`     | Research quality & upgrade      | `.venv/bin/python scripts/assess_research.py b2-hist --upgrade-process` |
 
 ### Slug & Path Utilities (Python)
 
@@ -1501,6 +1502,425 @@ Full technical documentation: `scripts/scoring/README.md`
 
 ---
 
+## Two-Stage Pipeline: Otaman + Hetman
+
+The pipeline is split into two stages for throughput optimization:
+
+- **Otaman** (`/otaman`) — Content sprint: prose only, no activities. ~30-60 min/module.
+- **Hetman** (`/hetman`) — Activity enrichment: adds activities, vocabulary, and final review.
+
+This split allows content generation to sprint ahead while activities (the bottleneck phase) are added later.
+
+### Architecture
+
+```
+User → /otaman {track} {num}  (Gemini interactive mode)
+         │
+    ┌────▼─────┐
+    │ OTAMAN   │  Content sprint (Phases 0-6b, prose only)
+    └────┬─────┘
+         │ dispatches via ai_agent_bridge.py
+    ┌────┼────────────┐
+    ▼                 ▼
+ YELLOW (yw-)      GREEN (gr-)
+ Builder           Reviewer (prose only)
+ --stdout-only     --stdout-only
+    │                 │
+    ▼                 ▼
+  Phases 0-2, 4-fix  Phase 6 (prose review)
+  Phase 6b fixes
+         │
+    ┌────▼─────┐
+    │ content  │  ✅ Content-complete (activities deferred)
+    │ complete │
+    └────┬─────┘
+         │
+User → /hetman {track} {num}  (later, when capacity available)
+         │
+    ┌────▼─────┐
+    │ HETMAN   │  Activity enrichment (Phases 3, 4, 7)
+    └────┬─────┘
+         │
+    ┌────┼────────────┐
+    ▼                 ▼
+ YELLOW (yw-)      FR (fr-)
+ Activities        Final Review
+ --stdout-only     --allow-write --delimiters
+    │                 │
+    ▼                 ▼
+  Phase 3           Phase 7 (adversarial)
+  Phase 4 (full)    3rd session, no memory
+         │
+    ┌────▼─────┐
+    │ CLAUDE   │  Spot-check only (1 in 5 modules)
+    └──────────┘
+```
+
+### Usage
+
+```bash
+# Stage 1: Content sprint (GEMINI skills — run in Gemini interactive mode)
+/otaman b1 5           # [Gemini] Prose-only rebuild of B1 module 5
+/otaman c1-bio 12      # [Gemini] Prose-only rebuild of C1-BIO module 12
+/otaman b2-hist        # [Gemini] Batch: all remaining modules in track
+
+# Stage 2: Activity enrichment (GEMINI skills)
+/hetman b1 5           # [Gemini] Add activities + final review to B1 module 5
+/hetman c1-bio         # [Gemini] Batch: enrich all content-complete modules
+
+# Full E2E mode (GEMINI skill — content + activities + review, no otaman needed)
+/hetman b1 5 --full    # [Gemini] Full pipeline for a single module
+/hetman c1-bio --full  # [Gemini] Batch: all incomplete modules from scratch
+
+# After Hetman completes (CLAUDE skill):
+/final-review b1 5     # [Claude] Final QA (~5 turns)
+
+# Content-only audit (used by otaman)
+scripts/audit_module.sh --skip-activities curriculum/l2-uk-en/{level}/{file}.md
+
+# Batch verification (run AFTER Gemini finishes to catch lies)
+.venv/bin/python scripts/verify_track.py {track}              # Verify all modules in track
+.venv/bin/python scripts/verify_track.py {track} --range 1-5  # Verify modules 1-5 only
+.venv/bin/python scripts/verify_track.py {track} --full       # Require full pass (not just content-complete)
+.venv/bin/python scripts/verify_track.py {track} --quick      # Fast: cached status, skip re-audit
+
+# Per-module verification gates (Gemini MUST run before declaring success)
+.venv/bin/python scripts/otaman_verify.py curriculum/l2-uk-en/{track}/{slug}.md  # Content-complete
+.venv/bin/python scripts/hetman_verify.py curriculum/l2-uk-en/{track}/{slug}.md  # Fully-complete
+
+# Batch scan for structural activity errors (run after large Gemini batches)
+.venv/bin/python scripts/scan_activity_errors.py                    # Scan all tracks
+.venv/bin/python scripts/scan_activity_errors.py --track b2 b2-hist # Scan specific tracks
+```
+
+### Deterministic Python Builder v3 (Preferred — Hybrid Gemini+Claude pipeline)
+
+`scripts/build_module_v3.py` reduces round-trips vs v2 by collapsing phases into single calls,
+and routes phases to the best LLM: Gemini for research/prose, Claude for activities and final review.
+
+**Baseline: 4 LLM calls. Worst case: 9 (with fix iterations). v2 typical: 8-9+ Gemini-only.**
+
+```bash
+# Single module — full E2E (Gemini phases A+B, Claude phases C+F)
+.venv/bin/python scripts/build_module_v3.py {track} {num}
+
+# Build entire track (skips already-passing modules)
+.venv/bin/python scripts/build_module_v3.py {track} --all
+
+# Build a range of modules
+.venv/bin/python scripts/build_module_v3.py {track} --range 1-20
+
+# Pre-seed research for all modules (Phase A only — fast batch)
+.venv/bin/python scripts/build_module_v3.py {track} --all --research-only
+
+# Nuke v3 state and restart from Phase A
+.venv/bin/python scripts/build_module_v3.py {track} {num} --rebuild
+
+# Re-run a single phase (A/B/C/audit/D/E/F)
+.venv/bin/python scripts/build_module_v3.py {track} {num} --force-phase D
+
+# Skip track context injection in Phases B and C
+.venv/bin/python scripts/build_module_v3.py {track} {num} --no-track-context
+
+# Dry-run (show plan, no LLM dispatches)
+.venv/bin/python scripts/build_module_v3.py {track} {num} --dry-run
+
+# Just verify (run audit, print PASS/FAIL, exit)
+.venv/bin/python scripts/build_module_v3.py {track} {num} --verify
+
+# + Phase F: optional final QA gate after Phase D
+.venv/bin/python scripts/build_module_v3.py {track} {num} --final-review
+
+# Phase F via Gemini (cross-agent: D=Claude, F=Gemini)
+.venv/bin/python scripts/build_module_v3.py {track} {num} --final-review --final-review-agent gemini
+```
+
+**Cross-agent pipeline:**
+
+Phase D (review) always uses Claude — the opposite agent from Phase B (Gemini builds content).
+This prevents self-review gaming detected by anti-gaming audit checks (issue #610).
+
+**Hybrid LLM routing — `--use-claude`:**
+
+By default, Phases A/B/C use Gemini and Phase D uses Claude.
+Use `--use-claude` to route additional phases to Claude (useful when running from a terminal
+to avoid Claude Code's 2-minute bash timeout, or to use Claude's superior activity quality):
+
+```bash
+# Route Phase A (research) to Claude — useful for c1/c2/b2-pro/c1-pro
+.venv/bin/python scripts/build_module_v3.py {track} {num} --use-claude A
+
+# Route Phase C (activities) to Claude explicitly (this is the default)
+.venv/bin/python scripts/build_module_v3.py {track} {num} --use-claude C
+
+# Route both A and C to Claude
+.venv/bin/python scripts/build_module_v3.py {track} {num} --use-claude "A C"
+
+# Research-only batch via Claude (for c1, c2, b2-pro, c1-pro)
+.venv/bin/python scripts/build_module_v3.py c1 --all --research-only --use-claude A
+```
+
+**Per-phase model overrides:**
+
+Default models are set in `scripts/batch_gemini_config.py` and auto-selected based on track type:
+- Seminar tracks (c1-bio, b2-hist, c1-hist, lit, oes, ruth): **claude-opus-4-6** for Claude phases
+- Core tracks (a1, a2, b1, b2, c1, c2, b2-pro, c1-pro): **claude-sonnet-4-6** for Claude phases
+- Phase D (review): always **claude-opus-4-6** (cross-agent review needs best model)
+- Phase F (final review): always **claude-opus-4-6** regardless of track
+
+Override models per-phase when needed:
+
+```bash
+# Use Opus for activities even on a core track
+.venv/bin/python scripts/build_module_v3.py a1 {num} --claude-model-C claude-opus-4-6
+
+# Use Sonnet for Phase D review (faster, cheaper)
+.venv/bin/python scripts/build_module_v3.py {track} {num} --claude-model-D claude-sonnet-4-6
+
+# Use Sonnet for final review (faster, cheaper)
+.venv/bin/python scripts/build_module_v3.py {track} {num} --final-review --claude-model-F claude-sonnet-4-6
+
+# Use Opus for research on a core track
+.venv/bin/python scripts/build_module_v3.py c1 {num} --use-claude A --claude-model-A claude-opus-4-6
+```
+
+**Model config defaults (edit `scripts/batch_gemini_config.py` to change globally):**
+
+```python
+CLAUDE_SONNET = "claude-sonnet-4-6"
+CLAUDE_OPUS   = "claude-opus-4-6"
+
+CLAUDE_MODEL_CORE_RESEARCH      = CLAUDE_SONNET  # Phase A, core tracks
+CLAUDE_MODEL_CORE_ACTIVITIES    = CLAUDE_SONNET  # Phase C, core tracks
+CLAUDE_MODEL_SEMINAR_RESEARCH   = CLAUDE_OPUS    # Phase A, seminar tracks
+CLAUDE_MODEL_SEMINAR_ACTIVITIES = CLAUDE_OPUS    # Phase C, seminar tracks
+CLAUDE_MODEL_FINAL_REVIEW       = CLAUDE_OPUS    # Phase F, all tracks
+```
+
+**Pipeline phases:**
+```
+Phase A (research+meta)   [Gemini by default; --use-claude A for Claude]
+→ B (content+track-ctx)  [Gemini always]
+→ C (activities+vocab)   [Claude: sonnet for core, opus for seminar]
+→ audit (fix loop, max 3 Gemini fix calls)
+→ D (review+fix loop, max 2 Gemini iters)
+→ [F: Claude QA gate, --final-review; opus always]
+→ E (MDX generation, always last, no LLM call)
+```
+
+**v3 vs v2:**
+- Phase A = v2's phases 0 + 0.5 + 1 (1 call instead of 3)
+- Phase C = Claude writes activities (better quality than Gemini-only)
+- Phase D = v2's phases 6 + 6b + 7 (1-2 calls instead of 3+)
+- Phase F = Claude final review with fix iterations (replaces Gemini adversarial review)
+- Track context injected into Phases B + C for cross-module consistency
+- State: `state-v3.json` (no conflict with v2's `state.json`)
+- Templates: `phase-A-seminar.md`, `phase-A-core.md`, `phase-D-review-fix.md`
+- v2 remains available as fallback
+
+### Deterministic Python Builder v2 (Fallback — archive support)
+
+`scripts/build_module_v2.py` — use for modules with archived prose (1.4M word
+archive detection + restore). Also the utility library imported by v3.
+Gemini only gets called for LLM tasks (research, writing, reviewing).
+
+```bash
+# Single module (resume-aware)
+.venv/bin/python scripts/build_module_v2.py {track} {num}
+
+# Build entire track sequentially (skips already-passing modules)
+.venv/bin/python scripts/build_module_v2.py {track} --all
+
+# Build a range of modules
+.venv/bin/python scripts/build_module_v2.py {track} --range 4-44
+
+# Rebuild from scratch (nuke ALL state + artifacts)
+.venv/bin/python scripts/build_module_v2.py {track} {num} --rebuild
+
+# Re-run a single phase (cleans that phase's artifacts only)
+.venv/bin/python scripts/build_module_v2.py {track} {num} --force-phase 3
+
+# Restart from a phase (cleans that phase + all subsequent, then runs forward)
+.venv/bin/python scripts/build_module_v2.py {track} {num} --restart-from 6
+
+# Force fresh research even if research file exists
+.venv/bin/python scripts/build_module_v2.py {track} {num} --force-research
+
+# Regenerate prose from updated research
+.venv/bin/python scripts/build_module_v2.py {track} {num} --refresh
+
+# Dry-run (show plan, no Gemini dispatches, no artifact cleanup)
+.venv/bin/python scripts/build_module_v2.py {track} {num} --dry-run
+
+# Just verify (run audit, print PASS/FAIL, exit immediately)
+.venv/bin/python scripts/build_module_v2.py {track} {num} --verify
+
+# Combine: dry-run entire track to see what needs building
+.venv/bin/python scripts/build_module_v2.py {track} --all --dry-run
+```
+
+**Pipeline phases** (all handled within one command):
+```
+Phase 0 (research) → 0.5 (enrich) → 1 (meta) → 2 (prose) → 3 (prose audit+fix)
+→ 4ab (activities+vocab) → 6 (review) → 6b (apply fixes)
+→ 5 (enrichment audit+fix) → 7 (final audit+fix) → 8 (MDX)
+```
+
+**After `build_module_v2.py` passes**, run Claude cross-agent review:
+```bash
+/final-review {track} {num}    # Claude QA (~5 turns) — separate from Gemini's Phase 6
+```
+
+**Artifact cleanup** (automatic on re-runs):
+
+| Flag | Cleans | Runs |
+|------|--------|------|
+| `--force-phase 6b` | Phase 6b artifacts only | That one phase |
+| `--restart-from 6` | Phase 6 + all subsequent artifacts + state | Pipeline from phase 6 onward |
+| `--rebuild` | ALL artifacts + state.json | Full pipeline from scratch |
+
+Each phase's orchestration files (prompts, logs, verify files), external artifacts
+(audit reports, review files, status JSON), and state entries are cleaned automatically.
+No stale files from previous runs.
+
+**Key advantages:**
+- Deterministic state tracking in `orchestration/{slug}/state.json`
+- Automatic artifact cleanup on re-runs (no stale prompts/logs)
+- Whole-module prose generation (single Gemini call per module)
+- Prose quality gate (drill blocks, glossary lists, LLM fingerprints)
+- Batch mode (`--all`, `--range`) with auto-skip for passing modules
+- Config tables for immersion rules, level constraints, activity configs
+
+### Legacy v1 Builder
+
+`scripts/build_module.py` — the original split-mode builder. Use v2 instead.
+
+```bash
+.venv/bin/python scripts/build_module.py {track} {num}                # Full pipeline
+.venv/bin/python scripts/build_module.py {track} {num} --content-only # Prose only
+.venv/bin/python scripts/build_module.py {track} {num} --enrich       # Activities only
+```
+
+### Key Components
+
+| Component | Location | Purpose |
+|-----------|----------|---------|
+| **Module builder v3** | `scripts/build_module_v3.py` | **4-call optimised pipeline (preferred)** |
+| Module builder v2 | `scripts/build_module_v2.py` | E2E pipeline — fallback, archive support |
+| Module builder v1 | `scripts/build_module.py` | Legacy split-mode builder (utility library for v2/v3) |
+| Final review (Claude) | `claude_extensions/commands/final-review.md` | Claude cross-agent QA |
+| Final review (Gemini) | `.gemini/skills/final-review/SKILL.md` | Gemini adversarial QA |
+| Verify gates | `scripts/otaman_verify.py`, `scripts/hetman_verify.py` | Hard pass/fail gates |
+| Template filler | `scripts/fill_template.py` | Fill phase templates with placeholders |
+| AI agent bridge | `scripts/ai_agent_bridge.py` | Dispatch to Gemini with `--allow-write`, `--delimiters` |
+| State persistence | `orchestration/{slug}/state.json` | Crash recovery |
+| Batch dispatcher | `scripts/batch_dispatcher.py` | Autonomous batch scheduling (old pipeline) |
+
+### Pipeline Phases
+
+**Otaman (content sprint):**
+
+| Phase | Action | Agent | Mode |
+|-------|--------|-------|------|
+| 0 | Research | Yellow Gemini | `--stdout-only` |
+| 1 | Meta rebuild | Yellow Gemini | `--stdout-only` |
+| 2 | Content writing (sharded) | Yellow Gemini | `--stdout-only` |
+| 4 | Content-only audit + fix loop (max 3) | Local + Yellow fixes | `--allow-write` |
+| 5 | MDX generation + status | Local | -- |
+| 6 | Prose review | Green Gemini (new session) | `--stdout-only` |
+| 6b | Apply prose fixes + IPA lint | Yellow + local | `--allow-write` |
+
+**Hetman (activity enrichment):**
+
+| Phase | Action | Agent | Mode |
+|-------|--------|-------|------|
+| 3 | Activities + vocabulary | Yellow Gemini | `--stdout-only` |
+| 4 | Full audit + fix loop (max 3) | Local + Yellow fixes | `--allow-write` |
+| 5 | MDX regeneration | Local | -- |
+| 7 | **Final review (adversarial)** | **FR Gemini (3rd session)** | `--allow-write --delimiters` |
+
+### Dispatch Modes
+
+The bridge (`ai_agent_bridge.py`) supports three execution modes:
+
+| Flag | Mode | Permissions | Used By |
+|------|------|------------|---------|
+| `--stdout-only` | READ-ONLY | Text output only, no file writes, no bash | Phases 0-3, 6 |
+| `--allow-write` | FULL-EXECUTION | Bash + file read/write | Phases 4 fixes, 6b, 7 |
+| `--allow-write --delimiters X,Y` | FULL-EXECUTION + specific tags | Same + model knows exact output delimiters | Phase 7 |
+
+**Silence Protocol:** In `--allow-write` mode, the system prompt enforces a **silence protocol** — the agent emits zero text between tool calls. Only the final delimited output is produced. This prevents the "planning loop" where the agent narrates instead of executing, wasting tokens and risking timeout.
+
+**Private Scratchpad:** Agents can use `<!-- thinking: ... -->` XML comments for internal reasoning (case endings, dates, IPA) without breaking the silence protocol. These don't count as narration and won't affect MDX builds or word counts.
+
+### Template Filling
+
+The Otaman/Hetman use `scripts/fill_template.py` to fill phase templates with computed placeholders:
+
+```bash
+.venv/bin/python scripts/fill_template.py \
+  --template claude_extensions/phases/gemini/phase-2-content.md \
+  --placeholders orchestration/{slug}/placeholders.yaml \
+  --output orchestration/{slug}/phase-2-prompt.md
+```
+
+Placeholders are computed once during pre-flight and stored in `orchestration/{slug}/placeholders.yaml`.
+
+### Crash Recovery
+
+State is persisted to `orchestration/{slug}/state.json` after every phase transition. On re-invocation, the orchestrator reads the state file and resumes from the last incomplete phase.
+
+### Content-Only Audit
+
+The `--skip-activities` flag enables content-only audits that defer activity/vocab gates:
+
+```bash
+scripts/audit_module.sh --skip-activities curriculum/l2-uk-en/{level}/{file}.md
+```
+
+Deferred gates serialize as `"status": "deferred"` in the status JSON, enabling:
+- Otaman to pass content-only audits without activities
+- `batch_otaman.py` to distinguish content-complete from fully-passing modules
+- Hetman to find modules that need activity enrichment
+
+### Verification Gates
+
+Hard pass/fail scripts that Gemini MUST run before declaring a module complete. These replace LLM self-assessment with deterministic checks.
+
+**Why these exist:** Gemini sometimes shortcuts conditional bash logic and declares success without running the actual audit. These scripts are the single source of truth — exit 0 = PASS, exit 1 = FAIL.
+
+**`scripts/otaman_verify.py`** — Content-complete gate (used after Otaman):
+```bash
+.venv/bin/python scripts/otaman_verify.py curriculum/l2-uk-en/{track}/{slug}.md
+```
+Checks: runs audit with `--skip-activities`, reads status JSON (no failing gates), verifies orchestration artifacts (phase-2 sections, placeholders.yaml).
+
+**`scripts/hetman_verify.py`** — Fully-complete gate (used after Hetman):
+```bash
+.venv/bin/python scripts/hetman_verify.py curriculum/l2-uk-en/{track}/{slug}.md
+```
+Checks: runs FULL audit (no `--skip-activities`), ALL gates must pass (no deferred, no fail), activities YAML and vocabulary YAML must exist.
+
+**`scripts/scan_activity_errors.py`** — Batch structural correctness scanner:
+```bash
+.venv/bin/python scripts/scan_activity_errors.py                     # All tracks
+.venv/bin/python scripts/scan_activity_errors.py --track b2 b2-hist  # Selected tracks
+```
+Scans every `activities/*.yaml` file for 5 structural errors that the YAML schema cannot catch. Exit 0 = clean, exit 1 = critical errors found.
+
+Detects:
+| Error type | What it catches |
+|---|---|
+| `SELECT_MIN_CORRECT_MISMATCH` | `min_correct` ≠ actual count of `correct: true` options per question |
+| `QUIZ_CORRECT_COUNT` | Quiz items with 0 or 2+ correct answers (must be exactly 1) |
+| `FILL_IN_ANSWER_NOT_IN_OPTIONS` | `answer` not present in the `options` list — student can never select correct answer |
+| `TRANSLATE_CORRECT_COUNT` | Translate items with 0 or 2+ correct options (must be exactly 1) |
+| `MARK_THE_WORDS_ANSWER_NOT_IN_TEXT` | Answer word absent from the activity `text` — student cannot mark it |
+
+These same checks run automatically inside `audit_module.sh` (hooked into `audit/core.py`). The batch scanner is for spotting errors across many modules at once after a Gemini build batch.
+
+---
+
 ## Batch Dispatcher (Autonomous Scheduler)
 
 **Purpose:** Autonomous scheduler that processes all 20 tracks (~1,250 modules) in priority order, dispatching to `batch_gemini_runner.py`, handling quota/failures, and rotating between tracks.
@@ -1697,6 +2117,72 @@ npm run status:all             # Generate all levels
 - Updates totals based on combined data
 
 **Output:** `docs/{LEVEL}-STATUS.md`
+
+---
+
+## Research Quality Assessment
+
+### assess_research.py
+
+**Purpose:** Assess research quality across tracks, identify gaps, and auto-upgrade weak research.
+
+**Usage:**
+
+```bash
+# Quality table (tracks with a rubric)
+.venv/bin/python scripts/assess_research.py b2-hist
+.venv/bin/python scripts/assess_research.py a1
+
+# Single module detail
+.venv/bin/python scripts/assess_research.py b2-hist 5
+
+# Only modules with gaps
+.venv/bin/python scripts/assess_research.py b2-hist --gaps
+
+# Coverage only (tracks without a rubric)
+.venv/bin/python scripts/assess_research.py b1
+
+# All tracks overview
+.venv/bin/python scripts/assess_research.py --all
+
+# JSON output
+.venv/bin/python scripts/assess_research.py b2-hist --json
+
+# Refresh queue (research upgraded, content stale)
+.venv/bin/python scripts/assess_research.py a1 --refresh-queue
+.venv/bin/python scripts/assess_research.py a1 --process           # rebuild stale modules
+
+# Upgrade queue (research below score threshold)
+.venv/bin/python scripts/assess_research.py b2-hist --upgrade                  # list modules below 9/10
+.venv/bin/python scripts/assess_research.py b2-hist --upgrade --min-score 8    # custom threshold
+.venv/bin/python scripts/assess_research.py b2-hist --upgrade-process          # regenerate weak research
+
+# Enrich plans from 9+ research
+.venv/bin/python scripts/assess_research.py c1-bio --enrich-plans
+```
+
+**Self-healing retries:** `--upgrade-process` retries each module up to 3 attempts (`MAX_RESEARCH_UPGRADE_RETRIES`). Hard failures (build error, timeout, missing file) stop retries immediately. Ctrl+C exits cleanly with a progress summary.
+
+**v3 integration:** after a successful upgrade, `--upgrade-process` automatically clears Phase A from `state-v3.json` for that module. This forces `build_module_v3.py` to regenerate the meta outline from the improved research on the next run. Modules whose research wasn't upgraded keep their Phase A cached.
+
+### Full Research → Build Workflow (v3)
+
+```bash
+# 1. Pre-seed research for all modules
+.venv/bin/python scripts/build_module_v3.py c1-bio --all --research-only
+
+# 2. Assess — see what's below 9/10
+.venv/bin/python scripts/assess_research.py c1-bio --gaps
+
+# 3. Upgrade weak research (auto-resets v3 Phase A for upgraded modules)
+.venv/bin/python scripts/assess_research.py c1-bio --upgrade-process
+
+# 4. Enrich plans from 9+ research
+.venv/bin/python scripts/assess_research.py c1-bio --enrich-plans
+
+# 5. Full build — Phase A cached for passing modules, re-runs for upgraded ones
+.venv/bin/python scripts/build_module_v3.py c1-bio --all
+```
 
 ---
 
@@ -1944,7 +2430,25 @@ npm run sync:landing:dry      # Preview changes without applying
 
 # Interactive mode
 .venv/bin/python scripts/ai_agent_bridge.py interactive
+
+# Dispatch with full execution access (Otaman Phase 7)
+.venv/bin/python scripts/ai_agent_bridge.py ask-gemini \
+  "Activate skill final-review. ..." \
+  --task-id fr-{slug} \
+  --allow-write \
+  --delimiters FINAL_REVIEW,FRICTION \
+  --model gemini-3-pro-preview
 ```
+
+**Key flags for `ask-gemini`:**
+
+| Flag | Purpose |
+|------|---------|
+| `--stdout-only` | READ-ONLY mode — text output only, no bash/writes |
+| `--allow-write` | FULL-EXECUTION mode — bash + file writes, silence protocol enforced |
+| `--delimiters X,Y` | Inject specific delimiter names into system prompt (e.g., `FINAL_REVIEW,FRICTION`) |
+| `--model` | Gemini model (always `gemini-3-pro-preview` for content) |
+| `--task-id` | Session isolation (prefix: `yw-` builder, `gr-` reviewer, `fr-` final review) |
 
 ### Signal Script (Gemini → Claude notification)
 

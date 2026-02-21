@@ -1,0 +1,236 @@
+✅ Message sent to Gemini (ID: 12278) [auto-acked: self-addressed]
+✓ Message 12278 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12278...
+📨 Message #12278
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-yakovenko-mirror-of-history
+   Time: 2026-02-20T23:38:12.195150+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: lit-essay-yakovenko-mirror
+level: LIT.ESSAY
+slug: yakovenko-mirror-of-history
+version: '2.0'
+title: 'Наталя Яковенко: Дзеркала історії'
+subtitle: Методологія як мистецтво
+content_outline:
+- section: Вступ — Історія як текст
+  points:
+  - Аналіз вступу до "Дзеркал історії"
+  - Концепція "образу іншого"
+  - Як історик конструює минуле
+- section: Шляхта і Козаки — подвійна оптика
+  points:
+  - Розбір ключових есеїв про ранньомодерну ідентичність
+  - Проблема "націоналізації" історії 17 століття
+  - Латинська культура України
+- section: Стилістика авторки
+  points:
+  - Барокова пишність мови Яковенко
+  - Іронія та наукова точність
+  - Термінологічна вишуканість
+- section: Деколонізація методу
+  points:
+  - Відмова від радянських та народницьких схем
+  - Повернення України в європейський контекст (Res Publica)
+  - Антропологічний вимір
+- section: Підсумок
+  points:
+  - Вплив на сучасну гуманітаристику
+  - Чому це треба читати філологам
+vocabulary_hints:
+  required:
+  - наратив
+  - дискурс
+  - ідентичність
+  - топос
+  - шляхта
+  recommended:
+  - палімпсест
+  - деконструкція
+activity_hints:
+- type: reading
+  focus: Аналіз тексту
+- type: essay-response
+  focus: Критичне есе
+- type: critical-analysis
+  focus: Методологічний розбір
+focus: literature
+pedagogy: literature
+immersion: 100% Ukrainian
+phase: LIT Expansion
+objectives:
+- Проаналізувати методологічні підходи Наталі Яковенко
+- Дослідити мовну стилістику наукового тексту
+persona:
+  voice: Literary Critic
+  role: Methodology Expert
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Наталя Яковенко: Дзеркала історії
+
+## Використані джерела
+1. [Чтиво: Дзеркала ідентичності](https://chtyvo.org.ua/authors/Yakovenko_Natalia/Dzerkala_identychnosti_Doslidzhennia_z_istorii_uiavlen_ta_idei_v_Ukraini_XVI_-_pochatku_XVIII_stolittia/) — Повний текст та опис збірки статей, що лягла в основу аналізу.
+2. [ЛітАкцент: Наталя Яковенко. Дзеркала ідентичності](http://litakcent.com/2013/02/13/natalya-yakovenko-dzerkala-identychnosti/) — Рецензія та аналіз ключових ідей книги.
+3. [Україна Модерна: Інтерв'ю з Наталею Яковенко](https://uamoderna.com/jitteopis-istorii/yakovenko-interview/) — Обговорення методології, антропологічного підходу та зміни історичних парадигм.
+4. [Енциклопедія Сучасної України: Яковенко Наталя Миколаївна](https://esu.com.ua/search_articles.php?id=Yakovenko_Natalia) — Біографічні дані та науковий доробок.
+5. [Ізборник: Наталя Яковенко](http://litopys.org.ua/index.html) — Тексти праць, зокрема "Нарис історії України".
+
+## Хронологія
+- **1942, 16 жовтня**: Народилася в селі Апрелівка (нині Макіївка) на Кіровоградщині.
+- **1967**: Закінчила класичне відділення Львівського університету (спеціалізація — латина та грецька мова).
+- **1970–1981**: Праця в Центральному державному історичному архіві (робота з латиномовними документами, формування джерельної бази).
+- **1993**: Вихід книги "Українська шляхта з кінця XIV до середини XVII ст." — перелом у сприйнятті шляхетського стану.
+- **2002**: Публікація "Паралельний світ" — початок глибокого дослідження історії уявлень та ідей.
+- **2012**: Вихід збірки "Дзеркала ідентичності" — підсумок досліджень ранньомодерної свідомості.
+
+## Ключові факти та цитати
+- **Про простір**: "У дзеркалах ідентичності йдеться про просторові уявлення домодерної людини... аморфний географічний простір починає перетворюватися на нашу землю, нашу священну Батьківщину."
+- **Про метод**: "Це ж така антропологізація історії, що словами не передати: тут і регіональний та ґендерний аспекти... і так звана «народна побожність»."
+- **Про стереотипи**: "Стереотипні уявлення про свій народ... формуються у підлітковому віці... через шкільний курс історії."
+- **Факт**: Яковенко прийшла в історію з філології (класичні мови), що визначило її унікальний стиль — увага до СЛОВА, до тексту як першоджерела смислів, а не просто фактів.
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ — Історія як текст: I — Концепція «Іншого»": [!context] — Пояснити метафору "дзеркала": ми бачимо себе лише через відображення в очах "Іншого" (поляка, московита, турка).
+- Section "Вступ — Історія як текст: II — Конструювання минулого": [!quote] — Цитата про "винайдення традиції". Історія — це не те, що було, а те, що ми про це написали.
+- Section "Шляхта і Козаки — подвійна оптика: I — Світ шляхти": [!myth-buster] — Спростування радянського міфу про шляхту як виключно "польських панів-гнобителів". Українська шляхта — носій політичної культури.
+- Section "Шляхта і Козаки — подвійна оптика: II — Козацька рецепція": [!history-bite] — Як козацька старшина "привласнила" шляхетську ідеологію і герби, ставши "новою шляхтою".
+- Section "Стилістика авторки": [!culture] — "Смачна" мова Яковенко. Вона пише історію як літературу, використовуючи барокові конструкції.
+- Section "Деколонізація методу: I — Подолання народництва": [!decolonization] — Відмова від віктимності ("плач над народом") на користь суб'єктності (історія еліт, успіхів, боротьби).
+
+## Деколонізаційний контекст
+- **Imperial/Soviet myth**: Історія України — це історія селянства та повстань проти "панів". 17 століття — це лише "Руїна" та "возз'єднання". Шляхта — класовий ворог.
+- **Ukrainian reality**: Українська історія — це історія європейської політичної нації (Res Publica). Шляхта (Руська шляхта) — творці культури та державності. Козаки — продовжувачі шляхетських традицій, а не їхні антиподи (в культурному сенсі). "Наталізація" історії — повернення собі власної еліти.
+
+## Contested Terms (if applicable)
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| **Шляхта** | Експлуататори, ополячені зрадники, чужий елемент. | Політична еліта, носії правової культури, захисники "руської віри", предки модерної нації. |
+| **Річ Посполита** | Тюрма народів, період занепаду, іноземне панування. | Спільна держава ("Спільна справа"), простір політичних свобод, школа республіканізму. |
+| **Козацькі війни** | Класова боротьба, селянська війна. | Боротьба за права і вольності в рамках політичної системи, становлення козацької державності. |
+| **Народ** | Етнічна маса, селянство (етнос). | Політичний народ (demos), шляхетська нація (natio). |
+
+## Section-Mapped Research Notes
+
+### Вступ — Історія як текст
+Яковенко трактує історію як текст, який треба "розчитати". Вона застосовує герменевтику: розуміння тексту через контекст епохи. Важливість "образу Іншого" — ідентичність формується через протиставлення (ми — не вони).
+
+### Шляхта і Козаки — подвійна оптика
+Ключовий зсув парадигми: шляхта не ворог, а "свої". Аналіз того, як руська шляхта зберігала свою ідентичність (віра, мова, право) в умовах полонізації. Козаки не знищили шляхетський світ, а "віддзеркалили" його, перейнявши ідеали свободи, герби та риторику.
+
+### Стилістика авторки
+Стиль Яковенко — це феномен. Вона відмовилася від сухого академізму ("канцеляриту"). Її тексти насичені метафорами, архаїзмами, грою слів. Це "барокова" історія про барокову добу. Іронія як інструмент дистанціювання від пафосу.
+
+### Деколонізація методу
+Відхід від "народницького" (Грушевський, Єфремов) канону, де історія — це страждання народу. Перехід до історії еліт, ідей, ментальності. Повернення України в контекст Центрально-Східної Європи (Latinitas), а не "спільної колиски" з Росією.
+
+### Підсумок
+Вплив Яковенко на сучасну гуманітаристику — величезний. Вона "переписала" підручники (буквально і фігурально). Для філолога це взірець роботи з текстом і мовою.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12337)
+✓ Message 12278 acknowledged
+✓ Message 12337 acknowledged

@@ -1,17 +1,16 @@
-# Audit Report: M01 — 01-the-cyrillic-code-i.md
-**Level:** A1 | **Module:** M01 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 1019
-**Naturalness:** 10/10 (PASS)
+# Audit Report: M01 — the-cyrillic-code-i.md
+**Level:** A1 | **Module:** M01 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-10 19:11:01
+**Generated:** 2026-02-21 00:46:28
 
 ## Configuration
 **Type:** A1-grammar
-**Word Target:** 1019 words
+**Word Target:** 2000 words
 **Activities:** 8-12 required
 **Items per Activity:** ≥12 items
 **Unique Types:** ≥4 types required
 **Priority Types:** anagram, fill-in, match-up, quiz, unjumble
-**Required Types:** anagram, group-sort, match-up, quiz
+**Required Types:** match-up, quiz
 **Engagement:** ≥3 callouts
 **Immersion:** 0-100%
 **Vocab Target:** ≥1 words
@@ -20,47 +19,50 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | match-up | True Friends | 12 | 8 | ✅ |
-| 2 | match-up | False Friends Sound | 12 | 8 | ✅ |
-| 3 | group-sort | Letter Types | 19 | 12 | ✅ |
-| 4 | quiz | Reading Words | 12 | 8 | ✅ |
-| 5 | true-false | Letter Recognition | 12 | 8 | ✅ |
-| 6 | fill-in | Complete the Word | 12 | 8 | ✅ |
-| 7 | anagram | Build the Word | 12 | 8 | ✅ |
-| 8 | anagram | International Words | 12 | 8 | ✅ |
+| 1 | match-up | Справжні друзі: Літери та звуки | 8 | 8 | ✅ |
+| 2 | match-up | Нові літери та хибні друзі: Звуки | 12 | 8 | ✅ |
+| 3 | group-sort | Сортування літер | 19 | 12 | ✅ |
+| 4 | quiz | Літери та звуки: Перевірка | 8 | 8 | ✅ |
+| 5 | anagram | Розшифруйте слова | 8 | 8 | ✅ |
+| 6 | match-up | Переклад слів | 8 | 8 | ✅ |
+| 7 | fill-in | Заповніть пропуски | 8 | 8 | ✅ |
+| 8 | true-false | Правда чи ні? | 8 | 8 | ✅ |
+| 9 | quiz | Нові знайомі | 8 | 8 | ✅ |
 
 **Summary:**
-- Total activities: 8 (target: 8-12) ✅
+- Total activities: 9 (target: 8-12) ✅
 - Unique types: 6 (minimum: 4) ✅
 - Priority types used: 4/5 (anagram, fill-in, match-up, quiz) ✅
-- Required types used: 4/4 (anagram, group-sort, match-up, quiz) ✅
+- Required types used: 2/2 (match-up, quiz) ✅
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1135/1019 (raw: 1507)
-- **Activities:** ✅ 8/8
+- **Words:** ✅ 2613/2000 (raw: 2991)
+- **Activities:** ✅ 9/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 4/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 41/1
+- **Vocab:** ✅ 20/1
 - **Structure:** ✅ Valid Structure
+- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 6.3% (target 5-15% (M01))
+- **Immersion:** 🇺🇦 6.2% (target 5-15% (M01))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ✅ 10/10 (High)
+- **Naturalness:** ℹ️ PENDING — awaiting review
+- **Research:** ✅ Content aligned with research
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Warm-up** | ✅ | 109 | Included in Core |
-| **Presentation** | ✅ | 354 | Included in Core |
-| **Practice** | ⚪️ | 278 | Skipped |
-| **Cultural Insight** | ✅ | 185 | Included in Core |
-| **Production** | ➖ | 68 | Excluded Type |
-| **Підсумок** | ✅ | 122 | Included in Core |
-| **Need More Practice?** | ⚪️ | 19 | Skipped |
+| **The Cyrillic Code I** | ✅ | 53 | Included in Core |
+| **Розминка: Чому кирилиця?** | ✅ | 476 | Included in Core |
+| **Презентація: Літери-друзі та літери-пастки** | ✅ | 870 | Included in Core |
+| **Практика: Читаємо міжнародні слова** | ✅ | 310 | Included in Core |
+| **Культурний контекст: Українська ідентичність літери «І»** | ✅ | 387 | Included in Core |
+| **Продукція: Ваші перші слова** | ✅ | 340 | Included in Core |
+| **Підсумок** | ✅ | 177 | Included in Core |

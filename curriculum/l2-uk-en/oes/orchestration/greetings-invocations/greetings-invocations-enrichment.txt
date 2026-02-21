@@ -1,0 +1,203 @@
+✅ Message sent to Gemini (ID: 11756) [auto-acked: self-addressed]
+✓ Message 11756 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #11756...
+📨 Message #11756
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-greetings-invocations
+   Time: 2026-02-20T23:30:16.547120+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 6
+module: oes-006
+module_number: 6
+slug: greetings-invocations
+title_uk: Вітання та звертання
+title_en: Greetings & Invocations
+phase: 1
+phase_id: vernacular-foundations
+phase_name: Vernacular Foundations
+focus: '"Господи, помози..." — Dative case in prayers'
+content_outline:
+- section: Вступ
+  description: Introduction to Greetings & Invocations
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Senior Paleographer
+  role: Master of Ceremonies
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Greetings Invocations (OES)
+
+## Використані джерела
+1. **Енциклопедія Сучасної України (esu.com.ua)** — статті про етикет та мовні норми.
+2. **Ізборник (litopys.org.ua)** — тексти графіті Софії Київської, "Слово о полку Ігоревім", берестяні грамоти.
+3. **History.org.ua** — дослідження про епістолярну спадщину та Звенигородські грамоти.
+4. **Zvenyhorod.org** — матеріали про археологічні знахідки у Звенигороді.
+
+## Хронологія
+- **1018–1019**: Найдавніші датовані графіті Софії Київської (глаголичні та кириличні).
+- **1019–1054**: Епоха Ярослава Мудрого — активна фіксація молитовних звертань ("Господи, помози...") на стінах собору.
+- **1110–1137**: Датування берестяних грамот зі Звенигорода (Львівщина), що містять формули ділового листування.
+- **1187**: Створення "Слова о полку Ігоревім" — фіксація епічних звертань ("Буй Тур Всеволод", "Яр Тур").
+- **Кінець XIV ст.**: Поява форми множинного звертання "Ви" до однієї особи (вплив європейської традиції, відсутній в ОЄС).
+
+## Ключові факти та цитати
+- **Сакральна формула**: Найпоширеніше графіті — «Господи, помози рабу своєму [Ім’я]». Це класичний приклад давального відмінка адресата.
+- **Епістолярна формула**: Стандартний початок листа на бересті — «Уклін від [Ім’я] до [Ім’я]» (Поклонъ ѿ... къ...).
+- **Прямота звертання**: До князів зверталися на "Ти" і в кличному відмінку: «Ти, княже...». Форма "Ви" вважалася б дивною або незрозумілою.
+- **Звенигородська грамота №2**: Лист від Говенової до Неженця з вимогою повернути борг — приклад прямої, беземоційної комунікації.
+
+## Engagement Hooks (mapped to sections)
+- **Section "Вступ: Культура «Ти»"**: `[!history-bite]` — У Київській Русі навіть до Великого князя зверталися на "Ти". Ввічливість виражалася інтонацією та кличним відмінком, а не множиною.
+- **Section "Сакральне звертання: Графіті"**: `[!context]` — Стіни Софії були "соціальною мережею" середньовіччя, де люди залишали молитви-статуси.
+- **Section "Граматика: Таємниця давального"**: `[!paleography]` — Як писарі скорочували "Господи" до "Г҃И" під титлом.
+- **Section "Епістолярний етикет"**: `[!culture]` — Берестяні грамоти Звенигорода доводять, що галичани XII ст. писали тією ж мовою, що й кияни.
+- **Section "Усні вітання"**: `[!myth-buster]` — "Здрастуй" — це пізніша форма. Давньоруське вітання — "Здоров" (побажання цілісності/здоров'я) або "Чолом" (фізичний уклін).
+- **Section "Підсумок"**: `[!decolonization]` — Українська мова зберегла живий кличний відмінок (Боже, брате), тоді як російська втратила його, замінивши називним (Бог, брат), зберігши лише як архаїзм у церкві.
+
+## Деколонізаційний контекст
+- **Міф**: Російська імперська лінгвістика часто трактувала кличний відмінок як "застарілий" або суто церковний.
+- **Реальність**: Для русинів (українців) кличний відмінок завжди був частиною живої розмовної мови. Втрата кличного відмінка в російській мові — наслідок фінно-угорського субстрату та болгарського церковного впливу, тоді як українська зберегла питому слов'янську рису.
+- **Етикет**: Московська традиція пізніше запровадила принизливі формули ("холоп твій б'є чолом"), тоді як руська (українська) традиція базувалася на гідності вільної людини ("уклін від...").
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| Vocative Case | Archaic, Church Slavonic relic (in Russian context) | Living, organic grammatical category rooted in Proto-Slavic and preserved in Ukrainian |
+| Forms of Address | Hierarchical, subservient (post-Mongol Muscovy) | Direct, dignified ("Ty, kniazhe"), egalitarian |
+| "Gospodin" vs "Pan" | "Pan" labeled as Polish bourgeois borrowing | "Pan" has local roots (from 'zhupan'?), but OES used titles or "dobrodiy" concepts |
+
+## Section-Mapped Research Notes
+
+### Вступ: Культура «Ти»
+В ОЄС не існувало пошанної множини ("Ви"). Усі — від смерда до князя — були на "Ти". Соціальна дистанція маркувалася не займенником, а титулом у кличному відмінку ("Княже", "Отче", "Брате").
+
+### Сакральне звертання: «Господи, помози...»
+Аналіз графіті Софії. Структура: [Звертання (Кл.в.)] + [Дієслово (Наказ. сп.)] + [Об'єкт (Дав.в.)]. "Господи (Voc) помози (Imp) рабу (Dat) своєму (Dat)". Це ключ до розуміння синтаксису.
+
+### Епістолярний етикет: Берестяні грамоти
+Формула "Поклонъ ѿ [X] къ [Y]". Це не просто "привіт", це формальний вступ. Звенигородські грамоти (1110-1137) показують побутовий рівень спілкування (борги, торгівля), де етикет був лаконічним.
+
+### Усні вітання: «Здоров» та «Чолом»
+Реконструкція усних форм. "Здоров" (побажання бути міцним, як дерево - *dorvo). "Чолом бити" — фізичний жест поваги, що перейшов у вербальну формулу. Епічні звертання в "Слові о полку": "Буй Тур Всеволод" — метафоричні імена-титули.
+
+### Граматичний фокус: Кличний та Давальний
+Кличний відмінок — не "додатковий", а один з 7 основних. Давальний відмінок позначає адресата (кому?). Порівняння: ОЄС "Княже" -> Укр "Княже", Рос "Князь". ОЄС "Рабу" -> Укр "Рабу/Рабові", Рос "Рабу".
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 11966)
+✓ Message 11756 acknowledged
+✓ Message 11966 acknowledged

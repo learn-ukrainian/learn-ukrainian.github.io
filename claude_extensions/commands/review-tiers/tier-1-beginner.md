@@ -2,7 +2,7 @@
 
 > **Target:** A1 and A2 modules
 > **Pedagogy:** PPP (Present-Practice-Produce)
-> **Immersion:** 10-70% Ukrainian (scaffolded with English)
+> **Immersion:** 10-90% Ukrainian (scaffolded with English, graduated by band)
 > **Experience Goal:** Safe, encouraging tutoring — learner feels supported, not overwhelmed
 
 ---
@@ -116,8 +116,9 @@ WELCOME → PREVIEW → PRESENT → PRACTICE → CELEBRATE
 | A1.1 | 20-40% | Heavy English support |
 | A1.2 | 40-60% | Increasing Ukrainian |
 | A1.3 | 60-80% | Scaffolded transition |
-| A2.1 | 40-60% | Review with more Ukrainian |
-| A2.2 | 50-70% | Building independence |
+| A2 M01-20 | 50-60% | Core grammar — English for theory |
+| A2 M21-50 | 60-75% | Applied grammar — English only for abstract concepts |
+| A2 M51-70 | 75-90% | Consolidation — near-full Ukrainian |
 
 ### Language Quality (Beginner Adaptation)
 

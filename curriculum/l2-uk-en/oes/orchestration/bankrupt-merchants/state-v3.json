@@ -1,0 +1,13 @@
+{
+  "track": "oes",
+  "slug": "bankrupt-merchants",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-20T11:18:42Z",
+      "task_id": "v3-bankrupt-merchants-pA",
+      "mode": "full"
+    }
+  }
+}

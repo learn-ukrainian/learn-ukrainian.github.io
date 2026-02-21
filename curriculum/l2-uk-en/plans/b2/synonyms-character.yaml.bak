@@ -1,0 +1,70 @@
+module: b2-60
+level: B2
+sequence: 60
+slug: synonyms-character
+version: '2.0'
+title: 'Синоніми: Характер та Особистість'
+subtitle: Synonyms - Character and Personality
+content_outline:
+- section: Розминка — Описуємо людину
+  points:
+  - Розумний vs мудрий vs кмітливий — різні типи інтелекту
+  - Добрий vs щедрий vs милосердний — різні прояви доброти
+  - Вдача та натура — українські концепти характеру
+- section: Smart
+  points:
+  - розумний (intelligent - general)
+  - мудрий (wise - experienced)
+  - кмітливий (quick-witted - practical)
+  - тямущий (clever - colloquial)
+  - геніальний (genius - exceptional)
+- section: Kind
+  points:
+  - добрий (kind - general)
+  - щедрий (generous - giving)
+  - милосердний (merciful - compassionate)
+  - чуйний (sensitive/responsive)
+  - лагідний (gentle - soft)
+- section: Практика — психологічний портрет
+  points:
+  - Обрати прикметники для опису характеру літературного героя
+  - Написати психологічний портрет з 10+ прикметниками характеру
+  - Порівняти опис однієї людини в різних регістрах (резюме vs особистий лист)
+  - Систематизувати синоніми M55-60 — створення власного тезаурусу
+focus: phraseology
+pedagogy: CBI
+objectives:
+- Учень може розрізняти відтінки значень між синонімами на позначення інтелекту та
+  доброти
+- Учень вміє створювати детальні психологічні портрети, використовуючи лексику рівня
+  B2
+- Учень розуміє концепцію 'вдачі' та 'натури' в українському культурному контексті
+grammar:
+- Adjectival nuances in personality
+- Abstract nouns for traits
+immersion: 100
+register: художній
+phase: B2.2 [Phraseology & Synonymy]
+vocabulary_hints:
+  required:
+  - синонім (synonym)
+  - вираз (expression)
+  - значення (meaning)
+  - контекст (context)
+  recommended:
+  - переносне значення (figurative meaning)
+  - стилістичне забарвлення (stylistic coloring)
+activity_hints:
+- type: reading
+  focus: Контекстне використання
+  items: 4
+- type: fill-in-the-blank
+  focus: Практичне застосування
+  items: 10
+- type: true-false
+  focus: Розуміння значень
+  items: 8
+persona:
+  voice: Professional Language Coach
+  role: Casting Director (Кастинг-директор)
+word_target: 4000

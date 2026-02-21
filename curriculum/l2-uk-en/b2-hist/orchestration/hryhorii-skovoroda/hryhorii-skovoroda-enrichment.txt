@@ -1,0 +1,348 @@
+✅ Message sent to Gemini (ID: 12736) [auto-acked: self-addressed]
+✓ Message 12736 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12736...
+📨 Message #12736
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-hryhorii-skovoroda
+   Time: 2026-02-20T23:42:05.495352+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b2-hist-068
+level: B2-HIST
+sequence: 68
+slug: hryhorii-skovoroda
+version: '2.0'
+title: 'Григорій Сковорода: Мандрівний філософ'
+subtitle: 'Hryhorii Skovoroda: The Wandering Philosopher'
+content_outline:
+- section: 'Вступ: Український Сократ'
+  points:
+  - Skovoroda as a symbol of intellectual freedom — called 'Ukrainian Socrates' for
+    his dialogic method and ethical focus; epitaph 'The world caught me, but did not
+    catch me' (Світ ловив мене, та не впіймав) — маніфест духовної незалежності
+  - His refusal of worldly goods and titles — chose personal freedom over church career
+    or secular positions; refused Catherine II's offers
+  - 'The legend of his life — apocryphal reply to Catherine II: ''My flute and sheep
+    are more precious to me than a royal crown'' (Мені моя сопілка і вівця дорожчі
+    царського вінця)'
+  - 'Engagement Hook: [!quote] — «Світ ловив мене, та не впіймав» як символ свободи
+    від мирських спокус'
+- section: 'Життєвий шлях: Від академії до дороги'
+  points:
+  - Studies at Kyiv-Mohyla Academy — 1734–1753; intellectual center of Eastern Europe;
+    studied Latin, Greek, Hebrew, poetics
+  - Court choir service in St. Petersburg (1741–1744) — exposure to imperial court
+    life
+  - Travels in Europe (Vienna, Bratislava, Tokaj) — 1745–1750; used time to visit
+    libraries and scholars in Hungary, Austria, Slovakia
+  - The 'Tokaj Commission' and wine — officially buying wine for the Tsar's court,
+    but likely had diplomatic functions
+  - Teaching at Pereiaslav and Kharkiv Collegiums — 1759–1769; conflict due to innovative
+    methods ('did not teach as is customary')
+  - '1769: Final break with official service — beginning of wandering life'
+  - 'Engagement Hook: [!history-bite] — «Токайська комісія» офіційно займалася закупівлею
+    вина, але ймовірно виконувала й дипломатичні/розвідувальні функції'
+- section: 'Філософія серця: Сродна праця'
+  points:
+  - 'Concept of ''affinity labor'' (srodna pratsia) — happiness through natural inclination;
+    include quote: «Сродна праця — це найсолодша в світі річ»'
+  - 'The theory of two natures (visible and invisible) — material/perishable vs. spiritual/eternal
+    (God); include quote: «Без ядра горіх ніщо, так само, як і людина без серця»'
+  - The three worlds (macrocosm, microcosm, symbolic) — Universe, Human, Bible
+  - Happiness through self-knowledge — 'Nosce te ipsum' (Пізнай себе); finding the
+    'true human' within
+  - 'Engagement Hook: [!context] — Концепція «сродної праці» як предтеча профорієнтації
+    та психології самореалізації'
+- section: 'Літературна спадщина: Сад божественних пісень'
+  points:
+  - 'Basni Kharkovskie (Kharkiv Fables) — 30 fables; structure: fable (plot) + power
+    (moral/sila)'
+  - Garden of Divine Songs — 30 poems; religious lyrics and personal experiences;
+    'Every city has its customs and laws' (Song 10) — satire on social vices, later
+    used by I. Kotliarevsky in 'Natalka Poltavka'
+  - Style and language (Baroque influence) — metaphors, antitheses, symbolism, bookish
+    Ukrainian language (Sloveno-Ruthenian) with folk elements
+  - 'Engagement Hook: [!culture] — Вплив барокової естетики: алегорії, символи, емблеми'
+- section: 'Читання: Байки та афоризми'
+  points:
+  - 'Analysis of ''The Bee and the Hornet'' — Bee = srodna pratsia (joy in work),
+    Hornet = consumerism; include quote: «Нам незрівнянно більша радість збирати мед,
+    аніж його споживати»'
+  - Interpretation of key aphorisms — 'Take the top and you will have the middle',
+    'Loss of time is the heaviest loss', «Любов виникає з любові; коли хочу, щоб мене
+    любили, я сам перший люблю»
+  - 'Engagement Hook: [!source] — Оригінальний текст байки «Бджола та Шершень»'
+- section: 'Первинні джерела: Листи до Михайла Ковалинського'
+  points:
+  - Friendship as a philosophical category — Kovalynsky as favorite student and first
+    biographer; spiritual unity
+  - Pedagogy views of Skovoroda — moderation, health, reading with taste ('не їж без
+    смаку'), 'cheerfulness of heart' (веселість серця)
+- section: 'Деколонізаційний погляд: Не «русский философ»'
+  points:
+  - Skovoroda's Ukrainian roots and identity — product of KMA and Ukrainian Baroque,
+    not Russian Orthodoxy; language is Sloveno-Ruthenian (Old Ukrainian)
+  - Distinction from Russian philosophical tradition — refuting V. Ern's 'First Russian
+    Philosopher' myth (1912) and Soviet 'peasant democrat-atheist' tropes
+  - Geographic reality — lived in Hetmanate and Slobozhanshchyna, never in Moscow;
+    European orientation
+  - Impact on Ukrainian national revival — Shevchenko's admiration; 2022 destruction
+    of Skovorodynivka museum as symbol of empire's fear
+  - 'Engagement Hook: [!myth-buster] — Спростування радянського міфу про Сковороду
+    як «селянського просвітителя» чи «першого російського філософа»'
+focus: history
+pedagogy: CBI
+prerequisites:
+- 'b2-hist-64: Іван Мазепа II'
+learning_outcomes:
+- Учень розуміє концепцію 'сродної праці' та її значення
+- Учень може описати життєвий шлях Сковороди та його вибір свободи
+- Учень знає основні байки та філософські твори Сковороди
+phase: HIST.7 [Mazepa & End of Hetmanate]
+objectives:
+- 'Analyze the causes and consequences of григорій сковорода: мандрівний філософ'
+- Evaluate the historical significance of український сократ
+- 'Trace the development of деколонізаційний погляд: не «русский философ»'
+vocabulary_hints:
+  required:
+  - 'сродна праця (congenial labor/affinity work) — key philosophical concept; collocations:
+    знайти сродну працю, займатися сродною працею; quote: «Сродна праця — це найсолодша
+    в світі річ»'
+  - 'мандрівний (wandering) — collocations: мандрівний філософ, мандрівне життя, мандрівний
+    спосіб життя'
+  - 'байка (fable) — genre; collocations: повчальна байка, сила байки, «Байки Харківські»'
+  - сила (moral/power) — specific term for the moral of a fable in Skovoroda's works
+    (сюжет і сила)
+  - 'пізнання (cognition/knowledge) — collocations: самопізнання, пізнай себе (know
+    yourself), шлях пізнання'
+  - 'серце (heart) — philosophical concept of inner self/spirit; collocations: філософія
+    серця, веселість серця'
+  - 'спокуса (temptation) — context: світ спокус, уникати спокус, боротьба зі спокусами'
+  - 'марнота (vanity) — context: світська марнота, марнота світу, «вся світська марнота»'
+  recommended:
+  - 'бароко (Baroque) — cultural style; collocations: українське бароко, барокова
+    естетика, барокова література'
+  - 'академія (academy) — context: Києво-Могилянська академія (КМА), спудей академії'
+  - 'епітафія (epitaph) — inscription on tombstone: «Світ ловив мене, та не впіймав»'
+  - 'свобода (freedom) — key value; collocations: духовна свобода, особиста свобода,
+    внутрішня свобода'
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: critical-analysis
+  focus: Аналіз причинно-наслідкових зв'язків між подіями
+  items: 3
+- type: critical-analysis
+  focus: Критична оцінка історичних тверджень та міфів
+  items: 5
+persona:
+  voice: Senior Professor of History
+  role: Scholar of Ukrainian Baroque Culture
+word_target: 5000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Григорій Сковорода: Мандрівний філософ
+
+## Використані джерела
+1. [Енциклопедія Сучасної України](https://esu.com.ua/article-87532) — академічна стаття про життя та філософію Сковороди.
+2. [Ізборник](http://litopys.org.ua/skovoroda/skov.htm) — повне зібрання творів, листів та біографічних матеріалів.
+3. [Інститут історії України НАНУ](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Skovoroda_H) — історична довідка про діяльність філософа.
+4. [Історична Правда](https://www.istpravda.com.ua/articles/2022/12/3/162135/) — стаття про деколонізацію спадщини Сковороди та російські міфи.
+
+## Хронологія
+- **1722, 3 грудня**: Народження в с. Чорнухи на Полтавщині в козацькій родині.
+- **1734–1753 (з перервами)**: Навчання в Києво-Могилянській академії.
+- **1741–1744**: Перебування у придворній співацькій капелі в Санкт-Петербурзі.
+- **1745–1750**: Подорож до Європи (Угорщина, Австрія, Словаччина) у складі «Токайської комісії».
+- **1759–1769**: Викладання піїтики та етики у Харківському колегіумі.
+- **1769–1794**: Період мандрівного життя, написання основних філософських творів («Сад божественних пісень», «Байки Харківські»).
+- **1794, 9 листопада**: Смерть у с. Пан-Іванівка (нині Сковородинівка). На могилі заповів написати: «Світ ловив мене, та не впіймав».
+
+## Ключові факти та цитати
+- **Цитата 1**: «Світ ловив мене, та не впіймав» (епітафія).
+- **Цитата 2**: «Сродна праця — це найсолодша в світі річ».
+- **Цитата 3**: «Без ядра горіх ніщо, так само, як і людина без серця».
+- **Цитата 4 (з «Бджола та Шершень»)**: «Нам незрівнянно більша радість збирати мед, аніж його споживати. До сього ми народжені».
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ: Український Сократ": [!quote] — «Світ ловив мене, та не впіймав» як символ свободи від мирських спокус.
+- Section "Життєвий шлях: Від академії до дороги": [!history-bite] — «Токайська комісія» офіційно займалася закупівлею вина, але ймовірно виконувала й дипломатичні/розвідувальні функції.
+- Section "Філософія серця: Сродна праця": [!context] — Концепція «сродної праці» як предтеча профорієнтації та психології самореалізації.
+- Section "Літературна спадщина: Сад божественних пісень": [!culture] — Вплив барокової естетики: алегорії, символи, емблеми.
+- Section "Читання: Байки та афоризми": [!source] — Оригінальний текст байки «Бджола та Шершень».
+- Section "Деколонізаційний погляд: Не «русский философ»": [!myth-buster] — Спростування радянського міфу про Сковороду як «селянського просвітителя» чи «першого російського філософа».
+
+## Деколонізаційний контекст
+- **Imperial/Soviet myth**: Сковорода — «перший російський філософ» (В. Ерн, 1912) або «селянський демократ-атеїст» (радянська пропаганда). Ігнорування його глибокої релігійності та барокового коріння.
+- **Ukrainian reality**: Сковорода — продукт Києво-Могилянської академії та української барокової культури. Його мова — книжна українська (словенороська) з елементами народної, а не російська. Знищення музею Сковороди у 2022 році російською ракетою — символ страху імперії перед українським духом.
+
+## Contested Terms (if applicable)
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| Національна приналежність | «Русский философ», частина «общерусской культуры» | Український мислитель, вихованець КМА, представник українського бароко |
+| Мова творів | «Русский язык» / «суржик» | Книжна українська мова (староукраїнська) XVIII ст., бароковий стиль |
+| Соціальна роль | «Народний просвітитель», «бунтар» | Інтелектуал, елітарний мислитель, який обрав шлях простоти (аскеза, а не бідність) |
+
+## Section-Mapped Research Notes
+
+### Вступ: Український Сократ
+- Григорія Сковороду називають «українським Сократом» за його мандрівний спосіб життя, метод навчання через діалоги та етичну спрямованість філософії.
+- Він відмовився від церковної кар'єри та світських посад, обравши особисту свободу.
+- Легенда про те, як він відповів Катерині II (або її посланцям): «Мені моя сопілка і вівця дорожчі царського вінця» (апокрифічна, але показова).
+- Епітафія «Світ ловив мене, та не впіймав» — маніфест духовної незалежності. «Світ» тут — це світ спокус, марноти, посад і багатства.
+
+### Життєвий шлях: Від академії до дороги
+- **Освіта**: Навчався у Києво-Могилянській академії — центрі інтелектуального життя Східної Європи. Вивчав мови (латину, грецьку, іврит), піїтику, риторику, філософію.
+- **Європа**: У складі «Токайської комісії» (місія генерала Вишневського) відвідав Відень, Братиславу (Пресбург), Токай. Мета комісії — закупівля вин для царського двору, але Сковорода використовував час для знайомства з європейськими вченими та бібліотеками.
+- **Викладання**: Працював у Переяславському та Харківському колегіумах. Конфліктував з керівництвом через новаторські методи викладання та погляди («не вчив так, як заведено»).
+- **Перелом**: У 1769 році остаточно пориває з офіційною службою і стає мандрівним філософом, живучи у друзів та прихильників.
+
+### Філософія серця: Сродна праця
+- **Сродна праця (Congenial Labor)**: Ідея про те, що щастя досягається, коли людина займається справою, яка відповідає її природним нахилам («сродності»).
+- Бог (Природа) зробив «потрібне неважким, а важке — непотрібним».
+- **Дві натури**: Видима (матеріальна, тлінна) і невидима (духовна, вічна, Бог).
+- **Три світи**:
+  1.  Макрокосм (Всесвіт).
+  2.  Мікрокосм (Людина).
+  3.  Символічний світ (Біблія).
+- **Пізнай себе (Nosce te ipsum)**: Шлях до щастя лежить через самопізнання, відкриття «істинної людини» в собі (серця).
+
+### Літературна спадщина: Сад божественних пісень
+- «Сад божественних пісень» — збірка з 30 віршів. Поєднання релігійної лірики та особистих переживань.
+- Найвідоміший твір: «Всякому місту — звичай і права» (Пісня 10). Сатира на суспільні вади (хабарництво, пияцтво, кар'єризм). Цей вірш став народною піснею, його використовував І. Котляревський у «Наталці Полтавці».
+- «Байки Харківські»: збірка з 30 байок. Кожна байка складається з фабули (сюжету) і «сили» (моралі/висновку).
+- Стиль бароко: пишність, метафоричність, антитези, символізм.
+
+### Читання: Байки та афоризми
+- **«Бджола та Шершень»**:
+  - Сюжет: Шершень сміється з Бджоли, яка постійно працює.
+  - Мораль («Сила»): Шершень — образ людей, що живуть крадіжкою і споживанням. Бджола — образ людини, яка знайшла «сродну працю». Для Бджоли збирання меду — насолода, а не просто робота.
+- **Афоризми**:
+  - «Бери вершину і матимеш середину».
+  - «З усіх утрат втрата часу найтяжча».
+  - «Любов виникає з любові; коли хочу, щоб мене любили, я сам перший люблю».
+
+### Первинні джерела: Листи до Михайла Ковалинського
+- Михайло Ковалинський — улюблений учень і перший біограф Сковороди.
+- Листи — зразок епістолярного жанру та джерело педагогічних поглядів Сковороди.
+- Теми листів: дружба як духовна єдність, поради щодо здоров'я, читання книг («не їж без смаку»), важливість душевної рівноваги («веселість серця»).
+- Сковорода вчив Ковалинського бути помірним у всьому, цінувати час і обирати гідне коло спілкування.
+
+### Деколонізаційний погляд: Не «русский философ»
+- Російська історіографія намагалася «привласнити» Сковороду, ігноруючи його українську сутність.
+- Сковорода ніколи не був у Москві (тільки Петербург транзитом), його світ — це Гетьманщина (Полтавщина, Київ) та Слобожанщина.
+- Його філософія базується на київській традиції та європейському бароко, а не на російському православ'ї московського зразка.
+- Вплив на українське відродження: Шевченко захоплювався Сковородою («Кобзар» згадує його), хоча й критикував за відірваність від реальності.
+- Символ незламності: У 2022 році музей у Сковородинівці був зруйнований, але статуя філософа вціліла серед вогню і руїн.
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12775)
+✓ Message 12736 acknowledged
+✓ Message 12775 acknowledged

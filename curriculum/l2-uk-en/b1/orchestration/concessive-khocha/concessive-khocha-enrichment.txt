@@ -1,0 +1,298 @@
+✅ Message sent to Gemini (ID: 10348) [auto-acked: self-addressed]
+✓ Message 10348 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10348...
+📨 Message #10348
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-concessive-khocha
+   Time: 2026-02-20T20:28:03.241502+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b1-35
+level: B1
+sequence: 35
+slug: concessive-khocha
+version: '2.0'
+title: 'Допустові речення: хоча, незважаючи на'
+subtitle: Concessive Clauses - Although, Despite
+content_outline:
+- section: 'Тест: Перевірте себе'
+  points:
+  - Diagnostic quiz on concessive clauses
+  - Self-assessment questions — focus on distinguishing 'незважаючи на' vs common
+    error 'не дивлячись на'
+- section: Пояснення
+  points:
+  - 'What are concessive clauses — State Standard §4.4.3: complex sentences with concessive
+    subordinate clauses'
+  - 'хоча - Although Clauses — use high-freq collocations ''хоча б'', ''хоча й'';
+    cultural hook: proverb «Хоч бачить око, та зуб не йме»'
+  - 'незважаючи на - Despite — learner error: calque ''не дивлячись на'' (gerund)
+    vs ''незважаючи на'' (preposition); spelling warning: ''не зважаючи'' (2 words,
+    gerund) vs ''незважаючи'' (1 word, prep)'
+  - 'Other Concessive Connectors (попри, хоч би) — ''попри'' as stylish media alternative;
+    literature quote: Ліна Костенко «Не бійся правди, хоч яка гірка...»'
+  - Concessive vs Adversative (хоча vs але) — introduction of 'проте' as formal/academic
+    connector
+- section: Практика
+  points:
+  - Form concessive clauses — practice transforming 'але' sentences into 'хоча' clauses
+  - 'Express unexpected outcomes — folk wisdom: «Хоч не з красою, аби з головою»'
+- section: Діалоги
+  points:
+  - 'Concessive clauses in conversation — register mismatch warning: avoid archaic
+    ''дарма що'' in business contexts'
+  - Contrast scenarios
+vocabulary_hints:
+  required:
+  - хоча (although) — хоча б (at least), хоча й (even though), хоча... але/проте
+  - незважаючи на (despite) — незважаючи на те що, незважаючи ні на що; NEVER 'не
+    дивлячись на'
+  - попри (despite - literary) — попри все, попри очікування, попри те що
+  - контраст (contrast)
+  - неочікуваний (unexpected)
+  - результат (result)
+  - допустовий (concessive)
+  - проте (however) — однак проте, хоча... проте (formal/academic)
+  recommended:
+  - хоч би (even though) — emphatic concession
+  - дарма що (in vain) — archaic/literary usage
+  - все одно (anyway)
+  - тим не менш (nevertheless)
+activity_hints:
+- type: fill-in
+  focus: Complete concessive sentences
+  items: 25
+- type: fill-in
+  focus: Convert sentences to concessive
+  items: 20
+- type: error-correction
+  focus: Fix concessive clause errors
+  items: 15
+- type: translate
+  focus: English to Ukrainian
+  items: 15
+focus: grammar
+pedagogy: TTT
+prerequisites:
+- b1-34 (Checkpoint Complex Sentences 1)
+connects_to:
+- b1-36 (Causal Result Clauses)
+objectives:
+- Learner understands concessive clause constructions
+- Learner can express contrast and unexpected outcomes
+- Learner can use various concessive connectors
+- Learner can distinguish concessive from adversative clauses
+grammar:
+- Concessive clauses with хоча (although)
+- Concessive phrases with незважаючи на (despite)
+- Contrast and unexpected outcome expressions
+register: розмовний
+phase: B1.3b [Complex Sentences]
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Debate Champion
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Допустові речення: хоча, незважаючи на
+
+## State Standard Reference
+§4.4.3 (B1 Level): "складнопідрядні речення з допустовою підрядною частиною (сполучники хоч, дарма що, незважаючи на те що): Незважаючи на те що заняття закінчилися пізно, ми пішли провідати Марту;"
+Alignment: This module directly addresses the B1 requirement for complex sentences with concessive clauses, specifically teaching the mandated conjunctions *хоча/хоч* and *незважаючи на те що*.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| **хоча** | High (Top 300 conjunctions) | хоча б (at least), хоча й (even though), хоча... але/проте (although... but/however) |
+| **незважаючи на** | High (Common Prep.) | незважаючи на те що (despite the fact that), незважаючи на труднощі (despite difficulties), незважаючи ні на що (despite everything) |
+| **попри** | Medium (Literary/News) | попри все (despite everything), попри те що (despite the fact that), попри очікування (contrary to expectations) |
+| **проте** | High (Academic/Formal) | однак проте (however), хоча... проте (although... nevertheless) |
+
+## Cultural Hooks
+1. **Proverb**: «Хоч бачить око, та зуб не йме» (The eye sees it, but the tooth can't get it — Tantalus-like situation).
+2. **Literature Quote**: «Не бійся правди, хоч яка гірка, не бійся смутків, хоч вони як ріки...» — Ліна Костенко (Don't fear the truth, however bitter it is...).
+3. **Folk Wisdom**: «Хоч не з красою, аби з головою» (Though not with beauty, provided [one is] with brains).
+
+## Common Learner Errors
+1. **Calque from Russian**: "Не дивлячись на" instead of "незважаючи на".
+   - *Error*: "Не дивлячись на дощ..." (Literally: "Not looking at the rain...").
+   - *Correction*: "Незважаючи на дощ..." or "Попри дощ...".
+   - *Reason*: Direct translation of Russian "несмотря на". In Ukrainian, "не дивлячись" is strictly a gerund meaning "without looking [with eyes]".
+
+2. **Spelling Confusion**: "Не зважаючи на" (gerund) vs "незважаючи на" (preposition).
+   - *Error*: "Ми пішли гуляти не зважаючи на погоду."
+   - *Correction*: "Ми пішли гуляти, незважаючи на погоду." (As a fixed prepositional phrase, it is written as one word "незважаючи").
+   - *Note*: "Не зважаючи" (two words) means literally "not paying attention to" (e.g., "Він йшов, не зважаючи на крики" - He walked on, ignoring the shouts).
+
+3. **Register Mismatch**: Overusing "попри" in very casual speech where "хоча" or simple "але" is more natural, or using "дарма що" (archaic/literary) in business contexts.
+
+## Cross-References
+- **Builds on**: b1-34 (Checkpoint Complex Sentences 1), A2 conjunctions (але, бо).
+- **Prepares for**: b1-36 (Causal Result Clauses), B2 Concessive variants (хай там як, як би не).
+
+## Notes for Content Writing
+- **Contrastive Grammar**: Explicitly distinguish "хоча" (conjunction + clause) from "незважаючи на" (preposition + noun).
+- **Style Tip**: Introduce "попри" as a stylish, slightly more formal alternative to "незважаючи на" often used in media.
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ та діагностика (Introduction & Diagnostics)"
+  words: 600
+  points:
+  - "Diagnostic quiz (Test phase of TTT) on concessive clauses to identify existing knowledge of 'хоча' and 'незважаючи на'"
+  - "Hook with the proverb «Хоч бачить око, та зуб не йме»: analysis of the 'tantalus-like' situation where reality contrasts with desire"
+  - "Identification task: scanning high-frequency collocations like 'хоча б' and 'хоча й' in a short introductory text about a debate"
+- section: "Граматичні основи та державний стандарт (Grammar Foundations & State Standard)"
+  words: 1000
+  points:
+  - "State Standard §4.4.3 alignment: defining complex sentences with concessive subordinate clauses using 'хоча/хоч' and 'незважаючи на те що'"
+  - "Syntactic distinction: 'хоча' as a conjunction leading a clause vs. 'незважаючи на' as a preposition leading a noun phrase"
+  - "Formal academic constructions: transition from simple 'але' (adversative) to the more sophisticated 'хоча... проте' (concessive-adversative pair)"
+  - "Structural variations of 'хоча': exploring 'хоча б' (at least) and 'хоча й' (even though) in context of expressing minimal requirements"
+- section: "Стилістичні нюанси: попри та дарма що (Stylistic Nuances: Despite & Although)"
+  words: 800
+  points:
+  - "Introducing 'попри' as a stylish, medium-frequency media alternative to 'незважаючи на'; drill with 'попри все' and 'попри очікування'"
+  - "Literary immersion with Lina Kostenko: «Не бійся правди, хоч яка гірка...» — analyzing the use of 'хоч' as a concessive marker for adjectives"
+  - "Register awareness: identifying archaic/literary 'дарма що' (State Standard §4.4.3) and warning against its use in business contexts vs. literature"
+  - "Emphatic concession with 'хоч би': how to use 'хоч би як' (no matter how) to add emotional weight to a statement"
+- section: "Практичний практикум: Робота над помилками (Practical Workshop: Error Correction)"
+  words: 800
+  points:
+  - "Debunking the Russian calque 'не дивлячись на': drill to replace it with 'незважаючи на' or 'попри' (e.g., 'незважаючи на дощ' vs. literal gerund 'не дивлячись у вікно')"
+  - "Spelling precision: distinguishing 'незважаючи' (one word, preposition) from 'не зважаючи' (two words, gerund meaning 'ignoring' or 'not paying attention to')"
+  - "Register mismatch workshop: practice selecting between 'але', 'хоча', and 'проте' based on formal vs. casual situational prompts"
+  - "Transformation exercise: converting simple adversative sentences into complex concessive clauses to increase sentence variety"
+- section: "Культурна інтеграція та дебати (Cultural Integration & Debates)"
+  words: 800
+  points:
+  - "Folk wisdom analysis: «Хоч не з красою, аби з головою» — discussion on the value of intellect over appearance using concessive structures"
+  - "Debate Champion Challenge: drafting a 200-word argument on a social issue using 'попри', 'хоча... проте', and 'незважаючи на' to handle counter-arguments"
+  - "Final self-assessment: correcting 10 sentences containing calques and spelling errors identified in research findings"
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "хоча (although) — High frequency (Top 300 conjunctions); collocations: хоча б (at least), хоча й (even though), хоча... але/проте"
+  - "незважаючи на (despite) — High frequency preposition; collocations: незважаючи на те що, незважаючи на труднощі, незважаючи ні на що"
+  - "попри (despite - literary) — Medium frequency, stylish media alternative; collocations: попри все, попри очікування, попри те що"
+  - "проте (however) — High frequency academic/formal; collocations: однак проте, хоча... проте"
+  - "хоч (although/even) — Common short form of 'хоча', often used in proverbs and literature"
+  - "неочікуваний (unexpected) — Key for describing the result of concessive clauses"
+  - "результат (result) — Used to discuss outcomes that occur 'despite' circumstances"
+  - "допустовий (concessive) — Linguistic term for the clause type (B1 level terminology)"
+  recommended:
+  - "дарма що (although) — State Standard §4.4.3; archaic/literary usage note, avoid in business"
+  - "хоч би (even if/if only) — Emphatic concession; usage: 'хоч би як' (no matter how)"
+  - "все одно (anyway) — Conversational marker of outcome regardless of concession"
+  - "тим не менш (nevertheless) — Formal/academic connector for contrasting results"
+  - "не дивлячись на (ERROR) — Russian calque; strictly avoid for 'despite', use only for 'not looking'"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4596 chars)
+✅ Message sent to Claude (ID: 10357)
+✓ Message 10357 acknowledged
+   Auto-acknowledged reply #10357 (stdout delivery — no inbox accumulation)
+✓ Message 10348 acknowledged

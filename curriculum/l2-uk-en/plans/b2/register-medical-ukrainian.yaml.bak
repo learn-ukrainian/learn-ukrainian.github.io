@@ -1,0 +1,127 @@
+module: b2-20
+level: B2
+sequence: 20
+slug: register-medical-ukrainian
+version: '2.0'
+title: 'Медична українська: спілкування у сфері охорони здоров''я'
+content_outline:
+- section: Вступ — Медичний регістр
+  points:
+  - 'Особливості медичної комунікації — Tone: Balance between formal/official (doctor/documents)
+    and natural/anxious (patient)'
+  - Різні ситуації (пацієнт, лікар, документи) — e.g., аптека, візит до сімейного
+    лікаря
+  - 'Формальність у медичному контексті — pharmacy culture: pharmacists as semi-diagnostic
+    advisors (''Що у вас є від горла?'')'
+- section: Опис симптомів
+  points:
+  - Частини тіла — review from B1
+  - 'Типи болю та відчуттів — adjectives: ниючий, ріжучий, тупий, гострий; grammar
+    point: ''біль'' is masculine (сильний біль)'
+  - Тривалість та інтенсивність
+  - 'Фрази для опису скарг — collocations: скарги пацієнта, відчувати біль'
+- section: Діалог лікар-пацієнт
+  points:
+  - 'Запитання лікаря — standard questions: ''Що вас турбує?'', ''Як давно це почалося?'''
+  - 'Відповіді пацієнта — grammar: лікуватися (reflexive) for patient vs лікувати
+    (transitive) for doctor'
+  - 'Пояснення діагнозу — collocations: поставити діагноз, попередній діагноз'
+  - 'Рекомендації та призначення — cultural hook: Mykola Amosov context (''здоров''я
+    треба здобувати самому'')'
+- section: Медичні інструкції
+  points:
+  - 'Прийом ліків — collocations: приймати ліки, ліки від застуди'
+  - 'Режим харчування — cultural context: ''система обмежень і навантажень'' (Amosov)'
+  - Фізична активність — '1000 movements' daily exercise routine
+  - Повторний візит — booking via Helsi (Helsi.me) system
+- section: Медична документація
+  points:
+  - Рецепт — electronic prescriptions (е-рецепт)
+  - Довідка — sick leave certificate (лікарняний)
+  - 'Направлення — collocations: направлення на обстеження, пройти обстеження'
+  - Виписка — історія хвороби пацієнта
+- section: Типові помилки та русизми
+  points:
+  - 'Калькування медичних термінів — error: ''приймати участь'' -> correct: ''брати
+    участь'''
+  - 'Правильні українські еквіваленти — error: ''хірургічний відділ'' -> correct:
+    ''хірургічне відділення'''
+  - Розмовні vs офіційні терміни
+  - Сучасна медична мова — digital health literacy (Helsi, eHealth)
+- section: Практика і підсумок
+  points:
+  - 'Рольові діалоги — simulation: Doctor appointment booking via Helsi'
+  - Написання медичних документів
+  - Підготовка до модуля 21
+vocabulary_hints:
+  required:
+  - симптом (symptom)
+  - діагноз (diagnosis) — поставити діагноз, підтвердити діагноз
+  - рецепт (prescription) — виписати ліки, рецептурні ліки
+  - ліки (medicine) — приймати ліки, ліки від застуди
+  - біль (pain) — гострий/тупий біль, masculine gender warning (сильний біль)
+  - температура (temperature)
+  - тиск (pressure - blood pressure)
+  - огляд (examination) — огляд пацієнта
+  - аналіз (test/analysis)
+  - лікування (treatment) — проходити лікування
+  recommended:
+  - скарга (complaint) — скарги пацієнта
+  - призначення (prescription/appointment) — рекомендації лікаря
+  - госпіталізація (hospitalization) — відділення (not відділ)
+  - одужання (recovery)
+  - профілактика (prevention)
+  - лікар (doctor) — сімейний лікар, викликати лікаря
+  - пацієнт (patient) — права пацієнта, історія хвороби
+  - обстеження (examination) — пройти обстеження
+activity_hints:
+- type: quiz
+  focus: Identify appropriate medical vocabulary
+  items: 15+
+- type: fill-in
+  focus: Complete doctor-patient dialogues
+  items: 12+
+- type: match-up
+  focus: Symptom description → body part
+  items: 16+
+- type: reading
+  focus: Understand medical instructions and documents
+  items: 4 texts
+- type: error-correction
+  focus: Fix russisms in medical context
+  items: 12+
+- type: essay-response
+  focus: Write description of symptoms for doctor visit
+  output: Model answer provided
+focus: style
+prerequisites:
+- b2-15 (Register Introduction)
+- 'b2-16 (Register: Formal/Informal)'
+- Body parts vocabulary from B1
+connects_to:
+- 'b2-21 (Register: IT/Tech)'
+- b2-25 (B2.1b Checkpoint)
+- b2-82 (Professional Communication III)
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Medical Communication
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Healthcare communication standards
+- name: Медична термінологія
+  url: https://uk.wikipedia.org/wiki/Медична_термінологія
+  type: secondary
+  notes: Medical terminology in Ukrainian
+- name: CEFR B2 Domain-Specific Language
+  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  type: reference
+  notes: B2 specialized vocabulary requirements
+immersion: 100% Ukrainian
+phase: B2.1b [Participles & Register Intro]
+objectives:
+- 'Understand and apply медична українська: спілкування у сфері охорони здоров''я'
+- Analyze and evaluate медичний регістр
+persona:
+  voice: Professional Language Coach
+  role: Family Doctor (Сімейний лікар)
+word_target: 4000

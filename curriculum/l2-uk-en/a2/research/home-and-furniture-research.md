@@ -1,81 +1,43 @@
-# Research: Home and Furniture (A2 M46)
+# Дослідження: Home and Furniture
 
-**Module**: A2 M46 "Дім та меблі"  
-**Level**: A2 (building on A1/A2 foundations)  
-**Date**: February 8, 2026
+## State Standard Reference
+§3.2: "Дім, помешкання: тип житла (квартира, приватний будинок); частини будинку і назви приміщень; меблі і предмети інтер’єру."
+§4.2.2.6: "Місцевий відмінок: у, в, на (місце перебування особи чи предмета): Друг працює в лікарні. Сумка лежить на столі."
+Alignment: Module introduces essential furniture vocabulary and drills the Locative case for describing item locations, directly fulfilling the communicative intention of describing one's dwelling (§3.2) and the grammatical requirement for Locative case usage (§4.2.2.6).
 
-## 1. Grammar: State Standard 2024 Reference
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| стіл (table) | High (Core A1/A2) | на столі (on the table), ставити стіл (to set the table), письмовий стіл (desk) |
+| стілець (chair) | High (Core A2) | на стільці (on the chair), сидіти на стільці (to sit on a chair) |
+| ліжко (bed) | High (Core A2) | у ліжку (in bed), двоспальне ліжко (double bed), стелити ліжко (to make the bed) |
+| шафа (wardrobe) | Medium (Core A2) | у шафі (in the wardrobe/closet), книжкова шафа (bookcase), шафа-купе (sliding wardrobe) |
+| диван (sofa) | High (Core A2) | на дивані (on the sofa), лежати на дивані (to lie on the sofa) |
+| підлога (floor) | High (Core A2) | на підлозі (on the floor), мити підлогу (to wash the floor) |
+| стіна (wall) | High (Core A2) | на стіні (on the wall), висіти на стіні (to hang on the wall) |
+| килим (carpet) | Medium (Core A2) | на килимі (on the carpet) |
 
-**Document**: *Стандарт державної мови «Українська мова як іноземна. Рівні загального володіння А1 – С2»* (Затверджено рішенням Національної комісії зі стандартів державної мови від 29.08.2024).
+## Cultural Hooks
+1. **The Threshold (Поріг)**: It is strictly taboo to shake hands or pass objects across the threshold (через поріг) in Ukraine. It is believed to block good luck or separate people. One must step fully inside or outside first.
+2. **Sitting at the Corner**: A common superstition warns unmarried people (especially young women) not to sit at the corner of a table (на розі столу), as it is said they will not marry for seven years ("сім років заміж не вийдеш").
+3. **Domovyk (Доровий)**: In folklore, the *Domovyk* is a household spirit living behind the stove or in a corner. He protects the home if treated well but plays pranks if the house is messy or family members quarrel.
 
-**Relevant Section**:
-> **Рівень А2 (Базовий)**
-> **Зміст комунікативно-мовленнєвої компетенції**
-> **Тематика спілкування (Сфери)**:
-> - Побутова сфера: Житло (помешкання), інтер'єр, умеблювання, оренда житла.
-> **Мовна компетенція (Граматика)**:
-> - Вживання відмінків іменників для позначення місця (Місцевий відмінок) та напрямку (Знахідний відмінок).
-> - Просторові прийменники (на, у/в, під, над, біля, поруч).
+## Common Learner Errors
+1. **Location vs. Direction**: Confusing "Where?" (Locative) with "Where to?" (Accusative).
+   * *Error*: Я йду в кімнаті. (I go inside the room - static form used for motion)
+   * *Correction*: Я йду в кімнату. (Accusative for motion) / Я в кімнаті. (Locative for location)
+2. **Consonant Mutations**: Forgetting the [г] → [з], [к] → [ц], [х] → [с] shift in Locative.
+   * *Error*: на підлоги (Genitive ending used incorrectly) or на підлогі (No mutation)
+   * *Correction*: на підлозі (Correct mutation [г] → [з] + ending -і).
+3. **Preposition Confusion (У vs НА)**: Using *у* instead of *на* for surface objects.
+   * *Error*: Книжка у столі. (Technically "inside the table's drawer", but usually learners mean "on")
+   * *Correction*: Книжка на столі. (On the surface). Note: *на кухні* (in the kitchen) is a common exception where English uses "in" but Ukrainian uses "on".
 
-## 2. Vocabulary Frequency
+## Cross-References
+- **Builds on**: a2-45 (Food and Cooking - likely introduced 'кухня' and basic appliances like 'холодильник').
+- **Prepares for**: a2-61 (Hotel Accommodation - booking rooms, asking for amenities), a2-47 (Nature and Weather - Locative usage extends to 'на вулиці', 'у небі').
 
-### High Frequency (Core A1/A2)
-*Essential for survival and basic description.*
-- **Rooms**: кімната, кухня, спальня, ванна (кімната), туалет, коридор.
-- **Structure**: дім, квартира, поверх, вікно, двері, стіна, підлога.
-- **Furniture**: стіл, стілець, ліжко, диван, шафа.
-- **Verbs**: жити, бути, мати, стояти (to stand), сидіти (to sit), лежати (to lie).
-
-### Medium Frequency (Target A2)
-*Required for richer description as per M46 goals.*
-- **Furniture/Decor**: крісло (armchair), полиця (shelf), дзеркало (mirror), килим (rug/carpet), лампа, штори (curtains), тумбочка (nightstand).
-- **Verbs**: винаймати (to rent), прибирати (to clean), переїжджати (to move house), шукати (to look for).
-- **Adjectives**: затишний (cozy), просторий (spacious), світлий (bright), зручний (comfortable), мебльований (furnished).
-
-### Low Frequency (Passive Context)
-*Likely to appear in reading/listening but not required for active production.*
-- стеля (ceiling), підвіконня (windowsill), передпокій (hallway/entrance area), шпалери (wallpaper), ремонт (renovation).
-
-## 3. Cultural Hook
-
-1.  **"Роззувайся, будь ласка" (Please, take off your shoes)**:
-    In Ukrainian culture, it is mandatory to remove street shoes immediately upon entering a home (in the *коридор*). Walking into a room with shoes on is considered highly rude and unhygienic. Hosts often provide *тапці* (slippers) for guests.
-
-2.  **The "Rozkladnyi Dyvan" (Pull-out Sofa)**:
-    Due to the prevalence of smaller apartments (historically *khrushchyovkas*), the living room often doubles as a bedroom. The *розкладний диван* is a cultural staple—a sofa that transforms into a bed at night. It represents practicality and hospitality (always ready for a guest).
-
-## 4. Pedagogical Notes
-
-### Key Differences & Challenges
--   **"Меблі" is always Plural**: Unlike English "furniture" (singular), Ukrainian *меблі* functions grammatically like "scissors" or "glasses".
-    -   *Error*: "Ця мебля гарна." (This furniture is beautiful.)
-    -   *Correct*: "Ці меблі гарні." (These furnitures are beautiful.)
--   **Positional Verbs**: English uses "is" for everything ("The cup is on the table", "The picture is on the wall"). Ukrainian prefers specific positional verbs:
-    -   *Стояти* (vertical/standing items): стіл стоїть, лампа стоїть.
-    -   *Лежати* (horizontal/flat items): килим лежить, книга лежить.
-    -   *Висіти* (hanging items): картина висить, люстра висить.
--   **Preposition Logic**:
-    -   *На кухні* (in the kitchen) vs *У кімнаті* (in the room). "На" often implies a surface or open space, but "на кухні" is a fixed exception likely deriving from the "hearth" concept.
-
-### Teaching Sequence
-1.  **Identify**: Naming rooms and basic furniture (Nominative).
-2.  **Locate**: Where is it? (Locative: *Де? У кімнаті, на столі*).
-3.  **Describe**: Adjectives (Nominative agreement: *Зручне ліжко*).
-4.  **Position**: Using positional verbs (*Шафа стоїть у кутку*).
-5.  **Move/Place**: Accusative for motion (*Я ставлю вазу на стіл*).
-
-## 5. Scope Boundaries
-
-### IN Scope (A2 M46)
--   **Locative Case**: Full usage for location (*у шафі, на підлозі, на стіні*).
--   **Accusative Case**: Direction (*Я йду в кімнату*) and direct object (*Я бачу стіл*).
--   **Genitive Case**: Lack of possession (*У кімнаті немає стола*).
--   **Comparatives**: *Ця кімната більша, ніж та* (Simple comparative).
--   **Complex Sentences**: *Я хочу купити диван, який стоїть там* (Relative clauses with *який*).
--   **Aspect**: *Я прибирав* (process) vs *Я прибрав* (result).
-
-### OUT of Scope (Too Advanced)
--   **Instrumental Plural**: Focus on Singular Instrumental (*з диваном*) is enough.
--   **Detailed Construction Vocab**: Concrete, brick, plumbing, wiring.
--   **Complex Passive**: *Кімната була прибрана мамою* (The room was cleaned by mom) — Avoid. Use active voice (*Мама прибрала кімнату*).
--   **Real Estate Legalese**: Mortgage, lease agreement details, utility tariffs.
+## Notes for Content Writing
+- **Visuals**: Use a "Room Map" concept to group vocabulary logically (e.g., Living Room items vs. Kitchen items).
+- **Grammar Focus**: explicitly highlight the *mutations* (підлога -> на підлозі) as this is a high-friction point for A2 learners. Use a clear table for these shifts.
+- **Engagement**: Use the "Threshold" superstition for a "Culture Tip" box near the "Entrance/Hallway" vocabulary section.

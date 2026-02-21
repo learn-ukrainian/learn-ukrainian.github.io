@@ -1,0 +1,292 @@
+✅ Message sent to Gemini (ID: 10533) [auto-acked: self-addressed]
+✓ Message 10533 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10533...
+📨 Message #10533
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-word-formation-person-suffixes
+   Time: 2026-02-20T20:40:38.051345+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b2-33
+level: B2
+sequence: 33
+slug: word-formation-person-suffixes
+version: '2.0'
+title: 'Словотворення: суфікси на позначення осіб'
+subtitle: Word Formation - Person Suffixes
+content_outline:
+- section: Розминка — Як утворюються назви осіб
+  points:
+  - Словотвір як ключ до розширення словника
+  - Продуктивні суфікси для назв осіб
+  - Зв'язок з дієсловами, іменниками, прикметниками
+- section: Суфікс -ар/-яр (професія, заняття)
+  points:
+  - Від іменників (бібліотека → бібліотекар, ворота → воротар)
+  - Від дієслів (лікувати → лікар, кухарити → кухар)
+  - Варіант -яр після м'яких (камінь → каменяр, вівця → вівчар)
+  - Жіночий рід з -ка (бібліотекарка, лікарка)
+- section: Суфікс -ач (виконавець дії)
+  points:
+  - Від дієслів (викладати → викладач, читати → читач)
+  - Активний діяч (слухати → слухач, грати → гравець)
+  - Порівняння з -ник (працівник vs працювач — не існує)
+  - Жіночий рід (викладачка, читачка)
+- section: Суфікс -ник (рід занять, роль)
+  points:
+  - Від іменників (робота → робітник, письмо → письменник)
+  - Від прикметників (художній → художник)
+  - Роль у групі (учасник, спільник, союзник)
+  - Варіант -івник (працівник, службовець)
+- section: Практика — визначення словотвору
+  points:
+  - Визначити, від якого слова утворено назву особи
+  - Створити назви осіб від заданих слів
+  - Аналіз тексту — знайти всі назви осіб
+focus: grammar
+pedagogy: TTT
+objectives:
+- Learner can form person nouns from other words using -ар/-яр suffix
+- Learner can form agent nouns from verbs using -ач suffix
+- Learner can form person nouns using -ник suffix for roles and occupations
+- Learner can identify word formation patterns for person nouns in authentic texts
+grammar:
+- Суфікс -ар/-яр для позначення професії чи діяльності
+- Суфікс -ач для позначення виконавця дії
+- Суфікс -ник для позначення роду занять
+register: науковий
+phase: B2.1c [Register & Word Formation]
+vocabulary_hints:
+  required:
+  - термін (term)
+  - поняття (concept)
+  - процес (process)
+  - метод (method)
+  recommended:
+  - аналіз (analysis)
+  - синтез (synthesis)
+  - дослідження (research)
+activity_hints:
+- type: reading
+  focus: Аналіз тексту
+  items: 4
+- type: essay-response
+  focus: Практичне застосування
+- type: true-false
+  focus: Перевірка розуміння
+  items: 8
+persona:
+  voice: Professional Language Coach
+  role: Recruiter (Рекрутер)
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Словотворення: суфікси на позначення осіб
+
+## State Standard Reference
+§4.2.5: "Утворення назв осіб за видом діяльності: діяти – діяч, виконувати – виконавець, просити – прохач, танцювати – танцівник."
+Alignment: This module directly addresses the B2 requirement to master agent noun formation using productive suffixes, expanding the learner's ability to create nouns from verbs and other nouns.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| лікар | High (General/Medical) | головний лікар, сімейний лікар, лікар-хірург |
+| викладач | High (Academic) | викладач університету, старший викладач |
+| письменник | Medium (Cultural) | відомий письменник, український письменник |
+| робітник | High (General) | кваліфікований робітник, найманий робітник |
+| школяр | High (Education) | старанний школяр, молодший школяр |
+| кобзар | Medium (Cultural/Historical) | мандрівний кобзар, спів кобзаря |
+| каменяр | Low (Literary/Historical) | вічний революціонер, дух каменярів |
+
+## Cultural Hooks
+1. **Ivan Franko's "Kamenyari" (The Stonecutters)**: The suffix `-яр` is immortalized in Franko's poem "Kamenyari", symbolizing the relentless spirit of progress and Ukrainian resilience. The phrase «лупайте сю скалу» (chip away at this rock) is iconic.
+2. **The Kobzar Tradition**: The suffix `-ар` is central to `кобзар` (kobza player), the spiritual guardian of Ukrainian history and epic poetry. The Kobzar is not just a musician but a symbol of national memory (Shevchenko's "Kobzar").
+
+## Common Learner Errors
+1. **Hard vs. Soft Consonants (-ар vs. -яр)**:
+   - *Error*: `лікаяр` or `каменар`.
+   - *Correction*: `лікар` (after hard 'к'), `каменяр` (after soft 'н').
+   - *Why*: Confusion over phonetic rules; `-яр` follows soft consonants, `-ар` follows hard ones (usually).
+2. **Suffix Overgeneralization (-ник vs. -ач)**:
+   - *Error*: `викладник` instead of `викладач`.
+   - *Correction*: `викладач`.
+   - *Why*: `-ник` is the most productive suffix, so learners overapply it. `-ач` often implies an active agent derived from a verb (викладати -> викладач).
+3. **Russian Interference (Soft Sign)**:
+   - *Error*: `лікарь`, `секретарь`.
+   - *Correction*: `лікар`, `секретар` (hard 'р' at the end).
+   - *Why*: In Russian, these words end with a soft sign (`врач` is different, but `секретарь`, `календарь` match). In Ukrainian, names of professions on `-р` are typically hard in the nominative.
+
+## Cross-References
+- **Builds on**:
+  - `b1-verb-conjugation` (Verb stems as bases for `-ач`)
+  - `a2-noun-declension` (Basic declension patterns)
+- **Prepares for**:
+  - `c1-professional-terminology` (Complex agent nouns in specific fields)
+  - `b2-pro-business` (Job titles and roles)
+
+## Notes for Content Writing
+- **Register**: Distinction between `робітник` (blue-collar worker) and `працівник` (employee/generic) is crucial for B2.
+- **Feminatives**: Briefly mention that for these masculine suffixes, specific feminine forms exist (`лікарка`, `викладачка`, `працівниця`), but focus the structural analysis on the masculine derivation bases first.
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Словотвір як інструмент концептуалізації (Introduction: Word Formation as a Tool for Conceptualization)"
+  words: 600
+  points:
+  - "Словотворення як ключ до розширення словникового запасу на рівні B2: перехід від зазубрювання до системного розуміння"
+  - "Огляд продуктивних суфіксів для назв осіб згідно з Державним стандартом §4.2.5 (діяч, виконавець, танцівник)"
+  - "Культурний контекст: Поезія Івана Франка «Каменярі» як символ незламності та ілюстрація суфікса -яр"
+- section: "Суфікс -ар/-яр: Від професії до національного символу (Suffix -ар/-яр: From Profession to National Symbol)"
+  words: 1000
+  points:
+  - "Утворення назв від іменників та дієслів: бібліотека → бібліотекар, лікувати → лікар, вівця → вівчар"
+  - "Фонетичне правило: вживання -ар після твердих приголосних та -яр після м’яких (камінь → каменяр) — запобігання помилкам типу «каменар»"
+  - "Феномен Кобзарства: кобзар як духовний охоронець історії та символ національної пам’яті (Т. Шевченко)"
+  - "Попередження про інтерференцію: відсутність м'якого знака в назвах професій на -р (лікар, секретар, а не лікарь, секретарь)"
+- section: "Суфікс -ач: Виконавець дії та активний діяч (Suffix -ач: Performer of Action and Active Agent)"
+  words: 800
+  points:
+  - "Виведення іменників від дієслівних основ (викладати → викладач, читати → читач, слухати → слухач)"
+  - "Семантична роль активного діяча: аналіз моделей викладач/викладачка та читач/читачка"
+  - "Робота над типовою помилкою: запобігання надмірному вживанню суфікса -ник (наприклад, викладач замість помилкового «викладник»)"
+- section: "Суфікс -ник: Рід занять, ролі та соціальні групи (Suffix -ник: Occupations, Roles, and Social Groups)"
+  words: 800
+  points:
+  - "Утворення від іменників та прикметників: робота → робітник, письмо → письменник, художній → художник"
+  - "Роль у групі та спільна діяльність: учасник, спільник, союзник; розгляд варіанта -івник (працівник)"
+  - "Прагматична диференціація: розрізнення понять «робітник» (кваліфікована фізична праця) та «працівник» (загальний термін для найманої праці)"
+- section: "Практика та синтез: Рекрутинг та аналіз текстів (Practice and Synthesis: Recruitment and Textual Analysis)"
+  words: 800
+  points:
+  - "Вправа на визначення словотвірних ланцюжків: від якого слова та за допомогою якого суфікса утворено назву особи"
+  - "Рольова гра «Рекрутер»: використання професійних назв у контексті найму та опису посадових обов'язків (Persona: Professional Language Coach)"
+  - "Аналіз автентичних текстів: пошук назв осіб та визначення їхнього стилістичного забарвлення (науковий vs розмовний)"
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "термін (term) — наукова назва поняття; вживати термін"
+  - "поняття (concept) — абстрактна одиниця мислення; ключове поняття"
+  - "процес (process) — послідовна зміна станів; складний процес"
+  - "метод (method) — спосіб досягнення мети; метод дослідження"
+  - "лікар (doctor) — High frequency; лікар-хірург, сімейний лікар; важливо: твердий 'р' в кінці"
+  - "викладач (lecturer/teacher) — High frequency academic; викладач університету, старший викладач"
+  - "письменник (writer) — відомий письменник, український письменник"
+  recommended:
+  - "аналіз (analysis) — розчленування цілого на частини; провести аналіз"
+  - "синтез (synthesis) — поєднання частин у ціле; метод синтезу"
+  - "дослідження (research) — процес вивчення явища; наукове дослідження"
+  - "робітник (worker) — blue-collar; кваліфікований робітник, найманий робітник"
+  - "працівник (employee) — generic term; державний працівник, сумлінний працівник"
+  - "кобзар (kobzar) — Cultural symbol; мандрівний кобзар, голос кобзаря"
+  - "каменяр (stonecutter) — Literary/Historical (Franko); дух каменярів, лупати скалу"
+  - "школяр (schoolboy) — старанний школяр, молодший школяр"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (3914 chars)
+✅ Message sent to Claude (ID: 10538)
+✓ Message 10538 acknowledged
+   Auto-acknowledged reply #10538 (stdout delivery — no inbox accumulation)
+✓ Message 10533 acknowledged

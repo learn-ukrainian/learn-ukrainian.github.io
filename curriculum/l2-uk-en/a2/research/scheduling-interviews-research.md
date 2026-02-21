@@ -1,49 +1,31 @@
-# Research Notes: Scheduling Interviews (A2 M64)
+# Дослідження: Scheduling Interviews
 
-**Track**: Core A
-**Module**: scheduling-interviews
-**Level**: A2 (Post-Grammar Checkpoint)
-**Topic**: Scheduling job/media interviews, discussing availability.
+## State Standard Reference
+§3.8: "Робота: найпоширеніші професії і види занять; місця роботи; час роботи, вихідні дні; заробітна плата." (Catalog B. Thematic Catalog, lines 1121-1125)
+Alignment: This module directly addresses the "Work" theme by covering job search, interview scheduling, and salary discussions, which are explicit requirements of the standard.
 
-## 1. Grammar: State Standard 2024 Reference
-This module corresponds to the requirements for the **A2 level** in professional and business communication as defined in the **Державний стандарт української мови (2024)**.
-Specifically, **Section 2.5.2. Спілкування в професійно-діловій сфері**:
-> «Здатність ініціювати, підтримувати та завершувати прості діалоги в межах знайомих професійних тем... домовлятися про час і місце зустрічі, використовуючи відповідні мовленнєві кліше».
-(Ability to initiate, maintain, and complete simple dialogues within familiar professional topics... to agree on the time and place of a meeting using appropriate speech clichés.)
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| **співбесіда** (interview) | High (Job sites) | пройти співбесіду, призначити співбесіду, запросити на співбесіду |
+| **резюме** (resume) | High (Job sites) | надіслати резюме, писати резюме, розглядати резюме |
+| **вакансія** (vacancy) | High (Job sites) | відкрита вакансія, шукати вакансію, опис вакансії |
+| **досвід** (experience) | High (General) | досвід роботи, мати досвід, без досвіду |
+| **зарплата** (salary) | High (General) | висока/низька зарплата, середня зарплата, виплачувати зарплату |
 
-## 2. Vocabulary Frequency & Collocations
-### High Frequency (Essential)
-- **Співбесіда** (Interview) — The core term for job/formal interviews.
-- **Призначити** (to schedule/appoint) — Perfective; used for the act of setting the time.
-- **Зручно** (conveniently) — Used in the structure «Вам зручно?» (Is it convenient for you?).
-- **Зустріч** (meeting/appointment) — General term for any scheduled encounter.
-- **Вільний** (free/available) — «Я вільний у понеділок».
+## Cultural Hooks
+1. **Formality is Key**: Unlike the increasingly casual West, Ukrainian interviews strictly use the formal "Ви" address. Using "ти" is a major faux pas. Address interviewers as "Пан/Пані + Surname" unless invited otherwise.
+2. **Academic Prestige**: Ukrainians place high value on formal education and degrees. It is culturally appropriate to highlight diplomas and academic titles on a resume/CV, more so than in some Anglophone cultures.
 
-### Common Collocations at A2 Level
-- **На котру годину?** (For what time?)
-- **Домовитися про зустріч** (To agree on a meeting).
-- **Надіслати резюме** (To send a CV/resume).
-- **Мені підходить** (That suits/works for me).
-- **Посилання на зум/міт** (Link for Zoom/Meet) — High frequency in modern contexts.
+## Common Learner Errors
+1. **Instrumental vs. "As"**: Learners often translate "I work as a manager" literally (`я працюю як менеджер`). Correct usage requires the Instrumental case without a preposition: `я працюю менеджером`.
+2. **Register Slip-ups**: Switching to informal "ти" too early. In a professional setting, stick to "Ви" until explicitly asked to switch (`можна на "ти"?`).
+3. **"Job" vs. "Work"**: Confusion between `робота` (general work/job) and `праця` (labor/effort). In the context of a job search, `робота` is almost always the correct term (`шукати роботу`, not `шукати працю`).
 
-## 3. Cultural Hook
-- **IT and Tech Influence**: Ukraine is a major global IT hub. Recruitment culture is highly digitalized. It is very common to schedule interviews via **LinkedIn** or even **Telegram**, which is often seen as more direct and professional than in some Western contexts where email remains the only standard.
-- **Punctuality**: While social gatherings in Ukraine might have some flexibility, professional interviews strictly follow the «час — це гроші» (time is money) principle. Being 5 minutes late for a remote «співбесіда» is often a disqualifier.
+## Cross-References
+- Builds on: `a2-63` (Scheduling Appointments) - reuses time/date structures; `a2-49` (Work) - reuses profession vocabulary.
+- Prepares for: `a2-65` (Giving Directions) - office location context.
 
-## 4. Pedagogical Notes
-- **Dative for Convenience**: English speakers often say "It's convenient *for* me" (для мене). In Ukrainian, the **Dative Case** (without a preposition) is required: «**Мені** зручно».
-- **Time Prepositions (о vs. в)**: Learners often confuse when to use «о» (at a specific hour) vs. «в» (on a day). 
-    - *Correct*: **О** шостій (At six), **У** вівторок (On Tuesday).
-- **Perfective Preference**: When scheduling, we are looking for a completed agreement. Therefore, the perfective aspect (**призначити**, **зустрітися**) is more natural than the imperfective in the actual act of setting the date.
-
-## 5. Scope Boundaries
-### IN Scope (Based on Prior Knowledge)
-- **All Cases**: Since the A2 grammar checkpoint is passed, use Nominative, Accusative, Locative, Genitive, Dative, and Instrumental freely.
-- **Verbal Aspect**: Use perfective aspect for scheduling specific events.
-- **Time/Date Construction**: Using ordinal numbers for hours and genitive for dates.
-- **Modals**: Using «могти» (can) and «хотіти» (want) to express availability.
-
-### OUT of Scope (Not yet learned/Too complex)
-- **Formal Passive Voice**: Avoid «Зустріч було призначено» (The meeting was scheduled). Use active: «Ми призначили зустріч».
-- **Participles**: Avoid «запрошений» (the invited one). Use relative clauses: «кандидат, якого ми запросили».
-- **Highly Specialized HR Jargon**: Avoid words like «оффер», «релокація», or complex labor code terminology. Keep it to the act of scheduling.
+## Notes for Content Writing
+- **Practical Focus**: The dialogue should include the exact phrases for "When can you start?" (`Коли ви можете почати?`) and "What are your salary expectations?" (`Яка бажана зарплата?`).
+- **Scaffolding**: Ensure the Instrumental case for professions (`працювати + Instr`) is reinforced, as it's a persistent trouble spot.

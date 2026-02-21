@@ -1,78 +1,37 @@
-# Research Notes: A1 M17 "Numbers & Money"
+# Дослідження: Numbers & Money (A1 Core)
 
-**Track**: Core A1
-**Module**: a1-17-numbers-and-money
-**Researched**: 2026-02-08
-**Level**: A1 (Beginner)
+## State Standard Reference
+§3.8 (Тематичний зміст): "Купівля: основні продукти харчування; одяг і взуття; засоби гігієни... гроші."
+Alignment: This module directly addresses the required theme of "Money" and enables basic transactions, a core A1 communicative competence. While morphological declension of cardinals is formally introduced in A2 (§4.2.1.3), A1 learners require lexical mastery of numbers 0-100 and basic agreement patterns (1-2-5) for practical shopping scenarios.
 
-## 1. Grammar: State Standard 2024 Reference
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| один (one) | High (Top 100) | один раз, одна гривня |
+| два (two) | High (Top 100) | два дні, дві гривні (feminine!) |
+| п'ять (five) | High | п'ять хвилин, п'ять гривень |
+| гривня (hryvnia) | High (Contextual) | скільки гривень? одна гривня |
+| скільки (how much) | High | скільки коштує? скільки з мене? |
+| коштувати (to cost) | Medium | скільки це коштує? |
+| ціна (price) | Medium | яка ціна? висока ціна |
 
-The **Державний стандарт української мови (ДСТУ 2024)** addresses numbers and shopping primarily through thematic competence and basic morphological structures for the A1 level.
+## Cultural Hooks
+1. **The Hryvnia's Origin**: The word "hryvnia" comes from "hryva" (mane), referring to a valuable neck ring or torque made of silver or gold used in Kyivan Rus (11th century).
+2. **The Kopeck Proverb**: "Копійка береже гривню" (A kopeck saves a hryvnia) — reflecting traditional frugality and the value of small savings.
+3. **Symbol**: The symbol ₴ (derived from cursive 'г' with double strokes) represents stability, similar to € or ¥.
 
-*   **§ 4.2.1.3. Числівник (Numeral):** 
-    > "Уживання родових форм порядкових числівників із закінченнями -ий, -а, -е: перший, першого..., перша, першої..., перше, першого...; другий, друга, друге..."
-    *(Note: While the grammar section for A1 focuses on Ordinals, the standard incorporates Cardinals through communicative examples and thematic requirements).*
+## Common Learner Errors
+1. **Gender of "Two"**: Using "два гривні" instead of "дві гривні". (Correction: "гривня" is feminine, so use "дві").
+2. **The 1-2-5 Rule**: Confusion over endings. 1 (Nom Sg), 2-4 (Nom Pl), 5+ (Gen Pl). Learners often say "п'ять гривні" instead of "п'ять гривень".
+3. **Pronunciation of "п'ять"**: Missing the apostrophe pause [pjat'] or softening the 'p' inappropriately.
+4. **Teen Stress**: Putting stress on the root instead of 'над' in 11-19 (e.g., saying "одИннадцять" instead of "одинАдцять").
 
-*   **§ 3.8. Купівля (закупи) (Shopping):** 
-    Identifies the following as mandatory thematic content for A1:
-    > "- магазини і ринки; споживчі товари... одиниці ваги й об’єму; гроші."
+## Cross-References
+- Builds on: `a1-16` (The Genitive I) — specifically the concept of case endings, though here it's taught as a fixed pattern.
+- Prepares for: `a1-18` (Food and Shopping) — essential prerequisite for price discussions.
+- Prepares for: `a1-23` (What Time Is It) — numbers 1-60 are critical for telling time.
 
-*   **§ 1.3.1.1. (Writing Skills):**
-    > "...переписати назви побутових предметів із цінника чи реклами, вивіски магазинів." 
-    *(This implies the ability to recognize and process prices/numbers in a retail context).*
-
-## 2. Vocabulary Frequency
-
-### High Frequency (A1 Core)
-*   **Cardinals 1-20:** оди́н, два, три, чоти́ри, п'ять... два́дцять.
-*   **Tens:** три́дцять, со́рок, п'ятдеся́т, шістдеся́т, сімдеся́т, вісімдеся́т, дев'яно́сто, сто.
-*   **Currency:** гри́вня (UAH), копі́йка (cent/kopeck), гро́ші (money).
-*   **Question/Action:** скі́льки (how much), коштува́ти (to cost), ціна́ (price).
-*   **Descriptors:** до́рого (expensive), де́шево (cheap).
-
-### Medium Frequency (Contextual)
-*   **Retail:** ри́нок (market), магази́н (shop), чек (receipt), зда́ча (change), купува́ти (to buy), плати́ти (to pay).
-*   **Card:** ка́ртка (card), готі́вка (cash).
-
-### Low Frequency (Out of Scope for M17)
-*   **Large Numbers:** ти́сяча (thousand), мільйо́н.
-*   **Financial:** валю́та (currency - term), банкома́т (ATM), раху́нок (bank account).
-
-## 3. Cultural Hook
-
-*   **Etymology of the Hryvnia:** The name "hryvnia" (гривня) dates back to the 11th-century Kievan Rus'. It originally referred to a neck ornament (a "hryvna" or mane-like collar) made of precious metals, which was eventually used as a weight unit for silver bullion.
-*   **Cash vs. Digital:** Ukraine is one of the world leaders in contactless payments (often using "Monobank" or "Apple/Google Pay"), even in small kiosks. However, at the traditional **ринок** (market), cash remains king, and "round numbers" are preferred to avoid the hassle of small **копійки**.
-*   **Historical Figures:** The 100 UAH note features Taras Shevchenko, while the 500 UAH note features Hryhoriy Skovoroda. These are "celebrity" philosophers/poets that students will encounter throughout the curriculum.
-
-## 4. Pedagogical Notes
-
-### The "Slavic Number Trap"
-Ukrainian number-noun agreement is notoriously difficult for English speakers. At A1, we follow a simplified formula:
-1.  **1 (один/одна/одне):** Nominative Singular (*1 гривня*)
-2.  **2, 3, 4:** Nominative Plural (Note: for feminine *гривня*, the plural is *гривні*)
-3.  **5-20, 0, and tens:** Genitive Plural (*5 гривень*)
-
-### Common Learner Errors
-*   **Over-regularization:** Using the singular for everything (*"два гривня"*) or the plural for everything (*"п'ять гривні"*).
-*   **Stress Shifts:** Numbers like *одина́дцять* (11) through *дев'ятна́дцять* (19) always have the stress on the **на** syllable.
-*   **Gender of '2':** Learners often forget that '2' has two forms: **два** (masculine/neuter) and **дві** (feminine - used with *гривня*).
-
-### Teaching Sequence
-1.  **Numbers 1-10** (pure counting).
-2.  **The Question:** "Скільки це коштує?".
-3.  **Currency Introduction:** Linking 1, 2, 5 to the correct forms of *гривня*.
-4.  **The Tens (20-100):** Building compound numbers (*двадцять один, сорок п'ять*).
-
-## 5. Scope Boundaries
-
-### IN Scope
-*   **Cardinal Numbers 0-100.**
-*   **Nominative Agreement:** Using numbers as subjects or simple labels (Prices).
-*   **Genitive Plural (Fixed):** Specifically the word *гривень* for numbers 5-20.
-*   **Present Tense:** "Це коштує..." (singular) and "Вони коштують..." (plural).
-
-### OUT Scope
-*   **Ordinal Numbers:** (First, second) - although mentioned in the standard, they are better suited for dates/floors in later modules.
-*   **Case Declension of Numbers:** Numbers in anything other than the Nominative (e.g., "I am with five friends") are B1+ topics.
-*   **Fractions and Decimals:** 1.5, half, etc.
-*   **Past Tense:** "It cost..." (коштувало) - focus on the immediate shopping experience first.
+## Notes for Content Writing
+- **Scaffolding**: Since this is A1.2, use English for the "1-2-5 Rule" explanation to ensure clarity. The distinction between "2 гривні" and "5 гривень" is often the first encounter with Genitive Plural for beginners.
+- **Visuals**: Use a clear table for the 1-2-5 pattern (Visual Agreement Tables are crucial per plan).
+- **Reality Check**: Use realistic 2024 prices (e.g., Coffee ~50 UAH, Bread ~25 UAH) to keep dialogues authentic.

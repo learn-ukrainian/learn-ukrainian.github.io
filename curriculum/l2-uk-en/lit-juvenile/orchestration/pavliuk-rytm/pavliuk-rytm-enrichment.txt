@@ -1,0 +1,232 @@
+✅ Message sent to Gemini (ID: 12072) [auto-acked: self-addressed]
+✓ Message 12072 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12072...
+📨 Message #12072
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-pavliuk-rytm
+   Time: 2026-02-20T23:35:51.670639+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 20
+module: lit-juvenile-20
+level: LIT.JUVENILE
+slug: pavliuk-rytm
+version: '2.0'
+title: Pavliuk Rytm
+subtitle: Pavliuk Rytm
+content_outline:
+- section: Вступ та контекст
+  points: []
+- section: Аналіз ключових творів
+  points: []
+- section: Стилістика та мова автора
+  points: []
+- section: Деколонізаційна перспектива
+  points:
+  - Як цей автор руйнує імперські міфи
+  - Українська суб'єктність у тексті
+- section: Підсумок та спадщина
+  points: []
+vocabulary_hints:
+  required:
+  - історіографія
+  - наратив
+  - суб'єктність
+  recommended:
+  - деколонізація
+activity_hints:
+- type: reading
+  focus: Аналіз першоджерела
+- type: essay-response
+  focus: Критичне есе
+- type: critical-analysis
+  focus: Деконструкція тексту
+focus: literature
+pedagogy: literature
+immersion: 100% Ukrainian
+phase: LIT Expansion
+objectives:
+- Проаналізувати творчість Pavliuk Rytm у контексті української літератури
+- Дослідити вплив автора на формування національної ідентичності
+persona:
+  voice: Senior Specialist
+  role: Teen Mentor
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Pavliuk Rytm
+
+## Використані джерела
+1. [Енциклопедія Сучасної України: Ігор Павлюк](https://esu.com.ua/) — біографічні дані, огляд ключових збірок, зокрема дитячої літератури (збірка «Сопілка», п'єса «Літаючий казан»).
+2. [Вікіпедія: Павлюк Ігор Зиновійович](https://uk.wikipedia.org/wiki/%D0%9F%D0%B0%D0%B2%D0%BB%D1%8E%D0%BA_%D0%86%D0%B3%D0%BE%D1%80_%D0%97%D0%B8%D0%BD%D0%BE%D0%B2%D1%96%D0%B9%D0%BE%D0%B2%D0%B8%D1%87) — детальний життєпис, бібліографія, включення творів до шкільної програми.
+3. [Золота Пектораль: Рецензія на збірку «Сопілка»](https://zolotapektoral.te.ua/) — аналіз ліризму та виховного потенціалу віршів Павлюка для школярів.
+
+## Хронологія
+- 1967: Народження Ігоря Павлюка у селі Ужова на Волині.
+- 1996: Захист кандидатської дисертації.
+- 2003: Вихід друком п'єси для дітей «Літаючий казан».
+- 2017: Публікація збірки віршів для школярів «Сопілка».
+- 2020: Здобуття міжнародних поетичних нагород, інтеграція віршів (наприклад, «Дівчинка») до оновленої шкільної програми з української літератури.
+
+## Ключові факти та цитати
+- Павлюк розуміє поезію не просто як римований текст, а як «ритм серця», ритм Універсуму, що є основою життя і духовного буття.
+- Твори Павлюка для дітей відзначаються відсутністю дидактизму; вони розмовляють з дитиною як з рівною, формуючи естетичний смак.
+- > «Вірші — це не тільки слова, це ритм, яким б'ється серце Всесвіту». [потребує верифікації точного формулювання, загальна філософія поета]
+- > «Справжня поезія не пишеться для дітей чи дорослих, вона пишеться для душі».
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ та контекст: Формування поета": [!history-bite] — Історія дитинства на Волині та формування природного світосприйняття, яке пізніше виллється у «ритм» його поезій.
+- Section "Аналіз ключових творів: «Літаючий казан»": [!myth-buster] — Спростування міфу, що сучасна дитяча драматургія поступається класичній радянській: Павлюк створює глибокі сучасні образи без ідеологічних штампів.
+- Section "Аналіз ключових творів: Збірка «Сопілка»": [!quote] — Цитата з поезії Павлюка, що демонструє музичність (сопілковість) української мови.
+- Section "Стилістика та мова автора: Філософія ритму": [!culture] — Як український мелос і народна пісня вплинули на специфічний поетичний ритм автора.
+- Section "Деколонізаційна перспектива: Руйнування імперських міфів": [!decolonization] — Павлюк відмовляється від образу українця як «меншого брата», утверджуючи модерну, глибоко вкорінену в європейський контекст ідентичність.
+- Section "Деколонізаційна перспектива: Українська суб'єктність": [!context] — Пояснення того, як впровадження творів Павлюка до шкільної програми допомагає формувати україноцентричний світогляд з дитинства.
+
+## Деколонізаційний контекст
+- **Imperial/Soviet myth**: Дитяча література має бути виключно виховною в ідеологічному ключі (радянська парадигма «піонера-героя»).
+- **Ukrainian reality**: Дитяча поезія Ігоря Павлюка плекає вільну особистість, пов'язану з природою, власним корінням та національним космосом, без шароварщини та партійного дидактизму.
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian (decolonized) framing |
+|---------|-----------------|-------------------------------|
+| Дитяча поезія | Засіб ідеологічної індоктринації та формування слухняного громадянина | Засіб естетичного розвитку, плекання вільної особистості та емоційного інтелекту |
+| Ритм тексту | Формалістичний інструмент віршування | Відображення національного мелосу та внутрішньої свободи |
+
+## Section-Mapped Research Notes
+
+### Вступ та контекст: Формування поета
+Волинське дитинство Ігоря Павлюка, ранній зв'язок з природою. Біографічний контекст як основа його ліричного світосприйняття.
+
+### Вступ та контекст: Дитяча література в його доробку
+Місце дитячої творчості у загальному доробку письменника. Відхід від традиційної повчальності до щирої розмови зі школярем.
+
+### Аналіз ключових творів: «Літаючий казан»
+П'єса 2003 року. Сюжетні лінії, метафорика та звернення до дитячої уяви. Драматургія як простір для гри та осмислення світу.
+
+### Аналіз ключових творів: Збірка «Сопілка»
+Поетична збірка для школярів (2017). Аналіз музичності віршів, тематики (природа, родина, Батьківщина). 
+
+### Аналіз ключових творів: Вірш «Дівчинка»
+Розбір вірша «Дівчинка», що часто вивчається у школі. Емоційна глибина тексту, образотворення та емпатія.
+
+### Стилістика та мова автора: Філософія ритму
+Поняття «ритму» у Павлюка. Ритм як дихання, зв'язок з Універсумом та українським мелосом. Як це реалізується в текстах для дітей.
+
+### Стилістика та мова автора: Образність та символіка
+Тропи і фігури мови. Використання фольклорних мотивів (сопілка, казан) у модерному ключі.
+
+### Деколонізаційна перспектива: Руйнування імперських міфів
+Подолання комплексу меншовартості через літературу. Як твори Павлюка руйнують радянські шаблони дитячої поезії.
+
+### Деколонізаційна перспектива: Українська суб'єктність
+Формування національної гідності через естетику. Україноцентричність поетичного світу автора. 
+
+### Підсумок та спадщина: Вплив на сучасну літературу
+Значення творчості Ігоря Павлюка для розвитку сучасної української дитячої літератури. Інтеграція в освітній процес та рецепція молодого покоління.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12155)
+✓ Message 12072 acknowledged
+✓ Message 12155 acknowledged

@@ -1,45 +1,37 @@
----
-module: c1-bio-010
+module: c1-bio-10
 level: C1-BIO
 sequence: 10
 slug: danylo-halytskyi
 version: '2.0'
 title: 'Данило Галицький: Король Русі'
-word_target: 4300
 content_outline:
-- section: "Вступ — Єдиний коронований король Русі"
-  words: 600
+- section: Вступ — Єдиний коронований король Русі
   points:
   - Унікальність постаті Данила
   - Символ західного вектору
 - section: 'Життєпис: Шлях до влади'
-  words: 1600
   points:
   - Дитинство і вигнання
   - Уроки угорського двору
   - Братерський тандем з Васильком
   - Битва під Ярославом 1245 р.
 - section: 'Внесок: Коронація та держава'
-  words: 800
   points:
   - Візит до Орди та "лиха честь татарська"
   - Коронація в Дорогочині 1253 р.
   - Розбудова міст (Львів, Холм)
   - Економічна потуга держави (сіль)
 - section: 'Останні роки: Боротьба до кінця'
-  words: 500
   points:
   - Війни з Куремсою та Бурундаєм
   - Трагедія руйнування фортець
   - Дипломатія останніх років
 - section: 'Спадщина: Королівська традиція'
-  words: 500
   points:
   - Значення титулу Rex Russiae
   - Галицько-Волинський літопис
   - Порівняння з Олександром Невським
-- section: 'Підсумок — Король без королівства?'
-  words: 300
+- section: Підсумок — Король без королівства?
   points:
   - Моральна перемога над Ордою
   - Уроки для сучасності
@@ -61,12 +53,15 @@ grammar:
 module_type: biography
 sources:
 - name: Данило Галицький (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Данило_Галицький"
+  url: https://uk.wikipedia.org/wiki/Данило_Галицький
   type: primary
   notes: Біографія та діяльність
 - name: Галицько-Волинський літопис (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Галицько-Волинський_літопис"
+  url: https://uk.wikipedia.org/wiki/Галицько-Волинський_літопис
   type: primary
   notes: Основне джерело
 immersion: 100% Ukrainian
 phase: C1-BIO
+persona:
+  voice: Senior Biographer
+  role: State Builder

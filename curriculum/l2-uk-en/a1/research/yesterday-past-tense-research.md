@@ -1,54 +1,32 @@
-# Research: Yesterday — Past Tense
-
-**Level:** A1 | **Module:** 21
-**Researched:** 2026-02-08
+# Дослідження: Yesterday - Past Tense
 
 ## State Standard Reference
-- **Section:** §4.2.4 (Особові форми дієслова — дієвідмінювання)
-- **Subsection:** §4.2.4.1 (Дійсний спосіб)
-- **Grammar Reference:** "утворення форм минулого часу дієслова: читав, читала, читало, читали; сміявся, сміялася, сміялося, сміялися; був, була, було, були"
-- **Functional Competence:** Каталог А. Перелік комунікативних намірів (p. 13): "виразити часові поняття: сьогодні, учора, завтра."
-- **Level Requirement:** A1 students must recognize and form basic past tense using the L-participle suffix, including gender and number agreement.
+§4.2.4.1: "утворення форм минулого часу дієслова: читав, читала, читало, читали; сміявся, сміялася, сміялося, сміялися; був, була, було, були"
+Alignment: Цей модуль безпосередньо реалізує вимогу стандарту щодо формування навичок утворення та вживання минулого часу дієслів (дійсний спосіб) на рівні А1.
 
 ## Vocabulary Frequency
-- **Core Adverbs:** вчора (yesterday), раніше (earlier), недавно (recently), минулого тижня (last week).
-- **Core Verbs (High Frequency):**
-  - **бути** (to be): Essential for "I was/we were".
-  - **робити** (to do/make): Used for "what did you do?".
-  - **їсти / пити** (to eat/drink): Daily routine verbs with irregular/mutation forms in past (їв, пив).
-  - **читати / дивитися** (to read/watch): Common leisure verbs.
-  - **йти / ходити** (to go/walk): Irregular past for *йти* (ішов, ішла) is a critical A1 hurdle.
-- **Collocations:**
-  - *Що ти робив вчора?* (What did you do yesterday?)
-  - *Я був вдома.* (I was at home.)
-  - *Ми ходили в кафе.* (We went to a cafe.)
-- **Frequency Data:** All verbs listed appear in the top 500 words of the Ukrainian frequency dictionary. "Бути" is the #1 verb in frequency.
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| вчора | High (Top 100 adv) | вчора ввечері, вчора зранку, тільки вчора |
+| минулий | High (Top 200 adj) | минулого тижня, минулого року, минулої ночі |
+| бути | Very High (Top 10 verb) | був удома, була на роботі, було цікаво |
+| робити | Very High (Top 20 verb) | робити каву, робити уроки, що ти робив? |
+| читати | High (Top 50 verb) | читав книгу, читала новини |
+| йти/ходити | High (Top 50 verb) | ішов додому, ходила в магазин |
 
-## Cultural Hook (verified)
-- **Fact 1: The Irretrievability of Time.** A famous Ukrainian proverb collected by Matvii Nomys (1864) states: *"Вчорашньої години не здоженеш"* (You won't catch yesterday's hour). This reflects a cultural emphasis on the value of time and the finality of the past.
-- **Fact 2: "Yesterday" in Daily Socializing.** In Ukrainian culture, sharing what happened "yesterday" (*вчора*) is a standard part of the "що нового?" (what's new?) ritual. While English speakers might focus on current states, Ukrainians often use the past tense to narrate recent micro-events as a way of establishing rapport.
-- **Source:** *Українські прислів'я та приказки* (М. Номис); Observation of contemporary linguistic etiquette in Ukraine.
+## Cultural Hooks
+1. **Перша друкована книга (1574)**: 15 лютого 1574 року Іван Федоров у Львові видав "Апостол". Це класичний приклад події в минулому ("надрукував"), що є важливим маркером української історії.
+2. **ЗУНР (1918-1919)**: Короткий період державності, що залишив слід у законодавстві та культурі (мова про закон про державну мову), дозволяє використати дієслова "було", "прийняли".
 
-## Pedagogical Notes
-- **Morphological Origin:** The past tense in Ukrainian is historically an *L-participle* (adjective-like). This is why it changes by **gender** (він робив, вона робила) but NOT by person (я робив, ти робив). This is a significant shift for English learners who are used to person-agreement (present) or no agreement (past simple "did").
-- **The "L-Suffix" Pattern:**
-  - Masculine: -в
-  - Feminine: -ла
-  - Neuter: -ло
-  - Plural: -ли
-- **Common Learner Errors:**
-  - **Gender Neglect:** Female students often forget to use the -ла ending when referring to themselves (*Я робив* instead of *Я робила*).
-  - **The "Йти" Trap:** Students often try to add the -в suffix to the stem of "йти" (*йтив*), whereas the past stems from a different root (*ішов*).
-- **Teaching Sequence:** Start with regular verbs (читав/читала), move to "бути" (був/була), and then introduce the highly frequent but irregular "йти" and "їсти".
+## Common Learner Errors
+1. **Gender Agreement Violation**: Жінки часто кажуть "я писав" або "я ходив" за аналогією з інфінітивом або present tense. → *Correction*: Акцентувати на -ла для жінок.
+2. **"To be" Calque**: "Я був працював" (I was working). → *Correction*: Пояснити, що в українській минулий час самодостатній: "Я працював".
+3. **Motion Verb Confusion**: Плутанина між "ішов" (process/one way) та "ходив" (round trip/fact). На рівні А1 часто спрощується, але варто розрізняти контексти.
 
-## Scope Boundaries
-- **IN SCOPE:**
-  - Standard past tense suffixes (-в, -ла, -ло, -ли).
-  - Past tense of reflexive verbs (-ся → -вся/-лася).
-  - Irregular past forms for "бути", "йти", and "їсти".
-  - Basic time adverbs (вчора, раніше, минулого тижня).
-- **OUT OF SCOPE:**
-  - **Verbal Aspect nuances:** While "прочитав" (perfective) might appear as a lexical item, the systematic contrast between Imperfective/Perfective past is reserved for B1.
-  - **Instrumental Case:** Not yet learned; sentences like "I was a student" (*Я був студентом*) should be avoided or taught as fixed phrases, focusing instead on location (*Я був у школі*).
-  - **Future Tense:** Introduced in the next module (M22).
-  - **Pluperfect:** Rare in modern Ukrainian, strictly out of scope for A1.
+## Cross-References
+- Builds on: a1-06 (Verbs I), a1-11 (Accusative Case - for objects like "читав книгу")
+- Prepares for: a1-22 (Tomorrow - Future Tense), a1-25 (Daily Routine - narratives)
+
+## Notes for Content Writing
+- Keep explanations regarding aspect simple; focus on "fact of action" (usually imperfective in simple past statements like "Що ти робив?") unless the result is emphasized.
+- Ensure the contrast between "він читав" and "вона читала" is visually clear (bold suffixes).

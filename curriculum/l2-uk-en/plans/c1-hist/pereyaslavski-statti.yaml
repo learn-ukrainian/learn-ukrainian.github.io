@@ -1,4 +1,3 @@
----
 module: c1-hist-024
 level: c1-hist
 sequence: 24
@@ -10,30 +9,26 @@ objectives:
 - 'Analyze the causes and consequences of переяславські статті: текст і контекст'
 - Evaluate the historical significance of найконтроверсійніший документ
 content_outline:
-- section: "Вступ — Найконтроверсійніший документ"
-  words: 457
+- section: Вступ — Найконтроверсійніший документ
   subsections:
   - Переяслав 1654 — що відбулося?
   - Чому досі сперечаються
   - Рада vs. Статті — що підписали?
   - Мета модуля — прочитати оригінал
 - section: Що насправді відбулося в січні 1654
-  words: 686
   subsections:
   - Рада в Переяславі — церемонія
   - Присяга — хто кому?
   - Інцидент з присягою царя
   - Що вирішили, чого не вирішили
-- section: "Березневі статті — справжній договір"
-  words: 800
+- section: Березневі статті — справжній договір
   subsections:
   - Переговори в Москві
   - 23 статті — зміст
   - Козацька автономія
   - Московські застереження
   - Що підписано, що відхилено
-- section: "Фрагмент — Ключові статті"
-  words: 800
+- section: Фрагмент — Ключові статті
   subsections:
   - Текст (з глосами)
   - Про реєстр — 60 000 козаків
@@ -41,25 +36,21 @@ content_outline:
   - Про відносини з іншими державами
   - Московська редакція
 - section: Інтерпретації
-  words: 686
   subsections:
   - Українська інтерпретація — персональна унія
   - Російська інтерпретація — возз'єднання
   - Польська інтерпретація — зрада
   - Сучасний аналіз — що насправді?
 - section: Чому це важливо досі
-  words: 343
   subsections:
   - Переяслав у російській пропаганді
   - Деконструкція міфу
   - Історична пам'ять vs. документ
 - section: Підсумок
-  words: 228
   subsections:
   - Від легенди до тексту
   - Критичний підхід
   - Зв'язок із циклом кооптації
-word_target: 4000
 vocabulary:
 - Переяславська рада
 - Березневі статті
@@ -89,15 +80,15 @@ activities:
   focus: Чи був Переяслав 'возз'єднанням' чи 'союзом'?
 sources:
 - name: Переяславська рада (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Переяславська_рада"
+  url: https://uk.wikipedia.org/wiki/Переяславська_рада
   type: reference
   notes: Overview
 - name: Березневі статті
-  url: "https://uk.wikipedia.org/wiki/Березневі_статті"
+  url: https://uk.wikipedia.org/wiki/Березневі_статті
   type: reference
   notes: March Articles (actual agreement)
 - name: Текст статей
-  url: "https://litopys.org.ua/"
+  url: https://litopys.org.ua/
   type: primary
   notes: Document text
 vocabulary_hints:
@@ -116,7 +107,9 @@ activity_hints:
   items: 4
 - type: essay-response
   focus: Критичний аналіз
-  word_target: 300
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Treaty Text Analyst

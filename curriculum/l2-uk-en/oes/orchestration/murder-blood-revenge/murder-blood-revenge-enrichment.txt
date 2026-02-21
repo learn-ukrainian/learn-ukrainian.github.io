@@ -1,0 +1,223 @@
+✅ Message sent to Gemini (ID: 12664) [auto-acked: self-addressed]
+✓ Message 12664 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12664...
+📨 Message #12664
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-murder-blood-revenge
+   Time: 2026-02-20T23:41:33.111105+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 52
+module: oes-052
+module_number: 42
+slug: murder-blood-revenge
+title_uk: Вбивство та кровна помста
+title_en: Murder & Blood Revenge
+phase: 2
+phase_id: literary-tradition
+phase_name: Literary Tradition
+focus: The concept of Vyra (Weregild)
+content_outline:
+- section: Вступ
+  description: Introduction to Murder & Blood Revenge
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Senior Paleographer
+  role: Avenger of Blood
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Murder Blood Revenge
+
+## Використані джерела
+1. [Руська Правда (Тексти на основі 7 списків та 5 редакцій)](http://litopys.org.ua/yushkov/yu.htm) — Академічне видання текстів Руської Правди (С. Юшков).
+2. [Енциклопедія історії України: Руська Правда](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Ruska_Pravda) — Аналіз історії створення та редакцій.
+3. [Енциклопедія Сучасної України: Вира](https://esu.com.ua/article-34062) — Визначення та історія грошового штрафу за вбивство.
+4. [Ізборник: Правда Руська](http://litopys.org.ua/oldukr2/oldukr01.htm) — Оригінальні тексти та переклади.
+
+## Хронологія
+- **1016 (або 1019)**: Ярослав Мудрий видає «Правду Ярослава» (Найдавніша правда, ст. 1-18 короткої редакції) під час боротьби за київський престол. Дозвіл кровної помсти для найближчих родичів.
+- **1054**: Смерть Ярослава Мудрого, початок правління тріумвірату Ярославичів.
+- **Близько 1072**: Вишгородська нарада князів (Ізяслав, Святослав, Всеволод). Прийняття «Правди Ярославичів». Офіційне скасування кровної помсти та заміна її на виру.
+- **Початок XII ст.**: Укладення Прорової (Розширеної) редакції Руської Правди за часів Володимира Мономаха.
+- **1240**: Занепад правової системи Руської Правди після монгольської навали, хоча норми діяли у Великому князівстві Литовському.
+
+## Ключові факти та цитати
+- **Стаття 1 (Коротка редакція)**: «Аще убьетъ мужъ мужа, то мьстить брату брата, или сынови отца, любо отцю сына, или братучаду, любо сестрину сынови; аще не будеть кто мьстя, то 40 гривенъ за голову».
+- **Скасування помсти (Правда Ярославичів)**: «По Ярославѣ же паки совкупившеся сынове его: Изяславъ, Святославъ, Всеволодъ і сгадали... а кровьнаго мьщениа не рекли, нъ оже убьють, то выкупъ кунами».
+- **Вартість життя (Вира)**:
+  - 80 гривень: княжий муж, тивун огнищний (старший дружинник, управитель).
+  - 40 гривень: вільний муж (людин), гридь, купець, мечник.
+  - 20 гривень: убивство жінки (піввира).
+  - 5 гривень: убивство смерда або холопа (відшкодування власнику).
+- **Дика вира**: Колективний штраф, який платила верв (громада), якщо вбивцю не знайдено або громада не видає його.
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ: Від звичаю до закону": [!context] — Кровна помста як механізм стримування насильства у бездержавному суспільстві, а не просто хаос.
+- Section "Джерело: Руська Правда...": [!paleography] — Аналіз фізичного вигляду списків (Троїцький, Академічний), відсутність розділових знаків, «суцільний рядок».
+- Section "Кровна помста: Стаття 1...": [!quote] — Оригінальний текст статті 1: «Убьеть мужъ мужа...».
+- Section "Реформа Ярославичів...": [!history-bite] — З'їзд у Вишгороді 1072 року як перший задокументований законодавчий «парламент» Русі.
+- Section "Економіка життя...": [!myth-buster] — Міф про «дешеве життя»: 40 гривень — це величезна сума (стадо коней), яку пересічна людина не могла сплатити самотужки.
+- Section "Соціальна ієрархія...": [!decolonization] — Порівняння з Салічною правдою (Lex Salica) франків. Русь була інтегрованою частиною європейського правового простору.
+- Section "Мовний аналіз...": [!culture] — Етимологія слова «головництво» (від «голова» — вбитий) та «вира» (можливо від нім. *wergeld* або спільнослов'янського кореня).
+
+## Деколонізаційний контекст
+- **Міф**: «Русская Правда» — пам'ятка російської історії.
+- **Реальність**: Руська Правда створена в Києві та Новгороді (який був частиною політичної системи Русі-України), її мова відображає східнослов'янські діалекти, що лягли в основу української мови (повноголосся, закінчення -ові/-еві). Росія (Московія) як держава виникає значно пізніше, тому привласнення цієї пам'ятки є імперською маніпуляцією.
+- **Термінологія**: Вживання терміну «давньоруський» виключно в контексті Русі-України, відмова від радянського «давньоросійський». Підкреслення європейськості права (компенсаційне право замість тілесних покарань, характерних для пізнішої Москви/Орди).
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| Руська Правда | Первый кодекс русского права | Кодекс права Русі-України, пам'ятка української правової культури |
+| Вира | Древнерусский штраф | Давньоруська (давньоукраїнська) форма композиції (відшкодування) |
+| Ярославичі | Русские князья | Київські князі, сини Ярослава Мудрого |
+
+## Section-Mapped Research Notes
+
+### Вступ: Від звичаю до закону
+Помста як сакральний обов'язок роду (Talio - «око за око»). Еволюція від родового ладу до ранньофеодальної держави, де князь монополізує право на насильство.
+
+### Джерело: Руська Правда як свідок епохи
+Найдавніший кодекс. Три редакції: Коротка, Розширена, Скорочена. Списки XV-XVII ст., але мова XI-XII ст. Палеографічні особливості: письмо устав, кирилиця.
+
+### Кровна помста: Стаття 1 та її контекст
+Аналіз тексту ст. 1. Коло месників: брат, син, батько, племінник. Обмеження кола месників — перший крок держави до контролю. Альтернатива (40 гривень) як опція, якщо немає кому мстити.
+
+### Реформа Ярославичів: Скасування помсти
+Причини: соціальні заворушення (повстання 1068 р.), потреба захисту княжої адміністрації. Заміна фізичної розправи штрафом на користь князя (фіскальний інтерес).
+
+### Економіка життя: Система вир
+«Вира» — штраф князю. «Головництво» — компенсація родині. Вартість: 40 гр = 200 овець або 40 корів. Це статок цілого села. Роль громади (верві) у сплаті.
+
+### Соціальна ієрархія смерті
+Подвійна вира (80 гр) за княжого мужа — захист еліти. Звичайна вира (40 гр). Піввира (20 гр) за жінку (але за важке каліцтво теж 20 гр!). Життя холопа не оцінювалося вирою, лише відшкодуванням збитків господарю (5 гр).
+
+### Інститут Верві та Дика вира
+Колективна відповідальність. Верв платить за знайдене тіло. Кругова порука як механізм соціального контролю.
+
+### Мовний аналіз: Лексика злочину і кари
+Терміни: *убити*, *голова*, *мьстить*, *вира*, *обида*. Порівняння: ОЕС *голову* -> Укр. *голову*. Еволюція значень.
+
+### Європейський контекст: Lex Salica vs Руська Правда
+Паралелі з варварськими правдами Європи (Салічна, Ріпуарська, Бургундська). Система вергельду (wergeld). Русь як частина європейського правового поля (на відміну від візантійського права з тілесними покараннями).
+
+### Підсумок: Гуманізація чи монетизація?
+Чи був це гуманізм? Ні, прагматизм. Збереження робочої сили та наповнення скарбниці. Але результат — менша жорстокість порівняно з пізнішими епохами.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12696)
+✓ Message 12664 acknowledged
+✓ Message 12696 acknowledged

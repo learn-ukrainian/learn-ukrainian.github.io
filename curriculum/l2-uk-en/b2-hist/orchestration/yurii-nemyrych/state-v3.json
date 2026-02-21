@@ -1,0 +1,13 @@
+{
+  "track": "b2-hist",
+  "slug": "yurii-nemyrych",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T15:24:43Z",
+      "task_id": "v3-yurii-nemyrych-pA",
+      "mode": "meta-only"
+    }
+  }
+}

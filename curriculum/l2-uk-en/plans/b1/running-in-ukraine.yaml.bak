@@ -1,0 +1,81 @@
+module: b1-81
+level: B1
+sequence: 81
+slug: running-in-ukraine
+version: '2.0'
+title: Біг в Україні
+subtitle: Running Culture and Marathon Events
+content_outline:
+- section: Огляд
+  points:
+  - Бігова культура в Україні — гачок
+- section: Інтеграція
+  points:
+  - Бігова культура в Україні
+  - Чому біг став популярним
+  - Київський марафон
+  - Wizz Air Kyiv City Marathon
+  - Регіональні забіги (Львів, Харків, Одеса)
+  - Забіги на підтримку армії
+  - Ветеранські спортивні проекти
+  - Parkrun в Україні
+  - Як знайти бігову спільноту
+- section: Практика
+  points:
+  - Ключові концепції
+- section: Продукція
+  points:
+  - Діалоги про реєстрацію, тренування, фініш
+- section: Підсумок — Перший крок
+  points:
+  - Як почати бігати
+- section: Потрібно більше практики?
+vocabulary_hints:
+  required:
+  - біг (running)
+  - марафон (marathon)
+  - дистанція (distance)
+  - темп (pace)
+  - реєстрація (registration)
+  - фініш (finish)
+  - бігун (runner)
+  - кросівки (running shoes)
+  recommended:
+  - напівмарафон (half-marathon)
+  - розминка (warm-up)
+  - особистий рекорд (personal best)
+  - біговий клуб (running club)
+activity_hints:
+- type: reading
+  focus: Race descriptions and runner stories
+  items: 15
+- type: match-up
+  focus: Match terms to definitions
+  items: 20
+- type: fill-in
+  focus: Complete training plans
+  items: 15
+- type: quiz
+  focus: Share running goals
+  items: 10
+focus: culture
+pedagogy: CBI
+prerequisites:
+- b1-80 (Active Lifestyle)
+connects_to:
+- b1-82 (Mountains and Trail)
+objectives:
+- Learner can discuss running events and training in Ukrainian
+- Learner can understand registration information for races
+- Learner can use running-specific vocabulary
+- Learner can describe their running experience
+grammar:
+- Running and race vocabulary
+- Discussing distances and times
+- Event registration language
+register: розмовний
+phase: B1.7 [Contemporary Ukraine]
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Kyiv Marathon Organizer
+word_target: 4000

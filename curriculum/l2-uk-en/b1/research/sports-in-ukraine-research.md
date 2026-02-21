@@ -1,83 +1,42 @@
-# Research: Sports in Ukraine (B1 M79)
+# Дослідження: Спорт в Україні
 
-**Module**: B1 M79 "Sports in Ukraine"
-**Topic**: Sports vocabulary, famous athletes, active lifestyle culture
-**Level**: B1 (Intermediate)
+## State Standard Reference
+§3.4: "Дозвілля, відпочинок: способи проведення вільного часу; хобі та зацікавлення; види спорту і спортивних споруд (стадіон, басейн, корт, ковзанка)..."
+Alignment: Module covers popular sports (football, boxing), athletes, and sports facilities, directly addressing the "types of sport" and "leisure" requirements of B1.
 
-## 1. Grammar: State Standard 2024 Reference
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| **Футбол** | High (Top sport) | грати у футбол, вболівати за команду, збірна України, забити гол, футбольний матч |
+| **Бокс** | High (Cultural icon) | чемпіон світу, важка вага, професійний ринг, боксерські рукавиці, нокаут |
+| **Перемога** | High (General & Sport) | здобути перемогу, святкувати перемогу, воля до перемоги, перемога у змаганнях |
+| **Змагання** | Medium-High | брати участь у змаганнях, міжнародні змагання, олімпійські ігри, спортивні змагання |
+| **Тренування** | Medium | іти на тренування, щоденні тренування, тренер, фізична підготовка |
+| **Вболівальник** | Medium | футбольний вболівальник, палкий вболівальник, сектор для вболівальників |
 
-According to the **Державний стандарт української мови як іноземної (2024)** (State Standard for Ukrainian as a Foreign Language), Level B1 requires the ability to discuss personal interests and hobbies, including sports.
+## Cultural Hooks
+1. **The Klitschko Era**: Vitali and Wladimir Klitschko held all major world heavyweight belts simultaneously (WBA, WBC, IBF, WBO) in 2011, earning a Guinness World Record. They are symbols of Ukrainian strength globally.
+2. **The Tsar of the Pole Vault**: Serhiy Bubka broke the world record for men's pole vault 35 times (17 outdoor and 18 indoor). His dominance is legendary.
+3. **First Gold**: Oksana Baiul won the first-ever Olympic gold medal for independent Ukraine in 1994 (Figure Skating), putting the young nation on the sports map.
+4. **The Ballon d'Or**: Andriy Shevchenko won the Ballon d'Or in 2004, the third Ukrainian to do so (after Blokhin and Belanov), cementing football as a "second religion" in Ukraine.
 
-> **Розділ IV. Вимоги до володіння українською мовою як іноземною на рівні В1 (Рубіжний рівень)**
-> **Соціокультурна компетенція**:
-> "Здатність орієнтуватися в повсякденних ситуаціях спілкування, підтримувати розмову на загальні теми (вільний час, захоплення, подорожі, **спорт**, культура)..."
-> **Лексична компетенція**:
-> "Лексичний мінімум рівня В1 дозволяє спілкуватися в межах визначених сфер і тем, зокрема... **фізична культура і спорт**."
+## Common Learner Errors
+1. **"Do sports" vs "Make sports"**: Learners often translate literally.
+    *   Error: *Я роблю спорт.*
+    *   Correct: *Я займаюся спортом.* (Requires Instrumental case).
+2. **Prepositions with "Play"**: Confusion between instruments and games.
+    *   Error: *Я граю на футбол.* / *Я граю футбол.*
+    *   Correct: *Я граю у футбол.* (Games use `в/у` + Accusative).
+    *   Contrast: *Я граю на гітарі.* (Instruments use `на` + Locative).
+3. **"Cheer for" construction**:
+    *   Error: *Я вболіваю для Динамо.*
+    *   Correct: *Я вболіваю за Динамо.* (`за` + Accusative).
 
-## 2. Vocabulary Frequency
+## Cross-References
+- Builds on: **b1-78** (Technology - modern context of sports analytics/broadcasts)
+- Prepares for: **b1-80** (Active Lifestyle - personal fitness vs professional spectator sports)
 
-At B1 level, students should move beyond generic terms to specific sports and actions.
-
-### High Frequency (Core)
-- **спортсмен / спортсменка** (athlete)
-- **вболівальник** (fan/supporter)
-- **команда** (team)
-- **збірна (України)** (national team)
-- **змагання** (competition/tournament)
-- **перемога / поразка** (victory / defeat)
-- **тренування / тренуватися** (training / to train)
-- **чемпіон / чемпіонат** (champion / championship)
-
-### Verbs & Collocations
-- **займатися спортом** (to do sports / exercise) - *Key collocation*
-- **грати у футбол / баскетбол / теніс** (to play football/basketball/tennis) - *Note preposition 'у/в' + Accusative*
-- **вболівати за + Accusative** (to root for / support) - *e.g., вболівати за "Динамо"*
-- **вигравати / програвати** (to win / to lose)
-
-### Specific Sports (Ukrainian Context)
-- **футбол** (football/soccer) - #1 sport
-- **бокс** (boxing) - High cultural relevance
-- **фехтування** (fencing) - Recently high profile
-- **гімнастика** (gymnastics)
-- **легка атлетика** (athletics/track and field)
-
-## 3. Cultural Hook
-
-### Boxing: The Klitschko & Usyk Era
-Ukraine is a global superpower in boxing. The **Klitschko brothers** (Vitali and Wladimir) held all major heavyweight belts simultaneously. Today, **Oleksandr Usyk** is the undisputed heavyweight champion (as of 2024), known for his "Cossack" style and promoting Ukrainian culture globally (hopak dance after fights, traditional dress).
-
-### Football: The Religion
-**Andriy Shevchenko** remains the biggest football legend (Ballon d'Or winner). **Dynamo Kyiv** and **Shakhtar Donetsk** are the historic rival clubs, though Shakhtar has been displaced by war. Football is the default "yard sport" (дворовий футбол) for children.
-
-### Fencing: Olga Kharlan
-**Olga Kharlan** is the most decorated Ukrainian Olympian (fencing). Her refusal to shake hands with a Russian opponent in 2023 became a symbol of principle and dignity during the war.
-
-## 4. Pedagogical Notes
-
-### "Play" vs. "Do"
-- English speakers often say "play sports".
-- Ukrainian distinguishes:
-  - **Грати в/у + [Game] (Accusative)**: Грати у футбол, грати в шахи.
-  - **Займатися + [Instrumental]**: Займатися спортом, займатися йогою, займатися плаванням.
-  - *Error Warning*: Students often say "грати спорт" (incorrect) or "робити спорт" (calque from "do sport"). Stick to "займатися".
-
-### Prepositions
-- **Вболівати ЗА (кого/що)**: To root FOR someone. Note usage of *Accusative*, not Instrumental.
-  - *Correct*: Я вболіваю за Україну.
-  - *Incorrect*: Я вболіваю для України.
-
-### Word Formation
-- **гра** (game) -> **гравець** (player) -> **грати** (to play) -> **виграти** (to win) -> **програти** (to lose). Highlighting this root helps memory.
-
-## 5. Scope Boundaries (B1 Level)
-
-### IN Scope (Expected Knowledge)
-- **Cases**: All cases used freely (Instrumental for "interested in/doing", Accusative for "playing/rooting").
-- **Aspect**: Perfective vs Imperfective (тренуватися vs потренуватися, вигравати vs виграти).
-- **Motion Verbs**: бігати (running as hobby), плавати (swimming), ходити на тренування.
-- **Tenses**: Past, Present, Future (Compound & Simple).
-
-### OUT of Scope (Too Advanced/Rare)
-- **Highly technical slang**: Specific tactical terms (ofsajd, penaltist) are okay as loanwords but not core focus.
-- **Obscure sports verbs**: фехтувати (to fence) is rare as a verb; usually "займатися фехтуванням".
-- **Complex Participles in speech**: While B1 introduces participles, conversation about sports should use active verbs ("Він забив гол" rather than "Гол був забитий ним").
+## Notes for Content Writing
+- **Persona Flavor**: Use the "Olympiad Commentator" persona (Senior Specialist) to inject excitement and pride.
+- **War Context**: Briefly mention how athletes (Usyk, Mahuchikh) use their platform for diplomacy and how sports continue despite the war (matches in empty stadiums).
+- **Immersion**: Ensure all sports terminology is in Ukrainian (e.g., "голкіпер" or "воротар", "форвард" or "нападник" - use standard Ukrainian terms preferred).

@@ -61,45 +61,22 @@ def make_module_id(track, num, total):
 
 
 def find_plan_file(track, slug, num=None):
-    """Find the plan YAML for a slug (handles numeric-prefix filenames)."""
+    """Find the plan YAML for a slug."""
     plan_dir = PLANS_DIR / track
-
-    # Seminar tracks: bare slug
     direct = plan_dir / f"{slug}.yaml"
     if direct.exists():
         return direct
-
-    # Core tracks: {num}-{slug}.yaml — use exact number prefix if known
-    if num is not None:
-        numbered = plan_dir / f"{num:02d}-{slug}.yaml"
-        if numbered.exists():
-            return numbered
-
-    # Fallback: glob but only match NN-{exact_slug}.yaml (not partial)
-    matches = [p for p in plan_dir.glob(f"[0-9]*-{slug}.yaml")
-               if re.match(rf"^\d+-{re.escape(slug)}\.yaml$", p.name)]
-    if matches:
-        return matches[0]
-
     return None
 
 
 def find_meta_file(track, slug, num=None):
     """Find the meta YAML for a slug."""
     meta_dir = CURRICULUM_DIR / track / "meta"
-
-    # Bare slug
     direct = meta_dir / f"{slug}.yaml"
     if direct.exists():
         return direct
 
-    # Core tracks: {num}-{slug}.yaml — use exact number prefix if known
-    if num is not None:
-        numbered = meta_dir / f"{num:02d}-{slug}.yaml"
-        if numbered.exists():
-            return numbered
-
-    # Fallback: glob but only match NN-{exact_slug}.yaml
+    # Fallback: glob
     matches = [p for p in meta_dir.glob(f"[0-9]*-{slug}.yaml")
                if re.match(rf"^\d+-{re.escape(slug)}\.yaml$", p.name)]
     if matches:

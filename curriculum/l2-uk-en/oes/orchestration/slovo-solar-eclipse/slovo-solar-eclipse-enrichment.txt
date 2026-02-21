@@ -1,0 +1,207 @@
+✅ Message sent to Gemini (ID: 12921) [auto-acked: self-addressed]
+✓ Message 12921 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12921...
+📨 Message #12921
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-slovo-solar-eclipse
+   Time: 2026-02-20T23:43:07.844836+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 77
+module: oes-077
+module_number: 63
+slug: slovo-solar-eclipse
+title_uk: 'Слово: Сонячне затемнення'
+title_en: 'Slovo: The Solar Eclipse'
+phase: 3
+phase_id: legal-tradition
+phase_name: Legal Tradition
+focus: Nature as actor — Omen vocabulary
+content_outline:
+- section: Вступ
+  description: 'Introduction to Slovo: The Solar Eclipse'
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Senior Paleographer
+  role: Royal Astronomer
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Slovo Solar Eclipse
+
+## Використані джерела
+1. [Енциклопедія історії України (history.org.ua)](http://resource.history.org.ua/) — Академічний аналіз історичного контексту походу Ігоря Святославича та літописних згадок про затемнення 1185 року.
+2. [Ізборник (litopys.org.ua)](http://litopys.org.ua/) — Тексти Київського та Галицько-Волинського літописів, оригінальний текст "Слова о полку Ігоревім" та його ритмічний переклад.
+3. [Енциклопедія Сучасної України (esu.com.ua)](https://esu.com.ua/) — Статті про астрономічні явища в історії України та символіку "Слова".
+
+## Хронологія
+- **23 квітня 1185**: Князь Ігор Святославич вирушає у похід з Новгорода-Сіверського.
+- **1 травня 1185, по обіді**: Військо Ігоря досягає берегів річки Сіверський Донець; відбувається сонячне затемнення (у цій місцевості фаза ~0.8, тобто не повна темрява, але значне потьмяніння).
+- **2-3 травня 1185**: Об'єднання з військами Всеволода Буй-Тура та інших князів.
+- **10 травня 1185**: Перша сутичка з половцями та перемога русичів.
+- **11-12 травня 1185**: Головна битва на річці Каялі, поразка Ігоря та полон.
+
+## Ключові факти та цитати
+
+### Оригінал (OES)
+> «Тогда Игорь възрѣ на свѣтлое солнце і видѣ отъ него тьмою вся своя воя прикрыты.»
+> «Солнце ему тьмою путь заступаше; нощь стонущи ему грозою птичь убуди; свистъ звѣринъ въста, збися дивъ, кличетъ връху древа...»
+
+### Літописна паралель (Київський літопис)
+Літописець описує подію більш реалістично: «І коли вони йшли до Дінця ріки, в годину вечірню, Ігор, глянувши на небо, побачив, що сонце стояло, як місяць».
+
+### Астрономічний факт
+Затемнення було повним у смузі, що проходила північніше (через Новгород Великий та Ярославль). На берегах Дінця затемнення було частковим (близько 80%), проте автор "Слова" художньо гіперболізує його до повної «тьми», що вкрила воїнів, посилюючи символізм катастрофи.
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ: Знамення над степом": [!history-bite] — Про те, що Ігор бачив лише часткове затемнення («як місяць»), але автор "Слова" перетворює це на тотальну темряву заради художньої правди.
+- Section "Текст: Сонячна темрява": [!paleography] — Аналіз написання літери «ѣ» у слові «възрѣ» та її еволюція в українській мові.
+- Section "Лексика: Мова знамень": [!context] — Поняття «знамення» у середньовічній людині: не фізика, а пряма мова Бога.
+- Section "Символіка: Природа як дійова особа": [!myth-buster] — Спростування радянського міфу про суто «язичницьку» природу затемнення; це синтез християнського провіденціалізму (кара за гординю) та давніх вірувань.
+- Section "Символіка: Природа як дійова особа": [!culture] — Образ «Дива», що кличе на верху дерева — унікальний демон східних слов'ян, вісник біди.
+- Section "Підсумок: Відлуння затемнення": [!decolonization] — Як імперська історіографія використовувала образ Ігоря для пропаганди єдності «російських земель», ігноруючи специфічно києво-руський (український) контекст міжусобиць.
+
+## Деколонізаційний контекст
+- **Imperial/Soviet myth**: Трактування походу Ігоря як боротьби «російського народу» проти степу. Ігнорування того факту, що половці часто були союзниками князів (і самого Ігоря раніше).
+- **Ukrainian reality**: Похід — епізод типової феодальної політики київських князів, де степ був частиною політичного ландшафту. «Слово» засуджує не стільки половців, скільки відсутність єдності між українськими (руськими) князями. Затемнення — пересторога проти егоїзму, а не просто «погана прикмета».
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| Мова «Слова» | «Древнерусский язык» (спільний предок) | Давньоукраїнська мова (жива народна основа з книжними елементами) |
+| Ігор Святославич | Герой «російської» військової слави | Трагічна постать, чия гординя призвела до поразки; повчальний приклад |
+| Руська земля | «Русская земля» (Росія) | Руська земля (держава з центром у Києві, прото-Україна) |
+
+## Section-Mapped Research Notes
+
+### Вступ: Знамення над степом
+Контекст 1185 року. Феодальна роздробленість. Ігор хоче слави («іспіті шоломом Дону»). Затемнення як межова подія перед входом у «землю незнаєму».
+
+### Текст: Сонячна темрява
+Детальний розбір уривка «Тогда Игорь възрѣ...». Граматичні форми аористу (*възрѣ*, *видѣ*) та їхня роль у створенні динаміки.
+
+### Лексика: Мова знамень
+Аналіз слів *тьма* (як субстанція, що діє), *заступати* (активна дія сонця проти князя). Етимологія слова *солнце*.
+
+### Символіка: Природа як дійова особа
+Природа не фон, а активний учасник. Сонце попереджає, ніч стогне, звірі свистять. Див — хто це? Міфологічний пласт. Гіпербола тьми як художній засіб.
+
+### Практика: Аналіз та інтерпретація
+Вправи на розпізнавання давніх форм, транскрипцію та пошук сучасних відповідників (рефлексів).
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12944)
+✓ Message 12921 acknowledged
+✓ Message 12944 acknowledged

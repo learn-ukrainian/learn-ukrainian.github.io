@@ -623,6 +623,19 @@
       ]
     }
   },
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/check-gemini-inbox.sh",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  },
   "respectGitignore": true,
   "language": "auto",
   "agent": "curriculum-maintainer",

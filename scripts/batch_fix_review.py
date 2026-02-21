@@ -40,32 +40,50 @@ GEMINI_TIMEOUT = 600  # 10 minutes
 def find_module_files(level: str, num: int) -> dict | None:
     """Find all files for a core-track module by number."""
     level_dir = REPO / f"curriculum/l2-uk-en/{level}"
+
+    # Primary: resolve via manifest
+    try:
+        sys.path.insert(0, str(REPO / "scripts"))
+        from manifest_utils import get_module_by_number
+        mod = get_module_by_number(level, num)
+        if mod:
+            slug = mod.slug
+            content_path = level_dir / f"{slug}.md"
+            if content_path.exists():
+                return {
+                    "num": num,
+                    "slug": slug,
+                    "full_stem": slug,
+                    "content": content_path,
+                    "activities": level_dir / f"activities/{slug}.yaml",
+                    "vocabulary": level_dir / f"vocabulary/{slug}.yaml",
+                    "meta": level_dir / f"meta/{slug}.yaml",
+                    "plan": level_dir.parent / f"plans/{level}/{slug}.yaml",
+                    "research": level_dir / f"research/{slug}-research.md",
+                    "review": _review_path(level_dir, slug),
+                    "status": _status_path(level_dir, slug),
+                    "orchestration": level_dir / f"orchestration/{slug}",
+                }
+    except Exception:
+        pass
+
+    # Fallback: glob
     content_files = sorted(level_dir.glob(f"{num:02d}-*.md"))
     if not content_files:
         return None
 
     content_path = content_files[0]
     slug = to_bare_slug(content_path.stem)
-    full_stem = content_path.stem
-
-    # Plan files may or may not have the number prefix
-    plan_path = level_dir.parent / f"plans/{level}/{full_stem}.yaml"
-    if not plan_path.exists():
-        plan_path = level_dir.parent / f"plans/{level}/{slug}.yaml"
-
-    meta_path = level_dir / f"meta/{full_stem}.yaml"
-    if not meta_path.exists():
-        meta_path = level_dir / f"meta/{slug}.yaml"
 
     return {
         "num": num,
         "slug": slug,
-        "full_stem": full_stem,
+        "full_stem": slug,
         "content": content_path,
-        "activities": level_dir / f"activities/{full_stem}.yaml",
-        "vocabulary": level_dir / f"vocabulary/{full_stem}.yaml",
-        "meta": meta_path,
-        "plan": plan_path,
+        "activities": level_dir / f"activities/{slug}.yaml",
+        "vocabulary": level_dir / f"vocabulary/{slug}.yaml",
+        "meta": level_dir / f"meta/{slug}.yaml",
+        "plan": level_dir.parent / f"plans/{level}/{slug}.yaml",
         "research": level_dir / f"research/{slug}-research.md",
         "review": _review_path(level_dir, slug),
         "status": _status_path(level_dir, slug),

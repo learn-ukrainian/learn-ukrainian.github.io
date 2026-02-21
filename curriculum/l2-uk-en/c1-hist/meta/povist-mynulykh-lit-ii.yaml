@@ -1,123 +1,66 @@
 slug: povist-mynulykh-lit-ii
-id: povist-mynulykh-lit-ii
-version: "2.0"
-title: "Повість минулих літ II: Ключові фрагменти"
-sequence: 12
-level: c1-hist
-focus: history
-pedagogy: seminar
-word_target: 4500
-status: implemented
-writers:
-- gemini-2-flash
-auditors:
-- gemini-2-flash
+title: 'Повість минулих літ II: Ключові фрагменти'
+word_target: 5000
 content_outline:
-- section: "Вступ"
-  words: 184
+- section: 'Вступ: Робота з первинним джерелом'
+  words: 400
   points:
-  - "Reading primary sources"
-  - "Literary nature of the text"
-  - "Constructed reality"
-- section: "Текстологія"
-  words: 270
+  - 'Літопис як жанр: поєднання історії, літератури та ідеології.'
+  - 'Методологія аналізу: розрізняємо факт, легенду та політичний мотив.'
+  - 'Структура уроку: три ключові наративи про владу, віру та порядок.'
+- section: 'Фрагмент I: Покликання варягів — Текст і контекст'
+  words: 800
   points:
-  - "Shakhmatov's hypothesis"
-  - "Three redactions"
-  - "Nestor vs Sylvester"
-- section: "Сакральна географія"
-  words: 402
+  - 'Аналіз тексту 862 року: «Земля наша велика...» (філологічний розбір).'
+  - 'Поняття «наряд»: влада чи порядок? Етимологія терміну.'
+  - 'Історична реальність: варяги як найманці та арбітри в племінних конфліктах.'
+  - 'Світовий контекст: практика запрошення іноземних правителів у Середньовіччі.'
+- section: 'Фрагмент I: Покликання варягів — Битва інтерпретацій'
+  words: 800
   points:
-  - "Vaticinium ex eventu"
-  - "Apostolic succession"
-  - "Kyiv vs Rome"
-- section: "Заснування Києва"
-  words: 342
+  - 'Норманізм vs Антинорманізм: суть наукової (і політичної) дискусії.'
+  - Імперський міф про «нездатність слов'ян до державотворення».
+  - 'Український погляд (М. Грушевський, М. Брайчевський): внутрішня еволюція державності.'
+  - 'Деколонізація: чому важливо відкинути російську імперську схему історії.'
+- section: 'Фрагмент II: Хрещення Володимира — Легенда про вибір'
+  words: 600
   points:
-  - "Founding myth"
-  - "Kyi as prince vs boatman"
-  - "Archaeological evidence"
-- section: "Покликання варягів"
-  words: 469
+  - 'Текст 986 року: діалоги з мусульманами, німцями та греками.'
+  - '«Русі єсть веселіє пити»: аналіз знаменитої відмови (менталітет чи політика?).'
+  - 'Естетичний аргумент: «Не відали, чи на небі ми...» як характеристика руської
+    культури.'
+- section: 'Фрагмент II: Хрещення Володимира — Realpolitik 988 року'
+  words: 600
   points:
-  - "Calling of Varangians"
-  - "Etymology of Rus"
-  - "Normanist debate"
-- section: "Смерть Олега"
-  words: 324
+  - 'Що замовчує легенда: геополітичний контекст та візантійський союз.'
+  - 'Корсунський похід і шлюб з Анною: Русь як супердержава регіону.'
+  - Хрещення як вхід до європейського клубу монархів (Pax Christiana).
+  - Спростування міфу про «колиску трьох народів» через призму джерел.
+- section: 'Фрагмент III: Помста Ольги — Язичницький епос'
+  words: 500
   points:
-  - "Legend of Oleg's death"
-  - "Scandinavian saga parallels"
-  - "Fate vs Will"
-- section: "Святослав Хоробрий"
-  words: 342
+  - 'Текст літопису: аналіз чотирьох етапів помсти.'
+  - 'Фольклорна основа: загадки, символізм човна та лазні.'
+  - Паралелі зі скандинавськими сагами (сюжет про птахів-паліїв).
+  - 'Ольга як «мудра жона» ще до хрещення: образ ідеальної правительки.'
+- section: 'Фрагмент III: Помста Ольги — Від міфу до реформи'
+  words: 500
   points:
-  - "Sviatoslav's character"
-  - "Knightly code"
-  - "Leo the Deacon's description"
-- section: "Хрещення Володимира"
-  words: 432
+  - 'Сакральний зміст помсти: ритуальне очищення і відновлення порядку.'
+  - 'Адміністративна реформа: перехід від полюддя до системи уроків і погостів.'
+  - Чому літописець-монах з захватом описує язичницьку жорстокість?
+  - Роль жінки у владній ієрархії Русі (порівняння з Європою).
+- section: Порівняльний аналіз наративів
+  words: 400
   points:
-  - "Choice of Faith"
-  - "Philosopher's Speech"
-  - "Aesthetics of Orthodoxy"
-- section: "Ярослав Мудрий і Книжність"
-  words: 301
+  - 'Спільна схема: Криза (хаос/смерть/язичництво) -> Рішення (варяги/помста/хрещення)
+    -> Порядок.'
+  - 'Ідеологічна програма Нестора: єдність династії та землі, божественне благословення
+    Києва.'
+  - 'Мовні засоби літописця: пряма мова, риторичні фігури, біблійні цитати.'
+- section: 'Практикум: Інтерпретація джерел'
+  words: 400
   points:
-  - "Yaroslav's library"
-  - "Translation project"
-  - "Books as rivers"
-- section: "Повчання Володимира Мономаха"
-  words: 321
-  points:
-  - "Instruction to Children"
-  - "Ideal Prince image"
-  - "Social responsibility"
-- section: "Половецька загроза"
-  words: 235
-  points:
-  - "Polovtsian raids"
-  - "Demonization of the enemy"
-  - "Bonnyak the Mangy"
-- section: "Любецький з'їзд і осліплення Василька"
-  words: 289
-  points:
-  - "Lyubech Congress 1097"
-  - "Patrimonial principle"
-  - "Blinding of Vasylko"
-- section: "Помста Ольги"
-  words: 257
-  points:
-  - "Olga's revenge"
-  - "Marriage/Funeral inversion"
-  - "State interest vs Ethics"
-- section: "Літературний аналіз"
-  words: 121
-  points:
-  - "Dmytro Chyzhevsky"
-  - "Monumental historicism"
-  - "Sub specie aeternitatis"
-- section: "Порівняльний аналіз"
-  words: 107
-  points:
-  - "Kyiv-centrism"
-  - "Dynastic unity"
-  - "Providentialism"
-- section: "Практикум"
-  words: 143
-  points:
-  - "Source reading task"
-  - "5 questions of historian"
-  - "Vocabulary check"
-- section: "Підсумок"
-  words: 77
-  points:
-  - "PVL as cultural DNA"
-  - "Future-building text"
-  - "Final reflection"
-naturalness:
-  score: 10
-  status: PASS
-timestamps:
-  created: 2026-02-10T17:00:00Z
-  updated: 2026-02-10T17:00:00Z
+  - Застосування методу джерелознавчої критики до нових фрагментів.
+  - Виявлення упереджень автора (християнський/києвоцентричний погляд).
+  - 'Підсумкова рефлексія: що «Повість» говорить нам про цінності людей XI ст.?'

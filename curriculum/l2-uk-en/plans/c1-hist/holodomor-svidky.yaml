@@ -1,4 +1,3 @@
----
 module: c1-hist-049
 level: c1-hist
 sequence: 49
@@ -10,15 +9,13 @@ objectives:
 - 'Analyze the causes and consequences of свідки і свідчення: усна історія'
 - Evaluate the historical significance of голоси тих, хто пережив
 content_outline:
-- section: "Вступ — Голоси тих, хто пережив"
-  words: 457
+- section: Вступ — Голоси тих, хто пережив
   subsections:
   - Повернення до усної історії
   - Тепер з контекстом механізмів
   - Як читати свідчення глибше
   - Структура модуля
 - section: Теми свідчень
-  words: 686
   subsections:
   - Конфіскація — як описують
   - Голод — що їли (і не їли)
@@ -26,40 +23,34 @@ content_outline:
   - Виживання — стратегії
   - Канібалізм — табуйована тема
 - section: Фрагменти свідчень
-  words: 914
   subsections:
   - Свідчення 1 — конфіскація
   - Свідчення 2 — голодна смерть близької людини
   - Свідчення 3 — виживання
   - Аналіз кожного
 - section: Дитячі спогади
-  words: 571
   subsections:
   - Діти як свідки
   - Особливості дитячої пам'яті
   - Травма і мовчання
   - Що діти розуміли?
 - section: Травма і пам'ять
-  words: 686
   subsections:
   - Посттравматичні ефекти
   - Чому так довго мовчали
   - Як передавалася травма
   - Сучасні нащадки
 - section: Методологічні питання
-  words: 457
   subsections:
   - Як оцінювати свідчення
   - Що достовірно, що ні
   - Емоційна правда vs. фактична
   - Етика роботи з травмою
 - section: Підсумок
-  words: 229
   subsections:
   - Свідчення як незамінне джерело
   - Від голосів до визнання
   - Підготовка до правового аспекту
-word_target: 4000
 vocabulary:
 - свідок
 - свідчення
@@ -89,15 +80,15 @@ activities:
   focus: Яке місце мають свідчення вижилих у дослідженні Голодомору?
 sources:
 - name: Усна історія Голодомору
-  url: "https://ucrdc.org/"
+  url: https://ucrdc.org/
   type: primary
   notes: UCRDC testimony archive
-- name: "Проєкт \"Голодомор у людських долях\""
-  url: "https://archive.khpg.org/"
+- name: Проєкт "Голодомор у людських долях"
+  url: https://archive.khpg.org/
   type: primary
   notes: Memorial project
 - name: Усна історія (методологія)
-  url: "https://uk.wikipedia.org/wiki/Усна_історія"
+  url: https://uk.wikipedia.org/wiki/Усна_історія
   type: reference
   notes: Methodology
 vocabulary_hints:
@@ -116,7 +107,9 @@ activity_hints:
   items: 4
 - type: essay-response
   focus: Критичний аналіз
-  word_target: 300
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Oral History Interviewer

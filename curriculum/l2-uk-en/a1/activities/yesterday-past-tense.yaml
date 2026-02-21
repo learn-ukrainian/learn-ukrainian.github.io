@@ -1,0 +1,339 @@
+- type: group-sort
+  title: "Він, Вона чи Вони?"
+  instruction: "Sort the verbs into the correct group based on their gender ending."
+  groups:
+    - name: "Чоловічий (Він)"
+      items: ["читав", "робив", "був", "знав", "їв"]
+    - name: "Жіночий (Вона)"
+      items: ["читала", "робила", "була", "знала", "їла"]
+    - name: "Множина (Вони)"
+      items: ["читали", "робили", "були", "знали", "їли"]
+
+- type: match-up
+  title: "Час (Time Expressions)"
+  instruction: "Match the Ukrainian time expressions with their English meanings."
+  pairs:
+    - left: "вчора зранку"
+      right: "yesterday morning"
+    - left: "вчора ввечері"
+      right: "yesterday evening"
+    - left: "минулого тижня"
+      right: "last week"
+    - left: "минулого року"
+      right: "last year"
+    - left: "сьогодні"
+      right: "today"
+    - left: "вчора вдень"
+      right: "yesterday afternoon"
+    - left: "сьогодні вранці"
+      right: "this morning"
+    - left: "сьогодні ввечері"
+      right: "this evening"
+
+- type: fill-in
+  title: "Дієслово «Бути» (To Be)"
+  instruction: "Complete the sentences with the correct past tense form of 'to be'."
+  items:
+    - sentence: "Вчора я (man) __________ удома."
+      answer: "був"
+      options: ["був", "була", "було", "були"]
+      explanation: "For a masculine subject ('я' referring to a man), use 'був'."
+    - sentence: "Олена __________ на роботі вчора."
+      answer: "була"
+      options: ["був", "була", "було", "були"]
+      explanation: "Olena is female, so we use the feminine ending 'була'."
+    - sentence: "Ми __________ в кіно минулого тижня."
+      answer: "були"
+      options: ["був", "була", "було", "були"]
+      explanation: "'Ми' (we) is plural, so we use the plural ending 'були'."
+    - sentence: "Це __________ цікаве радіо."
+      answer: "було"
+      options: ["був", "була", "було", "були"]
+      explanation: "'Радіо' is neuter, so we use the neuter ending 'було'."
+    - sentence: "Де ви __________ вчора ввечері?"
+      answer: "були"
+      options: ["був", "була", "було", "були"]
+      explanation: "'Ви' (you plural/formal) requires the plural ending 'були'."
+    - sentence: "Ти (woman) __________ там вчора?"
+      answer: "була"
+      options: ["був", "була", "було", "були"]
+      explanation: "Addressing a female ('ти'), use the feminine form 'була'."
+    - sentence: "Вони __________ в школі."
+      answer: "були"
+      options: ["був", "була", "було", "були"]
+      explanation: "Plural subject 'Вони' takes 'були'."
+    - sentence: "Кіно __________ цікаве."
+      answer: "було"
+      options: ["був", "була", "було", "були"]
+      explanation: "Neuter subject 'Кіно' takes 'було'."
+
+- type: fill-in
+  title: "Минулий час (Regular Verbs)"
+  instruction: "Choose the correct verb form to complete the sentence."
+  items:
+    - sentence: "Вчора я (man) __________ цікаву книгу."
+      answer: "читав"
+      options: ["читав", "читала", "читало", "читали"]
+      explanation: "Masculine subject takes the -в ending."
+    - sentence: "Марія __________ смачну каву."
+      answer: "пила"
+      options: ["пив", "пила", "пило", "пили"]
+      explanation: "Feminine subject (Maria) takes the -ла ending."
+    - sentence: "Студенти __________ уважно."
+      answer: "слухали"
+      options: ["слухав", "слухала", "слухало", "слухали"]
+      explanation: "Plural subject (students) takes the -ли ending."
+    - sentence: "Іван __________ сніданок."
+      answer: "готував"
+      options: ["готував", "готувала", "готувало", "готували"]
+      explanation: "Masculine subject (Ivan) takes the -в ending."
+    - sentence: "Ми __________ новий фільм."
+      answer: "дивилися"
+      options: ["дивився", "дивилася", "дивилося", "дивилися"]
+      explanation: "Plural subject (we) takes the -ли ending."
+    - sentence: "Вона __________ йогу зранку."
+      answer: "робила"
+      options: ["робив", "робила", "робило", "робили"]
+      explanation: "Feminine subject (she) takes the -ла ending."
+    - sentence: "Ми __________ у футбол."
+      answer: "грали"
+      options: ["грав", "грала", "грало", "грали"]
+      explanation: "Plural subject (we) takes -ли."
+    - sentence: "Дитина __________ довго."
+      answer: "спала"
+      options: ["спав", "спала", "спало", "спали"]
+      explanation: "Feminine subject (child/дитина) takes -ла."
+
+- type: quiz
+  title: "Перевірка знань (Knowledge Check)"
+  instruction: "Answer the questions about past tense grammar."
+  items:
+    - question: "Which suffix is used for a female subject in the past tense?"
+      explanation: "The suffix -ла is used for feminine subjects (Вона читала)."
+      options:
+        - text: "-ла"
+          correct: true
+        - text: "-в"
+          correct: false
+        - text: "-ло"
+          correct: false
+        - text: "-ли"
+          correct: false
+    - question: "How do you say 'last year' in Ukrainian?"
+      explanation: "We say 'минулого року' (Genitive case) without any preposition."
+      options:
+        - text: "минулого року"
+          correct: true
+        - text: "в минулому році"
+          correct: false
+        - text: "на минулому році"
+          correct: false
+        - text: "минулий рік"
+          correct: false
+    - question: "What is the correct past tense masculine form of 'їсти' (to eat)?"
+      explanation: "'Їсти' is irregular. The masculine form is 'їв'."
+      options:
+        - text: "їв"
+          correct: true
+        - text: "їстив"
+          correct: false
+        - text: "їла"
+          correct: false
+        - text: "їли"
+          correct: false
+    - question: "Which is the correct translation for 'I was working' (male speaker)?"
+      explanation: "Ukrainian does not use 'was' as a helper. Just use the past tense verb: 'Я працював'."
+      options:
+        - text: "Я працював"
+          correct: true
+        - text: "Я був працював"
+          correct: false
+        - text: "Я був працювати"
+          correct: false
+        - text: "Я є працював"
+          correct: false
+    - question: "Which form of 'йти' (to go) is correct for 'She went'?"
+      explanation: "'Йти' changes its stem to 'іш-'. Feminine form is 'ішла' (or 'йшла')."
+      options:
+        - text: "Вона ішла"
+          correct: true
+        - text: "Вона йтива"
+          correct: false
+        - text: "Вона ішов"
+          correct: false
+        - text: "Вона йти"
+          correct: false
+    - question: "Where do we place 'не' to make a sentence negative?"
+      explanation: "'Не' always comes directly BEFORE the verb."
+      options:
+        - text: "Before the verb"
+          correct: true
+        - text: "After the verb"
+          correct: false
+        - text: "At the end of the sentence"
+          correct: false
+        - text: "Attached to the subject"
+          correct: false
+    - question: "What is the past tense of 'робити' for 'we'?"
+      explanation: "Plural subjects take the -ли ending."
+      options:
+        - text: "робили"
+          correct: true
+        - text: "робив"
+          correct: false
+        - text: "робила"
+          correct: false
+        - text: "робило"
+          correct: false
+    - question: "How do you translate the English phrase 'He played'?"
+      explanation: "He (Він) + past tense suffix -в."
+      options:
+        - text: "Він грав"
+          correct: true
+        - text: "Він грала"
+          correct: false
+        - text: "Він грали"
+          correct: false
+        - text: "Він грає"
+          correct: false
+
+- type: unjumble
+  title: "Побудуйте речення (Sentence Building)"
+  instruction: "Rearrange the words to form a correct sentence."
+  items:
+    - words: ["Вчора", "я", "був", "удома"]
+      answer: "Вчора я був удома"
+    - words: ["ми", "ходили", "в", "кіно", "Минулого", "тижня"]
+      answer: "Минулого тижня ми ходили в кіно"
+    - words: ["Вона", "не", "пила", "каву", "вранці"]
+      answer: "Вона не пила каву вранці"
+    - words: ["Студенти", "слухали", "уважно", "вчора"]
+      answer: "Студенти слухали уважно вчора"
+    - words: ["Іван", "Федоров", "друкував", "книгу"]
+      answer: "Іван Федоров друкував книгу"
+    - words: ["Минулого", "року", "я", "був", "у", "школі"]
+      answer: "Минулого року я був у школі"
+
+- type: match-up
+  title: "Словосполучення (Collocations)"
+  instruction: "Match the verbs with the nouns they naturally go with."
+  pairs:
+    - left: "робити"
+      right: "домашнє завдання"
+    - left: "слухати"
+      right: "музику"
+    - left: "дивитися"
+      right: "телевізор"
+    - left: "пити"
+      right: "чай"
+    - left: "їсти"
+      right: "піцу"
+    - left: "ходити"
+      right: "в магазин"
+    - left: "грати"
+      right: "у футбол"
+    - left: "готувати"
+      right: "обід"
+
+- type: fill-in
+  title: "Неправильні дієслова (Irregular Verbs)"
+  instruction: "Select the correct form of 'їсти' (to eat), 'йти' (to go), or 'ходити' (to go regularly)."
+  items:
+    - sentence: "Вчора він __________ піцу на обід."
+      answer: "їв"
+      options: ["їв", "їла", "їло", "їли"]
+      explanation: "Masculine form of 'їсти' is 'їв'."
+    - sentence: "Вона __________ яблуко."
+      answer: "їла"
+      options: ["їв", "їла", "їло", "їли"]
+      explanation: "Feminine form of 'їсти' is 'їла'."
+    - sentence: "Ми __________ у парк вчора."
+      answer: "ходили"
+      options: ["ходили", "ходив", "ходила", "ходило"]
+      explanation: "Plural past tense of 'ходити' is 'ходили'."
+    - sentence: "Вчора я (man) __________ додому пішки."
+      answer: "ішов"
+      options: ["ішов", "ішла", "ішло", "ішли"]
+      explanation: "Masculine past tense of 'йти' is 'ішов'."
+    - sentence: "Вони __________ смачний суп."
+      answer: "їли"
+      options: ["їв", "їла", "їло", "їли"]
+      explanation: "Plural form of 'їсти' is 'їли'."
+    - sentence: "Марія __________ в магазин."
+      answer: "ішла"
+      options: ["ішов", "ішла", "ішло", "ішли"]
+      explanation: "Feminine past tense of 'йти' is 'ішла'."
+    - sentence: "Ти (man) __________ салат?"
+      answer: "їв"
+      options: ["їв", "їла", "їло", "їли"]
+      explanation: "Masculine 'You' takes 'їв'."
+    - sentence: "Ми __________ в кіно."
+      answer: "ходили"
+      options: ["ходили", "ходив", "ходила", "ходило"]
+      explanation: "Plural 'We' takes 'ходили'."
+
+- type: true-false
+  title: "Правда чи ні? (True or False)"
+  instruction: "Decide if the statement about grammar or usage is correct."
+  items:
+    - statement: "The phrase 'В минулому році' is correct Ukrainian."
+      correct: false
+      explanation: "No, we say 'минулого року' without the preposition 'в'."
+    - statement: "A woman should say 'Я читала'."
+      correct: true
+      explanation: "Yes, women use the -ла suffix for the past tense."
+    - statement: "To say 'We were at home', you say 'Ми були вдома'."
+      correct: true
+      explanation: "Yes, 'були' is the correct plural past form of 'to be'."
+    - statement: "'Вчора' means 'Tomorrow'."
+      correct: false
+      explanation: "'Вчора' means 'Yesterday'. 'Tomorrow' is 'Завтра'."
+    - statement: "The masculine past form of 'їсти' is 'їстив'."
+      correct: false
+      explanation: "No, it is irregular: 'їв'."
+    - statement: "The word 'не' is placed before the verb to make it negative."
+      correct: true
+      explanation: "Yes, 'не' + verb (не читав) is the correct structure."
+    - statement: "The verb 'йти' becomes 'ішов/ішла' in the past."
+      correct: true
+      explanation: "Yes, 'йти' is an irregular verb in the past tense."
+    - statement: "'Минулого тижня' means 'Next week'."
+      correct: false
+      explanation: "No, it means 'Last week'."
+
+- type: fill-in
+  title: "Моє вчора (My Yesterday)"
+  instruction: "Complete the story about a woman's day using the correct verbs."
+  items:
+    - sentence: "Вчора я (woman) __________ рано, о сьомій годині."
+      answer: "прокидалася"
+      options: ["прокидалася", "прокидався", "прокидалося", "прокидалися"]
+      explanation: "Feminine form for 'woke up'."
+    - sentence: "Я __________ смачний сніданок."
+      answer: "готувала"
+      options: ["готувала", "готував", "готувало", "готували"]
+      explanation: "Feminine form for 'cooked/prepared'."
+    - sentence: "Потім я __________ цікаву книгу."
+      answer: "читала"
+      options: ["читала", "читав", "читало", "читали"]
+      explanation: "Feminine form for 'read'."
+    - sentence: "Вдень я __________ в офісі."
+      answer: "працювала"
+      options: ["працювала", "працював", "працювало", "працювали"]
+      explanation: "Feminine form for 'worked'."
+    - sentence: "Ввечері ми з подругою __________ чай."
+      answer: "пили"
+      options: ["пили", "пив", "пила", "пило"]
+      explanation: "Plural form for 'drank' (we)."
+    - sentence: "Мій день __________ дуже цікавий."
+      answer: "був"
+      options: ["був", "була", "було", "були"]
+      explanation: "'День' (day) is masculine, so we use 'був'."
+    - sentence: "Я __________ музику."
+      answer: "слухала"
+      options: ["слухала", "слухав", "слухало", "слухали"]
+      explanation: "Feminine form for 'listened'."
+    - sentence: "Ввечері я __________ фільм."
+      answer: "дивилася"
+      options: ["дивилася", "дивився", "дивилося", "дивилися"]
+      explanation: "Feminine form for 'watched'."

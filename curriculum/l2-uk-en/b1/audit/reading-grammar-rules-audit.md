@@ -1,17 +1,16 @@
-# Audit Report: M03 — 03-reading-grammar-rules.md
-**Level:** B1 | **Module:** M03 | **Phase:** B1.0 | **Pedagogy:** PPP | **Target:** 3000
-**Naturalness:** 9/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-10 23:30:32
+# Audit Report: M03 — reading-grammar-rules.md
+**Level:** B1 | **Module:** M03 | **Phase:** B1.0 | **Pedagogy:** PPP | **Target:** 4000
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-21 01:21:17
 
 ## Configuration
 **Type:** B1-bridge
-**Word Target:** 3000 words
-**Activities:** 12-16 required
-**Items per Activity:** ≥14 items
-**Unique Types:** ≥5 types required
-**Priority Types:** fill-in, match-up, quiz, translate
-**Required Types:** cloze, group-sort, mark-the-words, match-up, quiz, true-false
+**Word Target:** 4000 words
+**Activities:** 4-8 required
+**Items per Activity:** ≥6 items
+**Unique Types:** ≥3 types required
+**Priority Types:** critical-analysis, error-correction, essay-response, fill-in, mark-the-words, match-up, quiz
+**Required Types:** error-correction, fill-in, mark-the-words, match-up, quiz, true-false
 **Engagement:** ≥4 callouts
 **Immersion:** 0-100%
 **Vocab Target:** ≥20 words
@@ -20,100 +19,74 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | match-up | Лінгвістичні терміни | 12 | 8 | ✅ |
-| 2 | match-up | Інструкції для вправ | 10 | 8 | ✅ |
-| 3 | group-sort | Категорії слів | 16 | 14 | ✅ |
-| 4 | quiz | Розуміння граматичних пояснень | 8 | 8 | ✅ |
-| 5 | true-false | Граматичні факти | 8 | 8 | ✅ |
-| 6 | fill-in | Заповніть пропуски | 12 | 8 | ✅ |
-| 7 | select | Сигнальні слова | 8 | 6 | ✅ |
-| 8 | unjumble | Складіть речення | 8 | 6 | ✅ |
-| 9 | cloze | Граматичне правило | 16 | 14 | ✅ |
-| 10 | error-correction | Виправлення помилок | 8 | 6 | ✅ |
-| 11 | mark-the-words | Знайдіть інструкції | 8 | 6 | ✅ |
-| 12 | translate | Переклад фраз | 8 | 6 | ✅ |
+| 1 | quiz | Перевірте розуміння аналітичних термінів | 8 | 8 | ✅ |
+| 2 | match-up | Інструкції та їх значення | 16 | 8 | ✅ |
+| 3 | fill-in | Граматичні пояснення | 8 | 8 | ✅ |
+| 4 | group-sort | Категорії термінів | 15 | 6 | ✅ |
+| 5 | true-false | Правда чи міф про мову? | 10 | 8 | ✅ |
+| 6 | mark-the-words | Знайдіть дієслова-інструкції | 11 | 6 | ✅ |
+| 7 | error-correction | Виправте мовні помилки | 6 | 6 | ✅ |
 
 **Summary:**
-- Total activities: 12 (target: 12-16) ✅
-- Unique types: 12 (minimum: 5) ✅
-- Priority types used: 4/4 (fill-in, match-up, quiz, translate) ✅
-- Required types used: 6/6 (cloze, group-sort, mark-the-words, match-up, quiz, true-false) ✅
+- Total activities: 7 (target: 4-8) ✅
+- Unique types: 7 (minimum: 3) ✅
+- Priority types used: 5/7 (error-correction, fill-in, mark-the-words, match-up, quiz) ✅
+- Required types used: 6/6 (error-correction, fill-in, mark-the-words, match-up, quiz, true-false) ✅
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 3064/3000 (raw: 3837)
-- **Activities:** ✅ 12/12
-- **Density:** ✅ All > 14
-- **Unique_types:** ✅ 12/5 types
+- **Words:** ✅ 4556/4000 (raw: 4911)
+- **Activities:** ✅ 7/4
+- **Density:** ✅ All > 6
+- **Unique_types:** ✅ 7/3 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 11/4
+- **Engagement:** ✅ 17/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 88/20
+- **Vocab:** ✅ 25/20
 - **Structure:** ✅ Valid Structure
+- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 35.9% (B1.1 Aspect)
-- **Richness:** ❌ 84% < 95% min (grammar)
+- **Immersion:** 🇺🇦 98.8% (target 60-100% (B1.0 Bridge))
+- **Richness:** ✅ 99% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
-- **Naturalness:** ✅ 9/10 (High)
+- **Naturalness:** ℹ️ PENDING — awaiting review
+- **Research:** ✅ Content aligned with research
 
 ## Richness Details
-**Score:** 84% (minimum: 95%)
+**Score:** 99% (minimum: 95%)
 **Module Type:** grammar
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 88 | 24 | 100% | 20% | 20.0% |
-| engagement | 11 | 5 | 100% | 15% | 15.0% |
-| dialogues | 0 | 4 | 0% | 15% | 0.0% |
-| variety | 0.94 | - | 94% | 10% | 9.4% |
-| cultural | 5 | 3 | 100% | 10% | 10.0% |
+| examples | 100 | 24 | 100% | 20% | 20.0% |
+| engagement | 12 | 5 | 100% | 15% | 15.0% |
+| dialogues | 14 | 4 | 100% | 15% | 15.0% |
+| variety | 0.97 | - | 97% | 10% | 9.7% |
+| cultural | 6 | 3 | 100% | 10% | 10.0% |
 | realworld | 20 | 3 | 100% | 10% | 10.0% |
-| visual | 9 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| questions | 32 | 5 | 100% | 5% | 5.0% |
-| proverbs | 10 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **84.4%** |
-
-### Dryness Flags & Fixes
-- ❌ **NO_DIALOGUE**
-  - FIX:
-    Add 4+ mini-dialogues. The detector counts lines in blockquotes with bold speaker names.
-    
-    Use ONE of these formats (blockquote is required for detection):
-    
-    Format 1 — Bold speaker in blockquote (PREFERRED):
-    > **Студент:** Чому тут знахідний відмінок?
-    > **Викладач:** Бо дієслово «бачити» вимагає знахідного.
-    > **Студент:** А якщо це заперечення?
-    > **Викладач:** Тоді родовий: «не бачу **книжки**».
-    
-    Format 2 — Em-dash in blockquote:
-    > — Чому тут знахідний?
-    > — Бо дієслово вимагає знахідного.
-    
-    Format 3 — Plain А:/Б: speakers:
-    А: Чому тут знахідний?
-    Б: Бо дієслово вимагає знахідного.
-    
-    IMPORTANT: Dialogues OUTSIDE blockquotes (>) using **Speaker:** format are NOT detected.
-    Place dialogues inside [!dialogue] callouts or blockquotes.
+| visual | 12 | 3 | 100% | 5% | 5.0% |
+| questions | 42 | 5 | 100% | 5% | 5.0% |
+| tables | 2 | 2 | 100% | 4% | 4.0% |
+| paragraph_var | 0.93 | - | 93% | 3% | 2.8% |
+| proverbs | 10 | 1 | 100% | 3% | 3.0% |
+| **TOTAL** | | | | | **99.5%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 58 | Included in Core |
-| **Introduction - Reading Grammar in Ukrainian** | ⚪️ | 0 | Skipped (using YAML) |
-| **Grammar Explanation Patterns** | ✅ | 279 | Included in Core |
-| **Instruction Words** | ⚪️ | 234 | Skipped |
-| **Comparison Patterns** | ✅ | 128 | Included in Core |
-| **Word Formation Terms** | ⚪️ | 207 | Skipped |
-| **Activity Instruction Verbs** | ➖ | 258 | Excluded Type |
-| **Analytical Terms** | ⚪️ | 230 | Skipped |
-| **Style and Register Terminology** | ⚪️ | 230 | Skipped |
-| **Practice** | ⚪️ | 408 | Skipped |
-| **Dialogues** | ✅ | 444 | Included in Core |
-| **Summary** | ✅ | 361 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 43 | Skipped |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Читаємо граматичні правила** | ✅ | 57 | Included in Core |
+| **Вступ: Читаємо граматику українською** | ✅ | 417 | Included in Core |
+| **Моделі граматичних пояснень** | ✅ | 590 | Included in Core |
+| **Слова-інструкції** | ✅ | 426 | Included in Core |
+| **Моделі порівняння** | ✅ | 384 | Included in Core |
+| **Дієслова в інструкціях до вправ** | ✅ | 456 | Included in Core |
+| **Аналітичні терміни** | ✅ | 448 | Included in Core |
+| **Термінологія стилю та регістру** | ✅ | 442 | Included in Core |
+| **Терміни словотвору** | ✅ | 379 | Included in Core |
+| **Практика** | ✅ | 354 | Included in Core |
+| **Діалоги** | ✅ | 395 | Included in Core |
+| **Підсумок** | ✅ | 208 | Included in Core |

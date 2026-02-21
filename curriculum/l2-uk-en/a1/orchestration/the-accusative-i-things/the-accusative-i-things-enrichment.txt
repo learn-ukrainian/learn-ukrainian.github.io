@@ -1,0 +1,288 @@
+✅ Message sent to Gemini (ID: 10068) [auto-acked: self-addressed]
+✓ Message 10068 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10068...
+📨 Message #10068
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-the-accusative-i-things
+   Time: 2026-02-20T19:39:42.228552+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: a1-11
+level: A1
+sequence: 11
+slug: the-accusative-i-things
+version: '2.0'
+title: 'The Accusative I: Things'
+subtitle: Making Direct Objects Work
+content_outline:
+- section: Warm-up
+  points:
+  - Що я бачу в кімнаті? (називний) — start with concrete, visible objects to anchor
+    the concept before introducing case change; use 'бачити' + object to prime the
+    structure
+  - 'Перехід до знахідного відмінка — introduce the concept of ''Direct Object'' (object
+    of action) vs Subject; learner error: misunderstanding grammatical role (Conceptual
+    Nominative)'
+- section: Presentation
+  points:
+  - 'Коли вживається знахідний (прямий додаток) — align with State Standard §4.2.3.2.1;
+    focus strictly on inanimate objects; context: shopping (''Я купую...'')'
+  - '''Жіночий рід: -а → -у, -я → -ю (книга → книгу)'' — learner error: leaving feminine
+    nouns in Nominative (-a); emphasize change is mandatory for Feminine Singular'
+  - '''Чоловічий рід неістот: без змін (стіл → стіл)'' — emphasize ''Safe Harbor''
+    concept; learner error: adding -a ending (Masculine Inanimate Confusion)'
+  - '''Середній рід: без змін (вікно → вікно)'' — reinforce that only Feminine singular
+    hard/soft usually changes here; contrast with Feminine to highlight the pattern'
+  - 'Дієслова зі знахідним (бачити, чути, брати, мати, хотіти, купувати) — use high-freq
+    collocations: мати рацію, брати участь, хотіти їсти; emphasize these verbs as
+    triggers'
+- section: Practice
+  points:
+  - Трансформація називного → знахідний — focus on distinguishing when change happens
+    (Fem) vs when it doesn't (Masc/Neut); ensure mix of inanimate nouns only
+  - 'Заповнення речень правильною формою — prioritize high-frequency verbs: бачити,
+    чути, брати, мати'
+- section: Production
+  points:
+  - Описати, що є в магазині (Я бачу...) — use 'бачити' + variety of inanimate objects
+  - 'Список покупок (Я хочу купити...) — cultural hook: include staples like ''хліб'',
+    ''гречка'' (buckwheat), daily rituals'
+- section: Cultural Insight
+  points:
+  - 'Типові покупки в українському магазині — mention ''базар'' (market) vs supermarket;
+    cultural hook: the ubiquitous ''Пакет потрібен?'' question at checkouts'
+vocabulary_hints:
+  required:
+  - бачити (to see) — бачити проблему, я бачу...
+  - чути (to hear) — чути музику, чути голос
+  - брати (to take) — брати участь, брати трубку, брати каву
+  - мати (to have) — мати рацію, мати час, мати можливість
+  - хотіти (to want) — хотіти їсти, хотіти спати, я хочу...
+  - купувати (to buy) — купувати продукти, купувати одяг
+  - книга (book) — читати книгу, цікава книга
+  - каву (coffee acc.) — пити каву, замовляти каву
+  recommended:
+  - любити (to love)
+  - шукати (to look for)
+  - знаходити (to find)
+  - відкривати (to open)
+activity_hints:
+- type: fill-in
+  focus: Change nominative to accusative
+  items: 25
+- type: fill-in
+  focus: Complete sentences with accusative
+  items: 20
+- type: quiz
+  focus: Identify correct case
+  items: 15
+focus: grammar
+pedagogy: PPP
+prerequisites:
+- a1-10 (Checkpoint - First Contact)
+connects_to:
+- a1-12 (The Accusative II - People)
+- a1-18 (Food and Shopping)
+objectives:
+- Learner can form accusative case for inanimate nouns
+- Learner can use accusative after verbs like бачити, брати, мати
+- Learner can distinguish between nominative and accusative forms
+- Learner understands when accusative is required
+grammar:
+- Accusative case (inanimate)
+- 'Feminine: -а → -у, -я → -ю'
+- 'Masculine/Neuter: no change'
+register: розмовний
+phase: A1.2 [Navigation]
+persona:
+  voice: Patient Supportive Tutor
+  role: Logistics Expert
+word_target: 2000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: The Accusative I: Things
+
+## State Standard Reference
+§4.2.3.2.1: "Без прийменника (об’єкт дії): Віра читає цікаву книжку."
+Alignment: This module focuses specifically on the direct object function without prepositions for inanimate nouns, aligning perfectly with the first subsection of the Accusative case standard for A1.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| бачити | High (Core A1) | бачити проблему, я бачу... |
+| чути | High (Core A1) | чути музику, чути голос |
+| брати | High (Core A1) | брати участь, брати трубку, брати каву |
+| мати | Very High (Core A1) | мати рацію, мати час, мати можливість |
+| хотіти | Very High (Core A1) | хотіти їсти, хотіти спати, я хочу... |
+| купувати | High (Core A1) | купувати продукти, купувати одяг |
+| книга | High (Core A1) | читати цікаву книгу |
+
+## Cultural Hooks
+1. **"Пакет потрібен?"**: The quintessential question at every Ukrainian supermarket checkout. It's a cultural meme and a practical necessity.
+2. **Базар vs Супермаркет**: The "bazar" is not just a market but a social hub where interaction is key, whereas supermarkets are more impersonal but convenient.
+
+## Common Learner Errors
+1. **Conceptual Nominative**: Learners leaving feminine nouns in the nominative case (e.g., *Я читаю книга* instead of *Я читаю книгу*) because they focus on the meaning, not the grammar.
+2. **Masculine Inanimate Confusion**: Learners trying to add endings to masculine inanimate objects (e.g., *Я бачу стола*) by over-applying the animate rule (which comes later in A1-12) or confusing it with Genitive.
+
+## Cross-References
+- Builds on: a1-10 (Checkpoint - First Contact), a1-01 (Cyrillic), a1-06 (Verbs I)
+- Prepares for: a1-12 (The Accusative II - People), a1-18 (Food and Shopping)
+
+## Notes for Content Writing
+- Keep strict separation between inanimate (this module) and animate (next module) to avoid confusion.
+- Use distinct visual cues (tables) to contrast the changing Feminine forms vs the stable Masculine/Neuter forms.
+- Ensure English scaffolding is clear for the concept of "Direct Object" as this is the first case change learners encounter.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Warm-up: 'Що я бачу в кімнаті?' (Nominative review) to anchor concrete objects before introducing case change. Use high-frequency verbs from a1-06 (Verbs I) like 'бачити' to prime the direct object structure."
+  - "Conceptual introduction of the Accusative case (Знахідний відмінок) for inanimate objects, aligning with State Standard §4.2.3.2.1 (e.g., 'Віра читає цікаву книжку'). Contrast Subject vs. Direct Object."
+- section: "Презентація: Знахідний відмінок (Presentation: Accusative Case)"
+  words: 600
+  points:
+  - "Feminine Singular transformation: -а → -у, -я → -ю (книга → книгу, кава → каву). Emphasize that the change is mandatory to avoid the 'Conceptual Nominative' error common at A1."
+  - "Masculine and Neuter 'Safe Harbor': Explain that inanimate masculine and neuter nouns do not change (стіл → стіл, вікно → вікно). Explicitly warn against 'Masculine Inanimate Confusion' (adding -a endings like 'бачу стола')."
+  - "High-frequency Action Verbs as triggers: Presentation of 'мати' (мати рацію, мати час), 'хотіти' (хотіти їсти), 'брати' (брати каву/участь), 'чути', 'бачити', and 'купувати'."
+- section: "Практика та запобігання помилкам (Practice and Error Prevention)"
+  words: 600
+  points:
+  - "Transformation drills: Nominative to Accusative focusing on the contrast between changing Feminine forms and stable Masculine/Neuter inanimate nouns."
+  - "Error Prevention: Targeted drills to correct 'Conceptual Nominative' (e.g., changing 'Я читаю книга' to 'Я читаю книгу') and preventing over-application of endings to masculine inanimate things."
+  - "High-frequency collocations practice using research-backed items: 'бачити проблему', 'чути голос', 'брати трубку', and 'мати можливість'."
+- section: "Виробництво та культура (Production and Culture)"
+  words: 400
+  points:
+  - "Cultural Hook: The 'Пакет потрібен?' checkout meme. Discussion of shopping dynamics: the impersonal 'супермаркет' vs. the social hub of the 'базар'."
+  - "Production: Creating a shopping list ('Я хочу купити...') including staples 'хліб' and 'гречка'. Describe items in a Ukrainian store context using 'Я бачу...' and 'Я купую...'."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "бачити (to see) — бачити проблему, я бачу...; High frequency core verb"
+  - "чути (to hear) — чути музику, чути голос; High frequency core verb"
+  - "брати (to take) — брати участь, брати трубку, брати каву; High frequency"
+  - "мати (to have) — мати рацію, мати час, мати можливість; Very High frequency (Core A1)"
+  - "хотіти (to want) — хотіти їсти, хотіти спати, я хочу...; Very High frequency (Core A1)"
+  - "купувати (to buy) — купувати продукти, купувати одяг; High frequency"
+  - "книга (book) — читати цікаву книгу; High frequency; paradigm example for Feminine Accusative"
+  - "кава (coffee) — пити каву, замовляти каву; Feminine -а to -у pattern"
+  - "хліб (bread) — купувати хліб; Masculine inanimate (no change)"
+  - "гречка (buckwheat) — хочу купити гречку; Cultural staple; Feminine pattern"
+  - "пакет (bag/packet) — 'Пакет потрібен?'; Key checkout vocabulary; Masculine inanimate"
+  recommended:
+  - "любити (to love) — я люблю каву; triggers Accusative"
+  - "шукати (to look for) — шукати вихід, шукати книгу"
+  - "знаходити (to find) — знаходити час, знаходити відповідь"
+  - "відкривати (to open) — відкривати вікно, відкривати книгу"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (3516 chars)
+✅ Message sent to Claude (ID: 10077)
+✓ Message 10077 acknowledged
+   Auto-acknowledged reply #10077 (stdout delivery — no inbox accumulation)
+✓ Message 10068 acknowledged

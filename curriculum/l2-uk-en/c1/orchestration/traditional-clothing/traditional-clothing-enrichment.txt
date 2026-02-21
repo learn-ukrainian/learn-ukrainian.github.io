@@ -1,0 +1,249 @@
+✅ Message sent to Gemini (ID: 10795) [auto-acked: self-addressed]
+✓ Message 10795 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10795...
+📨 Message #10795
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-traditional-clothing
+   Time: 2026-02-20T21:29:15.561629+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-066
+level: C1
+sequence: 66
+slug: traditional-clothing
+version: '2.0'
+title: Традиційний український одяг
+subtitle: Traditional Ukrainian Clothing
+content_outline:
+- section: Розминка — Одяг як ідентичність
+  points:
+  - Традиційний костюм як етнічний маркер
+  - Соціальна інформація в одязі (статус, регіон, вік)
+  - Ритуальна та буденна функція одягу
+- section: Жіночий костюм
+  points:
+  - 'Основні елементи: сорочка, спідниця, запаска, плахта'
+  - 'Головні убори: очіпок, намітка, вінок'
+  - 'Прикраси: намисто, дукачі, сережки'
+  - Регіональні варіанти (Полтава, Поділля, Гуцульщина)
+- section: Чоловічий костюм
+  points:
+  - 'Основні елементи: сорочка, штани, пояс, свита'
+  - 'Головні убори: шапка, брилем, кресаня'
+  - Козацький одяг (жупан, шаровари, оселедець)
+  - Обрядовий одяг (весільний, святковий)
+- section: Практика — опис костюма
+  points:
+  - Описати регіональний костюм за зображенням
+  - Порівняти українські та європейські костюми
+  - Написати есе про відродження традиційного одягу
+  - Обговорити вишиванку як сучасний символ
+focus: cultural
+pedagogy: CBI
+objectives:
+- Learner can describe the elements of traditional Ukrainian costume
+- Learner can explain the symbolism of embroidery and accessories
+- Learner can distinguish regional variations (Poltava vs. Hutsul vs. Podillia)
+- Learner can discuss the modern interpretation of traditional clothing
+grammar:
+- ethnographic terminology
+- descriptions of appearance
+phase: C1.5 Folk Culture & Arts
+persona:
+  voice: Senior Specialist
+  role: Реконструктор одягу
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Традиційний український одяг
+
+## State Standard Reference
+§3.21: "Традиції, звичаї, свята: українські звичаї і традиції; сімейні свята (день народження, іменини, весілля, хрестини); релігійні звичаї і традиції."
+Alignment: Цей модуль розкриває тему "українські звичаї і традиції" через призму матеріальної культури (одягу), формуючи етнографічну компетенцію на рівні C1 (термінологія, стилістика опису).
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| **Вишиванка** | Висока (загальновживане) | одягнути вишиванку, День вишиванки, орнамент вишиванки, білим по білому, код нації |
+| **Плахта** | Середня (етнографічне) | картата плахта, шовкова плахта, святкова плахта, підперезатися плахтою |
+| **Очіпок** | Низька (історичне) | одягнути очіпок, заміжня жінка в очіпку, зняти вінок і надіти очіпок |
+| **Намисто** | Середня | коралове намисто, дукачі, згарди, низка намиста, коштовне намисто |
+| **Шаровари** | Висока (культурний стереотип) | козацькі шаровари, широкі шаровари, червоні шаровари, шароварщина (негативний відтінок) |
+| **Крайка** | Низька (діалектне/специфічне) | ткана крайка, підперезатися крайкою, барвиста крайка |
+
+## Cultural Hooks
+1. **Код вишивки:** Вишивка — це не декор, а паспорт. За орнаментом і кольорами можна було точно визначити регіон, вік і соціальний статус. Наприклад, "білим по білому" — унікальна техніка Полтавщини, а густа чорна вишивка Борщівщини — символ жалоби за загиблими чоловіками.
+2. **Магія пояса:** Пояс був обов'язковим елементом одягу, що розмежовував "верх" (духовне) і "низ" (матеріальне). Вийти на люди "розпоясаним" вважалося гріхом і соромом (звідси слово "розпоясатися" — втратити сором, стати неконтрольованим).
+3. **Волосся як табу:** Для заміжньої жінки "світити волоссям" було неприпустимо. Ритуал переходу від дівчини (вінок, стрічки, відкрита коса) до жінки (очіпок, намітка, покрита голова) був ключовим моментом весілля ("покривання").
+
+## Common Learner Errors
+1. **Шаровари для всіх:** Стереотип, що всі українці носили шаровари. Насправді селяни частіше носили вузькі полотняні штани (гачі, порти), а шаровари — це статусний одяг козацької еліти та вершників.
+2. **Плутанина понять:** Вживання слова *юбка* (росіянізм або діалектизм) замість літературного *спідниця*, або *рубашка* замість *сорочка*.
+3. **Вишиванка vs Вишивка:** Плутання назви предмета одягу (*вишиванка*) і процесу/результату декорування (*вишивка*).
+
+## Cross-References
+- **Builds on:** A2 (Clothing module), B1.4 Folk Culture (M72-86).
+- **Prepares for:** C1.4 Literature (M86+ - описи героїв у класичній літературі), C1-BIO (біографії історичних постатей).
+
+## Notes for Content Writing
+- Використовувати термін "стрій" (costume/outfit) як синонім до "костюм" для стилістичного збагачення.
+- Акцентувати на тому, що народний одяг був дуже практичним і логічним, без зайвих деталей.
+- У розділі про чоловічий одяг обов'язково розвінчати міф про тотальну "шароваризацію".
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Одяг як етнічний маркер та «паспорт» особистості (Introduction: Clothing as Ethnic Marker and Personal Passport)"
+  words: 600
+  points:
+  - "Традиційний український стрій як складна система соціальних та етнічних кодів, що відображає статус, вік та регіональну приналежність."
+  - "Концепція вишивки як «паспорта»: розшифрування орнаментів Полтавщини (техніка «білим по білому») та Борщівщини (густа чорна вишивка як символ жалоби)."
+  - "Практичність та логіка народного вбрання: аналіз функціональності елементів та відсутності зайвого декору в автентичному костюмі."
+- section: "Жіночий стрій: Від дівочого вінка до жіночої намітки (Women's Costume: From Maiden Wreath to Woman's Headdress)"
+  words: 1000
+  points:
+  - "Основні компоненти: сорочка, спідниця, плахта (картата, шовкова) та запаска. Розрізнення понять «вишивка» (результат) та «вишиванка» (виріб)."
+  - "Магія головного убору: ритуал «покривання» та перехід від вінка до очіпка та намітки. Табу на «світіння волоссям» для заміжньої жінки."
+  - "Прикраси як обереги та показник достатку: коралове намисто, дукачі, згарди, низки коштовного намиста та сережки."
+  - "Регіональні особливості жіночого вбрання: порівняння силуетів та декору Полтавщини, Поділля та Гуцульщини."
+- section: "Чоловічий стрій: Міфи та реальність козацького одягу (Men's Costume: Myths and Reality of Cossack Clothing)"
+  words: 900
+  points:
+  - "Елементи чоловічого вбрання: сорочка, вузькі полотняні штани (гачі, порти) проти статусних козацьких шароварів. Розвінчання міфу про «тотальну шароваризацію» селянства."
+  - "Верхній та обрядовий одяг: жупан, свита, козацький оселедець та кресаня. Роль одягу у військовому та весільному контекстах."
+  - "Символізм пояса: пояс як магічна межа, що розмежовує «верх» (духовне) і «низ» (матеріальне). Аналіз поняття «розпоясатися» (втратити сором)."
+- section: "Аналіз типових помилок та стилістичні тонкощі (Analysis of Common Errors and Stylistic Nuances)"
+  words: 700
+  points:
+  - "Корекція лексичних русизмів: використання літературних назв «спідниця» замість «юбка» та «сорочка» замість «рубашка»."
+  - "Стилістичне збагачення: вживання терміна «стрій» як синоніма до «костюм» для опису цілісного етнографічного ансамблю."
+  - "Вправа на розрізнення регіональних варіантів: опис костюма за зображенням з використанням вивченої термінології та етнографічних маркерів."
+- section: "Сучасне відродження та культурний контекст (Modern Revival and Cultural Context)"
+  words: 800
+  points:
+  - "Вишиванка як сучасний символ національної ідентичності та «код нації». Значення Всесвітнього дня вишиванки для деколонізації образу українця."
+  - "Традиційні елементи у високій моді та повсякденному житті: від автентичних технік до сучасних стилізацій."
+  - "Написання есе про роль традиційного одягу у збереженні історичної пам'яті та його трансформацію у світовій культурі."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "вишиванка (vyshyvanka) — одягнути вишиванку, орнамент вишиванки, код нації; висока частотність"
+  - "плахта (plakhta) — картата плахта, шовкова плахта, підперезатися плахтою; середньочастотне, етнографічне"
+  - "очіпок (ochipok) — одягнути очіпок, заміжня жінка в очіпку; історичне, головний убір"
+  - "намисто (namysto) — коралове намисто, низка намиста, дукачі; середньочастотне, прикраси"
+  - "шаровари (sharovary) — козацькі шаровари, широкі шаровари; висока частотність, враховувати контекст «шароварщини»"
+  - "крайка (kraika) — ткана крайка, барвиста крайка; низька частотність, діалектне/специфічне"
+  recommended:
+  - "стрій (costume/outfit) — традиційний стрій, повний стрій; стилістично вишуканий синонім до «костюм»"
+  - "намітка (namitka) — біла намітка, покрити голову наміткою; історичний жіночий головний убір"
+  - "згарди (zhardy) — гуцульські згарди; специфічна назва обрядових прикрас"
+  - "свита (svyta) — довга свита, сіра свита; традиційний верхній одяг"
+  - "розпоясатися (to lose self-control) — фразеологізм, що походить від важливості пояса в одязі"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4117 chars)
+✅ Message sent to Claude (ID: 10806)
+✓ Message 10806 acknowledged
+   Auto-acknowledged reply #10806 (stdout delivery — no inbox accumulation)
+✓ Message 10795 acknowledged

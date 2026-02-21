@@ -1,0 +1,240 @@
+✅ Message sent to Gemini (ID: 10835) [auto-acked: self-addressed]
+✓ Message 10835 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10835...
+📨 Message #10835
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-ukrainska-arkhitektura
+   Time: 2026-02-20T21:31:17.852219+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-086
+level: C1
+sequence: 86
+slug: ukrainska-arkhitektura
+version: '2.0'
+title: Українська архітектура
+subtitle: Ukrainian Architecture — Stone Chronicles
+content_outline:
+- section: Розминка — Камʼяні хроніки
+  points:
+  - Софія Київська — візантійська спадщина
+  - Козацьке бароко — унікальний національний стиль
+  - Дерев'яні церкви Карпат — світова спадщина UNESCO
+- section: Content Areas
+  points:
+  - 'Kyivan Rus'': Софія Київська, Печерська лавра — Byzantine heritage'
+  - 'Ukrainian Baroque: Козацьке бароко, Мазепинський стиль — unique national style'
+  - 'Wooden churches: Карпатські церкви (UNESCO) — world heritage'
+  - 'Modernism: Конструктивізм Харкова, Держпром — Soviet avant-garde'
+  - 'Contemporary: Сучасна архітектура, відбудова — post-war rebuilding'
+- section: Практика — архітектурний аналіз
+  points:
+  - Описати Софію Київську — візантійська архітектура, мозаїки, фрески
+  - Порівняти козацьке бароко та європейський стиль — Мазепинська доба
+  - Написати есе про карпатські дерев'яні церкви як світову спадщину
+  - Проаналізувати Держпром як приклад конструктивізму
+focus: fine-arts
+pedagogy: CBI
+objectives:
+- Learner explores the legacy of Kyivan Rus architecture (Sophia).
+- Learner understands the uniqueness of Ukrainian Baroque (Mazepa style).
+- Learner analyzes the wooden churches of the Carpathians.
+grammar:
+- Architectural terminology
+- Describing spatial forms
+phase: C1.5 Folk Culture & Fine Arts
+persona:
+  voice: Senior Specialist
+  role: Історик архітектури
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Українська архітектура
+
+## State Standard Reference
+§3.17: "пам’ятки культури; туристичні принади (замки, палаци, парки, площі); місця пам’яті та пам’ятники"
+Alignment: Цей модуль безпосередньо розкриває тему "Місця" (пам'ятки культури) та "Культурне дозвілля" (§3.4), фокусуючись на архітектурній спадщині України від Київської Русі до сучасності. Він забезпечує лексичну та змістову базу для обговорення історичних пам'яток та архітектурних стилів на рівні C1.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| баня (купол) | Висока (архітектурні тексти) | золота баня, грушоподібна баня, багатобанний храм |
+| нава (неф) | Середня (спеціалізована) | центральна нава, бічні нави, тридільна церква |
+| апсида | Середня (спеціалізована) | вівтарна апсида, гранчаста апсида |
+| притвор | Середня (спеціалізована) | західний притвор, бабинець |
+| конструктивізм | Середня (мистецтвознавча) | харківський конструктивізм, радянський авангард, функціоналізм |
+| бароко | Висока (загальнокультурна) | козацьке бароко, мазепинське бароко, пишний декор |
+| відбудова | Висока (актуальна) | повоєнна відбудова, відновлення міст, реставрація |
+
+## Cultural Hooks
+1. **Софія Київська (XI ст.)**: Зберегла найбільший у світі ансамбль мозаїк і фресок XI століття (260 кв. м мозаїк і 3000 кв. м фресок). Графіті на стінах собору є унікальним джерелом живої староукраїнської мови.
+2. **Дерев'яні церкви Карпат**: Унікальна технологія будівництва "без жодного цвяха" (з'єднання "в замки"). Церкви внесені до списку світової спадщини ЮНЕСКО.
+3. **Будинок з химерами (Київ)**: Владислав Городецький збудував його на крутому схилі, використавши цемент (новий на той час матеріал) для реклами свого заводу. Легенда про прокляття, накладене архітектором.
+
+## Common Learner Errors
+1. **Плутанина "будинок" / "дім" / "хата"**: *Error*: "Це мій рідний будинок." → *Correct*: "Це мій рідний дім." (емоційний зв'язок). "Хата" вживається переважно для сільських одноповерхових будівель.
+2. **Орудний відмінок діяча**: *Error*: "Собор збудований Ярослав Мудрий." → *Correct*: "Собор збудований Ярославом Мудрим." (Passive voice agent).
+3. **Вживання прийменників стилю**: *Error*: "Церква в стилі бароко." (OK) vs "Церква стилю бароко." (Less natural). *Better*: "Барокова церква" або "Пам'ятка в стилі бароко".
+
+## Cross-References
+- Builds on: B2-HIST modules (Kyivan Rus history, Cossack era), C1-056 (Folk traditions).
+- Prepares for: C1-087 (Visual Arts), C1-106 (Final Exam - oral presentation).
+
+## Notes for Content Writing
+- Акцентувати на тяглості традиції (візантійські впливи -> трансформація в бароко -> модерні пошуки).
+- Використовувати терміни "українське бароко" або "козацьке бароко", підкреслюючи його відмінність від російського чи західноєвропейського (стриманість форм, але пишність декору, грушоподібні бані).
+- Для конструктивізму обов'язково згадати Держпром у Харкові як перший радянський хмарочос.
+- У розділі про сучасність торкнутися теми "відбудови" та переосмислення радянської спадщини (декомунізація простору).
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Камʼяні хроніки: від Софії до Бароко (Stone Chronicles: From Sophia to Baroque)"
+  words: 800
+  points:
+  - "Софія Київська (XI ст.) як візантійська спадщина: аналіз ансамблю мозаїк (260 кв. м) та фресок (3000 кв. м). Дослідження графіті на стінах собору як унікального джерела живої староукраїнської мови."
+  - "Українське (козацьке) бароко: концепція тяглості традиції. Мазепинський стиль та його відмінність від західноєвропейського: стриманість форм при пишності декору та грушоподібні бані."
+- section: "Дерев'яна архітектура та конструктивізм (Wooden Architecture and Constructivism)"
+  words: 1000
+  points:
+  - "Дерев'яні церкви Карпат (UNESCO): унікальна технологія будівництва 'без жодного цвяха' (з'єднання 'в замки'). Типологія: тридільні храми та бабинець."
+  - "Модернізм та харківський конструктивізм: Держпром як перший радянський хмарочос. Поняття радянського авангарду та функціоналізму в міському просторі."
+- section: "Архітектурні легенди та сучасна відбудова (Architectural Legends and Contemporary Reconstruction)"
+  words: 800
+  points:
+  - "Владислав Городецький та Будинок з химерами: використання цементу як інновації та реклами. Легенда про прокляття архітектора як культурний гачок."
+  - "Сучасна архітектура та переосмислення радянської спадщини: процеси декомунізації простору та актуальна тема повоєнної відбудови міст."
+- section: "Практичний аналіз та мовна точність (Practical Analysis and Linguistic Precision)"
+  words: 800
+  points:
+  - "Лексична диференціація: розрізнення понять 'будинок', 'дім' та 'хата'. Виправлення помилки 'Це мій рідний будинок' на 'Це мій рідний дім' (емоційний зв'язок)."
+  - "Граматичний фокус на орудний відмінок діяча в пасивних конструкціях: виправлення 'Собор збудований Ярослав Мудрий' на 'Собор збудований Ярославом Мудрим'."
+- section: "Підсумок: Архітектура як мова нації (Conclusion: Architecture as a National Language)"
+  words: 600
+  points:
+  - "Синтез стилів: порівняння барокових та конструктивістських об'єктів. Вживання прийменників стилю: 'барокова церква' vs 'пам'ятка в стилі бароко'."
+  - "Підготовка до усного виступу (C1-106): опис просторових форм та архітектурна термінологія."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "баня (dome/cupola) — золота баня, грушоподібна баня, багатобанний храм; висока частотність"
+  - "нава (nave) — центральна нава, бічні нави, тридільна церква; архітектурний термін"
+  - "апсида (apse) — вівтарна апсида, гранчаста апсида; спеціалізована лексика"
+  - "притвор (narthex) — західний притвор, бабинець (folk synonym); сакральна архітектура"
+  - "конструктивізм (constructivism) — харківський конструктивізм, радянський авангард, функціоналізм"
+  - "бароко (baroque) — козацьке бароко, мазепинське бароко, пишний декор; ключовий стиль"
+  - "відбудова (reconstruction/rebuilding) — повоєнна відбудова, відновлення міст, реставрація; актуальний контекст"
+  recommended:
+  - "бабинець (narthex in wooden churches) — традиційний український термін"
+  - "фреска (fresco) — розпис стін Софії Київської"
+  - "мозаїка (mosaic) — найбільший ансамбль XI століття"
+  - "графіті (graffiti) — давньоукраїнські написи на стінах храмів"
+  - "цемент (cement) — інноваційний матеріал Будинку з химерами"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (3336 chars)
+✅ Message sent to Claude (ID: 10838)
+✓ Message 10838 acknowledged
+   Auto-acknowledged reply #10838 (stdout delivery — no inbox accumulation)
+✓ Message 10835 acknowledged

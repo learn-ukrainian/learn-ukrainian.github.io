@@ -1,0 +1,13 @@
+{
+  "track": "b2-hist",
+  "slug": "petro-mohyla",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T15:01:24Z",
+      "task_id": "v3-petro-mohyla-pA",
+      "mode": "meta-only"
+    }
+  }
+}

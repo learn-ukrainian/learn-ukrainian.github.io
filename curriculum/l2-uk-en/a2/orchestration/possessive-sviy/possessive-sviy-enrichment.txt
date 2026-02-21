@@ -1,0 +1,328 @@
+✅ Message sent to Gemini (ID: 10169) [auto-acked: self-addressed]
+✓ Message 10169 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10169...
+📨 Message #10169
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-possessive-sviy
+   Time: 2026-02-20T20:00:30.820069+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: a2-17
+level: A2
+sequence: 17
+slug: possessive-sviy
+version: '2.0'
+title: Possessive Sviy
+subtitle: The Reflexive Possessive Pronoun
+content_outline:
+- section: Introduction / Вступ
+  points:
+  - 'Concept of reflexive possessive (one''s own) — State Standard alignment: essential
+    for A2 thematic descriptions of family, home, and identity (Standard §3: 930)'
+  - 'The problem of ambiguity in English — introduce with the classic ''Petro and
+    Ivan'' scenario to show how ''his'' can be ambiguous but ''свій'' is specific
+    — illustrative ambiguity: does he love HIS (own) mother or HIS (friend''s) mother?'
+- section: Presentation / Презентація
+  points:
+  - 'The Basic Rule: Subject = Possessor — use a decision-tree approach (Mermaid flowchart)
+    to visualize the logic'
+  - 'Contrastive examples: Він любить свою vs його маму — learner error: distinguishing
+    subject''s own vs someone else''s possession (Common Error: Він любить його маму
+    implies someone else''s mother)'
+  - Declension table across genders and cases — note that 'свій' declines exactly
+    like 'мій', building confidence (reuse pattern)
+  - '1st/2nd person usage (optionality) — learner error: redundancy (tautology) when
+    using ''свій'' with body parts or close family where possession is implied (e.g.,
+    ''Я мию свої руки'')'
+- section: Practice / Практика
+  points:
+  - 'Choosing ''свій'' vs ''його/її'' in context — cultural hook: the binary concept
+    of ''Свій — Чужий'' (One''s Own vs Stranger) as a fundamental worldview — using
+    ''свій'' correctly signals integration into the ''inner circle'''
+  - Translation drills — focus on resolving English ambiguities into precise Ukrainian
+    forms (e.g., 'He took his book' -> 'Він взяв свою книгу')
+- section: Dialogues / Діалоги
+  points:
+  - 'Whose car is it? — cultural hook: idiom «У чужий монастир зі своїм статутом не
+    ходять» (Don''t bring your own rules to a stranger''s monastery)'
+  - Family relationships — use high-frequency collocations like 'своя сім'я', 'свій
+    дім'
+  - Error correction drills — target the 'scandalous' error of confusing 'свою дружину'
+    (own wife) with 'його дружину' (his friend's wife)
+vocabulary_hints:
+  required:
+  - 'свій (one''s own - m) — collocations: свій час (one''s time), свій дім (one''s
+    home), у свій час (in due time)'
+  - 'своя (one''s own - f) — collocation: своя сім''я (one''s family)'
+  - 'своє (one''s own - n) — collocation: своє життя (one''s life)'
+  - 'свої (one''s own - pl) — collocation: свої люди (one''s own people/kin)'
+  - 'власний (own/private) — collocation: власна думка (own opinion), власний бізнес,
+    власні назви (proper names)'
+  - 'особистий (personal) — collocation: особисте життя (private life), особисті речі'
+  - 'чужий (someone else''s/stranger''s) — antonym to ''свій''; collocation: чужі
+    гроші (other people''s money), за чужий рахунок (at someone else''s expense)'
+  - його (his) — contrast with свій when subject is 3rd person singular masculine
+  - її (her) — contrast with своя/свій
+  - їхній (their) — contrast with свої/свій
+  - мій (my) — declines like свій
+  - твій (your) — declines like свій
+  - наш (our)
+  - ваш (your pl./formal)
+  - 'ділитися (to share) — collocation: ділитися своїм досвідом (share one''s experience)'
+  recommended:
+  - власне (precisely/actually)
+  - самостійно (independently/on one's own)
+  - 'спільний (shared/common) — collocation: спільна мова (common language)'
+  - належати (to belong)
+  - володіти (to own/possess)
+activity_hints:
+- type: quiz
+  focus: Choice - свій or його?
+  items: 15+
+- type: quiz
+  focus: Diagram - whose car is it?
+  items: 10+
+- type: fill-in
+  focus: Translation - contrastive sentences
+  items: 12+
+- type: fill-in
+  focus: Complete sentences with свій forms
+  items: 12+
+- type: quiz
+  focus: Identify correct possessive
+  items: 10+
+focus: grammar
+pedagogy: PPP
+prerequisites:
+- A1 possessive pronouns
+- a2-01 (Dative pronouns)
+- Basic sentence structure
+connects_to:
+- a2-18 (Bigger Better Stronger)
+- a2-20 (Preferences and Choices)
+- a2-25 (Checkpoint)
+objectives:
+- Learner can use 'свій' to refer back to the subject
+- Learner can distinguish between 'own' and 'someone else's' possession
+- Learner can decline 'свій' in all cases
+- Learner can identify when 'свій' is mandatory vs optional
+grammar:
+- reflexive possessive (свій)
+- contrast: свій vs його/її/їхній
+- declension of possessives
+- possessive agreement
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Pronouns
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Reflexive possessive requirements
+- name: Ukrainian Grammar - Possessives
+  url: https://uk.wikipedia.org/wiki/Займенник
+  type: reference
+  notes: Declension patterns for possessive pronouns
+immersion: 50-60% Ukrainian
+phase: A2.2
+persona:
+  voice: Encouraging Cultural Guide
+  role: Real Estate Agent
+word_target: 3000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Possessive Sviy
+
+## State Standard Reference
+§3 (Thematic Catalogue A2): "930: коротка інформація про свою сім’ю, свій дім, своє місто й рідну країну;"
+Alignment: Although formal morphological listing in §4.2.1.4 (A2) focusing on basic possessives (мій, твій, наш, ваш, їхній) omits *свій*, the State Standard explicitly requires the use of *свій* for thematic A2 communication regarding family, home, and identity. This module bridges the gap between basic possession and the reflexive possessive logic necessary for these A2 benchmarks.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| свій | High (Top 100) | своя сім'я, свій дім, у свій час |
+| власний | Medium | власний будинок, власна думка, власні назви |
+| особистий | Medium | особисте життя, особистий блог, особисті речі |
+| чужий | Medium | чужа дитина, чужі гроші, за чужий рахунок |
+
+## Cultural Hooks
+1. **Binary "Свій — Чужий"**: A fundamental concept in Ukrainian (and Slavic) culture, defining the boundary between "one's own" (family, friends, community) and "the stranger." Language reflects this deeply; using *свій* correctly signals integration into the "inner circle."
+2. **Idiom**: «У чужий монастир зі своїм статутом не ходять» (Don't go to someone else's monastery with your own rules). Demonstrates the contrast between *свій* (one's own) and *чужий* (someone else's).
+
+## Common Learner Errors
+1. **Subject-Possessor Mismatch** → *«Він любить його маму»* (He loves his [someone else's] mother) vs *«Він любить свою маму»* (He loves his [own] mother). Learners often default to *його/її* regardless of the subject, creating ambiguity.
+2. **Redundancy (Tautology)** → *«Я мию свої руки»* (I wash my hands). In Ukrainian, if the possessor is the subject and the object is an inseparable part of the person (body parts, close family), the possessive is often omitted unless emphasis is needed.
+3. **1st/2nd Person Confusion** → Thinking *свій* is mandatory for 1st/2nd person. In *«Я люблю свою/мою маму»*, both are correct, but learners often struggle to decide which sounds more natural (hint: *свою* is more common in neutral speech).
+
+## Cross-References
+- Builds on: A1 possessive pronouns (мій, твій), a2-01 (Dative pronouns)
+- Prepares for: a2-18 (Bigger Better Stronger - comparisons), a2-20 (Preferences and Choices), a2-25 (Checkpoint)
+
+## Notes for Content Writing
+- **The "Subject=Possessor" Rule**: This is the heart of the module. Use a decision-tree approach (Mermaid flowchart) to show when *свій* is needed.
+- **Ambiguity Focus**: Use the "Petro and Ivan" example to show how *його* vs *свою* changes the entire meaning of a sentence.
+- **Declension Table**: Since *свій* declines like *мій*, reuse the pattern to build confidence.
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Світ через займенник «свій» (Introduction: The World through 'Sviy')"
+  words: 500
+  points:
+  - "Alignment with State Standard §3 (930): Essential for A2 competency in describing one's own family (своя сім’я), home (свій дім), city (своє місто), and country (рідна країна)."
+  - "The 'Petro and Ivan' Ambiguity: Contrast English 'his' with Ukrainian specificity — analyze how 'Він любить його маму' (his friend's mother) differs drastically from 'Він любить свою маму' (his own mother)."
+  - "Establishing the identity hook: using 'свій' as the primary tool for defining one's immediate personal environment and circle of belonging."
+- section: "Презентація: Правило «Суб’єкт = Власник» (Presentation: The Subject = Possessor Rule)"
+  words: 800
+  points:
+  - "The Core Logic: Subject-Possessor agreement — use a Mermaid flowchart to visualize the decision-tree for choosing 'свій' vs 'його/її/їхній' in the 3rd person."
+  - "Declension Mastery: Detailed table showing that 'свій' declines exactly like 'мій/твій' (building on A1 patterns) across all genders and cases, focusing on consistency to build learner confidence."
+  - "Agreement in Practice: Drill high-frequency collocations from research — 'свій час' (m), 'своя сім'я' (f), 'своє життя' (n), 'свої люди' (pl)."
+  - "1st and 2nd Person Usage: Explain the optionality in 'Я люблю мою/свою маму' while noting that 'свій' is more common and sounds more natural in neutral speech."
+- section: "Культурний код: Свій — Чужий (Cultural Code: Own vs Stranger)"
+  words: 600
+  points:
+  - "The Fundamental Binary: Exploring 'Свій — Чужий' as a worldview — how using 'свій' correctly signals cultural integration into the 'inner circle' and distinguishes the community from 'the stranger' (чужий)."
+  - "Idiomatic Wisdom: Deep dive into «У чужий монастир зі своїм статутом не ходять» (Don't bring your rules to a stranger's monastery) — analyzing the contrast between 'свій' and 'чужий' in context."
+  - "Sociolinguistic register: How 'свої люди' (one's own kin/people) functions as a marker of trust and social capital in Ukrainian culture."
+- section: "Аналіз помилок: Уникнення тавтології та неясності (Error Analysis: Avoiding Tautology and Ambiguity)"
+  words: 600
+  points:
+  - "The Redundancy Trap (Tautology): Address the learner error of 'Я мию свої руки' — explain that in Ukrainian, possessives for body parts and close family are often omitted when the subject is the possessor."
+  - "The 'Scandalous' Error Drill: Direct focus on the common 3rd person mismatch — contrasting 'Він обійняв свою дружину' (own wife) vs 'Він обійняв його дружину' (someone else's wife) to highlight social consequences of grammar errors."
+  - "Contrastive vocabulary: Distinguishing 'свій' from 'власний' (private/exclusive ownership) and 'особистий' (personal/private life) with examples like 'власна думка' vs 'своя думка'."
+- section: "Практичне застосування та підсумок (Practical Application and Summary)"
+  words: 500
+  points:
+  - "Standard-Aligned Production: Guided writing task describing family, home, and city using 'свій' to meet §3 (930) benchmarks."
+  - "Interactive Resolution: Translation drills resolving English ambiguities ('He took his book') into precise Ukrainian forms using the 'Subject=Possessor' rule."
+  - "Final synthesis: Review of 'свій' as a declension twin to 'мій' and its role as the linguistic bridge to A2 thematic descriptions."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "свій (one's own - m) — high frequency (Top 100); collocations: свій час (in due time), свій дім, свій шлях"
+  - "своя (one's own - f) — collocation: своя сім'я (A2 Standard §3: 930), своя справа (one's business/affair)"
+  - "своє (one's own - n) — collocation: своє життя, своє місто, своє ім'я"
+  - "свої (one's own - pl) — collocation: свої люди (kin/trusted circle), свої речі (own things)"
+  - "власний (own/private) — collocation: власний будинок (private house), власна думка (own opinion), власні назви (proper names)"
+  - "особистий (personal) — collocation: особисте життя (private life), особистий блог, особисті речі"
+  - "чужий (someone else's/stranger's) — antonym to 'свій'; collocations: чужа дитина, чужі гроші, чужа країна"
+  - "його (his) — used for possession when the possessor is NOT the subject"
+  - "її (her) — used for possession when the possessor is NOT the subject"
+  - "їхній (their) — contrast with 'свої' when referring to 3rd person possession"
+  - "мій (my) — declines exactly like 'свій'; used interchangeably with 'свій' in 1st person"
+  - "твій (your) — declines like 'свій'; used interchangeably with 'свій' in 2nd person"
+  - "ділитися (to share) — collocation: ділитися своїми думками (share one's thoughts), ділитися своїм досвідом"
+  recommended:
+  - "власне (precisely/actually) — filler word and intensifier"
+  - "самостійно (independently/on one's own) — related to personal agency"
+  - "спільний (shared/common) — collocation: спільна мова (common language), спільна власність"
+  - "належати (to belong) — governing the dative case (кому?)"
+  - "володіти (to own/possess) — governing the instrumental case (чим?)"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (5248 chars)
+✅ Message sent to Claude (ID: 10176)
+✓ Message 10176 acknowledged
+   Auto-acknowledged reply #10176 (stdout delivery — no inbox accumulation)
+✓ Message 10169 acknowledged

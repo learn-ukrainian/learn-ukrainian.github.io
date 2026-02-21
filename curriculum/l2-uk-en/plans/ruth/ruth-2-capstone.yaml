@@ -8,7 +8,6 @@ phase: 2
 phase_id: sacred-word
 phase_name: Sacred Word
 focus: Translating modern prayer to "Peresopnytsia Style"
-word_target: 4000
 content_outline:
 - section: Вступ
   description: Introduction to RUTH-2 Capstone
@@ -24,3 +23,6 @@ activity_types:
 - etymology-trace
 - grammar-identify
 - historical-writing
+persona:
+  voice: Baroque Scholar
+  role: General Chancellor

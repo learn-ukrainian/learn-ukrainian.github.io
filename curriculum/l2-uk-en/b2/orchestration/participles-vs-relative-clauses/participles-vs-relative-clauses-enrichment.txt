@@ -1,0 +1,321 @@
+✅ Message sent to Gemini (ID: 10485) [auto-acked: self-addressed]
+✓ Message 10485 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10485...
+📨 Message #10485
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-participles-vs-relative-clauses
+   Time: 2026-02-20T20:37:58.835301+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b2-09
+level: B2
+sequence: 9
+slug: participles-vs-relative-clauses
+version: '2.0'
+title: Дієприкметники проти підрядних речень
+content_outline:
+- section: Вступ — Два способи вираження ознаки за дією
+  points:
+  - Дієприкметник як компактна форма
+  - Підрядне речення як розгорнута форма
+  - Стилістичний вибір
+- section: Порівняльна таблиця форм
+  points:
+  - працюючий студент = студент, який працює
+  - прочитана книга = книга, яку прочитали
+  - написано автором = що написав автор
+  - Систематичне порівняння всіх типів
+- section: Стилістичний вплив
+  points:
+  - Дієприкметники — книжний, академічний, піднесений стиль
+  - Підрядні речення — нейтральний, універсальний стиль
+  - Підрядні речення — переважний вибір у мовленні
+- section: Коли обирати дієприкметники
+  points:
+  - Академічне письмо (обмежено)
+  - Літературний стиль
+  - Фіксовані вирази (діюча особа, чинний закон)
+  - Термінологія
+- section: Коли обирати підрядні речення
+  points:
+  - Розмовне мовлення — завжди
+  - Нейтральний стиль
+  - Коли дієприкметник звучить штучно
+  - Уникання надмірної книжності
+- section: Трансформаційні вправи
+  points:
+  - Дієприкметник → підрядне (і навпаки)
+  - Збереження значення
+  - Зміна стилістики
+  - Редагування текстів
+- section: Практика і підсумок
+  points:
+  - Критерії вибору
+  - Типові помилки
+  - Підготовка до контрольного модуля
+vocabulary_hints:
+  required:
+  - підрядне речення (subordinate clause)
+  - який/яка/яке (which/that - relative pronoun)
+  - стилістичний вибір (stylistic choice)
+  - книжний стиль (bookish style)
+  - нейтральний стиль (neutral style)
+  - фіксований вираз (fixed expression)
+  - трансформація (transformation)
+  - редагування (editing)
+  - компактний (compact)
+  - розгорнутий (expanded)
+  recommended:
+  - природність (naturalness)
+  - штучний (artificial)
+  - переважний (preferable)
+  - еквівалентний (equivalent)
+  - стилістична норма (stylistic norm)
+activity_hints:
+- type: error-correction
+  focus: Participles → relative clauses (and vice versa)
+  items: 14+
+- type: quiz
+  focus: Which style is more appropriate for context?
+  items: 15+
+- type: error-correction
+  focus: Remove unnecessary participles from text
+  items: 3 texts
+- type: match-up
+  focus: Participle form → equivalent clause
+  items: 12+
+- type: group-sort
+  focus: Same sentence in both forms — analyze style
+  items: 10+
+- type: fill-in
+  focus: Complete with appropriate form (participle or clause)
+  items: 12+
+- type: essay-response
+  focus: Rewrite academic text for general audience
+  output: Model answer provided
+focus: grammar
+prerequisites:
+- b2-07 (Active Participles Present)
+- b2-08 (Active Participles Past)
+- b2-02 (Past Passive Participles)
+- Relative clause formation
+connects_to:
+- b2-10 (B2.1a Checkpoint)
+- b2-11 (Multi-clause Sentences)
+- 'b2-22 (Register: Literary Ukrainian)'
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Syntax
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Relative clause formation and usage
+- name: Сучасна українська літературна мова - Синтаксис
+  url: https://uk.wikipedia.org/wiki/Синтаксис
+  type: secondary
+  notes: Syntactic structures and stylistic choices
+- name: CEFR B2 Grammar Complexity
+  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  type: reference
+  notes: B2 complex sentence requirements
+immersion: 100% Ukrainian
+phase: B2.1a [Passive Voice]
+objectives:
+- Identify and correctly use дієприкметники проти підрядних речень
+- Form and apply два способи вираження ознаки за дією
+persona:
+  voice: Professional Language Coach
+  role: Literary Editor (Літературний редактор)
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Дієприкметники проти підрядних речень
+
+## State Standard Reference
+§4.3.4.2: "Складнопідрядні речення з означальною частиною зі сполучними словами який, котрий, що в називному та непрямих відмінках: Як радію за ту я людину, що загублену радість знайшла."
+§4.1.3.1: "Дійсний спосіб... пасивний стан (дієприкметники)..."
+Alignment: Цей модуль безпосередньо реалізує вимогу стандарту щодо вміння будувати складнопідрядні означальні речення (B2) та розрізняти стилістичні нюанси використання пасивних конструкцій (B2/C1).
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| який / яка / яке | Дуже висока (Топ-10) | той, який...; людина, яка...; день, у який... |
+| що | Дуже висока (Топ-10) | те, що...; все, що...; той, що... |
+| котрий | Середня (книжн.) | о котрій годині; той, котрий... |
+| діючий | Низька (обмежена) | діючий вулкан, діюча армія (але: чинний закон) |
+| охочий | Середня | охочий до праці, охочі вчитися |
+
+## Cultural Hooks
+1. **Боротьба з канцеляритом**: В українській лінгвостилістиці (зокрема, за заповітами Максима Рильського та Бориса Антоненка-Давидовича) нагромадження дієприкметників вважається ознакою "мертвої", бюрократичної мови ("канцеляриту"). Жива українська мова надає перевагу підрядним реченням.
+2. **"Активна" мова**: Український синтаксис тяжіє до активних конструкцій. Фраза "Ми зробили роботу" звучить природніше, ніж "Робота була зроблена нами". Це відображає ментальну настанову на дію та суб'єктність (Agency Pass).
+
+## Common Learner Errors
+1. **Калькування активних дієприкметників**: *Студент, читаючий книгу* (помилка) → *Студент, який читає книгу* (норма). Активні дієприкметники теперішнього часу на -уч/-юч в українській мові ненормативні або обмежені термінологією.
+2. **Важкі звороти з "який"**: Надмірне повторення "який" у кількох підрядних частинах поспіль (*Дім, який стоїть на горі, яка висока...*). Вирішення: чергування з дієприкметниковими зворотами або іншими сполучниками (що).
+3. **Неузгодження відмінків**: *Я бачу дівчину, яка (насправді: яку) я люблю*.
+
+## Cross-References
+- Builds on: b2-07 (Active Participles Present), b2-08 (Active Participles Past), Relative clause formation
+- Prepares for: b2-22 (Register: Literary Ukrainian), b2-pro (Academic Writing)
+
+## Notes for Content Writing
+- **Stylistic Emphasis**: Чітко розмежувати: дієприкметники = стислість, книжність, термінологічність; підрядні речення = розмовність, природність, жива оповідь.
+- **The "Trap"**: Звернути особливу увагу на пастку активних дієприкметників (robliačyi, dumajučyi). Це маркер "суржику" або російського впливу.
+- **Agency**: Використовувати приклади, де підрядне речення повертає суб'єктність (active voice), тоді як пасивний дієприкметник її ховає.
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Два способи вираження ознаки за дією (Introduction: Two Ways of Expressing Attribute by Action)"
+  words: 500
+  points:
+  - "Пояснення концепції дієприкметника як компактної форми проти підрядного речення як розгорнутої форми згідно зі Стандартом §4.1.3.1 та §4.3.4.2"
+  - "Огляд стилістичного вибору: чому жива мова уникає нагромадження дієприкметників, вважаючи це ознакою бюрократичного «канцеляриту»"
+- section: "Морфологічний та синтаксичний еквівалент (Morphological and Syntactic Equivalent)"
+  words: 800
+  points:
+  - "Систематичне порівняння активних форм: чому «працюючий студент» є помилкою калькування, а «студент, який працює» — нормою"
+  - "Аналіз пасивних форм: «прочитана книга» (компактність) проти «книга, яку прочитали» (нейтральність)"
+  - "Використання сполучних слів «який», «що», «котрий» (висока частотність «який» та «що» згідно з даними дослідження)"
+- section: "Стилістичний вибір та культура мовлення (Stylistic Choice and Speech Culture)"
+  words: 900
+  points:
+  - "Культурний гук: Боротьба з канцеляритом за порадами Максима Рильського та Бориса Антоненка-Давидовича щодо «оживлення» мови через підрядні речення"
+  - "Пріоритет агентності (Agency): Чому український синтаксис тяжіє до активних конструкцій («Ми зробили») замість пасивних дієприкметників («Було зроблено»)"
+  - "Сфери вживання: Академічне письмо та фіксовані терміни («чинний закон», «діючий вулкан») проти розмовної природності"
+- section: "Аналіз та виправлення типових помилок (Analysis and Correction of Common Errors)"
+  words: 900
+  points:
+  - "Критична помилка: виявлення та усунення калькування активних дієприкметників на -уч/-юч (*читаючий*, *пишучий*) як маркера суржику"
+  - "Пастка повторення «який»: стратегії уникнення монотонності через чергування зі сполучником «що» або доречним вживанням дієприкметникових зворотів"
+  - "Корекція неузгодження відмінків: відпрацювання правильних форм сполучних слів (наприклад, «дівчина, яку я люблю»)"
+- section: "Трансформаційна практика та редагування (Transformational Practice and Editing)"
+  words: 900
+  points:
+  - "Практикум «Літературний редактор»: перетворення сухого академічного тексту на зрозумілу публіцистику через синтаксичну трансформацію"
+  - "Вправи на збереження значення та зміну стилістичного забарвлення при переході від дієприкметника до підрядного речення"
+  - "Підсумковий чек-лист: критерії вибору форми залежно від жанру тексту та вимог до природності мовлення"
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "який / яка / яке (which/that) — сполучне слово; дуже висока частотність; вимагає узгодження у відмінку"
+  - "що (that) — сполучний засіб для підрядних означальних речень; часто взаємозамінний з «який» у Н. та З. відмінках"
+  - "котрий (which/who) — книжний варіант; середня частотність; використовується при виборі або в часових конструкціях («о котрій годині»)"
+  - "чинний закон (effective law) — стійке словосполучення; протиставляється помилковому «діючий закон»"
+  - "діючий вулкан (active volcano) — приклад прийнятної термінологічної форми активного дієприкметника"
+  - "охочий (willing/eager) — частотний прикметниковий замінник дієприкметника («охочі вчитися»)"
+  recommended:
+  - "канцелярит (officialese/bureaucratese) — термін для опису «мертвої» бюрократичної мови, перенасиченої дієприкметниками"
+  - "агентність (agency) — мовна категорія, що підкреслює суб'єктність дії в українському синтаксисі"
+  - "природність (naturalness) — головний критерій вибору підрядного речення в розмовному стилі"
+  - "стилістична норма (stylistic norm) — правила вибору синтаксичних конструкцій залежно від регістра"
+  - "еквівалентний (equivalent) — такий, що має те саме значення при зміні форми"
+  - "суржик (surzhyk) — змішана мова; калькування дієприкметників на -уч/-юч часто є його ознакою"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (3916 chars)
+✅ Message sent to Claude (ID: 10492)
+✓ Message 10492 acknowledged
+   Auto-acknowledged reply #10492 (stdout delivery — no inbox accumulation)
+✓ Message 10485 acknowledged

@@ -1,0 +1,304 @@
+✅ Message sent to Gemini (ID: 10090) [auto-acked: self-addressed]
+✓ Message 10090 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10090...
+📨 Message #10090
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-what-time-is-it
+   Time: 2026-02-20T19:40:58.231852+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: a1-23
+level: A1
+sequence: 23
+slug: what-time-is-it
+version: '2.0'
+title: What Time Is It?
+subtitle: Telling Time, Days, and Months
+content_outline:
+- section: Warm-up
+  points:
+  - 'Чому важливо знати час — cultural hook: Укрзалізниця як символ стійкості та пунктуальності
+    (90%+ вчасно)'
+  - 'Як українці питають про час — Standard §4.2.3.4: «Пане, скажіть, будь ласка,
+    котра година?»'
+- section: Presentation
+  points:
+  - 'Питання про час (Котра година? / О котрій?) — distinction: «Котра година?» (current
+    time) vs «О котрій?» (event time)'
+  - 'Повні години (Перша година, друга година...) — learner error: using cardinal
+    numbers (один) instead of ordinal (перша)'
+  - 'Половина та чверть (Пів на другу, чверть на третю) — learner error: confusing
+    ''пів на'' (half TO the next hour)'
+  - 'Хвилини (Десять хвилин на третю / Без десяти третя) — Standard §3.4 advice: prioritize
+    ''telegraphic style'' (вісім тридцять) for A1 simplicity'
+- section: Days of the Week
+  points:
+  - 'понеділок, вівторок, середа — learner error: days are capitalized in English
+    but lowercase in Ukrainian'
+  - четвер, п'ятниця, субота, неділя
+  - 'У понеділок (On Monday) — Standard §4.2.3.2: `у/в` + Accusative case for days;
+    learner error: using Locative (*у понеділку)'
+- section: Months of the Year
+  points:
+  - 'січень - грудень (January - December) — learner error: months are capitalized
+    in English but lowercase in Ukrainian'
+  - 'У січні (In January) — Standard §4.2.3.3: `у/в` + Locative case (ending -і) for
+    months'
+  - 'Seasons connection — context: associating months with seasonal weather in Ukraine'
+- section: Time Prepositions
+  points:
+  - 'о + locative (at a time) — usage: «о котрій?» (at what time?)'
+  - 'до + genitive (until) — usage: deadlines and durations'
+  - після + genitive (after)
+- section: Presentation 2
+  points:
+  - 'Розклад дня (О восьмій ранку я прокидаюся) — context: Ukrzaliznytsia conductor''s
+    shift'
+  - 'Призначення зустрічей (Зустрінемося о п''ятій) — cultural note: 24h format official
+    (17:00), 12h colloquial (п''ята вечора)'
+- section: Practice
+  points:
+  - Діалог про час (Котра година? — П'ята година)
+  - 'Діалог про плани на тиждень — usage: «на цьому тижні», «наступного тижня»'
+- section: Practice 2
+  points:
+  - 'Складання розкладу українською — context: creating a train schedule'
+vocabulary_hints:
+  required:
+  - година (hour) — котра година?, о восьмій годині, ціла година
+  - хвилина (minute) — за п'ять хвилин, через хвилину, зачекайте хвилину
+  - день (day) — добрий день, робочий день, вихідний день
+  - тиждень (week) — на цьому тижні, кінець тижня, наступного тижня
+  - місяць (month) — цього місяця, минулого місяця, три місяці
+  - рік (year) — новий рік, цього року, минулого року
+  - ранок (morning) — доброго ранку, о восьмій ранку, завтра вранці
+  - вечір (evening) — добрий вечір, сьогодні ввечері, о сьомій вечора
+  recommended:
+  - понеділок (Monday) — у понеділок, важкий понеділок
+  - січень (January) — у січні, перше січня
+  - зараз (now)
+  - пізно (late)
+  - рано (early)
+  - о котрій (at what time)
+activity_hints:
+- type: match-up
+  focus: Match times to clock faces
+  items: 20
+- type: fill-in
+  focus: Complete time expressions
+  items: 20
+- type: quiz
+  focus: Order days and months
+  items: 15
+- type: fill-in
+  focus: Schedule a meeting
+  items: 6
+focus: grammar
+pedagogy: PPP
+prerequisites:
+- a1-17 (Numbers and Money)
+- a1-22 (Tomorrow - Future Tense)
+connects_to:
+- a1-24 (Can, Must, Want - Modals)
+- a1-25 (My Daily Routine)
+objectives:
+- Learner can ask and tell the time
+- Learner can name all days of the week
+- Learner can name all months of the year
+- Learner can use time prepositions correctly
+grammar:
+- Clock time expressions (Котра година?)
+- Time prepositions (о, до, після)
+- Days and months in context
+register: розмовний
+phase: A1.3 [Consolidation]
+persona:
+  voice: Patient Supportive Tutor
+  role: Ukrzaliznytsia Conductor
+word_target: 2000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: What Time Is It?
+
+## State Standard Reference
+§4.2.3.4: "Пане / пані, скажіть, будь ласка, котра година?"
+Alignment: This module directly teaches the communicative intention of asking for and telling time, as explicitly exemplified in the State Standard's section on the Vocative case and address forms. It also covers §4.2.3.2.2 (Accusative for days) and §4.2.3.3 (Locative for months).
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| година (hour) | High (Core A1) | котра година?, о першій годині, ціла година |
+| хвилина (minute) | High (Core A1) | за п'ять хвилин, одна хвилина, 30 хвилин |
+| тиждень (week) | High (Core A1) | на цьому тижні, наступного тижня, дні тижня |
+| місяць (month) | High (Core A1) | у цьому місяці, минулого місяця, зимові місяці |
+| вчасно (on time) | Med (A1/A2) | бути вчасно, прийти вчасно, поїзд прибув вчасно |
+
+## Cultural Hooks
+1. **Ukrzaliznytsia Punctuality**: The Ukrainian railway system is famous for its resilience and punctuality (90%+ on time), even during wartime. It serves as a perfect context for learning precise time and schedules.
+2. **24-Hour Format**: Ukraine uses the 24-hour format (14:00, 20:30) for all official schedules, transport, and digital devices. The 12-hour format is reserved strictly for spoken, colloquial communication (друга година дня).
+
+## Common Learner Errors
+1. **Case Confusion with Days**: Learners often say *"у понеділку"* (Locative) mimicking "in/at", but Ukrainian requires Accusative: *у понеділок* (§4.2.3.2.2).
+2. **Cardinal vs. Ordinal for Hours**: Learners try to translate "It is two o'clock" as *"Це два годин"*. Correct: *Зараз друга година* (Ordinal number, Fem. gender).
+3. **Preposition Confusion**: Confusing *за* (in/within time span) and *на* (for a duration). At A1, focus on simple *о* (at) and *до* (until).
+
+## Cross-References
+- Builds on: a1-17 (Numbers and Money), a1-22 (Tomorrow - Future Tense)
+- Prepares for: a1-24 (Can, Must, Want - Modals), a1-25 (My Daily Routine)
+
+## Notes for Content Writing
+- The distinction between "Котра година?" (asking current time) and "О котрій?" (asking when an event happens) is crucial and must be scaffolded clearly.
+- Use "telegraphic style" (вісім тридцять) as the primary method for teaching minutes to A1 beginners, as allowed by modern communicative standards, before introducing complex fractions (чверть, пів).
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Cultural hook: Ukrzaliznytsia (90%+ punctuality) as the backbone of Ukrainian resilience; learning to be «вчасно» (on time) as a core value."
+  - "Communicative competence (Standard §4.2.3.4): Using the Vocative case and polite address forms: «Пане / пані, скажіть, будь ласка, котра година?»."
+- section: "Презентація часу (Time Presentation)"
+  words: 600
+  points:
+  - "Asking for time: Distinction between «Котра година?» (current time) and «О котрій?» (scheduled time for events or train arrivals)."
+  - "Hour identification: Using ordinal numbers in feminine gender (перша, друга). Learner error correction: translate 'It is two o'clock' as «Зараз друга година», not «два годин»."
+  - "A1 simplicity (Standard §3.4): Prioritize 'telegraphic style' (вісім тридцять) for minutes before introducing complex fractions like «пів на» or «чверть»."
+- section: "Дні та місяці (Days and Months)"
+  words: 600
+  points:
+  - "Days of the week: Grammar focus (§4.2.3.2.2) on «у/в» + Accusative case. Learner error: mimicking 'in/at' with Locative (*у понеділку) instead of correct «у понеділок»."
+  - "Months and Seasons: Locative case (§4.2.3.3) for months (у січні). Note on orthography: unlike English, months and days are lowercase in Ukrainian."
+  - "Associating months with weather and seasonal cycles in Ukraine to aid memorization."
+- section: "Практика та розклад (Practice and Schedule)"
+  words: 400
+  points:
+  - "Register distinction: 24-hour format for official schedules (transport, digital) vs. 12-hour format for colloquial speech («друга година дня» vs. «чотирнадцята година»)."
+  - "Prepositions for planning: Using «о» (at), «до» (until), and «після» (after) to create a simple conductor's shift schedule or a daily routine."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "година (hour) — котра година?, о першій годині, ціла година; High frequency (Core A1)"
+  - "хвилина (minute) — за п'ять хвилин, одна хвилина, 30 хвилин; High frequency (Core A1)"
+  - "день (day) — добрий день, робочий день, вихідний день; High frequency (Core A1)"
+  - "тиждень (week) — на цьому тижні, наступного тижня, дні тижня; High frequency (Core A1)"
+  - "місяць (month) — у цьому місяці, минулого місяця, зимові місяці; High frequency (Core A1)"
+  - "рік (year) — новий рік, цього року, минулого року; High frequency (Core A1)"
+  - "ранок (morning) — доброго ранку, о восьмій ранку, завтра вранці"
+  - "вечір (evening) — добрий вечір, сьогодні ввечері, о сьомій вечора"
+  recommended:
+  - "вчасно (on time) — бути вчасно, прийти вчасно, поїзд прибув вчасно; Med frequency (A1/A2)"
+  - "понеділок (Monday) — у понеділок, важкий понеділок; usage with Accusative"
+  - "січень (January) — у січні, перше січня; usage with Locative"
+  - "зараз (now)"
+  - "пізно (late)"
+  - "рано (early)"
+  - "о котрій (at what time)"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (2984 chars)
+✅ Message sent to Claude (ID: 10099)
+✓ Message 10099 acknowledged
+   Auto-acknowledged reply #10099 (stdout delivery — no inbox accumulation)
+✓ Message 10090 acknowledged

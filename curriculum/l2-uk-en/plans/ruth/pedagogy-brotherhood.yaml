@@ -1,4 +1,3 @@
----
 sequence: 59
 module: ruth-059
 module_number: 59
@@ -9,7 +8,6 @@ phase: 3
 phase_id: baroque-fight
 phase_name: Baroque Fight
 focus: How grammar was taught in brotherhood schools
-word_target: 4000
 content_outline:
 - section: Вступ
   description: Introduction to Pedagogy
@@ -24,3 +22,6 @@ activity_types:
 - transcription
 - etymology-trace
 - grammar-identify
+persona:
+  voice: Baroque Scholar
+  role: Brotherhood Rector

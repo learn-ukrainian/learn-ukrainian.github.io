@@ -1,0 +1,107 @@
+module: c1-012
+level: C1
+sequence: 12
+slug: research-article
+version: '2.0'
+title: Жанр — Наукова стаття
+content_outline:
+- section: Вступ — Що таке наукова стаття?
+  points:
+  - Визначення та цілі наукової статті
+  - Типи наукових статей
+  - Українські вимоги до публікацій
+- section: Структура IMRaD
+  points:
+  - Вступ (Introduction) — проблема, мета, гіпотеза
+  - Методи (Methods) — як проводилося дослідження
+  - Результати (Results) — що виявлено
+  - Обговорення (Discussion) — що це означає
+- section: Назва та ключові слова
+  points:
+  - Формулювання інформативної назви
+  - Вибір ключових слів
+  - Оптимізація для пошуку
+- section: Анотація (Abstract)
+  points:
+  - Структура анотації (мета, методи, результати, висновки)
+  - Обсяг і стиль
+  - Типові помилки
+- section: Висновки та література
+  points:
+  - Формулювання висновків
+  - Оформлення списку літератури
+  - Імплікації та перспективи
+- section: Мова наукової статті
+  points:
+  - Безособовий стиль
+  - Термінологія
+  - Типові фрази кожного розділу
+- section: Практика аналізу статей
+  points:
+  - Читання та аналіз зразків
+  - Ідентифікація структурних елементів
+  - Критичне оцінювання
+vocabulary_hints:
+  required:
+  - стаття (article)
+  - анотація (abstract)
+  - методологія (methodology)
+  - результати (results)
+  - обговорення (discussion)
+  - висновки (conclusions)
+  - ключові слова (keywords)
+  - література (references)
+  - гіпотеза (hypothesis)
+  - дослідження (research)
+  recommended:
+  - публікація (publication)
+  - рецензування (peer review)
+  - редакція (editorial board)
+  - фахове видання (professional journal)
+  - імпакт-фактор (impact factor)
+activity_hints:
+- type: group-sort
+  focus: Arrange article sections in order
+  items: 12+
+- type: match-up
+  focus: Section to content type
+  items: 15+
+- type: cloze
+  focus: Article section phrases
+  items: 12+
+- type: quiz
+  focus: Identify IMRaD elements in excerpts
+  items: 12+
+- type: essay-response
+  focus: Write abstract for given research
+- type: fill-in
+  focus: Match typical phrases to sections
+  items: 12+
+focus: grammar
+prerequisites:
+- c1-08 to c1-11 (Essay and Citation skills)
+- Academic style markers
+connects_to:
+- c1-13 (Abstract Writing)
+- c1-14 (Literature Review)
+- c1-19 (Article Critique)
+module_type: grammar
+sources:
+- name: Вимоги до наукових публікацій
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Official requirements for Ukrainian academic articles
+- name: IMRaD Structure Guidelines
+  url: https://mova.info/
+  type: secondary
+  notes: International research article structure
+immersion: 100% Ukrainian
+phase: C1.1 Academic Ukrainian
+objectives:
+- Identify and correctly use жанр — наукова стаття
+- Form and apply що таке наукова стаття?
+- Distinguish between практика аналізу статей
+persona:
+  voice: Senior Specialist
+  role: Головний науковий співробітник
+word_target: 4000

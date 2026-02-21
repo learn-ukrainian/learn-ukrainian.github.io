@@ -1,0 +1,210 @@
+✅ Message sent to Gemini (ID: 12878) [auto-acked: self-addressed]
+✓ Message 12878 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12878...
+📨 Message #12878
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-treaty-944-igor
+   Time: 2026-02-20T23:42:50.625241+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 74
+module: oes-074
+module_number: 60
+slug: treaty-944-igor
+title_uk: Договір 944 (Ігор)
+title_en: Treaty of 944 (Igor)
+phase: 3
+phase_id: legal-tradition
+phase_name: Legal Tradition
+focus: Christian vs Pagan oath-taking
+content_outline:
+- section: Вступ
+  description: Introduction to Treaty of 944 (Igor)
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Senior Paleographer
+  role: Byzantine Notary
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Treaty 944 Igor (Договір 944 року)
+
+## Використані джерела
+1. [Літопис руський (за Іпатіївським списком)](http://litopys.org.ua/litop/lit02.htm) — Першоджерело, що містить повний текст договору під 945 (6453) роком.
+2. [Енциклопедія історії України: Договір Київської Русі з Візантією 944](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Dogovir_Kyivskoi_1944) — Академічний аналіз умов та історичного контексту (М.Ф. Котляр).
+3. [Ізборник: Угоди Русі з Візантією](http://litopys.org.ua/old18/old18_03.htm) — Аналіз дипломатичних відносин та юридичної термінології.
+
+## Хронологія
+- **941 рік**: Перший похід Ігоря на Константинополь. Розгром руського флоту "грецьким вогнем".
+- **943/944 рік**: Другий похід Ігоря. Військо (варяги, русь, поляни, словени, кривичі, тиверці, печеніги) дійшло до Дунаю.
+- **944 рік**: Візантійський імператор Роман I Лакапін пропонує мир. Укладання договору (менш вигідного, ніж угода Олега 911 року).
+- **945 рік**: Затвердження договору в Києві. Присяга Ігоря та дружини на пагорбі Перуна та в церкві св. Іллі.
+- **945 рік**: Повстання древлян та загибель Ігоря (як наслідок зменшення прибутків від торгівлі та данини через умови договору).
+
+## Ключові факти та цитати
+
+### Цитати (Першоджерело)
+1. **Християнська присяга**: «Ми ж, скільки нас охрестилося, клялися соборною церквою святого Іллі в соборі чесному і перед чесним хрестом і хартією сею дотримуватись усього, що написано на ній».
+2. **Язичницька присяга**: «А нехрещені руси покладають щити свої і мечі свої нагі, і обручі свої, та інше оружжя, щоб заприсягтися, що все, що написано на хартії цій, дотримуватиметься Ігорем, і всіма боярами, і всіма людьми Руської землі».
+3. **Умови миру**: «І нехай молить великий князь наш Ігор, і князі його, і бояри його, і всі люди руські, щоб не наступали на країну вашу [грецьку]...»
+
+### Факти
+- **Торгові обмеження**: Вперше введені "грамоти" для послів та купців, скасовано право безмитної торгівлі (на відміну від договору 911 року).
+- **Етнічний склад**: Серед 50 імен послів переважають скандинавські (Івар, Вуєфаст, Слуди, Каршев), але з'являються слов'янські (Святослав, син Ігоря; Володислав, Предслава). Це свідчить про початок слов'янізації еліти.
+- **Топографія Києва**: Згадується церква св. Іллі "над Ручаєм" (Поділ) та пагорб Перуна, що вказує на локалізацію християнської та язичницької громад.
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ": [!history-bite] — Про "грецький вогонь", який жахнув русів у 941 році і змусив Ігоря шукати миру у 944-му.
+- Section "Історичне тло": [!context] — Порівняння умов: чому договір Олега був "переможним", а Ігоря — "компромісним" (втрата безмитної торгівлі).
+- Section "Етнічний склад еліти": [!myth-buster] — "Руські" імена послів майже суціль скандинавські. Міф про "споконвічно слов'янську" державу розбивається об список підписантів (Карли, Інгельд, Фарлаф), але ім'я сина Ігоря — Святослав — знаменує злам.
+- Section "Сакральний вимір": [!culture] — Церква св. Іллі як доказ існування потужної християнської громади в Києві за півстоліття до офіційного Хрещення.
+- Section "Юридична традиція": [!decolonization] — Термін "Закон Руський" як самостійна правова система, відмінна від візантійського (римського) права. Русь суб'єктна, а не є "провінцією" Візантії.
+- Section "Військові статті": [!paleography] — Аналіз терміну "корсуньська країна" (Крим) та зобов'язання Русі не воювати там — давній геополітичний інтерес.
+
+## Деколонізаційний контекст
+- **Imperial/Soviet myth**: Трактування Русі як "колиски трьох братніх народів" або виключно слов'янської держави з ігноруванням норманського елементу. Радянська історіографія часто замовчувала скандинавські імена послів.
+- **Ukrainian reality**: Русь X ст. — це мультиетнічна держава з варязькою військовою елітою, яка стрімко славізується. Договір фіксує момент переходу: батько Ігор (Інгвар) — скандинав, син Святослав — вже має слов'янське ім'я. Це історія *українського* державотворення, де Київ є центром тяжіння. Крим (Корсунь) вже тоді був зоною інтересів Києва.
+
+## Contested Terms (if applicable)
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| "Руський рід" | Етнічні росіяни (в перекладах часто "русские") | Поліетнічна спільнота підданих київського князя (варяги, слов'яни, фіни) |
+| "Закон Руський" | Прото-російське право | Оригінальна правова система Київської держави, джерело "Руської Правди" |
+| "Корсуньська країна" | "Исконно русская земля" | Територія візантійських володінь у Криму, об'єкт дипломатії Києва |
+
+## Section-Mapped Research Notes
+
+### Вступ
+Контекст невдалого походу 941 (вогонь) і демонстрації сили 944. Необхідність відновлення торгівлі.
+
+### Історичне тло: Від «грецького вогню» до Дунаю
+Деталі кампаній. Участь печенігів як найманців Ігоря. Роль Візантії (підкуп печенігів).
+
+### Етнічний склад еліти: Свідчення антропоніміки
+Аналіз списку послів. 50 імен. Групи: посли князів (Ігоря, Ольги, Святослава) та купці. Скандинавські корені (Свень, Сфірка) vs слов'янські (Святослав, Володислав). Роль жінки (Ольга, Предслава) в дипломатії.
+
+### Структура та зміст: Торгівля і право
+Введення "княжих грамот" (паспортна система). Обмеження на закупівлю шовку ("паволок"). Статті про втечу челяді (рабів) та майнові злочини (крадіжка, побої). Взаємодія "Закону Руського" і грецького права.
+
+### Сакральний вимір: Дві віри — одна присяга
+Ключовий момент. Подвійна процедура ратифікації. Християни (соборна церква) і язичники (зброя, Перун). Це свідчить про релігійну толерантність і перехідний період.
+
+### Військово-політичний союз
+Зобов'язання допомагати одне одному. Питання Криму ("Корсуньська країна") — Русь зобов'язується не нападати на візантійські володіння, але й захищати їх від "чорних болгар".
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12899)
+✓ Message 12878 acknowledged
+✓ Message 12899 acknowledged

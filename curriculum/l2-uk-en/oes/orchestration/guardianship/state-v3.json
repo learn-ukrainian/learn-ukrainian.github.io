@@ -1,0 +1,13 @@
+{
+  "track": "oes",
+  "slug": "guardianship",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-20T11:09:44Z",
+      "task_id": "v3-guardianship-pA",
+      "mode": "full"
+    }
+  }
+}

@@ -1,0 +1,342 @@
+✅ Message sent to Gemini (ID: 10381) [auto-acked: self-addressed]
+✓ Message 10381 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10381...
+📨 Message #10381
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-checkpoint-advanced-grammar
+   Time: 2026-02-20T20:29:50.755996+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b1-51
+level: B1
+sequence: 51
+slug: checkpoint-advanced-grammar
+version: '2.0'
+title: 'Контрольна точка: Просунута граматика'
+subtitle: Advanced Grammar Phase Checkpoint
+content_outline:
+- section: Огляд
+  points:
+  - Review B1.4 objectives
+  - Identify strengths and gaps
+  - Set checkpoint goals
+- section: 'Навичка 1: Дієприслівники недоконаного виду'
+  points:
+  - Утворення (-ючи, -ачи від НДВ)
+  - Читаючи книгу, він заснув
+  - Одночасність дій
+  - Самоперевірка
+- section: 'Навичка 2: Дієприслівники доконаного виду'
+  points:
+  - Утворення (-вши, -ши від ДВ)
+  - Прочитавши книгу, він заснув
+  - Послідовність дій (спочатку прочитав, потім заснув)
+  - Самоперевірка
+- section: 'Навичка 3: Активні дієприкметники'
+  points:
+  - Теперішній час (-учий/-ючий, -ачий/-ячий)
+  - Минулий час (-лий)
+  - Узгодження з іменником
+  - Самоперевірка
+- section: 'Навичка 4: Пасивні дієприкметники — повна форма'
+  points:
+  - Утворення (-ний/-тий)
+  - Написана книга, відкриті двері
+  - Узгодження з іменником (рід, число, відмінок)
+- section: 'Навичка 5: Пасивні дієприкметники — коротка форма'
+  points:
+  - Утворення (написано, відкрито)
+  - Вживання в безособових конструкціях
+  - Книгу написано
+- section: 'Навичка 6: Пасивні конструкції'
+  points:
+  - Три способи вираження пасиву
+  - Вибір форми залежно від регістру
+  - Порівняння активу і пасиву
+- section: 'Навичка 7: Демінутиви'
+  points:
+  - Суфікси демінутивів (-ик, -ок, -очок, -еньк-)
+  - Прагматика — пестливість, іронія, применшення
+  - Стилістичне вживання
+- section: 'Навичка 8: Збірні числівники та дроби'
+  points:
+  - Збірні числівники (двоє, троє, четверо)
+  - Дроби (одна друга, три чверті)
+  - Відсотки (п'ять відсотків)
+- section: Інтеграційне завдання
+  points:
+  - Comprehensive text with all forms
+  - Error analysis
+  - Proficiency check
+- section: Підсумок
+  points:
+  - Review results
+  - Plan for B1.5
+vocabulary_hints:
+  required:
+  - контрольна точка (checkpoint)
+  - оцінювання (assessment)
+  - дієприкметник (participle)
+  - дієприслівник (adverbial participle)
+  - пасивний стан (passive voice)
+  - демінутив (diminutive)
+  - збірний числівник (collective numeral)
+  - інтеграція (integration)
+  recommended:
+  - готовність (readiness)
+  - прогрес (progress)
+  - майстерність (mastery)
+  - самооцінка (self-assessment)
+activity_hints:
+- type: quiz
+  focus: B1.4 comprehensive test
+  items: 30
+- type: fill-in
+  focus: All participle and passive conversions
+  items: 25
+- type: fill-in
+  focus: Complete with appropriate forms
+  items: 20
+- type: fill-in
+  focus: Write integrated paragraphs
+  items: 10
+focus: checkpoint
+pedagogy: TTT
+prerequisites:
+- b1-50 (Integrated Grammar Lab)
+connects_to:
+- b1-52 (Abstract Concepts Ideas)
+objectives:
+- Learner can demonstrate mastery of advanced grammar forms
+- Learner can integrate knowledge from M42-M50
+- Learner can form and use adverbial and passive participles
+- Learner can self-assess readiness for Vocabulary Expansion phase
+grammar:
+- Integration of M42-M50
+- Participles, passive voice, diminutives, numerals
+- Comprehensive review and testing
+register: розмовний
+phase: B1.4b [Advanced Grammar Checkpoint]
+persona:
+  voice: Senior Language & Culture Specialist
+  role: University Philologist
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Контрольна точка: Просунута граматика
+
+## State Standard Reference
+§4.4.2 (Синтаксис: Просте ускладнене речення): "просте речення з дієприкметниковим зворотом... просте речення з дієприслівниковим зворотом" (Lines 2372-2375).
+§4.2.3.1 (Морфологія: Дієслово): "дієприкметник, дієприслівник" (Line 2271).
+Alignment: Module explicitely teaches the formation and usage of these forms (дієприслівник/дієприкметник) which are required for the B1 syntax standard of "complicated simple sentences" (просте ускладнене речення).
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| **дієприслівник** | Medium (Textbooks/Lit) | вживати дієприслівник, дієприслівниковий зворот, помилка у вживанні |
+| **пасивний стан** | Medium (Formal/Scientific) | пасивна конструкція, уникати пасиву, форми на -но/-то |
+| **збірний числівник** | High (Spoken/Lit) | двоє дітей, троє дверей, нас було п'ятеро, четверо друзів |
+| **демінутив** | Very High (Colloquial/Folk) | пестлива форма, зменшувальний суфікс, українська ментальність |
+
+## Cultural Hooks
+1.  **Cordocentrism & Diminutives**: Ukrainian is often called a "language of the heart" (cordocentrism). Diminutives (`сонечко`, `матуся`, even verbs `спатоньки`) are not just about small size, but emotional connection. They encode the Ukrainian worldview of intimacy and connection with the environment.
+2.  **The "Active" Ukrainian**: Unlike Russian or English legalese, standard Ukrainian style strongly prefers **active** constructions over passive ones. "Закон прийнято депутатами" is considered poor style (Russian influence); "Депутати прийняли закон" is natural. Forms ending in `-но/-то` (`Зроблено в Україні`) are a unique impersonal feature that emphasizes the result without naming the agent.
+
+## Common Learner Errors
+1.  **Dangling Participle (Diyepryslivnyk)**:
+    *   *Error*: "Йдучи додому, почався дощ." (Walking home, the rain started.)
+    *   *Correct*: "Коли я йшов додому, почався дощ."
+    *   *Reason*: The subject of the main verb (`дощ`) must be the doer of the adverbial participle (`йдучи`), which is impossible here.
+2.  **Active Present Participle Calques**:
+    *   *Error*: "сидячий студент", "читаюча дівчина".
+    *   *Correct*: "студент, який сидить", "дівчина, яка читає".
+    *   *Reason*: Calque from Russian (`сидящий`, `читающая`). Ukrainian avoids heavy participial forms in favor of relative clauses (`той, що...`).
+3.  **Collective Numerals with Females**:
+    *   *Error*: "троє дівчат", "двоє студенток".
+    *   *Correct*: "три дівчини", "дві студентки".
+    *   *Reason*: Collective numerals (`двоє`, `троє`) are strictly for male/mixed groups, children/animals, or plural-only nouns (`двері`). They are never used with feminine nouns.
+4.  **Passive Agent with -но/-то**:
+    *   *Error*: "Мною зроблено".
+    *   *Correct*: "Я зробив" or just "Зроблено" (without agent).
+    *   *Reason*: Forms ending in `-но/-то` are impersonal; adding an instrumental agent is a grammatical clash (bureaucratese).
+
+## Cross-References
+- **Builds on**: `b1-50` (Integrated Grammar Lab), `b1-26` (Complex sentences intro).
+- **Prepares for**: `b1-52` (Abstract Concepts - requires complex syntax), `b2` (Academic/Professional writing where passive/participles are more common).
+
+## Notes for Content Writing
+- **Structure**: Ensure the distinction between "Active Participles" (often bad style if present tense) and "Adverbial Participles" (good style for dynamism) is clear.
+- **Integration**: The "Integration Task" should focus on fixing "bad bureaucratic style" into "natural active Ukrainian" to test the passive/active skill.
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ та огляд компетенцій (Introduction and Competency Overview)"
+  words: 400
+  points:
+  - "Огляд цілей рівня B1.4 та відповідність Державному стандарту §4.2.3.1 (Морфологія: дієприкметник, дієприслівник)."
+  - "Самодіагностика: виявлення прогалин у вживанні складних граматичних форм перед переходом до фази розширення словникового запасу."
+  - "Встановлення цілей контрольної точки: перевірка здатності будувати 'просте ускладнене речення' згідно з §4.4.2 стандарту."
+- section: "Дієприслівники: Динаміка та помилки (Adverbial Participles: Dynamics and Errors)"
+  words: 650
+  points:
+  - "Диференціація недоконаного (-ючи, -ачи) та доконаного (-вши, -ши) видів для вираження одночасності чи послідовності дій."
+  - "Аналіз типової помилки (Dangling Participle): чому конструкція «Йдучи додому, почався дощ» є граматично хибною та як її виправити."
+  - "Практика узгодження дієприслівникового звороту з підметом основного речення для забезпечення природності мовлення."
+- section: "Дієприкметники: Активні форми та запозичення (Participles: Active Forms and Calques)"
+  words: 650
+  points:
+  - "Виправлення кальок з російської мови: заміна 'сидячих студентів' та 'читаючих дівчат' на природні конструкції з відносним займенником ('який сидить', 'що читає')."
+  - "Вживання активних дієприкметників минулого часу на -лий (пожовкле листя, зблідле обличчя) як стилістично правильної альтернативи."
+  - "Узгодження дієприкметників з іменниками у роді, числі та відмінку в структурі дієприкметникового звороту."
+- section: "Пасивні конструкції та безособові форми (Passive Constructions and Impersonal Forms)"
+  words: 650
+  points:
+  - "Філософія 'активної' української мови: чому конструкція «Депутати прийняли закон» є кращою за пасивну «Закон був прийнятий депутатами»."
+  - "Специфіка безособових форм на -но, -то (Зроблено в Україні): фокус на результаті без зазначення виконавця."
+  - "Граматична помилка clashed agents: чому не можна вживати орудний відмінок дійової особи з формами на -но/-то (уникнення конструкцій типу «Мною зроблено»)."
+- section: "Демінутиви та мовна ментальність (Diminutives and Linguistic Mentality)"
+  words: 600
+  points:
+  - "Концепція кордоцентризму: демінутиви як відображення 'мови серця' та емоційної близькості зі світом."
+  - "Аналіз суфіксів (-ик, -ок, -очок, -еньк-) та їхнього прагматичного значення: від пестливості до тонкої іронії."
+  - "Вихід за межі іменників: вживання демінутивних дієслів (їстоньки, спатоньки) як унікальної особливості українського розмовного стилю."
+- section: "Числівники: Збірні та дробові (Numerals: Collective and Fractions)"
+  words: 600
+  points:
+  - "Суворі обмеження збірних числівників (двоє, троє): чому вони вживаються з чоловічим родом, дітьми чи pluralia tantum, але ніколи з жінками (*двоє студенток — помилка)."
+  - "Математична точність: робота з дробами (одна друга, три чверті) та відсотками у контексті статистичних даних."
+  - "Узгодження збірних числівників у непрямих відмінках (нас було п'ятеро, зустрів двох друзів)."
+- section: "Інтеграція та підсумок фази (Integration and Phase Summary)"
+  words: 450
+  points:
+  - "Інтеграційне завдання: редагування офіційно-ділового тексту (канцеляризмів) та перетворення його на природну, динамічну українську мову."
+  - "Комплексний тест на знання синтаксису складного простого речення та морфологічних трансформацій."
+  - "Підбиття підсумків: оцінка прогресу та планування переходу до модуля B1.5 'Абстрактні поняття та ідеї'."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "дієприслівник (adverbial participle) — вживати дієприслівник, дієприслівниковий зворот; часто помилковий у вживанні"
+  - "дієприкметник (participle) — узгодження дієприкметника, активний vs пасивний стан"
+  - "пасивний стан (passive voice) — пасивна конструкція, уникати пасиву на користь активу"
+  - "безособова форма (impersonal form) — форми на -но/-то (зроблено, написано); фокус на результаті"
+  - "збірний числівник (collective numeral) — двоє дітей, троє дверей; обмеження за родом"
+  - "демінутив (diminutive) — пестлива форма, зменшувальний суфікс; емоційне забарвлення"
+  - "контрольна точка (checkpoint) — оцінювання знань, проміжний підсумок"
+  - "кордоцентризм (cordocentrism) — філософія серця, емоційність української мови"
+  recommended:
+  - "калька (calque/loan translation) — уникати кальок, виправлення помилок"
+  - "пестливий (affectionate/tender) — пестливі слова, інтимність мовлення"
+  - "одночасність (simultaneity) — вираження одночасних дій дієприслівником"
+  - "послідовність (sequence) — вираження послідовних дій"
+  - "спатоньки (to sleep - diminutive verb) — приклад дієслівного демінутива"
+  - "сонечко (sun - diminutive) — типовий приклад пестливої форми"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4826 chars)
+✅ Message sent to Claude (ID: 10388)
+✓ Message 10388 acknowledged
+   Auto-acknowledged reply #10388 (stdout delivery — no inbox accumulation)
+✓ Message 10381 acknowledged

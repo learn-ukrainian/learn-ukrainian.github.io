@@ -1,0 +1,322 @@
+✅ Message sent to Gemini (ID: 11898) [auto-acked: self-addressed]
+✓ Message 11898 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #11898...
+📨 Message #11898
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-roksolana
+   Time: 2026-02-20T23:34:28.908488+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-bio-14
+level: C1-BIO
+sequence: 14
+slug: roksolana
+version: '2.0'
+title: 'Роксолана: Від рабині до султанші'
+content_outline:
+- section: Вступ — Найвпливовіша жінка Османської імперії
+  points:
+  - Унікальність долі Роксолани
+  - Її місце в історії України та Туреччини
+  - Проблема джерел та легенд
+- section: Викрадення та рабство
+  points:
+  - Походження з Рогатина (версії)
+  - Татарський набіг та полон
+  - Продаж на ринку рабів
+  - Потрапляння до гарему
+- section: Сходження до влади
+  points:
+  - Прихильність Сулеймана
+  - Від рабині до хасекі
+  - Офіційний шлюб — безпрецедентний крок
+  - Народження дітей
+- section: Політичний вплив
+  points:
+  - Участь у державних справах
+  - Листування з європейськими монархами
+  - Інтриги щодо спадкоємця
+  - Доля Мустафи та Ібрагіма-паші
+- section: Благодійність та будівництво
+  points:
+  - Комплекс Хасекі
+  - Лазні, мечеті, школи
+  - Підтримка благодійних справ
+  - Архітектурна спадщина в Стамбулі
+- section: Спадщина та образ у культурі
+  points:
+  - Смерть та поховання
+  - Образ у літературі та мистецтві
+  - Українська та турецька пам'ять
+  - Сучасні серіали та суперечки
+- section: Підсумок — Жінка, що змінила імперію
+  points:
+  - Роксолана як символ сили волі
+  - Її вплив на османську традицію
+  - Значення для України
+vocabulary_hints:
+  required:
+  - султанша (sultana)
+  - хасекі (haseki - favorite consort)
+  - гарем (harem)
+  - рабиня (slave woman)
+  - полон (captivity)
+  - набіг (raid)
+  - спадкоємець (heir)
+  - інтрига (intrigue)
+  - благодійність (charity)
+  - меценатство (patronage)
+  recommended:
+  - візир (vizier)
+  - євнух (eunuch)
+  - фаворитка (favorite)
+  - мечеть (mosque)
+  - вакф (waqf - charitable endowment)
+activity_hints:
+- type: reading
+  focus: European diplomatic reports about Roksolana
+  source: Adapted historical sources
+  items: 3 passages
+- type: essay-response
+  focus: Was Roksolana a victim or a manipulator?
+  output: Balanced analysis with evidence
+- type: critical-analysis
+  focus: Evaluate different interpretations of Roksolana
+  output: Ukrainian vs. Turkish perspectives
+focus: biography
+pedagogy: CBI
+prerequisites:
+- c1-bio-05 (Anna Yaroslavna - earlier Ukrainian woman abroad)
+- c1-bio-06 (Mykhailo Chernihivskyi - captivity theme)
+connects_to:
+- c1-bio-10 (Bohdan Khmelnytskyi - later Cossack period)
+- c1-bio-12 (Ivan Mazepa - patronage theme)
+- c1-bio-41 (Solomiya Krushelnytska - later fame abroad)
+objectives:
+- Проаналізувати біографію Роксолани як приклад соціальної мобільності
+- Дослідити феномен 'Жіночого султанату' та роль жінок в османській політиці
+- Вивчити дипломатичну лексику та епістолярний стиль XVI століття
+grammar:
+- Historical narrative tenses
+- Quoted speech conventions
+- Epistolary formulas
+module_type: biography
+sources:
+- name: Роксолана (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Роксолана
+  type: primary
+  notes: Biography, rise to power, influence
+- name: Сулейман I (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Сулейман_I
+  type: reference
+  notes: Context of Ottoman court
+- name: Гарем (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Гарем
+  type: reference
+  notes: Structure of Ottoman harem system
+immersion: 100% Ukrainian
+phase: C1-BIO
+persona:
+  voice: Senior Biographer
+  role: Imperial Consort
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Роксолана: Від рабині до султанші
+
+## Використані джерела
+1. [Енциклопедія історії України (history.org.ua) — Роксолана](http://resource.history.org.ua/) — Академічний огляд життя Гюррем Султан, її вплив на політику імперії, дипломатичне листування та роль у "Жіночому султанаті".
+2. [Енциклопедія Сучасної України (esu.com.ua) — Сулейман І Пишний](https://esu.com.ua/) — Контекст епохи Сулеймана Пишного, роль його офіційної дружини Хасекі у внутрішній та зовнішній політиці.
+3. [Українська Вікіпедія — Роксолана](https://uk.wikipedia.org/wiki/Роксолана) — Хронологія життя, аналіз походження, благодійна та архітектурна діяльність (комплекс Хасекі Султан, співпраця з Сінаном).
+
+## Хронологія
+- ~1520: Викрадення під час татарського набігу на Рогатин, продаж на ринку рабів у Кафі, потрапляння до султанського гарему.
+- 1521: Народження першого сина Мехмеда, що дозволило зміцнити статус у гаремі та де-факто порушило традицію «одна наложниця — один син».
+- ~1533-1534: Укладення офіційного шлюбу (нікяха) з Сулейманом I Пишним. Отримання унікального титулу Хасекі Султан.
+- 1536: Страта великого візира Ібрагіма-паші — головного політичного конкурента Роксолани при дворі.
+- 1539: Початок будівництва масштабного релігійно-благодійного комплексу Хасекі Султан за проєктом Мімара Сінана.
+- 1541: Велика пожежа у Старому палаці. Переїзд Роксолани та гарему до султанської резиденції Топкапи.
+- 1549: Дипломатичне листування Роксолани з польським королем Сигізмундом II Августом, обмін посланцями та подарунками.
+- 1553: Страта шехзаде Мустафи, старшого сина Сулеймана від Махідевран (закон Фатіха), що відкрило шлях до трону синам Гюррем.
+- 1558: Смерть Роксолани. Похована в спеціально збудованому мавзолеї (тюрбе) на території мечеті Сулейманіє в Стамбулі.
+
+## Ключові факти та цитати
+- **З листів Роксолани до Сулеймана**: "Коли вітри принесуть Вам мій біль, Ви зрозумієте стан Вашої рабині, яка стогне і божеволіє, як соловейко."
+- **Формули звертання**: Вона називала султана "душею і серцем коханий мій шаху", "лікар моєї душі", а себе описувала як "безпорадна рабиня" або "нещасна наложниця, згоріла від вогню розлуки, з печінкою, що перетворилася на кебаб" (класична суфійська поетична метафора).
+- **Дипломатія**: У листуванні з європейськими монархами (як-от із Сигізмундом II Августом) Гюррем майстерно використовувала мову сімейної спорідненості ("брат", "приятелька").
+- **Історичний вплив**: Стала першою жінкою-рабинею (джаріє), яка отримала свободу, стала законною дружиною султана і започаткувала період так званого "Жіночого султанату".
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ — Найвпливовіша жінка Османської імперії": [!myth-buster] — Ім'я «Настя Лісовська» є літературною вигадкою ХІХ століття, створеною польськими та українськими письменниками. Справжнє ім'я невідоме, а європейські посли називали її «Роксоланою» за давньою античною назвою українських земель (Роксоланія).
+- Section "Сходження до влади: II — Законна дружина": [!quote] — Цитати з її особистих листів до Сулеймана під час його походів, що демонструють високий рівень володіння османською мовою, поетичними тропами та глибокий емоційний зв'язок між ними.
+- Section "Політичний вплив: I — Внутрішня політика та інтриги": [!history-bite] — Просторовий зсув влади: використавши пожежу у Старому палаці у 1541 році як привід, Роксолана перенесла гарем до палацу Топкапи, безпосередньо у політичний центр імперії, зламавши багатовікову просторову сегрегацію.
+- Section "Політичний вплив: II — Дипломатія та зовнішні зв'язки": [!context] — Поки Сулейман воював, Хасекі Гюррем листувалася з польським королем і шахом Персії, гарантуючи мирні кордони. Вона надсилала королю Польщі власноруч вишиті сорочки, що було винятковим політичним жестом визнання.
+- Section "Благодійність та будівництво": [!culture] — Заснований нею вакф (фонд) фінансував не лише мечеть та медресе, а й велику безкоштовну лікарню (дарушшифа) в Стамбулі та імарети (благодійні кухні) в Єрусалимі та Мецці. Вона була головним меценатом геніального архітектора Сінана.
+- Section "Спадщина та образ у культурі: II — Український та світовий міф": [!decolonization] — Відкидання образу хитрої "відьми-спокусниці", що панував у європейській та російській імперській літературі. Погляд на Роксолану як на видатну інтелектуалку та геніального політика-стратега, яка зуміла перетворити статус невільниці на абсолютну владу.
+
+## Деколонізаційний контекст
+- **Imperial/Soviet myth**: Роксолана — екзотична бранка, яка завдяки звабливості зачарувала султана, стала "відьмою", зрадила православну віру і своїми інтригами поклала початок занепаду Османської імперії (міф про руйнівний жіночий вплив). Російська історіографія часто намагалася маргіналізувати її українське походження, називаючи просто "русской" рабинею.
+- **Ukrainian reality**: Роксолана (Гюррем) була прагматичною лідеркою, яка ідеально адаптувалася до жорстоких умов османської системи. Вона не була зрадницею, а навпаки — європейським дипломатом українського походження, яка інституалізувала політичну владу жінки (титул Хасекі). Вона захищала своїх синів у межах кривавого "Закону Фатіха" і створила архітектурну спадщину світового рівня. Її вплив був перемогою гострого розуму та самоосвіти.
+
+## Contested Terms (if applicable)
+| Concept | Imperial/Orientalist framing | Ukrainian (decolonized/academic) framing |
+|---------|-----------------|-------------------|
+| Шлях до влади | "Відьомські чари", зваблення султана. | Інтелектуальне партнерство, майстерне володіння дипломатією та риторикою. |
+| Статус у гаремі | Проста наложниця, яка плела інтриги. | Інституціоналізація влади: перша офіційна Хасекі Султан, законна дружина. |
+| Смерть Мустафи | Підступне вбивство пасинка заради власних дітей. | Політичне виживання в умовах османської парадигми (Закон Фатіха про братовбивство). |
+| Жіночий султанат | Епоха занепаду та деградації імперії. | Період активної політичної та благодійної суб'єктності жінок при дворі. |
+
+## Section-Mapped Research Notes
+
+### Вступ — Найвпливовіша жінка Османської імперії
+- **Факти**: Вперше ім'я "Роксолана" фіксується у звітах посла Священної Римської імперії Ож'є Гіслена де Бусбека (похідне від Роксоланії — античної назви України). Османські джерела називають її виключно Гюррем Султан ("Та, що приносить радість").
+- **Історіографія**: Брак османських джерел про походження компенсується депешами венеційських байло (послів).
+- **Міф**: Поширена версія про доньку священника Лісовського з Рогатина (Настю/Олександру) є художньою інтерпретацією XIX ст. Надійно відоме лише русинське походження.
+
+### Викрадення та рабство
+- **Контекст**: Початок XVI ст. — період активних "жнив" ясиру кримськими татарами. Рогатин, як прикордонне містечко, був легкою мішенню.
+- **Шлях**: Крим (Кафа) -> ринок рабів Арет в Стамбулі -> відбір до султанського гарему (Топкапи/Старий палац).
+- **Гаремна система**: Статус джаріє (рабині). Гарем був не просто місцем для розваг, а суворою освітньою інституцією (вивчення ісламу, турецької та перської мов, музики, каліграфії). Роксолана вижила завдяки блискучій здатності до навчання.
+
+### Сходження до влади: I — Боротьба за серце султана
+- **Конфлікт**: Традиція гарему "одна наложниця — один син" була порушена. Роксолана народила п'ятьох синів (Мехмед, Селім, Баязид, Джихангір) і доньку Міхрімах.
+- **Суперництво**: Сутичка з Махідевран (матір'ю старшого спадкоємця Мустафи), після якої Махідевран була вислана в Манісу.
+- **Інтелектуальний зв'язок**: Сулейман був поетом (писав під псевдонімом Мухіббі), Гюррем стала його музою та рівним співрозмовником, що відрізняло її від інших.
+
+### Сходження до влади: II — Законна дружина
+- **Новий статус**: У 1533-1534 рр. Сулейман порушив багатовіковий османський канон, здійснивши нікях (офіційний шлюб) зі звільненою рабинею.
+- **Інституція**: Для неї був спеціально створений титул "Хасекі Султан" (улюблена дружина), який ставив її вище за сестер і тіток султана, поступаючись лише Валіде (матері султана).
+- **Джерела**: Збереглися листи, сповнені суфійської поезії та політичних звітів, які вона писала Сулейману під час його військових кампаній.
+
+### Політичний вплив: I — Внутрішня політика та інтриги
+- **Революція простору**: Після пожежі в 1541 р. Гюррем переконала Сулеймана перенести гарем зі Старого палацу до Топкапи (робочої резиденції та місця засідань Дивану). Це фізично наблизило її до влади.
+- **Боротьба за виживання**: Османський закон (Канун-наме Фатіха Мехмеда II) дозволяв султану вбити братів заради уникнення громадянської війни. Гюррем діяла на випередження, щоб захистити своїх синів. Вона сприяла усуненню візира Ібрагіма-паші (1536) та шехзаде Мустафи (1553), яких підтримували яничари.
+
+### Політичний вплив: II — Дипломатія та зовнішні зв'язки
+- **Зовнішня політика**: Перша жінка в імперії, яка вела самостійне міжнародне листування.
+- **Польський вектор**: У 1548/1549 роках писала королю Сигізмунду II Августу, вітаючи його зі сходженням на престол, обіцяючи підтримку добросусідських відносин та надсилаючи особисті подарунки. Це забезпечувало безпеку північних кордонів імперії (і, ймовірно, захист її рідних земель від нових спустошень).
+
+### Благодійність та будівництво
+- **Фінансова база**: Володіла величезним власним бюджетом (нашмаклик) і засновувала вакфи.
+- **Проєкти**: 1539 р. — комплекс Хасекі Хюррем Султан у Стамбулі (мечеть, медресе, лікарня дарушшифа, імарет). Будувала інфраструктуру (хамами, фонтани) в Едірне, Єрусалимі (знаменитий імарет Хасекі Султан, який годував сотні бідняків щодня), Мецці та Медині.
+- **Співпраця**: Була одним із перших і найважливіших замовників видатного османського архітектора Мімара Сінана.
+
+### Спадщина та образ у культурі: I — Османська пам'ять
+- **Смерть**: Померла 1558 року (ймовірно, від хвороби). Сулейман був невтішний, наказав Сінану збудувати для неї величний восьмигранний мавзолей (тюрбе) в саду мечеті Сулейманіє. Пізніше його самого поховали поруч.
+- **Вплив**: Започаткувала епоху "Жіночого султанату", що тривала понад століття, коли жінки (Хасекі та Валіде) мали колосальний вплив на державні справи.
+
+### Спадщина та образ у культурі: II — Український та світовий міф
+- **Європейський образ**: "La Sultana Rossa" (на портреті Тіціана). Європейці часто демонізували її, не розуміючи, як жінка-іноземка досягла такої влади без застосування "магії".
+- **Українська рецепція**: Від народних легенд (Дума про дівку-бранку) до літературних творів (Осип Назарук "Роксоляна", Павло Загребельний "Роксолана"). В українській свідомості стала символом незламності та перемоги розуму над жорстокими обставинами. Сучасна історіографія фокусується на її політичній суб'єктності, відкидаючи міфи про "зрадницю" або суто фольклорний романтизм.
+
+### Підсумок — Жінка, що змінила імперію
+- **Оцінка**: Життя Роксолани є феноменом безпрецедентної соціальної мобільності — від безправної невільниці до найвпливовішої правительки Сходу.
+- **Значення**: Змінила інституційну структуру Османської монархії, довела здатність жінки бути повноцінним політичним та інтелектуальним партнером правителя імперії. Символ життєстійкості та дипломатичної мудрості для української історії.
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 11950)
+✓ Message 11898 acknowledged
+✓ Message 11950 acknowledged

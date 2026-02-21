@@ -1,4 +1,3 @@
----
 sequence: 78
 module: ruth-078
 module_number: 78
@@ -9,7 +8,6 @@ phase: 4
 phase_id: cossack-word
 phase_name: Cossack Word
 focus: Hrabianka — Origins of Cossacks (Khazars myth)
-word_target: 4000
 content_outline:
 - section: Вступ
   description: Introduction to Glorifying the Host
@@ -24,3 +22,6 @@ activity_types:
 - transcription
 - etymology-trace
 - grammar-identify
+persona:
+  voice: Baroque Scholar
+  role: Military Chaplain

@@ -1,20 +1,16 @@
----
-module: c1-bio-028
+module: c1-bio-29
 level: C1-BIO
-sequence: 28
+sequence: 29
 slug: kost-hordiyenko
 version: '2.0'
 title: 'Кость Гордієнко: Запорозький кошовий'
-word_target: 4300
 content_outline:
-- section: "Вступ — Лицар степу"
-  words: 600
+- section: Вступ — Лицар степу
   points:
   - Гордієнко як символ запорозької суб'єктності
   - Ідеолог козацької республіки
   - Роль у союзі з Мазепою
 - section: Життєпис
-  words: 1600
   points:
   - Походження (Головко) та освіта в Могилянці
   - Обрання кошовим 1702 р.
@@ -22,28 +18,23 @@ content_outline:
   - Союз із Мазепою та Карлом XII 1709 р.
   - Участь у Полтавській битві
 - section: Історичний контекст
-  words: 600
   points:
   - Запорозька Січ vs Імперський абсолютизм
   - Степ як територія волі
 - section: Внесок
-  words: 400
   points:
   - Співавторство Конституції 1710 р. (Запорозькі статті)
   - Дипломатія у вигнанні
 - section: Останні роки
-  words: 400
   points:
   - Заснування Олешківської та Кам'янської Січей
   - Смерть 1733 р. у Кам'янці
   - Могила як національна святиня
 - section: Спадщина
-  words: 400
   points:
   - Образ отамана-характерника в фольклорі
   - Традиція безкомпромісного спротиву
 - section: Підсумок
-  words: 300
   points:
   - Гордієнко як хранитель коду волі
 focus: biography
@@ -64,11 +55,11 @@ grammar:
 module_type: biography
 sources:
 - name: Кость Гордієнко (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Кость_Гордієнко"
+  url: https://uk.wikipedia.org/wiki/Кость_Гордієнко
   type: primary
   notes: Біографія та діяльність
 - name: Запорожці у вигнанні
-  url: "http://resource.history.org.ua/"
+  url: http://resource.history.org.ua/
   type: reference
   notes: Олешківська та Кам'янська Січ
 immersion: 100% Ukrainian
@@ -84,3 +75,6 @@ activity_hints:
   source: Primary sources (adapted)
 - type: comparative-study
   focus: Гордієнко vs Сірко
+persona:
+  voice: Senior Biographer
+  role: Ally of Charles XII

@@ -298,7 +298,7 @@ If outside range: Adjust largest section(s) to compensate.
 **Immersion:**
 
 - A1: 10-40% Ukrainian (graduated)
-- A2: 40-75% Ukrainian (graduated by phase)
+- A2: 50-90% Ukrainian (graduated by band: M01-20 50-60%, M21-50 60-75%, M51-70 75-90%)
 
 ### TTT (Test-Teach-Test)
 
@@ -395,11 +395,11 @@ If outside range: Adjust largest section(s) to compensate.
 
 **Word Target:** 1000-1500
 
-**Immersion:** 40-75% (graduated)
+**Immersion:** 50-90% (graduated 3-band)
 
-- A2.1: 40-50%
-- A2.2: 50-65%
-- A2.3: 65-75%
+- M01-20 (Core grammar): 50-60%
+- M21-50 (Applied grammar): 60-75%
+- M51-70 (Consolidation): 75-90%
 
 **Content focus:**
 

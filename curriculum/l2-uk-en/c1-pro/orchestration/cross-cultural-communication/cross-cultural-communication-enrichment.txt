@@ -1,0 +1,271 @@
+✅ Message sent to Gemini (ID: 12481) [auto-acked: self-addressed]
+✓ Message 12481 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12481...
+📨 Message #12481
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-cross-cultural-communication
+   Time: 2026-02-20T23:40:08.960054+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-pro-43
+level: C1-PRO
+sequence: 43
+slug: cross-cultural-communication
+version: '2.0'
+title: Міжкультурна комунікація
+subtitle: Cross-Cultural Communication
+content_outline:
+- section: Розминка — Культурні виміри
+  points:
+  - Модель Гофстеде та її застосування
+  - Україна в контексті культурних вимірів
+  - Чому міжкультурна компетентність важлива для бізнесу
+- section: Комунікаційні стилі
+  points:
+  - 'Висококонтекстні та низькоконтекстні культури: особливості'
+  - Прямий та непрямий стиль комунікації
+  - 'Ставлення до часу: монохронні та поліхронні культури'
+  - Невербальна комунікація в різних культурах
+- section: Адаптація комунікації
+  points:
+  - Робота з партнерами з різних регіонів (ЄС, США, Азія)
+  - Уникнення культурних непорозумінь
+  - Етикет ділових зустрічей та переговорів
+  - Особливості комунікації з українськими партнерами для іноземців
+- section: Міжкультурні переговори
+  points:
+  - Підготовка до переговорів з урахуванням культури
+  - 'Стилі переговорів: конкурентний, колаборативний, компромісний'
+  - Управління конфліктами в міжкультурному середовищі
+  - Побудова довіри з партнерами з різних культур
+- section: Зразки міжкультурної комунікації
+  points:
+  - Зразок електронного листа з урахуванням культурних особливостей
+  - Приклади адаптації презентацій для різних аудиторій
+  - Типові фрази для дипломатичної комунікації
+- section: Практика — Міжкультурна комунікація
+  points:
+  - 'Завдання: Адаптувати презентацію для аудиторії з іншої культури'
+  - 'Вимоги: культурна чутливість, адаптація стилю, етикет'
+  - Критерії оцінювання
+vocabulary_hints:
+  required:
+  - культурний вимір (cultural dimension)
+  - висококонтекстна культура (high-context culture)
+  - низькоконтекстна культура (low-context culture)
+  - міжкультурна компетентність (cross-cultural competence)
+  - культурний інтелект (cultural intelligence)
+  - етноцентризм (ethnocentrism)
+  - культурна адаптація (cultural adaptation)
+  - невербальна комунікація (non-verbal communication)
+  recommended:
+  - дистанція влади (power distance)
+  - індивідуалізм/колективізм (individualism/collectivism)
+  - уникнення невизначеності (uncertainty avoidance)
+  - монохронна культура (monochronic culture)
+  - поліхронна культура (polychronic culture)
+  - збереження обличчя (saving face)
+activity_hints:
+- type: case-study
+  focus: Проаналізувати ситуацію міжкультурного непорозуміння — запропонувати рішення
+  items: 2
+- type: writing-task
+  focus: Адаптувати діловий лист для партнера з іншої культури
+  items: 1
+- type: fill-in
+  focus: Вибрати культурно відповідні формулювання
+  items: 10
+- type: matching
+  focus: З'єднати культурні виміри з країнами та їхніми характеристиками
+  items: 8
+- type: role-play
+  focus: Провести переговори з партнером з іншої культури
+  items: 1
+focus: professional
+pedagogy: ESP
+prerequisites:
+- c1-pro-42 (Основи усного перекладу)
+connects_to:
+- 'c1-pro-44 (Контрольна точка: Галузева спеціалізація)'
+objectives:
+- Учень розуміє основні культурні виміри та їх вплив на комунікацію
+- Учень може адаптувати свій комунікаційний стиль до різних культур
+- Учень може ефективно вести переговори в міжкультурному середовищі
+- Учень може уникати культурних непорозумінь у професійному контексті
+grammar:
+- Конструкції для порівняння культур (На відміну від... / У той час як у... / Порівняно
+  з...)
+- Конструкції для рекомендацій (Варто враховувати... / Рекомендується... / Доцільно...)
+- Конструкції для застережень (Слід уникати... / Не прийнято... / Може бути сприйнято
+  як...)
+register: напівформальний
+phase: C1-PRO.3
+persona:
+  voice: Senior Specialist
+  role: Культурний аташе
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Міжкультурна комунікація
+
+## Використані джерела
+1. [ДСТУ 4163:2020](https://zakon.rada.gov.ua/rada/show/v0144744-21) — Основний стандарт оформлення організаційно-розпорядчої документації в Україні.
+2. [Hofstede Insights: Ukraine](https://www.hofstede-insights.com/country-comparison-tool?countries=ukraine) — Порівняльний аналіз культурних вимірів України за моделлю Гофстеде.
+3. [Mind.ua: Культурний код українського бізнесу](https://mind.ua/publications/20216298-kulturnij-kod-ukrayinskogo-biznesu-yak-model-gofstede-dopomagaie-rozumiti-partneriv) — Аналіз дистанції влади та уникнення невизначеності в українських компаніях.
+4. [Speka.ua: Висококонтекстні культури](https://speka.ua/yak-spilkuvatisa-z-predstavnikami-riznix-kultur-koncepciya-edvarda-holla) — Концепція Едварда Голла в контексті сучасного бізнес-середовища.
+
+## Термінологічна база
+
+| Українська (норма) | Русизм/ненорма | English | Контекст вживання |
+|--------------------|---------------|---------|-------------------|
+| культурний вимір | культурний деменшн | cultural dimension | Аналіз відмінностей між національними культурами |
+| дистанція влади | дистанція власті | power distance | Рівень сприйняття ієрархії в організації |
+| уникнення невизначеності | избеганіє неопределеності | uncertainty avoidance | Ставлення до ризиків та непередбачуваності |
+| висококонтекстна культура | висококонтекстна культура | high-context culture | Комунікація, де велике значення має невербаліка та контекст |
+| міжкультурна компетентність | міжкультурна компетенція | cross-cultural competence | Навичка ефективної взаємодії з представниками інших культур |
+| збереження обличчя | сохраніє ліца | saving face | Намагання уникнути публічного приниження партнера |
+| монохронний тип культури | монохронний тип | monochronic culture | Сприйняття часу як лінійного та чітко розпланованого |
+| етноцентризм | етноцентризм | ethnocentrism | Оцінювання інших культур через призму власної як еталонної |
+
+## Мовні норми та стандарти
+- **ДСТУ 4163:2020**: Визначає правила вживання звертань, підписів та дат. Наприклад, вживання великої літери у займеннику «Ви» як вияву особливої поваги є факультативним, але рекомендованим у дипломатичному листуванні.
+- **ДСТУ 1.5:2015**: Регулює термінологію в нормативних документах, вимагаючи однозначності та відсутності емоційного забарвлення.
+
+## Аутентичні приклади
+1. [Початок листа]: «Пишемо Вам з приводу нашої попередньої розмови від 15 лютого щодо потенційної співпраці...»
+2. [Дипломатична відмова]: «Ми щиро цінуємо Вашу пропозицію, проте з огляду на поточну стратегію розвитку, ми не маємо можливості підтримати цей проект на даному етапі.»
+3. [Підтвердження]: «Підтверджуємо отримання Вашого звернення та повідомляємо, що воно було передане на розгляд профільного департаменту.»
+
+## Типові помилки
+1. ❌ **Згідно плану** → ✅ **Згідно з планом** — уникнення кальки з російської «согласно плану».
+2. ❌ **Вибачаюсь** → ✅ **Перепрошую / Прошу вибачення** — використання етикетно правильної форми без зворотного суфікса -ся.
+3. ❌ **Дякую вас** → ✅ **Дякую вам** — правильне керування (дальний відмінок).
+4. ❌ **По фамілії** → ✅ **На прізвище** — лексична помилка, змішування «прізвище» та «фамілія».
+5. ❌ **Нанести візит** → ✅ **Завітати / Зробити візит / Нанести візит (лише в офіційному протоколі)** — часте невмотивоване вживання канцеляризму.
+
+## Engagement Hooks (mapped to sections)
+- Section "Розминка — Культурні виміри": [!pro-tip] — Використання Power Distance Index для визначення, кому саме в іноземній делегації варто адресувати головні аргументи.
+- Section "Комунікаційні стилі": [!language-note] — Чому в англомовних культурах "I hear you" не означає "I agree", і як це передати українською.
+- Section "Адаптація комунікації": [!context] — Поняття «саваб» (savab) та «адаб» (adab) у комунікації з партнерами з Близького Сходу.
+- Section "Міжкультурні переговори": [!common-error] — Помилка прямолінійної критики в азійських культурах, що веде до «втрати обличчя».
+
+## Section-Mapped Research Notes
+
+### Розминка — Культурні виміри
+Дослідження показників України за Гофстеде: висока дистанція влади (76) та надзвичайно високе уникнення невизначеності (95). Це пояснює тяжіння до жорстких контрактів та ієрархічності.
+
+### Комунікаційні стилі
+Різниця між низькоконтекстною Німеччиною (все прописано в контракті) та висококонтекстною Україною (домовленості на словах, важливість особистих стосунків). Поняття поліхронності українців: можливість обговорювати кілька питань одночасно та гнучкість дедлайнів.
+
+### Адаптація комунікації
+Правила Small Talk у США vs стриманість у Скандинавії. Специфіка бізнес-етикету в Азії: ритуал обміну візитівками двома руками.
+
+### Міжкультурні переговори
+Гарвардська модель переговорів у крос-культурному аспекті. Важливість етапу "Guanxi" (зв'язки) у Китаї та "Wasta" в арабському світі.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12524)
+✓ Message 12481 acknowledged
+✓ Message 12524 acknowledged

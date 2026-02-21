@@ -1,69 +1,68 @@
----
 module: c2-093
 level: c2
 sequence: 93
 version: '2.0'
-title: "Дипломний проєкт — Фінальне шліфування"
+title: Дипломний проєкт — Фінальне шліфування
 focus: practice
 pedagogy: TTT
 objectives:
 - TBD
 sources:
 - name: Вимоги до оформлення наукових робіт (ДСТУ)
-  url: "https://dstu-online.com/"
+  url: https://dstu-online.com/
   type: reference
   notes: Formatting standards for academic papers
 - name: Коректура та верстка наукового тексту
-  url: "https://mon.gov.ua/"
+  url: https://mon.gov.ua/
   type: reference
   notes: Proofreading and layout guidelines
 - name: Типографіка українського тексту
-  url: "https://uk.wikipedia.org/wiki/Типографіка"
+  url: https://uk.wikipedia.org/wiki/Типографіка
   type: secondary
   notes: Typography conventions for Ukrainian
 content_outline:
-- section: "Вступ — Від робочої версії до фінальної"
-  words: 457
+- section: Вступ — Від редагування до шліфування (Introduction — From Editing to Polishing)
+  words: 500
   points:
-  - Різниця між редагуванням і шліфуванням
-  - Чеклист фінальної перевірки
-  - Психологія завершення проєкту
-- section: Коректура тексту
-  words: 686
+  - 'Learner error: confusion of ''редагування'' (improving logic/flow) with ''коректура''
+    (fixing typos/grammar) — strategy for separating these stages to avoid circular
+    rework.'
+  - 'Psychology of completion: overcoming the ''perfectionism trap'' vs. the deadline;
+    establish a checklist for the final ''Senior Specialist'' sign-off.'
+- section: Мовна коректура та синтаксична чистота (Language Proofreading and Syntactic
+    Clarity)
+  words: 750
   points:
-  - Орфографія та пунктуація
-  - Типові помилки (апостроф, м'який знак)
-  - Узгодження відмінювання
-  - Автоматичні та ручні перевірки
-- section: Оформлення роботи
-  words: 800
+  - 'Syntactic decolonization: identifying and replacing passive Anglicisms/Sovietisms
+    (''було проведено аналіз'') with active Ukrainian constructions (''автор дослідив'',
+    ''ми проаналізували'').'
+  - 'Advanced proofreading: verifying orthography (apostrophe, soft sign) in complex
+    professional terminology and ensuring correct case agreement in multi-level nested
+    lists.'
+- section: Технічний нормоконтроль та вимоги ДСТУ (Technical Normocontrol and DSTU
+    Requirements)
+  words: 750
   points:
-  - Вимоги до форматування (ДСТУ)
-  - Титульна сторінка, зміст, додатки
-  - Оформлення таблиць і рисунків
-  - Бібліографічний список за стандартом
-- section: Підготовка анотації та ключових слів
-  words: 571
+  - 'Cultural hook: ''Нормоконтроль'' — navigating the specific Ukrainian academic
+    stage where a dedicated officer verifies margins, fonts, and DSTU alignment.'
+  - 'Mastering DSTU 8302:2015: applying specific punctuation rules for the bibliography,
+    including the correct use of double slashes (//) and square brackets for citations.'
+- section: Вторинні тексти — Анотація та ключові слова (Secondary Texts — Abstract
+    and Keywords)
+  words: 500
   points:
-  - Структура анотації
-  - Анотація українською та англійською
-  - Добір ключових слів
-  - Абстракт для конференції (опційно)
-- section: Перевірка на плагіат
-  words: 571
+  - 'Applying §4.3.8: structuring the ''анотація'' (abstract) as a high-density summary
+    of research novelty, methodology, and key results in professional style.'
+  - 'Terminology alignment: ensuring precision in translating keywords between Ukrainian
+    and English abstracts to maintain semantic consistency.'
+- section: Академічна доброчесність та фінальна презентація (Academic Integrity and
+    Final Presentation)
+  words: 500
   points:
-  - Системи перевірки (Unicheck, StrikePlagiarism)
-  - Інтерпретація результатів
-  - Виправлення проблемних місць
-  - Самоцитування та його межі
-- section: "Практика — Фінальне оформлення"
-  words: 915
-  points:
-  - Повна коректура роботи
-  - Оформлення за ДСТУ
-  - Написання анотації (українською та англійською)
-  - Перевірка на плагіат та виправлення
-word_target: 4000
+  - 'Academic honesty: interpreting Unicheck/StrikePlagiarism reports and defining
+    the acceptable boundaries for self-citation (самоцитування).'
+  - 'Cultural hook: The ritual of the ''Палітурка'' — the hard-binding of the thesis
+    as a symbolic transition from a working draft to a defense-ready scholarly document.'
 vocabulary:
   required:
   - шліфування (polishing)
@@ -82,7 +81,7 @@ vocabulary:
   - колонтитул (header/footer)
   - нумерація сторінок (page numbering)
   - інтерліньяж (line spacing)
-  forbidden: "[]"
+  forbidden: '[]'
 activities:
   types_required:
   - match-up
@@ -97,21 +96,34 @@ connects_to:
 - c2-95 (Final Review I)
 vocabulary_hints:
   required:
-  - концепція (concept)
-  - аналіз (analysis)
-  - дискурс (discourse)
-  - методологія (methodology)
+  - шліфування (polishing) — фінальне шліфування тексту; шліфування стилю. High academic
+    register.
+  - коректура (proofreading) — виправлення технічних помилок; відрізняти від змістовного
+    редагування.
+  - анотація (abstract) — створення вторинного тексту (§4.3.8); вимагає лаконічності
+    та термінологічної точності.
+  - нормоконтроль (normocontrol) — формальний етап перевірки відповідності стандартам;
+    критичний для допуску до захисту.
+  - академічна доброчесність (academic integrity) — запобігання плагіату; дотримання
+    етичних норм наукового дослідження.
   recommended:
-  - інтерпретація (interpretation)
-  - контекстуалізація (contextualization)
-  - синтез (synthesis)
+  - палітурка (binding) — тверда палітурка; ритуальне завершення фізичного оформлення
+    дипломної роботи.
+  - авторська агентність (author agency) — використання активних конструкцій (автор
+    досліджує) замість пасивних (досліджено).
+  - ДСТУ 8302:2015 (State Standard) — чинний стандарт для бібліографічних посилань
+    та оформлення списку літератури.
+  - самоцитування (self-citation) — використання фрагментів власних попередніх праць
+    з обов'язковим посиланням.
 activity_hints:
 - type: reading
   focus: Поглиблений аналіз тексту
   items: 4
 - type: essay-response
   focus: Критичне осмислення
-  word_target: 400
 - type: discussion
   focus: Дискусія та аргументація
   items: 1
+persona:
+  voice: Senior Specialist
+  role: Editor-in-Chief

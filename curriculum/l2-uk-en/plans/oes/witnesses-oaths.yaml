@@ -1,41 +1,27 @@
----
-# Module Plan: Witnesses & Oaths
-# Track: OES
-# Module: 059
-# Source: Gemini Research (ISSUE-491)
-# Generated: 2026-02-04
 sequence: 59
 module: oes-059
-
 module_number: 59
 slug: witnesses-oaths
-title_uk: "Свідки та присяги"
-title_en: "Witnesses & Oaths"
-
+title_uk: Свідки та присяги
+title_en: Witnesses & Oaths
 phase: 3
 phase_id: legal-tradition
-phase_name: "Legal Tradition"
-
-focus: 'Dual — "Two witnesses"'
-
-word_target: 4000
-
-# Content outline to be expanded during content generation
+phase_name: Legal Tradition
+focus: Dual — "Two witnesses"
 content_outline:
-  - section: "Вступ"
-    description: "Introduction to Witnesses & Oaths"
-  - section: "Основний матеріал"
-    description: "Primary source analysis and grammar focus"
-  - section: "Практика"
-    description: "Exercises and activities"
-  - section: "Підсумок"
-    description: "Summary and connection to next module"
-
-# Vocabulary hints (to be populated during content generation)
-vocabulary_hints: "[]"
-
-# Activity types appropriate for this module
+- section: Вступ
+  description: Introduction to Witnesses & Oaths
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
 activity_types:
-  - transcription
-  - etymology-trace
-  - grammar-identify
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Senior Paleographer
+  role: Church Jurist

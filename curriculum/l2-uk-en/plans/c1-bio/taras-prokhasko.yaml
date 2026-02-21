@@ -1,53 +1,44 @@
----
-module: c1-bio-151
+module: c1-bio-158
 level: C1-BIO
-sequence: 151
+sequence: 158
 slug: taras-prokhasko
 version: '2.0'
 title: 'Тарас Прохасько: Станіславівський феномен'
 content_outline:
-- section: "Вступ — Письменник як ботанік і філософ"
-  words: 400
+- section: Вступ — Письменник як ботанік і філософ
   points:
   - Унікальний стиль Прохаська в українській літературі
   - Станіславівський феномен як літературне явище
   - Від ботаніка до культового письменника
 - section: Івано-Франківське дитинство
-  words: 600
   points:
   - Народження в 1968 році
   - Вплив Карпат на формування світогляду
   - Освіта та інтерес до природничих наук
 - section: Ботаніка як філософія життя
-  words: 700
   points:
   - Наукова діяльність
   - Як природознавство впливає на творчість
   - Паралелі між ботанікою та літературою
 - section: НепрОсті та альтернативна історія
-  words: 800
   points:
   - Аналіз головного роману
   - Теми памяті, ідентичності, місця
   - Карпати як метафора та простір
 - section: Станіславівський феномен
-  words: 700
   points:
   - Літературне угруповання у Франківську
   - Співавтори та однодумці
   - Вплив на сучасну українську прозу
 - section: Медитативна проза та філософія буття
-  words: 600
   points:
   - Особливості стилю Прохаська
   - Теми спостереження та споглядання
   - Есеїстика та малі форми
-- section: "Дискусія — Література як спосіб бачити світ"
-  words: 200
+- section: Дискусія — Література як спосіб бачити світ
   points:
   - Як науковий погляд збагачує художню прозу
   - Регіональна ідентичність в українській літературі
-word_target: 4000
 vocabulary_hints:
   required:
   - ботаніка (botany)
@@ -73,7 +64,6 @@ activity_hints:
   items: 3 passages
 - type: essay-response
   focus: Як місце формує письменника?
-  word_target: 300
   output: Аналітичний есей
 focus: biography
 prerequisites:
@@ -85,15 +75,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Тарас Прохасько (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Прохасько_Тарас_Богданович"
+  url: https://uk.wikipedia.org/wiki/Прохасько_Тарас_Богданович
   type: primary
   notes: Основна біографічна інформація
 - name: Видавництво Кальварія
-  url: "https://www.calvaria.com.ua/"
+  url: https://www.calvaria.com.ua/
   type: reference
   notes: Бібліографія та видання
 - name: Літературна критика
-  url: "https://litakcent.com/"
+  url: https://litakcent.com/
   type: reference
   notes: Аналіз творчості
 immersion: 100% Ukrainian
@@ -102,3 +92,6 @@ objectives:
 - 'Analyze the life and legacy of тарас прохасько: станіславівський феномен'
 - Evaluate the contributions of письменник як ботанік і філософ
 - Trace the career and influence of література як спосіб бачити світ
+persona:
+  voice: Senior Biographer
+  role: Carpathian Philosopher

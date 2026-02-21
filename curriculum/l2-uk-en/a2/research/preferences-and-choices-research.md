@@ -1,73 +1,34 @@
-# Research Notes: Preferences and Choices (Мистецтво вибору)
+# Дослідження: Preferences and Choices
 
-**Track**: Core A (General Language)
-**Module**: A2 M20 "Куди ми підемо? Мистецтво вибору (Preferences and Choices)"
-**Researched**: 2026-02-08
-**Level**: A1+ / A2.1 (Transition to Intermediate)
+## State Standard Reference
+§4.2.2.3: "Давальний відмінок: особа або предмет, для яких (на користь чи на шкоду) відбувається дія... суб’єкт кількісної вікової ознаки." (Note: While the standard lists these functions, Catalogue A explicitly adds the "Preferences" function).
+§4.3.1: "Ступені порівняння якісних прикметників: проста форма вищого ступеня (солодший, важливіший)... складена форма (більш солодкий)... суплетивні форми (великий – більший)."
+Catalogue A (2. Комунікативні наміри): "висловити свої вподобання: Мені подобається... Мені не подобається... Я люблю... Я не люблю."
+Alignment: This module addresses the Dative case requirement by teaching the "Mental State/Preference" subject logic (Мені подобається), uses the Comparison standard to allow students to weigh options (краще ніж), and fulfills the communicative intention of expressing likes/dislikes.
 
-## 1. Grammar: State Standard 2024 Reference
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| подобатися | High / Core | мені подобається, дуже подобається, подобається бути... |
+| вибирати | Medium-High / Core | вибирати книжку, вибирати професію, вибирати між... |
+| перевага | Medium / Academic-Core | віддавати перевагу (to prefer), мати перевагу |
+| краще | High / Core | краще ніж, краще зробити, так краще |
+| хотів би | High / Phraseological | я хотів би замовити, я хотіла би вибрати |
 
-The topic of expressing preferences and making choices is explicitly covered in the **Державний стандарт української мови (ДСТУ 2024)** within the Communicative Intentions for the A2 level.
+## Cultural Hooks
+1. **Lviv Coffee Culture**: Choosing a coffee in Lviv is a ritual. Phrases like "мені, будь ласка, філіжанку кави" and the need to choose between "кава з молоком," "кава з піском," or "львівська кава" provide a perfect context for preferences.
+2. **Proverb**: "На колір і смак товариш не всяк" (There is no accounting for tastes). This is the Ukrainian equivalent of "To each their own" and is essential for discussing differing opinions on choices.
 
-> **§2.4.2.2. Каталог А. Перелік комунікативних намірів:**
-> "висловити свої вподобання: Мені подобається... Мені не подобається... Я люблю... Я не люблю;"
-> — *ДСТУ 2024, Page 26/27 (Line 1050).*
+## Common Learner Errors
+1. **Nominative Overload**: Learners often say "Я подобається це" (Subject logic from English) instead of "Мені подобається це" (Dative experiencer logic).
+2. **Object Case Error**: Using Accusative for the liked object: "Мені подобається книжку" instead of "Мені подобається книжка" (The object liked is the grammatical subject).
+3. **Intensity Mismatch**: Misusing "любити" (for deep/stable affection) vs "подобатися" (for immediate/aesthetic liking). "Я люблю це пальто" sounds like a long-term passion, while "Мені подобається це пальто" is a standard shopping reaction.
 
-Additionally, the ability to choose information in a menu or schedule is defined as a reading skill at the A1/A2 level:
-> **§1.2.1.2. Особа вміє:**
-> "знаходити і вибирати потрібну інформацію, наприклад у чеку, на квитку, у меню."
-> — *ДСТУ 2024, Page 10 (Line 310).*
+## Cross-References
+- Builds on: `the-dative-i-pronouns` (Dative forms), `bigger-better-stronger` (Comparatives), `the-best-the-worst` (Superlatives).
+- Prepares for: `if-i-were` (M22, Unreal conditionals), `smart-shopping` (M24, Practical decision making).
 
-## 2. Vocabulary Frequency
-
-Key vocabulary for expressing preferences and choices at the A2 level focuses on high-frequency verbs and comparative adverbs.
-
-### High-Frequency Items
-- **Verbs**: `подобатися` (to like/please), `любити` (to love/like), `хотіти` (to want), `вибирати / вибрати` (to choose), `думати` (to think).
-- **Adverbs/Comparatives**: `краще` (better), `більше` (more), `мені більше подобається` (I like ... more).
-- **Conjunctions**: `або` (or), `чи` (or - in questions), `тому що` (because), `бо` (because).
-
-### Common Collocations (A1-A2)
-- `Мені подобається...` + Nominative (e.g., *Мені подобається ця кава*).
-- `Я люблю...` + Accusative (e.g., *Я люблю класичну музику*).
-- `Я думаю, що...` (I think that...).
-- `На мою думку...` (In my opinion...).
-- `Що ти вибереш?` (What will you choose?).
-
-## 3. Cultural Hook: The Art of Choice in Ukraine
-
-### Fact 1: The Lviv Coffee Ritual (Культ кави)
-In Western Ukraine, particularly in Lviv, "choosing coffee" is not just a morning routine but a cultural ritual. Lviv has a history of coffee houses dating back to the 18th century. A student learning to express preferences can relate to the complex choices in a Lviv "Kavyarnia": *кава на піску* (coffee on sand), *чоколад* (hot chocolate), or specific bean origins. The phrase "Йдемо на каву?" (Shall we go for coffee?) is a standard social invitation involving a choice of venue and atmosphere.
-
-### Fact 2: The "Borscht Choice" (Який борщ кращий?)
-Borscht is not a single recipe but a spectrum of choices. Every region in Ukraine has its own variation (Poltava style with galushky, Chernihiv style with apples, etc.). UNESCO recognized Ukrainian Borscht as intangible cultural heritage. Discussing which borscht is "better" (*кращий*) or which one someone "prefers" (*віддає перевагу*) is a quintessential Ukrainian dinner table debate that perfectly practices comparative adjectives and preference verbs.
-
-## 4. Pedagogical Notes
-
-### Key Differences from English
-- **Structural Inversion**: English uses "I like [object]" (Subject-Verb-Object). Ukrainian prefers the Dative construction: "To me [Dative] is pleasing [Verb] [Subject]" (*Мені подобається кава*). Beginners often make the mistake of using Nominative `Я` instead of Dative `Мені`.
-- **Like vs. Love**: In English, "I like" is very broad. In Ukrainian, `подобатися` is often for aesthetic or immediate pleasure, while `любити` implies a deeper habit or affection (though they are often used interchangeably at A1/A2).
-
-### Common Learner Errors
-- **Case Mismatch**: Using Accusative with `подобатися` (e.g., *Мені подобається каву* instead of *кава*).
-- **Comparative Confusion**: Using `кращий` (adjective - better) when `краще` (adverb - better) is required in the structure "It is better to..." (*Краще піти...*).
-- **Aspect Selection**: Students may struggle with choosing between `вибирати` (the process of looking) and `вибрати` (the act of making a decision).
-
-## 5. Scope Boundaries
-
-Based on the student's prior knowledge (all cases, aspects, comparatives), we can define clear boundaries for this module.
-
-### IN Scope
-- **Dative Case**: Using personal pronouns (`мені`, `тобі`, `йому`...) with `подобатися`.
-- **Nominative Case**: For the object that is "pleasing" in a `подобатися` construction.
-- **Accusative Case**: For objects of `любити` and `вибирати`.
-- **Comparatives**: Using `більше`, `мені більше подобається`, `краще ніж`.
-- **Simple Conjunctions**: `або`, `чи`, `бо`, `тому що`.
-- **Future Perfective**: Using `виберу` to express a final choice.
-
-### OUT Scope
-- **Conditional Mood**: Structures like "I would choose..." (*Я б вибрав*) are typically B1.
-- **Advanced Conjunctions**: `незалежно від того, чи...` (regardless of whether...).
-- **Complex Subordination**: Using `щоб` for complex indirect desires (*Я хочу, щоб ти вибрав...*), although simple purpose clauses are borderline.
-- **Passive Voice**: "It was chosen by..." (*Це було вибрано...*).
-- **Participles**: `вибраний` (chosen).
+## Notes for Content Writing
+- **The "Would Like" Bridge**: While the full Conditional mood (би/б) is a B1 topic, "я хотів би" is such a high-frequency functional chunk for A2 that it should be introduced here as a lexical item for polite requests/choices.
+- **Comparison Logic**: Emphasize that "краще" can function as both an adjective (better thing) and an adverb (better action), which is key for choosing between activities.
+- **Immersion Policy**: Since this is M20 (Band 1), keep the grammar explanations of Dative logic in English, but transition to Ukrainian for the situational choices (Restaurant, Shopping).

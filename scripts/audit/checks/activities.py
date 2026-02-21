@@ -107,27 +107,27 @@ def check_activity_complexity(content: str, level_code: str, module_num: int = 1
             elif act_type == 'fill-in':
                 rules['min_items'] = 6
 
-        # Apply B1 Bridge Relaxations (M01-M05 use A2 complexity exactly)
+        # Apply B1 Bridge Relaxations (M01-M05)
         if is_b1_bridge:
             if act_type == 'quiz':
-                rules['min_len'] = 8
-                rules['max_len'] = 15
+                rules['min_len'] = 5
+                rules['max_len'] = 20
             elif act_type == 'unjumble':
-                rules['words_min'] = 8
-                rules['words_max'] = 10
+                rules['words_min'] = 6
+                rules['words_max'] = 16
             elif act_type == 'match-up':
-                rules['pairs_min'] = 10
-                rules['pairs_max'] = 12
+                rules['pairs_min'] = 12
+                rules['pairs_max'] = 18
             elif act_type == 'fill-in':
                 rules['sent_min'] = 6
-                rules['sent_max'] = 8
+                rules['sent_max'] = 14
             elif act_type == 'true-false':
                 rules['min_len'] = 6
-                rules['max_len'] = 12
+                rules['max_len'] = 18
             elif act_type == 'group-sort':
                 rules['groups_min'] = 2
-                rules['groups_max'] = 4
-                rules['items_min'] = 10
+                rules['groups_max'] = 5
+                rules['items_min'] = 12
             elif act_type == 'error-correction':
                 rules['errors'] = 1
                 rules['min_len'] = 6
@@ -481,15 +481,19 @@ def check_matchup_misuse(content: str) -> list[dict]:
     return violations
 
 
-def check_activity_level_restrictions(content: str, level_code: str, module_num: int) -> list[dict]:
+def check_activity_level_restrictions(content: str, level_code: str, module_num: int, yaml_activities=None) -> list[dict]:
     """Check if activities are appropriate for the level."""
     violations = []
 
-    activity_types = re.findall(
-        r'##\s*(quiz|match-up|fill-in|true-false|group-sort|unjumble|error-correction|anagram|cloze|select|translate|mark-the-words):',
-        content, re.IGNORECASE
-    )
-    activity_types = [t.lower() for t in activity_types]
+    # Prefer YAML activities (source of truth) over markdown regex
+    if yaml_activities:
+        activity_types = [getattr(a, 'type', '').lower() for a in yaml_activities if hasattr(a, 'type')]
+    else:
+        activity_types = re.findall(
+            r'##\s*(quiz|match-up|fill-in|true-false|group-sort|unjumble|error-correction|anagram|cloze|select|translate|mark-the-words):',
+            content, re.IGNORECASE
+        )
+        activity_types = [t.lower() for t in activity_types]
 
     if not activity_types:
         return violations
@@ -518,6 +522,16 @@ def check_activity_level_restrictions(content: str, level_code: str, module_num:
                 'type': 'LEVEL_RESTRICTION',
                 'issue': f"Activity 'anagram' should be phased out after A1 M10 (current: M{module_num:02d})",
                 'fix': "Anagram is for Cyrillic scaffolding only. Use unjumble for word-ordering practice."
+            })
+
+    # Check unjumble restrictions — A1 M01-M10 should use anagram, not unjumble
+    if 'unjumble' in activity_types:
+        anagram_limit = rules.get('anagram_limit', 0)
+        if level_code == 'A1' and anagram_limit and module_num <= anagram_limit:
+            violations.append({
+                'type': 'LEVEL_RESTRICTION',
+                'issue': f"Activity 'unjumble' not appropriate for A1 M01-M{anagram_limit:02d} (current: M{module_num:02d})",
+                'fix': "A1 M01-M10 students are still learning letters. Use anagram (letter scramble) instead of unjumble (sentence reorder)."
             })
 
     return violations
@@ -698,37 +712,63 @@ def count_items(text: str, activity: Activity | None = None) -> int:
         return bullets
 
 
-def check_anagram_min_letters(content: str) -> list[dict]:
-    """Check that anagram items have at least 3 letters (1-2 letters are pointless)."""
+def check_anagram_min_letters(content: str, yaml_activities=None) -> list[dict]:
+    """Check anagram items: space-separated format, letter count matches answer, min 3 letters."""
     violations = []
 
-    # Find all anagram activities
-    anagram_pattern = r'##\s*anagram:\s*([^\n]+)\n(.*?)(?=\n##|\n#\s|\Z)'
-    anagrams = re.findall(anagram_pattern, content, re.DOTALL | re.IGNORECASE)
+    # Use YAML activities if available
+    if yaml_activities:
+        for activity in yaml_activities:
+            if not hasattr(activity, 'type') or activity.type != 'anagram':
+                continue
+            title = getattr(activity, 'title', 'Untitled')
+            for i, item in enumerate(getattr(activity, 'items', []), 1):
+                scrambled = getattr(item, 'scrambled', '')
+                answer = getattr(item, 'answer', '')
 
-    for title, body in anagrams:
-        # Find numbered items: "1. а б в" or "1. а / б / в"
-        items = re.findall(r'\d+\.\s*([^\n]+)', body)
+                # Check space-separated format (React component splits on spaces)
+                scrambled_letters = scrambled.split(' ')
+                if len(scrambled_letters) == 1 and len(scrambled) > 1:
+                    violations.append({
+                        'type': 'ANAGRAM_FORMAT',
+                        'issue': f"Anagram '{title}' item {i}: scrambled '{scrambled}' is not space-separated. React component needs 'а й ч' not 'айч'.",
+                        'fix': "Add spaces between letters: 'а й ч' instead of 'айч'."
+                    })
+                    scrambled_letters = list(scrambled)  # Fallback for further checks
 
-        for i, item in enumerate(items, 1):
-            # Extract letters (space or slash separated)
-            letters = re.split(r'[\s/]+', item.strip())
-            letters = [l.strip() for l in letters if l.strip() and not l.startswith('>')]
+                # Check letter count matches
+                scrambled_sorted = sorted(l.upper() for l in scrambled_letters if l.strip())
+                answer_sorted = sorted(answer.upper())
+                if scrambled_sorted != answer_sorted:
+                    violations.append({
+                        'type': 'ANAGRAM_LETTER_MISMATCH',
+                        'issue': f"Anagram '{title}' item {i}: scrambled letters {scrambled_sorted} don't match answer '{answer}' letters {answer_sorted}.",
+                        'fix': "Scrambled letters must be exactly the same letters as the answer, just reordered."
+                    })
 
-            if len(letters) <= 2:
-                violations.append({
-                    'type': 'ANAGRAM_TOO_SHORT',
-                    'issue': f"Anagram '{title.strip()}' item {i} has only {len(letters)} letter(s): '{item.strip()}'",
-                    'fix': "Anagram items must have at least 3 letters. Remove or replace with longer words."
-                })
+                # Check minimum length
+                if len(scrambled_letters) < 3:
+                    violations.append({
+                        'type': 'ANAGRAM_TOO_SHORT',
+                        'issue': f"Anagram '{title}' item {i} has only {len(scrambled_letters)} letter(s): '{scrambled}'",
+                        'fix': "Anagram items must have at least 3 letters."
+                    })
+    else:
+        # Fallback: parse from markdown (legacy)
+        anagram_pattern = r'##\s*anagram:\s*([^\n]+)\n(.*?)(?=\n##|\n#\s|\Z)'
+        anagrams = re.findall(anagram_pattern, content, re.DOTALL | re.IGNORECASE)
 
-            # Check for uppercase letters
-            if any(re.match(r'[А-ЯІЇЄҐ]', l) for l in letters):
-                violations.append({
-                    'type': 'ANAGRAM_UPPERCASE',
-                    'issue': f"Anagram '{title.strip()}' item {i} uses uppercase: '{item.strip()}'",
-                    'fix': "Use lowercase letters in anagram items."
-                })
+        for title, body in anagrams:
+            items = re.findall(r'\d+\.\s*([^\n]+)', body)
+            for i, item in enumerate(items, 1):
+                letters = re.split(r'[\s/]+', item.strip())
+                letters = [l.strip() for l in letters if l.strip() and not l.startswith('>')]
+                if len(letters) <= 2:
+                    violations.append({
+                        'type': 'ANAGRAM_TOO_SHORT',
+                        'issue': f"Anagram '{title.strip()}' item {i} has only {len(letters)} letter(s): '{item.strip()}'",
+                        'fix': "Anagram items must have at least 3 letters."
+                    })
 
     return violations
 

@@ -1,0 +1,122 @@
+module: c1-107
+level: C1
+sequence: 107
+slug: asyndetic-semantics
+version: '2.0'
+title: 'Безсполучникове речення: логіка тире і двокрапки'
+subtitle: 'Asyndetic Sentences: The Logic of Dash and Colon'
+content_outline:
+- section: Вступ — Природа безсполучникового зв'язку (Introduction — The Nature of
+    Asyndetic Connection)
+  words: 500
+  points:
+  - Alignment with State Standard §4.3.4.2 regarding open and closed structures of
+    asyndetic complex sentences and their inherent semantic relations.
+  - 'The philosophy of the semantic marker: Punctuation in asyndetic sentences is
+    a carrier of meaning and intonation (pauses, tone shifts), not just a graphic
+    requirement.'
+  - 'Learner error: Over-reliance on syndetic conjunctions (тому що, але) as a calque
+    from English; introducing the ''laconic efficiency'' of Ukrainian prose.'
+- section: Двокрапка — Пояснення, причина та уточнення (Colon — Explanation, Cause,
+    and Specification)
+  words: 1000
+  points:
+  - 'Cause and Explanation: Replacing ''бо/тому що'' in cases like ''Він не прийшов:
+    захворів''; distinguishing between direct cause and logical expansion.'
+  - 'Specification and Enumeration: Replacing ''а саме/тобто'' with a colon; the pattern
+    of moving from a general statement to specific components.'
+  - 'Semantic hierarchy: Analyzing how the second part clarifies or lists elements
+    hinted at in the first part, requiring a specific ''explanatory'' intonation.'
+  - 'Correction of common confusion: Why ''Я знаю: він прийде'' (explanation) requires
+    a colon, while learners often incorrectly default to a dash.'
+- section: Тире — Наслідок, контраст та динаміка (Dash — Consequence, Contrast, and
+    Dynamics)
+  words: 1000
+  points:
+  - 'Cause-Result relationship: Replacing ''тому/отже'' where the second part carries
+    the primary semantic weight (e.g., ''Прийшла весна — зацвіли сади'').'
+  - 'Contrast and Opposition: Using the dash to replace ''але/проте'' for sharp semantic
+    transitions (''Шукав щастя — знайшов біду'').'
+  - 'Dynamics and Rapid Sequence: The use of dashes for ''broken'' rhythm and immediate
+    succession of events (''Блискавка — грім — злива'').'
+  - The concepts of 'Authorial Dash' and 'Intonational Dash' as tools for psychological
+    emphasis, common in modernist literature.
+- section: Кома та трансформаційний аналіз (Comma and Transformational Analysis)
+  words: 800
+  points:
+  - 'Simultaneity and Sequence: Using the comma for parallel actions where no strong
+    cause-effect or contrast is present (''Сонце сідало, вітер стихав'').'
+  - 'Decision Tree strategy: Choosing between comma, dash, and colon based on the
+    intended logical relationship and desired rhetorical effect.'
+  - 'Transformation Practice: Rewriting syndetic sentences to asyndetic equivalents
+    to observe how register shifts from dry facts to artistic imagery.'
+  - 'Semantic expansion: Validating understanding by re-inserting conjunctions to
+    verify if the inferred semantic link matches the intended logic.'
+- section: 'Майстерність ритму: Коцюбинський та Стефаник (Mastery of Rhythm: Kotsiubynsky
+    and Stefanyk)'
+  words: 700
+  points:
+  - 'Impressionistic syntax: Mikhailo Kotsiubynsky (''Intermezzo'') — analyzing ''broken''
+    prose and asyndetic structures that convey psychological tension and momentary
+    impressions.'
+  - 'Expressionist laconicism: Vasyl Stefanyk — using short, ''nervous'' asyndetic
+    phrases to convey tragedy and existential pain without verbal excess.'
+  - 'Stylistic analysis: Comparing the rhythm and impact of paired texts to demonstrate
+    how asyndetic style enhances the emotional resonance of the narrative.'
+vocabulary_hints:
+  required:
+  - безсполучниковий (asyndetic) — безсполучникове складне речення; термін для позначення
+    зв'язку без сполучників
+  - двокрапка (colon) — ставити двокрапку; вказує на пояснення, причину або уточнення
+  - тире (dash) — авторське тире, інтонаційне тире; вживається для позначення наслідку,
+    контрасту або швидкої зміни подій
+  - причина (cause) — вказувати на причину; причинно-наслідковий зв'язок (high frequency
+    in semantic analysis)
+  - наслідок (consequence) — мати наслідком; логічний результат дії, що відображається
+    через тире
+  - пояснення (explanation) — давати пояснення; функція другого речення після двокрапки
+  - протиставлення (contrast) — тире для протиставлення; вживання замість сполучників
+    «а», «але»
+  recommended:
+  - ритм (rhythm) — ритм прози, динамічний ритм; характеристика модерністського тексту
+  - перерахування (enumeration) — вживання двокрапки при деталізації списку
+  - одночасність (simultaneity) — паралельність дій, що передається через кому
+  - послідовність (sequence) — логічна черговість подій у безсполучниковому реченні
+  - стилістика (stylistics) — вивчення засобів мовної виразності, зокрема синтаксичних
+activity_hints:
+- type: quiz
+  focus: Choose correct punctuation mark for semantic relationship
+  items: 15
+- type: fill-in
+  focus: Transform syndetic sentences to asyndetic
+  items: 15
+- type: match-up
+  focus: Match asyndetic sentence to its semantic type
+  items: 12
+- type: error-correction
+  focus: Fix punctuation in asyndetic sentences
+  items: 10
+focus: grammar
+pedagogy: PPP
+prerequisites:
+- c1-106 (C1.6 Checkpoint)
+connects_to:
+- c1-108 (Persuasive Speech)
+- c1-016 (Advanced Punctuation)
+objectives:
+- Learner can identify the semantic relationship in asyndetic sentences
+- Learner can choose correct punctuation (colon, dash, comma) based on meaning
+- Learner can transform syndetic sentences into asyndetic equivalents
+- Learner can use asyndetic style for literary and rhetorical effect
+grammar:
+- Asyndetic complex sentences (безсполучникові складні речення)
+- Colon for explanation/cause
+- Dash for consequence/contrast
+- Semantic analysis of punctuation choices
+register: літературний
+immersion: 100% Ukrainian
+phase: C1.5 [Literature]
+persona:
+  voice: Senior Specialist
+  role: Literary Editor
+word_target: 4000

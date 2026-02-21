@@ -1,53 +1,45 @@
----
-module: c1-bio-143
+module: c1-bio-150
 level: C1-BIO
-sequence: 143
+sequence: 150
 slug: kvitka-tsisyk
 version: '2.0'
 title: 'Квітка Цісик: Голос української діаспори'
 content_outline:
-- section: "Вступ — Голос, що повернув Україну американцям"
-  words: 400
+- section: Вступ — Голос, що повернув Україну американцям
   points:
   - Американська співачка українського походження
   - Популяризація української пісні у світі
   - Альбоми, що стали культовими
 - section: Юність у Нью-Йорку (1953-1970-ті)
-  words: 600
   points:
   - Народження в родині українських емігрантів
   - Зростання в українській громаді
   - Музична освіта
   - Перші виступи
 - section: Кар'єра в американській музиці (1970-1980-ті)
-  words: 800
   points:
   - Робота студійною співачкою
   - Реклама та джингли
   - Знаменитий голос «You Deserve a Break Today»
   - Робота з відомими музикантами
 - section: Українські альбоми (1980-1989)
-  words: 900
   points:
   - «Kvitka: Songs of Ukraine» (1980)
   - «Two Colors: Kvitka Sings Ukrainian Folk Songs» (1989)
   - Унікальні аранжування
   - Значення для діаспори
 - section: Хвороба та смерть (1989-1998)
-  words: 600
   points:
   - Боротьба з раком
   - Продовження творчості
   - Остання платівка
   - Смерть у Нью-Йорку
-- section: "Спадщина — Голос української душі"
-  words: 700
+- section: Спадщина — Голос української душі
   points:
   - Вплив на українську музику
   - Популярність в незалежній Україні
   - «Два кольори» та її версія
   - Цісик як символ діаспори
-word_target: 4000
 vocabulary_hints:
   required:
   - діаспора (diaspora)
@@ -73,7 +65,6 @@ activity_hints:
   items: 3 passages
 - type: essay-response
   focus: Яку роль відіграла Цісик у збереженні української культури за кордоном?
-  word_target: 300
   output: Analytical essay
 focus: biography
 prerequisites:
@@ -84,11 +75,11 @@ connects_to:
 module_type: biography
 sources:
 - name: Квітка Цісик (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Цісик_Квітка"
+  url: https://uk.wikipedia.org/wiki/Цісик_Квітка
   type: primary
   notes: Biography of the Ukrainian-American singer
 - name: Kvitka Cisyk Official
-  url: "https://www.kvitka.com/"
+  url: https://www.kvitka.com/
   type: reference
   notes: Official site with discography and biography
 immersion: 100% Ukrainian
@@ -97,3 +88,6 @@ objectives:
 - 'Analyze the life and legacy of квітка цісик: голос української діаспори'
 - Evaluate the contributions of голос, що повернув україну американцям
 - Trace the career and influence of голос української душі
+persona:
+  voice: Senior Biographer
+  role: Diaspora Muse

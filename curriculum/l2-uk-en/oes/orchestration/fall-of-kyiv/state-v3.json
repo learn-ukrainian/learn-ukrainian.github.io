@@ -1,0 +1,13 @@
+{
+  "track": "oes",
+  "slug": "fall-of-kyiv",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-20T10:05:23Z",
+      "task_id": "v3-fall-of-kyiv-pA",
+      "mode": "full"
+    }
+  }
+}

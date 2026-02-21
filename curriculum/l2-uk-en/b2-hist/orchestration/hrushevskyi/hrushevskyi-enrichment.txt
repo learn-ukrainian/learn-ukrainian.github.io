@@ -1,0 +1,296 @@
+✅ Message sent to Gemini (ID: 12931) [auto-acked: self-addressed]
+✓ Message 12931 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12931...
+📨 Message #12931
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-hrushevskyi
+   Time: 2026-02-20T23:43:08.271085+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b2-hist-087
+level: B2-HIST
+sequence: 87
+slug: hrushevskyi
+version: '2.0'
+title: Михайло Грушевський
+subtitle: 'Mykhailo Hrushevsky: Father of Ukrainian Historiography'
+content_outline:
+- section: 'Вступ: Людина-епоха'
+  points:
+  - Чому Грушевський — найважливіший український історик — творець «паспорта» українського
+    народу, наукової історії
+  - Науковець, який став президентом — поєднання ролей національного пророка XIX ст.
+    і державного будівничого XX ст.
+  - 'Трагічна доля в радянські часи — повернення в 1924 році як свідома жертва заради
+    науки; engagement hook: [!history-bite] про географію життя (Холм, Кавказ, Київ,
+    Львів, Кисловодськ)'
+- section: Біографія та наукова кар'єра
+  points:
+  - Ранні роки та освіта — вплив Володимира Антоновича та київської школи
+  - 'Львівський період: професор, керівник НТШ — «золота доба» (1894–1914), перетворення
+    НТШ на де-факто Академію наук; engagement hook: [!context] про професорство у
+    28 років'
+  - «Історія України-Руси» — монументальна праця — 10 томів у 13 книгах, писалася
+    все життя
+  - Деконструкція російської імперської схеми — зміщення фокусу з історії держави
+    на історію народу
+- section: Політична діяльність
+  points:
+  - Революція 1917 року — обрання головою Центральної Ради заочно (березень 1917)
+  - 'Голова Центральної Ради — легітимізація УНР; engagement hook: [!myth-buster]
+    про «романтика, який не вмів керувати»'
+  - Проголошення УНР — еволюція поглядів від автономії до незалежності (IV Універсал)
+  - Еміграція та повернення — Прага, Відень, Женева (1919–1924) та фатальне рішення
+    повернутися в СРСР
+  - 'Радянський період: тиск та загибель — арешт 1931 року, смерть у Кисловодську
+    1934 року (медичний терор)'
+- section: Первинні джерела
+  points:
+  - Фрагменти «Історії України-Руси» — аналіз стилю та аргументації
+  - Промови Грушевського в Центральній Раді — риторика державотворення
+  - 'Листи та щоденники — листи до доньки Катерини як свідчення людяності; engagement
+    hook: [!quote] зі статті 1904 року «Звичайна схема...»'
+- section: Деколонізаційний погляд
+  points:
+  - Схема Грушевського проти схеми Карамзіна — «коперніканський переворот» в історії
+    Східної Європи
+  - 'Україна як окремий історичний суб''єкт — спадкоємність: Київська Русь -> Галицько-Волинська
+    держава -> Козаччина -> УНР'
+  - 'Чому Росія досі атакує Грушевського — боротьба за київську спадщину; engagement
+    hook: [!decolonization] про термін «Україна-Русь»'
+- section: 'Підсумок: Незнищенна спадщина'
+  points:
+  - 'Грушевський на сторінці гривні — символізм 50 гривень; engagement hook: [!symbolism]'
+  - Сучасна історіографія та його вплив — цитата «Біда України в тому, що нею керують
+    ті, кому вона не потрібна»
+  - Грушевський і війна 2022 року — історична схема як зброя проти російських псевдоісторичних
+    наративів
+vocabulary_hints:
+  required:
+  - історіографія (historiography) — батько української історіографії
+  - історик (historian) — видатний, авторитетний
+  - наукова школа (academic school) — київська історична школа, школа Антоновича
+  - концепція (concept) — схема історії, народницька концепція
+  - деконструкція (deconstruction) — імперського наративу, міфів
+  - Центральна Рада (Central Rada) — голова ЦР, парламент
+  - голова (chairman) — обраний головою
+  - праця (work/opus) — фундаментальна, багатотомна
+  recommended:
+  - методологія (methodology) — наукова, позитивістська
+  - джерело (source) — першоджерело, аналіз джерел
+  - архів (archive) — робота в архівах
+  - репресії (repressions) — радянські, переслідування
+  - реабілітація (rehabilitation) — посмертна, наукова
+  - спадщина (legacy) — незнищенна, інтелектуальна
+activity_hints:
+- type: reading
+  focus: Фрагменти «Історії України-Руси»
+  source: Наукові тексти
+  items: 4
+- type: critical-analysis
+  focus: 'Спростування міфів: Міфи про Грушевського'
+  items: 5
+- type: essay-response
+  focus: Чому концепція Грушевського досі важлива для української ідентичності?
+focus: history
+pedagogy: CBI
+prerequisites:
+- b2-hist-86 (Синтез: Імперська доба)
+connects_to:
+- b2-hist-90 (Центральна Рада)
+- b2-hist-99 (Розстріляне відродження)
+objectives:
+- Учень може описати життя та діяльність Михайла Грушевського
+- Учень може пояснити його концепцію «Історії України-Руси»
+- Учень може проаналізувати його роль як голови Центральної Ради
+- Учень може оцінити значення Грушевського для української історіографії
+grammar:
+- Минулий час в біографічному наративі
+- Наукова термінологія
+- Непряма мова для передачі ідей
+register: публіцистичний
+phase: HIST.9 [WWI & Revolution]
+persona:
+  voice: Senior Professor of History
+  role: Academic Historian
+word_target: 5000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Михайло Грушевський
+
+## Використані джерела
+1. [Енциклопедія Сучасної України: Грушевський Михайло Сергійович](https://esu.com.ua/article-32093) — академічна біографія, детальний огляд наукової та політичної діяльності.
+2. [Історична Правда: Михайло Грушевський](https://www.istpravda.com.ua/themes/mykhailo-hrushevskyi/) — статті про маловідомі факти, повернення в СРСР та смерть.
+3. [Ізборник: Звичайна схема «русскої» історії](http://litopys.org.ua/hrushukr/hrush01.htm) — текст фундаментальної статті, що змінила історіографію.
+4. [Libraria: Архів української періодики](https://libraria.ua) — огляд преси часів Центральної Ради.
+
+## Хронологія
+- 1866, 29 вересня: Народився у м. Холм (нині Польща).
+- 1894: Переїзд до Львова, очолення кафедри всесвітньої історії з окремим оглядом історії Східної Європи.
+- 1898: Вихід першого тому монументальної праці «Історія України-Руси».
+- 1904: Публікація статті «Звичайна схема "русскої" історії...» — теоретичний розрив з імперським наративом.
+- 1917, березень: Обраний головою Української Центральної Ради.
+- 1918, 29 квітня: Обрання Президентом УНР (функціонально), прийняття Конституції УНР.
+- 1919–1924: Період еміграції (Прага, Відень, Женева).
+- 1924: Трагічне повернення до Радянської України для продовження наукової роботи.
+- 1931: Арешт ДПУ, звинувачення у керуванні «Українським національним центром», вислання до Москви.
+- 1934, 24 листопада: Загадкова смерть у Кисловодську після нескладної операції (офіційно — сепсис).
+
+## Ключові факти та цитати
+- **Титанічна працездатність**: Написав понад 2000 наукових праць. «Історія України-Руси» налічує 10 томів у 13 книгах.
+- **Державотворення**: Саме під його керівництвом УНР пройшла шлях від автономії до повної незалежності (IV Універсал).
+- **Цитата 1**: «Біда України в тому, що нею керують ті, кому вона не потрібна» (приписується, але влучно характеризує його позицію).
+- **Цитата 2 (з IV Універсалу)**: «Однині Українська Народна Республіка стає самостійною, ні від кого незалежною, вільною, суверенною державою українського народу».
+- **Цитата 3 (про мову)**: «Доки народ живе, живе і його мова».
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ: Людина-епоха": [!history-bite] — Грушевський народився в Польщі, виріс на Кавказі, вчився в Києві, прославився у Львові, а помер у Кисловодську. Справжній соборник ще до проголошення Соборності.
+- Section "Біографія та наукова кар'єра": [!context] — У 28 років він став професором. Це був нечуваний успіх для того часу, але він поїхав з "центру" (Києва) в "провінцію" (Львів), щоб мати свободу писати правду.
+- Section "Політична діяльність": [!myth-buster] — Міф про "романтика, який не вмів керувати". Грушевський створив парламент з нуля і втримав державу в хаосі світової війни, коли падали імперії.
+- Section "Первинні джерела": [!quote] — Уривок зі статті 1904 року, де він "розносить" російську імперську схему історії.
+- Section "Деколонізаційний погляд": [!decolonization] — Росія вкрала назву "Русь", але Грушевський повернув її Україні через дефіс: "Україна-Русь". Це була інтелектуальна спецоперація.
+- Section "Підсумок: Незнищенна спадщина": [!symbolism] — Його портрет на 50 гривнях не випадковий. Це купюра, яка найчастіше буває в руках — як і його історія має бути в голові кожного.
+
+## Деколонізаційний контекст
+- **Imperial/Soviet myth**: Історія Росії починається в Києві (Київська Русь -> Володимиро-Суздальське князівство -> Москва -> Російська імперія). Це "схема Карамзіна-Погодіна".
+- **Ukrainian reality**: Грушевський довів спадкоємність: Київська Русь -> Галицько-Волинська держава -> Литовсько-Руська доба -> Козаччина -> УНР -> Україна. Володимиро-Суздальське князівство — це корінь Росії, а не України.
+- **Наслідок**: Без Києва російська імперська історія втрачає "тисячолітній фундамент" і стає історією Московії, що почалася у XII-XIII століттях. Саме тому Грушевського ненавиділи і царі, і більшовики, і сучасна РФ.
+
+## Contested Terms
+| Concept | Imperial/Soviet framing | Ukrainian (decolonized) framing |
+|---------|-------------------------|--------------------------------|
+| Спадщина Русі | "Колиска трьох братніх народів", спільна історія | Виключна спадщина українського народу (Україна-Русь) |
+| Центральна Рада | "Буржуазна контрреволюція", маріонетки німців | Перший парламент незалежної України, виразник волі народу |
+| Повернення 1924 | "Визнання помилок", "каяття" перед Радянською владою | Свідома жертва заради порятунку української науки (академічний фронт) |
+| Смерть | Природна смерть від хвороби | Цілеспрямоване вбивство спецслужбами (медичний терор) |
+
+## Section-Mapped Research Notes
+
+### Вступ: Людина-епоха
+Михайло Грушевський — це фігура, що об'єднує дві епохи: романтичного національного відродження XIX ст. і жорсткого державотворення XX ст. Він єдиний, хто був одночасно найвидатнішим вченим нації і її політичним лідером. Його повернення в СРСР у 1924 році — це акт античного трагізму: він знав, що йде в пастку, але хотів завершити "Історію України-Руси" на рідній землі. Він створив "паспорт" українського народу — його науково обґрунтовану історію.
+
+### Біографія та наукова кар'єра
+Народився в Холмі, ріс на Кавказі, що дало йому дистанцію для погляду на Україну як на цілісність. Навчання у В. Антоновича в Києві сформувало його як позитивіста (факти понад усе). "Львівський період" (1894–1914) — "золота доба". Він перетворив НТШ (Наукове товариство ім. Шевченка) на де-факто Академію наук. Саме тут він почав писати "Історію України-Руси" — відповідь на "Історію держави Російської" Карамзіна. Грушевський змістив фокус з історії *держави* (як у росіян) на історію *народу*, який живе на своїй землі попри зміну держав.
+
+### Політична діяльність
+1917 рік виніс професора з кабінету на балкон будинку Вчителя. Його авторитет був настільки беззаперечним, що його обрали головою Центральної Ради заочно, поки він їхав з Москви. Еволюція його поглядів: від автономіста ("Україна у федеративній Росії") до самостійника (IV Універсал). Це не була "зрада ідеалів", це була реакція на більшовицьку агресію. Як політик він був ідеалістом-народником, вірив у соціалізм, що завадило створити боєздатну армію. Але саме він легітимізував УНР як державу.
+
+### Первинні джерела
+Ключовий документ: Стаття "Звичайна схема «русскої» історії й справа раціонального укладу історії східного слов'янства" (1904).
+Цитата: "Обминаннє київського періоду в російській схемі... переносить початок російської історії в ліси, на багна Оки та Волги".
+Цитати з листів до доньки Катерини показують його ніжність і людяність, контрастуючи з образом сурового "бороданя".
+
+### Деколонізаційний погляд
+Грушевський здійснив "коперніканський переворот" в історії Східної Європи. До нього вважалося, що історія тече з Києва у Володимир і Москву. Він довів: Київська держава — це початок *української* історії. Володимир-на-Клязьмі — початок *російської*. Це розбило ідею "єдіной і нєдєлімой". Росія досі воює з Грушевським, бо він забрав у неї право на київську спадщину. Його схема лежить в основі сучасної української ідентичності.
+
+### Підсумок: Незнищенна спадщина
+Грушевський сьогодні — це не бронзовий пам'ятник, а діючий інструмент самозахисту. Його тези використовують дипломати та історики, спростовуючи псевдоісторичні статті Путіна. Він переміг у довгостроковій перспективі: СРСР розпався, а Україна-Русь існує.
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12952)
+✓ Message 12931 acknowledged
+✓ Message 12952 acknowledged

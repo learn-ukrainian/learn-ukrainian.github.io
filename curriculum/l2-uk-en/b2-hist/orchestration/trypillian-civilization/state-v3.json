@@ -1,0 +1,33 @@
+{
+  "track": "b2-hist",
+  "slug": "trypillian-civilization",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T10:16:32Z",
+      "task_id": "v3-trypillian-civilization-pA",
+      "mode": "meta-only"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-19T10:16:32Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-19T10:16:32Z",
+      "note": "adopted-existing"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-19T10:23:02Z",
+      "attempts": 2
+    },
+    "v3-D": {
+      "status": "failed",
+      "ts": "2026-02-21T15:53:05Z",
+      "attempts": 1,
+      "note": "d1-no-review"
+    }
+  }
+}

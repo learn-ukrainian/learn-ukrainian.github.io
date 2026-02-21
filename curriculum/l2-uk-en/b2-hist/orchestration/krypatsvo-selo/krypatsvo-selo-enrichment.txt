@@ -1,0 +1,301 @@
+✅ Message sent to Gemini (ID: 12850) [auto-acked: self-addressed]
+✓ Message 12850 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12850...
+📨 Message #12850
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-krypatsvo-selo
+   Time: 2026-02-20T23:42:34.864148+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b2-hist-079
+level: B2-HIST
+sequence: 79
+slug: krypatsvo-selo
+version: '2.0'
+title: Кріпацтво на Півдні
+subtitle: Serfdom in Southern Ukraine
+content_outline:
+- section: 'Вступ: Рабство під іншою назвою'
+  points:
+  - Що таке кріпацтво? — система правової залежності, де людина стає «майном»; раптове
+    запровадження «згори» на відміну від еволюційного процесу в Московії
+  - Чим українське кріпацтво відрізнялось від російського — запроваджене пізніше,
+    але у жорсткішій формі на Півдні; [!history-bite] про «плантаційний» характер
+    нових маєтків
+  - 'Хронологія: від волі до неволі — ключові дати: 1775 (Січ), 1783 (Указ), 1796
+    (Повне рабство), 1817 (Військові поселення)'
+- section: Запровадження кріпацтва
+  points:
+  - '1783 рік: указ Катерини II — 3 травня, юридичне закріплення селян за місцем ревізії;
+    роздача земель фаворитам (Потьомкін) та офіцерам'
+  - 'Прикріплення селян до землі — цитата: «кожному з поселян залишитися на своєму
+    місці і при своєму званні» (Указ 1783)'
+  - Ліквідація козацьких вольностей — знищення Січі (1775) як прелюдія до рабства;
+    [!myth-buster] про те, що імперія принесла «порядок»
+  - Нова Сербія та колонізація Півдня — роздача земель офіцерам (1752–1764) і створення
+    латифундій як фундамент для майбутнього кріпацтва
+- section: Життя кріпаків
+  points:
+  - 'Панщина: праця на пана — 3–5 днів на тиждень, виснажлива праця на латифундіях;
+    [!sensory] — скрип возів, запах степу, спека'
+  - Оброк та інші повинності — натуральний або грошовий податок, додатковий тягар;
+    відсутність часу на власне господарство
+  - Село як соціальна одиниця — контраст між багатством природи Степу та злиднями
+    людей; умови життя у степовому кліматі
+  - Сім'я та громада — втручання поміщиків у особисте життя (дозволи на шлюб); сім'я
+    як єдиний прихисток
+  - 'Жінки в кріпацькому селі — «подвійний тягар»: праця на полі та вдома'
+- section: Первинні джерела
+  points:
+  - Указ 1783 року — суха бюрократична мова, що ламала долі мільйонів; юридичне оформлення
+    рабства
+  - Свідчення мандрівників про українське село — описи родючості землі й бідності
+    кріпаків; контраст з вільним минулим
+  - 'Фольклор та народні пісні про долю — цитата: «Ой, горе нам на Гетьманщині...»
+    або «На панщину ходжу, ходжу...»; [!quote]'
+- section: Деколонізаційний погляд
+  points:
+  - 'Імперський наратив: «цивілізування» селян — міф про «Дике Поле», яке Росія нібито
+    впорядкувала; «освоєння» як колонізація'
+  - 'Реальність: економічна експлуатація колонії — Південь (Новоросія) як ресурсна
+    база імперії; [!decolonization]'
+  - Кріпацтво як знищення козацької вільної України — перетворення вільних нащадків
+    козаків на рабів; інструмент упокорення регіону
+- section: 'Підсумок: До скасування 1861'
+  points:
+  - 'Форми опору: втечі, бунти — масові втечі до Криму, «Похід у Таврію за волею»
+    (1856) як віра у царську волю; [!context]'
+  - 'Скасування кріпацтва: обмежена свобода — 1861 рік, селяни залишилися без землі
+    та з боргами'
+  - Наслідки для українського села XX століття — закладена соціальна напруга («міна
+    уповільненої дії»)
+vocabulary_hints:
+  required:
+  - 'кріпацтво (serfdom) — форма державного рабства; collocations: скасування кріпацтва,
+    запровадження кріпацтва'
+  - 'кріпак (serf) — невільна людина; collocations: доля кріпака, втеча кріпаків,
+    колишній кріпак'
+  - 'панщина (corvée labor) — відробіткова рента; collocations: відбувати панщину,
+    тяжка панщина, ходити на панщину'
+  - 'оброк (quitrent) — податок продуктами чи грошима; collocations: платити оброк,
+    грошовий оброк'
+  - 'поміщик (landowner) — власник землі і душ; collocations: свавілля поміщика, багатий
+    поміщик'
+  - 'указ (decree) — офіційний наказ; collocations: царський указ, указ 1783 року,
+    підписати указ'
+  - 'прикріплення (binding) — юридична фіксація; collocations: прикріплення до землі,
+    вічне прикріплення'
+  - 'скасування (abolition) — ліквідація системи; collocations: реформа скасування
+    кріпацтва, маніфест про скасування'
+  recommended:
+  - 'повинність (obligation) — обов''язок перед паном; collocations: виконувати повинності'
+  - 'маєток (estate) — земельне володіння; collocations: панський маєток, економія'
+  - 'община (commune) — сільська громада; collocations: сільська община'
+  - 'втеча (escape) — форма опору; collocations: масова втеча, втеча до Криму'
+  - 'бунт (revolt) — активний опір; collocations: селянський бунт, придушити бунт'
+  - 'експлуатація (exploitation) — використання чужої праці; collocations: жорстока
+    експлуатація'
+  - 'плантаційний (plantation-style) — тип господарства; collocations: плантаційний
+    характер, як на плантаціях'
+  - 'ревізія (revision/census) — перепис населення; collocations: за даними ревізії,
+    ревізька казка'
+activity_hints:
+- type: reading
+  focus: Указ 1783 року про закріпачення
+  source: Архівні документи
+  items: 4
+- type: essay-response
+  focus: Як кріпацтво знищило козацьку вільну Україну?
+focus: history
+pedagogy: CBI
+prerequisites:
+- b2-hist-78 (Слобожанщина)
+connects_to:
+- b2-hist-80 (Кирило-Мефодіївське братство)
+- b2-hist-81 (Шевченко: Пробудження)
+objectives:
+- Учень може описати запровадження кріпацтва в Україні
+- Учень може пояснити різницю між державними селянами та кріпаками
+- Учень може проаналізувати форми селянського опору
+- Учень може оцінити наслідки кріпацтва для українського суспільства
+grammar:
+- Минулий час в історичному наративі
+- Соціально-економічна лексика
+- Складнопідрядні речення
+register: публіцистичний
+phase: HIST.8 [Imperial Era]
+persona:
+  voice: Senior Professor of History
+  role: Ethnographer of the South
+word_target: 5000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Кріпацтво на Півдні
+
+## Використані джерела
+1. [Енциклопедія історії України: Кріпацтво](http://resource.history.org.ua/) — Фундаментальний огляд етапів закріпачення, зокрема указу 1783 року.
+2. [Енциклопедія сучасної України: Панщина](https://esu.com.ua/) — Деталізація форм експлуатації та селянських повинностей.
+3. [Ізборник: Кріпацькі пісні](http://litopys.org.ua/) — Збірка фольклору, що відображає народну пам'ять про неволю.
+4. [Енциклопедія історії України: Похід у Таврію за волею](http://resource.history.org.ua/) — Інформація про масовий антикріпосницький рух на Півдні.
+
+## Хронологія
+- **1752**: Створення Нової Сербії — початок імперської колонізації та роздачі земель офіцерам, що заклало основу майбутніх маєтків.
+- **1764**: Ліквідація Нової Сербії, утворення Новоросійської губернії.
+- **1775**: Зруйнування Запорозької Січі — ліквідація осередку козацької вольності на Півдні.
+- **3 травня 1783**: Указ Катерини II про остаточне закріпачення селян Лівобережної та Слобідської України (поширення на Південь).
+- **1796**: Указ Павла I, що підтвердив та посилив кріпацтво на південних землях («Повне рабство»).
+- **1817**: Запровадження військових поселень на Півдні — ще жорсткіша форма несвободи.
+- **1856**: «Похід у Таврію за волею» — масова втеча кріпаків до Криму після Кримської війни.
+- **1861**: Скасування кріпацтва.
+
+## Ключові факти та цитати
+- **Цитата (Указ 1783)**: «...кожному з поселян залишитися на своєму місці і при своєму званні, де він записаний нинішньою ревізією...» (Закріплення за землею).
+- **Цитата (Народна пісня)**: «Ой, горе нам на Гетьманщині, / Що панують все чужії, все чужії!»
+- **Факт**: На Півдні кріпацтво було менш поширеним, ніж у центрі (близько 10-15% земель обробляли кріпаки), але умови були жорстокішими через "плантаційний" характер нових маєтків.
+- **Факт**: «Похід у Таврію» охопив тисячі селян, які вірили, що в Криму «цар дає волю».
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ": [!history-bite] — Про те, що кріпацтво в Україні було запроваджене *пізніше*, ніж у Росії, але в *жорсткішій* формі.
+- Section "Запровадження кріпацтва": [!myth-buster] — Міф про «Дике Поле», яке Росія «цивілізувала». Реальність: заміна козацької вольності на рабство.
+- Section "Життя кріпаків": [!sensory] — Опис звуків панського двору (скрип возів, крики наглядачів) та запаху розпеченого степу під час жнив.
+- Section "Первинні джерела": [!quote] — Уривок з пісні «На панщину ходжу, ходжу...».
+- Section "Деколонізаційний погляд": [!decolonization] — Як імперія використовувала кріпацтво для контролю над колонізованими землями.
+- Section "Підсумок": [!context] — Посилання на «Похід у Таврію» як доказ незламного прагнення до волі.
+
+## Деколонізаційний контекст
+- **Imperial Myth**: Російська імперія принесла порядок і цивілізацію на «дикі» землі Півдня (Новоросію).
+- **Ukrainian Reality**: Імперія знищила унікальний устрій вільностей Війська Запорозького і насадила найвідсталішу форму феодальної залежності — кріпацтво, перетворивши вільних людей на рабів. «Цивілізація» означала кайдани.
+
+## Contested Terms
+| Concept | Imperial/Soviet framing | Ukrainian (decolonized) framing |
+|---------|-------------------------|---------------------------------|
+| Новоросія | Історичний регіон, «освоєний» Росією | Південна Україна / Степова Україна, колонізована імперією |
+| Освоєння земель | Мирне заселення пустих територій | Колонізація, роздача козацьких земель російському дворянству |
+| Кріпацтво | Економічна необхідність епохи | Форма державного рабства, інструмент імперського контролю |
+
+## Section-Mapped Research Notes
+
+### Вступ: Рабство під іншою назвою
+Кріпацтво — це система правової залежності селянина від землевласника. На відміну від Росії, де воно формувалося століттями, в Україні (особливо на Півдні та Сході) воно було запроваджене "згори" указом 1783 року, раптово перетворивши вільних нащадків козаків на "майно". Це був шок для суспільства, яке пам'ятало козацькі вольності.
+
+### Запровадження кріпацтва
+Ключова дата — 3 травня 1783 року (Указ Катерини II). Цей документ юридично прив'язав селян до землі, де їх застала ревізія (перепис). На Півдні це супроводжувалося роздачею величезних земельних наділів російським офіцерам та фаворитам (як Потьомкін), які завозили своїх кріпаків з Росії або закріпачували місцевих. Ліквідація Запорозької Січі (1775) прибрала останню перепону для цього процесу.
+
+### Життя кріпаків
+Основа життя — панщина (відробіткова рента), що часто сягала 3-5 днів на тиждень. Селяни не мали часу на обробіток власного клаптика землі. Оброк (натуральний або грошовий податок) був додатковим тягарем. Життя в степу було важким кліматично (спека, посухи), а праця на величезних латифундіях виснажливою. Сім'я залишалася єдиним прихистком, але пани мали право втручатися в особисте життя (дозволи на шлюб). Жінки несли подвійний тягар: праця на полі та вдома.
+
+### Первинні джерела
+Указ 1783 року — суха бюрократична мова, що ламала долі мільйонів.
+Фольклор: пісні про панщину сповнені болю та ненависті («Бодай пану в дворі важко, як нам на лану»).
+Спогади мандрівників фіксують разючий контраст між багатством природи Півдня та злиднями його мешканців.
+
+### Деколонізаційний погляд
+Імперська історіографія подає приєднання Півдня як «тріумф цивілізації». Деколоніальний погляд викриває це як колоніальну експлуатацію. Землі, відібрані у татар і запорожців, стали ресурсною базою імперії, а люди — робочою силою. Кріпацтво було інструментом упокорення непокірного регіону, знищенням соціальної бази для можливого опору.
+
+### Підсумок: До скасування 1861
+Селяни ніколи не змирилися. Південь, як край свободи (Запоріжжя), пам'ятав волю. Форми опору: масові втечі (незважаючи на розшук), підпали маєтків, вбивства жорстоких управителів. «Похід у Таврію за волею» (1856) показав, що ідея свободи жива. Реформа 1861 року формально скасувала кріпацтво, але залишила селян безземельними та бідними, що заклало міну уповільненої дії на майбутнє.
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit -9): 
+✅ Message sent to Claude (ID: 12855)
+✓ Message 12850 acknowledged
+✓ Message 12855 acknowledged

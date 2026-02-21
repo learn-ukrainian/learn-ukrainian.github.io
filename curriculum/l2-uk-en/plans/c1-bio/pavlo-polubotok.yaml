@@ -1,47 +1,38 @@
----
-module: c1-bio-030
+module: c1-bio-30
 level: C1-BIO
 sequence: 30
 slug: pavlo-polubotok
 version: '2.0'
 title: 'Павло Полуботок: Мученик за автономію'
-word_target: 4300
 content_outline:
-- section: "Вступ — Символ нескореності"
-  words: 600
+- section: Вступ — Символ нескореності
   points:
   - Полуботок як символ морального та правового опору
   - Протистояння з імперською владою
   - Легендарний образ у пам'яті народу
 - section: Життєпис
-  words: 1600
   points:
   - Походження та інтелектуальне становлення
   - Шлях магната і полковника чернігівського
   - Наказний гетьман 1722 р.
   - Арешт і смерть у Петропавлівці
 - section: Історичний контекст
-  words: 600
   points:
   - Наступ імперії після Північної війни
   - Малоросійська колегія та адміністративний терор
 - section: Внесок
-  words: 400
   points:
   - Захист прав народу через закон
   - Меценатство та розбудова Чернігова
 - section: Останні роки
-  words: 400
   points:
   - Ув'язнення і діалог з Петром I
   - Моральна перемога над тираном
 - section: Спадщина
-  words: 400
   points:
   - Легенда про золото Полуботка
   - Символ національної гідності
 - section: Підсумок
-  words: 300
   points:
   - Значення постаті для сучасності
 focus: biography
@@ -62,11 +53,11 @@ grammar:
 module_type: biography
 sources:
 - name: Павло Полуботок (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Павло_Полуботок"
+  url: https://uk.wikipedia.org/wiki/Павло_Полуботок
   type: primary
   notes: Біографія та діяльність
 - name: Малоросійська колегія (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Малоросійська_колегія"
+  url: https://uk.wikipedia.org/wiki/Малоросійська_колегія
   type: reference
   notes: Контекст імперської політики
 immersion: 100% Ukrainian
@@ -82,3 +73,6 @@ activity_hints:
   source: Primary sources (adapted)
 - type: essay-response
   focus: Ціна гідності
+persona:
+  voice: Senior Biographer
+  role: Prisoner of State

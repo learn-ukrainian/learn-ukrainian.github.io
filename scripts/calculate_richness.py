@@ -70,6 +70,9 @@ MODULE_TYPE_MAP = {
     'literature': 'literature',
     'literary': 'literature',
     'lit': 'literature',
+    # Bridge types (Metalanguage)
+    'bridge': 'bridge',
+    'metalanguage': 'bridge',
     # Checkpoint types
     'checkpoint': 'checkpoint',
     'review': 'checkpoint',
@@ -87,6 +90,7 @@ MODULE_TYPE_TARGETS = {
         'questions': 5,
         'proverbs': 1,
         'visual': 3,
+        'tables': 2,
         'threshold': 95,
     },
     'vocabulary': {
@@ -166,6 +170,16 @@ MODULE_TYPE_TARGETS = {
         'visual': 3,
         'threshold': 95,
     },
+    'bridge': {
+        'engagement': 5,
+        'examples': 20,
+        'cultural': 2,
+        'realworld': 2,
+        'questions': 4,
+        'visual': 4,
+        'tables': 2,
+        'threshold': 90,
+    },
     'literature': {
         'engagement': 4,
         'analysis_sections': 5,
@@ -212,9 +226,10 @@ MODULE_TYPE_WEIGHTS = {
         'cultural': 0.10,
         'realworld': 0.10,
         'questions': 0.05,
-        'proverbs': 0.05,
+        'proverbs': 0.03,
         'visual': 0.05,
-        'paragraph_var': 0.05,
+        'paragraph_var': 0.03,
+        'tables': 0.04,
     },
     'history': {
         'engagement': 0.15,
@@ -313,6 +328,16 @@ MODULE_TYPE_WEIGHTS = {
         'visual': 0.15,
         'variety': 0.10,
         'paragraph_var': 0.05,
+    },
+    'bridge': {
+        'engagement': 0.20,
+        'examples': 0.30,
+        'cultural': 0.10,
+        'realworld': 0.10,
+        'visual': 0.10,
+        'variety': 0.10,
+        'paragraph_var': 0.05,
+        'tables': 0.05,
     },
 }
 
@@ -547,6 +572,14 @@ def extract_module_type(content: str, file_path: Union[str, Path, None] = None) 
 
     # Process frontmatter (from either source)
     if fm:
+        # Check for bridge indicator in tags or module_type
+        tags = fm.get('tags', [])
+        if isinstance(tags, list) and 'bridge' in [t.lower() for t in tags]:
+            return 'bridge'
+        
+        if fm.get('module_type') == 'bridge':
+            return 'bridge'
+
         # Check focus field FIRST (highest priority)
         focus = str(fm.get('focus', '')).lower().strip()
         if focus in MODULE_TYPE_MAP:
@@ -581,6 +614,27 @@ def extract_module_type(content: str, file_path: Union[str, Path, None] = None) 
 
     # Default to grammar for B1-B2, content for others
     level = extract_level(file_path)
+    
+    # Special Case: B1 Bridge Modules (M01-05)
+    if level == 'B1' and file_path:
+        slug = Path(file_path).stem
+        # Bridge modules usually have slugs like 'how-to-talk-about-grammar'
+        # or numeric prefixes if not yet migrated.
+        bridge_slugs = [
+            'how-to-talk-about-grammar',
+            'language-about-verbs',
+            'sentence-structure',
+            'parts-of-speech-depth',
+            'case-system-logic',
+            'verb-categories-metalanguage',
+            'syntax-and-sentence-structure'
+        ]
+        # Also check for numeric prefix 01-05
+        num_prefix_match = re.match(r'^0?([1-5])-([a-z-]+)', slug)
+        
+        if any(bs in slug for bs in bridge_slugs) or num_prefix_match:
+            return 'bridge'
+
     if level in ('B1', 'B2'):
         return 'grammar'
     elif level in ('C1', 'C2'):
@@ -591,11 +645,17 @@ def extract_module_type(content: str, file_path: Union[str, Path, None] = None) 
 
 def get_prose_content(content: str) -> str:
     """Extract prose content (excluding activities and vocab)."""
-    # Remove frontmatter
+    # Remove frontmatter (--- delimited)
     if content.startswith('---'):
         parts = content.split('---', 2)
         if len(parts) >= 3:
             content = parts[2]
+    # Remove bare YAML frontmatter (no --- delimiters, starts with YAML key)
+    elif re.match(r'^[a-z_]+:', content):
+        # Find where markdown prose starts (first heading)
+        heading_match = re.search(r'^#\s', content, re.MULTILINE)
+        if heading_match:
+            content = content[heading_match.start():]
 
     # Remove activities section
     for section in ['Activities', 'Вправи']:
@@ -972,21 +1032,22 @@ def count_resources(content: str) -> int:
 
 
 def count_visual_elements(content: str) -> int:
-    """Count visual elements (tables, callouts, boxes)."""
-    patterns = [
-        r'^\|[^|]+\|',  # Table rows
-        r'>\s*\[!',  # Callout boxes
-        r'```',  # Code blocks
-    ]
-    count = 0
-    for pattern in patterns:
-        matches = re.findall(pattern, content, re.MULTILINE)
-        count += len(matches)
-    # Tables count as 1 visual each (not per row)
-    table_markers = len(re.findall(r'^\|[-:| ]+\|', content, re.MULTILINE))
-    if table_markers > 0:
-        count = count - len(re.findall(r'^\|[^|]+\|', content, re.MULTILINE)) + table_markers
-    return count
+    """Count visual elements (callouts, code blocks, mermaid). Tables scored separately."""
+    callouts = len(re.findall(r'>\s*\[!', content, re.MULTILINE))
+    mermaid = len(re.findall(r'```mermaid', content))
+    code_fences = len(re.findall(r'```', content, re.MULTILINE))
+    code_blocks = max(0, (code_fences - mermaid * 2) // 2)
+    return callouts + code_blocks + mermaid
+
+
+def count_tables(content: str) -> int:
+    """Count distinct markdown tables (by separator rows)."""
+    return len(re.findall(r'^\|[-:| ]+\|', content, re.MULTILINE))
+
+
+def count_mermaid_diagrams(content: str) -> int:
+    """Count mermaid diagram blocks."""
+    return len(re.findall(r'```mermaid', content))
 
 
 def calculate_paragraph_variety(content: str) -> float:
@@ -1093,6 +1154,7 @@ def calculate_richness_score(content: str, level: str, file_path: Path = None, y
             'realworld': count_realworld(prose),
             'questions': count_questions(prose),
             'proverbs': count_proverbs(prose),
+            'tables': count_tables(prose),
         })
     elif module_type == 'vocabulary':
         raw.update({
@@ -1135,12 +1197,19 @@ def calculate_richness_score(content: str, level: str, file_path: Path = None, y
             'essays': count_essays(prose),
             'resources': count_resources(prose) + count_external_yaml_resources(file_path),
         })
+    elif module_type == 'bridge':
+        raw.update({
+            'examples': count_examples(prose),
+            'realworld': count_realworld(prose),
+            'questions': count_questions(prose),
+            'tables': count_tables(prose),
+        })
     elif module_type == 'checkpoint':
         # Use YAML activity types if provided (Preferred for YAML-First architecture)
         activity_type_count = 0
         if yaml_activity_types:
             activity_type_count = len(yaml_activity_types)
-        
+
         raw.update({
             'activity_types': activity_type_count,
             'review_sections': len(re.findall(r'^##\s*[^\n]+', prose, re.MULTILINE)),
@@ -1206,10 +1275,12 @@ def detect_dryness_flags(content: str, level: str, file_path: Path = None) -> li
     if count_engagement_boxes(prose) < 2:
         flags.append('NO_ENGAGEMENT')
 
-    # WALL_OF_TEXT: Paragraph > 500 words without break
+    # WALL_OF_TEXT: Paragraph exceeding threshold without break
+    # Narrative module types (history, biography, literature) have longer natural paragraphs
+    wall_threshold = 800 if module_type in ('history', 'biography', 'literature') else 500
     paragraphs = re.split(r'\n\s*\n', prose)
     for p in paragraphs:
-        if len(p.split()) > 500:
+        if len(p.split()) > wall_threshold:
             flags.append('WALL_OF_TEXT')
             break
 
@@ -1218,7 +1289,15 @@ def detect_dryness_flags(content: str, level: str, file_path: Path = None) -> li
         flags.append('REPETITIVE_STARTERS')
 
     # Type-specific flags - use 50% of target as threshold
-    if module_type == 'grammar':
+    if module_type == 'bridge':
+        # Bridge modules: examples (target 20), cultural (target 2), realworld (target 2)
+        # NO dialogues or proverbs required
+        if count_examples(prose) < 10:
+            flags.append('NO_EXAMPLES')
+        if count_realworld(prose) < 1:
+            flags.append('ABSTRACT_ONLY')
+
+    elif module_type == 'grammar':
         # Grammar modules: dialogues (target 4), examples (target 24), realworld (target 3), cultural (target 3), proverbs (target 1)
         dialogue_count = count_dialogues(prose)
         if level in ('B1', 'B2', 'C1', 'C2') and dialogue_count < 2:  # < 50% of target 4
@@ -1278,6 +1357,11 @@ def detect_dryness_flags(content: str, level: str, file_path: Path = None) -> li
             flags.append('NO_EXAMPLES')
         if count_realworld(prose) == 0:
             flags.append('ABSTRACT_ONLY')
+
+    # Table check for grammar module types only (soft warning)
+    if module_type in ('grammar', 'bridge'):
+        if count_tables(prose) == 0:
+            flags.append('NO_TABLES')
 
     # Cultural anchor check (B1+ grammar/vocab/content types) - need 2+ (50% of target 3)
     if module_type in ('grammar', 'vocabulary', 'content', 'cultural'):

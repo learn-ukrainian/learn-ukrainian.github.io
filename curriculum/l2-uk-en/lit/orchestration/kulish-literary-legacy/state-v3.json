@@ -1,0 +1,13 @@
+{
+  "track": "lit",
+  "slug": "kulish-literary-legacy",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-20T23:07:49Z",
+      "task_id": "v3-kulish-literary-legacy-pA",
+      "mode": "full"
+    }
+  }
+}

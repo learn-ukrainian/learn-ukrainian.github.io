@@ -1,4 +1,3 @@
----
 module: c1-hist-119
 level: c1-hist
 sequence: 119
@@ -10,48 +9,41 @@ objectives:
 - 'Analyze the causes and consequences of голокост в україні: співучасть і рятування'
 - Evaluate the historical significance of найтемніша сторінка
 content_outline:
-- section: "Вступ — Найтемніша сторінка"
-  words: 515
+- section: Вступ — Найтемніша сторінка
   subsections:
   - Голокост в Україні — масштаб
   - 1,5 мільйона жертв
   - Співучасть І рятування
   - Структура модуля
 - section: «Голокост від куль»
-  words: 903
   subsections:
   - Айнзацгрупи
   - Бабин Яр — символ
   - Методи знищення
   - Чому в Україні — особливо
 - section: Українська поліція
-  words: 774
   subsections:
   - Допоміжна поліція — хто йшов
   - Роль у Голокості
   - Не виправдання — пояснення
   - Масштаб участі
 - section: ОУН і євреї
-  words: 774
   subsections:
   - Антисемітизм в ОУН
   - Погроми 1941
   - Еволюція позиції
   - Суперечливість
 - section: Праведники
-  words: 645
   subsections:
   - 2700+ українських праведників
   - Митрополит Шептицький
   - Ризик — смерть
   - Індивідуальний вибір
 - section: Підсумок
-  words: 389
   subsections:
   - І злочинці, і рятівники
   - Не «українці» — окремі люди
   - Перехід до радянського антисемітизму
-word_target: 4000
 vocabulary:
 - Голокост
 - «Голокост від куль»
@@ -70,26 +62,26 @@ vocabulary:
 - колабораціонізм
 activities:
 - type: critical-analysis
-  focus: "Holocaust in Ukraine — numbers and geography"
+  focus: Holocaust in Ukraine — numbers and geography
 - type: critical-analysis
   focus: Who collaborated and why
 - type: reading
-  focus: "Ukrainian Righteous — stories and patterns"
+  focus: Ukrainian Righteous — stories and patterns
 - type: critical-analysis
-  focus: "OUN and Jews — complex relationship"
+  focus: OUN and Jews — complex relationship
 - type: essay-response
   focus: Як оцінювати українську роль у Голокості?
 sources:
 - name: Голокост в Україні (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Голокост_в_Україні"
+  url: https://uk.wikipedia.org/wiki/Голокост_в_Україні
   type: reference
   notes: Holocaust overview
 - name: Бабин Яр (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Бабин_Яр"
+  url: https://uk.wikipedia.org/wiki/Бабин_Яр
   type: reference
   notes: Babi Yar
 - name: Праведники народів світу (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Праведники_народів_світу"
+  url: https://uk.wikipedia.org/wiki/Праведники_народів_світу
   type: reference
   notes: Righteous Among Nations
 vocabulary_hints:
@@ -108,7 +100,9 @@ activity_hints:
   items: 4
 - type: essay-response
   focus: Критичний аналіз
-  word_target: 300
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Holocaust Memory Keeper

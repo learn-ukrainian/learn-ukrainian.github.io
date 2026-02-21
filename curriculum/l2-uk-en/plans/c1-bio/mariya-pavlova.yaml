@@ -1,53 +1,45 @@
----
-module: c1-bio-049
+module: c1-bio-50
 level: C1-BIO
-sequence: 49
+sequence: 50
 slug: mariya-pavlova
 version: '2.0'
 title: 'Марія Павлова: Видатний палеонтолог'
 content_outline:
-- section: "Вступ — Жінка, що читала кістки"
-  words: 400
+- section: Вступ — Жінка, що читала кістки
   points:
   - Марія Павлова — перша жінка-палеонтолог світового рівня
   - Від київської гімназистки до професора Московського університету
   - Подолання бар'єрів у чоловічому світі науки
 - section: Ранні роки та освіта (1854-1880)
-  words: 600
   points:
   - Народження в Києві в родині службовця
   - Навчання в київській гімназії
   - Інтерес до природничих наук
   - Переїзд до Парижа для продовження освіти
 - section: Наукова кар'єра в Парижі (1880-1886)
-  words: 700
   points:
   - Навчання в Сорбонні та робота з Альбером Годрі
   - Шлюб з геологом Олексієм Павловим
   - Перші наукові публікації про викопних ссавців
   - Формування як самостійного науковця
 - section: Московський період (1886-1920)
-  words: 800
   points:
   - Переїзд до Москви з чоловіком
   - Робота в Московському університеті
   - Дослідження викопних коней та хоботних
   - Створення палеонтологічної колекції
 - section: Наукові досягнення
-  words: 700
   points:
   - Монографії про викопних ссавців Євразії
   - Теорія еволюції коней
   - Відкриття нових видів та родів
   - Міжнародне визнання та нагороди
 - section: Останні роки та спадщина (1920-1938)
-  words: 800
   points:
   - Продовження роботи в радянський період
   - Перша жінка — почесний член АН СРСР
   - Смерть у 1938 році
   - Вплив на розвиток палеонтології
-word_target: 4000
 vocabulary_hints:
   required:
   - палеонтологія (paleontology)
@@ -73,7 +65,6 @@ activity_hints:
   items: 3 passages
 - type: essay-response
   focus: Які перешкоди долали жінки-науковці у XIX столітті?
-  word_target: 300
   output: Historical analysis
 focus: biography
 prerequisites:
@@ -84,15 +75,15 @@ connects_to:
 module_type: biography
 sources:
 - name: Марія Павлова (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Марія_Василівна_Павлова"
+  url: https://uk.wikipedia.org/wiki/Марія_Василівна_Павлова
   type: primary
   notes: Біографія, наукова діяльність, внесок у палеонтологію
 - name: Палеонтологія
-  url: "https://uk.wikipedia.org/wiki/Палеонтологія"
+  url: https://uk.wikipedia.org/wiki/Палеонтологія
   type: reference
   notes: Наукова галузь та її методи
 - name: Жінки в науці XIX століття
-  url: "https://uk.wikipedia.org/wiki/Жінки_в_науці"
+  url: https://uk.wikipedia.org/wiki/Жінки_в_науці
   type: reference
   notes: Контекст жіночої участі у науці
 immersion: 100% Ukrainian
@@ -101,3 +92,6 @@ objectives:
 - 'Analyze the life and legacy of марія павлова: видатний палеонтолог'
 - Evaluate the contributions of жінка, що читала кістки
 - Trace the career and influence of останні роки та спадщина (1920-1938)
+persona:
+  voice: Senior Biographer
+  role: Fossil Hunter

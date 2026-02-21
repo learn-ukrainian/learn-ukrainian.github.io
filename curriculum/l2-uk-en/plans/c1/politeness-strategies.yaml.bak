@@ -1,0 +1,46 @@
+module: c1-042
+level: C1
+sequence: 42
+slug: politeness-strategies
+version: '2.0'
+title: 'Стратегії ввічливості: Прагматика спілкування'
+subtitle: 'Politeness Strategies: Communication Pragmatics'
+content_outline:
+- section: Розминка — Мистецтво ввічливості
+  points:
+  - Позитивна ввічливість — створення спільності (ми з вами...)
+  - Негативна ввічливість — повага до автономії (перепрошую, чи не могли б...)
+  - Українська специфіка — Ви-форма, пестливі звертання
+- section: Positive Politeness
+  points:
+  - 'Компліменти: Як гарно ви це зробили!'
+  - 'Інклюзивність: Ми з вами розуміємо...'
+  - 'Спільна позиція: Погодьтеся, що...'
+- section: Negative Politeness
+  points:
+  - 'Вибачення: Перепрошую, чи не могли б ви...'
+  - 'Непрямість: Можливо, варто було б...'
+  - 'Мінімізація: Це лише невелике прохання...'
+- section: Практика — стратегії ввічливості
+  points:
+  - Переписати прямі прохання на непрямі (ввічливі)
+  - Аналіз ділового листа — знайти маркери ввічливості
+  - Написати відмову без образи (FTA mitigation)
+  - Порівняти українську та англійську ввічливість
+focus: style
+pedagogy: Sociolinguistics
+objectives:
+- Learner can apply complex politeness strategies in varied social contexts
+- Learner can analyze cultural nuances of Ukrainian etiquette
+- Learner can mitigate face-threatening acts using linguistic markers
+grammar:
+- Indirect speech acts
+- Honorifics and address forms
+- Modality of requests
+- Euphemisms in social contexts
+immersion: 100
+phase: C1.4 Advanced Stylistics & Rhetoric
+persona:
+  voice: Senior Specialist
+  role: Експерт з етикету
+word_target: 4000

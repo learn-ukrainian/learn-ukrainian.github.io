@@ -1,99 +1,49 @@
-# Core A Research: Видові пари (40 Essential Aspect Pairs)
+# Дослідження: Видові пари: 40 найважливіших
 
-**Module:** B1 M12 "Видові пари: 40 найважливіших"
-**Level:** B1 (Intermediate)
-**Topic:** Essential Aspectual Pairs
+## State Standard Reference
+§4.2.3.1 (B1): "Дійсний спосіб... утворення форм роду і числа дієслів минулого часу недоконаного і доконаного виду... дієвідмінювання дієслів недоконаного виду в майбутньому часі... дієвідмінювання дієслів доконаного виду в майбутньому часі"
+Alignment: This module directly fulfills the requirement to distinguish and conjugate aspectual pairs in all tenses, focusing on the core high-frequency verbs required for B1 communicative competence.
 
-> **Note on Level:** The prompt indicated "Level A1" and "Alphabet-only" prerequisites. This contradicts the module identity (B1 M12) and the linguistic nature of Aspect (which requires Past/Future tenses). This research aligns with the **B1 Curriculum Plan** (`12-aspect-pairs-essential-40.yaml`) to ensure linguistic validity.
+## Vocabulary Frequency
+| Word Pair (Imp/Perf) | Frequency Notes | Key Collocations |
+|----------------------|----------------|------------------|
+| робити / зробити | Top 10 verbs | робити домашнє завдання, зробити помилку |
+| говорити / сказати | Top 20 verbs | говорити правду, сказати «ні» |
+| брати / взяти | Top 50 verbs | брати участь, взяти до уваги |
+| давати / дати | Top 50 verbs | давати слово, дати пораду |
+| бачити / побачити | Top 50 verbs | радий бачити, побачити світ |
+| їсти / з'їсти | High Freq | їсти сніданок, з'їсти все |
+| пити / випити | High Freq | пити каву, випити ліки |
+| писати / написати | High Freq | писати листа, написати книгу |
+| читати / прочитати | High Freq | читати новини, прочитати до кінця |
+| вчити / вивчити | High Freq | вчити мову, вивчити вірш |
 
-## 1. Grammar: State Standard 2024 Reference
+## Cultural Hooks
+1. **Proverb (Result Focus):** «Зробив діло – гуляй сміло» (Done the job – walk boldly). Captures the essence of the Perfective aspect (completion implies freedom/result).
+2. **Proverb (Process Focus):** «Вода камінь точить» (Water wears away the stone). Illustrates the Imperfective aspect (continuous, repetitive action causing change).
+3. **Folk Wisdom:** «Куй залізо, поки гаряче» (Strike while the iron is hot). Highlights the concept of simultaneous action often expressed with imperfective forms in complex sentences.
 
-The topic of **Aspectual Pairs** is formally introduced at the A2 level and expanded at B1.
+## Common Learner Errors
+1. **The "Perfective Present" Trap:**
+   - *Error:* «Я зроблю це зараз» (meaning "I am doing it now") or attempting to conjugate perfective in present structure.
+   - *Correction:* Perfective verbs *cannot* exist in the present tense. Their "present" form usually has future meaning.
+   - *Fix:* Drill that Present = Imperfective ONLY.
 
-**Primary Reference (Definition):**
-> **§ 4.3.2. Видові пари дієслів**
-> "робити – зробити, ділити – поділити, писати – написати, виходити – вийти, забувати – забути."
-> *(State Standard 2024, p. 34, A2 Level)*
+2. **Future Tense Confusion:**
+   - *Error:* «Я буду прочитати» (Mixing compound future auxiliary with perfective infinitive).
+   - *Correction:* «Я буду читати» (Imp) OR «Я прочитаю» (Perf).
+   - *Fix:* Contrast "Process Future" (буду + Imp) vs. "Result Future" (Simple Perf).
 
-**Secondary Reference (Usage):**
-> **§ 4.2.3.1. Дійсний спосіб**
-> "утворення форм роду і числа дієслів минулого часу недоконаного і доконаного виду: хотів, хотіла... побачив, побачила..."
-> "дієвідмінювання дієслів недоконаного виду в майбутньому часі... дієвідмінювання дієслів доконаного виду в майбутньому часі..."
-> *(State Standard 2024, p. 54-55, B1 Level)*
+3. **Past Tense Nuance (Did vs. Was Doing):**
+   - *Error:* «Вчора я прочитав книгу» (when meaning "I was reading it but didn't finish").
+   - *Correction:* «Вчора я читав книгу».
+   - *Fix:* Emphasize that "reading" (process) ≠ "read" (completion).
 
-## 2. Vocabulary Frequency
+## Cross-References
+- **Builds on:** B1-06 to B1-11 (Aspect Theory phases), A2 verb basics.
+- **Prepares for:** B1-13 (Work Week - Narrative application), B1-14 (Aspect Integration), B1-26+ (Complex Sentences).
 
-**High-Frequency Suppletive Pairs (Must Memorize):**
-*These pairs share no common root and must be learned as separate words.*
-1.  **брати** (Imp) – **взяти** (Perf) [to take]
-2.  **говорити** (Imp) – **сказати** (Perf) [to speak/say]
-3.  **шукати** (Imp) – **знайти** (Perf) [to search/find]
-4.  **класти** (Imp) – **покласти** (Perf) [to put (laying)]
-5.  **ловити** (Imp) – **спіймати** (Perf) [to catch]
-
-**High-Frequency Prefix Pairs:**
-*The most common pattern: standard verb + prefix.*
-1.  **робити** – **зробити** [to do]
-2.  **писати** – **написати** [to write]
-3.  **читати** – **прочитати** [to read]
-4.  **їсти** – **з'їсти** [to eat]
-5.  **пити** – **випити** [to drink]
-6.  **дзвонити** – **подзвонити** [to call]
-7.  **готувати** – **приготувати** [to cook/prepare]
-8.  **дивитися** – **подивитися** [to watch]
-9.  **бачити** – **побачити** [to see]
-10. **чути** – **почути** [to hear]
-
-**High-Frequency Suffix/Stem Pairs:**
-1.  **відкривати** – **відкрити** [to open]
-2.  **закривати** – **закрити** [to close]
-3.  **починати** – **почати** [to begin]
-4.  **закінчувати** – **закінчити** [to finish]
-5.  **вставати** – **встати** [to stand up/get up]
-6.  **давати** – **дати** [to give]
-7.  **забувати** – **забути** [to forget]
-8.  **розповідати** – **розповісти** [to tell]
-
-## 3. Cultural Hook
-
-**1. The "Politeness" Nuance (Imperatives)**
-In Ukrainian culture, aspect dictates politeness in invitations.
-*   **Imperfective (Process):** Used for polite invitations or offering hospitality.
-    *   *Example:* "Сідайте, будь ласка" (Sit down - Imp) is polite/welcoming.
-    *   *Contrast:* "Сядьте" (Sit down - Perf) sounds like a military order or strict command.
-    *   *Example:* "Беріть цукерки" (Take candies - Imp) vs "Візьміть ручку" (Take the pen - Perf, specific instruction).
-
-**2. Proverb: "Зробив діло — гуляй сміло"**
-*   *"Done the deed — walk boldly."*
-*   This famous rhyming proverb illustrates the **Result** meaning of the Perfective aspect (`Зробив` - completed). You can only relax (`гуляй` - Imperfective process) *after* the boundary of completion is crossed.
-
-## 4. Pedagogical Notes
-
-**Learner Challenges:**
-1.  **Concept Mapping:** English speakers struggle to distinguish "I read a book yesterday" (Process: *читав*) from "I read a book yesterday" (Result: *прочитав*).
-    *   *Fix:* Use the concept of **"Video vs. Snapshot"**. Imperfective is a video recording of the action. Perfective is a snapshot of the result.
-2.  **The "Present Tense" Trap:** Learners try to conjugate Perfective verbs in the Present tense.
-    *   *Rule:* Perfective verbs **cannot** exist in the Present. If you conjugate *зроблю*, it becomes Future ("I will do").
-3.  **Suppletive Confusion:** *Брати/Взяти* and *Говорити/Сказати* are often treated as synonyms rather than aspect pairs.
-    *   *Teaching Tip:* Drill them strictly as "Left Shoe / Right Shoe" pairs. They are the *same verb* in different dimensions.
-
-**Teaching Sequence:**
-1.  **Review Concept:** Process (Imperfective) vs. Result (Perfective).
-2.  **Prefix Pattern:** Show how `з-`, `на-`, `про-` change the meaning to "completed".
-3.  **Suffix Pattern:** Focus on `-ува-` removal (*купувати -> купити*).
-4.  **Suppletive Drill:** Brute-force memory for the top 5 irregulars.
-
-## 5. Scope Boundaries
-
-**IN SCOPE (B1):**
-*   The 40 most frequent pairs (Lexical focus).
-*   Past Tense usage (Difference between *робив* and *зробив*).
-*   Future Tense usage (Difference between *буду робити* and *зроблю*).
-*   Infinitive usage (after *хочу*, *треба*, etc.).
-*   Basic Imperative distinction (Politeness).
-
-**OUT OF SCOPE (Save for B2/C1):**
-*   **Secondary Imperfectivization:** Creating new imperfectives from prefixed perfectives (e.g., *переписувати* from *переписати*).
-*   **Nuanced Motion Verbs:** Detailed prefixes of motion (*доходити/дійти*, *оббігати/оббігти*). Covered in separate Motion modules.
-*   **Biaspectual Verbs:** Verbs that are both Imp/Perf (e.g., *гарантувати*, *одружити*).
-*   **Abstract/Figurative meanings:** Focus only on the literal physical action for now.
+## Notes for Content Writing
+- **Visuals:** Use a "Process vs. Result" timeline visual description.
+- **Pedagogy:** Strictly adhere to TTT. Start with a diagnostic that traps them in "Perfective Present" or "Future Mix-up" errors to create the "teachable moment."
+- **Immersion:** 100% Ukrainian. Use icons (🔄 vs ✅) to symbolize Imperfective/Perfective instead of English translation where possible in tables.

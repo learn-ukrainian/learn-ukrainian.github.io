@@ -1,0 +1,203 @@
+✅ Message sent to Gemini (ID: 12962) [auto-acked: self-addressed]
+✓ Message 12962 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12962...
+📨 Message #12962
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-slovo-golden-word
+   Time: 2026-02-20T23:43:25.074956+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 82
+module: oes-082
+module_number: 82
+slug: slovo-golden-word
+title_uk: 'Слово: Золоте слово'
+title_en: 'Slovo: The Golden Word'
+phase: 4
+phase_id: literary-art
+phase_name: Literary Art
+focus: Rhetoric — The plea for unity
+content_outline:
+- section: Вступ
+  description: 'Introduction to Slovo: The Golden Word'
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Senior Paleographer
+  role: Grand Prince's Orator
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Slovo Golden Word (Золоте слово Святослава)
+
+## Використані джерела
+1. [Енциклопедія Сучасної України: Слово о полку Ігоревім](https://esu.com.ua/article-12345) — загальний аналіз, історія відкриття, значення.
+2. [Ізборник: Слово о полку Ігоревім (текст і переклади)](http://litopys.org.ua/slovo/slovo.htm) — оригінальний текст, коментарі, переклади.
+3. [Енциклопедія історії України: Слово о полку Ігоревім](http://history.org.ua/ukr_hist_enc_skor.php) — історичний контекст походу 1185 року.
+
+## Хронологія
+- **1185 (квітень-травень)**: Невдалий похід Ігоря Святославича на половців, поразка на річці Каялі.
+- **1185 (літо)**: Святослав Київський бачить «мутен сон» у Києві та виголошує «Золоте слово».
+- **1187**: Ймовірна дата написання «Слова» (заклик до єдності ще актуальний).
+- **1792**: Олексій Мусін-Пушкін купує рукопис у складі збірника (за іншою версією — отримує від архімандрита Іоїля).
+- **1800**: Перше друковане видання «Слова» у Москві.
+- **1812**: Оригінал рукопису згорає під час московської пожежі (навала Наполеона).
+
+## Ключові факти та цитати
+- **Сон Святослава**: Символіка передчуття біди. «Чорне покривало» (жалоба), «синє вино» (горе/отрута), «перли» (сльози), «тес без князька» (порушений дім/держава).
+- **Риторика**: «Золоте слово» — це не просто плач, а політична програма об'єднання земель навколо Києва.
+- **Двоїна (Dualis)**: Текст рясніє формами двоїни, що зникли в сучасних мовах, але лишили слід (очі, плечі). Приклад: «ваю храбрая сердца» (ваші [двох] хоробрі серця).
+- **Українські риси**: Повноголосся (*ворота*, *голова*), кличний відмінок (*княже*, *Бояне*), закінчення -ові/-еві (*Ігореві*, *Дунаєві*), лексика (*смага*, *яруга*, *кожух*).
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ: Історичний контекст": [!context] — Похід 1185 року був авантюрою сіверських князів, що не узгодили дії з Києвом.
+- Section "Сон Святослава: Символіка": [!culture] — «Сипали перлами» у сні означало сльози — стійкий фольклорний символ.
+- Section "Золоте слово: Риторика єдності": [!quote] — «О моя синовця, Ігорю і Всеволоде! Рано єсте почали Половецьку землю мечами обидити...»
+- Section "Звернення до князів": [!history-bite] — Святослав звертається до Ярослава Осмомисла як до могутнього володаря, що «підпер гори Угорські» (Карпати) — свідчення сили Галицького князівства.
+- Section "Мова Слова: Жива стихія": [!paleography] — Втрата оригіналу 1812 року створила «детективну» історію з пошуком істини, яку намагалися викривити імперські фальсифікатори.
+- Section "Детектив: Історія відкриття": [!myth-buster] — Спростування тези про «російськість» Слова. Автор, ймовірно, був чернігівцем або киянином, мова твору — давньоукраїнська (руська).
+
+## Деколонізаційний контекст
+- **Imperial Myth**: «Слово» — пам'ятка «російської» літератури, спільна колиска.
+- **Ukrainian Reality**: Текст написаний на території України (Київ/Чернігів), відображає реалії українського степу, містить питомо українські мовні риси, яких немає в російській мові (кличний відмінок, специфічна лексика).
+- **Agency**: Святослав Київський показаний не як номінальний глава, а як мудрий стратег, що прагне консолідації земель — праобраз української державності.
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| Мова твору | Давньоросійська (Old Russian) | Давньоукраїнська / Давньоруська (Old Rus / Old East Slavic) |
+| Історична приналежність | Загальноросійське надбання | Пам'ятка українського середньовіччя (Київський цикл) |
+| Етнонім | Русскіє | Русини / Русь (населення Руської землі) |
+
+## Section-Mapped Research Notes
+
+### Вступ: Історичний контекст і відкриття
+Похід 1185 року як тригер для написання твору. Відкриття рукопису наприкінці XVIII ст., трагічна доля оригіналу.
+
+### Сон Святослава: Символіка біди
+Аналіз символів сну: терем без князька (смерть/розпад), чорне паволока (похорон), синє вино з отрутою (горе), перли (сльози). Зв'язок з язичницькими віруваннями.
+
+### Золоте слово: Текст і риторика
+Святослав як "старий сокіл". Його докір Ігорю та Всеволоду за самовпевненість ("Слава"). Заклик до інших князів (Всеволода Велике Гніздо, Рюрика, Давида, Ярослава Осмомисла, Романа Мстиславича). Географія Русі очима автора.
+
+### Мова Слова: Давньоруська чи давньоукраїнська?
+Аналіз мовних рис. Двоїна: "ваю храбрая сердца". Кличний відмінок: "Ігорю", "княже". Лексика: "яруга", "болонь", "смага". Це доказ автохтонності твору на українських теренах.
+
+### Питання автентичності
+Скептицизм (школа Мазона, Зіміна) проти наукового консенсусу. Чому підробити "Слово" у XVIII ст. було неможливо (знання лінгвістики того часу не дозволяло відтворити граматичні нюанси XII ст., зокрема двоїну).
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12995)
+✓ Message 12962 acknowledged
+✓ Message 12995 acknowledged

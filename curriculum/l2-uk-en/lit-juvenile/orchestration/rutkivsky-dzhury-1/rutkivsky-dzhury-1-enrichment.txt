@@ -1,0 +1,219 @@
+✅ Message sent to Gemini (ID: 12162) [auto-acked: self-addressed]
+✓ Message 12162 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12162...
+📨 Message #12162
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-rutkivsky-dzhury-1
+   Time: 2026-02-20T23:37:00.541964+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 26
+module: lit-juvenile-26
+level: LIT.JUVENILE
+slug: rutkivsky-dzhury-1
+version: '2.0'
+title: Rutkivsky Dzhury 1
+subtitle: Rutkivsky Dzhury 1
+content_outline:
+- section: Вступ та контекст
+  points: []
+- section: Аналіз ключових творів
+  points: []
+- section: Стилістика та мова автора
+  points: []
+- section: Деколонізаційна перспектива
+  points:
+  - Як цей автор руйнує імперські міфи
+  - Українська суб'єктність у тексті
+- section: Підсумок та спадщина
+  points: []
+vocabulary_hints:
+  required:
+  - історіографія
+  - наратив
+  - суб'єктність
+  recommended:
+  - деколонізація
+activity_hints:
+- type: reading
+  focus: Аналіз першоджерела
+- type: essay-response
+  focus: Критичне есе
+- type: critical-analysis
+  focus: Деконструкція тексту
+focus: literature
+pedagogy: literature
+immersion: 100% Ukrainian
+phase: LIT Expansion
+objectives:
+- Проаналізувати творчість Rutkivsky Dzhury 1 у контексті української літератури
+- Дослідити вплив автора на формування національної ідентичності
+persona:
+  voice: Senior Specialist
+  role: Young Sentry
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Володимир Рутківський — «Джури козака Швайки»
+
+## Використані джерела
+1. [Енциклопедія Сучасної України](http://esu.com.ua/) — Стаття про В. Рутківського, аналіз його внеску у дитячу історичну прозу.
+2. [БараБука. Простір української дитячої книги](http://www.barabooka.com.ua/) — Аналітика серії «Джури» та її значення для формування сучасної підліткової літератури в Україні.
+3. [Читомо](https://chytomo.com/) — Статті про деколонізаційний потенціал дитячої літератури та формування національної ідентичності через подолання віктимності.
+
+## Хронологія
+- 1937: Народження Володимира Рутківського (с. Хрестителеве, Черкаська область).
+- 1489: Історичний час дії роману «Джури козака Швайки» (перша письмова згадка про українських козаків у хроніках).
+- 2007: Вихід друком першої книги тетралогії — «Джури козака Швайки» у видавництві «А-БА-БА-ГА-ЛА-МА-ГА».
+- 2012: В. Рутківський отримує Національну премію України імені Тараса Шевченка за трилогію «Джури».
+- 2021: Смерть Володимира Рутківського, залишення потужної літературної спадщини.
+
+## Ключові факти та цитати
+- Твір заповнює колосальну лакуну в дитячій літературі щодо періоду зародження козацтва, подаючи його не через призму класових страждань, а через героїку і пригоди.
+- Цитата з твору (концепція волі): «Козак — це людина вільна. А воля — це найдорожче, що є на світі».
+- Цитата з критики: «Рутківський повернув українським дітям їхніх власних супергероїв, які не поступаються західним аналогам, але глибоко вкорінені в нашу історію».
+- Феномен «характерництва» (персонаж Санько) поданий не просто як магія, а як глибоко закорінена в українську міфологію здатність до контролю над собою, ворогом (навіювання) та гармонійний зв'язок із природою.
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ та контекст": [!context] — Пояснення історичного феномену «Дикого Поля» кінця XV століття як прикордонної зони, де в умовах постійної небезпеки формувався новий тип вільної людини — козак.
+- Section "Аналіз ключових творів: Світ лицарства та магії": [!culture] — Розкриття концепту характерництва як унікальної української міфологічної концепції суперсили, недоступної для розуміння ворогам.
+- Section "Аналіз ключових творів: Герої та їхня еволюція": [!history-bite] — Згадка про те, що персонаж Пилип Швайка базується на реальних історичних прототипах елітних козацьких вивідників (пластунів), які часто діяли у симбіозі з прирученими вовками.
+- Section "Стилістика та мова автора": [!quote] — Акцент на використанні колоритних народних висловів, архаїзмів та козацького гумору, що надають мові автентичності.
+- Section "Деколонізаційна перспектива": [!myth-buster] — Спростування радянського міфу про те, що козаки були виключно неосвіченими, безправними селянами-втікачами.
+- Section "Підсумок та спадщина": [!decolonization] — Як «Джури» лікують національну історичну травму, пропонуючи читачам замість наративу страждань історію сильних і розумних переможців.
+
+## Деколонізаційний контекст
+- **Imperial/Soviet myth**: Козацтво зародилося виключно як реакція на соціальний гніт (марксистська класова боротьба). Козаки подавалися як збіднілі маргінали та втікачі без чіткої політичної чи військової культури. Дитяча література УРСР часто ігнорувала раннє лицарське козацтво.
+- **Ukrainian reality**: Козаки постають як організований лицарський орден, військова еліта та професійні розвідники (вивідники), які виконують надскладні завдання із захисту своїх земель. Вони є активними суб'єктами історії, здатними до самоорганізації, дипломатії та передового військового мистецтва.
+
+## Contested Terms (if applicable)
+| Concept | Imperial/Soviet framing | Ukrainian (decolonized) framing |
+|---------|-----------------|-------------------------------|
+| Козаки | Збіднілі селяни-втікачі, елемент стихійної класової боротьби | Вільні лицарі-оборонці, професійні воїни та вивідники, фундатори нації |
+| Дике Поле | Порожня, дика територія, згодом цивілізована імперією | Простір українського фронтиру, місце формування військової демократії |
+| Відносини з Ордою | Спрощений чорно-білий наратив про одвічну російську допомогу проти татар | Здатність українців до самостійної самооборони, складна степова геополітика |
+
+## Section-Mapped Research Notes
+
+### Вступ та контекст
+Дослідити біографію Володимира Рутківського та його пізній, але надпотужний прорив в історичній прозі для дітей. Звернути увагу на історичне тло роману — кінець XV століття (зокрема 1489 рік — дата першої згадки козаків у хроніках). Пояснити концепт «Дикого Поля» як простору екстремальної небезпеки, який водночас став колискою для абсолютно вільного, самоорганізованого суспільства.
+
+### Аналіз ключових творів: Світ лицарства та магії
+Роман як епічний старт культової тетралогії. Гармонійне поєднання історичної достовірності (відтворення побуту, зброї, військової тактики вивідників) з питомою українською міфологією. Детально проаналізувати постать вовка Барвінка — це не просто тварина, а тотемний помічник, повноправний герой. Розкрити феномен характерництва (через дар Санька) як український аналог магії, що полягає в силі духу та єднанні з природою.
+
+### Аналіз ключових творів: Герої та їхня еволюція
+Архітектоніка головних персонажів. Пилип Швайка виступає як архетип ідеального козака-вивідника: перемагає не лише фізичною силою, а насамперед інтелектом і хитрістю. Грицик і Санько репрезентують мотив ініціації: їхній шлях від наляканих хлопчаків із села Воронівка до свідомих зброєносців (джур). Психологічна достовірність процесу дорослішання.
+
+### Стилістика та мова автора
+Лексичне багатство роману. Рутківський майстерно вплітає в текст архаїзми, історизми (вивідник, джура, ногайці, урус-шайтан) та приказки, збагачуючи словник юного читача без обтяження тексту. Кінематографічна динаміка сюжету тримає увагу. Особливу роль відіграє український гумор — він знімає зайву пафосність, робить героїв живими і допомагає їм долати страх.
+
+### Деколонізаційна перспектива
+Твір є потужним інструментом деколонізації дитячої свідомості. Рутківський свідомо ламає імперський міф про покірних «гречкосіїв», які лише тікали від панів. Натомість утверджується суб'єктність: українці показані як проактивні творці власної історії, здатні захистити себе. Перехід від віктимного наративу (плачу над поразками) до героїчного (пишання лицарською звитягою).
+
+### Підсумок та спадщина
+«Джури козака Швайки» як твір, що здійснив революцію в сучасній українській дитячій літературі. Присудження Національної премії імені Тараса Шевченка у 2012 році підтвердило високий статус жанру дитячої літератури. Твір продовжує відігравати ключову роль у патріотичному вихованні, долаючи комплекс меншовартості і даючи новим поколінням відчуття закоріненості у велику європейську лицарську традицію.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12236)

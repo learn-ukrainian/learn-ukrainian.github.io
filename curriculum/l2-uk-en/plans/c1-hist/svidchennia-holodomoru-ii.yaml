@@ -1,4 +1,3 @@
----
 module: c1-hist-037
 level: c1-hist
 sequence: 37
@@ -10,15 +9,13 @@ objectives:
 - 'Analyze the causes and consequences of свідчення голодомору ii: документи'
 - Evaluate the historical significance of документальні докази
 content_outline:
-- section: "Вступ — Документальні докази"
-  words: 457
+- section: Вступ — Документальні докази
   subsections:
   - Від свідчень до документів
   - Що збереглося в архівах
   - Радянські документи — особливість
   - Як читати бюрократичну мову
 - section: Типи документів
-  words: 571
   subsections:
   - Партійні постанови
   - Чорні дошки — списки
@@ -26,40 +23,34 @@ content_outline:
   - Звіти ОГПУ
   - Статистика смертей
 - section: Закон про п'ять колосків (7.08.1932)
-  words: 800
   subsections:
   - Повний текст (з глосами)
   - Розстріл за крадіжку зерна
   - Як застосовувався
   - Мета — терор
 - section: Чорні дошки
-  words: 686
   subsections:
   - Що таке «чорна дошка»
   - Документальні свідчення
   - Приклад — постанова про село
   - Наслідки для населення
-- section: "Фрагмент — Телеграма про хлібозаготівлі"
-  words: 571
+- section: Фрагмент — Телеграма про хлібозаготівлі
   subsections:
   - Текст (з глосами)
   - Бюрократична мова
   - Цифри і реальність
   - Що стоїть за документом
 - section: Критика джерела
-  words: 571
   subsections:
   - Радянські документи — що вони приховують
   - Евфемізми
   - Що не фіксувалося
   - Порівняння з усними свідченнями
 - section: Підсумок
-  words: 344
   subsections:
   - Документ і свідчення — разом
   - Доказова база геноциду
   - Зв'язок із визнанням
-word_target: 4000
 vocabulary:
 - документ
 - постанова
@@ -89,15 +80,15 @@ activities:
   focus: Як радянські документи доводять намір знищити?
 sources:
 - name: Архівні документи Голодомору
-  url: "https://cdiak.archives.gov.ua/"
+  url: https://cdiak.archives.gov.ua/
   type: primary
   notes: Central State Archive
 - name: Чорні дошки
-  url: "https://uk.wikipedia.org/wiki/Чорні_дошки"
+  url: https://uk.wikipedia.org/wiki/Чорні_дошки
   type: reference
   notes: Blacklists
 - name: Закон про п'ять колосків
-  url: "https://uk.wikipedia.org/wiki/Закон_про_п'ять_колосків"
+  url: https://uk.wikipedia.org/wiki/Закон_про_п'ять_колосків
   type: reference
   notes: August 7, 1932 law
 vocabulary_hints:
@@ -116,7 +107,9 @@ activity_hints:
   items: 4
 - type: essay-response
   focus: Критичний аналіз
-  word_target: 300
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Forensic Archivist

@@ -1,59 +1,41 @@
-# Research Notes: Basic Motion Prefixes (В- vs. Ви-)
+# Дослідження: Basic Motion Prefixes
 
-**Track**: Core A
-**Module**: 36-basic-motion-prefixes
-**Researched**: 2026-02-08
-**Level**: A2 (Building on A1 foundations)
+## State Standard Reference
+§4.2.2.4.2: "Із прийменниками: в, у, на (кінцевий пункт руху суб’єкта): Діти їдуть в Одесу. Ми зайшли в кімнату."
+Alignment: This module directly teaches the construction of "Prefix В- + Preposition В/У + Accusative" for entering, which is a core A2 requirement.
 
-## 1. Grammar: State Standard 2024 Reference
+§4.2.3.1: "дієвідмінювання дієслів у теперішньому часі: ... іти (іду, ідеш...), їхати (їду, їдеш...), ходити (ходжу...), їздити (їжджу...)"
+Alignment: The module reinforces the conjugation of base motion verbs when teaching their prefixed forms.
 
-The Ukrainian State Standard 2024 (ДСТУ 2024) formally introduces the word formation of prefixed verbs of motion at the **B1 level** (§4.3.8), but expects functional usage of directional motion with prepositions at the **A2 level** (§4.2.2.4.2 and §4.2.2.2.2).
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| **Входити** (to enter) | High (General) | входити в кімнату, входити в моду (idiom), входити в історію |
+| **Виходити** (to exit) | High (General) | виходити з дому, виходити на вулицю, виходити заміж (idiom), виходити з себе (idiom) |
+| **В'їжджати** (to drive in) | Medium (Transport) | в'їжджати до міста, в'їжджати в гараж, в'їжджати в нову квартиру (move in) |
+| **Виїжджати** (to drive out) | Medium (Transport) | виїжджати за кордон, виїжджати з парковки, виїжджати на природу |
 
-- **Section §4.3.8 (B1 level):** "Утворення префіксальних дієслів руху: іти – прийти, перейти, вийти, зайти, дойти..."
-- **Section §4.2.2.4.2 (A2 level):** Specifies the use of the Accusative case for destination: "в, у, на (кінцевий пункт руху суб’єкта): Діти їдуть в Одесу. Ми зайшли в кабінет."
-- **Section §4.2.2.2.2 (A2 level):** Specifies the use of the Genitive case for origin: "з, із, зі (вихідний пункт руху – звідки?): Вони приїхали з Об’єднаних Арабських Еміратів."
+## Cultural Hooks
+1. **The Threshold (Поріг)**: In Ukrainian culture, the threshold is a sacred boundary. It is strictly forbidden to shake hands, pass money, or talk across the threshold (через поріг) — you must either invite the person in or step out. This perfectly illustrates the "В-" (in) vs "Ви-" (out) binary.
+2. **Kyiv Metro Navigation**: The terms "Вхід" (Entrance) and "Вихід" (Exit) are ubiquitous signs in the metro. "Не притулятися" (Do not lean) on doors is another common phrase context for motion.
 
-## 2. Vocabulary Frequency
+## Common Learner Errors
+1. **Wrong Preposition**: Using *в/у* with *виходити* instead of *з*.
+   *   *Error*: Я виходжу в офісу.
+   *   *Correct*: Я виходжу **з** офісу.
+   *   *Why*: Learners associate "office" with "in", ignoring the "out of" vector.
+2. **Confusing Walk/Drive**: Using *входити* for vehicles.
+   *   *Error*: Машина входить у гараж.
+   *   *Correct*: Машина **в'їжджати** у гараж.
+   *   *Why*: English "enter" covers both; Ukrainian strictly separates by mode of transport.
+3. **Aspect Confusion**: Mixing up *входити* (process/habit) and *увійти* (result).
+   *   *Error*: Я увійшов у спортзал щодня.
+   *   *Correct*: Я **входжу** (або ходив) у спортзал щодня.
 
-At the A2 level, focus is placed on the most high-frequency spatial "GPS" prefixes that define entering and exiting.
+## Cross-References
+- Builds on: `motion-verbs-basics` (M20 - stem conjugation), `accusative-case` (M11 - destination)
+- Prepares for: `advanced-motion-prefixes` (B1 - passing through, going around), `transport-hub` (A2.4 vocabulary)
 
-| Verb (Imperfective / Perfective) | English | Frequency | Common Collocations |
-|---------------------------------|---------|-----------|---------------------|
-| **входити / увійти** | to enter (on foot) | High | входити в кімнату, увійти в метро |
-| **виходити / вийти** | to exit (on foot) | High | виходити на вулицю, вийти з автобуса |
-| **в’їжджати / в’їхати** | to drive in | Medium | в’їхати в гараж, в’їжджати в місто |
-| **виїжджати / виїхати** | to drive out | Medium | виїхати з парковки, виїжджати з країни |
-| **влітати / влетіти** | to fly in | Low | птах влетів у вікно |
-
-**Key Collocations:**
-- **Вийти на наступній зупинці** (To get off at the next stop) — Critical for public transport.
-- **Вхід заборонено / Вихід поруч** (Entry forbidden / Exit nearby) — Standard signage.
-
-## 3. Cultural Hook
-
-- **The Kyiv Metro:** Navigation in the Ukrainian metro is a primary use-case for these prefixes. Signs like **«Вхід»** (Entrance) and **«Вихід»** (Exit) are everywhere. The announcement **«Вихід на праву сторону»** (Exit on the right side) is a classic phrase every commuter knows.
-- **Etiquette (The "Crowd Rule"):** In Ukrainian public transport culture, there is a strict (though often ignored) rule: **«Спочатку дайте вийти, а потім заходьте»** (First let people exit, then enter). This phrase is a staple of urban linguistic landscape.
-- **Urban Navigation:** Ukrainians often use landmarks to describe entering/exiting "The Center" (**в’їхати в центр**) or "The City" (**виїхати за місто** - for weekends/dachas).
-
-## 4. Pedagogical Notes
-
-- **Prefix-Preposition Harmony:** Ukrainian requires a "double signal" of direction. The prefix must match the preposition's logic:
-  - **в-** (into) pairs with **в/у** (+ Accusative).
-  - **ви-** (out of) pairs with **з/із/зі** (+ Genitive).
-- **The Aspectual Shift:** Adding a prefix to a **unidirectional** verb (e.g., *іти*) creates a **perfective** verb (*вийти* - a single completed exit). Adding a prefix to a **multidirectional** verb (e.g., *ходити*) creates a new **imperfective** verb (*виходити* - a process or habit of exiting). This is often confusing for English speakers who see "go" as one verb.
-- **Orthography (The Apostrophe):** Learners often forget the apostrophe in **в’їхати**. It is required because the prefix ends in a consonant and the root starts with **ї**.
-- **The v/u Alternation:** Remind students of the **в/у** rule for prefixes just like in prepositions: *входити* vs. *увійти*.
-
-## 5. Scope Boundaries
-
-**IN SCOPE:**
-- Prefixes **в-/у-** (into) and **ви-** (out).
-- Verb stems **-йти** (walking) and **-їхати** (driving).
-- Directional prepositions: **в/у**, **на** (destination) and **з/із**, **від** (origin).
-- Basic aspectual pairs formed by these prefixes.
-
-**OUT OF SCOPE:**
-- Other motion prefixes: **при-** (arrival), **за-** (short visit), **пере-** (crossing), **до-** (reaching), **під-** (approaching), **від-** (moving away), **про-** (passing through).
-- Verbs of motion for swimming, carrying, or crawling (*плавати, нести, повзти*).
-- Figurative meanings: *виходити заміж* (getting married), *виходити газета* (newspaper being published).
-- Instrumental case for paths (*йти вулицею*), as this was covered in previous modules and would clutter the prefix focus.
+## Notes for Content Writing
+- **Visuals**: Use the "Box Analogy" clearly. В- is an arrow INTO the box; Ви- is an arrow OUT OF the box.
+- **Euphony**: Explicitly teach *увійти* vs *ввійти* vs *увіходити* rules briefly, as these verbs trigger euphony rules constantly.

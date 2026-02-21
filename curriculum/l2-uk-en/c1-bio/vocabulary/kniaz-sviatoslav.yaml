@@ -1,129 +1,166 @@
-module: c1-bio-002
-level: C1-BIO
-version: '2.0'
-items:
-- lemma: каганат
-  ipa:
-  - kɐɦɐˈnɑt
+- term: воїн
+  ipa: /ˈʋɔjin/
+  pos: іменник
+  gender: чол.
+  translation: warrior
+  collocations:
+    - хоробрий воїн
+    - полеглий воїн
+    - воїн-захисник
+  learner_note: "Не плутати з «солдат» (сучасний солдат); «воїн» несе архаїчно-героїчне забарвлення"
+  example: "Святослав увійшов в історію як хоробрий воїн, якого боялися навіть вороги."
+
+- term: завойовник
+  ipa: /zɑˈʋɔjɔʋnɪk/
+  pos: іменник
+  gender: чол.
+  translation: conqueror
+  collocations:
+    - жорстокий завойовник
+    - великий завойовник
+    - завойовник нових земель
+  example: "Святослав увійшов у світову історію як завойовник, що знищив Хозарський каганат."
+
+- term: каганат
+  ipa: /kɑɦɑˈnɑt/
+  pos: іменник
+  gender: чол.
   translation: khaganate
-  definition: Тип середньовічної монархії у тюркомовних народів на чолі з каганом (хазари, авари).
-- lemma: дружина
-  ipa:
-  - drʊˈʒɪnɐ
-  translation: retinue / warband
-  definition: Постійний військовий загін князя в Русі, що був ядром війська і частиною управління.
-- lemma: пороги
-  ipa:
-  - pɔˈrɔɦɪ
-  translation: rapids
-  definition: Кам'янисті ділянки в руслі річки (зокрема Дніпра), що перешкоджають судноплавству.
-- lemma: засідка
-  ipa:
-  - zɐˈsʲidkɐ
+  collocations:
+    - Хозарський каганат
+    - знищення каганату
+    - розпад каганату
+  example: "Розгром Хозарського каганату відкрив Русі прямий вихід на торгові шляхи Сходу."
+
+- term: похід
+  ipa: /ˈpɔxid/
+  pos: іменник
+  gender: чол.
+  translation: campaign, march
+  collocations:
+    - військовий похід
+    - піти в похід
+    - східний похід
+    - балканський похід
+  example: "Під час Балканського походу Святослав захопив понад вісімдесят міст уздовж Дунаю."
+
+- term: дружина
+  ipa: /druˈʒɪnɑ/
+  pos: іменник
+  gender: жін.
+  translation: retinue, warband (princely armed force)
+  collocations:
+    - княжа дружина
+    - вірна дружина
+    - очолити дружину
+  learner_note: "У середньовічному контексті — «збройне оточення князя», не «дружина» (wife/жінка)"
+  example: "Дружина Святослава відзначалася незламним бойовим духом і сліпою відданістю своєму ватажкові."
+
+- term: печеніги
+  ipa: /pɛt͡ʃɛˈnʲiɦɪ/
+  pos: іменник
+  gender: чол. мн.
+  translation: Pechenegs (nomadic steppe people)
+  collocations:
+    - напад печенігів
+    - облога печенігів
+    - союз з печенігами
+  example: "Поки Святослав воював на Балканах, печеніги оточили Київ і ледь не захопили місто."
+
+- term: пороги
+  ipa: /pɔˈrɔɦɪ/
+  pos: іменник
+  gender: чол. мн.
+  translation: rapids (in a river)
+  collocations:
+    - Дніпрові пороги
+    - загибель на порогах
+    - обійти пороги
+  example: "Свенельд застерігав: «Обійди, княже, пороги на конях, бо стоять печеніги»."
+
+- term: засідка
+  ipa: /zɑˈsidkɑ/
+  pos: іменник
+  gender: жін.
   translation: ambush
-  definition: Раптовий напад із прихованої позиції.
-- lemma: оселедець
-  ipa:
-  - ɔseˈlɛdet͡sʲ
-  translation: oseledets (Cossack forelock)
-  definition: Характерна зачіска (пасма волосся на голеній голові), ознака знатності воїна.
-- lemma: експансія
-  ipa:
-  - eksˈpɑnsʲijɐ
-  translation: expansion
-  definition: Розширення сфери панування, впливу, поширення чого-небудь за початкові межі.
-- lemma: доблесть
-  ipa:
-  - ˈdɔblestʲ
-  translation: valor / prowess
-  definition: Мужність, відвага, виявлені в бою; висока моральна якість воїна.
-- lemma: візантійський
-  ipa:
-  - ʋizɐnˈtʲii̯sʲkei̯
-  translation: Byzantine
-  definition: Такий, що стосується Візантії (Східної Римської імперії).
-- lemma: данник
-  ipa:
-  - ˈdɑnːɪk
-  translation: tributary
-  definition: Той, хто платить данину переможцю або сюзерену.
-- lemma: язичництво
-  ipa:
-  - jɐˈzɪt͡ʃnɪt͡stʋɔ
-  translation: paganism
-  definition: Політеїстична релігія, заснована на поклонінні силам природи та багатьом богам.
-- lemma: ультиматум
-  ipa:
-  - ʊlʲtɪˈmɑtʊm
-  translation: ultimatum
-  definition: Категорична вимога, невиконання якої загрожує застосуванням сили.
-- lemma: стратегія
-  ipa:
-  - strɐˈtɛɦʲijɐ
-  translation: strategy
-  definition: Мистецтво ведення війни, загальний план військових дій.
-- lemma: маневреність
-  ipa:
-  - mɐˈnɛu̯renʲisʲtʲ
-  translation: maneuverability
-  definition: Здатність швидко змінювати напрямок руху або дії (про військо).
-- lemma: гегемонія
-  ipa:
-  - heɦeˈmɔnʲijɐ
-  translation: hegemony
-  definition: Політичне, економічне або військове панування однієї держави над іншими.
-- lemma: фатальний
-  ipa:
-  - fɐˈtɑlʲnei̯
-  translation: fatal
-  definition: Такий, що неминуче веде до загибелі або тяжких наслідків; визначений долею.
-- lemma: аскетизм
-  ipa:
-  - ɐskeˈtɪzm
-  translation: asceticism
-  definition: Обмеження життєвих потреб, відмова від розкоші (характерне для Святослава).
-- lemma: мілітарний
-  ipa:
-  - mʲilʲiˈtɑrnei̯
-  translation: military (adj)
-  definition: Військовий, воєнний; пов'язаний з війною.
-- lemma: пастка
-  ipa:
-  - ˈpɑstkɐ
-  translation: trap
-  definition: Пристрій або ситуація для захоплення когось зненацька.
-- lemma: тріумф
-  ipa:
-  - trʲiˈʊmf
-  translation: triumph
-  definition: Блискучий успіх, видатна перемога.
-- lemma: капітуляція
-  ipa:
-  - kɐpʲitʊˈlʲɑt͡sʲijɐ
-  translation: capitulation
-  definition: Припинення опору і здача ворогові на певних умовах.
-- lemma: форпост
-  ipa:
-  - fɔrˈpɔst
-  translation: outpost
-  definition: Передовий пункт, укріплення на кордоні.
-- lemma: степ
-  ipa:
-  - stɛp
-  translation: steppe
-  definition: Великий безлісий простір у помірному поясі, вкритий трав'янистою рослинністю.
-- lemma: імперський
-  ipa:
-  - imˈpɛrsʲkei̯
-  translation: imperial
-  definition: Такий, що стосується імперії; владний, завойовницький.
-- lemma: пакт
-  ipa:
-  - pɑkt
-  translation: pact
-  definition: Міжнародна угода, договір (зазвичай про ненапад або взаємодопомогу).
-- lemma: жертовність
-  ipa:
-  - ʒerˈtɔu̯nʲisʲtʲ
-  translation: sacrifice / selflessness
-  definition: Готовність пожертвувати власними інтересами або життям заради вищої мети.
+  collocations:
+    - влаштувати засідку
+    - потрапити в засідку
+    - засідка ворога
+  example: "Біля Дніпрових порогів на Святослава вже чекала підготовлена засідка."
+
+- term: данник
+  ipa: /ˈdɑnnɪk/
+  pos: іменник
+  gender: чол.
+  translation: tributary (one who pays tribute)
+  collocations:
+    - брати в данники
+    - звільнити від данини
+    - данники хозарів
+  example: "В'ятичі були данниками хозарів, доки Святослав не звільнив їх і не включив до складу Русі."
+
+- term: договір
+  ipa: /dɔɦɔˈʋir/
+  pos: іменник
+  gender: чол.
+  translation: treaty, agreement
+  collocations:
+    - укласти договір
+    - мирний договір
+    - порушити договір
+  example: "Зрештою, сили були нерівними, і Святослав був змушений укласти почесний мирний договір."
+
+- term: чаша
+  ipa: /ˈt͡ʃɑʃɑ/
+  pos: іменник
+  gender: жін.
+  translation: cup, goblet
+  collocations:
+    - ритуальна чаша
+    - чаша з черепа
+    - пити з чаші
+  example: "Хан Куря наказав зробити ритуальну чашу з черепа Святослава, окувавши її золотом."
+
+- term: череп
+  ipa: /ˈt͡ʃɛrɛp/
+  pos: іменник
+  gender: чол.
+  translation: skull
+  collocations:
+    - череп ворога
+    - зробити чашу з черепа
+  example: "Пити з черепа великого воїна означало не зневагу, а найвищу честь і містичне причастя до його сили."
+
+- term: здобич
+  ipa: /ˈzdɔbɪt͡ʃ/
+  pos: іменник
+  gender: жін.
+  translation: spoils, booty
+  collocations:
+    - багата здобич
+    - ділити здобич
+    - захопити здобич
+  example: "Дружинники жили за рахунок здобичі та данини з підкорених народів."
+
+- term: облога
+  ipa: /ɔbˈlɔɦɑ/
+  pos: іменник
+  gender: жін.
+  translation: siege
+  collocations:
+    - тримати облогу
+    - зняти облогу
+    - виснажлива облога
+  example: "Тримісячна облога Доростола стала легендою військової доблесті руських воїнів."
+
+- term: перемога
+  ipa: /pɛrɛˈmɔɦɑ/
+  pos: іменник
+  gender: жін.
+  translation: victory
+  collocations:
+    - здобути перемогу
+    - велика перемога
+    - піррова перемога
+  example: "Перемога над Хазарією відкрила Русі шлях до нових торгових артерій, але ціною безпеки кордонів."

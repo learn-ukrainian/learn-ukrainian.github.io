@@ -1,4 +1,3 @@
----
 module: c1-hist-094
 level: c1-hist
 sequence: 94
@@ -10,54 +9,46 @@ objectives:
 - 'Analyze the causes and consequences of синтез: закономірність чи випадок?'
 - Evaluate the historical significance of паттерни на роздоріжжях
 content_outline:
-- section: "Вступ — Паттерни на роздоріжжях"
-  words: 457
+- section: Вступ — Паттерни на роздоріжжях
   subsections:
   - Огляд модулів 89-93
   - Чи є закономірності
   - Роль вибору vs. структури
   - Мета синтезу
 - section: Порівняння поворотних точок
-  words: 686
   subsections:
   - 1654 → 1709 → 1917 → 1991 → 2004 → 2014
   - Що спільного
   - Що відрізняється
   - Таблиця порівняння
 - section: Структурні фактори
-  words: 800
   subsections:
   - Геополітичне положення
   - Ресурси — завжди обмежені
   - Зовнішні актори — завжди присутні
   - Внутрішня єдність — варіативна
 - section: Роль агентності
-  words: 686
   subsections:
   - Лідери мають вибір
   - Помилки і правильні рішення
   - Народ як актор (2004, 2014, 2022)
   - Зростання агентності з часом
 - section: Чи можна передбачити
-  words: 571
   subsections:
   - Закономірності — так
   - Конкретний результат — ні
   - Цінність історичного аналізу
   - Підготовка до майбутнього
-- section: "2022 — найбільше роздоріжжя"
-  words: 457
+- section: 2022 — найбільше роздоріжжя
   subsections:
   - Всі попередні досвіди
   - Чому результат інший
   - Новий етап історії?
 - section: Підсумок
-  words: 343
   subsections:
   - Історія — не випадкова, але не детермінована
   - Роль вибору зростає
   - Перехід до Заходу
-word_target: 4000
 vocabulary:
 - синтез
 - закономірність
@@ -87,11 +78,11 @@ activities:
   focus: Чи можна передбачити наступне роздоріжжя української історії?
 sources:
 - name: Історія України (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Історія_України"
+  url: https://uk.wikipedia.org/wiki/Історія_України
   type: reference
   notes: General history
 - name: Контрфактична історія (Вікіпедія)
-  url: "https://uk.wikipedia.org/wiki/Контрфактична_історія"
+  url: https://uk.wikipedia.org/wiki/Контрфактична_історія
   type: reference
   notes: Methodology
 vocabulary_hints:
@@ -110,7 +101,9 @@ activity_hints:
   items: 4
 - type: essay-response
   focus: Критичний аналіз
-  word_target: 300
 - type: true-false
   focus: Факти та інтерпретації
   items: 10
+persona:
+  voice: Academic Historiographer
+  role: Strategic Foresight Historian

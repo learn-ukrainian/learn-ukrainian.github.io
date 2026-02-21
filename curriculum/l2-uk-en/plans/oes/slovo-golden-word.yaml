@@ -1,4 +1,3 @@
----
 sequence: 82
 module: oes-082
 module_number: 82
@@ -9,7 +8,6 @@ phase: 4
 phase_id: literary-art
 phase_name: Literary Art
 focus: Rhetoric — The plea for unity
-word_target: 4000
 content_outline:
 - section: Вступ
   description: 'Introduction to Slovo: The Golden Word'
@@ -24,3 +22,6 @@ activity_types:
 - transcription
 - etymology-trace
 - grammar-identify
+persona:
+  voice: Senior Paleographer
+  role: Grand Prince's Orator

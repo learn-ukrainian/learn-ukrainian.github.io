@@ -1,0 +1,232 @@
+✅ Message sent to Gemini (ID: 11946) [auto-acked: self-addressed]
+✓ Message 11946 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #11946...
+📨 Message #11946
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-malaniuk-little-russianism
+   Time: 2026-02-20T23:34:41.838342+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 16
+module: lit-essay-16
+level: LIT.ESSAY
+slug: malaniuk-little-russianism
+version: '2.0'
+title: Malaniuk Little Russianism
+subtitle: Malaniuk Little Russianism
+content_outline:
+- section: Вступ та контекст
+  points: []
+- section: Аналіз ключових творів
+  points: []
+- section: Стилістика та мова автора
+  points: []
+- section: Деколонізаційна перспектива
+  points:
+  - Як цей автор руйнує імперські міфи
+  - Українська суб'єктність у тексті
+- section: Підсумок та спадщина
+  points: []
+vocabulary_hints:
+  required:
+  - історіографія
+  - наратив
+  - суб'єктність
+  recommended:
+  - деколонізація
+activity_hints:
+- type: reading
+  focus: Аналіз першоджерела
+- type: essay-response
+  focus: Критичне есе
+- type: critical-analysis
+  focus: Деконструкція тексту
+focus: literature
+pedagogy: literature
+immersion: 100% Ukrainian
+phase: LIT Expansion
+objectives:
+- Проаналізувати творчість Malaniuk Little Russianism у контексті української літератури
+- Дослідити вплив автора на формування національної ідентичності
+persona:
+  voice: Senior Specialist
+  role: Empire Diagnostician
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Malaniuk Little Russianism
+
+## Використані джерела
+1. [Енциклопедія Сучасної України (ЕСУ)](https://esu.com.ua/) — стаття про Євгена Маланюка, його життєвий шлях та формування вольового "вісниківського" світогляду.
+2. [Локальна Історія](https://localhistory.org.ua/) — історико-культурний аналіз праці "Малоросійство", деконструювання явища як ментальної хвороби бездержавної нації.
+3. [Освіта.ua](https://osvita.ua/) — повний текст есе "Малоросійство" та літературознавчий аналіз стилістики і концептуальних засад твору Маланюка.
+
+## Хронологія
+- 1897: Народження Євгена Маланюка в Новоархангельську на Херсонщині (нині Кіровоградщина).
+- 1920: Вимушена еміграція Маланюка після поразки Української революції 1917–1921 років; початок глибокої рефлексії над причинами втрати державності.
+- 1959: Публікація есе "Малоросійство" у Нью-Йорку (видавництво "Вісник"), де викладено системну діагностику української національної меншовартості.
+- 1968: Смерть Євгена Маланюка в Нью-Йорку; залишення по собі величезної інтелектуальної спадщини.
+- 1991+: Після здобуття Незалежності України та особливо під час сучасної російсько-української війни праця "Малоросійство" набуває нової хвилі актуальності.
+
+## Ключові факти та цитати
+- "Що ж таке малорос? Це – тип національно-дефективний, скалічений психічно, духовно, а – в наслідках, часом – і расово." (Євген Маланюк).
+- "… малоросійство – то не москвофільство і не ще яке-небудь фільство. То – неміч, хвороба, каліцтво внутрішньонаціональне. Це – національне пораженство." (Євген margin).
+- Маланюк стверджував, що малоросійство вражало переважно "мозковий центр нації" — інтелігенцію, тоді як селянство залишалося найменш ураженим цією хворобою.
+- Головним ліком від малоросійства автор вважав творення власної держави та "напружене творення Духової Суверенності".
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ та контекст: I — Історичні передумови": `[!context]` — Написання есе "Малоросійство" було спробою Маланюка знайти глибинні, внутрішні причини поразки визвольних змагань, перенісши фокус із зовнішніх ворогів на ментальний стан самої української нації.
+- Section "Аналіз ключових творів: II — Діагностика хвороби бездержавності": `[!quote]` — "Малоросійство – це не політика і навіть не тактика, лише завжди апріорна і тотальна капітуляція. Капітуляція ще перед боєм."
+- Section "Стилістика та мова автора: I — Риторика та термінологія": `[!culture]` — Маланюк створив унікальний стиль української публіцистики — мілітарний, категоричний, безкомпромісний, що отримав назву "імперативного" або "вісниківського".
+- Section "Деколонізаційна перспектива: I — Руйнування імперських міфів": `[!myth-buster]` — Російська імперія століттями культивувала образ "малороса" як кумедного, співаючого і безпечного провінціала. Маланюк зриває цю маску, показуючи, що за цим образом стоїть духовна капітуляція та національне каліцтво.
+- Section "Деколонізаційна перспектива: II — Повернення української суб'єктності": `[!decolonization]` — Маланюк вперше в історії української думки перевів малоросійство з категорії політичної чи культурної орієнтації у категорію медичну і психологічну (як хворобу), вимагаючи не просто політичної, а глибокої духовної деколонізації.
+- Section "Підсумок та спадщина: II — Актуальність концепції в сучасних умовах": `[!history-bite]` — Багато тез Маланюка, написаних у США в 1959 році, читаються так, ніби вони створені сьогодні як коментар до проблем українського суспільства в умовах гібридної та повномасштабної війни.
+
+## Деколонізаційний контекст
+- **Imperial/Soviet myth:** Малоросійство — це просто природна регіональна ідентичність, симпатія до "старшого брата" та частина загальноросійського культурного простору. "Малорос" — це лояльний співочий українець.
+- **Ukrainian reality:** Малоросійство — це наслідок колоніального терору і втрати державності. Це параліч політичної волі, втрата історичної пам'яті та добровільна відмова від власної суб'єктності. Воно є не природним станом, а "хронічною хворобою", яка потребує системного лікування через усвідомлення та державне будівництво.
+
+## Contested Terms (if applicable)
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| Малоросійство | Провінційна любов до рідного краю при лояльності до імперії, культурний колорит. | Ментальна хвороба, національно-дефективний стан, внутрішня капітуляція та втрата пам'яті. |
+| Малорос | Лояльний, кумедний, аполітичний "менший брат", що збагачує імперську культуру. | Психічно та духовно скалічений індивід, який відмовився від власної національної волі. |
+
+## Section-Mapped Research Notes
+
+### Вступ та контекст: I — Історичні передумови
+Маланюк формувався як особистість в горнилі Української революції 1917–1921 років. Поразка у цій боротьбі стала для нього ключовою травмою і водночас стимулом до аналізу. Він зрозумів, що зовнішній ворог (більшовики, білогвардійці) переміг лише тому, що Україна була послаблена зсередини. Історичним ґрунтом, на якому розквітло малоросійство, Маланюк називає втрату власної держави після Хмельниччини та доби Руїни.
+
+### Вступ та контекст: II — Біографічний вимір та еміграція
+Перебуваючи в еміграції (Чехословаччина, згодом США), Маланюк мав змогу спостерігати за українцями як у діаспорі, так і (через залізну завісу) в УРСР. Есе "Малоросійство" (1959, Нью-Йорк) стало квінтесенцією його роздумів. Маланюк виступав як "постановник діагнозу" своєму народу, керуючись жорсткою любов'ю і бажанням бачити Україну сильною нацією, а не безформною етнографічною масою.
+
+### Аналіз ключових творів: I — Структура та головна теза есею
+Есей має чітку полемічну та аналітичну структуру. Головна теза полягає в тому, що проблема українського малоросійства є центральною проблемою, що стоїть на заваді відновленню державності. Маланюк відмежовує малоросійство від простого "москвофільства", підкреслюючи його природу як глибокого психологічного та національного комплексу меншовартості, що базується на атрофії історичної пам'яті.
+
+### Аналіз ключових творів: II — Діагностика хвороби бездержавності
+Автор вводить медичну термінологію для опису суспільних явищ ("діагноз", "неміч", "каліцтво", "хвороба"). Він аналізує симптоми малоросійства: фаталізм, схильність до компромісів із ворогом, страх брати відповідальність за власну долю. Цікавим є спостереження Маланюка, що цією хворобою була уражена насамперед еліта — "мозковий центр нації", тоді як простий народ мав міцніший імунітет.
+
+### Стилістика та мова автора: I — Риторика та термінологія
+Стиль есею — безкомпромісний, категоричний, мілітарний. Маланюк як есеїст уникає ліризму й сентиментальності, які він вважав проявами того ж таки малоросійства в літературі. Він кує терміни, що б'ють на сполох: "національне пораженство", "тотальна капітуляція". Його риторика націлена на пробудження, вона різка і часто навмисно болюча для читача.
+
+### Стилістика та мова автора: II — Метафорика мілітарності
+Есей пронизаний лексикою боротьби, сили, сталі та крові. Маланюк позиціонує себе як "імперативного" автора, для якого слово є зброєю (метафора "стилета і стилоса"). У цьому підході він формує новий канон українського інтелектуального дискурсу — не розслаблено-хуторянський, а європейський, вольовий, державницький.
+
+### Деколонізаційна перспектива: I — Руйнування імперських міфів
+Маланюк здійснює радикальну деконструкцію імперського міфу про "добродушного малороса". Він доводить, що те, що в імперії подавалося як "українська специфіка" (співочість, м'якість, нездатність до жорсткої організації), є не автентичною рисою українців, а наслідком колоніального розтління. Він викриває малоросійство як інструмент імперського домінування, що руйнує зсередини будь-який державотворчий потенціал.
+
+### Деколонізаційна перспектива: II — Повернення української суб'єктності
+Деколонізація за Маланюком неможлива без усвідомлення проблеми: "поставлення діагнозу є початком лікування". Він вимагає відмови від комплексу жертви і переходу до активного творення "Духової Суверенності". Відновлення суб'єктності означає повернення до історичної пам'яті (Київська Русь, Козацька доба), де українці були державотворчим, мілітарним народом, здатним до самоврядування.
+
+### Підсумок та спадщина: I — Рецепція праці в діаспорі та в Україні
+У середовищі діаспори есей викликав бурхливі дискусії, адже він не залишав місця для самозаспокоєння. В радянській Україні праця була заборонена. Лише з початком 1990-х років "Малоросійство" почали повертати в український інтелектуальний обіг. Есей став базовим текстом для розуміння постколоніального синдрому в українському суспільстві.
+
+### Підсумок та спадщина: II — Актуальність концепції в сучасних умовах
+Сьогодні, під час екзистенційної війни з Росією, концепт Маланюка набув непересічної актуальності. Усвідомлення "внутрішнього малороса" допомагає сучасній Україні долати залишки російського культурного і політичного впливу. "Малоросійство" залишається фундаментальним твором для формування сучасної національної ідентичності та остаточного розриву з колоніальним минулим.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 11992)
+✓ Message 11946 acknowledged
+✓ Message 11992 acknowledged

@@ -1,0 +1,244 @@
+✅ Message sent to Gemini (ID: 10745) [auto-acked: self-addressed]
+✓ Message 10745 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10745...
+📨 Message #10745
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-degrees-of-certainty
+   Time: 2026-02-20T21:26:34.556517+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-041
+level: C1
+sequence: 41
+slug: degrees-of-certainty
+version: '2.0'
+title: 'Ступені впевненості: Модальність та хеджування'
+subtitle: 'Degrees of Certainty: Modality & Hedging'
+content_outline:
+- section: Розминка — Наскільки ви впевнені?
+  points:
+  - Шкала впевненості — від "точно" до "неможливо"
+  - Хеджування — пом'якшення категоричних тверджень
+  - Академічний стиль — чому вчені рідко говорять "точно"
+- section: Certainty Scale
+  points:
+  - '100%: безперечно, безсумнівно, напевно'
+  - '75%: ймовірно, скоріш за все, очевидно'
+  - '50%: можливо, може бути, мабуть'
+  - '25%: навряд чи, сумнівно, малоймовірно'
+  - '0%: неможливо, виключено, ні в якому разі'
+- section: Практика — модальність у тексті
+  points:
+  - Визначити ступінь впевненості автора в науковій статті
+  - Переписати категоричні твердження з хеджуванням
+  - Градуювати вирази впевненості (безперечно → можливо → навряд чи)
+  - Написати параграф наукового тексту з правильною модальністю
+focus: style
+pedagogy: Academic
+objectives:
+- Learner can express precise degrees of certainty using academic markers
+- Learner can analyze authorial stance and hedging in authentic texts
+- Learner can adjust the force of claims in academic production
+grammar:
+- Epistemic modality markers
+- Hedging strategies in academic discourse
+- Scale of certainty (probability)
+- Subjective vs. objective modality
+immersion: 100
+phase: C1.4 Advanced Stylistics & Rhetoric
+persona:
+  voice: Senior Specialist
+  role: Аналітик ризиків
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Ступені впевненості: Модальність та хеджування
+
+## State Standard Reference
+§4.4.4: "Стилістичні засоби синтаксису... елементи структурування тексту: вставні слова *по-перше, по-друге, по-третє, отже* та ін."
+§4.3.2: "Просте речення зі вставними словами: *Завтра в мене, знаєш, важливі справи*."
+Alignment: Цей модуль розширює розуміння вставних слів та модальних часток від простого граматичного явища до інструменту академічного хеджування (hedging) та стилістичної точності на рівні C1.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| **безперечно** | High (Academic/Publicistic) | безперечно свідчить, безперечно важливий, це безперечно так |
+| **ймовірно** | Medium (Scientific) | цілком ймовірно, найбільш ймовірно, менш ймовірно |
+| **навряд чи** | High (Conversational/Publicistic) | навряд чи можливо, навряд чи варто, це навряд чи допоможе |
+| **мабуть** | High (General) | мабуть, тому що; я, мабуть, піду |
+| **очевидно** | High (Scientific/General) | цілком очевидно, стає очевидно, очевидно, що |
+| **скоріш за все** | Medium (General) | скоріш за все, це помилка; вони, скоріш за все, не прийдуть |
+
+## Cultural Hooks
+1. **Культура "щирості" vs. академічна обережність**: В українській побутовій культурі цінується прямота і категоричність ("рубати правду"), тоді як хеджування може сприйматися як нещирість ("крутити хвостом"). Натомість в академічному середовищі категоричність вважається ознакою дилетантства ("голослівність"), а хеджування — ознакою професіоналізму.
+2. **"Може" як національна філософія**: Слово "може" (або "може бути") є універсальним інструментом української ментальності, що дозволяє уникати конфліктів і залишати простір для маневру (прислів'я: "Може, дощ, а може, сніг; може, буде, може, ні").
+
+## Common Learner Errors
+1. **Пунктуація з "навряд чи"**: Помилка: *"Навряд чи, це правда"*. Правильно: *"Навряд чи це правда"*. (Частка *навряд чи* не є вставним словом і не відокремлюється комами).
+2. **Злиття "на жаль"**: Помилка: *"Нажаль"*. Правильно: *"На жаль"*.
+3. **Плутанина "однак"**: Помилка: *"Однак, ми пішли"* (на початку речення). Правильно: *"Однак ми пішли"* (сполучник = але). Але: *"Ми, однак, пішли"* (в середині = вставне слово).
+4. **Надуживання "я думаю"**: Замість багатства модальності (*на мою думку, вважаю, припускаю, переконаний*), студенти калькують англійське *I think*.
+
+## Cross-References
+- **Builds on**: B2 Grammar modules (Basic introductory words), B2 Syntax.
+- **Prepares for**: C1.5 Literature (interpreting authorial stance), C1-BIO (biographical analysis).
+
+## Notes for Content Writing
+- Особливу увагу приділити різниці між **вставними словами** (відокремлюються комами) та **модальними частками** (не відокремлюються: *навряд чи, все-таки, майже, навіть*). Це найскладніший пункт для C1.
+- Використати науковий стиль для прикладів (Persona: Аналітик ризиків ідеально підходить для теми ймовірності).
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ та культурний контекст (Introduction and Cultural Context)"
+  words: 600
+  points:
+  - "Дилема «рубати правду» vs. академічна обережність — розбір культурного сприйняття прямоти та перехід до концепції хеджування як ознаки професіоналізму."
+  - "Філософія «може бути» в українській ментальності — аналіз прислів'я «Може, дощ, а може, сніг» як способу уникати конфліктів та залишати простір для маневру."
+  - "Введення персони Аналітика ризиків — обговорення небезпеки «голослівності» та важливості градуювання тверджень у науковому середовищі."
+- section: "Шкала впевненості та хеджування (Certainty Scale and Hedging)"
+  words: 1000
+  points:
+  - "Повна впевненість (100%): вживання маркерів «безперечно», «безсумнівно», «напевно» та їхня роль у створенні переконливості тексту."
+  - "Градуювання ймовірності (75%-25%): семантичні відтінки між «ймовірно», «скоріш за все», «мабуть» та «сумнівно» згідно з вимогами стандарту §4.4.4."
+  - "Хеджування як стратегія — як пом'якшувати категоричні твердження в науковому дискурсі, щоб відповідати критеріям академічної доброчесності."
+- section: "Граматика: Вставні слова vs. модальні частки (Grammar: Parentheticals vs. Particles)"
+  words: 900
+  points:
+  - "Критичне розрізнення для рівня C1: вставні слова (з комами) проти модальних часток «навряд чи», «все-таки», «майже» (без ком)."
+  - "Аналіз вставних конструкцій згідно зі стандартом §4.3.2 — від простого вираження ставлення до складного структурування аргументації."
+  - "Пунктуаційний тренінг: робота з часткою «навряд чи» та правописом виразу «на жаль» (завжди окремо) для усунення типових помилок."
+- section: "Стилістична точність та авторська позиція (Stylistic Precision and Authorial Stance)"
+  words: 800
+  points:
+  - "Подолання калькування «я думаю» — розширення репертуару вступних фраз: «на мою думку», «припускаю», «переконаний», «вважаю»."
+  - "Випадки з «однак»: розрізнення сполучника на початку речення (без коми) та вставного слова в середині (з комами) для точності висловлювання."
+  - "Суб'єктивна vs. об'єктивна модальність — як вибір маркерів впевненості змінює сприйняття об'єктивності дослідження."
+- section: "Практикум аналітика та синтез (Practicum and Synthesis)"
+  words: 700
+  points:
+  - "Трансформація категоричних тверджень — вправа на переписування «аматорських» тез у професійні гіпотези з використанням хеджування."
+  - "Аналіз автентичного наукового тексту — ідентифікація ступенів впевненості автора та обґрунтування вибору модальних засобів."
+  - "Підсумкова рефлексія: створення параграфу наукового стилю на тему ризиків, інтегруючи вивчені вставні слова та частки."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "безперечно (undoubtedly) — вживається в науковому та публіцистичному стилях; кол.: безперечно свідчить, безперечно важливий"
+  - "ймовірно (probably) — висока частотність у наукових текстах; кол.: цілком ймовірно, менш ймовірно"
+  - "навряд чи (unlikely) — модальна частка, що НЕ виділяється комами; кол.: навряд чи можливо, навряд чи варто"
+  - "мабуть (perhaps/probably) — універсальний маркер середнього ступеня впевненості, вставне слово"
+  - "очевидно (obviously) — вживається для підкреслення логічного висновку; кол.: цілком очевидно, стає очевидно"
+  recommended:
+  - "безсумнівно (undoubtedly) — формальний синонім до 'безперечно'"
+  - "скоріш за все (most likely) — загальновживаний маркер високої ймовірності"
+  - "припускати (to assume) — академічна альтернатива конструкції 'я думаю'"
+  - "виключено (ruled out) — маркер нульової ймовірності (0% certainty)"
+  - "на мою думку (in my opinion) — стандартна вставна конструкція для вираження авторської позиції"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (3763 chars)
+✅ Message sent to Claude (ID: 10752)
+✓ Message 10752 acknowledged
+   Auto-acknowledged reply #10752 (stdout delivery — no inbox accumulation)
+✓ Message 10745 acknowledged

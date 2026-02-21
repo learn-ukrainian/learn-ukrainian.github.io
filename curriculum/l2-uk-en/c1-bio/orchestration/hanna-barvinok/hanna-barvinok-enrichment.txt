@@ -1,0 +1,275 @@
+✅ Message sent to Gemini (ID: 12401) [auto-acked: self-addressed]
+✓ Message 12401 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12401...
+📨 Message #12401
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-hanna-barvinok
+   Time: 2026-02-20T23:39:31.097920+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-bio-41
+level: C1-BIO
+sequence: 41
+slug: hanna-barvinok
+version: '2.0'
+title: 'Ганна Барвінок: Письменниця і етнографка'
+content_outline:
+- section: Вступ — Перша з жінок української літератури
+  points:
+  - Одна з перших українських письменниць
+  - Дружина Пантелеймона Куліша
+  - Етнографічна та просвітницька діяльність
+- section: Юність та виховання (1828-1847)
+  points:
+  - Народження Олександри Білозерської
+  - Родина та освіта
+  - Вплив українського фольклору
+  - Знайомство з Кулішем
+- section: Подружжя з Кулішем (1847-1860-ті)
+  points:
+  - Шлюб і спільна діяльність
+  - Участь у Кирило-Мефодіївському братстві
+  - Арешт Куліша та заслання
+  - Чекання та листування
+- section: Літературна діяльність (1860-ті–1890-ті)
+  points:
+  - Псевдонім «Ганна Барвінок»
+  - Оповідання про селянське життя
+  - Етнографічні записи
+  - Збірка «Оповідання з народних уст»
+- section: Пізній період (1890-1911)
+  points:
+  - Вдівство та продовження праці
+  - Спогади про Куліша
+  - Останні твори
+  - Смерть у Мотронівці
+- section: Спадщина — Голос селянської України
+  points:
+  - Внесок в українську етнографію
+  - Жіночий голос в літературі
+  - Сучасне дослідження творчості
+  - Барвінок як символ жіночої творчості
+vocabulary_hints:
+  required:
+  - письменниця (woman writer)
+  - етнограф (ethnographer)
+  - просвітниця (enlightener)
+  - псевдонім (pseudonym)
+  - оповідання (short story)
+  - фольклор (folklore)
+  - селянство (peasantry)
+  - побут (everyday life)
+  - обряд (ritual)
+  - традиція (tradition)
+  recommended:
+  - усна творчість (oral tradition)
+  - народна пісня (folk song)
+  - звичай (custom)
+  - етнографічний запис (ethnographic record)
+  - жіноча література (women's literature)
+activity_hints:
+- type: reading
+  focus: Українська жіноча література XIX ст.
+  source: Literary history sources
+  items: 3 passages
+- type: essay-response
+  focus: Яку роль відіграла Барвінок у збереженні українського фольклору?
+  output: Analytical essay
+focus: biography
+prerequisites:
+- c1-bio-20
+connects_to:
+- c1-bio-97
+- c1-bio-24
+module_type: biography
+sources:
+- name: Ганна Барвінок (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Ганна_Барвінок
+  type: primary
+  notes: Biography of the pioneering woman writer
+- name: Інститут літератури ім. Т.Г. Шевченка
+  url: https://ilnan.gov.ua/
+  type: reference
+  notes: Literary archive materials
+immersion: 100% Ukrainian
+phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of ганна барвінок: письменниця і етнографка'
+- Evaluate the contributions of перша з жінок української літератури
+- Trace the career and influence of голос селянської україни
+persona:
+  voice: Senior Biographer
+  role: Folklorist
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Ганна Барвінок: Письменниця і етнографка
+
+## Використані джерела
+1. [Енциклопедія Сучасної України: Ганна Барвінок](https://esu.com.ua/article-40502) — фундаментальна біографічна стаття.
+2. [Історія України: Ганна Барвінок (Білозерська-Куліш)](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Barvinok_H) — академічна довідка Інституту історії України.
+3. [Літературна спадщина Ганни Барвінок](http://litopys.org.ua/) — тексти творів та аналітичні статті.
+4. [Бібліотека української літератури: Ганна Барвінок](https://www.ukrlib.com.ua/bio/printit.php?tid=1568) — детальна біографія та огляд творчості.
+
+## Хронологія
+- **1828, 5 травня (23 квітня ст. ст.)**: Народилася в Борзні (або Мотронівці) у дворянській родині Білозерських.
+- **1843**: Знайомство з Пантелеймоном Кулішем у Мотронівці (їй 15, йому 24).
+- **1847, 22 січня**: Одруження з П. Кулішем. Боярин на весіллі — Тарас Шевченко.
+- **1847, квітень**: Арешт Куліша у Варшаві (справа Кирило-Мефодіївського братства).
+- **1847–1850**: Життя на засланні в Тулі разом з чоловіком. Втрата першої дитини.
+- **1858**: Початок літературної діяльності під псевдонімом Ганна Барвінок.
+- **1860–1862**: Активна публікація в журналі «Основа».
+- **1897, 14 лютого**: Смерть Пантелеймона Куліша. Ганна стає розпорядницею його спадщини.
+- **1911, 6 липня (23 червня ст. ст.)**: Смерть у Мотронівці. Похована поруч з чоловіком.
+
+## Ключові факти та цитати
+- **Факт**: Її називали «поетом жіночого горя».
+- **Цитата (первинна)**: «...коли не доїхавши до Варшави, зробилась я письменницею, навіть Куліш похвалив мене за «Жидівського кріпака».»
+- **Цитата (первинна)**: «Я тільки до того й жила, щоб побачити твої, світе мій, друковані твори». (З листів до Куліша, демонструє її відданість його праці).
+- **Факт**: Брала активну участь у виданні альманаху «Хата» та журналу «Основа».
+- **Факт**: Іван Франко назвав її «праматір'ю української літератури» (разом з Марком Вовчком).
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ — Перша з жінок української літератури": [!myth-buster] — Спростування міфу про те, що вона була лише «тінню» Куліша. Вона була самодостатньою авторкою.
+- Section "Юність та виховання (1828-1847)": [!context] — Роль хутора Мотронівка як культурного осередку («Кулішівка»).
+- Section "Подружжя з Кулішем (1847-1860-ті)": [!history-bite] — Як весільна подорож перетворилася на арешт і заслання. Роль Шевченка на весіллі.
+- Section "Літературна діяльність (1860-ті–1890-ті)": [!quote] — Цитата про початок писання ("з нудьги" у Варшаві).
+- Section "Пізній період (1890-1911)": [!culture] — Як вона продала родинний маєток, щоб видати твори Куліша (самопожертва заради культури).
+- Section "Спадщина — Голос селянської України": [!decolonization] — Повернення її імені в канон після радянського забуття (де її вважали занадто «релігійною» і «сентиментальною»).
+
+## Деколонізаційний контекст
+- **Imperial/Soviet myth**: Радянське літературознавство маргіналізувало її як «сентиментальну» письменницю, фокусуючись лише на Марку Вовчку як на «прогресивній». Її глибока релігійність та етико-моральна проблематика не вписувалися в атеїстичний канон. Також применшувалася її роль як видавця та мецената української культури.
+- **Ukrainian reality**: Ганна Барвінок — піонерка «жіночого голосу» в літературі. Вона не просто описувала страждання, а й показувала духовну силу української жінки. Вона була повноправним учасником культурного процесу, а не лише дружиною відомого чоловіка.
+
+## Contested Terms (if applicable)
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| Жіноча література | Сентименталізм, «жіноче ниття», побутовізм | Гендерна творчість, психологізм, етико-моральні пошуки, філософія серця |
+| Роль у шлюбі | «Вірна дружина декабриста» (тінь) | Соратниця, редакторка, видавчиня, «Берегиня Кулішева» |
+
+## Section-Mapped Research Notes
+
+### Вступ — Перша з жінок української літератури
+Одна з перших жінок-письменниць в Україні. Почала писати раніше за Марка Вовчка, але опублікувала пізніше. Важливість її етнографічної роботи: фіксація живих народних звичаїв, пісень, обрядів, особливо весільних. Псевдонім «Ганна Барвінок» символізує нев'януче кохання та вірність (барвінок — символ весілля і пам'яті).
+
+### Юність та виховання (1828-1847)
+Рід Білозерських — козацька шляхта. Батько — предводитель дворянства, мати — берегиня традицій. Освіта вдома і в пансіонах (Кременчук, Полтава). Знання мов. Вплив фольклору: «Я з народних уст записувала». Мотронівка як центр українського життя. Зустріч з Кулішем: романтична історія (він старший, відомий), її захоплення ним як генієм.
+
+### Подружжя з Кулішем (1847-1860-ті)
+Весілля 1847 року. Шевченко — старший боярин, дуже веселився, співав. Поїздка до Варшави — арешт Куліша. Ганна втрачає дитину (викидень через стрес). Життя в Тулі: бідність, але духовна близькість. Вона вчить його розуміти народну душу глибше. Повернення в Україну.
+
+### Літературна діяльність (1860-ті–1890-ті)
+Публікації в «Основі». Тематика: «жіноче безталання» (п'яниця-чоловік, рекрутчина, зла свекруха). Але акцент не на соціальному протесті (як у Вовчка), а на внутрішній святість, терпінні, моральній перевазі жінки. Твори: «П'яниця», «Хатнє лихо», «Молодича боротьба». Етнографічна точність мови (Куліш казав, що вчиться у неї мови).
+
+### Пізній період (1890-1911)
+Після смерті Куліша (1897) присвятила себе виданню його творів. Продала маєток у Мотронівці, щоб оплатити друк. Жіла скромно, майже бідно. Листування з науковцями, письменниками (Коцюбинський, Франко). Мемуари. Самотність, але сповнена обов'язку.
+
+### Спадщина — Голос селянської України
+Її творчість — місток між етнографією та художньою прозою. Внесок у формування літературної мови (чернігівський діалект). Символ жертовності заради культури. Сучасне переосмислення: не сентименталізм, а екзистенційна проза.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12454)
+✓ Message 12401 acknowledged
+✓ Message 12454 acknowledged

@@ -1,0 +1,312 @@
+✅ Message sent to Gemini (ID: 11880) [auto-acked: self-addressed]
+✓ Message 11880 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #11880...
+📨 Message #11880
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-povist-mynulykh-lit-i
+   Time: 2026-02-20T23:34:17.583484+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-hist-011
+level: c1-hist
+sequence: 11
+version: '1.0'
+title: 'Повість минулих літ I: Структура та автори'
+focus: history
+pedagogy: seminar
+objectives:
+- 'Analyze the causes and consequences of повість минулих літ i: структура та автори'
+- Evaluate the historical significance of найстаріший літопис русі
+content_outline:
+- section: Вступ — Найстаріший літопис Русі
+  subsections:
+  - Що таке Повість минулих літ (ПМЛ)?
+  - Чому це найважливіше джерело для ранньої історії?
+  - Редакції — Лаврентіївська, Іпатіївська
+  - Що ми розглянемо в цьому модулі
+- section: Структура літопису
+  subsections:
+  - Вступна частина — «звідки пішла Руська земля»
+  - Недатована частина — легенди, походження
+  - Датована частина — від 852 року
+  - Принцип погодного запису
+  - Що включено і що пропущено
+- section: Питання авторства
+  subsections:
+  - Нестор — традиційна атрибуція
+  - Хто насправді писав? Кілька авторів
+  - Шахматов — реконструкція шарів
+  - Як визначити різних авторів?
+  - Політичні замовники — князі та церква
+- section: Редакції та рукописи
+  subsections:
+  - Лаврентіївський список (1377)
+  - Іпатіївський список (XV ст.)
+  - Радзивіллівський список (з мініатюрами)
+  - Чим відрізняються редакції?
+  - Що додано, що прибрано
+- section: Мова літопису
+  subsections:
+  - Давньоруська як основа
+  - Церковнослов'янські елементи
+  - Як читати сьогодні — глосарій
+  - Приклади з текстами
+- section: Чому важлива критика джерела
+  subsections:
+  - ПМЛ — не об'єктивна історія
+  - Легенди vs. історичні факти
+  - Політична заангажованість
+  - Як використовувати критично
+- section: Підсумок
+  subsections:
+  - ПМЛ як фундамент історичної пам'яті
+  - Підготовка до читання фрагментів
+  - Зв'язок із наступним модулем
+vocabulary:
+- літопис
+- редакція
+- рукопис
+- атрибуція
+- погодний запис
+- компіляція
+- давньоруський
+- церковнослов'янський
+- реконструкція
+- шар / пласт
+- палеографія
+- кодекс
+- автограф
+- копіїст
+- інтерполяція
+activities:
+- type: reading
+  focus: Opening passage \"Откуда есть пошла Руская земля\" — modern translation
+- type: critical-analysis
+  focus: Who benefits from specific passages? Identify political purpose
+- type: comparative-study
+  focus: Compare Laurentian vs. Hypatian redaction on one event
+- type: essay-response
+  focus: Чи можна довіряти Повісті минулих літ як історичному джерелу?
+sources:
+- name: Повість минулих літ (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Повість_минулих_літ
+  type: reference
+  notes: Overview of the chronicle
+- name: Повість минулих літ (повний текст)
+  url: https://litopys.org.ua/pvlyar/yar.htm
+  type: primary
+  notes: Full text of Laurentian redaction
+- name: Нестор Літописець
+  url: https://uk.wikipedia.org/wiki/Нестор_Літописець
+  type: reference
+  notes: Traditional attribution
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
+persona:
+  voice: Academic Historiographer
+  role: Monastic Chronicler
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Повість минулих літ I: Структура та автори
+
+## Використані джерела
+1. [litopys.org.ua](http://litopys.org.ua/pvlyar/yar.htm) — Повний текст та аналіз Лаврентіївського списку.
+2. [esu.com.ua](https://esu.com.ua/search_articles.php?id=3775) — Енциклопедія Сучасної України: стаття про Повість минулих літ.
+3. [history.org.ua](http://resource.history.org.ua/) — Інститут історії України НАНУ: історіографія літописання.
+4. [Шахматов О. О.](http://litopys.org.ua/shakh/shakh.htm) — Розвідки про склад давньоруських літописних зводів.
+
+## Хронологія
+- **бл. 1037**: Найдавніший Київський звід (гіпотеза Шахматова).
+- **1073**: Перший Києво-Печерський звід (Никон).
+- **1093-1095**: Другий Києво-Печерський звід.
+- **1113**: Перша редакція «Повісті минулих літ» (Нестор, не збереглася).
+- **1116**: Друга редакція (Сильвестр, Видубицький монастир).
+- **1118**: Третя редакція (для Мстислава Володимировича).
+- **1377**: Лаврентіївський список (найстаріший збережений список, містить редакцію 1116 р.).
+- **XV ст. (бл. 1425)**: Іпатіївський список (містить редакцію 1118 р.).
+
+## Ключові факти та цитати
+- **Цитата (початок)**: «Се повісті врем’яних літ, звідки пішла Руська земля, хто в Києві почав спершу княжити і як Руська земля постала...»
+- **Гіпотеза Шахматова**: ПМЛ — це не твір одного автора, а багатошаровий "літописний звід", де кожен наступний редактор змінював попередній текст на догоду політичному замовнику.
+- **Сильвестр (Видубичі)**: Переписав кінцівку ПМЛ у 1116 році, щоб звеличити Володимира Мономаха і применшити роль Святополка Ізяславича (попереднього покровителя Печерського монастиря).
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ — Найстаріший літопис Русі": [!history-bite] — Оригіналу ПМЛ не існує; ми читаємо копії, зроблені через 300-400 років після написання.
+- Section "Структура літопису": [!context] — Літопис починається не з Києва, а з Всесвітнього потопу і синів Ноя, вписуючи Русь у біблійну історію.
+- Section "Питання авторства": [!myth-buster] — Нестор не був єдиним автором. Це колективна праця кількох поколінь ченців-редакторів.
+- Section "Редакції та рукописи": [!culture] — Іпатіївський список зберіг «живу» українську мову (лексику, фразеологію) краще, ніж "суздальський" Лаврентіївський.
+- Section "Мова літопису": [!quote] — Приклади українізмів у тексті: «рілля», «соромитися», «тужити», кличний відмінок «княже/брате».
+- Section "Чому важлива критика джерела": [!decolonization] — ПМЛ — це політичний документ, а не об'єктивна хроніка. Це "PR-кампанія" київських князів (зокрема Мономаховичів).
+
+## Деколонізаційний контекст
+- **Imperial Myth**: ПМЛ — "общерусскоє достояніє", початок історії Росії.
+- **Ukrainian Reality**: ПМЛ створена в Києві, фіксує київський світогляд і українські етнографічні риси. Суздальські (російські) літописи починаються лише з перепису ПМЛ і відгалужуються пізніше. Лаврентіївський список (створений на Півночі) має сліди "редагування" київської історії.
+- **Imperial Myth**: "Київська Русь" як колиска трьох народів.
+- **Ukrainian Reality**: Літопис чітко вирізняє "русь" (київські поляни) від інших слов'янських племен півночі.
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| Мова літопису | Давньоруська (спільна/давньоросійська) | Церковнослов'янська з потужним давньоукраїнським субстратом (редакція тексту). |
+| Русь | Давня Росія | Середньовічна держава з центром у Києві (Україна-Русь). |
+| Спадкоємність | Київ -> Володимир -> Москва | Київ -> Галич/Волинь -> Велике Князівство Литовське -> Гетьманщина. |
+
+## Section-Mapped Research Notes
+
+### Вступ — Найстаріший літопис Русі
+- Визначення: Головне історичне джерело XI-XII ст.
+- Оригінали втрачені, маємо лише списки XIV-XV ст.
+- Значення: Єдине джерело, що дає цілісну (хоч і легендарну) картину ранньої історії.
+
+### Структура літопису
+- **Вступна (недатована) частина**: Біблійна генеалогія (Яфет -> слов'яни), розселення племен (поляни, древляни, сіверяни vs словени, кривичі). Легенда про заснування Києва (Кий, Щек, Хорив).
+- **Датована частина**: Починається з 6360 (852) року.
+- Принцип "погодних записів": "В літо..." (In the year...). Порожні роки.
+
+### Питання авторства
+- **Нестор**: Традиція (Печерський патерик). Ймовірно автор редакції 1113 р.
+- **Сильвестр**: Ігумен Видубицького монастиря. Зробив запис у 1116 р.: "Ігумен Сильвестр святого Михаїла написав книги ці..."
+- **Олексій Шахматов**: Теорія нашарування. Зводи 1039, 1073, 1093 рр. як попередники ПМЛ.
+
+### Редакції та рукописи
+- **Лаврентіївський список (1377)**: Зроблений ченцем Лаврентієм для князя Дмитра Суздальського. Відображає редакцію Сильвестра (1116). Містить "Повчання Володимира Мономаха" (унікальна вставка).
+- **Іпатіївський список (XV ст., бл. 1425)**: Знайдений в Іпатіївському монастирі (Кострома), але походження — південно-руське (українське). Містить редакцію 1118 р. + Київський літопис (XII ст.) + Галицько-Волинський літопис (XIII ст.).
+
+### Мова літопису
+- Основа: Церковнослов'янська (літературна мова того часу).
+- Жива мова: Потужний вплив розмовної мови Русі (протоукраїнської).
+- Особливості: Повноголосся (город, молоко), закінчення -ові/-еві (синові), кличний відмінок, лексика (жито, стріха, яруга).
+
+### Чому важлива критика джерела
+- Упередженість: "Хто платить, той замовляє музику". Нестор/Сильвестр писали під контролем князів.
+- Легендарність: Вставки фольклору (помста Ольги, смерть Олега від коня) подаються як факти.
+- Хронологія: Дати раннього періоду (IX ст.) вираховані заднім числом і часто помилкові.
+
+### Підсумок
+- ПМЛ — фундамент української ідентичності та історичної пам'яті.
+- Необхідність критичного читання ("читати між рядків").
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 11929)
+✓ Message 11880 acknowledged
+✓ Message 11929 acknowledged

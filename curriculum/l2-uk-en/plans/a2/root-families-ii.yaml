@@ -1,0 +1,109 @@
+module: a2-42
+level: A2
+sequence: 42
+slug: root-families-ii
+version: '2.0'
+title: Root Families II
+subtitle: Communication and Thought
+content_outline:
+- section: Вступ (Introduction)
+  words: 450
+  points:
+  - 'The Language of the Mind: Introduction to cognitive root families — alignment
+    with State Standard §2 (Expressing thoughts/beliefs) and §4.5.1 (Synonyms).'
+  - 'Overview of the 4 core Mind-Roots: дум- (thought), говор- (speech), мов- (language/speech),
+    and слух- (hearing/listening) as foundational networks for A2 communication.'
+  - 'Motivation: Explaining how ''roots contain logic'' through the connection between
+    ''listening'' and ''obedience'' as a cultural memory aid.'
+- section: Презентація (Presentation)
+  words: 900
+  points:
+  - 'The дум- Family: Focus on ''думати'' (process) vs ''вважати'' (opinion). Key
+    collocations: «на мою думку», «я думаю, що...», and «гарна думка».'
+  - 'The говор-/мов- Family: The ''Mo'' Bridge — visual connection between ''говорити''
+    and ''розмовляти''. Explanation of prefix «роз-» as exchange (conversation as
+    an exchange of words).'
+  - 'The слух- Family: Focus on the active nature of ''слухати'' (to listen) and the
+    cultural etymology of ''слухняний'' (obedient/he who listens).'
+  - 'Prefix Logic: How «від-» changes «мов-» to «відмова» — literal meaning ''speaking
+    away/back'' as a refusal.'
+  - 'Secondary derivatives: Introduction to ''мова'' (language) as a central concept
+    in the ''мов-'' family.'
+- section: Культурний контекст та лексичні нюанси (Cultural Context and Lexical Nuances)
+  words: 700
+  points:
+  - 'The ''Mova'' vs ''Yazyk'' Distinction: Critical cultural rule — ''язик'' is ONLY
+    the physical organ (body part), whereas ''мова'' is the language. Error alert:
+    ''український язик'' sounds like a food item (beef tongue).'
+  - 'Proverb Analysis: «Слово – срібло, мовчання – золото» (Speech is silver, silence
+    is gold) — exploring the ''мовчання'' derivative in the ''мов-'' family.'
+  - 'Process vs. Result: Distinction between ''говорити'' (the process of speaking/ability)
+    and ''казати'' (the content/delivery of a message), aligned with Standard §4.5.1.'
+- section: Практика та корекція помилок (Practice and Error Correction)
+  words: 600
+  points:
+  - 'Root Family Sorting: Distinguishing semantic clusters of ''thought'' vs ''speech''
+    vs ''listening''. Drill for synonyms mentioned in research (казати, говорити,
+    розповідати).'
+  - 'Error Correction Lab: Identifying and fixing common learner slips: ''Він казав
+    по-українськи'' vs ''Він говорив українською''; ''Я не слухав тебе'' vs ''Я не
+    чув тебе'' (active vs passive).'
+  - '''Build the Thought'' Challenge: Deriving nouns from verbs (дум- → думка, мов-
+    → розмова, від-мов- → відмова) to reinforce word-formation patterns.'
+- section: Діалоги та підсумок (Dialogues and Summary)
+  words: 350
+  points:
+  - 'A Deep Conversation: Dialogues discussing thoughts and opinions using cognitive
+    verbs ''я думаю'', ''я вважаю'' and reaction phrases ''цікава думка''.'
+  - 'Refusal Scenario: Roleplay involving a polite ''відмова'' (refusal) using ''мова''
+    roots, integrating the instrumental case (з ким?) and accusative (про що?).'
+  - 'Summary: Reviewing how root families serve as memory anchors for A2 lexical growth.'
+focus: grammar
+pedagogy: PPP
+objectives:
+- Learner can identify communication and thought root families
+- Learner can derive verbs and nouns from abstract roots
+- Learner can understand the difference between 'мова' and 'розмова' roots
+- Learner can build a network of communication vocabulary
+grammar:
+- common roots (дум-, говор-, мов-, слух-)
+- secondary prefix + root combinations
+- identifying semantic clusters
+module_type: word-formation
+sources:
+- name: Ukrainian Word Formation - Communication
+  url: https://uk.wikipedia.org/wiki/Словотворення_в_українській_мові
+  type: reference
+  notes: Focus on communicative root expansion
+immersion: 60-75% Ukrainian
+phase: A2.4
+persona:
+  voice: Encouraging Cultural Guide
+  role: Genealogist
+vocabulary_hints:
+  required:
+  - 'думати (to think) — high frequency; collocations: думати про (+ Acc), я думаю,
+    що...'
+  - 'думка (thought/opinion) — high frequency; collocations: цікава думка, на мою
+    думку, гарна думка'
+  - 'говорити (to speak) — focus on process/ability; usage: говорити українською (no
+    prep), говорити про (+ Acc)'
+  - 'розмовляти (to converse) — ''роз-'' prefix implies exchange; collocations: розмовляти
+    телефоном, ми розмовляли про...'
+  - 'мова (language) — cultural note: never use ''язик'' for language; collocations:
+    рідна мова, іноземна мова'
+  - 'слухати (to listen) — active process; collocations: слухати музику, слухати маму,
+    уважно слухати'
+  - 'слухняний (obedient) — mnemonic: ''he who listens''; collocations: слухняна дитина'
+  - 'відмова (refusal) — etymology: ''speaking back/away''; collocation: отримати
+    відмову'
+  - казати (to say/tell) — focus on content/message; used for reporting speech
+  recommended:
+  - 'мовчання (silence) — derivative of ''мов-''; proverb: «Слово – срібло, мовчання
+    – золото»'
+  - вважати (to consider/believe) — high frequency for expressing formal opinions;
+    synonym for 'думати'
+  - чути (to hear) — passive counterpart to 'слухати'; common source of learner confusion
+  - розмова (conversation) — noun derived from 'розмовляти'; focus on 'роз-' prefix
+    logic
+word_target: 3000

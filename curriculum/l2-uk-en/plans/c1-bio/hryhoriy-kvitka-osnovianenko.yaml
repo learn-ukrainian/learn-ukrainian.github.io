@@ -1,60 +1,51 @@
----
-module: c1-bio-037
+module: c1-bio-37
 level: C1-BIO
 sequence: 37
 slug: hryhoriy-kvitka-osnovianenko
 version: '2.0'
 title: 'Григорій Квітка-Основ''яненко: Батько української прози'
 content_outline:
-- section: "Вступ — Перший прозаїк"
-  words: 400
+- section: Вступ — Перший прозаїк
   points:
   - Квітка як засновник української художньої прози
   - Його роль у становленні літературної мови
   - Значення для розвитку реалізму
 - section: Походження та молодість
-  words: 600
   points:
   - Народження в дворянській родині (1778)
   - Слобожанщина як культурний регіон
   - Військова служба та відставка
   - Перші літературні спроби російською
 - section: Звернення до української мови
-  words: 600
   points:
   - Вплив Котляревського та "Енеїди"
   - Рішення писати українською
   - Полеміка про право української мови на літературу
   - Псевдонім "Грицько Основ'яненко"
 - section: Сентиментальна проза
-  words: 700
   points:
   - '"Маруся" (1834) — перша українська повість'
   - Ідеалізація селянського життя
   - Трагічна любов як центральний мотив
   - Вплив європейського сентименталізму
 - section: Сатирична проза
-  words: 700
   points:
   - '"Конотопська відьма" (1833)'
   - Сатира на козацьку старшину
   - Народні вірування та гумор
   - Реалістичні елементи в сатирі
 - section: Етнографічна спадщина
-  words: 500
   points:
   - Описи народних звичаїв та обрядів
   - Весільні та поховальні традиції
   - Слобожанський діалект у творах
   - Внесок у фольклористику
 - section: Останні роки та значення
-  words: 500
   points:
   - Робота в Харківському театрі
   - Смерть 1843 року
   - Вплив на Нечуя-Левицького та реалістів
   - '"Батько української прози" — заслужений титул'
-word_target: 4000
 vocabulary_hints:
   required:
   - прозаїк (prose writer)
@@ -75,12 +66,11 @@ vocabulary_hints:
   - трагічна любов (tragic love)
 activity_hints:
 - type: reading
-  focus: "Excerpts from \"Маруся\" and \"Конотопська відьма\""
+  focus: Excerpts from "Маруся" and "Конотопська відьма"
   source: UkrLib or Wikisource
   items: 4 passages
 - type: essay-response
-  focus: "Why is Kvitka called \"Father of Ukrainian Prose\"?"
-  word_target: 300
+  focus: Why is Kvitka called "Father of Ukrainian Prose"?
   output: Literary analysis with examples
 - type: critical-analysis
   focus: Compare Kvitka's sentimentalism with European models
@@ -96,23 +86,23 @@ connects_to:
 module_type: biography
 sources:
 - name: Григорій Квітка-Основ'яненко (Wikipedia UA)
-  url: "https://uk.wikipedia.org/wiki/Григорій_Квітка-Основ'яненко"
+  url: https://uk.wikipedia.org/wiki/Григорій_Квітка-Основ'яненко
   type: primary
   notes: Biography, works, literary significance
 - name: Маруся (повість)
-  url: "https://uk.wikipedia.org/wiki/Маруся_(повість)"
+  url: https://uk.wikipedia.org/wiki/Маруся_(повість)
   type: reference
   notes: His most famous sentimental work
 - name: Конотопська відьма
-  url: "https://uk.wikipedia.org/wiki/Конотопська_відьма"
+  url: https://uk.wikipedia.org/wiki/Конотопська_відьма
   type: reference
   notes: His satirical masterpiece
 - name: Слобожанщина (історичний регіон)
-  url: "https://uk.wikipedia.org/wiki/Слобожанщина"
+  url: https://uk.wikipedia.org/wiki/Слобожанщина
   type: reference
   notes: Regional context for his works
 - name: Харківський університет
-  url: "https://uk.wikipedia.org/wiki/Харківський_національний_університет"
+  url: https://uk.wikipedia.org/wiki/Харківський_національний_університет
   type: reference
   notes: Intellectual center of his era
 immersion: 100% Ukrainian
@@ -122,3 +112,6 @@ objectives:
   прози'
 - Evaluate the contributions of перший прозаїк
 - Trace the career and influence of останні роки та значення
+persona:
+  voice: Senior Biographer
+  role: Provincial Storyteller

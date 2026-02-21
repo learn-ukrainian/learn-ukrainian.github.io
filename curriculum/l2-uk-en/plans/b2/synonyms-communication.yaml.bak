@@ -1,0 +1,69 @@
+module: b2-59
+level: B2
+sequence: 59
+slug: synonyms-communication
+version: '2.0'
+title: 'Синоніми: Комунікація та Мовлення'
+subtitle: Synonyms - Communication and Speech
+content_outline:
+- section: Розминка — Як сказати \"сказати\"
+  points:
+  - Казати vs говорити vs розповідати — різниця у вживанні
+  - Офіційне мовлення (повідомляти, заявляти, стверджувати)
+  - Різні способи запитувати (питати, цікавитися, допитувати)
+- section: Say
+  points:
+  - казати (say - neutral)
+  - говорити (speak/talk - general)
+  - розповідати (tell/narrate - story)
+  - повідомляти (inform - official)
+  - заявляти (declare - formal)
+- section: Ask
+  points:
+  - питати (ask - general)
+  - запитувати (ask - formal)
+  - цікавитися (be interested/inquire)
+  - розпитувати (question - detailed)
+  - допитувати (interrogate - intense)
+- section: Практика — дієслова мовлення
+  points:
+  - Обрати дієслово мовлення відповідно до контексту (інтерв'ю, суд, дружня розмова)
+  - Переписати пряму мову в непряму з правильним вибором дієслова
+  - Написати діалог з різними дієсловами мовлення (5+ синонімів)
+  - Порівняти українські та англійські дієслова мовлення в перекладі
+focus: phraseology
+pedagogy: CBI
+objectives:
+- Учень може розрізняти відтінки значень дієслів мовлення (казати, повідомляти, заявляти)
+- Учень вміє обирати точне дієслово для запиту інформації залежно від контексту (питати,
+  цікавитися, допитувати)
+- Учень розуміє стилістичні відмінності між офіційним та розмовним мовленням
+grammar:
+- Nuances in verbs of speech
+- Reporting and dialogue structure
+immersion: 100
+register: публіцистичний
+phase: B2.2 [Phraseology & Synonymy]
+vocabulary_hints:
+  required:
+  - синонім (synonym)
+  - вираз (expression)
+  - значення (meaning)
+  - контекст (context)
+  recommended:
+  - переносне значення (figurative meaning)
+  - стилістичне забарвлення (stylistic coloring)
+activity_hints:
+- type: reading
+  focus: Контекстне використання
+  items: 4
+- type: fill-in-the-blank
+  focus: Практичне застосування
+  items: 10
+- type: true-false
+  focus: Розуміння значень
+  items: 8
+persona:
+  voice: Professional Language Coach
+  role: Negotiator (Перемовник)
+word_target: 4000

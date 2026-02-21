@@ -1,0 +1,245 @@
+✅ Message sent to Gemini (ID: 10739) [auto-acked: self-addressed]
+✓ Message 10739 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10739...
+📨 Message #10739
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-hyperbole-litotes
+   Time: 2026-02-20T21:26:11.268534+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-038
+level: C1
+sequence: 38
+slug: hyperbole-litotes
+version: '2.0'
+title: 'Гіпербола та літота: Гра масштабів'
+subtitle: 'Hyperbole & Litotes: Playing with Scale'
+content_outline:
+- section: Розминка — Перебільшення та применшення
+  points:
+  - Гіпербола — свідоме перебільшення для ефекту
+  - Літота — применшення через заперечення (непоганий = добрий)
+  - Емоційний вплив обох прийомів на читача/слухача
+- section: Hyperbole (Гіпербола)
+  points:
+  - 'Перебільшення: Я чекав цілу вічність'
+  - 'Function: Emphasis, humor, emotion'
+- section: Litotes (Літота)
+  points:
+  - 'Применшення: Непоганий (= дуже добрий)'
+  - 'Function: Modesty, understatement, irony'
+- section: Практика — масштаб у мовленні
+  points:
+  - Знайти гіперболи в народних піснях та казках
+  - Визначити функцію літоти в офіційному та розмовному мовленні
+  - Переписати текст з нейтрального в емоційно-перебільшений
+  - Порівняти українські та англійські способи перебільшення
+focus: style
+pedagogy: Immersion
+objectives:
+- Identify and use hyperbole for emotional impact
+- Master litotes for polite understatement and irony
+- Analyze the use of scale in literary and daily communication
+grammar:
+- Hyperbole (exaggeration)
+- Litotes (understatement via double negation)
+- Emphasis and modesty strategies
+phase: C1.4 Advanced Stylistics & Rhetoric
+persona:
+  voice: Senior Specialist
+  role: Майстер риторики
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Гіпербола та літота: Гра масштабів
+
+## State Standard Reference
+§4.4.3: "Стилістичні засоби лексики: ...зменшувально-пестливі форми (хлопець – хлопчик...), згрубілі форми (вітер – вітрище, великий – величезний)... епітети, метафори"
+Alignment: Цей модуль розширює лексичні засоби виразності, додаючи риторичні фігури гіперболи та літоти до морфологічних засобів (суфіксів суб'єктивної оцінки), передбачених стандартом для рівня C1. Також відповідає §4.4.6 "Використання елементів риторики в композиції тексту".
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| гіпербола | Середня (академ.) | вдатися до гіперболи, художня гіпербола, явна гіпербола |
+| літота | Низька (академ.) | вживати літоту, іронічна літота |
+| перебільшення | Висока | явне перебільшення, без перебільшення, схильність до перебільшень |
+| применшення | Середня | свідоме применшення, з метою применшення |
+| вічність | Висока | чекати цілу вічність, здаватися вічністю |
+| непоганий | Висока | зовсім непоганий, результат непоганий (у значенні "добрий") |
+
+## Cultural Hooks
+1. **Козацькі думи та епос**: Український фольклор насичений гіперболами для опису сили героїв (козак, що "однією рукою побив полк ворогів") або горя ("сльози рікою ллються").
+2. **Етикетна стриманість**: У сучасному спілкуванні українці часто використовують літоту для ввічливості або скромності (замість "Це геніально!" — "Це зовсім не зле", "Не без того").
+
+## Common Learner Errors
+1. **Калькування англійських гіпербол**: "I'm starving" → "Я вмираю" (неприродно) замість "Я голодний як вовк" або "У мене кишка кишці кулешу варить".
+2. **Нерозуміння подвійного заперечення в літоті**: Сприйняття фрази "Він не позбавлений таланту" як слабкої похвали, хоча це може означати "Він дуже талановитий".
+3. **Плутанина регістрів**: Використання книжних гіпербол ("море сліз") у побутовій розмові, що звучить пафосно.
+
+## Cross-References
+- Builds on: **B2-45** (Phraseology), **B2-50** (Diminutives/Augmentatives)
+- Prepares for: **C1-056** (Folk Songs), **C1-086** (Shevchenko - Literary Analysis)
+
+## Notes for Content Writing
+- Важливо розрізняти "граматичну гіперболу" (суфікси -ищ-, -енн-) і "лексичну гіперболу" (фразеологізми).
+- Літоту варто подавати не лише як "understatement", але і як засіб іронії, що є критично важливим для C1.
+- У розділі про культуру згадати "Енеїду" Котляревського як енциклопедію народної гіперболи.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Розминка та основи масштабу (Warm-up & Basics of Scale)"
+  words: 500
+  points:
+  - "Вступ до стилістичних засобів лексики за стандартом §4.4.3: роль перебільшення та применшення в емоційному мовленні"
+  - "Розрізнення граматичної гіперболи (морфологічні засоби: суфікси -ищ-, -енн-) та лексичної гіперболи (фразеологізми та образи)"
+  - "Емоційний вплив: як свідоме викривлення масштабу допомагає виразити суб'єктивну істину"
+- section: "Гіпербола: Сила, епос та традиція (Hyperbole: Power, Epic & Tradition)"
+  words: 1000
+  points:
+  - "Культурний код: Аналіз козацьких дум та епосу, де герой 'однією рукою побиває полк ворогів' як приклад національної гіперболи"
+  - "Енциклопедія народної гіперболи: Вивчення засобів виразності в 'Енеїді' Котляревського (художня та явна гіпербола)"
+  - "Регістрова специфіка: Чому книжні гіперболи типу 'море сліз' звучать пафосно в побуті, та як використовувати розмовні відповідники"
+  - "Функції гіперболи: акцентування, гумор та вираження граничних емоцій через фразеологію ('чекати цілу вічність')"
+- section: "Літота: Стриманість, ввічливість та іронія (Litotes: Restraint, Politeness & Irony)"
+  words: 1000
+  points:
+  - "Мистецтво применшення: Використання літоти для етикетної стриманості та скромності в українському мовленні ('не без того', 'зовсім не зле')"
+  - "Семантика подвійного заперечення: Пояснення, чому 'Він не позбавлений таланту' може означати вищий ступінь похвали, ніж пряме твердження"
+  - "Літота як інструмент іронії: Тонкі засоби вираження скепсису або сарказму, критично важливі для рівня C1"
+  - "Практичні приклади літоти в офіційному дискурсі для пом'якшення оцінок ('непоганий результат')"
+- section: "Аналіз помилок та мовна практика (Error Analysis & Practice)"
+  words: 800
+  points:
+  - "Виправлення калькованих гіпербол: Заміна англійського 'I'm starving' (неприродне 'Я вмираю') на ідіоматичне 'Я голодний як вовк' або 'Кишка кишці кулешу варить'"
+  - "Вправа на розпізнавання: Відрізнення літоти від слабкої похвали в контексті ділового та особистого спілкування"
+  - "Стилістичний експеримент: Перетворення нейтрального тексту на емоційно-насичене оповідання за допомогою зміни масштабів"
+  - "Порівняльний аналіз: Як масштаб у мові корелює з українським менталітетом (емоційність vs ввічлива стриманість)"
+- section: "Творча продукція та риторика тексту (Creative Production & Rhetoric)"
+  words: 700
+  points:
+  - "Застосування елементів риторики в композиції тексту за стандартом §4.4.6: написання сатиричного нарису з використанням гіпербол"
+  - "Створення діалогу-суперечки: Використання літоти як засобу витонченої іронії та контраргументації"
+  - "Підсумкова рефлексія: Вплив вибору масштабу на сприйняття образу автора та його переконливість"
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "гіпербола (hyperbole) — вдатися до гіперболи, художня гіпербола, явна гіпербола; середня частота (академічний регістр)"
+  - "літота (litotes) — вживати літоту, іронічна літота; низька частота (академічний регістр)"
+  - "перебільшення (exaggeration) — явне перебільшення, без перебільшення, схильність до перебільшень; висока частота"
+  - "применшення (understatement) — свідоме применшення, з метою применшення; середня частота"
+  - "вічність (eternity) — чекати цілу вічність, здаватися вічністю; висока частота, гіперболічне значення"
+  - "непоганий (not bad / quite good) — зовсім непоганий, результат непоганий; висока частота, часто вживається як літота для 'добрий'"
+  recommended:
+  - "кишка кишці кулешу варить (starving) — ідіоматична гіпербола для сильного голоду"
+  - "не без того (not without it) — етикетна літота, що підтверджує наявність чогось"
+  - "море сліз (sea of tears) — книжна гіпербола, потребує обережного вживання в розмові"
+  - "не такий уже й дурний (not that stupid) — літота, що насправді вказує на розум людини"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (3949 chars)
+✅ Message sent to Claude (ID: 10744)
+✓ Message 10744 acknowledged
+   Auto-acknowledged reply #10744 (stdout delivery — no inbox accumulation)
+✓ Message 10739 acknowledged

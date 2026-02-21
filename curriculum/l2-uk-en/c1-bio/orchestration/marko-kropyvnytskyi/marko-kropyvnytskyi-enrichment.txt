@@ -1,0 +1,285 @@
+✅ Message sent to Gemini (ID: 12461) [auto-acked: self-addressed]
+✓ Message 12461 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12461...
+📨 Message #12461
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-marko-kropyvnytskyi
+   Time: 2026-02-20T23:40:07.853662+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-bio-45
+level: C1-BIO
+sequence: 45
+slug: marko-kropyvnytskyi
+version: '2.0'
+title: 'Марко Кропивницький: Корифей театру'
+content_outline:
+- section: Вступ — Батько українського театру
+  points:
+  - Марко Кропивницький — засновник професійного українського театру
+  - Актор, режисер, драматург і композитор в одній особі
+  - Творець національної театральної школи
+- section: Ранні роки та освіта (1840-1865)
+  points:
+  - Народження в селі Бережувата на Херсонщині
+  - Навчання в Єлисаветградській гімназії
+  - Перші театральні враження та аматорські вистави
+  - Формування національної свідомості
+- section: Початок театральної кар'єри (1865-1882)
+  points:
+  - Організація аматорських труп
+  - Перші драматичні твори
+  - Знайомство з Михайлом Старицьким
+  - Боротьба з цензурою Емського указу
+- section: Створення професійного театру (1882-1900)
+  points:
+  - Заснування першої професійної української трупи (1882)
+  - Постановка «Наталки Полтавки» та «Назара Стодолі»
+  - Виховання акторів — Заньковецька, Садовський, Саксаганський
+  - Гастролі імперією та успіх у глядачів
+- section: Драматургія та музика
+  points:
+  - П'єси «Дай серцю волю, заведе в неволю», «Глитай, або ж Павук»
+  - Оперети та музичні комедії
+  - Народні пісні та хорові обробки
+  - Етнографічний реалізм як метод
+- section: Останні роки та спадщина (1900-1910)
+  points:
+  - Продовження театральної діяльності до останніх днів
+  - Смерть у 1910 році
+  - Вплив на розвиток українського театру XX століття
+  - Кропивницький як символ національного відродження
+vocabulary_hints:
+  required:
+  - корифей (coryphaeus, leading figure)
+  - трупа (theater company)
+  - драматург (playwright)
+  - режисер (director)
+  - актор (actor)
+  - вистава (performance)
+  - репертуар (repertoire)
+  - цензура (censorship)
+  - етнографізм (ethnographism)
+  - антреприза (theatrical enterprise)
+  recommended:
+  - оперета (operetta)
+  - декорація (stage design)
+  - гастролі (tour)
+  - бенефіс (benefit performance)
+  - амплуа (character type)
+activity_hints:
+- type: reading
+  focus: Уривки з п'єс та спогади сучасників
+  source: Оригінальні твори та мемуари
+  items: 3 passages
+- type: essay-response
+  focus: Чому Кропивницького називають батьком українського театру?
+  output: Historical analysis
+focus: biography
+prerequisites:
+- c1-bio-46-ivan-kotliarevskyi
+connects_to:
+- c1-bio-26-mariya-zankovetska
+- c1-bio-57-les-kurbas
+module_type: biography
+sources:
+- name: Марко Кропивницький (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Марко_Кропивницький
+  type: primary
+  notes: Біографія, театральна та літературна діяльність
+- name: Театр корифеїв
+  url: https://uk.wikipedia.org/wiki/Театр_корифеїв
+  type: reference
+  notes: Український театр XIX століття
+- name: Українська драматургія XIX століття
+  url: https://uk.wikipedia.org/wiki/Українська_драматургія
+  type: reference
+  notes: Контекст розвитку театру
+immersion: 100% Ukrainian
+phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of марко кропивницький: корифей театру'
+- Evaluate the contributions of батько українського театру
+- Trace the career and influence of останні роки та спадщина (1900-1910)
+persona:
+  voice: Senior Biographer
+  role: Troupe Manager
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Марко Кропивницький: Корифей театру
+
+## Використані джерела
+1. [Енциклопедія Сучасної України: Марко Кропивницький](https://esu.com.ua/article-1959) — Академічна біографія, детальний огляд творчості.
+2. [Історія українського театру (History.org.ua)](http://history.org.ua) — Контекст Емського указу та створення професійного театру.
+3. [Бібліотека ім. Чижевського: Матеріали про Кропивницького](http://library.kr.ua) — Спогади, листи, деталі про єлисаветградський період.
+4. [УкрЛіб: Біографія та творчість](https://ukrlib.com.ua) — Аналіз драматургії.
+
+## Хронологія
+- **22 травня 1840**: Народження в с. Бежбайраки (нині Кропивницьке).
+- **1861-1871**: Служба в повітовому суді Бобринця, участь в аматорських гуртках.
+- **1876**: Емський указ — заборона українського друкованого слова і театру.
+- **1881**: Пом'якшення цензури, дозвіл на вистави українською мовою (але без перекладів).
+- **27 жовтня 1882**: Перша вистава професійної трупи в Єлисаветграді («Наталка Полтавка»).
+- **1886-1887**: Тріумфальні гастролі у Петербурзі та Москві (визнання імператором).
+- **1900-ті**: Життя на хуторі Затишок, літературна праця.
+- **21 квітня 1910**: Смерть у потязі по дорозі з гастролей.
+
+## Ключові факти та цитати
+
+**Цитати (Primary Sources):**
+1. **Про відданість справі:** «Я, добродію, артист, перш усього артист, і не схибив перед українським театром ані на півмізинця... Суду історії я не боюсь, бо я роблю моє діло як умію і як можу».
+2. **Про суть українського театру (Лист до Єфремова):** «Я бачу лише у співі та етнографії фізіономію малоросійського театру... Ніколи я не брався моралізувати публіку — це не моя справа».
+
+**Ключові факти:**
+- **Батько:** Лука Іванович, управитель маєтків, людина сувора, але заможна.
+- **Освіта:** Не закінчив гімназію в Києві, займався самоосвітою.
+- **Унікальність:** Поєднував таланти адміністратора, режисера, актора, драматурга, композитора і співака.
+- **Режисура:** Вперше ввів поняття «ансамблю», де кожен актор, навіть у масовці, мав свою партитуру дій.
+
+## Engagement Hooks (mapped to sections)
+- **Section "Вступ — Батько українського театру"**: `[!quote]` — Цитата про «не схибив ані на півмізинця», що задає тон відданості.
+- **Section "Ранні роки: Формування особистості"**: `[!context]` — Опис життя в маєтку Кантакузена та жорсткі реалії дитинства без матері.
+- **Section "Боротьба з імперією: Емський контекст"**: `[!myth-buster]` — Спростування міфу про «дозвіл» царя на театр. Це була вимушена поступка під тиском, а не милість.
+- **Section "Тріумф 1882 року"**: `[!history-bite]` — Деталі прем'єри 27 жовтня: як Кропивницький сам малював декорації та шив костюми.
+- **Section "Феномен режисури Кропивницького"**: `[!culture]` — Як він досягав реалізму: змушував акторів вивчати побут селян не як екзотику, а як правду життя.
+- **Section "Спадщина та пам'ять"**: `[!legacy]` — Прямий зв'язок з Лесем Курбасом, який вважав себе продовжувачем традицій, але в новій формі.
+
+## Деколонізаційний контекст
+- **Imperial Myth**: «Малоросійський театр» як розвага для панів, «гопак і шаровари».
+- **Ukrainian Reality**: Театр Кропивницького був високопрофесійним, європейського рівня мистецтвом, що порушувало гострі соціальні питання. Він довів, що українська мова придатна для високої драми, а не лише для комедії.
+- **Resistance**: Саме існування театру в умовах заборони мови було політичним актом. Гастролі в столицях імперії змушували еліту визнати окремішність української культури.
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| Назва театру | Малоросійський театр | Український професійний театр (Театр корифеїв) |
+| Мова | «Нарєчіє» | Повноцінна літературна мова сцени |
+| Статус | Етнографічний курйоз | Національна інституція |
+
+## Section-Mapped Research Notes
+
+### Вступ
+Фокус на масштабі постаті. Він створив інституцію з нічого. Порівняння з Шекспіром чи Мольєром за впливом на національну культуру.
+
+### Ранні роки
+Дитинство не було ідилічним. Вплив матері (музика) і батька (дисципліна). Освіта в Бобринці — периферія, що стала центром.
+
+### Початок кар'єри та Емський указ
+Важливо показати тиск. Театр не просто «з'явився», він пробивався крізь бетон заборон. Аматорський етап як школа виживання.
+
+### Створення професійного театру (1882)
+Ключова дата. Об'єднання найкращих сил (Заньковецька, Садовський). Роль Ашхарумова (антрепренер).
+
+### Режисура та Драматургія
+Аналіз методу. Етнографічний реалізм — це не просто костюми, це психологічна правда. П'єси як соціальний документ епохи.
+
+### Останні роки
+Розпад першої трупи (конфлікти амбіцій). Життя на хуторі. Смерть у дорозі — символічно для мандрівного артиста.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12513)
+✓ Message 12461 acknowledged
+✓ Message 12513 acknowledged

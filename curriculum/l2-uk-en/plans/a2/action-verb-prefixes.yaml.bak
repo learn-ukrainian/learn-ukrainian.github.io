@@ -1,0 +1,77 @@
+module: a2-38
+level: A2
+sequence: 38
+slug: action-verb-prefixes
+version: '2.0'
+title: Action Verb Prefixes
+subtitle: Redoing, Finishing, and Opening
+content_outline:
+- section: Introduction / Вступ
+  points:
+  - 'From GPS to Transformation: The LEGO logic of Ukrainian verbs'
+  - Why phrasal verbs don't exist in Ukrainian
+- section: Presentation / Презентація
+  points:
+  - 'The Meaning Map: 8 core action transformers'
+  - 'The Logic of Re- (Пере-): Redoing and correcting — learner error: Confusing переписати
+    (do it again/copy) with дописати (finish what was started)'
+  - 'The Logic of Finish (До-): Reaching the limit — cultural hook: The ''Bread Respect''
+    (доїсти reflects reverence for food/scarcity trauma)'
+  - 'The Open/Close Wars: Відчинити (physical) vs Відкрити (abstract/general) — cultural
+    hook: The ''Hinges Rule'' (physical barrier vs abstract opening); learner error:
+    The ''Open'' Trap (using відкрити for doors)'
+  - 'The Triple Trap of За-: Close, Start, and Excess — learner error: The ''Za-''
+    Trap (using закрити for physical doors or confusing with ''to shut down'')'
+  - 'The "Give" Family: Distinguishing Віддати, Передати, Здати'
+  - 'Nuances of "A Little": The power of По- — scaffolding note: Carefully distinguish
+    по- as "a little bit" (delimitative) vs по- as perfective marker (starting vs
+    doing for a while)'
+- section: Practice / Практика
+  points:
+  - Transformation drills (Pysaty -> ?)
+  - 'Real-world scenario: Office chaos and housework'
+- section: Dialogues / Діалоги
+  points:
+  - A conversation between a writer and an editor about deadlines and rewrites
+focus: grammar
+pedagogy: PPP
+objectives:
+- Learner can express re-doing an action (rewriting, reading)
+- Learner can express finishing an action
+- Learner can describe opening and closing things
+- Learner can modify action verbs to add nuance
+- Learner can differentiate between 'start' and 'excess' meanings of prefixes
+grammar:
+- prefix пере- (re-doing)
+- prefix до- (finishing)
+- prefix від-/роз- (opening)
+- prefix за- (closing/starting)
+- prefix по- (little/start)
+- prefix на- (accumulate)
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Verb Morphology
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Standards for non-motion verb prefixes and semantic transformation at A2
+- name: Grammar of Ukrainian Language - Semantic Prefixes
+  url: https://uk.wikipedia.org/wiki/Префікси_в_українській_мові
+  type: reference
+  notes: Functional analysis of Po-, Za-, Vy-, and Pere- in action stems
+immersion: 60-75% Ukrainian
+phase: A2.3
+persona:
+  voice: Encouraging Cultural Guide
+  role: Film Director
+vocabulary_hints:
+  required:
+  - переписати (to rewrite/copy) — переписати вправу, переписати текст, переписати
+    майно
+  - дописати (to finish writing) — дописати речення, дописати листа, дописати до кінця
+  - відчинити (to open [physical]) — відчинити двері, відчинити вікно, відчинити кватирку
+  - відкрити (to open [abstract/general]) — відкрити очі, відкрити рахунок, відкрити
+    Америку, відкрити бізнес
+  - зачинити (to close [physical]) — зачинити вікно, зачинити за собою двері
+  - закрити (to close [abstract/general]) — закрити тему, закрити очі (на щось), закрити
+    засідання
+word_target: 3000

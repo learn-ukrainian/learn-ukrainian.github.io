@@ -1,0 +1,118 @@
+module: a2-58
+level: A2
+sequence: 58
+slug: practical-warm-up
+version: '2.0'
+title: Practical Warm-up
+subtitle: Getting Ready for Action
+content_outline:
+- section: 'Вступ (Introduction: Setting the Stage)'
+  words: 400
+  points:
+  - 'Orientation to practical A2.6 competencies: setting expectations for understanding
+    short texts (30-50 words) and monologues as per State Standard §1.1.1.2.'
+  - 'Overview of the module''s mission: bridging theoretical knowledge with real-world
+    application, focusing on strategies for understanding separate phrases and dialogue
+    replies.'
+- section: 'Навички читання: Скарби Книжкового Форуму (Reading Skills: Book Forum
+    Treasures)'
+  words: 700
+  points:
+  - 'Application of reading strategies (§1.2.1.4): skimming (оглядове читання) for
+    main ideas and scanning (пошукове читання) for specific facts like names or dates.'
+  - 'Cultural Hook: The Lviv Book Forum. Practice browsing book blurbs in a bookstore
+    (книгарня) to identify the ''головна ідея'' without needing to know every individual
+    word.'
+  - 'Keyword identification: Extracting ''ключові слова'' from posters and public
+    announcements to grasp the context of major cultural events.'
+- section: 'Слухання та Говоріння: Активне сприйняття (Listening & Speaking: Active
+    Perception)'
+  words: 800
+  points:
+  - 'Listening for gist and factual information (§1.1.1.2): extracting simple data
+    from clear, structured speech and responding with short, appropriate dialogue
+    replies.'
+  - 'Learner Error Clinic: Distinguishing between ''чути'' (passive physical hearing)
+    and ''слухати'' (active, intentional listening). Drill: ''Я не слухав тебе уважно''
+    vs. ''Я не чув твого голосу''.'
+  - 'Interactive exercise: Simulating a morning show dialogue where learners must
+    identify specific facts and names mentioned by the host.'
+- section: 'Письмо: Радіодиктант національної єдності (Writing: Radio Dictation of
+    National Unity)'
+  words: 700
+  points:
+  - 'Cultural Hook: The tradition of the Radio Dictation of National Unity held on
+    Ukrainian Language Day. Discussion of how it unites Ukrainians worldwide through
+    a shared writing task.'
+  - 'Writing practice (§1.3.1.1): Transferring information from a heard text into
+    simple written phrases. Focus on clarity and factual accuracy over complex syntax.'
+  - 'Learner Error Clinic: ''питання'' (general issue/topic) vs. ''запитання'' (specific
+    inquiry requiring an answer). Practice: ''важливе питання'' vs. ''ставити запитання
+    вчителеві''.'
+- section: Інтеграція та Підсумок (Integration & Summary)
+  words: 400
+  points:
+  - 'Integration Task: A simulated mini-dictation based on the National Unity Day
+    concept, requiring learners to listen, write, and then answer questions about
+    the text.'
+  - 'Synthesis of A2 skills: Reviewing strategies for skimming/scanning and active
+    listening before progressing to high-stakes scenarios like medical care (Module
+    A2-59).'
+vocabulary_hints:
+  required:
+  - текст (text) — читати текст, розуміти текст, писати текст; high frequency in educational
+    settings
+  - питання (issue/question) — важливе питання, вирішити питання; refers to a topic
+    or problem, not a specific inquiry
+  - запитання (question to ask) — ставити запитання, відповідати на запитання; used
+    for inquiries requiring a response
+  - відповідь (answer) — правильна відповідь, дати відповідь; essential for dialogue
+    interaction
+  - розуміти (to understand) — я розумію, ти розумієш?; core verb for expressing comprehension
+  - читати (to read) — читати книгу, оглядове читання; linked to the high value of
+    reading culture in Ukraine
+  - слухати (to listen) — слухати уважно, слухати музику; active process, often confused
+    with the passive 'чути'
+  - головний (main) — головна ідея, головний герой, головна інформація
+  - деталь (detail) — шукати деталі, важлива деталь; used in scanning exercises
+  recommended:
+  - ідея (idea) — головна ідея; useful for summarizing skimming tasks
+  - інформація (information) — шукати інформацію, передавати інформацію
+  - ключовий (key) — ключове слово (keyword), ключова фраза
+  - стратегія (strategy) — стратегія читання, стратегія слухання; academic/practical
+    register
+activity_hints:
+- type: reading
+  focus: Understand main ideas
+  items: 15
+- type: quiz
+  focus: Listen for key information
+  items: 10
+- type: fill-in
+  focus: Vocabulary in context
+  items: 15
+- type: quiz
+  focus: Answer questions orally
+  items: 10
+focus: practical
+pedagogy: PPP
+prerequisites:
+- a2-57 (Practical Intro)
+connects_to:
+- a2-59 (Medical Care)
+objectives:
+- Learner can understand main ideas in text
+- Learner can answer questions about a text
+- Learner can identify key vocabulary in context
+- Learner can synthesize information
+grammar:
+- Reading comprehension strategies
+- Listening for gist and detail
+- Vocabulary activation in context
+register: розмовний
+immersion: 75-90% Ukrainian
+phase: A2.6 [Practical]
+persona:
+  voice: Encouraging Cultural Guide
+  role: Morning Show Host
+word_target: 3000

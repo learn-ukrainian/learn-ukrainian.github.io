@@ -1,0 +1,116 @@
+module: b2-50
+level: B2
+sequence: 50
+slug: idioms-body-hands-legs
+version: '2.0'
+title: 'Соматичні фразеологізми: Руки та ноги'
+subtitle: 'Somatic Idioms: Hands and Legs'
+content_outline:
+- section: 'Вступ: Мова тіла та фразеологічна точність (Introduction: Body Language
+    and Phraseological Precision)'
+  words: 600
+  points:
+  - Introduction to somatic idioms as tools for linguistic precision (Coach/Craftsman
+    persona), emphasizing the B2 requirement for appropriate register use per §1.4.1.2.1.
+  - 'Overview of the somatic metaphor system: ''Hands'' as symbols of agency, control,
+    and labor vs. ''Legs'' as movement, foundation, and freedom.'
+  - 'Visual strategy: Contrasting literal vs. figurative meanings (e.g., physical
+    hands vs. the ''hands not reaching'' time metaphor) to establish a conceptual
+    baseline.'
+- section: 'Майстерність та дія: Фразеологізми з компонентом «рука» (Mastery and Action:
+    Idioms with the ''Hand'' Component)'
+  words: 1000
+  points:
+  - 'Deep dive into ''Золоті руки'' (Golden hands): Exploring the cultural link between
+    gold, supreme quality, and the traditional Ukrainian respect for craftsmanship.'
+  - 'Nuances of agency: Analysis of ''Опустити руки'' (To give up) vs. ''Руки не доходять''
+    (To not have time) — correcting the common error of literal physical interpretation.'
+  - 'Informal spatial markers: Using ''Рукою подати'' (Very close) in colloquial descriptions
+    of distance and location.'
+  - 'The shadow of cooperation: Analyzing ''Рука руку миє'' (Hand washes hand) through
+    its Roman origins (Petronius) and its specific negative connotation of corruption
+    and ''mutual cover-up'' in Ukrainian culture.'
+- section: 'Рух та незалежність: Фразеологізми з компонентом «нога» (Movement and
+    Independence: Idioms with the ''Leg'' Component)'
+  words: 1000
+  points:
+  - 'Resilience and agency: ''Стати на ноги'' (To get on one''s feet) as a core expression
+    for financial, physical, or national independence (Agency pass).'
+  - 'Dynamics of movement: Contrasting the urgency of ''Одна нога тут, інша там''
+    (Back in a flash) with the slow pace of ''Нога за ногою'' (Very slowly/shuffling).'
+  - 'Social boundaries: ''Бути на короткій нозі'' (To be on familiar terms) — clarifying
+    the nuance of ''панібратство'' (unwarranted familiarity) to avoid calquing errors
+    from English.'
+  - 'Interpersonal friction: Using ''Плутатися під ногами'' (To get in the way) to
+    describe obstacles and social interference.'
+- section: Лабораторія помилок та стилістичний тюнінг (Error Laboratory and Stylistic
+    Tuning)
+  words: 800
+  points:
+  - 'Diagnostic drill on ''Руки не доходять'': Explaining the interference of literal
+    meaning and practicing the correct usage for ''lack of time'' with 3 minimal pairs.'
+  - 'Register matching workshop: Analyzing why ''Одна нога тут, інша там'' (imperative/command)
+    is stylistically inappropriate for formal requests or professional correspondence.'
+  - 'Calque detection: Identifying and replacing literal translations of English somatic
+    idioms (e.g., ''short leg'') with authentic Ukrainian equivalents discovered in
+    frequency research.'
+- section: 'Практика та синтез: Створення наративу (Practice and Synthesis: Creating
+    a Narrative)'
+  words: 600
+  points:
+  - 'Production task: Writing a short story (200+ words) using 4-5 idioms to describe
+    a professional journey or a recovery process (incorporating ''Золоті руки'' and
+    ''Стати на ноги'').'
+  - 'Peer evaluation checklist: Assessing the accuracy of the register (official vs.
+    unofficial) and the decolonized use of resilience metaphors according to §1.4.1.2.1.'
+focus: phraseology
+pedagogy: CBI
+objectives:
+- Learner can recognize and interpret 8 core Ukrainian somatic idioms about hands
+  and legs
+- Learner can use idioms appropriately in context to express actions, abilities, and
+  obstacles
+- Learner understands the distinction between literal and figurative meanings
+grammar:
+- Fixed expressions (фразеологічні одиниці)
+- Idiom structure and variation
+immersion: 100
+register: varies
+phase: B2.2 [Phraseology & Synonymy]
+vocabulary_hints:
+  required:
+  - золоті руки (golden hands) — майстер на всі руки; high frequency; denotes supreme
+    craftsmanship
+  - рукою подати (very close) — дуже близько; colloquial; used for spatial proximity
+  - опустити руки (to give up) — втратити надію/бажання діяти; high frequency; focus
+    on non-literal meaning
+  - 'рука руку миє (hand washes hand) — кругова порука, корупція; negative connotation;
+    register: literary/colloquial'
+  - стати на ноги (to get on one's feet) — стати самостійним, одужати; high frequency;
+    marker of agency/resilience
+  - 'нога за ногою (very slowly) — дуже повільно; colloquial frequency: medium'
+  - бути на короткій нозі (to be on familiar terms) — близькі, часто панібратські
+    стосунки; low frequency nuance
+  - одна нога тут, інша там (be back in a flash) — дуже швидко; high frequency; typically
+    imperative mood
+  - плутатися під ногами (to get in the way) — заважати комусь; colloquial
+  recommended:
+  - руки не доходять (no time to do something) — брак часу; critical error prevention
+    point
+  - панібратство (familiarity/palsiness) — essential context for 'на короткій нозі'
+  - кругова порука (mutual cover-up) — essential context for 'рука руку миє'
+  - майстерність (mastery/craftsmanship) — context for 'золоті руки' and persona
+  - резильєнтність (resilience) — modern context for 'стати на ноги'
+activity_hints:
+- type: reading
+  focus: Аналіз тексту
+  items: 4
+- type: essay-response
+  focus: Практичне застосування
+- type: true-false
+  focus: Перевірка розуміння
+  items: 8
+persona:
+  voice: Professional Language Coach
+  role: Craftsman (Ремісник)
+word_target: 4000

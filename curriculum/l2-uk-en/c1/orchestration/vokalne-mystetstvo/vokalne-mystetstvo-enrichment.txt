@@ -1,0 +1,240 @@
+✅ Message sent to Gemini (ID: 10823) [auto-acked: self-addressed]
+✓ Message 10823 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10823...
+📨 Message #10823
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-vokalne-mystetstvo
+   Time: 2026-02-20T21:30:46.910072+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-080
+level: C1
+sequence: 80
+slug: vokalne-mystetstvo
+version: '2.0'
+title: Вокальне мистецтво
+subtitle: Vocal Art
+content_outline:
+- section: Розминка — Голос України
+  points:
+  - Багата хорова традиція від козацьких часів
+  - Романс як жанр — від Лисенка до сьогодення
+  - Фольк-фьюжн: ДахаБраха, ONUKA та ін.
+- section: Content Areas
+  points:
+  - 'Choral tradition: Church choirs, Капела Думка, Капела Ревуцького'
+  - 'Art song (романс): Лисенко, Степовий, contemporary composers'
+  - 'Folk crossover: ДахаБраха, ONUKA — art music meets folk'
+- section: Практика — вокальне мистецтво
+  points:
+  - Прослухати хоровий твір Капели Думка — описати звучання
+  - Проаналізувати романс Лисенка — текст та музика
+  - Порівняти традиційний та сучасний підходи ДахаБрахи
+  - Написати есе про українську вокальну школу
+focus: fine-arts
+pedagogy: CBI
+objectives:
+- Learner explores the rich tradition of Ukrainian choral music.
+- Learner understands the genre of art song (romance) in Ukraine.
+- Learner can discuss contemporary vocal fusion projects.
+grammar:
+- Professional music terminology
+- Descriptive aesthetics
+phase: C1.5 Folk Culture & Fine Arts
+persona:
+  voice: Senior Specialist
+  role: Оперний критик
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Вокальне мистецтво
+
+## State Standard Reference
+§4.4.3: "Стилістичні засоби лексики: епітети (веселий хлопець, молода держава); метафори (тепла атмосфера, сонце заходить)..."
+Alignment: Цей модуль розвиває лінгвістичну компетентність у використанні естетичної лексики та професійної термінології (метафори, епітети) для опису вокального мистецтва, що відповідає вимогам рівня С1 щодо стилістичного багатства мовлення.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| тембр | High (Music) | оксамитовий тембр, приємний тембр, унікальний тембр |
+| діапазон | Medium | широкий діапазон, голосовий діапазон, октава |
+| акапела | Medium | співати акапела, акапельний спів |
+| колоратура | Low (Term) | колоратурне сопрано, віртуозна колоратура |
+| мелізматика | Low (Term) | багата мелізматика, народна мелізматика |
+| капела | High (Culture) | Національна капела "Думка", хорова капела |
+
+## Cultural Hooks
+1. **Капела "ДУМКА"**: Назва є абревіатурою — *Державна українська мандрівна капела* (заснована 1919 року). Це підкреслює мобільність і просвітницьку місію колективу в буремні часи.
+2. **ДахаБраха**: Гурт називає свій стиль "етно-хаос". Їхній виступ на NPR Tiny Desk Concert став глобальним проривом для української сучасної музики.
+
+## Common Learner Errors
+1. **Голос vs. Голосування**: Плутанина значень (voice vs. vote). *Correct*: "У співака сильний голос" (не "голосування").
+2. **Грати vs. Співати/Виконувати**: Вживання дієслова "грати" стосовно вокалу. *Correct*: "Він виконує партію" або "Він співає".
+3. **Калькування описів**: Використання бідних прикметників (гарний, добрий) замість естетичних (проникливий, дзвінкий, насичений).
+
+## Cross-References
+- Builds on: B1 Cultural modules (Music), B2 History (Baroque period).
+- Prepares for: C1-081 (Theater/Cinema), C1-086 (Literature start).
+
+## Notes for Content Writing
+- Акцент на "кордоцентризмі" (сердечності) української музичної культури.
+- Обов'язково згадати "Золотий вік" української музики (Бортнянський, Ведель, Березовський) у контексті хорового співу, але не заглиблюватися в біографії (це для C1-BIO).
+- Використовувати професійну лексику для опису вражень від музики (обов'язковий елемент С1).
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Голос як дзеркало душі (Introduction: Voice as a Mirror of the Soul)"
+  words: 500
+  points:
+  - "Поняття «кордоцентризму» (сердечності) як філософської основи української музичної культури"
+  - "Огляд багатоголосої традиції від козацьких дум до сучасних хорових полотен"
+  - "Естетичний опис вокалу: використання епітетів (оксамитовий, проникливий, дзвінкий) та метафор (тепла атмосфера) згідно з вимогами С1 (§4.4.3)"
+- section: "Хорова спадщина та «Золотий вік» (Choral Heritage and the 'Golden Age')"
+  words: 900
+  points:
+  - "Тріумвірат «Золотого віку»: духовний вимір творчості Максима Березовського, Артема Веделя та Дмитра Бортнянського"
+  - "Національна капела «ДУМКА»: історія абревіатури (Державна українська мандрівна капела, 1919) та її просвітницька місія"
+  - "Сучасні хорові інституції: Капела Ревуцького та розвиток чоловічого хорового співу"
+- section: "Камерно-вокальний жанр: Романс (Chamber Vocal Genre: Art Song/Romance)"
+  words: 800
+  points:
+  - "Еволюція українського романсу: від засновника Миколи Лисенка та Якова Степового до сучасних інтерпретацій"
+  - "Аналіз взаємодії поетичного слова та музичної тканини в класичному романсі"
+  - "Лексичний фокус: професійна термінологія для опису виконання (діапазон, тембр, колоратура, мелізматика)"
+- section: "Етно-хаос та фольк-ф’южн (Ethno-Chaos and Folk Fusion)"
+  words: 900
+  points:
+  - "Гурт «ДахаБраха»: філософія стилю «етно-хаос» та глобальний прорив (NPR Tiny Desk Concert)"
+  - "Електронний фольклор: ONUKA — поєднання архаїчних інструментів та сучасного саунду"
+  - "Традиційна мелізматика в сучасному контексті: як автентичний спів стає частиною світової музичної сцени"
+- section: "Аналіз та вокальна школа (Analysis and Vocal School)"
+  words: 900
+  points:
+  - "Типові помилки: розмежування значень «голос» (voice) та «голосування» (vote); правильне вживання «виконувати партію» замість калькованого «грати»"
+  - "Робота над стилістичним багатством: заміна примітивних оцінок (гарний, добрий) на професійні дескриптори (насичений, віртуозний)"
+  - "Творче завдання: написання есе-критики про розвиток української вокальної школи та її міжнародне значення"
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "тембр (timbre) — оксамитовий тембр, унікальний тембр; висока частотність у мистецькому дискурсі"
+  - "діапазон (range) — широкий діапазон, голосовий діапазон; опис вокальних можливостей"
+  - "акапела (a cappella) — співати акапела, акапельний спів; ключовий термін хорової традиції"
+  - "колоратура (coloratura) — колоратурне сопрано, віртуозна колоратура; технічна складність вокалу"
+  - "мелізматика (melismatics) — багата мелізматика, народна мелізматика; орнаментика співу"
+  - "капела (chapel/choir) — хорова капела, Національна капела «Думка»; інституційне позначення колективу"
+  - "виконувати (to perform) — виконувати партію, виконувати романс; вживання замість помилкового «грати» щодо вокалу"
+  - "проникливий (penetrating/soulful) — проникливий спів, проникливе виконання; естетичний епітет С1"
+  recommended:
+  - "оксамитовий (velvety) — оксамитовий голос; метафоричний епітет для опису тембру"
+  - "кордоцентризм (cordocentrism) — музичний кордоцентризм; філософський термін для опису «сердечності» культури"
+  - "етно-хаос (ethno-chaos) — стиль етно-хаос; самоназва жанру гурту «ДахаБраха»"
+  - "просвітницька місія (enlightenment mission) — виконувати просвітницьку місію; контекст історії капели «ДУМКА»"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (3548 chars)
+✅ Message sent to Claude (ID: 10830)
+✓ Message 10830 acknowledged
+   Auto-acknowledged reply #10830 (stdout delivery — no inbox accumulation)
+✓ Message 10823 acknowledged

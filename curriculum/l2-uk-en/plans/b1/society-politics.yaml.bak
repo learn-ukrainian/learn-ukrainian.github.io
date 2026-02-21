@@ -1,0 +1,95 @@
+module: b1-60
+level: B1
+sequence: 60
+slug: society-politics
+version: '2.0'
+title: Суспільство та політика
+subtitle: Society & Politics
+content_outline:
+- section: Вступ
+  points:
+  - Why political vocabulary matters — aligned with State Standard §3.6 (Social Relations
+    & State Structure)
+  - 'Ukrainian democratic context — cultural hook: Конституція Пилипа Орлика (1710)
+    as evidence of early democratic traditions'
+  - Key concepts overview
+- section: Вживання
+  points:
+  - 'Collocations patterns — focus on high-frequency pairs: ухвалити закон, прийти
+    до влади, брати участь у виборах'
+  - Register considerations — distinguish between official news language (passive
+    constructions) and kitchen table discussion
+  - 'Application domains — learner error: Громадський (public transport) vs Громадянський
+    (civil society)'
+- section: Читання
+  points:
+  - News article
+  - 'Historical perspective — engagement: The Human Chain (1990) illustrating civic
+    unity and ''соборність'''
+  - Blog commentary
+- section: Діалоги
+  points:
+  - News discussion (formal)
+  - Pre-election debate (informal)
+  - 'Activism conversation, political analysis — syntactic focus: complex causal sentences
+    (тому що, через те що)'
+- section: Лексика
+  points:
+  - Six vocabulary groups
+  - 'State/society, power/institutions — learner error: Політика (sphere/policy) vs
+    Політик (person)'
+  - 'Law, democratic process, reforms, concepts — learner error: Цивільний (civil
+    marriage/law) vs Громадянський (civic rights)'
+- section: Підсумок
+  points:
+  - Key vocabulary recap
+  - Practice recommendations
+vocabulary_hints:
+  required:
+  - уряд (government) — формування уряду, відставка уряду, голова уряду
+  - держава (state) — державна влада, органи державної влади
+  - влада (power/authority) — виконавча влада, прийти до влади, поділ влади
+  - вибори (elections) — брати участь у виборах, йти на вибори, виборча дільниця
+  - голосування (voting) — право голосу, день голосування
+  - закон (law) — ухвалити закон, порушувати закон, згідно із законом
+  - громадянин (citizen) — права громадянина, обов'язок громадянина
+  - права (rights) — захищати права, порушення прав
+  recommended:
+  - парламент (parliament) — розпуск парламенту, сесія парламенту
+  - конституція (constitution) — згідно з конституцією, гарант конституції
+  - демократія (democracy) — розвиток демократії, принципи демократії
+  - свобода (freedom) — свобода слова, боротьба за свободу
+activity_hints:
+- type: match-up
+  focus: Political noun phrases
+  items: 25
+- type: fill-in
+  focus: Complete civic sentences
+  items: 20
+- type: match-up
+  focus: Match institutions and functions
+  items: 15
+- type: quiz
+  focus: Discuss civic topics
+  items: 10
+focus: vocabulary
+pedagogy: PPP
+prerequisites:
+- b1-59 (Media News)
+connects_to:
+- b1-61 (Professional Communication)
+objectives:
+- Learner can use 30 civic and political vocabulary words in context
+- Learner can discuss democratic processes and institutions
+- Learner can form natural collocations with political vocabulary
+- Learner can understand Ukrainian political discourse
+grammar:
+- Noun collocations with civic vocabulary
+- Political discourse patterns
+- Formal register expressions
+register: розмовний
+phase: B1.5 [Vocabulary Expansion I]
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Political Analyst
+word_target: 4000

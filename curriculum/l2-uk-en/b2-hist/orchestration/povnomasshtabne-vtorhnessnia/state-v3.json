@@ -1,0 +1,13 @@
+{
+  "track": "b2-hist",
+  "slug": "povnomasshtabne-vtorhnessnia",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T17:35:15Z",
+      "task_id": "v3-povnomasshtabne-vtorhnessnia-pA",
+      "mode": "meta-only"
+    }
+  }
+}
