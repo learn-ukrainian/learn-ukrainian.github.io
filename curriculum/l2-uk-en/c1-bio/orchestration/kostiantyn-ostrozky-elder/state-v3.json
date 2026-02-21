@@ -2,12 +2,5 @@
   "track": "c1-bio",
   "slug": "kostiantyn-ostrozky-elder",
   "mode": "v3",
-  "phases": {
-    "v3-A": {
-      "status": "complete",
-      "ts": "2026-02-19T11:54:56Z",
-      "task_id": "v3-kostiantyn-ostrozky-elder-pA",
-      "mode": "meta-only"
-    }
-  }
+  "phases": {}
 }

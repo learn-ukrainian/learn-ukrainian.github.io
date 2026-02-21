@@ -1,0 +1,285 @@
+✅ Message sent to Gemini (ID: 10088) [auto-acked: self-addressed]
+✓ Message 10088 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10088...
+📨 Message #10088
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-tomorrow-future-tense
+   Time: 2026-02-20T19:40:42.045063+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: a1-22
+level: A1
+sequence: 22
+slug: tomorrow-future-tense
+version: '2.0'
+title: Tomorrow - Future Tense
+subtitle: Talking About What Will Happen
+content_outline:
+- section: Warm-up
+  points:
+  - Контраст теперішнього, минулого та майбутнього часу — cross-ref to A1-21 (Yesterday)
+- section: Presentation
+  points:
+  - 'Складений майбутній (буду + інфінітив) — focus heavily on this structure (State
+    Standard §4.2.4.1); learner error: aspect clash (e.g., *буду прочитати instead
+    of буду читати)'
+  - 'Дієвідміна буду (буду, будеш, буде, будемо, будете, будуть) — learner error:
+    conjugation drift (mixing 1st/2nd pl endings)'
+  - Синтетичний майбутній (-му, -меш, -ме) — згадка — limit to brief 'FYI' to avoid
+    overwhelming learner
+- section: Presentation 2
+  points:
+  - 'Вираження планів (Я буду працювати) — cultural hook: «Не кажи ''гоп'', поки не
+    перескочиш» (caution with plans)'
+  - 'Вираження намірів (Я хочу..., Я збираюся...) — collocations: хочу знати, збиратися
+    додому'
+- section: Presentation 3
+  points:
+  - 'Завтра, післязавтра, наступного тижня — collocations: завтра вранці, завтра ввечері;
+    grammar note: practice genitive endings for ''наступного'''
+  - 'У понеділок, у січні, наступного року — collocations: наступного року'
+- section: Presentation 4
+  points:
+  - 'Скоро, незабаром, потім, пізніше — cultural hook: «Завтра буде новий день» (optimism/resilience)'
+- section: Presentation 5
+  points:
+  - 'Плани на вихідні — collocations: мати плани, складати план'
+  - Плани на відпустку
+- section: Practice
+  points:
+  - Діалог про плани на вечір
+  - Діалог про плани на канікули
+- section: Practice 2
+  points:
+  - Розповідь про свої плани на завтра
+vocabulary_hints:
+  required:
+  - завтра (tomorrow) — завтра вранці, завтра ввечері
+  - 'буду (I will) — я буду там, будемо працювати; learner error: do not use for perfective
+    verbs'
+  - наступний (next) — наступного тижня, наступного року
+  - план (plan) — мати плани, складати план
+  - хотіти (to want) — хочу знати, дуже хочемо
+  - збиратися (to be going to) — збиратися додому, збиратися в дорогу
+  - незабаром (soon) — незабаром весна, незабаром побачимося
+  - потім (then, later) — а потім, потім скажу
+  recommended:
+  - тиждень (week)
+  - рік (year)
+  - сподіватися (to hope)
+  - мріяти (to dream)
+  - планувати (to plan)
+  - обіцяти (to promise)
+activity_hints:
+- type: fill-in
+  focus: Complete future tense sentences
+  items: 20
+focus: grammar
+pedagogy: PPP
+prerequisites:
+- a1-21 (Yesterday - Past Tense)
+connects_to:
+- a1-23 (What Time Is It)
+- a1-25 (My Daily Routine)
+objectives:
+- Learner can form compound future using буду + infinitive
+- Learner can conjugate буду for all persons
+- Learner can express plans and intentions
+- Learner can use future time expressions correctly
+grammar:
+- Compound future (буду + infinitive)
+- Буду conjugation for all persons
+- Future time expressions
+register: розмовний
+phase: A1.3 [Consolidation]
+persona:
+  voice: Patient Supportive Tutor
+  role: Event Planner
+word_target: 2000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Tomorrow - Future Tense
+
+## State Standard Reference
+§4.2.4.1: "утворення складеної форми майбутнього часу дієслів недоконаного виду: буду читати, будеш сидіти, буде сміятися, будемо гуляти, будете працювати, будуть відпочивати"
+Alignment: This module directly teaches the formation of the compound future tense (буду + infinitive), which is the primary A1 requirement for future tense.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| завтра | High (Top 100) | завтра вранці, завтра ввечері, завтра вдень |
+| план | High | мати плани, складати план, плани на майбутнє |
+| наступний | High | наступного тижня, наступного року, наступного разу (Genitive time expressions) |
+| збиратися | Medium | збиратися додому, я збираюся (I intend to), збиратися в дорогу |
+| хотіти | High | хочу знати, хочу сказати, дуже хочу |
+| скоро | High | скоро буду, дуже скоро, як скоро |
+
+## Cultural Hooks
+1. **Superstition about plans**: «Не кажи "гоп", поки не перескочиш» (Don't say "hop" until you've jumped). Ukrainians can be cautious about stating plans too definitively to avoid "jinxing" them.
+2. **Resilience/Optimism**: «Завтра буде новий день» (Tomorrow will be a new day). A common phrase offering hope and perspective during difficult times.
+
+## Common Learner Errors
+1. **Aspect Clash**: Using *буду* with perfective verbs (e.g., *буду прочитати* instead of *буду читати* or *прочитаю*). Correction: Only imperfective verbs use *буду*.
+2. **Case Error in Time Expressions**: Using Nominative instead of Genitive for "next" (e.g., *наступний тиждень я їду* instead of *наступного тижня я їду*).
+3. **Conjugation Drift**: Confusing forms of *бути* (e.g., *ми будуть* instead of *ми будемо*).
+
+## Cross-References
+- **Builds on**: A1-21 (Yesterday - Past Tense) — contrasts past/future.
+- **Prepares for**: A1-23 (What Time Is It), A1-25 (My Daily Routine) — expands time management vocab.
+
+## Notes for Content Writing
+- **Immersion**: A1 Level (Band 3: M21-34). Use ~35-40% immersion. Explain grammar in English.
+- **Focus**: Keep the distinction between "intent" (хочу/збираюся) and "certainty" (буду робити) clear.
+- **Scaffolding**: Provide a clear table for *буду* conjugation.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Контраст теперішнього, минулого та майбутнього часу — посилання на модуль A1-21 (Yesterday). Повторення логіки часової лінії: де ми зараз і де ми будемо."
+  - "Культурний контекст оптимізму: розбір фрази «Завтра буде новий день» як приклад використання майбутнього часу для вираження надії та стійкості."
+- section: "Презентація граматики (Grammar Presentation)"
+  words: 600
+  points:
+  - "Складений майбутній час (буду + інфінітив) згідно з Державним стандартом §4.2.4.1. Повна таблиця дієвідміни допоміжного дієслова «бути» (буду, будеш, буде, будемо, будете, будуть)."
+  - "Попередження про помилку (Learner Error): Конфлікт видів. Чітке правило — «буду» вживається лише з дієсловами недоконаного виду. Тренування на розрізнення: «буду читати» (correct) vs «буду прочитати» (wrong)."
+  - "Синтетичний майбутній час (працюватиму, працюватимеш) — ознайомчий огляд (FYI) для розпізнавання в автентичних текстах без глибокого вивчення на рівні A1."
+- section: "Лексика та культурний контекст (Vocabulary and Culture)"
+  words: 600
+  points:
+  - "Часові маркери майбутнього: завтра, післязавтра, скоро. Специфіка вживання виразів: завтра вранці, завтра вдень, завтра ввечері (висока частотність)."
+  - "Конструкція «наступного тижня/року»: вивчення родового відмінка (Genitive) для часових виразів. Learner Error: уникнення прямого перекладу з англійської «next week» (Nominative)."
+  - "Вираження планів та намірів: різниця між «буду» (впевненість) та «хочу/збираюся» (намір). Культурний аспект: «Не кажи 'гоп', поки не перескочиш» — обережність українців у плануванні (superstition hook)."
+- section: "Практика та підсумок (Practice and Summary)"
+  words: 400
+  points:
+  - "Відпрацювання розмовних конструкцій: плани на вихідні та вечір. Використання словосполучень: мати плани, складати план, плани на майбутнє."
+  - "Підсумковий діалог: рольова гра «Організатор подій». Планування канікул або робочого тижня з фокусом на правильну дієвідміну «бути» та використання родового відмінка часу."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "завтра (tomorrow) — завтра вранці, завтра вдень, завтра ввечері; High frequency (Top 100)"
+  - "буду (I will) — я буду там, будемо працювати; граматичний маркер лише для недоконаного виду"
+  - "наступний (next) — наступного тижня, наступного року, наступного разу; вимагає родового відмінка у часових виразах"
+  - "план (plan) — мати плани, складати план, плани на майбутнє; High frequency"
+  - "хотіти (to want) — хочу знати, хочу сказати, дуже хочу; вираження наміру (High frequency)"
+  - "збиратися (to be going to) — збиратися додому, збиратися в дорогу; вираження інтенції"
+  - "скоро (soon) — скоро буду, дуже скоро, як скоро; висока частотність у розмовах про плани"
+  - "потім (then, later) — а потім, потім скажу; вживання для послідовності дій"
+  recommended:
+  - "тиждень (week) — наступного тижня"
+  - "рік (year) — наступного року"
+  - "сподіватися (to hope) — сподіваюся, що все буде добре"
+  - "мріяти (to dream) — мріяти про відпустку"
+  - "планувати (to plan) — планувати час, планувати подорож"
+  - "пізніше (later) — трохи пізніше"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (3267 chars)
+✅ Message sent to Claude (ID: 10095)
+✓ Message 10095 acknowledged
+   Auto-acknowledged reply #10095 (stdout delivery — no inbox accumulation)
+✓ Message 10088 acknowledged

@@ -1,0 +1,312 @@
+✅ Message sent to Gemini (ID: 10463) [auto-acked: self-addressed]
+✓ Message 10463 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10463...
+📨 Message #10463
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-indefinite-negative-pronouns
+   Time: 2026-02-20T20:34:23.953167+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b1-93
+level: B1
+sequence: 93
+slug: indefinite-negative-pronouns
+version: '2.0'
+title: Невизначені та заперечні займенники
+subtitle: Indefinite & Negative Pronouns
+content_outline:
+- section: Вступ — Світ невизначеності
+  points:
+  - Why Ukrainian has three "someone" words — хтось, хто-небудь, дехто each express
+    a different shade of indefiniteness
+  - State Standard §4.2.1.4 alignment — expanded pronoun system at B1
+  - 'Cultural hook: the Ukrainian love of precision — unlike English "someone", Ukrainian
+    distinguishes known-but-unspecified (хтось) from truly random (хто-небудь)'
+- section: Невизначені займенники з -сь (Known but unspecified)
+  points:
+  - хтось, щось, якийсь, чийсь, десь, колись, кудись — the speaker knows or assumes
+    existence
+  - 'Formation: pronoun + -сь (invariable particle)'
+  - 'Usage: Хтось подзвонив. (Someone called — I heard the phone.)'
+  - 'Declension: хтось declines like хто (когось, комусь, кимось)'
+- section: Невизначені займенники з -небудь (Truly indefinite)
+  points:
+  - хто-небудь, що-небудь, який-небудь, де-небудь, коли-небудь
+  - 'Usage: questions, future, hypothetical — Чи хто-небудь бачив мої ключі?'
+  - 'Learner error: using -небудь for past events (wrong — use -сь for known existence)'
+  - Hyphen spelling rule — always hyphenated
+- section: Невизначені займенники з де- (Some, a few)
+  points:
+  - дехто, дещо, деякий, десь, деколи — partial quantity, "some of many"
+  - 'Usage: Дехто вважає, що... (Some people think that...)'
+  - 'Contrast: дехто (some people) vs хтось (someone specific but unnamed)'
+- section: Заперечні займенники з ні- (Negative pronouns)
+  points:
+  - ніхто, ніщо, ніякий, нічий, ніде, ніколи, нікуди, ніскільки
+  - 'Double negation rule — MANDATORY in Ukrainian: Ніхто не прийшов (Nobody came)'
+  - 'Learner error: omitting не with ні- pronouns (English transfer — *Ніхто прийшов)'
+  - 'Preposition splits: ні з ким, ні до кого, ні про що — preposition goes between
+    ні- and pronoun'
+- section: Практика — Контрастні вправи
+  points:
+  - 'Three-way contrast: хтось vs хто-небудь vs дехто in context'
+  - 'Negative vs indefinite: ніхто vs хтось in paired sentences'
+  - 'Error correction: common mistakes with double negation and -небудь/-сь confusion'
+  - 'Text analysis: find and classify pronouns in authentic Ukrainian text'
+- section: Підсумок
+  points:
+  - Summary table of all indefinite/negative pronoun forms
+  - Decision flowchart for choosing the right pronoun
+vocabulary_hints:
+  required:
+  - хтось (someone — known/assumed to exist)
+  - хто-небудь (anyone — truly indefinite, in questions/future)
+  - дехто (some people — partial from a group)
+  - ніхто (nobody) — ніхто не знає, ні з ким
+  - щось (something) — щось трапилось
+  - що-небудь (anything) — дай мені що-небудь
+  - ніщо (nothing) — ніщо не допомагає
+  - ніколи (never) — я ніколи не забуду
+  recommended:
+  - деякий (some, certain) — деякі люди, деякі питання
+  - нічий (nobody's) — нічия земля
+  - ніде (nowhere) — ніде не можу знайти
+  - будь-який (any at all) — будь-яка допомога
+activity_hints:
+- type: quiz
+  focus: Choose correct indefinite pronoun (-сь vs -небудь vs де-)
+  items: 15
+- type: fill-in
+  focus: Complete sentences with negative pronouns + не
+  items: 15
+- type: error-correction
+  focus: Fix double negation and pronoun choice errors
+  items: 10
+- type: match-up
+  focus: Match pronoun to context description
+  items: 12
+focus: grammar
+pedagogy: PPP
+prerequisites:
+- b1-91 (Feedback, Negotiation & Complaints)
+connects_to:
+- b1-94 (Phonetics & Assimilation)
+- b1-95 (B1 Final Exam)
+objectives:
+- Learner can distinguish хтось, хто-небудь, and дехто in context
+- Learner can form and use negative pronouns with obligatory double negation
+- Learner can split negative pronouns with prepositions (ні з ким, ні до кого)
+- Learner can choose the correct indefinite pronoun series for the communicative situation
+grammar:
+- Indefinite pronouns (-сь, -небудь, де-)
+- Negative pronouns (ні-) with double negation
+- Preposition insertion in negative pronouns
+- Declension of indefinite/negative pronouns
+register: нейтральний
+immersion: 75-100% Ukrainian
+phase: B1.9 [Communication Skills]
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Logic Puzzle Host
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Невизначені та заперечні займенники
+
+## State Standard Reference
+§4.2.1.4: "Займенник... питально-відносні займенники: хто, що, який, яка, яке, чий, чия, чиє, котрий, котра, котре."
+**Alignment**: The State Standard introduces the base interrogative pronouns at A1/A2. At B1, the standard requires "Expanded pronouns — indefinite (хтось, щось, дехто), negative (ніхто, ніщо)" (Mapping §4.2.1.4). Although explicit declension tables for indefinite pronouns appear in the B2 text (§4.1.1.4), B1 usage is confirmed by standard examples like "ніхто не зможе забути" (§4.4.2, line 2378).
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| **хтось** | High (Oral/Written) | хтось дзвонив, хтось сказав, хтось із нас, хтось постукав |
+| **щось** | High (Oral/Written) | щось трапилось, щось нове, щось цікаве, щось таке |
+| **хто-небудь** | Medium (Hypothetical) | хто-небудь бачив?, чи є тут хто-небудь?, спитай кого-небудь |
+| **що-небудь** | Medium (Hypothetical) | що-небудь поїсти, дай мені що-небудь, розкажи що-небудь |
+| **дехто** | Medium (Specific group) | дехто вважає, дехто з друзів, дехто каже |
+| **ніхто** | High (Negative) | ніхто не знає, ніхто не прийшов, ніхто не бачив, ні з ким |
+| **ніщо** | High (Negative) | ніщо не вічне, ніщо не допомагає, ні про що |
+
+## Cultural Hooks
+1. **The "Precision of Uncertainty"**: Ukrainian culture values semantic precision even in uncertainty. Unlike English, which often switches between "someone" and "anyone" based on grammatical rules (questions vs. statements), Ukrainian distinguishes by *meaning*: Is the person real but unknown (`-сь`), or purely hypothetical (`-небудь`)?
+2. **"Ніхто" in Folklore**: The concept of `ніхто` appears in riddles and proverbs, often personified as a tricky force or absolute absence (e.g., "Ніхто не знає, що нас чекає").
+
+## Common Learner Errors
+1. **Missing Double Negation** → *Ніхто прийшов* (Wrong) vs *Ніхто **не** прийшов* (Correct). learners transfer English logic ("Nobody came") where the negative pronoun is sufficient. In Ukrainian, the verb MUST also be negated.
+2. **Preposition Merging** → *Нізким* (Wrong) vs *Ні з ким* (Correct). Learners treat the pronoun as a fixed block. The preposition must "split" the negative particle from the root.
+3. **Misusing -небудь in Past Tense** → *Хто-небудь подзвонив* (Unnatural) vs *Хтось подзвонив* (Correct). Since a past event implies a specific agent existed, `-сь` is required. `-небудь` sounds strangely hypothetical for a completed fact.
+
+## Cross-References
+- **Builds on**: A1/A2 Interrogative Pronouns (`хто`, `що`, `який`), Case Declensions.
+- **Prepares for**: B1.9 Communication Skills (Negotiation), B2 Advanced Literature (Stylistic use of indefinite forms).
+
+## Notes for Content Writing
+- **Persona Flavor**: Use the "Logic Puzzle Host" voice to explain the `-сь` vs `-небудь` distinction as a logic game (Real vs. Hypothetical).
+- **Visuals**: Use a "Splitting the Atom" visual metaphor for `ні з ким` (Preposition splitting the negative pronoun).
+- **Pedagogy**: Focus heavily on the "Double Negation" rule as a mandatory feature, not a stylistic choice.
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Логіка невизначеності (Introduction: The Logic of Uncertainty)"
+  words: 600
+  points:
+  - "State Standard alignment (§4.2.1.4): Expanding interrogative pronouns (хто, що) into the complex B1 systems of indefinite and negative pronouns."
+  - "Cultural hook: The 'Precision of Uncertainty' — explaining how Ukrainian semantic logic differs from English rule-based switching (someone vs. anyone)."
+  - "Persona introduction: The Logic Puzzle Host frames the choice between pronoun series as a strategic semantic game based on knowledge and certainty."
+- section: "Реальна невизначеність: Займенники з часткою -сь (Real Uncertainty: Pronouns with the Particle -сь)"
+  words: 850
+  points:
+  - "Usage of the -сь series (хтось, щось, якийсь): Expressing agents or objects known to exist but remaining unspecified or unnamed by the speaker."
+  - "High-frequency collocations from research: 'хтось дзвонив' (someone called), 'щось трапилось' (something happened), 'хтось постукав' (someone knocked)."
+  - "Morphology and declension: The base interrogative pronoun declines (когось, комусь) while the particle '-сь' remains invariable."
+  - "Pedagogical rule: Why '-сь' is mandatory for past tense factual events where an agent clearly existed, contrasting with the '-небудь' error."
+- section: "Гіпотетична та парціальна невизначеність: -небудь та де- (Hypothetical and Partial Uncertainty: -небудь and де-)"
+  words: 850
+  points:
+  - "The -небудь series: Expressing truly random, hypothetical, or unknown agents in questions, future tense, and conditional statements."
+  - "Spelling mastery: The mandatory hyphenation rule for all -небудь forms (хто-небудь, що-небудь) as a non-negotiable B1 literacy competency."
+  - "The 'де-' series (дехто, дещо, деякий): Semantic nuance of partial quantity ('some of many') compared to the individual 'someone' (хтось)."
+  - "Academic/Formal register: Using 'дехто вважає' (some people think) as a standard rhetorical opener to introduce differing viewpoints."
+- section: "Абсолютне заперечення: Займенники з ні- (Absolute Negation: Pronouns with ні-)"
+  words: 900
+  points:
+  - "The Mandatory Double Negation Rule: Internalizing the 'ніхто + не + verb' structure to prevent English-transfer errors like '*Ніхто прийшов'."
+  - "The 'Splitting the Atom' visual: Morphological rule where prepositions insert between 'ні-' and the pronoun root (ні з ким, ні до кого, ні про що)."
+  - "Cultural resonance: Personification of 'Ніхто' in proverbs and riddles ('Ніхто не знає, що нас чекає'), highlighting the concept of absolute absence."
+  - "Declension patterns for negative pronouns: Mastering case changes (нікого, нікому) while maintaining the negative prefix."
+- section: "Практикум: Контрасти та розв'язання помилок (Workshop: Contrasts and Error Resolution)"
+  words: 800
+  points:
+  - "Contrastive analysis drills: Choosing between хтось, хто-небудь, and дехто in nuanced narrative contexts to develop native-like semantic intuition."
+  - "Preposition split clinic: Intensive practice with 'ні з ким' and 'ні про що' to ensure correct spelling and morphological placement."
+  - "The Logic Puzzle Flowchart: A definitive learner guide for selecting the correct pronoun series based on timeframe, certainty, and negation."
+  - "Summary table: Comprehensive reference mapping of all indefinite and negative series with their corresponding usage constraints and case forms."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "хтось (someone) — хтось дзвонив, хтось постукав; high frequency; real but unspecified agent."
+  - "щось (something) — щось трапилось, щось нове; high frequency; real unspecified object."
+  - "хто-небудь (anyone) — medium frequency; hypothetical or random agent in questions/future."
+  - "що-небудь (anything) — medium frequency; hypothetical/any object (дай мені що-небудь)."
+  - "дехто (some people) — дехто вважає, дехто з друзів; partial subset of a group."
+  - "ніхто (nobody) — ніхто не знає, ніхто не бачив; high frequency; mandatory double negation."
+  - "ніщо (nothing) — ніщо не вічне; used with negative verb 'не'."
+  - "ні з ким (with nobody) — crucial example of preposition splitting the pronoun."
+  recommended:
+  - "деякий (some, certain) — деякі люди, деякі питання; specific but unnamed subset."
+  - "дещо (something, some things) — partial quantity or specific details."
+  - "нічий (nobody's) — нічия земля; absolute lack of ownership."
+  - "ніде (nowhere) — ніде не можу знайти; absolute absence of location."
+  - "колись (sometime/once) — real past event or unspecified future point."
+  - "коли-небудь (ever/anytime) — purely hypothetical time."
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4753 chars)
+✅ Message sent to Claude (ID: 10469)
+✓ Message 10469 acknowledged
+   Auto-acknowledged reply #10469 (stdout delivery — no inbox accumulation)
+✓ Message 10463 acknowledged

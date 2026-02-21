@@ -1,0 +1,331 @@
+✅ Message sent to Gemini (ID: 11120) [auto-acked: self-addressed]
+✓ Message 11120 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #11120...
+📨 Message #11120
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-relihiynyi-styl
+   Time: 2026-02-20T22:25:01.375263+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c2-008
+level: c2
+sequence: 8
+version: '2.0'
+title: Релігійний стиль — Сакральна мова
+focus: stylistics
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Біблія українською мовою (Огієнко)
+  url: https://bible.ua/
+  type: primary
+  notes: Standard Ukrainian Bible translation by Ivan Ohienko
+- name: Літургійні тексти УПЦ
+  url: https://liturgia.cerkva.info/
+  type: reference
+  notes: Liturgical texts and prayers in Ukrainian
+- name: Ukrainian State Standard 2024 — Confessional style
+  url: https://mon.gov.ua/
+  type: reference
+  notes: C2 requirements for understanding religious register
+content_outline:
+- section: Вступ — Релігійний стиль в українській мові
+  points:
+  - Історія релігійної мови в Україні
+  - Церковнослов'янська спадщина
+  - Сучасна українська сакральна мова
+- section: Біблійний стиль
+  points:
+  - Переклад Огієнка — мовні особливості
+  - Лексика біблійного тексту
+  - Синтаксис біблійних речень
+  - Порівняння перекладів (Огієнко, Хоменко)
+- section: Молитовний дискурс
+  points:
+  - Структура молитви
+  - Звертання до Бога
+  - Кличний відмінок у молитвах
+  - Отче наш — детальний аналіз
+- section: Церковнослов'янські елементи
+  points:
+  - Лексика — благо, глас, воістину
+  - Фонетичні особливості — врата, глава
+  - Граматичні архаїзми
+  - Функції церковнослов'янізмів
+- section: Проповідь та гомілетика
+  points:
+  - Структура проповіді
+  - Риторичні прийоми
+  - Тематика та образність
+  - Сучасна проповідь vs традиційна
+- section: Релігійний стиль у літературі
+  points:
+  - Біблійні алюзії у Шевченка
+  - Релігійна образність у Франка
+  - Сучасні автори та сакральне
+  - Секуляризація релігійної мови
+- section: Практикум — Аналіз та інтерпретація
+  points:
+  - Читання біблійного уривка
+  - Аналіз молитви
+  - Словник церковнослов'янізмів
+  - Дискусія — релігія в українській культурі
+vocabulary:
+  required:
+  - благо (good/blessing)
+  - глас (voice — archaic)
+  - воістину (truly/verily)
+  - проповідь (sermon)
+  - молитва (prayer)
+  - сакральний (sacred)
+  - літургія (liturgy)
+  - церковнослов'янізм (Church Slavonicism)
+  - гомілетика (homiletics)
+  - кличний (vocative)
+  recommended:
+  - врата (gates — archaic)
+  - псалом (psalm)
+  - благословення (blessing)
+  - покаяння (repentance)
+  - причастя (communion)
+  forbidden: '[]'
+activities:
+  types_required:
+  - reading
+  - quiz
+  - fill-in
+  - critical-analysis
+  - comparative-study
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c2-23 (Intertextuality includes biblical allusions)
+- c2-77 (Rare/archaic forms)
+- c2-30 (Intertextuality in C2.2)
+vocabulary_hints:
+  required:
+  - концепція (concept)
+  - аналіз (analysis)
+  - дискурс (discourse)
+  - методологія (methodology)
+  recommended:
+  - інтерпретація (interpretation)
+  - контекстуалізація (contextualization)
+  - синтез (synthesis)
+activity_hints:
+- type: reading
+  focus: Поглиблений аналіз тексту
+  items: 4
+- type: essay-response
+  focus: Критичне осмислення
+- type: discussion
+  focus: Дискусія та аргументація
+  items: 1
+persona:
+  voice: Senior Specialist
+  role: Theologian
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Релігійний стиль — Сакральна мова
+
+## State Standard Reference
+§4.3.1.1: "Стилі української мови: ... релігійний"
+§4.3.3: "Застарілі слова (архаїзми та історизми)... Евфемізми: відійти у вічність – померти"
+§4.3.4: "Звертання... Микола Лисенко... написав музику до гімну «Молитва за Україну»"
+Alignment: This module explicitly addresses the "Religious style" listed in §4.3.1.1 and develops competence in the specific lexical (archaisms, euphemisms) and syntactic (vocative in prayer) features required at C2 level.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| благо | High (Lit/Rel) | на благо, усіх благ, дарувати благо, спільне благо |
+| глас | Archaic (Stylistic) | глас вопіющого в пустелі, глас народу, глас Божий |
+| воістину | High (Rel) | воістину воскрес, воістину так, і це воістину |
+| проповідь | Medium | виголошувати проповідь, читати проповідь (moralize), недільна проповідь |
+| молитва | High | читати молитву, стояти на молитві, «Отче наш», ранкова/вечірня молитва |
+| літургія | Specific (Rel) | божественна літургія, служити літургію |
+| спасіння | High (Rel/Phil) | спасіння душі, шлях до спасіння |
+| гріх | High | первородний гріх, спокутувати гріх, смертний гріх |
+
+## Cultural Hooks
+1. **Peresopnytsia Gospel (1556-1561):** The first translation of the Gospel into Old Ukrainian language. It is a national symbol upon which Presidents of Ukraine swear their oath of office.
+2. **"Prayer for Ukraine" (Боже великий, єдиний):** Spiritual anthem of Ukraine (music by Mykola Lysenko, lyrics by Oleksandr Konysky). Perfect example of high religious style in national context.
+3. **Ivan Ohienko (Metropolitan Ilarion):** His 1962 translation of the Bible is considered the standard for literary Ukrainian, balancing exactness with the aesthetics of the Ukrainian language.
+
+## Common Learner Errors
+1. **Vocative Omission:** Praying "Ісус, допоможи" instead of "Ісусе, допоможи". In Ukrainian religious discourse, the Vocative case is mandatory and strictly enforced.
+2. **Russisms in Terminology:** Using *батюшка* (Russian style) instead of *отець* or *священник*.
+3. **Calques:** "Спаси і сохрани" (Russian *Спаси и сохрани*) instead of the Ukrainian canonical "Спаси і помилуй".
+4. **Capitalization:** Confusion between *Церква* (as the Body of Christ/Institution - capitalized) and *церква* (building - lowercase in general contexts, though variable by tradition).
+
+## Cross-References
+- Builds on: c2-23 (Intertextuality/Biblical allusions), c2-77 (Archaic forms)
+- Prepares for: c2-30 (Advanced Intertextuality)
+
+## Notes for Content Writing
+- Maintain a respectful, academic, yet "theologically accurate" tone (Persona: Theologian).
+- Ensure a clear distinction between "Church Slavonicisms" (which are stylistic loans) and "Old Ukrainian" (the historical root).
+- Use Ohienko's translation for all biblical quotes unless comparing variations.
+- Emphasize that "Sacred Language" isn't just for believers—it's a key layer of the Ukrainian cultural code (Shevchenko, Franko, Stus).
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Поняття релігійного стилю (Introduction: Concept of Religious Style)"
+  words: 500
+  points:
+  - "Визначення релігійного (конфесійного) стилю згідно з Державним стандартом §4.3.1.1 та його роль у системі стилів сучасної української літературної мови."
+  - "Сакральна мова як ключовий шар українського культурного коду: від Траса Шевченка та Івана Франка до Василя Стуса — аналіз тяглості релігійної образності."
+  - "Диференціація понять: церковнослов'янська спадщина (стилістичні запозичення) проти давньоукраїнської мовної основи в релігійних текстах."
+- section: "Сакральні тексти та історія перекладу (Sacred Texts and Translation History)"
+  words: 700
+  points:
+  - "Пересопницьке Євангеліє (1556–1561) як перша пам'ятка перекладу на староукраїнську мову та її сучасне значення як національного символу, на якому присягають Президенти України."
+  - "Постать Івана Огієнка (митрополита Іларіона) та його переклад Біблії 1962 року: аналіз балансу між точністю богословського змісту та естетикою українського літературного слова."
+  - "Компаративний аналіз перекладів Огієнка та Хоменка: синтаксичні особливості та лексичний вибір (наприклад, використання архаїзмів для підсилення урочистості)."
+- section: "Лексико-семантичні особливості сакральної мови (Lexical and Semantic Features of Sacred Language)"
+  words: 800
+  points:
+  - "Робота з архаїзмами та історизмами згідно з §4.3.3: функціонування слів 'глас', 'врата', 'днесь' у сучасному теологічному дискурсі."
+  - "Евфемізація в релігійному стилі: заміна побутової лексики на сакральну (наприклад, 'відійти у вічність' замість 'померти') як вияв поваги та метафізичного підтексту."
+  - "Фразеологія біблійного походження: аналіз значень та вживання висловів 'глас вопіющого в пустелі', 'шлях до спасіння', 'спокутувати гріх'."
+- section: "Молитовний дискурс та гомілетика (Prayer Discourse and Homiletics)"
+  words: 800
+  points:
+  - "Граматичний канон молитви згідно з §4.3.4: обов'язковість кличного відмінка (Vocative case) у звертаннях до Бога ('Боже', 'Ісусе', 'Господи') та аналіз помилок його опускання."
+  - "Духовний гімн 'Молитва за Україну' (Боже великий, єдиний): аналіз тексту Олександра Кониського та музики Миколи Лисенка як зразка високого релігійного стилю в національному контексті."
+  - "Структура сучасної проповіді: поєднання традиційної гомілетики з актуальною риторикою, тематика та образність виголошення слова до вірян."
+- section: "Релігійний стиль у літературі та культурі (Religious Style in Literature and Culture)"
+  words: 700
+  points:
+  - "Біблійні алюзії та ремінісценції у творчості класиків (Шевченко, Франко): як релігійний стиль стає інструментом соціальної та національної критики (зв'язок із c2-23)."
+  - "Проблема секуляризації релігійної мови в сучасному медіа-дискурсі: переосмислення сакральних понять у світському контексті та збереження регістру."
+  - "Вплив релігійної термінології на формування філософських та етичних концепцій в українській гуманітаристиці."
+- section: "Практикум: Культура мовлення та аналіз помилок (Workshop: Speech Culture and Error Analysis)"
+  words: 500
+  points:
+  - "Виправлення типових помилок: усунення русизмів ('батюшка' замість 'отець' або 'священник') та кальок ('спаси і сохрани' замість нормативного 'спаси і помилуй')."
+  - "Правописні норми: правила вживання великої та малої літер у релігійних назвах (Церква як інституція vs церква як будівля) згідно з чинним правописом."
+  - "Стилістичний експеримент: трансформація світського тексту в релігійний регістр з використанням відповідної лексики та синтаксичних конструкцій."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "благо (good/blessing) — на благо України, усіх благ, спільне благо, дарувати благо; висока частотність у літургійних текстах."
+  - "глас (voice — archaic) — глас вопіющого в пустелі (голос самотнього), глас Божий, глас народу; стилістичне маркування урочистості."
+  - "воістину (truly/verily) — воістину воскрес, воістину так, це воістину святе діло; прислівник підтвердження сакральної істини."
+  - "спасіння (salvation) — спасіння душі, шлях до спасіння, вічне спасіння; ключовий сотеріологічний термін."
+  - "гріх (sin) — первородний гріх, спокутувати гріх, смертний гріх, ввести у гріх; центральне поняття морального богослов'я."
+  recommended:
+  - "відійти у вічність (to pass away) — релігійний евфемізм згідно з §4.3.3 Державного стандарту."
+  - "священник (priest) — нормативний український термін; уникати русизму 'батюшка'."
+  - "спаси і помилуй (save and have mercy) — канонічна українська формула; уникати кальки 'спаси і сохрани'."
+  - "спокута (atonement/repentance) — акт визнання провини та духовного очищення."
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4779 chars)
+✅ Message sent to Claude (ID: 11123)
+✓ Message 11123 acknowledged
+   Auto-acknowledged reply #11123 (stdout delivery — no inbox accumulation)
+✓ Message 11120 acknowledged

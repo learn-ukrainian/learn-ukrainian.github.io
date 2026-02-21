@@ -1,0 +1,332 @@
+✅ Message sent to Gemini (ID: 11207) [auto-acked: self-addressed]
+✓ Message 11207 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #11207...
+📨 Message #11207
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-c2-2-review
+   Time: 2026-02-20T22:30:34.194727+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c2-044
+level: c2
+sequence: 44
+version: '2.0'
+title: Повторення C2.2 — Літературна майстерність
+focus: integration
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Інститут літератури НАН України
+  url: https://ilnan.gov.ua/
+  type: reference
+  notes: Academic standards for literary analysis and research
+- name: Українська Вільна Академія Наук
+  url: https://uvan.us/
+  type: reference
+  notes: International standards for Ukrainian literary scholarship
+- name: Слово і Час — науковий журнал
+  url: http://dspace.nbuv.gov.ua/handle/123456789/8800
+  type: reference
+  notes: Peer-reviewed literary criticism examples
+content_outline:
+- section: Вступ — Консолідація літературних компетенцій
+  points:
+  - Огляд пройденого матеріалу М26-43
+  - Взаємозв'язки між теорією та практикою
+  - Підготовка до контрольної оцінки
+- section: Літературна теорія та наратологія (М26-27)
+  points:
+  - Ключові теоретичні концепції
+  - Наративні категорії та їх застосування
+  - Практичні завдання на закріплення
+- section: Поетика вірша та прози (М28-29)
+  points:
+  - Версифікація та просодія
+  - Прозові техніки та стилістика
+  - Інтеграція формального аналізу
+- section: Інтертекстуальність та критика (М30-32)
+  points:
+  - Інтертекстуальні зв'язки
+  - Методи літературної критики
+  - Написання літературознавчих есеїв
+- section: Переклад та творче письмо (М33-37)
+  points:
+  - Перекладознавча теорія та практика
+  - 'Творче письмо: поезія та проза'
+  - Індивідуальний голос у перекладі та оригіналі
+- section: Сучасна література та спільнота (М38-41)
+  points:
+  - Орієнтація в сучасному літературному процесі
+  - Літературні премії та канон
+  - Участь у літературній спільноті
+- section: Підсумок та підготовка до Checkpoint
+  points:
+  - Самодіагностика прогалин
+  - Рекомендації для індивідуального повторення
+  - Очікування від контрольної оцінки
+vocabulary:
+  required:
+  - консолідація (consolidation)
+  - повторення (review)
+  - закріплення (reinforcement)
+  - систематизація (systematization)
+  - інтеграція (integration)
+  - самодіагностика (self-diagnosis)
+  - прогалина (gap)
+  - взаємозв'язок (interconnection)
+  - компетенція (competency)
+  - оцінювання (assessment)
+  recommended:
+  - траєкторія навчання (learning trajectory)
+  - рефлексивна практика (reflective practice)
+  - метакогнітивний (metacognitive)
+  - пріоритезація (prioritization)
+  - індивідуальний план (individual plan)
+  forbidden: '[]'
+activities:
+  types_required:
+  - essay-response
+  - quiz
+  - comparative-study
+  - critical-analysis
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c2-45 (C2.2 Checkpoint — assessment)
+- c2-46 (Professional Language Overview — C2.3 start)
+vocabulary_hints:
+  required:
+  - концепція (concept)
+  - аналіз (analysis)
+  - дискурс (discourse)
+  - методологія (methodology)
+  recommended:
+  - інтерпретація (interpretation)
+  - контекстуалізація (contextualization)
+  - синтез (synthesis)
+activity_hints:
+- type: reading
+  focus: Поглиблений аналіз тексту
+  items: 4
+- type: essay-response
+  focus: Критичне осмислення
+- type: discussion
+  focus: Дискусія та аргументація
+  items: 1
+persona:
+  voice: Senior Specialist
+  role: Senior Editor
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Повторення C2.2 — Літературна майстерність
+
+## State Standard Reference
+§4.3.1.1, §4.3.3, §4.3.4, §4.3.7, §4.3.8: "Стилі української мови: художній, науковий... Стилістичні засоби лексики... Стилістичні засоби синтаксису... Уміння трансформувати текст з одного стилю в інший... Уміння утворювати вторинні тексти, зокрема реферати, повідомлення."
+Alignment: Цей модуль консолідує навички володіння художнім та науковим стилями, фокусуючись на літературному аналізі, критиці та творчому письмі, що відповідає вимогам стандарту до рівня С2.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| консолідація | Середня (академ.) | консолідація знань, консолідація зусиль, процес консолідації |
+| наратологія | Низька (спец.) | сучасна наратологія, наратологічний аналіз, категорії наратології |
+| інтертекстуальність | Низька (спец.) | постмодерна інтертекстуальність, інтертекстуальні зв'язки, принцип інтертекстуальності |
+| версифікація | Низька (спец.) | силабо-тонічна версифікація, проблеми версифікації, українська версифікація |
+| рефлексія | Висока (інтел.) | критична рефлексія, саморефлексія, філософська рефлексія |
+
+## Cultural Hooks
+1. **Феномен "Шістдесятників":** Як при===RESEARCH_START===
+
+# Дослідження: Повторення C2.2 — Літературна майстерність
+
+## State Standard Reference
+§4.3.1.1, §4.3.3, §4.3.8: "Стилі української мови: художній... Стилістичні засоби лексики: епітети, метафори, перифраз, метонімія... Уміння утворювати вторинні тексти, зокрема реферати, повідомлення (тут: літературна критика, рецензії)."
+Alignment: Цей модуль інтегрує теоретичні знання з художнього стилю (поетика, тропи) та практичні навички створення вторинних текстів (критика, есеїстика), забезпечуючи комплексне повторення матеріалу C2.2.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| консолідація | High (Academic) | консолідація знань, соціальна консолідація |
+| інтертекстуальність | Low (Specialized) | постмодерна інтертекстуальність, прихована інтертекстуальність |
+| наратив | High (Humanities) | історичний наратив, зміна наративу, наративна стратегія |
+| дискурс | High (Academic) | літературний дискурс, публічний дискурс, дискурсивні практики |
+| канон | Medium | літературний канон, перегляд канону, класичний канон |
+| рефлексія | High (General/Academic) | критична рефлексія, саморефлексія, філософська рефлексія |
+
+## Cultural Hooks
+1. **Школа перекладу**: Феномен Миколи Лукаша та Григорія Кочура, які перекладали "неперекладне" (наприклад, "Декамерон" чи поезію Верлена), демонструючи безмежні можливості української мови. Це якір для секції про переклад.
+2. **Станіславівський феномен**: Постмодерний вибух 90-х (Андрухович, Іздрик, Прохасько) як приклад живої інтертекстуальності та гри з текстом.
+
+## Common Learner Errors
+1. **Вірш vs Поема**: Студенти часто плутають "вірш" (poem) та "поема" (long poem/epic) через вплив англійського "poem".
+   *Correct*: Вірш — малий жанр, поема — великий ліро-епічний твір.
+2. **Сюжет vs Фабула**: Нерозрізнення хронології подій (фабула) та авторського викладу (сюжет).
+   *Correct*: Фабула — "що сталося", Сюжет — "як про це розказано".
+3. **Калькування термінів**: Вживання англізмів замість усталених відповідників (напр., "новел" замість "роман" від "novel").
+   *Correct*: Novel = Роман, Novella = Новела.
+
+## Cross-References
+- Builds on: c2-26 (Literary Theory), c2-28 (Poetics), c2-33 (Translation)
+- Prepares for: c2-45 (Checkpoint), c2-46 (Professional Language)
+
+## Notes for Content Writing
+- Focus on the "Instructor-Colleague" tone suitable for C2 learners.
+- Use excerpts from standard-setting texts (e.g., Kotsyubynsky for impressionism, Stus for palimpsests) to illustrate theoretical points implicitly.
+- Ensure definitions of "narrator" vs "author" are crisp, as this is a key maturity marker in literary analysis.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Консолідація літературних компетенцій (Introduction: Consolidation of Literary Competencies)"
+  words: 400
+  points:
+  - "Огляд пройденого матеріалу М26-43 через призму Держстандарту §4.3.1.1 щодо стилістичної диференціації та консолідації знань."
+  - "Взаємозв'язки між теорією та практикою: рефлексія над переходом від аналізу чужого тексту до творення власного."
+- section: "Поетика та стилістичні засоби (Poetics and Stylistic Devices)"
+  words: 750
+  points:
+  - "Стилістичні засоби лексики (§4.3.3): поглиблений аналіз епітетів, метафор та метонімії на прикладі поетичних палімпсестів Василя Стуса."
+  - "Learner error: Розрізнення понять «вірш» (poem — малий жанр) та «поема» (long poem/epic — великий ліро-епічний твір) для уникнення інтерференції з англійською мовою."
+- section: "Наратологія: Структура та голос (Narratology: Structure and Voice)"
+  words: 750
+  points:
+  - "Наратологічний аналіз: диференціація функцій автора, розповідача (narrator) та персонажа в літературному дискурсі."
+  - "Learner error: Чітке розрізнення фабули (хронологічна послідовність подій) та сюжету (авторський виклад) на прикладах імпресіоністичної прози М. Коцюбинського."
+- section: "Інтертекстуальність та майстерність перекладу (Intertextuality and Translation Mastery)"
+  words: 800
+  points:
+  - "Принцип інтертекстуальності: гра з текстом у «Станіславівському феномені» (творчість Ю. Андруховича, Ю. Іздрика, Т. Прохаська)."
+  - "Культурний якір: Школа перекладу Миколи Лукаша та Григорія Кочура як доказ безмежних можливостей української мови у відтворенні світових шедеврів."
+- section: "Літературна критика та формування канону (Literary Criticism and Canon Formation)"
+  words: 800
+  points:
+  - "Створення вторинних текстів (§4.3.8): практика написання рецензій та наукових повідомлень у жанрі літературної критики."
+  - "Поняття літературного канону та його динаміка. Learner error: запобігання калькуванню термінів (вживання «роман» замість помилкового «новел» від англ. novel)."
+- section: "Підсумок: Рефлексія та самодіагностика (Summary: Reflection and Self-Diagnosis)"
+  words: 500
+  points:
+  - "Критична рефлексія (High Frequency) над індивідуальною траєкторією навчання та самодіагностика прогалин перед Checkpoint."
+  - "Систематизація інтегрованих знань: підготовка до контрольної оцінки рівня літературної майстерності."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "консолідація (consolidation) — консолідація знань, консолідація зусиль; High Frequency (Academic)"
+  - "наратив (narrative) — наративна стратегія, зміна наративу, історичний наратив; High Frequency (Humanities)"
+  - "інтертекстуальність (intertextuality) — постмодерна інтертекстуальність, прихована інтертекстуальність; Specialized"
+  - "дискурс (discourse) — літературний дискурс, дискурсивні практики; High Frequency (Academic)"
+  - "рефлексія (reflection) — критична рефлексія, саморефлексія; High Frequency (General/Academic)"
+  recommended:
+  - "канон (canon) — літературний канон, перегляд канону; Medium Frequency"
+  - "фабула (fabula/plot) — хронологія подій; розрізняти з поняттям «сюжет»"
+  - "версифікація (versification) — система віршування; низька частотність, спеціалізоване"
+  - "концепція (concept) — цілісний погляд на явище; Academic register"
+  - "контекстуалізація (contextualization) — аналіз у контексті; High academic complexity"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (3473 chars)
+✅ Message sent to Claude (ID: 11217)
+✓ Message 11217 acknowledged
+   Auto-acknowledged reply #11217 (stdout delivery — no inbox accumulation)
+✓ Message 11207 acknowledged

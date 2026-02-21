@@ -6,40 +6,64 @@ version: '2.0'
 title: Which One?
 subtitle: Relative Clauses with Який
 content_outline:
-- section: Introduction / Вступ
+- section: 'Вступ: Опис за межами прикметників (Introduction: Description Beyond Adjectives)'
+  words: 450
   points:
-  - 'The power of description beyond adjectives — describing people and things with
-    full sentences; cultural hook: ''Який пан, такий жупан'' (Like master, like coat)
-    — illustrates how ''який'' matches the noun it describes'
-  - '''The Chameleon: Why ''''Який'''' is the ultimate linker'' — visual aid: ''Mirror''
-    analogy (reflects noun gender/number)'
-- section: Presentation / Презентація
+  - The power of complex sentences — moving from simple adjectives to describing people
+    and things with full clauses; contextualizing the bridge between A2 and B1 syntax.
+  - 'Folk wisdom hook: «Який пан, такий жупан» (Like master, like coat/jacket) — a
+    linguistic illustration of how «який» matches the noun it describes, just as a
+    garment reflects its owner''s status.'
+  - 'Introduction to the ''Mirror'' analogy: Visualizing «який» as a mirror that reflects
+    the gender and number of the noun it follows (the antecedent).'
+- section: 'Презентація: Відмінювання та узгодження (Presentation: Agreement and Declension)'
+  words: 700
   points:
-  - '''Basic Agreement: Який, Яка, Яке, Які'' — starting with Nominative case; learner
-    error: case agreement failures (mismatching gender/number with antecedent)'
-  - '''The Case Detective: Why ''''Який'''' changes inside the clause'' — introducing
-    Accusative forms; rule: case determined by clause verb (знаю кого? -> якого),
-    not the antecedent; visual aid: ''dresses for the job inside the new sentence'''
-  - '''Who vs. Which: The universal nature of ''''Який'''''' — learner error: using
-    ''хто'' instead of ''який'' for people; differentiation: ''хто'' is for ''He who...''
-    (Той, хто...), ''який'' modifies specific nouns'
-  - '''Abstract Links: Те, що...'' — standard reference: §4.4.2 (complex sentences
-    with ''що'', ''тому що'', ''щоб'')'
-  - '''Precision: Defining your subject with relative clauses'' — market culture:
-    ''Який вам зважити?'' (Which one do you want?), ''Які помідори найсолодші?'''
-  - 'The Mandatory Comma — learner error: omitting comma before ''який'' (unlike English
-    restrictive clauses)'
-- section: Practice / Практика
+  - 'Basic Agreement: «Який, Яка, Яке, Які» in the Nominative case — mastering the
+    gender/number match with the antecedent; standard reference to adjective-like
+    endings.'
+  - 'The Case Detective: Introducing the rule that «який» ''dresses for the job''
+    inside the relative clause — the case is determined by the verb inside the clause
+    (e.g., «знаю кого? -> якого»), not the main sentence.'
+  - 'Introducing Accusative forms: Focusing on «якого» (masc/anim) and «яку» (fem)
+    as the primary tools for building descriptive sentences about actions.'
+  - 'Scaffolding strategy: Moving from Nominative subject clauses (e.g., «чоловік,
+    який стоїть») to Accusative object clauses (e.g., «чоловік, якого я знаю»).'
+- section: Культурний контекст та вибір (Cultural Context and Selection)
+  words: 550
   points:
-  - Sentence merging drills — combining simple sentences into complex ones; focus
-    on gender/number agreement
-  - '''Wanted'' poster description exercises — describing suspects or lost items using
-    ''який''; learner error: failing to decline ''який'' in Accusative (Я бачу чоловіка,
-    якого...)'
-- section: Dialogues / Діалоги
+  - 'The ''Selection'' Culture: Navigating a Ukrainian market (ринок) where the question
+    «Який?» is constant for precision; exploring the nuance of selecting specific
+    items.'
+  - 'Market interactions: Practical phrases like «Який вам зважити?» (Which one should
+    I weigh?) and «Які помідори найсолодші?» (Which tomatoes are the sweetest?).'
+  - 'The logic of naming: Discussing the idiom «Як ви човен назвете, так він і попливе»
+    (As you name the boat, so it shall float) regarding the importance of defining
+    characteristics.'
+- section: Практика та типові помилки (Practice and Common Errors)
+  words: 850
   points:
-  - 'Police witness interview or searching for a specific item in a shop — using ''який/яка/яке''
-    to specify details; context: selecting items at a market (''Selection'' culture)'
+  - 'Differentiating «Хто» vs. «Який»: Correcting the common learner error of using
+    «хто» for people (e.g., «Чоловік, хто живе тут» — incorrect) vs. the correct «Чоловік,
+    який живе тут».'
+  - 'The Mandatory Comma: Deep dive into punctuation rules; emphasizing that unlike
+    English restrictive clauses, Ukrainian relative clauses almost always require
+    a preceding comma.'
+  - 'Case Agreement Drills: Transforming simple pairs into complex sentences (e.g.,
+    «Я бачу дівчину. Вона читає.» -> «Я бачу дівчину, яка читає.» vs «Дівчина читає.
+    Я її бачу.» -> «Дівчина, яку я бачу, читає.»).'
+  - 'Identifying the ''The Chameleon'' behavior: Drills to ensure learners don''t
+    mismatch the case of the relative pronoun with the antecedent when the clause
+    function differs.'
+- section: Діалоги та підсумок (Dialogues and Summary)
+  words: 450
+  points:
+  - 'Witness Interview scenario: Providing detailed descriptions of people or lost
+    items to an official using varied forms of «який».'
+  - 'Shopping scenario: A market dialogue focusing on specifying preferences («Мені
+    подобається той, який...») and asking clarifying questions.'
+  - 'Final synthesis: Reviewing the universal nature of «який» for both people and
+    objects, reinforcing the ''reflects antecedent / dresses for internal job'' rule.'
 focus: grammar
 pedagogy: PPP
 objectives:
@@ -69,12 +93,19 @@ persona:
   role: Competition Judge
 vocabulary_hints:
   required:
-  - який (which/that/who - masc) — який це?, той, який... (the one who/which)
-  - яка (which/that/who - fem) — яка різниця? (what's the difference?), дівчина, яка...
-  - яке (which/that/who - neut) — яке сьогодні число? (what is the date today?)
-  - які (which/that/who - pl) — люди, які... (people who...), які плани?
-  - той (that one) — той, хто... (he who...), той самий (the same one)
+  - який (which/that/who - masc) — який це?, той, який... (the one who/which); Top
+    20 frequency
+  - яка (which/that/who - fem) — яка різниця? (what's the difference?), дівчина, яка...;
+    Top 50 frequency
+  - яке (which/that/who - neut) — яке сьогодні число? (what's the date?); Top 100
+    frequency
+  - які (which/that/who - pl) — люди, які... (people who...), які плани?; Top 100
+    frequency
+  - той (that one) — той, хто... (he who...), той самий (the same one); Top 200 frequency
   recommended:
-  - 'чоловік (man/husband) — learner error: чоловік = man AND husband'
-  - 'жінка (woman/wife) — learner error: жінка = woman AND wife'
+  - 'чоловік (man/husband) — learner error: used for both ''man'' and ''husband'''
+  - 'жінка (woman/wife) — learner error: used for both ''woman'' and ''wife'''
+  - ринок (market) — central setting for 'Selection' culture activities
+  - зважити (to weigh) — key verb in market selection collocations
+  - різниця (difference) — used in the common collocation «яка різниця?»
 word_target: 3000

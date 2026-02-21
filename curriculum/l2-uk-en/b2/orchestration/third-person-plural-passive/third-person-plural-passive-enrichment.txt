@@ -1,0 +1,319 @@
+✅ Message sent to Gemini (ID: 10477) [auto-acked: self-addressed]
+✓ Message 10477 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10477...
+📨 Message #10477
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-third-person-plural-passive
+   Time: 2026-02-20T20:37:19.144754+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b2-05
+level: B2
+sequence: 5
+slug: third-person-plural-passive
+version: '2.0'
+title: Пасив третьою особою множини
+content_outline:
+- section: Вступ — Найрозмовніший пасив
+  points:
+  - Третя особа множини як пасивна конструкція
+  - Імпліцитний агент — невизначені "вони"
+  - Місце в системі пасиву
+- section: Утворення конструкції
+  points:
+  - Дієслово в 3-й особі множини без підмета
+  - Об'єкт часто в давальному відмінку (Мені сказали)
+  - Об'єкт у знахідному (Книгу взяли)
+  - Видові нюанси
+- section: Семантика невизначеного агента
+  points:
+  - «Вони» як абстрактні люди
+  - Порівняння з англійським «One says» / «They say»
+  - Ефект анонімності
+- section: Контексти вживання
+  points:
+  - Побутові ситуації (У магазині мене запитали)
+  - Телефонні розмови (По телефону нам повідомили)
+  - Чутки та плітки (Кажуть, що...)
+  - Неформальні оповіді
+- section: Порівняння з іншими формами пасиву
+  points:
+  - 3-я особа множини vs -но/-то — регістр
+  - 3-я особа множини vs -ся — акцент
+  - Стилістичний вибір
+  - Коли не можна використовувати
+- section: Типові помилки
+  points:
+  - Надмірна формальність у розмовному контексті
+  - Змішування відмінків
+  - Неправильний вибір регістру
+- section: Практика і підсумок
+  points:
+  - Ключові правила
+  - Підготовка до модуля 06
+  - Інтеграція всіх форм пасиву
+vocabulary_hints:
+  required:
+  - сказали (they said/was told)
+  - запитали (they asked/was asked)
+  - повідомили (they informed/was informed)
+  - пообіцяли (they promised/was promised)
+  - дали (they gave/was given)
+  - показали (they showed/was shown)
+  - розмовний (colloquial)
+  - неформальний (informal)
+  - імпліцитний (implicit)
+  - анонімний (anonymous)
+  recommended:
+  - чутка (rumor)
+  - плітка (gossip)
+  - побутовий (everyday)
+  - оповідь (narrative)
+  - контекст (context)
+activity_hints:
+- type: fill-in
+  focus: Formal passive → colloquial (3rd person plural)
+  items: 12+
+- type: fill-in
+  focus: Complete everyday sentences with 3rd pl passive
+  items: 14+
+- type: quiz
+  focus: Register identification (formal vs colloquial)
+  items: 12+
+- type: match-up
+  focus: Situation → appropriate passive form
+  items: 12+
+- type: error-correction
+  focus: Official announcement → casual retelling
+  items: 8+
+- type: essay-response
+  focus: Write informal story using 3rd pl passive
+  output: Model answer provided
+focus: grammar
+prerequisites:
+- b2-01 (Passive Voice System)
+- b2-02 (Past Passive Participles)
+- b2-03 (Impersonal -но/-то)
+- b2-04 (Reflexive Passive)
+- Dative case mastery
+connects_to:
+- b2-06 (Passive in Context)
+- 'b2-24 (Register: Colloquial Style)'
+- b2-10 (B2.1a Checkpoint)
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Impersonal Constructions
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Colloquial impersonal passive patterns
+- name: Розмовний стиль української мови
+  url: https://uk.wikipedia.org/wiki/Розмовний_стиль
+  type: secondary
+  notes: Colloquial speech characteristics
+- name: CEFR B2 Speaking Descriptors
+  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  type: reference
+  notes: B2 speaking fluency expectations
+immersion: 100% Ukrainian
+phase: B2.1a [Passive Voice]
+objectives:
+- Identify and correctly use пасив третьою особою множини
+- Form and apply найрозмовніший пасив
+persona:
+  voice: Professional Language Coach
+  role: Gossip Columnist (Світський оглядач)
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Пасив третьою особою множини (Неозначено-особові речення)
+
+## State Standard Reference
+§4.3.3.1: "Односкладні речення з головним членом – дієсловом: [...] неозначено-особові речення: По радіо повідомили про погіршення погоди;"
+Alignment: This module directly addresses the B2 requirement for mastering one-member sentences (односкладні речення), specifically the indefinite-personal type (неозначено-особові), which functions as a colloquial passive equivalent.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| **чутка** (rumor) | High (Spoken) | *чутка пішла/пройшла* (rumor spread), *пустити чутку* (start a rumor), *за чутками* (rumor has it), *глуха чутка* (vague rumor) |
+| **плітка** (gossip) | High (Spoken) | *розпускати плітки* (spread gossip), *плести плітки* (weave gossip), *пуста плітка* (idle gossip) |
+| **казати** (to say) | Very High | *кажуть, що...* (they say that...), *мені казали* (I was told) |
+| **повідомити** (to inform) | High (Media/Formal) | *повідомили про...* (it was reported about...), *нам повідомили* (we were informed) |
+
+## Cultural Hooks
+1.  **Gossip as Social Control**: Historically in Ukrainian villages, *плітки* (gossip) were not just idle talk but a mechanism for maintaining social norms and community cohesion ("social glue").
+2.  **Folk Wisdom**: The proverb "Чужий рот не хлів — не зачинити" (A stranger's mouth is not a barn — you can't shut it) perfectly captures the cultural attitude towards the inevitability of rumors. Another relevant one: "Сорока летить, а собака на хвості сидить" (news spreads fast).
+
+## Common Learner Errors
+1.  **Over-explicit Subject**: Using "Вони" explicitly (*Вони кажуть*) instead of the more natural indefinite form (*Кажуть*).
+    *   *Correction*: Omit the pronoun to achieve the true "indefinite" or "passive" effect.
+2.  **Subject Re-introduction**: Attempting to add a grammatical subject to a sentence that should remain subjectless to focus on the action.
+    *   *Correction*: Maintain the one-member structure (only predicate).
+3.  **Register Confusion**: Using formal passive participles (-но/-то) in casual gossip contexts where 3rd person plural is more appropriate.
+    *   *Correction*: Use *Вкрали гаманець* (colloquial) instead of *Гаманець було вкрадено* (formal/police report).
+
+## Cross-References
+- **Builds on**: `b2-01` (Passive Voice System), `b2-03` (Impersonal -но/-то forms).
+- **Prepares for**: `b2-06` (Passive in Context), `b2-24` (Register: Colloquial Style).
+
+## Notes for Content Writing
+- **Terminology**: Briefly introduce the term "неозначено-особові речення" but focus on the functional description "3rd Person Plural Passive" for English speakers.
+- **Contrast**: Explicitly contrast with English "They say..." (where 'They' is present) vs Ukrainian *Кажуть...* (where 'They' is absent).
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 500
+  points:
+  - "Введення в концепцію неозначено-особових речень (indefinite-personal sentences) згідно з Державним стандартом §4.3.3.1."
+  - "Рольова модель: Світський оглядач (Gossip Columnist) та використання анонімності як інструменту залучення аудиторії."
+  - "Визначення імпліцитного агента: коли дії важливіші за виконавців (невизначені «вони»)."
+- section: "Граматична база та термінологія (Grammatical Base and Terminology)"
+  words: 700
+  points:
+  - "Механізм утворення: дієслово у 3-й особі множини минулого або теперішнього часу без використання займенника «вони»."
+  - "Керування відмінками: Давальний відмінок для адресата (Мені сказали) проти Знахідного для об'єкта дії (Книгу взяли)."
+  - "Контраст з англійською мовою: обов'язковість відсутності підмета для досягнення справжнього пасивного ефекту."
+- section: "Соціокультурний аспект пліток (Sociocultural Aspect of Gossip)"
+  words: 900
+  points:
+  - "Культурний гачок: Плітки (gossip) як «соціальний клей» в українській громаді — від історичних сіл до сучасних медіа."
+  - "Інтеграція народної мудрості: аналіз прислів'я «Чужий рот не хлів — не зачинити» у контексті неминучості чуток."
+  - "Робота з лексикою: розрізнення понять «чутка пішла», «пустити чутку» та «за чутками» у повсякденному спілкуванні."
+- section: "Порівняння регістрів та аналіз помилок (Register Comparison and Error Analysis)"
+  words: 1000
+  points:
+  - "Типова помилка: Використання надмірного підмета (Вони кажуть) замість природного неозначеного «Кажуть»."
+  - "Стилістичний вибір: порівняння розмовного пасиву (Вкрали гаманець) з офіційним -но/-то (Гаманець було вкрадено)."
+  - "Помилка повторного введення підмета: чому не можна додавати «хто» у речення, де фокус має залишатися на самій дії."
+- section: "Практичне застосування та підсумок (Practical Application and Summary)"
+  words: 900
+  points:
+  - "Нарративна практика: переказ світських новин та чуток, використовуючи «Кажуть, що...» та «Нам повідомили...»."
+  - "Синтез системи пасиву: вибір між 3-ю особою множини, формами на -ся та -но/-то залежно від ситуативного контексту."
+  - "Підбиття підсумків: як використання цього «найрозмовнішого пасиву» підвищує природність мовлення на рівні B2."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "казати (to say) — «кажуть, що...» (it is said that...), «мені казали» (I was told); Very High frequency"
+  - "повідомити (to inform) — «повідомили про...» (it was reported about...), «нам повідомили» (we were informed); High frequency in Media/Formal contexts"
+  - "чутка (rumor) — «чутка пішла/пройшла» (rumor spread), «пустити чутку» (start a rumor), «за чутками» (rumor has it); High frequency (Spoken)"
+  - "плітка (gossip) — «розпускати плітки» (spread gossip), «плести плітки» (weave gossip); High frequency in informal social contexts"
+  - "сказали (they said/was told) — «сказали, що...» (was told that...); High frequency marker of the structure"
+  - "запитали (they asked/was asked) — ключовий дієслівний компонент для побутових ситуацій"
+  - "пообіцяли (they promised/was promised) — часто вживається у неформальних оповідях про взаємодії"
+  recommended:
+  - "неозначено-особовий (indefinite-personal) — лінгвістичний термін для узгодження зі Стандартом §4.3.3.1"
+  - "соціальний клей (social glue) — метафора для опису культурної ролі пліток у громаді"
+  - "чужий рот не хлів (stranger's mouth is not a barn) — прислів'я про неможливість зупинити поширення новин"
+  - "сорока на хвості принесла (magpie brought it on its tail) — ідіома для позначення джерела неофіційної інформації"
+  - "побутовий (everyday/domestic) — контекстний маркер для вибору цього типу пасиву"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (3791 chars)
+✅ Message sent to Claude (ID: 10486)
+✓ Message 10486 acknowledged
+   Auto-acknowledged reply #10486 (stdout delivery — no inbox accumulation)
+✓ Message 10477 acknowledged

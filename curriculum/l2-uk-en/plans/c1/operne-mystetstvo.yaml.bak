@@ -1,0 +1,40 @@
+module: c1-079
+level: C1
+sequence: 79
+slug: operne-mystetstvo
+version: '2.0'
+title: Оперне мистецтво
+subtitle: Opera Art
+content_outline:
+- section: Розминка — Українська опера
+  points:
+  - Львівська та Київська опери — центри оперного мистецтва
+  - Українські голоси на світовій сцені
+  - Від Крушельницької до Оксани Линів
+- section: Content Areas
+  points:
+  - 'Opera houses: Львівська опера (1900), Київська опера (1901) — history and significance'
+  - 'Repertoire: Ukrainian operas still performed today'
+  - 'Great singers: Соломія Крушельницька, Борис Гмиря, Анатолій Солов''яненко, Анатолій
+    Кочерга'
+  - 'Contemporary: Оксана Линів (conductor), сучасні постановки'
+- section: Практика — оперний дискурс
+  points:
+  - Написати біографічну довідку про Соломію Крушельницьку
+  - Порівняти архітектуру Львівської та Віденської опер
+  - Обговорити досягнення Оксани Линів як диригентки
+  - Написати рецензію на оперну виставу
+focus: fine-arts
+pedagogy: CBI
+objectives:
+- Learner knows the history of major Ukrainian opera houses.
+- Learner can identify world-renowned Ukrainian opera singers.
+- Learner uses professional terminology to evaluate operatic performances.
+grammar:
+- Narrative of institutional history
+- Evaluative discourse on performance
+phase: C1.5 Folk Culture & Fine Arts
+persona:
+  voice: Senior Specialist
+  role: Лібретист
+word_target: 4000

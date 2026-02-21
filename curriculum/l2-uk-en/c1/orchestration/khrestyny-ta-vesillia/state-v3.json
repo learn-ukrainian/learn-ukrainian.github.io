@@ -2,12 +2,5 @@
   "track": "c1",
   "slug": "khrestyny-ta-vesillia",
   "mode": "v3",
-  "phases": {
-    "v3-A": {
-      "status": "complete",
-      "ts": "2026-02-19T18:31:13Z",
-      "task_id": "v3-khrestyny-ta-vesillia-pA",
-      "mode": "full"
-    }
-  }
+  "phases": {}
 }

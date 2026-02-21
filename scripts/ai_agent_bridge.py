@@ -506,10 +506,15 @@ def send_message(content: str, task_id: str = None, msg_type: str = "response", 
     """, (task_id, from_llm, to_llm, msg_type, content, data_json, timestamp))
 
     msg_id = cursor.lastrowid
+
+    # Auto-ack self-addressed messages (agent dispatching to itself via CLI, not broker)
+    if from_llm == to_llm:
+        cursor.execute("UPDATE messages SET acknowledged = 1 WHERE id = ?", (msg_id,))
+
     conn.commit()
     conn.close()
 
-    print(f"✅ Message sent to {to_llm.title()} (ID: {msg_id})")
+    print(f"✅ Message sent to {to_llm.title()} (ID: {msg_id}){' [auto-acked: self-addressed]' if from_llm == to_llm else ''}")
 
     # Trigger macOS notification to alert human
     try:
@@ -1149,7 +1154,7 @@ Format your response clearly.
             # Always clean up PID file, and send error if no response was routed
             if not _response_sent:
                 try:
-                    send_message(
+                    err_id = send_message(
                         content=f"[Bridge Error] Gemini process failed for message #{message_id}. Check logs.",
                         task_id=msg['task_id'],
                         msg_type="error",
@@ -1158,6 +1163,8 @@ Format your response clearly.
                         from_model="gemini-bridge-error"
                     )
                     acknowledge(message_id)
+                    # Auto-ack the error message itself — it's a dead-end notification
+                    acknowledge(err_id)
                 except Exception:
                     pass  # Best-effort error reporting
             _remove_pid_file("gemini", task_key)
@@ -1345,7 +1352,7 @@ Do NOT use MCP tools to send your response - just output your response directly.
                 print(f"\n❌ Claude CLI error: {error_msg[:500]}")
                 sys.stdout.flush()
 
-                send_message(
+                err_id = send_message(
                     content=f"[Bridge Error] Claude CLI failed:\n{error_msg[:500]}",
                     task_id=msg['task_id'],
                     msg_type="error",
@@ -1355,6 +1362,8 @@ Do NOT use MCP tools to send your response - just output your response directly.
                 )
                 _response_sent = True
                 acknowledge(message_id)
+                # Auto-ack the error message — dead-end notification
+                acknowledge(err_id)
                 return
 
             response = ''.join(output_lines).strip()
@@ -1363,7 +1372,7 @@ Do NOT use MCP tools to send your response - just output your response directly.
             print(f"✅ Claude finished ({len(response)} chars)")
             sys.stdout.flush()
 
-            send_message(
+            reply_id = send_message(
                 content=response,
                 task_id=msg['task_id'],
                 msg_type="response",
@@ -1375,12 +1384,14 @@ Do NOT use MCP tools to send your response - just output your response directly.
             _response_sent = True
 
             acknowledge(message_id)
+            # Auto-ack reply — Claude reads from stdout, broker record is for audit trail only
+            acknowledge(reply_id)
 
         except subprocess.TimeoutExpired:
             proc.kill()
             timeout_mins = timeout_val // 60 if timeout_val else "?"
             print(f"\n❌ Claude CLI timed out ({timeout_mins} min sync limit)")
-            send_message(
+            err_id = send_message(
                 content=f"[Bridge Error] Claude CLI timed out after {timeout_mins} minutes. Consider using --async flag for long tasks.",
                 task_id=msg['task_id'],
                 msg_type="error",
@@ -1390,9 +1401,10 @@ Do NOT use MCP tools to send your response - just output your response directly.
             )
             _response_sent = True
             acknowledge(message_id)
+            acknowledge(err_id)
         except FileNotFoundError:
             print("❌ claude CLI not found. Is it installed?")
-            send_message(
+            err_id = send_message(
                 content="[Bridge Error] Claude CLI not found on system",
                 task_id=msg['task_id'],
                 msg_type="error",
@@ -1401,11 +1413,12 @@ Do NOT use MCP tools to send your response - just output your response directly.
                 from_model="claude-bridge-not-found"
             )
             _response_sent = True
+            acknowledge(err_id)
         finally:
             # Always clean up PID file, and send error if no response was routed
             if not _response_sent:
                 try:
-                    send_message(
+                    err_id = send_message(
                         content=f"[Bridge Error] Claude process failed unexpectedly for message #{message_id}. Check logs.",
                         task_id=msg['task_id'],
                         msg_type="error",
@@ -1414,6 +1427,7 @@ Do NOT use MCP tools to send your response - just output your response directly.
                         from_model="claude-bridge-error"
                     )
                     acknowledge(message_id)
+                    acknowledge(err_id)
                 except Exception:
                     pass  # Best-effort error reporting
             _remove_pid_file("claude", task_key)

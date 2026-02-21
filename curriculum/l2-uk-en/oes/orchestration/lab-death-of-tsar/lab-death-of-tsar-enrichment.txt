@@ -1,0 +1,204 @@
+✅ Message sent to Gemini (ID: 12182) [auto-acked: self-addressed]
+✓ Message 12182 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12182...
+📨 Message #12182
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-lab-death-of-tsar
+   Time: 2026-02-20T23:37:20.097251+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 23
+module: oes-023
+module_number: 19
+slug: lab-death-of-tsar
+title_uk: 'Лабораторія: Смерть царя'
+title_en: 'Lab: The Death of a Tsar'
+phase: 1
+phase_id: vernacular-foundations
+phase_name: Vernacular Foundations
+focus: Analyzing the 1054 graffiti on Yaroslav's death
+content_outline:
+- section: Вступ
+  description: 'Introduction to Lab: The Death of a Tsar'
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+- grammar-lab
+persona:
+  voice: Senior Paleographer
+  role: Forensic Historian
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Lab Death Of Tsar
+
+## Використані джерела
+1. **Висоцький С. О. "Давньоруські написи Софії Київської" (1966)** — фундаментальне дослідження епіграфіки собору, першопублікація та аналіз графіті про смерть Ярослава.
+2. **Корнієнко В. В. "Корпус графіті Софії Київської" (2010-ті)** — сучасне переосмислення та уточнення прочитання написів, нові методи фіксації.
+3. **Німчук В. В. "Хрестоматія з історії української мови X-XIII ст."** — лінгвістичний аналіз тексту, фонетичні та морфологічні особливості.
+4. **Ричка В. М. "Terra Ucrainica. Історичні нариси"** — контекст титулатури "цар/цесар" у політичній культурі Русі.
+
+## Хронологія
+- **1019**: Утвердження Ярослава на київському престолі.
+- **1037**: Початок масштабного будівництва Софії Київської (традиційна дата, дискусійна).
+- **1051**: Поставлення Іларіона митрополитом (перший русин), утвердження церковної незалежності.
+- **1054, 20 лютого**: Смерть Ярослава Мудрого у Вишгороді (зафіксована у графіті).
+- **1054**: Поховання князя у мармуровому саркофазі в Софії Київської.
+
+## Ключові факти та цитати
+- **Текст графіті (реконструкція)**: «В 6562 м(ідя)ца феврари 20 успене ц(а)ря наш(о)го в н(е)д(ілю) в (тиждень) м(у)че(ника) Феодора».
+- **Переклад**: "У 6562 році, місяця лютого 20-го, успіння царя нашого в неділю в тиждень мученика Феодора".
+- **Унікальність**: Єдиний документальний запис точної дати смерті князя, зроблений сучасником (можливо, очевидцем похорону).
+- **Титул**: Вживання титулу "цар" (цесар) щодо київського князя, що ставить його врівень з візантійськими імператорами.
+
+## Engagement Hooks (mapped to sections)
+- Section "Основний матеріал: I — Артефакт": [!history-bite] — Графіті було "живим журналом" або "Facebook стіною" середньовічного киянина, де писали новини, молитви і навіть прокляття.
+- Section "Основний матеріал: III — Титул «Цар»": [!myth-buster] — Міф про те, що першим "царем" був Іван Грозний. Київські князі носили цей титул за 500 років до появи Москви як центру влади.
+- Section "Основний матеріал: IV — Мова": [!paleography] — Особливості написання літери "ф" (ферт) та скорочення слів (титла) як ознака високої книжкової культури автора.
+- Section "Вступ": [!context] — Смерть Ярослава позначила кінець епохи "єдиновладдя" і перехід до складної системи тріумвірату.
+- Section "Основний матеріал: V — Хронологія": [!decolonization] — Використання власної системи літочислення та церковного календаря, незалежного від зовнішніх впливів.
+- Section "Підсумок": [!culture] — Саркофаг Ярослава як центр паломництва і місце політичної легітимізації наступників.
+
+## Деколонізаційний контекст
+- **Imperial/Soviet myth**: Ярослав Мудрий як "загальноруський" князь, початок "російської" державності. Титул "цар" замовчувався або трактувався як риторична фігура.
+- **Ukrainian reality**: Ярослав — творець суто київської імперської ідеології (Софія, Золоті ворота, Іларіон). Титул "цар" у графіті — доказ претензій Києва на рівність з Константинополем. Мова напису має виразні протоукраїнські риси.
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| Ярослав Мудрий | "Русский князь", законотворець "Русской Правды" | Київський князь, "тесть Європи", будівничий Руської (української) імперії |
+| Графіті | Побутові написи, псування стін | Важливі історичні документи, "кам'яний архів" Русі, джерело живої мови |
+| Титул "Цар" | Привілей московських царів з 1547 р. | Титул київських володарів з XI ст., символ суверенності Русі-України |
+
+## Section-Mapped Research Notes
+
+### Вступ
+Смерть Ярослава як фінал "Золотого віку". Важливість епіграфіки для уточнення літописних даних. Контекст 1054 року (розкол християнства).
+
+### Основний матеріал
+**I — Артефакт**: Локалізація напису (центральна нава, біля вівтаря). Відкриття С. Висоцького. Стан збереження.
+**II — Текст**: Політерне прочитання. Розкриття скорочень (титлів). Палеографічні особливості (уставне письмо).
+**III — Титул «Цар»**: Політична вага слова "цря". Порівняння з монетами Ярослава ("Ярославле сребро") та фресками ("Ктиторський портрет"). Ідеологія "Київ — Другий Єрусалим".
+**IV — Мова**: Аналіз форми "успене" (відсутність [і] перед [j], явище, характерне для народної мови). "Феврари" — візантійський вплив vs місцева адаптація.
+**V — Хронологія**: Як вираховується дата. 6562 рік від створення світу. "Тиждень Феодора" — прив'язка до церковного календаря (перший тиждень Великого посту).
+
+### Практика
+Завдання на прочитання графіті по фото. Переклад дат на сучасне літочислення. Пошук сучасних відповідників до слів з графіті.
+
+### Підсумок
+Підтвердження літописної дати (або корекція). Значення графіті як джерела, що не підлягало пізнішому редагуванню (на відміну від літописів).
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12242)
+✓ Message 12182 acknowledged
+✓ Message 12242 acknowledged

@@ -1,0 +1,13 @@
+{
+  "track": "lit-essay",
+  "slug": "shevelov-moscow-maros",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-20T23:00:45Z",
+      "task_id": "v3-shevelov-moscow-maros-pA",
+      "mode": "full"
+    }
+  }
+}

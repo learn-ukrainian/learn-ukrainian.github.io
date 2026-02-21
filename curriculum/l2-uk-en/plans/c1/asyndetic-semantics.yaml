@@ -6,58 +6,83 @@ version: '2.0'
 title: 'Безсполучникове речення: логіка тире і двокрапки'
 subtitle: 'Asyndetic Sentences: The Logic of Dash and Colon'
 content_outline:
-- section: Вступ — Речення без сполучників
+- section: Вступ — Природа безсполучникового зв'язку (Introduction — The Nature of
+    Asyndetic Connection)
+  words: 500
   points:
-  - State Standard §4.3.4.2 alignment — asyndetic complex sentences and their semantic
-    relations
-  - 'Why asyndetic style matters: it is the hallmark of mature Ukrainian prose — tighter,
-    more rhythmic, and more literary than syndetic equivalents'
-  - Cross-reference with M16 (advanced-punctuation) — this module focuses on MEANING,
-    not mechanics
-- section: 'Двокрапка — пояснення і причина (Colon: explanation & cause)'
+  - Alignment with State Standard §4.3.4.2 regarding open and closed structures of
+    asyndetic complex sentences and their inherent semantic relations.
+  - 'The philosophy of the semantic marker: Punctuation in asyndetic sentences is
+    a carrier of meaning and intonation (pauses, tone shifts), not just a graphic
+    requirement.'
+  - 'Learner error: Over-reliance on syndetic conjunctions (тому що, але) as a calque
+    from English; introducing the ''laconic efficiency'' of Ukrainian prose.'
+- section: Двокрапка — Пояснення, причина та уточнення (Colon — Explanation, Cause,
+    and Specification)
+  words: 1000
   points:
-  - 'Colon replaces бо/тому що: Він не прийшов: захворів. (He didn''t come — he got
-    sick.)'
-  - 'Colon replaces а саме/тобто: Я люблю три речі: каву, книжки і тишу.'
-  - 'Pattern: general statement : specific explanation/enumeration'
-  - Literary examples from Kotsiubynsky, Franko
-- section: 'Тире — наслідок і контраст (Dash: consequence & contrast)'
+  - 'Cause and Explanation: Replacing ''бо/тому що'' in cases like ''Він не прийшов:
+    захворів''; distinguishing between direct cause and logical expansion.'
+  - 'Specification and Enumeration: Replacing ''а саме/тобто'' with a colon; the pattern
+    of moving from a general statement to specific components.'
+  - 'Semantic hierarchy: Analyzing how the second part clarifies or lists elements
+    hinted at in the first part, requiring a specific ''explanatory'' intonation.'
+  - 'Correction of common confusion: Why ''Я знаю: він прийде'' (explanation) requires
+    a colon, while learners often incorrectly default to a dash.'
+- section: Тире — Наслідок, контраст та динаміка (Dash — Consequence, Contrast, and
+    Dynamics)
+  words: 1000
   points:
-  - 'Dash replaces тому/отже: Прийшла весна — зацвіли сади. (Spring came — gardens
-    bloomed.)'
-  - 'Dash replaces але/проте: Шукав щастя — знайшов біду. (Sought happiness — found
-    trouble.)'
-  - 'Dash for rapid sequence: Блискавка — грім — злива. (Lightning — thunder — downpour.)'
-  - 'Pattern: cause/condition — result/consequence'
-- section: 'Кома — послідовність і одночасність (Comma: sequence & simultaneity)'
+  - 'Cause-Result relationship: Replacing ''тому/отже'' where the second part carries
+    the primary semantic weight (e.g., ''Прийшла весна — зацвіли сади'').'
+  - 'Contrast and Opposition: Using the dash to replace ''але/проте'' for sharp semantic
+    transitions (''Шукав щастя — знайшов біду'').'
+  - 'Dynamics and Rapid Sequence: The use of dashes for ''broken'' rhythm and immediate
+    succession of events (''Блискавка — грім — злива'').'
+  - The concepts of 'Authorial Dash' and 'Intonational Dash' as tools for psychological
+    emphasis, common in modernist literature.
+- section: Кома та трансформаційний аналіз (Comma and Transformational Analysis)
+  words: 800
   points:
-  - 'Comma for parallel actions: Сонце сідало, вітер стихав, птахи замовкали.'
-  - Comma vs dash vs colon — decision tree based on semantic relationship
-  - 'Learner error: defaulting to syndetic constructions when asyndetic is more natural'
-- section: 'Трансформація: від сполучникового до безсполучникового'
+  - 'Simultaneity and Sequence: Using the comma for parallel actions where no strong
+    cause-effect or contrast is present (''Сонце сідало, вітер стихав'').'
+  - 'Decision Tree strategy: Choosing between comma, dash, and colon based on the
+    intended logical relationship and desired rhetorical effect.'
+  - 'Transformation Practice: Rewriting syndetic sentences to asyndetic equivalents
+    to observe how register shifts from dry facts to artistic imagery.'
+  - 'Semantic expansion: Validating understanding by re-inserting conjunctions to
+    verify if the inferred semantic link matches the intended logic.'
+- section: 'Майстерність ритму: Коцюбинський та Стефаник (Mastery of Rhythm: Kotsiubynsky
+    and Stefanyk)'
+  words: 700
   points:
-  - 'Practice: rewrite syndetic sentences as asyndetic (тому що → :, але → —)'
-  - 'Reverse practice: expand asyndetic to syndetic to verify semantic understanding'
-  - 'Style analysis: compare paired texts (one syndetic, one asyndetic) for rhythm
-    and impact'
-- section: Підсумок
-  points:
-  - Decision tree for colon vs dash vs comma in asyndetic sentences
-  - Register guidance — asyndetic style is more literary/formal
+  - 'Impressionistic syntax: Mikhailo Kotsiubynsky (''Intermezzo'') — analyzing ''broken''
+    prose and asyndetic structures that convey psychological tension and momentary
+    impressions.'
+  - 'Expressionist laconicism: Vasyl Stefanyk — using short, ''nervous'' asyndetic
+    phrases to convey tragedy and existential pain without verbal excess.'
+  - 'Stylistic analysis: Comparing the rhythm and impact of paired texts to demonstrate
+    how asyndetic style enhances the emotional resonance of the narrative.'
 vocabulary_hints:
   required:
-  - безсполучниковий (asyndetic) — безсполучникове речення
-  - двокрапка (colon) — ставити двокрапку
-  - тире (dash) — тире між підметом і присудком
-  - причина (cause) — вказувати на причину
-  - наслідок (consequence) — причина і наслідок
-  - пояснення (explanation) — двокрапка вводить пояснення
-  - протиставлення (contrast) — тире для протиставлення
+  - безсполучниковий (asyndetic) — безсполучникове складне речення; термін для позначення
+    зв'язку без сполучників
+  - двокрапка (colon) — ставити двокрапку; вказує на пояснення, причину або уточнення
+  - тире (dash) — авторське тире, інтонаційне тире; вживається для позначення наслідку,
+    контрасту або швидкої зміни подій
+  - причина (cause) — вказувати на причину; причинно-наслідковий зв'язок (high frequency
+    in semantic analysis)
+  - наслідок (consequence) — мати наслідком; логічний результат дії, що відображається
+    через тире
+  - пояснення (explanation) — давати пояснення; функція другого речення після двокрапки
+  - протиставлення (contrast) — тире для протиставлення; вживання замість сполучників
+    «а», «але»
   recommended:
-  - перерахування (enumeration)
-  - одночасність (simultaneity)
-  - послідовність (sequence)
-  - ритм (rhythm) — ритм прози
+  - ритм (rhythm) — ритм прози, динамічний ритм; характеристика модерністського тексту
+  - перерахування (enumeration) — вживання двокрапки при деталізації списку
+  - одночасність (simultaneity) — паралельність дій, що передається через кому
+  - послідовність (sequence) — логічна черговість подій у безсполучниковому реченні
+  - стилістика (stylistics) — вивчення засобів мовної виразності, зокрема синтаксичних
 activity_hints:
 - type: quiz
   focus: Choose correct punctuation mark for semantic relationship

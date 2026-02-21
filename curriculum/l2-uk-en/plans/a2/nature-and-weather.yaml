@@ -6,49 +6,70 @@ version: '2.0'
 title: Nature and Weather
 subtitle: The World Around Us
 content_outline:
-- section: Вступ
+- section: 'Вступ: Природа України (Introduction: Ukraine''s Nature)'
+  words: 450
   points:
-  - Ukraine's diverse landscapes — згадати Карпати та степ як приклади (§3.13)
-  - Nature vocabulary introduction
-- section: Граматика
+  - 'Geographical overview of Ukraine as per Standard §3.13: contrasting the diverse
+    landscapes of the Carpathian mountains (Карпати) and the southern steppes (степи).'
+  - Introduction to the 'Carpathian Forester' persona and the transition from A1 basic
+    nouns to A2 detailed nature descriptions and personal states.
+- section: 'Лексика: Ландшафти та легенди (Vocabulary: Landscapes and Legends)'
+  words: 900
   points:
-  - 'Weather conditions (погода, дощ, сніг) — collocations: гарна/погана погода, йде
-    дощ, падає сніг; learner error: «Це є дощ» instead of «Йде дощ» or «Дощить»; visual:
-    table for Impersonal Constructions'
-  - 'Landscapes (гора, річка, ліс) — collocations: висока гора, густий ліс, швидка
-    річка; cultural hook: Lake Nesamovyte legends (storms)'
-  - 'Flora and fauna (дерева, тварини) — context: деякі види рослин та свійських тварин
-    (§3.13)'
-  - Environment vocabulary
-- section: Практика
+  - 'High-frequency nature vocabulary (гора, ліс, річка, озеро) enriched with A2 collocations:
+    ''густий ліс'', ''швидка річка'', and ''вершина гори'' (§3.13).'
+  - 'Cultural Hook: The legend of Lake Nesamovyte (Озеро Несамовите); teaching ''буря''
+    (storm) and ''град'' (hail) through the folk belief that disturbing the water
+    triggers dangerous mountain weather.'
+  - 'Flora and Fauna (§3.13): Introducing common plants and domestic animals (свійські
+    тварини) within the context of their natural Ukrainian habitats.'
+- section: 'Граматика: Погода та стани (Grammar: Weather and States)'
+  words: 850
   points:
-  - 'Dialogues about weather — focus on Dative case for states: «Мені холодно» (learner
-    error: «Я холодний»); Standard §4.2.2.3'
-  - Nature descriptions — explicit contrast of Adjective (Який день? Холодний) vs
-    Adverb (Як надворі? Холодно)
-- section: Корисні вирази
+  - 'Dative Case for States (§4.2.2.3): Mastering ''Мені холодно/тепло/жарко'' and
+    correcting the pervasive learner error ''Я холодний'' (I am a cold person/corpse).'
+  - 'Idiomatic Weather Verbs: Correcting the literal ''Це є дощ'' with the correct
+    verb phrases ''Йде дощ'', ''Падає сніг'', or the synthetic verb ''Дощить''.'
+  - 'Grammar Contrast: Explicitly distinguishing between Adjectives (Який день? Холодний)
+    for noun modification and Adverbs (Як надворі? Холодно) for impersonal weather
+    descriptions.'
+  - 'Visualizing Impersonal Constructions: Construction of a comparative table mapping
+    English personal subjects to Ukrainian Dative structures for weather and physical
+    feelings.'
+- section: 'Практика: Прогноз та розмови (Practice: Forecast and Dialogues)'
+  words: 500
   points:
-  - 'Useful weather phrases — idiom: «Сім погод надворі» (unpredictable weather)'
-- section: Підсумок
+  - 'Mountain Survival Dialogue: Using weather vocabulary to discuss unpredictable
+    conditions through the idiom ''Сім погод надворі''.'
+  - 'Communicative Task: Describing a favorite landscape using expanded adjectives
+    and dative-state constructions to express comfort or discomfort (e.g., ''Біля
+    річки мені прохолодно'').'
+  - 'Weather Forecasting: Roleplay practicing ''прогноз погоди'' and ''сонячна погода''
+    in a realistic conversational or broadcast register.'
+- section: Підсумок (Summary)
+  words: 300
   points:
-  - Summary of vocabulary
+  - Review of essential nature collocations and the functional shift from Nominative
+    labels to Dative case descriptions of states (§4.2.2.3).
+  - 'Self-Correction Check: Distinguishing between descriptive nature adjectives and
+    impersonal weather adverbs to avoid common A2 errors.'
 vocabulary_hints:
   required:
-  - погода (weather) — гарна/погана погода, прогноз погоди, сонячна погода
-  - клімат (climate)
-  - гора (mountain) — висока гора, вершина гори, Карпатські гори
-  - ліс (forest) — густий ліс, у лісі, лісова стежка
-  - річка (river) — швидка річка, на березі річки, купатися в річці
-  - дощ (rain) — йде дощ, сильний дощ, мокнути під дощем
-  - сніг (snow) — падає сніг, білий сніг, багато снігу
-  - природа (nature)
+  - погода (weather) — гарна/погана погода, прогноз погоди, сонячна погода (High frequency)
+  - дощ (rain) — йде дощ, сильний дощ, під дощем, мокнути під дощем (High frequency)
+  - сніг (snow) — падає сніг, білий сніг, багато снігу (High frequency)
+  - ліс (forest) — густий ліс, у лісі, лісова стежка (High frequency)
+  - гора (mountain) — висока гора, у горах, вершина гори, Карпатські гори (High frequency)
+  - річка (river) — швидка річка, на березі річки, купатися в річці (Med-High frequency)
+  - клімат (climate) — континентальний клімат, зміни клімату
+  - природа (nature) — дика природа, на лоні природи
   recommended:
-  - туман (fog)
-  - 'град (hail) — cultural hook: Lake Nesamovyte storms'
-  - 'озеро (lake) — cultural hook: Озеро Несамовите'
-  - степ (steppe)
-  - довкілля (environment)
-  - тварина (animal)
+  - озеро (lake) — Озеро Несамовите, чисте озеро; cultural hook for storms
+  - град (hail) — сильний град, град у горах; associated with Lake Nesamovyte legend
+  - туман (fog) — густий туман, у тумані
+  - степ (steppe) — широкий степ, у степу; key geographical contrast (§3.13)
+  - довкілля (environment) — охорона довкілля, навколишнє довкілля
+  - тварина (animal) — свійська тварина, дика тварина (§3.13)
 activity_hints:
 - type: match-up
   focus: Nature and weather words

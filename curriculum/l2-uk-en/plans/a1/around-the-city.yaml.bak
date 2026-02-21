@@ -1,0 +1,93 @@
+module: a1-15
+level: A1
+sequence: 15
+slug: around-the-city
+version: '2.0'
+title: Around the City
+subtitle: Navigating Urban Spaces with Confidence
+content_outline:
+- section: Warm-up
+  points:
+  - Основні місця в українському місті — Central Squares (Maidan/Ploshcha) as navigation
+    hubs; State Standard §4.2.3.3 alignment
+  - Як запитати дорогу — contrast «Як дістатися до...?» (direction) vs «Де знаходиться...?»
+    (location)
+- section: Presentation
+  points:
+  - Напрямки (прямо, наліво, направо, назад) — introduce «ліворуч/праворуч» as common
+    synonyms on signs; State Standard §4.2.3.2 (Direction)
+  - 'Міська інфраструктура (зупинка, станція, аптека, пошта) — focus on locative usage:
+    «на зупинці», «на пошті», «в аптеці»'
+  - 'Прийменники місця (біля, навпроти, за, перед) — treat «біля/навпроти» + Genitive
+    as fixed lexical chunks; learner error: using Nominative (біля аптека)'
+  - 'Запитання про дорогу (Як дістатися до...? / Де знаходиться...?) — learner error:
+    confusion between «Де» (Location) and «Куди» (Direction/Motion)'
+- section: Practice
+  points:
+  - Слідування інструкціям на мапі — focus on landmark-based navigation («біля аптеки»)
+    rather than distances
+  - Діалоги про напрямки — reinforce the «Де?» vs «Куди?» distinction from research
+  - Опис маршруту
+- section: Production
+  points:
+  - Пояснити дорогу до свого дому
+  - Рольова гра — турист і місцевий — incorporate «На зупинці, будь ласка!» phrase
+- section: Cultural Insight
+  points:
+  - 'Особливості українських міст — Marshrutka culture: shouting «На зупинці, будь
+    ласка!» to exit'
+  - Як українці дають вказівки — preference for landmarks over cardinal directions
+vocabulary_hints:
+  required:
+  - прямо (straight) — йти прямо, їхати прямо
+  - 'наліво (left) — поверніть наліво; synonym: ліворуч'
+  - 'направо (right) — подивіться направо; synonym: праворуч'
+  - 'вулиця (street) — на вулиці (Locative); learner error: в вулиці; collocation:
+    переходити вулицю'
+  - 'зупинка (stop) — на зупинці; cultural hook: asking the driver to stop'
+  - аптека (pharmacy) — в аптеці; цілодобова аптека
+  - пошта (post office) — на пошті
+  - 'площа (square) — на площі; cultural hook: central gathering place (Maidan/Ploshcha)'
+  recommended:
+  - 'біля (near) — + Genitive pattern (біля аптеки); learner error: біля аптека'
+  - навпроти (opposite) — + Genitive pattern (навпроти парку)
+  - станція (station) — на станції (metro/train)
+  - перехрестя (intersection) — на перехресті
+  - світлофор (traffic light) — на світлофорі
+  - тротуар (sidewalk) — йти по тротуару
+activity_hints:
+- type: match-up
+  focus: Follow directions on a map
+  items: 10
+- type: fill-in
+  focus: Ask for and give directions
+  items: 8
+- type: fill-in
+  focus: Complete with prepositions
+  items: 15
+- type: match-up
+  focus: Place → description
+  items: 15
+focus: practical
+pedagogy: PPP
+prerequisites:
+- a1-13 (The Locative)
+- a1-14 (Mine and Yours)
+connects_to:
+- a1-16 (The Genitive I)
+- a1-40 (Taking Transport)
+objectives:
+- Navigate using directional vocabulary (прямо, наліво, направо)
+- Use locative case for city locations in context
+- Ask and answer 'Де...?' and 'Як дістатися до...?'
+- Name common urban infrastructure and transport
+grammar:
+- Locative case in context
+- Directional expressions
+- Prepositions of location
+register: розмовний
+phase: A1.2 [Navigation]
+persona:
+  voice: Patient Supportive Tutor
+  role: Taxi Driver
+word_target: 2000

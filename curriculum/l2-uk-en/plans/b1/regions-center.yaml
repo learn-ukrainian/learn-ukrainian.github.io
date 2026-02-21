@@ -6,44 +6,74 @@ version: '2.0'
 title: 'Українські регіони: Центр'
 subtitle: Central Ukraine - Kyiv, Poltava, and Cossack Heritage
 content_outline:
-- section: 'Вступ — Центр: Серце України'
+- section: 'Вступ: Центр — Серце та Колиска України (Introduction: The Center as the
+    Heart and Cradle of Ukraine)'
+  words: 400
   points:
-  - Київ як столиця і символ
-  - Центральна Україна як колиска нації
-- section: Сучасність
+  - 'Central Ukraine as a historical and cultural concept: exploring the lands of
+    the former Hetmanate and their role in national formation.'
+  - 'Overview of the three pillars of identity: Kyiv (the capital), Poltava (the language),
+    and Cherkasy (the Cossack spirit).'
+- section: 'Полтавщина: Колиска літературної мови (Poltava Region: Cradle of the Literary
+    Language)'
+  words: 1000
   points:
-  - Київ — місто тисячі років
-  - Від Київської Русі до сьогодення
-  - Майдан і революційна традиція
-  - Київ як європейська столиця
-- section: Історія та культура
+  - 'Poltava as the ''spiritual capital'' and birthplace of modern Ukrainian: the
+    legacy of Ivan Kotlyarevsky and the vernacular impact of ''Eneida'' (State Standard
+    §3.15).'
+  - The role of the Poltava dialect as the foundational standard for the national
+    language; connecting the region's literary tradition to modern identity.
+- section: 'Черкащина: Козацьке серце та гетьманська слава (Cherkasy Region: Cossack
+    Heart and Hetman Glory)'
+  words: 1100
   points:
-  - Полтавщина — козацька слава
-  - Котляревський і українська література
-  - Черкащина — Шевченків край
-  - Козацька спадщина Центру
-- section: Практика
+  - 'Cherkasy as the center of the Cossack state: exploring Chyhyryn as the strategic
+    capital under Bohdan Khmelnytsky and the ''Hetmanate'' concept.'
+  - The spiritual resting place of Taras Shevchenko in Kaniv (Tarasova Hora); defining
+    the region as the 'Land of Bohdan and Taras' and its historical significance.
+- section: 'Київ: Від княжої столиці до європейського центру (Kyiv: From Princely
+    Capital to European Center)'
+  words: 900
   points:
-  - Ключові концепції для повторення
-  - Порівняльні таблиці
-- section: Підсумок — Звідси все починалось
+  - 'Kyiv''s monuments and cultural heritage according to State Standard §3.13: the
+    continuity from Kyivan Rus through Saint Sophia and the Golden Gate.'
+  - 'Modern Kyiv: the symbol of resistance and democratic tradition (Maidan) and its
+    evolution into a leading European metropolis.'
+- section: 'Практика: Робота над типовими помилками (Practice: Working on Common Learner
+    Errors)'
+  words: 400
   points:
-  - Центр як джерело української ідентичності
+  - 'Correcting Russianisms in toponyms: drill the pronunciation and spelling of ''Черкаси''
+    (not Черкасси) and the suffix ''-щина'' in ''Полтавщина'' (not Полтавщіна).'
+  - 'Mastering prepositional patterns: drill ''їхати до Черкас'' (Genitive) versus
+    ''бути в Черкасах'' (Locative) to prevent case-mismatch errors.'
+- section: 'Підсумок: Джерело української ідентичності (Summary: The Source of Ukrainian
+    Identity)'
+  words: 200
+  points:
+  - Synthesis of how Central Ukraine connects the Cossack past with the linguistic
+    and political present of the nation.
 vocabulary_hints:
   required:
-  - Київ (Kyiv)
-  - Полтава (Poltava)
-  - Черкаси (Cherkasy)
-  - козацтво (Cossacks)
-  - спадщина (heritage)
-  - столиця (capital)
-  - історичний (historical)
-  - традиція (tradition)
+  - Київ (Kyiv) — столиця України, місто тисячі років; висока частотність, символ
+    державності.
+  - Полтава (Poltava) — духовна столиця, літературна Полтавщина; центр лінгвістичної
+    традиції.
+  - Черкаси (Cherkasy) — козацький край; зверніть увагу на вживання прийменника 'до
+    Черкас'.
+  - козацтво (Cossacks) — доба козацтва, українське козацтво; фундаментальне історичне
+    поняття.
+  - спадщина (heritage) — культурна спадщина, історична спадщина; вживання у контексті
+    збереження пам'яток.
+  - гетьман (hetman) — гетьманська столиця, гетьманська булава; символ влади у козацькій
+    державі.
+  - столиця (capital) — духовна столиця, європейська столиця; State Standard §3.13.
   recommended:
-  - полтавщина (Poltava region)
-  - гетьман (hetman)
-  - Дніпро (Dnipro)
-  - літературний (literary)
+  - полтавщина (Poltava region) — суфікс -щина вказує на регіон; поширений топонім.
+  - черкащина (Cherkasy region) — земля Богдана і Тараса, козацьке серце.
+  - літературний (literary) — літературна мова, літературна спадщина; пов'язано з
+    Іваном Котляревським.
+  - Дніпро (Dnipro) — головна річка, символ єдності Центральної України.
 activity_hints:
 - type: reading
   focus: Authentic texts about Central Ukraine

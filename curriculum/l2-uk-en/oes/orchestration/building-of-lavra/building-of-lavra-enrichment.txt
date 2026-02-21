@@ -1,0 +1,205 @@
+✅ Message sent to Gemini (ID: 13064) [auto-acked: self-addressed]
+✓ Message 13064 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #13064...
+📨 Message #13064
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-building-of-lavra
+   Time: 2026-02-20T23:44:13.330691+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 92
+module: oes-092
+module_number: 92
+slug: building-of-lavra
+title_uk: Будівництво Лаври
+title_en: The Building of the Lavra
+phase: 4
+phase_id: literary-art
+phase_name: Literary Art
+focus: Architectural & miraculous vocabulary
+content_outline:
+- section: Вступ
+  description: Introduction to The Building of the Lavra
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Senior Paleographer
+  role: Iconographer
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Building Of Lavra
+
+## Використані джерела
+1. [Ізборник (litopys.org.ua)](http://litopys.org.ua/paterik/paterik.htm) — Києво-Печерський патерик, основне джерело наративу про заснування та будівництво церкви.
+2. [Енциклопедія Сучасної України (esu.com.ua)](https://esu.com.ua/article-6950) — Стаття про Києво-Печерську Лавру, історія архітектурного ансамблю.
+3. [Інститут історії України (history.org.ua)](http://resource.history.org.ua/) — Академічні дослідження з історії архітектури та церковного життя Київської Русі.
+
+## Хронологія
+- **1051**: Преподобний Антоній поселяється у печері — заснування монастиря.
+- **1073**: Закладення кам'яного Успенського собору (Велика церква Печерська) князем Святославом Ярославичем та ігуменом Феодосієм.
+- **1073-1077**: Активна фаза будівництва за участі грецьких майстрів.
+- **1083-1089**: Оздоблення храму мозаїками та фресками (за участі Алімпія).
+- **1089**: Урочисте освячення Успенського собору.
+- **1240**: Руйнування Лаври під час монгольської навали хана Батия.
+- **1718**: Велика пожежа, після якої собор відбудовано в стилі українського бароко (майстер Степан Ковнір).
+- **1941**: Підрив Успенського собору радянськими військами (за версією, що утвердилася в незалежній Україні).
+
+## Ключові факти та цитати
+- **Кошторис**: Князь Святослав виділив на будівництво 1000 гривень золотом — колосальна сума для того часу. Він особисто копав рів для фундаменту.
+- **Пояс Шимона**: Варяг Шимон Африканович пожертвував золотий пояс (10 ліктів) та золотий вінець для церкви, побачивши видіння майбутнього храму. Поясом міряли фундамент: "20 у ширину, 30 у довжину, 50 у висоту".
+- **Майстри**: Згідно з Патериком, майстри прийшли з Константинополя (Царгорода) за покликом Богородиці, яка дала їм золото на будівництво.
+- **Технологія**: Використання плінфи та техніки "затопленого ряду" (*opus mixtum*) — чергування каменю та плінфи на рожевому розчині (цем'янці).
+- **Цитата (Патерик)**: «Хочу бо церкву собі спорудити на Русі, в Києві. І повеліла взяти золота на три роки майстрам...»
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ": [!context] — Лавра як перший великий кам'яний монастирський комплекс, що змінив ландшафт Київських гір.
+- Section "Основний матеріал: I — Легенда заснування": [!history-bite] — Історія про золотий пояс варяга Шимона, яким вимірювали пропорції храму.
+- Section "Основний матеріал: II — Будівничі та меценати": [!quote] — Уривок з Патерика про прибуття грецьких майстрів з Царгорода: «Ось взяли ми міру пояса того...».
+- Section "Основний матеріал: III — Архітектура та оздоблення": [!paleography] — Опис графіті на стінах собору (або плінфі), що свідчать про грамотність киян ХІ ст.
+- Section "Основний матеріал: III — Архітектура та оздоблення": [!culture] — Пояснення терміну "плінфа" та техніки "затопленого ряду" як маркера київської архітектурної школи.
+- Section "Основний матеріал: IV — Духовний центр": [!decolonization] — Лавра як "Новий Єрусалим" на пагорбах Києва, прямий зв'язок Київ-Афон-Константинополь, без посередництва Москви.
+
+## Деколонізаційний контекст
+- **Imperial/Soviet myth**: Твердження про Лавру як колиску "російського православ'я" або "триєдиного народу". Применшення ролі київських князів та варязького елементу на користь пізніших московських наративів.
+- **Ukrainian reality**: Лавра — суверенний київський проект, інтегрований у візантійський світ. Архітектура, мова графіті та літописання (Патерик) є питомо давньоукраїнськими явищами. Підрив собору у 1941 році скоїли радянські диверсанти, а не німці (як стверджувала радянська пропаганда).
+
+## Contested Terms (if applicable)
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| Давньоруська архітектура | Древнерусская архитектура (спільнокоренева) | Давньоукраїнська / Архітектура Русі-України |
+| Успенський собор | Общероссийская святыня | Головний храм Русі-України, взірець київської школи |
+| Заснування | "Русское монашество" | Київське чернецтво, афонська традиція в Україні |
+
+## Section-Mapped Research Notes
+
+### Вступ
+Лавра як духовне серце Русі. Значення кам'яного будівництва в дерев'яному Києві.
+
+### Основний матеріал: I — Легенда заснування (Пояс Шимона)
+Видіння Шимона. Роль Богородиці. Містична метрологія (міра поясом).
+
+### Основний матеріал: II — Будівничі та меценати (Святослав і греки)
+Роль князя Святослава (1000 гривень, копання рову). Прихід зодчих з Константинополя (Влахернська церква як взірець). Смерть Феодосія (1074) і продовження робіт Стефаном.
+
+### Основний матеріал: III — Архітектура та оздоблення (Плінфа і мозаїка)
+Шестистовпний хрестовокупольний храм. Техніка мурування (плінфа, цем'янка). Алімпій Печерський і мозаїки. Вплив на подальшу архітектуру (чернігівські, володимирські храми як наслідування Києва).
+
+### Основний матеріал: IV — Духовний центр (Єрусалим на Дніпрі)
+Лавра як центр літописання (Нестор) і культури. Поховання князів. Лавра як "небеси подібна" церква.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 13099)
+✓ Message 13064 acknowledged
+✓ Message 13099 acknowledged

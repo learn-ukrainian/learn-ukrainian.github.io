@@ -1,0 +1,90 @@
+module: b1-31
+level: B1
+sequence: 31
+slug: conditionals-real-yakshcho
+version: '2.0'
+title: 'Умовні речення: реальна умова (якщо)'
+subtitle: Real Conditionals - If Clauses
+content_outline:
+- section: 'Тест: Перевірте себе'
+  points:
+  - Diagnostic quiz on real conditionals
+  - Self-assessment questions
+- section: Пояснення
+  points:
+  - 'What are real conditionals — State Standard §4.4.3 alignment: complex sentences
+    with real condition clauses'
+  - 'якщо as conditional marker — collocations: «якщо... то...», «що якщо», «навіть
+    якщо»'
+  - Basic Real Conditional (Якщо + present, future) — explicitly contrast «Якщо +
+    Future» (Ukrainian) vs. «If + Present» (English)
+  - 'Tense Sequences (present → future) — learner error: Tense Mismatch (Future) -
+    using present tense for future conditions'
+  - 'якщо vs коли distinction — learner error: confusing «if» (doubt/possibility)
+    and «when» (temporal certainty)'
+- section: Практика
+  points:
+  - 'Form conditional sentences — cultural hook: Proverb «Взимку не зігрієшся, якщо
+    літом не спітнієш» (Hard work)'
+  - Use correct tenses — focus on correcting «Якщо ти приходиш...» to «Якщо ти прийдеш...»
+  - 'Exercises with якщо — cultural hook: Proverb «Якщо боятися труднощів, то не варто
+    й починати» (Resilience)'
+- section: Діалоги
+  points:
+  - Real conditionals in conversation — distinguish between «наслідок» (causal/negative)
+    and «результат» (outcome/achievement)
+  - 'Everyday scenarios — register note: avoid bureaucratic «у результаті» in casual
+    speech, use «через це»/«тому»'
+vocabulary_hints:
+  required:
+  - якщо (if) — якщо... то... (if... then...), що якщо (what if), навіть якщо (even
+    if)
+  - умова (condition) — за умови (on condition), обов'язкова умова (mandatory condition),
+    необхідна умова (necessary condition), створювати умови (to create conditions)
+  - умовний (conditional)
+  - результат (result) — позитивний результат (positive result), у результаті (as
+    a result - final outcome), досягти результату (to achieve a result)
+  - наслідок (consequence) — унаслідок (as a result of - negative/neutral), мати наслідки
+    (to have consequences), небезпечні наслідки (dangerous consequences)
+  - реальний (real)
+  - можливий (possible)
+  - ймовірний (probable)
+  recommended:
+  - за умови що (on condition that)
+  - у разі якщо (in case)
+  - припускаючи (assuming)
+  - за умови (provided that)
+activity_hints:
+- type: fill-in
+  focus: Complete conditionals
+  items: 25
+- type: error-correction
+  focus: Combine with якщо
+  items: 20
+- type: error-correction
+  focus: Fix tense sequence errors
+  items: 15
+- type: translate
+  focus: English to Ukrainian
+  items: 15
+focus: grammar
+pedagogy: TTT
+prerequisites:
+- b1-30 (Purpose Clauses щоб + past form)
+connects_to:
+- b1-32 (Conditionals Unreal якби)
+objectives:
+- Learner understands real conditional constructions
+- Learner can form conditional sentences with якщо
+- Learner can use correct tense sequences in conditionals
+- Learner can express future conditions accurately
+grammar:
+- Real conditionals with якщо
+- Tense sequence in conditional sentences
+- Present and future in conditional clauses
+register: розмовний
+phase: B1.3a [Complex Sentences]
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Software Engineer
+word_target: 4000

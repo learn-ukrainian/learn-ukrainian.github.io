@@ -1,0 +1,304 @@
+✅ Message sent to Gemini (ID: 10385) [auto-acked: self-addressed]
+✓ Message 10385 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10385...
+📨 Message #10385
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-abstract-concepts-processes
+   Time: 2026-02-20T20:30:05.310861+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b1-53
+level: B1
+sequence: 53
+slug: abstract-concepts-processes
+version: '2.0'
+title: 'Абстрактні концепції: процеси та зміни'
+subtitle: 'Abstract Concepts: Processes and Changes'
+content_outline:
+- section: Вступ
+  points:
+  - Describing how things change
+  - Temporal dimension
+  - Causation and result
+- section: Вивчення слів
+  points:
+  - Six vocabulary groups
+  - Base processes, positive/negative trends
+  - Speed of change, systemic changes
+- section: Вживання
+  points:
+  - Collocations patterns
+  - Register considerations
+  - Cultural aspects
+  - 'Deverbal nouns with -ння/-ення: forming abstract process nouns from verbs (читати→читання,
+    навчати→навчання, зростати→зростання) — productive B1 word formation tool for
+    abstract concepts (State Standard §4.3.4)'
+- section: Читання
+  points:
+  - Economic review
+  - Historical perspective
+  - Personal development blog
+- section: Діалоги
+  points:
+  - Business meeting (formal)
+  - News discussion (informal)
+  - Personal development, academic seminar
+- section: Підсумок
+  points:
+  - Key vocabulary recap
+  - Practice recommendations
+vocabulary_hints:
+  required:
+  - розвиток (development)
+  - прогрес (progress)
+  - зміна (change)
+  - перетворення (transformation)
+  - зростання (growth)
+  - занепад (decline)
+  - тенденція (tendency/trend)
+  - еволюція (evolution)
+  recommended:
+  - трансформація (transformation)
+  - спад (decline/recession)
+  - закономірність (pattern/regularity)
+  - темп (rate/pace)
+activity_hints:
+- type: match-up
+  focus: Process noun phrases
+  items: 25
+- type: fill-in
+  focus: Describe trends and changes
+  items: 20
+- type: match-up
+  focus: Match process word to context
+  items: 15
+- type: fill-in
+  focus: Write about changes
+  items: 10
+focus: vocabulary
+pedagogy: PPP
+prerequisites:
+- b1-52 (Abstract Concepts Ideas)
+connects_to:
+- b1-54 (Expressing Opinions)
+objectives:
+- Learner can use 35 process and change vocabulary words in context
+- Learner can distinguish between similar process words
+- Learner can describe trends and changes using appropriate collocations
+- Learner can narrate developments over time
+grammar:
+- Noun collocations with process vocabulary
+- Verb-noun pairs for change descriptions
+- Temporal markers with process words
+register: розмовний
+phase: B1.5 [Vocabulary Expansion I]
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Business Consultant
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Абстрактні концепції: процеси та зміни
+
+## State Standard Reference
+§4.3.4: "Утворення іменників від дієслів: читати – читання, говорити – говоріння, бачити – бачення."
+Alignment: This module focuses on abstract nouns derived from verbs (e.g., *перетворення, зростання, бачення*), which is the core morphological competency for describing processes at B1+.
+
+Additional thematic alignment:
+- §3.6 (Суспільні відносини): суспільні проблеми, війна і мир (social changes).
+- §3.14 (Природне середовище): клімат, пори року (natural cycles/processes).
+
+## Vocabulary Frequency
+| Word | Frequency / Notes | Key collocations |
+|------|-------------------|------------------|
+| **зміна** | High (Top 500) | *радикальна зміна, кліматичні зміни, вітер змін, внести зміни* |
+| **розвиток** | High (Top 500) | *сталий розвиток, розвиток подій, всебічний розвиток, зупинити розвиток* |
+| **зростання** | Med-High | *економічне зростання, особистісне зростання, темпи зростання* (NOT *ріст* for abstract) |
+| **перетворення** | Medium | *процес перетворення, чудесне перетворення, перетворення енергії* |
+| **занепад** | Low-Medium | *період занепаду, занепад культури, економічний занепад* |
+| **тенденція** | Medium | *позитивна тенденція, зберігається тенденція, модна тенденція* |
+| **еволюція** | Low-Medium | *еволюція поглядів, теорія еволюції* |
+
+## Cultural Hooks
+1. **Demographic Shift**: Since 1990, Ukraine's population has decreased by ~20% (a major *negative trend* / *занепад* in demographics), yet civil society trust has *grown* (*зростання*) to record highs (88% belief in victory).
+2. **Geopolitical Vector**: A historic *transformation* (*перетворення*) of public opinion: in 2003, 76% supported a union with Russia; by 2023, absolute majority support EU/NATO integration. This is a perfect example of *еволюція поглядів*.
+
+## Common Learner Errors
+1. **Ріст vs Зростання**: Using *ріст* for abstract concepts (e.g., *ріст економіки* - surzhyk/calque).
+   → Correct: *зростання економіки*. *Ріст* is primarily biological/physical (*ріст клітин*), *зріст* is height (*високий на зріст*).
+2. **Рости vs Зростати**: Using *рости* for abstract increases.
+   → Correct: *ціни зростають* (prices increase), *напруга зростає*. *Рости* is for children/trees (*дитина росте*).
+3. **Зміна vs Решта**: Asking for "change" (money) as *зміна*.
+   → Correct: *решта* (coins/change back). *Зміна* is alteration/shift (*зміна клімату*).
+
+## Cross-References
+- **Builds on**: b1-52 (Abstract Concepts: Ideas) - moves from static ideas to dynamic processes.
+- **Prepares for**: b1-54 (Expressing Opinions) - need process vocab to argue *why* things are getting better/worse.
+
+## Notes for Content Writing
+- **Persona Application**: As a "Business Consultant", frame the *Вступ* and *Діалоги* around analysing trends (market trends, personal growth).
+- **Morphology Focus**: Explicitly teach the `-ння/-ення` suffix pattern as a tool for creating process nouns (e.g., *покращувати → покращення*).
+- **Agency Rule**: Ensure examples show Ukrainians *driving* the changes (*Ми змінили країну*), not just passive observers (*Країна змінилася*).
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Establishing the 'Business Consultant' persona to analyze market and social trends, introducing the temporal dimension of change (past, present, future vectors)."
+  - "Applying the 'Agency Rule': focusing on how Ukrainians actively drive changes (Ми змінили країну) rather than being passive observers, setting the motivational tone for the module."
+- section: "Основна лексика: Тренди та динаміка (Core Vocabulary: Trends and Dynamics)"
+  words: 900
+  points:
+  - "Categorization of processes: positive trends (розвиток, прогрес, зростання) vs. negative ones (занепад, спад, застій), using frequency data to highlight high-impact business terms."
+  - "Cultural hook application: analyzing the 20% demographic decrease since 1990 contrasted with the record growth (88%) in civil society trust and belief in victory."
+  - "Systemic change vocabulary: focusing on 'перетворення' (transformation) and 'еволюція' (evolution) through the lens of the historic shift in public opinion toward EU/NATO integration since 2003."
+- section: "Словотворення та граматичне вживання (Word Formation and Grammatical Usage)"
+  words: 800
+  points:
+  - "Morphology focus on State Standard §4.3.4: systematic formation of deverbal nouns using -ння/-ення suffixes (читати→читання, покращувати→покращення) as a core B1+ tool."
+  - "Correction of common learner errors: distinguishing physical/biological 'ріст' from abstract 'зростання' (e.g., економічне зростання) to fix frequent calques."
+  - "Usage drills: identifying when to use 'зростати' (prices, tension) vs 'рости' (children, trees), and the critical pragmatic distinction between 'зміна' (alteration) and 'решта' (monetary change)."
+- section: "Аналітичне читання та аудіювання (Analytical Reading and Listening)"
+  words: 1000
+  points:
+  - "Economic review text practicing 'сталий розвиток' (sustainable development) and 'темпи зростання' (growth rates) in the context of Ukraine's economic transformation."
+  - "Historical perspective on 'еволюція поглядів' (evolution of views), using the 2003-2023 geopolitical vector shift as a case study for abstract narration."
+  - "Personal development blog excerpt: applying vocabulary like 'особистісне зростання' and 'самовдосконалення' to describe individual growth processes."
+- section: "Комунікація та обговорення (Communication and Discussion)"
+  words: 600
+  points:
+  - "Formal business meeting simulation: analyzing market trends using professional collocations like 'позитивна тенденція' and 'зберігається динаміка'."
+  - "Informal news discussion: debating 'розвиток подій' (development of events) regarding social issues (§3.6) and natural processes (§3.14), adhering to register considerations."
+- section: "Підсумок та закріплення (Summary and Consolidation)"
+  words: 300
+  points:
+  - "Recap of the 35+ process words and suffix tools, with practice recommendations for narrating complex developments over time using correct verb-noun pairs."
+  - "Final reflection activity: learners describe a significant personal or social change using the 'Agency Rule' and appropriate temporal markers."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "зміна (change) — радикальна зміна, кліматичні зміни, внести зміни; high frequency (Top 500)"
+  - "розвиток (development) — сталий розвиток, розвиток подій, всебічний розвиток; high frequency (Top 500)"
+  - "зростання (growth) — економічне зростання, особистісне зростання, темпи зростання; preferred abstract form, avoid 'ріст'"
+  - "перетворення (transformation) — процес перетворення, перетворення енергії; focuses on qualitative shift"
+  - "занепад (decline) — період занепаду, занепад культури, економічний занепад; systemic decline"
+  - "тенденція (tendency/trend) — позитивна тенденція, зберігається тенденція; essential for business/news analysis"
+  - "еволюція (evolution) — еволюція поглядів, теорія еволюції; indicates slow, gradual development"
+  - "покращення (improvement) — example of §4.3.4 deverbal noun formation from 'покращувати'"
+  recommended:
+  - "трансформація (transformation) — academic synonym for перетворення"
+  - "спад (decline/recession) — економічний спад; often used for recession or reduction in volume"
+  - "закономірність (pattern/regularity) — used for describing logical or systemic processes"
+  - "темп (rate/pace) — темпи зростання, у швидкому темпі; describes the speed of change"
+  - "погіршення (worsening) — antonym of покращення; process noun from погіршувати"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4618 chars)
+✅ Message sent to Claude (ID: 10394)
+✓ Message 10394 acknowledged
+   Auto-acknowledged reply #10394 (stdout delivery — no inbox accumulation)
+✓ Message 10385 acknowledged

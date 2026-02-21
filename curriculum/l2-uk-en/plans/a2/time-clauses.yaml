@@ -6,32 +6,50 @@ version: '2.0'
 title: Time Clauses
 subtitle: When, While, and After
 content_outline:
-- section: Introduction / Вступ
+- section: Вступ (Introduction)
+  words: 400
   points:
-  - 'Life as a sequence of events — aligns with State Standard §1.4.1.1: creating
-    a narrative as a simple sequence of events'
-  - 'Why chronological ''logic'' matters for storytelling — cultural hook: proverb
-    «Всьому свій час» (Everything has its time)'
-- section: Presentation / Презентація
+  - 'Life as a sequence of events: alignment with Ukrainian State Standard §1.4.1.1
+    regarding the creation of a narrative monologue as a simple sequence of events.'
+  - 'The cultural concept of time and patience: Introduction of the proverb «Всьому
+    свій час» (Everything has its time) to frame the importance of temporal logic.'
+- section: 'Презентація: Граматичні основи (Presentation: Grammatical Foundations)'
+  words: 800
   points:
-  - '''Simultaneity: Поки (Process) vs Коли (Point)'' — visualize with a timeline;
-    learner error: confusing «коли» (when) with «якщо» (if)'
-  - '''Sequencing: Перед тим як (Before) vs Після того як (After)'' — pedagogy note:
-    explicitly contrast «перед» + Noun vs «перед тим як» + Verb; learner error: dropping
-    «тим/того» (missing linkers)'
-  - '''Immediacy: Як тільки, Щойно'' — colloquial usage «як тільки зможу»'
-  - '''Frequency: Кожного разу, коли...'' — reinforce pattern consistency'
-  - '''The Until Trap: Поки не'' — cultural hook: Christmas Eve tradition (do not
-    eat «поки не зійде перша зірка»); learner error: missing the double negative'
-  - '''Aspect Selection: Ongoing processes vs Finished triggers'' — builds on «verb-aspect-intro»'
-- section: Practice / Практика
+  - 'Simultaneity and Points in Time: Contrast between «коли» (point/when) and «поки»
+    (process/while) using a visual timeline for clarity.'
+  - 'Sequencing events: Detailed rules for «перед тим як» (before) and «після того
+    як» (after), focusing on the necessity of the linkers «тим/того».'
+  - 'Common Error Correction: Addressing the ''If confusion'' where learners use «коли»
+    for conditional «якщо» (e.g., «Якщо я матиму час...» vs «Коли я матиму час...»).'
+  - 'Pedagogical Distinction: Explicitly contrast the structure of «перед» + Noun
+    (prepositional phrase) vs «перед тим як» + Verb (time clause).'
+- section: 'Презентація: Складні випадки та культура (Presentation: Complex Cases
+    and Culture)'
+  words: 700
   points:
-  - Narrative sequencing drills — focus on State Standard requirement for monologue
-    production
-  - '''''''Wait until'''' logic exercises'''
-- section: Dialogues / Діалоги
+  - 'The ''Until Trap'': Explaining the double negative requirement in «поки не» clauses
+    (e.g., «Я чекаю, поки ти не прийдеш»).'
+  - 'Cultural Hook: The Ukrainian Christmas Eve (Свята Вечеря) tradition of waiting
+    to eat «поки не зійде перша зірка» (until the first star appears).'
+  - 'Immediacy and Frequency: Usage of «щойно» (just/as soon as) and «як тільки» (as
+    soon as) in spoken register, plus «кожного разу, коли...» for habits.'
+- section: Практика та корекція помилок (Practice and Error Correction)
+  words: 600
   points:
-  - Reporting a busy morning or planning a trip's schedule
+  - 'Drill: Identifying and fixing the missing linker error (e.g., correcting «Перед
+    я пішов» to «Перед тим як я пішов»).'
+  - 'Transformation exercises: Converting simple prepositional phrases into complex
+    time clauses using the research-based contrast patterns.'
+  - 'Negative logic drills: Practicing the «поки не» structure to internalize the
+    Ukrainian negation of the limit-action.'
+- section: Продукція та діалоги (Production and Dialogues)
+  words: 500
+  points:
+  - 'Monologue production: Reporting a busy morning schedule or a trip itinerary,
+    strictly following the State Standard requirement for sequencing.'
+  - 'Dialogue: Planning a shared event where participants use «поки», «як тільки»,
+    and «після того як» to coordinate their actions.'
 focus: grammar
 pedagogy: PPP
 objectives:
@@ -62,12 +80,20 @@ persona:
   role: Orchestra Conductor
 vocabulary_hints:
   required:
-  - 'коли (when) — Collocations: Коли ти прийдеш? Коли я був маленьким...'
-  - 'поки (while/until) — Collocations: Поки я чекаю... Поки що (meanwhile/so far)'
-  - 'перед тим як (before [doing something]) — Usage: Перед тим як вийти... Перед
-    тим як лягти спати...'
-  - 'після того як (after [doing something]) — Usage: Після того як ми закінчили...
-    Після того як він подзвонив...'
-  - 'щойно (just/as soon as) — Collocations: Щойно я зайшов...'
-  - 'як тільки (as soon as) — Collocations: Як тільки зможу...'
+  - 'коли (when) — High frequency/Core. Collocations: Коли ти прийдеш? Коли я був
+    маленьким...'
+  - 'поки (while/until) — High frequency/Core. Collocations: Поки я чекаю... Поки
+    що (meanwhile/so far).'
+  - 'перед тим як (before [doing something]) — Medium frequency. Usage: Перед тим
+    як вийти... Перед тим як лягти спати...'
+  - 'після того як (after [doing something]) — Medium frequency. Usage: Після того
+    як ми закінчили... Після того як він подзвонив...'
+  - 'щойно (just/as soon as) — Medium frequency/Spoken register. Collocations: Щойно
+    я зайшов...'
+  - 'як тільки (as soon as) — Medium frequency/Spoken register. Collocations: Як тільки
+    зможу...'
+  recommended:
+  - 'поки не (until) — Grammatical logic: requires a double negative in Ukrainian.'
+  - якщо (if) — Essential contrast word to avoid the 'when/if' confusion at A2.
+  - кожного разу, коли (every time when) — Frequency pattern for habit description.
 word_target: 3000

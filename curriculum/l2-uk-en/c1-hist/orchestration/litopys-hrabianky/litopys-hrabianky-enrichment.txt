@@ -1,0 +1,296 @@
+✅ Message sent to Gemini (ID: 12112) [auto-acked: self-addressed]
+✓ Message 12112 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12112...
+📨 Message #12112
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-litopys-hrabianky
+   Time: 2026-02-20T23:36:14.131713+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-hist-021
+level: c1-hist
+sequence: 21
+version: '1.0'
+title: 'Літопис Грабянки: Козацький патріотизм'
+focus: history
+pedagogy: seminar
+objectives:
+- 'Analyze the causes and consequences of літопис грабянки: козацький патріотизм'
+- Evaluate the historical significance of патріотичний літопис
+content_outline:
+- section: Вступ — Патріотичний літопис
+  subsections:
+  - Григорій Грабянка — автор і діяч
+  - Найбільш ідеологічний з трьох
+  - Мета — виправдання козацьких прав
+  - Написано ~1710 року
+- section: Автор і його позиція
+  subsections:
+  - Біографія Грабянки
+  - Гадяцький полковник
+  - Політичні переконання
+  - Чому важливо знати автора
+- section: Структура і зміст
+  subsections:
+  - Від витоків козацтва
+  - Хмельницький — центральна фігура
+  - До початку XVIII ст.
+  - Міфологічна передісторія
+- section: Ідеологічна програма
+  subsections:
+  - Легітимація козацької державності
+  - Шляхетна генеалогія козаків
+  - Козаки як захисники православ'я
+  - Критика Москви — закамуфльована
+  - Ідеал козацької «республіки»
+- section: Фрагмент — Козацьке походження
+  subsections:
+  - Текст (з глосами)
+  - Міфічні предки козаків
+  - Риторичні прийоми
+  - Порівняння з реальністю
+- section: Барокова історіографія
+  subsections:
+  - Стиль — книжний, риторичний
+  - Бароковий патріотизм
+  - Символіка і алегорії
+  - Вплив польської історіографії
+- section: Підсумок
+  subsections:
+  - Літопис як політичний маніфест
+  - Цінність для розуміння ментальності
+  - Порівняння з іншими літописами
+vocabulary:
+- патріотизм
+- легітимація
+- ідеологія
+- генеалогія
+- барокова історіографія
+- міфологізація
+- риторика
+- православ'я
+- шляхта
+- республіка
+- апологетика
+- панегірик
+- етіологічний міф
+- компіляція
+- ідеалізація
+activities:
+- type: reading
+  focus: Cossack origin myth passage
+- type: critical-analysis
+  focus: Identify ideological claims — what does author want readers to believe?
+- type: comparative-study
+  focus: Compare Hrabianka's Khmelnytsky with Samovydets'
+- type: critical-analysis
+  focus: How does knowing the author changes interpretation?
+- type: essay-response
+  focus: Чому Грабянка створив міфічну генеалогію козаків?
+sources:
+- name: Літопис Григорія Граб'янки (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Літопис_Григорія_Граб'янки
+  type: reference
+  notes: Overview
+- name: Літопис Грабянки (текст)
+  url: https://litopys.org.ua/grab/hrab.htm
+  type: primary
+  notes: Full text
+- name: Граб'янка Григорій Іванович
+  url: https://uk.wikipedia.org/wiki/Граб'янка_Григорій_Іванович
+  type: reference
+  notes: Author biography
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
+persona:
+  voice: Academic Historiographer
+  role: Cossack Officer-Historian
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Літопис Грабянки: Козацький патріотизм
+
+## Використані джерела
+1. [Літопис гадяцького полковника Григорія Грабянки](http://litopys.org.ua/grab/hrab.htm) — Повний текст літопису, ключове першоджерело.
+2. [Енциклопедія історії України: Граб'янка Григорій Іванович](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Grabianka_H) — Біографічні дані та академічний огляд діяльності.
+3. [Яковенко Н. Нарис історії України з найдавніших часів](https://shron1.chtyvo.org.ua/Yakovenko_Natalia/Narys_istorii_Ukrainy_z_naidavnishykh_chasiv_vyd_2006.pdf) — Контекст козацького бароко та міфотворчості.
+
+## Хронологія
+- 1666 (орієнтовно) — Народження Григорія Граб'янки.
+- 1686 — Початок служби у козацькому війську.
+- 1710 — Завершення основної редакції Літопису (рік створення).
+- 1717–1723 — Граб'янка обіймає посаду Гадяцького полковника.
+- 1723 — Ув'язнення у Петропавлівській фортеці разом з Павлом Полуботком за відстоювання автономії Гетьманщини.
+- 1738 — Загибель у поході проти турків (російсько-турецька війна).
+
+## Ключові факти та цитати
+- **Цитата 1**: «Історія презельної брані...» (традиційний початок заголовку, що вказує на фокус на Хмельниччині).
+- **Цитата 2**: «Народ малоросійський, іменем козаки, від козар...» — ключова ідеологема про хозарське походження для легітимізації древності роду.
+- **Факт**: Граб'янка — єдиний з "великих літописців", хто був кадровим військовим високого рангу (полковник), а не канцеляристом.
+- **Факт**: Твір є компіляцією, що спирається на іноземні джерела (Стрийковський, Гваньїні, Пуфендорф) для надання ваги українській історії.
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ — Патріотичний літопис": [!context] — Літопис писався після поразки Мазепи, коли треба було захищати козацькі права пером, а не шаблею.
+- Section "Автор і його позиція": [!history-bite] — Граб'янка не був «кабінетним вченим», він загинув у бою, командуючи полком, що підтверджує його відданість козацькій справі.
+- Section "Структура і зміст": [!decolonization] — Граб'янка свідомо будує історію України як історію окремого політичного тіла («Козацької нації»), а не як провінції імперії.
+- Section "Ідеологічна програма": [!myth-buster] — Міф про хозарів був не наївністю, а політичною технологією: довести, що козаки — це давня аристократія, рівна шляхті, а не повсталі селяни.
+- Section "Фрагмент — Козацьке походження": [!quote] — Аналіз уривка про «козар-козаків» як приклад барокової етимології.
+- Section "Барокова історіографія": [!culture] — Високий стиль мови (книжна українська з елементами церковнослов'янської та польської) свідчив про елітарність культури Гетьманщини.
+
+## Деколонізаційний контекст
+- **Imperial/Soviet myth**: Козацькі літописи — це просто «місцева хроніка» або «фольклорна історія», возз'єднання з Росією як мета.
+- **Ukrainian reality**: Літопис Граб'янки — це державницький маніфест автономії, спроба вписати Україну в контекст європейської історії через античні та середньовічні паралелі, ігноруючи московську династичну історію як чужу.
+
+## Contested Terms (if applicable)
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| Малоросія | Провінційна назва частини Російської імперії, меншовартість. | У бароковій традиції — політична назва Гетьманщини (Malo-Russia як "Core Russia" в грецькому сенсі), синонім козацької держави. |
+| Козацький народ | Соціальний стан (сословіє). | Політична нація (як шляхетський народ у Польщі), носій суверенітету. |
+| Війна Хмельницького | Класова боротьба селян або боротьба за возз'єднання. | Національно-визвольна війна, відновлення стародавніх прав і вольностей «руського» народу. |
+
+## Section-Mapped Research Notes
+
+### Вступ — Патріотичний літопис
+Літопис створено близько 1710 року, у критичний час після Полтавської битви. Це не просто хроніка подій, а ідеологічна зброя. Граб'янка намагається довести, що козаки мають давнє і шляхетне походження, отже, мають право на самоврядування. З трьох головних літописів (Самовидця, Граб'янки, Величка) цей вважається найбільш концептуально цілісним у відстоюванні прав старшини.
+
+### Автор і його позиція
+Григорій Граб'янка — представник козацької еліти. Гадяч — полкове місто, один з центрів гетьманського управління. Його біографія (суддя, обозний, полковник) показує глибоку залученість у державні справи. Його участь у делегації Полуботка до Петра I і подальше ув'язнення свідчать про готовність ризикувати життям заради прав Гетьманщини. Важливо знати автора, бо текст — це проекція поглядів козацької старшини, яка прагнула перетворитися на легітимну аристократію.
+
+### Структура і зміст
+Охоплює події від давнини до 1709 року. Головний герой — Богдан Хмельницький. Йому присвячено левову частку тексту. На відміну від Самовидця, який фокусується на «очевидних» подіях, Граб'янка дає розлогу вступну частину з етногенезом (походженням) народу, що було вимогою тогочасної європейської історіографії.
+
+### Ідеологічна програма
+Головна мета — легітимація. Козаки — не бунтівні хлопи, а нащадки войовничих хозар. Це давало право на «старожитність» і рівність з польською шляхтою та російським дворянством. Захист православ'я виступає як моральне виправдання воєн. Критика Москви обережна, прихована між рядків або вкладена в уста історичних персонажів, але ідеал — це «Республіка», де панує закон і козацькі вольності.
+
+### Фрагмент — Козацьке походження
+Аналіз тексту про походження від Яфета і хозар. Риторичні фігури, посилання на античних авторів. Це типовий для бароко етіологічний міф (міф про походження). Важливо показати, як автор маніпулює фактами заради високої мети — створення престижної родословної для своєї нації.
+
+### Барокова історіографія
+Стиль Граб'янки — пишний, складний, насичений метафорами. Це «сарматизм» на українському ґрунті. Вплив польських хроністів (Стрийковського) очевидний у структурі та аргументації. Бароковий патріотизм — це любов до «отчизни» (Гетьманщини), що вимагає її уславлення словом.
+
+### Підсумок
+Літопис Граб'янки — це пам'ятка політичної думки XVIII ст. Він показує, як козацька еліта мислила себе окремим народом з власною історією та правами. Це місток між збройною боротьбою Хмельницького та політичною боротьбою Полуботка і мазепинців.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12210)
+✓ Message 12112 acknowledged
+✓ Message 12210 acknowledged

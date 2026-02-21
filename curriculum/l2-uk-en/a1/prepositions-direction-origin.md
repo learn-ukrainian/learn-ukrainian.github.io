@@ -34,7 +34,7 @@ If you confuse these words, it will sound like "Where to are you?" instead of "W
 
 ### Візуалізація руху (Visualizing Movement)
 
-Let's look at this geometrically. You have a point on a map.
+Let's visualize this. Imagine a point on a map.
 
 *   Standing on the point -> **Де?**
 *   Arrow *towards* the point -> **Куди?**
@@ -62,7 +62,7 @@ Your task is to switch between these three modes: Static — Forward — Backwar
 
 ### Логіка вибору відмінка (The Logic of Choosing a Case)
 
-This table shows the algorithm.
+Here is the pattern.
 
 | Question | Function | Case | Prepositions | Example (Store) |
 | :--- | :--- | :--- | :--- | :--- |
@@ -131,7 +131,7 @@ Use **у/в** (in) for enclosed spaces ("containers").
 *   **Київ** -> Ми **в Києві**. (We are in Kyiv.)
 *   **Україна** -> Ви **в Україні**. (You are in Ukraine.)
 
-Remember euphony: **у** park (consonant), **в** office (vowel).
+Запам'ятайте евфонію: **у** парку (після приголосної), **в** офісі (після голосної).
 
 ### Прийменник НА: Поверхня та події (Surface and Events)
 
@@ -158,7 +158,7 @@ Use **на** (on/at) for surfaces and events.
 
 ### Культурний аспект: Вдома (At Home)
 
-**Вдома** [ˈu̯dɔmɐ] is an adverb. It means "at home".
+**Вдома** [u̯ˈdɔmɐ] is an adverb. It means "at home".
 
 *   Де ти? — Я **вдома**.
 *   Ми сьогодні **вдома**.
@@ -167,7 +167,7 @@ Use **вдома** for location. Use **додому** for direction.
 
 ### Типові місця (Common Places)
 
-Let's learn the Locative forms for common places. Notice the endings.
+Вивчімо форми місцевого відмінка для типових місць. Зверніть увагу на закінчення.
 
 | Place (Nominative) | Place (Locative) | English |
 | :--- | :--- | :--- |
@@ -238,7 +238,7 @@ Use **до** for people and buildings (if you don't enter).
 
 ### Рух до місць (Moving to Places)
 
-Here are the same places in the Accusative Case.
+Ось ті самі місця у знахідному відмінку.
 
 | Place (Nominative) | Direction (Accusative) | English |
 | :--- | :--- | :--- |
@@ -253,9 +253,17 @@ Here are the same places in the Accusative Case.
 
 For **Origin** (Where from?), we use **Звідки?** and the **Genitive Case**.
 
+### Евфонія: З / Із / Зі
+
+Прийменник **з** має три форми. Вибір залежить від першої літери наступного слова:
+
+*   **з** — основна форма: **з парку**, **з магазину**, **з Києва**.
+*   **зі** — коли наступне слово має дві приголосні на початку: **зі школи**, **зі столу**, **зі Львова**.
+*   **із** — варіант для тексту: **із села**, **із парку**.
+
 ### Дзеркало: В ↔ З
 
-If you were **в** (inside), you come out **з** (from).
+If you were **в** (inside), you come out **з** (from). Це дзеркальне правило.
 
 **Genitive Endings:**
 *   Masc: -а/-я, -у/-ю.
@@ -268,10 +276,11 @@ If you were **в** (inside), you come out **з** (from).
 *   **Школа** -> Я йду **зі школи**.
 *   **Україна** -> Я приїхав **з України**.
 *   **Кімната** -> Я виходжу **з кімнати**.
+*   **Офіс** -> Він йде **з офісу**.
 
 ### Дзеркало: На ↔ З
 
-If you were **на** (surface), you return **з**.
+If you were **на** (surface), you return **з**. Правило те саме: прийменник місця визначає прийменник руху.
 
 **Examples:**
 *   **Робота** -> Я йду **з роботи**.
@@ -279,6 +288,7 @@ If you were **на** (surface), you return **з**.
 *   **Вулиця** -> Я йду **з вулиці**.
 *   **Концерт** -> Ми йдемо **з концерту**.
 *   **Стіл** -> Я беру книгу **зі столу**.
+*   **Вокзал** -> Поїзд їде **з вокзалу**.
 
 ### Дзеркало: До ↔ Від
 
@@ -300,14 +310,13 @@ If you went **до** (to someone), you return **від** (from them).
 
 ### Повернення з місць (Returning from Places)
 
-And finally, the Genitive Case for origin.
+І нарешті — Родовий відмінок для походження.
 
 | Place (Nominative) | Origin (Genitive) | English |
 | :--- | :--- | :--- |
 | **Аеропорт** | з аеропорту | from the airport |
 | **Готель** | з готелю | from the hotel |
 | **Лікарня** | з лікарні | from the hospital |
-| **Музей** | з музею | from the museum |
 | **Театр** | з театру | from the theater |
 | **Ресторан** | з ресторану | from the restaurant |
 | **Кафе** | з кафе | from the cafe |
@@ -317,54 +326,60 @@ And finally, the Genitive Case for origin.
 
 ## Систематизація: Школа і Робота
 
-Let's compare the systems.
+Порівняймо системи.
 
 ### Школа (Система "В")
 
-School is a building.
+Школа — це будівля. Будівля — це контейнер. Тому ми вживаємо **в/у**.
 
 1.  **Де?** Діти **у школі**. (Locative)
 2.  **Куди?** Діти йдуть **у школу**. (Accusative)
 3.  **Звідки?** Діти йдуть **зі школи**. (Genitive)
 
+Так само працює: **магазин** (у магазині → у магазин → з магазину), **банк** (у банку → у банк → з банку).
+
 ### Робота (Система "НА")
 
-Work is an activity.
+Робота — це діяльність. Діяльність — це не контейнер. Тому ми вживаємо **на**.
 
 1.  **Де?** Я **на роботі**. (Locative)
 2.  **Куди?** Я йду **на роботу**. (Accusative)
 3.  **Звідки?** Я йду **з роботи**. (Genitive)
 
-### Cultural Note: The Market vs. The Supermarket
+Так само працює: **пошта** (на пошті → на пошту → з пошти), **вокзал** (на вокзалі → на вокзал → з вокзалу).
 
-In Ukraine, we distinguish between **ринок** (market / bazaar) and **супермаркет** (supermarket).
-*   **Ринок** is an open space (historically). So we say **на ринку**.
-*   **Супермаркет** is a building. So we say **у супермаркеті**.
+### Культурна примітка: Ринок і Супермаркет
+
+В Україні ми розрізняємо **ринок** (market / bazaar) та **супермаркет** (supermarket).
+*   **Ринок** — це місце на вулиці (історично). Тому кажемо **на ринку**.
+*   **Супермаркет** — це будівля. Тому кажемо **у супермаркеті**.
 
 *   Я йду **на ринок**. Я купую сало. (I am going to the market. I buy salo.)
 *   Я йду **в супермаркет**. Я купую молоко. (I am going to the supermarket. I buy milk.)
+*   Я повертаюся **з ринку**. (I am returning from the market.)
+*   Я повертаюся **з супермаркету**. (I am returning from the supermarket.)
 
 ### Винятки (Exceptions)
 
-Remember these exceptions:
+Запам'ятайте ці винятки:
 *   **На пошту**
 *   **На кухню**
 *   **На базар**
 
 ### Таблиця локацій (Locations Table)
 
-| Location | Where? (Locative) | Where to? (Accusative) | Where from? (Genitive) |
+| Місце | Де? (Locative) | Куди? (Accusative) | Звідки? (Genitive) |
 | :--- | :--- | :--- | :--- |
-| **Home** | вдома | додому | з дому |
-| **Store** | у магазині | у магазин | з магазину |
-| **Office** | в офісі | в офіс | з офісу |
-| **Street** | на вулиці | на вулицю | з вулиці |
-| **Park** | у парку | у парк | з парку |
-| **Kyiv** | у Києві | у Київ | з Києва |
+| **Дім** | вдома | додому | з дому |
+| **Магазин** | у магазині | у магазин | з магазину |
+| **Офіс** | в офісі | в офіс | з офісу |
+| **Вулиця** | на вулиці | на вулицю | з вулиці |
+| **Парк** | у парку | у парк | з парку |
+| **Київ** | у Києві | у Київ | з Києва |
 
 ## Практика: Маршрут по місту
 
-Let's describe a route.
+Опишімо маршрут по місту.
 
 ### Ранок: Рух вперед (Morning)
 
@@ -427,7 +442,7 @@ Let's describe a route.
 
 # Підсумок
 
-Today you have learned the navigation system of Ukrainian. You know the three questions: **Де?**, **Куди?**, **Звідки?**.
+Сьогодні ви вивчили навігаційну систему української мови. Тепер ви знаєте три питання: **Де?**, **Куди?**, **Звідки?**.
 
 **Золоте правило (Golden Rule):**
 1.  **Де?** -> Місцевий (Locative)
@@ -441,4 +456,4 @@ Today you have learned the navigation system of Ukrainian. You know the three qu
 4.  Чому ми кажемо "на роботі"? (Why do we say "na roboti"?)
 5.  Як сказати "I am from Canada"? (How to say "I am from Canada"?)
 
-You are ready for the next lesson!
+Тепер можна йти далі!

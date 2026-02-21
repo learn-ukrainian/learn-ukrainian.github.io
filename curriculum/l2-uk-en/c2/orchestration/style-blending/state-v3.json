@@ -2,12 +2,5 @@
   "track": "c2",
   "slug": "style-blending",
   "mode": "v3",
-  "phases": {
-    "v3-A": {
-      "status": "complete",
-      "ts": "2026-02-20T00:44:57Z",
-      "task_id": "v3-style-blending-pA",
-      "mode": "full"
-    }
-  }
+  "phases": {}
 }

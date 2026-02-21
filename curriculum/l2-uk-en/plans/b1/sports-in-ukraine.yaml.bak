@@ -1,0 +1,84 @@
+module: b1-79
+level: B1
+sequence: 79
+slug: sports-in-ukraine
+version: '2.0'
+title: Спорт в Україні
+subtitle: Spectator Sports and Ukrainian Athletes
+content_outline:
+- section: Вступ — Спортивна нація
+  points:
+  - Спорт як національна гордість
+  - Найпопулярніші види спорту в Україні
+- section: Футбол — Релігія мільйонів
+  points:
+  - '"Динамо" Київ і "Шахтар" Донецьк'
+  - Збірна України на Євро і Мундіалі
+  - Андрій Шевченко — легенда
+- section: Бокс — Брати Клички і далі
+  points:
+  - Віталій і Володимир Клички
+  - Олександр Усик — абсолютний чемпіон
+  - Василь Ломаченко
+- section: Олімпійська слава
+  points:
+  - Сергій Бубка — людина-птах
+  - Українські гімнасти і стрибуни
+  - Паралімпійці України
+- section: Спорт під час війни
+  points:
+  - Спортсмени на фронті
+  - Міжнародні турніри як дипломатія
+- section: Підсумок — Перемога як звичка
+  points:
+  - Спорт як символ незламності
+- section: Потрібно більше практики?
+vocabulary_hints:
+  required:
+  - спорт (sport)
+  - футбол (football)
+  - бокс (boxing)
+  - команда (team)
+  - чемпіон (champion)
+  - перемога (victory)
+  - спортсмен (athlete)
+  - змагання (competition)
+  recommended:
+  - Олімпійські ігри (Olympic Games)
+  - тренер (coach)
+  - стадіон (stadium)
+  - вболівальник (fan)
+activity_hints:
+- type: reading
+  focus: Athlete profiles and sports news
+  items: 15
+- type: match-up
+  focus: Match athletes to sports
+  items: 20
+- type: fill-in
+  focus: Complete sports reports
+  items: 15
+- type: quiz
+  focus: Discuss sports preferences
+  items: 10
+focus: culture
+pedagogy: CBI
+prerequisites:
+- b1-78 (Technology and Startups)
+connects_to:
+- b1-80 (Active Lifestyle)
+objectives:
+- Learner can discuss Ukrainian sports culture in Ukrainian
+- Learner can understand authentic texts about Ukrainian athletes and teams
+- Learner can use sports-related vocabulary in context
+- Learner can compare Ukrainian sports achievements with global trends
+grammar:
+- Sports vocabulary
+- Discussing achievements and competitions
+- Expressing support and opinions
+register: розмовний
+phase: B1.7 [Contemporary Ukraine]
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Olympiad Commentator
+word_target: 4000

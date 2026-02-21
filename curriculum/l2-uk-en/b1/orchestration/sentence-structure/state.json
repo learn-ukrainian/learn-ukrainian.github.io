@@ -1,0 +1,35 @@
+{
+  "slug": "sentence-structure",
+  "track": "b1",
+  "module_num": 4,
+  "mode": "v3",
+  "phases": {
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-02-20T01:05:10Z",
+      "words": 4363,
+      "attempts": 2
+    },
+    "3a": {
+      "status": "complete",
+      "timestamp": "2026-02-20T01:09:48Z",
+      "note": "v3-phase-C"
+    },
+    "3b": {
+      "status": "complete",
+      "timestamp": "2026-02-20T01:09:48Z",
+      "note": "v3-phase-C"
+    },
+    "3": {
+      "status": "complete",
+      "timestamp": "2026-02-20T13:55:13Z",
+      "note": "v3-audit-escalation"
+    },
+    "5-enrich": {
+      "status": "complete",
+      "timestamp": "2026-02-20T13:55:13Z",
+      "note": "v3-audit-escalation"
+    }
+  },
+  "last_updated": "2026-02-20T13:55:13Z"
+}

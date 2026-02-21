@@ -1,0 +1,13 @@
+{
+  "track": "lit-juvenile",
+  "slug": "rutkivsky-dzhury-2",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-20T22:52:22Z",
+      "task_id": "v3-rutkivsky-dzhury-2-pA",
+      "mode": "full"
+    }
+  }
+}

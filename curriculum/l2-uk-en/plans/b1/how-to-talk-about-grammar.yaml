@@ -6,76 +6,102 @@ version: '3.0'
 title: Як говорити про граматику
 subtitle: Learning grammar terminology in Ukrainian
 content_outline:
-- section: 'Вступ: сила метамови'
+- section: 'Вступ: Сила метамови (Introduction: The Power of Metalanguage)'
+  words: 500
   points:
-  - Benefits of learning grammar terminology in target language
-  - Preparation for full immersion in B1.1+
-  - Key structural terms (слово, речення, частина мови, граматика, правило, приклад)
-  - English scaffolding paragraph (bridge module — immersion 70%)
-- section: 'Частини мови: самостійні категорії'
+  - English scaffolding (bridge module) explaining the transition to 70-85% immersion
+    and why learning grammar in Ukrainian is essential for B1+ success.
+  - 'The ''Linguistics Professor'' persona introduction: grammar as a powerful tool
+    for decolonization and precision, not just a set of rules.'
+  - 'Historical Hook: Meletiy Smotrytskyi and his ''Grammar'' (1619). Discuss how
+    his terminology established the foundation for modern Ukrainian linguistic systematicity.'
+  - 'Alignment with State Standard §4.2.1: Defining ''метамова'' (metalanguage) and
+    ''термін'' (term) as prerequisites for morphological competence.'
+- section: Самостійні частини мови (Independent Parts of Speech)
+  words: 1000
   points:
-  - іменник, дієслово, прикметник, прислівник, займенник, числівник
-  - Each POS gets its own H3 with definition, questions, 2+ examples, usage note
-  - Equal depth for all 6 — no afterthoughts
-- section: 'Частини мови: службові слова'
+  - 'Comprehensive breakdown of the six independent categories: іменник, дієслово,
+    прикметник, прислівник, займенник, числівник.'
+  - Each category features an H3 with definition, questions (Хто? Що? Що робити?),
+    and frequency-based collocations like 'рід іменника' or 'час дієслова'.
+  - 'Linguistic Depth: Explicit instruction on ''вид дієслова'' (aspect) and ''відміна
+    іменника'' (declension group) as required for B1 state standards.'
+  - 'Addressing Learner Error (Gender): Clarifying that ''рід іменника'' is determined
+    by word endings (стіл - він, шафа - вона), not the physical sex of the object.'
+- section: Службові частини мови та культурна лінза (Service Parts of Speech and Cultural
+    Lens)
+  words: 600
   points:
-  - сполучник, прийменник, частка, вигук
-  - Each gets its own H3 with role in sentence structure
-  - Equal depth for all 4 — same pattern as самостійні
-- section: 'Відмінки: сім ключів'
+  - Functional roles of сполучник (conjunction), прийменник (preposition), частка
+    (particle), and вигук (interjection) in sentence construction.
+  - 'Cultural Hook: The letter ''Ґ'' as a symbol of systematicity. Discuss its repression
+    in 1933 and restoration in the 1990s as part of returning historical truth to
+    grammar.'
+  - Distinction between 'просте речення' (simple sentence) and 'складне речення' (complex
+    sentence) using service words as structural glue.
+- section: 'Сім ключів: Відмінки та їхні ролі (Seven Keys: Cases and Their Roles)'
+  words: 1000
   points:
-  - називний, родовий, давальний, знахідний, орудний, місцевий, кличний
-  - Each case gets its own H3 with question, main role, 2+ examples
-  - Equal depth with Додаткова інформація for every case
-  - На Різдво Дід Загубив Горішки Між Ковбасками mnemonic (or verified equivalent)
-  - Etymology or mnemonic aids where helpful
-- section: Граматичні категорії та будова слова
+  - Detailed presentation of all 7 cases (називний, родовий, давальний, знахідний,
+    орудний, місцевий, кличний) with questions and primary semantic roles.
+  - 'Mnemonic Aid: Integration of ''На Різдво Дід Загубив Горішки Між Ковбасками''
+    for memorizing the standard Ukrainian case order.'
+  - 'Addressing Learner Error (Accusative vs Genitive): Specific drill on ''Бачу брата''
+    (Acc) vs ''Немає брата'' (Gen) to clear confusion with animate nouns.'
+  - 'The Vocative Mandate: Emphasizing the cultural importance of ''кличний відмінок''
+    (e.g., ''Привіт, Андрію!'') as a marker of authentic Ukrainian address.'
+- section: Граматичні категорії та будова слова (Grammatical Categories and Word Structure)
+  words: 600
   points:
-  - морфеміка (корінь, суфікс тощо) — own H3
-  - рід, число, особа, час, вид — own H3
-  - Syntactic roles (підмет, присудок, додаток, означення, обставина) — own H3
-  - Each sub-topic gets its own H3, not a wall of text
-- section: 'Практика: читаємо граматику українською'
+  - 'Morphemics breakdown: identification of ''корінь'' (root), ''префікс'' (prefix),
+    ''суфікс'' (suffix), and ''закінчення'' (ending) for vocabulary decoding.'
+  - 'Overview of categories: рід (gender), число (number), особа (person), час (tense),
+    and вид (aspect) with 2+ examples for each.'
+  - 'Syntactic Roles: Introduction to ''підмет'' (subject), ''присудок'' (predicate),
+    ''додаток'' (object), ''означення'' (attribute), and ''обставина'' (adverbial)
+    in Ukrainian.'
+- section: Практика та підсумок (Practice and Summary)
+  words: 300
   points:
-  - Simple grammar explanations in Ukrainian
-  - Recognizing patterns in textbook language
-  - Cultural anchoring (Шевченко, Леся Українка, Франко quotes)
-  - Teacher-student dialogues woven into content
-- section: Підсумок і самоперевірка
-  points:
-  - Key terms review
-  - Readiness check for M02
-  - Self-assessment questions (6+)
+  - 'Teacher-student dialogue simulation: ''Яка це частина мови?'' and ''У якому відмінку
+    це слово?'' to normalize classroom metalanguage.'
+  - Recognition drill using authentic quotes from Shevchenko or Lesya Ukrainka to
+    identify parts of speech and case forms in context.
+  - Self-assessment checklist for M02 readiness, ensuring the learner can name all
+    7 cases and 10 parts of speech without English prompts.
 immersion: 70-85% Ukrainian
 vocabulary_hints:
   required:
-  - дієслово (verb)
-  - іменник (noun)
-  - прикметник (adjective)
-  - прислівник (adverb)
-  - займенник (pronoun)
-  - числівник (numeral)
-  - називний відмінок (nominative case)
-  - родовий відмінок (genitive case)
-  - давальний відмінок (dative case)
-  - знахідний відмінок (accusative case)
-  - орудний відмінок (instrumental case)
-  - місцевий відмінок (locative case)
-  - кличний відмінок (vocative case)
+  - іменник (noun) — рід іменника (gender of a noun), відміна іменника (declension
+    of a noun); High frequency.
+  - дієслово (verb) — час дієслова (verb tense), вид дієслова (verb aspect); High
+    frequency.
+  - відмінок (case) — називний відмінок (nominative case), відмінювання (declension);
+    Essential terminology.
+  - прикметник (adjective) — узгодження з іменником (agreement with noun).
+  - прислівник (adverb) — незмінна частина мови (invariable part of speech).
+  - займенник (pronoun) — особовий займенник (personal pronoun).
+  - числівник (numeral) — кількісний та порядковий (cardinal and ordinal).
+  - називний відмінок (nominative case) — Хто? Що?
+  - родовий відмінок (genitive case) — Кого? Чого?
+  - давальний відмінок (dative case) — Кому? Чому?
+  - знахідний відмінок (accusative case) — Кого? Що?
+  - орудний відмінок (instrumental case) — Ким? Чим?
+  - місцевий відмінок (locative case) — На кому? На чому?
+  - кличний відмінок (vocative case) — Звертання (addressing someone).
   recommended:
-  - сполучник (conjunction)
-  - прийменник (preposition)
-  - частка (particle)
-  - вигук (interjection)
-  - граматика (grammar)
-  - правило (rule)
-  - приклад (example)
-  - метамова (metalanguage)
-  - підмет (subject)
-  - присудок (predicate)
-  - додаток (object)
-  - означення (attribute)
-  - обставина (adverbial)
+  - речення (sentence) — просте речення (simple sentence), складати речення (to form
+    a sentence).
+  - правило (rule) — граматичне правило (grammar rule), за правилом (according to
+    the rule).
+  - приклад (example) — наводити приклад (to provide an example).
+  - метамова (metalanguage) — термінологічний апарат (terminological apparatus).
+  - підмет (subject) — головний член речення (main member of the sentence).
+  - присудок (predicate) — що робить підмет? (what the subject does).
+  - сполучник (conjunction) — єднальний сполучник (connecting conjunction).
+  - прийменник (preposition) — уживання з відмінками (usage with cases).
+  - частка (particle) — модальна частка (modal particle).
+  - вигук (interjection) — емоційне забарвлення (emotional coloring).
 activity_hints:
 - type: match-up
   focus: Ukrainian term → English equivalent

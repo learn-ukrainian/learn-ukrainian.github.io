@@ -6,33 +6,63 @@ version: '2.0'
 title: Action Verb Prefixes
 subtitle: Redoing, Finishing, and Opening
 content_outline:
-- section: Introduction / Вступ
+- section: 'Вступ: Логіка LEGO в українських дієсловах (Introduction: The LEGO logic
+    of Ukrainian verbs)'
+  words: 400
   points:
-  - 'From GPS to Transformation: The LEGO logic of Ukrainian verbs'
-  - Why phrasal verbs don't exist in Ukrainian
-- section: Presentation / Презентація
+  - 'The ''Meaning Map'' concept: Moving from basic A1 stems (писати, читати, робити)
+    to semantic transformation using prefixes as ''GPS coordinates'' for action.'
+  - 'Why phrasal verbs don''t exist in Ukrainian: Explaining how prefixes replace
+    English particles (write down, write over, write out) with internal morphological
+    logic.'
+  - 'Cultural Motivation: The ''Bread Respect'' (доїсти) — introducing the prefix
+    до- through the lens of traditional reverence for food and historical scarcity
+    trauma.'
+- section: 'Презентація: Світ префіксів пере-, до- та по- (Presentation: The world
+    of prefixes Pere-, Do-, and Po-)'
+  words: 850
   points:
-  - 'The Meaning Map: 8 core action transformers'
-  - 'The Logic of Re- (Пере-): Redoing and correcting — learner error: Confusing переписати
-    (do it again/copy) with дописати (finish what was started)'
-  - 'The Logic of Finish (До-): Reaching the limit — cultural hook: The ''Bread Respect''
-    (доїсти reflects reverence for food/scarcity trauma)'
-  - 'The Open/Close Wars: Відчинити (physical) vs Відкрити (abstract/general) — cultural
-    hook: The ''Hinges Rule'' (physical barrier vs abstract opening); learner error:
-    The ''Open'' Trap (using відкрити for doors)'
-  - 'The Triple Trap of За-: Close, Start, and Excess — learner error: The ''Za-''
-    Trap (using закрити for physical doors or confusing with ''to shut down'')'
-  - 'The "Give" Family: Distinguishing Віддати, Передати, Здати'
-  - 'Nuances of "A Little": The power of По- — scaffolding note: Carefully distinguish
-    по- as "a little bit" (delimitative) vs по- as perfective marker (starting vs
-    doing for a while)'
-- section: Practice / Практика
+  - 'The Logic of Re- (Пере-): Distinguishing between ''doing again'' (переписати
+    вправу) and ''copying'' (переписати текст) vs ''transferring'' (передати).'
+  - 'The Logic of Completion (До-): Reaching the limit — following State Standard
+    §4.3.2 for aspectual pairs (писати – написати vs дописати листа до кінця).'
+  - 'The ''A Little'' Power (По-): Scaffolding the delimitative meaning (почитати
+    трохи) vs the perfective marker; cautioning against confusing it with a simple
+    start of action.'
+  - 'Learner Error Focus: The Rewrite vs. Finish Trap — clarifying the overlap where
+    English ''write more'' confuses переписати with дописати.'
+- section: Відчинити чи відкрити? Битва за простір (To open or to reveal? The battle
+    for space)
+  words: 750
   points:
-  - Transformation drills (Pysaty -> ?)
-  - 'Real-world scenario: Office chaos and housework'
-- section: Dialogues / Діалоги
+  - 'The ''Hinges Rule'': Rigorous distinction between opening physical barriers (відчинити
+    двері, вікно, кватирку) and abstract ''opening'' (відкрити рахунок, очі, Америку).'
+  - 'The ''Open'' Trap: Explicitly debunking the Surzhyk ''відкрити двері'' (incorrect)
+    by highlighting the physical hinge logic vs the Russian interference pattern.'
+  - 'The Closing Counterparts: Applying the same logic to зачинити (physical doors/windows)
+    vs закрити (abstract themes, eyes, or sessions).'
+  - 'The ''Za-'' Triple Trap: Managing the three faces of за- (Closing physical objects,
+    Starting an action, and Excess/Shutting down a business).'
+- section: 'Практика: Трансформація смислів (Practice: Transformation of meanings)'
+  words: 600
   points:
-  - A conversation between a writer and an editor about deadlines and rewrites
+  - 'Visualizing Grammar: Completing a ''Hinge vs. Abstract'' comparison table based
+    on research frequency data (High-frequency collocations for office and home).'
+  - 'Scenario Training: ''The Messy Office'' — drills on correcting errors (переписати),
+    finishing tasks (дописати), and managing physical vs abstract openings (відчинити
+    вікно vs відкрити файл).'
+  - 'The ''Give'' Family Drill: Contextual practice distinguishing віддати (give back),
+    передати (pass), and здати (hand in/surrender).'
+- section: Діалоги та підсумок (Dialogues and Summary)
+  words: 400
+  points:
+  - 'Writer vs. Editor Dialogue: A high-immersion conversation about deadlines, where
+    the writer must decide whether to redo (переписати) or just finish (дописати)
+    the chapter.'
+  - 'Mastery Check: Identifying the ''Excess'' vs ''Start'' meanings in sentences
+    using за-, and verifying the correct choice of ''Open'' for business vs windows.'
+  - 'Final synthesis: Reviewing the aspectual logic mandated by State Standard §4.3.2
+    and the cultural significance of the prefix до-.'
 focus: grammar
 pedagogy: PPP
 objectives:
@@ -65,13 +95,22 @@ persona:
   role: Film Director
 vocabulary_hints:
   required:
-  - переписати (to rewrite/copy) — переписати вправу, переписати текст, переписати
-    майно
-  - дописати (to finish writing) — дописати речення, дописати листа, дописати до кінця
-  - відчинити (to open [physical]) — відчинити двері, відчинити вікно, відчинити кватирку
-  - відкрити (to open [abstract/general]) — відкрити очі, відкрити рахунок, відкрити
-    Америку, відкрити бізнес
-  - зачинити (to close [physical]) — зачинити вікно, зачинити за собою двері
+  - відчинити (to open [physical]) — відчинити двері, вікно, кватирку, ворота; High
+    Frequency (Specific)
+  - відкрити (to open [abstract/general]) — відкрити рахунок, очі, бізнес, сезон,
+    душу; Very High Frequency
+  - зачинити (to close [physical]) — зачинити вікно, зачинити за собою двері; High
+    Frequency
   - закрити (to close [abstract/general]) — закрити тему, закрити очі (на щось), закрити
-    засідання
+    засідання, закрити бізнес; Very High Frequency
+  - переписати (to rewrite/copy) — переписати вправу, переписати текст, переписати
+    майно; Academic/Office register
+  - дописати (to finish writing) — дописати речення, дописати листа, дописати до кінця;
+    High Frequency
+  recommended:
+  - доїсти (to finish eating) — доїсти все з тарілки; reflects cultural reverence
+    for food
+  - почитати (to read for a while) — почитати книжку перед сном; delimitative usage
+  - здати (to hand in/give back) — здати тест, здати здачу, здати в оренду
+  - віддати (to give back/return) — віддати борг, віддати книжку в бібліотеку
 word_target: 3000

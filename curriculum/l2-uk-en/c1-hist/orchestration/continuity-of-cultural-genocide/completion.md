@@ -1,4 +1,4 @@
-PASS: build_module_v2.py c1-hist 135 — E2E
+FAIL: build_module_v2.py c1-hist 135 — E2E
 
   Module:   continuity-of-cultural-genocide
   Track:    c1-hist
@@ -6,5 +6,5 @@ PASS: build_module_v2.py c1-hist 135 — E2E
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  PASS
-  Date:     2026-02-20T00:10:06Z
+  Verdict:  FAIL
+  Date:     2026-02-20T23:41:25Z

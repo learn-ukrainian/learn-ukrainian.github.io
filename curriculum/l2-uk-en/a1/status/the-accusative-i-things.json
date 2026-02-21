@@ -2,14 +2,14 @@
   "module": "the-accusative-i-things",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-19T23:01:37.803574Z",
+  "last_audit": "2026-02-21T00:46:34.612495Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-19T16:16:55.205976Z",
+    "md": "2026-02-20T22:30:32.444384Z",
     "meta": "2026-02-19T16:12:59.324392Z",
     "activities": "2026-02-19T15:38:12.312577Z",
     "vocabulary": "2026-02-18T19:59:52.835120Z",
-    "plan": "2026-02-18T19:03:32.187096Z",
+    "plan": "2026-02-20T20:40:11.768939Z",
     "research": "2026-02-19T16:12:59.315653Z"
   },
   "gates": {
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "2789/2000 (raw: 3030)"
+      "message": "2804/2000 (raw: 3046)"
     },
     "activities": {
       "status": "pass",

@@ -1,0 +1,114 @@
+module: a2-04
+level: A2
+sequence: 4
+slug: the-instrumental-i-accompaniment
+version: '2.0'
+title: The Instrumental I — Accompaniment
+subtitle: With Whom? Using 'З'
+content_outline:
+- section: Introduction / Вступ
+  points:
+  - The seventh case in Ukrainian (орудний відмінок) — alignment with State Standard
+    §4.2.2.5.2 (спільність дії)
+  - Key question - ким? чим? (by whom? by what?)
+  - 'Primary use - accompaniment with з/із/зі — cultural hook: Bread and Salt (Хліб-сіль)
+    as a traditional symbol of sharing hospitality with guests, signifying a wish
+    for prosperity and deep bonds'
+- section: Presentation / Презентація
+  points:
+  - 'Instrumental Endings by Gender — learner error: Nominative Overuse (Я йду з друг
+    → з другом)'
+  - 'з/із/зі Variants (euphony) — usage of ''зі'' before words starting with consonant
+    clusters like ''ст-'', ''зв-'' (e.g., зі студентами, зі мною); learner error:
+    Euphony Errors (using ''з'' instead of ''зі'')'
+  - 'Social Verbs with Accompaniment — focus on high-frequency verbs: розмовляти,
+    гуляти, зустрічатися'
+- section: Practice / Практика
+  points:
+  - 'Common Expressions (разом з) — high-frequency collocations: разом з сім''єю,
+    з другом, з подругою'
+  - 'Sentence formation: Together with others — cultural distinction: друг (close
+    friend) vs. приятель (casual acquaintance); note strict levels of friendship in
+    Ukrainian culture'
+- section: Dialogues / Діалоги
+  points:
+  - 'Social interaction scenarios — learner error: Missing Preposition ''з'' (e.g.,
+    розмовляю мамою vs. з мамою)'
+vocabulary_hints:
+  required:
+  - 'з/із/зі (with) — high-frequency usage: з другом, з подругою, з сім''єю; euphony
+    rule: зі before consonant clusters (ст-, зв-)'
+  - 'разом (together) — collocation: працювати разом, разом з'
+  - разом з (together with) — High frequency pairing in A2 social contexts
+  - 'поруч з (next to) — usage note: often used with people in social scenarios'
+  - 'зустрічатися (to meet) — collocation: зустрічатися з приятелями, зустрічатися
+    біля кафе'
+  - 'гуляти (to walk) — collocation: гуляти з собакою, гуляти з друзями'
+  - 'розмовляти (to talk) — collocation: розмовляти з мамою, розмовляти українською'
+  - спілкуватися (to communicate) — State Standard §4.2.2.5.2 alignment
+  - зустрітися (to meet - pf)
+  - познайомитися (to get acquainted)
+  - одружитися (to get married)
+  - подружитися (to become friends)
+  - жити (to live)
+  - працювати (to work)
+  - грати (to play)
+  recommended:
+  - помиритися (to make up)
+  - посваритися (to quarrel)
+  - товаришувати (to be friends)
+  - 'приятелювати (to be pals) — cultural note: casual acquaintance vs. deep bond
+    of ''друг'''
+  - сусідити (to be neighbors)
+activity_hints:
+- type: fill-in
+  focus: Add instrumental endings to nouns
+  items: 15+
+- type: match-up
+  focus: Person + з + instrumental form
+  items: 12+
+- type: fill-in
+  focus: Combine two people doing something together
+  items: 10+
+- type: quiz
+  focus: Choose correct instrumental ending
+  items: 12+
+- type: fill-in
+  focus: Complete social verb sentences
+  items: 10+
+focus: grammar
+pedagogy: PPP
+prerequisites:
+- a2-02 (Dative noun endings)
+- A1 noun gender
+- A1 prepositions basics
+connects_to:
+- a2-05 (Instrumental II - Means & Tools)
+- a2-06 (Being and Becoming)
+- a2-07 (Spatial Prepositions)
+objectives:
+- Learner can form instrumental case endings for nouns
+- Learner can use the preposition з (with) correctly
+- Learner can describe doing things together with others
+- Learner can use proper euphony rules for з/із/зі
+grammar:
+- instrumental endings
+- preposition з/із/зі
+- accompaniment
+- social interaction
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Instrumental Case
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Instrumental endings and з/із/зі usage rules
+- name: Ukrainian Grammar Reference
+  url: https://uk.wikipedia.org/wiki/Орудний_відмінок
+  type: reference
+  notes: Complete instrumental paradigm
+immersion: 50-60% Ukrainian
+phase: A2.1
+persona:
+  voice: Encouraging Cultural Guide
+  role: Wedding Starosta
+word_target: 3000

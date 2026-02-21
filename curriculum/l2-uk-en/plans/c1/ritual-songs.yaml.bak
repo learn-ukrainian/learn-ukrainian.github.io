@@ -1,0 +1,24 @@
+module: c1-049
+level: c1
+sequence: 49
+version: '1.0'
+title: 'Обрядові пісні: Коло життя'
+subtitle: 'Ritual Songs: The Circle of Life'
+focus: cultural
+pedagogy: Cultural Immersion
+objectives:
+- Learner can distinguish between kolyadky, shchedrivky, and vesnyanky
+- Learner understands the pre-Christian roots of Ukrainian holidays
+- Learner can analyze the symbolism of ritual songs
+content_outline:
+- section: Introduction
+  subsections:
+  - TBD
+vocabulary:
+  required: '[]'
+  recommended: '[]'
+  forbidden: '[]'
+persona:
+  voice: Senior Specialist
+  role: Збирач фольклору
+word_target: 4000

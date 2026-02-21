@@ -1,0 +1,240 @@
+✅ Message sent to Gemini (ID: 11969) [auto-acked: self-addressed]
+✓ Message 11969 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #11969...
+📨 Message #11969
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-sherekh-fifth-kharkiv
+   Time: 2026-02-20T23:35:00.951937+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 17
+module: lit-essay-17
+level: LIT.ESSAY
+slug: sherekh-fifth-kharkiv
+version: '2.0'
+title: Sherekh Fifth Kharkiv
+subtitle: Sherekh Fifth Kharkiv
+content_outline:
+- section: Вступ та контекст
+  points: []
+- section: Аналіз ключових творів
+  points: []
+- section: Стилістика та мова автора
+  points: []
+- section: Деколонізаційна перспектива
+  points:
+  - Як цей автор руйнує імперські міфи
+  - Українська суб'єктність у тексті
+- section: Підсумок та спадщина
+  points: []
+vocabulary_hints:
+  required:
+  - історіографія
+  - наратив
+  - суб'єктність
+  recommended:
+  - деколонізація
+activity_hints:
+- type: reading
+  focus: Аналіз першоджерела
+- type: essay-response
+  focus: Критичне есе
+- type: critical-analysis
+  focus: Деконструкція тексту
+focus: literature
+pedagogy: literature
+immersion: 100% Ukrainian
+phase: LIT Expansion
+objectives:
+- Проаналізувати творчість Sherekh Fifth Kharkiv у контексті української літератури
+- Дослідити вплив автора на формування національної ідентичності
+persona:
+  voice: Senior Specialist
+  role: Urban Intellectual
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Sherekh Fifth Kharkiv
+
+## Використані джерела
+1. [Енциклопедія Сучасної України (ЕСУ)](https://esu.com.ua/) — стаття про Юрія Шевельова (Шереха), його життєвий та творчий шлях, внесок в есеїстику та літературознавство.
+2. [Історична правда / history.org.ua](https://www.istpravda.com.ua/) — аналітичні матеріали щодо концепції "Четвертого Харкова", історіософського значення ідей Шевельова для розуміння міського простору Сходу України.
+3. [Літопис (litopys.org.ua)](http://litopys.org.ua/) — оригінальний текст есею Юрія Шереха "Четвертий Харків" (1948 рік, Мюнхен), аналіз його мови та стилістики.
+
+## Хронологія
+- **1908**: Народження Юрія Шевельова у Харкові, формування його ідентичності в міському середовищі Слобожанщини.
+- **1920-ті**: Епоха "Третього Харкова", становлення Шевельова в атмосфері українського європейського модернізму (Хвильовий, Курбас, ВАПЛІТЕ).
+- **1943**: Вимушена еміграція Шевельова з Харкова через Другу світову війну.
+- **1948**: Написання та публікація в Мюнхені концептуального есею "Четвертий Харків" під псевдонімом Юрій Шерех.
+- **2013**: Знищення проросійською місцевою владою Харкова меморіальної дошки Юрію Шевельову, що стало каталізатором суспільного спротиву.
+- **2017-дотепер**: Розвиток у Харкові потужної громадсько-культурної ініціативи "П'ятий Харків" (за участю Сергія Жадана та інших інтелектуалів), яка базується на шевельовській візії майбутнього міста.
+
+## Ключові факти та цитати
+- Шерех концептуалізує історію міста через п'ять етапів: від козацької слободи (Перший) до провінції Квітки-Основ'яненка (Другий), від модерної столиці Хвильового (Третій) до зрусифікованої радянської руїни (Четвертий). П'ятий Харків — це візія вільного українського європейського міста майбутнього.
+- *«Москва робила з Харкова глуху провінцію, збиваючи з нього все те, що робило його столицею Третього Харкова»* (Ю. Шерех).
+- *«Провінція — це не територія, це стан душі»* (Ю. Шерех).
+- *«Тільки через Третій Харків лежить шлях до П'ятого Харкова, Харкова майбутньої вільної України»* (Ю. Шерех).
+
+## Engagement Hooks (mapped to sections)
+- Section "Аналіз ключових творів: Перший і Другий Харків": **[!history-bite]** Слобожанська козацька сутність Харкова як фундамент його вільного духу, часто ігнорована в радянських підручниках.
+- Section "Аналіз ключових творів: Третій Харків Хвильового": **[!context]** Епоха Розстріляного відродження та будинок "Слово" як фізичний, пульсуючий центр Третього Харкова.
+- Section "Деколонізаційна перспектива: Руйнування імперських міфів": **[!myth-buster]** Деконструкція радянського міфу про споконвічно "пролетарський, російськомовний Харьков". 
+- Section "Деколонізаційна перспектива: Повернення української суб'єктності": **[!decolonization]** Доведення тези Шереха про те, що провінційність — це політичний стан, штучно нав'язаний місту імперією через знищення еліт.
+- Section "Стилістика та мова автора: Інтелектуальний наратив Шереха": **[!quote]** "Тільки через Третій Харків лежить шлях до П'ятого Харкова..." — як формула національного ренесансу.
+- Section "Підсумок та спадщина: Рецепція ідей Шевельова": **[!culture]** Знищення дошки Шевельова у 2013 році як акт імперського вандалізму та страху перед інтелектуальною силою "П'ятого Харкова".
+
+## Деколонізаційний контекст
+- **Imperial/Soviet myth**: Харків — це російське місто, індустріальний гігант, "Перша столиця", створена більшовиками на противагу "націоналістичному" Києву, місто без глибокого українського коріння.
+- **Ukrainian reality**: Харків — це органічний слобожанський козацький простір, який у 1920-х роках став столицею найяскравішого українського європейського модернізму. Радянська індустріалізація і русифікація були не "розвитком", а свідомим інструментом денаціоналізації і провінціалізації Харкова (Четвертий Харків), що нині долається завдяки поверненню української суб'єктності (П'ятий Харків).
+
+## Contested Terms (if applicable)
+| Concept | Imperial framing | Ukrainian (decolonized) framing |
+|---------|-----------------|-------------------------------|
+| Статус Харкова | "Перша столиця" УРСР, протиставлення Києву | Каталізатор українського європейського модернізму та відродження 1920-х |
+| Сутність міста | Індустріальний пролетарський мегаполіс (русскоязичний) | Осередок інтелектуального модернізму, Третій Харків Хвильового і Курбаса |
+| Четвертий Харків | Відбудоване радянське місто-герой після війни | Зрусифікована, травмована і штучно провінціалізована Москвою територія |
+
+## Section-Mapped Research Notes
+
+### Вступ та контекст: Постать Юрія Шевельова (Шереха)
+Юрій Шевельов (літературний псевдонім — Юрій Шерех) є одним із найвпливовіших українських інтелектуалів, мовознавців та есеїстів XX століття. Його формування відбувалося в Харкові 1920-х років.
+
+### Вступ та контекст: Історичне тло есею "Четвертий Харків"
+Есей написаний у 1948 році в Мюнхені (еміграція). Це глибока історіософська рефлексія на руйнування українського обличчя Харкова після Другої світової війни та сталінських репресій.
+
+### Аналіз ключових творів: Перший і Другий Харків
+Перший Харків — козацька слобода, простір свободи. Другий Харків — місто ремісників та епохи Квітки-Основ'яненка. Це трансформація вільного козацького духу в спокійне губернське містечко імперії.
+
+### Аналіз ключових творів: Третій Харків Хвильового
+Період розквіту 1920-х років. Харків стає столицею Українського відродження. Хвильовий, Курбас, ВАПЛІТЕ творять новий, європейський вектор розвитку української нації.
+
+### Аналіз ключових творів: Четвертий Харків радянської руїни
+Радянське післявоєнне місто. Москва цілеспрямовано перетворює колишню столицю модернізму на глуху, зрусифіковану провінцію, знищуючи інтелігенцію.
+
+### Аналіз ключових творів: Візія "П'ятого Харкова"
+Проєкт майбутнього міста. П'ятий Харків має постати на фундаменті Третього (модерного і українського). Це місто вільної України, що подолало російський провінціалізм.
+
+### Стилістика та мова автора: Есеїстика як культурна зброя
+Жанр інтелектуального есею дозволяє Шереху поєднувати строгу наукову аналітику з глибокою метафоричністю, створюючи потужний історіософський наратив.
+
+### Стилістика та мова автора: Інтелектуальний наратив Шереха
+Мова Шереха відзначається складною синтаксичною будовою, іронією та сарказмом щодо радянської імперської спадщини. Місто розглядається як метафора всієї України.
+
+### Деколонізаційна перспектива: Руйнування імперських міфів
+Шерех деконструює міф про "російський пролетарський Харків". Він доводить, що радянська "Перша столиця" була інструментом поневолення, а не розвитку.
+
+### Деколонізаційна перспектива: Повернення української суб'єктності
+Шерех стверджує: без українського змісту Харків приречений бути провінцією. Українська культура є органічною і життєво необхідною для урбаністичного простору міста.
+
+### Підсумок та спадщина: Рецепція ідей Шевельова
+Довге замовчування Шереха в СРСР. Повернення його праць у 1990-х. Боротьба за його спадщину в Харкові (кейс із розбитою меморіальною дошкою у 2013 році).
+
+### Підсумок та спадщина: "П'ятий Харків" у сучасному вимірі
+Втілення ідей Шереха в сучасному Харкові через культурні ініціативи (зокрема фестиваль "П'ятий Харків" С. Жадана). Героїчний опір міста у 2022-2024 роках як остаточне народження П'ятого Харкова.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12023)
+✓ Message 11969 acknowledged
+✓ Message 12023 acknowledged

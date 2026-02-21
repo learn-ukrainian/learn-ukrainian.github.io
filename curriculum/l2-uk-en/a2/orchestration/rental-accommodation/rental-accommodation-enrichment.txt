@@ -1,0 +1,322 @@
+✅ Message sent to Gemini (ID: 10259) [auto-acked: self-addressed]
+✓ Message 10259 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10259...
+📨 Message #10259
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-rental-accommodation
+   Time: 2026-02-20T20:05:31.246690+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: a2-62
+level: A2
+sequence: 62
+slug: rental-accommodation
+version: '2.0'
+title: Rental Accommodation
+subtitle: Finding an Apartment
+content_outline:
+- section: Introduction
+  points:
+  - 'Rental market overview — cultural hook: «Без посередників» (No middlemen) is
+    a common phrase to avoid fees'
+  - 'Finding apartments — distinction between «від власника» (from owner) and «через
+    рієлтора» (via agent); collocations: комісія рієлтора, послуги рієлтора'
+- section: Presentation
+  points:
+  - 'Rental vocabulary intro — learner error: confusing «здавати» (to rent out/give)
+    with «знімати» (to rent/take)'
+- section: Reading Context
+  points:
+  - 'здається, оренда, депозит — cultural hook: «Перший і останній місяць» (paying
+    first and last month upfront) is standard practice; collocations: довгострокова
+    оренда, страховий депозит'
+  - 'Room descriptions — writing note: clearly distinguish «кімната» (room in shared
+    flat) from «однокімнатна квартира» (studio/1-bed); cultural hook: «євроремонт»
+    vs «радянський стан»'
+- section: Viewing Dialogue
+  points:
+  - Asking about features — use collocations like «квартира з євроремонтом»
+  - 'меблі, ремонт, техніка — state standard alignment: cover specific furniture vocabulary;
+    collocations: квартира з меблями, без меблів, нові меблі'
+- section: Utilities Review
+  points:
+  - 'комунальні послуги — learner error: assuming utilities are included; essential
+    question «А комунальні включені?»; collocation: плюс комунальні'
+  - газ, вода, електрика
+- section: Agreement Insight
+  points:
+  - 'договір оренди — collocation: «підписати договір оренди»'
+  - 'Terms and conditions — cultural hook: cash is often preferred for deposits; terms:
+    застава (security deposit)'
+- section: Practice
+  points:
+  - 'Inquire about apartment — learner error: using Locative instead of Accusative
+    for moving («в нову квартиру», not «в новій квартирі»)'
+  - Discuss terms
+- section: Narrative
+  points:
+  - Rental story — reinforce Accusative case for destination of moving
+vocabulary_hints:
+  required:
+  - оренда (rent) — довгострокова ~, подобова ~, вартість ~и, здати в ~у
+  - квартира (apartment) — однокімнатна ~, з євроремонтом, огляд ~и
+  - власник (owner) — від ~а, дзвонити ~у, я ~
+  - орендар (tenant)
+  - депозит (deposit) — страховий ~, повернути ~
+  - комунальні (utilities) — платити за ~, ~ включені, плюс ~
+  - договір (contract) — ~ оренди, підписати ~
+  - меблі (furniture) — квартира з ~ями, без ~ів, нові ~
+  recommended:
+  - здається (for rent)
+  - кімната (room) — зняти ~у (vs квартира)
+  - ремонт (renovation) — євроремонт, радянський стан
+  - гарантія (guarantee)
+  - застава (security deposit) — synonym for депозит
+  - умови (conditions)
+  - 'зняти (to rent/take) — ~ квартиру, ~ житло, ~ кімнату, ~ без посередників (learner
+    error: not здати)'
+  - рієлтор (realtor) — комісія ~а, без ~а, послуги ~а
+activity_hints:
+- type: match-up
+  focus: Rental vocabulary
+  items: 25
+- type: reading
+  focus: Negotiate rental terms
+  items: 10
+focus: practical
+pedagogy: PPP
+prerequisites:
+- a2-61 (Hotel Accommodation)
+connects_to:
+- a2-63 (Scheduling Appointments)
+- a2-46 (Home and Furniture)
+objectives:
+- Learner can understand rental ads
+- Learner can ask about apartment details
+- Learner can discuss lease terms
+- Learner can talk about utilities and furniture
+grammar:
+- Rental vocabulary (оренда, власник, орендар)
+- Discussing utilities (комунальні послуги)
+- Contract and lease terms
+register: розмовний
+immersion: 75-90% Ukrainian
+phase: A2.6 [Practical]
+persona:
+  voice: Encouraging Cultural Guide
+  role: Landlord
+word_target: 3000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Rental Accommodation
+
+## State Standard Reference
+§3.2: "Дім, помешкання: тип житла (квартира, приватний будинок); частини будинку і назви приміщень; меблі і предмети інтер’єру; ... винаймання квартири або будинку."
+Alignment: This module directly addresses the "винаймання квартири" (renting an apartment) requirement, along with related vocabulary for housing types, rooms, and furniture explicitly listed in the standard.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| **оренда** | High / Web Search | довгострокова ~, подобова ~, договір ~и, вартість ~и, здати в ~у |
+| **зняти** | High / Web Search | ~ квартиру, ~ житло, ~ кімнату, ~ без посередників |
+| **квартира** | High / Web Search | однокімнатна ~, ~ з євроремонтом, огляд ~и, жити у ~і |
+| **власник** | Med / Web Search | від ~а, я ~, дзвонити ~у |
+| **комунальні** | Med / Web Search | платити за ~, ~ послуги, плюс ~, ~ включені |
+| **депозит** | Med / Web Search | страховий ~, повернути ~, застава (synonym) |
+| **рієлтор** | Med / Web Search | комісія ~а, без ~а, послуги ~а |
+| **меблі** | High / Web Search | квартира з ~ями, без ~ів, нові ~ |
+
+## Cultural Hooks
+1. **"Євроремонт" vs. "Радянський стан"**: In Ukrainian rental ads, "євроремонт" (Euro-renovation) is a specific term denoting modern standards (plastic windows, modern tiling, laminate), distinguishing it from "радянський стан" (Soviet condition). It's a key value marker.
+2. **"Перший і останній місяць"**: It is standard practice to pay for the first month and the "last month" (security deposit) in cash immediately upon signing. Unlike in some countries, credit checks are rare; cash is king.
+3. **"Без посередників" (No middlemen)**: A very common phrase in ads. Ukrainians actively try to avoid real estate agents to save the commission fee (often 50% of the first month's rent).
+
+## Common Learner Errors
+1. **"Здавати" vs. "Знімати"**: Learners often confuse *to rent (take)* (`знімати` / `орендувати`) with *to rent out (give)* (`здавати`).
+   *   *Error*: Я хочу здати квартиру (when meaning "I want to rent an apartment to live in").
+   *   *Correction*: Я хочу зняти/орендувати квартиру.
+2. **Case Confusion with Location vs. Motion**: Confusing where they live (Locative) with where they are moving (Accusative).
+   *   *Error*: Я переїжджаю *в новій квартирі* (Locative).
+   *   *Correction*: Я переїжджаю *в нову квартиру* (Accusative).
+3. **Assuming Utilities are Included**: In the West, "rent" often covers water/garbage. In Ukraine, the price is almost always "X грн + комунальні" (rent + utilities). Learners forget to ask `Комунальні включені?`.
+
+## Cross-References
+- **Builds on**: `a2-61` (Hotel Accommodation - basics of staying somewhere), `a2-46` (Home and Furniture - furniture vocab).
+- **Prepares for**: `a2-63` (Scheduling Appointments - arranging viewings), `a2-contracts` (future legal/business modules).
+
+## Notes for Content Writing
+- **Realism**: Include the question "А комунальні?" in the dialogue practice — it's the #1 question prospective tenants ask.
+- **Distinction**: Clearly distinguish between `кімната` (room in a shared flat) and `однокімнатна квартира` (1-room apartment/studio), as this confuses English speakers.
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Overview of the Ukrainian rental market based on State Standard §3.2: emphasis on 'винаймання квартири' (renting) versus 'приватний будинок' (private house)."
+  - "Cultural hook: «Без посередників» (No middlemen) — explain why Ukrainians actively avoid real estate agents to save 50-100% commission fees; introduce collocations «комісія рієлтора», «послуги рієлтора»."
+  - "Cultural hook: «Перший і останній місяць» — explain the standard practice of paying the first month and a security deposit upfront in cash; distinction between «застава» and «депозит»."
+- section: "Презентація лексики (Vocabulary Presentation)"
+  words: 500
+  points:
+  - "Core verbs: distinction between «здавати» (to rent out/give) and «знімати/орендувати» (to rent/take). Learner error fix: correct 'Я хочу здати квартиру' (wrong for a tenant) to 'Я хочу зняти квартиру'."
+  - "Distinction between housing types: clearly distinguish «кімната» (room in shared flat) from «однокімнатна квартира» (1-room apartment) to avoid English speakers' confusion with 'studio'."
+  - "Frequency focus: introduce high-frequency words «оренда», «квартира», and «власник» with collocations like «від власника», «я власник»."
+- section: "Контекстне читання: Оголошення (Reading Context: Ads)"
+  words: 500
+  points:
+  - "Analysis of rental advertisements using vocabulary like «здається», «довгострокова оренда», «подобова оренда»."
+  - "Cultural hook: «Євроремонт» (modern standards like plastic windows/laminate) vs «Радянський стан» (Soviet condition) — explain these as critical value markers in Ukrainian ads."
+  - "Identifying features: «поверх» (floor), «площа» (area), and the register of abbreviations used in ads."
+- section: "Діалог: Огляд квартири (Dialogue: Viewing the Apartment)"
+  words: 600
+  points:
+  - "Asking about features: use collocations «квартира з меблями», «без меблів», «техніка». Align with State Standard §3.2 requirements for furniture and interior items."
+  - "The #1 tenant question: drill the essential inquiry «А комунальні включені?» or «Скільки за комунальні?»."
+  - "Viewing etiquette and collocations: «огляд квартири», «дзвонити власникові», «коли можна подивитися?»."
+- section: "Комунальні послуги та умови (Utilities and Conditions)"
+  words: 400
+  points:
+  - "Breakdown of «комунальні послуги»: газ, вода, електрика, опалення (heating). Explain the 'X грн + комунальні' pricing model common in Ukraine."
+  - "Learner error fix: drill the pattern 'плюс комунальні' vs 'комунальні включені' to prevent the assumption that rent covers everything."
+  - "Utility management: introduce «лічильники» (meters) and «платити за комунальні»."
+- section: "Укладання договору (Signing the Agreement)"
+  words: 300
+  points:
+  - "Legal vocabulary: «підписати договір оренди», «умови договору», «термін оренди»."
+  - "Financial terms: «страховий депозит» (security deposit), «повернути депозит», and the synonym «застава»."
+- section: "Практика та розповідь (Practice and Narrative)"
+  words: 300
+  points:
+  - "Grammar focus: Learner error fix — Case confusion with Location (Locative) vs Motion (Accusative). Drill moving «в нову квартиру» (Acc) vs living «у новій квартирі» (Loc)."
+  - "Narrative production: a story about successfully finding an apartment «без посередників» and moving in, reinforcing the Accusative case for destination."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "оренда (rent) — довгострокова ~, подобова ~, вартість ~и, здати в ~у; High frequency"
+  - "зняти (to rent/take) — ~ квартиру, ~ житло, ~ кімнату, ~ без посередників; Note: learner error to use 'здати'"
+  - "квартира (apartment) — однокімнатна ~, ~ з євроремонтом, огляд ~и, жити у ~і; High frequency"
+  - "власник (owner) — від ~а, дзвонити ~у, я ~; Medium frequency"
+  - "депозит (deposit) — страховий ~, повернути ~; Synonym: застава"
+  - "комунальні (utilities) — платити за ~, ~ включені, плюс ~, ~ послуги; Critical phrase: 'А комунальні?'"
+  - "договір (contract) — ~ оренди, підписати ~, умови ~у"
+  - "меблі (furniture) — квартира з ~ями, без ~ів, нові ~; Standard §3.2"
+  recommended:
+  - "здається (for rent) — phrase used at the start of ads"
+  - "кімната (room) — зняти ~у; distinguish from 1-room apartment"
+  - "євроремонт (Euro-renovation) — modern standard renovation"
+  - "радянський стан (Soviet condition) — old/unrenovated condition"
+  - "рієлтор (realtor) — комісія ~а, без ~а, послуги ~а"
+  - "застава (security deposit) — standard term for upfront security payment"
+  - "посередник (middleman/agent) — без ~ів (very common search filter)"
+  - "техніка (appliances) — побутова ~, квартира з ~ою"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4774 chars)
+✅ Message sent to Claude (ID: 10266)
+✓ Message 10266 acknowledged
+   Auto-acknowledged reply #10266 (stdout delivery — no inbox accumulation)
+✓ Message 10259 acknowledged

@@ -1,0 +1,13 @@
+{
+  "track": "ruth",
+  "slug": "the-ruin",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-20T12:12:31Z",
+      "task_id": "v3-the-ruin-pA",
+      "mode": "full"
+    }
+  }
+}

@@ -4,27 +4,29 @@
   "mode": "v3",
   "phases": {
     "v3-A": {
-      "status": "failed",
-      "ts": "2026-02-19T15:11:37Z"
+      "status": "complete",
+      "ts": "2026-02-20T21:30:36Z",
+      "note": "migrated-from-v2"
     },
     "v3-B": {
       "status": "complete",
-      "ts": "2026-02-19T12:56:28Z"
+      "ts": "2026-02-20T21:30:36Z",
+      "note": "migrated-from-v2"
     },
     "v3-C": {
       "status": "complete",
-      "ts": "2026-02-19T12:56:28Z",
-      "note": "adopted-existing"
+      "ts": "2026-02-20T21:30:36Z",
+      "note": "migrated-from-v2"
     },
     "v3-audit": {
       "status": "complete",
-      "ts": "2026-02-19T12:56:29Z",
-      "attempts": 1
+      "ts": "2026-02-20T21:30:36Z",
+      "note": "migrated-from-v2"
     },
     "v3-D": {
       "status": "complete",
-      "ts": "2026-02-19T12:58:26Z",
-      "attempts": 1
+      "ts": "2026-02-20T21:30:36Z",
+      "note": "migrated-from-v2"
     }
   }
 }

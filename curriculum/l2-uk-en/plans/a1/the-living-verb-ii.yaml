@@ -6,53 +6,79 @@ version: '2.0'
 title: The Living Verb II
 subtitle: Second Conjugation (-ити verbs)
 content_outline:
-- section: Warm-up
+- section: 'Вступ: Тріада гостинності (Introduction: The Triad of Hospitality)'
+  words: 400
   points:
-  - Second Conjugation — the -ити family (говорити, робити)
-  - Still imperfective (ongoing/habitual actions)
-  - Powers actions from speaking and seeing to loving
-- section: Presentation
+  - 'Introduction to Second Conjugation verbs (-ити): establishing this family as
+    the second pillar of Ukrainian verbal action, focusing on ongoing and habitual
+    meanings.'
+  - 'Cultural Motivator - The Triad of Hospitality: Establishing the verbs ''їсти''
+    (to eat), ''пити'' (to drink), and ''говорити'' (to speak) as the core of Ukrainian
+    social interaction, where connection is built through feeding and conversation.'
+  - 'Concept check: reviewing the difference between ''doing'' (imperfective) and
+    ''completing'', anchoring the module in the learner''s existing understanding
+    of present tense from Module 06.'
+- section: 'Презентація: Моделі та мутації (Presentation: Paradigms and Mutations)'
+  words: 650
   points:
-  - 'Pattern: -ити → -ю, -иш, -ить, -имо, -ите, -ять — Visual Paradigms: Compare 1st
-    (читати) vs 2nd (говорити) side-by-side to highlight vowel difference (е/є vs
-    и/і)'
-  - 'Example paradigm: говорити → говорю, говориш, говорить...'
-  - 'Consonant mutations in some verbs (д→дж, т→ч) — State Standard: сидіти (сиджу...);
-    frame ''labial L'' (роблю, люблю) as a helpful sound for easier pronunciation,
-    not just an exception'
-  - 'Common verbs (робити, бачити, любити, ходити) — include їсти and пити as ''Bonus
-    Verbs''; learner error: Conjugation Mix-up (using 1st conjugation endings like
-    роб-еш)'
-- section: Practice
+  - 'Systematic introduction of endings: -ити → -ю, -иш, -ить, -имо, -ите, -ять. Side-by-side
+    comparison with First Conjugation (читати vs говорити) to highlight the critical
+    vowel difference (е/є vs и/і).'
+  - 'State Standard competency (§4.2.4.1): Using ''сидіти'' (я сиджу) as the primary
+    model for consonant mutation (д→дж) in the first person singular.'
+  - 'Phonetic framing of the ''Labial L'' in ''люблю'' and ''роблю'': teaching the
+    epenthetic ''l'' not just as a rule, but as a physical aid to separate labial
+    consonants (б, п, в, м, ф) from the ''ю'' sound.'
+  - 'The irregularity of ''їсти'' (to eat): explicitly teaching the correct ''я їм''
+    form and contrasting it with the common learner error ''я їджу'' or ''я їстю''.'
+  - Distinction between 'бачити' (to see - result/faculty) and 'дивитися' (to watch
+    - process) to prevent semantic confusion in early sentence building.
+- section: 'Практика: Помилки та автоматизація (Practice: Errors and Automation)'
+  words: 500
   points:
-  - Conjugation drills with -ити verbs
-  - Sorting verbs by conjugation (1st vs 2nd)
-- section: Production
+  - 'Contrastive drills to prevent Conjugation Mixing: identifying and correcting
+    the habit of applying 1st conjugation endings to 2nd conjugation verbs (e.g.,
+    ''ти робиш'' vs incorrect ''ти робеш'').'
+  - 'Mutation Mastery: intensive ''Я''-form drills with verbs like ''ходити'' (ходжу),
+    ''сидіти'' (сиджу), and ''платити'' (плачу) to eliminate omission errors like
+    ''я ходю'' or ''я сидю''.'
+  - 'Sorting exercises: categorization of 1st and 2nd conjugation verbs to build structural
+    intuition for vowel patterns in endings.'
+- section: Продукування та культурний контекст (Production and Cultural Context)
+  words: 450
   points:
-  - 'Describing what people do (Вона бачить, Вони люблять) — use collocations: робити
-    помилки, любити читати, бачити світ'
-- section: Cultural Insight
-  points:
-  - 'The -ити ending is over 1000 years old (Proto-Slavic) — Proto-Slavic Roots: Direct
-    descendant of *-iti class, structurally recognizable for 1000+ years'
-  - 'Shared with Polish, Czech, and other Slavic languages — The Etymology of ''Любити'':
-    Shares roots with ''люди'' (people), implying to love is to be part of the community'
+  - 'Contextual Production: describing daily routines and interests using high-frequency
+    collocations such as ''робити домашнє завдання'', ''любити природу'', and ''говорити
+    українською''.'
+  - 'Deep Culture - The Etymology of ''Любити'': exploring the PIE root (*lewdh-)
+    shared with ''люди'' (people) and ''людство'' (humanity), illustrating how love
+    is intrinsically linked to community belonging.'
+  - 'Social Ethics of Hospitality: discussing the weight of ''їсти'' and ''пити''
+    in hosting, noting that refusing a meal (''не їсти'') can be perceived as a rejection
+    of the host''s goodwill.'
 vocabulary_hints:
   required:
-  - говорити (to speak) — говорити українською, говорити повільно
-  - робити (to do) — робити помилки, робити вибір
-  - любити (to love) — любити читати, любити музику
-  - бачити (to see) — бачити світ, бачити сон
-  - 'їсти (to eat) — хочу їсти, готувати їсти; learner error: attempting regular conjugation
-    (я їджу)'
-  - пити (to drink) — пити каву, пити воду
-  - ходити (to walk) — ходити в парк, ходити до школи
-  - просити (to ask)
+  - говорити (to speak) — говорити українською, говорити правду; High Frequency (Top
+    100). Part of the 'Hospitality Triad'.
+  - 'робити (to do) — робити домашнє завдання, робити покупки, робити вибір; High
+    Frequency (Top 50). Note labial mutation: ''я роблю''.'
+  - бачити (to see) — я бачу, радий бачити, бачити на власні очі; High Frequency (Top
+    200). Focus on result/faculty.
+  - 'любити (to love) — я люблю тебе, любити природу, любити читати; shares PIE root
+    with ''люди'' (people). Note labial mutation: ''я люблю''.'
+  - 'їсти (to eat) — хотіти їсти, смачно їсти; Irregular: ''я їм'', ''ти їси'', ''він
+    їсть''. Learner error: avoid ''я їджу''.'
+  - пити (to drink) — пити каву, пити воду; High Frequency. Essential for cultural
+    hospitality contexts.
+  - ходити (to walk) — ходити в парк, ходити до школи; involves mutation 'я ходжу'
+    (д→дж).
+  - просити (to ask) — просити допомоги; involves mutation 'я прошу' (с→ш).
   recommended:
-  - сидіти (to sit) — State Standard example for consonant mutation (сиджу)
-  - стояти (to stand)
-  - платити (to pay)
-  - вчити (to teach/learn)
+  - сидіти (to sit) — State Standard example for consonant mutation (я сиджу).
+  - стояти (to stand) — high frequency positional verb; note 'вони стоять' ending.
+  - платити (to pay) — useful for practical scenarios; involves mutation 'я плачу'
+    (т→ч).
+  - вчити (to teach/learn) — вчити мову; frequent 2nd conjugation verb with 'и' stem.
 activity_hints:
 - type: fill-in
   focus: Conjugate Second Conjugation verbs

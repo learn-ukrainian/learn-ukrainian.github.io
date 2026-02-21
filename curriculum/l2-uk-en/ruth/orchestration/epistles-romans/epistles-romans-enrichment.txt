@@ -1,0 +1,216 @@
+✅ Message sent to Gemini (ID: 12422) [auto-acked: self-addressed]
+✓ Message 12422 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12422...
+📨 Message #12422
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-epistles-romans
+   Time: 2026-02-20T23:39:34.576281+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 41
+module: ruth-041
+module_number: 33
+slug: epistles-romans
+title_uk: 'Послання: Римляни'
+title_en: 'The Epistles: Romans'
+phase: 2
+phase_id: sacred-word
+phase_name: Sacred Word
+focus: Theological terminology — Оправданіє, Благодать
+content_outline:
+- section: Вступ
+  description: 'Introduction to The Epistles: Romans'
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Baroque Scholar
+  role: Pauline Exegete
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Epistles Romans (Ruthenian Context)
+
+## Використані джерела
+1. [Іван Огієнко. Історія української літературної мови. XVI століття](http://litopys.org.ua/ohienko/oh09.htm) — Аналіз перекладів Валентина Негалевського та Крехівського Апостола.
+2. [Німчук В. В. Історія української мови. Морфологія](http://litopys.org.ua/ukrmova/um.htm) — Особливості дієвідмінювання та лексики у пам'ятках XVI ст.
+3. [Острозька Біблія 1581 р.](https://starodruky.ostrohcastle.com.ua) — Факсимільне видання, текст Послання до Римлян церковнослов'янською.
+4. [Пересопницьке Євангеліє та його місце в історії](http://litopys.org.ua) — Контекст перекладів "простою мовою".
+5. [Чепіга І. П. Валентин Негалевський — перекладач Святого Письма](http://litopys.org.ua) — Детальний аналіз лексики Негалевського (зокрема термін "винуватець").
+
+## Хронологія
+- 1525: Франциск Скорина видає «Апостол» у Вільні (білорусько-українська книжна мова).
+- 1560-ті: Створення рукописного Крехівського Апостола (переклад з Радзивіллівської Біблії народною мовою).
+- 1574: Іван Федоров друкує «Апостол» у Львові (церковнослов'янська мова).
+- 1581: Вихід Острозької Біблії (канонічний церковнослов'янський текст).
+- 1581: Валентин Негалевський завершує переклад Нового Заповіту «простою мовою» (с. Хорошів).
+- 1590-ті: Активне використання цитат з Римлян у полемічній літературі (Клірик Острозький vs Іпатій Потій).
+
+## Ключові факти та цитати
+- **Негалевський (1581)**: Унікальний переклад з польської (Мартин Чехович, соцініанин). Використовує полонізми та народні терміни.
+  - *Цитата (реконструкція концепту)*: Замість традиційного «грішник» вживає термін «винуватець» (боржник), наслідуючи польське *winowajca*. Це відображає юридичне розуміння виправдання (Justification) як сплати боргу.
+- **Острозька Біблія (1581)**:
+  - *Рим. 1:17*: «Правда бо Божия в нем являеться от веры в веру, яко же есть писано: праведный же от веры жив будет».
+  - Консервативна стратегія перекладу, орієнтація на грецький оригінал, але збереження архаїчних форм.
+- **Теологічний конфлікт**: Послання до Римлян було центром протестантської теології (Sola Fide — виправдання вірою). Українські перекладачі мусили обирати терміни для *dikaiosyne* (правда/праведність/оправдання) та *charis* (благодать/ласка).
+
+## Engagement Hooks (mapped to sections)
+- Section "Історичний контекст": [!context] — Пояснити, чому Послання до Римлян називали "Євангелієм Павла" і чому воно стало "полем битви" Реформації на українських землях.
+- Section "Валентин Негалевський": [!myth-buster] — Міф про те, що "проста мова" була мовою черні. Реальність: шляхтич Негалевський перекладав нею для освіченої аудиторії, яка прагнула розуміння.
+- Section "Острозька Біблія": [!culture] — Острозька Біблія як відповідь на виклик Реформації: не спрощення, а повернення до високого стилю для захисту православ'я.
+- Section "Оправдання": [!decolonization] — Як російська синодальна традиція пізніше уніфікувала термінологію, витіснивши питомі українські варіанти (наприклад, "справедливість" vs "правда").
+- Section "Благодать": [!history-bite] — "Благодать" як юридичний термін у Литовському Статуті (королівська милість) vs богословське поняття.
+- Section "Рецепція": [!quote] — Цитати з полемістів (Вишенського), які застерігали від "простих слів" у сакральних текстах.
+
+## Деколонізаційний контекст
+- **Міф**: Українська біблійна традиція є лише відгалуженням "загальноросійської" або церковнослов'янської без власного обличчя.
+- **Реальність**: Існування потужної течії перекладів "простою мовою" (Крехівський Апостол, Негалевський) у XVI ст. доводить, що українці мали власну реформаційну традицію та живу мовну практику в церкві задовго до російських перекладів XIX ст.
+
+## Contested Terms (if applicable)
+| Concept | Imperial/Synodal framing | Ukrainian/Ruthenian framing |
+|---------|--------------------------|-----------------------------|
+| *Dikaiosyne* | Праведность (статика, стан) | Оправданіє / Справедливість (дія, процес, юридичний аспект) |
+| *Hamartia* | Грѣхъ (релігійне порушення) | Вина / Борг (Негалевський) (юридична відповідальність) |
+| *Language* | "Западнорусский язык" | Руська мова / Проста мова (Middle Ukrainian) |
+
+## Section-Mapped Research Notes
+
+### Історичний контекст: Послання до Римлян у XVI ст.
+- Послання як маніфест Реформації. Лютер назвав його "найголовнішою частиною НЗ".
+- Вплив на українські землі: проникнення протестантизму (кальвінізм, соцініанство) через Польщу.
+- Потреба у зрозумілому тексті для полеміки.
+
+### Валентин Негалевський та "проста мова"
+- Унікальність: переклад з польської (а не з церковнослов'янської чи грецької).
+- Соцініанський вплив: раціоналістичний підхід до тексту.
+- Лексика: полонізми (*костел* замість *церква*), але жива народна граматика.
+
+### Острозька Біблія: Стандарт високого стилю
+- Відмова від "простої мови" на користь сакральної мови.
+- Політичний жест князя Острозького: ми маємо свою "латину" (слов'янську мову).
+- Текст Римлян в Острозькій Біблії — це еталон, з яким змагалися переклади народною мовою.
+
+### Богословський концепт: Оправданіє (Justification)
+- Рим. 3:24 "оправдувані дарма благодаттю Його".
+- Як перекладали *dikaioumenoi*: "оправдані" чи "справедливі"?
+- Зв'язок із судовою термінологією того часу (триб, декрет, вирок).
+
+### Богословський концепт: Благодать (Grace)
+- *Charis*: "ласка" (польський вплив) vs "благодать" (слов'янська традиція).
+- Розуміння благодаті як незаслуженого дару vs "енергії".
+- Полеміка навколо природи благодаті в контексті Берестейської унії.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12472)
+✓ Message 12422 acknowledged
+✓ Message 12472 acknowledged

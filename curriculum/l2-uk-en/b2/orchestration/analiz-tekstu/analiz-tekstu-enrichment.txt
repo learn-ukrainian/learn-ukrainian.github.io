@@ -1,0 +1,276 @@
+✅ Message sent to Gemini (ID: 10627) [auto-acked: self-addressed]
+✓ Message 10627 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10627...
+📨 Message #10627
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-analiz-tekstu
+   Time: 2026-02-20T20:45:37.644903+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b2-80
+level: B2
+sequence: 80
+slug: analiz-tekstu
+version: '2.0'
+title: Аналіз тексту
+subtitle: Text Analysis
+content_outline:
+- section: Розминка — Поглиблений аналіз
+  points:
+  - Від базового аналізу (М78) до комплексного підходу
+  - Багатошаровість тексту — зміст, форма, контекст
+  - Мета аналізу — розуміння та оцінка
+- section: Аналіз авторської позиції
+  points:
+  - Явна vs прихована позиція автора
+  - Мовні маркери авторського ставлення
+  - Іронія та сарказм — як розпізнати
+  - Реконструкція авторського світогляду
+- section: Контекстуальний аналіз
+  points:
+  - Історичний контекст — коли і чому написано
+  - Соціальний контекст — для кого написано
+  - Інтертекстуальність — зв'язки з іншими текстами
+  - Культурні алюзії та їх розшифрування
+- section: Аналіз аргументації
+  points:
+  - Структура аргументу (теза, докази, висновок)
+  - Типи логічних зв'язків (причина-наслідок, порівняння)
+  - Логічні помилки та хибні аргументи
+  - Оцінка переконливості аргументації
+- section: Стилістичний аналіз
+  points:
+  - Вибір лексики — нейтральна, емоційна, термінологічна
+  - Синтаксис — прості vs складні речення, їх ефект
+  - Тропи та фігури мови
+  - Регістр та його відповідність жанру
+- section: Підсумок та практика
+  points:
+  - Комплексний аналіз тексту — від форми до змісту
+  - Написання аналітичного есе
+  - Застосування у capstone проєкті
+focus: skills
+pedagogy: CBI
+objectives:
+- Analyze texts for subtext and author intent
+- Identify bias and manipulation in media
+- Understand rhetorical structure of arguments
+grammar:
+- Rhetorical analysis methods
+- Identifying bias and subtext
+phase: B2.4 Skills & Capstone
+vocabulary_hints:
+  required:
+  - термін (term)
+  - поняття (concept)
+  - процес (process)
+  - метод (method)
+  recommended:
+  - аналіз (analysis)
+  - синтез (synthesis)
+  - дослідження (research)
+activity_hints:
+- type: reading
+  focus: Аналіз тексту
+  items: 4
+- type: essay-response
+  focus: Практичне застосування
+- type: true-false
+  focus: Перевірка розуміння
+  items: 8
+persona:
+  voice: Professional Language Coach
+  role: Philologist (Філолог)
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Аналіз тексту
+
+## State Standard Reference
+§4.4.1.2, §4.4.1.3: "Стилістичні засоби лексики: антоніми, синоніми, омоніми, епітети, метафори... Стилістичні засоби синтаксису: звертання, еліпсис, повтор, порівняння, уточнення, елементи структурування тексту (вставні слова)."
+Alignment: This module directly teaches the identification and analysis of these stylistic devices (lexical and syntactic) to deconstruct authorial intent and text structure, as required for B2/C1 competence.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| термін (term) | High (Academic/Science) | науковий термін, технічний термін, визначення терміна, вживати термін |
+| поняття (concept) | High (Academic/Philosophy) | ключове поняття, підмінити поняття, сформувати поняття, розширити поняття |
+| процес (process) | Very High (General/Academic) | творчий процес, історичний процес, процес аналізу, прискорити процес |
+| метод (method) | High (Academic/Science) | метод дослідження, ефективний метод, науковий метод, метод дедукції |
+| аналіз (analysis) | Very High (Academic/Media) | глибокий аналіз, критичний аналіз, аналіз тексту, зробити аналіз |
+
+## Cultural Hooks
+1. **Post-Colonial Reading**: Ukrainian literary analysis has a strong tradition of "reading between the lines" (Езопова мова - Aesopian language) developed during censorship eras (Russian Empire, USSR). Critics look for subtextual resistance and national identity markers hidden in seemingly neutral texts.
+2. **Shevchenko vs. Franko**: The contrast between Taras Shevchenko's emotional, romantic, "prophetic" style and Ivan Franko's analytical, rational, European-integrated approach serves as the foundational archetype for discussing "Style" and "Authorial Position" in Ukrainian philology.
+
+## Common Learner Errors
+1. **Literal Translation of Idioms** → Misses the figurative meaning (e.g., translating "пекти раків" as "baking crayfish" instead of "blushing/feeling ashamed"). *Correction*: Identify the phrase as a fixed unit before analyzing.
+2. **Confusing Register** → Treating academic text as conversational or vice-versa. *Correction*: Analyze lexical markers (slang vs. terminology) to determine the target audience and tone.
+3. **Ignoring Word Order Emphasis** → Thinking word order is purely random. *Correction*: In Ukrainian, the most important information often comes at the end of the sentence (rheme). Ignoring this leads to misinterpreting the author's logical stress.
+
+## Cross-References
+- Builds on: B2-78 (Basic Analysis - likely "Розуміння прочитаного" or similar skill module mentioned in plan), B2-Grammar modules (Participles/Deepriepryslivnyky for syntax analysis).
+- Prepares for: B2-94 (Final Exam/Capstone), C1 Literature Track (LIT modules).
+
+## Notes for Content Writing
+- **Persona**: The "Philologist" persona should treat the student as a colleague-in-training, using precise terminology but explaining it clearly.
+- **Examples**: Use excerpts that clearly demonstrate *intent* (e.g., a news headline manipulating opinion vs. a neutral report) to make "Analysis" practical, not just theoretical.
+- **Terminology**: Ensure strict distinction between "тема" (topic) and "ідея" (main idea/message), as this is a classic stumbling block.
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ та термінологічні засади (Introduction and Terminological Foundations)"
+  words: 600
+  points:
+  - "Перехід від базового аналізу (М78) до комплексного філологічного підходу — текст як багатошарова система"
+  - "Чітке розмежування ключових понять: «тема» (про що текст) vs «ідея» (головне повідомлення/меседж автора)"
+  - "Методологія глибокого читання: від аналізу форми до розуміння прихованих змістів та авторської мети"
+- section: "Стилістичні засоби та синтаксис (Stylistic Means and Syntax)"
+  words: 1000
+  points:
+  - "Стилістичні засоби лексики згідно з Держстандартом (§4.4.1.2): роль епітетів, метафор та антонімів у тексті"
+  - "Стилістичні засоби синтаксису (§4.4.1.3): використання еліпсису, звертань та вставних слів для структурування"
+  - "Принцип актуального членування речення: виявлення «реми» (найважливішої інформації), що зазвичай стоїть у кінці"
+  - "Аналіз логічного наголосу: як порядок слів утворює змістові акценти та впливає на сприйняття аргументу"
+- section: "Авторська позиція та культурні архетипи (Authorial Position and Cultural Archetypes)"
+  words: 800
+  points:
+  - "Явна vs прихована позиція автора: маркери ставлення та мовні засоби вираження суб'єктивності"
+  - "Культурний архетип: порівняння емоційно-пророчого стилю Т. Шевченка та аналітичного підходу І. Франка"
+  - "Феномен «Езопової мови»: історичний досвід розкодування підтексту в умовах цензури та колоніального тиску"
+  - "Виявлення іронії, сарказму та модальності як інструментів реконструкції авторського світогляду"
+- section: "Контекстуальний аналіз та деколонізація (Contextual Analysis and Decolonization)"
+  words: 800
+  points:
+  - "Історичний та соціальний контекст: аналіз того, для кого і з якою метою було створено конкретний текст"
+  - "Постколоніальна оптика: пошук маркерів національної ідентичності та спротив імперським наративам у підтексті"
+  - "Інтертекстуальність та алюзії: виявлення зв'язків з іншими текстами українського та світового канону"
+  - "Робота з культурним кодом: розшифрування символів, зрозумілих носіям мови, але прихованих для іноземця"
+- section: "Логіка аргументації та запобігання помилкам (Argumentation Logic and Error Prevention)"
+  words: 800
+  points:
+  - "Структура аргументу (теза, докази, висновок) та оцінка переконливості за допомогою логічних зв'язків"
+  - "Типова помилка: буквальний переклад ідіом (напр. «пекти раків»); стратегія ідентифікації сталих виразів"
+  - "Помилка регістру: аналіз лексичних маркерів (сленг vs термінологія) для визначення тону повідомлення"
+  - "Виявлення маніпулятивних прийомів, логічних помилок та хибних аргументів у сучасних медіа-текстах"
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "термін (term) — науковий термін, вживати термін; висока частотність в академічному контексті"
+  - "поняття (concept) — ключове поняття, підмінити поняття; вживається для філософських та абстрактних категорій"
+  - "процес (process) — творчий процес, процес аналізу; загальновживаний термін з високою частотністю"
+  - "метод (method) — науковий метод, метод дедукції; ключове слово для методологічного аналізу"
+  recommended:
+  - "аналіз (analysis) — глибокий аналіз, критичний аналіз; базове поняття для медіаграмотності"
+  - "синтез (synthesis) — логічний синтез; антонім до аналізу, вживається в науковому стилі"
+  - "дослідження (research) — об'єкт дослідження, проводити дослідження; маркер академічного регістра"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (3522 chars)
+✅ Message sent to Claude (ID: 10634)
+✓ Message 10634 acknowledged
+   Auto-acknowledged reply #10634 (stdout delivery — no inbox accumulation)
+✓ Message 10627 acknowledged

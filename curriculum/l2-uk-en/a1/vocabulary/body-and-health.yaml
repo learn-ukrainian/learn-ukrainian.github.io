@@ -91,7 +91,7 @@ items:
     translation: 'prescription'
     pos: 'noun'
     gender: 'm'
-    example: 'Ліки за рецептом.'
+    example: 'У мене є рецепт.'
   - lemma: 'однина'
     translation: 'singular (grammar)'
     pos: 'noun'

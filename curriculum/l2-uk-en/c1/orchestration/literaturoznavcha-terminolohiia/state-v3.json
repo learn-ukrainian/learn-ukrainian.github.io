@@ -2,12 +2,5 @@
   "track": "c1",
   "slug": "literaturoznavcha-terminolohiia",
   "mode": "v3",
-  "phases": {
-    "v3-A": {
-      "status": "complete",
-      "ts": "2026-02-19T17:48:29Z",
-      "task_id": "v3-literaturoznavcha-terminolohiia-pA",
-      "mode": "full"
-    }
-  }
+  "phases": {}
 }

@@ -1,0 +1,40 @@
+module: c1-092
+level: C1
+sequence: 92
+slug: istoriia-ukrainskoi-literatury
+version: '2.0'
+title: Історія української літератури
+subtitle: History of Ukrainian Literature
+content_outline:
+- section: Розминка — Від літопису до роману
+  points:
+  - Київська Русь — літописи, житія, повісті
+  - Бароко — Сковорода як філософ-поет
+  - Романтизм та національне пробудження
+- section: Content Areas
+  points:
+  - 'Давня література: chronicles, religious texts, polemics'
+  - 'Бароко: Сковорода, Кониський'
+  - 'Романтизм: national awakening'
+  - 'Реалізм: social consciousness'
+  - 'Модернізм: early 20th century experimentation'
+- section: Практика — літературна історія
+  points:
+  - Проаналізувати фрагмент Повісті минулих літ
+  - Порівняти барокову та романтичну поезію
+  - Написати есе про вплив соціального контексту на літературу
+  - Обговорити зв'язок між модернізмом та національним відродженням
+focus: literature
+pedagogy: Immersion & Analysis
+objectives:
+- Overview of major periods in Ukrainian literature
+- Identify key authors and movements
+- Understand the socio-political context of literary development
+grammar:
+- Literary analysis register
+- Historical present in narrative
+phase: C1.6 Literature
+persona:
+  voice: Senior Specialist
+  role: Професор літератури
+word_target: 4000

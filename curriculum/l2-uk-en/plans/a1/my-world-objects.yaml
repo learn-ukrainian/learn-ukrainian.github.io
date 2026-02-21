@@ -6,57 +6,70 @@ version: '2.0'
 title: 'My World: Objects'
 subtitle: Pointing to Things with Demonstratives
 content_outline:
-- section: Warm-up
+- section: Вступ (Introduction)
+  words: 350
   points:
-  - Demonstratives point to things — "this one" or "that one" — visual scaffolding
-    essential (finger touching vs pointing)
-  - In Ukrainian, demonstratives change by gender (m/f/n/pl) — aligns with State Standard
-    §4.2.2 (demonstrative pronouns)
-  - Using gender knowledge from Module 03 — reinforcing endings without explicit reteaching
-- section: Presentation
+  - Recap of a1-03 (Gender) and a1-04 (Identification) as the grammatical foundation
+    for demonstrative specification.
+  - Introduction of the proverb «В гостях добре, а вдома краще» (East or West, home
+    is best) to anchor the home-centric vocabulary and cultural value of 'дім'.
+  - Overview of State Standard §4.2.2 regarding the formation and usage of gendered
+    and plural forms of the demonstrative pronouns 'цей' and 'той'.
+- section: Презентація (Presentation)
+  words: 650
   points:
-  - 'Near demonstratives: цей (m), ця (f), це (n), ці (pl)'
-  - 'Far demonstratives: той (m), та (f), те (n), ті (pl) — proximity confusion is
-    a common learner error'
-  - 'Match demonstrative to noun gender — learner error: mismatching gender (e.g.,
-    Цей книга)'
-  - 'Dual meaning of це: neuter "this" AND general "this is" — critical distinction:
-    Це + Noun (Identification) vs Цей + Noun (Specification)'
-- section: Practice
+  - 'Visual scaffolding: Distinguishing ''Near'' (цей/ця/це/ці) via hand-touching
+    icons vs. ''Far'' (той/та/те/ті) via finger-pointing icons.'
+  - 'The ''Identification vs. Specification'' hurdle: Differentiate ''Це стіл'' (This
+    is a table - Identification) from ''Цей стіл'' (This table - Specification) with
+    English metalanguage.'
+  - 'Formation of plural forms: Introducing ''ці'' and ''ті'' with emphasis on inherently
+    plural nouns like ''двері'' (ці двері) as mentioned in research.'
+  - 'Gender agreement patterns: Demonstrating the rhyming sound association between
+    demonstrative endings and noun endings (e.g., цЯ книгА, цЕ вікнО) to prevent mismatch.'
+- section: Практика (Practice)
+  words: 450
   points:
-  - 'Kitchen objects: ніж (m), ложка (f), блюдо (n)'
-  - 'Furniture: диван (m), шафа (f), крісло (n)'
-  - 'Room vocabulary with gender agreement — cultural hook: "В гостях добре, а вдома
-    краще" (East or West, home is best)'
-- section: Cultural Insight
+  - 'Drill: Gender Matching. Correcting the common learner error ''цей книга'' using
+    minimal pairs and phonological reinforcement of the feminine ''-а'' ending.'
+  - 'Household categorization: Grouping kitchen objects (ніж, ложка, блюдо) and furniture
+    (диван, шафа, крісло) by their grammatical gender.'
+  - 'Proximity mnemonic: Using the ''T'' for ''There/That'' association (той/та) to
+    resolve proximity confusion between near and far objects during identification
+    tasks.'
+- section: Культурний контекст (Cultural Insight)
+  words: 300
   points:
-  - Why телефон is masculine but лампа is feminine
-  - Ukrainian home vocabulary across all three genders — distinction between traditional
-    хата (rural house) and modern квартира (apartment)
-  - The "Pokuttia" (Red Corner) concept — traditional special place for icons/rushnyky,
-    relevant even in modern layouts
-- section: Production
+  - 'The Traditional Ukrainian Home: Explaining the ''Покуття'' (Pokuttia/Red Corner)
+    concept as a spiritual focal point for icons and rushnyky, even in modern layouts.'
+  - 'Lexical distinctions in dwelling: Comparing the traditional rural ''хата'' with
+    the modern urban ''квартира'' and the general concept of ''дім''.'
+- section: Продукція та підсумок (Production and Summary)
+  words: 250
   points:
-  - Navigate a living space naming objects — differentiate between objects near (цей)
-    and far (той)
-  - Point and identify using correct demonstratives
+  - 'Persona Task: ''Interior Designer''. Navigating a living space, pointing to distant
+    and near objects, and correctly specifying them with gender-matched demonstratives.'
+  - 'Review of Standard §4.2.2 competencies: Self-assessment on matching demonstrative
+    gender and number with 40 household and everyday objects.'
 vocabulary_hints:
   required:
-  - цей (this m.) — цей стіл, цей будинок
-  - ця (this f.) — ця книга, ця кімната
-  - той (that m.) — той чоловік, той парк
-  - та (that f.) — та жінка
-  - стіл (table) — на столі, письмовий стіл
-  - книга (book) — цікава книга, читати книгу
+  - цей / ця / це / ці (this) — High frequency (Top 100); цей стіл, ця кімната, це
+    вікно, ці речі
+  - той / та / те / ті (that) — High frequency (Top 200); той будинок, та жінка, те
+    місце, ті люди
+  - стіл (table) — Household high frequency; на столі, за столом, письмовий стіл,
+    обідній стіл
+  - книга (book) — цікава книга, читати книгу; note the rhyme with 'ця'
   - телефон (phone) — мобільний телефон, мій телефон
   - кімната (room) — моя кімната, велика кімната
   recommended:
   - стілець (chair) — зручний стілець
-  - ліжко (bed) — велике ліжко
+  - ліжко (bed) — Medium household frequency; у ліжку, лягати в ліжко, велике ліжко
   - лампа (lamp) — настільна лампа
-  - вікно (window) — біля вікна, це вікно
-  - шафа (wardrobe) — у шафі
-  - двері (door) — вхідні двері (plural only in Ukr)
+  - вікно (window) — High frequency general; біля вікна, дивитися у вікно, відчинити
+    вікно
+  - шафа (wardrobe) — High frequency household; у шафі, книжкова шафа, шафа для одягу
+  - двері (door) — Plural only in Ukrainian (ці двері); вхідні двері
 activity_hints:
 - type: match-up
   focus: Label room objects

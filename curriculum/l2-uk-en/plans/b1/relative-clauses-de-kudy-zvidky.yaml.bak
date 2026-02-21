@@ -1,0 +1,86 @@
+module: b1-27
+level: B1
+sequence: 27
+slug: relative-clauses-de-kudy-zvidky
+version: '2.0'
+title: 'Підрядні означальні: де, куди, звідки'
+subtitle: Place Relative Clauses
+content_outline:
+- section: Тест
+  points: '[]'
+- section: Теорія
+  points:
+  - Три типи просторових відносин
+  - Споріднені прислівники
+- section: Поглиблення
+  points:
+  - Де — статична локація
+  - Куди — напрямок руху
+  - Звідки — походження
+  - Типові помилки та як їх уникнути
+  - Невизначені та заперечні форми
+- section: Практика
+  points: '[]'
+- section: Діалоги
+  points:
+  - 'Діалог 1: Про переїзд'
+  - 'Діалог 2: Про подорож'
+  - 'Діалог 3: Про роботу'
+  - 'Діалог 4: Про навчання'
+  - 'Діалог 5: Про походження'
+- section: Українське прислів'я
+  points: '[]'
+- section: Потрібно більше практики?
+  points:
+  - Інтеграція знань
+  - Реальне застосування
+  - Онлайн-ресурси
+vocabulary_hints:
+  required:
+  - де (where - location)
+  - куди (where - to)
+  - звідки (where - from)
+  - місце (place)
+  - напрямок (direction)
+  - розташування (location)
+  - походження (origin)
+  - рух (movement)
+  recommended:
+  - статичний (static)
+  - динамічний (dynamic)
+  - призначення (destination)
+  - джерело (source)
+activity_hints:
+- type: fill-in
+  focus: де/куди/звідки selection
+  items: 25
+- type: error-correction
+  focus: Combine with place relatives
+  items: 20
+- type: match-up
+  focus: Match sentences to meanings
+  items: 15
+- type: translate
+  focus: English to Ukrainian
+  items: 15
+focus: grammar
+pedagogy: TTT
+prerequisites:
+- b1-26 (Relative Clauses який)
+connects_to:
+- b1-28 (Relative Clauses коли/що)
+objectives:
+- Learner understands difference between де, куди, звідки
+- Learner can form relative clauses describing places
+- Learner can choose correct place relative for context
+- Learner can combine location and direction in clauses
+grammar:
+- Place relatives with де (where - location)
+- Place relatives with куди (where - direction to)
+- Place relatives with звідки (where - direction from)
+register: розмовний
+phase: B1.3a [Complex Sentences]
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Geographer
+word_target: 4000

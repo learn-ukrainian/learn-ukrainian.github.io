@@ -2,12 +2,5 @@
   "track": "c1",
   "slug": "essay-writing-practice",
   "mode": "v3",
-  "phases": {
-    "v3-A": {
-      "status": "complete",
-      "ts": "2026-02-19T13:29:20Z",
-      "task_id": "v3-essay-writing-practice-pA",
-      "mode": "full"
-    }
-  }
+  "phases": {}
 }

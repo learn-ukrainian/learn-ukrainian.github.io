@@ -1,0 +1,306 @@
+✅ Message sent to Gemini (ID: 12540) [auto-acked: self-addressed]
+✓ Message 12540 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12540...
+📨 Message #12540
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-holodomor-mekhanizmy-i
+   Time: 2026-02-20T23:40:34.421004+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-hist-046
+level: c1-hist
+sequence: 46
+version: '1.0'
+title: 'Механізми Голодомору I: Колективізація'
+focus: history
+pedagogy: seminar
+objectives:
+- 'Analyze the causes and consequences of механізми голодомору i: колективізація'
+- Evaluate the historical significance of як створили голод
+content_outline:
+- section: Вступ — Як створили голод
+  subsections:
+  - Голодомор — не випадковість
+  - Колективізація — передумова
+  - Як економічна політика стала зброєю
+  - Структура модуля
+- section: Сталінська колективізація
+  subsections:
+  - Мета — індустріалізація за рахунок села
+  - П'ятирічка в чотири роки
+  - Знищення приватного господарства
+  - Чому саме Україна — житниця
+- section: Розкуркулення
+  subsections:
+  - Хто такий «куркуль»?
+  - Три категорії — розстріл, заслання, виселення
+  - Масштаби — скільки постраждало
+  - Знищення найкращих господарів
+  - Як це вплинуло на врожай
+- section: Колгоспна система
+  subsections:
+  - Як працював колгосп
+  - Вилучення зерна — механізм
+  - Трудодні — нова форма кріпацтва
+  - Чому селяни чинили опір
+  - Форми опору
+- section: Україна vs. інші регіони
+  subsections:
+  - Чому Україна особливий випадок
+  - Більший тиск — чому
+  - Порівняння з Росією, Казахстаном
+  - Націоналістичний компонент
+- section: Від колективізації до голоду
+  subsections:
+  - 1930-1931 — вже голод
+  - Ігнорування сигналів
+  - Ескалація 1932 року
+  - Підготовка до наступного модуля
+- section: Підсумок
+  subsections:
+  - Колективізація як фундамент
+  - Без неї — немає Голодомору
+  - Зв'язок механізмів
+vocabulary:
+- колективізація
+- колгосп
+- куркуль
+- розкуркулення
+- вилучення
+- трудодень
+- індустріалізація
+- п'ятирічка
+- кріпацтво
+- опір
+- радгосп
+- МТС
+- хлібозаготівлі
+- норма
+- саботаж
+activities:
+- type: critical-analysis
+  focus: 'Map the chain: collectivization → famine'
+- type: critical-analysis
+  focus: Analyze \"kulak\" categorization — who decided, how?
+- type: comparative-study
+  focus: Compare Ukrainian and Russian collectivization quotas
+- type: reading
+  focus: Analyze a dekulakization order
+- type: essay-response
+  focus: Як колективізація створила передумови для Голодомору?
+sources:
+- name: Колективізація в УРСР (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Колективізація_в_УРСР
+  type: reference
+  notes: Ukrainian collectivization
+- name: Розкуркулення (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Розкуркулення
+  type: reference
+  notes: Dekulakization
+- name: Колгосп (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Колгосп
+  type: reference
+  notes: Collective farm system
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
+persona:
+  voice: Academic Historiographer
+  role: Agrarian Policy Historian
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Механізми Голодомору I: Колективізація
+
+## Використані джерела
+1. [Енциклопедія Сучасної України: Голодомор 1932–1933 років в Україні](https://esu.com.ua/article-25411) — комплексний аналіз причин, механізмів та наслідків геноциду.
+2. [Інститут історії України НАНУ: Колективізація сільського господарства в УРСР](http://history.org.ua) — академічний огляд процесу примусової колективізації.
+3. [Радіо Свобода: Розкуркулення – як сталінський режим нищив українське селянство](https://www.radiosvoboda.org) — деталізація категорій репресованих та масштабів злочину.
+4. [Історична правда: Чорні дошки – механізм голодомору](https://www.istpravda.com.ua) — аналіз специфічного репресивного інструменту.
+
+## Хронологія
+- **1928**: Початок форсованої індустріалізації та перших примусових хлібозаготівель.
+- **1929**: Оголошення курсу на «суцільну колективізацію»; початок масового наступу на селянські господарства.
+- **30 січня 1930**: Постанова ЦК ВКП(б) про заходи щодо ліквідації куркульських господарств (визначення трьох категорій репресованих).
+- **Березень 1930**: Стаття Сталіна «Запаморочення від успіхів» — тимчасовий тактичний відступ через масові селянські повстання.
+- **7 серпня 1932**: Прийняття «Закону про п'ять колосків» (розстріл або 10 років ув'язнення за збирання залишків врожаю).
+- **Листопад 1932**: Запровадження натуральних штрафів (вилучення м'яса та картоплі) для господарств, що не виконали план.
+- **6 грудня 1932**: Постанова РНК УСРР і ЦК КП(б)У про занесення сіл на «чорні дошки» за «злісний саботаж».
+- **22 січня 1933**: Директива Сталіна про заборону виїзду селян з території УСРР та Кубані.
+
+## Ключові факти та цитати
+- **Категорії розкуркулення**:
+    1.  Активні вороги радянської влади (концтабори або розстріл).
+    2.  Найбільш заможні господарі (вислання у віддалені райони СРСР).
+    3.  Решта куркулів (переселення на гірші землі за межі колгоспу).
+- **Масштаби**: За 1928–1931 роки знищено понад 350 тисяч селянських господарств, пограбовано та депортовано близько 1,5 млн осіб.
+- **Визначення**: Рафаель Лемкін назвав нищення українського селянства "класичним прикладом радянського геноциду".
+- **Цитата (Сталін, 1932)**: «Якщо не візьмемось нині за виправлення становища в Україні, Україну можемо втратити...»
+- **Цитата (Зі спогадів очевидців)**: «Забирали все до зернини. Шукали щупами в землі, в стінах, в печах. Це була не заготівля, це був грабіж».
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ — Як створили голод": `[!myth-buster]` — Спростування міфу про "неврожай" як причину голоду. Врожай 1932 року був достатнім для харчування населення.
+- Section "Сталінська колективізація": `[!context]` — Індустріалізація потребувала валюти, яку отримували через експорт зерна ("Голод в обмін на верстати").
+- Section "Розкуркулення": `[!decolonization]` — Термін "куркуль" був ідеологічним ярликом для знищення найпродуктивнішої частини української нації, а не класовою характеристикою.
+- Section "Колгоспна система": `[!history-bite]` — "Трудодні" були формою неокріпацтва: селяни працювали безкоштовно, не маючи права залишити колгосп без паспорта.
+- Section "Україна vs. інші регіони": `[!historiography]` — Порівняння смертності в Україні та Росії: в зернових районах Росії голод був наслідком політики, в Україні — інструментом упокорення (закриття кордонів).
+- Section "Від колективізації до голоду": `[!quote]` — Цитата з постанови про "Чорні дошки", що ілюструє повну блокаду сіл.
+
+## Деколонізаційний контекст
+- **Імперський міф**: Голодомор — це "загальносоюзна трагедія", викликана перегинами на місцях та посухою.
+- **Українська реальність**: Голодомор був спланованою операцією ("удар у спину") для ліквідації українського національного опору. Специфічні антиукраїнські заходи (закриття кордонів, репресії проти інтелігенції, українізації) доводять геноцидний намір.
+- **Термінологія**: Заміна радянського евфемізму "продовольчі труднощі" на чітке юридичне визначення "Геноцид".
+
+## Contested Terms (if applicable)
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| Куркуль | Експлуататор, ворог народу, миїд | Працьовитий господар, носій традицій, основа нації |
+| Колективізація | Модернізація села, створення ефективних господарств | Повернення кріпацтва, знищення приватної власності, інструмент контролю |
+| Голодомор | "Продовольчі труднощі", наслідок неврожаю | Геноцид, штучно організований голод, зброя масового знищення |
+| Саботаж | Дії куркулів проти радянської влади | Природний опір селян грабунку та насильству |
+
+## Section-Mapped Research Notes
+
+### Вступ — Як створили голод
+Голод не був випадковим збігом обставин. Це був результат ланцюга рішень: від колективізації до вилучення продовольства. Врожай 1932 року (12-14 млн тонн) був меншим за попередні, але цілком достатнім, щоб уникнути голоду. Проблема була не в наявності зерна, а в його тотальному вилученні державою.
+
+### Сталінська колективізація
+Головна мета — отримання ресурсів для індустріалізації ("надподаток" із села). План першої п'ятирічки вимагав колосальних коштів. Селянин розглядався як ресурс. Примусовий вступ до колгоспів ламав столітній уклад життя. 1929 рік — "рік великого перелому", початок терору проти одноосібників.
+
+### Розкуркулення
+Мета — знекровити село, позбавити його лідерів. Постанова від 30.01.1930 розділила селян на три категорії. 1-ша категорія (актив) підлягала розстрілу або концтаборам. "Розкуркулення" проводилося часто без суду, за списками місцевих активістів. Майно конфісковували, сім'ї викидали на вулицю. Це була війна проти найбільш фахових аграріїв.
+
+### Колгоспна система
+Колгосп — це державне підприємство з примусовою працею. Оплата "трудоднями", які часто були порожніми паличками в відомості. Паспортна система 1932 року прив'язала селян до землі, фактично відновивши кріпацтво. Держава встановлювала нереальні плани хлібозаготівель, які неможливо було виконати без вилучення насіннєвого фонду та продовольства для харчування.
+
+### Україна vs. інші регіони
+Специфіка України: поєднання соціального (селянського) та національного питань. Сталін боявся втратити Україну ("Пільсудський не дрімає"). Тому в Україні застосовувалися специфічні заходи: "Чорні дошки" (блокада цілих районів), заборона виїзду (блокування кордонів УРСР військами НКВС), репресії проти культурної еліти паралельно з голодом. У Росії (навіть на Кубані, де жили українці) теж був голод, але механізм "етнічної чистки" був найбільш виражений саме проти українців.
+
+### Від колективізації до голоду
+1930-1931 роки — перші ознаки кризи, "волинки" (повстання). Влада ігнорувала сигнали, звинувачуючи селян у "куркульському саботажі". Закон "про п'ять колосків" (серпень 1932) легалізував вбивство за жменю зерна. Листопад 1932 — комісія Молотова в Україні, запровадження натуральних штрафів (вилучення всієї їжі). Це був перехід від вилучення зерна до вилучення всього їстівного.
+
+### Підсумок
+Колективізація зруйнувала економічну основу українського села і створила організаційну структуру (колгосп) для легкого вилучення ресурсів. Без контролю над селом через колгоспи організація Голодомору такого масштабу була б технічно неможливою.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12575)
+✓ Message 12540 acknowledged
+✓ Message 12575 acknowledged

@@ -1,0 +1,89 @@
+module: b1-42
+level: B1
+sequence: 42
+slug: adverbial-participles-imperfective
+version: '2.0'
+title: Дієприслівники недоконаного виду
+subtitle: Adverbial Participles - Imperfective (-ючи/-ачи)
+content_outline:
+- section: Вступ
+  points:
+  - 'Дієприслівники as verbal adverbs — State Standard §4.4.2 alignment; pedagogy:
+    ''Sentence Compression'' technique (transforming ''Коли я йшов...'' -> ''Йдучи...'')'
+  - Difference from дієприкметники
+- section: Пояснення
+  points:
+  - 'Formation -ючи/-ачи suffixes — learner error: confusion between I (-учи/-ючи)
+    and II (-ачи/-ячи) conjugations (e.g., *писачи* instead of *пишучи*)'
+  - 'Expressing simultaneous actions — cultural hook: ''Юлій Цезар'' reference for
+    multitasking; visual aid: parallel timelines for main vs simultaneous action'
+  - 'Common imperfective participles — focus on high-frequency discourse markers:
+    *чесно кажучи*, *м''яко кажучи*, *інакше кажучи*'
+- section: Практика
+  points:
+  - Form participles from verbs
+  - 'Transform clauses to participles — learner error: Dangling Participle (Дисбаланс
+    підметів) e.g., ''Йдучи додому, почався дощ'''
+- section: Діалоги
+  points:
+  - 'Participles in conversation — cultural hook: ''За двома зайцями'' (chasing two
+    hares = doing two things at once)'
+  - 'Real-world usage — distinction: *не дивлячись на* (prepositional usage ''despite'')
+    vs *не дивлячись* (literal ''not looking'')'
+- section: Потрібно більше практики?
+  points:
+  - Additional exercises — focus on correcting impersonal constructions (e.g., 'Читаючи...,
+    мені стало сумно')
+vocabulary_hints:
+  required:
+  - дієприслівник (adverbial participle)
+  - недоконаний вид (imperfective aspect)
+  - одночасність (simultaneity)
+  - суфікс (suffix)
+  - читаючи (while reading) — читаючи книгу, читаючи новини
+  - роблячи (while doing)
+  - слухаючи (while listening)
+  - бачачи (while seeing)
+  - кажучи (saying/speaking) — чесно кажучи, м'яко кажучи (discourse markers)
+  - йдучи (walking/going) — йдучи вулицею, йдучи додому
+  recommended:
+  - підмет (subject)
+  - трансформація (transformation)
+  - підрядне речення (subordinate clause)
+  - замінювати (to replace)
+  - дивлячись (looking) — дивлячись у вікно, не дивлячись на (despite)
+  - знаючи (knowing) — знаючи правду, не знаючи дороги
+activity_hints:
+- type: fill-in
+  focus: Verb to participle conversion
+  items: 25
+- type: fill-in
+  focus: Complete sentences with participles
+  items: 20
+- type: error-correction
+  focus: Combine with adverbial participles
+  items: 15
+- type: error-correction
+  focus: Fix participle formation errors
+  items: 10
+focus: grammar
+pedagogy: TTT
+prerequisites:
+- b1-41 (Checkpoint Complex Sentences 2)
+connects_to:
+- b1-43 (Adverbial Participles Perfective)
+objectives:
+- Learner can form imperfective adverbial participles using -ючи/-ачи suffixes
+- Learner can use adverbial participles to express simultaneous actions
+- Learner understands when imperfective participles are preferred
+- Learner can replace subordinate clauses with adverbial participles
+grammar:
+- Дієприслівники недоконаного виду
+- Суфікси -ючи/-ачи formation rules
+- Одночасність дій (simultaneous actions)
+register: розмовний
+phase: B1.4a [Participles]
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Screenwriter
+word_target: 4000

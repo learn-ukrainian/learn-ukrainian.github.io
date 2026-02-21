@@ -1,0 +1,219 @@
+✅ Message sent to Gemini (ID: 11884) [auto-acked: self-addressed]
+✓ Message 11884 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #11884...
+📨 Message #11884
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-rutkivsky-dzhury-2
+   Time: 2026-02-20T23:34:17.667034+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 12
+module: lit-juvenile-12
+level: LIT.JUVENILE
+slug: rutkivsky-dzhury-2
+version: '2.0'
+title: Rutkivsky Dzhury 2
+subtitle: Rutkivsky Dzhury 2
+content_outline:
+- section: Вступ та контекст
+  points: []
+- section: Аналіз ключових творів
+  points: []
+- section: Стилістика та мова автора
+  points: []
+- section: Деколонізаційна перспектива
+  points:
+  - Як цей автор руйнує імперські міфи
+  - Українська суб'єктність у тексті
+- section: Підсумок та спадщина
+  points: []
+vocabulary_hints:
+  required:
+  - історіографія
+  - наратив
+  - суб'єктність
+  recommended:
+  - деколонізація
+activity_hints:
+- type: reading
+  focus: Аналіз першоджерела
+- type: essay-response
+  focus: Критичне есе
+- type: critical-analysis
+  focus: Деконструкція тексту
+focus: literature
+pedagogy: literature
+immersion: 100% Ukrainian
+phase: LIT Expansion
+objectives:
+- Проаналізувати творчість Rutkivsky Dzhury 2 у контексті української літератури
+- Дослідити вплив автора на формування національної ідентичності
+persona:
+  voice: Senior Specialist
+  role: Mystic Sorcerer
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Rutkivsky Dzhury 2 (Володимир Рутківський, «Джури-характерники»)
+
+## Використані джерела
+1. [Енциклопедія Сучасної України (ЕСУ) — Рутківський Володимир Григорович](https://esu.com.ua) — огляд біографії та внеску письменника у розвиток української дитячої історичної прози.
+2. [Інститут історії України НАНУ](http://history.org.ua) — для історичної верифікації козацького порубіжжя кінця XV ст., явища характерництва та інституту джур у Запорозькій Січі.
+3. [УкрЛіб / Літопис](http://litopys.org.ua) — тексти та аналіз еволюції українського лицарського епосу від дум до сучасної дитячої літератури.
+
+## Хронологія
+- 1937: Народження Володимира Рутківського на Черкащині.
+- 2007: Вихід першої книги серії — «Джури козака Швайки», що стала проривом в українській підлітковій літературі.
+- 2009: Публікація другої частини — «Джури-характерники», де поглиблюється тема української міфології, характерництва та дорослішання головних героїв (Санька і Грицика).
+- 2012: Присудження В. Рутківському Національної премії України імені Тараса Шевченка за історичну трилогію про джур.
+- 2021: Смерть письменника, який залишив по собі нове покоління, виховане на суб'єктних і переможних українських наративах.
+
+## Ключові факти та цитати
+- Тетралогія Рутківського змінила парадигму української дитячої літератури: від фокусу на селянському стражданні до активного лицарського драйву та пригод.
+- Характерництво у книзі описане не як казкова магія західного фентезі, а як мистецтво сугестії, знання природи, медицини та військової тактики.
+- > "З кожного положення є щонайменше два виходи" [потребує перевірки сторінки] — філософія виживання та кмітливості козаків у степу.
+- > "Характерник — це той, хто бачить ворога наскрізь, а для ворога стає невидимкою" [потребує верифікації].
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ та контекст: Козацьке порубіжжя та історичне тло": `[!history-bite]` — Походження слова «джура». Тюркське «чура» означало зброєносця, але в українському козацтві це трансформувалося в унікальну систему військово-патріотичного наставництва та освіти.
+- Section "Аналіз ключових творів: Феномен характерництва як національної міфології": `[!culture]` — Козаки-характерники використовували знання психології («морока», «омана»), а не лише містику, що має паралелі з елітними підрозділами сучасних спецназівців.
+- Section "Стилістика та мова автора: Гумор як механізм вітальності": `[!quote]` — Цитати або жарти Демка Дурної Сили як ілюстрація українського сміхового захисту у критичних ситуаціях.
+- Section "Деколонізаційна перспектива: Руйнування міфу про Дике Поле": `[!myth-buster]` — Руйнування імперського міфу. Степи Півдня України не були порожнім «Диким Полем», що чекало російської «цивілізації». Вони були жвавим простором українського промислу (уходники) та формування лицарського стану.
+- Section "Деколонізаційна перспектива: Українська суб'єктність та подолання віктимності": `[!decolonization]` — Твір свідомо відкидає комплекс жертви. Герої не плачуть над недолею, а беруть до рук зброю, проявляють розум і стають творцями своєї долі.
+- Section "Підсумок та спадщина: Значення твору для сучасної літератури": `[!context]` — Книги Рутківського випередили час і стали ідеологічним фундаментом для покоління підлітків, які зростали в умовах незалежності та війни з РФ після 2014 року.
+
+## Деколонізаційний контекст
+- **Imperial/Soviet myth**: Українська історія — це безперервна низка поразок, поневолення та страждань бідного селянства, а козаки — неорганізовані бунтівники. Дитяча література має виховувати жалість та співчуття.
+- **Ukrainian reality**: Українська історія — це історія лицарської звитяги, військового мистецтва, самоврядування та глибокої духовної культури. Рутківський повертає українським дітям вкрадених у них національних героїв та суперменів-характерників.
+
+## Contested Terms
+
+| Концепт | Імперський/радянський наратив | Український (деколонізований) наратив у творі |
+|---------|-----------------|-------------------------------|
+| Дике Поле | Нічийний, порожній простір, що підлягав колонізації імперією. | Простір свободи, формування українського військового стану та уходницьких промислів. |
+| Козацтво | Соціально пригнічені маси, розбійники-втікачі без державності. | Лицарський орден, еліта нації зі строгим кодексом честі, традиціями та військовим мистецтвом. |
+| Дитинство в історії | Пасивний об'єкт історії, жертви кріпацтва і воєн. | Джури — майбутні лідери, активні учасники подій, які свідомо обирають шлях боротьби. |
+
+## Section-Mapped Research Notes
+
+### Вступ та контекст
+Рутківський довго йшов до визнання. Його мета полягала у створенні повноцінного дитячого бестселера, який би закрив нішу вітчизняного фентезі та історичного роману. До нього українські підлітки захоплювалися мушкетерами чи лицарями Круглого столу. Роман розгортається на тлі кінця XV ст. — періоду зародження козацтва.
+
+### Аналіз ключових творів
+Книга «Джури-характерники» показує дорослішання героїв. Санько відкриває у собі здібності до сугестії та магії характерників. Характерництво виступає не просто як фокус, а як глибокий зв'язок українця зі своєю землею і вміння психологічно переважати ворога. Важливим є інститут джур — емоційний та професійний зв'язок між наставниками (Швайка, дід Кібчик) та молоддю.
+
+### Стилістика та мова автора
+Мова Рутківського надзвичайно соковита, багата на синоніми та козацьку фразеологію, але водночас легка для дитячого сприйняття. Особливу роль відіграє гумор — він позбавляє текст зайвого пафосу, робить героїв живими і виступає механізмом вітальності (життєстійкості).
+
+### Деколонізаційна перспектива
+Це ключова заслуга твору. Рутківський зносить міф про "Дике поле" і будує наратив перемоги. Його герої — розумні, сильні, хитрі українці, які здатні дати відсіч татарам і захистити свою землю. Твір позбавлений віктимності (комплексу жертви).
+
+### Підсумок та спадщина
+Роман став культовим і породив хвилю інтересу до української історії серед підлітків. Він сформував новітній канон української дитячої літератури.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 11920)
+✓ Message 11884 acknowledged
+✓ Message 11920 acknowledged

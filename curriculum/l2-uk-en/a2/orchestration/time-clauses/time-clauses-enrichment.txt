@@ -1,0 +1,280 @@
+✅ Message sent to Gemini (ID: 10201) [auto-acked: self-addressed]
+✓ Message 10201 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10201...
+📨 Message #10201
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-time-clauses
+   Time: 2026-02-20T20:02:21.607715+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: a2-33
+level: A2
+sequence: 33
+slug: time-clauses
+version: '2.0'
+title: Time Clauses
+subtitle: When, While, and After
+content_outline:
+- section: Introduction / Вступ
+  points:
+  - 'Life as a sequence of events — aligns with State Standard §1.4.1.1: creating
+    a narrative as a simple sequence of events'
+  - 'Why chronological ''logic'' matters for storytelling — cultural hook: proverb
+    «Всьому свій час» (Everything has its time)'
+- section: Presentation / Презентація
+  points:
+  - '''Simultaneity: Поки (Process) vs Коли (Point)'' — visualize with a timeline;
+    learner error: confusing «коли» (when) with «якщо» (if)'
+  - '''Sequencing: Перед тим як (Before) vs Після того як (After)'' — pedagogy note:
+    explicitly contrast «перед» + Noun vs «перед тим як» + Verb; learner error: dropping
+    «тим/того» (missing linkers)'
+  - '''Immediacy: Як тільки, Щойно'' — colloquial usage «як тільки зможу»'
+  - '''Frequency: Кожного разу, коли...'' — reinforce pattern consistency'
+  - '''The Until Trap: Поки не'' — cultural hook: Christmas Eve tradition (do not
+    eat «поки не зійде перша зірка»); learner error: missing the double negative'
+  - '''Aspect Selection: Ongoing processes vs Finished triggers'' — builds on «verb-aspect-intro»'
+- section: Practice / Практика
+  points:
+  - Narrative sequencing drills — focus on State Standard requirement for monologue
+    production
+  - '''''''Wait until'''' logic exercises'''
+- section: Dialogues / Діалоги
+  points:
+  - Reporting a busy morning or planning a trip's schedule
+focus: grammar
+pedagogy: PPP
+objectives:
+- Learner can sequence events using time conjunctions
+- Learner can describe simultaneous actions using 'поки' and 'коли'
+- Learner can distinguish between 'перед тим як' and 'після того як'
+- Learner can tell stories with clear chronological structure
+grammar:
+- time connectors (коли, поки, після того як)
+- sequence of tenses
+- aspect in time clauses
+- simultaneous vs sequential actions
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Temporal Clauses
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Communicative requirements for sequencing events and temporal coordination
+    at A2
+- name: Grammar of Ukrainian Language - Time Conjunctions
+  url: https://uk.wikipedia.org/wiki/Складнопідрядне_речення_часу
+  type: reference
+  notes: Detailed rules for 'коли', 'поки', and 'як тільки'
+immersion: 60-75% Ukrainian
+phase: A2.2
+persona:
+  voice: Encouraging Cultural Guide
+  role: Orchestra Conductor
+vocabulary_hints:
+  required:
+  - 'коли (when) — Collocations: Коли ти прийдеш? Коли я був маленьким...'
+  - 'поки (while/until) — Collocations: Поки я чекаю... Поки що (meanwhile/so far)'
+  - 'перед тим як (before [doing something]) — Usage: Перед тим як вийти... Перед
+    тим як лягти спати...'
+  - 'після того як (after [doing something]) — Usage: Після того як ми закінчили...
+    Після того як він подзвонив...'
+  - 'щойно (just/as soon as) — Collocations: Щойно я зайшов...'
+  - 'як тільки (as soon as) — Collocations: Як тільки зможу...'
+word_target: 3000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Time Clauses
+
+## State Standard Reference
+§1.4.1.1: "створювати розповідь як просту послідовність подій" (Monologue speech - Production)
+Alignment: This module directly enables the A2 requirement to narrate events in sequence by providing the necessary temporal conjunctions (*коли, поки, після того як*), bridging the gap between simple sentences and the B1 formal syntax requirements.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| коли | High / Core | Коли ти прийдеш? Коли я був маленьким... |
+| поки | High / Core | Поки я чекаю... Поки що (meanwhile/so far) |
+| перед тим як | Medium / Literary & Spoken | Перед тим як вийти... Перед тим як лягти спати... |
+| після того як | Medium / Literary & Spoken | Після того як ми закінчили... Після того як він подзвонив... |
+| щойно | Medium / Spoken | Щойно я зайшов... |
+| як тільки | Medium / Spoken | Як тільки зможу... |
+
+## Cultural Hooks
+1. **The First Star**: A classic Ukrainian Christmas Eve tradition. Families do not start the Holy Supper (Свята Вечеря) *until* the first star appears in the sky (`поки не зійде перша зірка`).
+2. **"Всьому свій час"**: A common proverb meaning "Everything has its time," reflecting a philosophical view on patience and destiny.
+
+## Common Learner Errors
+1. **The "If" Confusion** → Using *коли* for conditional *if*.
+   *   *Error*: Коли я матиму час, я допоможу. (Acceptable but often implies certainty "When I have time").
+   *   *Correction*: **Якщо** я матиму час... (If I have time).
+   *   *Why*: Learners transfer "when" = "if" from other languages or archaic usage.
+2. **Missing "linkers"** → Dropping *тим/того* in complex conjunctions.
+   *   *Error*: Перед я пішов... / Після я поїв...
+   *   *Correction*: Перед **тим як** я пішов... / Після **того як** я поїв...
+   *   *Why*: Direct translation of English "Before I went" / "After I ate".
+3. **The "Until" Trap** → Missing the double negative in *until* clauses.
+   *   *Error*: Я чекаю, поки ти прийдеш. (Means "I wait *while* you come").
+   *   *Correction*: Я чекаю, **поки** ти **не** прийдеш. (I wait until you come).
+   *   *Why*: Ukrainian logic requires the action to be negated until the limit is reached.
+
+## Cross-References
+- Builds on: `verb-aspect-intro` (Aspect is crucial for *process* vs *result* in time clauses), `past-tense-common`.
+- Prepares for: `complex-syntax-b1`, `narrative-modules` (Storytelling skills).
+
+## Notes for Content Writing
+- **Visuals**: Use a timeline visualization for *Before/After* logic.
+- **Pedagogy**: Explicitly contrast `перед` + Noun vs `перед тим як` + Verb. This is a high-friction point for English speakers.
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Life as a sequence of events: alignment with Ukrainian State Standard §1.4.1.1 regarding the creation of a narrative monologue as a simple sequence of events."
+  - "The cultural concept of time and patience: Introduction of the proverb «Всьому свій час» (Everything has its time) to frame the importance of temporal logic."
+- section: "Презентація: Граматичні основи (Presentation: Grammatical Foundations)"
+  words: 800
+  points:
+  - "Simultaneity and Points in Time: Contrast between «коли» (point/when) and «поки» (process/while) using a visual timeline for clarity."
+  - "Sequencing events: Detailed rules for «перед тим як» (before) and «після того як» (after), focusing on the necessity of the linkers «тим/того»."
+  - "Common Error Correction: Addressing the 'If confusion' where learners use «коли» for conditional «якщо» (e.g., «Якщо я матиму час...» vs «Коли я матиму час...»)."
+  - "Pedagogical Distinction: Explicitly contrast the structure of «перед» + Noun (prepositional phrase) vs «перед тим як» + Verb (time clause)."
+- section: "Презентація: Складні випадки та культура (Presentation: Complex Cases and Culture)"
+  words: 700
+  points:
+  - "The 'Until Trap': Explaining the double negative requirement in «поки не» clauses (e.g., «Я чекаю, поки ти не прийдеш»)."
+  - "Cultural Hook: The Ukrainian Christmas Eve (Свята Вечеря) tradition of waiting to eat «поки не зійде перша зірка» (until the first star appears)."
+  - "Immediacy and Frequency: Usage of «щойно» (just/as soon as) and «як тільки» (as soon as) in spoken register, plus «кожного разу, коли...» for habits."
+- section: "Практика та корекція помилок (Practice and Error Correction)"
+  words: 600
+  points:
+  - "Drill: Identifying and fixing the missing linker error (e.g., correcting «Перед я пішов» to «Перед тим як я пішов»)."
+  - "Transformation exercises: Converting simple prepositional phrases into complex time clauses using the research-based contrast patterns."
+  - "Negative logic drills: Practicing the «поки не» structure to internalize the Ukrainian negation of the limit-action."
+- section: "Продукція та діалоги (Production and Dialogues)"
+  words: 500
+  points:
+  - "Monologue production: Reporting a busy morning schedule or a trip itinerary, strictly following the State Standard requirement for sequencing."
+  - "Dialogue: Planning a shared event where participants use «поки», «як тільки», and «після того як» to coordinate their actions."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "коли (when) — High frequency/Core. Collocations: Коли ти прийдеш? Коли я був маленьким..."
+  - "поки (while/until) — High frequency/Core. Collocations: Поки я чекаю... Поки що (meanwhile/so far)."
+  - "перед тим як (before [doing something]) — Medium frequency. Usage: Перед тим як вийти... Перед тим як лягти спати..."
+  - "після того як (after [doing something]) — Medium frequency. Usage: Після того як ми закінчили... Після того як він подзвонив..."
+  - "щойно (just/as soon as) — Medium frequency/Spoken register. Collocations: Щойно я зайшов..."
+  - "як тільки (as soon as) — Medium frequency/Spoken register. Collocations: Як тільки зможу..."
+  recommended:
+  - "поки не (until) — Grammatical logic: requires a double negative in Ukrainian."
+  - "якщо (if) — Essential contrast word to avoid the 'when/if' confusion at A2."
+  - "кожного разу, коли (every time when) — Frequency pattern for habit description."
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (3579 chars)
+✅ Message sent to Claude (ID: 10208)
+✓ Message 10208 acknowledged
+   Auto-acknowledged reply #10208 (stdout delivery — no inbox accumulation)
+✓ Message 10201 acknowledged

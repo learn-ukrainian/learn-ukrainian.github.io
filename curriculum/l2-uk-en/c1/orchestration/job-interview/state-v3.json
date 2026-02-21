@@ -2,12 +2,5 @@
   "track": "c1",
   "slug": "job-interview",
   "mode": "v3",
-  "phases": {
-    "v3-A": {
-      "status": "complete",
-      "ts": "2026-02-19T13:35:03Z",
-      "task_id": "v3-job-interview-pA",
-      "mode": "full"
-    }
-  }
+  "phases": {}
 }

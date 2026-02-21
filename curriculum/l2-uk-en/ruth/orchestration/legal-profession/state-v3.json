@@ -1,0 +1,13 @@
+{
+  "track": "ruth",
+  "slug": "legal-profession",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-20T08:06:38Z",
+      "task_id": "v3-legal-profession-pA",
+      "mode": "full"
+    }
+  }
+}

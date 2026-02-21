@@ -1,7 +1,7 @@
 # Audit Report: M24 — can-must-want-modals.md
 **Level:** A1 | **Module:** M24 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-19 23:01:54
+**Generated:** 2026-02-21 00:46:43
 
 ## Configuration
 **Type:** A1-grammar

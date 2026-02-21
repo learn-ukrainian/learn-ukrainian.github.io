@@ -1,0 +1,207 @@
+✅ Message sent to Gemini (ID: 12571) [auto-acked: self-addressed]
+✓ Message 12571 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12571...
+📨 Message #12571
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-sviatoslav-vsevolodovych
+   Time: 2026-02-20T23:40:55.686651+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 45
+module: oes-045
+module_number: 37
+slug: sviatoslav-vsevolodovych
+title_uk: Святослав Всеволодович
+title_en: Sviatoslav Vsevolodovych
+phase: 2
+phase_id: literary-tradition
+phase_name: Literary Tradition
+focus: '"Golden Word" context'
+content_outline:
+- section: Вступ
+  description: Introduction to Sviatoslav Vsevolodovych
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Senior Paleographer
+  role: Kyiv Grand Prince
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Святослав Всеволодович (Sviatoslav Vsevolodovych)
+
+## Використані джерела
+1. **Енциклопедія історії України (history.org.ua)** — ґрунтовна стаття про політичну діяльність та дуумвірат.
+2. **Ізборник (litopys.org.ua)** — оригінальні тексти Іпатіївського літопису та "Слова о полку Ігоревім".
+3. **Енциклопедія Сучасної України (esu.com.ua)** — біографічні відомості та оцінка історичної ролі.
+
+## Хронологія
+- **бл. 1123**: Народження Святослава у сім'ї Всеволода Ольговича.
+- **1141–1164**: Князювання у Турові, Володимирі-Волинському, Новгороді, Чернігові.
+- **1176**: Поразка від половців, втрата київського престолу.
+- **1181**: Початок "Великого дуумвірату" зі смоленським князем Рюриком Ростиславичем.
+- **1184**: Блискуча перемога над половецьким ханом Кобяком на річці Оріль.
+- **1185**: Невдалий похід Ігоря Святославича; виголошення "Золотого слова".
+- **1194**: Смерть Святослава Всеволодовича (25 липня), кінець періоду стабільності.
+
+## Ключові факти та цитати
+
+### Цитата 1: "Золоте слово" (Слово о полку Ігоревім)
+> «О моя сыновчя, Игорю и Всеволоде! Рано еста начала Половецкую землю мечи цвѣлити, а себѣ славы искати. Нъ нечестно одолѣсте, нечестно бо кровь поганую пролиясте. Ваю храбрая сердца въ жестоцемъ харалузѣ скована, а въ буести закалена. Се ли створисте моей сребреней сѣдинѣ?»
+
+### Цитата 2: Некролог (Іпатіївський літопис, 1194)
+> «[Був] же князь Святослав мудрим, додержував заповідей божих, і чистоту тілесну пильнував, і чернецтво та священство любив, і вбогим помагав.»
+
+### Політичний контекст
+- **Дуумвірат**: Унікальна для Русі система співправління, де Святослав (Ольгович) сидів у Києві як старійшина, а Рюрик (Смоленський) контролював "Руську землю" (Київщину) з Овруча та Білгорода. Це забезпечило 13 років миру.
+- **Військовий талант**: На відміну від авантюрного Ігоря, Святослав проводив системні коаліційні походи (1184), що ламали хребет половецькій загрозі.
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ": [!context] — Походження з династії Ольговичів, "проклятого роду" (через Олега Гориславича), і як Святослав змінив цю репутацію.
+- Section "Основний матеріал": [!history-bite] — Київський дуумвірат 1181–1194 рр. як приклад успішного політичного компромісу, що суперечить міфу про "суцільний хаос" роздробленості.
+- Section "Основний матеріал": [!quote] — Уривок з літопису про перемогу над Кобяком (1184) як контраст до поразки Ігоря.
+- Section "Основний матеріал": [!paleography] — Аналіз епітета "злато слово" та метафори "зронив перлину" в тексті поеми.
+- Section "Основний матеріал": [!myth-buster] — Спростування радянського міфу про "занепад Києва" у XII ст.; за часів Святослава Київ залишався сакральним і політичним центром, за який змагалися всі гілки Рюриковичів.
+- Section "Підсумок": [!reflection] — Чому смерть Святослава у 1194 році стала каталізатором нових міжусобиць (зокрема, з Романом Мстиславичем).
+
+## Деколонізаційний контекст
+- **Міф імперії**: Російська історіографія (Татіщєв, Карамзін) часто маргіналізувала київських князів XII ст., переносячи фокус на Володимиро-Суздальське князівство (Всеволод Велике Гніздо) як на "новий центр". Святослава зображували слабким або номінальним правителем.
+- **Українська реальність**: Святослав Всеволодович був архітектором системи колективної безпеки. Його "Золоте слово" — це не просто література, а реальна політична програма об'єднання земель навколо Києва, а не підкорення їх одному деспоту (як у Суздалі).
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| **Київська Русь XII ст.** | Період "розпаду" і переміщення центру на північ (Владимир) | Період "поліцентризму" зі збереженням Києва як сакрального "серця" і об'єкта боротьби («Співправління») |
+| **Дуумвірат** | Тимчасовий, вимушений союз | Ефективна політична модель стримування і противаг (Святослав + Рюрик) |
+| **Золоте слово** | Літературний плач | Політичний маніфест консолідації руських сил проти Степу |
+
+## Section-Mapped Research Notes
+
+### Вступ
+- Ольговичі: чернігівська династія, традиційні суперники Мономаховичів.
+- Шлях до влади: складні маневри між Волинню, Новгородом і Черніговом.
+
+### Основний матеріал
+- **1184 vs 1185**: Важливо показати контраст. Святослав організував *загальноруський* похід і переміг. Ігор пішов сепаратно ("поіскати слави") і програв.
+- **Текст "Слова"**: Аналіз закликів до Всеволода, Рюрика, Давида, Ярослава Осмомисла. Це панорама політичної карти Русі очима київського князя.
+- **Метафори**: "Срібна сивина" (мудрість), "Сокіл у митях" (досвідчений воїн, який не дасть гнізда в обиду).
+
+### Практика
+- Порівняння літописного опису подій 1185 року і поетичного.
+- Граматика: двоїна (ваі, єста), аорист (одолѣсте), перфект.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12611)
+✓ Message 12571 acknowledged
+✓ Message 12611 acknowledged

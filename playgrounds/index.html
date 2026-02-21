@@ -23,7 +23,8 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Ar
 .stat .value { font-size: 36px; font-weight: 700; }
 .stat .label { font-size: 12px; color: var(--text2); text-transform: uppercase; }
 
-.cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; max-width: 700px; width: 100%; padding: 0 24px; }
+.cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; max-width: 1000px; width: 100%; padding: 0 24px; }
+@media (max-width: 900px) { .cards { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 600px) { .cards { grid-template-columns: 1fr; } }
 
 .card { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 24px; text-decoration: none; color: var(--text); transition: all 0.2s; display: block; }
@@ -38,6 +39,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Ar
 .card.curriculum { border-left: 3px solid var(--blue); }
 .card.quality { border-left: 3px solid var(--purple); }
 .card.api { border-left: 3px solid var(--gray); }
+.card.comms { border-left: 3px solid var(--yellow); }
 
 .footer { margin-top: 40px; font-size: 12px; color: var(--text3); }
 </style>
@@ -70,11 +72,23 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Ar
     <p>Bird's-eye view of all tracks. Module plans, word targets, content outlines.</p>
     <div class="card-stat" id="curriculum-stat"></div>
   </a>
+  <a class="card comms" href="/comms.html">
+    <div class="icon">&#128225;</div>
+    <h2>Agent Comms</h2>
+    <p>Live batch progress, agent messages, zombie detection, throughput monitoring.</p>
+    <div class="card-stat" id="comms-stat"></div>
+  </a>
   <a class="card quality" href="/quality.html">
     <div class="icon">&#9881;</div>
     <h2>Quality</h2>
     <p>Research coverage, review scores, outstanding issues, weak modules. The fix queue.</p>
     <div class="card-stat" id="quality-stat"></div>
+  </a>
+  <a class="card" href="/track-health.html" style="border-left: 3px solid var(--cyan);">
+    <div class="icon">&#128737;</div>
+    <h2>Track Health</h2>
+    <p>Build progress, audit, enrichment, final reviews, ETA — one view per track. Auto-refreshes.</p>
+    <div class="card-stat" id="health-stat"></div>
   </a>
 </div>
 
@@ -106,6 +120,16 @@ async function loadStats() {
     const t = data.totals;
     document.getElementById('progress-stat').textContent =
       `${t.research_done} research · ${t.content_done} content · ${t.audit_passing} passing`;
+  } catch(e) {}
+
+  try {
+    const res = await fetch('/api/comms/batch-progress');
+    const data = await res.json();
+    const tracks = Object.values(data.tracks || {});
+    const running = tracks.filter(t => t.health === 'healthy').length;
+    const stalled = tracks.filter(t => t.health === 'stalled').length;
+    document.getElementById('comms-stat').textContent =
+      `${data.running_processes} processes · ${running} healthy · ${stalled} stalled`;
   } catch(e) {}
 
   try {

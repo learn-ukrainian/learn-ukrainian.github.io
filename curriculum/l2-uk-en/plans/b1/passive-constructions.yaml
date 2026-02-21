@@ -6,55 +6,78 @@ version: '2.0'
 title: 'Пасивні конструкції: повна система'
 subtitle: Passive Constructions - Complete System
 content_outline:
-- section: Тест
+- section: Вступ та діагностичний тест (Introduction and Diagnostic Test)
+  words: 600
   points:
-  - Three passive types overview — Adjectival (state/feature), Impersonal (fact/result),
-    Reflexive (process/regular action)
-  - 'Active vs passive voice — state standard §4.4.2 alignment: simple sentence with
-    participle clause vs active construction'
-- section: Пояснення
+  - 'Overview of the three passive types as defined by State Standard §4.2.3.1 and
+    §4.4.2: Adjectival (participle), Impersonal (fact/result), and Reflexive (process/habitual
+    action).'
+  - Diagnostic exercise to identify existing learner patterns, specifically targeting
+    the common error of adding an agent in the instrumental case to impersonal -но/-то
+    constructions (e.g., diagnosing if learners say 'Мною було зроблено').
+- section: 'Граматична система: три типи пасиву (Grammar System: Three Passive Types)'
+  words: 1000
   points:
-  - 'Participle passive — Adjectival function (state/feature: зачинений магазин)'
-  - 'Short form passive — Impersonal forms on -но/-то (зроблено, прожито); unique
-    Ukrainian feature emphasizing result/fatality; learner error: adding agent in
-    instrumental case (Мною було зроблено -> WRONG)'
-  - 'Reflexive passive (-ся) — Process or regular action (магазин зачиняється); learner
-    error: confusing process with result'
-  - 'Choosing the right passive — cultural hook: avoiding ''Kanceliaryt'' (bureaucratese)
-    and Russian-style passive overuse; preference for active voice in natural Ukrainian'
-- section: Практика
+  - 'The Adjectival Passive: Using passive participles to describe states or features
+    (e.g., ''зачинений магазин''); practical exercises based on Standard §4.4.2 regarding
+    participle clauses.'
+  - 'The Impersonal Passive (-но/-то): Deep dive into this unique Ukrainian feature
+    used for констатація факту (stating fact/result); explanation of its fatalistic
+    or official tone (e.g., ''Вхід заборонено'').'
+  - 'The Reflexive Passive (-ся): Defining process or regular actions (e.g., ''магазин
+    зачиняється о 18:00''); contrastive analysis to prevent confusion between process
+    and result (''відчиняється'' vs ''відчинено'').'
+- section: 'Культурний контекст: боротьба з «канцеляритом» (Cultural Context: Fighting
+    ''Bureaucratese'')'
+  words: 800
   points:
-  - Transform with all three types — fix English calques like 'It was decided by him'
-    -> 'Він вирішив'
-  - Compare meanings — distinguish between process (будується) and result (збудовано/збудований)
-- section: Діалоги
+  - Defining 'Kanceliaryt' (bureaucratese) as a remnant of Soviet/Russian-style passive
+    overuse; highlighting the linguistic preference for active voice ('Ми вирішили'
+    vs 'Нами було вирішено').
+  - 'Analyzing the ''Agent Error'': Explicitly teaching that forms on -но/-то must
+    NOT have an agent in the instrumental case (''Мною зроблено'' - WRONG vs ''Я зробив''
+    or ''Зроблено'' - RIGHT).'
+- section: Практика та корекція помилок (Practice and Error Correction)
+  words: 900
   points:
-  - Real-world passive usage — official announcements (Вхід заборонено) vs news reports
-  - Context and style — contrasting official register (passive) with conversational
-    style (active)
-- section: Потрібно більше практики?
+  - 'Transformation triad: Converting active sentences into all three passive types
+    while maintaining natural Ukrainian style; fixing English calques like ''It was
+    decided by him'' -> ''Він вирішив''.'
+  - 'Minimal pairs drill: Distinguishing between state (''Двері зачинені''), process
+    (''Двері зачиняються''), and the result of a completed action (''Двері зачинено'').'
+- section: Діалоги та застосування в мовленні (Dialogues and Speech Application)
+  words: 700
   points:
-  - Additional exercises — focus on correcting 'passive heavy' sentences to natural
-    active ones
+  - 'Situational dialogues: Contrasting official announcements (high passive usage)
+    with everyday conversation (high active usage) to demonstrate register shifts.'
+  - 'Final summary: Decision-making matrix for choosing the correct passive vs. active
+    voice based on emphasis (result vs. actor) and situational context (Standard §4.4.2
+    syntax integration).'
 vocabulary_hints:
   required:
-  - пасивний стан (passive voice) — вживати пасивний стан, речення в пасивному стані
+  - пасивний стан (passive voice) — вживати пасивний стан, речення в пасивному стані;
+    High frequency in grammar context
   - активний стан (active voice) — перетворити на активний стан, перевага активного
-    стану
-  - зворотний (reflexive)
-  - трансформація (transformation)
-  - конструкція (construction)
-  - стиль (style)
-  - бути (to be)
-  - -ся (reflexive suffix)
+    стану; High frequency, stylistic priority
+  - дієприкметник (participle) — пасивний дієприкметник, дієприкметниковий зворот;
+    High frequency (Education/Standard)
+  - -но/-то (impersonal ending) — зроблено, написано, відкрито, заборонено; High frequency
+    (Official/Announcements)
+  - зворотний (reflexive) — зворотне дієслово, пасив на -ся
+  - трансформація (transformation) — трансформація активу в пасив
+  - конструкція (construction) — граматична конструкція, пасивна конструкція
+  - стиль (style) — офіційно-діловий стиль, розмовний стиль
+  - бути (to be) — допоміжне дієслово в пасиві
+  - -ся (reflexive suffix) — додавання -ся до дієслова
   recommended:
-  - наголос (emphasis)
-  - агент дії (agent of action)
-  - регістр (register)
-  - уникати (to avoid)
-  - дієприкметник (participle) — пасивний дієприкметник, дієприкметниковий зворот
-  - -но/-то (impersonal ending) — зроблено, написано, відкрито, заборонено
-  - будуватися (to be built) — будинок будується, плани будуються
+  - наголос (emphasis) — робити наголос на результаті
+  - агент дії (agent of action) — виконавець дії, уникати агента в орудному відмінку
+  - регістр (register) — офіційний регістр, зміна регістру
+  - уникати (to avoid) — уникати канцеляриту, уникати пасивних конструкцій
+  - будуватися (to be built) — будинок будується, плани будуються; Medium frequency,
+    common process example
+  - канцелярит (bureaucratese) — ознака канцеляриту, вплив російської мови
+  - констатація (statement) — констатація факту, констатація результату
 activity_hints:
 - type: fill-in
   focus: Active to three passive types

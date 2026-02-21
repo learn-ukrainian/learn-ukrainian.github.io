@@ -74,7 +74,7 @@ For most masculine nouns ending in a hard consonant (like **стіл**, **кви
 
 *   **паспорт** → немає **паспорта**
 *   **брат** → немає **брата**
-*   **телефон** → немає **телефону** [teleˈfɔnu]
+*   **хліб** → немає **хліба** [ˈxlʲibɑ]
 
 Words often drop a vowel when you add the ending (the "fleeting vowel" rule):
 *   **квиток** (ticket) → немає **квитка** (not *квитока*)
@@ -83,7 +83,6 @@ Words often drop a vowel when you add the ending (the "fleeting vowel" rule):
 **Special Mentions:**
 *   **День** (day) → немає **дня** [dnʲɑ] (The 'е' disappears).
 *   **Батько** (father) → немає **батька** (The 'о' changes to 'а').
-*   **Сон** (dream/sleep) → немає **сну** (The 'о' disappears).
 
 > [!tip] **Порада: Випадні голосні (Fleeting Vowels)**
 > If a masculine word ends in **-ок** or **-ець**, the **о** or **е** usually disappears when you add the Genitive ending!
@@ -105,10 +104,12 @@ This usually happens with:
 *   **цукор** (sugar) → без **цукру** [ˈt͡sukru] (Notice the fleeting 'o'!)
 *   **чай** (tea) → немає **чаю** [ˈt͡ʃɑju]
 *   **обід** (lunch) → немає **обіду** [oˈbʲidu]
+*   **телефон** (phone) → немає **телефону** [tɛlɛˈfɔnu]
+*   **сон** (dream/sleep) → немає **сну** (The 'о' disappears, like цукор → цукру!)
 
 > [!warning] **Увага: Типова помилка (-а vs. -у)**
-> *   Is it a concrete native object (ticket, passport)? Use **-а**.
-> *   Is it a substance (sugar, tea), concept (time), or foreign loanword (телефон)? Use **-у**.
+> *   Is it a concrete, countable object (ticket, passport, key)? Use **-а**.
+> *   Is it a substance (sugar, tea) or abstract concept (time, peace)? Use **-у**.
 
 ### Genitive Endings: Feminine Nouns (-и / -і)
 
@@ -140,6 +141,7 @@ Singular words ending in **-ія** become **-ії**:
 **Food & Drink:**
 *   **Кава без цукру.** (Coffee without sugar.) — *цукор* (substance) → *цукру*
 *   **Чай без молока.** (Tea without milk.) — *молоко* (neuter -o → -a) → *молока*
+*   **Вода без газу.** (Water without gas/sparkling.) — *газ* (substance) → *газу*
 *   **Бургер без м'яса.** (Burger without meat.) — *м'ясо* (neuter -o → -a) → *м'яса*
 
 **Travel & Life:**

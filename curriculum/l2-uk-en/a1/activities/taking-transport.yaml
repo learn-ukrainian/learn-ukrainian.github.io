@@ -1,0 +1,405 @@
+- type: group-sort
+  title: 'Де чи Куди? (Location vs. Direction)'
+  instruction: 'Sort the phrases based on whether they answer "Where?" (Location/Static) or "Where to?" (Direction/Motion).'
+  groups:
+    - name: 'Де? (Location - Locative)'
+      items:
+        - 'я стою на зупинці'
+        - 'ми сидимо в автобусі'
+        - 'вона чекає на станції'
+        - 'ти зараз у метро'
+        - 'пасажири у вагоні'
+        - 'вони сидять у трамваї'
+    - name: 'Куди? (Direction - Accusative)'
+      items:
+        - 'я йду на зупинку'
+        - 'ми заходимо в автобус'
+        - 'вона йде на станцію'
+        - 'ти спускаєшся в метро'
+        - 'пасажири заходять у вагон'
+        - 'ми заходимо в трамвай'
+
+- type: match-up
+  title: 'Знайдіть пару: Термін і Визначення'
+  instruction: 'Match the transport term with its correct description.'
+  pairs:
+    - left: 'Зупинка'
+      right: 'Місце, де зупиняється автобус або тролейбус'
+    - left: 'Станція'
+      right: 'Велике приміщення для метро або поїзда'
+    - left: 'Квиток'
+      right: 'Документ, який дає право на проїзд'
+    - left: 'Валідатор'
+      right: 'Пристрій для оплати проїзду карткою'
+    - left: 'Водій'
+      right: 'Людина, яка керує транспортом'
+    - left: 'Пасажир'
+      right: 'Людина, яка їде в транспорті'
+    - left: 'Проїзний'
+      right: 'Картка на багато поїздок'
+    - left: 'Маршрут'
+      right: 'Шлях руху транспорту'
+
+- type: quiz
+  title: 'Перевірка розуміння тексту'
+  instruction: 'Choose the correct answer based on the lesson text.'
+  items:
+    - question: 'Яка станція метро в Києві є найглибшою у світі?'
+      options:
+        - text: 'Арсенальна'
+          correct: true
+        - text: 'Хрещатик'
+          correct: false
+        - text: 'Вокзальна'
+          correct: false
+        - text: 'Політехнічний інститут'
+          correct: false
+      explanation: 'Станція Арсенальна розташована на глибині 105,5 метрів.'
+    - question: 'Як називається маленьке жовте маршрутне таксі?'
+      options:
+        - text: 'маршрутка'
+          correct: true
+        - text: 'таксі'
+          correct: false
+        - text: 'автобус'
+          correct: false
+        - text: 'метро'
+          correct: false
+      explanation: 'Маршрутне таксі скорочено називають маршрутка.'
+    - question: 'Чим ми зазвичай платимо в метро Києва?'
+      options:
+        - text: 'смартфоном або карткою'
+          correct: true
+        - text: 'готівкою водію'
+          correct: false
+        - text: 'паперовим квитком'
+          correct: false
+        - text: 'жетоном'
+          correct: false
+      explanation: 'У метро Києва діє безготівкова оплата через валідатори.'
+    - question: 'Як називається місце, де ми переходимо з однієї лінії на іншу?'
+      options:
+        - text: 'пересадка'
+          correct: true
+        - text: 'вихід'
+          correct: false
+        - text: 'вхід'
+          correct: false
+        - text: 'зупинка'
+          correct: false
+      explanation: 'Зміна лінії метро називається пересадка.'
+    - question: 'Що треба зробити, якщо ви хочете вийти з маршрутки?'
+      options:
+        - text: 'сказати водію про зупинку'
+          correct: true
+        - text: 'просто чекати біля дверей'
+          correct: false
+        - text: 'натиснути червону кнопку'
+          correct: false
+        - text: 'подзвонити в дзвіночок'
+          correct: false
+      explanation: 'У маршрутці треба голосно сказати водію: На зупинці, будь ласка!'
+    - question: 'Який відмінок ми використовуємо для транспорту (Чим?)?'
+      options:
+        - text: 'Орудний відмінок'
+          correct: true
+        - text: 'Називний відмінок'
+          correct: false
+        - text: 'Родовий відмінок'
+          correct: false
+        - text: 'Місцевий відмінок'
+          correct: false
+      explanation: 'Ми використовуємо Орудний відмінок (Instrumental Case) для засобів транспорту.'
+    - question: 'Який транспорт їде під землею?'
+      options:
+        - text: 'метро'
+          correct: true
+        - text: 'автобус'
+          correct: false
+        - text: 'трамвай'
+          correct: false
+        - text: 'таксі'
+          correct: false
+      explanation: 'Метро — це підземний вид транспорту.'
+    - question: 'Що треба зробити з квитком?'
+      options:
+        - text: 'завалідувати'
+          correct: true
+        - text: 'з’їсти'
+          correct: false
+        - text: 'викинути'
+          correct: false
+        - text: 'сховати'
+          correct: false
+      explanation: 'Квиток потрібно завалідувати.'
+
+- type: fill-in
+  title: 'Чим ви їдете? (Instrumental Case)'
+  instruction: 'Complete the sentences using the correct form of the transport in Instrumental case.'
+  items:
+    - sentence: 'Я щоранку їду на роботу на {{answer}}.'
+      answer: 'метро'
+      options: ['метро', 'метром', 'метрі', 'метру']
+      explanation: 'Слово метро не змінюється; з ним вживається прийменник «на».'
+    - sentence: 'Мій брат любить їздити {{answer}}.'
+      answer: 'автобусом'
+      options: ['автобусом', 'автобус', 'автобусу', 'автобусі']
+      explanation: 'Автобус (чоловічий рід) в орудному відмінку має закінчення -ом.'
+    - sentence: 'Ми їдемо в центр {{answer}}.'
+      answer: 'трамваєм'
+      options: ['трамваєм', 'трамвай', 'трамваї', 'трамваю']
+      explanation: 'Трамвай (м''яка група) в орудному відмінку має закінчення -єм.'
+    - sentence: 'Студенти часто їздять {{answer}}.'
+      answer: 'тролейбусом'
+      options: ['тролейбусом', 'тролейбус', 'тролейбусі', 'тролейбуса']
+      explanation: 'Тролейбус в орудному відмінку має закінчення -ом.'
+    - sentence: 'Увечері найзручніше їхати на {{answer}}.'
+      answer: 'таксі'
+      options: ['таксі', 'таксем', 'таксом', 'таксу']
+      explanation: 'Слово таксі не змінюється; з ним вживається прийменник «на».'
+    - sentence: 'Туристи люблять подорожувати {{answer}}.'
+      answer: 'поїздом'
+      options: ['поїздом', 'поїзд', 'поїзді', 'поїзда']
+      explanation: 'Поїзд в орудному відмінку має закінчення -ом.'
+    - sentence: 'Вона їде до школи {{answer}}.'
+      answer: 'тролейбусом'
+      options: ['тролейбусом', 'тролейбус', 'тролейбусу', 'тролейбусі']
+      explanation: 'Тролейбус (чоловічий рід) в орудному відмінку має закінчення -ом.'
+    - sentence: 'Вони їдуть на вокзал на {{answer}}.'
+      answer: 'метро'
+      options: ['метро', 'метром', 'метрі', 'метру']
+      explanation: 'Слово метро не змінюється; з ним вживається прийменник «на».'
+
+- type: unjumble
+  title: 'Складіть речення'
+  instruction: 'Put the words in the correct order to form a sentence.'
+  items:
+    - words: ['на', 'роботу', 'їду', 'автобусом', 'Я', '.']
+      answer: 'Я їду на роботу автобусом.'
+    - words: ['Наступна', 'станція', '—', 'Університет', '.']
+      answer: 'Наступна станція — Університет.'
+    - words: ['треба', 'пересадку', 'зробити', 'Мені', '.']
+      answer: 'Мені треба зробити пересадку.'
+    - words: ['Обережно,', 'двері', 'зараз', 'зачиняються', '.']
+      answer: 'Обережно, двері зараз зачиняються.'
+    - words: ['доїхати', 'Як', 'до', 'вокзалу', '?']
+      answer: 'Як доїхати до вокзалу?'
+    - words: ['квиток', 'завалідувати', 'Не', 'забудьте', '.']
+      answer: 'Не забудьте завалідувати квиток.'
+
+- type: true-false
+  title: 'Правила етикету та факти'
+  instruction: 'Decide if the statement is True or False regarding transport in Ukraine.'
+  items:
+    - statement: 'У маршрутці можна платити карткою через валідатор.'
+      correct: false
+      explanation: 'У маршрутках зазвичай платять готівкою водію.'
+    - statement: 'Слово "метро" змінюється за відмінками (метром, метрі).'
+      correct: false
+      explanation: 'Слово "метро" є незмінним іншомовним словом.'
+    - statement: 'Щоб вийти з маршрутки, треба попросити водія зупинитися.'
+      correct: true
+      explanation: 'Маршрутки зупиняються на вимогу пасажирів.'
+    - statement: 'У Києві жетони все ще популярні для оплати метро.'
+      correct: false
+      explanation: 'Жетони більше не використовуються; діє електронна система оплати.'
+    - statement: 'Коли двері метро зачиняються, треба бігти швидше.'
+      correct: false
+      explanation: 'Це небезпечно! Треба зачекати наступний поїзд.'
+    - statement: 'Станція "Арсенальна" дуже глибока, тому ескалатор їде довго.'
+      correct: true
+      explanation: 'Це найглибша станція у світі.'
+    - statement: 'Тролейбус їздить швидше за метро.'
+      correct: false
+      explanation: 'Метро значно швидше, бо немає заторів.'
+    - statement: 'Маршрутки зупиняються на кожній зупинці автоматично.'
+      correct: false
+      explanation: 'У маршрутці треба попередити водія про зупинку.'
+
+- type: fill-in
+  title: 'Іти чи Їхати?'
+  instruction: 'Choose the correct verb: "іти" (walk) or "їхати" (ride).'
+  items:
+    - sentence: 'Я {{answer}} додому пішки, бо погода гарна.'
+      answer: 'йду'
+      options: ['йду', 'їду', 'ходити', 'їздити']
+      explanation: 'Пішки (on foot) означає, що ми використовуємо дієслово йти.'
+    - sentence: 'Ми {{answer}} на роботу на машині.'
+      answer: 'їдемо'
+      options: ['їдемо', 'йдемо', 'ходимо', 'їздимо']
+      explanation: 'На машині (by car) означає транспорт, тому їхати.'
+    - sentence: 'Студенти {{answer}} в університет на метро.'
+      answer: 'їдуть'
+      options: ['їдуть', 'йдуть', 'ходять', 'їздять']
+      explanation: 'На метро — це транспорт, тому їхати.'
+    - sentence: 'Він {{answer}} в магазин, це дуже близько.'
+      answer: 'іде'
+      options: ['іде', 'їде', 'ходить', 'їздить']
+      explanation: 'Близько зазвичай ходять пішки (іти).'
+    - sentence: 'Ви {{answer}} до Львова поїздом?'
+      answer: 'їдете'
+      options: ['їдете', 'йдете', 'ходите', 'їздите']
+      explanation: 'Поїзд — це транспорт, тому їхати.'
+    - sentence: 'Чому ти {{answer}} так повільно?'
+      answer: 'ідеш'
+      options: ['ідеш', 'їдеш', 'ходиш', 'їздиш']
+      explanation: 'Контекст руху людини ногами (walking).'
+    - sentence: 'Діти {{answer}} до школи пішки.'
+      answer: 'йдуть'
+      options: ['йдуть', 'їдуть', 'ходять', 'їздять']
+      explanation: 'Пішки — це завжди іти.'
+    - sentence: 'Ми завтра {{answer}} у відпустку.'
+      answer: 'їдемо'
+      options: ['їдемо', 'йдемо', 'їздимо', 'ходимо']
+      explanation: 'У відпустку (на далеку відстань) — їхати.'
+
+- type: match-up
+  title: 'Корисні фрази'
+  instruction: 'Match the Ukrainian phrase to the English translation.'
+  pairs:
+    - left: 'Обережно, двері зачиняються'
+      right: 'Caution, doors are closing'
+    - left: 'Наступна зупинка'
+      right: 'Next stop'
+    - left: 'Як доїхати до центру?'
+      right: 'How do I get to the center?'
+    - left: 'Передайте за проїзд'
+      right: 'Pass the fare, please'
+    - left: 'Ви виходите?'
+      right: 'Are you getting off?'
+    - left: 'Один квиток, будь ласка'
+      right: 'One ticket, please'
+    - left: 'Мені треба на вокзал'
+      right: 'I need to get to the train station'
+    - left: 'Скільки коштує проїзд?'
+      right: 'How much is the fare?'
+
+- type: quiz
+  title: 'Граматика: Де чи Куди?'
+  instruction: 'Choose the correct preposition and case ending.'
+  items:
+    - question: 'Зараз я йду _____ (метро).'
+      options:
+        - text: 'в метро'
+          correct: true
+        - text: 'у метрі'
+          correct: false
+        - text: 'на метро'
+          correct: false
+        - text: 'при метро'
+          correct: false
+      explanation: 'Напрямок руху (Куди?) вимагає Знахідний відмінок: в метро.'
+    - question: 'Ми вже довго чекаємо _____ (зупинка).'
+      options:
+        - text: 'на зупинці'
+          correct: true
+        - text: 'на зупинку'
+          correct: false
+        - text: 'в зупинці'
+          correct: false
+        - text: 'під зупинку'
+          correct: false
+      explanation: 'Місцезнаходження (Де?) вимагає Місцевий відмінок: на зупинці.'
+    - question: 'Вона швидко зайшла _____ (вагон).'
+      options:
+        - text: 'у вагон'
+          correct: true
+        - text: 'у вагоні'
+          correct: false
+        - text: 'на вагон'
+          correct: false
+        - text: 'з вагона'
+          correct: false
+      explanation: 'Напрямок руху (Куди?) вимагає Знахідний відмінок: у вагон.'
+    - question: 'Скажи мені, ти зараз _____ (робота)?'
+      options:
+        - text: 'на роботі'
+          correct: true
+        - text: 'на роботу'
+          correct: false
+        - text: 'в роботі'
+          correct: false
+        - text: 'у роботу'
+          correct: false
+      explanation: 'Місцезнаходження (Де?) вимагає Місцевий відмінок: на роботі.'
+    - question: 'Швидкісний поїзд прибуває _____ (станція).'
+      options:
+        - text: 'на станцію'
+          correct: true
+        - text: 'на станції'
+          correct: false
+        - text: 'у станцію'
+          correct: false
+        - text: 'в станції'
+          correct: false
+      explanation: 'Напрямок (Куди?) — на станцію.'
+    - question: 'Багато людей зараз стоять _____ (ескалатор).'
+      options:
+        - text: 'на ескалаторі'
+          correct: true
+        - text: 'на ескалатор'
+          correct: false
+        - text: 'в ескалатор'
+          correct: false
+        - text: 'у ескалаторі'
+          correct: false
+      explanation: 'Місце (Де?) — на ескалаторі.'
+    - question: 'Увечері ми з друзями йдемо _____ (центр).'
+      options:
+        - text: 'в центр'
+          correct: true
+        - text: 'в центрі'
+          correct: false
+        - text: 'на центр'
+          correct: false
+        - text: 'з центру'
+          correct: false
+      explanation: 'Напрямок руху (Куди?) — в центр.'
+    - question: 'Сьогодні ми цілий день гуляємо _____ (центр).'
+      options:
+        - text: 'в центрі'
+          correct: true
+        - text: 'в центр'
+          correct: false
+        - text: 'на центрі'
+          correct: false
+        - text: 'у центру'
+          correct: false
+      explanation: 'Місце (Де?) — в центрі.'
+
+- type: fill-in
+  title: 'Діалог у маршрутці'
+  instruction: 'Fill in the missing words to complete the dialogue.'
+  items:
+    - sentence: '— Передайте, будь ласка, за {{answer}}.'
+      answer: 'проїзд'
+      options: ['проїзд', 'квиток', 'вихід', 'вхід']
+      explanation: 'Стандартна фраза: Передайте за проїзд.'
+    - sentence: '— Скільки з мене? — {{answer}} гривень.'
+      answer: 'П''ятнадцять'
+      options: ['П''ятнадцять', 'Багато', 'Гроші', 'Квиток']
+      explanation: 'Потрібно назвати число (ціну).'
+    - sentence: '— Ви {{answer}} на наступній?'
+      answer: 'виходите'
+      options: ['виходите', 'йдете', 'сидите', 'стоїте']
+      explanation: 'Питання до пасажира попереду: Ви виходите?'
+    - sentence: '— Так, я виходжу. Дозвольте {{answer}}.'
+      answer: 'пройти'
+      options: ['пройти', 'стати', 'сісти', 'лежати']
+      explanation: 'Ввічливе прохання пропустити до виходу.'
+    - sentence: '— Водію! На {{answer}}, будь ласка!'
+      answer: 'зупинці'
+      options: ['зупинці', 'дорозі', 'світлофорі', 'повороті']
+      explanation: 'Прохання зупинити автобус.'
+    - sentence: '— Дякую! Гарного {{answer}}!'
+      answer: 'дня'
+      options: ['дня', 'раку', 'часу', 'автобуса']
+      explanation: 'Ввічливе прощання.'
+    - sentence: '— Передайте {{answer}} водію.'
+      answer: 'гроші'
+      options: ['гроші', 'квиток', 'проїзд', 'картку']
+      explanation: 'Ми передаємо гроші або оплату.'
+    - sentence: '— Я {{answer}} на наступній.'
+      answer: 'виходжу'
+      options: ['виходжу', 'їду', 'сиджу', 'йду']
+      explanation: 'Попередження про вихід.'

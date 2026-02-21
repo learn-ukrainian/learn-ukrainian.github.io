@@ -3,25 +3,30 @@
   "slug": "body-and-health",
   "mode": "v3",
   "phases": {
-    "v3-A": {
-      "status": "complete",
-      "ts": "2026-02-19T23:28:11Z",
-      "task_id": "v3-body-and-health-pA",
-      "mode": "full"
-    },
     "v3-B": {
       "status": "complete",
-      "ts": "2026-02-19T23:29:20Z"
+      "ts": "2026-02-20T21:35:34Z",
+      "note": "migrated-from-v2"
     },
     "v3-C": {
       "status": "complete",
-      "ts": "2026-02-19T23:30:51Z",
-      "task_id": "v3-body-and-health-pC"
+      "ts": "2026-02-20T21:35:34Z",
+      "note": "migrated-from-v2"
     },
     "v3-audit": {
-      "status": "failed",
-      "ts": "2026-02-19T23:55:26Z",
-      "attempts": 3
+      "status": "complete",
+      "ts": "2026-02-20T21:35:34Z",
+      "note": "migrated-from-v2"
+    },
+    "v3-D": {
+      "status": "complete",
+      "ts": "2026-02-20T21:35:34Z",
+      "note": "migrated-from-v2"
+    },
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-20T21:35:35Z",
+      "note": "adopted-existing-meta"
     }
   }
 }

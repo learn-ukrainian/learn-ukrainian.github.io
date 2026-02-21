@@ -6,60 +6,75 @@ version: '2.0'
 title: The Cyrillic Code I
 subtitle: Cracking the Ukrainian Alphabet
 content_outline:
-- section: Warm-up
+- section: Вступ (Introduction)
+  words: 400
   points:
-  - 'Why Ukrainian uses Cyrillic — cultural hook: named after Saint Cyril (9th c.),
-    though he likely created Glagolitic; developed by his students in the First Bulgarian
-    Empire.'
-  - 'Good news: Many letters are familiar — leaning on internationalisms like ''таксі'',
-    ''піца'', ''метро'' to build immediate confidence.'
-  - 'Strategy: True Friends vs False Friends — pedagogical approach to categorize
-    letters by visual/auditory similarity to Latin script.'
-- section: Presentation
+  - 'The cultural origin of Cyrillic: Named after Saint Cyril (9th c.), though he
+    likely created Glagolitic; developed by his students like Clement of Ohrid in
+    the First Bulgarian Empire.'
+  - 'Strategy: ''True Friends'' vs ''False Friends'' — categorization of 19 letters
+    by visual/auditory similarity to Latin script to build immediate learner confidence.'
+  - 'Building on internationalisms: Leaning on familiar sounds in ''таксі'', ''піца'',
+    ''метро'' to demonstrate that the code is already partially cracked.'
+- section: Презентація (Presentation)
+  words: 600
   points:
-  - 'True Friends (А, Е, І, О, К, М, Т) - look AND sound like English — State Standard
-    §4.1.1 alignment: introducing ''Україна'', ''Олена''.'
-  - 'False Friends (В, Н, Р, С, У, Х) - look familiar but sound different — learner
-    error: ''В'' trap (Vehicle /v/), ''Н'' trap (Hen /n/), ''Р'' trap (Roaring engine
-    /r/ or a ''Purring cat'').'
-  - 'New Letters (Б, Д, З, Л, П, Ф) - unique to Cyrillic — visual aids: ''Д'' looks
-    like a little house; explicitly clear that ''ё'', ''ы'', ''э'' (Russian-only)
-    do NOT exist in Ukrainian.'
-- section: Practice
+  - 'True Friends (А, Е, І, О, К, М, Т): Letters that look AND sound like English
+    — aligned with State Standard §4.1.1 using examples like ''Україна'' and ''Олена''.'
+  - 'The Trap Letters (False Friends): Explicitly identifying the ''P'' Trap (Р looks
+    like P but sounds like a roaring engine /r/), the ''H'' Trap (Н looks like H but
+    sounds like a Hen /n/), the ''B'' Trap (В looks like B but sounds like a Vehicle
+    /v/), and the ''C'' Trap (С looks like C but sounds like a Snake /s/).'
+  - 'New Letters (Б, Д, З, Л, П, Ф): Unique Cyrillic shapes with visual aids — ''Д''
+    looks like a little house, ''Л'' has two legs for walking.'
+  - 'The Exclusion Rule: Explicitly clarifying that Russian-only characters like ''ё'',
+    ''ы'', ''э'' do NOT exist in Ukrainian to establish linguistic boundaries from
+    the start.'
+- section: Практика (Practice)
+  words: 400
   points:
-  - 'Reading international words (банк, метро, кафе) — collocations: ''національний
-    банк'', ''станція метро'', ''ідемо в кафе''.'
-  - Mini-dialogues at metro station and café — focusing on 'так, будь ласка' (yes,
-    please) and 'так, звісно' (yes, of course).
-- section: Cultural Insight
+  - 'Decoding drills with high-frequency urban vocabulary: Reading ''банк'', ''метро'',
+    ''кафе'' while navigating the ''P'' and ''H'' traps.'
+  - 'Collocation building: Practicing essential phrases like ''національний банк''
+    and ''станція метро'' to see letters in context.'
+  - 'Functional mini-dialogues: Using ''так, будь ласка'' (yes, please) and ''так,
+    звісно'' (yes, of course) for immediate communicative utility.'
+- section: Культурний контекст (Cultural Insight)
+  words: 400
   points:
-  - 'Why Ukrainian uses Cyrillic (not Russian alphabet) — decolonization angle: Ukrainian
-    is unique for retaining ''І/і'' alongside ''И/и'', giving it a more ''European''
-    look compared to Russian.'
-  - Unique Ukrainian letters (І, Ї, Є, Ґ) — the 'І' identity and its role in distinguishing
-    the Ukrainian script from neighbors.
-- section: Production
+  - 'The ''I'' Identity: How the dotted ''І'' serves as a visual symbol of Ukrainian
+    identity and its European connection, distinguishing it from neighbors who use
+    ''И''.'
+  - 'The Story of Ґ: Brief mention of the ''repressed letter'' (removed in 1933, restored
+    in 1990) as a hook for Ukrainian linguistic resilience.'
+  - 'Typography and State Pride: State Standard §4.1.1 focus on naming conventions
+    — recognizing the letters in ''Київ'', ''Україна'', and ''українець'' as a first
+    step in literacy.'
+- section: Підсумок та продукція (Summary & Production)
+  words: 200
   points:
-  - Decoding international words — emphasizing that 'це факт' (it's a fact) uses 'Ф'
-    (False Friend for some, New Letter for others).
-  - Reading practice with IPA — focusing on the 'P' Trap (rolled /r/ like a 'Purring
-    cat') and 'B' Trap (voiced /v/).
+  - 'The Purring Cat vs. Roaring Engine: Production drill focusing on the rolled /r/
+    (Р) vs English /p/ to ensure phonological accuracy.'
+  - 'Fact-checking the code: Using ''це факт'' (it''s a fact) as a production exercise
+    for ''Ф'' and ''Т'' letter-sound correspondence.'
 vocabulary_hints:
   required:
-  - 'так (yes) — collocation: ''так, будь ласка'' (yes, please); ''так, звісно'' (yes,
-    of course)'
-  - 'банк (bank) — collocation: ''у банку'' (in the bank); ''національний банк'''
-  - 'метро (metro) — collocation: ''станція метро'' (metro station); ''у метро'''
-  - 'кафе (café) — collocation: ''у кафе'' (in the cafe); ''ідемо в кафе'''
-  - 'такт (tact) — usage note: international cognate'
-  - 'кіт (cat) — collocation: ''чорний кіт''; ''мій кіт'''
-  - 'мама (mom) — collocation: ''моя мама''; ''люблю маму'''
-  - 'тато (dad) — usage note: basic family term'
+  - 'так (yes) — collocations: ''так, будь ласка'' (yes, please), ''так, звісно''
+    (yes, of course); high frequency (top 100)'
+  - 'банк (bank) — collocations: ''у банку'' (in the bank), ''національний банк'';
+    high frequency urban term'
+  - 'метро (metro) — collocations: ''станція метро'' (metro station), ''у метро'';
+    high frequency transport term'
+  - 'кафе (café) — collocations: ''у кафе'', ''ідемо в кафе''; daily frequency'
+  - 'кіт (cat) — collocations: ''мій кіт'', ''чорний кіт''; core family/pet vocabulary'
+  - 'мама (mom) — collocations: ''моя мама'', ''люблю маму''; core family term'
+  - 'тато (dad) — usage: basic family term; collocations: ''мій тато'''
+  - 'такт (tact) — usage: international cognate to demonstrate shared roots'
   recommended:
-  - 'парк (park) — usage note: clear internationalism'
-  - 'bar (bar) — usage note: clear internationalism'
-  - 'факт (fact) — collocation: ''це факт'' (it''s a fact); ''цікавий факт'''
-  - 'план (plan) — collocation: ''бізнес-план''; ''маю план'' (I have a plan)'
+  - 'парк (park) — usage: clear internationalism for decoding practice'
+  - 'факт (fact) — collocations: ''це факт'' (it''s a fact), ''цікавий факт'''
+  - 'план (plan) — collocations: ''бізнес-план'', ''маю план'' (I have a plan)'
+  - 'бар (bar) — usage: clear internationalism for ''Б'', ''А'', ''Р'' identification'
 activity_hints:
 - type: match-up
   focus: Match letters to sounds

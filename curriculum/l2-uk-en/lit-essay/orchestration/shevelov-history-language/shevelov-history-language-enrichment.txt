@@ -1,0 +1,221 @@
+✅ Message sent to Gemini (ID: 12032) [auto-acked: self-addressed]
+✓ Message 12032 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12032...
+📨 Message #12032
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-shevelov-history-language
+   Time: 2026-02-20T23:35:30.190078+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 19
+module: lit-essay-19
+level: LIT.ESSAY
+slug: shevelov-history-language
+version: '2.0'
+title: Shevelov History Language
+subtitle: Shevelov History Language
+content_outline:
+- section: Вступ та контекст
+  points: []
+- section: Аналіз ключових творів
+  points: []
+- section: Стилістика та мова автора
+  points: []
+- section: Деколонізаційна перспектива
+  points:
+  - Як цей автор руйнує імперські міфи
+  - Українська суб'єктність у тексті
+- section: Підсумок та спадщина
+  points: []
+vocabulary_hints:
+  required:
+  - історіографія
+  - наратив
+  - суб'єктність
+  recommended:
+  - деколонізація
+activity_hints:
+- type: reading
+  focus: Аналіз першоджерела
+- type: essay-response
+  focus: Критичне есе
+- type: critical-analysis
+  focus: Деконструкція тексту
+focus: literature
+pedagogy: literature
+immersion: 100% Ukrainian
+phase: LIT Expansion
+objectives:
+- Проаналізувати творчість Shevelov History Language у контексті української літератури
+- Дослідити вплив автора на формування національної ідентичності
+persona:
+  voice: Senior Specialist
+  role: Historical Linguist
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Shevelov History Language (Юрій Шевельов: історія мови та есеїстика)
+
+## Використані джерела
+1. [Енциклопедія сучасної України (ЕСУ)](https://esu.com.ua/) — стаття "Шевельов Юрій Володимирович": життєвий шлях, внесок у мовознавство та літературознавство.
+2. [Інститут історії України НАНУ](http://history.org.ua/) — "ШЕВЕЛЬОВ (Шерех) Юрій Володимирович": історичний контекст його діяльності в еміграції, конфлікт з радянською історіографією.
+3. [Ізборник (litopys.org.ua)](http://litopys.org.ua/) — Юрій Шевельов, праці "Історична фонологія української мови", есе "Москва, Маросейка", статті про формування української літературної мови.
+
+## Хронологія
+- **1908**: Народився Юрій Шевельов (Ломідзе) у Харкові в родині етнічних німців/росіян, але свідомо обрав українську ідентичність.
+- **1944**: Еміграція з України на Захід (Німеччина), початок активної участі в об'єднанні МУР (Мистецький український рух) під псевдонімом Юрій Шерех.
+- **1954**: Написання та публікація есе "Москва, Маросейка", де вперше чітко сформульовано три головні небезпеки для українського відродження.
+- **1979**: Публікація епохальної праці "A Historical Phonology of the Ukrainian Language" (Гейдельберг), що здійснила переворот у славістиці.
+- **2002**: Смерть у Нью-Йорку. Спадщина Шевельова починає активно повертатися і переосмислюватися в незалежній Україні.
+
+## Ключові факти та цитати
+- **Факт**: Шевельов науково довів, що українська мова бере свій початок безпосередньо з праслов'янської, обминаючи гіпотетичний етап "спільноруської" (або давньоруської) мови.
+- **Цитата**: «Три страшні вороги українського відродження — Москва, український провінціалізм і комплекс Кочубеящина» (з есе "Москва, Маросейка").
+- **Цитата**: «Спільносхіднослов'янської (праруської) мови ніколи не було... Українська мова постала безпосередньо з праслов'янської» ("Історична фонологія").
+- **Факт**: Як літературний критик (Юрій Шерех), він пропагував ідею "національно-органічного" розвитку літератури, вільного від хуторянства та народництва.
+
+## Engagement Hooks (mapped to sections)
+- **Section "Аналіз ключових творів: "Історична фонологія" та науковий переворот"**: `[!myth-buster]` — Міф про "давньоруську народність" та єдину колиску трьох братніх народів. Шевельов фонологічними доказами зруйнував концепцію "Old East Slavic".
+- **Section "Вступ та контекст"**: `[!history-bite]` — Шевельов народився в російськомовній родині етнічного німця В. Шнейдера (який змінив прізвище на Шевельов через антинімецькі настрої Першої світової), але свідомо вибрав українську ідентичність і став її найбільшим захисником.
+- **Section "Вступ та контекст"**: `[!context]` — Діяльність Шевельова розгорталася на тлі жорсткої радянської цензури в УРСР, тому справжня українська наука могла розвиватися лише в еміграції (МУР, Гарвард, Колумбійський університет).
+- **Section "Аналіз ключових творів: Есеїстика та "Москва, Маросейка""**: `[!quote]` — Цитата про Москву, провінціалізм та Кочубеївщину як внутрішні і зовнішні екзистенційні загрози.
+- **Section "Деколонізаційна перспектива"**: `[!decolonization]` — Праці Шевельова повернули українській мові її самостійну, європейську історію, вирвавши її з ролі "додатка" до російської філологічної традиції.
+- **Section "Стилістика та мова автора"**: `[!culture]` — Вплив "шевельовського" стилю — поєднання строгого об'єктивізму з блискучою, іронічною есеїстикою — на сучасних інтелектуалів (наприклад, Оксану Забужко).
+
+## Деколонізаційний контекст
+- **Imperial/Soviet myth**: Українська мова є "зіпсованим" полонізмами діалектом російської або розвинулася разом із російською та білоруською зі спільної "давньоруської" мови в період Київської Русі.
+- **Ukrainian reality**: Українська мова розвивалася самостійно з праслов'янської. Її фонетичні риси почали формуватися ще у VII столітті. Есеїстика Шевельова деконструює менталітет "малороса", пояснюючи, що Російська імперія тримається не лише на силі Москви, але й на внутрішньому комплексі меншовартості українців.
+
+## Contested Terms
+| Concept | Imperial/Soviet framing | Ukrainian (decolonized) framing |
+|---------|-------------------------|---------------------------------|
+| Походження мов | Спільносхіднослов'янська мова, "колиска трьох народів" | Праслов'янська мова, безпосередній незалежний розвиток української |
+| Зв'язки з метрополією | Братерський союз, возз'єднання (Переяславська рада) | "Москва, Маросейка", колоніальне поглинання, Кочубеївщина |
+| Стан нації в імперії | Регіональна самобутність, місцевий колорит | Провінціалізм, хуторянство (як ментальна хвороба) |
+
+## Section-Mapped Research Notes
+
+### Вступ та контекст
+Юрій Шевельов (Юрій Шерех, Григорій Шевчук) — видатний український мовознавець, літературознавець та есеїст. Народився у Харкові, пережив Другу світову війну, емігрував. Став професором Гарвардського та Колумбійського університетів. Працював в умовах, коли в радянській Україні українська гуманітаристика була перетворена на інструмент імперської пропаганди. Шевельов став символом інтелектуального опору і збереження "високої" української науки в діаспорі.
+
+### Аналіз ключових творів: "Історична фонологія" та науковий переворот
+Його magnum opus — "A Historical Phonology of the Ukrainian Language" (1979). У цій праці Шевельов математично точно довів, що українська мова виникла не внаслідок розпаду гіпотетичної "спільноруської" мови, а постала безпосередньо з праслов'янської. Він виділив фонологічні зміни, які були унікальними для протоукраїнських територій ще до утворення Київської держави. Це повністю зруйнувало радянський міф про "колиску трьох братніх народів".
+
+### Аналіз ключових творів: Есеїстика та "Москва, Маросейка"
+Під псевдонімом Юрій Шерех він створив блискучу школу української інтелектуальної есеїстики. Есе "Москва, Маросейка" (1954) є фундаментальним для розуміння української поразки у визвольних змаганнях та історії відносин з Росією. Шевельов аналізує Переяславську угоду і виводить формулу "трьох страшних ворогів" українського відродження: зовнішнього (Москва) та двох внутрішніх (провінціалізм/хуторянство та Кочубеївщина/комплекс зради заради власної вигоди).
+
+### Стилістика та мова автора
+Стиль Шевельова поєднує бездоганну академічну точність і глибоку риторичну майстерність. Його есеїстика характеризується іронією, сарказмом, широкою європейською ерудицією. Він писав так званим "харківським" правописом, уникаючи радянських русифікованих норм. Мова Шевельова — це мова вільного європейського інтелектуала, яка сама по собі є актом деколонізації.
+
+### Деколонізаційна перспектива
+Як цей автор руйнує імперські міфи: Шевельов знищує ключовий лінгвістичний міф імперії про вторинність української мови. Українська суб'єктність у тексті: його праці утверджують Україну як самостійний культурний та історичний суб'єкт. Він показав, що українська мова та література мають оцінюватися не за критеріями подібності до російської, а у світовому, європейському контексті.
+
+### Підсумок та спадщина
+Спадщина Шевельова є фундаментом сучасної української філології та інтелектуальної деколонізації. Його ідеї вплинули на ціле покоління сучасних письменників і мислителів. Повернення його праць в Україну після 1991 року стало потужним поштовхом до переосмислення національної ідентичності та остаточного відриву від радянських гуманітарних матриць.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12105)
+✓ Message 12032 acknowledged
+✓ Message 12105 acknowledged

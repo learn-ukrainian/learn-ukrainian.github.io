@@ -1,0 +1,296 @@
+✅ Message sent to Gemini (ID: 10423) [auto-acked: self-addressed]
+✓ Message 10423 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10423...
+📨 Message #10423
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-regions-west
+   Time: 2026-02-20T20:32:08.443233+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b1-72
+level: B1
+sequence: 72
+slug: regions-west
+version: '2.0'
+title: 'Українські регіони: Захід'
+subtitle: Western Ukraine - Regions and Heritage
+content_outline:
+- section: Вступ — Захід як вікно в Європу
+  points:
+  - Географія Західної України
+  - Чому Захід має особливу ідентичність
+- section: Сучасність
+  points:
+  - Львів — культурна столиця
+  - Історія міста та австрійська спадщина
+  - Кав'ярні, архітектура, атмосфера
+  - Львів як центр українського відродження
+- section: Історія та культура
+  points:
+  - Галичина — земля традицій
+  - Галицький діалект і особливості
+  - Греко-католицька церква
+  - Закарпаття — мозаїка культур
+  - Угорці, русини, румуни
+  - Гори та туризм
+- section: Продукція та бренди Заходу
+  points:
+  - Львівська кава і шоколад
+  - Вино Закарпаття
+  - Гуцули, бойки, лемки
+- section: Підсумок — Захід у серці України
+  points:
+  - Роль Заходу в українській ідентичності
+vocabulary_hints:
+  required:
+  - регіон (region)
+  - спадщина (heritage)
+  - традиція (tradition)
+  - архітектура (architecture)
+  - Галичина (Galicia)
+  - Закарпаття (Zakarpattia)
+  - Львів (Lviv)
+  - культура (culture)
+  recommended:
+  - кав'ярня (coffee shop)
+  - гори (mountains)
+  - етнічний (ethnic)
+  - ідентичність (identity)
+activity_hints:
+- type: reading
+  focus: Authentic texts about Western Ukraine
+  items: 15
+- type: match-up
+  focus: Match regions to features
+  items: 20
+- type: fill-in
+  focus: Complete cultural descriptions
+  items: 15
+- type: quiz
+  focus: Compare regional cultures
+  items: 10
+focus: culture
+pedagogy: CBI
+prerequisites:
+- b1-71 (Emotional Intelligence)
+connects_to:
+- b1-73 (Regions East)
+objectives:
+- Learner can discuss Western Ukraine's regions and cultural heritage
+- Learner can understand authentic texts about Lviv, Galicia, and Zakarpattia
+- Learner can use regional vocabulary to describe Western Ukrainian culture
+- Learner can compare Western Ukrainian traditions with other regions
+grammar:
+- Reading comprehension strategies
+- Cultural vocabulary in context
+- Descriptive language patterns
+register: розмовний
+phase: B1.7 [Contemporary Ukraine]
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Lviv Coffee Connoisseur
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Українські регіони: Захід
+
+## State Standard Reference
+§3.13: "Місця: тип і розташування місцевості; інституції та громадські місця; пам’ятки культури і пам’ятники; туристичні принади."
+§3.15: "Традиції, звичаї, свята: ... українські звичаї і традиції."
+Alignment: This module directly addresses the requirement to describe local terrain, cultural monuments, and tourist attractions (Lviv, Carpathians), as well as specific regional traditions (coffee culture, holidays).
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| **спадщина** (heritage) | High (Core Academic/Cultural) | культурна спадщина, історична спадщина, світова спадщина ЮНЕСКО |
+| **традиція** (tradition) | High (General) | за народною традицією, давня традиція, підтримувати традицію |
+| **архітектура** (architecture) | Medium (Thematic) | старовинна архітектура, пам'ятка архітектури, стиль архітектури |
+| **кав'ярня** (coffee shop) | High (Urban/Cultural) | затишна кав'ярня, львівська кав'ярня, сидіти в кав'ярні |
+| **Галичина** (Galicia) | Medium (Regional Proper Noun) | на Галичині, Східна Галичина, історія Галичини |
+| **Закарпаття** (Zakarpattia) | Medium (Regional Proper Noun) | відпочинок на Закарпатті, природа Закарпаття, вина Закарпаття |
+
+## Cultural Hooks
+1. **Lviv Coffee Origin**: The coffee tradition in Lviv is linked to **Yuriy Kulchytskyi** (from Lviv region), a hero of the Battle of Vienna (1683), who opened the first Viennese coffee house "Under the Blue Bottle" and invented the recipe for coffee with milk/sugar. Lviv's first coffee house opened later (1829), but the "cult" is modern.
+2. **Dialectal Flavor**: The "Galician" accent and vocabulary (*гаварити*, *філіжанка*, *коліжанка*, *файно*) are iconic markers of the region, often used in literature and media to signal "Western" identity.
+3. **Multicultural Zakarpattia**: Unlike the more homogenous center, Zakarpattia is a true borderland mosaic: Ukrainian, Hungarian, Romanian, and Slovak influences blend in language, cuisine (bograch), and architecture.
+
+## Common Learner Errors
+1. **Preposition Usage**: *В Галичині* (Incorrect) → **На Галичині** (Correct).
+   *Why*: Historical regions (Galicia, Volhynia, Polissia, Zakarpattia) traditionally take the preposition *на*, treating them as territories/terrains rather than enclosed administrative units.
+2. **Regional Confusion**: Equating "Western Ukraine" solely with "Lviv/Galicia".
+   *Why*: Learners often overlook that Volhynia, Bukovyna, and Zakarpattia have distinct histories and dialects separate from the Galician tradition.
+3. **Adjective Agreement**: *Львівська кава* (Correct) vs *Львівський кава* (Incorrect).
+   *Why*: *Кава* is feminine in Ukrainian (unlike Russian where *кофе* is masculine), so adjectives must agree: *смачна кава*, *гаряча кава*.
+
+## Cross-References
+- **Builds on**: A2 cultural modules (basic holidays, food), B1-71 (Emotional Intelligence - sequencing).
+- **Prepares for**: B1-73 (Regions East - intended for contrast), B1-84 (Internal Tourism).
+
+## Notes for Content Writing
+- **Persona**: "Lviv Coffee Connoisseur" (Urbanist/Ethnographer blend). Use a tone that is welcoming, slightly sophisticated but warm (*«Запрошую на філіжанку кави...»*).
+- **Immersion**: Strict 100%. Use *«як кажуть львів'яни»* to introduce dialect words without breaking immersion.
+- **Geography**: Clearly distinguish the Carpathians (nature) from Lviv (urban culture).
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Захід як вікно в Європу (Introduction: The West as a Window to Europe)"
+  words: 600
+  points:
+  - "Географічне розташування Західної України як 'вікна в Європу' та прикордонного мозаїчного регіону."
+  - "Державний стандарт §3.13: Опис ландшафту, інституцій та громадських місць, що формують особливу ідентичність Заходу."
+  - "Розвінчування міфу про однорідність: короткий огляд відмінностей між Галичиною, Волинню, Буковиною та Закарпаттям."
+- section: "Львів — місто кави та архітектури (Lviv — City of Coffee and Architecture)"
+  words: 1000
+  points:
+  - "Історія львівської кави: Юрій Кульчицький, Віденська битва (1683) та перша кав'ярня 'Під синьою пляшкою'."
+  - "Культурний гачок: Як Кульчицький винайшов рецепт кави з молоком та цукром, ставши символом європейської інтеграції Львова."
+  - "Архітектурна спадщина: Львів як об'єкт Світової спадщини ЮНЕСКО (Державний стандарт §3.13)."
+  - "Робота над помилками: Жіночий рід слова 'кава' в українській мові — вправи на узгодження прикметників (смачна кава, львівська кава)."
+- section: "Галичина: Традиції та мовний колорит (Galicia: Traditions and Linguistic Flavor)"
+  words: 800
+  points:
+  - "Навчальна помилка: Правильне вживання прийменників з історичними регіонами — 'на Галичині' (територія) замість 'в Галичині'."
+  - "Галицький діалект як маркер ідентичності: вживання слів 'філіжанка', 'коліжанка', 'файно' в автентичному контексті."
+  - "Державний стандарт §3.15: Роль Греко-католицької церкви та місцевих звичаїв у збереженні українських традицій."
+- section: "Закарпаття — мозаїка культур та природи (Zakarpattia — A Mosaic of Cultures and Nature)"
+  words: 1000
+  points:
+  - "Закарпаття як мультикультурне порубіжжя: суміш українських, угорських, румунських та словацьких впливів."
+  - "Кулінарна дипломатія: традиції закарпатської кухні (бограч) та виноробства як частина туристичної привабливості."
+  - "Карпатські гори: туризм, екологія та побут етнічних груп (гуцули, бойки, лемки) згідно зі стандартом §3.13."
+- section: "Підсумок: Захід у серці України (Summary: The West in the Heart of Ukraine)"
+  words: 600
+  points:
+  - "Роль Західної України у національному відродженні та сучасній культурній дипломатії."
+  - "Порівняння регіональних особливостей (Галичина vs Закарпаття) для підготовки до модуля B1-73 (Схід України)."
+  - "Повторення стратегій розуміння автентичних текстів про пам'ятки культури та туристичні принади."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "регіон (region) — гірський регіон, прикордонний регіон; висока частотність"
+  - "спадщина (heritage) — культурна спадщина, світова спадщина ЮНЕСКО; академічний реєстр"
+  - "традиція (tradition) — за народною традицією, підтримувати традицію; загальновживане"
+  - "архітектура (architecture) — пам'ятка архітектури, старовинна архітектура; тематичне"
+  - "Галичина (Galicia) — вживання: НА Галичині (historical region preposition)"
+  - "Закарпаття (Zakarpattia) — вживання: НА Закарпатті; природа Закарпаття"
+  - "Львів (Lviv) — культурна столиця, львів'янин/львів'янка"
+  - "культура (culture) — мозаїка культур, центр українського відродження"
+  recommended:
+  - "кав'ярня (coffee shop) — затишна львівська кав'ярня; осередок спілкування"
+  - "гори (mountains) — відпочинок у горах, Карпати"
+  - "етнічний (ethnic) — етнічні групи, етнічний склад населення"
+  - "ідентичність (identity) — національна ідентичність, особлива ідентичність"
+  - "філіжанка (cup) — галицький діалектизм; часто вживається з 'кава'"
+  - "файно (fine/well) — діалектне прислівник, характерне для Заходу"
+  - "коліжанка (female colleague/friend) — специфічне західноукраїнське звертання"
+  - "бограч (bograch) — закарпатська м'ясна страва; культурний маркер"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (3824 chars)
+✅ Message sent to Claude (ID: 10428)
+✓ Message 10428 acknowledged
+   Auto-acknowledged reply #10428 (stdout delivery — no inbox accumulation)
+✓ Message 10423 acknowledged

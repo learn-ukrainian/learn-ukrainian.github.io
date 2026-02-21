@@ -1,35 +1,33 @@
-# Дослідження: At the Café (Практичний сценарій)
+# Дослідження: At the Café
 
 ## State Standard Reference
-§3.9: "Ресторан, кафе: страви; напої; посуд і столові прибори."
-§4.2.3.2.1: "Знахідний відмінок: Без прийменника (об’єкт дії): Віра читає цікаву книжку."
-Alignment: Цей модуль реалізує комунікативну інтенцію «замовлення в закладі харчування» через використання тематичної лексики (напої, страви) та граматичної конструкції Знахідного відмінка для прямого додатка (замовлення об’єкта).
+§4.2.3.2.1: "Без прийменника (об’єкт дії): Віра читає цікаву книжку."
+Alignment: This module explicitly teaches the Accusative case for ordering (direct object), matching the standard's requirement for expressing the object of an action without a preposition (e.g., "Я хочу кав**у**"). It also addresses Catalogue A (Communicative Intentions) for "висловити елементарні прохання" (express elementary requests) and Catalogue B (Themes) §3.9 "Ресторан, кафе".
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| Кава | High (Top beverage) | чорна кава, кава з молоком, філіжанка кави |
-| Чай | High | зелений чай, чорний чай, чай з лимоном |
-| Рахунок | High (Service context)| можна рахунок?, оплатити рахунок, окремий рахунок |
-| Будь ласка | High (Politeness) | каву, будь ласка; сідайте, будь ласка |
-| Меню | Medium-High | подивитися меню, що у вас у меню? |
-| Готівка/Картка| Medium (Payment) | платити готівкою, розрахуватися карткою |
+| кава | High (Top 500) | чорна кава, кава з молоком, філіжанка кави, пити каву |
+| чай | High (Top 500) | зелений чай, чорний чай, чай з лимоном, чашка чаю |
+| меню | Medium | винна карта, дитяче меню, попросити меню |
+| рахунок | Medium | оплатити рахунок, попросити рахунок, окремий рахунок |
+| будь ласка | Very High | скажіть будь ласка, дайте будь ласка, сідайте будь ласка |
+| готівка | Medium | платити готівкою (Instrumental fixed phrase) |
 
 ## Cultural Hooks
-1. **Львівська кавова легенда**: Львів вважається столицею кави в Україні завдяки австрійському впливу. Тут кава — це не просто напій, а ритуал. Замість звичайної "чашки" львів'яни часто кажуть «філіжанка» (filizhanka), що підкреслює особливу атмосферу. (Джерело: lviv-day.com)
-2. **Юрій Кульчицький**: Українець із Галичини, який відкрив одну з перших кав'ярень у Відні («Під синьою пляшкою») і навчив європейців додавати в каву молоко та цукор. У Львові йому встановлено пам'ятник. (Джерело: welcomeukraine.today)
+1. **Lviv Coffee Culture**: Lviv is considered the coffee capital of Ukraine. The phrase "Піти на каву" (To go for coffee) implies a social ritual, not just consuming a drink.
+2. **Yuriy Kulchytsky**: A Ukrainian noble from Halychyna who is credited with opening the first coffee house in Vienna, "Under the Blue Bottle," and inventing coffee with milk (Melange).
+3. **Філіжанка vs Чашка**: In Lviv and Western Ukraine, the word «філіжанка» (from Polish *filiżanka*) is preferred for a coffee cup, while «чашка» is standard elsewhere. Using «філіжанка» adds "Lviv flavor".
 
 ## Common Learner Errors
-1. **Case Mismatch**: Використання Називного відмінка замість Знахідного при замовленні. (Error: *«Я хочу кава»* → Correct: **«Я хочу каву»**) — новачки часто забувають змінювати закінчення -а на -у для жіночого роду.
-2. **Literal Translation**: Спроба перекласти "May I have..." буквально. (Error: *«Можу я мати...»* → Correct: **«Можна мені...»**) — в українській мові для замовлення частіше використовується безособова конструкція з давальним відмінком займенника.
-3. **Word Order with "Please"**: Розміщення "будь ласка" на початку речення, що звучить занадто формально. В українській мові "будь ласка" найприродніше звучить у середині або в кінці прохання.
+1. **Case Error**: Using Nominative instead of Accusative for the object ("Я буду кав**а**" instead of "Я буду кав**у**").
+2. **Word Order**: Placing "будь ласка" at the absolute beginning of a request like in English ("Будь ласка, дайте мені..." is less natural than "Дайте мені, будь ласка...").
+3. **Literal Translation**: Translating "Can I have...?" literally. The natural Ukrainian equivalent is "Можна мені...?" (Is it allowed to me?) or simply "Мені, будь ласка..." (To me, please...).
 
 ## Cross-References
-- Builds on: **a1-19** (At the Café - intro), **a1-34** (Checkpoint Core Grammar - case formation).
-- Prepares for: **a1-36** (At the Restaurant - more complex dining), **a1-37** (At the Market - bargaining and items).
+- Builds on: a1-19 (At the Café - Intro), a1-34 (Checkpoint Core Grammar)
+- Prepares for: a1-36 (At the Restaurant), a1-37 (At the Market)
 
 ## Notes for Content Writing
-- Використовувати персонажа «Lviv Coffee Connoisseur», щоб додати локального колориту (фрази про філіжанку, запах кави).
-- Фокусуватися на ввічливості: обов'язкове використання "будь ласка" та "дякую" у кожному діалозі.
-- Чітко пояснити різницю між оплатою готівкою (instrumental case intro through fixed phrase) та карткою.
-- Забезпечити IPA для всіх нових слів, особливо для «філіжанка» та «рахунок».
+- **Instrumental Case Strategy**: The plan requires introducing "готівкою" and "карткою". Since Instrumental is an A2 topic, these must be taught as **fixed lexical chunks** (adverbs) rather than a grammatical declension rule.
+- **Politeness**: Emphasize "Дякую" and "Будь ласка" as mandatory markers of politeness (Standard §3.9).

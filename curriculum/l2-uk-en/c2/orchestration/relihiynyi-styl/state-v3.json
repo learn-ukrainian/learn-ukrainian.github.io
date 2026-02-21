@@ -2,12 +2,5 @@
   "track": "c2",
   "slug": "relihiynyi-styl",
   "mode": "v3",
-  "phases": {
-    "v3-A": {
-      "status": "complete",
-      "ts": "2026-02-20T00:19:45Z",
-      "task_id": "v3-relihiynyi-styl-pA",
-      "mode": "full"
-    }
-  }
+  "phases": {}
 }

@@ -1,7 +1,7 @@
 # Audit Report: M14 — mine-and-yours.md
 **Level:** A1 | **Module:** M14 | **Phase:** A1.2 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-19 23:07:23
+**Generated:** 2026-02-21 00:46:36
 
 ## Configuration
 **Type:** A1-grammar
@@ -38,7 +38,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 3019/2000 (raw: 3501)
+- **Words:** ✅ 3021/2000 (raw: 3503)
 - **Activities:** ✅ 10/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -67,5 +67,5 @@
 | **Практика: Чия це річ?** | ✅ | 497 | Included in Core |
 | **Діалоги: Це мій телефон** | ✅ | 468 | Included in Core |
 | **Культура: Твій чи Ваш?** | ✅ | 503 | Included in Core |
-| **Підсумок** | ✅ | 45 | Included in Core |
+| **Підсумок** | ✅ | 47 | Included in Core |
 | **Vocabulary** | ➖ | 0 | Excluded Type |

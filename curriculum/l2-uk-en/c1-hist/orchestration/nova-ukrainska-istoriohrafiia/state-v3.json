@@ -2,12 +2,5 @@
   "track": "c1-hist",
   "slug": "nova-ukrainska-istoriohrafiia",
   "mode": "v3",
-  "phases": {
-    "v3-A": {
-      "status": "complete",
-      "ts": "2026-02-19T11:33:26Z",
-      "task_id": "v3-nova-ukrainska-istoriohrafiia-pA",
-      "mode": "full"
-    }
-  }
+  "phases": {}
 }

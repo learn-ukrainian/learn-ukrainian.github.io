@@ -1,7 +1,7 @@
 # Audit Report: M09 — reflexive-verbs.md
 **Level:** A1 | **Module:** M09 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-19 23:01:35
+**Generated:** 2026-02-21 00:46:33
 
 ## Configuration
 **Type:** A1-grammar
@@ -38,7 +38,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2672/2000 (raw: 3328)
+- **Words:** ✅ 2701/2000 (raw: 3356)
 - **Activities:** ✅ 10/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 5/4 types
@@ -51,7 +51,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 22.0% (target 15-35% (M09))
+- **Immersion:** 🇺🇦 22.1% (target 15-35% (M09))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -62,6 +62,6 @@
 | **Intro/Narrative** | ✅ | 290 | Included in Core |
 | **Reflexive Verbs (-ся)** | ✅ | 86 | Included in Core |
 | **Розминка: Що таке зворотні дієслова?** | ✅ | 422 | Included in Core |
-| **Теорія: Відмінювання та групи** | ✅ | 669 | Included in Core |
+| **Теорія: Відмінювання та групи** | ✅ | 698 | Included in Core |
 | **Практика: Дія на себе чи на іншого?** | ✅ | 795 | Included in Core |
 | **Культура: Секрети вимови** | ✅ | 410 | Included in Core |

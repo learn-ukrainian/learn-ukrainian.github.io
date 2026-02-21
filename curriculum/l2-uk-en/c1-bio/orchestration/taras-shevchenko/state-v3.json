@@ -2,12 +2,5 @@
   "track": "c1-bio",
   "slug": "taras-shevchenko",
   "mode": "v3",
-  "phases": {
-    "v3-A": {
-      "status": "complete",
-      "ts": "2026-02-19T13:23:04Z",
-      "task_id": "v3-taras-shevchenko-pA",
-      "mode": "full"
-    }
-  }
+  "phases": {}
 }

@@ -1,0 +1,212 @@
+✅ Message sent to Gemini (ID: 12592) [auto-acked: self-addressed]
+✓ Message 12592 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12592...
+📨 Message #12592
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-battle-of-kalka
+   Time: 2026-02-20T23:40:56.997392+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 47
+module: oes-047
+module_number: 39
+slug: battle-of-kalka
+title_uk: Битва на Калці
+title_en: Battle of Kalka
+phase: 2
+phase_id: literary-tradition
+phase_name: Literary Tradition
+focus: The Mongol threat appearing
+content_outline:
+- section: Вступ
+  description: Introduction to Battle of Kalka
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Senior Paleographer
+  role: Scout of the Wild Field
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Battle Of Kalka (Битва на Калці)
+
+## Використані джерела
+1.  [Енциклопедія історії України: Калка, битва на річці 1223](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Kalka_b) — Академічний огляд подій, датування та наслідків.
+2.  [Ізборник: Літопис Руський (Іпатіївський список)](http://litopys.org.ua/ipatlet/ipat36.htm) — Першоджерело, текст "Повісті про битву на Калці".
+3.  [Енциклопедія Сучасної України: Калка](https://esu.com.ua/article-9269) — Сучасна інтерпретація, аналіз учасників та втрат.
+
+## Хронологія
+- **1222**: Поява монгольських військ (Субедей і Джебе) на Північному Кавказі, розгром аланів і половців.
+- **Початок 1223**: Половецький хан Котян прибуває до Галича з проханням про допомогу («Днесь нашу землю отъяли, а вашу заутра возмуть»).
+- **Весна 1223**: Рада князів у Києві (Мстислав Романович, Мстислав Мстиславич Удатний, Мстислав Святославич та інші). Рішення виступити разом ("лучче намъ єсть стрѣти я на чюжой сторонѣ, нежели на своєй").
+- **Квітень 1223**: Збір військ біля острова Хортиця (Заруб). Перше зіткнення з монгольським авангардом, перемога русів.
+- **31 травня 1223**: Вирішальна битва на річці Калка. Неузгодженість дій: Мстислав Удатний і Данило атакують, київський князь залишається в укріпленому таборі. Втеча половців, розгром руського війська.
+- **1-3 червня 1223**: Облога київського табору ("на горі"). Зрада бродників (Плоскиня).
+- **Червень 1223**: "Бенкет на кістках" (страта полонених князів). Відступ залишків війська до Русі (повернулася лише десята частина).
+
+## Ключові факти та цитати
+- **Половецьке прохання**: «Землю нашу днесь отъяли, а вашу заутра пришедше возмуть».
+- **Заклик Мстислава Удатного**: «Аще ся не поможемъ симъ, то имуть ся предати имъ» (стратегічне бачення: краще мати половців союзниками, ніж васалами монголів).
+- **Опис татар**: «Явишася языци, ихъже никтоже добрѣ ясно не вѣсть, кто суть і отколе изидоша».
+- **Зрада Плоскині**: «І цѣлова хрест честный к Мьстиславу... а ты й-половци иссѣче, а князи я, и вдави я, положивше под доскы».
+- **Хоробрість Данила**: «Данилъ же выѣха напередъ... бѣ бо дерзокъ и храборъ».
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ": [!history-bite] — Про "невідомі народи" (Ismailites, Moabites) — як середньовічна людина пояснювала появу монголів через біблійні пророцтва.
+- Section "Основний матеріал: Дипломатія...": [!context] — Половецько-руські відносини: від ворожнечі до династичних шлюбів і військових союзів.
+- Section "Основний матеріал: Похід...": [!myth-buster] — Міф про "монгольську лавину". Насправді це був розвідувальний корпус (2 тумени, ~20 тис.), а не вся орда.
+- Section "Основний матеріал: Битва...": [!biography] — Данило Галицький: 18-річний князь, що отримав поранення, але продовжував бій (майбутній король).
+- Section "Основний матеріал: Трагедія...": [!decolonization] — Роль бродників (прото-козаків?) у зраді. Складність степової політики, де "свої" (християни) могли стати на бік ворога.
+- Section "Мовний аналіз...": [!paleography] — Особливості передачі тюркських імен (Котян, Басти) та титулів у давньоруській мові.
+
+## Деколонізаційний контекст
+- **Міф**: "Зрада половців". Радянська/російська історіографія часто звинувачувала половців у втечі, яка зламала стрій.
+- **Реальність**: Половці були деморалізовані попередніми поразками, але ініціатива битви належала Мстиславу Удатному, який переоцінив свої сили і не узгодив дії з іншими князями.
+- **Міф**: "Братні народи проти ворога".
+- **Реальність**: Русь була конгломератом ворогуючих князівств. Київський князь свідомо не вступив у бій, сподіваючись відсидітися. Це урок феодальної роздробленості, а не "спільної боротьби".
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| Назва противника | Монголо-татари (злиття понять) | Монголи (етнічне ядро), татари (підкорені племена), "невідомі народи" (джерела) |
+| Поразка | Наслідок "половецької зради" | Наслідок неузгодженості руських князів та тактичної переваги монголів |
+| Територія | Южно-русские степи | Дике Поле, Половецький степ, Північне Причорномор'я |
+
+## Section-Mapped Research Notes
+
+### Вступ
+Поява "невідомих народів". Релігійна інтерпретація (карою за гріхи). Хронікальна невизначеність щодо походження ворога.
+
+### Основний матеріал: Дипломатія на грані (Посольство і Рада)
+Котян Сутоєвич. Подарунки князям (верблюди, коні, дівчата). Аргументація: геополітика замість релігії. Київська рада: компроміс між ворогуючими Мономаховичами та Ольговичами.
+
+### Основний матеріал: Фатальний похід (Рух у степ)
+Збір у Заруба. Розстріл монгольських послів (порушення "яси" — закону, що зробило війну війною на винищення). Перемога над авангардом Гемябека. Ілюзія легкої перемоги.
+
+### Основний матеріал: Битва на Калці (Тактика і Хаос)
+31 травня. Переправа Мстислава Удатного. Відсутність єдиного командування. Удар монгольської важкої кінноти. Втеча половців через ряди руських полків. Героїзм Данила і Олега Курського.
+
+### Основний матеріал: Бенкет на кістках (Облога Києва)
+Табір Мстислава Київського. 3 дні оборони. Переговори з Плоскинею (бродник, християн, що цілував хрест). Підступне вбивство. Символізм "бенкету на дошках" — сакральне приниження князівської крові (без пролиття на землю).
+
+### Мовний аналіз: Літописний стиль (Повість про битву)
+Аналіз уривків. "Сѣча зла". Військова термінологія: "насади", "стяг", "дружина". Граматика: аорист як час миттєвої дії.
+
+### Підсумок
+Втрати (90% війська). "Сумна земля". Психологічний шок. Калка як репетиція Апокаліпсису 1240 року.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12634)
+✓ Message 12592 acknowledged
+✓ Message 12634 acknowledged

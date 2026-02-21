@@ -1,0 +1,298 @@
+✅ Message sent to Gemini (ID: 10352) [auto-acked: self-addressed]
+✓ Message 10352 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10352...
+📨 Message #10352
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-temporal-clauses
+   Time: 2026-02-20T20:28:12.961722+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b1-37
+level: B1
+sequence: 37
+slug: temporal-clauses
+version: '2.0'
+title: Часові підрядні речення
+subtitle: Temporal Clauses Deep Dive
+content_outline:
+- section: Тест
+  points:
+  - 'Diagnostic quiz on temporal clauses — focus on learner error: confusing ''коли''
+    (point) vs ''поки'' (duration)'
+  - Self-assessment questions — test the 'Until' negation trap specifically (поки
+    не)
+- section: Пояснення
+  points:
+  - коли - Basic Time Clause — State Standard §4.4.3 alignment; crucial distinction
+    between point and duration
+  - Sequence Connectors (перш ніж, після того як, як тільки) — visualize with timeline;
+    emphasize aspect correctness (Perf for completed sequence)
+  - 'Duration Connectors (поки, доки, під час того як) — learner error: ''Until''
+    requires negative verb (поки не); contrast with English logic'
+  - 'Simultaneous Actions — crucial distinction: Impf + Impf for simultaneous vs Perf
+    + Perf for sequential; cultural hook: ''Усьому свій час'' (Everything has its
+    time)'
+- section: Практика
+  points:
+  - Sequence events — practice ordering events with 'перш ніж' vs 'після того як'
+    using aspect clues
+  - Build temporal stories — incorporate idiom 'Чекати з моря погоди' (waiting idly)
+    to contrast active vs passive time
+- section: Діалоги
+  points:
+  - Temporal clauses in conversation — model natural use of 'як тільки' and 'тим часом'
+  - Narrative scenarios — practice explaining past sequences (storytelling aspect)
+vocabulary_hints:
+  required:
+  - 'коли (when) — high frequency; collocations: коли я був..., коли ми прийшли...'
+  - 'поки (while/until) — high frequency; learner error: confusing ''коли'' vs ''поки'';
+    collocations: поки не (until), поки я чекав...'
+  - 'перш ніж (before) — medium frequency (literary/formal); collocations: перш ніж
+    почати, перш ніж сказати'
+  - 'після того як (after) — medium frequency; collocations: після того як ми зробили...,
+    одразу після того як'
+  - 'як тільки (as soon as) — medium frequency; collocations: як тільки зможу, як
+    тільки прийдеш'
+  - доки (while/as long as) — synonym for поки; focus on duration
+  - під час (during) — focus on simultaneous action noun phrases
+  - одночасно (simultaneously) — useful adverb for clarification
+  recommended:
+  - щойно (just as) — emphasis on immediacy
+  - відтоді як (since - temporal) — temporal starting point
+  - до того як (before) — alternative to перш ніж
+  - 'тим часом (meanwhile) — medium frequency; collocations: тим часом як, а тим часом'
+activity_hints:
+- type: fill-in
+  focus: Complete temporal sentences
+  items: 25
+- type: error-correction
+  focus: Sequence events
+  items: 20
+- type: error-correction
+  focus: Fix temporal clause errors
+  items: 15
+- type: fill-in
+  focus: Write temporal narratives
+  items: 10
+focus: grammar
+pedagogy: TTT
+prerequisites:
+- b1-36 (Causal Result Clauses)
+connects_to:
+- b1-38 (Complex Sentence Integration)
+objectives:
+- Learner can express часові відношення using various temporal connectors
+- Learner can sequence events using appropriate temporal markers
+- Learner can distinguish simultaneous vs sequential actions
+- Learner can build complex temporal narratives
+grammar:
+- Temporal clauses with коли, після того як, поки
+- 'Sequence markers: перш ніж, як тільки'
+- Simultaneous vs sequential action
+register: розмовний
+phase: B1.3b [Complex Sentences]
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Biographer
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Часові підрядні речення
+
+## State Standard Reference
+§4.4.3: "складнопідрядні речення із часовою підрядною частиною (сполучне слово коли): вираження значення одночасності... вираження значення різночасовості"
+Alignment: Цей модуль безпосередньо реалізує вимогу стандарту щодо часових підрядних речень, розширюючи базове "коли" (A2) до точніших "поки", "перш ніж", "після того як" для рівня B1.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| **коли** | High (Top 100) | коли я був..., коли ми прийшли... |
+| **поки** | High | поки не (until), поки я чекав... |
+| **перш ніж** | Medium (Literary/Formal) | перш ніж почати, перш ніж сказати |
+| **після того як** | Medium | після того як ми зробили..., одразу після того як |
+| **як тільки** | Medium | як тільки зможу, як тільки прийдеш |
+| **тим часом** | Medium | тим часом як, а тим часом |
+
+## Cultural Hooks
+1. **"Усьому свій час"** (Everything has its time) — This proverb reflects the philosophical Ukrainian attitude towards patience and destiny. It's a perfect example for "General Truths" using temporal clauses.
+2. **"Чекати з моря погоди"** (To wait for weather from the sea) — Idiom meaning to wait idly for favorable conditions that may never come. Good for contrasting with active time management.
+
+## Common Learner Errors
+1. **Confusion of "коли" vs "поки"**: Learners often use "коли" for continuous background actions where "поки" (while) is required.
+   - *Error:* Я читав, **коли** вона спала. (Implies a point in time)
+   - *Correct:* Я читав, **поки** вона спала. (Implies duration/simultaneity)
+2. **"Until" Negation Trap**: In Ukrainian, "until" clauses often require a negative verb (`не` + perfective), which contradicts English logic.
+   - *Error:* Я буду чекати, поки ти **прийдеш**.
+   - *Correct:* Я буду чекати, поки ти **не прийдеш**.
+3. **Aspect Mismatch**: Using imperfective aspect for sequential actions (implies simultaneity) or perfective for simultaneous actions.
+   - *Error:* Коли я **читав** (Impf) книгу, я **зрозумів** (Perf) це. (Correct nuance: background action interrupted by event)
+   - *Error:* Після того як я **читав** (Impf) книгу, я ліг спати. (Incorrect: needs Perfective `прочитав` to show completion before the next action).
+
+## Cross-References
+- **Builds on**: `b1-36` (Causal Result Clauses - similar complex structure logic)
+- **Prepares for**: `b1-38` (Complex Sentence Integration - mixing time, cause, and condition)
+- **Connects to**: `b1-06` to `b1-10` (Aspect - crucial for correct temporal sequencing)
+
+## Notes for Content Writing
+- **Crucial Distinction**: Explicitly teach the difference between **Simultaneous** (одночасність - *Impf + Impf* or *коли/поки*) and **Sequential** (різночасовість - *Perf + Perf* or *після того як/перш ніж*).
+- **Visual Aid**: Use a timeline visualization for "перш ніж" vs "після того як" to clarify the order of events.
+- **Pedagogy**: Use the "Until" negation trap as a specific "Test" item in the TTT cycle, as it's counter-intuitive for English speakers.
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ та Діагностика (Introduction & Diagnostics)"
+  words: 600
+  points:
+  - "Diagnostic quiz on temporal clauses per State Standard §4.4.3 — focus on the critical learner error: confusing 'коли' (point in time) vs 'поки' (duration/simultaneity)."
+  - "Self-assessment on the 'Until' negation trap: test the counter-intuitive use of 'поки не' + perfective verb versus English positive logic."
+  - "Orientation to simultaneous (одночасність) vs sequential (різночасовість) actions, identifying high-frequency connectors found in research."
+- section: "Пояснення: Одночасність та Тривалість (Explanation: Simultaneity & Duration)"
+  words: 1000
+  points:
+  - "Deep dive into 'коли' (high frequency) vs 'поки/доки' (duration) — corrective drill: 'Я читав, поки вона спала' (Correct) vs 'Я читав, коли вона спала' (Incorrect nuance)."
+  - "Grammar of Simultaneous Actions: The requirement for Imperfective aspect (Impf + Impf) to show background continuity and parallel events."
+  - "Usage of 'тим часом як' and 'під час того як' for complex narrative layers, expanding beyond basic A2 'коли' constructions."
+- section: "Пояснення: Послідовність та пастка «поки не» (Explanation: Sequence & the «Until» Trap)"
+  words: 1000
+  points:
+  - "Sequence Connectors: 'перш ніж', 'після того як', 'як тільки' — visualize with a timeline to clarify event order (Action A finishes before Action B starts)."
+  - "Aspectual logic for sequencing: Emphasize the necessity of Perfective aspect (Perf + Perf) to signal completed sequence (e.g., 'Після того як я прочитав...')."
+  - "The 'Until' Negation Trap: Detailed explanation of 'поки не' + negative perfective verb (e.g., 'Я буду чекати, поки ти не прийдеш') to correct the most common B1 transfer error from English."
+- section: "Культурна перспектива: Час і Доля (Cultural Perspective: Time & Destiny)"
+  words: 700
+  points:
+  - "Cultural Hook 1: 'Усьому свій час' (Everything has its time) — Philosophical reading on patience and destiny in Ukrainian culture using general truth temporal clauses."
+  - "Cultural Hook 2: 'Чекати з моря погоди' — Idiom analysis focusing on passive vs active time management, contrasting 'поки' (while waiting) with 'як тільки' (actionable change)."
+  - "Linguistic elegance: How Ukrainian uses temporal markers to create 'narrative depth' in storytelling, moving from simple lists to layered experiences."
+- section: "Практика та Синтез (Practice & Synthesis)"
+  words: 700
+  points:
+  - "Sentence building: Ordering historical or daily events using 'перш ніж' vs 'після того як' with strict aspectual checks."
+  - "Error correction marathon: Fixing aspectual mismatches and the 'Until' negation trap in 15+ student-simulated sentences."
+  - "Narrative Production: Learners write a short story about a journey or event, incorporating at least 5 different temporal connectors and the idiom 'Чекати з моря погоди'."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "коли (when) — High frequency; collocations: 'коли я був...', 'коли ми прийшли...'; used for specific points in time."
+  - "поки (while/until) — High frequency; collocations: 'поки не' (until + negative verb), 'поки я чекав...'; signals duration."
+  - "перш ніж (before) — Medium frequency (literary/formal); collocations: 'перш ніж почати', 'перш ніж сказати'; requires Perfective."
+  - "після того як (after) — Medium frequency; collocations: 'після того як ми зробили...', 'одразу після того як'."
+  - "як тільки (as soon as) — Medium frequency; collocations: 'як тільки зможу', 'як тільки прийдеш'; emphasis on immediacy."
+  - "доки (while/as long as) — Synonym for 'поки'; focus on duration of a state."
+  - "під час (during) — Used with nouns to focus on simultaneous action phrases."
+  - "одночасно (simultaneously) — Crucial adverb for clarifying parallel sequences."
+  recommended:
+  - "щойно (just as) — Emphasis on immediacy; collocation: 'щойно я побачив'."
+  - "відтоді як (since) — Temporal starting point for a continuous duration."
+  - "до того як (before) — Common alternative to 'перш ніж' for sequential events."
+  - "тим часом (meanwhile) — Collocations: 'тим часом як', 'а тим часом'; used for parallel plot lines."
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4295 chars)
+✅ Message sent to Claude (ID: 10359)
+✓ Message 10359 acknowledged
+   Auto-acknowledged reply #10359 (stdout delivery — no inbox accumulation)
+✓ Message 10352 acknowledged

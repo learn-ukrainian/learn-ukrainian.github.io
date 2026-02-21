@@ -1,0 +1,319 @@
+✅ Message sent to Gemini (ID: 12432) [auto-acked: self-addressed]
+✓ Message 12432 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12432...
+📨 Message #12432
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-samvydav-shcho-tse
+   Time: 2026-02-20T23:39:35.880027+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-hist-039
+level: c1-hist
+sequence: 39
+version: '1.0'
+title: 'Самвидав: Що це було?'
+focus: history
+pedagogy: seminar
+objectives:
+- 'Analyze the causes and consequences of самвидав: що це було?'
+- Evaluate the historical significance of підпільна література
+content_outline:
+- section: Вступ — Підпільна література
+  subsections:
+  - Що таке самвидав?
+  - Чому виник — цензура
+  - Форми — машинопис, копії
+  - Значення для опору
+- section: Історія самвидаву
+  subsections:
+  - Витоки — 1950-60-ті
+  - «Відлига» — відносна свобода
+  - Шістдесятники — нове покоління
+  - Повернення репресій
+- section: Як працював самвидав
+  subsections:
+  - Техніка — друкарська машинка
+  - Копіювання — 5-7 копій
+  - Розповсюдження — ланцюжки
+  - Ризики — що загрожувало
+  - Вивезення на Захід
+- section: Типи текстів
+  subsections:
+  - Літературні твори
+  - Хроніки репресій
+  - Звернення і петиції
+  - Переклади
+  - Історичні дослідження
+- section: Український самвидав — особливості
+  subsections:
+  - Національне питання — центральне
+  - Мова як опір
+  - «Український вісник» Чорновола
+  - Зв'язок із загальносоюзним
+- section: Фрагмент — Перший номер
+  subsections:
+  - Текст (з глосами)
+  - Мета видання
+  - Тон і стиль
+  - Аудиторія
+- section: Підсумок
+  subsections:
+  - Самвидав як феномен
+  - Значення для історії
+  - Підготовка до наступних модулів
+vocabulary:
+- самвидав
+- цензура
+- підпільний
+- машинопис
+- копіювання
+- розповсюдження
+- опір
+- дисидент
+- репресія
+- хроніка
+- тамвидав
+- відлига
+- шістдесятники
+- КГБ
+- обшук
+activities:
+- type: reading
+  focus: Sample samvydav text — introduction to a publication
+- type: critical-analysis
+  focus: Map the samvydav production and distribution network
+- type: critical-analysis
+  focus: What were the risks at each stage?
+- type: comparative-study
+  focus: Compare Ukrainian samvydav with Russian
+- type: essay-response
+  focus: Чому самвидав був ефективним способом опору?
+sources:
+- name: Самвидав (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Самвидав
+  type: reference
+  notes: Overview
+- name: Український самвидав
+  url: https://uk.wikipedia.org/wiki/Український_самвидав
+  type: reference
+  notes: Ukrainian samizdat specifically
+- name: Архів самвидаву
+  url: https://diasporiana.org.ua/
+  type: primary
+  notes: Diaspora digital archive
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
+persona:
+  voice: Academic Historiographer
+  role: Underground Press Researcher
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Самвидав: Що це було?
+
+## Використані джерела
+1. [Енциклопедія історії України (history.org.ua)](http://resource.history.org.ua/) — фундаментальні статті про самвидав, дисидентський рух та персоналії.
+2. [Енциклопедія Сучасної України (esu.com.ua)](https://esu.com.ua/) — біографії Чорновола, Дзюби, Стуса, статті про "Український вісник".
+3. [Дисидентський рух в Україні (museum.khpg.org)](http://museum.khpg.org/) — віртуальний музей, архів документів, спогади учасників.
+4. [Diasporiana.org.ua](https://diasporiana.org.ua/) — архів української еміграційної періодики та самвидаву.
+
+## Хронологія
+- **Початок 1960-х**: Поява літературного самвидаву («шістдесятники»: Симоненко, Костенко, Стус). Поширення поезії та літературної критики.
+- **1964**: Пожежа в Публічній бібліотеці АН УРСР (Київ). Памфлет Є. Сверстюка «З приводу процесу над Погружальським» — перехід до політичної публіцистики.
+- **Серпень-Вересень 1965**: Перша хвиля арештів української інтелігенції. Іван Дзюба пише працю «Інтернаціоналізм чи русифікація?» (поширюється у самвидаві).
+- **1967**: В'ячеслав Чорновіл укладає збірку «Лихо з розуму» (матеріали про арештованих шістдесятників). Засуджений до ув'язнення.
+- **Січень 1970**: У Львові виходить перший випуск журналу «Український вісник» (редактор В. Чорновіл). Початок систематичного інформаційного самвидаву.
+- **Січень 1972**: «Великий погром» — масові арешти дисидентів (Чорновіл, Стус, Світличний, Сверстюк). Припинення виходу «першого» «Українського вісника» (до 1987 р.).
+
+## Ключові факти та цитати
+- **Технологія**: Використання друкарських машинок («Еріка», «Москва», «Колібрі»). Один закладка — 4-5 читабельних копій через "копірку" (вуглецевий папір) на тонкому «папіросному» папері.
+- **«Еріка»**: «"Еріка" бере чотири копії» (Олександр Галич).
+- **Масштаб**: Текст Івана Дзюби «Інтернаціоналізм чи русифікація?» став «біблією» самвидаву, його читали тисячі людей, попри заборону.
+- **Репресії**: Стаття 62 КК УРСР «Антирадянська агітація і пропаганда» — головний інструмент боротьби з самвидавом (терміни: 7 років таборів + 5 років заслання).
+- **Цитата (Завдання «УВ»)**: «"Український вісник" не є ні антирадянським, ні антикомуністичним виданням... Головне завдання "Вісника" — давати об'єктивну інформацію про порушення гарантованих Конституцією прав і свобод громадян».
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ — Підпільна література": [!history-bite] — Про походження терміна (іронічне "сам-себе-видав" поета Глазкова vs серйозний український контекст).
+- Section "Історія самвидаву": [!context] — Зв'язок "відлиги" Хрущова з появою перших нецензурованих текстів.
+- Section "Як працював самвидав": [!myth-buster] — Міф про "підпільні друкарні" (насправді — це були звичайні квартири та побутові машинки).
+- Section "Типи текстів": [!quote] — Уривок з поезії Симоненка або Стуса, що ходив у списках.
+- Section "Український самвидав — особливості": [!decolonization] — Чітке розмежування: російський *самвидав* боровся за демократизацію імперії, український *самвидав* — за національне визволення від неї.
+- Section "Фрагмент — Перший номер": [!source] — Аналіз передмови до першого випуску «Українського вісника».
+
+## Деколонізаційний контекст
+- **Imperial/Soviet myth**: Дисиденти — «буржуазні націоналісти», «наймити Заходу», «антирадятники», що займалися наклепами.
+- **Ukrainian reality**: Дисиденти були правозахисниками-легалістами. Вони не порушували законів, а вимагали від влади дотримання власної Конституції СРСР та УРСР (свобода слова, право на самовизначення).
+- **Reframing**: Самвидав — це не «кримінал», а єдина форма існування вільної української думки та культури в умовах тоталітаризму. Це альтернативна публічна сфера.
+
+## Contested Terms (Термінологічне мапування)
+| Поняття | Імперський/Радянський фреймінг | Український (деколонізований) фреймінг |
+|---------|--------------------------------|----------------------------------------|
+| **Самвидав** | «Антирадянська агітація та пропаганда», «наклепницькі вигадки» | Інтелектуальний опір, вільна преса, інструмент національного самозбереження. |
+| **Український вісник** | Нелегальне антидержавне видання | Перший незалежний правозахисний та інформаційний журнал в УРСР. |
+| **Дисиденти** | «Відщепенці», «вороги народу», кримінальні злочинці | Правозахисники, політв'язні сумління, моральна еліта нації. |
+| **Буржуазний націоналізм** | Ідеологічний жупел для репресій будь-якого патріотизму | Прагнення до збереження національної ідентичності, мови та культури. |
+
+## Section-Mapped Research Notes
+
+### Вступ — Підпільна література
+- Визначення: Самвидав (сам-себе-видав) — спосіб поширення літературних, публіцистичних, релігійних творів, які не могли бути опубліковані офіційно через цензуру.
+- Етимологія: Калька з російського "самиздат" (поет М. Глазков, 1940-ві), але в Україні набуло специфічного національно-визвольного забарвлення.
+- Причини: Тотальна цензура (Головліт), монополія партії на інформацію.
+- Значення: Подолання страху, формування альтернативного інформаційного простору, консолідація опозиції.
+
+### Історія самвидаву
+- **Етап 1 (1960-1965)**: "Культурницький". Поезія (Ліна Костенко, Василь Симоненко, Микола Вінграновський), літературна критика (Іван Дзюба, Євген Сверстюк), щоденники. Без прямої політичної конфронтації.
+- **Етап 2 (1965-1972)**: "Політизація". Після арештів 1965 року з'являється правозахисна публіцистика. Листи протесту, звернення до влади, фіксація судових процесів (Чорновіл "Лихо з розуму").
+- **Етап 3 (після 1972)**: "Табірний період" та Гельсінська група. Самвидав стає більш організованим, але масові репресії 1972 року завдають удару.
+
+### Як працював самвидав
+- **Техніка**: Друкарська машинка — головний інструмент. Фотокопіювання (рідше, бо реактиви контролювалися). Ручне переписування (найбезпечніше, але повільно).
+- **"Закладка"**: 4-5 аркушів цигаркового паперу + копірка. Остання копія ("сліпа") часто ледь читалася.
+- **Поширення**: Ланцюгова реакція ("геометрична прогресія"). "Прочитав — передай іншому". Довіра як основа безпеки.
+- **Ризики**: Облік шрифтів друкарських машинок у КДБ. Обшуки, вилучення літератури. Стаття 62 КК УРСР. Зберігання самвидаву вже було злочином.
+- **Тамвидав**: Передача плівок на Захід (туристи, дипломати). Публікація у видавництвах "Сучасність", "Смолоскип" та повернення в Україну через радіо "Свобода".
+
+### Типи текстів
+- **Художня література**: Заборонені поеми, романи (наприклад, твори Солженіцина, вірші Стуса, "Собор" Гончара — хоча був офіційно виданий, але потім вилучений і ходив у самвидаві).
+- **Документалістика та хроніки**: Фіксація фактів репресій, списки заарештованих, стенограми судів.
+- **Публіцистика та есеїстика**: "Інтернаціоналізм чи русифікація?" (Дзюба), "Приєднання чи возз'єднання?" (Брайчевський).
+- **Історичні дослідження**: Спростування офіційних радянських історичних міфів (наприклад, про Переяславську раду).
+
+### Український самвидав — особливості
+- **Національний пріоритет**: На відміну від московського самвидаву (демократія, права людини загалом), український ставив на перше місце національні права (мова, культура, державність).
+- **Зв'язок з діаспорою**: Тісна взаємодія з "тамвидавом".
+- **«Український вісник» (1970-1972)**:
+    - Редактор: В'ячеслав Чорновіл (під псевдонімами або анонімно).
+    - Формат: Машинописний журнал.
+    - Зміст: Хроніка репресій, есеї, документи, літературні твори.
+    - Вплив: Став рупором українського руху, аналог московської "Хроники текущих событий", але з виразним національним акцентом.
+
+### Фрагмент — Перший номер
+- **Контекст**: Січень 1970 року. Львів.
+- **Текст передмови**: Декларація легалізму. Журнал не є підпільним у сенсі змови, він є реалізацією конституційного права на свободу слова.
+- **Тон**: Стриманий, фактологічний, об'єктивний. Уникнення емоційних закликів, щоб не дати приводу для звинувачень у "наклепах".
+- **Аудиторія**: Інтелігенція в Україні та українська діаспора/Захід.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12471)
+✓ Message 12432 acknowledged
+✓ Message 12471 acknowledged

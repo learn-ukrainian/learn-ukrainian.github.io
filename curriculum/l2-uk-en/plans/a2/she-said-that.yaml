@@ -6,35 +6,67 @@ version: '2.0'
 title: She Said That...
 subtitle: Reported Speech Basics
 content_outline:
-- section: Introduction / Вступ
+- section: Вступ (Introduction)
+  words: 400
   points:
-  - 'The social function of reporting — cultural hook: «На лавці» culture (grandmothers
-    discussing neighbors) as a recognizable trope for reporting information'
+  - The social function of reporting and the «На лавці» (On the bench) culture — introduce
+    the culturally recognizable trope of grandmothers (бабусі) discussing neighbors
+    as a natural context for reporting information.
   - Why Ukrainian tense logic is 'Fair' — explicitly frame the system as «Honest»
-    (we report exactly what we heard without changing the time)
-- section: Presentation / Презентація
+    because we report exactly what we heard without changing the time (unlike English
+    backshifting).
+  - 'Cultural anchor: introduce the proverb «Слово не горобець — вилетить не впіймаєш»
+    (A word is not a sparrow—you can''t catch it once it has flown) to emphasize the
+    weight of spoken words and gossip.'
+- section: 'Презентація: Твердження та Дієслова (Presentation: Statements and Verbs)'
+  words: 800
   points:
-  - 'The Three Pillars: Що (Statement), Чи (Question), Щоб (Command) — alignment:
-    State Standard §4.4.2 (complex sentences with що, щоб, чи)'
-  - 'The No-Backshift Rule (The Golden Rule) — learner error: The «Backshift» Trap
-    (applying English past-to-past rules like «He said he *was* busy» instead of «He
-    said he *is* busy»)'
-  - 'Pronoun Shifting (I -> He/She) — learner error: Pronoun Persistence (forgetting
-    to shift perspective from «Я» to «Він/Вона»)'
-  - 'Reporting Verbs: Formal vs Emotional registers — differentiation: clearly distinguish
-    *казати* (message content, introduces *що*) vs *говорити* (act of speaking)'
-  - 'Reporting Commands: The Past Tense after ''щоб'''
-- section: Practice / Практика
+  - 'The Three Pillars of Indirect Speech: Що (Statement), Чи (Question), Щоб (Command)
+    — align with State Standard §4.4.2 regarding complex sentences with these conjunctions.'
+  - 'Reporting Verbs Differentiation: Clearly distinguish between *казати* (focus
+    on message content, introduces *що*) and *говорити* (focus on the act of speaking)
+    using collocations like *казати правду* vs *говорити про...*.'
+  - The No-Backshift Rule (The Golden Rule) — identify the «Backshift» Trap where
+    learners incorrectly apply English past-to-past rules (e.g., saying 'He said he
+    *was* busy' instead of the correct Ukrainian 'Він сказав, що він *зайнятий*').
+  - Pronoun Shifting (I -> He/She) — address the 'Pronoun Persistence' error where
+    learners forget to shift perspective from «Я» to «Він/Вона» in the reported clause.
+- section: 'Презентація: Питання та Накази (Presentation: Questions and Commands)'
+  words: 800
   points:
-  - 'Conversational ''Chain'' (Whisper game) — cultural hook: «Зіпсований телефон»
-    (Broken telephone) game to demonstrate distortion'
-  - 'Direct to Indirect transformation drills — learner error: Question Word Order
-    (keeping inversion in reported questions) and «If» vs «Whether» (*якщо* vs *чи*)'
-- section: Dialogues / Діалоги
+  - Reporting Yes/No Questions with *чи* — target the 'If vs Whether' error where
+    learners use *якщо* (conditional) instead of the correct *чи* (whether).
+  - Word Order in Reported Questions — correct the 'Question Word Order' trap where
+    learners keep inversion or question intonation (e.g., 'Я не знаю, де є вокзал?'
+    instead of the declarative 'Я не знаю, де вокзал').
+  - Reporting Commands with *щоб* — explain the use of the past tense after *щоб*
+    as mandated by State Standard §4.4.2 for expressing the subject's intent or command.
+  - Usage of *питати* (to ask) and *відповідати* (to answer) — introduce collocations
+    such as *питати дозволу* (ask permission) and *відповідати на питання* (answer
+    a question).
+- section: 'Практика: Трансформація та Робота над Помилками (Practice: Transformation
+    and Error Correction)'
+  words: 600
   points:
-  - 'Gossip at the ''lavka'' or office news — cultural hook: proverb «Слово не горобець
-    — вилетить не впіймаєш» (A word is not a sparrow—you can''t catch it once it has
-    flown)'
+  - Direct to Indirect Transformation Drills — focused exercises converting simple
+    statements and questions, specifically monitoring for 'Backshift' and 'Pronoun
+    Persistence' errors.
+  - Minimal Pair Drills for *якщо* vs *чи* — practice distinguishing between conditional
+    'if' and the 'whether' used in reported questions to solidify correct conjunction
+    usage.
+  - Correcting Word Order — exercises focused on stripping question inversion from
+    indirect questions to move toward natural declarative structures.
+- section: Продукція та Підсумок (Production and Summary)
+  words: 400
+  points:
+  - Conversational 'Chain' Game — introduce the Ukrainian children's game «Зіпсований
+    телефон» (Broken telephone) to demonstrate how reported speech can distort information
+    while practicing the grammar.
+  - 'Role-play: Gossip at the ''lavka'' or office news — using the ''Gossip Columnist''
+    persona to report various ''news'' items using the full range of *що*, *чи*, and
+    *щоб*.'
+  - Review of the 'Honest' tense system — summarize why retaining the original tense
+    is the core strength of Ukrainian reported speech.
 focus: grammar
 pedagogy: PPP
 objectives:
@@ -64,15 +96,19 @@ persona:
   role: Gossip Columnist
 vocabulary_hints:
   required:
-  - 'казати (to say/tell) — collocations: казати правду (tell the truth), він каже,
-    що... (he says that...), так би мовити (so to speak)'
-  - 'говорити (to speak/talk) — collocations: говорити українською (speak Ukrainian),
-    говорити про... (talk about...), говорити з... (speak with...)'
+  - 'казати (to say/tell) — High frequency (Top 100); collocations: казати правду
+    (tell the truth), він каже, що... (he says that...), так би мовити (so to speak)'
+  - 'говорити (to speak/talk) — High frequency; collocations: говорити українською
+    (speak Ukrainian), говорити про... (talk about...), говорити з... (speak with...)'
   - 'питати (to ask) — collocations: питати дозволу (ask permission), питати дорогу
     (ask for directions)'
   - 'відповідати (to answer) — collocations: відповідати на питання (answer a question),
     відповідати за... (be responsible for...)'
   recommended:
-  - 'плітки (gossip) — context: «на лавці» culture'
-  - 'зіпсований телефон (broken telephone) — context: children''s game used for practice'
+  - плітки (gossip) — noun; essential for «на лавці» (on the bench) cultural context
+  - зіпсований телефон (broken telephone) — Ukrainian name for the whisper game; used
+    for practicing information transmission
+  - чи (whether/if) — conjunction; critical for reported questions, distinct from
+    conditional 'якщо'
+  - щоб (in order to/that) — conjunction; used for reporting commands and requests
 word_target: 3000

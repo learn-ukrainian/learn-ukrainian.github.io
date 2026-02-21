@@ -1,0 +1,97 @@
+module: c1-107
+level: C1
+sequence: 107
+slug: asyndetic-semantics
+version: '2.0'
+title: 'Безсполучникове речення: логіка тире і двокрапки'
+subtitle: 'Asyndetic Sentences: The Logic of Dash and Colon'
+content_outline:
+- section: Вступ — Речення без сполучників
+  points:
+  - State Standard §4.3.4.2 alignment — asyndetic complex sentences and their semantic
+    relations
+  - 'Why asyndetic style matters: it is the hallmark of mature Ukrainian prose — tighter,
+    more rhythmic, and more literary than syndetic equivalents'
+  - Cross-reference with M16 (advanced-punctuation) — this module focuses on MEANING,
+    not mechanics
+- section: 'Двокрапка — пояснення і причина (Colon: explanation & cause)'
+  points:
+  - 'Colon replaces бо/тому що: Він не прийшов: захворів. (He didn''t come — he got
+    sick.)'
+  - 'Colon replaces а саме/тобто: Я люблю три речі: каву, книжки і тишу.'
+  - 'Pattern: general statement : specific explanation/enumeration'
+  - Literary examples from Kotsiubynsky, Franko
+- section: 'Тире — наслідок і контраст (Dash: consequence & contrast)'
+  points:
+  - 'Dash replaces тому/отже: Прийшла весна — зацвіли сади. (Spring came — gardens
+    bloomed.)'
+  - 'Dash replaces але/проте: Шукав щастя — знайшов біду. (Sought happiness — found
+    trouble.)'
+  - 'Dash for rapid sequence: Блискавка — грім — злива. (Lightning — thunder — downpour.)'
+  - 'Pattern: cause/condition — result/consequence'
+- section: 'Кома — послідовність і одночасність (Comma: sequence & simultaneity)'
+  points:
+  - 'Comma for parallel actions: Сонце сідало, вітер стихав, птахи замовкали.'
+  - Comma vs dash vs colon — decision tree based on semantic relationship
+  - 'Learner error: defaulting to syndetic constructions when asyndetic is more natural'
+- section: 'Трансформація: від сполучникового до безсполучникового'
+  points:
+  - 'Practice: rewrite syndetic sentences as asyndetic (тому що → :, але → —)'
+  - 'Reverse practice: expand asyndetic to syndetic to verify semantic understanding'
+  - 'Style analysis: compare paired texts (one syndetic, one asyndetic) for rhythm
+    and impact'
+- section: Підсумок
+  points:
+  - Decision tree for colon vs dash vs comma in asyndetic sentences
+  - Register guidance — asyndetic style is more literary/formal
+vocabulary_hints:
+  required:
+  - безсполучниковий (asyndetic) — безсполучникове речення
+  - двокрапка (colon) — ставити двокрапку
+  - тире (dash) — тире між підметом і присудком
+  - причина (cause) — вказувати на причину
+  - наслідок (consequence) — причина і наслідок
+  - пояснення (explanation) — двокрапка вводить пояснення
+  - протиставлення (contrast) — тире для протиставлення
+  recommended:
+  - перерахування (enumeration)
+  - одночасність (simultaneity)
+  - послідовність (sequence)
+  - ритм (rhythm) — ритм прози
+activity_hints:
+- type: quiz
+  focus: Choose correct punctuation mark for semantic relationship
+  items: 15
+- type: fill-in
+  focus: Transform syndetic sentences to asyndetic
+  items: 15
+- type: match-up
+  focus: Match asyndetic sentence to its semantic type
+  items: 12
+- type: error-correction
+  focus: Fix punctuation in asyndetic sentences
+  items: 10
+focus: grammar
+pedagogy: PPP
+prerequisites:
+- c1-106 (C1.6 Checkpoint)
+connects_to:
+- c1-108 (Persuasive Speech)
+- c1-016 (Advanced Punctuation)
+objectives:
+- Learner can identify the semantic relationship in asyndetic sentences
+- Learner can choose correct punctuation (colon, dash, comma) based on meaning
+- Learner can transform syndetic sentences into asyndetic equivalents
+- Learner can use asyndetic style for literary and rhetorical effect
+grammar:
+- Asyndetic complex sentences (безсполучникові складні речення)
+- Colon for explanation/cause
+- Dash for consequence/contrast
+- Semantic analysis of punctuation choices
+register: літературний
+immersion: 100% Ukrainian
+phase: C1.5 [Literature]
+persona:
+  voice: Senior Specialist
+  role: Literary Editor
+word_target: 4000

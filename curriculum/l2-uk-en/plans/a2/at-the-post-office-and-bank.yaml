@@ -6,56 +6,84 @@ version: '2.0'
 title: At the Post Office and Bank
 subtitle: Services and Money
 content_outline:
-- section: Introduction / Вступ
+- section: 'Вступ: Світ послуг в Україні (Introduction: The World of Services in Ukraine)'
+  words: 500
   points:
-  - 'Practical services context — State Standard §3.11: covers core service contexts
-    of Bank and Post Office; aligns with §4.2.2.4 (Accusative objects) and §4.2.1.3
-    (Numerals)'
-  - Importance of politeness — focus on requests (я б хотів/хотіла, будь ласка) and
-    polite imperative
-- section: Presentation / Презентація
+  - Introduction to the A2 thematic catalogue for services (State Standard §3.11),
+    establishing the context for post office and bank interactions.
+  - 'Cultural motivator: Overview of Ukraine''s leading digital banking ecosystem
+    (Monobank/Privat24) and the patriotic renaissance of Ukrposhta.'
+  - Linguistic focus on 'я б хотів/хотіла' (I would like) as the standard polite request
+    formula, distinguishing it from the more direct 'я хочу'.
+- section: 'Укрпошта: Листи та патріотичні марки (Ukrposhta: Letters and Patriotic
+    Stamps)'
+  words: 700
   points:
-  - 'Post Office terminology (лист, посилка, марка) — cultural hook: Ukrposhta wartime
-    stamps as symbols of resistance and philately as patriotism'
-  - 'Bank terminology (рахунок, картка, обмін) — learner error: ''рахунок'' (bill/account)
-    vs ''счет'' (Russianism); cultural hook: Monobank/Privat24 digital ecosystem'
-  - Polite service formulas (я хочу, мені потрібно) — emphasize 'я б хотів' for requests;
-    align with State Standard functional requests
-- section: Practice / Практика
+  - 'Essential postal terminology: ''лист'' (letter), ''посилка'' (package), ''конверт''
+    (envelope), and ''адреса'' (address).'
+  - 'Cultural Hook: The ''Russian warship, go...!'' stamp phenomenon; how philately
+    became a symbol of Ukrainian resistance and national pride.'
+  - 'Grammar in context: Using the Accusative case for direct objects (відправити
+    листа, купити марку). Drill the specific feminine inanimate change (-а to -у)
+    to avoid the common error of leaving ''посилка'' or ''марка'' unchanged.'
+  - Postal codes (індекси) and using numerals 100-1000 to express addresses and service
+    prices in UAH.
+- section: Банківські операції та цифрова екосистема (Banking Operations and the Digital
+    Ecosystem)
+  words: 700
   points:
-  - 'Case analysis in service sentences — learner error: Direction (Accusative: іду
-    на пошту) vs. Location (Locative: я на пошті); learner error: Accusative of Inanimate
-    Nouns (відправити посилку, -а to -у)'
-  - 'Service vocabulary matching — include numbers 100-1000 in context of money (UAH)
-    and postal codes (indices); alignment: §4.2.1.3 Numerals'
-- section: Dialogues / Діалоги
+  - 'Key banking terms: ''рахунок'' (account), ''картка'' (card), ''валюта'' (currency),
+    and ''готівка'' (cash).'
+  - 'Critical Learner Error: Distinguishing Ukrainian ''рахунок'' (account/bill) from
+    the Russian ''счет'' (surzhyk); emphasizing that ''рахунок'' is used for both
+    banking and restaurants.'
+  - 'Modern banking verbs: ''відкрити рахунок'' (open an account), ''знімати готівку''
+    (withdraw cash), and ''переказати гроші'' (transfer money) via mobile apps.'
+  - The role of QR codes and instant transfers in daily Ukrainian life (Monobank context).
+- section: 'Граматичний практикум: Куди чи де? (Grammar Lab: Direction vs. Location)'
+  words: 600
   points:
-  - 'At the Post Office — focus: sending a letter/package using polite imperative
-    and Accusative case'
-  - 'At the Bank — focus: currency exchange and digital banking (Monobank context)'
+  - 'Resolving the common motion-based case confusion: ''іду на пошту / в банк'' (Accusative
+    for direction) vs. ''я на пошті / у банку'' (Locative for location).'
+  - Mastering numbers 100-1000 in currency exchange scenarios; understanding 'курс
+    валют' (exchange rates) and 'обмін' (exchange).
+  - 'Drilling the Accusative Case for services: ''відправити бандероль'', ''отримати
+    переказ'', ''замовити картку''.'
+- section: Діалоги та підсумок (Dialogues and Summary)
+  words: 500
+  points:
+  - 'Roleplay Dialogue 1: At the post office sending a registered letter and purchasing
+    limited-edition stamps using polite imperatives.'
+  - 'Roleplay Dialogue 2: At the bank/ATM exchanging currency and discussing digital
+    transfer options.'
+  - 'Functional summary: Review of key service formulas and the importance of using
+    ''рахунок'' correctly to maintain linguistic purity.'
 vocabulary_hints:
   required:
-  - пошта (post office) — на пошті, іти на пошту
-  - банк (bank) — у банку, іти в банк
-  - лист (letter) — писати листа, відправити листа (Accusative object)
-  - посилка (package) — отримати посилку, вага посилки (Accusative inanimate feminine)
-  - бандероль (parcel)
-  - 'марка (stamp) — cultural hook: famous wartime stamps'
-  - конверт (envelope)
-  - адреса (address)
-  - індекс (postal code) — use with numbers 100-1000
-  - відправляти (to send)
-  - отримувати (to receive)
-  - гроші (money) — знімати гроші, міняти гроші
-  - 'рахунок (account) — відкрити рахунок, стан рахунку; learner error: avoid ''счет'''
-  - картка (card) — банківська картка, термін дії
-  - готівка (cash) — платити готівкою, знімати готівку
+  - пошта (post office) — на пошті (Loc.), іти на пошту (Acc.); High frequency
+  - банк (bank) — у банку (Loc.), іти в банк (Acc.); High frequency
+  - лист (letter) — писати листа, відправити листа; Accusative object usage
+  - посилка (package) — отримати посилку (Acc. -у ending), вага посилки; High frequency
+  - бандероль (parcel) — відправити бандероль; Feminine noun ending in soft sign
+  - 'марка (stamp) — поштова марка, колекційна марка; Cultural hook: wartime resistance
+    symbols'
+  - конверт (envelope) — покласти в конверт, купити конверт
+  - адреса (address) — домашня адреса, писати адресу
+  - індекс (postal code) — поштовий індекс; used with numerals 100-1000
+  - відправляти (to send) — відправляти посилку/листа; Imperfective
+  - отримувати (to receive) — отримувати гроші/пакунок; Imperfective
+  - гроші (money) — знімати гроші, міняти гроші; Always plural
+  - 'рахунок (account) — відкрити рахунок, стан рахунку; Learner error: avoid Russian
+    ''счет'''
+  - картка (card) — банківська картка, безконтактна картка
+  - готівка (cash) — платити готівкою, знімати готівку; Medium frequency
   recommended:
-  - валюта (currency) — курс валют, обмін валют
-  - переказ (transfer)
-  - знімати (to withdraw)
-  - вкладати (to deposit)
-  - обмінювати (to exchange)
+  - валюта (currency) — курс валют, іноземна валюта
+  - переказ (transfer) — грошовий переказ, зробити переказ
+  - знімати (to withdraw) — знімати готівку з банкомата
+  - вкладати (to deposit) — вкладати гроші на рахунок
+  - обмінювати (to exchange) — обмінювати валюту, пункт обміну
+  - курс (rate) — курс долара, курс євро
 activity_hints:
 - type: fill-in
   focus: Banking sentences with correct cases

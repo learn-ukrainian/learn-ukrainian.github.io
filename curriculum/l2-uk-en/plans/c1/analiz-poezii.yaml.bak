@@ -1,0 +1,40 @@
+module: c1-104
+level: C1
+sequence: 104
+slug: analiz-poezii
+version: '2.0'
+title: Аналіз поезії
+subtitle: Analysis of Poetry
+content_outline:
+- section: Розминка — Інструменти аналізу
+  points:
+  - Версифікація — ямб, хорей, дактиль
+  - Рими — парна, перехресна, кільцева
+  - Звукопис — алітерація, асонанс
+- section: Content Areas
+  points:
+  - 'Версифікація: розмір, ритм, стопа'
+  - 'Рими: парна, перехресна, кільцева'
+  - 'Строфіка: катрен, терцина, сонет'
+  - 'Звукопис: алітерація, асонанс'
+  - 'Практичний аналіз: step-by-step method'
+- section: Практика — філологічний аналіз
+  points:
+  - Визначити розмір вірша Шевченка — стопа, ритм
+  - Проаналізувати римування у вірші Франка
+  - Виявити звукопис у ліриці Лесі Українки
+  - Написати повний аналіз вірша за методикою
+focus: literature
+pedagogy: Literary Analysis
+objectives:
+- Learner can identify poetic meters (ямб, хорей, дактиль).
+- Learner can analyze rhyme schemes and strophic structures.
+- Learner can conduct a comprehensive philological analysis of a poem.
+grammar:
+- Poetic syntax and rhythm
+- Stylistic devices in verse
+phase: C1.6 Literature
+persona:
+  voice: Senior Specialist
+  role: Літературний критик
+word_target: 4000

@@ -1,0 +1,13 @@
+{
+  "track": "b2-pro",
+  "slug": "technical-checkpoint",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-20T01:03:53Z",
+      "task_id": "v3-technical-checkpoint-pA",
+      "mode": "full"
+    }
+  }
+}

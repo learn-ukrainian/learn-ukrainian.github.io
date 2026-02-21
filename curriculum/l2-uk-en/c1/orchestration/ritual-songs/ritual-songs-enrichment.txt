@@ -1,0 +1,225 @@
+✅ Message sent to Gemini (ID: 10761) [auto-acked: self-addressed]
+✓ Message 10761 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10761...
+📨 Message #10761
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-ritual-songs
+   Time: 2026-02-20T21:27:19.124105+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-049
+level: c1
+sequence: 49
+version: '1.0'
+title: 'Обрядові пісні: Коло життя'
+subtitle: 'Ritual Songs: The Circle of Life'
+focus: cultural
+pedagogy: Cultural Immersion
+objectives:
+- Learner can distinguish between kolyadky, shchedrivky, and vesnyanky
+- Learner understands the pre-Christian roots of Ukrainian holidays
+- Learner can analyze the symbolism of ritual songs
+content_outline:
+- section: Introduction
+  subsections:
+  - TBD
+vocabulary:
+  required: '[]'
+  recommended: '[]'
+  forbidden: '[]'
+persona:
+  voice: Senior Specialist
+  role: Збирач фольклору
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Обрядові пісні: Коло життя
+
+## State Standard Reference
+§3.21: "Традиції, звичаї, свята: ... українські звичаї і традиції; релігійні звичаї і традиції."
+Alignment: Модуль детально розглядає календарно-обрядовий цикл, розкриваючи зміст українських та релігійних традицій через призму народної пісенної творчості, що відповідає тематиці "Традиції" рівня С1.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| **Обряд** | High (General/Culture) | *здійснювати обряд, стародавній обряд, весільний обряд* |
+| **Колядка** | High (Seasonal) | *співати колядки, різдвяна колядка, стародавня колядка* |
+| **Щедрівка** | High (Seasonal) | *виконувати щедрівку, щедрий вечір, водити Меланку* |
+| **Веснянка** | Medium (Cultural) | *закликати весну, водити гаївки, дівочі веснянки* |
+| **Синкретизм** | Medium (Academic) | *релігійний синкретизм, поєднання вірувань, християнсько-язичницький синкретизм* |
+| **Культ** | Medium (Academic) | *культ сонця, культ предків, аграрний культ* |
+
+## Cultural Hooks
+1.  **"Щедрик" як світовий феномен**: Всесвітньо відома "Carol of the Bells" — це українська щедрівка в обробці Миколи Леонтовича. Важливо: це пісня про *ластівку* (весняний символ), бо Новий рік колись святкували навесні.
+2.  **Дідух vs Ялинка**: Стародавній український символ Різдва — сніп пшениці (Дідух), що символізує дух предків і врожай, на противагу пізнішій традиції ялинки.
+
+## Common Learner Errors
+1.  **Плутанина між колядками та щедрівками**:
+    *   *Помилка*: Виконання щедрівок на Різдво.
+    *   *Правильно*: Колядки — на Різдво (про народження Христа/Сонця), щедрівки — на Новий рік (бажання добробуту господарям).
+2.  **Вживання "святкувати" vs "відзначати"**:
+    *   *Помилка*: "Ми святкуємо трагічну дату."
+    *   *Правильно*: "Ми відзначаємо/вшановуємо дату." (Для обрядів важливо розрізняти свято і ритуал).
+
+## Cross-References
+- Builds on: B1-M72 (Традиції), B2-Folk modules.
+- Prepares for: C1-LIT (Лісова пісня), C1-BIO (Леся Українка, Микола Лисенко).
+
+## Notes for Content Writing
+- Дотримуватися академічного, але живого стилю (C1).
+- Використовувати термін "календарно-обрядовий цикл".
+- Акцентувати на дохристиянському корінні свят (язичництво), яке адаптувалося до християнства.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Календарно-обрядовий цикл (Introduction: The Calendar-Ritual Cycle)"
+  words: 500
+  points:
+  - "Explain the core concept of the 'календарно-обрядовий цикл' as a structural backbone of Ukrainian folk life, aligning with State Standard §3.21 regarding traditions and customs."
+  - "Introduce the historical transition from pre-Christian (pagan) agricultural cults to religious syncretism with the Christian liturgical year."
+  - "Outline the seasonal divisions of the ritual year and the primary function of song as a tool for magical influence on nature and community well-being."
+- section: "Зимовий цикл: Колядки та Щедрівки (Winter Cycle: Kolyadky and Shchedrivky)"
+  words: 1000
+  points:
+  - "Differentiate between 'колядки' (Christmas/Birth of Christ) and 'щедрівки' (New Year/Prosperity); address the common learner error of performing shchedrivky on Christmas day."
+  - "Analyze the 'Щедрик' (Carol of the Bells) phenomenon: explain the spring symbolism of the 'ластівка' (swallow) reflecting the ancient practice of celebrating the New Year in spring."
+  - "Contrast the 'Дідух' (wheat sheaf) as the ancestral spirit symbol against the modern Christmas tree tradition, highlighting the 'культ предків'."
+- section: "Весняний цикл: Закликання природи (Spring Cycle: Invoking Nature)"
+  words: 800
+  points:
+  - "Examine 'Веснянки' and 'Гаївки' as ritual tools for 'закликати весну' (invoking spring) and the role of the 'культ сонця' in early agrarian life."
+  - "Practice session: distinguish between the verbs 'святкувати' (to celebrate a holiday) and 'відзначати/вшановувати' (to observe/honor a ritual or date) to correct register-specific stylistic errors."
+  - "Analyze the melodic and rhythmic simplicity of spring songs as markers of their ancient, ritualistic function."
+- section: "Літньо-осінній цикл: Купала та Жнива (Summer-Autumn Cycle: Kupala and Harvest)"
+  words: 1000
+  points:
+  - "Discuss Kupala rituals as the peak of the 'аграрний культ', focusing on fire and water symbolism and the syncretism of Christian St. John's Day."
+  - "Explore 'жниварські пісні' (harvest songs) and the sanctity of bread, linking them to the culmination of the agricultural labor cycle."
+  - "Reflect on the motifs of fertility and community protection that bridge the summer rituals with the autumn transition to indoor labor."
+- section: "Підсумок: Синкретизм як культурний код (Summary: Syncretism as a Cultural Code)"
+  words: 700
+  points:
+  - "Synthesize how 'релігійний синкретизм' allowed for the preservation of ancient folk beliefs within the modern Ukrainian cultural identity."
+  - "Review key terminology (обряд, синкретизм, культ) and collocations (здійснювати обряд, весільний обряд) in academic and senior specialist registers."
+  - "Provide a bridge to upcoming literature modules (Lesya Ukrainka, Mykola Lysenko) by showing how folk ritual songs influenced classical Ukrainian arts."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "Обряд (ritual) — здійснювати обряд, стародавній обряд, весільний обряд; High frequency in cultural/academic contexts"
+  - "Колядка (Christmas carol) — співати колядки, різдвяна колядка; Seasonal high frequency; specifically for Christmas"
+  - "Щедрівка (New Year carol) — виконувати щедрівку, щедрий вечір, водити Меланку; Distinguished from kolyadka by timing (New Year)"
+  - "Веснянка (Spring song) — закликати весну, водити гаївки; Focus on ritual invocation verbs"
+  recommended:
+  - "Синкретизм (syncretism) — релігійний синкретизм, християнсько-язичницький синкретизм; Essential for C1-level academic discussion"
+  - "Культ (cult) — культ сонця, культ предків, аграрний культ; Used to explain the roots of rituals"
+  - "Дідух (Didukh) — традиційний символ Різдва; Key cultural term for contrast with western traditions"
+  - "Ластівка (swallow) — символ весни; Crucial for explaining the lyrics of 'Shchedryk'"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4005 chars)
+✅ Message sent to Claude (ID: 10770)
+✓ Message 10770 acknowledged
+   Auto-acknowledged reply #10770 (stdout delivery — no inbox accumulation)
+✓ Message 10761 acknowledged

@@ -1,7 +1,7 @@
 # Audit Report: M02 — the-dative-ii-nouns.md
 **Level:** A2 | **Module:** M02 | **Phase:** A2.1 | **Pedagogy:** PPP | **Target:** 3000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-19 13:28:55
+**Generated:** 2026-02-21 01:07:23
 
 ## Configuration
 **Type:** A2-grammar
@@ -39,15 +39,6 @@
 - Required types used: 3/3 (fill-in, match-up, quiz) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: давальний
-  - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
 - **Words:** ✅ 3689/3000 (raw: 4021)
 - **Activities:** ✅ 12/10
@@ -56,9 +47,9 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 4/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 25/1
+- **Vocab:** ✅ 26/1
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ⚠️ 5 IPA issues (run lint_ipa.py --fix)
+- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)

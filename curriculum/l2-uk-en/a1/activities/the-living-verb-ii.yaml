@@ -214,7 +214,7 @@
     - сидите
     - сиджу
     - сидять
-    sentence: Ми ___ вдома і дивимось фільм.
+    sentence: Ми ___ вдома і п'ємо чай.
   - answer: вчиш
     explanation: Для "ти" закінчення -иш.
     options:
@@ -393,25 +393,25 @@
 - instruction: Розшифруйте дієслова з уроку.
   items:
   - answer: говорити
-    scrambled: г о в о р и т и
+    scrambled: р и т о в г о и
   - answer: робити
-    scrambled: р о б и т и
+    scrambled: т и б о р и
   - answer: бачити
-    scrambled: б а ч и т и
+    scrambled: ч и т а б и
   - answer: любити
-    scrambled: л ю б и т и
+    scrambled: т и б ю л и
   - answer: ходити
-    scrambled: х о д и т и
+    scrambled: д и т о х и
   - answer: сидіти
-    scrambled: с и д і т и
+    scrambled: т і д и с и
   - answer: спати
-    scrambled: с п а т и
+    scrambled: т и а п с
   - answer: вчити
-    scrambled: в ч и т и
+    scrambled: т и ч в и
   - answer: платити
-    scrambled: п л а т и т и
+    scrambled: т и л а т п и
   - answer: їсти
-    scrambled: ї с т и
+    scrambled: т и с ї
   title: Нові слова
   type: anagram
 - instruction: Оберіть правильне слово для контексту.

@@ -1,0 +1,240 @@
+✅ Message sent to Gemini (ID: 11863) [auto-acked: self-addressed]
+✓ Message 11863 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #11863...
+📨 Message #11863
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-khvylovy-ukraine-or-little-russia
+   Time: 2026-02-20T23:34:08.835705+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 13
+module: lit-essay-13
+level: LIT.ESSAY
+slug: khvylovy-ukraine-or-little-russia
+version: '2.0'
+title: Khvylovy Ukraine Or Little Russia
+subtitle: Khvylovy Ukraine Or Little Russia
+content_outline:
+- section: Вступ та контекст
+  points: []
+- section: Аналіз ключових творів
+  points: []
+- section: Стилістика та мова автора
+  points: []
+- section: Деколонізаційна перспектива
+  points:
+  - Як цей автор руйнує імперські міфи
+  - Українська суб'єктність у тексті
+- section: Підсумок та спадщина
+  points: []
+vocabulary_hints:
+  required:
+  - історіографія
+  - наратив
+  - суб'єктність
+  recommended:
+  - деколонізація
+activity_hints:
+- type: reading
+  focus: Аналіз першоджерела
+- type: essay-response
+  focus: Критичне есе
+- type: critical-analysis
+  focus: Деконструкція тексту
+focus: literature
+pedagogy: literature
+immersion: 100% Ukrainian
+phase: LIT Expansion
+objectives:
+- Проаналізувати творчість Khvylovy Ukraine Or Little Russia у контексті української
+  літератури
+- Дослідити вплив автора на формування національної ідентичності
+persona:
+  voice: Senior Specialist
+  role: Literary Polemicist
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Khvylovy Ukraine Or Little Russia
+
+## Використані джерела
+1. [Енциклопедія сучасної України: Хвильовий Микола](https://esu.com.ua/article-36528) — життєпис, аналіз ролі у ВАПЛІТЕ та Літературній дискусії 1920-х років.
+2. [Інститут історії України НАНУ: «Літературна дискусія 1925–1928»](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Literaturna_dyskusiia) — історичний та політичний контекст написання памфлетів.
+3. [Ізборник: Микола Хвильовий «Україна чи Малоросія?»](http://litopys.org.ua/khvylovy/khvyl05.htm) — повний текст віднайденого в архівах КДБ памфлету для глибокого аналізу та цитування.
+
+## Хронологія
+- 1893: Народження Миколи Фітільова (Хвильового) на Сумщині.
+- 1925: Початок Літературної дискусії (стаття «Про "сатану в бочці"» та цикл «Камо грядеши»). Заснування ВАПЛІТЕ.
+- 1926 (квітень): Й. Сталін пише листа «Тов. Кагановичу та іншим членам ПБ ЦК КП(б)У» з гострою критикою національно-орієнтованих гасел Хвильового.
+- 1926: Хвильовий пише памфлет «Україна чи Малоросія?». Текст конфісковано і заборонено до друку (поширювався виключно в машинописах серед соратників).
+- 1933 (13 травня): Самогубство Миколи Хвильового на знак протесту проти Голодомору та репресій.
+- 1990: Перша публікація повного тексту «Україна чи Малоросія?» в Україні (журнал «Слово і час»).
+
+## Ключові факти та цитати
+- «Росія самостійна держава? Самостійна! Ну, так і ми самостійна.» (категоричне ствердження суб'єктності України).
+- «Під російською літературою ми розуміємо літературу великоросійську, себто ту, що вийшла з-під пера тургенєвих, толстих...»
+- «Справа в тому, що російська література тяжить над нами в віках як господар становища, що привчила нашу психіку до рабського наслідування.»
+- «Від російської літератури, від її стилів українська поезія мусить утікати якмога швидше.»
+- «Даєш психологічну Європу!» — заклик орієнтуватися на західноєвропейський «фаустівський дух» динамізму.
+
+## Engagement Hooks (mapped to sections)
+- Section "Аналіз ключових творів: I — Історія написання та заборона памфлету": `[!history-bite]` — Памфлет був настільки концептуально небезпечним для Москви, що його особисто читав і жорстко критикував Сталін. Текст вважався втраченим до 1990 року і лежав у закритих архівах КДБ.
+- Section "Аналіз ключових творів: II — Концепт «Малоросійства»": `[!context]` — Пояснення «малоросійства» не як географічного чи етнічного терміна, а як психологічного комплексу раба та ментальної деформації, що породжує готовність до підпорядкування.
+- Section "Деколонізаційна перспектива: I — Руйнування імперського міфу про «старшого брата»": `[!myth-buster]` — Спростування міфу про те, що українська культура є провінційним відгалуженням «великої російської». Хвильовий стверджує, що російська культура — це колоніальний гегемон, вплив якого потрібно відкинути задля власного виживання.
+- Section "Аналіз ключових творів: III — Орієнтація на «Психологічну Європу»": `[!decolonization]` — Термін «Європа» вживається Хвильовим світоглядно, а не географічно. Це європейський інтелект, пошук і постійна творча незадоволеність на противагу євразійському застою.
+- Section "Підсумок та спадщина: I — Трагічний фінал автора та розстріляне відродження": `[!quote]` — Цитата з передсмертної записки Хвильового: «Арешт Ялового — це розстріл цілої Генерації… За що? За те, що ми були найщирішими комуністами? Нічого не розумію».
+- Section "Стилістика та мова автора: I — Публіцистичний запал та полемічність": `[!culture]` — ВАПЛІТЕ та ідея створення високого, елітарного українського мистецтва замість примітивного масового «пролеткульту».
+
+## Деколонізаційний контекст
+- Imperial/Soviet myth: Українська та російська літератури розвиваються в нерозривній історичній єдності; російська література є «передовою», «старшим братом» і природним зразком для української.
+- Ukrainian reality: Хвильовий доводить, що це типові стосунки метрополії і колонії. Українська культура повинна подолати внутрішню провінційність (малоросійство), розірвати ментальні пута й орієнтуватися безпосередньо на світовий досвід («психологічну Європу»).
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian (decolonized) framing |
+|---------|-----------------|-------------------------------|
+| Малоросія | Природна частина "великої Росії", південно-західна етнографічна провінція | Постколоніальний психологічний комплекс меншовартості, вірус провінційності |
+| Європа | Ворожий "буржуазно-загниваючий Захід" | Психологічна Європа, фаустівський дух, цивілізаційний еталон динамізму |
+| Російська література | Старший брат і універсальний зразок для наслідування | Імперський інструмент асиміляції, гегемон, від якого слід емансипуватися |
+| Українізація | Тимчасова тактика компартії для залучення неохоплених мас | Процес незворотного національного відродження та державного самоствердження |
+
+## Section-Mapped Research Notes
+
+### Вступ та контекст: I — Історичне тло Літературної дискусії
+Літературна дискусія 1925–1928 років почалася як суперечка про якість мистецтва, але швидко переросла у боротьбу за цивілізаційний вибір України. Політика "українізації" дала тимчасову ілюзію свободи, в якій письменники намагалися виробити самостійний шлях нації.
+
+### Вступ та контекст: II — Постать Миколи Хвильового
+Хвильовий — колишній чекіст, який пройшов шлях від віри в ідеалізовану "загірну комуну" до усвідомлення колоніального статусу УСРР. Створення ВАПЛІТЕ стало спробою згуртувати еліту для творення європейського мистецтва.
+
+### Аналіз ключових творів: I — Історія написання та заборона памфлету
+Трактат «Україна чи Малоросія?» (1926) був відповіддю на ідеологічні атаки Москви та місцевих конформістів. Текст настільки налякав керівництво, що був заборонений за особистою вказівкою Сталіна і зберігався у сейфах спецслужб понад 60 років.
+
+### Аналіз ключових творів: II — Концепт «Малоросійства»
+За Хвильовим, малоросійство — це рабська ментальність, звичка озиратися на "московського диригента". Письменник жорстко таврує інтелігенцію, яка погоджується на вторинність української культури.
+
+### Аналіз ключових творів: III — Орієнтація на «Психологічну Європу»
+Запропонувавши гасло "Даєш психологічну Європу!", Хвильовий підкреслював орієнтацію на "фаустівський дух" європейської цивілізації, її активність і постійний рух вперед.
+
+### Стилістика та мова автора: I — Публіцистичний запал та полемічність
+Стиль памфлетів Хвильового безпрецедентний за своєю сміливістю. Він полемічний, саркастичний, повний риторичних запитань і рубаних фраз, що створюють ефект напруженої розмови.
+
+### Стилістика та мова автора: II — Образність та риторичні фігури
+Хвильовий майстерно обігрує марксистську термінологію, вкладаючи в неї національно-визвольний зміст. Його метафори (як "рабське наслідування", "московський гегемон") стали класикою української риторики.
+
+### Деколонізаційна перспектива: I — Руйнування імперського міфу про «старшого брата»
+Хвильовий відкрито стверджує, що вплив російської літератури шкодить українцям, бо діє як асиміляційний механізм. Він позбавляє російську культуру статусу "старшого брата".
+
+### Деколонізаційна перспектива: II — Емансипація української культури
+Гасло "Геть від Москви!" — це не про фізичну втечу, а про ментальну емансипацію. Повноцінна культура може розвиватися лише тоді, коли позбудеться психологічної залежності.
+
+### Підсумок та спадщина: I — Трагічний фінал автора та розстріляне відродження
+Усвідомлення поразки ілюзій. Початок сталінського терору та розгрому української культури. Самогубство Хвильового у травні 1933 року було актом протесту і дзвінком-попередженням для нації.
+
+### Підсумок та спадщина: II — Актуальність ідей Хвильового сьогодні
+Сьогодні памфлет «Україна чи Малоросія?» читається як свіжий маніфест деколонізації. В умовах сучасної війни ідеї Хвильового становлять ідеологічний фундамент боротьби України за повну ментальну і політичну незалежність.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 11905)
+✓ Message 11863 acknowledged
+✓ Message 11905 acknowledged

@@ -1,0 +1,299 @@
+✅ Message sent to Gemini (ID: 12214) [auto-acked: self-addressed]
+✓ Message 12214 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12214...
+📨 Message #12214
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-lysty-mazepy
+   Time: 2026-02-20T23:37:33.907608+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-hist-026
+level: c1-hist
+sequence: 26
+version: '1.0'
+title: 'Листи Мазепи: Дипломат і меценат'
+focus: history
+pedagogy: seminar
+objectives:
+- 'Analyze the causes and consequences of листи мазепи: дипломат і меценат'
+- Evaluate the historical significance of мазепа у листах
+content_outline:
+- section: Вступ — Мазепа у листах
+  subsections:
+  - Листування як джерело
+  - Чому важливі приватні документи?
+  - Мазепа — багатогранна постать
+  - Що збереглося
+- section: Типи кореспонденції
+  subsections:
+  - Дипломатичні листи — до царя
+  - Внутрішня кореспонденція — старшина
+  - Приватні листи
+  - Меценатське листування — культура
+- section: Мазепа-дипломат
+  subsections:
+  - Листи до Петра І
+  - Тон — підданий чи союзник?
+  - Що Мазепа просив
+  - Як маневрував
+  - Останні листи перед зрадою
+- section: Фрагмент — Лист до Петра I
+  subsections:
+  - Текст (з глосами)
+  - Формули ввічливості
+  - Прихований зміст
+  - Що не сказано
+- section: Мазепа-меценат
+  subsections:
+  - Листування про церкви
+  - Підтримка освіти
+  - Культурний патронат
+  - Інший образ — не тільки політик
+- section: Критика джерела
+  subsections:
+  - Офіційні листи — маска
+  - Що можна дізнатися
+  - Порівняння з іншими джерелами
+  - Чи знаємо «справжнього» Мазепу?
+- section: Підсумок
+  subsections:
+  - Листування як вікно в епоху
+  - Складність постаті
+  - Зв'язок із циклом кооптації
+vocabulary:
+- листування
+- кореспонденція
+- дипломатія
+- меценатство
+- ввічливість
+- підданий
+- зрада
+- маневрування
+- патронат
+- анафема
+- епістолярний
+- ритуал
+- титулатура
+- челобитна
+- грамота
+activities:
+- type: reading
+  focus: Letter to Peter I with glosses
+- type: critical-analysis
+  focus: What is NOT said in an official letter?
+- type: comparative-study
+  focus: Compare letter tone before and after 1708
+- type: comparative-study
+  focus: Reconstruct Mazepa's personality from letters
+- type: essay-response
+  focus: Чи можна зрозуміти Мазепу через його листування?
+sources:
+- name: Іван Мазепа (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Іван_Мазепа
+  type: reference
+  notes: Hetman biography
+- name: Листування Мазепи
+  url: https://litopys.org.ua/
+  type: primary
+  notes: Correspondence collection
+- name: Мазепа як меценат
+  url: https://uk.wikipedia.org/wiki/Меценатство_Івана_Мазепи
+  type: reference
+  notes: Cultural patronage
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
+persona:
+  voice: Academic Historiographer
+  role: Epistolary Researcher
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Листи Мазепи: Дипломат і меценат
+
+## Використані джерела
+1. [Енциклопедія історії України: Мазепа Іван Степанович](http://resource.history.org.ua/) — біографічні дані та хронологія.
+2. [Листи Івана Мазепи (Ізборник)](http://litopys.org.ua/) — тексти листів до Мотрі Кочубей та Івана Скоропадського.
+3. [Мазепа Іван (Енциклопедія Сучасної України)](https://esu.com.ua/) — аналіз меценатської діяльності.
+4. [Листування Івана Мазепи (Наукова бібліотека)](http://elib.nlu.org.ua/) — огляд епістолярної спадщини.
+
+## Хронологія
+- 1639, 20 березня: Народження Івана Мазепи (с. Мазепинці).
+- 1687, 25 липня: Обрання гетьманом на Коломацькій раді.
+- 1690-1700: Активна фаза меценатства (відбудова Софії Київської, Лаври).
+- 1704: Початок роману з Мотрею Кочубей (серія інтимних листів).
+- 1708, жовтень: Листування зі Станіславом Лещинським та Карлом XII.
+- 1708, 30 жовтня: Лист до Івана Скоропадського із закликом до виступу проти Москви.
+- 1709, 27 червня: Поразка під Полтавою.
+- 1709, 21 вересня: Смерть у с. Варниця (Молдова).
+
+## Ключові факти та цитати
+- **Інтимна лірика**: «Моє серденько, мій квіте рожаний! Сердечно від того болію, що недалеко від мене їдеш, а я не можу очиць твоїх і личка біленького видати...» (Лист до Мотрі).
+- **Політичний маніфест**: «Вітчизна наша Малоросійська... приходить до крайньої згуби... Московська влада хоче нас... до рук прибрати і запровадити у тиранську свою неволю» (Лист до Скоропадського, 1708).
+- **Меценатство**: Коштом Мазепи збудовано/відновлено 26 соборів та церков, зокрема Троїцьку надбрамну церкву Лаври та Богоявленський собор Братського монастиря.
+- **Стиль**: Мазепа володів латиною, польською, італійською; його листи вирізняються бароковою вишуканістю, риторичними фігурами та дипломатичним етикетом.
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ — Мазепа у листах": [!context] — Епістолярна спадщина Мазепи налічує сотні документів, розсіяних по архівах Швеції, Польщі та Росії.
+- Section "Типи кореспонденції...": [!culture] — Бароковий етикет вимагав складної титулатури та формул ввічливості, які Мазепа використовував віртуозно.
+- Section "Мазепа-дипломат...": [!history-bite] — Мазепа 20 років вів подвійну гру, присипляючи пильність Петра I саме через лояльні листи.
+- Section "Фрагмент: Лист до Мотрі...": [!quote] — Цитування інтимних звертань («моє серденько») як зразок українського барокового романтизму.
+- Section "Фрагмент: Лист до Скоропадського...": [!decolonization] — Цей лист спростовує міф про «раптову зраду» — Мазепа чітко аргументує загрозу національній безпеці.
+- Section "Мазепа-меценат...": [!myth-buster] — Російська пропаганда знищувала герби Мазепи на церквах, але самі церкви (наприклад, Всіхсвятська у Лаврі) залишилися свідками його доби.
+
+## Деколонізаційний контекст
+- **Imperial/Soviet myth**: Мазепа — «зрадник» (іуда), який керувався лише власними амбіціями. Анафема як інструмент політичного тиску.
+- **Ukrainian reality**: Мазепа — державний діяч, який намагався зберегти автономію Гетьманщини в умовах наступу російського абсолютизму. Його «зрада» була спробою порятунку «Вітчизни Малоросійської».
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| Мазепинство | Зрадництво, сепаратизм, політична неблагонадійність | Національно-визвольний рух, боротьба за державність |
+| Полтавська битва | «Тріумф російської зброї», «перемога над зрадниками» | Трагедія українського розколу, спроба вирватися з імперії |
+| Анафема | Церковне прокляття за гріх віровідступництва | Політичний акт покарання, неканонічний інструмент царату |
+
+## Section-Mapped Research Notes
+
+### Вступ — Мазепа у листах
+Мазепа залишив величезний корпус текстів: універсали, приватні листи, дипломатичні ноти. Це унікальне джерело для реконструкції не лише подій, а й психології гетьмана. Важливо підкреслити, що більшість оригіналів втрачено або вивезено до Москви/Петербурга.
+
+### Типи кореспонденції та епістолярний стиль
+Розподіл на офіційну (до царя, королів) та приватну (до старшини, родичів). Особливість стилю: високе бароко, використання латинських сентенцій, складна синтаксична структура. Листи до Мотрі — унікальний зразок інтимної лірики XVII ст.
+
+### Мазепа-дипломат: Гра на шахівниці Європи
+Аналіз стратегії: писати лояльні звіти Петру I, водночас налагоджуючи контакти з Карлом XII та Станіславом Лещинським. Використання шифрів та довірених посланців (Пилип Орлик). Дипломатія як засіб виживання Гетьманщини.
+
+### Фрагмент: Лист до Мотрі Кочубей (Аналіз)
+Текст листа. Аналіз мовних засобів: пестливі форми, метафори («квіте рожаний»). Контекст: старий гетьман і молода дівчина, політичний скандал з Кочубеєм. Цей лист показує Мазепу як людину глибоких пристрастей.
+
+### Фрагмент: Лист до Скоропадського 1708 року
+Політичний заповіт. Аргументація розриву з Москвою: порушення царем угоди (Коломацьких статей), загроза перетворення козаків на драгунів. Це доказ того, що виступ 1708 року був не спонтанним, а вимушеним кроком.
+
+### Мазепа-меценат: Архітектура у словах
+Листи, що стосуються фінансування церков. «Мазепинське бароко» як візуалізація його політичної програми. Перелік об'єктів: Лавра, Софія, Батурин. Меценатство як спосіб легітимації влади та спасіння душі.
+
+### Історіографія: Війна інтерпретацій
+Як змінювався образ Мазепи в літературі та історії. Від «проклятого гетьмана» в РІ до романтичного героя у Байрона/Гюго і національного лідера в сучасній Україні. Роль листів у деконструкції міфів.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12289)
+✓ Message 12214 acknowledged
+✓ Message 12289 acknowledged

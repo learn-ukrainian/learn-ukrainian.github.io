@@ -1,0 +1,91 @@
+module: a1-11
+level: A1
+sequence: 11
+slug: the-accusative-i-things
+version: '2.0'
+title: 'The Accusative I: Things'
+subtitle: Making Direct Objects Work
+content_outline:
+- section: Warm-up
+  points:
+  - Що я бачу в кімнаті? (називний) — start with concrete, visible objects to anchor
+    the concept before introducing case change; use 'бачити' + object to prime the
+    structure
+  - 'Перехід до знахідного відмінка — introduce the concept of ''Direct Object'' (object
+    of action) vs Subject; learner error: misunderstanding grammatical role (Conceptual
+    Nominative)'
+- section: Presentation
+  points:
+  - 'Коли вживається знахідний (прямий додаток) — align with State Standard §4.2.3.2.1;
+    focus strictly on inanimate objects; context: shopping (''Я купую...'')'
+  - '''Жіночий рід: -а → -у, -я → -ю (книга → книгу)'' — learner error: leaving feminine
+    nouns in Nominative (-a); emphasize change is mandatory for Feminine Singular'
+  - '''Чоловічий рід неістот: без змін (стіл → стіл)'' — emphasize ''Safe Harbor''
+    concept; learner error: adding -a ending (Masculine Inanimate Confusion)'
+  - '''Середній рід: без змін (вікно → вікно)'' — reinforce that only Feminine singular
+    hard/soft usually changes here; contrast with Feminine to highlight the pattern'
+  - 'Дієслова зі знахідним (бачити, чути, брати, мати, хотіти, купувати) — use high-freq
+    collocations: мати рацію, брати участь, хотіти їсти; emphasize these verbs as
+    triggers'
+- section: Practice
+  points:
+  - Трансформація називного → знахідний — focus on distinguishing when change happens
+    (Fem) vs when it doesn't (Masc/Neut); ensure mix of inanimate nouns only
+  - 'Заповнення речень правильною формою — prioritize high-frequency verbs: бачити,
+    чути, брати, мати'
+- section: Production
+  points:
+  - Описати, що є в магазині (Я бачу...) — use 'бачити' + variety of inanimate objects
+  - 'Список покупок (Я хочу купити...) — cultural hook: include staples like ''хліб'',
+    ''гречка'' (buckwheat), daily rituals'
+- section: Cultural Insight
+  points:
+  - 'Типові покупки в українському магазині — mention ''базар'' (market) vs supermarket;
+    cultural hook: the ubiquitous ''Пакет потрібен?'' question at checkouts'
+vocabulary_hints:
+  required:
+  - бачити (to see) — бачити проблему, я бачу...
+  - чути (to hear) — чути музику, чути голос
+  - брати (to take) — брати участь, брати трубку, брати каву
+  - мати (to have) — мати рацію, мати час, мати можливість
+  - хотіти (to want) — хотіти їсти, хотіти спати, я хочу...
+  - купувати (to buy) — купувати продукти, купувати одяг
+  - книга (book) — читати книгу, цікава книга
+  - каву (coffee acc.) — пити каву, замовляти каву
+  recommended:
+  - любити (to love)
+  - шукати (to look for)
+  - знаходити (to find)
+  - відкривати (to open)
+activity_hints:
+- type: fill-in
+  focus: Change nominative to accusative
+  items: 25
+- type: fill-in
+  focus: Complete sentences with accusative
+  items: 20
+- type: quiz
+  focus: Identify correct case
+  items: 15
+focus: grammar
+pedagogy: PPP
+prerequisites:
+- a1-10 (Checkpoint - First Contact)
+connects_to:
+- a1-12 (The Accusative II - People)
+- a1-18 (Food and Shopping)
+objectives:
+- Learner can form accusative case for inanimate nouns
+- Learner can use accusative after verbs like бачити, брати, мати
+- Learner can distinguish between nominative and accusative forms
+- Learner understands when accusative is required
+grammar:
+- Accusative case (inanimate)
+- 'Feminine: -а → -у, -я → -ю'
+- 'Masculine/Neuter: no change'
+register: розмовний
+phase: A1.2 [Navigation]
+persona:
+  voice: Patient Supportive Tutor
+  role: Logistics Expert
+word_target: 2000

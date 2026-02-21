@@ -1,0 +1,114 @@
+module: a2-18
+level: A2
+sequence: 18
+slug: bigger-better-stronger
+version: '2.0'
+title: Bigger, Better, Stronger
+subtitle: The Comparative Degree
+content_outline:
+- section: Introduction / Вступ
+  points:
+  - Concept of comparison in daily life — proverbs like «Добре слово краще, ніж готові
+    гроші»
+  - 'English vs Ukrainian comparative logic — learner error: avoiding double comparatives
+    like «більш кращий» (more better); correct analytic form «більш хороший» or synthetic
+    «кращий»'
+- section: Presentation / Презентація
+  points:
+  - 'Regular formation (-іший/-ший) — note stem alternations: г→ж (дорогий→дорожчий),
+    к→ч (близький→ближчий), х→ш (тихий→тихіший); learner error: neglecting these mandatory
+    changes'
+  - 'Irregular comparatives (The Big 10) — focus on suppletive forms: великий–більший,
+    малий–менший per State Standard §4.3.1'
+  - 'Comparison structures: ніж vs за — learner error: using Nominative instead of
+    Accusative after «за» (Він вищий за мене)'
+  - 'Intensifiers (набагато, трохи) — use with comparatives: «набагато дорожчий»,
+    «трохи дешевший»'
+- section: Practice / Практика
+  points:
+  - Transformation drills — focus on stem alternations (г→ж, к→ч, х→ш)
+  - 'Situational comparisons (Shopping/Family) — cultural hook: Kyiv TV Tower (385m)
+    vs Eiffel Tower (324m); Motherland Monument (102m) as European landmark'
+- section: Dialogues / Діалоги
+  points:
+  - Market dialogue comparing prices and quality — use collocations like «дорожчий
+    товар» and «дешевший варіант»; proverb «Краще один раз побачити...»
+vocabulary_hints:
+  required:
+  - більший (bigger) — більший розмір (larger size), більша кількість (larger quantity)
+  - менший (smaller) — менший розмір (smaller size), менша кількість (smaller quantity)
+  - кращий (better) — кращий результат (better result), краща якість (better quality)
+  - гірший (worse) — use with context of quality
+  - вищий (taller) — вищий на зріст (taller), вищий за мене (taller than me)
+  - нижчий (shorter) — physical height
+  - довший (longer) — physical length or duration
+  - коротший (shorter) — physical length or duration
+  - ширший (wider) — physical dimension
+  - вужчий (narrower) — physical dimension
+  - дорожчий (more expensive) — дорожчий товар (more expensive item), набагато дорожчий
+    (much more expensive)
+  - дешевший (cheaper) — дешевший варіант (cheaper option), трохи дешевший (a little
+    cheaper)
+  - старший (older) — старший брат (older brother), старший за віком (older by age);
+    proverb «Чим старіший, тим мудріший»
+  - молодший (younger) — family or age context
+  - ніж (than) — followed by Nominative
+  recommended:
+  - 'за (than + Acc) — requires Accusative case (за мене, за нього); learner error:
+    using Nominative'
+  - набагато (much) — intensifier for comparatives
+  - трохи (a little) — intensifier for comparatives
+  - значно (significantly) — formal intensifier
+  - швидший (faster) — speed comparison
+activity_hints:
+- type: fill-in
+  focus: Transform positive to comparative
+  items: 15+
+- type: fill-in
+  focus: Comparison sentences with ніж/за
+  items: 12+
+- type: quiz
+  focus: Which is bigger/better/etc.?
+  items: 12+
+- type: match-up
+  focus: Adjective + comparative form
+  items: 12+
+- type: fill-in
+  focus: Irregular comparative forms
+  items: 10+
+focus: grammar
+pedagogy: PPP
+prerequisites:
+- A1 adjective agreement
+- a2-17 (Possessive sviy)
+- Basic sentence structure
+connects_to:
+- a2-19 (The Best, The Worst)
+- a2-20 (Preferences and Choices)
+- a2-24 (Smart Shopping)
+objectives:
+- Learner can form comparative adjectives
+- Learner can compare two objects using 'ніж' and 'за'
+- Learner can identify and use irregular comparative forms
+- Learner can describe differences in quality and quantity
+grammar:
+- comparative adjectives formation
+- regular comparatives (-іший)
+- irregular comparatives (кращий, більший)
+- comparison structures (ніж, за)
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Comparison
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Comparative adjective requirements for A2
+- name: Ukrainian Adjective Reference
+  url: https://uk.wikipedia.org/wiki/Прикметник
+  type: reference
+  notes: Complete comparison paradigms
+immersion: 50-60% Ukrainian
+phase: A2.2
+persona:
+  voice: Encouraging Cultural Guide
+  role: Sports Commentator
+word_target: 3000

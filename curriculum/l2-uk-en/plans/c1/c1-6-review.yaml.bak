@@ -1,0 +1,41 @@
+module: c1-105
+level: C1
+sequence: 105
+slug: c1-6-review
+version: '2.0'
+title: 'C1.6 Література: Огляд та рефлексія'
+subtitle: 'C1.6 Literature: Review and Reflection'
+content_outline:
+- section: Розминка — Український літературний канон
+  points:
+  - Від Котляревського до Коцюбинського — еволюція
+  - Романтизм, реалізм, імпресіонізм — напрямки
+  - Шевченко, Франко, Леся — три стовпи
+- section: Review Areas
+  points:
+  - 'Major authors: Kotlyarevsky, Shevchenko, Franko, Lesya Ukrainka'
+  - 'Literary movements: Romanticism, Realism'
+  - Key works and their themes
+  - Literary analysis skills application
+  - Cross-author comparisons
+- section: Практика — інтеграційний аналіз
+  points:
+  - Порівняти Шевченка та Франка — поетика та ідеологія
+  - Написати есе про еволюцію жіночих образів у літературі
+  - Проаналізувати вплив історичного контексту на творчість
+  - Обговорити актуальність класики у сучасній Україні
+focus: review
+pedagogy: Integration
+objectives:
+- Learner can synthesize knowledge of the Ukrainian literary canon from classics to
+  contemporary.
+- Learner can compare different literary eras and movements.
+- Learner can apply advanced literary terminology to various texts.
+grammar:
+- Synthesis of stylistic devices
+- Comparative literary analysis
+phase: C1.6 Literature
+persona:
+  voice: Senior Specialist
+  role: Літературний оглядач
+word_target: 4000

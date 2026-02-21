@@ -1,4 +1,4 @@
-- instruction: Match the Ukrainian letter to its English sound equivalent.
+- instruction: Match the Ukrainian letter or word to its English equivalent.
   pairs:
   - left: А а
     right: a (father)
@@ -14,8 +14,8 @@
     right: m (map)
   - left: Т т
     right: t (stop)
-  - left: Б б
-    right: b (bank)
+  - left: мама
+    right: mom
   title: 'Справжні друзі: Літери та звуки'
   type: match-up
 - instruction: These letters are tricksters. Match them to their real sound.
@@ -165,7 +165,7 @@
     - correct: false
       text: '[u]'
     question: How do you pronounce the letter «І» in «і»?
-  title: 'Фальшиві друзі: Перевірка'
+  title: 'Літери та звуки: Перевірка'
   type: quiz
 - instruction: Rearrange the letters to form the correct Ukrainian word.
   items:

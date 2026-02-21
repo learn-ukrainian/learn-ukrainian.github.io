@@ -1,33 +1,35 @@
 # Дослідження: Структура речення
 
 ## State Standard Reference
-§4.4: "Синтаксис. Просте речення (розповідне, питальне). Складне речення (складносурядне, складнопідрядне)."
-Alignment: This module introduces the *terminology* (metalanguage) required to discuss the syntactic structures mandated by §4.4 of the B1 standard, specifically preparing learners for the complex sentence types detailed in lines 2380-2431.
+§4.4.2: "Просте ускладнене речення: просте речення з однорідними членами... з дієприкметниковим зворотом... з дієприслівниковим зворотом... зі вставними словами"
+§4.4.3: "Складне речення: складносурядне... складнопідрядне... з підрядною означальною частиною... з підрядною частиною причини..."
+Alignment: This module provides the essential metalanguage (підмет, присудок, підрядне речення) required to understand and analyze the complex syntactic structures mandated by the B1 standard (lines 2367-2431). Without these terms, learners cannot access native-level grammar explanations for the required complex sentence types.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| підмет | High (Education) | головний член речення, підкреслюємо однією рискою |
-| присудок | High (Education) | дієслівний присудок, узгоджується з підметом |
-| додаток | Med-High | прямий додаток, непрямий додаток |
-| означення | Med-High | узгоджене означення, відповідає на питання "який?" |
-| обставина | Med-High | обставина часу, обставина місця, обставина способу дії |
-| синтаксичний розбір | High (School) | зробити розбір, повний синтаксичний аналіз |
+| підмет | Edu/High | підкреслити підмет, головний член речення |
+| присудок | Edu/High | дієслівний присудок, узгоджуватися з підметом |
+| додаток | Edu/High | прямий додаток, непрямий додаток |
+| означення | Edu/Mid | узгоджене означення, поширене означення |
+| обставина | Edu/Mid | обставина часу, обставина місця |
+| просте речення | Edu/High | будова простого речення |
+| складне речення | Edu/High | частини складного речення |
+| підрядне речення | Edu/High | головне і підрядне, сполучник підрядності |
 
 ## Cultural Hooks
-1. **The "Underlining" Ritual**: Every Ukrainian schoolchild learns a specific visual code for sentence parts: Subject (one line `____`), Predicate (two lines `====`), Object (dotted `_ _ _`), Attribute (wavy `~~~~`), Adverbial (dot-dash `_._._`). This is a universal shared experience.
-2. **"Anatomy of Language"**: In Ukrainian education, syntactic analysis is treated not just as grammar but as a logic exercise ("анатомія мови"), believed to structure thinking and clarity of expression.
+1. **The School Underlining Ritual**: Every Ukrainian schoolchild learns a rigid visual system for syntactic analysis: Subject (one line), Predicate (two lines), Attribute (wavy line), Object (dotted line), Adverbial (dot-dash). This visual code is universal in Ukraine.
+2. **"Parsing" as Logic**: Syntactic analysis (синтаксичний розбір) is treated almost like a mathematical proof in Ukrainian education, fostering a logical approach to language structure.
 
 ## Common Learner Errors
-1. **The "Missing" Subject**: Learners panic when the subject is omitted (Pro-Drop), e.g., "Люблю каву" (I love coffee). *Correction*: Explain that the verb ending *is* the subject marker.
-2. **Rigid SVO Order**: Learners use strict SVO (Subject-Verb-Object) even when emphasis requires OVS. *Correction*: Teach that "Каву люблю я" shifts emphasis to *who* loves it.
-3. **Confusing Object & Adverbial**: In English, "in the park" is just a phrase. In Ukrainian, distinguishing between *додаток* (object) and *обставина* (adverbial) is crucial for case usage.
+1. **Parts of Speech vs. Sentence Parts**: Confusing "noun" (іменник) with "subject" (підмет). "Subject" is the role, "noun" is the class.
+2. **Pro-Drop Panic**: Learners often think a sentence is "incomplete" if the subject is omitted (e.g., "Люблю каву"), whereas in Ukrainian the ending of the predicate implies the subject.
+3. **Object vs. Adverbial**: Confusing an object (Questions: кого? чого?) with an adverbial of place (Questions: де? куди?), especially with prepositions.
 
 ## Cross-References
-- Builds on: A2 Case System (understanding that *cases* mark function).
-- Prepares for: B1.3 Complex Sentences (M26-41), where "clause" terminology is essential.
+- Builds on: b1-01 (Basic grammar terminology), b1-02 (Verb terminology)
+- Prepares for: b1-26 (Relative clauses), b1-35 (Concessive clauses), b1-05 (Metalanguage checkpoint)
 
 ## Notes for Content Writing
-- **Visuals are Key**: Use the "underlining" conventions in all examples. It's the most authentic way to teach this.
-- **Metalanguage Bridge**: This is B1.0. Use Ukrainian terms *immediately*, but allow English "scaffolding" comparisons in the intro only.
-- **Dialogues**: Create a scenario where a Ukrainian friend helps the learner "fix" a text using these terms (e.g., "Here you need a comma because it's a new clause").
+- **B1.0 Bridge Module**: Use English sparingly (max 2 paragraphs in intro) to bridge the gap, but transition to Ukrainian explanations for the specific terms.
+- **Visuals**: Heavily rely on the underlining convention in examples. Use formatting (bold/underline/italics) to simulate the school notebook experience.

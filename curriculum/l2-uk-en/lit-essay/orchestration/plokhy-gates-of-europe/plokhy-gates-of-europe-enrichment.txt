@@ -1,0 +1,237 @@
+✅ Message sent to Gemini (ID: 12385) [auto-acked: self-addressed]
+✓ Message 12385 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12385...
+📨 Message #12385
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-plokhy-gates-of-europe
+   Time: 2026-02-20T23:39:22.029731+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 35
+module: lit-essay-35
+level: LIT.ESSAY
+slug: plokhy-gates-of-europe
+version: '2.0'
+title: Plokhy Gates Of Europe
+subtitle: Plokhy Gates Of Europe
+content_outline:
+- section: Вступ та контекст
+  points: []
+- section: Аналіз ключових творів
+  points: []
+- section: Стилістика та мова автора
+  points: []
+- section: Деколонізаційна перспектива
+  points:
+  - Як цей автор руйнує імперські міфи
+  - Українська суб'єктність у тексті
+- section: Підсумок та спадщина
+  points: []
+vocabulary_hints:
+  required:
+  - історіографія
+  - наратив
+  - суб'єктність
+  recommended:
+  - деколонізація
+activity_hints:
+- type: reading
+  focus: Аналіз першоджерела
+- type: essay-response
+  focus: Критичне есе
+- type: critical-analysis
+  focus: Деконструкція тексту
+focus: literature
+pedagogy: literature
+immersion: 100% Ukrainian
+phase: LIT Expansion
+objectives:
+- Проаналізувати творчість Plokhy Gates Of Europe у контексті української літератури
+- Дослідити вплив автора на формування національної ідентичності
+persona:
+  voice: Senior Specialist
+  role: Continental Historian
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Plokhy Gates Of Europe
+
+## Використані джерела
+1. [Енциклопедія Сучасної України: Плохій Сергій Миколайович](https://esu.com.ua/article-71711) — біографічні дані, загальний огляд наукового доробку та методології Гарвардської школи українознавства.
+2. [Інститут історії України НАН України: Рецензії на праці С. Плохія](http://history.org.ua/) — аналіз історіографічного значення книги "Брама Європи", розгляд концепції територіального підходу до історії.
+3. [Літопис: Історіографічні дебати навколо спадщини Русі](http://litopys.org.ua/) — контекст для розуміння дискусії щодо тяглості української державності, яку піднімає Плохій.
+4. [Український інститут книги: Сергій Плохій та просування українських наративів](https://ubi.org.ua/) — інформація про вплив книги на західну аудиторію після 2014 та 2022 років.
+
+## Хронологія
+- 1957: Народження Сергія Плохія (історик нині є директором Українського наукового інституту Гарвардського університету).
+- 2014: Початок російської агресії проти України, що стало безпосереднім поштовхом для написання книги.
+- 2015: Вихід англомовного оригіналу "The Gates of Europe: A History of Ukraine" у видавництві Basic Books.
+- 2016: Публікація українського перекладу книги "Брама Європи. Історія України від скіфських воєн до незалежності".
+- 2018: Сергій Плохій стає лауреатом Національної премії України імені Тараса Шевченка за цю книгу.
+- 2021: Вихід оновленого видання з новими розділами, що охоплюють період президентства В. Зеленського та подальший перебіг війни.
+
+## Ключові факти та цитати
+- "Історія України — це історія порубіжжя, яка творилася на стику двох екосистем — євразійського степу та східноєвропейського лісостепу... і на кордоні християнства й ісламу, а також католицизму і православ'я." (С. Плохій)
+- Книга написана з позицій "територіальної історії", що інтегрує не лише етнічних українців, але й кримських татар, поляків, євреїв, які творили історію на українських землях.
+- Автор кидає виклик російській історіографічній схемі, яка привласнює історію Київської Русі (розвінчує парадигму В. Ключевського та М. Погодіна).
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ та контекст: II — Метафора «Брами Європи»": [!context] — Пояснення концепції фронтиру. Україна не як провінція чужих імперій, а як цивілізаційна брама, через яку ідеї та впливи рухалися в обох напрямках.
+- Section "Аналіз ключових творів: I — Переосмислення епохи Русі": [!myth-buster] — Спростування імперського міфу про "колиску трьох братніх народів". Демонстрація того, як Москва привласнила київську спадщину задля легітимізації імперії.
+- Section "Аналіз ключових творів: II — Козацька держава як європейський актор": [!history-bite] — Козацтво як соціальний стан, який вимушено перебрав на себе функції націотворення та захисту після полонізації старої руської еліти.
+- Section "Стилістика та мова автора: I — Наративна історія для глобального читача": [!quote] — Наведення яскравої цитати Плохія щодо ролі історії у сучасній гібридній війні.
+- Section "Деколонізаційна перспектива: II — Повернення української суб'єктності": [!decolonization] — Територіальний (поліетнічний) підхід до історії України замість вузько етноцентричного або імперського підходів.
+- Section "Підсумок та спадщина: I — Рецепція на Заході та премії": [!culture] — Значення перекладу історії України англійською мовою для формування світової думки (book diplomacy).
+
+## Деколонізаційний контекст
+- Imperial/Soviet myth: Україна не має власної самостійної історії, її розвиток можливий лише в межах Російської або Радянської держави. Україна — це "Малоросія", південно-західна околиця.
+- Ukrainian reality: Україна — суб'єкт європейської історії з часів Античності до сьогодення, місце синтезу різних культур і ключовий чинник європейської безпеки. Українська історія має тяглість, а не розчиняється в російському наративі.
+
+## Contested Terms (if applicable)
+| Concept | Imperial framing | Ukrainian (decolonized) framing |
+|---------|-----------------|-------------------------------|
+| Давньоруська держава | Київська Русь як перший етап російської державності, "Спільна колиска" | Політичне і культурне утворення з центром у Києві, спадкоємицею якого насамперед є Україна |
+| Переяславська рада 1654 | "Возз'єднання" двох братніх народів на віки | Ситуативний військово-політичний союз, який Москва згодом перетворила на інструмент інкорпорації |
+| Іван Мазепа | Зрадник законного російського монарха | Політик європейського формату, який боровся за суверенітет Гетьманщини |
+
+## Section-Mapped Research Notes
+
+### Вступ та контекст: I — Історичний момент та задум
+Книга постала як інтелектуальна відповідь на виклики 2014 року (анексія Криму, війна на Донбасі). Плохій усвідомив дефіцит знань на Заході про те, чому Україна чинить опір і чому вона не є "частиною Росії".
+
+### Вступ та контекст: II — Метафора «Брами Європи»
+Метафора брами вказує на геополітичне положення на зламі культур. Україна постійно перебувала під впливом європейських рухів (Ренесанс, Реформація, Просвітництво), транслюючи їх далі на Схід, або ж була щитом проти експансії зі Сходу.
+
+### Аналіз ключових творів: I — Переосмислення епохи Русі
+Плохій майстерно деконструює династичний міф Рюриковичів, який Москва використала для виправдання територіальної експансії. Показує важливість Галицько-Волинського князівства та Великого князівства Литовського як продовжувачів руської традиції.
+
+### Аналіз ключових творів: II — Козацька держава як європейський актор
+Аналіз козацтва не просто як "втікачів", а як військового ордену, що перебрав політичне лідерство. Гадяцька угода 1658 р. аналізується як ключова, хоч і невдала, спроба європейської інтеграції.
+
+### Аналіз ключових творів: III — Модерне націотворення ХІХ-ХХ століть
+Роль української інтелігенції (Кирило-Мефодіївське братство, М. Грушевський) у створенні модерного національного міфу. Подолання імперських заборон (Валуєвський циркуляр, Емський указ).
+
+### Стилістика та мова автора: I — Наративна історія для глобального читача
+Автор відмовляється від сухих академічних конструкцій на користь захопливого "storytelling". Використовує макроісторичну перспективу, щоб зробити історію Східної Європи зрозумілою західному читачу, не обтяженому локальними деталями.
+
+### Стилістика та мова автора: II — Інтелектуальна аргументація
+Книга поєднує фактаж із глибокою публіцистичністю. Плохій постійно веде невидиму полеміку з російською пропагандою, відповідаючи на неї вивіреними історичними аргументами, а не емоціями.
+
+### Деколонізаційна перспектива: I — Деконструкція імперських міфів
+Головний удар автора спрямований проти "схеми російської історії", що зводить українців до другорядного відгалуження. Плохій повертає Україні її регіональне розмаїття та історичну суб'єктність.
+
+### Деколонізаційна перспектива: II — Повернення української субвності
+Плохій впроваджує в наратив концепцію територіального, багатонаціонального суспільства. Історія України — це історія всіх народів, які населяли цю землю, що докорінно відрізняється від етноцентричних наративів 19-го століття.
+
+### Підсумок та спадщина: I — Рецепція на Заході та премії
+Отримання Шевченківської премії. Статус бестселера (особливо після повномасштабного вторгнення 2022). Книга стала обов'язковим читанням для західних політиків та дипломатів (must-read).
+
+### Підсумок та спадщина: II — Значення для національної свідомості
+Праця не лише пояснює Україну світу, а й пояснює Україну самим українцям. Вона дарує сучасне, європейське, деколонізоване бачення власної історії.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12449)
+✓ Message 12385 acknowledged
+✓ Message 12449 acknowledged

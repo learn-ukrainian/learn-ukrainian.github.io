@@ -3,30 +3,30 @@
   "slug": "weather-and-nature",
   "mode": "v3",
   "phases": {
-    "v3-A": {
-      "status": "complete",
-      "ts": "2026-02-19T22:27:35Z",
-      "task_id": "v3-weather-and-nature-pA",
-      "mode": "full"
-    },
     "v3-B": {
       "status": "complete",
-      "ts": "2026-02-19T22:29:07Z"
+      "ts": "2026-02-20T23:51:01Z",
+      "note": "migrated-from-v2"
     },
     "v3-C": {
       "status": "complete",
-      "ts": "2026-02-19T22:30:28Z",
-      "task_id": "v3-weather-and-nature-pC"
+      "ts": "2026-02-20T23:51:01Z",
+      "note": "migrated-from-v2"
     },
     "v3-audit": {
       "status": "complete",
-      "ts": "2026-02-19T22:45:31Z",
-      "attempts": 3
+      "ts": "2026-02-20T23:51:01Z",
+      "note": "migrated-from-v2"
     },
     "v3-D": {
       "status": "complete",
-      "ts": "2026-02-19T22:46:36Z",
-      "attempts": 1
+      "ts": "2026-02-20T23:51:01Z",
+      "note": "migrated-from-v2"
+    },
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-20T23:51:01Z",
+      "note": "adopted-existing-meta"
     }
   }
 }

@@ -1,0 +1,290 @@
+✅ Message sent to Gemini (ID: 13046) [auto-acked: self-addressed]
+✓ Message 13046 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #13046...
+📨 Message #13046
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-mykola-khvylovyi
+   Time: 2026-02-20T23:43:59.764436+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-bio-97
+level: C1-BIO
+sequence: 97
+slug: mykola-khvylovyi
+version: '2.0'
+title: 'Микола Хвильовий: Геть від Москви!'
+content_outline:
+- section: Вступ — Бунтар, що обрав смерть
+  points:
+  - Микола Хвильовий — найяскравіша постать Розстріляного відродження
+  - Від комуніста до ідеолога «психологічної Європи»
+  - Самогубство як останній акт спротиву
+- section: Ранні роки та революція (1893-1921)
+  points:
+  - Народження на Харківщині (справжнє ім'я — Микола Фітільов)
+  - Участь у революції та громадянській війні
+  - Вступ до Комуністичної партії
+  - Початок літературної діяльності
+- section: Літературний злет (1921-1925)
+  points:
+  - Збірки «Сині етюди» та «Осінь»
+  - Організація літературних об'єднань — ВАПЛІТЕ
+  - Імпресіоністичний стиль та психологізм
+  - Визнання як провідного прозаїка
+- section: «Геть від Москви!» (1925-1928)
+  points:
+  - Літературна дискусія про шляхи української культури
+  - Гасло «Геть від Москви!» — орієнтація на Європу
+  - Концепція «азійського ренесансу»
+  - Конфлікт з партійною лінією та примусове каяття
+- section: Останні роки та самогубство (1928-1933)
+  points:
+  - Тиск влади та творча криза
+  - Голодомор та знищення української інтелігенції
+  - Самогубство 13 травня 1933 року
+  - Передсмертний лист і його значення
+- section: Спадщина та реабілітація
+  points:
+  - Заборона творів на десятиліття
+  - Реабілітація у 1980-х роках
+  - Вплив на сучасну українську літературу
+  - Хвильовий як символ інтелектуального спротиву
+vocabulary_hints:
+  required:
+  - Розстріляне відродження (Executed Renaissance)
+  - орієнтація (orientation)
+  - імпресіонізм (impressionism)
+  - дискусія (discussion/debate)
+  - самогубство (suicide)
+  - каяття (repentance)
+  - ренесанс (renaissance)
+  - інтелігенція (intelligentsia)
+  - спротив (resistance)
+  - ідеологія (ideology)
+  recommended:
+  - авангард (avant-garde)
+  - психологізм (psychologism)
+  - модернізм (modernism)
+  - тоталітаризм (totalitarianism)
+  - цензура (censorship)
+activity_hints:
+- type: reading
+  focus: Уривки з памфлетів та прози Хвильового
+  source: Оригінальні твори
+  items: 3 passages
+- type: essay-response
+  focus: Чому гасло «Геть від Москви!» актуальне сьогодні?
+  output: Contemporary analysis
+focus: biography
+prerequisites:
+- c1-bio-57-les-kurbas
+connects_to:
+- c1-bio-68-olena-teliha
+- c1-bio-77-vasyl-stus
+module_type: biography
+sources:
+- name: Микола Хвильовий (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Микола_Хвильовий
+  type: primary
+  notes: Біографія, творчість, літературна дискусія
+- name: Літературна дискусія 1925-1928
+  url: https://uk.wikipedia.org/wiki/Літературна_дискусія_1925—1928_років
+  type: reference
+  notes: Контекст полеміки «Геть від Москви!»
+- name: Розстріляне відродження
+  url: https://uk.wikipedia.org/wiki/Розстріляне_відродження
+  type: reference
+  notes: Доля української інтелігенції 1920-30-х
+immersion: 100% Ukrainian
+phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of микола хвильовий: геть від москви!'
+- Evaluate the contributions of бунтар, що обрав смерть
+- Trace the career and influence of спадщина та реабілітація
+persona:
+  voice: Senior Biographer
+  role: Pamphleteer
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Микола Хвильовий: Геть від Москви!
+
+## Використані джерела
+1.  [Енциклопедія Сучасної України: Хвильовий Микола](https://esu.com.ua/article-873529) — академічна біографія, аналіз творчості та політичної позиції.
+2.  [History.org.ua: Хвильовий Микола Григорович](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Khvylovyj_M) — детальна стаття Інституту історії України НАНУ.
+3.  [Litopys.org.ua: Микола Хвильовий](http://litopys.org.ua/khvyl/khvyl.htm) — тексти творів та літературознавчі статті.
+4.  [Історична Правда: Самогубство Хвильового](https://www.istpravda.com.ua/articles/2013/05/13/123956/) — аналіз архівних документів та обставин смерті.
+
+## Хронологія
+- **13 грудня 1893**: Народився у Тростянці (Харківщина) як Микола Фітільов.
+- **1916**: Участь у Першій світовій війні, окопна правда, радикалізація поглядів.
+- **квітень 1919**: Вступ до КП(б)У, участь у громадянській війні на боці червоних.
+- **1921**: Переїзд до Харкова, вихід збірки «Сині етюди», початок літературної слави.
+- **1925**: Створення ВАПЛІТЕ, початок Літературної дискусії (памфлет «Камо грядеши?»).
+- **1926**: Лист Сталіна до Кагановича з критикою Хвильового («Геть від Москви!»).
+- **січень 1928**: Примусовий саморозпуск ВАПЛІТЕ під тиском влади.
+- **13 травня 1933**: Самогубство у будинку «Слово» на знак протесту проти репресій та Голодомору.
+
+## Ключові факти та цитати
+- **Цитата 1**: «Перед нами стоїть таке питання: на яку із світових літератур взяти курс? В будь-якому випадку не на російську. Це рішуче і без всяких застережень... Від російської літератури, від її стихії українська поезія мусить тікати якомога швидше.» («Камо грядеши?»)
+- **Цитата 2**: «Арешт Ялового — це розстріл цілої генерації... За що? За те, що ми були найщирішими комуністами? Нічого не розумію.» (Передсмертна записка)
+- **Факт**: Справжнє прізвище — Фітільов. Псевдонім «Хвильовий» обрав на честь бурхливої революційної епохи.
+- **Факт**: Концепція «азійського ренесансу» передбачала, що українська культура стане містком, який принесе європейські цінності відродженим народам Азії.
+
+## Engagement Hooks (mapped to sections)
+- **Section "Революція: Чекист з душею поета"**: `[!myth-buster]` — Міф про те, що всі українські письменники були жертвами від початку. Хвильовий був фанатичним чекістом, вірив у комунізм («я — чекіст, але я і людина»).
+- **Section "Літературний злет: «Сині етюди»"**: `[!quote]` — Цитата про «запах слова» з «Синіх етюдів», що демонструє його імпресіонізм.
+- **Section "Дискусія: «Камо грядеши?»"**: `[!decolonization]` — Розбір гасла «Геть від Москви!» не як ксенофобії, а як необхідної гігієни для подолання провінційності.
+- **Section "Ідеологія: Азійський ренесанс і Європа"**: `[!context]` — Пояснення концепції Шпенглера «Присмерк Європи» і як Хвильовий її переосмислив (Європа вмирає, але її дух відродиться в Україні).
+- **Section "Фінал: Постріл 13 травня"**: `[!history-bite]` — Факт про те, що Хвильовий запросив друзів «на чай» перед самогубством, перетворивши смерть на перформанс спротиву.
+- **Section "Спадщина: Повернення із забуття"**: `[!culture]` — Вплив Хвильового на шістдесятників та сучасну літературу (Жадан як продовжувач урбаністичної традиції Харкова).
+
+## Деколонізаційний контекст
+- **Imperial Myth**: Хвильовий — «буржуазний націоналіст», який ненавидів Росію.
+- **Ukrainian Reality**: Хвильовий був націонал-комуністом, який бачив Україну рівноправною частиною європейського культурного простору, а не колоніальним придатком. Його конфлікт був не з російською культурою як такою, а з її гегемонією та «російським диригентом».
+
+## Contested Terms
+| Concept | Imperial/Soviet framing | Ukrainian (decolonized) framing |
+|---------|-------------------------|---------------------------------|
+| Хвильовізм | Контрреволюційна буржуазна ідеологія, зрада комунізму | Рух за культурну суверенність та європейську орієнтацію України |
+| Українізація | Тимчасова поступка націоналістам | Природний процес повернення до національної ідентичності |
+| Націонал-комунізм | Політична єресь, прикриття для націоналізму | Спроба поєднати соціальну справедливість з національним визволенням |
+
+## Section-Mapped Research Notes
+
+### Вступ: Бунтар, що обрав смерть
+Центральна фігура 1920-х. Синтез фанатичного комунара і українського патріота. Його смерть стала символічним кінцем українізації.
+
+### Ранні роки: Формування бунтівника
+Походження з дворян і вчителів. Навчання в гімназії, виключення за "крамолу". Вплив мандрів по селах ("ходіння в народ").
+
+### Революція: Чекист з душею поета
+Участь у громадянській війні. Керівництво ЧК. Травматичний досвід розстрілів, який пізніше вилився у новелі "Я (Романтика)". Конфлікт між гуманізмом і фанатизмом.
+
+### Літературний злет: «Сині етюди»
+1921 рік — переїзд до Харкова. Вибух "Синіх етюдів". Романтичний вітаїзм. Відмова від просвітянського реалізму на користь модернізму. Вплив на молодь.
+
+### Організатор: ВАПЛІТЕ і «Літературний ярмарок»
+Створення "Гарту", потім ВАПЛІТЕ. ВАПЛІТЕ як "академія" для обраних, елітарне мистецтво проти "масовізму" (Плугу). Журнал "Вапліте".
+
+### Дискусія: «Камо грядеши?»
+1925 рік. Стаття "Про сатану в бочці". Початок дискусії. Питання: куди йти українській літературі? Відповідь: геть від провінційності, геть від мавпування Москви.
+
+### Ідеологія: Азійський ренесанс і Європа
+"Психологічна Європа" — це не географія, а культура (Фауст, Гамлет, активна дія). Україна як лідер "Азійського ренесансу". Месіанство Хвильового.
+
+### Цькування: Полювання на «хвильовізм»
+Лист Сталіна 1926 року — вирок. Кампанія в пресі. Звинувачення у зраді. Вимушене каяття Хвильового (тактичний відступ). Закриття ВАПЛІТЕ. Створення "Пролітфронту" як спроба вижити.
+
+### Фінал: Постріл 13 травня
+1933 рік. Поїздка селами, бачення Голодомору. Арешт Ялового. Рішення піти з життя. Деталі останнього дня. Похорон як мовчазна демонстрація.
+
+### Спадщина: Повернення із забуття
+Заборона імені. Міф про "хвильовізм". Повернення у 1980-х. Актуальність гасла "Геть від Москви" у XXI столітті (війна з Росією).
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 13083)
+✓ Message 13046 acknowledged
+✓ Message 13083 acknowledged

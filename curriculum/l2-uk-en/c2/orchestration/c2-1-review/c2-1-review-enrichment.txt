@@ -1,0 +1,315 @@
+✅ Message sent to Gemini (ID: 11148) [auto-acked: self-addressed]
+✓ Message 11148 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #11148...
+📨 Message #11148
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-c2-1-review
+   Time: 2026-02-20T22:26:50.890355+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c2-019
+level: c2
+sequence: 19
+version: '2.0'
+title: Повторення C2.1 — Консолідація стилістики
+focus: integration
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: C2.1 module summaries
+  url: internal
+  type: reference
+  notes: Key concepts from modules 01-18
+- name: Stylistics comprehensive review
+  url: https://www.nbuv.gov.ua/
+  type: reference
+  notes: Integration of stylistic concepts
+- name: Ukrainian State Standard 2024 — Review methodology
+  url: https://mon.gov.ua/
+  type: reference
+  notes: C2 consolidation requirements
+content_outline:
+- section: Огляд — Сім функціональних стилів
+  points:
+  - Науковий — ключові характеристики
+  - Офіційний — формальні ознаки
+  - Публіцистичний — прийоми впливу
+  - Художній — літературні засоби
+  - Розмовний — маркери усності
+  - Релігійний — сакральна мова
+  - Епістолярний — кореспонденція
+- section: Трансформація стилів
+  points:
+  - Науковий → популярний
+  - Офіційний → публіцистичний
+  - Стратегії адаптації
+  - Збереження змісту
+- section: Милозвучність та евфонія
+  points:
+  - Система чергувань
+  - у/в, і/й, з/зі/із
+  - Комплексне застосування
+  - Редагування для милозвучності
+- section: Лексична та синтаксична стилістика
+  points:
+  - Вибір слова — синоніми, антоніми
+  - Стилістично маркована лексика
+  - Структура речення
+  - Риторичні фігури
+- section: Індивідуальний голос
+  points:
+  - Елементи авторського стилю
+  - Тон, ритм, лексика
+  - Розвиток та вдосконалення
+  - Консистентність голосу
+- section: Когерентність тексту
+  points:
+  - Засоби зв'язності
+  - Тематична прогресія
+  - Конектори та переходи
+  - Плинність тексту
+- section: Рефлексія та планування
+  points:
+  - Самооцінка прогресу
+  - Сильні сторони після C2.1
+  - Зони для покращення
+  - Цілі для C2.2
+vocabulary:
+  required:
+  - повторення (review/revision)
+  - узагальнення (generalization/summary)
+  - консолідація (consolidation)
+  - закріплення (reinforcement)
+  - систематизація (systematization)
+  - оцінювання (assessment/evaluation)
+  - рефлексія (reflection)
+  - прогрес (progress)
+  - досягнення (achievement)
+  - перспектива (perspective)
+  recommended:
+  - синтез (synthesis)
+  - інтеграція (integration)
+  - компетенція (competence)
+  - готовність (readiness)
+  - ретроспекція (retrospection)
+  forbidden: '[]'
+activities:
+  types_required:
+  - essay-response
+  - quiz
+  - fill-in
+  - match-up
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c2-20 (C2.1 Checkpoint — formal assessment)
+- c2-21 (Stylistic devices mastery begins C2.1b)
+- c2-26 (C2.2 Literary mastery)
+vocabulary_hints:
+  required:
+  - концепція (concept)
+  - аналіз (analysis)
+  - дискурс (discourse)
+  - методологія (methodology)
+  recommended:
+  - інтерпретація (interpretation)
+  - контекстуалізація (contextualization)
+  - синтез (synthesis)
+activity_hints:
+- type: reading
+  focus: Поглиблений аналіз тексту
+  items: 4
+- type: essay-response
+  focus: Критичне осмислення
+- type: discussion
+  focus: Дискусія та аргументація
+  items: 1
+persona:
+  voice: Senior Specialist
+  role: Manuscript Doctor
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Повторення C2.1 — Консолідація стилістики
+
+## State Standard Reference
+§4.3 (Стилістика): "Уміння трансформувати текст з одного стилю в інший, зокрема науковий у науково-популярний, офіційний у публіцистичний тощо" (§4.3.7).
+Alignment: Модуль систематизує всі 7 функціональних стилів (§4.3.1.1), засоби милозвучності (§4.3.2) та лексико-синтаксичні засоби (§4.3.3-4.3.4), забезпечуючи виконання вимог стандарту щодо стилістичної компетенції на рівні C2.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| консолідація | High (Academic) | консолідація знань, консолідація зусиль, процес консолідації |
+| стилістика | Medium (Specialized) | практична стилістика, функціональна стилістика, стилістика мовлення |
+| евфонія (милозвучність) | Low / High | закони милозвучності, порушення евфонії, засоби милозвучності |
+| когерентність | Medium (Academic) | когерентність тексту, логічна когерентність, зв'язність і когерентність |
+
+## Cultural Hooks
+1. **Київські неокласики ("П'ятеро з парнасу")**: Микола Зеров та його гурток як взірець "високого стилю", естетичної довершеності та боротьби за європейський рівень української літератури. Їхня поезія — ідеальний приклад стилістичної дисципліни.
+2. **Іван Котляревський "Енеїда"**: Як приклад майстерної гри зі стилями (бурлескно-травестійний), де "високий" сюжет Вергілія трансформується у "низький" народний регістр, що стало початком нової української літературної мови.
+
+## Common Learner Errors
+1. **Канцелярит у розмовному мовленні**: Використання штампів ("згідно з", "з метою", "даний") у невідповідних контекстах → Потрібне стилістичне редагування.
+2. **Порушення законів милозвучності (у/в, і/й)**: Механічне чергування без урахування попереднього/наступного звуку → Втрата плинності тексту.
+3. **Змішування регістрів (Register mixing)**: Вживання сленгу або діалектизмів у суто офіційних чи наукових текстах без стилістичної мети.
+
+## Cross-References
+- Builds on: C2.1a (M01-18) — окремі стилістичні теми.
+- Prepares for: C2.2 (Literary Mastery) — де ці інструменти будуть використані для творчого письма.
+
+## Notes for Content Writing
+- Особливу увагу приділити **релігійному** та **епістолярному** стилям, які часто ігноруються, але є у Стандарті 2024.
+- У розділі про трансформацію показати конкретні пари: як одну й ту ж думку висловити науково, публіцистично та розмовно.
+- "Індивідуальний голос" має базуватися на понятті "ідіостиль".
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Консолідація та систематизація (Introduction: Consolidation and Systematization)"
+  words: 500
+  points:
+  - "Огляд стилістичної компетенції на рівні C2 згідно з Державним стандартом 2024 (§4.3.1.1): від теорії до автоматизації."
+  - "Поняття ідіостилю як вершини мовної особистості — перехід від загальних норм до індивідуального голосу."
+- section: "Функціональна стилістика: Сім граней мови (Functional Stylistics: Seven Facets of Language)"
+  words: 1000
+  points:
+  - "Глибокий аналіз наукового та художнього стилів крізь призму Київських неокласиків (М. Зеров) — взірець дисципліни та 'високого стилю'."
+  - "Критичний розбір розмовного стилю: подолання 'канцеляриту' (вживання 'згідно з', 'з метою' у побуті) як ознаки низької культури мовлення."
+  - "Практика епістолярного та релігійного стилів (вимога Стандарту §4.3.1.1) — сакральна мова та етикет сучасного листування."
+- section: "Динаміка та трансформація стилів (Dynamics and Style Transformation)"
+  words: 800
+  points:
+  - "Методологія трансформації тексту (§4.3.7): адаптація наукового викладу для публіцистичної аудиторії без втрати змісту."
+  - "Історична стилістична гра: бурлескно-травестійна трансформація сюжету в 'Енеїді' Котляревського як заснування нової літературної мови."
+- section: "Евфонія та когерентність тексту (Euphony and Text Coherence)"
+  words: 900
+  points:
+  - "Закони милозвучності (§4.3.2): діагностика типових помилок у чергуванні у/в, і/й, з/зі/із, що створюють фонетичні затики."
+  - "Когерентність та логічна зв'язність: використання інтелектуальних конекторів для побудови складного академічного дискурсу."
+- section: "Практикум: Від аналізу до синтезу (Workshop: From Analysis to Synthesis)"
+  words: 800
+  points:
+  - "Стилістичне редагування: виявлення та усунення змішування регістрів (Register mixing) у професійних та офіційних текстах."
+  - "Підсумкова рефлексія: самооцінка володіння інструментами стилістики C2.1 та підготовка до літературної майстерності C2.2."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "консолідація (consolidation) — консолідація знань/зусиль; висока частотність в академічному дискурсі."
+  - "стилістика (stylistics) — функціональна/практична стилістика; базовий термін курсу."
+  - "евфонія (euphony) — засоби милозвучності; ключовий чинник плинності мовлення (§4.3.2)."
+  - "когерентність (coherence) — логічна когерентність тексту; зв'язність і цілісність викладу."
+  - "ідіостиль (idiostyle) — індивідуальна манера автора; виявлення авторського 'Я' через вибір засобів."
+  recommended:
+  - "канцелярит (bureaucratese) — стилістична вада; використання офіційно-ділових штампів у невідповідних регістрах."
+  - "травестія (travesty) — трансформація високого в низьке; на прикладі І. Котляревського."
+  - "неокласицизм (neoclassicism) — орієнтир на високу естетику та стилістичну строгість (М. Зеров)."
+  - "регістр (register) — ситуативна доречність мовних засобів; уникнення register mixing."
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (3060 chars)
+✅ Message sent to Claude (ID: 11158)
+✓ Message 11158 acknowledged
+   Auto-acknowledged reply #11158 (stdout delivery — no inbox accumulation)
+✓ Message 11148 acknowledged

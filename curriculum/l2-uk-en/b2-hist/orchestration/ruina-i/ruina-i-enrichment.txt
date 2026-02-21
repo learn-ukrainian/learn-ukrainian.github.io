@@ -1,0 +1,321 @@
+✅ Message sent to Gemini (ID: 12644) [auto-acked: self-addressed]
+✓ Message 12644 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12644...
+📨 Message #12644
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-ruina-i
+   Time: 2026-02-20T23:41:19.180829+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b2-hist-058
+level: B2-HIST
+sequence: 58
+slug: ruina-i
+version: '2.0'
+title: 'Руїна I: Виговщина і розкол'
+subtitle: 'The Ruin I: Vyhovsky and the Split'
+content_outline:
+- section: 'Вступ: Епоха великих надій і розчарувань'
+  points:
+  - Definition of 'The Ruin' (1657-1687) — term coined by Cossack chronicler Samiilo
+    Velychko to describe the devastation
+  - The vacuum of power after Khmelnytsky — [!context] Ruin as state collapse due
+    to internal strife plus external intervention
+- section: 'Гетьман Іван Виговський: Курс на Європу'
+  points:
+  - Vyhovsky's biography and political program — General Chancellor, intellectual,
+    architect of the Hadiach Union; [!myth-buster] not a 'Polish lackey' but a statist
+  - The suppression of the Pushkar uprising — first act of civil war, inspired and
+    financed by Moscow (Pushkar and Barabash)
+  - 'Foreign policy: balancing between Moscow and Warsaw — seeking equal status for
+    Ukraine in Europe'
+- section: Гадяцька унія і війна з Москвою
+  points:
+  - The failure of the alliance with Moscow — violation of Pereyaslav articles by
+    the Tsar
+  - The signing of the Treaty of Hadiach (brief recap) — Grand Duchy of Rus as 3rd
+    member of Commonwealth with own army, treasury, and coin
+  - The start of the Muscovite-Ukrainian war — Moscow declares Vyhovsky a traitor;
+    open military aggression
+- section: 'Конотопська битва 1659: Втрачена перемога'
+  points:
+  - The siege of Konotop by Trubetskoy — heroic defense by Colonel Hulyanytsky
+  - 'Tactics of the battle: deceptive retreat — luring Muscovites into the marshy
+    Sosnivka river valley'
+  - 'The defeat of the Muscovite cavalry and its consequences — Solovyov quote: ''flower
+    of Moscow cavalry perished''; [!history-bite] Tsar Alexei Mikhailovich in mourning,
+    preparing to evacuate Moscow'
+- section: Падіння Виговського і початок хаосу
+  points:
+  - The uprising of Ivan Sirko in Zaporizhzhia — forced Tatar allies to return to
+    Crimea, weakening Vyhovsky
+  - The election of Yurii Khmelnytsky — [!decolonization] Vyhovsky lost the information
+    war to populist demagoguery about 'Polish serfdom'
+  - The Chudniv campaign and the split of the state — cementing the division into
+    Left and Right Banks
+- section: 'Чорна рада 1663: Тріумф охлократії'
+  points:
+  - The struggle for power on the Left Bank — vacuum filled by populism
+  - Somko vs. Briukhovetsky — [!culture] Panteleimon Kulish's novel 'Chorna rada'
+    depicts this conflict between elite statist (Somko) and demagogue (Briukhovetsky)
+  - The 'Black Council' in Nizhyn and its tragic outcome — 1663; participation of
+    'chern' (commoners); execution of Somko and Zolota
+- section: 'Первинні джерела: Літопис Самовидця'
+  points:
+  - Reading excerpts about the Black Council — eyewitness account (likely Roman Rakushka-Romanovsky)
+  - Contrast between mob chaos and state order — criticism of both 'chern' for anarchy
+    and 'starshyna' for pride
+- section: Деколонізаційний погляд
+  points:
+  - 'The myth of ''civil war'' vs. foreign intervention — Moscow''s hybrid war tactics:
+    financing opposition to destabilize the Hetmanate'
+  - Moscow's role in deepening the split — [!quote] irony of Briukhovetsky promising
+    rights but bringing Muscovite voyevodas
+vocabulary_hints:
+  required:
+  - руїна (ruin) — capitalized when referring to the period; synonym for devastation
+  - розкол (split/schism) — often used for the division of the Hetmanate
+  - чорна рада (Black Council) — council where commoners (chern) participated; symbol
+    of mob rule
+  - охлократія (ochlocracy) — mob rule; negative term for the events of 1663
+  - міжусобиця (internecine strife) — civil conflict within the state
+  - булава (bulava/mace) — symbol of Hetman's power; 'zrekatysia bulavy' (to resign)
+  - промосковський (pro-Moscow) — political orientation of the Left Bank elite
+  - пропольський (pro-Polish) — political orientation often ascribed to Vyhovsky
+  - лівобережжя (Left Bank) — sphere of Moscow's influence
+  - правобережжя (Right Bank) — sphere of Poland's influence
+  recommended:
+  - наказний гетьман (acting hetman) — temporary title held by Vyhovsky initially
+  - воєвода (voyevoda) — Muscovite military governor installed in Ukrainian cities
+  - зрадник (traitor) — label used by Moscow propaganda against Vyhovsky
+activity_hints:
+- type: reading
+  focus: Analysis of the Black Council description
+- type: essay-response
+  focus: 'Causes of the Ruin: internal or external?'
+- type: comparative-study
+  focus: Vyhovsky vs. Briukhovetsky policies
+- type: critical-analysis
+  focus: 'Верифікація фактів: Facts about Konotop and Nizhyn'
+  items: 4
+focus: history
+pedagogy: CBI
+objectives:
+- Учень може пояснити причини громадянської війни (Руїни)
+- Учень може проаналізувати наслідки Конотопської битви
+- Учень може оцінити роль Чорної ради 1663 року в розколі України
+grammar:
+- 'Historical narrative: description of chaos'
+- 'Political terminology: factions and parties'
+sources:
+- name: The Ruin - Encyclopedia of Ukraine
+  url: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CR%5CU%5CRuin.htm
+  type: reference
+  notes: Overview of the period
+- name: Chronicle of Eyewitness
+  url: http://litopys.org.ua/samovyd/sam.htm
+  type: primary
+  notes: Primary source for the period
+register: публіцистичний
+phase: HIST.6 [Khmelnytsky & Cossack State]
+persona:
+  voice: Senior Professor of History
+  role: Mercenary Captain
+word_target: 5000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Руїна I: Виговщина і розкол
+
+## Використані джерела
+1. [Енциклопедія історії України (history.org.ua)](http://resource.history.org.ua/) — Фундаментальні статті про Руїну, Івана Виговського та Гадяцький договір.
+2. [Ізборник (litopys.org.ua)](http://litopys.org.ua/samovyd/sam.htm) — Першоджерело «Літопис Самовидця» (опис Чорної ради).
+3. [Енциклопедія Сучасної України (esu.com.ua)](https://esu.com.ua/) — Статті про Конотопську битву та політичні наслідки розколу.
+4. [Локальна Історія (localhistory.org.ua)](https://localhistory.org.ua/) — Матеріали про міфи козацької доби та деколонізаційний погляд на події 1658-1663 років.
+
+## Хронологія
+- **Серпень 1657**: Смерть Богдана Хмельницького; обрання Івана Виговського наказним гетьманом при малолітньому Юрії.
+- **Жовтень 1657**: Корсунська рада затверджує Виговського повноправним гетьманом; початок антигетьманського повстання Пушкаря і Барабаша.
+- **Травень 1658**: Розгром повстання Пушкаря під Полтавою; початок відкритої інтервенції Москви.
+- **16 вересня 1658**: Підписання Гадяцького договору (Велике Князівство Руське як третій член Речі Посполитої).
+- **28-29 червня 1659**: Конотопська битва; розгром московського війська Трубецького козацько-татарськими силами.
+- **Вересень 1659**: Антигетьманське повстання Івана Сірка; зречення Виговського; обрання Юрія Хмельницького.
+- **17-18 червня 1663**: «Чорна рада» в Ніжині; обрання Івана Брюховецького гетьманом Лівобережної України; страта Якима Сомка та Івана Золотаренка.
+
+## Ключові факти та цитати
+- **Про Конотоп (Сергій Соловйов)**: «Цвіт московської кінноти, що відбув щасливі походи 1654 і 1655 років, загинув за один день, і вже ніколи після того цар московський не був у змозі вивести в поле такого блискучого війська. У жалібній одежі вийшов цар Олексій Михайлович до народу й жах охопив Москву...»
+- **Про Чорну раду (Літопис Самовидця)**: «Назбіралось люду незчисленна сила, і все то була сільська чернь... у чорних сорочках... У иншого сокира за поясом, у того коса на плечі, а другий притяг із колякою».
+- **Про Гадяцьку унію**: Проєкт передбачав створення Великого Князівства Руського з власною армією (30 тис. козаків), скарбницею, монетою та судовою системою, а також ліквідацію Берестейської унії.
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ: Епоха великих надій і розчарувань": [!context] — Термін «Руїна» вперше вжив козацький літописець Самійло Величко, описуючи спустошення Правобережжя («сльози залили б очі...»).
+- Section "Гетьман Іван Виговський: Курс на Європу": [!myth-buster] — Виговський не був «польським запроданцем». Він був державником, який намагався вирвати Україну з московської орбіти через створення рівноправної конфедерації народів.
+- Section "Гадяцька унія і війна з Москвою": [!history-bite] — Умови Гадяцької унії передбачали повну заборону військам Речі Посполитої перебувати на території України, окрім як у випадку спільної війни.
+- Section "Конотопська битва 1659: Втрачена перемога": [!military] — Виговський використав класичну тактику степової війни: імітація відступу і заманювання ворога у пастку (болотиста річка Соснівка), де важка кавалерія втратила маневреність.
+- Section "Чорна рада 1663: Тріумф охлократії": [!culture] — Пантелеймон Куліш у романі «Чорна рада» зобразив цей конфлікт не просто як політичний, а як цивілізаційний: «низове» (руйнівне) проти «городового» (державницького).
+- Section "Деколонізаційний погляд": [!decolonization] — Теза про «громадянську війну» є московським наративом. Насправді це була гібридна агресія: Москва фінансувала опозицію (Пушкаря, Брюховецького) і вводила війська під приводом «захисту».
+
+## Деколонізаційний контекст
+- **Imperial Myth**: Руїна — це наслідок «зради» Виговського і його відходу від Москви. Громадянська війна почалася через «польські інтриги».
+- **Ukrainian Reality**: Руїна була спровокована порушенням Москвою Переяславських статей і підтримкою внутрішньої опозиції (Пушкаря, Барабаша, Брюховецького) для дестабілізації Гетьманату. Москва використовувала тактику «розділяй і володарюй», не допускаючи консолідації влади в руках сильного гетьмана.
+
+## Contested Terms
+| Concept | Imperial/Soviet framing | Ukrainian (decolonized) framing |
+|---------|-------------------------|---------------------------------|
+| Повстання Пушкаря | «Народне повстання» проти пропольської старшини | Заколот, інспірований і профінансований Москвою проти законного уряду |
+| Зрада Виговського | Зрада «воссоєдінєнію», перехід на бік ворога | Спроба зберегти державний суверенітет перед лицем московської експансії |
+| Чорна рада | Тріумф демократії, волевиявлення народу | Охлократичний переворот, маніпуляція натовпом з боку Москви |
+| Громадянська війна | Внутрішній конфлікт через класові суперечності | Гібридна війна Росії проти України з використанням колаборантів |
+
+## Section-Mapped Research Notes
+
+### Вступ: Епоха великих надій і розчарувань
+- **Визначення**: Період 1657–1687 рр. (від смерті Б. Хмельницького до обрання І. Мазепи). Характеризується розпадом державної єдності, міжусобицями та втручанням сусідніх держав.
+- **Контекст**: Смерть харизматичного лідера (Хмельницького) створила вакуум влади. Жоден наступник не мав такого беззаперечного авторитету.
+- **Фактор**: Соціальне напруження між «статечними» козаками (заможними) і «голотою» (незаможними, виключеними з реєстру).
+
+### Гетьман Іван Виговський: Курс на Європу
+- **Біографія**: Генеральний писар при Хмельницькому, інтелектуал, шляхтич православного віросповідання.
+- **Політика**: Орієнтація на повну незалежність Гетьманату. Намагався побудувати спадкову монархію (підтримував кандидатуру Юрія Хмельницького, але сам став регентом, а згодом повноправним гетьманом).
+- **Повстання Пушкаря і Барабаша (1657-1658)**: Полтавський полковник Мартин Пушкар та кошовий отаман Яків Барабаш виступили проти Виговського. Москва таємно підтримувала їх грошима та обіцянками, водночас надсилаючи послів до Виговського. Придушення повстання було жорстоким (спалення Полтави), але необхідним для збереження держави.
+
+### Гадяцька унія і війна з Москвою
+- **Причина**: Відкрита підтримка Москвою антигетьманської опозиції та порушення Березневих статей (введення воєвод, спроби збирати податки).
+- **Концепція**: Перетворення Речі Посполитої на федерацію трьох народів: Польського, Литовського та Руського (Українського).
+- **Ключові пункти**: «Велике Князівство Руське» (Київське, Чернігівське, Брацлавське воєводства); гетьман — голова виконавчої влади; власна армія (30 тис. реєстрових + 10 тис. найманих); скасування Берестейської унії на території князівства; свобода друку і відкриття університетів.
+- **Реакція**: Сейм ратифікував договір в урізаному вигляді, що підірвало довіру козаків. Москва оголосила Виговського зрадником і почала військову інтервенцію (армія Трубецького та Ромодановського).
+
+### Конотопська битва 1659: Втрачена перемога
+- **Облога Конотопа**: 70 днів полковник Григорій Гуляницький з 4-тисячним загоном тримав оборону проти 100-тисячної (за іншими даними 50-70 тис.) армії Трубецького. Це дало час Виговському зібрати війська.
+- **Сили сторін**: Виговський (козаки + найманці) + Кримський хан Мехмед IV Ґерай (татари). Всього близько 60 тис.
+- **Хід битви**: Виговський атакував московський табір і імітував панічний відступ. Московська кіннота (Пожарський, Львов) кинулася навздогін і потрапила в пастку в заболоченій долині р. Соснівка. Татари завдали удару із засідки.
+- **Наслідки**: Повний розгром елітної московської кавалерії. Шлях на Москву був відкритий, але внутрішня опозиція та набіг Сірка на Крим завадили розвинути успіх.
+
+### Падіння Виговського і початок хаосу
+- **Фактор Сірка**: Кошовий отаман Іван Сірко (легендарний, але політично недалекоглядний) напав на татарські поселення, змусивши хана повернутися до Криму. Виговський залишився без головного союзника.
+- **Інформаційна війна**: Московські агенти та місцеві популісти поширювали чутки, що Виговський «продав Україну полякам» і «хоче окатоличити козаків».
+- **Зречення**: На раді в Германівці (вересень 1659) козаки відмовилися підкорятися Виговському. Він добровільно зрікся булави, щоб уникнути подальшого кровопролиття, і виїхав до Польщі (де згодом був розстріляний поляками).
+
+### Чорна рада 1663: Тріумф охлократії
+- **Передумови**: Після невдалого гетьманування Юрія Хмельницького (Слободищенський трактат, розкол на Правобережжя — Тетеря, і Лівобережжя — Сомко).
+- **Кандидати на Лівобережжі**: Яким Сомко (наказний гетьман, представник заможної старшини, державник) vs Іван Брюховецький (кошовий отаман, демагог, «кандидат від Москви»).
+- **Суть події**: Рада біля Ніжина, де право голосу дали «черні» (простолюду). Брюховецький обіцяв «пограбувати багатих» і зменшити податки. Його прихильники фізично напали на прибічників Сомка.
+- **Роль Москви**: Князь Гагін (представник царя) підтримав Брюховецького, бо той був більш поступливим і готовим здати суверенітет (що він і зробив у Московських статтях 1665 р.).
+- **Фінал**: Сомка і Золотаренка заарештували і прилюдно стратили. Почалася епоха «руїни» в прямому сенсі — грабунки, занепад права.
+
+### Первинні джерела: Літопис Самовидця
+- **Автор**: Ймовірно, Роман Ракушка-Романовський. Очевидець подій.
+- **Опис**: З жахом описує, як «челядь» (слуги) повстала проти господарів, як ламали списи об голови старшини.
+- **Значення**: Цей текст є ключовим для розуміння психології натовпу і наслідків популізму. Він показує, що втрата державності почалася з втрати внутрішньої єдності та поваги до закону.
+
+### Деколонізаційний погляд
+- **Гібридна війна 17 ст.**: Події Руїни — це не просто «сварки гетьманів». Це результат цілеспрямованої політики сусідів. Москва систематично підтримувала опозицію до будь-якого сильного гетьмана (підтримувала Пушкаря проти Виговського, Брюховецького проти Сомка, пізніше — змову проти Мазепи).
+- **Ціна популізму**: Приклад Брюховецького показує, як антиелітарна риторика, підживлена ворогом, призводить до повної втрати незалежності (Батуринські статті Брюховецького перетворили українців фактично на холопів царя).
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12685)
+✓ Message 12644 acknowledged
+✓ Message 12685 acknowledged

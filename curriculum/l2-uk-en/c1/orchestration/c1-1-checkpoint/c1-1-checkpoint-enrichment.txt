@@ -1,0 +1,289 @@
+✅ Message sent to Gemini (ID: 10701) [auto-acked: self-addressed]
+✓ Message 10701 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10701...
+📨 Message #10701
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-c1-1-checkpoint
+   Time: 2026-02-20T21:24:15.458018+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-020
+level: c1
+sequence: 20
+version: '2.0'
+title: Контрольна точка — Академічна база
+focus: checkpoint
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: CEFR C1 Assessment Criteria
+  url: https://www.coe.int/
+  type: reference
+  notes: C1 level assessment descriptors
+- name: Ukrainian State Standard C1 (2024)
+  url: https://mon.gov.ua/
+  type: reference
+  notes: National C1 competency requirements
+content_outline:
+- section: Огляд C1.1 — Академічні основи
+  points:
+  - Підсумок модулів M01-M19
+  - Ключові компетенції C1.1
+  - Структура контрольної точки
+- section: Граматичний огляд
+  points:
+  - Пасивний стан та регістри
+  - Дієприкметники та складні речення
+  - Неправильні дієслова
+  - Пунктуація
+- section: Академічний стиль
+  points:
+  - Безособові конструкції
+  - Номіналізація та хеджінг
+  - Логічні сполучники
+  - Формальний регістр
+- section: Наукове письмо
+  points:
+  - Структура есе та статті
+  - Цитування та парафразування
+  - Анотація та огляд літератури
+  - Тези та контраргументи
+- section: Усна презентація
+  points:
+  - Структура доповіді
+  - Мовні маркери
+  - Робота з аудиторією
+- section: Критичний аналіз
+  points:
+  - Оцінка методології
+  - Аналіз аргументації
+  - Написання рецензії
+- section: Практичні завдання
+  points:
+  - Есе на вибір теми
+  - Рецензія статті
+  - Самооцінка C1.1
+vocabulary:
+  required:
+  - консолідація (consolidation)
+  - оцінювання (assessment)
+  - компетенція (competency)
+  - інтеграція (integration)
+  - самооцінка (self-assessment)
+  - критерій (criterion)
+  - рівень (level)
+  - академічний (academic)
+  - науковий (scientific)
+  - професійний (professional)
+  recommended:
+  - підсумок (summary)
+  - огляд (review)
+  - контрольна точка (checkpoint)
+  - досягнення (achievement)
+  - прогрес (progress)
+  forbidden: '[]'
+activities:
+  types_required:
+  - quiz
+  - essay-response
+  - cloze
+  - fill-in
+  - match-up
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c1-21 (CV/Resume Writing - C1.2 start)
+- c1-35 (Speaking Practice)
+- c1-106 (Final C1 Checkpoint)
+persona:
+  voice: Senior Specialist
+  role: Декан факультету
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Контрольна точка — Академічна база
+
+## State Standard Reference
+§4.4.1.1: "Стилі української мови: розмовний; офіційний; науковий; публіцистичний; художній; релігійний; епістолярний."
+§4.3.2: "Просте речення з дієприкметниковим зворотом... просте речення з дієприслівниковим зворотом."
+Alignment: Цей модуль систематизує знання про науковий стиль (лексика, синтаксис) та граматичні засоби (пасив, дієприкметники), необхідні для академічного спілкування на рівні С1, що відповідає вимогам стандарту щодо володіння різними функціональними стилями.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| **консолідація** | Середня (наук./публіц.) | консолідація знань, консолідація зусиль, процес консолідації |
+| **компетенція** | Висока (офіц./наук.) | мовна компетенція, фахова компетенція, набути компетенції |
+| **номіналізація** | Низька (лінгв.) | засіб номіналізації, процес номіналізації, віддієслівні іменники |
+| **хеджінг** | Низька (спец.) | засоби хеджування, стратегії хеджування, пом'якшення категоричності |
+| **рецензія** | Середня (академ.) | написати рецензію, рецензія на статтю, критична рецензія |
+
+## Cultural Hooks
+1. **Наукове товариство імені Шевченка (НТШ)**: Засноване 1873 року у Львові, фактично виконувало функції першої української академії наук ще до створення офіційної ВУАН. Це приклад самоорганізації української інтелігенції для розвитку науки.
+2. **Києво-Могилянська академія**: Перший вищий навчальний заклад у Східній Європі (1632), що заклав фундамент української академічної традиції та риторики.
+
+## Common Learner Errors
+1. **Калькування "дана проблема"** → *Ця проблема*, *зазначена проблема*, *розглядувана проблема*. (Слово "даний" в українській мові вживається переважно у значенні "кимсь даний", а не як вказівний займенник).
+2. **Надуживання пасивним станом** (Passive Voice Overuse): *Було зроблено висновок* → *Ми дійшли висновку*. Українська наукова мова тяжіє до активних конструкцій або безособових форм на -но, -то, на відміну від англійської.
+3. **Суржик у термінології**: *Співшукач* (калька з рос. соискатель) → *Здобувач*. *Приймати участь* → *Брати участь*.
+4. **Неправильне вживання "рахувати"**: *Я рахую, що...* (лічити гроші/числа) → *Я вважаю, що...* (мати думку).
+
+## Cross-References
+- Builds on: B2 Grammar (Complex sentences), B2 Academic Vocabulary.
+- Prepares for: C1.2 (Professional Communication), C1-106 (Final Exam), C2 (Academic Mastery).
+
+## Notes for Content Writing
+- Focus on "active agency" even in academic texts. Avoid "It was decided" where "The committee decided" works better, unless focusing purely on the process.
+- Emphasize "hedging" (пом'якшення категоричності) as a marker of politeness and scientific objectivity in Ukrainian, using words like *ймовірно, можна припустити, видається*.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Академічні основи C1.1 (Introduction: C1.1 Academic Foundations)"
+  words: 500
+  points:
+  - "Систематизація знань про функціональні стилі української мови (науковий, офіційний, публіцистичний) згідно з §4.4.1.1 Державного стандарту."
+  - "Культурний контекст: Традиції української академічної риторики від Києво-Могилянської академії (1632) до Наукового товариства імені Шевченка (1873) як центрів інтелектуальної самоорганізації."
+- section: "Граматика та синтаксис наукового викладу (Grammar and Syntax of Scientific Exposition)"
+  words: 700
+  points:
+  - "Аналіз синтаксису складного речення: коректне вживання дієприкметникових та дієприслівникових зворотів у науковому тексті без калькування."
+  - "Трансформаційна практика: подолання надуживання пасивним станом (Passive Voice Overuse) шляхом переходу до активних конструкцій («ми дійшли висновку») або безособових форм на -но, -то."
+- section: "Академічний лексикон та стратегії хеджування (Academic Lexicon and Hedging Strategies)"
+  words: 800
+  points:
+  - "Лексичний аудит та дебілізація канцеляризмів: заміна кальки «дана проблема» на «ця/зазначена/розглядувана проблема» та «приймати участь» на «брати участь»."
+  - "Опанування стратегій хеджування (пом'якшення категоричності): використання маркерів «ймовірно», «можна припустити», «видається доцільним» для дотримання наукової етики."
+- section: "Наукове письмо та критичне рецензування (Scientific Writing and Critical Reviewing)"
+  words: 900
+  points:
+  - "Корекція типових помилок слововживання: диференціація дієслів «вважати» (для висловлення думки) та «рахувати» (для лічби чисел) у структурі аргументації."
+  - "Алгоритм написання академічної рецензії: від аналізу методології дослідження до формулювання конструктивної критики та висновків."
+- section: "Усна презентація та самооцінка (Oral Presentation and Self-Assessment)"
+  words: 1100
+  points:
+  - "Риторичні маркери усної доповіді: структурування виступу, використання перехідних фраз та мовна взаємодія з аудиторією в офіційному регістрі."
+  - "Фінальна контрольна точка: комплексна перевірка засвоєння академічної бази (консолідація знань, номіналізація, фахова компетенція) за дескрипторами CEFR C1."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "консолідація (consolidation) — консолідація знань, зусиль; висока частотність у науковому та публіцистичному стилях"
+  - "компетенція (competency) — фахова/мовна компетенція, набути компетенції; базовий термін офіційного спілкування"
+  - "номіналізація (nominalization) — процес номіналізації, засіб номіналізації; спеціальний термін для опису віддієслівних іменників"
+  - "хеджування (hedging) — стратегії хеджування, засоби хеджування; ключова концепція для пом'якшення категоричності в науці"
+  - "рецензія (review) — критична рецензія на статтю, написати рецензію; обов'язковий жанр академічного письма"
+  - "здобувач (candidate/seeker) — здобувач наукового ступеня; використовувати замість калькованого «співшукач»"
+  recommended:
+  - "ймовірно (probably/likely) — ключовий маркер хеджування для вираження припущення"
+  - "вважати (to consider/believe) — вживати для висловлення власної думки («я вважаю»), уникаючи помилкового «я рахую»"
+  - "розглядуваний (under consideration) — заміна канцеляризму «даний» («розглядуване питання»)"
+  - "брати участь (to participate) — єдино правильний варіант замість помилкового «приймати участь»"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (3508 chars)
+✅ Message sent to Claude (ID: 10711)
+✓ Message 10711 acknowledged
+   Auto-acknowledged reply #10711 (stdout delivery — no inbox accumulation)
+✓ Message 10701 acknowledged

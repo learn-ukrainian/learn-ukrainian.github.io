@@ -2,31 +2,5 @@
   "track": "b2",
   "slug": "past-passive-participles",
   "mode": "v3",
-  "phases": {
-    "v3-A": {
-      "status": "complete",
-      "ts": "2026-02-19T11:11:45Z",
-      "task_id": "v3-past-passive-participles-pA",
-      "mode": "full"
-    },
-    "v3-B": {
-      "status": "complete",
-      "ts": "2026-02-19T11:11:45Z"
-    },
-    "v3-C": {
-      "status": "complete",
-      "ts": "2026-02-19T11:11:45Z",
-      "note": "adopted-existing"
-    },
-    "v3-audit": {
-      "status": "complete",
-      "ts": "2026-02-19T11:18:36Z",
-      "attempts": 2
-    },
-    "v3-D": {
-      "status": "complete",
-      "ts": "2026-02-19T11:20:59Z",
-      "attempts": 1
-    }
-  }
+  "phases": {}
 }

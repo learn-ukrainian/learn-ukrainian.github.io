@@ -1,0 +1,204 @@
+✅ Message sent to Gemini (ID: 12035) [auto-acked: self-addressed]
+✓ Message 12035 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12035...
+📨 Message #12035
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-latinisms
+   Time: 2026-02-20T23:35:30.344801+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 21
+module: ruth-021
+module_number: 17
+slug: latinisms
+title_uk: Латинізми
+title_en: Latinisms
+phase: 1
+phase_id: chancery-legal
+phase_name: Chancery & Legal
+focus: Акт, Протокол, Інстигатор
+content_outline:
+- section: Вступ
+  description: Introduction to Latinisms
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+- loanword-trace
+persona:
+  voice: Baroque Scholar
+  role: Latin Secretary
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Латинізми та їх вплив на староукраїнську мову
+
+## Використані джерела
+1. [Ізборник (Litopys.org.ua)](http://litopys.org.ua) — Першоджерела української літератури та історії.
+2. [Енциклопедія Сучасної України](https://esu.com.ua) — Статті про латинізми та історію освіти.
+3. [Інститут історії України НАНУ](http://history.org.ua) — Універсали Богдана Хмельницького, історичні документи.
+4. [Медієвіст](http://medievist.org.ua) — Статті про латиномовну літературу України.
+
+## Хронологія
+- **1576**: Заснування Острозької академії, де латина вивчалася на рівні з грецькою та церковнослов'янською.
+- **1632**: Заснування Києво-Могилянської колегії (згодом академії), де латина стає основною мовою викладання.
+- **1650**: Універсал Богдана Хмельницького з Ірклієва (10 серпня), що містить канцеляризми латинського походження (*універсал, чинш, серпень*).
+- **XVIII ст.**: Розквіт української латиномовної поезії та шкільної драми (Сковорода, Прокопович).
+- **1794**: Смерть Григорія Сковороди, чиї листи та твори демонструють глибоку інтеграцію латини в інтелектуальний дискурс.
+
+## Ключові факти та цитати
+- **Цитата 1**: "Pretiosissime amice mi Michaël!" (Найдорогоцінніший друже мій Михайле!) — з листа Г. Сковороди до М. Ковалинського.
+- **Цитата 2**: "...покои подлинном с королем его милости и со всею **Рѣчью Посполитою**..." — з Універсалу Б. Хмельницького (1650).
+- **Терміни**: *Інстигатор* (прокурор), *протокол*, *акція*, *факт*, *гумор*, *бурса*.
+
+## Engagement Hooks (mapped to sections)
+- **Вступ**: `[!context]` — Латина як *lingua franca* Європи, перепустка України до західного культурного простору.
+- **Освіта та Академія**: `[!myth-buster]` — Спростування міфу про "полонізацію" через латину; насправді це був шлях до європейської науки, оминаючи московську ізоляцію.
+- **Адміністративна мова**: `[!history-bite]` — Слово "універсал" (гетьманський указ) походить від лат. *universalis*, підкреслюючи державницьку традицію.
+- **Макаронічна мова**: `[!culture]` — Барокова гра слів: поєднання "високої" латини та "низької" руської мови для комічного ефекту у вертепах.
+- **Лексичний спадок**: `[!history-bite]` — Назви місяців в староукраїнській мові іноді вживалися латинські (август, маїй), але перемогла слов'янська традиція, на відміну від російської.
+- **Підсумок**: `[!decolonization]` — Латинізми в українській мові — свідчення приналежності до європейського правового та освітнього поля, на відміну від російської, де ці слова часто є пізнішими запозиченнями через німецьку/французьку.
+
+## Деколонізаційний контекст
+- **Imperial Myth**: Латинський вплив трактувався в Російській імперії та СРСР як "ворожий", "польсько-єзуїтський" та такий, що псує "чистоту руської мови".
+- **Ukrainian Reality**: Латина була мовою інтелектуальної свободи та зв'язку з Європою. Українські еліти (Сковорода, Могила) вільно володіли нею, що ставило їх вище за московських колег того часу. Латинізми в українській мові часто є давнішими і прямими, тоді як в російську вони потрапили пізніше як технічні терміни.
+
+## Section-Mapped Research Notes
+
+### Вступ
+- Латина як мова дипломатії, науки та релігії.
+- Відмінність української ситуації (прямий контакт через Річ Посполиту) від московської.
+
+### Основний матеріал: I — Освітній фундамент
+- Києво-Могилянська академія як центр латинської вченості.
+- "Латинська наука" як база для формування української інтелігенції.
+- Вплив на лексику: *студент, професор, лекція, вакації*.
+
+### Основний матеріал: II — Мова канцелярії
+- Гетьманська канцелярія. Вплив Статутів Литовських.
+- Терміни: *апеляція, декрет, інстигатор, трибунал*.
+- Аналіз Універсалу Хмельницького: слово *Річ Посполита* (Res Publica).
+
+### Основний матеріал: III — Барокова гра
+- Макаронічна мова: змішування кодів.
+- Іван Величковський і його курйозні вірші.
+- Інтермедії шкільної драми.
+
+### Основний матеріал: IV — Лексичні пласти
+- Суфіксальний вплив: *-ція* (революція), *-тор* (сенатор).
+- Абстрактна лексика: *амбіція, фортуна, гонор*.
+- Побутова лексика, що стала своєю: *цибуля* (cepula), *школа* (schola - через грецьку/латину).
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12106)
+✓ Message 12035 acknowledged
+✓ Message 12106 acknowledged

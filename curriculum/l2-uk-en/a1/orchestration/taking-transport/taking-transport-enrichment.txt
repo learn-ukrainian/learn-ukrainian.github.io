@@ -1,0 +1,299 @@
+✅ Message sent to Gemini (ID: 10127) [auto-acked: self-addressed]
+✓ Message 10127 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10127...
+📨 Message #10127
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-taking-transport
+   Time: 2026-02-20T19:42:56.854733+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 40
+module: a1-40
+level: A1
+slug: taking-transport
+version: '2.0'
+title: Taking Transport
+subtitle: Navigating the City
+content_outline:
+- section: Warm-up
+  points:
+  - 'Види транспорту в українських містах — State Standard: focus on ''місто'' (city)
+    and ''подорожі'' (travel)'
+  - 'Як ви їздите на роботу/навчання? — learner error: forgetting Instrumental case
+    or ''на'' + Locative (e.g., ''їду автобус'' instead of ''автобусом'')'
+- section: Presentation
+  points:
+  - 'Види транспорту (метро, трамвай, тролейбус, автобус, маршрутка) — distinguish
+    ''зупинка'' (bus/tram) vs ''станція'' (metro); cultural hook: Arsenalna is the
+    deepest metro station in the world'
+  - 'Ключові фрази (Наступна зупинка..., Обережно, двері зачиняються) — must include
+    ''Ви виходите?'' (Are you getting off?) for moving through crowds; cultural hook:
+    Mykola Petrenko as the iconic ''Voice of the Metro'''
+  - 'Оплата проїзду (квиток, проїзний, валідатор) — note: ensure IPA for multi-syllable
+    terms like ''прокомпостувати'''
+  - 'Пересадка (Де можна пересісти на...?) — collocations: ''робити пересадку'', ''станція
+    з пересадкою'''
+- section: Practice
+  points:
+  - 'Запитати дорогу (Як доїхати до...?) — learner error: confusing Direction (Accusative)
+    vs. Location (Locative), e.g., ''Де ти йдеш?'' vs ''Куди ти йдеш?'''
+  - Купити квиток (Один квиток, будь ласка)
+  - 'На зупинці (Цей автобус їде до...?) — collocations: ''вийти на зупинці'', ''наступна
+    зупинка'''
+- section: Warm-up 2
+  points:
+  - 'Наратив про подорож метром — context: deep stations, long escalators (Kyiv Metro
+    style)'
+  - Ключова лексика в контексті
+  - Оголошення в метро
+vocabulary_hints:
+  required:
+  - зупинка (stop) — наступна зупинка, автобусна зупинка, вийти на зупинці
+  - метро (metro) — їхати на метро, станція метро, вхід у метро
+  - трамвай (tram)
+  - 'тролейбус (trolleybus) — note: provide careful IPA'
+  - маршрут (route)
+  - станція (station) — кінцева станція, станція пересадки
+  - пересадка (transfer) — робити пересадку, станція з пересадкою
+  - 'виходити (to exit) — phrase: Ви виходите? (Are you getting off?)'
+  recommended:
+  - прокомпостувати (to validate) — IPA required; challenging pronunciation
+  - проїзний (transit pass) — проїзний квиток
+  - кондуктор (conductor)
+  - водій (driver) — водій маршрутки
+  - квиток (ticket) — купити квиток, один квиток
+  - маршрутка (marshrutka) — сісти в маршрутку, номер маршрутки
+activity_hints:
+- type: fill-in
+  focus: Asking for transport help
+  items: 10
+- type: quiz
+  focus: Transport announcements
+  items: 12
+- type: match-up
+  focus: Match routes to destinations
+  items: 15
+- type: fill-in
+  focus: On the bus/metro
+  items: 5
+focus: practical
+pedagogy: PPP
+prerequisites:
+- a1-15 (Around the City)
+- a1-39 (Buying Tickets)
+connects_to:
+- a1-41 (Phone Basics)
+- a1-42 (Emergencies)
+objectives:
+- Learner can use public transport
+- Learner can ask for directions
+- Learner can understand announcements
+- Learner can validate tickets
+grammar:
+- Direction questions (Як доїхати до...?)
+- Imperative for directions
+- Locative for stops
+register: розмовний
+phase: A1.4 [Practical Scenarios]
+persona:
+  voice: Patient Supportive Tutor
+  role: Marshrutka Veteran
+word_target: 2000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Taking Transport
+
+## State Standard Reference
+§3.3: "Місто (заклади, транспорт і місця)... громадський транспорт; таксі"
+§3.7: "Подорожі... основні дії на позначення руху (іти, їхати – у базових фразах)"
+§4.2.3.2 (Знахідний): "в, у, на (указівка на кінцевий пункт руху або переміщення)"
+§4.2.3.3 (Місцевий): "у, в, на (позначення місця)"
+Alignment: This module directly addresses the State Standard's requirements for navigating city transport, using motion verbs (іти/їхати) and the distinction between location (Locative) and direction (Accusative).
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| метро | High / Common | їхати на метро, станція метро, жетон (archaic but cultural), карта метро |
+| маршрутка | High / Spoken | зупиніть на зупинці, передайте за проїзд, повна маршрутка |
+| зупинка | High / Common | наступна зупинка, на зупинці, автобусна зупинка |
+| пересадка | Medium / Transport | робити пересадку, станція пересадки, без пересадок |
+| валідатор | Rising / Modern | прикласти картку до валідатора, не працює валідатор |
+
+## Cultural Hooks
+1. **Kyiv Metro Depth**: Arsenalna station is the deepest in the world (105.5m). The long escalator ride is a specific Kyiv experience where people read, listen to music, or run down (though not allowed).
+2. **"Pass the fare" (Передайте за проїзд)**: In marshrutkas, passengers pass cash from hand to hand to the driver, often across the whole bus. It requires trust and social interaction ("За одного, будь ласка").
+3. **Kyiv Digital**: The shift from plastic tokens ("жетони") to QR-codes and NFC payments. The "Kyiv Digital" app is now central to city transport.
+
+## Common Learner Errors
+1. **Motion Verbs**: Confusing *іти* (to go by foot) and *їхати* (to go by vehicle).
+   *   *Error*: "Я йду на метро." → *Correction*: "Я їду на метро."
+2. **Case Confusion (Instrumental vs Locative)**:
+   *   *Error*: "Я їду автобус." (Direct translation)
+   *   *Correction*: "Я їду автобусом" (Instrumental - means) OR "Я їду на автобусі" (Locative - location).
+3. **Direction vs Location**:
+   *   *Error*: "Де ти йдеш?" (Where are you walking inside something?)
+   *   *Correction*: "Куди ти йдеш?" (Where are you going to?)
+
+## Cross-References
+- Builds on: `a1-15` (Around the City - locations), `a1-39` (Buying Tickets - basics)
+- Prepares for: `a1-41` (Phone Basics), `a1-42` (Emergencies - lost in city)
+
+## Notes for Content Writing
+- **Decolonization**: Avoid Soviet-style terms if outdated. Focus on modern Ukrainian urban reality (QR codes, electronic tickets) but acknowledge the persisting "marshrutka culture".
+- **Pedagogy**: Explicitly scaffold the difference between "Де?" (Locative) and "Куди?" (Accusative) as it's a frequent sticking point.
+- **Tone**: Keep it practical. The "Marshrutka Veteran" persona aspect should be helpful/street-smart, not grumpy.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Вступ до теми громадського транспорту згідно зі Стандартом (§3.3) — focus on 'громадський транспорт' and 'місто' (city) context."
+  - "Warm-up: 'Як ви їздите на роботу/навчання?' — introduction of the 'Marshrutka Veteran' persona and the blend of modern Kyiv Digital systems with traditional social customs."
+  - "Learner error: confusion between 'іти' (to walk) and 'їхати' (to go by vehicle) — explicitly establishing 'Я їду на метро' as the correct form over the English-influenced 'Я йду на метро'."
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "Види транспорту (метро, трамвай, тролейбус, автобус, маршрутка) — distinguishing between 'зупинка' (bus/tram stop) and 'станція' (metro/train station) with frequency notes."
+  - "Cultural Hook: The depth of the Kyiv Metro — Arsenalna station (deepest in the world, 105.5m) and the experience of long escalators where people read or listen to music."
+  - "Grammar in context: Direction vs. Location (§4.2.3.2/3) — drilling the difference between 'Куди ви їдете?' (Accusative/Destination) and 'Де ви?' (Locative/Location)."
+  - "Case selection for transit: Instrumental ('їхати автобусом') vs. Locative ('їхати на автобусі') — correcting the common omission error 'їду автобус'."
+- section: "Практика (Practice)"
+  words: 600
+  points:
+  - "Cultural Hook: 'Передайте за проїзд!' — the social protocol of passing cash by hand in a marshrutka, requiring phrases like 'За одного, будь ласка' and 'Зупиніть на зупинці'."
+  - "Modern Urban Reality: The shift from 'жетони' (tokens) to 'Київ Цифровий' (Kyiv Digital) — vocabulary for 'валідатор', 'QR-код', and 'прикласти картку'."
+  - "Essential transport phrases: 'Наступна зупинка...', 'Обережно, двері зачиняються', and the vital social phrase 'Ви виходите?' (Are you getting off?) used to move through crowds."
+  - "Asking for help: 'Як доїхати до...?' and understanding transit announcements, with a focus on 'станція пересадки' (transfer station)."
+- section: "Підсумок (Summary)"
+  words: 400
+  points:
+  - "Summary of motion verbs and case patterns for public transport, consolidating the 'Де' vs. 'Куди' distinction."
+  - "Final review of the 'Marshrutka Veteran' persona's street-smart tips for navigating Ukrainian cities efficiently."
+  - "Cross-reference: Preparing for a1-41 (Phone Basics) and a1-42 (Emergencies) by ensuring the learner can identify their location while traveling."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "метро (metro) — їхати на метро, станція метро, глибока станція; cultural hook: Arsenalna"
+  - "зупинка (stop) — наступна зупинка, вийти на зупинці, автобусна зупинка; High frequency"
+  - "маршрутка (marshrutka) — зупиніть на зупинці, передайте за проїзд, повна маршрутка; High spoken frequency"
+  - "пересадка (transfer) — робити пересадку, станція пересадки, без пересадок; Medium frequency"
+  - "їхати (to go by vehicle) — їхати автобусом (Instrumental), їхати на метро (Locative); State Standard §3.7"
+  - "виходити (to exit) — Ви виходите? (Are you getting off?); essential phrase for crowds"
+  recommended:
+  - "валідатор (validator) — прикласти картку до валідатора, не працює валідатор; modern urban reality"
+  - "квиток (ticket) — купити квиток, електронний квиток, один квиток"
+  - "станція (station) — кінцева станція, станція пересадки, станція метро"
+  - "проїзд (fare/passage) — оплата проїзду, передайте за проїзд; core social collocation"
+  - "прокомпостувати (to validate) — IPA required [prokompostʊˈvɑte]; challenging phonetic target"
+  - "проїзний (transit pass) — проїзний квиток, студентський проїзний"
+  - "водій (driver) — водій маршрутки, водій автобуса"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (3814 chars)
+✅ Message sent to Claude (ID: 10134)
+✓ Message 10134 acknowledged
+   Auto-acknowledged reply #10134 (stdout delivery — no inbox accumulation)
+✓ Message 10127 acknowledged

@@ -1,0 +1,332 @@
+✅ Message sent to Gemini (ID: 10481) [auto-acked: self-addressed]
+✓ Message 10481 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10481...
+📨 Message #10481
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-active-participles-present
+   Time: 2026-02-20T20:37:38.157705+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b2-07
+level: B2
+sequence: 7
+slug: active-participles-present
+version: '2.0'
+title: Активні дієприкметники теперішнього часу (-учий/-ючий)
+content_outline:
+- section: Вступ — Активні дієприкметники
+  points:
+  - Різниця між активними та пасивними дієприкметниками
+  - Роль активних дієприкметників у літературній мові
+  - Чому вивчаємо для розпізнавання, а не для продукування
+- section: Утворення дієприкметників на -учий/-ючий
+  points:
+  - Від основи 3-ї особи множини теперішнього часу
+  - читають → читаючий (reading)
+  - працюють → працюючий (working)
+  - говорять → говорячий (speaking)
+  - Правила чергування суфіксів
+- section: Стилістична специфіка
+  points:
+  - Архаїчний/книжний характер
+  - Рідкість у сучасному мовленні
+  - Українська мова віддає перевагу підрядним реченням
+- section: Еквівалентні підрядні речення
+  points:
+  - працюючий чоловік = чоловік, який працює
+  - читаюча жінка = жінка, яка читає
+  - Коли обирати дієприкметник, коли — підрядне
+  - Стилістичний ефект кожної форми
+- section: Контексти вживання
+  points:
+  - Літературні тексти XIX-XX століття
+  - Офіційні документи (діюча особа, чинний закон)
+  - Наукові терміни
+  - Уникання в розмовному мовленні
+- section: Лексикалізовані форми
+  points:
+  - Дієприкметники, що стали прикметниками
+  - 'Приклади: завідуючий, керуючий, існуючий'
+  - Правильне вживання лексикалізованих форм
+- section: Практика і підсумок
+  points:
+  - Розпізнавання в текстах
+  - Трансформація в підрядні речення
+  - Підготовка до модуля 08
+vocabulary_hints:
+  required:
+  - активний (active)
+  - дієприкметник (participle)
+  - теперішній час (present tense)
+  - книжний (bookish)
+  - архаїчний (archaic)
+  - підрядне речення (subordinate clause)
+  - лексикалізований (lexicalized)
+  - діюча особа (acting person)
+  - чинний закон (current law)
+  - керуючий (manager - lexicalized)
+  recommended:
+  - існуючий (existing)
+  - завідуючий (head/manager)
+  - трансформація (transformation)
+  - еквівалент (equivalent)
+  - стилістичний ефект (stylistic effect)
+activity_hints:
+- type: fill-in
+  focus: Participle → relative clause
+  items: 14+
+- type: quiz
+  focus: Identify participles in literary text
+  items: 12+
+- type: match-up
+  focus: Participle → equivalent clause
+  items: 12+
+- type: fill-in
+  focus: Complete sentences with lexicalized participles
+  items: 10+
+- type: reading
+  focus: Identify all participles in literary excerpt
+  items: 3 texts
+- type: group-sort
+  focus: Lexicalized vs productive participles
+  items: 16+
+- type: error-correction
+  focus: Replace inappropriate participles with clauses
+  items: 10+
+focus: grammar
+prerequisites:
+- b2-02 (Past Passive Participles)
+- Relative clause formation (який/яка/яке)
+- Present tense conjugation
+connects_to:
+- b2-08 (Active Participles Past)
+- b2-09 (Participles vs Relative Clauses)
+- 'b2-22 (Register: Literary Ukrainian)'
+- b2-10 (B2.1a Checkpoint)
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Active Participles
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Recognition requirements for active participles
+- name: Літературна мова та її стилі
+  url: https://uk.wikipedia.org/wiki/Літературна_мова
+  type: secondary
+  notes: Literary usage of participles
+- name: Правопис української мови 2019
+  url: https://uk.wikipedia.org/wiki/Український_правопис
+  type: reference
+  notes: Official orthography rules for participles
+immersion: 100% Ukrainian
+phase: B2.1a [Passive Voice]
+objectives:
+- Identify and correctly use активні дієприкметники теперішнього часу (-учий/-ючий)
+- Form and apply активні дієприкметники
+persona:
+  voice: Professional Language Coach
+  role: Old-School Grammarian (Граматист старої школи)
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Активні дієприкметники теперішнього часу (-учий/-ючий)
+
+## State Standard Reference
+§4.3.2: "просте речення з дієприкметниковим зворотом: Озеро, оточене густими кущами, було не широке, а довге" (B2 Syntax)
+Alignment: The standard includes participial phrases as a B2 syntactic complexity marker. However, the examples provided in the standard predominantly use *passive* participles (-ен-, -т-), reflecting the normative tendency to avoid active present forms (-уч-, -юч-) in favor of relative clauses or lexicalized adjectives. This module directly addresses this tension by teaching recognition of these forms while discouraging their productive use in favor of idiomatic alternatives.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| **працюючий** | High (often non-standard) | працююча людина (better: людина, яка працює), працюючий телефон |
+| **чинний** | High (Official/Legal) | чинний закон, чинне законодавство, чинний договір |
+| **діючий** | High (often erroneous) | діючий вулкан (correct), діюча армія (correct), *діючий закон* (incorrect -> чинний) |
+| **існуючий** | High (often erroneous) | існуючі проблеми (better: наявні проблеми), існуючий порядок (better: чинний/теперішній) |
+| **завідуючий** | Medium (Lexicalized Noun) | завідуючий кафедри, завідуючий відділом (official title) |
+| **керуючий** | Medium (Official) | керуючий справами, керуючий банківською установою |
+| **оточуючий** | Medium (often erroneous) | *оточуюче середовище* (incorrect -> довкілля / навколишнє середовище) |
+
+## Cultural Hooks
+1. **The "Zombie" Participles**: Active participles in -учий/-ючий are often called the "zombies" of Ukrainian grammar by linguists like Oleksandr Ponomariv. They exist physically in the language due to centuries of Russian influence (calques from -ущий/-ющий), but they are syntactically "dead" in authentic Ukrainian, which prefers the energy of verbs (*той, що йде*) over the statis of participles (*ідучий*).
+2. **The "Legal Litmus Test"**: The distinction between **чинний** (valid/in force) and **діючий** (acting/functioning) is a primary marker of professional literacy in Ukraine. Using "діючий закон" immediately flags a speaker as influenced by Surzhyk or Russian administrative jargon ("действующий закон").
+
+## Common Learner Errors
+1. **Calquing English "-ing"**: *English* "The sleeping cat" → *Ukrainian* "Сплячий кіт" (Clunky/Artificial) → **Correction**: "Кіт, який спить" (Natural).
+   *Why*: Learners assume 1:1 mapping between English participles and Ukrainian -учий forms.
+2. **Legal Confusion**: *Surzhyk* "Діюче законодавство" → **Correction**: "Чинне законодавство".
+   *Why*: Calque from Russian "действующее законодательство".
+3. **Wrong Adjective Choice**: *Surzhyk* "Слідуюча зупинка" → **Correction**: "Наступна зупинка".
+   *Why*: "Слідуючий" is a literal translation of Russian "следующий", but standard Ukrainian uses the specific adjective "наступний".
+4. **Environment**: *Surzhyk* "Оточуюче середовище" → **Correction**: "Довкілля" or "Навколишнє середовище".
+
+## Cross-References
+- **Builds on**: B1-06 (Present Tense Conjugation), B2-02 (Past Passive Participles), Relative Clause Syntax (A2/B1).
+- **Prepares for**: B2-08 (Past Active Participles - even rarer), B2-22 (Register: Literary Ukrainian - understanding where these forms *are* appropriate).
+
+## Notes for Content Writing
+- **Stylistic Warning**: This module must be framed as "Recognition & Avoidance" for most forms. Teach *how* to form them so students recognize them in literature/documents, but rigorously train *how to replace* them with `який...` clauses in their own speech.
+- **Lexicalization Exceptions**: Clearly distinguish the "allowable" list (lexicalized nouns/adjectives like *завідуючий*, *цілющий*, *родючий*) from the "avoid" list (productive forms like *читаючий*, *пишучий*).
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Спадщина та статус «зомбі» (Introduction: Heritage and «Zombie» Status)"
+  words: 600
+  points:
+  - "Поняття активного дієприкметника теперішнього часу як граматичної форми, що існує в системі, але суттєво обмежена у вжитку сучасним живим мовленням."
+  - "Культурний контекст: Метафора професора Олександра Пономаріва про «зомбі-дієприкметники» — пояснення того, як кальковані форми (-учий/-ючий) позбавляють українську мову її природної дієслівности."
+  - "Обґрунтування стратегії вивчення B2: фокус на пасивному розпізнаванні цих форм у класичній літературі та офіційних документах при одночасному уникненні їх у власному продуктивному мовленні."
+- section: "Морфологічне творення та розпізнавання (Morphological Formation and Recognition)"
+  words: 800
+  points:
+  - "Алгоритм деривації: основа 3-ї особи множини теперішнього часу (вони читають, пишуть) + суфікс -уч- (-юч-) / -ач- (-яч-) + прикметникове закінчення."
+  - "Аналіз морфологічних моделей на конкретних прикладах: працюють → працюючий, говорять → говорячий, мислять → мислячий, квітнуть → квітнучий."
+  - "Фонетичні обмеження та традиційні чергування голосних у суфіксах дієприкметників, що допомагають ідентифікувати книжний стиль."
+- section: "Сила дієслова: Трансформація в підрядні речення (The Power of the Verb: Transformation into Relative Clauses)"
+  words: 900
+  points:
+  - "Головний принцип ідіоматичности: заміна штучного дієприкметника активною конструкцією «який + дієслово» для надання мовленню природної динаміки."
+  - "Стилістичний контраст: аналіз пар «сплячий кіт» (штучно) vs «кіт, який спить» (природно) та «працююча людина» vs «людина, яка працює» — чому українська мова віддає перевагу енергії дії."
+  - "Функціонування дієприкметникових зворотів у літературному стилі XIX-XX століть: аналіз прикладів зі стандартів (напр. «Озеро, оточене...») та випадків, де ці форми створюють урочистий ефект."
+- section: "Лакмусовий папірець грамотности: чинний vs діючий (The Literacy Litmus Test: valid vs acting)"
+  words: 800
+  points:
+  - "Суворе розмежування значень: «чинний» як характеристика юридичної сили (закони, угоди) vs «діючий» як активне функціонування або роль (вулкани, армія, персонажі)."
+  - "Робота над помилкою «діючий закон»: як використання цього суржикового калькування з російської мови («действующий») сигналізує про недостатній рівень професійної грамотности."
+  - "Випадки легітимного вживання «діючий»: «діюча особа» (театр/література), «діюча речовина» (фармакологія), «діючий вулкан» — drill на розрізнення контекстів."
+- section: "Лексикалізовані форми та подолання кальок (Lexicalized Forms and Overcoming Calques)"
+  words: 900
+  points:
+  - "Вивчення списку дозволених лексикалізованих слів, що стали прикметниками чи іменниками: завідуючий (титул), керуючий (посада), цілющий (властивість), родючий (якість)."
+  - "Стратегії заміни кальки «існуючий»: використання контекстуальних відповідників — «наявний» (про ресурси/проблеми), «теперішній» (про стан), «даний» (про факт)."
+  - "Деколонізація мовлення: викорінення конструкцій «оточуюче середовище» (→ довкілля / навколишнє середовище) та «слідуюча зупинка» (→ наступна зупинка) як маркерів імперського впливу."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "активний (active) — граматична категорія форми дієприкметника"
+  - "дієприкметник (participle) — термін для позначення дієслівної форми з ознаками прикметника"
+  - "теперішній час (present tense) — час, у якому творяться форми на -учий/-ючий"
+  - "чинний (valid/in force) — чинне законодавство, чинний закон; ключовий маркер професійної мови"
+  - "діючий (acting/functioning) — діючий вулкан, діюча армія; часто помилково вживається як калька «valid»"
+  - "завідуючий (head/manager) — завідуючий кафедрою, завідуючий відділом; лексикалізований іменник (посада)"
+  - "керуючий (manager/governor) — керуючий справами, керуючий банківською установою; офіційне звання"
+  - "наступний (next) — наступна зупинка; обов'язкова ідіоматична заміна помилкової кальки «слідуючий»"
+  - "наявний (available/existing) — наявні ресурси, наявні проблеми; природна заміна канцеляризму «існуючий»"
+  - "довкілля (environment) — природна заміна штучного терміну «оточуюче середовище»"
+  - "підрядне речення (subordinate clause) — конструкція «який + дієслово», що є стандартом для заміни дієприкметника"
+  recommended:
+  - "книжний (bookish/literary) — характеристика високого стилю, де ці форми зустрічаються найчастіше"
+  - "архаїчний (archaic) — відчуття продуктивних активних дієприкметників у сучасному розмовному мовленні"
+  - "лексикалізований (lexicalized) — форма, що втратила значення дії і стала іменником або прикметником"
+  - "діюча особа (acting person) — театральний або літературний персонаж"
+  - "цілющий (healing/medicinal) — цілюща вода, цілющі трави; прикметник, що описує постійну якість"
+  - "родючий (fertile) — родюча земля, родючий ґрунт; прикметник, що став окремим словом"
+  - "канцеляризм (bureaucratese) — термін для опису надмірного вживання штучних дієприкметників"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (5134 chars)
+✅ Message sent to Claude (ID: 10494)
+✓ Message 10494 acknowledged
+   Auto-acknowledged reply #10494 (stdout delivery — no inbox accumulation)
+✓ Message 10481 acknowledged

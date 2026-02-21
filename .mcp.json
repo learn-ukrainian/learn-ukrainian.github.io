@@ -4,6 +4,13 @@
       "command": ".venv/bin/python",
       "args": [".mcp/servers/message-broker/server.py"],
       "env": {}
+    },
+    "memory": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-memory"],
+      "env": {
+        "MEMORY_FILE_PATH": "/Users/krisztiankoos/projects/learn-ukrainian/tasks/memory.json"
+      }
     }
   }
 }

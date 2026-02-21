@@ -1,0 +1,13 @@
+{
+  "track": "oes",
+  "slug": "slovo-solar-eclipse",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-20T11:38:40Z",
+      "task_id": "v3-slovo-solar-eclipse-pA",
+      "mode": "full"
+    }
+  }
+}

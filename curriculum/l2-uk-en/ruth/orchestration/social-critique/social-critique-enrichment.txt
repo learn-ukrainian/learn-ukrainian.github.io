@@ -1,0 +1,202 @@
+✅ Message sent to Gemini (ID: 12717) [auto-acked: self-addressed]
+✓ Message 12717 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12717...
+📨 Message #12717
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-social-critique
+   Time: 2026-02-20T23:41:50.316305+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 65
+module: ruth-065
+module_number: 53
+slug: social-critique
+title_uk: Соціальна критика
+title_en: Social Critique
+phase: 3
+phase_id: baroque-fight
+phase_name: Baroque Fight
+focus: Defense of the poor vs rich prelates
+content_outline:
+- section: Вступ
+  description: Introduction to Social Critique
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Baroque Scholar
+  role: Satirist
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Social Critique
+
+## Використані джерела
+1. [Ізборник (Litopys.org.ua)](http://litopys.org.ua/ukr17/ukr17.htm) — Українська література XVII ст., зокрема твори Івана Вишенського та Климентія Зіновіїва.
+2. [Енциклопедія Сучасної України (ESU)](https://esu.com.ua/article-14987) — Статті про Івана Вишенського та українську барокову літературу.
+3. [Історія української культури](http://litopys.org.ua/istkult/ikult.htm) — Розділи про соціальні верстви та літературу бароко.
+4. [Бібліотека давньої української літератури](http://litopys.org.ua/old17/old17_06.htm) — Тексти інтермедій та вертепних драм.
+
+## Хронологія
+- **Кінець XVI ст.** — Активна полемічна діяльність Івана Вишенського, написання «Послання до єпископів».
+- **1619** — Постановка та друк інтермедій Якуба Гаватовича (у складі «Трагедії...»), де вперше виведені соціальні типи українського простолюду.
+- **1622** — «Вірші на жалісний погреб... Сагайдачного» Касіяна Саковича — маніфест козацької меритократії (лицарство здобувається звитягою, а не народженням).
+- **Середина XVII ст.** — Розквіт шкільної драми та «низового» бароко (вертеп), де соціальна критика маскується під сміхову культуру.
+- **Початок XVIII ст. (до 1712)** — Творчість Климентія Зіновіїва, укладання рукописної збірки віршів про ремісників та побут.
+
+## Ключові факти та цитати
+- **Іван Вишенський**: «Чи не ваші то милості... лупите з підданих?». Вишенський протиставляє «голяка-мандрівника» (себе/Христа) «ожирілим владикам». Його критика базується не на економічній теорії, а на євангельській моралі.
+- **Климентій Зіновіїв**: Єдиний поет доби, що детально описав сотні ремесел і висловив співчуття «робʼячим людям» та сиротам. «Але то зле, же многії в убостві умирають».
+- **Якуб Гаватович**: У його інтермедіях прості селяни (Стецько і Климок) вперше отримують голос, хоч і в комічному ключі, критикуючи панів та несправедливість.
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ: Світ як театр чи тюрма?": [!context] — Барокова метафора "Theatrum Mundi" (світ-театр) протиставляється візії Вишенського "Світ-Тюрма".
+- Section "Іван Вишенський: Гнів пустельника": [!quote] — «Диявол-світодержець» як уособлення феодальної системи.
+- Section "Сатира низового бароко": [!history-bite] — Сміхова культура не просто розважала, а виконувала функцію «соціального клапана», дозволяючи говорити правду через блазня.
+- Section "Климентій Зіновіїв: Енциклопедія буденності": [!myth-buster] — Міф про те, що барокова література була відірвана від життя простого народу. Зіновіїв довів зворотне.
+- Section "Козацький ідеал і соціальна мобільність": [!decolonization] — Козацтво створило унікальний для Європи соціальний ліфт, де вчорашній селянин міг стати гетьманом.
+- Section "Підсумок: Від моралі до політики": [!culture] — Вплив барокової сатири на формування "Енеїди" Котляревського.
+
+## Деколонізаційний контекст
+- **Imperial/Soviet myth**: Українське бароко ігнорувало соціальні питання або зводило їх до примітивної «класової боротьби» (марксистський погляд). Мандрівні дяки — це «люмпени» та «безбожники».
+- **Ukrainian reality**: Соціальна критика була глибоко релігійною (пошук Правди Божої). Мандрівні дяки були інтелектуальною елітою, що несла освіту в маси. Козацька модель пропонувала альтернативу шляхетській ієрархії.
+
+## Contested Terms
+| Concept | Imperial/Soviet framing | Ukrainian (decolonized) framing |
+|---------|-----------------|-------------------------------|
+| **Класова боротьба (Class Struggle)** | Рушійна сила історії, бунт бідних проти багатих. | Моральний конфлікт між Правдою і Кривдою; захист гідності, а не лише майна. |
+| **Мандрівні дяки (Wandering Clerks)** | Волоцюги, п'яниці, попередники пролетаріату. | Носії «мандрівного університету», творці бурлескної культури, вільні митці. |
+| **Унія (The Union)** | Знаряддя поневолення, виключно негативне явище. | Складний процес пошуку ідентичності; полеміка навколо Унії стимулювала розвиток української риторики та соціальної думки. |
+
+## Section-Mapped Research Notes
+
+### Вступ: Світ як театр чи тюрма?
+Вступ до концепції соціальної нерівності в Речі Посполитій. Два погляди: світ як пишний театр (шляхетське бароко) і світ як місце страждання (аскетичне бароко Вишенського).
+
+### Іван Вишенський: Гнів пустельника
+Аналіз «Послання до єпископів». Риторика контрасту: розкіш владик vs злидні пастви. Використання народної мови для підсилення гніву.
+*Джерела*: Тексти Вишенського, дослідження І. Франка та сучасних медієвістів.
+
+### Сатира низового бароко: Інтермедії та вертеп
+Сміх як зброя. Інтермедії до драми Якуба Гаватовича (1619). Соціальні типи: селянин, шляхтич, корчмар. Вертепна скринька як модель світобудови, де земна несправедливість висміюється у нижньому ярусі.
+
+### Климентій Зіновіїв: Енциклопедія буденності
+Унікальність постаті Зіновіїва. Його співчуття до «робʼячих людей». Опис ремесел і засудження тих, хто кривдить сиріт та вдів. Це предтеча етнографічного реалізму.
+
+### Козацький ідеал: Гідність понад походження
+«Вірші на жалісний погреб... Сагайдачного» Касіяна Саковича. Ідея, що шляхетність визначається не гербом предків, а особистою мужністю і захистом вітчизни. Це революційна думка для феодальної Європи.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12754)
+✓ Message 12717 acknowledged
+✓ Message 12754 acknowledged

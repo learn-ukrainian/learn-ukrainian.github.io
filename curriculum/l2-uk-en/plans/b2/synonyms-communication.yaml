@@ -6,31 +6,53 @@ version: '2.0'
 title: 'Синоніми: Комунікація та Мовлення'
 subtitle: Synonyms - Communication and Speech
 content_outline:
-- section: Розминка — Як сказати \"сказати\"
+- section: 'Вступ: Вага слова (Introduction: The Weight of Words)'
+  words: 500
   points:
-  - Казати vs говорити vs розповідати — різниця у вживанні
-  - Офіційне мовлення (повідомляти, заявляти, стверджувати)
-  - Різні способи запитувати (питати, цікавитися, допитувати)
-- section: Say
+  - 'Negotiator persona: Explaining why precision in verbs of speech is critical for
+    professional credibility and ''precision-targeted'' communication.'
+  - 'Cultural hook: Introduction to ''high-context'' communication in Ukraine — how
+    meaning is conveyed through register, intonation, and silence.'
+  - 'The Art of Silence: Discussing the proverb «Слово — срібло, а мовчання — золото»
+    as a cultural value in professional speech.'
+- section: Мистецтво вибору — Дієслова «Say» (The Art of Choice — 'Say' Verbs)
+  words: 950
   points:
-  - казати (say - neutral)
-  - говорити (speak/talk - general)
-  - розповідати (tell/narrate - story)
-  - повідомляти (inform - official)
-  - заявляти (declare - formal)
-- section: Ask
+  - 'Spectrum of ''saying'': Differentiating neutral ''казати'' and general ''говорити''
+    from official ''повідомляти'' and formal ''заявляти'' (State Standard §4.4.1.2).'
+  - 'Learner error: Aspect confusion between «говорити» (process, imperfective) and
+    «сказати» (result, perfective). Correcting the common error «Я хотів сказати з
+    тобою» to «Я хотів поговорити з тобою».'
+  - 'Frequency and Collocations: Practice with high-frequency pairs like «казати правду»
+    vs. official media-style «повідомляти новини» or «заявляти про права».'
+- section: Градація запиту — Дієслова «Ask» (Gradation of Inquiring — 'Ask' Verbs)
+  words: 950
   points:
-  - питати (ask - general)
-  - запитувати (ask - formal)
-  - цікавитися (be interested/inquire)
-  - розпитувати (question - detailed)
-  - допитувати (interrogate - intense)
-- section: Практика — дієслова мовлення
+  - 'Intensity Scale: Mapping a hierarchy from polite ''цікавитися'' (be interested)
+    to neutral ''питати/запитувати'' to aggressive ''допитувати'' (interrogate a suspect).'
+  - 'Address Etiquette: Power distance in language — when to use ''запитувати'' (formal/superiors)
+    vs. ''питати'' (casual/peers).'
+  - 'Learner error: The ''Ask for'' translation trap. Distinguishing «питати» (seeking
+    information) from «просити» (requesting a favor/help), e.g., ''Я прошу тебе допомогти''
+    instead of ''Я питаю тебе допомогти''.'
+- section: 'Граматичний двигун: Пряма та непряма мова (Grammar Engine: Direct and
+    Indirect Speech)'
+  words: 850
   points:
-  - Обрати дієслово мовлення відповідно до контексту (інтерв'ю, суд, дружня розмова)
-  - Переписати пряму мову в непряму з правильним вибором дієслова
-  - Написати діалог з різними дієсловами мовлення (5+ синонімів)
-  - Порівняти українські та англійські дієслова мовлення в перекладі
+  - 'Syntactic transformations: Converting direct speech using conjunctions ''що'',
+    ''щоб'', and the particle ''чи'' for questions (State Standard §4.3.5).'
+  - 'Negotiator practice: Reporting a witness''s statement using synonyms that imply
+    different levels of certainty (e.g., ''Свідок заявив, що...'' vs. ''Друг розповідав,
+    що...'').'
+- section: 'Практика та синтез: Переговори (Practice and Synthesis: Negotiations)'
+  words: 750
+  points:
+  - 'Narrative Arc: A simulation of a high-stakes negotiation where the student must
+    choose verbs based on the evolving register (from polite inquiry to formal declaration).'
+  - 'Register Mismatch Drill: Identifying and correcting ''socially awkward'' use
+    of informal speech verbs in professional reports or news summaries.'
+  - 'Summary: Reviewing the stylistic coloring of speech verbs and their impact on
+    the listener''s perception.'
 focus: phraseology
 pedagogy: CBI
 objectives:
@@ -46,13 +68,28 @@ register: публіцистичний
 phase: B2.2 [Phraseology & Synonymy]
 vocabulary_hints:
   required:
-  - синонім (synonym)
-  - вираз (expression)
-  - значення (meaning)
-  - контекст (context)
+  - 'казати (say) — high frequency, neutral; collocations: казати правду, як кажуть
+    (as they say)'
+  - 'говорити (speak/talk) — high frequency, process-oriented; collocations: говорити
+    українською, говорити про справу'
+  - 'повідомляти (inform/report) — medium frequency, official register; collocations:
+    повідомляти новини, офіційно повідомляти'
+  - 'заявляти (declare/state) — low frequency, formal; collocations: заявляти про
+    права, заявляти протест'
+  - 'питати (ask) — high frequency, general information; collocation: питати дозволу.
+    Note: not for requests/favors'
+  - запитувати (inquire/ask) — formal register; used in high-power distance contexts
+    or official settings
+  - 'цікавитися (be interested/inquire) — polite, low intensity; collocation: цікавитися
+    думкою'
+  - 'допитувати (interrogate) — high intensity, legal/conflict context; collocations:
+    допитувати свідка, допитувати підозрюваного'
   recommended:
-  - переносне значення (figurative meaning)
-  - стилістичне забарвлення (stylistic coloring)
+  - просити (ask for/request) — used for favors or actions, distinguished from 'питати'
+  - зазначати (note/point out) — formal, used in summaries and reports
+  - 'висловлювати (express) — collocations: висловлювати думку, висловлювати подяку'
+  - стилістичне забарвлення (stylistic coloring) — essential for B2 synonym analysis
+  - контекст (context) — the primary driver for speech verb selection
 activity_hints:
 - type: reading
   focus: Контекстне використання

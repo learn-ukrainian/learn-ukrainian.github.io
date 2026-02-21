@@ -1,0 +1,13 @@
+{
+  "track": "oes",
+  "slug": "slovo-defeat",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-20T11:44:25Z",
+      "task_id": "v3-slovo-defeat-pA",
+      "mode": "full"
+    }
+  }
+}

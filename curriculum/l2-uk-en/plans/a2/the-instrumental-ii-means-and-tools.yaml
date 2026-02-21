@@ -6,56 +6,84 @@ version: '2.0'
 title: The Instrumental II — Means and Tools
 subtitle: How? By What Means?
 content_outline:
-- section: Introduction / Вступ
+- section: 'Вступ: Без прийменника «з» (Introduction: No Preposition ''Z'')'
+  words: 500
   points:
-  - 'Contrast with з + instrumental (accompaniment) — learner error: literally translating
-    ''with a pen'' as ''з ручкою'' instead of just ''ручкою'' (Research Error #1:
-    Я пишу з ручкою vs Я пишу ручкою); emphasize the ''No З for Tools'' rule early'
-  - 'Direct instrumental for means/manner — State Standard §4.2.2.5.1: ''Без прийменника:
-    знаряддя і засіб дії: Студент пише новою ручкою''; example: «Діти люблять малювати
-    олівцями»'
-- section: Presentation / Презентація
+  - 'Explicit focus on State Standard §4.2.2.5.1: Defining the Instrumental case as
+    the primary marker for ''знаряддя і засіб дії'' (instruments and means of action)
+    without prepositions.'
+  - 'Critical Learner Error #1: The ''Redundant Preposition'' trap. Address the literal
+    translation of ''with a pen'' as *з ручкою* (accompaniment) vs. the correct *ручкою*
+    (instrument). Provide contrastive pairs: ''Я йду з ручкою'' (I am walking while
+    holding a pen) vs. ''Я пишу ручкою'' (I am writing with a pen).'
+  - 'Conceptual hook: Think of the Instrumental case as ''becoming'' the tool or the
+    extension of the hand, which is why no connecting word like ''with'' is needed
+    in Ukrainian.'
+- section: Транспорт і рух (Transport and Movement)
+  words: 700
   points:
-  - 'Transport by Instrumental (їхати автобусом) — learner error: attempting to decline
-    ''метро'' or ''таксі'' (Error #3: *метром* instead of *метро* -> correct: «Я їду
-    метро»); cultural hook: the ''night train'' (нічний поїзд) travel culture'
-  - 'Tools and Instruments (писати ручкою) — learner error: confusion between -ом
-    (hard) and -ем (soft/mixed) endings (Error #2: *олівецом* instead of *олівцем*);
-    examples: ножем, виделкою (Kitchen context)'
-  - Body Parts as Instruments
-- section: Practice / Практика
+  - 'Means of travel: Using the Instrumental to answer the question ''Чим?'' (By what
+    means?). Key high-frequency examples: їхати автобусом, подорожувати поїздом, дістатися
+    машиною.'
+  - 'Learner Error #3: Indeclinable nouns. Explicitly teach that *метро* and *таксі*
+    remain unchanged: «Я їду метро» (NOT *метром*). Provide a dedicated table for
+    these exceptions.'
+  - 'Cultural Hook: ''Нічний поїзд'' (The Night Train). Explain the cultural significance
+    of the railway (Залізниця) as the backbone of Ukrainian travel, where the Instrumental
+    case is used to describe the journey itself (їхати нічним поїздом).'
+- section: Інструменти та знаряддя (Tools and Instruments)
+  words: 700
   points:
-  - '''How do you...?'' question patterns — focus on questions ''Як?'' (How?) and
-    ''Чим?'' (With what?) — Note: ''Чим'' specifically asks for the instrument/tool'
-  - 'Common expressions review — collocations: дістатися автобусом, їхати власною
-    машиною'
-- section: Dialogues / Діалоги
+  - 'Everyday tools: Writing and creating. Focus on high-frequency school/office items:
+    писати синьою ручкою, малювати олівцем, креслити олівцем.'
+  - 'Learner Error #2: Ending confusion (-ом vs -ем). Address the hard/soft stem distinction
+    to prevent errors like *олівецом* instead of the correct *олівцем*. Drill the
+    ''ц'' as a soft/mixed stem requiring ''-ем''.'
+  - 'Kitchen context: Instrumental for eating and food prep. Use the cultural context
+    of sharing meals on a train to introduce: різати ножем, їсти виделкою, тримати
+    ложкою.'
+- section: Питання та відповіді (Questions and Answers)
+  words: 600
   points:
-  - 'Commute and tool usage scenarios — context: using tools (knife/fork) while sharing
-    food during long train journeys (Cultural Hook #2: Залізниця)'
+  - 'Question patterns: Differentiating between ''Як?'' (How? - manner) and ''Чим?''
+    (With what? - instrument). Practice identifying which question a sentence answers.'
+  - 'Body parts as instruments: Expanding the ''means'' concept to the human body
+    (дивитися очима, слухати вухами, писати рукою).'
+  - 'Common collocations review: Focus on ''дістатися + transport'' and ''користуватися
+    + instrument'' (using the Instrumental case).'
+- section: Практика та підсумок (Practice and Summary)
+  words: 500
+  points:
+  - 'Scenario-based production: Describing a commute or a creative process using at
+    least three different instruments/means in the Instrumental case.'
+  - 'Review of ''No З'' rule: A final check to ensure students don''t revert to using
+    prepositions for tools.'
+  - 'Connection to future modules: Briefly mention how this case will apply to professions
+    (a2-06) and spatial relations (a2-07).'
 vocabulary_hints:
   required:
-  - автобус (bus) — їхати автобусом, дістатися автобусом
-  - трамвай (tram)
-  - тролейбус (trolleybus)
-  - метро (metro) — їхати метро, дістатися метро (indeclinable)
-  - машина (car) — їхати власною машиною, подорожувати машиною
-  - таксі (taxi) — їхати таксі (indeclinable)
-  - поїзд (train) — їхати нічним поїздом, подорожувати поїздом
-  - літак (plane)
-  - ручка (pen) — писати синьою ручкою, підписати ручкою
-  - олівець (pencil) — малювати олівцем, креслити олівцем
-  - ніж (knife) — різати ножем, чистити ножем
-  - виделка (fork) — їсти виделкою, тримати виделкою
-  - ложка (spoon)
-  - комп'ютер (computer)
-  - телефон (phone)
+  - автобус (bus) — їхати автобусом, дістатися автобусом; high frequency transport
+  - поїзд (train) — подорожувати поїздом, їхати нічним поїздом; cultural travel backbone
+  - машина (car) — їхати власною машиною, подорожувати машиною; high frequency
+  - метро (metro) — їхати метро, дістатися метро; indeclinable exception
+  - таксі (taxi) — їхати таксі, замовити таксі; indeclinable exception
+  - ручка (pen) — писати синьою ручкою, підписати ручкою; high frequency office/school
+  - 'олівець (pencil) — малювати олівцем, креслити олівцем; note: soft stem ''-ем''
+    ending'
+  - ніж (knife) — різати ножем, чистити ножем; kitchen/travel context
+  - виделка (fork) — їсти виделкою, тримати виделкою; kitchen context
+  - ложка (spoon) — їсти ложкою, мішати ложкою
+  - трамвай (tram) — їхати трамваєм
+  - тролейбус (trolleybus) — їхати тролейбусом
+  - літак (plane) — летіти літаком, подорожувати літаком
+  - комп'ютер (computer) — працювати комп'ютером
+  - телефон (phone) — розмовляти телефоном
   recommended:
-  - ножиці (scissors)
-  - голка (needle)
-  - молоток (hammer)
-  - пензель (brush/paintbrush)
-  - очі (eyes)
+  - ножиці (scissors) — різати ножицями; plural only
+  - голка (needle) — шити голкою
+  - молоток (hammer) — забивати молотком
+  - пензель (brush/paintbrush) — малювати пензлем
+  - очі (eyes) — дивитися очима; plural instrumental 'очима'
 activity_hints:
 - type: fill-in
   focus: Choose correct transport instrumental

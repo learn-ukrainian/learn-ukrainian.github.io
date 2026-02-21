@@ -1,0 +1,287 @@
+✅ Message sent to Gemini (ID: 12221) [auto-acked: self-addressed]
+✓ Message 12221 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12221...
+📨 Message #12221
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-pylyp-orlyk
+   Time: 2026-02-20T23:37:34.139715+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-bio-31
+level: C1-BIO
+sequence: 31
+slug: pylyp-orlyk
+version: '2.0'
+title: 'Пилип Орлик: Автор першої конституції'
+content_outline:
+- section: Вступ — Батько українського конституціоналізму
+  points:
+  - Значення Конституції 1710 року
+  - Орлик як політичний мислитель
+  - Перша українська політична еміграція
+- section: Молодість та служба при Мазепі
+  points:
+  - Походження та освіта
+  - Кар'єра в гетьманській канцелярії
+  - Генеральний писар
+  - Вірність Мазепі
+- section: Обрання гетьманом в еміграції
+  points:
+  - Смерть Мазепи в Бендерах
+  - Обрання гетьманом 1710 року
+  - Присяга та Конституція
+  - Легітимність еміграційного гетьманства
+- section: Конституція Пилипа Орлика
+  points:
+  - Структура документа
+  - Обмеження влади гетьмана
+  - Права козацтва та населення
+  - Порівняння з європейськими конституціями
+  - Демократичні елементи
+- section: Дипломатична діяльність
+  points:
+  - Боротьба за міжнародну підтримку
+  - Прутський похід 1711 року
+  - Листування з європейськими дворами
+  - Мандри Європою
+- section: Останні роки та спадщина
+  points:
+  - Життя в еміграції
+  - Смерть у Молдові
+  - Доля нащадків
+  - Конституція як символ
+- section: Підсумок — Візія, що випередила час
+  points:
+  - Орлик як провісник демократії
+  - Актуальність Конституції 1710 року
+  - Місце в українській політичній думці
+vocabulary_hints:
+  required:
+  - конституція (constitution)
+  - гетьман (hetman)
+  - еміграція (emigration)
+  - писар (scribe/secretary)
+  - рада (council)
+  - обмеження влади (limitation of power)
+  - присяга (oath)
+  - пакти (pacts)
+  - привілеї (privileges)
+  - канцелярія (chancellery)
+  recommended:
+  - генеральний (general - as in rank)
+  - статті (articles)
+  - ратифікація (ratification)
+  - клейноди (regalia)
+  - протекторат (protectorate)
+activity_hints:
+- type: reading
+  focus: Excerpts from the Constitution of 1710
+  source: Original text (adapted)
+- type: essay-response
+  focus: Was Orlyk's Constitution democratic for its time?
+- type: critical-analysis
+  focus: Evaluate claims of "first European constitution"
+focus: biography
+pedagogy: seminar
+prerequisites:
+- c1-bio-27 (Іван Мазепа)
+- c1-bio-30 (Кость Гордієнко)
+connects_to:
+- c1-bio-32 (Петро Калнишевський)
+module_type: biography
+sources:
+- name: Пилип Орлик (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Пилип_Орлик
+  type: primary
+  notes: Biography, Constitution of 1710, exile
+- name: Конституція Пилипа Орлика
+  url: https://uk.wikipedia.org/wiki/Конституція_Пилипа_Орлика
+  type: primary
+  notes: Text and analysis of Constitution
+immersion: 100% Ukrainian
+phase: C1-BIO
+objectives:
+- Оцінити державницький внесок Пилипа Орлика
+- Проаналізувати основні положення Конституції 1710 року
+- Дослідити роль української політичної еміграції XVIII століття
+persona:
+  voice: Senior Biographer
+  role: Constitution Drafter
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Пилип Орлик: Автор першої конституції
+
+## Використані джерела
+1. [Пакти і Конституції прав і вольностей Війська Запорозького](https://zakon.rada.gov.ua/laws/show/n0001001-10#Text) — Повний текст на сайті Верховної Ради України.
+2. [Пилип Орлик на сайті Інституту історії України](http://resource.history.org.ua/) — Біографічні дані та історичний контекст.
+3. [Діаріуш подорожній](http://litopys.org.ua/orlyk/orl.htm) — Уривки та аналіз щоденника на Ізборнику.
+
+## Хронологія
+- **11 (21) жовтня 1672**: Народження в с. Косута (нині Білорусь) у шляхетській родині чеського походження.
+- **1694**: Закінчення Києво-Могилянської академії.
+- **1706**: Призначення Генеральним писарем Війська Запорозького.
+- **27 червня 1709**: Поразка під Полтавою, еміграція до Бендер.
+- **5 квітня 1710**: Обрання гетьманом та ухвалення "Пактів і Конституцій".
+- **1711**: Прутський похід, спроба звільнити Правобережну Україну.
+- **1714**: Виїзд зі Швеції, початок тривалої політичної еміграції Європою.
+- **1722-1734**: Перебування в Салоніках (Греція) під наглядом османської влади.
+- **24 травня 1742**: Смерть у Яссах (Молдова).
+
+## Ключові факти та цитати
+- **Походження**: Рід Орликів походив з чеської баронівської родини, що втекла від гуситів.
+- **Освіта**: Вільно володів польською, латинською, німецькою, шведською, знав грецьку та церковнослов'янську.
+- **Цитата (Преамбула Конституції)**:
+  > «Дивний і незбагненний у долях своїх Бог, милосердний у довготерпінні, справедливий у покаранні, як завжди від початку світу, на праведному мірилі правосуддя свого - одні держави і народи возвеличує, а інші за гріхи і беззаконня - упокорює...»
+- **Цитата (Присяга)**:
+  > «Присягаю на Господа Бога... що, будучи обраним, оголошеним і виведеним на знаменитий уряд гетьманський... буду вірним, відданим і щирим...»
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ — Батько українського конституціоналізму": [!context] — Пилип Орлик як символ неперервності гетьманської влади (спадкоємець Мазепи).
+- Section "Молодість та служба при Мазепі": [!fact] — Інтелектуальний тандем: Мазепа цінував Орлика не лише як виконавця, а як стратега.
+- Section "Обрання гетьманом в еміграції": [!myth-buster] — "Гетьман без держави"? Ні, Орлик керував реальною політичною силою та мав визнання монархів.
+- Section "Конституція Пилипа Орлика": [!decolonization] — "Хозарський міф" у преамбулі як спосіб ідеологічного розриву з Москвою (ми не "братні народи", ми окрема цивілізація).
+- Section "Дипломатична діяльність": [!history-bite] — Орлик створив першу в історії "антиросійську коаліцію" (Швеція, Туреччина, Крим).
+- Section "Останні роки та спадщина": [!quote] — З "Діаріуша" про самотність і тугу за родиною ("Omnia vanitas...").
+
+## Деколонізаційний контекст
+- **Imperial/Soviet myth**: Орлик — "зрадник", "мазепинець", а його Конституція — нікчемний папірець, що ніколи не діяв.
+- **Ukrainian reality**: Орлик — легітимний правитель, визнаний Карлом XII та Османами. Конституція діяла на Правобережжі під час походу 1711 року та в Бендерах. Це перша європейська конституція, що розділила гілки влади (за 38 років до Монтеск'є).
+- **Термінологія**: Замість "втеча Мазепи" — "відступ" або "еміграція". Замість "зрада" — "союз із Швецією".
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| Полтавська битва | "Славна перемога російської зброї" | Трагедія, початок окупації, але й народження політичної еміграції |
+| Конституція 1710 | "Бендерська фантазія", "проект" | Правовий акт, реальний суспільний договір, діючий закон |
+| Мазепинці | Зрадники, вороги народу | Політична еліта, борці за незалежність |
+
+## Section-Mapped Research Notes
+
+### Вступ — Батько українського конституціоналізму
+Орлик не просто "наступник Мазепи", а творець нової політичної філософії. Він перевів козацьку вольницю в русло європейського права.
+
+### Молодість та служба при Мазепі
+Вплив Стефана Яворського (вчитель). Кар'єра: від консисторського писаря до Генерального писаря. Мазепа став хрещеним батьком сина Григора. Довіра була абсолютною.
+
+### Обрання гетьманом в еміграції
+Бендери як "маленька Україна". Вибори відбулися 5 квітня (старий стиль) 1710 року. Це були перші вибори за участю запорожців (Кость Гордієнко), що об'єднало гетьманат і Січ.
+
+### Конституція Пилипа Орлика
+Аналіз трьох гілок влади: Гетьман (виконавча), Генеральна Рада (законодавча), Генеральний Суд (судова). Гарантії соціального захисту (вдів, сиріт). Заборона гетьману "самовладно" карати.
+
+### Дипломатична діяльність
+"Прутський мир" 1711 року був катастрофою, але Орлик не здавався. Переговори з кримським ханом. Подорожі: Швеція (Крістіанстад), Німеччина (Ганновер, Бреслау), Франція (листування), Туреччина.
+
+### Останні роки та спадщина
+"Салонікське ув'язнення" — почесний полон. Бідність ("гетьман у лахмітті"). Але син Григор став генералом армії Франції і продовжував справу батька (т.зв. "Нація козаків" у французькій дипломатії).
+
+### Підсумок — Візія, що випередила час
+Конституція США — 1787, Польщі — 1791, Франції — 1791. Орлик — 1710. Він заклав фундамент модерної української нації, яка будується на ПРАВІ, а не на СИЛІ.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12284)
+✓ Message 12221 acknowledged
+✓ Message 12284 acknowledged

@@ -1,0 +1,342 @@
+✅ Message sent to Gemini (ID: 12733) [auto-acked: self-addressed]
+✓ Message 12733 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12733...
+📨 Message #12733
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-pylyp-orlyk-konstytutsiia
+   Time: 2026-02-20T23:41:55.843771+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b2-hist-067
+level: B2-HIST
+sequence: 67
+slug: pylyp-orlyk-konstytutsiia
+version: '2.0'
+title: Пилип Орлик і перша Конституція
+subtitle: Pylyp Orlyk and the First Constitution
+content_outline:
+- section: 'Вступ: Гетьман у вигнанні'
+  points:
+  - Orlyk's background and education — Czech noble origin (Barons Orlyk), Jesuit college
+    in Vilnius, Kyiv-Mohyla Academy (pupil of Stefan Yavorsky); born 1672 in Kosuta
+    (Belarus)
+  - 'Election as Hetman in Bendery — April 5 (16), 1710; first election in emigration;
+    cultural hook: [!history-bite] Orlyk was born in Belarus (Kosuta) but became a
+    Ukrainian Hetman'
+  - The tragic context of exile — post-Poltava defeat, death of Mazepa in Bendery,
+    alliance with Charles XII
+- section: Бендерська Конституція 1710 року
+  points:
+  - 'Structure of the document (Pacts and Constitutions) — Full title «Пакти й Конституції
+    прав і вольностей Війська Запорозького»; Preamble (historical justification),
+    16 articles, Oath; cultural hook: [!context] 77 years before US Constitution,
+    81 years before French Constitution'
+  - Separation of powers (Hetman, Council, Court) — General Council meets 3 times/year
+    (Christmas, Easter, Pokrova); General Court independent from Hetman; Hetman limited
+    by law
+  - Protection of social groups — protection of Cossack widows/orphans, ban on Hetman
+    seizing land/property from Cossacks
+- section: 'Демократичні ідеї: Україна vs Європа'
+  points:
+  - 'Comparison with European legal thought (Locke, Montesquieu) — cultural hook:
+    [!myth-buster] Orlyk applied separation of powers *before* Montesquieu''s ''Spirit
+    of Laws'' (1748)'
+  - The uniqueness of the contract between the Hetman and the Army — 'social contract'
+    nature vs simple 'election capitulation' (pacta conventa)
+  - Anti-tyranny safeguards — Hetman cannot execute without court, cannot unilaterally
+    control treasury (skarbnytsia)
+- section: Дипломатична боротьба Орлика
+  points:
+  - 'Anti-Moscow coalition (Sweden, Turkey, Crimea) — first European anti-Russian
+    coalition; cultural hook: [!decolonization] Ukraine viewed as the ''shield of
+    Europe'' against tyranny'
+  - Campaign of 1711 onto the Right Bank — initial success vs Tatar betrayal and looting
+    causing loss of support and retreat
+  - Years of wandering in Europe (Thessaloniki, Paris, London) — 12 years in Thessaloniki
+    under surveillance; seeking support from Louis XV and Vatican; death in Jassy
+    (1742)
+- section: 'Читання: Текст Конституції'
+  points:
+  - 'Analysis of specific articles (religion, borders, corruption) — Art 1: Orthodoxy
+    under Constantinople (not Moscow); Art 2: Borders by Sluch river (Khmelnytsky
+    era); Art 6: Limits on Hetman by General Council'
+  - 'Language and style of the document (Latin/Old Ukrainian) — include quote: «Володарі,
+    що дорожать своїм добрим ім''ям... виставлені на суд загалу»'
+- section: 'Первинні джерела: Листи та діаріуш'
+  points:
+  - 'Excerpts from Orlyk''s Diary (''Diariusz'') — >2000 pages, travelogue of 18th-century
+    Europe, written in Polish with Latinisms; cultural hook: [!culture] Unique 18th-century
+    travelogue'
+  - 'Letters to European monarchs — ''Manifesto to European Governments'' (1712) explaining
+    war reasons (tyranny vs rights); quote: «Природним правом є визволятися від гноблення
+    і трудитися, аби повернути те, що несправедливістю... було забрано»'
+- section: 'Деколонізаційний погляд: Правова культура'
+  points:
+  - Ukrainian constitutionalism vs Russian autocracy — refuting the imperial view
+    of the Constitution as a 'fiction' or simple 'pact'; Ukraine as part of European
+    legal tradition
+  - Myth of 'anarchy' debunked — Ukrainians sought legal order (Constitution), contrary
+    to the 'mazepynstvo' anarchy narrative invented by empire
+  - Orlyk as a symbol of European Ukraine — continuity with UNR Constitution (1918)
+    and modern Ukraine; 'Ukraine is Europe, Muscovy is Asia' dichotomy
+focus: history
+pedagogy: CBI
+prerequisites:
+- 'b2-hist-66: Іван Мазепа III'
+learning_outcomes:
+- Учень розуміє значення Конституції Пилипа Орлика 1710 року
+- Учень може описати структуру та основні ідеї документа
+- Учень знає біографію Пилипа Орлика як наступника Мазепи
+phase: HIST.7 [Mazepa & End of Hetmanate]
+objectives:
+- Analyze the causes and consequences of пилип орлик і перша конституція
+- Evaluate the historical significance of гетьман у вигнанні
+- 'Trace the development of деколонізаційний погляд: правова культура'
+vocabulary_hints:
+  required:
+  - історія (history) — козацька історія, вивчати історію
+  - держава (state) — вільна держава, будувати державу, державний суверенітет
+  - народ (people) — український народ, права народу
+  - влада (power) — поділ влади (separation of powers), обмеження влади, виконавча
+    влада
+  - період (period) — складний період, історичний період
+  - подія (event) — визначна подія, хронологія подій
+  - джерело (source) — історичне джерело, первинні джерела (primary sources)
+  - спадщина (heritage) — правова спадщина, культурна спадщина, епістолярна спадщина
+  - Конституція (Constitution) — перша Конституція, ухвалити Конституцію, Бендерська
+    Конституція
+  - гетьман (Hetman) — обрати гетьмана, влада гетьмана, гетьман у вигнанні
+  - рада (council) — Генеральна Рада, скликати раду, козацька рада
+  - вигнання (exile) — жити у вигнанні, політичне вигнання, еміграція
+  - угода (agreement/treaty) — підписати угоду, порушити угоду, суспільний договір
+    (social contract)
+  - права (rights) — права і вольності, захищати права, природне право
+  recommended:
+  - аналіз (analysis) — критичний аналіз, робити аналіз
+  - контекст (context) — історичний контекст, у контексті подій
+  - вплив (influence) — мати вплив, під впливом
+  - наслідки (consequences) — причини і наслідки, політичні наслідки
+  - тиранія (tyranny) — боротьба проти тиранії, московська тиранія
+  - суверенітет (sovereignty) — державний суверенітет, відстоювати суверенітет
+  - коаліція (coalition) — антимосковська коаліція, створити коаліцію
+  - скарбниця (treasury) — військова скарбниця, розпоряджатися скарбницею
+  - присяга (oath) — скласти присягу, текст присяги
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: critical-analysis
+  focus: Аналіз причинно-наслідкових зв'язків між подіями
+  items: 3
+- type: critical-analysis
+  focus: Критична оцінка історичних тверджень та міфів
+  items: 5
+persona:
+  voice: Senior Professor of History
+  role: Constitutional Scribe
+word_target: 5000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Пилип Орлик і перша Конституція
+
+## Використані джерела
+1. [Енциклопедія історії України](http://resource.history.org.ua/) — фундаментальні статті про Орлика та Конституцію.
+2. [Ізборник (litopys.org.ua)](http://litopys.org.ua/) — тексти Конституції та історичні розвідки.
+3. [Вікіпедія (uk.wikipedia.org)](https://uk.wikipedia.org/wiki/Орлик_Пилип_Степанович) — загальна біографія та хронологія.
+4. [Освіта.ua](https://osvita.ua/) — аналіз змісту Конституції 1710 року.
+5. [ESU (esu.com.ua)](https://esu.com.ua/) — енциклопедичні дані про родину та діяльність.
+
+## Хронологія
+- **11 (21) жовтня 1672**: Народження Пилипа Орлика в с. Косута (сучасна Білорусь).
+- **1694**: Закінчення Києво-Могилянської колегії.
+- **1702**: Призначення Генеральним писарем Війська Запорозького (права рука Мазепи).
+- **1709**: Поразка під Полтавою, еміграція разом з Мазепою та Карлом XII до Бендер.
+- **5 (16) квітня 1710**: Обрання гетьманом та ухвалення «Пактів і Конституцій».
+- **1711**: Похід Орлика на Правобережжя проти Москви (успішний початок, але зрада татар).
+- **1714**: Переїзд до Швеції на запрошення Карла XII.
+- **1720–1734**: Період поневірянь Європою (Німеччина, Франція, Греція).
+- **1742**: Смерть у Яссах (Молдова).
+
+## Ключові факти та цитати
+- **Цитата з Маніфесту (1712)**: «Природним правом є визволятися від гноблення і трудитися, аби повернути те, що несправедливістю та переважною силою було забрано».
+- **Цитата з Конституції (Преамбула)**: Проголошення незалежності від Москви та відновлення протекторату шведського короля як гаранта прав.
+- **Стаття 6**: Встановлення Генеральної Ради (парламенту), яка мала збиратися тричі на рік (Різдво, Великдень, Покрова).
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ: Гетьман у вигнанні": [!history-bite] — Орлик був чеського походження (барони Орлики), народився в Білорусі, а став українським гетьманом.
+- Section "Бендерська Конституція 1710 року": [!context] — Конституція Орлика з'явилася на 77 років раніше за Конституцію США і на 81 рік раніше за Конституцію Франції.
+- Section "Демократичні ідеї: Україна vs Європа": [!myth-buster] — Міф про те, що ідея поділу влади належить виключно Монтеск'є. Орлик застосував її на практиці раніше.
+- Section "Дипломатична боротьба Орлика": [!decolonization] — Орлик створив першу європейську антиросійську коаліцію, бачачи Україну як щит Європи.
+- Section "Читання: Текст Конституції": [!quote] — «Володарі, що дорожать своїм добрим ім'ям... виставлені на суд загалу».
+- Section "Первинні джерела: Листи та діаріуш": [!culture] — «Діаріуш» Орлика (понад 2000 сторінок) — це унікальний тревелог XVIII століття, що описує побут Європи очима вигнанця.
+
+## Деколонізаційний контекст
+- **Imperial/Soviet myth**: Конституція Орлика — це фікція, просто «договір» (pacta conventa), який ніколи не діяв. Орлик — зрадник і маріонетка шведів.
+- **Ukrainian reality**: Це повноцінний конституційний акт, що визначав державний суверенітет і правові механізми. Він частково діяв на Правобережжі до 1714 року. Орлик — легітимний наступник Мазепи.
+
+## Contested Terms (if applicable)
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| Конституція 1710 | «Виборча капітуляція» / «Пакти» (як у Польщі) | Перша європейська Конституція (First Constitution) |
+| Пилип Орлик | Зрадник, «мазепинець», емігрант | Гетьман України (у вигнанні), державник |
+| Статус України | Малоросія (частина імперії) | Вільна держава (під протекторатом Швеції) |
+
+## Section-Mapped Research Notes
+
+### Вступ: Гетьман у вигнанні
+- Походження: рід Орликів чеського баронського походження.
+- Освіта: єзуїтський колегіум у Вільні, Києво-Могилянська академія (учень Стефана Яворського).
+- Кар'єра: стрімкий злет від писаря консисторії до Генерального писаря (1706).
+- Контекст обрання: після смерті Мазепи в Бендерах (Молдова/Османська імперія) козацька рада обирає Орлика. Це перше обрання гетьмана в еміграції.
+
+### Бендерська Конституція 1710 року
+- Повна назва: «Пакти й Конституції прав і вольностей Війська Запорозького».
+- Три гілки влади:
+    1. Законодавча: Генеральна Рада (старшина + полковники + виборні від полків + запорожці).
+    2. Виконавча: Гетьман (обмежений законом, не самодержець).
+    3. Судова: Генеральний Суд (незалежний від гетьмана).
+- Соціальний аспект: захист козацьких вдів та сиріт, заборона гетьману забирати землі чи майно.
+- Релігія: Православ'я (під юрисдикцією Константинополя, не Москви).
+
+### Демократичні ідеї: Україна vs Європа
+- Інновація: ідея «суспільного договору» (contract social) між правителем і народом.
+- Порівняння: Джон Локк (ідеї вже існували), Монтеск'є (напише «Дух законів» пізніше, у 1748).
+- Унікальність: це не теоретичний трактат, а реальний юридичний документ, підписаний сторонами (Гетьман — Старшина — Запорожці).
+- Антитиранські запобіжники: гетьман не має права страчувати без суду, не має права одноосібно розпоряджатися скарбницею.
+
+### Дипломатична боротьба Орлика
+- Мета: створення антимосковської коаліції.
+- Учасники: Шведське королівство, Османська імперія, Кримське ханство, Річ Посполита (станіславчики).
+- Похід 1711 року: Орлик із татарами та поляками входить на Правобережжя. Населення масово підтримує його. Але татари починають грабувати села, і підтримка падає. Відступ.
+- Еміграція: «Одіссея» Орлика. Салоніки (жив під наглядом турків 12 років), спроби знайти підтримку у Франції (Людовик XV) та Ватикану.
+
+### Читання: Текст Конституції
+- Структура: Преамбула (історичне обґрунтування прав України) + 16 статей + Присяга.
+- Мова: староукраїнська (для внутрішнього вжитку) та латинська (для дипломатії).
+- Ключові статті для аналізу:
+    - Ст. 1 (Віра православна).
+    - Ст. 2 (Кордони — по річку Случ, як за Богдана Хмельницького).
+    - Ст. 6 (Обмеження влади гетьмана радою).
+
+### Первинні джерела: Листи та діаріуш
+- «Діаріуш подорожній» (1720–1733): написаний польською мовою з латинізмами.
+- Зміст: особисті переживання, дипломатичні інтриги, побут європейських міст, туга за Батьківщиною.
+- Листи: «Маніфест до європейських урядів» (1712) — пояснення причин війни з Росією (порушення прав, тиранія).
+- Епістолярна спадщина показує високий рівень освіченості та інтеграцію в європейський культурний простір.
+
+### Деколонізаційний погляд: Правова культура
+- Російський наратив: українці схильні до анархії та бунту («мазепинство»).
+- Реальність: українці прагнули правового порядку (Constitution) і обмеження свавілля влади.
+- Орлик як символ: Україна — це частина Європи з її правовою традицією, а не частина деспотичної Азії/Московії.
+- Тяглість: ідеї Орлика перегукуються з Конституцією УНР 1918 року та сучасною Конституцією України.
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12772)
+✓ Message 12733 acknowledged
+✓ Message 12772 acknowledged

@@ -2,12 +2,5 @@
   "track": "c1",
   "slug": "slang-youth",
   "mode": "v3",
-  "phases": {
-    "v3-A": {
-      "status": "complete",
-      "ts": "2026-02-19T15:27:13Z",
-      "task_id": "v3-slang-youth-pA",
-      "mode": "full"
-    }
-  }
+  "phases": {}
 }

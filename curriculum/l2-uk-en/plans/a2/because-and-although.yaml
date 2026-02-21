@@ -6,40 +6,47 @@ version: '2.0'
 title: Because and Although
 subtitle: Linking Ideas Logically
 content_outline:
-- section: Introduction / Вступ
+- section: Вступ (Introduction)
+  words: 450
   points:
-  - Moving from simple to complex logic — aligning with State Standard §4.4.2 requirements
-    for causal (тому що, бо) and adversarial (але) sentences — State Standard lines
-    1403-1416
-  - The 'Glue' of language — moving beyond simple sentences to connected speech
-- section: Presentation / Презентація
+  - Connecting simple ideas into complex logical structures — alignment with Ukrainian
+    State Standard §4.4.2 (lines 1403-1416) for causal and adversarial sentences
+  - 'Cultural anchor: Introducing the folk wisdom ''І трясця не бере без причини''
+    (Even the fever doesn''t strike without a reason) to illustrate that every result
+    has a cause'
+- section: 'Презентація: Чому та Як (Presentation: Why and How)'
+  words: 800
   points:
-  - '''Cause: neutral (тому що), informal (бо), formal (оскільки)'' — distinguish
-    registers clearly; note word order preference for main clause first with ''тому
-    що'' (e.g., ''Я не прийшов, тому що хворів'') — learner error: ''Because I was
-    sick...'' -> ''Тому що я хворів...'''
-  - '''Concession: хоча, незважаючи на'' — ''Хоча'' introduces a counter-expectation
-    (e.g., ''Хоча я втомився, я піду'')'
-  - '''Subtle Causes: завдяки (positive) vs через (negative)'' — learner error: using
-    ''через'' for positive outcomes (like ''thanks to''); cultural hook: using ''завдяки''
-    for negative events sounds sarcastic — Fix: Positive = Завдяки, Negative = Через'
-  - 'Punctuation: The Mandatory Comma — learner error: ''Comma Phobia''; fix: drill
-    the comma as an inseparable part of the conjunction ('', тому що'', '', бо'')
-    — Clauses MUST be separated by commas'
-  - 'Logic of ''Why?'' in different registers — folk wisdom: ''І трясця не бере без
-    причини'' (Even the fever doesn''t strike without a reason)'
-- section: Practice / Практика
+  - 'Register Hierarchy: Clearly distinguish between neutral ''тому що'', casual/spoken
+    ''бо'', and formal/written ''оскільки'' — provide examples for each context'
+  - 'Word Order Constraint: Fix the learner error of starting sentences with ''Because...''
+    (unnatural inversion) by drilling the preference for main clause first: ''Я не
+    прийшов, тому що хворів'''
+  - 'The Mandatory Comma: Addressing ''Comma Phobia'' by drilling the comma as an
+    inseparable part of the conjunction ('', тому що'', '', бо'', '', оскільки'',
+    '', але'')'
+- section: 'Презентація: Всупереч обставинам (Presentation: Despite the Circumstances)'
+  words: 650
   points:
-  - Causal chain exercises — practice linking events with 'через' (negative) and 'завдяки'
-    (positive) — use collocations 'через погоду', 'завдяки підтримці'
-  - 'Argument building drills — using ''бо'' for quick spoken reasons and ''оскільки''
-    for formal arguments — example: ''Не йди туди, бо там холодно'' vs ''Оскільки
-    ви тут...'''
-- section: Dialogues / Діалоги
+  - Concession with 'хоча' (although) vs contrast with 'але' (but) — building sentences
+    with counter-expectations (e.g., 'Хоча це дорого, я це куплю')
+  - 'Attribution Accuracy: Positive ''завдяки'' (thanks to) vs Negative/Neutral ''через''
+    (due to/because of) — warning against the sarcastic or illiterate use of ''завдяки''
+    for negative events'
+- section: 'Практика: Логічне обґрунтування (Practice: Logical Justification)'
+  words: 650
   points:
-  - Explaining a missing meeting or surprising result — contrast excuses ('через затори')
-    with achievements ('завдяки допомозі') — incorporate phrase 'Я запізнився, тому
-    що...'
+  - 'Correction Drills: Identifying and fixing the use of ''через'' for positive outcomes
+    (e.g., ''Я склав іспит через вчителя'' -> ''Я склав іспит завдяки вчителю'')'
+  - 'Argumentation practice: Re-phrasing casual explanations using ''бо'' into formal
+    statements using ''оскільки'' for different social settings'
+- section: Продукція та Діалоги (Production and Dialogues)
+  words: 450
+  points:
+  - 'Investigative Journalist Roleplay: Interviewing a partner about a surprising
+    result or event, requiring the use of ''через затори'' vs ''завдяки зусиллям'''
+  - 'Logical Synthesis: Summarizing the transition from A1 simple sentences to A2
+    connected speech, emphasizing the ''glue'' provided by logical conjunctions'
 focus: grammar
 pedagogy: PPP
 objectives:
@@ -64,20 +71,18 @@ persona:
   role: Investigative Journalist
 vocabulary_hints:
   required:
-  - 'тому що (because) — High frequency, neutral; Collocation: ''Це сталося, тому
-    що...'', ''Я запізнився, тому що...'''
-  - 'бо (because/for) — Spoken/Casual; Collocation: ''Не йди туди, бо там холодно'',
-    ''Я їм, бо голодний'''
-  - 'через (because of/due to) — Preposition for negative/neutral causes; Collocation:
-    ''Через погоду'', ''через помилку'''
-  - 'завдяки (thanks to) — Preposition for positive causes; Collocation: ''Завдяки
-    тобі'', ''завдяки підтримці'''
-  - 'хоча (although) — Concession; Collocation: ''Хоча я втомився, я піду'', ''Хоча
-    це дорого...'''
-  - але (but) — Standard adversarial conjunction (State Standard §4.4.2)
+  - тому що (because) — Це сталося, тому що...; high frequency, neutral register
+  - бо (because/for) — Я їм, бо голодний; high frequency, casual/spoken register
+  - через (because of/due to) — Через погоду, через помилку; preposition for negative
+    or neutral causes
+  - завдяки (thanks to) — Завдяки тобі, завдяки допомозі; preposition strictly for
+    positive causes
+  - хоча (although) — Хоча я втомився, я піду; introduces counter-expectation/concession
+  - але (but) — Standard adversarial conjunction (State Standard §4.4.2 requirement)
   recommended:
-  - 'оскільки (since/as) — Formal/Written; Collocation: ''Оскільки ви тут...'', ''Оскільки
-    це важливо...'''
+  - оскільки (since/as) — Оскільки ви тут...; formal/written register, often used
+    in professional contexts
   - 'причина (reason) — Key noun for logic; idiomatic: ''без причини'' (folk wisdom)'
-  - наслідок (consequence) — Useful for explaining results
+  - наслідок (consequence/result) — Useful for explaining the logical outcome of an
+    action
 word_target: 3000

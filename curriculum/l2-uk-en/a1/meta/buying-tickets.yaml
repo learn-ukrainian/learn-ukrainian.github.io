@@ -1,3 +1,40 @@
 slug: buying-tickets
 title: Buying Tickets
 word_target: 2000
+content_outline:
+- section: Види транспорту та вокзали
+  words: 300
+  points:
+  - 'Distinguish basic transport types: поїзд (train), автобус (bus), маршрутка (minibus)'
+  - 'Define location hubs: вокзал (major terminal) vs станція/зупинка (stop)'
+  - 'Introduce collocations: центральний вокзал, залізничний вокзал'
+  - 'Visual/Context: Arriving at the station signage'
+- section: Купівля квитка та напрямок
+  words: 500
+  points:
+  - 'The core request formula: ''Один квиток до..., будь ласка'''
+  - 'Grammar Pattern: ''до + City'' (Genitive endings for basic cities: -а/-я) as
+    fixed chunks'
+  - 'Common error alert: ''їхати в'' vs ''їхати до'''
+  - 'Return options: ''туди й назад'' vs ''в один бік'''
+- section: 'Деталі подорожі: Клас і Розклад'
+  words: 500
+  points:
+  - 'Carriage types cultural context: Купе vs Плацкарт vs Сидячий (Intercity)'
+  - 'Seat specification: нижнє (lower) vs верхнє (upper) місце'
+  - 'Schedule inquiries: ''О котрій відправлення?'', ''Коли прибуття?'''
+  - 'Platform navigation: ''Яка платформа?'', ''Який вагон?'''
+- section: 'Практика: Діалоги на вокзалі'
+  words: 400
+  points:
+  - 'Scenario 1: Buying a train ticket to Lviv (Polite request focus)'
+  - 'Scenario 2: Bus station inquiry (Schedule focus)'
+  - 'Scenario 3: Clarifying details (Change of ticket/platform check)'
+  - Reinforce usage of 'автовокзал' vs 'залізничний вокзал'
+- section: 'Подорож поїздом: Традиції'
+  words: 300
+  points:
+  - 'Narrative closing: The atmosphere of a Ukrainian train journey'
+  - 'Cultural anchor: Tea in ''підстаканники'' and interaction with the ''провідник'''
+  - Practical vocabulary recap in context (ticket, tea, bed linen)
+  - 'Final motivation: ''Щасливої дороги!'''

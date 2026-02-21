@@ -1,0 +1,321 @@
+✅ Message sent to Gemini (ID: 11242) [auto-acked: self-addressed]
+✓ Message 11242 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #11242...
+📨 Message #11242
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-professional-discussions
+   Time: 2026-02-20T22:32:39.045734+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c2-057
+level: c2
+sequence: 57
+version: '2.0'
+title: Професійні дискусії
+focus: grammar
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Українська асоціація медіаторів
+  url: https://ukrmediation.org.ua/
+  type: reference
+  notes: Standards for professional negotiations and mediation
+- name: Національний інститут стратегічних досліджень
+  url: https://niss.gov.ua/
+  type: reference
+  notes: Examples of policy discussions and expert debates
+- name: Громадське телебачення — дебати
+  url: https://hromadske.ua/
+  type: reference
+  notes: Examples of professional discussions and debates
+content_outline:
+- section: Вступ — Культура професійної дискусії
+  points:
+  - Відмінність дискусії від суперечки
+  - Принципи конструктивного діалогу
+  - Етика професійних обговорень
+- section: Ведення дебатів
+  points:
+  - Структура формальних дебатів
+  - Аргументація та контраргументація
+  - Риторичні техніки переконання
+  - Логічні помилки та їх розпізнавання
+- section: Переговори
+  points:
+  - Типи переговорів (розподільчі, інтегративні)
+  - Стратегії та тактики переговорів
+  - Досягнення компромісу
+  - BATNA та ZOPA
+- section: Консультації та експертні обговорення
+  points:
+  - Роль експерта в обговоренні
+  - Представлення фахової думки
+  - Робота в експертних групах
+  - Досягнення консенсусу
+- section: Модерація дискусій
+  points:
+  - Роль модератора
+  - Техніки управління дискусією
+  - Вирішення конфліктів
+  - Підсумовування результатів
+- section: Практичні вправи
+  points:
+  - Симуляція дебатів
+  - 'Рольова гра: переговори'
+  - Модерація групової дискусії
+vocabulary:
+  required:
+  - дискусія (discussion)
+  - дебати (debate)
+  - переговори (negotiations)
+  - аргумент (argument)
+  - контраргумент (counterargument)
+  - компроміс (compromise)
+  - консенсус (consensus)
+  - модератор (moderator)
+  - експерт (expert)
+  - позиція (position)
+  recommended:
+  - BATNA (BATNA - best alternative)
+  - фасилітатор (facilitator)
+  - опонент (opponent)
+  - пропонент (proponent)
+  - резюмування (summarizing)
+  forbidden: '[]'
+activities:
+  types_required:
+  - quiz
+  - fill-in
+  - match-up
+  - critical-analysis
+  - essay-response
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c2-58 (Cross-Domain Communication)
+- c2-61-65 (Legal Ukrainian — negotiations in legal context)
+- c2-73 (Professional Identity)
+vocabulary_hints:
+  required:
+  - концепція (concept)
+  - аналіз (analysis)
+  - дискурс (discourse)
+  - методологія (methodology)
+  recommended:
+  - інтерпретація (interpretation)
+  - контекстуалізація (contextualization)
+  - синтез (synthesis)
+activity_hints:
+- type: reading
+  focus: Поглиблений аналіз тексту
+  items: 4
+- type: essay-response
+  focus: Критичне осмислення
+- type: discussion
+  focus: Дискусія та аргументація
+  items: 1
+persona:
+  voice: Senior Specialist
+  role: Moderator
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Професійні дискусії
+
+## State Standard Reference
+§3.13: "Робота: ... ділові переговори; укладання ділових угод і контрактів."
+§3.7: "Суспільні відносини: ... дискусійні проблеми."
+§4.3.5: "Використання елементів риторики в композиції тексту."
+Alignment: Цей модуль безпосередньо реалізує вимоги стандарту щодо ведення ділових переговорів (business negotiations) та участі в дискусіях (discussions) на рівні вільного володіння (C2), інтегруючи риторичні прийоми та стратегії аргументації.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| дискусія | High / General & Academic | гостра дискусія, плідна дискусія, винести на дискусію |
+| дебати | Medium / Political & Media | телевізійні дебати, парламентські дебати, брати участь у дебатах |
+| переговори | High / Business & Pol. | мирні переговори, вести переговори, за стіл переговорів |
+| компроміс | Medium / General | піти на компроміс, шукати компроміс, розумний компроміс |
+| консенсус | Medium / Formal | досягти консенсусу, загальний консенсус |
+| аргумент | High / General | вагомий аргумент, переконливий аргумент, навести аргумент |
+
+## Cultural Hooks
+1. **Культура медіації**: В Україні активно розвивається інститут медіації (Закон України «Про медіацію» 2021 року), що створює новий попит на фахівців з професійного вирішення конфліктів та нову термінологію.
+2. **Публічні дебати**: Традиція телевізійних дебатів в Україні (на прикладі "Громадського" або "Суспільного") є важливим елементом демократичної культури, демонструючи високі стандарти журналістської етики та модерації.
+
+## Common Learner Errors
+1. **Калькування англійських ідіом**: *to make a point* -> *зробити точку* (помилка) -> *висловити думку / навести аргумент* (правильно).
+2. **Плутанина регістрів**: Використання емоційно забарвленої лексики (сварка, базар) замість професійної (дискусія, полеміка, обговорення) у формальному контексті.
+3. **Хибний друг перекладача**: *argument* (у значенні "суперечка") -> *аргумент* (доказ). В українській "суперечка" - це *dispute/argument*, а "аргумент" - це виключно *reason/proof*.
+
+## Cross-References
+- Builds on: c2-58 (Cross-Domain Communication), c2-61-65 (Legal Ukrainian)
+- Prepares for: c2-73 (Professional Identity)
+
+## Notes for Content Writing
+- Акцентувати увагу на *конструктивізмі* та *ввічливості* навіть під час гострих суперечок.
+- Використовувати приклади з реального українського інформаційного простору (без політики, але з актуальних суспільних тем).
+- Чітко розмежувати поняття "дебати" (формалізований процес) та "дискусія" (вільний обмін думками).
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Етика та культура професійного дискурсу (Introduction: Ethics and Professional Discourse Culture)"
+  words: 500
+  points:
+  - "Поняття конструктивного діалогу та відмінність «дискусії» від «суперечки» у фаховому середовищі"
+  - "Принципи професійної етики під час обговорень: конструктивізм, ввічливість та повага до опонента"
+  - "Хибні друзі перекладача: розмежування значення слова «аргумент» (як доказ/reason) та поняття «суперечка» (dispute/argument)"
+- section: "Публічні дебати та мистецтво переконання (Public Debates and the Art of Persuasion)"
+  words: 900
+  points:
+  - "Традиція публічних дебатів в Україні на прикладі «Суспільного» та «Громадського»: високі стандарти модерації"
+  - "Структура формальних дебатів та реалізація вимог стандарту §4.3.5 щодо риторичної композиції тексту"
+  - "Аргументація та контраргументація: наведення вагомих та переконливих аргументів"
+  - "Типові помилки: калькування англійської ідіоми «make a point» — перехід від неправильного «зробити точку» до питомого «висловити думку / навести аргумент»"
+- section: "Ділові переговори та інститут медіації (Business Negotiations and the Institution of Mediation)"
+  words: 900
+  points:
+  - "Типи та стратегії переговорів (розподільчі та інтегративні) відповідно до стандарту §3.13"
+  - "Закон України «Про медіацію» (2021) як новий контекст для професійного вирішення конфліктів"
+  - "Техніки досягнення компромісу: пошук «розумного компромісу» та робота з концепціями BATNA та ZOPA"
+  - "Термінологія переговорного процесу: «сідати за стіл переговорів», «вести переговори», «виходити з глухого кута»"
+- section: "Експертні консультації та пошук консенсусу (Expert Consultations and Seeking Consensus)"
+  words: 700
+  points:
+  - "Роль експерта та представлення фахової думки в обговоренні складних суспільних проблем (§3.7)"
+  - "Плутанина регістрів: дотримання офіційно-ділового стилю та уникнення емоційно забарвленої лексики (сварка, базар) у дискусії"
+  - "Механізми досягнення «загального консенсусу» в робочих групах та прийняття колективних рішень"
+- section: "Модерація та підбиття підсумків (Moderation and Summarizing Results)"
+  words: 500
+  points:
+  - "Роль модератора як фасилітатора: техніки управління динамікою групи та нейтралізації конфліктів"
+  - "Мистецтво резюмування: підбиття підсумків, структурування результатів дискусії та формулювання висновків"
+  - "Заключне слово: етичні аспекти завершення професійного обговорення та планування подальших кроків"
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "дискусія (discussion) — плідна дискусія, гостра дискусія, винести питання на дискусію"
+  - "дебати (debate) — парламентські дебати, брати участь у дебатах; часто у контексті медіа"
+  - "переговори (negotiations) — вести переговори, сідати за стіл переговорів, ділові переговори"
+  - "аргумент (argument/reason) — вагомий аргумент, переконливий аргумент; доказ, а не суперечка"
+  - "компроміс (compromise) — шукати компроміс, піти на розумний компроміс"
+  - "консенсус (consensus) — досягти загального консенсусу, дійти згоди"
+  - "модератор (moderator) — ключова фігура, що забезпечує дотримання регламенту та етики"
+  - "експерт (expert) — фахівець, що надає професійну оцінку; експертне середовище"
+  - "позиція (position) — чітка позиція, обґрунтувати свою позицію"
+  recommended:
+  - "медіація (mediation) — альтернативний спосіб вирішення спорів за участю посередника"
+  - "фасилітатор (facilitator) — особа, що полегшує процес комунікації в групі"
+  - "полеміка (polemics) — гостра дискусія при зіткненні протилежних думок"
+  - "резюмування (summarizing) — стислий виклад основних положень обговорення"
+  - "пропонент (proponent) — особа, що висуває та підтримує тезу в дебатах"
+  - "опонент (opponent) — супротивник у дискусії або дебатах"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (3896 chars)
+✅ Message sent to Claude (ID: 11251)
+✓ Message 11251 acknowledged
+   Auto-acknowledged reply #11251 (stdout delivery — no inbox accumulation)
+✓ Message 11242 acknowledged

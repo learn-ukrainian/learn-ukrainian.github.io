@@ -1,0 +1,207 @@
+✅ Message sent to Gemini (ID: 12175) [auto-acked: self-addressed]
+✓ Message 12175 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12175...
+📨 Message #12175
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-dual-number-intro
+   Time: 2026-02-20T23:37:18.539252+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 21
+module: oes-021
+module_number: 17
+slug: dual-number-intro
+title_uk: 'Двоїна: Вступ'
+title_en: The Dual Number
+phase: 1
+phase_id: vernacular-foundations
+phase_name: Vernacular Foundations
+focus: Handling pairs (eyes, hands, two people)
+content_outline:
+- section: Вступ
+  description: Introduction to The Dual Number
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Senior Paleographer
+  role: Twin Scribe
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Двоїна: Вступ (The Dual Number)
+
+## Використані джерела
+1. [Ізборник: Руська Правда (litopys.org.ua)](http://litopys.org.ua/pravda/pravda.htm) — первинні тексти обох редакцій, де двоїна фіксується у правових контекстах (руцѣ, нозѣ, очи).
+2. [Літопис Руський (litopys.org.ua)](http://litopys.org.ua/litop/litop.htm) — корпус для пошуку прикладів двоїни в наративних текстах (очима, рукама, вушима).
+3. [Слово о полку Ігоревім: текст і коментар (litopys.org.ua)](http://litopys.org.ua/slovo/slovo.htm) — поетичний корпус, де двоїна живе ще як повноцінна продуктивна категорія.
+4. [Історія української мови: Морфологія (litopys.org.ua)](http://litopys.org.ua/ium/ium.htm) — академічний опис парадигм двоїни, закінчень за родами та основами.
+5. [Енциклопедія сучасної України (esu.com.ua)](https://esu.com.ua) — стаття про двоїну у слов'янських мовах, порівняльна граматика.
+
+## Хронологія
+- **Праслов'янська доба (до VI ст. н.е.)**: Двоїна — повноцінна і обов'язкова граматична категорія поряд з однією та множиною, успадкована з праіндоєвропейської.
+- **X–XI ст.**: У живій давньокиївській мові двоїна активно функціонує, але вже відчувається тиск — у побутових текстах (берестяні грамоти) з'являється сплутування форм.
+- **1016–1072 рр.**: «Руська Правда» фіксує двоїну в юридично навантажених контекстах: *руцѣ*, *нозѣ* (парні органи тіла у статтях про покарання).
+- **1187 р. (приблизно)**: «Слово о полку Ігоревім» — двоїна ще жива і поетично продуктивна («два солнца помѣркоста», «оба багряная стлъпа»).
+- **XIII–XIV ст.**: Злам — двоїна починає занепадати, форми змішуються з множиною в рукописах.
+- **XV–XVI ст.**: Двоїна зникає як обов'язкова категорія, але залишає «скам'янілі» форми, що збереглися дотепер: *очі, вуха, плечі, коліна*.
+- **Сучасна українська**: Рефлекси двоїни живуть у формах після числівника «два»: *дві руки* (не *дві рук*) — іменник вживається у формі, що генетично є двоїною, а не родовим однини (як у рос. *две руки*).
+
+## Ключові факти та цитати
+- **Три форми замість шести**: Двоїна не відмінювалась повністю — лише три відмінкових форми: 1) Н./Зн./Кл. (*очи, руцѣ*), 2) Р./М. (*очию, руку*), 3) Д./О. (*очима, рукама*).
+- **Основний принцип**: Двоїна вживалась для природних пар (очі, вуха, руки, ноги, плечі, коліна) та для будь-яких двох об'єктів, коли парність семантично важлива.
+- **Цитата (Слово о полку)**: «Два солнца помѣркоста, оба багряная стлъпа погасоста» — «два сонця» + дієслово і прикметник у формі двоїни. Вся конструкція чітко відмінна від множини.
+- **Цитата (Іпатіївський літопис)**: «И начаста очи єю темнѣти» (і почали очі їхні тьмяніти) — *очи* — давальний-орудний двоїни від *oko*.
+- **Числівниковий тест**: Якщо після *два/дві* іменник вживається у формі, генетично відмінній від родового однини — це рефлекс двоїни. Пор.: *два брати* (укр., рефлекс двоїни) vs *два брата* (рос., родовий однини).
+
+## Engagement Hooks (mapped to sections)
+
+- Section "Вступ": [!myth-buster] — «Двоїна зникла безслідно» — міф. Вона розчинилась у граматиці, ставши «невидимим привидом». Щоразу, коли ви кажете *очі* замість *очеса* або *дві руки* замість *двох рук* — ви говорите двоїною, навіть не знаючи.
+- Section "Основний матеріал": [!history-bite] — У давній Русі існувало три числа: одне, двоє, багато. Дитина, яка вчила мову, засвоювала три парадигми відмінювання — не дві. Ця система проіснувала кілька тисяч років і лише поступово поступилась місцем спрощеній двочленній опозиції.
+- Section "Основний матеріал (граматика)": [!language-note] — Слово *плечі* — це не стандартна множина від *плече*. Це скам'яніла форма двоїни (Н.в. двоїни від основ на -о). «Справжня» множина була б *плеча* або *плечеса*, як у церковнослов'янській.
+- Section "Практика": [!paleography] — На берестяних грамотах та в ранніх рукописах можна бачити, як писарі колихаються між формами двоїни і множини — «двоїна розмивається» просто перед вашими очима, зафіксована на пергаменті.
+
+## Деколонізаційний контекст
+- **Радянський (та й ширший: imperialний) міф**: Двоїна — спільна риса «давньоруської мови», і те, що вона збереглась у формах *два брати* (укр.) vs *два брата* (рос.), подається як несуттєва варіація єдиної «спільноруської» спадщини.
+- **Українська реальність**: Рефлекс двоїни після *два/дві* є структурно відмінним в українській та російській — і ця відмінність лінгвістично значуща. Українська зберегла форму, що функціонує як давня двоїна в іменному відмінку; російська перейшла на родовий однини. Це окреме, незалежне розгалуження, а не «діалектна варіація».
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| «Давньоруська мова» | Спільний предок усіх трьох «братніх» мов; двоїна — спільна риса | Давньокиївська/давньоукраїнська; рефлекси двоїни в укр. і рос. розвинулись по-різному |
+| «Два брата» (рос.) | Те саме, що укр. «два брати» | Різна граматична природа: рос. — родовий однини; укр. — рефлекс двоїни |
+| «Зникнення» двоїни | Двоїна «зникла» як у рос., так і в укр. | В укр. двоїна не зникла, а трансформувалась — вона живе у формах *очі, вуха, дві руки* |
+
+## Section-Mapped Research Notes
+
+### Вступ
+Мета вступного модуля — не вивчити всі відмінкові форми двоїни напам'ять (це задача наступного модуля «Body Injury Dual», де є конкретні тексти), а зрозуміти принцип: чому в мові існував третій граматичний «клас кількості», яка логіка за ним стоїть і що від нього залишилось.
+
+Хороший відкривач: попросити студента порівняти *очі — очей — очам — очима* зі стандартною множиною і поставити питання — «звідки ці дивні форми?» Це момент «когнітивного гачка»: виявляється, *очі* і *вуха* — це не нормальна множина, а привид двоїни.
+
+### Основний матеріал
+Центральні лексеми для вступного модуля: *oko → očy* (двоїна), *uxo → uši* (двоїна), *ruka → rucě* (двоїна), *noga → nozě* (двоїна).
+
+Ключова парадигма для двоїни іменників чоловічого роду (основи на *-o-*): Н.в./Зн.в. = *-a* (*бrata*, *города*); Р.в./М.в. = *-u* (*брату*, *городу*); Д.в./О.в. = *-ма* (*братьма*, *городъма*). Порівняти з множиною, щоб показати різницю.
+
+### Практика
+Вправи мають будуватись на впізнаванні форм у реальних текстах — не на відмінюванні в ізоляції. Рекомендовані джерела для прикладів: «Слово о полку Ігоревім» (поетичні двоїни), Руська Правда (юридичні двоїни парних органів), берестяні грамоти (побутові, іноді «зламані» форми).
+
+### Підсумок
+Зв'язок із наступним модулем — «Body Injury Dual» — де двоїна вивчається в контексті конкретних статей Руської Правди про тілесні ушкодження (*руцѣ, нозѣ, очи*). Вступний модуль закладає граматичний фундамент; наступний — занурює у правовий і тілесний контекст.
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12258)
+✓ Message 12175 acknowledged
+✓ Message 12258 acknowledged

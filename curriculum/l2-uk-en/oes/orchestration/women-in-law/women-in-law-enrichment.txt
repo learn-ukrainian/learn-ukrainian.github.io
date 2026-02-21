@@ -1,0 +1,206 @@
+✅ Message sent to Gemini (ID: 12796) [auto-acked: self-addressed]
+✓ Message 12796 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12796...
+📨 Message #12796
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-women-in-law
+   Time: 2026-02-20T23:42:25.240937+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 66
+module: oes-066
+module_number: 54
+slug: women-in-law
+title_uk: Жінки у праві
+title_en: Women in Law
+phase: 3
+phase_id: legal-tradition
+phase_name: Legal Tradition
+focus: Gender roles & legal rights
+content_outline:
+- section: Вступ
+  description: Introduction to Women in Law
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Senior Paleographer
+  role: Widow's Advocate
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Women In Law (Жінки у праві Київської Русі)
+
+## Використані джерела
+1. [Історія українського права: статус жінки](http://history.org.ua) — аналіз правового становища жінки за Руською Правдою та церковними статутами.
+2. [Енциклопедія Сучасної України: Княгиня Ольга](http://esu.com.ua) — біографія та реформаторська діяльність княгині Ольги.
+3. [Літопис Руський](http://litopys.org.ua) — першоджерела про шлюби, дипломатію та діяльність княгинь.
+4. [Берестяні грамоти в Україні](http://history.org.ua) — аналіз грамот зі Звенигорода та Києва, що свідчать про жіночу грамотність та економічну активність.
+
+## Хронологія
+- **911**: Договір Русі з греками згадує майнові права руських жінок.
+- **945**: Початок регентства княгині Ольги після загибелі Ігоря; перші адміністративні реформи (уроки та погости).
+- **957**: Дипломатичний візит княгині Ольги до Константинополя, прийом у імператора Костянтина Багрянородного.
+- **1016–1054**: Укладання «Руської Правди» Ярослава Мудрого, що закріпила майнові права жінок (придане, спадщина).
+- **1051**: Шлюб Анни Ярославни з королем Франції Генріхом I; її підпис кирилицею на документах (свідчення освіченості).
+- **1051–1054**: Укладання Церковного уставу Ярослава, що регулював шлюбно-сімейні відносини.
+- **XII ст.**: Написання берестяних грамот (Звенигород), де жінки виступають активними учасницями економічних відносин (напр. вдова Говенова).
+
+## Ключові факти та цитати
+- **Майнова незалежність**: Жінка в Русі мала право на «придане», яке залишалося її особистою власністю у шлюбі. Чоловік не міг його відчужувати без її згоди.
+- **Спадкове право**: Вдова отримувала «виділ» (частину майна) та управляла спадщиною дітей до їх повноліття. Якщо не було синів, дочки могли успадковувати майно («задниця»).
+- **Освіта**: На відміну від західноєвропейських сучасниць, жінки еліти (Янка Всеволодівна, Анна Ярославна) були високоосвіченими. Янка заснувала школу для дівчат при Андріївському монастирі (1086).
+- **Цитата (Руська Правда)**: «Аже умрет муж, то вдовице приставнути часть» (Якщо помре чоловік, то вдові належить частина).
+- **Цитата (Анна Ярославна)**: Підпис «АНА РЪИНА» (Анна Королева) на французькому документі 1063 року.
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ": [!myth-buster] — Спростування міфу про безправність жінок у «темні віки»; руські жінки мали більше прав, ніж їхні західноєвропейські сучасниці.
+- Section "Основний матеріал: I — Руська Правда...": [!history-bite] — «Віно» (шлюбний викуп) ставало власністю жінки, своєрідним страхуванням на випадок вдівства.
+- Section "Основний матеріал: I — Руська Правда...": [!quote] — Цитата зі статті про штраф за вбивство жінки (рівний штрафу за чоловіка того ж стану).
+- Section "Основний матеріал: II — Церковне право...": [!context] — Церква захищала жінку від насильства (штрафи за «умикання»), але водночас суворіше карала за перелюб.
+- Section "Основний матеріал: III — Голоси жінок...": [!paleography] — Аналіз підпису Анни Ярославни (кирилиця у латинському документі).
+- Section "Основний матеріал: III — Голоси жінок...": [!culture] — Звенигородська берестяна грамота: вдова вимагає повернення боргу (приклад економічної агентності).
+
+## Деколонізаційний контекст
+- **Imperial Myth**: Російська історіографія часто маргіналізує роль жінки або приписує руські досягнення (Ольга, Анна) виключно «російській» історії.
+- **Ukrainian Reality**: Правова традиція Русі (майнова незалежність жінки) прямо вплинула на Литовський Статут та українське козацьке право, де жінки зберігали широкі права, на відміну від Московського царства, де жінки були затворницями (терем).
+- **Термінологія**: Використання терміну «давньоруська» (не «давньоросійська») та акцент на тяглості традиції до ранньомодерної України.
+
+## Contested Terms (if applicable)
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| Княгиня Ольга | «Первая русская святая», засновниця російської державності | Київська правителька, реформаторка, предтеча європейської інтеграції України |
+| Руська Правда | «Русское право», основа російського законодавства | Пам'ятка українського права, джерело Литовських Статутів |
+| Анна Ярославна | «Анна Русская», королева французів | Анна Київська, символ освіченості та європейських зв'язків Києва |
+
+## Section-Mapped Research Notes
+
+### Вступ
+Огляд статусу жінки в середньовічній Європі та унікальність ситуації в Русі. Відсутність римського права (paterfamilias) дозволяла більшу гнучкість звичаєвого права.
+
+### Основний матеріал: I — Руська Правда та майнова незалежність
+Аналіз статей Руської Правди. Поняття «віно» (викуп/посаг), «придане». Право вдови розпоряджатися майном. Опікунство над дітьми. Штрафи за ображення честі жінки («за сором»). Спадкування дочками за відсутності синів (стаття про «задницю»).
+
+### Основний матеріал: II — Церковне право та сфера моралі
+Статут Ярослава. Регулювання шлюбу (моногамія, заборона кровозмішення). Покарання за викрадення наречених. Нерівність у покараннях за перелюб (суворіше для жінок). Право на розлучення (хоча й обмежене). Захист від домашнього насильства (штрафи за побиття).
+
+### Основний матеріал: III — Голоси жінок: Княгині та міщанки
+**Еліта**: Ольга як державний діяч (податкова реформа, дипломатія). Анна Ярославна та її підпис (рівень освіти). Євпраксія Всеволодівна (боротьба проти імператора Генріха IV).
+**Міщанки**: Берестяні грамоти. Грамота від Говенової (Звенигород) — приклад ділового листування. Економічна активність жінок у містах (торгівля, ремесло).
+
+### Практика
+Вправи на аналіз текстів (уривки з Руської Правди та Статуту Ярослава). Палеографічний аналіз підпису Анни. Порівняння статусу жінки в Русі та Франції XI ст.
+
+### Підсумок
+Спадковість традиції. Як права руських жінок трансформувалися у права шляхтянок у Великому князівстві Литовському (Гальшка Гулевичівна як спадкоємиця цієї традиції). Контраст з Московією.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit -9): 
+✅ Message sent to Claude (ID: 12828)
+✓ Message 12796 acknowledged
+✓ Message 12828 acknowledged

@@ -1,0 +1,302 @@
+✅ Message sent to Gemini (ID: 10393) [auto-acked: self-addressed]
+✓ Message 10393 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10393...
+📨 Message #10393
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-discourse-markers-advanced
+   Time: 2026-02-20T20:30:36.820117+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b1-57
+level: B1
+sequence: 57
+slug: discourse-markers-advanced
+version: '2.0'
+title: 'Дискурсивні маркери II: складна організація'
+subtitle: 'Discourse Markers II: Advanced Text Organization'
+content_outline:
+- section: Вступ
+  points:
+  - Beyond basic connectors — alignment with State Standard §4.4.2/§4.5.1 regarding
+    inserted words and complex sentences
+  - 'Academic writing needs — cultural hook: reference the Kyiv-Mohyla Academy rhetoric
+    tradition where clear speech was a sign of wisdom'
+  - Complex argument structure — moving from simple sentences to organized discourse
+- section: Вивчення слів
+  points:
+  - Six vocabulary groups — covering ordering (по-перше), adding (крім того), contrasting
+    (проте), and concluding (отже)
+  - Sequence, addition, contrast — emphasis on paired markers like «з одного боку...
+    з іншого боку»
+  - 'Cause-effect, conclusions, clarification — visualize decision logic (flowchart
+    approach: Adding? → крім того; Contrasting? → проте)'
+- section: Вживання
+  points:
+  - Building argumentation — use 'Keynote Speaker' persona to model persuasive structure
+  - Formal vs informal register — clearly differentiate formal (таким чином, отже)
+    from conversational (ну, до речі, словом)
+  - 'Common errors, combining markers — warn against: Register Mismatch (slang ''короче''
+    in formal contexts), Punctuation Omission (missing commas), Russian Interference
+    (''во-пєрвих''), and Broken Pairs'
+- section: Читання
+  points:
+  - Analytical article — framed as 'How to win a debate' or 'Structuring a winning
+    presentation'
+  - Conference presentation — utilizing modern parliamentary debate markers (шановне
+    товариство, дозвольте зауважити)
+- section: Діалоги
+  points:
+  - Project presentation (formal) — practicing authority markers
+  - Discussing plans (informal) — contrasting with formal register
+  - Academic discussion, interview — using summary markers like «підсумовуючи» and
+    «нарешті»
+- section: Підсумок
+  points:
+  - Key markers recap
+  - Practice recommendations
+vocabulary_hints:
+  required:
+  - по-перше (firstly) — по-перше, хочу зазначити
+  - по-друге (secondly) — по-друге, варто наголосити
+  - нарешті (finally) — нарешті ми дійшли згоди; і, нарешті, останній пункт
+  - підсумовуючи (summarizing) — підсумовуючи вищесказане; підсумовуючи результати
+  - таким чином (thus) — таким чином, ми бачимо; діяти таким чином
+  - особливо (especially)
+  - передусім (above all) — передусім потрібно; це стосується передусім
+  - загалом (in general) — загалом кажучи; загалом це вірно
+  recommended:
+  - насамкінець (in conclusion)
+  - головне (the main thing)
+  - з одного боку (on one hand) — paired with з іншого боку
+  - з іншого боку (on the other hand) — paired with з одного боку
+activity_hints:
+- type: true-false
+  focus: Structure arguments with markers
+  items: 20
+- type: fill-in
+  focus: Complete academic texts
+  items: 20
+- type: fill-in
+  focus: Write structured essays
+  items: 15
+- type: fill-in
+  focus: Improve text organization
+  items: 15
+focus: vocabulary
+pedagogy: PPP
+prerequisites:
+- b1-56 (Discourse Markers Basic)
+connects_to:
+- b1-58 (Describing Changes)
+objectives:
+- Learner can use 25 advanced discourse markers to organize complex arguments
+- Learner can sequence ideas using ordinal markers
+- Learner can express addition, contrast, and conclusion in academic writing
+- Learner can structure extended discourse effectively
+grammar:
+- Advanced discourse markers for text organization
+- Academic and formal connectors
+- Structuring arguments and conclusions
+register: розмовний
+phase: B1.5 [Vocabulary Expansion I]
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Keynote Speaker
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Дискурсивні маркери II: складна організація
+
+## State Standard Reference
+§4.4.2 / §4.5.1: "просте речення зі вставними словами мабуть, можливо, здається" (lines 2377-2378); "Складне речення... складносурядне... складнопідрядне" (lines 2380-2431); "Офіційне й неофіційне спілкування" (lines 2435-2450).
+Alignment: This module systematically expands the "inserted words" (вставні слова) category from the basic B1 examples (мабуть) to advanced text organizers (по-перше, підсумовуючи) and aligns with the B1 requirement to distinguish between formal and informal registers.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| по-перше / по-друге | High (GRAK/MOVA.info) | по-перше, хочу зазначити; по-друге, варто наголосити |
+| нарешті | High | нарешті ми дійшли згоди; і, нарешті, останній пункт |
+| підсумовуючи | Medium (Academic/Formal) | підсумовуючи вищесказане; підсумовуючи результати |
+| таким чином | High (Formal) | таким чином, ми бачимо; діяти таким чином |
+| з одного боку | High | з одного боку... з іншого боку (paired) |
+| передусім | Medium | передусім потрібно; це стосується передусім |
+| загалом | High | загалом кажучи; загалом це вірно |
+
+## Cultural Hooks
+1. **Kyiv-Mohyla Rhetoric Tradition**: Rhetoric (риторка) was a prestige subject at the Kyiv-Mohyla Academy (17th-18th c.). Students like Theophan Prokopovych and Hryhorii Skovoroda were trained to structure arguments with precise logic and transitional phrases, viewing clear speech as a sign of wisdom.
+2. **Modern Public Speaking**: Reference the Ukrainian tradition of "viche" (віче) and modern parliamentary debate, where formal markers (шановне товариство, дозвольте зауважити) are crucial for authority.
+
+## Common Learner Errors
+1. **Register Mismatch**: Using "короче" (slang/surzhyk) instead of "словом" or "підсумовуючи" in formal contexts.
+2. **Punctuation Omission**: Forgetting commas after markers. *Error:* "По-перше я не знав." → *Correct:* "По-перше, я не знав."
+3. **Russian Interference**: Using calcques like "во-пєрвих" or confusing "накінець" (spatial end) with "нарешті" (finally/temporal).
+4. **Broken Pairs**: Using "з одного боку" without following up with "з іншого боку".
+
+## Cross-References
+- **Builds on**: b1-56 (Discourse Markers Basic - simple connectors like `тому що`, `але`).
+- **Prepares for**: b1-58 (Describing Changes - requires structured explanation); B2/C1 Academic Writing modules.
+
+## Notes for Content Writing
+- **Persona (Keynote Speaker)**: Use the "Keynote Speaker" voice to model these markers. The "Analysis" section can be framed as "How to win a debate" or "Structuring a winning presentation".
+- **Visuals**: Use a flowchart for choosing the right connector (Adding? → `крім того`; Contrasting? → `проте`; Concluding? → `отже`).
+- **Differentiation**: Clearly separate "Formal/Academic" (отже, таким чином) from "Conversational" (ну, знаєш, до речі).
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 500
+  points:
+  - "Align text organization strategies with State Standard §4.4.2/§4.5.1 regarding advanced 'вставні слова' (inserted words) and the transition from simple B1 connectors to complex argument structures."
+  - "Cultural hook: The Kyiv-Mohyla Academy rhetoric tradition (17th-18th c.), where masters like Hryhorii Skovoroda and Theophan Prokopovych taught transitional logic and clear speech as essential signs of intellectual wisdom."
+- section: "Презентація лексики (Vocabulary Presentation)"
+  words: 1000
+  points:
+  - "Categorize 25+ markers into six functional clusters: Sequencing (по-перше), Addition (крім того, передусім), Contrast (проте, з одного боку... з іншого боку), Clarification (загалом), Result (таким чином), and Conclusion (отже, нарешті)."
+  - "Focus on frequency-informed collocations and paired usage: Drill 'по-перше, хочу зазначити' and 'підсумовуючи результати', while emphasizing the mandatory pair 'з одного боку... з іншого боку' to avoid broken logic."
+  - "Visualize decision logic using a flowchart approach: Training students to select markers based on intent (Adding? → крім того; Contrasting? → проте; Concluding? → отже)."
+- section: "Граматика та вживання (Grammar and Usage)"
+  words: 1000
+  points:
+  - "Register differentiation: Clearly separate formal/academic markers (отже, таким чином, підсумовуючи) from conversational discourse markers (ну, знаєш, до речі, словом)."
+  - "Learner error clinic: Addressing punctuation omission with comma-placement drills after markers (e.g., 'По-перше, я не знав') and correcting the semantic confusion between temporal 'нарешті' and spatial 'накінець'."
+  - "De-Russification focus: Identifying and replacing common calques like 'во-пєрвих' with 'по-перше' and surzhyk 'короче' with professional alternatives like 'словом' or 'підсумовуючи'."
+- section: "Аналіз та читання (Analysis and Reading)"
+  words: 1000
+  points:
+  - "Reading: 'How to Win a Debate' — an analytical article framed around conference presentations and parliamentary debate traditions (viche), using authority markers like 'шановне товариство' and 'дозвольте зауважити'."
+  - "Modeling persuasive structure: Analyzing how to move from simple sentences to organized, authoritative discourse using the 'Keynote Speaker' persona."
+- section: "Практика та підсумок (Practice and Summary)"
+  words: 500
+  points:
+  - "Production Task: Delivering a structured argument in the 'Keynote Speaker' voice, modeling authority and logical flow through a recap of the 25 target markers."
+  - "Self-correction workshop: Identifying register mismatches and broken pairs in peer arguments, bridging directly to the descriptive organization required for b1-58 (Describing Changes)."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "по-перше (firstly) — по-перше, хочу зазначити; High frequency academic starter"
+  - "по-друге (secondly) — по-друге, варто наголосити; Sequencing marker"
+  - "нарешті (finally) — нарешті ми дійшли згоди; і, нарешті, останній пункт; High frequency; temporal focus"
+  - "підсумовуючи (summarizing) — підсумовуючи вищесказане; підсумовуючи результати; Academic/Formal register"
+  - "таким чином (thus) — таким чином, ми бачимо; діяти таким чином; High frequency formal result marker"
+  - "особливо (especially) — used for emphasizing key points within complex arguments"
+  - "передусім (above all) — передусім потрібно; це стосується передусім; Medium frequency emphasis marker"
+  - "загалом (in general) — загалом кажучи; загалом це вірно; High frequency clarification/generalization"
+  recommended:
+  - "насамкінець (in conclusion) — formal academic closing marker"
+  - "головне (the main thing) — signals priority within a hierarchical argument"
+  - "з одного боку (on one hand) — paired with з іншого боку; mandatory logical pair"
+  - "з іншого боку (on the other hand) — paired with з одного боку; contrast marker"
+  - "проте (however) — contrastive discourse marker; formal register"
+  - "отже (so/therefore) — concluding marker for logical derivation"
+  - "крім того (besides/furthermore) — additive marker for expanding complex texts"
+  - "словом (in a word) — conversational/semi-formal summary marker to replace 'короче'"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4361 chars)
+✅ Message sent to Claude (ID: 10402)
+✓ Message 10402 acknowledged
+   Auto-acknowledged reply #10402 (stdout delivery — no inbox accumulation)
+✓ Message 10393 acknowledged

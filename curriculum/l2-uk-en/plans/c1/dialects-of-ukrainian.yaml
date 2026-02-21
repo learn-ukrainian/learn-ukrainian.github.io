@@ -5,59 +5,92 @@ slug: dialects-of-ukrainian
 version: '2.0'
 title: Діалекти та наріччя
 content_outline:
-- section: Вступ — Діалектологія
+- section: 'Вступ: Поняття діалекту та наріччя (Introduction: Concept of Dialect and
+    Group)'
+  words: 500
   points:
-  - Що таке діалект
-  - Діалект vs літературна мова
-  - Історія діалектної диференціації
-- section: Три наріччя
+  - 'State Standard §1.1.1.1 (C2 Target): Explain why moving from ''Standard Academic''
+    to ''Full Spectrum'' Ukrainian is essential for professional competency and understanding
+    authentic texts.'
+  - 'Linguistic definition: Distinguish between ''діалект'' (systemic variation) and
+    ''літературна мова'' (standardized norm) using the concept of ''діалектологія''.'
+  - 'Learner error: Differentiate organic, historical dialectal systems from ''Surzhyk''
+    (chaotic Russian-Ukrainian interference); emphasize that dialect is a structured
+    system with its own logic.'
+- section: 'Класифікація: Три наріччя України (Classification: Three Dialect Groups
+    of Ukraine)'
+  words: 700
   points:
-  - Північне наріччя (Полісся)
-  - Південно-західне наріччя (Галичина, Закарпаття, Буковина)
-  - Південно-східне наріччя (Слобожанщина, Донеччина)
-- section: Фонетичні особливості
+  - 'The Mental Map of Ukraine: Define the three major groups — Північне (Polissia),
+    Південно-західне (mountains/west), and Південно-східне (steppe/center).'
+  - 'The Poltava Base: Explain the historical significance of the South-Eastern group
+    as the foundation for modern standard Ukrainian, popularized by Ivan Kotliarevsky’s
+    ''Eneida'' (1798).'
+  - 'Geographic distribution and ''ізоглоса'': How linguistic boundaries are mapped
+    using a ''діалектний атлас''.'
+- section: Фонетичні та морфологічні риси (Phonetic and Morphological Features)
+  words: 850
   points:
-  - Ікання vs укання
-  - Дзвінкі та глухі приголосні
-  - Наголос та інтонація
-- section: Лексичні відмінності
+  - 'Phonetic contrasts: Compare ''ікання'' vs ''укання'' across regions; provide
+    IPA transcriptions for contrastive analysis (e.g., [chodyt] vs [chodyt'']).'
+  - 'Morphological variations: Analyze regional verb endings (e.g., -ть in the 3rd
+    person) and pronoun forms that deviate from the standard norm.'
+  - 'Learner error: Address hypercorrection where students avoid valid dialectal/standard
+    words (e.g., «держати») due to fear of sounding like they are using Russian, despite
+    the word''s historical legitimacy.'
+- section: Лексичне багатство та регіоналізми (Lexical Richness and Regionalisms)
+  words: 800
   points:
-  - Бараболя vs картопля
-  - Файний vs гарний
-  - Регіоналізми
-- section: Морфологічні риси
+  - 'Lexical doublets: Compare ''бараболя/бульба'' vs standard ''картопля'' and ''файний''
+    vs ''гарний'' as markers of regional identity.'
+  - 'Cultural hook: The Hutsul lexicon in Kotsiubynsky’s ''Shadows of Forgotten Ancestors''
+    — explain specific mountain terminology like «ґазди», «полонина», and «трембіта».'
+  - 'Regionalism vs. Standard: Practice identifying words that are ''регіоналізми''
+    and finding their literary equivalents.'
+- section: Діалект, література та ідентичність (Dialect, Literature, and Identity)
+  words: 650
   points:
-  - Закінчення дієслів
-  - Особливості відмінювання
-  - Форми займенників
-- section: Діалект і ідентичність
+  - 'The Stylistic Function: How writers use ''діалектизми'' to create ''local flavor''
+    and authentic character voices in literature and cinema (e.g., Parajanov’s film).'
+  - 'Social Perception: Discuss the shift from viewing dialects as ''uneducated''
+    or ''incorrect'' speech to recognizing them as reservoirs of linguistic richness
+    and cultural heritage.'
+  - 'Preservation: The role of local communities in keeping dialects alive in the
+    age of global standardization.'
+- section: Практичний аналіз та дестигматизація (Practical Analysis and Destigmatization)
+  words: 500
   points:
-  - Соціальне сприйняття
-  - Діалект у літературі
-  - Збереження діалектів
-- section: Практичне завдання
-  points:
-  - Розпізнавання діалектних рис
-  - Аналіз текстів
-  - Слухання діалектних зразків
+  - 'Listening Comprehension: Analyze audio samples of various ''говори'' to identify
+    specific regional traits (phonetic and lexical).'
+  - 'Textual analysis: Identifying dialectal features in authentic literary excerpts
+    and ''translating'' them into the standard register.'
+  - 'Final reflection: Summarize the value of linguistic diversity in the context
+    of Ukrainian national identity and decolonization.'
 vocabulary_hints:
   required:
-  - діалект (dialect)
-  - наріччя (dialect group)
-  - говір (subdialect)
-  - фонетика (phonetics)
-  - лексика (vocabulary)
-  - морфологія (morphology)
-  - літературна мова (standard language)
-  - регіоналізм (regionalism)
-  - ізоглоса (isogloss)
-  - діалектологія (dialectology)
+  - діалект (dialect) — місцевий діалект, особливості діалекту; high frequency in
+    academic and general discourse
+  - наріччя (dialect group) — три наріччя, класифікація наріч; technical linguistic
+    term for the three main groups
+  - говір (subdialect) — гуцульський говір, особливості говору; medium frequency,
+    used for specific regional speech
+  - ізоглоса (isogloss) — мовна ізоглоса, карта ізоглос; low frequency, technical
+    term for linguistic boundaries
+  - літературна мова (standard language) — норми літературної мови, кодифікація; high
+    frequency core term
+  - регіоналізм (regionalism) — лексичні регіоналізми, вживати регіоналізми; medium
+    frequency academic term
   recommended:
-  - говірка (local speech)
-  - діалектна риса (dialectal feature)
-  - стандартизація (standardization)
-  - діалектний атлас (dialect atlas)
-  - мовна норма (linguistic norm)
+  - говірка (local speech) — місцева говірка; refers to the speech of a specific village
+    or small area
+  - діалектна риса (dialectal feature) — характерна діалектна риса; used when describing
+    phonetic or grammatical markers
+  - стандартизація (standardization) — процес стандартизації; context of linguistic
+    norms
+  - діалектний атлас (dialect atlas) — укладати діалектний атлас; resource for linguistic
+    research
+  - мовна норма (linguistic norm) — дотримуватися мовної норми; the standard against
+    which dialects are compared
 activity_hints:
 - type: quiz
   focus: Identify dialect by features

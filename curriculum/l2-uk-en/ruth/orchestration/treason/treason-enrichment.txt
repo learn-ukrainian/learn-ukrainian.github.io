@@ -1,0 +1,218 @@
+✅ Message sent to Gemini (ID: 11985) [auto-acked: self-addressed]
+✓ Message 11985 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #11985...
+📨 Message #11985
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-treason
+   Time: 2026-02-20T23:35:05.347773+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 18
+module: ruth-018
+module_number: 18
+slug: treason
+title_uk: Зрада
+title_en: Treason
+phase: 1
+phase_id: chancery-legal
+phase_name: Chancery & Legal
+focus: Образа Маєстату — High crimes
+content_outline:
+- section: Вступ
+  description: Introduction to Treason
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Baroque Scholar
+  role: Hetman's Inquisitor
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Treason (Зрада)
+
+## Використані джерела
+1. [Litopys.org.ua — Статут Литовський 1588 року](http://litopys.org.ua/statut2/st1588.htm) — Оригінальний текст Розділу 1, Артикулу 3 про "Образу маєстату".
+2. [History.org.ua — Енциклопедія історії України](http://history.org.ua) — Статті про судочинство Гетьманщини та поняття "державна зрада".
+3. [Litopys.org.ua — Донос В. Кочубея та І. Іскри](http://litopys.org.ua) — Текст та історичний контекст справи Кочубея-Мазепи.
+4. [Esu.com.ua — Енциклопедія Сучасної України](https://esu.com.ua) — Еволюція поняття зради в українському праві.
+5. [Ізборник — Права, за якими судиться малоросійський народ 1743](http://izbornyk.org.ua) — Кодифікація права Гетьманщини.
+
+## Хронологія
+- 1529: Перший Литовський Статут вводить поняття "образа маєстату господарського".
+- 1588: Третій Литовський Статут (Розділ 1, Артикул 3) остаточно закріплює норму про "образу маєстату" та відповідальність за неправдиве звинувачення.
+- 1658: Гадяцький договір Івана Виговського — звинувачення гетьмана у зраді з боку опозиції та Москви.
+- 1659: Переяславські статті Юрія Хмельницького обмежують права гетьмана, вводячи поняття зради царю.
+- 1708: Страта Василя Кочубея та Івана Іскри за "неправдивий донос" на Мазепу (який згодом виявився правдивим з погляду Петра I).
+- 1708-1709: Анафема Мазепі та початок масштабної кампанії з таврування українських автономістів як "зрадників".
+- 1743: Кодекс "Права, за якими судиться малоросійський народ" систематизує злочини проти держави.
+
+## Ключові факти та цитати
+- **Литовський Статут 1588, Р.1, Арт.3**: «А хто бы теж колвек кого обмовляючы в тых речах около ображенья маестату нашого або здрады речы посполитое винил ку соромоте а зельживости... тогды тот, хто на кого мовить и ведет, а не доведет, тым караньем сам каран быти маеть» (Принцип таліону: недоведене звинувачення карається так само, як і злочин).
+- **Кара на горло**: Найвища міра покарання (смертна кара) за образу маєстату, часто супроводжувалася конфіскацією майна та "честі".
+- **Кочубей перед стратою**: «Оце ж за донос нагорода, / За донос і правий, і вірний! / Царю нас оббрехав лукавий Гетьман / І видав нас Цар / Зрадникові нашої отчизни!» (Слова приписувані Кочубею, що ілюструють трагедію політичного доносу).
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ: Природа зради": [!context] — Зрада як юридичний, а не лише моральний концепт у ранньомодерну добу.
+- Section "Законодавче поле: Литовський Статут": [!quote] — Цитата з Артикулу 3 про відповідальність донощика.
+- Section "Судова практика Гетьманщини": [!history-bite] — Як заможні козаки могли відкупитися від "кари на горло" (композиція — грошове відшкодування).
+- Section "Політична зрада: Виговський": [!decolonization] — Як Москва використовувала звинувачення у "зраді" для усунення неугодних гетьманів (Виговський, Дорошенко).
+- Section "Анатомія доносу: Кочубей та Іскра": [!myth-buster] — Міф про Кочубея як "борця за правду": насправді це була боротьба за владу та особиста помста, використана імперією.
+- Section "Спадщина терміну": [!culture] — Еволюція слова "зрадник" у сучасній політичній культурі України (від Мазепи до сьогодення).
+
+## Деколонізаційний контекст
+- **Imperial/Soviet myth**: "Зрада" — це будь-яка дія проти інтересів Російської імперії/СССР (Мазепа як архетиповий зрадник). Українські гетьмани, що шукали союзу зі Швецією чи Туреччиною, таврувалися як зрадники "спільної вітчизни".
+- **Ukrainian reality**: Гетьмани діяли як суверенні (або напівсуверенні) правителі, і зміна сюзерена була легітимним інструментом міжнародної політики того часу. Звинувачення у "зраді" було інструментом імперського контролю та обмеження автономії Гетьманщини. "Донос" заохочувався імперією для розколу козацької еліти.
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian framing |
+|---------|------------------|-------------------|
+| Мазепинство | Зрадництво, сепаратизм, відступництво від православ'я | Національно-визвольний рух, спроба збереження державності |
+| Зрада (у 17 ст.) | Порушення присяги царю | Політичний маневр в інтересах Війська Запорозького; вірність присязі народу (а не монарху) |
+| Донос Кочубея | Патріотичний вчинок вірного підданого | Інструмент політичної боротьби та імперської інтриги |
+
+## Section-Mapped Research Notes
+
+### Вступ: Феномен зради у ранньомодерному суспільстві
+Зрада ("здрада") не була лише етичною категорією. Це був найтяжчий злочин — "Crimen laesae maiestatis". Вона загрожувала самому існуванню держави (Речі Посполитої або Гетьманщини).
+
+### Законодавче поле: Литовський Статут і "Образа Маєстату"
+Ключовий документ: Третій Литовський Статут 1588 р.
+Артикул 3 Розділу 1: Чітке визначення. Відповідальність за наклеп.
+Покарання: "Кара на горло" (смерть), четвертування (для особливо тяжких випадків), конфіскація.
+
+### Судова практика: Від "слова і діла" до вироку
+Процедура дізнання ("inquisitio"). Роль тортур при розслідуванні "слова і діла государевого".
+Специфіка козацького судочинства: роль Генерального суду.
+Можливість заміни смертної кари на штраф або заслання (для еліти).
+
+### Політична зрада як інструмент влади: Справа Виговського
+Гадяцька унія 1658 р. як спроба перебудови відносин з Річчю Посполитою.
+Звинувачення у зраді з боку промосковської партії (Пушкар, Барабаш).
+Трансформація поняття: зрада царю vs зрада інтересам України.
+
+### Анатомія доносу: Казус Кочубея та Іскра
+Історія конфлікту Мазепи та Кочубея.
+Текст доносу: звинувачення у намірах "відірвати Малоросію".
+Реакція Петра I: спершу недовіра, тортури донощиків, страта.
+Посмертна реабілітація донощиків імперією (поховання у Лаврі).
+
+### Спадщина та сучасні паралелі
+Термін "зрадник" у сучасній Україні.
+Політична культура підозри.
+Вплив історичних травм (Руїна, Мазепа) на сприйняття політичних опонентів.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12043)
+✓ Message 11985 acknowledged
+✓ Message 12043 acknowledged

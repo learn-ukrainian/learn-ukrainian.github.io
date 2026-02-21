@@ -1,239 +1,148 @@
-Good — the vocabulary file exists but has a different format than other vocab files. Now I have everything I need for a thorough review.
+## Deep Adversarial Review: at-the-cafe (A1 #19)
+
+I've read all four files in full. Here's my finding-by-finding analysis.
 
 ---
 
-## Phase 9 Final QA Review: at-the-cafe (a1-19)
+### Ukrainian Language Quality
+
+**IPA Accuracy** — Overall solid. Spot-checked all 35+ transcriptions:
+- Tie bars present on all affricates (t͡ʃ, t͡s, d͡ʒ) ✓
+- Labiodental approximant ʋ used consistently for В ✓
+- Glottal fricative ɦ for Г (e.g., ɦoˈtʲiu̯.kɐ) ✓
+- Palatalization markers correct (tʲ, sʲ, nʲ, etc.) ✓
+- No issues found.
+
+**Russianisms** — None detected. No кушати, получати, приймати участь, слідуючий. ✓
+
+**Russian Characters** — No ы, э, ё, ъ found. ✓
+
+**Gender/Case Agreement** — All checked sentences are correct:
+- Feminine accusative: каву, воду, піцу, колу, пасту ✓
+- Masculine accusative (inanimate = nominative): чай, сік, круасан ✓
+- Adjective agreement: чорну каву, зелений чай, велику каву, гарячу піцу ✓
+- Genitive after без: без цукру, без молока, без газу, без лимона, без меду ✓
+- Instrumental after з: з молоком, з лимоном, з цукром, з джемом, з медом ✓
+- "Решти не треба" (genitive after не треба) ✓
+- "Філіжанку кави" (genitive after measure noun) ✓
+
+**Verb Forms** — Correct:
+- "Я замовлю" (perfective future of замовити) ✓
+- "Я візьму" (perfective future of взяти) ✓
+- "Що порадите?" (2nd person plural future, natural for polite request) ✓
+- Imperatives: Дайте, Принесіть, Скажіть — all correct Ви-form ✓
+
+---
+
+### Pedagogical Correctness
+
+**Vocabulary scope** — All plan-required and recommended items used. Module introduces additional café vocabulary (піца, сік, круасан, кола, еспресо, etc.) which is contextually appropriate. No scope violation.
+
+**Grammar scope** — Stays within bounds. Accusative case is the focus. Genitive/Instrumental taught correctly as lexical chunks, not analyzed. Future tense introduced as practical ordering phrases. All aligned with plan.grammar.
+
+**Unjumble word/answer consistency** — All 12 items verified: every word in the answer appears in the words array. ✓
+
+**Fill-in grammatical correctness** — All 36 fill-in items produce grammatical sentences when the answer is inserted. ✓
+
+**Quiz distractor validity** — One concern: fill-in "Key Phrases Completion" item `{{answer}} рахунок` with answer "Принесіть" also has "Дайте" as a distractor. Both "Принесіть рахунок" and "Дайте рахунок" are valid Ukrainian. The explanation says "Bring the bill," which disambiguates toward "Принесіть," and the module teaches this specific collocation. Acceptable but noted.
+
+---
+
+### Factual Accuracy
+
+**Kulchytsky legend** — Properly hedged in English ("beloved Ukrainian legend," "Legend has it," "according to the story"). The Ukrainian summary sentences on line 403 present it without hedging, but this is acceptable for A1 reading practice — the English context provides the nuance. Monument in Lviv: confirmed real. ✓
+
+**Tipping culture** — "About 10%" is accurate for Ukrainian restaurant/café service. ✓
+
+**Café culture claims** — Laptop culture, lingering, dressing up — all accurate modern observations. ✓
+
+**Сирник definition** — "cottage cheese pancake" is a common English approximation. ✓
+
+---
+
+### LLM Artifacts
+
+- No purple prose or grandiose openers. Writing has a distinct, warm "barista persona" voice.
+- No "Це не просто X, а Y" pattern.
+- No false statistics or invented percentages.
+- No folk etymology presented as fact (Kulchytsky story explicitly framed as legend).
+- Clean. ✓
+
+---
+
+### Plan Compliance
+
+**All meta content_outline sections present** ✓ (7/7 sections + Підсумок)
+
+**All plan content_outline points covered:**
+- Вступ: Lviv tradition, Kulchytsky legend ✓
+- Презентація: Ви form, «Я хочу» correction, Accusative case, lexical chunks ✓
+- Практика: Accusative drills, imperatives, рахунок vs чек, adjective antonyms ✓
+- Продукція: Payment phrases, tipping, roleplay ✓
+
+**All required vocabulary used in prose** ✓ (кава, чай, меню, рахунок, офіціант, замовляти, вода, будь ласка)
+
+**Objectives → self-check mapping:**
+- Order food/drinks ✓ (Q1, Q5)
+- Ask for recommendations — taught in content (Що порадите?) but not in self-check. Minor gap, not blocking.
+- Request the bill ✓ (Q3)
+- Polite forms/cases ✓ (Q2, Q4, Q5, Q6)
+
+---
 
 ### Issues Found
 
----
+**Issue 1: Contextual oddity — "риба" (fish) in comparison table**
+- Location: at-the-cafe.md, line 188 (comparison table)
+- Text: `| **риба** | Feminine | **рибу** (-у) | Я буду рибу. |`
+- Problem: Fish is not a café-context item. The module is about coffee, pastries, and drinks. "Fish" breaks thematic immersion. All other table items (кава, вода, піца, кола, паста, чай, сік, тістечко) are café-appropriate.
+- Fix: Replace with **булка** (bun/roll) — a common bakery item in Ukrainian cafés, feminine -а, and follows the same pattern (булка → булку).
 
-#### CRITICAL: IPA — Що transcribed as Russian [ʃtɔ]
-**Location:** `at-the-cafe.md:72, 73`
-**Text:** `[ʃtɔ bɐˈʒɑ.je.te]` and `[ʃtɔ ˈbu.de.te ...]`
-**Problem:** Ukrainian Щ = [ʃt͡ʃ], not [ʃt]. The transcription [ʃtɔ] is the **Russian pronunciation of что**. Ukrainian Що = [ʃt͡ʃɔ]. This is the single most dangerous error in the module — it teaches the Russian phoneme in a Ukrainian language course.
+**Issue 2: Unnatural English phrasing in Practice Drills**
+- Location: at-the-cafe.md, line 198
+- Text: `If you desire pizza, try:`
+- Problem: "If you desire pizza" sounds archaic/overly formal in English instructions. A1 learners need clear, natural English scaffolding.
+- Fix: "If you want pizza, try:"
 
-#### CRITICAL: IPA — Missing tie bars on Ч throughout
-**Location:** Lines 31, 35, 290, 296, 316, 326
-**Problem:** Ч is an affricate [t͡ʃ] but is consistently written as [tʃ] (two separate sounds). This contradicts the same document's correct usage of tie bars for Ц [t͡s] (line 55: офіціант, line 230: цукром). Inconsistency teaches learners that Ч and Ц have different phonological status when they don't.
-
-#### CRITICAL: IPA — Missing tie bar + wrong stress on ДЖ
-**Location:** `at-the-cafe.md:231`  
-**Text:** `[z dʒɛˈmɔm]`
-**Problem:** (a) ДЖ is an affricate [d͡ʒ], not two separate sounds. (b) Stress is wrong — джем retains stress on the stem: дже́мом [ˈd͡ʒɛ.mɔm], not джемо́м.
-
-#### CRITICAL: IPA — Wrong stress on мед- forms
-**Location:** `at-the-cafe.md:232, 239`
-**Text:** `[z mɛˈdɔm]`, `[bɛz mɛˈdʊ]`
-**Problem:** Standard Ukrainian stress: ме́дом [ˈmɛ.dɔm], ме́ду [ˈmɛ.dʊ]. The stress is on the stem, not the ending. Green Team flagged this — confirmed.
-
-#### MODERATE: Сирник mistranslated as "cheesecake"
-**Location:** `at-the-cafe.md:342`
-**Text:** `**Сирник** is a cheesecake`
-**Problem:** Factual error. A сирник is a **cottage cheese pancake** (pan-fried from сир/тварог), not a Western-style cheesecake (which is чізкейк in modern Ukrainian). A learner ordering сирник expecting cheesecake will be surprised. This matters for a café module.
-
-#### MODERATE: Kulchytsky legend presented as verified fact
-**Location:** `at-the-cafe.md:392-395`
-**Text:** `"Did you know that a Ukrainian taught Europe how to drink coffee?"`, `"inventing the recipe for modern coffee culture"`
-**Problem:** The meta itself says "Yuriy Kulchytsky **legend**." The research file says "credited with." But the prose states it as uncontested fact. The claim that he "taught Europe to drink coffee" and "invented the recipe" is disputed by historians (Johannes Diodato, an Armenian, received Vienna's first coffee house license in 1685). For a curriculum that includes history modules, presenting contested legends as facts undermines credibility.
-
-#### MODERATE: Missing plan objective — "ask for recommendations"
-**Location:** Plan objective #2: "Learner can ask for recommendations"
-**Problem:** The content teaches how to order, specify, and pay — but never teaches how to ask for a recommendation (e.g., Що порадите?). This is a plan compliance gap. No self-check question maps to this objective either.
-
-#### MODERATE: капучіно (plan recommended vocabulary) absent from content
-**Location:** Entire module
-**Problem:** The plan's `vocabulary_hints.recommended` lists капучіно but it appears nowhere in the lesson — not even on the simulated café menu, where it would be the most natural item.
-
-#### MINOR: "liquids" → "drinks"
-**Location:** `at-the-cafe.md:28`
-**Text:** `the "Big Three" liquids`
-**Problem:** "Liquids" is clinical/robotic. "Drinks" is natural. Green Team flagged this — agreed.
-
-#### MINOR: Vocabulary file uses `items:` wrapper inconsistent with other vocab files
-**Location:** `vocabulary/at-the-cafe.yaml:1`
-**Problem:** The file uses `items:` dict wrapper while other A1 vocab files (e.g., food-and-shopping.yaml) use a bare list at root. Not a content error but a schema inconsistency.
-
-#### NOT FIXED (flagged only): LLM fingerprint phrases
-**Location:** Lines 13, 19
-**Text:** "golden ticket to local culture", "the soul of a Ukrainian city"
-**Assessment:** Stock LLM phrases, but the warmup voice is intentionally engaging and the persona is "Chatty Barista." These are tolerable in context. Not fixing.
+**Issue 3: Unnatural English phrasing in Practice Drills**
+- Location: at-the-cafe.md, line 199
+- Text: `If you wish for juice, say:`
+- Problem: Same issue — "wish for juice" is unnaturally formal.
+- Fix: "If you want juice, say:"
 
 ---
 
-### Fixes
+### Noted but Acceptable (not fixing)
 
-===FIX_START===
-FILE: curriculum/l2-uk-en/a1/at-the-cafe.md
----OLD---
-- **Що бажаєте?** [ʃtɔ bɐˈʒɑ.je.te] — What do you desire/wish?
-- **Що будете замовляти?** [ʃtɔ ˈbu.de.te zɐ.mou̯ˈlʲɑ.tɪ] — What will you order?
----NEW---
-- **Що бажаєте?** [ʃt͡ʃɔ bɐˈʒɑ.je.te] — What do you desire/wish?
-- **Що будете замовляти?** [ʃt͡ʃɔ ˈbu.de.te zɐ.mou̯ˈlʲɑ.tɪ] — What will you order?
-===FIX_END===
-
-===FIX_START===
-FILE: curriculum/l2-uk-en/a1/at-the-cafe.md
----OLD---
-2. **чай** [tʃɑi̯] — tea (masculine)
----NEW---
-2. **чай** [t͡ʃɑi̯] — tea (masculine)
-===FIX_END===
-
-===FIX_START===
-FILE: curriculum/l2-uk-en/a1/at-the-cafe.md
----OLD---
-4. **тістечко** [ˈtʲis.te.tʃko] — pastry/cake (neuter)
----NEW---
-4. **тістечко** [ˈtʲis.tet͡ʃ.ko] — pastry/cake (neuter)
-===FIX_END===
-
-===FIX_START===
-FILE: curriculum/l2-uk-en/a1/at-the-cafe.md
----OLD---
-- **з джемом** [z dʒɛˈmɔm] — with jam
-- **з медом** [z mɛˈdɔm] — with honey
----NEW---
-- **з джемом** [z ˈd͡ʒɛ.mɔm] — with jam
-- **з медом** [z ˈmɛ.dɔm] — with honey
-===FIX_END===
-
-===FIX_START===
-FILE: curriculum/l2-uk-en/a1/at-the-cafe.md
----OLD---
-- **без меду** [bɛz mɛˈdʊ] — without honey
----NEW---
-- **без меду** [bɛz ˈmɛ.dʊ] — without honey
-===FIX_END===
-
-===FIX_START===
-FILE: curriculum/l2-uk-en/a1/at-the-cafe.md
----OLD---
-In English, "check" and "bill" are often interchangeable. In Ukrainian, **чек** [tʃɛk] is the *receipt*
----NEW---
-In English, "check" and "bill" are often interchangeable. In Ukrainian, **чек** [t͡ʃɛk] is the *receipt*
-===FIX_END===
-
-===FIX_START===
-FILE: curriculum/l2-uk-en/a1/at-the-cafe.md
----OLD---
-- **Готівкою чи карткою?** [ɦoˈtʲiu̯.ko.jʊ tʃɪ ˈkɑrt.ko.jʊ]
----NEW---
-- **Готівкою чи карткою?** [ɦoˈtʲiu̯.ko.jʊ t͡ʃɪ ˈkɑrt.ko.jʊ]
-===FIX_END===
-
-===FIX_START===
-FILE: curriculum/l2-uk-en/a1/at-the-cafe.md
----OLD---
-Leaving a tip is called **чайові** [tʃɐ.joˈʋʲi] (literally: "tea money").
----NEW---
-Leaving a tip is called **чайові** [t͡ʃɐ.joˈʋʲi] (literally: "tea money").
-===FIX_END===
-
-===FIX_START===
-FILE: curriculum/l2-uk-en/a1/at-the-cafe.md
----OLD---
-- **До побачення!** [dɔ poˈbɑ.tʃe.nʲːɐ] — Goodbye!
----NEW---
-- **До побачення!** [dɔ poˈbɑ.t͡ʃe.nʲːɐ] — Goodbye!
-===FIX_END===
-
-===FIX_START===
-FILE: curriculum/l2-uk-en/a1/at-the-cafe.md
----OLD---
-Before we look at the menu, you need the "Big Three" liquids that keep Ukraine running.
----NEW---
-Before we look at the menu, you need the "Big Three" drinks that keep Ukraine running.
-===FIX_END===
-
-===FIX_START===
-FILE: curriculum/l2-uk-en/a1/at-the-cafe.md
----OLD---
-Did you know that a Ukrainian taught Europe how to drink coffee?
-**Юрій Кульчицький** (Yuriy Kulchytsky) was a hero of the Battle of Vienna in 1683. As a reward for his bravery, he asked for the bags of "strange beans" the Ottoman army left behind. The Viennese thought it was camel feed. Kulchytsky knew better.
-
-He opened one of the first coffee houses in Vienna. But the bitter black drink was too strong for the locals. So, he added honey and milk—inventing the recipe for modern coffee culture. In Lviv, there is a statue dedicated to him.
----NEW---
-There is a beloved Ukrainian legend about coffee. **Юрій Кульчицький** (Yuriy Kulchytsky) was a hero of the Battle of Vienna in 1683. According to the story, as a reward for his bravery, he asked for the bags of "strange beans" the Ottoman army left behind. The Viennese thought it was camel feed. Kulchytsky knew better.
-
-Legend has it that he opened one of the first coffee houses in Vienna. But the bitter black drink was too strong for the locals. So, he added honey and milk — and that is how Ukrainians like to explain the birth of European coffee culture. In Lviv, there is a statue dedicated to him.
-===FIX_END===
-
-===FIX_START===
-FILE: curriculum/l2-uk-en/a1/at-the-cafe.md
----OLD---
-*Note: **Медівник** is a honey cake, and **Сирник** is a cheesecake.*
----NEW---
-*Note: **Медівник** is a honey cake, and **Сирник** is a cottage cheese pancake.*
-===FIX_END===
-
-===FIX_START===
-FILE: curriculum/l2-uk-en/a1/at-the-cafe.md
----OLD---
-3. **Це все?**
-   - **Так, дякую.** (Yes, thanks.)
-   - **Ні, ще воду, будь ласка.** (No, also water, please.)
-
-### Mini-Dialogue: The Latte Order
----NEW---
-3. **Це все?**
-   - **Так, дякую.** (Yes, thanks.)
-   - **Ні, ще воду, будь ласка.** (No, also water, please.)
-
-### Asking for a Recommendation
-If you are unsure what to order, you can ask:
-- **Що порадите?** — What do you recommend?
-
-This is a polite way to get the waiter's suggestion. Notice it uses the **Ви** form — just like **«Що бажаєте?»**.
-
-### Mini-Dialogue: The Latte Order
-===FIX_END===
-
-===FIX_START===
-FILE: curriculum/l2-uk-en/a1/at-the-cafe.md
----OLD---
-| НАПОЇ (Drinks) | ДЕСЕРТИ (Desserts) |
-| :--- | :--- |
-| Еспресо | Шоколадне тістечко |
-| Американо | Круасан з джемом |
-| Кава з молоком | Медівник |
-| Чай (зелений / чорний) | Сирник |
-| Сік (апельсиновий / яблучний) | Морозиво (ванільне / шоколадне) |
----NEW---
-| НАПОЇ (Drinks) | ДЕСЕРТИ (Desserts) |
-| :--- | :--- |
-| Еспресо | Шоколадне тістечко |
-| Капучіно | Круасан з джемом |
-| Американо | Медівник |
-| Кава з молоком | Сирник |
-| Чай (зелений / чорний) | Морозиво (ванільне / шоколадне) |
-| Сік (апельсиновий / яблучний) | |
-===FIX_END===
+- **Unjumble comma omissions** ("Мені будь ласка каву" without commas) — format limitation standard across all A1 unjumble activities.
+- **"Смачна вода"** in adjective drill — semantically unusual but serves the grammar teaching purpose.
+- **Missing vocabulary YAML** — not present, but automated audit passed. The vocab coverage in prose and activities is thorough.
+- **"з газом" in match-up activity** not explicitly taught as a chunk in content (only "без газу" is) — inferable from context at A1.
+- **"Плачу карткою/готівкою"** in final fill-in uses a verb form not taught in prose — but the fill-in tests the noun form (карткою/готівкою), not the verb. Learner doesn't need to produce "плачу."
 
 ---
 
-### Summary
+## Fixes
 
-| Category | Issues Found | Fixed | Remaining |
-|----------|-------------|-------|-----------|
-| IPA (Що = Russian) | 1 (2 instances) | 1 | 0 |
-| IPA (Ч tie bars) | 6 instances | 6 | 0 |
-| IPA (ДЖ tie bar + stress) | 1 | 1 | 0 |
-| IPA (мед- stress) | 2 | 2 | 0 |
-| Factual (сирник) | 1 | 1 | 0 |
-| Factual (Kulchytsky) | 1 | 1 | 0 |
-| Plan compliance (recommendation) | 1 | 1 | 0 |
-| Plan compliance (капучіно) | 1 | 1 | 0 |
-| Style ("liquids") | 1 | 1 | 0 |
-| Vocab file format | 1 | 0 | 1 (flagged) |
-| LLM fingerprint | 2 | 0 | 2 (tolerable) |
+===FIX_START===
+FILE: curriculum/l2-uk-en/a1/at-the-cafe.md
+---OLD---
+| **риба** | Feminine | **рибу** (-у) | Я буду рибу. |
+---NEW---
+| **булка** | Feminine | **булку** (-у) | Я буду булку. |
+===FIX_END===
 
-**Total: 18 issues found, 15 fixed, 3 remaining (1 structural flag, 2 tolerable style)**
+===FIX_START===
+FILE: curriculum/l2-uk-en/a1/at-the-cafe.md
+---OLD---
+3. If you desire pizza, try: **Я буду піцу, будь ласка.**
+4. If you wish for juice, say: **Я буду сік, будь ласка.**
+---NEW---
+3. If you want pizza, try: **Я буду піцу, будь ласка.**
+4. If you want juice, say: **Я буду сік, будь ласка.**
+===FIX_END===
 
-The Що [ʃtɔ] issue was the most serious — this is literally the Russian pronunciation of что being taught in a Ukrainian course. All IPA issues are now corrected with proper tie bars and stress placement. The Kulchytsky text now properly frames the story as a legend. The сирник mistranslation is fixed. The missing "ask for recommendations" objective is now addressed.
-
-After these fixes, the module is sound: pedagogically strong, culturally grounded, activities are clean, grammar is accurate, and all plan sections + objectives are covered.
+---
 
 ===VERDICT===
 APPROVE

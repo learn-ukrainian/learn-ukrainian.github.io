@@ -1,0 +1,288 @@
+✅ Message sent to Gemini (ID: 11774) [auto-acked: self-addressed]
+✓ Message 11774 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #11774...
+📨 Message #11774
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-natalka-poltavka
+   Time: 2026-02-20T23:30:51.654071+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 5
+module: lit-05
+level: LIT
+slug: natalka-poltavka
+version: '2.0'
+title: 'Наталка Полтавка: Анатомія Почуттів'
+subtitle: 'LIT-005: Від Сміху до Сліз'
+content_outline:
+- section: Вступ — Від реготу до сльози
+  points:
+  - Котляревський після "Енеїди"
+  - 1819 рік — поява "Наталки Полтавки"
+  - Чому автор змінив регістр
+- section: Сентименталізм як літературний напрям
+  points:
+  - Що таке сентименталізм
+  - Європейський контекст (Руссо, Річардсон)
+  - Українська специфіка жанру
+- section: Наталка — архетип української нареченої
+  points:
+  - Характеристика героїні
+  - Конфлікт "багатство vs гідність"
+  - Порівняння з Марусею Квітки
+- section: Музика важливіша за слово
+  points:
+  - '"Віють вітри" — роль пісні у драмі'
+  - Інші пісні п'єси
+  - Опера vs драма
+- section: Другорядні персонажі
+  points:
+  - Возний Тетерваковський — комічний антагоніст
+  - Петро — ідеальний наречений
+  - Терпилиха — образ матері
+- section: Підсумок — Український театр народжується
+  points:
+  - Значення п'єси для українського театру
+  - Перехід від бурлеску до серйозності
+  - Зв'язок з творчістю Квітки
+vocabulary_hints:
+  required:
+  - сентименталізм (sentimentalism)
+  - архетип (archetype)
+  - наречена (bride)
+  - гідність (dignity)
+  - жертовність (sacrifice)
+  - опера (opera)
+  - драма (drama)
+  - возний (official/bailiff)
+  - катарсис (catharsis)
+  - театр (theatre)
+  recommended:
+  - мелодрама (melodrama)
+  - антагоніст (antagonist)
+  - ремарка (stage direction)
+  - монолог (monologue)
+  - репліка (line/cue)
+activity_hints:
+- type: reading
+  focus: Ключові сцени "Наталки Полтавки"
+  source: UkrLib tid=50
+  items: 5+
+- type: essay-response
+  focus: Конфлікт "багатство vs гідність"
+  output: Аргументативне есе
+focus: literature
+pedagogy: literature
+prerequisites:
+- lit-01 to lit-04 (Kotliarevsky & Eneida modules)
+- Understanding of burlesque to sentimentalism transition
+connects_to:
+- lit-06 (Kvitka biography — продовження сентименталізму)
+- lit-07 (Marusya — розвиток жіночого архетипу)
+objectives:
+- Analyze the transition from burlesque to sentimentalism
+- Characterize Natalka as a moral ideal
+- Interpret social conflict in the play
+grammar:
+- Sentimentalism markers
+- Dramatic dialogue structure
+- Folk song integration
+module_type: literature
+sources:
+- name: Наталка Полтавка — повний текст
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=50
+  type: primary
+  notes: П'єса для детального аналізу
+- name: Аналіз "Наталки Полтавки"
+  url: https://www.ukrlib.com.ua/analiz/printit.php?tid=50
+  type: secondary
+  notes: Літературознавчий аналіз
+- name: Віють вітри — пісня
+  url: https://uk.wikipedia.org/wiki/Віють_вітри
+  type: reference
+  notes: Контекст народної пісні
+immersion: 100% Ukrainian
+phase: LIT.1 Burlesque & Folk Origins
+persona:
+  voice: Senior Philologist & Critic
+  role: Faithful Bride
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Наталка Полтавка: Анатомія Почуттів
+
+## Використані джерела
+1. [Енциклопедія історії України](http://www.history.org.ua/) — Історичний та культурний контекст появи українського театру у Полтаві, біографічні відомості про І. Котляревського та М. Щепкіна.
+2. [Енциклопедія сучасної України](http://esu.com.ua/) — Аналіз розвитку української драматургії, поняття сентименталізму та його трансформації в українській літературі.
+3. [Ізборник](http://litopys.org.ua/) — Текстологічний аналіз та критика п'єси "Наталка Полтавка", історія її створення та публікацій.
+
+## Хронологія
+- **1798**: Видання перших трьох частин "Енеїди", що заклало основу нової української літератури через бурлеск.
+- **1819**: Написання та перша успішна постановка п'єси "Наталка Полтавка" у Полтавському вільному театрі за участю видатного актора Михайла Щепкіна (у ролі виборного Макогоненка).
+- **1838**: Перше книжкове видання п'єси, здійснене Ізмаїлом Срезневським (уже після смерті Івана Котляревського).
+- **1889**: Вихід у світ класичної опери "Наталка Полтавка" на музику Миколи Лисенка, яка закріпила безсмертя твору на великій сцені.
+- **1936**: Створення еталонної екранізації "Наталка Полтавка" режисером Іваном Кавалерідзе — перший україномовний звуковий фільм у США.
+
+## Ключові факти та цитати
+- **Цитата 1**: "Золото — не дівка! Наградив бог Терпилиху дочкою." (Виборний про Наталку).
+- **Цитата 2**: "Не рівняйте мене, пане возний, з собою: я дівка проста, а ви пан; я сирота, а ви багатий; маємо хіть одружитися, та не маємо з чого жити; я вас не люблю і не буду любить..." (Наталка до Возного).
+- **Цитата 3**: "Краще умерти, ніж з немилим жити." (Наталка).
+- Котляревський використав у п'єсі 22 пісні, більшість з яких були добре відомими народними творами, проте автор часто переробляв їх текст відповідно до драматичної ситуації.
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ — Від реготу до сльози": `[!history-bite]` — У першій постановці 1819 року роль хитрого виборного Макогоненка грав Михайло Щепкін. Котляревський, який був директором Полтавського театру, доклав багато зусиль і коштів, щоб викупити талановитого актора з кріпацтва.
+- Section "Сентименталізм як літературний напрям: І — Європейський контекст": `[!context]` — Європейський сентименталізм ідеалізував "природну людину", шукаючи моральної чистоти подалі від зіпсованого міста. Котляревський переніс цю ідею на український ґрунт, де такою "природною людиною" став вільний селянин.
+- Section "Сентименталізм як літературний напрям: ІІ — Українська специфіка": `[!decolonization]` — Українська специфіка сентименталізму: замість пасивної та страждаючої героїні-жертви (як "Бідна Ліза" М. Карамзіна), Наталка бореться за свої права, захищає свою честь і має активну життєву позицію.
+- Section "Наталка — архетип української нареченої: І — Характеристика та конфлікт": `[!quote]` — "Краще умерти, ніж з немилим жити", — ця фраза Наталки стала квінтесенцією українського волелюбства і пріоритету етичного над матеріальним.
+- Section "Музика важливіша за слово: І — Народна пісня як двигун": `[!culture]` — 22 пісні у п'єсі не є просто вставними фольклорними номерами "для краси". Вони замінюють собою монологи, рухають сюжет і розкривають глибоку психологію героїв, продовжуючи традицію українського вертепу.
+- Section "Другорядні персонажі: І — Возний та Петро": `[!myth-buster]` — Російська та радянська критика часто подавала "Наталку Полтавку" як легковажний "малоросійський водевіль". Насправді через комічний, канцеляризований суржик возного Тетерваковського автор блискуче висміює та деконструює бюрократичний апарат Російської імперії, що вторгся в українське село.
+
+## Деколонізаційний контекст
+- **Imperial/Soviet myth**: П'єса — це мила, дещо наївна "етнографічна картинка" сільського життя з піснями й танцями, що демонструє покірність і простоту "малоросійського" народу.
+- **Ukrainian reality**: Це глибоко національна соціально-побутова драма, що утверджує високу людську гідність і моральну перевагу українського селянства над імперським чиновництвом (возний). Твір став політичним та культурним маніфестом, який довів здатність української мови обслуговувати серйозні драматичні жанри, а не лише бурлеск.
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian (decolonized) framing |
+|---------|-----------------|-------------------------------|
+| Жанр твору | "Малоросійський водевіль" або "оперетка" | Перша класична українська соціально-побутова драма |
+| Мова твору | Провінційна говірка, придатна лише для комедії | Повноцінна літературна мова, здатна передавати найтонші емоції |
+| Характер селян | Наївність, покірність долі | Національна гідність, моральна вищість, готовність боротися за своє |
+
+## Section-Mapped Research Notes
+
+### Вступ — Від реготу до сльози
+Поява п'єси у 1819 році стала поворотною. Після нищівного сміху "Енеїди" Котляревському був потрібен новий регістр — серйозний, здатний викликати емпатію і катарсис. П'єса була написана спеціально для Полтавського театру як відповідь на російські водевілі, що спотворювали український побут (наприклад, п'єси О. Шаховського). Участь М. Щепкіна забезпечила безпрецедентний успіх.
+
+### Сентименталізм як літературний напрям: І — Європейський контекст
+Сентименталізм виник у Західній Європі (Ж.-Ж. Руссо, С. Річардсон) як реакція на сухий раціоналізм класицизму. Основна ідея: культ почуттів, емоцій, моральна чистота "природної людини" у протиставленні до зіпсованого "цивілізованого" суспільства. Цей напрям зосереджувався на внутрішньому світі маленької, звичайної людини.
+
+### Сентименталізм як літературний напрям: ІІ — Українська специфіка
+В Україні сентименталізм набув виразного національно-демократичного забарвлення. На відміну від західних чи російських зразків (де героїні часто гинули, здаючись перед обставинами), український сентименталізм стверджує життєстійкість і активність. Наталка не топиться в ставку від розпачу, а аргументовано відхиляє пропозицію заможного чиновника.
+
+### Наталка — архетип української нареченої: І — Характеристика та конфлікт
+Наталка — втілення народного ідеалу (розумна, поштива, роботяща). Головний конфлікт п'єси розгортається по двох лініях: зовнішній соціально-майновий (багатство возного проти людської гідності бідної дівчини) та внутрішній психологічний (обов'язок перед старою матір'ю проти вірного кохання до Петра).
+
+### Наталка — архетип української нареченої: ІІ — Архетип та порівняння
+Образ Наталки заклав матрицю для всієї наступної української літератури. Згодом цю лінію продовжить Г. Квітка-Основ'яненко у повісті "Маруся". Однак, якщо Маруся Квітки — глибоко релігійна, ідеалізована до рівня ікони та зрештою приречена на трагічну смерть жертва, то Наталка Котляревського — цілком земна, раціональна, вольова жінка, здатна захистити своє щастя.
+
+### Музика важливіша за слово: І — Народна пісня як двигун
+Котляревський вплів у текст 22 пісні (як народні, так і власні стилізації). Пісня "Віють вітри, віють буйні", з якої починається п'єса, задає загальний лірико-драматичний тон. Пісні в "Наталці Полтавці" слугують аріями, через які герої сповідаються, сумують, жартують, рухаючи дію вперед.
+
+### Музика важливіша за слово: ІІ — Опера чи драма?
+За формою "Наталка Полтавка" — це п'єса з піснями (зингшпіль), що виросла з традиції шкільної драми, вертепу та інтермедій. Проте її надзвичайна музичність призвела до того, що пізніше (1889) Микола Лисенко написав до неї класичну оперну партитуру, і твір закріпився у свідомості українців саме як національна опера.
+
+### Другорядні персонажі: І — Возний та Петро
+Возний Тетерваковський — не просто кумедний залицяльник. Його суржик (суміш російської канцеляриту, церковнослов'янщини та українських слів) є засобом сатиричного викриття імперської бюрократії. Петро — бідний бурлака, щирий і благородний (аж до готовності віддати Наталці зароблені гроші, щоб вона була щаслива з возним), представляє ідеалізований полюс української душі.
+
+### Другорядні персонажі: ІІ — Образ Терпилихи
+Горпина Терпилиха не є класичною злою силою чи жорстокою матір'ю. Її бажання видати Наталку за возного продиктоване гірким досвідом бідності та страхом перед майбутнім. Вона керується прагматизмом виживання, що створює достовірний психологічний конфлікт поколінь.
+
+### Підсумок — Український театр народжується
+"Наталка Полтавка" стала точкою відліку нової української драматургії та професійного театру. Твір остаточно розірвав із монополією бурлеску, довівши, що народною мовою можна писати про високі, трагічні почуття. Ця традиція безпосередньо вплинула на театр корифеїв у другій половині XIX століття.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 11812)
+✓ Message 11774 acknowledged
+✓ Message 11812 acknowledged

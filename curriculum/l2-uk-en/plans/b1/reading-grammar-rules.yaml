@@ -6,84 +6,80 @@ version: '2.0'
 title: Читаємо граматичні правила
 subtitle: Understanding grammar explanations in Ukrainian
 content_outline:
-- section: Introduction - Reading Grammar in Ukrainian
+- section: 'Вступ: Розуміння освітнього процесу (Introduction: Understanding Educational
+    Process)'
+  words: 600
   points:
-  - 'Why understanding instruction patterns matters — aligns with State Standard §3.8:
-    Organization of educational process (understanding lectures, exams)'
-  - 'Common grammar textbook structure — visual focus: use textbook snippets/screenshots
-    and decode them'
-  - Preparation for full immersion
-- section: Grammar Explanation Patterns
+  - 'Importance of mastering instructional language for educational integration —
+    aligns with State Standard §3.8: Organization of educational process (understanding
+    lectures, seminars, and exams)'
+  - 'Framing the shift to full immersion by decoding textbook structures: why recognizing
+    visual patterns (bold text, tables, arrows) is the first step in comprehension'
+  - Preparation for navigating B1-level materials where instructions are exclusively
+    in Ukrainian
+- section: Шаблони граматичних пояснень (Grammar Explanation Patterns)
+  words: 850
   points:
-  - '"X використовується, коли..." (X is used when...) — collocations: часто використовується,
-    як правило використовується'
-  - '"X показує..." (X shows...)'
-  - '"X означає..." (X means...) — collocations: що це означає, слово означає, це
-    не означає'
-- section: Instruction Words
+  - 'High-frequency academic patterns: «X використовується, коли...» and «X означає...»
+    — mapping typical definitions in standard textbooks'
+  - 'Collocation focus: «часто використовується», «як правило використовується», «це
+    не означає, що...»'
+  - 'Visual literacy: Decoding the ''Grammar Box'' — identifying ''Rule'', ''Example'',
+    and ''Exception'' layout patterns without needing translation'
+  - 'Grammar-specific frequency: mastering the term «виняток» (exception) to navigate
+    rules — highlighting the common learner error of using the Russian calque «виключення»'
+- section: Словник інструкцій та дієслова завдань (Instruction Vocabulary and Activity
+    Verbs)
+  words: 900
   points:
-  - 'порівняйте, зверніть увагу — collocations: порівняйте речення, порівняйте з'
-  - наприклад, тобто, отже
-- section: Comparison Patterns
+  - 'Instructional commands: «порівняйте», «зверніть увагу», «виберіть», «знайдіть»,
+    «доповніть» — mapping the 80% rule: identifying the verb is 80% of understanding
+    the task'
+  - 'Common learner error: confusing «підкресліть» (underline) with «креслити» (draw/draft)
+    — minimal pair drills to ensure task compliance'
+  - 'The transition from general tasks to morphological ones: understanding «утворіть»
+    (form/derive) vs «зробіть» (do/make) — referencing State Standard §4.3.4 on deriving
+    nouns from verbs (читати – читання)'
+  - 'Logical connectors in instructions: «наприклад», «тобто», «отже», «на відміну
+    від»'
+- section: Аналітична термінологія та контекст (Analytical Terminology and Context)
+  words: 700
   points:
-  - 'на відміну від — collocation: суттєва відмінність (essential difference)'
-  - подібно до
-- section: Activity Instruction Verbs
+  - 'Mastering academic terminology: «контекст», «маркер», «частота», «аспектуальна
+    пара» — building on b1-01 and b1-02 terminology'
+  - 'Contextual clues: «зрозуміти з контексту», «широкий контекст» — strategies for
+    dealing with unknown words in grammar rules'
+  - 'Learner error warning: avoiding calques in grammar discussion — explicitly drilling
+    «брати участь» (to participate) instead of the incorrect «приймати участь»'
+- section: Стилістика та історія граматики (Stylistics and Grammar History)
+  words: 650
   points:
-  - виберіть, знайдіть, з'єднайте
-  - розташуйте, доповніть, натисніть
-  - перекладіть, складіть
-  - 'Understanding what activities ask you to do — key insight: identifying the verb
-    is 80% of understanding the task'
-- section: Analytical Terms
+  - 'Cultural hook: Meletius Smotrytsky (1619) — the author of ''Hrammatika Slavenska''
+    who established the terminology we use today (відмінок, дієслово) and separated
+    the Locative case'
+  - 'Distinguishing registers: «розмовна мова» vs «літературна мова» — aligns with
+    State Standard §4.5.1 Stylistics'
+  - 'Cultural hook: Ivan Ohiienko (Metropolitan Ilarion) and his ''Native Language
+    Duties'' — the struggle for linguistic purity and standard language norms'
+  - 'Word structure terms: «корінь», «префікс», «суфікс», «закінчення» — understanding
+    the ''building blocks'' of Ukrainian words'
+- section: Практика та підсумок (Practice and Summary)
+  words: 300
   points:
-  - контекст, маркер, частота
-  - аспектуальна пара
-  - 'Using these terms in grammar discussion — learner error warning: use «брати участь»
-    not «приймати участь» (calque)'
-- section: Style and Register Terminology
-  points:
-  - стиль, регістр — aligns with State Standard §4.5.1 Stylistics (distinguishing
-    formal vs informal)
-  - розмовна мова, літературна мова, формальна мова
-  - 'Recognizing style markers in texts — cultural hook: Іван Огієнко (Metropolitan
-    Ilarion) and his «12 Language Commandments» on standard language'
-- section: Word Formation Terms
-  points:
-  - 'корінь, префікс, суфікс — cultural hook: Мелетій Смотрицький (1619), author of
-    first grammar, established the system of declensions'
-  - основа, закінчення
-  - 'Analyzing word structure — learner error: confusion of «утворіть» (morphological
-    form) vs «зробіть» (general task); case error: «навчання чогось» (Genitive)'
-- section: Practice
-  points:
-  - Reading authentic grammar explanations
-  - Pattern recognition
-- section: Dialogues
-  points:
-  - 6 mini-dialogues illustrating concepts
-- section: Summary
-  points:
-  - Readiness check for M04
+  - 'Authentic text analysis: identifying instructions and explanation patterns in
+    a sample text from a Ukrainian MON-approved textbook'
+  - 'Readiness check: ensuring the learner can correctly identify 90% of task verbs
+    to prepare for M04 Sentence Structure'
 vocabulary_hints:
   required:
-  - використовується (is used) — часто використовується, використовується для, як
-    правило використовується
-  - показує (shows)
-  - означає (means) — що це означає, слово означає, це не означає
-  - порівняйте (compare) — порівняйте речення, порівняйте з, порівняйте таблиці
-  - зверніть увагу (note, pay attention)
-  - виберіть (choose)
-  - знайдіть (find)
-  - доповніть (complete)
-  - контекст (context)
-  - маркер (marker)
+  - маркер (marker) — Analytical term
   recommended:
-  - частота (frequency)
-  - аспектуальна пара (aspectual pair)
-  - розмовна мова (colloquial language)
-  - 'літературна мова (literary language) — context: Ohiienko''s standardization'
-  - формальна мова (formal language)
+  - частота (frequency) — Academic usage
+  - аспектуальна пара (aspectual pair) — Grammar-specific term
+  - літературна мова (literary language) — Related to Ohiienko's standardization
+  - розмовна мова (colloquial language) — Stylistic marker
+  - відмінювання (declension/conjugation) — Smotrytsky's legacy
+  - утворіть (form/derive) — Morphological instruction
 activity_hints:
 - type: mark-the-words
   focus: Find instruction patterns in grammar text

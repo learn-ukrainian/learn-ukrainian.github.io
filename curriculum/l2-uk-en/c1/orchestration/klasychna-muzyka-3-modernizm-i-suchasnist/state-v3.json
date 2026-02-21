@@ -2,12 +2,5 @@
   "track": "c1",
   "slug": "klasychna-muzyka-3-modernizm-i-suchasnist",
   "mode": "v3",
-  "phases": {
-    "v3-A": {
-      "status": "complete",
-      "ts": "2026-02-19T17:11:24Z",
-      "task_id": "v3-klasychna-muzyka-3-modernizm-i-suchasnist-pA",
-      "mode": "full"
-    }
-  }
+  "phases": {}
 }

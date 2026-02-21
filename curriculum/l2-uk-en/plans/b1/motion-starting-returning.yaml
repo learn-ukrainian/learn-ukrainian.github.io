@@ -6,54 +6,85 @@ version: '2.0'
 title: 'Рух: початок і повернення'
 subtitle: Motion - Starting & Returning
 content_outline:
-- section: Діагностика
+- section: Вступ та Діагностика (Introduction & Diagnostics)
+  words: 600
   points:
-  - 'Prefix diagnostic — діалог про хаотичний ранок: спроба зайти в переповнену маршрутку,
-    забігти в кіоск'
-  - Intuition check — перевірка розуміння різниці між «йти» та «піти», «їхати» та
-    «поїхати»
-- section: Пояснення
+  - Introduction to the logic of starting, visiting, and dispersing in Ukrainian movement
+    verbs, building on the passing concepts from b1-18.
+  - 'Diagnostic dialogue: A chaotic morning commute scenario involving trying to ''зайти''
+    into a full marshrutka and needing to ''заскочити'' into a kiosk.'
+  - 'Intuition check: Evaluating the learner''s initial grasp of the ''по-'' prefix
+    for starting movement (''піти'' vs ''йти'') and the transport distinction (''піти''
+    vs ''поїхати'').'
+- section: Семантика префіксів за державним стандартом (Prefix Semantics per State
+    Standard)
+  words: 1000
   points:
-  - по-, за-, роз- prefixes — семантика початку (по-), відвідування/входу (за-) та
-    розходження (роз-); State Standard §4.3.8
-  - 'Starting, stopping by, dispersing — «поїхати» (start trip), «зайти» (visit/enter),
-    «розійтися» (disperse); learner error: плутанина префіксів руху з іншими значеннями'
-- section: Поглиблення
+  - 'Detailed breakdown of по-, за-, and роз- prefixes based on State Standard §4.3.8:
+    semantics of starting (по-), entering/visiting (за-), and dispersing (роз-).'
+  - 'Comparative analysis: ''зайти'' (casual entry/drop in) vs ''увійти'' (formal
+    physical entry) to establish natural register awareness in social contexts.'
+  - 'Semantics of dispersal: ''розійтися'' (on foot) vs ''роз''їхатися'' (by vehicle)
+    with high-frequency collocations like ''розійтися по домівках''.'
+  - 'Standardized patterns: listing prefixed pairs for ''іти'' and ''їхати'' as mandated
+    by §4.3.8 to ensure competency in formation.'
+- section: Мовні нюанси та запобігання помилкам (Linguistic Nuances & Error Prevention)
+  words: 900
   points:
-  - 'Extended patterns — розрізнення «зайти за кимось» (пішки) та «заїхати за кимось»
-    (транспортом); preposition confusion: «зайти в» vs «зайти за»'
-  - 'Nuanced usage — «зайти» (casual) vs «увійти» (formal); cultural hook: традиція
-    «На коня» перед тим, як гості розійдуться'
-- section: Практика
+  - 'Learner error focus: correcting the overuse of formal ''увійти'' for social visits
+    where the natural ''зайти до друга'' is required.'
+  - 'Prepositional clarity: ''зайти в'' (to enter a space) vs ''зайти за'' (to go
+    behind/hide), using minimal pairs to prevent common preposition confusion.'
+  - 'Social coordination logic: distinguishing ''зайти за кимось'' (picking someone
+    up on foot) vs ''заїхати за кимось'' (picking someone up by car).'
+  - 'Distance check: addressing the common error ''піти до Львова'' by enforcing the
+    transport-specific ''поїхати'' for long-distance travel.'
+- section: Культурний контекст та транспортний етикет (Cultural Context & Transport
+    Etiquette)
+  words: 800
   points:
-  - 'Prefix selection exercises — фокус на виборі між транспортом (їхати) та ходою
-    (йти); learner error: «піти до Львова» замість «поїхати»'
-- section: Діалоги
+  - 'Transport etiquette: The golden rule of Ukrainian public transit — ''Спочатку
+    виходять, потім заходять'' (Exit first, then enter) — as a social norm.'
+  - 'Travel ritual: ''Присісти на дорогу'' (sitting before leaving) — exploring its
+    historical roots in folklore and its modern role as a psychological reset.'
+  - 'Hospitality ritual: The ''На коня'' tradition (the stirrup cup) — the final toast
+    before guests ''розходяться'' (disperse).'
+- section: Комплексна практика та підсумок (Comprehensive Practice & Summary)
+  words: 700
   points:
-  - 'Movement dialogues — сценарій від''їзду; cultural hook: звичай «Присісти на дорогу»
-    перед виходом з дому'
-  - 'Natural usage — етикет транспорту: «Спочатку виходять, потім заходять»; colloquial
-    usage: «заскочити» (pop in)'
+  - Prefix selection drills focusing on the choice between 'йти' and 'їхати' when
+    combined with 'по-', 'за-', and 'роз-' semantics.
+  - 'Colloquial usage: mastering the ''pop-in'' culture through high-frequency usage
+    of ''заскочити'' for quick coffee or errands.'
+  - 'Summary of the movement arc: from ''початок'' (departure rituals) through intermediate
+    stops to the final dispersal of a group.'
 vocabulary_hints:
   required:
-  - піти/виходити (to leave on foot/exit) — вийти з дому, вийти на зупинці
-  - поїхати/виїжджати (to leave by vehicle/exit) — поїхати у відпустку, виїхати з
-    міста
-  - зайти/заходити (to stop by on foot) — зайти в гості, зайти в магазин, зайти по
-    дорозі
-  - заїхати/заїжджати (to stop by in vehicle) — заїхати за кимось, заїхати на заправку
-  - розійтися/розходитися (to disperse on foot) — розійтися по домівках, думки розійшлися
-  - роз'їхатися/роз'їжджатися (to disperse by vehicle) — гості роз'їхалися
-  - 'початок (beginning) — context: початок руху'
-  - зупинка (stop) — вийти на зупинці
-  - 'розходження (dispersal) — context: шляхи розійшлися'
-  - 'напрямок (direction) — context: змінити напрямок руху'
+  - 'піти/виходити (to leave on foot/exit) — collocations: вийти з дому, вийти на
+    зупинці, вийти заміж (marry - f.)'
+  - 'поїхати/виїжджати (to leave by vehicle/exit) — high frequency; usage: поїхати
+    у відпустку, поїхати з міста'
+  - 'зайти/заходити (to stop by on foot) — high frequency; collocations: зайти в гості,
+    зайти в магазин, зайти по дорозі'
+  - 'заїхати/заїжджати (to stop by in vehicle) — medium frequency; usage: заїхати
+    за кимось (pick someone up), заїхати на заправку'
+  - 'розійтися/розходитися (to disperse on foot) — medium frequency; collocations:
+    розійтися по домівках, думки розійшлися'
+  - 'роз''їхатися/роз''їжджатися (to disperse by vehicle) — usage: гості роз''їхалися
+    після вечірки'
+  - 'початок (beginning) — context: початок руху (Standard §4.3.8); starting point'
+  - 'зупинка (stop) — collocation: вийти на зупинці; public transport stop'
+  - 'розходження (dispersal) — context: шляхи розійшлися; literal and metaphorical'
+  - 'напрямок (direction) — context: змінити напрямок руху; heading'
   recommended:
-  - побігти (to start running) — побігти на автобус
-  - забігти (to run in briefly) — забігти в аптеку
-  - розбігтися (to scatter running) — діти розбіглися
-  - 'заскочити (to pop in quickly) — colloquial: заскочити на каву'
-  - затриматися (to linger) — затриматися на роботі
+  - 'побігти (to start running) — usage: побігти на автобус (start running for the
+    bus)'
+  - 'забігти (to run in briefly) — usage: забігти в аптеку (pop into the pharmacy)'
+  - 'розбігтися (to scatter running) — usage: діти розбіглися по майданчику'
+  - 'заскочити (to pop in quickly) — colloquial register: заскочити на каву (pop in
+    for coffee)'
+  - 'затриматися (to linger/be delayed) — usage: затриматися на роботі (to stay late
+    at work)'
 activity_hints:
 - type: quiz
   focus: по- vs за- vs роз- selection

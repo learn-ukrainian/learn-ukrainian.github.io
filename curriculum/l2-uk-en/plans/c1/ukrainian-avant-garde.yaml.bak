@@ -1,0 +1,47 @@
+module: c1-065
+level: C1
+sequence: 65
+slug: ukrainian-avant-garde
+version: '2.0'
+title: Український авангард
+subtitle: Ukrainian Avant-Garde
+content_outline:
+- section: Розминка — Українські модерністи
+  points:
+  - Український авангард 1910-1930-х років
+  - Зв'язок з європейським модернізмом
+  - Трагічна доля митців за Сталіна
+- section: Ключові постаті та напрямки
+  points:
+  - 'Казимир Малевич: супрематизм, "Чорний квадрат"'
+  - 'Олександра Екстер: кубофутуризм, театральний дизайн'
+  - 'Давид Бурлюк: футуризм, "батько українського авангарду"'
+  - 'Михайло Бойчук: монументалізм, бойчукізм'
+  - Олександр Архипенко: скульптурний кубізм
+- section: Спадщина авангарду
+  points:
+  - Зв'язок авангарду з народним мистецтвом
+  - Репресії "Розстріляного відродження"
+  - Сучасне перевідкриття та музеї
+  - Вплив на світове мистецтво
+- section: Практика — аналіз мистецтва
+  points:
+  - Проаналізувати твір Малевича — форма, колір, ідея
+  - Порівняти український та російський авангард
+  - Написати есе про трагедію "Розстріляного відродження"
+  - Обговорити вплив народного мистецтва на авангард
+focus: cultural
+pedagogy: CBI
+objectives:
+- Learner can discuss the Ukrainian Avant-Garde movement and its key figures
+- Learner can analyze avant-garde artworks using appropriate terminology
+- Learner can explain the impact of Ukrainian artists on world modernism
+- Learner can describe the connection between folk art and avant-garde
+grammar:
+- art analysis vocabulary
+- stylistic descriptions
+phase: C1.5 Folk Culture & Arts
+persona:
+  voice: Senior Specialist
+  role: Футурист
+word_target: 4000

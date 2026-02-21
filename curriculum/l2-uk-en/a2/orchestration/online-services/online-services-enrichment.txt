@@ -1,0 +1,315 @@
+✅ Message sent to Gemini (ID: 10273) [auto-acked: self-addressed]
+✓ Message 10273 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10273...
+📨 Message #10273
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-online-services
+   Time: 2026-02-20T20:06:14.819678+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: a2-69
+level: A2
+sequence: 69
+slug: online-services
+version: '2.0'
+title: Online Services
+subtitle: Apps and Delivery
+content_outline:
+- section: Introduction / Вступ
+  points:
+  - 'Online services in Ukraine — cultural hook: ''State in a Smartphone'' concept
+    and Diia app as central to daily life; aligns with State Standard §3.11 (services)
+    and §3.4 (internet)'
+  - 'Popular apps — mention widespread use of Monobank, Privat24, and delivery services;
+    context: cashless economy even at small vendors (Apple Pay/Google Pay ubiquity)'
+- section: Presentation / Презентація
+  points:
+  - 'Service vocabulary — focus on UI elements (buttons like ''Оплатити'', icons for
+    ''Кошик'') and Imperative mood for app commands (Натисніть, Оберіть); content
+    note: describe UI elements clearly'
+  - 'замовлення, кошик, доставка — collocations: оформити замовлення, додати в кошик,
+    мобільний додаток; learner error: ''замовлення'' is neuter (моє, не моя), ''в
+    кошик'' (Accusative for direction) vs ''в кошику'' (Locative)'
+- section: Practice / Практика
+  points:
+  - 'Order food delivery — context: distinguishing ''номер'' (ID/phone) vs ''кількість''
+    (quantity); use terms like ''безкоштовна доставка'' (free delivery), ''час доставки''
+    (delivery time)'
+  - 'Taxi apps (Uklon, Bolt) — functional vocabulary: ''замовити таксі'', ''місце
+    посадки'' (pickup), ''місце призначення'' (destination); state standard §3.11
+    alignment'
+- section: Dialogues / Діалоги
+  points:
+  - 'Customer support conversation — use polite imperative forms; cover ''скарга''
+    and ''повернення''; cultural note: standard polite forms in chat support'
+  - 'App interactions — banking context: ''перевірити баланс'', ''поповнити баланс'',
+    ''номер картки''; cultural hook: common phrase ''skinuty na kartu'' (скинути на
+    картку)'
+- section: Narrative / Розповідь
+  points:
+  - 'Online services story — cultural hook: the ''Monobank jar'' (banka) for collective
+    fundraising and ''скинути на картку'' culture; emphasizes digital philanthropy'
+- section: Need More Practice?
+  points:
+  - Summary and links — prepares for a2-70 (Introduction to Participles) and a2-71
+    (A2 Final Exam)
+vocabulary_hints:
+  required:
+  - 'замовлення (order) — оформити замовлення, номер замовлення, скасувати замовлення;
+    learner error: neuter gender agreement (моє замовлення)'
+  - кошик (cart) — додати в кошик (motion, Acc), ваш кошик порожній (state, Loc);
+    common UI term
+  - доставка (delivery) — служба доставки, безкоштовна доставка, час доставки
+  - оплата (payment) — оплата карткою, Apple Pay/Google Pay context
+  - переказ (transfer) — грошовий переказ, скинути на картку (very common phrase)
+  - баланс (balance) — перевірити баланс, поповнити баланс
+  - додаток (app) — мобільний додаток, завантажити додаток, через додаток
+  - картка (card) — банківська картка, номер картки, скинути на картку
+  - сповіщення (notification) — отримати сповіщення, налаштування сповіщень
+  recommended:
+  - підтвердження (confirmation) — код підтвердження, чекати на підтвердження
+  - відстеження (tracking) — номер для відстеження, відстежити замовлення
+  - підтримка (support) — служба підтримки, написати в підтримку
+  - скарга (complaint) — подати скаргу, книга скарг
+  - повернення (refund) — оформити повернення коштів
+  - промокод (promo code) — ввести промокод, активний промокод
+  - таксі (taxi) — замовити таксі, водій
+activity_hints:
+- type: match-up
+  focus: Online services vocabulary
+  items: 25
+- type: quiz
+  focus: Understand app interfaces (reading comprehension)
+  items: 15
+- type: fill-in
+  focus: Complete service requests
+  items: 15
+focus: practical
+pedagogy: PPP
+prerequisites:
+- a2-68 (Texting and Messaging)
+connects_to:
+- a2-70 (Introduction to Participles)
+- a2-53 (Shopping and Services)
+objectives:
+- Learner can use Ukrainian delivery apps
+- Learner can handle online banking basics
+- Learner can communicate with support
+- Learner can understand app notifications
+grammar:
+- App interface vocabulary (кошик, замовити)
+- Banking terms (картка, переказ, баланс)
+- Customer support phrases
+register: розмовний
+immersion: 75-90% Ukrainian
+phase: A2.6 [Practical]
+persona:
+  voice: Encouraging Cultural Guide
+  role: IT Support Specialist
+word_target: 3000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Online Services
+
+## State Standard Reference
+§3.11: "Послуги: банк; пошта; бібліотека; спортзал, басейн; таксі."
+§3.9: "Купівля (закупи): ... гроші."
+§3.4: "Дозвілля... інтернет, соціальні мережі."
+Alignment: This module directly addresses the A2 requirement for communicative competence in service interactions (banking, taxi) and digital literacy (internet), specifically focusing on the modern "app-based" realization of these services in Ukraine.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| замовлення (n) | High (E-commerce context) | оформити замовлення, номер замовлення, скасувати замовлення |
+| кошик (m) | High (Shopping UI) | додати в кошик, ваш кошик порожній |
+| доставка (f) | High (Logistics) | безкоштовна доставка, служба доставки, час доставки |
+| додаток (m) | High (Tech) | мобільний додаток, завантажити додаток, через додаток |
+| картка (f) | High (Banking) | банківська картка, оплата карткою, номер картки |
+| переказ (m) | Medium (Banking) | грошовий переказ, переказ на картку |
+| баланс (m) | High (Banking) | перевірити баланс, поповнити баланс |
+
+## Cultural Hooks
+1. **Diia (Дія) & "State in a Smartphone"**: Ukraine is the first country to grant digital passports the same legal status as physical ones. The "Diia" app is central to daily life for documents and services, symbolizing Ukraine's rapid digitalization.
+2. **Cashless Everywhere**: Even small street vendors and markets often accept card/phone payments (Apple Pay/Google Pay). "Skinuty na kartu" (скинути на картку - send to card) is a standard way to pay friends or small merchants, often via Monobank or Privat24.
+3. **Monobank Culture**: The "Mono" cat mascot and the concept of "banka" (jar) for collective fundraising (especially for donations) are deeply embedded in modern Ukrainian social culture.
+
+## Common Learner Errors
+1. **Case Mismatch in "Add to Cart"**: Learners often say "додати в кошик" (correct - Accusative) but mix it with static location meanings.
+   *   *Error*: "Це в кошик" (Nom/Acc mix) vs "Це в кошику" (Locative - It is in the cart).
+2. **Gender Agreement with "Замовлення"**: Since it ends in -я, learners sometimes mistake it for feminine.
+   *   *Error*: "Моя замовлення" → *Correct*: "Моє замовлення" (Neuter).
+3. **"Number" vs "Quantity"**: Confusing "номер" (ID/phone) with "кількість" (amount).
+   *   *Context*: "Номер замовлення" (Order ID) vs "Кількість товарів" (Quantity of items).
+
+## Cross-References
+- Builds on: a2-68 (Texting and Messaging - app interfaces), a2-53 (Shopping and Services - basic terms)
+- Prepares for: a2-70 (A2 Final Exam)
+
+## Notes for Content Writing
+- **Visuals**: Describe UI elements clearly (buttons like "Оплатити", icons for "Кошик").
+- **Grammar Focus**: Pay attention to the Imperative mood for app commands (Натисніть, Оберіть) and Genitive case for quantities/transactions.
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Online services in Ukraine — cultural hook: 'State in a Smartphone' (Держава у смартфоні) and the Diia (Дія) app; explain that Ukraine is the first country to grant digital passports full legal status (State Standard §3.11, §3.4)"
+  - "Cashless economy context: the ubiquity of Apple Pay/Google Pay even at street kiosks; introduce the cultural phrase 'skinuty na kartu' (скинути на картку) as a standard social and commercial interaction"
+- section: "Презентація (Presentation)"
+  words: 700
+  points:
+  - "Core UI vocabulary: focus on 'замовлення' (order), 'кошик' (cart), and 'додаток' (app); note 'додаток' is the standard term for a mobile application (State Standard §3.9)"
+  - "Grammar focus: Imperative mood for app commands (Натисніть, Оберіть, Оплатити, Підтвердіть); provide a list of common button labels and their functions"
+  - "Learner error alert: 'Замовлення' is neuter gender (моє замовлення); drill agreement to prevent feminine-ending confusion (-я suffix pattern)"
+- section: "Практика (Practice)"
+  words: 700
+  points:
+  - "Navigation and Cart logic: drill the distinction between 'додати в кошик' (motion, Accusative) and 'у кошику' (static location, Locative); use 5 minimal pairs to reinforce the case change"
+  - "Ordering logistics: distinguish between 'номер' (ID/phone number) and 'кількість' (quantity); example: 'номер замовлення' vs 'кількість товарів'"
+  - "Delivery specifics: collocations for 'доставка' (безкоштовна доставка, час доставки, служба доставки); simulate tracking an order using 'номер для відстеження'"
+- section: "Діалоги (Dialogues)"
+  words: 600
+  points:
+  - "Taxi and Transport: functional dialogue using apps like Uklon or Bolt; use terms 'замовити таксі', 'місце посадки' (pickup), and 'місце призначення' (destination)"
+  - "Banking and Support: customer support chat context; handling a 'скарга' (complaint) or 'повернення' (refund/return); common phrases like 'перевірити баланс' and 'поповнити рахунок'"
+  - "Peer-to-peer transfers: a dialogue about splitting a bill using 'скинути на картку'; mention Monobank and Privat24 as the primary platforms"
+- section: "Розповідь (Narrative)"
+  words: 400
+  points:
+  - "Cultural narrative: The 'Monobank cat' mascot and the social phenomenon of the 'banka' (банка/jar) for collective fundraising and digital philanthropy"
+  - "Story of a digital day: using Diia for ID, ordering delivery via Glovo/Bolt, and donating to a 'banka', emphasizing Ukraine's status as a digital leader"
+- section: "Підсумок (Summary)"
+  words: 200
+  points:
+  - "Review of key collocations (оформити замовлення, оплата карткою); final check on neuter gender agreement for 'замовлення'"
+  - "Preparation for a2-70 (Introduction to Participles) and the A2 Final Exam (a2-71)"
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "замовлення (order) — оформити замовлення, номер замовлення, скасувати замовлення; high frequency; note neuter gender (моє)"
+  - "кошик (cart/basket) — додати в кошик (motion/Acc), ваш кошик порожній (Loc); standard UI term"
+  - "доставка (delivery) — служба доставки, безкоштовна доставка, час доставки; essential for e-commerce"
+  - "додаток (app/application) — мобільний додаток, завантажити додаток, через додаток; refers specifically to mobile software"
+  - "картка (card) — банківська картка, оплата карткою, номер картки; central to 'skinuty na kartu' culture"
+  - "переказ (transfer) — грошовий переказ, переказ на картку; common in banking apps"
+  - "баланс (balance) — перевірити баланс, поповнити баланс; used for phones and banks"
+  - "оплата (payment) — термінал для оплати, підтвердити оплату; standard checkout term"
+  recommended:
+  - "підтвердження (confirmation) — код підтвердження, чекати на підтвердження"
+  - "відстеження (tracking) — номер для відстеження, відстежити замовлення"
+  - "підтримка (support) — служба підтримки, написати в підтримку"
+  - "скарга (complaint) — подати скаргу, розгляд скарги"
+  - "повернення (return/refund) — оформити повернення коштів, повернення товару"
+  - "банка (jar/fundraising tool) — скинути в банку, відкрити банку; specific Monobank cultural term"
+  - "промокод (promo code) — ввести промокод, знижка за промокодом"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4355 chars)
+✅ Message sent to Claude (ID: 10278)
+✓ Message 10278 acknowledged
+   Auto-acknowledged reply #10278 (stdout delivery — no inbox accumulation)
+✓ Message 10273 acknowledged

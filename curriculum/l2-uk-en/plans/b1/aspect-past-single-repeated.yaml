@@ -6,55 +6,86 @@ version: '2.0'
 title: 'Вид у минулому: одного разу vs щодня'
 subtitle: 'Aspect in Past: Single vs Repeated Actions'
 content_outline:
-- section: Тест
+- section: 'Тест: Два спогади (Test: Two Memories)'
+  words: 600
   points:
-  - Compare two narratives
-  - Deduce rule (One vs Many) — use visual timeline (Dots on a line vs One big X)
-    per research
-- section: Пояснення
+  - 'Memoirist persona: Contrast a recurring childhood habit (repeated action) with
+    a single, life-altering event (single action).'
+  - 'Visual timeline deduction: Introduce the ''Dots on a line'' (habits) vs ''One
+    big X'' (events) visualization to help learners identify frequency markers.'
+  - 'Initial identification of time markers found in research: «щодня» vs «того разу»
+    as triggers for aspect selection.'
+- section: 'Презентація: Теорія та культурний контекст (Presentation: Theory and Cultural
+    Context)'
+  words: 1000
   points:
-  - 'Single events (markers: once, that time) — cultural hook: «Одного разу...» as
-    canonical folk tale opener'
-  - 'Repeated actions (markers: always, often) — cultural hook: «щонеділі» associations
-    with family rituals'
-  - 'Contrast table — explicit contrast: «читав» (process/habit) vs «прочитав» (result)'
-  - 'Special cases (once, long ago) — learner error: confusion with English «used
-    to» (just past imperfective)'
-- section: Практика
+  - 'Alignment with State Standard §4.2.3.1: Systematic review of past tense formation
+    for imperfective (хотів) and perfective (побачив) verbs.'
+  - 'The Folk Tale Hook: Deep dive into «Одного разу...» (Once upon a time) as the
+    canonical folk-tale opener that shifts language into narrative storytelling mode.'
+  - 'Habitual Hospitality Hook: Cultural associations with «щонеділі» (every Sunday)
+    and «на свята» (on holidays) as triggers for imperfective verb rituals (gathering,
+    cooking, visiting).'
+  - 'Semantic contrast table: Explicitly compare «читав» (process or habit) vs «прочитав»
+    (achievement or result) using high-frequency collocations.'
+  - 'Deconstructing ''Used to'' confusion: Explain how the Ukrainian past imperfective
+    fully encompasses the English ''used to'' concept without requiring extra structures.'
+- section: Грамматичні нюанси та типові помилки (Grammatical Nuances and Common Errors)
+  words: 800
   points:
-  - Selection algorithm
-  - 'Common mistakes — learner error: Perfective for Habitual Actions (Він прочитав
-    книгу щодня)'
-  - Aspect in daily life
-- section: Діалоги
+  - 'Learner Error Correction: Addressing the ''Perfective for Habituals'' trap (Він
+    прочитав книгу щодня -> Він читав...) by focusing on the frequency marker over
+    completion.'
+  - 'Process vs Achievement: Distinguishing between ''Я складав іспит'' (the act of
+    taking) and ''Я склав іспит'' (the success of passing) as a marker of single achievement.'
+  - 'Selection algorithm: A step-by-step guide for choosing aspect based on frequency
+    adverbs (часто, іноді, зазвичай) vs specific sequence markers (вперше, востаннє).'
+- section: 'Практика: Минуле в деталях (Practice: Past in Detail)'
+  words: 1000
   points:
-  - 'School memories — context: habits (used to) vs specific events'
-  - Summer stories
-  - Work experience
-- section: Підсумок
+  - 'School memories narrative: Practice contrasting teachers'' routines (habitual)
+    with a specific memory of a graduation ceremony (single event).'
+  - 'The ''One Summer'' Transformation: Drill transforming a habitual description
+    (''Кожного літа ми їздили...'') into a specific narrative (''Того літа ми поїхали...'').'
+  - 'Professional Memoir Dialogue: Scenario-based practice discussing repeated daily
+    work tasks versus a single major career milestone.'
+- section: 'Підсумок: Резюме маркерів (Summary: Marker Recap)'
+  words: 600
   points:
-  - Summary of markers — review frequency adverbs
-  - Self-check
+  - 'Master table of frequency markers: Grouping ''always/often/usually'' (Imp) vs
+    ''once/that day/that time'' (Perf) for quick reference.'
+  - 'Persona reflection: A final narrative summary by the Memoirist, weaving together
+    habits and specific events to showcase the beauty of Ukrainian aspectual flow.'
+  - 'Self-check assessment: 10-item diagnostic identifying the ''Storytelling Mode''
+    triggered by narrative markers.'
 vocabulary_hints:
   required:
-  - 'одного разу (once) — collocations: одного разу вранці/вночі, одного разу він
-    вирішив'
-  - 'щодня (every day) — collocations: робити щодня, щодня бачити; synonym: кожного
-    дня'
-  - 'часто (often) — collocations: дуже часто, досить часто'
-  - 'іноді (sometimes) — collocations: тільки іноді, іноді навіть, іноді буває'
-  - 'зазвичай (usually) — collocations: як зазвичай, він зазвичай'
-  - 'того разу (that time) — collocations: саме того разу, пам''ятаю того разу'
-  - того дня (that day)
-  - 'завжди (always) — collocations: назавжди (forever), завжди був, завжди казав'
-  - ніколи (never)
-  - рідко (rarely)
+  - 'одного разу (once) — High frequency; collocations: одного разу вранці/вночі;
+    canonical folk-tale opener'
+  - 'щодня (every day) — High frequency; synonym: кожного дня; collocations: робити
+    щодня, бачити щодня'
+  - 'часто (often) — Very High frequency; collocations: досить часто, дуже часто,
+    як часто'
+  - 'іноді (sometimes) — High frequency; collocations: тільки іноді, іноді навіть,
+    іноді буває'
+  - 'зазвичай (usually) — High frequency; usage: зазвичай ми, він зазвичай, як зазвичай'
+  - 'того разу (that time) — Medium frequency; specific event marker; collocations:
+    пам''ятаю того разу, саме того разу'
+  - того дня (that day) — Specific perfective trigger for narrative events
+  - 'завжди (always) — Very High frequency; collocations: назавжди (forever), завжди
+    був, завжди казав'
+  - ніколи (never) — Negative frequency marker; usually requires past imperfective
+    for habits
+  - рідко (rarely) — Frequency marker for repeated actions
   recommended:
-  - регулярно (regularly)
-  - постійно (constantly)
-  - вперше (for the first time)
-  - востаннє (for the last time)
-  - неодноразово (repeatedly)
+  - регулярно (regularly) — Formal register frequency marker
+  - постійно (constantly) — High intensity habitual marker
+  - вперше (for the first time) — Achievement/single event marker
+  - востаннє (for the last time) — Final occurrence marker
+  - неодноразово (repeatedly) — Formal register for multiple occurrences
+  - щонеділі (every Sunday) — Cultural hook associated with family rituals and imperfective
+    aspect
+  - на свята (on holidays) — Context for habitual hospitality and recurring actions
 activity_hints:
 - type: fill-in
   focus: Time marker → aspect selection

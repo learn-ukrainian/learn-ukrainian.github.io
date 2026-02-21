@@ -6,49 +6,94 @@ version: '2.0'
 title: Непрямі питання та накази
 subtitle: Reported Questions & Commands
 content_outline:
-- section: Тест
+- section: Діагностичний тест (Diagnostic Test)
+  words: 500
   points:
-  - Diagnostic quiz on indirect questions/commands — check for common 'що' vs 'чи'
-    confusion and 'ask to do' mistranslations
-  - Self-assessment questions
-- section: Пояснення
+  - Diagnostic quiz identifying the common 'що' vs 'чи' confusion in Yes/No indirect
+    questions (e.g., *Він запитав, що я хочу кави* vs correct *чи я хочу*)
+  - Check for 'ask to action' mistranslations where learners incorrectly use *питати*
+    instead of *просити* for requests
+  - 'Visual recognition task: identifying the incorrect retention of question marks
+    in reported questions (e.g., *Вона спитала, де я живу?*)'
+  - Self-assessment against Ukrainian State Standard §4.4.3 competencies regarding
+    reported speech transformations
+- section: Граматичне пояснення (Grammatical Explanation)
+  words: 1300
   points:
-  - 'Yes/No Questions (Він запитав, чи...) — learner error: using ''що'' instead of
-    ''чи'' for indirect yes/no questions'
-  - 'Wh-Questions (Вона запитала, що/де/коли...) — emphasize falling narrative intonation
-    and removal of question mark; learner error: forgetting pronoun shifts (I -> he/she)'
-  - Reported Commands (Він сказав, щоб я...) — highlight 'щоб' + past tense structure
-    despite present/future meaning; contrast register of 'наказати' (strong/military)
-    vs 'просити' (polite) vs 'вимагати' (demanding)
-  - 'Reported Requests (просити, щоб) — learner error: translating ''ask to action''
-    as ''питати'' instead of ''просити''; cultural hook: preference for indirect politeness
-    (''Чи не могли б ви...?'')'
-- section: Практика
+  - 'State Standard §4.4.3: Syntax of complex sentences with indirect speech; mapping
+    direct speech acts to subordinating conjunctions (*що*, *чи*, *щоб*)'
+  - 'Indirect Yes/No Questions: Mandatory use of *чи*; explicit drill to eliminate
+    the common learner error of using *що* as a universal conjunction'
+  - 'Wh-Questions (що, де, коли...): Focus on the shift from rising interrogative
+    intonation to falling narrative intonation and the mandatory removal of the question
+    mark'
+  - 'Reported Commands and Requests: Detailed analysis of the *щоб* + Past Tense structure
+    (e.g., *сказав, щоб я зробив*); explaining why past form is used despite present/future
+    meaning'
+  - 'Lexical Register Hierarchy: Contrasting *наказати* (strong/official/military
+    authority) vs *просити* (standard polite) vs *вимагати* (demanding/urgent)'
+  - 'Pronoun and Person Shifts: Rules for transforming *I/Me* to *He/She/Him/Her*
+    to maintain narrative logic and avoid subject confusion'
+- section: Практичні вправи (Practical Exercises)
+  words: 1000
   points:
-  - Report questions and commands — practice transforming direct imperatives into
-    polite indirect requests
-  - Mixed transformation
-- section: Діалоги
+  - 'Transformation drills: Converting direct imperatives into polite indirect requests
+    using the *просити, щоб* pattern'
+  - 'Mixed transformation practice: Shifting a variety of direct questions (Yes/No
+    and Wh-types) into reportable narrative statements'
+  - 'Error correction focus: Identifying and fixing specific learner pitfalls documented
+    in research, such as question mark retention and incorrect conjunction choice'
+  - 'Sentence completion: Building complex sentences from prompts focusing on the
+    ''щоб'' + past tense morphology'
+- section: Культурний контекст та діалоги (Cultural Context & Dialogues)
+  words: 700
   points:
-  - Indirect questions/commands in conversation — highlight 'Ty' vs 'Vy' dynamics
-    in reporting requests (friend vs formal)
-  - Everyday scenarios
+  - 'Politeness Hierarchy: Exploring why Ukrainians prefer indirect structures like
+    *Чи не могли б ви...?* over direct commands in formal settings'
+  - 'The ''Ty'' vs ''Vy'' dynamic: How reporting a request changes based on the social
+    hierarchy (e.g., reporting a teacher''s request vs a friend''s request)'
+  - 'Scenario-based dialogues: Applying reported commands in workplace (formal/demanding)
+    vs household (casual/polite) contexts'
+  - 'Intonation drill: Practice reading reported questions with narrative falling
+    tones to distinguish them from direct queries'
+- section: Підсумок та самоперевірка (Summary & Self-check)
+  words: 500
+  points:
+  - Summary table of conjunction selection based on speech act type (Question -> чи/wh-word;
+    Command -> щоб)
+  - 'Final review of the ''Ask'' distinction: *запитати* (information) vs *просити*
+    (action)'
+  - Checklist for B1-41 Checkpoint readiness, ensuring all complex sentence structures
+    from B1.3b are internalized
+  - 'Reflective task: Describing a recent request or command using all three main
+    conjunctions (*що, чи, щоб*)'
 vocabulary_hints:
   required:
-  - питання (question) — поставити питання, вирішити питання, спірне питання
-  - наказ (command) — віддати наказ, виконати наказ, видати наказ
-  - прохання (request) — звернутися з проханням, ввічливе прохання, настійливе прохання
-  - чи (whether) — mandatory for Yes/No indirect questions (avoiding 'що')
-  - запитати (to ask) — запитати дозволу, запитати дорогу, запитати пораду
-  - наказати (to order) — наказати зробити, суворо наказати
-  - просити (to request) — просити допомоги, просити пробачення, просити слова
-  - щоб (that - subjunctive) — used in reported commands/requests with past tense
-    verb (сказав, щоб я зробив)
+  - питання (question) — поставити питання, вирішити питання, спірне питання, риторичне
+    питання; high frequency general use
+  - наказ (command) — віддати наказ, виконати наказ, видати наказ; implies official
+    or military register
+  - прохання (request) — звернутися з проханням, ввічливе прохання, настійливе прохання;
+    high frequency
+  - чи (whether) — mandatory for Yes/No indirect questions; must be distinguished
+    from 'що' in reporting
+  - запитати (to ask) — запитати дозволу, запитати дорогу, запитати пораду; focus
+    on information seeking
+  - наказати (to order) — наказати зробити, суворо наказати; implies authority (parental,
+    military, or state)
+  - просити (to request) — просити допомоги, просити пробачення, просити слова; key
+    for reporting actions (not questions)
+  - щоб (that - subjunctive) — mandatory for reported commands/requests; used with
+    past tense verbs (*сказав, щоб я зробив*)
   recommended:
-  - поцікавитися (to wonder) — polite alternative to 'запитати' in indirect speech
-  - вимагати (to demand) — stronger than 'просити', often implies authority or urgency
-  - умовляти (to persuade) — trying to convince someone to act
-  - заборонити (to forbid) — often used in negative reported commands
+  - поцікавитися (to wonder) — polite, higher-register alternative to 'запитати' in
+    indirect speech
+  - вимагати (to demand) — stronger than 'просити', implies urgency, authority, or
+    strict necessity
+  - умовляти (to persuade) — describing the act of trying to convince someone to comply
+    with a request
+  - заборонити (to forbid) — used for negative reported commands (e.g., *Він заборонив,
+    щоб ми йшли*)
 activity_hints:
 - type: fill-in
   focus: Questions and commands to indirect

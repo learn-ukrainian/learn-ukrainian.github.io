@@ -6,54 +6,78 @@ version: '2.0'
 title: Home and Furniture
 subtitle: Where I Live
 content_outline:
-- section: Вступ
+- section: 'Вступ: Типи житла та помешкання (Introduction: Types of Housing)'
+  words: 500
   points:
-  - Types of housing — aligns with State Standard §3.2 (квартира, приватний будинок)
-  - Home vocabulary introduction — use a 'Room Map' concept to group items logically
-- section: Граматика
+  - 'State Standard §3.2 compliance: Differentiating between ''квартира'' (apartment)
+    and ''приватний будинок'' (private house) as primary housing types.'
+  - Introduce the 'Room Map' visual concept to group vocabulary by function (living,
+    sleeping, cooking) for logical retention.
+  - 'Cultural motivator: The folklore of ''Domovyk'' (household spirit) who protects
+    the home and lives behind the stove or in a corner.'
+- section: 'Презентація: Кімнати та меблі (Presentation: Rooms and Furniture)'
+  words: 800
   points:
-  - 'Rooms (кухня, вітальня, спальня) — note ''на кухні'' exception (English ''in'',
-    Ukrainian ''on''); learner error: confusing prepositions'
-  - 'Furniture (стіл, стілець, диван, ліжко) — cultural hook: superstition about sitting
-    at the corner of a table (unmarried); learner error: ''у столі'' (inside) vs ''на
-    столі'' (on)'
-  - Appliances (холодильник, пральна машина) — builds on a2-45 (Food/Cooking)
-  - 'Locative case for location — explicitly highlight consonant mutations [г]→[з],
-    [к]→[ц], [х]→[с] (e.g., підлога -> на підлозі); learner error: forgetting mutations'
-- section: Практика
+  - 'Essential furniture list based on frequency: ''стіл'' (table), ''стілець'' (chair),
+    ''ліжко'' (bed), ''шафа'' (wardrobe), and ''диван'' (sofa).'
+  - 'Parts of the room and interior: ''підлога'' (floor), ''стіна'' (wall), and ''килим''
+    (carpet) with associated collocations.'
+  - 'Household appliances: ''холодильник'' (refrigerator) and ''пральна машина'' (washing
+    machine), building on a2-45 context.'
+- section: 'Граматика: Місцевий відмінок та прийменники (Grammar: Locative Case and
+    Prepositions)'
+  words: 700
   points:
-  - 'Dialogues about homes — cultural hook: The Threshold (Поріг) taboo (shaking hands
-    across it)'
-  - 'Room descriptions — learner error: confusing Location (Locative) vs Direction
-    (Accusative)'
-- section: Корисні вирази
+  - 'State Standard §4.2.2.6: Using ''у/в'' and ''на'' in the Locative case to describe
+    the location of persons or objects (e.g., на столі, в лікарні).'
+  - 'High-friction point: Consonant mutations [г]→[з], [к]→[ц], [х]→[с] explicitly
+    drilled (e.g., ''підлога'' -> ''на підлозі'', ''полиця'' -> ''на полиці'').'
+  - 'Prepositional usage: Contrasting ''у/в'' (inside) with ''на'' (on surface), and
+    highlighting ''на кухні'' as a required idiomatic exception.'
+- section: 'Практика: Опис оселі та етикет (Practice: Home Description and Etiquette)'
+  words: 600
   points:
-  - Useful home phrases — include invitation etiquette (crossing threshold)
-- section: Підсумок
+  - 'Practice drills for Learner Error: Location (static Locative) vs Direction (motion
+    Accusative), correcting ''Я йду в кімнаті'' to ''Я йду в кімнату''.'
+  - 'Cultural Etiquette: The Threshold (Поріг) taboo—instruction on why shaking hands
+    across the threshold is forbidden in Ukrainian culture.'
+  - 'Social Superstition: Sitting at the corner of the table (''на розі столу'') and
+    the associated 7-year marriage warning for unmarried people.'
+- section: 'Підсумок: Мій дім — моя фортеця (Summary: My Home is My Castle)'
+  words: 400
   points:
-  - Summary of vocabulary
+  - Synthesizing vocabulary for describing one's own dwelling and the items within
+    each room.
+  - Useful invitation phrases incorporating proper etiquette for entering a Ukrainian
+    home.
+  - Reviewing objectives and previewing connections to a2-61 (Hotel) and a2-47 (Locative
+    expansion in Nature).
 vocabulary_hints:
   required:
-  - 'кімната (room) — learner error: confusion with ''місце'' (place); location vs
-    direction'
-  - кухня (kitchen) — на кухні (in the kitchen) [exception]
-  - спальня (bedroom) — у спальні (in the bedroom)
-  - вітальня (living room) — у вітальні (in the living room)
-  - ванна (bathroom) — у ванній (in the bathroom)
-  - меблі (furniture) — collective noun (singular); меблі для дому
   - стіл (table) — на столі (on the table), ставити стіл (to set the table), письмовий
     стіл (desk)
+  - стілець (chair) — на стільці (on the chair), сидіти на стільці (to sit on a chair)
   - ліжко (bed) — у ліжку (in bed), двоспальне ліжко (double bed), стелити ліжко (to
     make the bed)
-  recommended:
   - шафа (wardrobe) — у шафі (in the wardrobe/closet), книжкова шафа (bookcase), шафа-купе
     (sliding wardrobe)
   - диван (sofa) — на дивані (on the sofa), лежати на дивані (to lie on the sofa)
-  - холодильник (refrigerator) — common appliance
+  - 'кімната (room) — learner error: confusion with ''місце'' (place); drill location
+    vs direction'
+  - кухня (kitchen) — на кухні (in the kitchen) [exception where 'on' replaces 'in']
+  - спальня (bedroom) — у спальні (in the bedroom)
+  - вітальня (living room) — у вітальні (in the living room)
+  - ванна (bathroom) — у ванній (in the bathroom)
+  - меблі (furniture) — collective noun; меблі для дому
+  recommended:
+  - підлога (floor) — на підлозі (on the floor); high-frequency word highlighting
+    [г]→[з] mutation
+  - стіна (wall) — на стіні (on the wall); high-frequency location point
+  - килим (carpet) — на килимі (on the carpet)
+  - холодильник (refrigerator) — common appliance; builds on a2-45
   - пральна машина (washing machine) — essential appliance
   - квартира (apartment) — у квартирі (in the apartment)
-  - 'будинок (house) — у будинку (in the house); cultural hook: Domovyk (spirit protecting
-    the home)'
+  - будинок (house) — у будинку (in the house); reference to Domovyk lore
 activity_hints:
 - type: match-up
   focus: Rooms and furniture

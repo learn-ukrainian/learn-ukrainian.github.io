@@ -1,0 +1,298 @@
+✅ Message sent to Gemini (ID: 10373) [auto-acked: self-addressed]
+✓ Message 10373 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10373...
+📨 Message #10373
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-passive-constructions
+   Time: 2026-02-20T20:29:22.921504+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b1-47
+level: B1
+sequence: 47
+slug: passive-constructions
+version: '2.0'
+title: 'Пасивні конструкції: повна система'
+subtitle: Passive Constructions - Complete System
+content_outline:
+- section: Тест
+  points:
+  - Three passive types overview — Adjectival (state/feature), Impersonal (fact/result),
+    Reflexive (process/regular action)
+  - 'Active vs passive voice — state standard §4.4.2 alignment: simple sentence with
+    participle clause vs active construction'
+- section: Пояснення
+  points:
+  - 'Participle passive — Adjectival function (state/feature: зачинений магазин)'
+  - 'Short form passive — Impersonal forms on -но/-то (зроблено, прожито); unique
+    Ukrainian feature emphasizing result/fatality; learner error: adding agent in
+    instrumental case (Мною було зроблено -> WRONG)'
+  - 'Reflexive passive (-ся) — Process or regular action (магазин зачиняється); learner
+    error: confusing process with result'
+  - 'Choosing the right passive — cultural hook: avoiding ''Kanceliaryt'' (bureaucratese)
+    and Russian-style passive overuse; preference for active voice in natural Ukrainian'
+- section: Практика
+  points:
+  - Transform with all three types — fix English calques like 'It was decided by him'
+    -> 'Він вирішив'
+  - Compare meanings — distinguish between process (будується) and result (збудовано/збудований)
+- section: Діалоги
+  points:
+  - Real-world passive usage — official announcements (Вхід заборонено) vs news reports
+  - Context and style — contrasting official register (passive) with conversational
+    style (active)
+- section: Потрібно більше практики?
+  points:
+  - Additional exercises — focus on correcting 'passive heavy' sentences to natural
+    active ones
+vocabulary_hints:
+  required:
+  - пасивний стан (passive voice) — вживати пасивний стан, речення в пасивному стані
+  - активний стан (active voice) — перетворити на активний стан, перевага активного
+    стану
+  - зворотний (reflexive)
+  - трансформація (transformation)
+  - конструкція (construction)
+  - стиль (style)
+  - бути (to be)
+  - -ся (reflexive suffix)
+  recommended:
+  - наголос (emphasis)
+  - агент дії (agent of action)
+  - регістр (register)
+  - уникати (to avoid)
+  - дієприкметник (participle) — пасивний дієприкметник, дієприкметниковий зворот
+  - -но/-то (impersonal ending) — зроблено, написано, відкрито, заборонено
+  - будуватися (to be built) — будинок будується, плани будуються
+activity_hints:
+- type: fill-in
+  focus: Active to three passive types
+  items: 25
+- type: quiz
+  focus: Choose best passive type
+  items: 20
+- type: fill-in
+  focus: Complete passive sentences
+  items: 15
+- type: fill-in
+  focus: Write using varied passives
+  items: 10
+focus: grammar
+pedagogy: TTT
+prerequisites:
+- b1-46 (Past Passive Participles 2)
+connects_to:
+- b1-48 (Diminutives Master Class)
+objectives:
+- Learner can distinguish three types of passive constructions
+- Learner can transform active sentences to passive
+- Learner understands stylistic nuances of each passive type
+- Learner can choose appropriate passive for context
+grammar:
+- Три типи пасивних конструкцій
+- Пасив з дієприкметником (participle passive)
+- Пасив з короткою формою (short form passive)
+- Зворотний пасив (-ся reflexive passive)
+register: розмовний
+phase: B1.4a [Participles]
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Government Spokesperson
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Пасивні конструкції: повна система
+
+## State Standard Reference
+§4.2.3.1 (B1 Verbs): "Дійсний спосіб: ...дієприкметник (participle)..."
+§4.4.2 (B1 Syntax): "просте речення з дієприкметниковим зворотом: Три години тому ми повернулися з екскурсії, організованої для учасників конференції"
+Alignment: Цей модуль систематизує використання дієприкметників (participles) та безособових форм, які згадуються в стандарті як частина дієслівної системи та ускладненого речення на рівні B1.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| пасивний стан | Середня (Граматика) | вживати пасивний стан, речення в пасивному стані |
+| активний стан | Середня (Граматика) | перетворити на активний стан, перевага активного стану |
+| дієприкметник | Висока (Освіта) | пасивний дієприкметник, дієприкметниковий зворот |
+| -но/-то | Висока (Офіційний) | зроблено, написано, відкрито, заборонено |
+| будуватися | Середня (Загальна) | будинок будується, плани будуються (перен.) |
+
+## Cultural Hooks
+1. **"Канцелярит" і бюрократія**: Надмірне вживання пасивного стану (особливо форм на -ся з орудним відмінком діяча, як-от "мною вирішується") вважається ознакою "канцеляриту" або впливом російської/радянської бюрократичної мови. Українська мова тяжіє до активних конструкцій ("Ми вирішуємо", а не "Нами вирішується").
+2. **Унікальність безособових форм на -но/-то**: Ці форми (зроблено, прожито) є специфічною рисою української мови, яка дозволяє підкреслити *результат* дії без вказівки на особу, надаючи висловлюванню фаталістичного або офіційного відтінку (наприклад, у наказах: "Вхід заборонено").
+
+## Common Learner Errors
+1. **Агент у безособових реченнях**: "Мною було зроблено" (Помилка) → "Я зробив" або просто "Зроблено" (Правильно). Форми на -но/-то не повинні мати виконавця в орудному відмінку.
+2. **Зловживання пасивом**: Калькування англійського "It was decided by him" → "Це було вирішено ним" (Неприродно) → "Він вирішив це" (Природно).
+3. **Плутанина процесу і результату**: Використання -ся для результату замість дієприкметника (наприклад, "Двері відчиняються" замість "Двері відчинені" або "Двері відчинено").
+
+## Cross-References
+- Builds on: b1-46 (Past Passive Participles 2)
+- Prepares for: b1-48 (Diminutives - stylistic contrast), B2-PRO (Official documents)
+
+## Notes for Content Writing
+- Чітко розмежувати три типи:
+    1. **Пасивний дієприкметник** (Adjectival: *зачинений магазин*) — стан/ознака.
+    2. **Безособова форма на -но/-то** (Impersonal: *магазин зачинено*) — констатація факту/результату.
+    3. **Пасив на -ся** (Reflexive: *магазин зачиняється о 18:00*) — процес або регулярна дія.
+- Наголосити на стилістиці: пасив доречний в новинах та офіційних документах, але в розмові краще актив.
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ та діагностичний тест (Introduction and Diagnostic Test)"
+  words: 600
+  points:
+  - "Overview of the three passive types as defined by State Standard §4.2.3.1 and §4.4.2: Adjectival (participle), Impersonal (fact/result), and Reflexive (process/habitual action)."
+  - "Diagnostic exercise to identify existing learner patterns, specifically targeting the common error of adding an agent in the instrumental case to impersonal -но/-то constructions (e.g., diagnosing if learners say 'Мною було зроблено')."
+- section: "Граматична система: три типи пасиву (Grammar System: Three Passive Types)"
+  words: 1000
+  points:
+  - "The Adjectival Passive: Using passive participles to describe states or features (e.g., 'зачинений магазин'); practical exercises based on Standard §4.4.2 regarding participle clauses."
+  - "The Impersonal Passive (-но/-то): Deep dive into this unique Ukrainian feature used for констатація факту (stating fact/result); explanation of its fatalistic or official tone (e.g., 'Вхід заборонено')."
+  - "The Reflexive Passive (-ся): Defining process or regular actions (e.g., 'магазин зачиняється о 18:00'); contrastive analysis to prevent confusion between process and result ('відчиняється' vs 'відчинено')."
+- section: "Культурний контекст: боротьба з «канцеляритом» (Cultural Context: Fighting 'Bureaucratese')"
+  words: 800
+  points:
+  - "Defining 'Kanceliaryt' (bureaucratese) as a remnant of Soviet/Russian-style passive overuse; highlighting the linguistic preference for active voice ('Ми вирішили' vs 'Нами було вирішено')."
+  - "Analyzing the 'Agent Error': Explicitly teaching that forms on -но/-то must NOT have an agent in the instrumental case ('Мною зроблено' - WRONG vs 'Я зробив' or 'Зроблено' - RIGHT)."
+- section: "Практика та корекція помилок (Practice and Error Correction)"
+  words: 900
+  points:
+  - "Transformation triad: Converting active sentences into all three passive types while maintaining natural Ukrainian style; fixing English calques like 'It was decided by him' -> 'Він вирішив'."
+  - "Minimal pairs drill: Distinguishing between state ('Двері зачинені'), process ('Двері зачиняються'), and the result of a completed action ('Двері зачинено')."
+- section: "Діалоги та застосування в мовленні (Dialogues and Speech Application)"
+  words: 700
+  points:
+  - "Situational dialogues: Contrasting official announcements (high passive usage) with everyday conversation (high active usage) to demonstrate register shifts."
+  - "Final summary: Decision-making matrix for choosing the correct passive vs. active voice based on emphasis (result vs. actor) and situational context (Standard §4.4.2 syntax integration)."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "пасивний стан (passive voice) — вживати пасивний стан, речення в пасивному стані; High frequency in grammar context"
+  - "активний стан (active voice) — перетворити на активний стан, перевага активного стану; High frequency, stylistic priority"
+  - "дієприкметник (participle) — пасивний дієприкметник, дієприкметниковий зворот; High frequency (Education/Standard)"
+  - "-но/-то (impersonal ending) — зроблено, написано, відкрито, заборонено; High frequency (Official/Announcements)"
+  - "зворотний (reflexive) — зворотне дієслово, пасив на -ся"
+  - "трансформація (transformation) — трансформація активу в пасив"
+  - "конструкція (construction) — граматична конструкція, пасивна конструкція"
+  - "стиль (style) — офіційно-діловий стиль, розмовний стиль"
+  - "бути (to be) — допоміжне дієслово в пасиві"
+  - "-ся (reflexive suffix) — додавання -ся до дієслова"
+  recommended:
+  - "наголос (emphasis) — робити наголос на результаті"
+  - "агент дії (agent of action) — виконавець дії, уникати агента в орудному відмінку"
+  - "регістр (register) — офіційний регістр, зміна регістру"
+  - "уникати (to avoid) — уникати канцеляриту, уникати пасивних конструкцій"
+  - "будуватися (to be built) — будинок будується, плани будуються; Medium frequency, common process example"
+  - "канцелярит (bureaucratese) — ознака канцеляриту, вплив російської мови"
+  - "констатація (statement) — констатація факту, констатація результату"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4260 chars)
+✅ Message sent to Claude (ID: 10378)
+✓ Message 10378 acknowledged
+   Auto-acknowledged reply #10378 (stdout delivery — no inbox accumulation)
+✓ Message 10373 acknowledged

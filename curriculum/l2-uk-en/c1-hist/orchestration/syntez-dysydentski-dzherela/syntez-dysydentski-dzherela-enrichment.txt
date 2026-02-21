@@ -1,0 +1,301 @@
+✅ Message sent to Gemini (ID: 12505) [auto-acked: self-addressed]
+✓ Message 12505 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12505...
+📨 Message #12505
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-syntez-dysydentski-dzherela
+   Time: 2026-02-20T23:40:14.573402+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-hist-044
+level: c1-hist
+sequence: 44
+version: '1.0'
+title: 'Синтез: Голоси опору'
+focus: history
+pedagogy: seminar
+objectives:
+- 'Analyze the causes and consequences of синтез: голоси опору'
+- Evaluate the historical significance of від самвидаву до незалежності
+content_outline:
+- section: Вступ — Від самвидаву до незалежності
+  subsections:
+  - Огляд модулів 39-43
+  - Різні голоси одного руху
+  - Мета синтезу
+  - Лінія від опору до держави
+- section: Типологія дисидентських джерел
+  subsections:
+  - Самвидавні видання
+  - Приватне листування
+  - Офіційні документи (УГГ)
+  - Літературні твори
+  - Таблиця порівняння
+- section: Голоси опору — хто говорив?
+  subsections:
+  - Інтелігенція — письменники, вчені
+  - Правозахисники
+  - Колишні політв'язні
+  - Жінки в русі
+  - Хто мовчав?
+- section: Стратегії опору
+  subsections:
+  - Культурний опір — мова, література
+  - Правовий опір — посилання на закони
+  - Документування — хроніка
+  - Міжнародний тиск
+  - Що спрацювало?
+- section: Від опору до влади
+  subsections:
+  - Перебудова — нові можливості
+  - Рух — від підпілля до партії
+  - Дисиденти в політиці — Чорновіл, Лук'яненко
+  - Парадокс — комуністи голосують за незалежність
+- section: Методологічні уроки
+  subsections:
+  - Читання цензурованих текстів
+  - Реконструкція вирізаного
+  - Голос vs. мовчання
+  - Героїзація vs. критика
+- section: Підсумок
+  subsections:
+  - Завершення «Джерельної» фази
+  - Від джерел до тематики
+  - Чек-ліст для дисидентських джерел
+vocabulary:
+- синтез
+- опір
+- дисидентський рух
+- голос
+- стратегія
+- правовий
+- культурний
+- документування
+- перебудова
+- Рух
+- інтелігенція
+- правозахисник
+- мученик
+- герой
+- міф
+activities:
+- type: essay-response
+  focus: Create comprehensive source matrix for modules 39-43
+- type: critical-analysis
+  focus: Evaluate which resistance strategies were most effective
+- type: comparative-study
+  focus: Compare paths of 3 dissidents to independence
+- type: essay-response
+  focus: Як дисидентський рух підготував незалежність?
+sources:
+- name: Дисидентський рух в Україні (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Дисидентський_рух_в_Україні
+  type: reference
+  notes: Overview
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
+persona:
+  voice: Academic Historiographer
+  role: KGB Archives Researcher
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Синтез: Голоси опору (Дисидентські джерела)
+
+## Використані джерела
+1.  [Енциклопедія Сучасної України (ЕСУ) — Дисидентський рух](https://esu.com.ua/article-24365) — фундаментальний огляд руху, етапів та персоналій.
+2.  [Віртуальний музей дисидентського руху в Україні](https://museum.khpg.org/) — архів документів, біографій та самвидаву (Харківська правозахисна група).
+3.  [History.org.ua — Шістдесятництво](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Shistdesiatnytstvo) — академічний аналіз культурного феномену опору.
+4.  [Ізборник (Litopys.org.ua) — Іван Дзюба «Інтернаціоналізм чи русифікація?»](http://litopys.org.ua/dziuba/dziuba.htm) — текст ключового політичного памфлету епохи.
+5.  [Архів Української Гельсінської Групи](http://osvita.ua/vnz/reports/history/30524/) — документи та декларації правозахисного етапу.
+
+## Хронологія
+-   **1959**: Заснування Левком Лук'яненком Української робітничо-селянської спілки (УРСС) — першої підпільної організації повоєнного періоду.
+-   **1965**: Перша хвиля арештів української інтелігенції; презентація праці Івана Дзюби «Інтернаціоналізм чи русифікація?».
+-   **1970**: Вихід першого номера самвидавного журналу «Український вісник» (В. Чорновіл).
+-   **1972**: «Великий погром» — масові арешти дисидентів (Стус, Сверстюк, Світличний, Чорновіл), початок «генерального погрому» української культури.
+-   **1976**: Створення Української Гельсінської Групи (УГГ) на чолі з Миколою Руденком.
+-   **1985**: Смерть Василя Стуса в таборі Кучино; початок «Перебудови».
+-   **1988**: Трансформація УГГ в Українську Гельсінську Спілку (УГС) — прообраз першої політичної партії.
+-   **1989**: Створення Народного Руху України за перебудову.
+
+## Ключові факти та цитати
+-   **Самвидав**: «Український вісник» був не просто журналом, а альтернативним інформаційним агентством, що документувало репресії.
+-   **Легалізм**: Унікальна тактика українських дисидентів (на відміну від збройного підпілля ОУН-УПА) — апеляція до радянських законів та Конституції («Ми не просимо милості, ми вимагаємо дотримання ваших законів»).
+-   **Цитата І. Дзюби**: *«Національна справа — це справа всього народу, а не окремої закритої групи»*.
+-   **Цитата В. Стуса**: *«Творчість — то тільки гримаса індивідуального болю»* (з листів до сина).
+-   **Жіночий голос**: Роль жінок (Михайлина Коцюбинська, Атена Пашко, Раїса Мороз) часто недооцінена; вони були не лише «берегинями» в'язнів, а й активними творцями самвидаву.
+
+## Engagement Hooks (mapped to sections)
+-   **Section "Типологія дисидентських джерел: I — Феномен самвидаву"**: `[!history-bite]` — Про техніку виготовлення самвидаву: цигарковий папір («папіросний»), друкарська машинка «Еріка» (бере 4 копії), ризик зберігання навіть одного аркуша.
+-   **Section "Типологія дисидентських джерел: II — Документи та листи"**: `[!quote]` — Уривок з «Листів до сина» Василя Стуса як приклад філософського заповіту, а не просто побутового листування.
+-   **Section "Голоси опору — хто говорив?: II — Правозахисний та жіночий рух"**: `[!myth-buster]` — Міф про те, що дисиденти були виключно чоловіками-героями. Жінки часто брали на себе найнебезпечнішу роботу зв'язкових і редакторок.
+-   **Section "Стратегії опору: I — Культурна оборона"**: `[!context]` — Концепція «життя не по брехні» (Солженіцин/Гавел) у вітчизняному контексті морального абсолютизму (Сверстюк).
+-   **Section "Стратегії опору: II — Право і розголос"**: `[!decolonization]` — Відмова від радянської термінології («антирадєтчік») на користь правової («в'язень сумління»).
+-   **Section "Від опору до влади"**: `[!culture]` — Феномен вчорашніх політв'язнів у костюмах депутатів Верховної Ради (Лук'яненко, Чорновіл) у 1990 році.
+
+## Деколонізаційний контекст
+-   **Imperial/Soviet Myth**: Дисиденти — це «агенти західних спецслужб», «буржуазні націоналісти», відірвані від народу маргінали.
+-   **Ukrainian Reality**: Дисидентський рух був елітарним, але глибоко національним явищем, що відстоювало не лише політичні, а й культурні права (мова, історія) проти русифікації. Вони повернули Україні суб'єктність на міжнародній арені ще до 1991 року.
+-   **Reframing**: Відмова від віктимізації (тільки жертви репресій) до підкреслення їхньої інтелектуальної переваги над тоталітарною системою.
+
+## Contested Terms
+| Concept | Imperial/Soviet framing | Ukrainian (decolonized) framing |
+|---------|-------------------------|--------------------------------|
+| **Самвидав** | «Антирадянська агітація та пропаганда», наклепницькі матеріали | **Вільна преса**, незалежна громадянська журналістика, інструмент правди |
+| **Дисидент** | Відщепенець, ідеологічний диверсант, злочинець | **Інакодумець**, правозахисник, представник національної еліти (совісті нації) |
+| **Український буржуазний націоналізм** | Найтяжчий ідеологічний злочин, ворожість до "дружби народів" | **Патріотизм**, захист національної ідентичності, антиколоніальний спротив |
+| **Табори (ГУЛАГ/Пермські табори)** | Виправно-трудові установи | **Каральна система**, місця знищення української інтелігенції |
+
+## Section-Mapped Research Notes
+
+### Вступ — Від самвидаву до незалежності
+Синтез модулів 39-43. Рух опору 1960-80-х років не був однорідним: він еволюціонував від культурництва (шістдесятники) до правозахисту (УГГ) і політики (УГС, Рух). Спільний знаменник — слово як зброя.
+
+### Типологія дисидентських джерел: I — Феномен самвидаву
+«Український вісник» як головний рупор. Жанрове розмаїття: памфлети (Дзюба), есеїстика (Сверстюк, Мороз), поезія (Стус, Костенко). Технологія поширення: передрук, фотоплівка, передача на Захід («тамвидав»).
+
+### Типологія дисидентських джерел: II — Документи та листи
+Документи УГГ — це юридичні акти: меморандуми про порушення прав людини, списки репресованих. Приватне листування з таборів (епістолярій) — унікальне джерело духовної біографії (Стус, Світличний), де фіксується внутрішня свобода в умовах неволі.
+
+### Голоси опору — хто говорив?: I — Інтелектуали та творці
+Ядро руху — творча інтелігенція (письменники, літературознавці). Чому саме гуманітарії стали авангардом? Роль науковців (математик Леонід Плющ, генерал Петро Григоренко) — вихід за межі «філологічного» гетто.
+
+### Голоси опору — хто говорив?: II — Правозахисний та жіночий рух
+Еволюція від захисту культури до захисту прав людини. Роль жінок: не лише дружини (хоча і це важливо), а й самостійні діячки (Оксана Мешко — «козацька матір», Раїса Руденко). Феномен «мовчазної більшості» та конформізму.
+
+### Стратегії опору: I — Культурна оборона
+Збереження мови як фундаменту ідентичності. «Різдвяні колядування» та вшанування пам'яті Шевченка як акти політичного протесту. Література як простір свободи, куди не дістає цензура (шухлядна творчість).
+
+### Стратегії опору: II — Право і розголос
+«Легалізм»: вимога дотримуватися власної Конституції СРСР. Документування злочинів режиму для історії та міжнародних трибуналів. Звернення до світової спільноти через «Радіо Свобода» та діаспору. Це зруйнувало інформаційну блокаду.
+
+### Від опору до влади
+Кінець 1980-х: гласність відкриває шлюзи. Дисиденти виходять з таборів і стають лідерами нації. Створення Народного Руху. Парадокс: незалежність проголосила комуністична більшість (Група 239) під тиском націонал-демократичної меншості (Народна Рада).
+
+### Методологічні уроки
+Як читати джерела? Езопова мова. Розуміння контексту цензури. Необхідність читати «між рядками». Проблема героїзації: бачити в дисидентах живих людей зі слабкостями та сумнівами, а не лише бронзові пам'ятники.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12555)
+✓ Message 12505 acknowledged
+✓ Message 12555 acknowledged

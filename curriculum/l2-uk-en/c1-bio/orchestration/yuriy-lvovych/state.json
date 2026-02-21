@@ -2,7 +2,13 @@
   "slug": "yuriy-lvovych",
   "track": "c1-bio",
   "module_num": 12,
-  "mode": "v3",
-  "phases": {},
-  "last_updated": "2026-02-18T23:19:07Z"
+  "mode": "e2e",
+  "phases": {
+    "0": {
+      "status": "complete",
+      "timestamp": "2026-02-20T22:59:02Z",
+      "task_id": "yw-yuriy-lvovych-p0"
+    }
+  },
+  "last_updated": "2026-02-20T22:59:02Z"
 }

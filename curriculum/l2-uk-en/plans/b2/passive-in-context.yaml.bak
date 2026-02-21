@@ -1,0 +1,127 @@
+module: b2-06
+level: B2
+sequence: 6
+slug: passive-in-context
+version: '2.0'
+title: Пасив у контексті — вибір за регістром
+content_outline:
+- section: Вступ — Регістр і пасив
+  points:
+  - Що таке регістр — alignment with CEFR B2 Sociolinguistic Competence
+  - 'Чому вибір пасиву залежить від контексту — cultural hook: The ''Kantseliaryt''
+    Trap (bureaucratese vs Agency Pass)'
+  - Підсумок чотирьох форм пасиву — preference for Active Voice ('Ми вирішили' > 'Було
+    вирішено') where possible
+- section: Таблиця регістрів і форм пасиву
+  points:
+  - 'Юридичний документ → -но/-то — cultural hook: Unique Ukrainian form with strict
+    Action Focus (no agent)'
+  - Наукова стаття → -ся
+  - Літературний текст → -ний/-тий
+  - Розмовна оповідь → 3-я особа множини
+- section: Практичні сценарії — Юридичний контекст
+  points:
+  - 'Оголошення, накази, постанови — vocab: офіційний документ, офіційна заява'
+  - 'Чому -но/-то є обов''язковим — learner error: The ''By-Agent'' mistake (e.g.,
+    ''Закон прийнято *парламентом*'')'
+  - Зразки документів — State Standard §4.3.3.1 (one-member sentences)
+- section: Практичні сценарії — Науковий контекст
+  points:
+  - Опис експерименту, методології
+  - Чому -ся підходить найкраще
+  - Зразки наукових текстів — State Standard §4.3.2 (participial phrases)
+- section: Практичні сценарії — Літературний та журналістичний контекст
+  points:
+  - Художній опис, новини
+  - Дієприкметники в літературі
+  - Комбінування форм у журналістиці
+- section: Практичні сценарії — Розмовний контекст
+  points:
+  - Побутові оповіді, чутки
+  - 'Чому 3-я особа множини є природною — learner error: Overuse of ''Buty'' + Participle
+    (calque of ''was written'')'
+  - 'Уникання формальності — vocab: доречний/недоречний жарт'
+- section: Інтегрована практика
+  points:
+  - Один зміст у чотирьох формах
+  - 'Критерії вибору — content writing note: Include decision tree flowchart (Agent
+    known? -> Important? -> Active Voice)'
+  - 'Типові помилки — learner error: Register mismatch with reflexive verbs (e.g.,
+    ''я вибачаюся'' vs ''вибачте'')'
+vocabulary_hints:
+  required:
+  - регістр (register) — офіційний/неофіційний регістр, високий регістр, зміна регістру
+  - контекст (context) — у цьому контексті, широкий контекст, вирвати з контексту
+  - вибір (choice/selection)
+  - юридичний (legal) — юридична особа, юридичний термін, юридична сила
+  - науковий (scientific)
+  - літературний (literary)
+  - журналістичний (journalistic)
+  - розмовний (colloquial)
+  - доречний (appropriate) — доречне зауваження, цілком доречно, недоречний жарт
+  - недоречний (inappropriate)
+  - офіційний (official) — офіційний документ, офіційна заява, офіційний стиль
+  recommended:
+  - стилістика (stylistics)
+  - комунікативна ситуація (communicative situation)
+  - мовленнєва компетенція (speech competence)
+  - прагматика (pragmatics)
+  - соціолінгвістика (sociolinguistics)
+activity_hints:
+- type: error-correction
+  focus: Same information in 4 passive forms
+  items: 8+
+  output: Model versions provided
+- type: match-up
+  focus: Context → appropriate passive form
+  items: 16+
+- type: quiz
+  focus: «Which passive would you use?» — scenario-based
+  items: 15+
+- type: error-correction
+  focus: Fix register-inappropriate passive usage
+  items: 12+
+- type: group-sort
+  focus: Analyze same content in different registers
+  items: 8+
+- type: fill-in
+  focus: Register-appropriate rewriting
+  items: 10+
+- type: essay-response
+  focus: Write same news in 3 different registers
+  output: Model answers for each register
+focus: grammar
+prerequisites:
+- b2-01 (Passive Voice System)
+- b2-02 (Past Passive Participles)
+- b2-03 (Impersonal -но/-то)
+- b2-04 (Reflexive Passive)
+- b2-05 (3rd Person Plural Passive)
+connects_to:
+- b2-07 (Active Participles Present)
+- b2-15 (Register Introduction)
+- b2-10 (B2.1a Checkpoint)
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Register System
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Functional styles and passive voice distribution
+- name: Функціональні стилі української мови
+  url: https://uk.wikipedia.org/wiki/Стиль_мовлення
+  type: secondary
+  notes: Overview of Ukrainian functional styles
+- name: CEFR B2 Sociolinguistic Competence
+  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  type: reference
+  notes: B2 register awareness requirements
+immersion: 100% Ukrainian
+phase: B2.1a [Passive Voice]
+objectives:
+- Identify and correctly use пасив у контексті — вибір за регістром
+- Form and apply регістр і пасив
+- Distinguish between інтегрована практика
+persona:
+  voice: Professional Language Coach
+  role: Press Secretary (Прес-секретар)
+word_target: 4000

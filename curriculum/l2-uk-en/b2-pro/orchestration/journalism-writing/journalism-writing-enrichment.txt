@@ -1,0 +1,276 @@
+✅ Message sent to Gemini (ID: 12219) [auto-acked: self-addressed]
+✓ Message 12219 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12219...
+📨 Message #12219
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-journalism-writing
+   Time: 2026-02-20T23:37:34.053758+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b2-pro-33
+level: B2-PRO
+sequence: 33
+slug: journalism-writing
+version: '2.0'
+title: Журналістське письмо
+subtitle: Journalism Writing
+content_outline:
+- section: Розминка — Журналістика як професія
+  points:
+  - Чим журналістський текст відрізняється від інших
+  - Українська журналістика — традиції та сучасність
+  - Чому професіоналу корисно вміти писати як журналіст
+- section: Структура новинної статті
+  points:
+  - 'Принцип перевернутої піраміди: найважливіше — на початку'
+  - 'Заголовок: інформативний vs клікбейт, вимоги до обсягу'
+  - 'Лід (перший абзац): хто, що, де, коли, чому, як'
+  - 'Бекграунд: контекст та історія питання'
+  - 'Цитати: пряма мова, атрибуція, баланс'
+- section: Типи журналістських матеріалів
+  points:
+  - 'Новина: факти без коментарів автора'
+  - 'Репортаж: деталі, атмосфера, особистий погляд'
+  - 'Аналітика: аналіз, висновки, прогнози'
+  - 'Інтерв''ю: запитання-відповіді, коментарі'
+  - Вибір формату залежно від мети
+- section: Мова журналістики
+  points:
+  - 'Стислість: як писати коротко без втрати змісту'
+  - 'Активний стан: Уряд ухвалив (не «було ухвалено урядом»)'
+  - 'Конкретність: цифри, факти, імена замість абстракцій'
+  - 'Нейтральність: як уникати оціночних суджень у новині'
+- section: Зразки журналістських текстів
+  points:
+  - Зразок новини з аналізом структури
+  - Зразок початку репортажу
+  - Типові помилки початківців
+- section: Практика — Написання журналістського тексту
+  points:
+  - 'Завдання 1: Написати новину за прес-релізом'
+  - 'Завдання 2: Переписати довгий текст як лід'
+  - Критерії оцінювання журналістського тексту
+vocabulary_hints:
+  required:
+  - перевернута піраміда (inverted pyramid)
+  - лід (lead paragraph)
+  - бекграунд (background)
+  - атрибуція цитати (quote attribution)
+  - редакційна політика (editorial policy)
+  - прес-реліз (press release)
+  - дедлайн (deadline)
+  - факт-чекінг (fact-checking)
+  recommended:
+  - рубрика (column/section)
+  - редактор (editor)
+  - кореспондент (correspondent)
+  - ексклюзив (exclusive)
+  - наклад (circulation)
+  - редакція (editorial office)
+activity_hints:
+- type: document-analysis
+  focus: Проаналізувати структуру новинної статті — знайти лід, бекграунд, цитати
+  items: 2
+- type: writing-task
+  focus: Написати новину (200 слів) за наданим прес-релізом
+  items: 1
+- type: register-transform
+  focus: Переписати офіційний текст у журналістському стилі
+  items: 6
+- type: fill-in
+  focus: Скоротити речення без втрати змісту
+  items: 8
+- type: error-correction
+  focus: Знайти порушення журналістських стандартів у тексті
+  items: 6
+- type: writing-task
+  focus: Написати заголовок та лід до наданої інформації
+  items: 3
+focus: professional
+pedagogy: ESP
+prerequisites:
+- 'b2-pro-32 (Аналіз новин II: Джерела)'
+connects_to:
+- 'b2-pro-34 (Ораторство I: Структура)'
+objectives:
+- Учень знає структуру журналістської статті (перевернута піраміда)
+- Учень може написати інформативний заголовок та лід
+- Учень може розрізняти новину, репортаж та аналітику
+- Учень може писати стисло та конкретно в журналістському стилі
+grammar:
+- Активний стан замість пасивного (Уряд ухвалив vs було ухвалено)
+- Теперішній час для актуальності (Президент заявляє)
+- Скорочені атрибутивні конструкції (заявив міністр vs як заявив міністр)
+register: публіцистичний
+phase: B2-PRO.3
+persona:
+  voice: Senior Specialist
+  role: Колумніст «Української правди»
+word_target: 2000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Журналістське письмо
+
+## Використані джерела
+1. [Інститут масової інформації (ІМІ)](https://imi.org.ua/) — основний ресурс з професійних стандартів української журналістики (баланс, точність, достовірність).
+2. [Детектор медіа](https://detector.media/) — провідний аналітичний ресурс про медіа в Україні, що досліджує якість контенту та мовні тенденції.
+3. [Кодекс етики українського журналіста](http://www.cjbe.org.ua/code/) — зведення етичних норм та вимог до професійного письма.
+4. [ВВС Україна: Редакційні настанови](https://www.bbc.com/ukrainian/institutional-37466144) — практичний посібник з написання новин та стилістики.
+
+## Термінологічна база
+
+| Українська (норма) | Русизм/ненорма | English | Контекст вживання |
+|--------------------|---------------|---------|-------------------|
+| Лід (зачин) | - | Lead | Перший абзац новини, що містить суть. |
+| Перевернута піраміда | - | Inverted pyramid | Принцип побудови тексту від важливого до другорядного. |
+| Брати участь | Приймати участь | To participate | Опис активності суб'єктів у подіях. |
+| Вживати заходів | Приймати міри | To take measures | Опис дій влади чи організацій у відповідь на подію. |
+| Наголосити / зазначити | Підкреслити (калька) | To emphasize | Атрибуція прямої мови (Reporting verbs). |
+| Фактчекінг | Перевірка фактів | Fact-checking | Процес верифікації інформації перед публікацією. |
+| Бекграунд (тло) | Контекст | Background | Додаткова інформація для розуміння контексту події. |
+| Атрибуція | - | Attribution | Посилання на джерело інформації або автора цитати. |
+
+## Мовні норми та стандарти
+- **Професійні стандарти ІМІ**: Баланс думок, достовірність, точність, відокремлення фактів від коментарів.
+- **Публіцистичний стиль**: Використання активного стану («Уряд ухвалив...») замість пасивного («Було ухвалено урядом...»).
+- **Стислість (Laconism)**: Уникнення зайвих слів-паразитів («на сьогоднішній день», «в даний час»).
+
+## Аутентичні приклади
+1. [Новинний лід]: «Сили оборони України вночі знищили 20 ворожих дронів-камікадзе у межах Одеської та Миколаївської областей. Про це повідомляють Повітряні сили ЗСУ у своєму Telegram-каналі.»
+2. [Атрибуція цитати]: ««Цей пакет допомоги є критично важливим для нашої артилерії», — наголосив міністр оборони під час брифінгу.»
+3. [Бекграунд]: «Нагадаємо, що попереднього тижня Верховна Рада підтримала законопроєкт про реформування митної служби у першому читанні.»
+
+## Типові помилки
+1. ❌ «На протязі години» → ✅ «Протягом години» — часові межі в українській мові позначаються словом «протягом», а «на протязі» означає перебування у струмені повітря.
+2. ❌ «Згідно інструкції» → ✅ «Згідно з інструкцією» — прийменник «згідно» вимагає прийменника «з» та орудного відмінка.
+3. ❌ «Являється експертом» → ✅ «Є експертом» — дієслово «являтися» є калькою з російської «являться» у значенні «бути».
+4. ❌ «Висвітлювати питання» → ✅ «Розглядати / аналізувати питання» — журналістський штамп, якого варто уникати на користь конкретних дієслів.
+5. ❌ «Повідомив про те, що...» → ✅ «Повідомив, що...» — зайве нагромадження слів (плеоназм), що сповільнює читання новини.
+
+## Engagement Hooks (mapped to sections)
+- Section "Розминка — Журналістика як професія": [!context] — Чому в епоху соцмереж професійні стандарти ІМІ стали ще важливішими для виживання медіа.
+- Section "Структура новинної статті: Піраміда та заголовок": [!pro-tip] — Заголовок має бути «самодостатнім»: читач має зрозуміти новину, навіть не відкриваючи її.
+- Section "Мова журналістики": [!language-note] — Використовуйте дієслова замість іменників. Замість «здійснили напад» пишіть «напали» — це економить час читача і додає тексту динаміки.
+- Section "Практика — Написання журналістського тексту": [!common-error] — Найбільша помилка новачка — почати новину з бекграунду («Минулого року...») замість самої події.
+
+## Section-Mapped Research Notes
+
+### Розминка — Журналістика як професія
+Журналістика — це фільтрація шуму. Ключова відмінність журналістського тексту — об'єктивність (відокремлення фактів від власних почуттів). Важливо згадати «Українську правду» та «Укрінформ» як приклади дотримання стандартів.
+
+### Структура новинної статті
+Перевернута піраміда: Лід (5W+H: Who, What, Where, When, Why, How). Заголовок має бути інформативним (SVO: Subject-Verb-Object). Цитати додають тексту «людського обличчя» та підтверджують факти.
+
+### Типи журналістських матеріалів
+Розрізнення новини (що сталося зараз), репортажу (ефект присутності, опис запахів, звуків), аналітики (чому це сталося і що буде далі) та інтерв'ю (розкриття героя через діалог).
+
+### Мова журналістики
+Стислість — це ввічливість. Активний стан: «Верховна Рада ухвалила», а не «Законопроєкт був ухвалений Верховною Радою». Конкретика: «5 мільярдів», а не «величезна сума».
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12286)
+✓ Message 12219 acknowledged
+✓ Message 12286 acknowledged

@@ -1,0 +1,292 @@
+✅ Message sent to Gemini (ID: 10403) [auto-acked: self-addressed]
+✓ Message 10403 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10403...
+📨 Message #10403
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-environment-ecology
+   Time: 2026-02-20T20:31:10.515048+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b1-62
+level: B1
+sequence: 62
+slug: environment-ecology
+version: '2.0'
+title: Довкілля та екологія
+subtitle: Environment & Ecology
+content_outline:
+- section: Вступ
+  points:
+  - 'Why ecology matters in Ukraine — cultural hook: modern «еко-свідомість» and innovation
+    like Rekava (coffee grounds cups)'
+  - 'Core environmental concepts — learner error: distinguishing «довкілля» (general)
+    vs «навколишнє середовище» (official/bureaucratic)'
+  - Vocabulary overview — focus on collocations like «захист довкілля» and «стан довкілля»
+- section: Читання
+  points:
+  - 'Environmental texts — cultural hook: Carpathians as «lungs of Europe» and the
+    threat of «вирубка лісів»'
+  - 'Ecological challenges in Ukraine — specific stat: landfills occupy ~7% of territory
+    (size of Denmark), recycling only ~3%'
+- section: Діалоги
+  points:
+  - 'Discuss ecological issues — grammar integration: explaining causes with «тому
+    що», «через те що», «бо»'
+  - 'Propose solutions — focus on practical actions: «сортування сміття» and «вторинна
+    переробка» (not «ресайклінг»)'
+vocabulary_hints:
+  required:
+  - 'довкілля (environment) — collocations: захист довкілля, стан довкілля, шкода
+    довкіллю'
+  - 'природа (nature) — context: wild nature vs. human environment'
+  - 'забруднення (pollution) — grammar: + Genitive (забруднення повітря, води, ґрунту)'
+  - 'клімат (climate) — collocations: зміна клімату, м''який клімат'
+  - 'екологія (ecology) — cultural context: popular science vs. academic discipline'
+  - 'захист (protection) — collocations: захист довкілля, захист тварин'
+  - 'переробка (recycling) — usage: preferred over anglicism «ресайклінг» (or «вторинна
+    переробка»)'
+  - 'відходи (waste) — collocations: переробка відходів, сортування відходів, побутові
+    відходи'
+  recommended:
+  - 'глобальне потепління (global warming) — collocations: боротьба з глобальним потеплінням,
+    наслідки потепління'
+  - 'викиди (emissions) — context: industrial pollution, car exhaust'
+  - 'відновлювана енергія (renewable energy) — context: solar, wind power trends in
+    Ukraine'
+  - 'екосистема (ecosystem) — collocations: крихка екосистема, збереження екосистеми;
+    example: Lake Synevyr'
+activity_hints:
+- type: match-up
+  focus: Environmental noun phrases
+  items: 25
+- type: fill-in
+  focus: Describe environmental issues
+  items: 20
+- type: match-up
+  focus: Match problems and solutions
+  items: 15
+- type: quiz
+  focus: Discuss ecological topics
+  items: 10
+focus: vocabulary
+pedagogy: PPP
+prerequisites:
+- b1-61 (Professional Communication)
+connects_to:
+- b1-63 (Health Wellness)
+objectives:
+- Learner can use 35 environmental vocabulary words in context
+- Learner can discuss environmental issues using appropriate collocations
+- Learner can distinguish between довкілля/навколишнє середовище/природа
+- Learner can express opinions on environmental topics
+grammar:
+- Environmental vocabulary collocations
+- Cause-effect constructions for ecology
+- Problem-solution patterns
+register: розмовний
+phase: B1.6 [Vocabulary Expansion II]
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Carpathian Ecologist
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Довкілля та екологія
+
+## State Standard Reference
+§3.14: "Природне середовище: погода, пори року, клімат; рослини; деякі види свійських тварин, дикі тварини; природні об’єкти (ліс, озеро, річка, гори, море)."
+§4.4.3: "складнопідрядні речення з підрядною частиною причини (сполучники тому що, бо, через те що)"
+Alignment: This module directly addresses the B1 theme "Natural Environment" (§3.14) and fulfills the grammatical requirement for complex sentences with causal clauses (§4.4.3), which are essential for explaining environmental cause-and-effect (e.g., pollution causes climate change).
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| довкілля | High / Modern Usage | захист довкілля, стан довкілля, шкода довкіллю |
+| забруднення | High / Core | забруднення повітря, забруднення води, рівень забруднення |
+| відходи | Medium / Specific | переробка відходів, сортування відходів, побутові відходи |
+| глобальне потепління | High / Media | боротьба з глобальним потеплінням, наслідки потепління |
+| екосистема | Medium / Scientific | крихка екосистема, збереження екосистеми |
+
+## Cultural Hooks
+1. **The "Lungs of Europe"**: The Ukrainian Carpathians are often called the "lungs of Europe" but face significant threats from deforestation (*вирубка лісів*). They host the highest mountain lake, Brebeneskul (1801m), and the largest, Synevyr, which stays cold (max 1-2m warm surface) even in summer.
+2. **The 7% Problem**: A striking statistic for discussion is that landfills occupy ~7% of Ukraine's territory (comparable to the size of Denmark), with only ~3% of waste being recycled, highlighting the urgent need for *сортування сміття* (waste sorting).
+3. **Modern Innovation**: Ukrainian startup *Rekava* creates biodegradable cups from coffee grounds, showcasing modern *еко-свідомість* (eco-consciousness).
+
+## Common Learner Errors
+1. **Довкілля vs. Навколишнє середовище**: Learners often overuse the bulky *навколишнє середовище* (official/bureaucratic).
+   → *Correct form*: Prefer **довкілля** for general usage; reserve *навколишнє середовище* for fixed official phrases like *Міністерство захисту довкілля та природних ресурсів*.
+2. **Case with "Забруднення"**: Learners often use the wrong case for what is being polluted.
+   → *Correct form*: *Забруднення* + **Genitive** (забруднення *повітря*, *води*, *ґрунту*).
+3. **"Recycling" translation**: Using "ресайклінг" (anglicism) instead of Ukrainian terms.
+   → *Correct form*: **Переробка** (processing/recycling) or **вторинна переробка**.
+
+## Cross-References
+- Builds on: b1-61 (Professional Communication - formal register introduction)
+- Prepares for: b1-63 (Health Wellness - link between environment and health)
+
+## Notes for Content Writing
+- **Persona**: The "Carpathian Ecologist" voice should be passionate but grounded in science. Use the Synevyr or deforestation examples to make the "Problem-Solution" grammar structures feels urgent, not abstract.
+- **Grammar Integration**: Use the "Cause-Effect" focus to explain *why* these problems exist (because of plastic, because of emissions) using *тому що*, *через те що*, *бо*.
+- **Immersion**: Ensure all "eco-tips" (sorting rules, saving water) are in Ukrainian, perhaps modelled on real posters found in Lviv or Kyiv.
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 500
+  points:
+  - "The concept of modern Ukrainian «еко-свідомість» (eco-consciousness) — introduce the cultural hook of 'Rekava', the Lviv-based startup making biodegradable cups from coffee grounds."
+  - "Setting the scene: Why ecology is a critical topic in Ukraine, framing the Carpathians as the «легені Європи» (lungs of Europe) and their role in the continental ecosystem."
+  - "Statistical shock: Introduce the '7% Problem' — landfills in Ukraine occupy territory the size of Denmark (~7%), while recycling rates remain at only ~3%."
+- section: "Словник та поняття (Vocabulary & Concepts)"
+  words: 900
+  points:
+  - "Terminology distinction — addressing the common learner error: when to use the natural «довкілля» vs. the bureaucratic/official «навколишнє середовище» (e.g., in ministry titles)."
+  - "Natural objects from State Standard §3.14 — categorical vocabulary for forest (ліс), lake (озеро), river (річка), and mountains (гори) using the Carpathians as a recurring example."
+  - "Grammar-Vocabulary lock: The word «забруднення» (pollution) and the mandatory Genitive case — drill collocations like «забруднення повітря», «забруднення води», and «забруднення ґрунту»."
+  - "Recycling terminology: Explicitly teaching «переробка» or «вторинна переробка» over the anglicism «ресайклінг», emphasizing the importance of «сортування сміття»."
+- section: "Природа України: Карпати (Nature of Ukraine: The Carpathians)"
+  words: 1000
+  points:
+  - "Reading focus on the Carpathian ecosystem: Describe Lake Synevyr (the largest) and Lake Brebeneskul (the highest), including the fact that Synevyr stays cold even in summer."
+  - "The threat of «вирубка лісів» (deforestation): Discussing the ecological consequences of logging in the mountains and how it affects the regional climate."
+  - "Biodiversity: Mentions of wild animals (дикі тварини) and flora per State Standard §3.14, using the Carpathian Biosphere Reserve as the setting."
+- section: "Причина і наслідок (Cause and Effect)"
+  words: 800
+  points:
+  - "Grammar integration (§4.4.3): Explaining environmental issues using causal conjunctions «тому що», «через те що», and «бо»."
+  - "Syntactic patterns: 'The lake is polluted because of waste' (озеро забруднене через те, що...), 'We must sort trash because it saves nature' (ми повинні сортувати сміття, бо це рятує природу)."
+  - "Problem-solution mapping: Analyzing how industrial emissions (викиди) lead to global warming (глобальне потепління) and proposing renewable energy (відновлювана енергія) as a fix."
+- section: "Практика та підсумок (Practice & Summary)"
+  words: 800
+  points:
+  - "Production task: Creating 'eco-tips' posters modeled on real Ukrainian awareness campaigns, focusing on practical actions like saving water and reducing plastic use."
+  - "Dialogue: A conversation between a 'Carpathian Ecologist' and a tourist about preserving the «крихка екосистема» (fragile ecosystem) of the mountains."
+  - "Summary: Final review of the довкілля vs. природа distinction and a wrap-up on the importance of individual contribution to «захист довкілля»."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "довкілля (environment) — high frequency; prefer over bureaucratic 'навколишнє середовище'; collocations: захист довкілля, стан довкілля"
+  - "забруднення (pollution) — high frequency; MUST use Genitive case for the object (повітря, води, ґрунту)"
+  - "відходи (waste) — collocations: побутові відходи (household waste), сортування відходів, переробка відходів"
+  - "переробка (recycling) — usage: «вторинна переробка» is the standard term; avoid 'ресайклінг' in formal/educational contexts"
+  - "викиди (emissions) — context: industrial and automotive exhaust (викиди газів)"
+  - "сміття (trash/garbage) — collocations: сортування сміття, вивезення сміття, накопичення сміття"
+  - "природа (nature) — context: State Standard §3.14 core term; refers to the natural world vs. human-built environment"
+  - "захист (protection) — collocations: захист довкілля, Міністерство захисту довкілля та природних ресурсів"
+  recommended:
+  - "еко-свідомість (eco-consciousness) — modern buzzword; context: Rekava startup, youth movements"
+  - "вирубка лісів (deforestation) — critical environmental issue in the Carpathians"
+  - "глобальне потепління (global warming) — collocation: боротьба з глобальним потеплінням; context: media and science"
+  - "відновлювана енергія (renewable energy) — context: solar and wind energy trends in Ukraine"
+  - "екосистема (ecosystem) — collocation: крихка екосистема (fragile ecosystem); example: Lake Synevyr"
+  - "легені Європи (lungs of Europe) — cultural idiom referring to the Ukrainian Carpathians"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4824 chars)
+✅ Message sent to Claude (ID: 10410)
+✓ Message 10410 acknowledged
+   Auto-acknowledged reply #10410 (stdout delivery — no inbox accumulation)
+✓ Message 10403 acknowledged

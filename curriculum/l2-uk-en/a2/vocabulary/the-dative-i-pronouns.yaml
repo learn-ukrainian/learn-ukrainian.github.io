@@ -23,7 +23,7 @@
   notes: Dative form of 'ми'
   pos: pronoun
   translation: to us
-- ipa: '[vɑm]'
+- ipa: '[ʋɑm]'
   lemma: вам
   notes: Dative form of 'ви'
   pos: pronoun
@@ -33,7 +33,7 @@
   notes: Dative form of 'вони'
   pos: pronoun
   translation: to them
-- ipa: '[poˈdɔbɑtʲisʲɑ]'
+- ipa: '[poˈdɔbɑtɪsʲɑ]'
   lemma: подобатися
   notes: governs Dative case (Subject pleases Recipient)
   pos: verb
@@ -43,12 +43,12 @@
   notes: governs Dative case
   pos: verb
   translation: to help
-- ipa: '[dzvoˈnɪtɪ]'
+- ipa: '[d͡zʋoˈnɪtɪ]'
   lemma: дзвонити
   notes: governs Dative case
   pos: verb
   translation: to call (phone)
-- ipa: '[zdɑˈvɑtʲisʲɑ]'
+- ipa: '[zdɑˈʋɑtɪsʲɑ]'
   lemma: здаватися
   notes: governs Dative case (impersonal)
   pos: verb
@@ -68,7 +68,7 @@
   notes: stronger than 'треба'
   pos: adverb
   translation: necessary / essential
-- ipa: '[ˈtʲsʲikɑvo]'
+- ipa: '[t͡sʲiˈkɑʋo]'
   lemma: цікаво
   notes: impersonal state
   pos: adverb
@@ -78,7 +78,7 @@
   notes: impersonal state
   pos: adverb
   translation: boring / bored
-- ipa: '[ˈvɛselo]'
+- ipa: '[ˈʋɛselo]'
   lemma: весело
   notes: impersonal state
   pos: adverb
@@ -88,7 +88,7 @@
   notes: impersonal state
   pos: adverb
   translation: sad
-- ipa: '[ˈvɑʒko]'
+- ipa: '[ˈʋɑʒko]'
   lemma: важко
   notes: impersonal state
   pos: adverb
@@ -103,7 +103,7 @@
   notes: impersonal state
   pos: adverb
   translation: pleasant / nice
-- ipa: '[ˈbɔlʲɑtʃe]'
+- ipa: '[ˈbɔlʲɑt͡ʃe]'
   lemma: боляче
   notes: impersonal state
   pos: adverb
@@ -138,7 +138,7 @@
   notes: grammatical term
   pos: noun
   translation: adjective
-- ipa: '[dɑˈvɑlʲnɪj]'
+- ipa: '[dɑˈʋɑlʲnɪj]'
   lemma: давальний
   notes: grammatical term
   pos: adjective
@@ -148,3 +148,18 @@
   notes: grammatical term
   pos: noun
   translation: noun
+- ipa: '[dɑˈʋɑtɪ]'
+  lemma: давати
+  notes: governs Dative case (давати комусь)
+  pos: verb
+  translation: to give
+- ipa: '[dʲɑˈkuʋɑtɪ]'
+  lemma: дякувати
+  notes: governs Dative case (дякую тобі)
+  pos: verb
+  translation: to thank
+- ipa: '[poˈrʲiɦ]'
+  lemma: поріг
+  notes: 'Cultural context: не через поріг'
+  pos: noun
+  translation: threshold

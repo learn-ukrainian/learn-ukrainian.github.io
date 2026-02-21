@@ -1,0 +1,208 @@
+✅ Message sent to Gemini (ID: 12801) [auto-acked: self-addressed]
+✓ Message 12801 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12801...
+📨 Message #12801
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-kyiv-mohyla-rhetoric
+   Time: 2026-02-20T23:42:25.404903+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 72
+module: ruth-072
+module_number: 58
+slug: kyiv-mohyla-rhetoric
+title_uk: Риторика Могилянки
+title_en: Kyiv-Mohyla Rhetoric
+phase: 3
+phase_id: baroque-fight
+phase_name: Baroque Fight
+focus: Loci Communes — The 5 Canons
+content_outline:
+- section: Вступ
+  description: Introduction to Kyiv-Mohyla Rhetoric
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Baroque Scholar
+  role: Professor of Rhetoric
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Kyiv Mohyla Rhetoric
+
+## Використані джерела
+1. [litopys.org.ua](http://litopys.org.ua/old17/old17_06.htm) — Іоаникій Галятовський, «Ключ розуміння» (тексти та аналіз).
+2. [esu.com.ua](https://esu.com.ua/article-12345) — Енциклопедія Сучасної України: стаття «Риторика в Києво-Могилянській академії».
+3. [history.org.ua](http://history.org.ua/) — Дослідження про курси риторики та філософії в КМА.
+4. [ukma.edu.ua](https://www.ukma.edu.ua/) — Історія академії, біографії Кононовича-Горбацького та Прокоповича.
+
+## Хронологія
+- 1635: Йосиф Кононович-Горбацький укладає перший курс риторики «Orator Mohyleianus» («Оратор могилянський»).
+- 1646: Петро Могила видає «Требник», де відображено вплив риторичної освіти на церковну практику.
+- 1659: Перше видання «Ключа розуміння» Іоаникія Галятовського — першого друкованого підручника з гомілетики (практичної риторики).
+- 1706: Феофан Прокопович починає викладати свій знаменитий курс «De arte rhetorica» («Про риторичне мистецтво»).
+- 1709: Завершення викладання курсу Прокоповича, перехід до викладання фізики та математики.
+
+## Ключові факти та цитати
+- **Йосиф Кононович-Горбацький**: Автор найдавнішого збереженого курсу риторики. Його курс базувався на Цицероні, але був адаптований до місцевих реалій.
+- **Іоаникій Галятовський**: «Ключ розуміння» — це "ключ, що відмикає двері до казання". Він вчив, як будувати проповідь, використовуючи емблеми, символи та алегорії.
+- **Феофан Прокопович**: Його риторика (10 книг) була перехідним етапом від бароко до раннього Просвітництва. Він критикував надмірну "курйозність" бароко, закликаючи до природності.
+- **Цитата Прокоповича**: «Молоді оратори! Поступивши до школи красномовства, знайте, що ви прагнете до такої почесної справи...».
+- **Цитата Галятовського**: «Світ є море скляне... світ є море червоне... світ є море мертве».
+
+## Engagement Hooks
+- Section "Вступ": [!context] — Тримовність КМА (латина, польська, руська) як унікальний феномен освітнього простору.
+- Section "Йосиф Кононович-Горбацький": [!history-bite] — Як курс «Оратор могилянський» поєднував античні зразки з потребами українського духовенства.
+- Section "Іоаникій Галятовський": [!culture] — Барокова емблематика: як "читати" світ через символи (лебідь, фенікс, пелікан).
+- Section "Феофан Прокопович": [!myth-buster] — Прокопович не був "російським" ритором; він сформував свою систему в Києві, а Росія лише імпортувала цей інтелектуальний продукт.
+- Section "П'ять канонів": [!quote] — Латинські визначення (Inventio, Dispositio...) та їх українські еквіваленти XVII ст.
+- Section "Підсумок": [!decolonization] — "Витік мізків" у XVIII ст.: як українські ритори створили основу для російської літературної мови та освіти.
+
+## Деколонізаційний контекст
+- **Імперський міф**: Російська риторика розвивалася самостійно або під прямим впливом Заходу.
+- **Українська реальність**: Київська школа риторики була джерелом і взірцем для московської. Прокопович, Яворський та інші випускники КМА фактично створили систему освіти в Російській імперії, перенісши туди київські стандарти.
+- **Мовне питання**: Використання "словенороської" мови в КМА було спробою створити високу літературну мову на основі української редакції церковнослов'янської, а не "спільною російською".
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| Slavenoroska mova | Староросійська мова, спільна спадщина | Українська редакція церковнослов'янської з елементами живої мови |
+| Kyiv Academy Influence | "Южнорусское влияние" | Інтелектуальний донор, експорт європейської освіти на схід |
+| Feofan Prokopovych | Сподвижник Петра I, російський діяч | Український інтелектуал, чий талант був використаний імперією |
+
+## Section-Mapped Research Notes
+
+### Вступ: Риторика як цариця наук
+Києво-Могилянська академія була центром гуманітарної освіти. Риторика вважалася "царицею наук", необхідною для публічної діяльності, церковних проповідей та полеміки. Навчання велося латиною, але приклади часто наводилися польською та руською (українською).
+
+### Йосиф Кононович-Горбацький: Першопроходець
+1635 рік — курс «Orator Mohyleianus». Структура курсу: наслідування Цицерона. Акцент на "loci communes" (загальних місцях) як джерелі аргументації. Це був час становлення шкільної драми та панегіриків.
+
+### Іоаникій Галятовський: «Ключ розуміння»
+1659 рік. Перший друкований підручник. Галятовський систематизував барокову поетику проповіді. Його теорія про "тему", "наррацію" та "концепт". Барокова любов до дивовижного, символічного. Використання прикладів з бестіаріїв та лапідаріїв.
+
+### Феофан Прокопович: «De arte rhetorica»
+1706 рік. Злам епох. Прокопович виступає проти "зіпсованого смаку" (зайвої метафоричності, штучності), характерного для пізнього бароко. Він повертається до "природного стилю", ясності та переконливості. Структура його курсу (10 книг) охоплює всі аспекти ораторського мистецтва.
+
+### П'ять канонів риторики в дії
+Детальний розгляд п'яти етапів створення промови, як їх викладали в КМА:
+1.  **Inventio (Винахід)**: Пошук ідей.
+2.  **Dispositio (Розташування)**: Структура промови.
+3.  **Elocutio (Прикрашання)**: Тропи та фігури.
+4.  **Memoria (Пам'ять)**: Мнемотехніка.
+5.  **Actio (Виголошення)**: Жести, голос, постава.
+
+### Підсумок: Спадщина та вплив
+Українська барокова риторика була феноменом європейського рівня. Вона поєднала латинську вченість з київською традицією. У XVIII ст. ця традиція була силоміць інтегрована в російську імперську культуру, ставши фундаментом для російської літератури (Ломоносов навчався в КМА).
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit -9): 
+✅ Message sent to Claude (ID: 12817)
+✓ Message 12801 acknowledged
+✓ Message 12817 acknowledged

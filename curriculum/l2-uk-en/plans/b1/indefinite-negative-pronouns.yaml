@@ -6,63 +6,83 @@ version: '2.0'
 title: Невизначені та заперечні займенники
 subtitle: Indefinite & Negative Pronouns
 content_outline:
-- section: Вступ — Світ невизначеності
+- section: 'Вступ: Логіка невизначеності (Introduction: The Logic of Uncertainty)'
+  words: 600
   points:
-  - Why Ukrainian has three "someone" words — хтось, хто-небудь, дехто each express
-    a different shade of indefiniteness
-  - State Standard §4.2.1.4 alignment — expanded pronoun system at B1
-  - 'Cultural hook: the Ukrainian love of precision — unlike English "someone", Ukrainian
-    distinguishes known-but-unspecified (хтось) from truly random (хто-небудь)'
-- section: Невизначені займенники з -сь (Known but unspecified)
+  - 'State Standard alignment (§4.2.1.4): Expanding interrogative pronouns (хто, що)
+    into the complex B1 systems of indefinite and negative pronouns.'
+  - 'Cultural hook: The ''Precision of Uncertainty'' — explaining how Ukrainian semantic
+    logic differs from English rule-based switching (someone vs. anyone).'
+  - 'Persona introduction: The Logic Puzzle Host frames the choice between pronoun
+    series as a strategic semantic game based on knowledge and certainty.'
+- section: 'Реальна невизначеність: Займенники з часткою -сь (Real Uncertainty: Pronouns
+    with the Particle -сь)'
+  words: 850
   points:
-  - хтось, щось, якийсь, чийсь, десь, колись, кудись — the speaker knows or assumes
-    existence
-  - 'Formation: pronoun + -сь (invariable particle)'
-  - 'Usage: Хтось подзвонив. (Someone called — I heard the phone.)'
-  - 'Declension: хтось declines like хто (когось, комусь, кимось)'
-- section: Невизначені займенники з -небудь (Truly indefinite)
+  - 'Usage of the -сь series (хтось, щось, якийсь): Expressing agents or objects known
+    to exist but remaining unspecified or unnamed by the speaker.'
+  - 'High-frequency collocations from research: ''хтось дзвонив'' (someone called),
+    ''щось трапилось'' (something happened), ''хтось постукав'' (someone knocked).'
+  - 'Morphology and declension: The base interrogative pronoun declines (когось, комусь)
+    while the particle ''-сь'' remains invariable.'
+  - 'Pedagogical rule: Why ''-сь'' is mandatory for past tense factual events where
+    an agent clearly existed, contrasting with the ''-небудь'' error.'
+- section: 'Гіпотетична та парціальна невизначеність: -небудь та де- (Hypothetical
+    and Partial Uncertainty: -небудь and де-)'
+  words: 850
   points:
-  - хто-небудь, що-небудь, який-небудь, де-небудь, коли-небудь
-  - 'Usage: questions, future, hypothetical — Чи хто-небудь бачив мої ключі?'
-  - 'Learner error: using -небудь for past events (wrong — use -сь for known existence)'
-  - Hyphen spelling rule — always hyphenated
-- section: Невизначені займенники з де- (Some, a few)
+  - 'The -небудь series: Expressing truly random, hypothetical, or unknown agents
+    in questions, future tense, and conditional statements.'
+  - 'Spelling mastery: The mandatory hyphenation rule for all -небудь forms (хто-небудь,
+    що-небудь) as a non-negotiable B1 literacy competency.'
+  - 'The ''де-'' series (дехто, дещо, деякий): Semantic nuance of partial quantity
+    (''some of many'') compared to the individual ''someone'' (хтось).'
+  - 'Academic/Formal register: Using ''дехто вважає'' (some people think) as a standard
+    rhetorical opener to introduce differing viewpoints.'
+- section: 'Абсолютне заперечення: Займенники з ні- (Absolute Negation: Pronouns with
+    ні-)'
+  words: 900
   points:
-  - дехто, дещо, деякий, десь, деколи — partial quantity, "some of many"
-  - 'Usage: Дехто вважає, що... (Some people think that...)'
-  - 'Contrast: дехто (some people) vs хтось (someone specific but unnamed)'
-- section: Заперечні займенники з ні- (Negative pronouns)
+  - 'The Mandatory Double Negation Rule: Internalizing the ''ніхто + не + verb'' structure
+    to prevent English-transfer errors like ''*Ніхто прийшов''.'
+  - 'The ''Splitting the Atom'' visual: Morphological rule where prepositions insert
+    between ''ні-'' and the pronoun root (ні з ким, ні до кого, ні про що).'
+  - 'Cultural resonance: Personification of ''Ніхто'' in proverbs and riddles (''Ніхто
+    не знає, що нас чекає''), highlighting the concept of absolute absence.'
+  - 'Declension patterns for negative pronouns: Mastering case changes (нікого, нікому)
+    while maintaining the negative prefix.'
+- section: 'Практикум: Контрасти та розв''язання помилок (Workshop: Contrasts and
+    Error Resolution)'
+  words: 800
   points:
-  - ніхто, ніщо, ніякий, нічий, ніде, ніколи, нікуди, ніскільки
-  - 'Double negation rule — MANDATORY in Ukrainian: Ніхто не прийшов (Nobody came)'
-  - 'Learner error: omitting не with ні- pronouns (English transfer — *Ніхто прийшов)'
-  - 'Preposition splits: ні з ким, ні до кого, ні про що — preposition goes between
-    ні- and pronoun'
-- section: Практика — Контрастні вправи
-  points:
-  - 'Three-way contrast: хтось vs хто-небудь vs дехто in context'
-  - 'Negative vs indefinite: ніхто vs хтось in paired sentences'
-  - 'Error correction: common mistakes with double negation and -небудь/-сь confusion'
-  - 'Text analysis: find and classify pronouns in authentic Ukrainian text'
-- section: Підсумок
-  points:
-  - Summary table of all indefinite/negative pronoun forms
-  - Decision flowchart for choosing the right pronoun
+  - 'Contrastive analysis drills: Choosing between хтось, хто-небудь, and дехто in
+    nuanced narrative contexts to develop native-like semantic intuition.'
+  - 'Preposition split clinic: Intensive practice with ''ні з ким'' and ''ні про що''
+    to ensure correct spelling and morphological placement.'
+  - 'The Logic Puzzle Flowchart: A definitive learner guide for selecting the correct
+    pronoun series based on timeframe, certainty, and negation.'
+  - 'Summary table: Comprehensive reference mapping of all indefinite and negative
+    series with their corresponding usage constraints and case forms.'
 vocabulary_hints:
   required:
-  - хтось (someone — known/assumed to exist)
-  - хто-небудь (anyone — truly indefinite, in questions/future)
-  - дехто (some people — partial from a group)
-  - ніхто (nobody) — ніхто не знає, ні з ким
-  - щось (something) — щось трапилось
-  - що-небудь (anything) — дай мені що-небудь
-  - ніщо (nothing) — ніщо не допомагає
-  - ніколи (never) — я ніколи не забуду
+  - хтось (someone) — хтось дзвонив, хтось постукав; high frequency; real but unspecified
+    agent.
+  - щось (something) — щось трапилось, щось нове; high frequency; real unspecified
+    object.
+  - хто-небудь (anyone) — medium frequency; hypothetical or random agent in questions/future.
+  - що-небудь (anything) — medium frequency; hypothetical/any object (дай мені що-небудь).
+  - дехто (some people) — дехто вважає, дехто з друзів; partial subset of a group.
+  - ніхто (nobody) — ніхто не знає, ніхто не бачив; high frequency; mandatory double
+    negation.
+  - ніщо (nothing) — ніщо не вічне; used with negative verb 'не'.
+  - ні з ким (with nobody) — crucial example of preposition splitting the pronoun.
   recommended:
-  - деякий (some, certain) — деякі люди, деякі питання
-  - нічий (nobody's) — нічия земля
-  - ніде (nowhere) — ніде не можу знайти
-  - будь-який (any at all) — будь-яка допомога
+  - деякий (some, certain) — деякі люди, деякі питання; specific but unnamed subset.
+  - дещо (something, some things) — partial quantity or specific details.
+  - нічий (nobody's) — нічия земля; absolute lack of ownership.
+  - ніде (nowhere) — ніде не можу знайти; absolute absence of location.
+  - колись (sometime/once) — real past event or unspecified future point.
+  - коли-небудь (ever/anytime) — purely hypothetical time.
 activity_hints:
 - type: quiz
   focus: Choose correct indefinite pronoun (-сь vs -небудь vs де-)

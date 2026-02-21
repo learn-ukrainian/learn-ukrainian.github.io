@@ -1,0 +1,236 @@
+✅ Message sent to Gemini (ID: 12073) [auto-acked: self-addressed]
+✓ Message 12073 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12073...
+📨 Message #12073
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-stus-phenomenon
+   Time: 2026-02-20T23:35:51.718798+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 21
+module: lit-essay-21
+level: LIT.ESSAY
+slug: stus-phenomenon
+version: '2.0'
+title: Stus Phenomenon
+subtitle: Stus Phenomenon
+content_outline:
+- section: Вступ та контекст
+  points: []
+- section: Аналіз ключових творів
+  points: []
+- section: Стилістика та мова автора
+  points: []
+- section: Деколонізаційна перспектива
+  points:
+  - Як цей автор руйнує імперські міфи
+  - Українська суб'єктність у тексті
+- section: Підсумок та спадщина
+  points: []
+vocabulary_hints:
+  required:
+  - історіографія
+  - наратив
+  - суб'єктність
+  recommended:
+  - деколонізація
+activity_hints:
+- type: reading
+  focus: Аналіз першоджерела
+- type: essay-response
+  focus: Критичне есе
+- type: critical-analysis
+  focus: Деконструкція тексту
+focus: literature
+pedagogy: literature
+immersion: 100% Ukrainian
+phase: LIT Expansion
+objectives:
+- Проаналізувати творчість Stus Phenomenon у контексті української літератури
+- Дослідити вплив автора на формування національної ідентичності
+persona:
+  voice: Senior Specialist
+  role: Stoic Martyr
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Феномен Василя Стуса
+
+## Використані джерела
+1. [Енциклопедія історії України](http://history.org.ua/?termin=Stus_V) — СТУС Василь Семенович (Бажан О.Г.). Детальна біографічна та історична довідка про дисидентську та правозахисну діяльність поета.
+2. [Енциклопедія Сучасної України](https://esu.com.ua/search_articles.php?id=3612) — Академічний аналіз поетичної творчості Стуса, його стилістики (герметизм, екзистенціалізм) та перекладацької спадщини.
+3. [Літопис (litopys.org.ua) та матеріали Харківської правозахисної групи] — Документи судових процесів, свідчення про табір "Перм-36", листи Стуса до рідних, збірка "Палімпсести".
+
+## Хронологія
+- **1938**: Народився в селі Рахнівка (Вінницька область), родина невдовзі переїхала на Донбас (Сталіно).
+- **1965 (4 вересня)**: Участь у знаковому публічному протесті проти масових арештів української інтелігенції під час прем'єри фільму С. Параджанова "Тіні забутих предків" у київському кінотеатрі "Україна".
+- **1972 (12 січня)**: Перший арешт під час масової кампанії проти українського дисидентського руху (операція "Блок"). Засуджений до 5 років таборів суворого режиму та 3 років заслання.
+- **1979**: Повернення до Києва і свідоме приєднання до Української громадської групи сприяння виконанню Гельсінських угод (УГГ).
+- **1980 (14 травня)**: Другий арешт. Ганебний судовий процес за участю призначеного адвоката В. Медведчука. Вирок: 10 років таборів особливого режиму і 5 років заслання. Знищення КДБ останньої збірки "Птах душі" (близько 300 віршів).
+- **1985 (4 вересня)**: Загадкова і трагічна загибель у карцері табору ВС-389/36-1 (село Кучино Пермської області) під час сухого голодування.
+
+## Ключові факти та цитати
+- Стус був не лише геніальним поетом, а й видатним перекладачем світової класики (Гете, Рільке, Лорка), що вводило українську мову у світовий культурний контекст.
+- **Цитата 1**: "Як добре те, що смерті не боюсь я / і не питаю, чи тяжкий мій хрест..." (Пророче кредо екзистенціального стоїцизму).
+- **Цитата 2**: "Терпи, терпи — терпець тебе шліфує..." (Метафора духовного загартування через страждання).
+- **Цитата 3** (з листів до сина): "Бути людиною — це відчувати свою відповідальність перед народом..."
+- У 1985 році Генріх Белль висував кандидатуру Василя Стуса на здобуття Нобелівської премії з літератури, однак поет загинув до можливого розгляду.
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ та контекст: I — Ранні роки та формування світогляду": **[!history-bite]** — Донецький (сталінський) період життя Стуса, його викладання української мови в російськомовній школі на Горлівщині.
+- Section "Вступ та контекст: II — Дисидентський рух шістдесятників": **[!history-bite]** — Деталі спонтанного і сміливого протесту в кінотеатрі "Україна" (спільно з І. Дзюбою та В. Чорноволом).
+- Section "Аналіз ключових творів: I — Рання лірика та Круговерть": **[!quote]** — Ранні філософські вірші, що демонструють перехід від традиційної лірики до складніших метафор.
+- Section "Аналіз ключових творів: III — Палімпсести як вершина": **[!culture]** — Табірний феномен збереження текстів; як співкамерники вчили вірші Стуса напам'ять або пересилали мікроскопічні записи ("ксиви").
+- Section "Стилістика та мова автора: II — Екзистенціалізм Стуса": **[!context]** — Порівняння філософії Стуса з ідеями Альбера Камю та Жана-Поля Сартра (вибір бути людиною в абсурдних/граничних умовах).
+- Section "Деколонізаційна перспектива: I — Опір русифікації": **[!decolonization]** — Як Стус послідовно руйнував радянський стереотип "провінційної" української культури, перекладаючи найскладнішу європейську філософську лірику (Рільке, Гете).
+- Section "Підсумок та спадщина: Значення для сучасної України": **[!myth-buster]** — Спростування радянського міфу про "кримінального злочинця-націоналіста" та утвердження образу українського європейського інтелектуала.
+
+## Деколонізаційний контекст
+- **Радянський міф**: Українська культура — це фольклорне, селянське явище без власної високої філософії, а всі, хто бореться за її права — маргінальні "буржуазні націоналісти", вороги народу.
+- **Українська реальність**: Творчість Стуса — це література світового рівня, глибокий екзистенціалізм, інтелектуалізм і герметизм. Його боротьба була захистом людської гідності та національної суб'єктності проти тоталітарної імперії, що здійснювала лінгвоцид та етноцид.
+
+## Contested Terms
+| Concept | Imperial/Soviet framing | Ukrainian (decolonized) framing |
+|---------|-------------------------|---------------------------------|
+| Дисиденти | Кримінальні злочинці, "антисовєтчики", відщепенці | Правозахисники, борці за громадянські свободи та національну гідність |
+| Русифікація | "Добровільне" злиття націй, інтернаціоналізм | Примусовий лінгвоцид, системна політика денаціоналізації (як це описував Стус) |
+| Смерть Стуса | "Серцева недостатність", "природна смерть" | Політичне вбивство, замордування в карцері тоталітарної системи |
+
+## Section-Mapped Research Notes
+
+### Вступ та контекст: I — Ранні роки та формування світогляду
+Вінниччина як місце народження, переїзд на промисловий Донбас. Сталінський індустріальний пейзаж. Навчання в Сталінському педінституті (нині Донецьк). Викладання в школі. Служба в радянській армії на Уралі, де він вперше глибоко усвідомив свою українськість через відірваність від Батьківщини. Перші публікації з передмовою Андрія Малишка (1959). Вступ до аспірантури Інституту літератури в Києві.
+
+### Вступ та контекст: II — Дисидентський рух шістдесятників
+Перебування в київському колі молодої інтелектуальної еліти (Світличний, Симоненко, Горська). Протест 4 вересня 1965 року під час прем'єри "Тіней забутих предків". Виключення з аспірантури. Відмова йти на компроміси з режимом. Перший арешт 1972 року ("операція Блок").
+
+### Аналіз ключових творів: I — Рання лірика та Круговерть
+"Круговерть" і "Зимові дерева". Звернення до тем самотності, історичної пам'яті, призначення митця. Аналіз віршів "Отак живу: як мавпа серед мавп...", "Ти тінь, ти присмерк, ікебана...". Формування стоїчного голосу.
+
+### Аналіз ключових творів: II — Веселий цвинтар та Час творчості
+Творчість періоду першого ув'язнення та заслання на Колимі (Магаданська область). Мотив болю, який очищає і гартує дух. Вірш "Господи, гніву пречистого...". Відкриття метафізичного виміру страждання.
+
+### Аналіз ключових творів: III — Палімпсести як вершина
+"Палімпсести" — найдосконаліша збірка українського модернізму другої половини ХХ ст. Назва як метафора стертої, але незнищенної пам'яті (палімпсест — пергамент, на якому новий текст написано поверх старого). Аналіз віршів "Як добре те, що смерті не боюсь я...", "Народе мій, до тебе я ще верну". Втрата і розшук текстів (рукопис "Птах душі", знищений КДБ).
+
+### Стилістика та мова автора: I — Філософська лірика та герметизм
+Складна, іноді зашифрована метафорика (герметизм). Відмова від соцреалістичної прозорості. Використання неологізмів (своєрідна словотворчість Стуса — "всевік", "стососонце"). Асоціативна образність, споріднена з Рільке. Вплив перекладацької роботи на власну стилістику поета.
+
+### Стилістика та мова автора: II — Екзистенціалізм Стуса
+Концепція "прямостояння". Людина в межовій ситуації (grenzsituation Карла Ясперса). Відповідальність за свій вибір. Стус не як жертва, а як суб'єкт вільного екзистенціального вибору: "Мій вибір — мій хрест". Стоїцизм перед обличчям неминучої загибелі.
+
+### Деколонізаційна перспектива: I — Опір русифікації та лінгвоциду
+Відкриті листи Стуса до ЦК КПУ та Спілки письменників (зокрема, лист 1968 року на захист В. Чорновола). Трактування русифікації як форми духовного вбивства нації. Стус довів, що українська мова здатна артикулювати найскладніші філософські проблеми людства, тим самим руйнуючи імперський міф про її "меншовартість".
+
+### Деколонізаційна перспектива: II — Стус і європейський контекст
+Виривання української культури з радянської ізоляції. Переклади Рільке, Лорки, Цвєтаєвої, Гете. Стус мислив себе в європейській традиції модернізму, а не в провінційному гетто "радянської України". Номінація на Нобелівську премію Генріхом Беллем як визнання цього світового рівня.
+
+### Підсумок та спадщина: Значення для сучасної України
+Перепоховання Василя Стуса, Юрія Литвина та Олекси Тихого в Києві у 1989 році (як каталізатор українського пробудження). Стус як символ незламності та моральний імператив для нації. Його поезія як зброя сучасного покоління українців у війні проти тієї ж самої російської імперії.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12156)
+✓ Message 12073 acknowledged
+✓ Message 12156 acknowledged

@@ -91,7 +91,7 @@ Here are some examples:
     *   *Ми сидимо тихо.* (We sit quietly.)
 *   **легкий** (easy/light) → **легко** [ˈlɛxkɔ] (easily)
     *   *Він робить це легко.* (He does this easily.)
-*   **важкий** (difficult/heavy) → **важко** [ˈʋɑʒkɔ] (with difficulty/hard)
+*   **важкий** (difficult/heavy) → **важко** [ˈʋɑʃkɔ] (with difficulty/hard)
     *   *Це важко читати.* (This is hard to read.)
 
 > [!tip]
@@ -324,7 +324,7 @@ Let's see a conversation between two friends, Olena and Ihor. They discuss their
 
 ### Історія: Мій брат Олег (My brother Oleh)
 
-*Мій брат Олег працює в офісі. Він працює **багато** і **старанно**. Він приходить додому **пізно**. Він **часто** втомлений. Але у суботу він відпочиває **активно**. Він грає у футбол. Він бігає **швидко** і грає **добре**. У неділю він спить **довго**. Він каже: "Я працюю **важко**, тому я відпочиваю **добре**".*
+*Мій брат Олег працює в офісі. Він працює **багато** і **старанно**. Він приходить додому **пізно**. Він **часто** втомлений. Але у суботу він відпочиває **активно**. Він грає у футбол. Він бігає **швидко** та грає **добре**. У неділю він спить **довго**. Він каже: "Я працюю **важко**, тому я відпочиваю **добре**".*
 
 (My brother Oleh works in an office. He works a lot and diligently. He comes home late. He is often tired. But on Saturday he rests actively. He plays football. He runs fast and plays well. On Sunday he sleeps long. He says: "I work hard, therefore I rest well".)
 
@@ -343,7 +343,7 @@ Ukrainian culture values quality and thoroughness. Being "fast" is good, but bei
 
 Read about another lifestyle. Notice the difference.
 
-*Мій друг Максим — музикант. Він живе **дуже** цікаво, але неспокійно. Він **часто** працює вночі. Тому він прокидається **пізно**, о 12:00. Він снідає **повільно** і п'є каву. Він грає на гітарі **голосно** і **гарно**. Сусіди (neighbors) слухають його **уважно**. Максим **ніколи не** поспішає. Він каже: "Я живу **легко** і **весело**".*
+*Мій друг Максим — музикант. Він живе **дуже** цікаво, але неспокійно. Він **часто** працює вночі. Тому він прокидається **пізно**, о 12:00. Він снідає **повільно** і п'є каву. Він грає на гітарі **голосно** та **гарно**. Сусіди (neighbors) слухають його **уважно**. Максим **ніколи не** поспішає. Він каже: "Я живу **легко** і **весело**".*
 
 (My friend Maksym is a musician. He lives very interestingly but restlessly. He often works at night. Therefore he wakes up late, at 12:00. He eats breakfast slowly and drinks coffee. He plays the guitar loudly and beautifully. Neighbors listen to him attentively. Maksym is never in a hurry. He says: "I live easily and fun".)
 

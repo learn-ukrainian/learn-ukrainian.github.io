@@ -6,48 +6,78 @@ version: '2.0'
 title: At the Store
 subtitle: Supermarket Shopping
 content_outline:
-- section: Warm-up
+- section: Вступ (Introduction)
+  words: 300
   points:
   - 'Структура українського супермаркету — cultural hook: ''Silpo'' themed supermarkets
-    offer immersive cultural experiences (e.g., GTA, Steampunk themes)'
-  - 'Відділи (молочний, м''ясний, кондитерський) — collocation: у якому відділі?'
-- section: Presentation
+    (GTA, Steampunk) offer immersive cultural experiences unlike standardized Western
+    stores'
+  - The 'Bag Ritual' — the universal interaction 'Пакет потрібен?' (Do you need a
+    bag?) as a cultural meme and essential communicative script
+  - 'Alignment with State Standard §3.8: Shopping for essential goods (bread, eggs,
+    dairy) and store navigation competencies'
+- section: Презентація (Presentation)
+  words: 500
   points:
-  - 'Питання про місцезнаходження (Де знаходиться...? / В якому відділі...?) — learner
-    error: Inanimate Masculine Over-correction (e.g., ''я купую магазин'', not ''магазина'')'
-  - Прохання допомогти (Вибачте, де тут...?)
-  - 'На касі (Пакет потрібен? / Готівкою чи карткою?) — emphasizing the ''Bag Ritual''
-    (''Пакет потрібен?''); learner error: avoid Russian calque ''покупка'', use ''купівля''
-    or ''закупи'''
-  - 'Акції та знижки (Це в акції? / Скільки відсотків знижка?) — collocation: акційна
-    знижка'
-  - 'Проблеми (Ця ціна неправильна / Чек, будь ласка) — cultural hook: tradition of
-    printing predictions/quotes on receipts (''чек'')'
-- section: Practice
+  - 'Відділи магазину (молочний, м''ясний, кондитерський, хлібний) — collocation:
+    ''у якому відділі?'' (Locative context)'
+  - Питання про місцезнаходження (Де знаходиться...?) та прохання допомогти (Вибачте,
+    де тут...?)
+  - 'Граматика: Accusative case for shopping items (§4.2.3.2) — reinforcing -у/-ю
+    endings using high-frequency feminine nouns (кава, вода, сметана, олія)'
+  - На касі (Пакет потрібен? / Готівкою чи карткою?) — teaching 'карткою чи готівкою'
+    as fixed lexical chunks (Instrumental case) for A1 communicative success
+- section: Практика (Practice)
+  words: 500
   points:
-  - 'Діалог 1: Пошук товару в магазині — writing note: use high-frequency feminine
-    nouns (кава, вода) to reinforce Accusative -у/-ю ending'
-  - 'Діалог 2: Оплата на касі — collocation: розрахуватися на касі'
-  - 'Діалог 3: Повернення товару'
-- section: Warm-up 2
+  - 'Learner error drill: Case confusion between destination (Acc) and location (Loc)
+    — ''іти в магазин'' vs ''бути в магазині'''
+  - 'Lexical interference (Russism) correction: Avoiding ''покупка'' (Russian/Surzhyk)
+    in favor of correct terms ''купівля'' (process) or ''закупи'' (shopping trip)'
+  - 'Gender agreement practice: Reinforcing ''ця ціна'' (fem), ''ця каса'', ''ця знижка''
+    to avoid agreement errors common with inanimate direct objects'
+  - 'Learner error: Inanimate Masculine Over-correction — drill to reinforce ''я купую
+    магазин'' (Acc=Nom) instead of incorrect ''магазина'''
+- section: Продукція (Production)
+  words: 400
   points:
-  - 'Наратив про похід у супермаркет — collocation: іти в магазин (movement context)'
-  - Типові ситуації та фрази
+  - 'Ситуація: Пошук товарів за списком згідно зі Стандартом (овочі, фрукти, м’ясо,
+    хліб) та запит про ціну'
+  - 'Ситуація: Розрахунок на касі — використання картки на знижку та вибір способу
+    оплати (карткою/готівкою)'
+  - 'Вирішення проблем: ''Ця ціна неправильна'' та прохання про надання чека — ''Чек,
+    будь ласка'''
+- section: Підсумок (Summary)
+  words: 300
+  points:
+  - 'Cultural hook: The tradition of ''Передбачення на чеках'' (Predictions on receipts)
+    in Ukrainian stores as an engaging reading activity'
+  - 'Review of high-frequency collocations: ''акційна знижка'', ''черга до каси'',
+    ''ціна за кілограм'''
+  - 'Підсумок комунікативних навичок: Навігація в супермаркеті та завершення транзакції
+    згідно з вимогами рівня A1'
 vocabulary_hints:
   required:
-  - магазин (store) — продуктовий магазин, іти в магазин
-  - супермаркет (supermarket) — Silpo themed stores
-  - каса (checkout) — на касі, черга до каси
-  - відділ (section/department) — у якому відділі?, молочний/м'ясний відділ
-  - пакет (bag) — пакет потрібен?, покласти в пакет
-  - знижка (discount) — велика знижка, акційна знижка
-  - ціна (price) — ціна за кілограм, низька ціна
-  - чек (receipt) — чек, будь ласка; predictions on receipts
+  - магазин (store) — High frequency (A1 Core); іти в магазин (Acc.), продуктовий
+    магазин
+  - супермаркет (supermarket) — High frequency; Silpo themed stores; у супермаркеті
+    (Loc.)
+  - каса (checkout) — High frequency; на касі, вільна каса, черга до каси
+  - відділ (section/department) — Medium frequency; у якому відділі?, молочний/м'ясний
+    відділ
+  - пакет (bag) — High frequency; 'Пакет потрібен?' (Bag Ritual); покласти в пакет
+  - знижка (discount) — Medium frequency; велика знижка, акційна знижка, картка на
+    знижку
+  - ціна (price) — High frequency; 'ця ціна' (feminine agreement); ціна за кілограм
+  - чек (receipt) — High frequency; передбачення на чеку (predictions); чек, будь
+    ласка
   recommended:
-  - кошик (basket)
-  - візок (cart)
-  - полиця (shelf)
-  - акція (sale/promotion)
+  - готівка (cash) — Medium frequency; платити готівкою (fixed Instrumental chunk)
+  - картка (card) — High frequency; платити карткою (fixed Instrumental chunk)
+  - кошик (basket) — Medium frequency; покласти в кошик
+  - візок (cart) — Medium frequency; взяти візок
+  - полиця (shelf) — High frequency; на полиці
+  - акція (sale/promotion) — High frequency; це в акції?, товар по акції
 activity_hints:
 - type: fill-in
   focus: Supermarket conversation

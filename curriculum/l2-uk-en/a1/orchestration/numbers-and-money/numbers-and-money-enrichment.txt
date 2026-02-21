@@ -1,0 +1,289 @@
+✅ Message sent to Gemini (ID: 10078) [auto-acked: self-addressed]
+✓ Message 10078 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10078...
+📨 Message #10078
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-numbers-and-money
+   Time: 2026-02-20T19:40:11.807701+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: a1-17
+level: A1
+sequence: 17
+slug: numbers-and-money
+version: '2.0'
+title: Numbers & Money
+subtitle: Counting and Shopping in Ukraine
+content_outline:
+- section: Warm-up
+  points:
+  - Числа в повсякденному житті — focus on practical utility (prices, bus numbers)
+  - Де ми використовуємо числа
+- section: Presentation
+  points:
+  - 'Числа 1-20 (один, два, три... двадцять) — Phonetics focus: ''п''ять'' [pjat'']
+    and stress shift in teens (одина́дцять)'
+  - 'Десятки (двадцять, тридцять... сто) — learner error warning: no soft sign in
+    middle of 50-80 (п''ятдесят)'
+  - 'Узгодження з іменниками (1 гривня, 2 гривні, 5 гривень) — Visual Agreement Tables
+    crucial (1/2-4/5+); learner error: 1-2-5 Rule case agreement'
+  - Запитання про ціну (Скільки коштує?) — Standard §4.2.1.3 alignment
+  - Українська валюта (гривня, копійка) — Symbol ₴ based on cursive 'г', stability
+    symbol like €/¥
+- section: Practice
+  points:
+  - Лічба та арифметика
+  - Діалоги про ціни — Use realistic 2024 prices (e.g., Coffee ~ 40-60 UAH)
+  - 'Рольова гра — покупки — Key phrase: «Скільки з мене?»'
+- section: Cultural Insight
+  points:
+  - 'Історія гривні — Origin: ''hryvna'' (neck ornament/ingot)'
+  - 'Типові ціни в Україні — Proverb: "Копійка береже гривню" (penny saved is penny
+    earned)'
+vocabulary_hints:
+  required:
+  - один (one) — gender agreement error warning (один vs одна)
+  - два (two) — gender agreement error warning (два vs дві)
+  - три (three)
+  - п'ять (five) — pronunciation focus [pjat']
+  - десять (ten)
+  - гривня (hryvnia) — origin from 'neck' (hryva)
+  - 'скільки (how much) — collocation: «Скільки з мене?»'
+  - 'коштувати (to cost) — collocation: «Скільки коштує квиток?»'
+  recommended:
+  - сто (hundred)
+  - 'копійка (kopeck) — Proverb: «Копійка береже гривню»'
+  - 'ціна (price) — collocation: «Яка ціна?»'
+  - 'дорого (expensive) — context: «Це дуже дорого!»'
+  - дешево (cheap)
+  - здача (change)
+activity_hints:
+- type: fill-in
+  focus: Counting practice
+  items: 30
+- type: fill-in
+  focus: Complete with correct number form
+  items: 20
+- type: quiz
+  focus: Identify numbers heard
+  items: 15
+- type: fill-in
+  focus: Shopping transactions
+  items: 6
+focus: grammar
+pedagogy: PPP
+prerequisites:
+- a1-16 (The Genitive I)
+connects_to:
+- a1-18 (Food and Shopping)
+- a1-23 (What Time Is It)
+objectives:
+- Learner can count from 0-100 in Ukrainian
+- Learner can ask and answer 'How much does it cost?'
+- Learner can handle basic shopping transactions
+- Learner can use numbers with genitive plural forms
+grammar:
+- Cardinals 0-100
+- Number agreement (1=nom, 2-4=nom.pl, 5+=gen.pl)
+- Genitive plural with numbers
+register: розмовний
+phase: A1.2 [Navigation]
+persona:
+  voice: Patient Supportive Tutor
+  role: Bazaar Accountant
+word_target: 2000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Numbers & Money (A1 Core)
+
+## State Standard Reference
+§3.8 (Тематичний зміст): "Купівля: основні продукти харчування; одяг і взуття; засоби гігієни... гроші."
+Alignment: This module directly addresses the required theme of "Money" and enables basic transactions, a core A1 communicative competence. While morphological declension of cardinals is formally introduced in A2 (§4.2.1.3), A1 learners require lexical mastery of numbers 0-100 and basic agreement patterns (1-2-5) for practical shopping scenarios.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| один (one) | High (Top 100) | один раз, одна гривня |
+| два (two) | High (Top 100) | два дні, дві гривні (feminine!) |
+| п'ять (five) | High | п'ять хвилин, п'ять гривень |
+| гривня (hryvnia) | High (Contextual) | скільки гривень? одна гривня |
+| скільки (how much) | High | скільки коштує? скільки з мене? |
+| коштувати (to cost) | Medium | скільки це коштує? |
+| ціна (price) | Medium | яка ціна? висока ціна |
+
+## Cultural Hooks
+1. **The Hryvnia's Origin**: The word "hryvnia" comes from "hryva" (mane), referring to a valuable neck ring or torque made of silver or gold used in Kyivan Rus (11th century).
+2. **The Kopeck Proverb**: "Копійка береже гривню" (A kopeck saves a hryvnia) — reflecting traditional frugality and the value of small savings.
+3. **Symbol**: The symbol ₴ (derived from cursive 'г' with double strokes) represents stability, similar to € or ¥.
+
+## Common Learner Errors
+1. **Gender of "Two"**: Using "два гривні" instead of "дві гривні". (Correction: "гривня" is feminine, so use "дві").
+2. **The 1-2-5 Rule**: Confusion over endings. 1 (Nom Sg), 2-4 (Nom Pl), 5+ (Gen Pl). Learners often say "п'ять гривні" instead of "п'ять гривень".
+3. **Pronunciation of "п'ять"**: Missing the apostrophe pause [pjat'] or softening the 'p' inappropriately.
+4. **Teen Stress**: Putting stress on the root instead of 'над' in 11-19 (e.g., saying "одИннадцять" instead of "одинАдцять").
+
+## Cross-References
+- Builds on: `a1-16` (The Genitive I) — specifically the concept of case endings, though here it's taught as a fixed pattern.
+- Prepares for: `a1-18` (Food and Shopping) — essential prerequisite for price discussions.
+- Prepares for: `a1-23` (What Time Is It) — numbers 1-60 are critical for telling time.
+
+## Notes for Content Writing
+- **Scaffolding**: Since this is A1.2, use English for the "1-2-5 Rule" explanation to ensure clarity. The distinction between "2 гривні" and "5 гривень" is often the first encounter with Genitive Plural for beginners.
+- **Visuals**: Use a clear table for the 1-2-5 pattern (Visual Agreement Tables are crucial per plan).
+- **Reality Check**: Use realistic 2024 prices (e.g., Coffee ~50 UAH, Bread ~25 UAH) to keep dialogues authentic.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Державний стандарт (§3.8) та роль чисел у повсякденному житті: фокус на тематиці купівлі основних продуктів, одягу та засобів гігієни."
+  - "Де ми використовуємо числа: приклади з реальним контекстом 2024 року (наприклад, кава за 50 грн, квиток на автобус) та розкладом руху."
+  - "Мотиваційний вступ через діалог про покупки, що активує знання з модуля a1-16 (Генітив I) у контексті запиту ціни."
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "Числа 1-20: фокус на правильну вимову «п'ять» [pjat'] (пауза апострофа) та правильний наголос у числівниках 11-19 (одинАдцять, дванАдцять)."
+  - "Десятки (20-100) та застереження щодо помилок: відсутність м'якого знака в середині числівників 50-80 (п'ятдесят, шістдесят)."
+  - "Правило «1-2-5»: узгодження чисел з іменниками (1 гривня - Nom Sg, 2 гривні - Nom Pl, 5 гривень - Gen Pl) з використанням візуальних таблиць."
+  - "Запитання про ціну та базові конструкції: «Скільки коштує?», «Скільки з мене?», «Яка ціна?»."
+- section: "Практика (Practice)"
+  words: 600
+  points:
+  - "Лічба та арифметика: інтерактивні вправи на додавання цін у кошику з використанням актуальних цін (хліб ~25 грн, молоко ~40 грн)."
+  - "Робота над помилкою «два» vs «дві»: акцент на жіночому роді слова «гривня» («дві гривні») на відміну від чоловічого («два долари»)."
+  - "Діалоги в магазині: моделювання ситуацій купівлі з використанням фразеології «Це дуже дорого!» та «У вас є здача?»."
+  - "Дрилі на закріплення правила 1-2-5: перетворення форм іменника залежно від випадкового числа (3 гривні -> 10 гривень -> 1 гривня)."
+- section: "Культурний контекст (Cultural Context)"
+  words: 400
+  points:
+  - "Історія гривні: походження назви від «гриви» (шийна прикраса або злиток із золота чи срібла часів Київської Русі)."
+  - "Символ гривні ₴: аналіз графіки (курсивна літера «г» з двома рисками) як символу стабільності за аналогією до € та ¥."
+  - "Народна мудрість: вивчення прислів'я «Копійка береже гривню» для ілюстрації традиційного ставлення до грошей та ощадливості."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "один (one) — High frequency (Top 100); collocations: «один раз», «одна гривня»; warning: gender agreement error (один vs одна)"
+  - "два (two) — High frequency (Top 100); collocations: «два дні», «дві гривні» (feminine!); warning: gender agreement error (два vs дві)"
+  - "три (three) — High frequency; usage in basic counting and price negotiation"
+  - "п'ять (five) — High frequency; pronunciation focus [pjat'] with distinct apostrophe; collocations: «п'ять хвилин», «п'ять гривень»"
+  - "десять (ten) — High frequency; essential base for teen numbers and currency denominations"
+  - "гривня (hryvnia) — High frequency (contextual); historical origin from 'neck' (hryva); collocations: «одна гривня», «скільки гривень?»"
+  - "скільки (how much) — High frequency; key collocations: «Скільки з мене?», «Скільки коштує?»"
+  - "коштувати (to cost) — Medium frequency; essential for shopping; collocation: «Скільки це коштує?»"
+  recommended:
+  - "сто (hundred) — Usage in large numbers and round prices like «сто гривень»"
+  - "копійка (kopeck) — Cultural proverb: «Копійка береже гривню»; historical subunit of the hryvnia"
+  - "ціна (price) — Medium frequency; collocations: «яка ціна?», «висока ціна», «низька ціна»"
+  - "дорого (expensive) — Context: «Це дуже дорого!»; used for expressing budget constraints"
+  - "дешево (cheap) — Context: «Це дешево»; evaluation of value for money"
+  - "здача (change) — Essential for completing transactions; collocation: «Чи є у вас здача?»"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (3731 chars)
+✅ Message sent to Claude (ID: 10085)
+✓ Message 10085 acknowledged
+   Auto-acknowledged reply #10085 (stdout delivery — no inbox accumulation)
+✓ Message 10078 acknowledged

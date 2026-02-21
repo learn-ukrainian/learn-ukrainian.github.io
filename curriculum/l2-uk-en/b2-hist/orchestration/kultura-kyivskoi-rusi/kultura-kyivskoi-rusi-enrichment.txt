@@ -1,0 +1,341 @@
+✅ Message sent to Gemini (ID: 11980) [auto-acked: self-addressed]
+✓ Message 11980 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #11980...
+📨 Message #11980
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-kultura-kyivskoi-rusi
+   Time: 2026-02-20T23:35:05.087329+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b2-hist-016
+level: B2-HIST
+sequence: 16
+slug: kultura-kyivskoi-rusi
+version: '2.0'
+title: Культура Київської Русі
+content_outline:
+- section: Читання
+  points:
+  - Огляд основних тем культурного розвитку Київської Русі — входження до «Візантійської
+    співдружності націй» зі збереженням самобутності
+- section: Вступ — Культурний світ Русі
+  points:
+  - Культурне багатство Київської Русі як синтез візантійських та місцевих традицій
+    — візантійська форма (камінь, християнство) та місцевий зміст (дерево, фольклор)
+  - Роль християнства у формуванні культурної ідентичності — культурний вибух після
+    988 року
+  - Культура як вираз державності та національного духу — відсутність повного цезаропапізму,
+    вплив князя
+- section: Писемність та освіта
+  points:
+  - Запровадження кирилиці та розвиток писемної культури — витіснення глаголиці
+  - Створення скрипторіїв при монастирях — Остромирове Євангеліє (1056–1057) як найдавніша
+    датована книга
+  - Берестяні грамоти як свідчення поширення грамотності — знахідки у Звенигороді
+    (Львівщина) спростовують міф про «новгородський феномен»; [!myth-buster]
+  - Освітня діяльність монастирів та соборів — графіті Софії Київської фіксують живу
+    розмовну мову (м'яке «ц», закінчення -ові/-єві)
+- section: Література
+  points:
+  - Літописання як головний жанр історичної прози — «Повість минулих літ» (1113) як
+    політична публіцистика
+  - «Слово о полку Ігоревім» як шедевр давньоруської літератури — 1187 рік, заклик
+    до єднання, язичницькі метафори
+  - Житійна література та її роль у духовному житті — житія Феодосія Печерського
+  - Перекладна література та культурний обмін з Візантією — «Ізборники» Святослава
+    (1073, 1076) як енциклопедії знань
+- section: Архітектура
+  points:
+  - Хрестово-купольний стиль храмового будівництва — Десятинна церква (988) як перша
+    кам'яна споруда
+  - Софійський собор як архітектурний символ держави — синтез візантійської системи
+    та місцевої 13-купольної традиції
+  - Синтез візантійської техніки та місцевих художніх традицій — використання «голосників»
+    (керамічних глечиків) для акустики; [!history-bite]
+  - Розвиток оборонного зодчества та палацового будівництва — Золоті ворота (сакральна
+    і оборонна функція), Спасо-Преображенський собор у Чернігові
+- section: Образотворче мистецтво
+  points:
+  - Мозаїка та фрески у храмах Києва — Оранта («Непорушна Стіна»), світські сюжети
+    (полювання, музиканти)
+  - Іконопис та формування місцевих художніх шкіл — Аліпій Печерський
+  - Ювелірне мистецтво - скань, зернь, емаль — київська школа перегородчастої емалі,
+    відома в Європі
+  - Книжкова мініатюра та оздоблення рукописів — ілюстрації Остромирового Євангелія
+- section: Музика та усна творчість
+  points:
+  - Церковний спів та його роль у богослужінні — знаменний розспів
+  - Билини та епічна традиція про князів і богатирів — Ілля Муромець з Морівська (Чернігівщина);
+    [!culture]
+  - Боян як образ давньоруського співця — згадка у «Слові о полку Ігоревім»
+  - Народна музика та її відображення в літературі — скоморохи на фресках Софії (гуслі,
+    сопілки)
+- section: Деколонізаційний погляд
+  points:
+  - Спростування міфів про культурну залежність Русі від Москви — спростування концепції
+    «спільної колиски» і «єдиної давньоруської мови»; [!decolonization]
+  - Київська Русь як незалежний центр культурного розвитку — українська культура не
+    була провінційною щодо Візантії
+  - Українська культурна спадщина як фундамент національної ідентичності — діалектні
+    риси (повноголосся, кличний відмінок) у мові Русі
+- section: Первинні джерела
+  points:
+  - Тексти літописів як історичні свідчення — цитата про книги («ріки, що наповнюють
+    всесвіт»); [!quote]
+  - Рукописи «Слова о полку Ігоревім» — уривок (плач Ярославни або вступ)
+  - Археологічні знахідки - берестяні грамоти, ювелірні вироби — фото грамоти зі Звенигорода
+- section: Потрібно більше практики?
+  points:
+  - Додаткові матеріали для поглибленого вивчення культури Київської Русі
+vocabulary_hints:
+  required:
+  - писемність (literacy) — берестяні грамоти як доказ масової писемності
+  - кирилиця (Cyrillic) — витіснила глаголицю
+  - літопис (chronicle) — «Повість минулих літ», політична публіцистика
+  - житіє (hagiography) — житія святих, Феодосій Печерський
+  - мозаїка (mosaic) — смальта, Оранта, вічність
+  - фреска (fresco) — малювання по вологій штукатурці, світські сюжети
+  - іконопис (icon painting) — канон, Аліпій Печерський
+  - скань (filigree) — ювелірна техніка, тонкий дріт
+  - емаль (enamel) — перегородчаста емаль, експорт до Європи
+  - монастир (monastery) — центр освіти, скрипторій
+  - скрипторій (scriptorium) — майстерня переписування книг
+  - билина (bylina - epic poem) — київський цикл, богатирі
+  recommended:
+  - берестяна грамота (birch bark letter) — Звенигород, побутове листування
+  - мініатюра (miniature) — книжкова ілюстрація, Остромирове Євангеліє
+  - глаголиця (Glagolitic) — рання слов'янська абетка
+  - Боян (Boyan) — віщий співець
+  - церковний спів (church chant) — знаменний розспів
+  - зернь (granulation) — дрібні кульки металу
+  - чернь (niello) — чорний сплав для декору срібла
+  - голосники (acoustic jars) — кераміка в стінах для акустики
+activity_hints:
+- type: reading
+  focus: Culture as a manifesto
+  items: 1
+- type: critical-analysis
+  focus: Art and decolonization
+  items: 3
+- type: essay-response
+  focus: Heritage and security
+  items: 1
+focus: history
+pedagogy: CBI
+prerequisites:
+- b2-hist-14 (St. Sophia Cathedral)
+- b2-hist-12 (Yaroslav the Wise)
+connects_to:
+- b2-hist-18 (People of Rus — everyday life)
+- 'b2-hist-20 (Synthesis: Kyivan Rus)'
+objectives:
+- Understand the development of writing and education in Rus
+- Analyze the literary masterpieces like "Slovo o polku Ihorevim"
+- Discuss the synthesis of Byzantine and local artistic traditions
+grammar:
+- Past tense narrative
+- Art and culture vocabulary
+sources:
+- name: Культура Київської Русі (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Культура_Київської_Русі
+  type: reference
+  notes: Comprehensive overview
+- name: Літописання Київської Русі
+  url: https://uk.wikipedia.org/wiki/Літописання_Київської_Русі
+  type: reference
+  notes: Chronicle tradition
+- name: Слово о полку Ігоревім
+  url: https://litopys.org.ua/slovo/slovo.htm
+  type: primary
+  notes: Epic poem text
+immersion: 100% Ukrainian
+phase: B2-HIST.1 [Kyivan Rus]
+persona:
+  voice: Senior Professor of History
+  role: Master Iconographer
+word_target: 5000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Культура Київської Русі
+
+## Використані джерела
+1. [Енциклопедія історії України: Київська Русь](http://resource.history.org.ua/) — Фундаментальний огляд культурного розвитку, архітектури та мистецтва.
+2. [Ізборник (Litopys.org.ua)](http://litopys.org.ua/) — Першоджерела: «Слово о полку Ігоревім», літописи, праці про писемність.
+3. [Енциклопедія Сучасної України: Берестяні грамоти](https://esu.com.ua/) — Статті про поширення грамотності та знахідки берестяних грамот на території України.
+4. [Освіта.ua: Культура Київської Русі](https://osvita.ua/) — Навчальні матеріали про освіту, літературу та мистецтво.
+
+## Хронологія
+- 988: Прийняття християнства Володимиром Великим, початок монументального кам'яного будівництва (Десятинна церква).
+- 1037: Завершення будівництва Софійського собору в Києві, заснування першої бібліотеки Ярославом Мудрим.
+- 1056–1057: Створення Остромирового Євангелія — найдавнішої датованої рукописної книги Русі.
+- 1073, 1076: Укладання «Ізборників» Святослава — енциклопедичних збірок знань.
+- 1113: Укладання першої редакції «Повісті минулих літ» Нестором Літописцем.
+- 1187: Створення поеми «Слово о полку Ігоревім» (перша письмова згадка назви «Україна» в Іпатіївському літописі під цим роком).
+
+## Ключові факти та цитати
+- **Грамотність**: Берестяні грамоти, знайдені у Звенигороді (Львівщина), свідчать про те, що писати вміли не лише ченці та князі, а й прості містяни.
+- **Мова**: У написах на стінах Софії Київської (графіті) зафіксовані риси живої розмовної мови, що є предком сучасної української (м'яке «ц», закінчення «-ові»/-«єві» в давальному відмінку: «Борису», «Петрові»).
+- **Архітектура**: Софія Київська — це синтез візантійської хрестово-купольної системи та місцевої багатоверхноі (13 куполів) традиції дерев'яного зодчества.
+
+> «О, світла й красно прикрашена земля Руська! Багатьма красотами дивуєш ти: озерами багатьма... містами великими, селами дивними...» («Слово про погибель Руської землі»)
+
+> «Книги — мов ріки, які наповнюють собою увесь світ; це джерело мудрості, в книгах — незмірна глибина...» («Повість минулих літ»)
+
+## Engagement Hooks (mapped to sections)
+- Section "Писемність та освіта": [!myth-buster] — Спростування міфу про те, що берестяні грамоти — це суто російський (новгородський) феномен. Знахідки у Звенигороді підтверджують грамотність і на українських теренах.
+- Section "Архітектура": [!history-bite] — Про «голосники» (керамічні глечики) у стінах соборів, які покращували акустику та полегшували конструкцію.
+- Section "Музика та усна творчість": [!culture] — Скоморохи та їхні інструменти (гуслі, сопілки) зображені на фресках Софії Київської, що свідчить про повагу до світської музики, попри церковні заборони.
+- Section "Література": [!quote] — Цитата з «Повчання дітям» Володимира Мономаха як приклад високої етичної культури еліти.
+- Section "Образотворче мистецтво": [!context] — Пояснення символіки Оранти («Непорушної Стіни») у Софії Київської як захисниці Києва.
+- Section "Деколонізаційний погляд": [!decolonization] — Аналіз того, як радянська історіографія приписувала культурні надбання Києва вигаданій «давньоруській народності», заперечуючи їхню безпосередню українську приналежність.
+
+## Деколонізаційний контекст
+- **Imperial/Soviet myth**: Культура Київської Русі є «спільною колискою» трьох народів, а російська культура є її прямим і головним спадкоємцем.
+- **Ukrainian reality**: Київська Русь — це безпосередній етап розвитку української культури та державності. Російська (Московська) культура формувалася значно пізніше (з XIV ст.) в інших етнічних та геополітичних умовах (Залісся, вплив Орди).
+- **Imperial/Soviet myth**: Давньоруська мова була єдиною для всіх східних слов'ян.
+- **Ukrainian reality**: Існували чіткі діалектні відмінності. Київсько-поліські та галицько-волинські діалекти мали виразні риси, притаманні сучасній українській мові (повноголосся, закінчення -ові/-єві, кличний відмінок), які відсутні в російській.
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| Давньоруська мова | Єдина монолітна мова-предок («общерусский язык»). | Сукупність діалектів; київські говірки є прямими предками української мови. |
+| Берестяні грамоти | Феномен «російської» півночі (Новгород). | Загальноруське явище; менша кількість знахідок в Україні зумовлена складом ґрунту, а не відсутністю грамотності. |
+| «Слово о полку Ігоревім» | Пам'ятка російської літератури. | Пам'ятка української літератури, написана на українських землях, про українських князів, з використанням української лексики. |
+
+## Section-Mapped Research Notes
+
+### Читання
+Огляд культурного вибуху після 988 року. Русь стає частиною «Візантійської співдружності націй», але зберігає самобутність.
+
+### Вступ — Культурний світ Русі
+Синтез: Візантія дала форму (християнство, кам'яна архітектура), місцева традиція — зміст (дерев'яне зодчество, фольклор). Держава не підкорялася церкві (цезаропапізм візантійського зразка не прижився повністю, князь мав великий вплив).
+
+### Писемність та освіта
+Кирилиця витіснила глаголицю. Скрипторії при Софії та Печерському монастирі. Знахідки стилів (писал) та берестяних грамот у Звенигороді. Графіті Софії Київської як джерело живої мови (С. Висоцький).
+
+### Література
+Літописання (Нестор, Сильвестр) — не просто хроніка, а політична публіцистика. «Слово о полку Ігоревім» (1187) — заклик до єднання, унікальна ритміка, багато язичницьких метафор (Стрибожі внуки). Житія (Феодосій Печерський).
+
+### Архітектура
+Десятинна церква (перша кам'яна). Софія Київська (1037) — 13 куполів (Христос і 12 апостолів), пірамідальна композиція. Золоті ворота — оборонна і сакральна функція. Спасо-Преображенський собор у Чернігові.
+
+### Образотворче мистецтво
+Монументалізм. Мозаїка (смальта) — Оранта, Христос Пантократор. Фрески — світські сюжети (полювання, музиканти). Книжкова мініатюра (Остромирове Євангеліє). Ювелірне мистецтво: перегородчаста емаль (київська школа була відома в Європі), чернь, зернь.
+
+### Музика та усна творчість
+Церковний спів (знаменний розспів). Билини київського циклу (Ілля Муромець — родом з Муровська/Морівська під Черніговом, а не Мурома). Скоморохи — носії народної карнавальної культури.
+
+### Деколонізаційний погляд
+Спростування тези про «вторинність» культури Русі. Вона не була провінцією Візантії. Відкидання радянського терміну «спільноруська культура». Чітка фіксація українських рис у мові та ментальності (індивідуалізм, повага до жінки, вічеві традиції).
+
+### Первинні джерела
+Уривки з «Повісті минулих літ» (про вибір віри, про книги). Уривок зі «Слова о полку Ігоревім» (плач Ярославни або вступ). Фото берестяної грамоти.
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12038)
+✓ Message 11980 acknowledged
+✓ Message 12038 acknowledged

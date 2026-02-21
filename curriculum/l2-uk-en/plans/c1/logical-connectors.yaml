@@ -5,59 +5,91 @@ slug: logical-connectors
 version: '2.0'
 title: Логічні сполучники та зв'язки
 content_outline:
-- section: Вступ — Роль сполучників у тексті
+- section: Вступ — Роль сполучників у структурі тексту (Introduction — Role of Connectors
+    in Text Structure)
+  words: 500
   points:
-  - Логічна зв'язність тексту
-  - Категорії логічних зв'язків
-  - Вплив на читабельність
-- section: Причинові сполучники
+  - Роль логічних зв'язків у забезпеченні когезії та когерентності тексту відповідно
+    до Держстандарту (§4.4.4)
+  - 'Огляд категорій логічних зв''язків: причинові, наслідкові, допустові, протиставні
+    та підсилювальні'
+  - Вплив правильного вибору сполучника на читабельність та сприйняття аргументації
+    в академічному дискурсі
+- section: Причинові та наслідкові сполучники (Causal and Consequential Connectors)
+  words: 800
   points:
-  - Оскільки, позаяк, через те що
-  - У зв'язку з тим що, завдяки тому що
-  - Нюанси значення причинових зв'язок
-- section: Наслідкові сполучники
+  - Вживання 'оскільки' (висока частотність) та 'позаяк' (книжний/інтелектуальний
+    регістр) у формальних текстах
+  - 'Наслідкові конструкції: ''отже'' для логічних висновків та ''внаслідок цього''
+    для офіційно-ділового стилю'
+  - 'Типова помилка: усунення кальки ''так як'' та заміна її на нормативні ''оскільки''
+    або ''бо'''
+  - Диференціація 'завдяки' (позитивний контекст) та 'через' (нейтральний/негативний
+    контекст) для вираження причини
+- section: Допустові та протиставні відношення (Concessive and Contrastive Relations)
+  words: 800
   points:
-  - Отже, таким чином, тому
-  - Внаслідок цього, у результаті
-  - Звідси випливає, з цього слідує
-- section: Допустові сполучники
+  - Вживання 'хоча', 'незважаючи на' та 'попри' для вираження допустовості в аналітичних
+    статтях
+  - Протиставлення через 'натомість' (аналітичний стиль) та 'водночас' для багатогранного
+    аналізу явища
+  - Стилістичні нюанси 'утім' (літературно-публіцистичний) як альтернативи 'проте'
+    та 'однак'
+  - 'Learner error: заміна кальки ''тим не менш'' на нормативні ''утім'', ''проте''
+    або ''однак'''
+- section: Додаткові, підсилювальні та уточнювальні засоби (Additional, Intensive,
+    and Clarifying Tools)
+  words: 700
   points:
-  - Хоча, незважаючи на те що, попри те що
-  - Проте, однак, утім
-  - Дарма що, хай там як
-- section: Протиставні сполучники
+  - Використання 'зокрема', 'насамперед' та 'передусім' для структурування аргументів
+    за важливістю
+  - Логічне уточнення через 'власне' та 'загалом' у межах академічного абзацу
+  - Нейтральний сполучник 'зате' як засіб вираження компенсації (на противагу суто
+    протиставним формам)
+- section: Стилістична майстерність та культурний контекст (Stylistic Mastery and
+    Cultural Context)
+  words: 600
   points:
-  - Натомість, навпаки, на противагу
-  - З іншого боку, водночас
-  - Тоді як, у той час як
-- section: Додаткові та підсилювальні
+  - 'Аналіз ''довгих речень'' Оксани Забужко: використання складних сполучникових
+    зв''язків для утримання складної думки (на прикладі ''Notre Dame d''Ukraine'')'
+  - 'Історичний екскурс: логічні конструкції в українській полемічній літературі XVII
+    ст. (І. Вишенський, М. Смотрицький)'
+  - 'Ритміка та логіка: як сполучники формують інтелектуальний темпоритм есеїстики'
+- section: Практика аргументації та редагування (Argumentation Practice and Editing)
+  words: 600
   points:
-  - Крім того, до того ж, більше того
-  - Зокрема, насамперед, передусім
-  - Особливо, власне, загалом
-- section: Практика в аргументації
-  points:
-  - Побудова логічних ланцюжків
-  - Вибір сполучника за контекстом
-  - Уникнення надмірного використання
+  - 'Побудова логічних ланцюжків: від тези через причину до наслідку з використанням
+    C1 вокабуляру'
+  - 'Трансформація тексту: переписування уривків зі зміною логічних акцентів (напр.,
+    з причинового на допустовий)'
+  - Вправи на виправлення калькованих сполучникових конструкцій у професійних перекладах
 vocabulary_hints:
   required:
-  - оскільки (since, because)
-  - позаяк (since, as)
-  - отже (therefore)
-  - таким чином (thus)
-  - внаслідок (as a result)
-  - незважаючи на (despite)
-  - попри (despite)
-  - натомість (instead)
-  - водночас (at the same time)
-  - крім того (moreover)
+  - 'оскільки (since, because) — High frequency, formal; collocation: «оскільки відомо,
+    що...»'
+  - позаяк (since, as) — Medium frequency, bookish/intellectual register
+  - отже (therefore) — High frequency; primary marker for academic inference and conclusions
+  - 'внаслідок (as a result) — Medium frequency, official context; collocation: «внаслідок
+    цього рішення»'
+  - натомість (instead, in contrast) — Medium frequency, analytical/journalistic register;
+    implies alternative
+  - утім / втім (however, still) — Medium frequency, literary/publicistic; effective
+    stylistic alternative to «проте»
+  - завдяки (thanks to) — Strictly positive context; distinguish from neutral/negative
+    «через»
+  - попри (despite) — High frequency in formal discourse; used with accusative case
+  - водночас (at the same time) — Essential for marking simultaneous logical perspectives
+  - крім того (moreover, besides) — Standard additive connector for expanding arguments
   recommended:
-  - звідси (from here, hence)
-  - на противагу (in contrast)
-  - дарма що (even though)
-  - передусім (first of all)
-  - власне (actually)
+  - зате (but, on the other hand) — High frequency, neutral; emphasizes compensation
+    or contrast
+  - дарма що (even though) — Concessive connector with a slight literary/expressive
+    nuance
+  - передусім (first of all) — Key marker for prioritizing points in a logical list
+  - власне (actually, strictly speaking) — Used for logical narrowing and precise
+    identification
+  - звідси (hence, from this) — Marker of logical derivation often used in academic
+    abstracts
 activity_hints:
 - type: group-sort
   focus: Connectors by function (causal/consequential/concessive/contrastive)

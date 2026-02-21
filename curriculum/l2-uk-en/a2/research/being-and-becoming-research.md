@@ -1,38 +1,32 @@
-# Дослідження: Being and Becoming
+# Дослідження: Being and Becoming (A2-06)
 
 ## State Standard Reference
-§4.2.2.5.1: "Без прийменника: характеристика особи за професією чи статусом: Олег буде програмувальником. Микола хоче стати викладачем. Він працював менеджером. Вона мріє стати громадянкою України;"
-Alignment: This module directly addresses the requirement for A2 learners to use the instrumental case to describe a person's profession or status with verbs of being, becoming, and working.
+§4.2.2.5.1: "Без прийменника: характеристика особи за професією чи статусом: Олег буде програмувальником. Микола хоче стати викладачем. Він працював менеджером. Вона мріє стати громадянкою України"
+Alignment: Цей модуль безпосередньо реалізує вимогу стандарту щодо використання орудного відмінка для позначення професії та статусу з дієсловами *бути, стати, працювати*.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| бути | Very High (Corpus) | буде лікарем, був вчителем |
-| стати | High (Corpus) | стати спеціалістом, стати успішним |
-| працювати | High (Corpus) | працювати інженером, працювати в офісі |
-| лікар / лікарка | High | працювати лікарем, викликати лікаря |
-| вчитель / вчителька | High | перша вчителька, працювати вчителем |
-| інженер / інженерка | Medium-High | головний інженер, стати інженером |
+| бути (past/future) | Very High | був студентом, буде лікарем |
+| стати | High | стати спеціалістом, хоче стати... |
+| працювати | High | працювати вчителем, працює програмістом |
+| лікар | High | хороший лікар, працювати лікарем |
+| програміст | High (Colloq: *айтішник*) | працювати програмістом, стати айтішником |
+| інженер | Medium | головний інженер, працювати інженером |
 
 ## Cultural Hooks
-1. **Фемінітиви (Femininitives)**: In 2020, Ukraine officially updated its "Classifier of Professions" to allow and encourage the use of feminine forms for professions (e.g., *директорка*, *інженерка*, *президентка*). This reflects a broader societal shift toward gender visibility in professional life.
-2. **IT Hub Prestige**: While traditionally *лікар* and *вчитель* were the most respected professions, modern Ukraine is a major European IT hub. Words like *програміст*, *айтішник*, and *тестувальник* now carry immense prestige and are the primary goals of the "becoming" (стати) narrative for many young Ukrainians.
+1. **Фемінітиви (Reform 2020)**: Офіційне закріплення фемінітивів у правописі 2019 року (*директорка, менеджерка, філологиня*). Це важливий аспект сучасної української мови, що відображає гендерну рівність.
+2. **IT-індустрія**: Україна є одним з провідних IT-хабів Європи. Професія програміста (*айтішника*) є надзвичайно престижною та поширеною, тому діалоги в цьому контексті будуть дуже актуальними для учнів.
 
 ## Common Learner Errors
-1. **Nominative Trap**: Using the nominative case after *бути* in past/future or after *стати*. 
-   - *Error*: Він хоче стати лікар. → *Correct*: Він хоче стати лікарем.
-   - *Why*: Direct translation from English "to be a doctor" or "become a doctor" where "doctor" feels like a subject complement.
-2. **"Work as" Calque**: Using the preposition *як* (as) where a pure instrumental is required.
-   - *Error*: Я працюю як менеджер. → *Correct*: Я працюю менеджером.
-   - *Why*: Interference from English "work as" or German "arbeiten als".
-3. **Gender Mismatch in Agreement**: Using masculine adjectives with feminine profession forms.
-   - *Error*: Він хороша лікарка (referring to a man) or Вона хороший лікарка. → *Correct*: Вона хороша лікарка.
+1. **Nominative Trap**: *Він хоче бути лікар* (instead of *лікарем*). Error comes from L1 interference (English "wants to be a doctor").
+2. **"Work as" Calque**: *Він працює як менеджер* (instead of *працює менеджером*). Direct translation of "works as".
+3. **Gender Mismatch**: *Вона хороший лікар* (instead of *Вона хороша лікарка*). Confusion between the grammatical gender of the profession noun and the biological gender of the person.
 
 ## Cross-References
-- Builds on: `a2-04` (Instrumental case endings for nouns/adjectives), `a2-05` (Instrumental case for means/tools).
-- Prepares for: `a2-49` (Work & Professions - vocabulary expansion), `a1-26` (Basic present tense "to be" - contrast).
+- **Builds on**: A2-04 (Instrumental endings - learners must know endings to apply this usage), A2-05 (Instrumental means), A1 Present Tense (for contrast).
+- **Prepares for**: A2-07 (Spatial Prepositions), A2-49 (Work & Professions - expanded vocabulary).
 
 ## Notes for Content Writing
-- Focus on the distinction: **Present Tense Identity** (Nom. - *Я лікар*) vs. **Role/Function/Process** (Instr. - *Я працюю лікарем*, *Я буду лікарем*).
-- Ensure consistent use of both masculine and feminine forms for all profession examples to model modern Ukrainian usage.
-- Use the "Cultural Insight" box to explain the 2020 linguistic reform regarding femininitives.
+- **Terminology**: The Standard uses *програмувальник*, but *програміст* is universally used in spoken/professional language. Teach *програміст* as primary, note *програмувальник* as formal variant.
+- **Scaffolding**: Since this is A2 Band 1 (50-60% Immersion), explicitly explain the logic of "Identity (Nom) vs Function (Instr)" in English in the Introduction.

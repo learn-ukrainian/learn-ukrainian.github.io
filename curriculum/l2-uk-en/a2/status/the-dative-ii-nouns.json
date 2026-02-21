@@ -2,14 +2,14 @@
   "module": "the-dative-ii-nouns",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-19T13:28:55.905167Z",
+  "last_audit": "2026-02-21T01:07:23.456189Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-19T13:28:36.749960Z",
+    "md": "2026-02-21T01:06:52.575766Z",
     "meta": "2026-02-19T13:01:36.868320Z",
-    "activities": "2026-02-19T13:12:38.060194Z",
-    "vocabulary": "2026-02-18T14:39:37.285310Z",
-    "plan": "2026-02-18T19:03:33.080498Z",
+    "activities": "2026-02-21T01:06:48.894508Z",
+    "vocabulary": "2026-02-21T01:06:51.315201Z",
+    "plan": "2026-02-20T20:59:22.578321Z",
     "research": "2026-02-19T13:01:36.861733Z"
   },
   "gates": {
@@ -31,7 +31,7 @@
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "25/1"
+      "message": "26/1"
     },
     "naturalness": {
       "status": "info",
@@ -39,9 +39,9 @@
       "message": "PENDING \u2014 awaiting review"
     },
     "ipa": {
-      "status": "warn",
+      "status": "pass",
       "violations": 0,
-      "message": "5 IPA issues (run lint_ipa.py --fix)"
+      "message": "Clean IPA"
     },
     "research": {
       "status": "pass",
@@ -57,7 +57,7 @@
   "overall": {
     "status": "pass",
     "blocking_issues": [],
-    "pass_count": 6,
+    "pass_count": 7,
     "fail_count": 0,
     "deferred_count": 0
   }

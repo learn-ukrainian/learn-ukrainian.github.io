@@ -6,65 +6,77 @@ version: '2.0'
 title: Checkpoint — Full Grammar
 subtitle: A2 Mastery Review
 content_outline:
-- section: Огляд
+- section: Вступ та огляд (Introduction and Overview)
+  words: 400
   points:
-  - Overview of checkpoint — summative assessment for A2 morphological curriculum
-    (Standard §4.2.2) — verifies ability to form all 7 cases and use aspectual pairs
-    (Lines 1258-1359)
-  - Self-assessment focus — emphasis on self-correction ('виправити помилку') and
-    Euphony as Logic — explain that 'irregularities' are often language trying to
-    sound better
-- section: 'Skill 1: Daily Life'
+  - Summative assessment for the A2 morphological curriculum (Standard §4.2.2), verifying
+    ability to form all 7 cases and use aspectual pairs.
+  - Self-assessment focus with emphasis on self-correction ('виправити помилку') and
+    'Euphony as Logic' to explain linguistic irregularities.
+- section: 'Милозвучність: Секрет мелодійності (Euphony: The Secret of Melodiousness)'
+  words: 500
   points:
-  - Daily life vocabulary review — focus on Euphony (Mylozvuchnist) rules (u/v, i/y)
-    for smooth speech — scientifically recognized melodic quality (like Italian)
-  - 'Practical situations — learner error: Motion Verb Transport (confusing ''іти''
-    vs ''їхати'') — Error: ''Я йду до Львова поїздом'' -> Correction: ''Я їду...'''
-- section: 'Skill 2: Work & Education'
+  - Scientific recognition of Ukrainian as a melodic language (similar to Italian)
+    and the concept of 'Милозвучність' (Euphony).
+  - Drilling the rules of u/v and i/y alternation as logical choices to avoid harsh
+    consonant clusters and maintain musical flow.
+- section: Система відмінків та Кличний (The Case System and the Vocative)
+  words: 600
   points:
-  - Work and education vocabulary — introduce basic grammatical meta-language (іменник,
-    дієслово) — prepare for B1 Bridge strategy
-  - 'Professional situations — learner error: Aspect Mismatch (using Imperfective
-    for completed specific actions) — Error: ''Вчора я писав лист і відправив'' ->
-    Correction: ''Вчора я написав...'''
-- section: 'Skill 3: Health & Body'
+  - Review of the 7-case system, highlighting the 'Soul' of the Vocative (Кличний)
+    as a sign of respect and personification of nature (lisi, zori).
+  - 'Addressing common error: Case Confusion (Genitive vs. Accusative) in negation/quantity
+    — ''Я не маю часу'' (Gen) vs ''Я маю час'' (Acc).'
+- section: 'Дієслово: Вид та Рух (The Verb: Aspect and Motion)'
+  words: 600
   points:
-  - Health vocabulary review — focus on correct case usage for body parts and conditions
-  - 'Body and wellness — cultural hook: The ''Soul'' of the Cases and Vocative case
-    personification — even nature (Zemle-matty, lisi, zori) is addressed directly'
-- section: 'Skill 4: Shopping & Travel'
+  - 'Aspectual pairs review: ''вибирати'' (process) vs ''вибрати'' (result) and ''перевіряти''
+    (process) vs ''перевірити'' (result).'
+  - 'Correcting Aspect Mismatch: using Perfective for completed actions (''написав
+    лист'') vs Imperfective for background process (''писав лист'').'
+  - 'Motion Verb Transport: correcting the confusion between ''іти'' (walking) and
+    ''їхати'' (vehicle) — e.g., ''їду поїздом'', not ''йду''.'
+- section: Сфери життя та Метамова (Spheres of Life and Metalanguage)
+  words: 500
   points:
-  - Shopping and travel vocabulary — differentiating 'вибирати' (process) vs 'вибрати'
-    (result) — High frequency A2 General vocabulary
-  - 'Practical transactions — learner error: Case Confusion (Genitive vs. Accusative,
-    especially in negation) — Error: ''Я не маю час'' -> Correction: ''Я не маю часу'''
-- section: Integration Challenge
+  - Integration of Daily Life, Work, and Health vocabulary while introducing Ukrainian
+    meta-language terms like 'іменник' (noun) and 'дієслово' (verb).
+  - 'B1 Bridge strategy: preparing learners for deeper grammatical analysis by using
+    target language terminology for core concepts.'
+- section: Підсумок та інтеграція (Summary and Integration)
+  words: 400
   points:
-  - Comprehensive assessment — selecting correct case and aspect in complex sentences
-  - Mixed skills practice — verify ability to 'перевіряти себе' (check oneself) and
-    apply rules — reinforce collocations like 'перевіряти знання'
-- section: Підсумок
-  points:
-  - Summary and next steps — transition to B1 Metalanguage Bridge — prepares for A2-57
+  - 'Comprehensive assessment: selecting correct case and aspect in complex sentences
+    (''речення'') to demonstrate A2 mastery.'
+  - Consolidation of A2 core (A2-01 to A2-55) and preparation for A2-57 and the transition
+    to the B1 level.
 vocabulary_hints:
   required:
-  - повторення (review) — key concept for checkpoint
+  - помилка (mistake) — робити помилку, виправити помилку, груба помилка; high-frequency
+    meta-language for self-correction focus
+  - правило (rule) — запам'ятати правило, за правилом, виняток з правила; high-frequency
+    meta-language
   - відмінок (case) — Називний, Родовий, Давальний, Знахідний, Орудний, Місцевий,
-    Кличний
-  - дієслово (verb) — meta-language introduction
-  - граматика (grammar) — rules and exceptions
-  - речення (sentence) — complex structures
-  - слово (word) — vocabulary choice
-  - правильно (correctly) — self-correction focus
-  - помилка (mistake) — робити помилку, виправити помилку, груба помилка
+    Кличний; summative morphological focus
+  - дієслово (verb) — meta-language introduction for B1 Bridge strategy
+  - іменник (noun) — meta-language introduction for B1 Bridge strategy
+  - речення (sentence) — focus on complex structures and integrative assessment
+  - правильно (correctly) — focus on self-correction and accuracy ('вибирати правильну
+    відповідь')
+  - повторення (review) — key concept for the A2 level summative checkpoint
   recommended:
-  - вид (aspect) — completed vs process
-  - доконаний (perfective) — result focus
-  - недоконаний (imperfective) — process focus
-  - вправа (exercise) — practice context
-  - правило (rule) — запам'ятати правило, за правилом, виняток з правила
-  - вибирати (to choose) — вибирати правильну відповідь, вибирати подарунок
-  - перевіряти (to check) — перевіряти себе, перевіряти вправу, перевіряти знання
+  - милозвучність (euphony) — melodic quality of Ukrainian driving u/v and i/y alternation
+    rules
+  - вибирати (to choose) — вибирати правильну відповідь, вибирати подарунок; high-frequency
+    A2 general vocabulary
+  - перевіряти (to check) — перевіряти себе, перевіряти вправу, перевіряти знання;
+    central to self-assessment
+  - вид (aspect) — distinction between доконаний (perfective/result) and недоконаний
+    (imperfective/process)
+  - кличний відмінок (vocative case) — personification of nature and sign of respect
+    in address
+  - граматика (grammar) — the framework of rules and exceptions ('виняток з правила')
+    mastered in A2
 activity_hints:
 - type: quiz
   focus: A2 grammar comprehensive test

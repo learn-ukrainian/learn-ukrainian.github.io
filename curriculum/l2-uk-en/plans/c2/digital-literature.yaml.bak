@@ -1,0 +1,117 @@
+module: c2-039
+level: c2
+sequence: 39
+version: '2.0'
+title: Цифрова література
+focus: literature
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Електронна література — Вікіпедія
+  url: https://uk.wikipedia.org/wiki/Електронна_література
+  type: reference
+  notes: Digital/electronic literature concepts
+- name: Українські літературні платформи
+  url: https://litcentr.in.ua/
+  type: primary
+  notes: Online literary communities and publications
+- name: Медіалітература
+  url: https://uk.wikipedia.org/wiki/Медіалітература
+  type: reference
+  notes: Media and literature intersection
+content_outline:
+- section: Вступ — Література в цифрову епоху
+  points:
+  - Що таке цифрова література
+  - Гіпертекст і нелінійна нарація
+  - Література народжена цифровою vs. дигіталізована
+- section: Форми цифрової літератури
+  points:
+  - Гіпертекстова проза
+  - Інтерактивна фікшн
+  - Візуальна поезія онлайн
+  - Твіттер-література і мікроформи
+- section: Онлайн-платформи і публікація
+  points:
+  - Літературні портали (ЛітАкцент, Україна молода)
+  - Самвидав онлайн
+  - Електронні книги
+  - Аудіокниги і подкасти
+- section: Соціальні мережі і література
+  points:
+  - Інстаграм-поезія
+  - Літературний TikTok (BookTok)
+  - Фейсбук-проза
+  - Авторський брендинг
+- section: Критика і рецепція онлайн
+  points:
+  - Блоги і влоги про книги
+  - Goodreads і подібні платформи
+  - Онлайн-рецензії
+  - Краудсорсингова критика
+- section: Виклики і можливості
+  points:
+  - Авторське право в цифрову епоху
+  - Демократизація публікації
+  - Увага і конкуренція
+  - Майбутнє цифрової літератури
+- section: Підсумок
+  points:
+  - Інтеграція цифрового і традиційного
+  - Практичні кроки для автора
+  - Критичне ставлення до платформ
+vocabulary:
+  required:
+  - цифровий (digital)
+  - гіпертекст (hypertext)
+  - інтерактивний (interactive)
+  - платформа (platform)
+  - самвидав (self-publishing)
+  - аудіокнига (audiobook)
+  - подкаст (podcast)
+  - блог (blog)
+  - мікроформа (microform)
+  - брендинг (branding)
+  recommended:
+  - влог (vlog)
+  - краудсорсинг (crowdsourcing)
+  - дигіталізація (digitization)
+  - інтерфейс (interface)
+  - мультимедіа (multimedia)
+  forbidden: '[]'
+activities:
+  types_required:
+  - essay-response
+  - quiz
+  - comparative-study
+  - critical-analysis
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c2-40 (Literary Prizes & Canon)
+- c2-41 (Literary Community)
+- c2-45 (C2.2 Checkpoint)
+vocabulary_hints:
+  required:
+  - концепція (concept)
+  - аналіз (analysis)
+  - дискурс (discourse)
+  - методологія (methodology)
+  recommended:
+  - інтерпретація (interpretation)
+  - контекстуалізація (contextualization)
+  - синтез (synthesis)
+activity_hints:
+- type: reading
+  focus: Поглиблений аналіз тексту
+  items: 4
+- type: essay-response
+  focus: Критичне осмислення
+- type: discussion
+  focus: Дискусія та аргументація
+  items: 1
+persona:
+  voice: Senior Specialist
+  role: Cyber-Ethnographer

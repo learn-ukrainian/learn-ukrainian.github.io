@@ -2,12 +2,5 @@
   "track": "c1-bio",
   "slug": "yuriy-kondratiuk",
   "mode": "v3",
-  "phases": {
-    "v3-A": {
-      "status": "complete",
-      "ts": "2026-02-19T19:45:24Z",
-      "task_id": "v3-yuriy-kondratiuk-pA",
-      "mode": "full"
-    }
-  }
+  "phases": {}
 }

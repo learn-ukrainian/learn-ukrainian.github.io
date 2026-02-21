@@ -1,0 +1,317 @@
+✅ Message sent to Gemini (ID: 10720) [auto-acked: self-addressed]
+✓ Message 10720 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10720...
+📨 Message #10720
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-surzhyk
+   Time: 2026-02-20T21:25:15.109461+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-029
+level: C1
+sequence: 29
+slug: surzhyk
+version: '2.0'
+title: 'Суржик: Феномен змішування'
+content_outline:
+- section: Вступ — Що таке суржик
+  points:
+  - Визначення суржику
+  - Історичні причини виникнення
+  - Соціолінгвістичний контекст
+- section: Фонетична інтерференція
+  points:
+  - Російська фонетика в українських словах
+  - Наголос та інтонація
+  - Вимова приголосних
+- section: Лексична інтерференція
+  points:
+  - кажеться → здається
+  - понімаю → розумію
+  - єслі → якщо
+  - Типові русизми
+- section: Граматична інтерференція
+  points:
+  - Конструкції з російського
+  - Помилки в керуванні
+  - Калькування
+- section: Код-свічинг
+  points:
+  - Перемикання між мовами
+  - Ситуативне використання
+  - Соціальні функції
+- section: Соціальне сприйняття
+  points:
+  - Ставлення до суржику
+  - Суржик і престиж
+  - Дестигматизація
+- section: Практичне завдання
+  points:
+  - Трансформація суржику в стандартну мову
+  - Аналіз текстів
+  - Дискусія про ставлення
+vocabulary_hints:
+  required:
+  - суржик (surzhyk)
+  - інтерференція (interference)
+  - русизм (Russicism)
+  - код-свічинг (code-switching)
+  - змішування (mixing)
+  - фонетичний (phonetic)
+  - лексичний (lexical)
+  - граматичний (grammatical)
+  - калька (calque)
+  - стигматизація (stigmatization)
+  recommended:
+  - білінгвізм (bilingualism)
+  - контактна мова (contact language)
+  - норма (norm)
+  - девіація (deviation)
+  - соціолект (sociolect)
+activity_hints:
+- type: quiz
+  focus: Identify surzhyk vs standard
+  items: 15+
+- type: match-up
+  focus: Surzhyk → standard Ukrainian
+  items: 15+
+- type: error-correction
+  focus: Transform surzhyk to standard
+  items: 15+
+- type: fill-in
+  focus: Replace surzhyk forms
+  items: 12+
+- type: cloze
+  focus: Sociolinguistic vocabulary
+  items: 10+
+- type: group-sort
+  focus: Classify interference types
+  items: 12+
+focus: grammar
+prerequisites:
+- c1-28 (Dialects)
+- Understanding of linguistic variation
+connects_to:
+- c1-30 (History of Language)
+- c1-31 (Diaspora Ukrainian)
+- c1-35 (C1.2 Checkpoint)
+module_type: grammar
+sources:
+- name: Антоненко-Давидович - Як ми говоримо
+  url: https://r2u.org.ua/
+  type: primary
+  notes: Classic guide to Russianisms
+- name: Масенко - Суржик
+  url: https://mova.info/
+  type: reference
+  notes: Academic analysis of Surzhyk
+immersion: 100% Ukrainian
+phase: C1.2 Professional Communication
+objectives:
+- 'Identify and correctly use суржик: феномен змішування'
+- Form and apply що таке суржик
+- Distinguish between практичне завдання
+persona:
+  voice: Senior Specialist
+  role: Польовий дослідник мови
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Суржик: Феномен змішування
+
+## State Standard Reference
+§4.4.1.1: "Стилі української мови: розмовний; офіційний; науковий; публіцистичний; художній; релігійний; епістолярний."
+§4.4.5: "Уміння створити текст певного стилю за планом."
+Alignment: Модуль розвиває вміння розрізняти літературну норму та інтерференцію (суржик), що є критичним для дотримання стилістичної чистоти, особливо в офіційному та науковому стилях (C1).
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| суржик | High (Social/Academic) | говорити суржиком, переходити на суржик, викорінювати суржик |
+| інтерференція | Medium (Academic) | мовна інтерференція, фонетична інтерференція, вплив російської мови |
+| русизм | High (Educational) | уникати русизмів, калька з російської, типовий русизм |
+| код-свічинг | Low (Academic) | ситуативний код-свічинг, перемикання кодів, білінгвізм |
+| стигматизація | Medium (Sociology) | соціальна стигматизація, мовний престиж, мовна стійкість |
+
+## Cultural Hooks
+1. **Вєрка Сердючка (Андрій Данилко)**: Найвідоміший приклад використання суржику в поп-культурі як засобу створення комічного образу "простої людини".
+2. **Лесь Подерв'янський**: Використання суржику в сатиричних п'єсах для гротескного зображення радянської та пострадянської дійсності.
+3. **Фільм «Мої думки тихі» (Антоніо Лукіч)**: Реалістичне відображення мовної ситуації на Закарпатті та специфічного діалекту/суржику.
+
+## Common Learner Errors
+1. **Лексичні кальки**: *приймати участь* (take part) → *брати участь*; *вірне рішення* (correct decision) → *правильне рішення*. Причина: прямий переклад з російської/англійської.
+2. **Фонетичні помилки**: *чєловек* замість *людина*, *канєшно* замість *звісно*. Причина: вплив російської фонетики.
+3. **Граматичні помилки**: *дякую вас* (thank you) → *дякую вам*; *вибачаюся* (I apologize) → *перепрошую* / *вибачте*. Причина: різне керування дієслів.
+
+## Cross-References
+- **Builds on**: c1-28 (Dialects) — distinction between organic dialect and artificial mixture.
+- **Prepares for**: c1-30 (History of Language) — Russification policies context; c1-35 (Checkpoint).
+
+## Notes for Content Writing
+- Важливо розрізняти суржик (хаотичне змішування) та діалекти (сталі територіальні варіанти).
+- У розділі "Соціальне сприйняття" слід уникати категоричного засудження носіїв суржику, фокусуючись на освітньому аспекті та престижі літературної мови.
+- Використовувати приклади "анти-суржик" (як правильно) у форматі таблиць "Неправильно — Правильно".
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 500
+  points:
+  - "Визначення суржику як хаотичного змішування української та російської мовних систем; відмінність від сталих територіальних діалектів (builds on c1-28)."
+  - "Відповідність Державному стандарту (§4.4.1.1): розгляд суржику в контексті розмовного стилю та його неприпустимість в офіційному чи науковому мовленні."
+  - "Історичні передумови: вплив політики русифікації на формування 'гібридної мови' та соціолінгвістичний контекст виникнення."
+- section: "Соціолінгвістичний вимір: Суржик як феномен (Sociolinguistic Dimension: Surzhyk as a Phenomenon)"
+  words: 800
+  points:
+  - "Поняття мовної інтерференції та мовної стійкості: аналіз факторів, що сприяють змішуванню кодів."
+  - "Код-свічинг vs Суржик: відмінність між усвідомленим перемиканням кодів у білінгвальному середовищі та несвідомим використанням суржику."
+  - "Соціальне сприйняття та стигматизація: дискусія про мовний престиж без категоричного засудження носіїв, фокус на освітній дестигматизації."
+- section: "Фонетична та граматична інтерференція (Phonetic and Grammatical Interference)"
+  words: 900
+  points:
+  - "Типові фонетичні помилки: вплив російської вимови та редукції голосних (напр., 'чєловек' замість 'людина', 'канєшно' замість 'звісно')."
+  - "Граматичне керування: виправлення помилки 'дякую вас' (вплив російської) на нормативне 'дякую вам' (Dative) — розбір на мінімальних парах."
+  - "Дієслівні форми та зворотні конструкції: трансформація суржикового 'вибачаюся' (I apologize to myself) на літературне 'вибачте' або 'перепрошую'."
+- section: "Лексичні кальки та «Анти-суржик» (Lexical Calques and 'Anti-Surzhyk')"
+  words: 900
+  points:
+  - "Аналіз типових кальок: заміна 'приймати участь' (take part) на 'брати участь' та 'вірне рішення' на 'правильне рішення' (correct decision)."
+  - "Практичний інструментарій: створення таблиці 'Неправильно — Правильно' для частотних слів (кажеться -> здається, єслі -> якщо, понімаю -> розумію)."
+  - "Вправи на деконструкцію суржикових речень та їх переклад літературною нормою з поясненням етимології запозичень."
+- section: "Суржик у культурі та медіа (Surzhyk in Culture and Media)"
+  words: 500
+  points:
+  - "Культурний хук — Вєрка Сердючка (Андрій Данилко): аналіз використання суржику як засобу створення комічного образу 'простої людини'."
+  - "Літературна сатира Леся Подерв'янського: гротескне відображення радянської та пострадянської дійсності через мовне змішування."
+  - "Кінематографічний приклад: фільм «Мої думки тихі» (Антоніо Лукіч) як джерело для аналізу реалістичної мовної ситуації в Україні."
+- section: "Практичне застосування та підсумок (Practical Application and Summary)"
+  words: 400
+  points:
+  - "Відповідність Державному стандарту (§4.4.5): створення короткого тексту офіційного стилю з уникненням будь-якої інтерференції."
+  - "Дискусія: суржик як тимчасовий етап переходу до повної україномовності та роль мовної гігієни у професійному житті."
+  - "Підсумковий тест на ідентифікацію прихованих русизмів та граматичних кальок у складних реченнях."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "суржик (surzhyk) — говорити суржиком, переходити на суржик; висока частотність у соціолінгвістиці"
+  - "інтерференція (interference) — мовна інтерференція, фонетична інтерференція; академічний термін"
+  - "русизм (Russicism) — уникати русизмів, типовий русизм; ключовий термін для освітнього контексту"
+  - "код-свічинг (code-switching) — перемикання кодів; часто використовується в контексті білінгвізму"
+  - "калька (calque) — лексична калька, калька з російської; дослівний переклад структури"
+  - "стигматизація (stigmatization) — соціальна стигматизація; середній рівень частотності"
+  - "мовна стійкість (linguistic resilience) — здатність опиратися впливу іншої мовної системи"
+  recommended:
+  - "білінгвізм (bilingualism) — двомовність; часто є підґрунтям для появи суржику"
+  - "соціолект (sociolect) — мова певної соціальної групи"
+  - "девіація (deviation) — відхилення від літературної норми"
+  - "мовний престиж (linguistic prestige) — соціальний статус мовного варіанту в суспільстві"
+  - "викорінювати (to eradicate) — активно позбуватися суржику або помилок"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4305 chars)
+✅ Message sent to Claude (ID: 10728)
+✓ Message 10728 acknowledged
+   Auto-acknowledged reply #10728 (stdout delivery — no inbox accumulation)
+✓ Message 10720 acknowledged

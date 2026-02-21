@@ -1,0 +1,40 @@
+module: c1-084
+level: C1
+sequence: 84
+slug: teatralne-mystetstvo-1
+version: '2.0'
+title: Театральне мистецтво I
+subtitle: Theater Arts I — From Origins to Kurbas
+content_outline:
+- section: Розминка — Витоки українського театру
+  points:
+  - Від вертепу до професійної сцени
+  - Театр корифеїв — Заньковецька, Кропивницький
+  - Лесь Курбас — геній світового рівня
+- section: Content Areas
+  points:
+  - 'Origins: Вертеп, шкільна драма — folk and religious roots'
+  - '19th century: Котляревський, Кропивницький, **Марія Заньковецька** — national
+    theater birth'
+  - 'Revolutionary: **Лесь Курбас**, Театр "Березіль" — world-class experimental theater,
+    Executed Renaissance martyr'
+- section: Практика — історія театру
+  points:
+  - Описати структуру вертепу — персонажі, сюжет
+  - Проаналізувати внесок Марії Заньковецької
+  - Написати есе про революційний театр Курбаса
+  - Обговорити розстріл Курбаса та знищення "Березолю"
+focus: fine-arts
+pedagogy: CBI
+objectives:
+- Learner explores the origins of Ukrainian theater (Vertep, School Drama).
+- Learner understands the role of the Coryphaei Theater.
+- Learner analyzes the revolutionary impact of Les Kurbas and Berezil.
+grammar:
+- Dramatic terminology
+- Analysis of staging
+phase: C1.5 Folk Culture & Fine Arts
+persona:
+  voice: Senior Specialist
+  role: Театральний режисер
+word_target: 4000

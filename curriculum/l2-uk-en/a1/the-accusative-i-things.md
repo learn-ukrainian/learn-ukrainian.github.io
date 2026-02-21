@@ -242,7 +242,8 @@ The verb "to have" is one of the most common triggers. In Ukrainian, we often us
 
 *   **Я маю ідею** [iˈdɛju]. (I have an idea.) — *ідея → ідею*
 *   **Я маю план**. (I have a plan.) — *план → план* (Masculine, no change)
-*   **Я маю можливість** [mɔʒˈlɪʋʲisʲtʲ]. (I have an opportunity.)
+*   **Я маю можливість** [mɔʒˈlɪʋʲisʲtʲ]. (I have an opportunity.) — *можливість → можливість* (Feminine, but ends in a consonant, not -а/-я — no change!)
+---
 
 ### Using "Хотіти" (To Want)
 

@@ -21,19 +21,19 @@
   audit script returned non-zero exit code
   overall status is 'fail' (must be 'pass')
   failing gates:
-    lesson: 2501/2000 (raw: 2874) | pedagogy: 1 violations
+    lesson: 2616/2000 (raw: 2994) | pedagogy: 3 violations
     activities: 9/8 | density: 1 < 12
 
   Hetman has NOT completed this module.
   Fix the issues above and re-run this script.
 
 ─── Audit output (last 15 lines) ───
-    [COMPLEXITY] match-up 'Справжні друзі: Літери та звуки' has 7 pairs (target: 8-15)
-       → FIX: Adjust number of pairs to 8-15.
+    [RUSSIAN_CHARACTERS] Found Russian-only characters: ы, ё, э (lines: [166])
+       → FIX: Replace with Ukrainian equivalents: ы→и, э→е, ё→ьо/йо. These characters never appear in Ukrainian.
 
 
   📝 RECOMMENDATION: UPDATE (patch fixes) (severity 15/100)
-     → 1 violations (minor)
+     → 3 violations (minor)
      → Activity density below minimum
 
 

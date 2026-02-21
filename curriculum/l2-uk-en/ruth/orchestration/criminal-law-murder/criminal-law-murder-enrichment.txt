@@ -1,0 +1,209 @@
+✅ Message sent to Gemini (ID: 11760) [auto-acked: self-addressed]
+✓ Message 11760 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #11760...
+📨 Message #11760
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-criminal-law-murder
+   Time: 2026-02-20T23:30:16.651612+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 6
+module: ruth-006
+module_number: 6
+slug: criminal-law-murder
+title_uk: 'Кримінальне право: Вбивство'
+title_en: 'Criminal Law I: Murder'
+phase: 1
+phase_id: chancery-legal
+phase_name: Chancery & Legal
+focus: Головщина revisited
+content_outline:
+- section: Вступ
+  description: 'Introduction to Criminal Law I: Murder'
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Baroque Scholar
+  role: Grod Court Judge
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Criminal Law Murder
+
+## Використані джерела
+1. [Encyclopedia of Ukraine](http://www.encyclopediaofukraine.com) — Academic overview of the Lithuanian Statutes and criminal law.
+2. [Історія держави і права України (підручник)](https://history.org.ua) — Detailed analysis of the evolution of criminal law from Ruska Pravda to the Statutes.
+3. [Наталія Старченко. "Вбивство князів Четвертинських 1576 р."](https://chtyvo.org.ua) — Microhistory case study of a noble murder trial on Volhynia.
+4. [Литовський Статут 1588 року (текст)](http://litopys.org.ua) — Primary source text analysis.
+5. [Андрій Заяць. "Міське судочинство на Волині"](https://lnu.edu.ua) — Procedural details of criminal justice.
+
+## Хронологія
+- 1468: **Судебник Казимира IV** — early codification of criminal liability, introducing differentiation based on intent.
+- 1529: **Перший Литовський Статут** — codified "головщина" rates; distinct penalties for murdering nobles vs. peasants.
+- 1566: **Другий Литовський Статут** — expansion of criminal articles, introduction of presumption of innocence elements.
+- 1576: **Справа князів Четвертинських** — resonance murder case illustrating the "blood feud" transition to state justice.
+- 1588: **Третій Литовський Статут** — final systematization; Art. 1, Section XI establishes strict death penalty ("горло") for premeditated murder of nobles.
+
+## Ключові факти та цитати
+- **Terminological Fluidity**: Murder was called `мужобойство`, `забойство`, `убивство`. The outcome was often financial settlement (`головщина`) alongside physical punishment.
+- **Quote 1 (Statute 1588, modernized Ruthenian)**: «А єсли бы которій шляхтич... чловека простого стану забил, и был на горячей крови пойман... тогды того шляхтича-убийцу горлом карати» (Demonstrates class-based justice but also the severity of "red-handed" capture).
+- **Quote 2 (Concept)**: «Головщина» — the "price of a head". For a noble: 100 kop of groschen. For a peasant: 24 kop. A dog could be valued higher than a peasant in earlier codes, though Statutes standardized peasant value.
+- **Procedural Term**: «На гарячій крові» (in flagrante delicto) — changed the jurisdiction and immediacy of the sentence.
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ": [!context] — The transition from "private vengeance" (Ruska Pravda) to "public crime" (Statutes).
+- Section "Термінологія": [!language-gem] — Analysis of the word `головщина` vs `головоріз`.
+- Section "Головщина: Економіка смерті": [!history-bite] — Compare the price of a peasant's life (24 kopy) to the price of a warhorse or a sable coat.
+- Section "Види вбивства": [!myth-buster] — Myth: "Peasants had no rights." Reality: Statute 1588 nominally protected them, though enforcement was class-biased.
+- Section "Судовий процес": [!role-play] — "You are the Voznyi (court official). Identify the wounds."
+- Section "Аналіз джерела": [!quote] — Direct reading of Statute Article XI.
+
+## Деколонізаційний контекст
+- **Imperial Myth**: Russian historiography claims the Statutes as "Russian Law" (`Русское право`) or emphasizes their "feudal cruelty" to justify later Tsarist/Soviet "liberation".
+- **Ukrainian Reality**: The Statutes were written in **Ruthenian (Old Ukrainian)**, not Russian. They represented a synthesis of local tradition and **European** (Roman/Magdeburg) law, far more advanced than the Muscovite *Sudebniks* of the same era (which relied more on arbitrary despotic power). The legal culture of the Hetmanate was built on this foundation, not on Muscovite law.
+
+## Contested Terms
+| Concept | Imperial/Soviet framing | Ukrainian (decolonized) framing |
+|---------|-------------------------|---------------------------------|
+| Мова Статутів | "Западнорусский язык" (Western Russian) | **Руська мова** (Old Ukrainian/Ruthenian) |
+| Правова природа | Феодальне пригнічення, польське запозичення | **Європейська правова традиція**, синтез звичаєвого та римського права |
+| Головщина | Архаїчний пережиток | Інститут **компенсаційної юстиції**, предтеча цивільного позову |
+
+## Section-Mapped Research Notes
+
+### Вступ
+Focus on the shift from "crime as injury to a person" (private law) to "crime as injury to the state/order" (public law).
+
+### Термінологія та класифікація
+Define `мужобойство`. Explain that `головщина` implies the head (`голова`) as the seat of life/value.
+
+### Головщина: Ціна життя
+Detailed breakdown of costs. 100 kop (noble) vs 24 kop (peasant). Explain `нав'язка` as the "add-on" for wounds or insult.
+
+### Види вбивства
+Distinguish `умисне` (premeditated) vs `необережне` (negligent). The concept of `оборона` (self-defense) existed but required strict proof (oath with co-swearers).
+
+### Покарання: Горло і Гроші
+The duality of punishment: You pay with your money (`головщина`) AND your life (`горло`). Muscovite law was often purely corporal; Ruthenian law remained heavily restitution-based.
+
+### Судовий процес та докази
+The role of the `возний` (visiting the scene). `Свідоцтво` (testimony). The "red-handed" (`на гарячій крові`) exception bypassing normal delays.
+
+### Аналіз джерела: Статут 1588
+Deep read of Rozdil XI. Focus on the archaic syntax and Polonisms (`артикул`, `претекст`).
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 11835)
+✓ Message 11760 acknowledged
+✓ Message 11835 acknowledged

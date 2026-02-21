@@ -1,0 +1,280 @@
+✅ Message sent to Gemini (ID: 11959) [auto-acked: self-addressed]
+✓ Message 11959 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #11959...
+📨 Message #11959
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-technical-documentation
+   Time: 2026-02-20T23:34:59.970533+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b2-pro-18
+level: B2-PRO
+sequence: 18
+slug: technical-documentation
+version: '2.0'
+title: Технічна документація
+subtitle: Technical Documentation
+content_outline:
+- section: Розминка — Світ технічної документації
+  points:
+  - Типи технічної документації (специфікація, інструкція, керівництво)
+  - Чому вміння читати та писати техдоки — ключова навичка
+  - Українська технічна документація vs перекладена з англійської
+- section: Структура технічного документа
+  points:
+  - 'Елементи: титульна сторінка, зміст, вступ, основна частина, додатки'
+  - 'Нумерація: розділи, підрозділи, пункти (1.1, 1.1.1)'
+  - 'Візуальні елементи: таблиці, схеми, діаграми, скріншоти'
+  - Посилання та перехресні посилання
+- section: Мова технічної документації
+  points:
+  - 'Характеристики: точність, однозначність, стислість'
+  - 'Стандартні формулювання: система призначена для..., функція дозволяє...'
+  - 'Інструкції: натисніть, виберіть, введіть, підтвердіть'
+  - Уникання двозначності та суб'єктивності
+- section: Читання специфікацій та інструкцій
+  points:
+  - 'Технічне завдання (ТЗ): вимоги, обмеження, критерії приймання'
+  - 'Інструкція користувача: навігація, пошук потрібної інформації'
+  - 'Технічний паспорт: характеристики, умови експлуатації'
+- section: Зразок технічного документа
+  points:
+  - Фрагмент технічного завдання з аналізом
+  - Інструкція з експлуатації обладнання
+  - Аналіз структури та термінології
+- section: Практика — читання та написання
+  points:
+  - 'Завдання 1: Прочитати ТЗ і визначити ключові вимоги'
+  - 'Завдання 2: Написати інструкцію для простої процедури'
+  - Типові помилки в технічній документації
+vocabulary_hints:
+  required:
+  - технічне завдання (technical specification)
+  - вимоги до системи (system requirements)
+  - інструкція користувача (user manual)
+  - критерії приймання (acceptance criteria)
+  - функціональність (functionality)
+  - умови експлуатації (operating conditions)
+  - технічний паспорт (technical datasheet)
+  - перехресне посилання (cross-reference)
+  recommended:
+  - специфікація (specification)
+  - керівництво (guide/manual)
+  - обмеження (limitations)
+  - сумісність (compatibility)
+  - конфігурація (configuration)
+  - версія документа (document version)
+activity_hints:
+- type: document-analysis
+  focus: Проаналізувати технічне завдання — визначити вимоги та обмеження
+  items: 1
+- type: writing-task
+  focus: Написати інструкцію для простої процедури (5-7 кроків)
+  items: 1
+- type: vocabulary-domain
+  focus: Підібрати визначення до термінів технічної документації
+  items: 12
+- type: fill-in
+  focus: Вставити правильні дієслова в інструкцію (натисніть, виберіть, введіть)
+  items: 10
+- type: matching
+  focus: З'єднати тип документа з його призначенням
+  items: 8
+- type: error-correction
+  focus: Знайти двозначні або неточні формулювання в техдокументації
+  items: 6
+focus: professional
+pedagogy: ESP
+prerequisites:
+- 'b2-pro-17 (ІТ-лексика II: Розробка)'
+connects_to:
+- b2-pro-19 (Фінансова лексика)
+objectives:
+- Учень може читати та розуміти технічні завдання та специфікації
+- Учень може писати прості інструкції для користувачів
+- Учень знає структуру основних типів технічної документації
+- Учень може використовувати стандартні формулювання технічної мови
+grammar:
+- Наказовий спосіб для інструкцій (натисніть, виберіть, не закривайте)
+- Пасивні конструкції (система призначена для, документ розроблено)
+- Дієприкметники у функції означення (встановлене ПЗ, налаштований сервер)
+register: технічний
+phase: B2-PRO.2
+persona:
+  voice: Senior Specialist
+  role: Технічний письменник
+word_target: 2000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Технічна документація (b2-pro)
+
+## Використані джерела
+1. [ДСТУ 4163:2020](https://zakon.rada.gov.ua/rada/show/v0144731-20) — Уніфікована система організаційно-розпорядчої документації. Основний стандарт оформлення документів в Україні.
+2. [ДСТУ ISO/IEC 26514:2019](http://uas.org.ua/) — Системна та програмна інженерія. Розроблення документації користувача (адаптація міжнародного стандарту).
+3. [ДСТУ 3008:2015](http://online.budstandart.com/ua/catalog/doc-page?id_doc=63148) — Звіти у сфері науки і техніки. Структура та правила оформлення (часто використовується як база для ТЗ).
+4. [Дія.Бізнес: Технічне завдання](https://business.diia.gov.ua/) — Державні рекомендації щодо підготовки ТЗ для тендерів та закупівель.
+5. [Офіційний сайт УкрНДНЦ](https://uas.org.ua/) — Національний орган стандартизації України.
+
+## Термінологічна база
+
+| Українська (норма) | Русизм/ненорма | English | Контекст вживання |
+|--------------------|---------------|---------|-------------------|
+| Технічне завдання (ТЗ) | Техзаданіє | Technical Specification / Statement of Work (SOW) | Офіційний документ-замовлення |
+| Критерії приймання | Прийомочні критерії | Acceptance Criteria | Умови здачі-приймання робіт |
+| Умови експлуатації | Условія експлуатації | Operating Conditions | Розділ інструкції/паспорта |
+| За замовчуванням | По замовчуванню | By default | Опис параметрів системи |
+| Згідно з (інструкцією) | Згідно інструкції | According to | Посилання на норми |
+| Обсяг (пам'яті/робіт) | Об'єм | Volume / Scope | Технічні характеристики |
+| Полягає в... | Заключається в... | Consists of | Опис функціональності |
+| Перехресне посилання | Крос-референс | Cross-reference | Навігація в документах |
+
+## Мовні норми та стандарти
+- **ДСТУ 4163:2020**: Вимагає використання шрифту Times New Roman (12-14 пт), міжрядковий інтервал 1.0-1.5, обов'язкове датування та підписання (реквізит "Підпис").
+- **ДСТУ ISO/IEC 26514:2019**: Наголошує на "user-centric" підході — документація повинна відповідати на питання користувача, а не просто описувати функції.
+- **Безособові конструкції**: Замість активних дієприкметників (наприклад, "виконуємий процес") слід вживати пасивні конструкції («процес, що виконується») або дієслівні форми («виконати процес»).
+
+## Аутентичні приклади
+1. [Мета ТЗ]: «Метою розробки системи є автоматизація процесів обліку складських запасів та оптимізація логістичних маршрутів підприємства».
+2. [Вимоги до надійності]: «Система повинна забезпечувати цілодобовий режим роботи (24/7) з коефіцієнтом готовності не менше 0.999».
+3. [Інструкція]: «Для збереження внесених змін натисніть кнопку "Підтвердити" у нижній частині діалогового вікна».
+
+## Типові помилки
+1. ❌ **На протязі** (години) → ✅ **Протягом** (години) — "На протязі" означає фізичний протяг повітря.
+2. ❌ **Приймати участь** → ✅ **Брати участь** — калька з російської "принимать участие".
+3. ❌ **Дана система** → ✅ **Ця система** / **Зазначена система** — використання слова "даний" у значенні вказівного займенника є канцеляризмом.
+4. ❌ **По технічним причинам** → ✅ **З технічних причин** — неправильне вживання прийменника "по".
+5. ❌ **Прийти до згоди** → ✅ **Дійти згоди** — стала конструкція в українській діловій мові.
+
+## Engagement Hooks (mapped to sections)
+- Section "Розминка": [!pro-tip] — Чому техдоки — це "страховка" розробника.
+- Section "Мова технічної документації": [!language-note] — "За замовчуванням" чи "по дефолту"? Нормативна лексика проти сленгу.
+- Section "Читнання специфікацій": [!context] — Роль ТЗ (Технічного завдання) у запобіганні "scope creep" (розростання меж проєкту).
+- Section "Практика": [!common-error] — Найпоширеніші "пастки" перекладу з англійської (наприклад, "actual" — це "фактичний", а не "актуальний").
+
+## Section-Mapped Research Notes
+
+### Розминка — Світ технічної документації
+Огляд видів (SRS, User Manual, API Docs). Статистика вартості помилки в документації (case studies з NASA або IT-сектору).
+
+### Структура технічного документа
+Аналіз ДСТУ 3008:2015. Важливість глосарію (Терміни та визначення) для уникнення двозначності. Правило 1.1, 1.1.1 — логічна ієрархія.
+
+### Мова технічної документації
+Технічний стиль (Technical Writing): принцип KISS (Keep It Short and Simple). Використання наказового способу для інструкцій («натисніть», «оберіть»).
+
+### Читання специфікацій та інструкцій
+Аналіз структури ТЗ: Загальні відомості, Призначення, Вимоги, Склад робіт, Порядок приймання. Робота з "Acceptance Criteria".
+
+### Зразок технічного документа
+Приклад реального ТЗ на розробку модуля ПЗ або інструкції до побутової техніки (наприклад, кавомашини як зрозумілий B2 контекст).
+
+### Практика — читання та написання
+Методика написання step-by-step інструкцій. Перевірка на "неоднозначність" (ambiguity test).
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12022)
+✓ Message 11959 acknowledged
+✓ Message 12022 acknowledged

@@ -1,0 +1,13 @@
+{
+  "track": "oes",
+  "slug": "weaponry-laws",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-20T10:23:19Z",
+      "task_id": "v3-weaponry-laws-pA",
+      "mode": "full"
+    }
+  }
+}

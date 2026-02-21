@@ -1,0 +1,256 @@
+✅ Message sent to Gemini (ID: 10773) [auto-acked: self-addressed]
+✓ Message 10773 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10773...
+📨 Message #10773
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-honcharstvo-ta-rizbyarstvo
+   Time: 2026-02-20T21:28:01.850206+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-055
+level: C1
+sequence: 55
+slug: honcharstvo-ta-rizbyarstvo
+version: '2.0'
+title: Гончарство та різьбярство
+subtitle: Pottery and Woodcarving Traditions
+content_outline:
+- section: Розминка — Ремесло та мистецтво
+  points:
+  - Гончарство — одне з найдавніших українських ремесел
+  - Різьбярство — дерево та кістка як матеріали
+  - Зв'язок ремесла з побутом та ритуалами
+- section: Українське гончарство
+  points:
+  - 'Центри гончарства: Опішня, Косів, Дибинці'
+  - 'Типи виробів: глечики, макітри, дзбанки, тарілки'
+  - 'Техніки: ліплення, гончарний круг, глазурування'
+  - Розпис та орнаменти (Косівська кераміка)
+- section: Українське різьбярство
+  points:
+  - 'Гуцульське різьбярство: скрині, табакерки, люльки'
+  - Церковне різьбярство (іконостаси, хрести)
+  - 'Техніки: плоска різьба, рельєфна, ажурна'
+  - Матеріали (липа, бук, самшит)
+- section: Практика — опис ремесла
+  points:
+  - Описати керамічний виріб, використовуючи термінологію
+  - Порівняти опішнянську та косівську кераміку
+  - Написати есе про збереження традиційних ремесел
+  - Обговорити роль ремесла в сучасному дизайні
+focus: vocabulary
+pedagogy: Immersion & Analysis
+objectives:
+- Learner can analyze the stylistic differences between Opishne and Kosiv pottery
+- Learner can describe woodcarving techniques using specialized vocabulary
+- Learner can write a critical essay on folk art heritage
+grammar:
+- Art terminology
+- Descriptive registers
+phase: C1.5 Folk Culture & Fine Arts
+persona:
+  voice: Senior Specialist
+  role: Майстер цеху
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Гончарство та різьбярство
+
+## State Standard Reference
+§3.21: "Традиції, звичаї, свята: українські звичаї і традиції"
+Alignment: Цей модуль розкриває тему народних ремесел (гончарство, різьбярство) як ключового елементу української культурної традиції та ідентичності, забезпечуючи лексичний запас для опису пам'яток культури.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| **Гончарство** | Висока (тематична) | *традиційне гончарство, центр гончарства, займатися гончарством* |
+| **Глина** | Висока | *гончарна глина, пластична глина, випалена глина* |
+| **Глазур (полива)** | Середня | *вкривати глазур'ю, свинцева полива, кольорова глазур* |
+| **Макітра** | Середня (етно) | *терти мак у макітрі, глиняна макітра* |
+| **Куманець** | Низька (специфічна) | *святковий куманець, розписаний куманець* |
+| **Різьбярство** | Висока (тематична) | *художнє різьбярство, різьбярство по дереву, гуцульське різьбярство* |
+| **Інкрустація** | Середня | *інкрустація бісером (пацьорками), інкрустація металом, багатство інкрустації* |
+| **Скриня** | Висока (побут) | *різьблена скриня, посаг у скрині, окована скриня* |
+| **Орнамент** | Висока | *рослинний орнамент, геометричний орнамент, зооморфний орнамент* |
+
+## Cultural Hooks
+1. **Косівська мальована кераміка**: Внесена до Репрезентативного списку нематеріальної культурної спадщини людства ЮНЕСКО. Унікальна триколірна гама (зелений, жовтий, коричневий) та техніка "ритування" (видряпування по сирій глині).
+2. **Династія Шкрібляків**: Основоположники класичного гуцульського різьбярство (с. Яворів). Їхні вироби (тарілки, скриньки) вирізняються "сухою" різьбою та вишуканою інкрустацією.
+3. **Опішнянський зооморфний посуд**: Знамениті баранці, леви та бики, які слугували посудом для напоїв ("куманці" у формі тварин), що є унікальною рисою полтавського гончарства.
+
+## Common Learner Errors
+1. **Passive Voice Overuse**: *Посуд був зроблений майстром* → *Майстер виготовив посуд*. (Уникання пасивних конструкцій на користь активних дієслів).
+2. **Lexical Confusion**: *Кераміка* vs *Гончарство*. *Кераміка* — матеріал або виріб, *гончарство* — процес/ремесло.
+3. **Imprecise Adjectives**: Using generic *гарний/старий* instead of specific *автентичний, традиційний, старовинний, розписаний, глазурований*.
+
+## Cross-References
+- Builds on: B1 Cultural modules (Holidays, Daily Life), A2/B1 modules on describing objects.
+- Prepares for: C1-BIO (Biographies of artists like Kateryna Bilokur or Maria Prymachenko), C1.5 Literature modules (descriptive passages in extensive reading).
+
+## Notes for Content Writing
+- Акцентувати увагу на **технологічному процесі** (лексика дії: *ліпити, випалювати, точити, різьбити, інкрустувати*).
+- Використовувати порівняння стилів (Опішня vs Косів) як приклад для аналітичного мислення (C1 level).
+- Включити тему "кітч vs мистецтво" (шароварщина проти справжньої традиції) в розділі про сучасний стан.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Ремесло як дзеркало ідентичності (Introduction: Craft as a Mirror of Identity)"
+  words: 500
+  points:
+  - "Гончарство та різьбярство як ключові елементи української ідентичності та культурної традиції (Держстандарт §3.21)"
+  - "Лексичне розмежування: 'кераміка' (матеріал або виріб) проти 'гончарства' (процес або вид ремесла) — усунення типової лексичної плутанини"
+  - "Зв'язок ремесла з побутом та сакральними ритуалами українців: від повсякденного вжитку до обрядових предметів"
+- section: "Українське гончарство: Технологія та центри (Ukrainian Pottery: Technology and Centers)"
+  words: 1000
+  points:
+  - "Технологічний цикл виготовлення: робота з пластичною глиною, формування на гончарному крузі, випалювання та глазурування (поливання)"
+  - "Косівська мальована кераміка (ЮНЕСКО): унікальна триколірна гама та складна техніка 'ритування' (видряпування по сирій глині)"
+  - "Опішнянський зооморфний посуд: традиція виготовлення керамічних баранців, левів та биків (куманців) як візитівка Полтавщини"
+  - "Етнографічна лексика: макітра (символічне значення), глечик, дзбанок та святковий розписаний куманець"
+- section: "Українське різьбярство: Від скрині до іконостаса (Ukrainian Woodcarving: From Chests to Iconostases)"
+  words: 900
+  points:
+  - "Гуцульське різьбярство та династія Шкрібляків із села Яворів: основи класичного стилю 'сухої' різьби"
+  - "Матеріали та техніки: використання липи, бука та самшиту; поєднання плоскої, рельєфної та ажурної різьби"
+  - "Мистецтво інкрустації: оздоблення виробів бісером (пацьорками), металом та деревом інших порід"
+  - "Предмети побуту та культу: різьблена скриня (символіка посагу), табакерки, люльки та церковне різьблення (іконостаси)"
+- section: "Лінгвістичний аналіз: Опис витворів мистецтва (Linguistic Analysis: Describing Artworks)"
+  words: 700
+  points:
+  - "Корекція граматичного реєстру: уникнення пасивних конструкцій ('посуд був зроблений') на користь активних дієслів дії ('майстер виготовив/виліпив')"
+  - "Синонімічний ряд та точність прикметників: заміна загальних слів 'гарний' або 'старий' на 'автентичний', 'старовинний', 'витончений', 'глазурований'"
+  - "Класифікація орнаментів: лексика для опису рослинних, геометричних та зооморфних мотивів у народному мистецтві"
+- section: "Практика та синтез: Сучасна доля ремесел (Practice and Synthesis: Modern Fate of Crafts)"
+  words: 900
+  points:
+  - "Порівняльний аналіз стилів: Опішня проти Косова (розвиток аналітичного мислення та використання спеціалізованої термінології)"
+  - "Дискусія: 'шароварщина' (кітч) проти справжньої традиції — роль ремесла в сучасному дизайні та збереженні спадщини"
+  - "Написання критичного есе про важливість підтримки народних майстрів в умовах глобалізації"
+  - "Підготовка до тем C1.5: підґрунтя для вивчення біографій Катерини Білокур та Марії Примаченко"
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "гончарство (pottery) — традиційне гончарство, центр гончарства; висока частота"
+  - "різьбярство (woodcarving) — художнє різьбярство по дереву, гуцульське різьбярство"
+  - "полива / глазур (glaze) — вкривати поливою, свинцева полива; термін для кераміки"
+  - "ритування (sgraffito/engraving) — техніка видряпування орнаменту по сирій глині (Косів)"
+  - "інкрустація (incrustation/inlay) — інкрустація бісером (пацьорками), багатство інкрустації"
+  - "макітра (makitra) — глиняна макітра, терти мак у макітрі; етнографічний маркер"
+  - "куманець (traditional vessel) — святковий розписаний куманець, зооморфний посуд"
+  - "скриня (chest) — різьблена скриня, посаг у скрині; лексика традиційного побуту"
+  recommended:
+  - "ліпити (to mold/sculpt) — процес створення форми з глини"
+  - "випалювати (to fire/burn) — термічна обробка керамічних виробів"
+  - "автентичний (authentic) — заміна загальним прикметникам для опису традицій"
+  - "зооморфний (zoomorphic) — опис орнаментів із зображенням тварин"
+  - "шароварщина (sharovarshchyna/kitsch) — термін для опису поверхневого, псевдонародного мистецтва"
+  - "пацьорки (beads) — діалектна/етнографічна назва бісеру для інкрустації"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4182 chars)
+✅ Message sent to Claude (ID: 10784)
+✓ Message 10784 acknowledged
+   Auto-acknowledged reply #10784 (stdout delivery — no inbox accumulation)
+✓ Message 10773 acknowledged

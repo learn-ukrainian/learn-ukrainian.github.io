@@ -6,49 +6,65 @@ version: '2.0'
 title: 'The Genitive I: Absence'
 subtitle: Talking About What You Don't Have
 content_outline:
-- section: Warm-up
+- section: Вступ (Introduction)
+  words: 400
   points:
-  - 'Ситуація відсутності (У мене немає...) — learner error: using Nominative after
-    немає (e.g., *У мене немає квиток*)'
-  - Контраст є vs немає — focus on ready-made communicative models per State Standard
-    §4.0
-- section: Presentation
+  - 'Контраст конструкцій «є» (possession from a1-13) vs «немає» (absence) — State
+    Standard §4.0: акцент на відтворенні готових моделей у ситуаціях «Покупки» (§3.8)
+    та «Ресторан» (§3.9).'
+  - 'Подолання Learner Error: розрізнення граматичного заперечення якості/стану «не»
+    (Я не студент) та заперечення існування/наявності «немає» (У мене немає квитка).'
+- section: Презентація (Presentation)
+  words: 600
   points:
-  - Конструкція немає + родовий (Немає часу) — include fixed formulaic phrases 'немає
-    часу', 'немає грошей' (plural exception)
-  - 'Закінчення: -а/-я для чоловічого, -и/-і для жіночого — learner error: confusing
-    masculine endings -а (concrete) vs -у (abstract like ''часу'')'
-  - 'Прийменник без + родовий (кава без цукру) — key collocations: без цукру, без
-    молока, без квитка'
-  - 'Заперечення: не маю + родовий — learner error: confusing ''немає'' (absence)
-    with particle ''не'' (negation)'
-- section: Practice
+  - 'Граматична основа: конструкція немає + родовий відмінок — State Standard §4.2.2.2:
+    формування навички на базі сталих сполук «немає часу», «немає грошей» (Gen. pl.
+    exception).'
+  - 'Прийменник без + родовий відмінок — ключові колокації для повсякденного вжитку:
+    «кава без цукру», «вода без газу», «їхати без квитка».'
+  - 'Систематизація закінчень чоловічого роду: конкретні предмети на -а/-я (хліба,
+    квитка) проти абстрактних та речовинних на -у/-ю (часу, цукру) — фокус на Learner
+    Error 3.'
+- section: Практика (Practice)
+  words: 600
   points:
-  - Трансформація називний → родовий — use a simple Visual Mapping table (Nom → Gen)
-    like хліб → хліба, вода → води
-  - Речення з немає та без — focus on high frequency items (цукор, квиток, час)
-  - Діалоги "У тебе є...? — Ні, немає" — use softened refusals context
-- section: Cultural Insight
+  - 'Корекція типової помилки (Case Neglect): використання називного відмінка замість
+    родового після «немає» — дрил на мінімальних парах «є квиток» vs «немає квитка».'
+  - 'Трансформаційні вправи за схемою Nom → Gen — візуалізація змін закінчень: -а/-я
+    для чоловічого (конкретне) та -и/-і для жіночого (вода → води).'
+  - 'Рольова гра «У ресторані/магазині»: замовлення напоїв «без цукру/молока» та ввічливі
+    запити про наявність товарів.'
+- section: Культурний контекст (Cultural Context)
+  words: 400
   points:
-  - Типові вирази з немає (Немає проблем!) — ubiquitous phrase reflecting helpful/flexible
-    attitude; include proverb 'Немає диму без вогню'
-  - Ввічливі відмови в українській культурі — using factual 'немає' to soften a direct
-    refusal (e.g., 'Вибачте, хліба немає')
+  - 'Культурний код: вживання фрази «Немає проблем!» як вияву гнучкості та ввічлива
+    відмова через «немає» («На жаль, квитків немає») для пом''якшення прямого «Ні».'
+  - 'Лінгвокраїнознавство: розбір прислів''я «Немає диму без вогню» як ілюстрації
+    структури заперечення та вживання прийменника з родовим відмінком.'
 vocabulary_hints:
   required:
-  - немає (there is no) — немає часу, немає проблем, немає грошей
-  - без (without) — без цукру, без молока, без квитка
-  - 'час (time) — немає часу (Gen: часу)'
-  - 'гроші (money) — немає грошей (Gen: грошей)'
-  - молоко (milk) — без молока
-  - 'цукор (sugar) — без цукру, немає цукру (Gen: цукру)'
-  - вода (water) — води немає
-  - хліб (bread) — хліба немає
+  - 'немає (there is no) — High frequency core word; used in ready-made models: «немає
+    часу», «немає грошей»'
+  - 'без (without) — High frequency preposition + Genitive; collocations: «без цукру»,
+    «без молока», «без газу»'
+  - 'час (time) — Gen: часу; abstract noun requiring ending -у; State Standard high-frequency
+    item'
+  - 'гроші (money) — Gen pl: грошей; irregular plural; essential for financial context
+    (§3.8)'
+  - 'молоко (milk) — Gen: молока; regular feminine-to-genitive shift'
+  - 'цукор (sugar) — Gen: цукру; uncountable substance requiring ending -у; key for
+    restaurant dialogues'
+  - 'вода (water) — Gen: води; contrast «вода з газом» vs «вода без газу»'
+  - 'хліб (bread) — Gen: хліба; concrete object requiring ending -а; context: grocery
+    shopping'
   recommended:
-  - проблема (problem) — немає проблем (Gen pl.)
-  - 'квиток (ticket) — немає квитка, без квитка (Gen: квитка)'
-  - ключ (key) — немає ключа
-  - телефон (phone) — немає телефону
+  - 'проблема (problem) — Gen pl: проблем; used in the ubiquitous phrase «Немає проблем!»'
+  - 'квиток (ticket) — Gen: квитка; concrete object (ending -а); Learner Error: common
+    neglect of case after «без»'
+  - 'ключ (key) — Gen: ключа; concrete object focus'
+  - 'телефон (phone) — Gen: телефону; abstract/device focus for ending -у'
+  - 'газ (gas/sparkling) — Gen: газу; used in the essential collocation «без газу»
+    for ordering water'
 activity_hints:
 - type: fill-in
   focus: Change nouns to genitive

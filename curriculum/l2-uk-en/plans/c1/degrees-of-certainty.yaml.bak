@@ -1,0 +1,43 @@
+module: c1-041
+level: C1
+sequence: 41
+slug: degrees-of-certainty
+version: '2.0'
+title: 'Ступені впевненості: Модальність та хеджування'
+subtitle: 'Degrees of Certainty: Modality & Hedging'
+content_outline:
+- section: Розминка — Наскільки ви впевнені?
+  points:
+  - Шкала впевненості — від "точно" до "неможливо"
+  - Хеджування — пом'якшення категоричних тверджень
+  - Академічний стиль — чому вчені рідко говорять "точно"
+- section: Certainty Scale
+  points:
+  - '100%: безперечно, безсумнівно, напевно'
+  - '75%: ймовірно, скоріш за все, очевидно'
+  - '50%: можливо, може бути, мабуть'
+  - '25%: навряд чи, сумнівно, малоймовірно'
+  - '0%: неможливо, виключено, ні в якому разі'
+- section: Практика — модальність у тексті
+  points:
+  - Визначити ступінь впевненості автора в науковій статті
+  - Переписати категоричні твердження з хеджуванням
+  - Градуювати вирази впевненості (безперечно → можливо → навряд чи)
+  - Написати параграф наукового тексту з правильною модальністю
+focus: style
+pedagogy: Academic
+objectives:
+- Learner can express precise degrees of certainty using academic markers
+- Learner can analyze authorial stance and hedging in authentic texts
+- Learner can adjust the force of claims in academic production
+grammar:
+- Epistemic modality markers
+- Hedging strategies in academic discourse
+- Scale of certainty (probability)
+- Subjective vs. objective modality
+immersion: 100
+phase: C1.4 Advanced Stylistics & Rhetoric
+persona:
+  voice: Senior Specialist
+  role: Аналітик ризиків
+word_target: 4000

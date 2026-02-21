@@ -1,0 +1,232 @@
+✅ Message sent to Gemini (ID: 12060) [auto-acked: self-addressed]
+✓ Message 12060 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12060...
+📨 Message #12060
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-oksenyk-forest-valley
+   Time: 2026-02-20T23:35:40.498879+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 18
+module: lit-juvenile-18
+level: LIT.JUVENILE
+slug: oksenyk-forest-valley
+version: '2.0'
+title: Oksenyk Forest Valley
+subtitle: Oksenyk Forest Valley
+content_outline:
+- section: Вступ та контекст
+  points: []
+- section: Аналіз ключових творів
+  points: []
+- section: Стилістика та мова автора
+  points: []
+- section: Деколонізаційна перспектива
+  points:
+  - Як цей автор руйнує імперські міфи
+  - Українська суб'єктність у тексті
+- section: Підсумок та спадщина
+  points: []
+vocabulary_hints:
+  required:
+  - історіографія
+  - наратив
+  - суб'єктність
+  recommended:
+  - деколонізація
+activity_hints:
+- type: reading
+  focus: Аналіз першоджерела
+- type: essay-response
+  focus: Критичне есе
+- type: critical-analysis
+  focus: Деконструкція тексту
+focus: literature
+pedagogy: literature
+immersion: 100% Ukrainian
+phase: LIT Expansion
+objectives:
+- Проаналізувати творчість Oksenyk Forest Valley у контексті української літератури
+- Дослідити вплив автора на формування національної ідентичності
+persona:
+  voice: Senior Specialist
+  role: Game Warden
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Сергій Оксеник (Іванюк) та трилогія «Лісом, небом, водою»
+
+## Використані джерела
+1. [Енциклопедія Сучасної України (ЕСУ) / НаУКМА](https://ukma.edu.ua) — біографічні відомості про Сергія Іванюка (Оксеника), його викладацьку та редакторську діяльність.
+2. [Читомо (chytomo.com)](https://chytomo.com) — аналіз жанрової специфіки роману «Лісом, небом, водою», постапокаліптичного сеттингу та порушення табу в дитячій літературі.
+3. [Світ Фентезі (svitfantasy.com.ua)](http://svitfantasy.com.ua) — огляд тематики виживання, людяності та філософського підґрунтя в творчості Оксеника.
+
+## Хронологія
+- 8 січня 1952: Народження Сергія Іванюка у Миколаєві.
+- 2004: Вихід першої книги трилогії «Лісом, небом, водою» — «Лисий» (перевидання 2005).
+- 2006: Іванюк стає головним редактором журналу для підлітків «Однокласник».
+- 2007: Вихід другої частини роману — «Леля».
+- 2014: Вихід завершальної частини трилогії — «Кролик».
+- 26 квітня 2018: Смерть письменника в Києві.
+
+## Ключові факти та цитати
+- Сергій Оксеник створив перший український підлітковий постапокаліптичний фентезі-роман.
+- Сюжет розгортається на зруйнованій землі після екологічної катастрофи, де головні герої-діти (Лисий і Леля) намагаються вижити і знайти чисту воду.
+- Оксеник сміливо порушує "табу" дитячої літератури: пише про необхідність вбивати заради самозахисту, смерть, народження, зберігаючи при цьому психологічну адекватність для підліткової аудиторії.
+- *«Лісова звичка»* — вміння рухатися безшумно, що стає метафорою виживання і зв'язку з природою в новому жорстокому світі.
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ: II — Жанрова своєрідність": [!history-bite] — Зазначити, що Оксеник був викладачем Києво-Могилянської академії (Сергій Іванюк) і водночас писав захопливе фентезі під псевдонімом.
+- Section "Аналіз творів: I — Світ після катастрофи": [!context] — Пояснити вплив Чорнобильської катастрофи на формування постапокаліптичного бачення в українській літературі.
+- Section "Аналіз творів: III — Філософські виміри": [!quote] — Цитати з тексту про збереження людської подоби в нелюдських умовах.
+- Section "Стилістика: I — Адаптація мови": [!culture] — Як мова роману поєднує підлітковий сленг, архаїзми та багату літературну норму.
+- Section "Деколонізація: I — Руйнування імперських міфів": [!myth-buster] — Спростування міфу про те, що якісна фантастика та постапокаліптика для підлітків можлива лише російською чи англійською мовами.
+- Section "Деколонізація: II — Українська суб'єктність": [!decolonization] — Герої Оксеника не є пасивними жертвами обставин (як це часто диктував колоніальний канон), вони є активними творцями нового світу.
+
+## Деколонізаційний контекст
+- Imperial/Soviet myth: Українська дитяча література має обмежуватися етнографічними казками або дидактичними шкільними повістями; масштабна фантастика — прерогатива "великих" культур.
+- Ukrainian reality: Сергій Оксеник створив складний, багатошаровий всесвіт постапокаліпсису, де українські підлітки діють у жорстких реаліях, вирішують дорослі моральні дилеми та демонструють інтелектуальну зрілість, закладаючи основи для сучасної української жанрової літератури.
+
+## Contested Terms (if applicable)
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| Жанр для дітей | Спрощений, суто повчальний текст, захищений від "темних" тем. | Література, що чесно говорить з підлітком про смерть, виживання та моральний вибір. |
+
+## Section-Mapped Research Notes
+
+### Вступ: I — Біографічний контекст
+Сергій Іванюк (Сергій Оксеник) — викладач, літературознавець, головний редактор журналу "Однокласник". Його подвійна ідентичність: академічний вчений та автор пригодницької прози.
+
+### Вступ: II — Жанрова своєрідність
+Поєднання антиутопії, постапокаліптики та фентезі. Трилогія "Лісом, небом, водою" ("Лисий", "Леля", "Кролик") як етапний твір української дитячої літератури 2000-х.
+
+### Аналіз творів: I — Світ після катастрофи
+Сеттинг зруйнованого світу, де найбільшою цінністю є чиста вода. Архаїзація суспільства, небезпечні мутанти, лісові племена.
+
+### Аналіз творів: II — Еволюція головних героїв
+Шлях Лисого та Лелі. Як діти змушені швидко дорослішати. Проблема вимушеного насилля заради самооборони — розрив шаблонів класичної дитячої прози.
+
+### Аналіз творів: III — Філософські виміри
+Моральні дилеми: що робить людину людиною? Проблема збереження людяності та пам'яті минулих поколінь (зокрема, згадки про "Старих").
+
+### Стилістика: I — Адаптація мови
+Багатий лексикон. Введення специфічних термінів вигаданого світу ("лісова звичка"). Динамізм оповіді, що тримає увагу підлітка.
+
+### Стилістика: II — Художні засоби
+Використання пейзажів як психологічного фону. Напружений ритм, поєднання міфологічних мотивів з реалістичним психологізмом.
+
+### Деколонізація: I — Руйнування імперських міфів
+Текст доводить спроможність української літератури створювати власні унікальні фентезійні світи без озирання на російські зразки постапокаліптики (на зразок "Сталкера" чи "Метро 2033").
+
+### Деколонізація: II — Українська суб'єктність
+Підлітки у романі мають власну волю, вони діють автономно, беруть на себе відповідальність за долю світу. Це відхід від патерналістської радянської парадигми.
+
+### Підсумок та спадщина: Значення для дитячої літератури
+Вплив Оксеника на формування нового покоління українських письменників та читачів. Його внесок у розвиток сучасної жанрової літератури для юнацтва.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12137)
+✓ Message 12060 acknowledged
+✓ Message 12137 acknowledged

@@ -5,28 +5,28 @@
   "phases": {
     "v3-A": {
       "status": "complete",
-      "ts": "2026-02-19T18:17:38Z",
-      "task_id": "v3-my-world-objects-pA",
-      "mode": "full"
+      "ts": "2026-02-20T20:46:55Z",
+      "note": "migrated-from-v2"
     },
     "v3-B": {
       "status": "complete",
-      "ts": "2026-02-19T18:17:38Z"
+      "ts": "2026-02-20T20:46:55Z",
+      "note": "migrated-from-v2"
     },
     "v3-C": {
       "status": "complete",
-      "ts": "2026-02-19T18:17:39Z",
-      "note": "adopted-existing"
+      "ts": "2026-02-20T20:46:55Z",
+      "note": "migrated-from-v2"
     },
     "v3-audit": {
       "status": "complete",
-      "ts": "2026-02-19T18:17:40Z",
-      "attempts": 1
+      "ts": "2026-02-20T20:46:55Z",
+      "note": "migrated-from-v2"
     },
     "v3-D": {
       "status": "complete",
-      "ts": "2026-02-19T18:19:27Z",
-      "attempts": 1
+      "ts": "2026-02-20T20:46:55Z",
+      "note": "migrated-from-v2"
     }
   }
 }

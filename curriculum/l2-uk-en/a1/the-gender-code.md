@@ -61,7 +61,7 @@ Masculine nouns are the "default" state of a noun stem. They usually have **zero
 **Examples:**
 *   **дім** [dʲim] — house (ends in 'm' → Masculine)
 *   **стіл** [stʲil] — table (ends in 'l' → Masculine)
-*   **брат** [brat] — brother (ends in 't' → Masculine)
+*   **брат** [brɑt] — brother (ends in 't' → Masculine)
 
 There is one important variation. Sometimes a masculine word ends in a soft sign (**ь**) or a semivowel (**й**). These still count as consonant endings because they are not open vowels like -a or -o.
 
@@ -134,7 +134,7 @@ We will focus on the logic, so you don't get tricked by exceptions.
 This family is mostly **Feminine** (Жіночий), but it has a very important secret. It includes **Masculine** words that describe male people but historically end in **-а**.
 
 **The "Dad" Exception:**
-Look at the word **тато** [ˈta.to] (dad). It ends in **-о**, so it looks Neuter, right?
+Look at the word **тато** [ˈtɑ.tɔ] (dad). It ends in **-о**, so it looks Neuter, right?
 **WRONG.**
 Biological gender always overrides grammatical ending. A dad is a man. Therefore, **тато** is Masculine (Чоловічий).
 
@@ -148,7 +148,7 @@ However, grammatically, they behave like Family 1. They dress like women (wear t
 *   **моя мама** (my mom) — Feminine agreement.
 
 **The "Dog" Distinction:**
-Consider the word **собака** [soˈba.ka] (dog).
+Consider the word **собака** [sɔˈbɑ.kɑ] (dog).
 In Russian, this word is feminine. In Ukrainian, **собака** is **Masculine** by default — the standard literary form.
 *   **мій собака** (my dog) — Standard form.
 *   **моя собака** — Also acceptable when specifically referring to a female dog.
@@ -169,7 +169,7 @@ This is the "Night" family. It consists of **Feminine** nouns that end in a cons
 
 *   **ніч** (night) — Feminine → **моя ніч**
 *   **любов** [lʲuˈbɔu̯] (love) — Feminine → **моя любов**
-*   **радість** [ˈra.dʲisʲtʲ] (joy) — Feminine → **моя радість**
+*   **радість** [ˈrɑ.dʲisʲtʲ] (joy) — Feminine → **моя радість**
 
 These words must be memorized individually — you can't reliably tell them from consonant-ending Masculine words by ending alone. The good news: at this stage, if a word ends in a consonant, guessing Masculine is right about 90% of the time. For now, just recognize the pattern when you see it.
 
@@ -186,8 +186,8 @@ This is an ancient neuter form.
 *   Correct: **моє ім'я** (my name).
 
 Examples of "Baby Neuter":
-*   **теля** [teˈlʲa] (calf) — Neuter
-*   **цуценя** [t͡su.t͡seˈnʲa] (puppy) — Neuter
+*   **теля** [teˈlʲɑ] (calf) — Neuter
+*   **цуценя** [t͡su.t͡seˈnʲɑ] (puppy) — Neuter
 *   **ім'я** (name) — Neuter
 
 > [!myth-buster]
@@ -261,7 +261,7 @@ Language does not exist in a vacuum. It lives in the games you play, the songs y
 ### Зв'язок зі S.T.A.L.K.E.R. (The S.T.A.L.K.E.R. Connection)
 If you have ever played the Ukrainian game *S.T.A.L.K.E.R.*, you already know some gendered vocabulary without realizing it.
 
-*   **Артефакт** [ar.teˈfɑkt] (Artifact) — Ends in 't' (Consonant). It's **Masculine**. You find *him*.
+*   **Артефакт** [ɑr.teˈfɑkt] (Artifact) — Ends in 't' (Consonant). It's **Masculine**. You find *him*.
 *   **Зона** [ˈzɔ.nɑ] (The Zone) — Ends in 'a'. It's **Feminine**. The Zone is a *she*. She is dangerous and beautiful.
 *   **Укриття** [uˈkrɪtːʲɑ] (Shelter) — Ends in '-я' after a double consonant. It is **Neuter** — a place, a state of safety.
 
@@ -269,9 +269,9 @@ If you have ever played the Ukrainian game *S.T.A.L.K.E.R.*, you already know so
 The words for the most important people in your life are gendered, but so are the spaces you inhabit.
 
 *   **Чоловік** [t͡ʃo.loˈʋʲik] (Man/Husband) — Masculine.
-*   **Жінка** [ˈʒin.ka] (Woman/Wife) — Feminine.
+*   **Жінка** [ˈʒin.kɑ] (Woman/Wife) — Feminine.
 *   **Дім** (Home/House) — Masculine. A house feels solid, built.
-*   **Квартира** [kʋarˈtɪ.ra] (Apartment) — Feminine.
+*   **Квартира** [kʋɑrˈtɪ.rɑ] (Apartment) — Feminine.
 
 When you speak Ukrainian, you are constantly acknowledging the category of the things around you. You are not just pointing at objects; you are classifying the world.
 

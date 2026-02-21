@@ -2,12 +2,5 @@
   "track": "c1-hist",
   "slug": "valuevskyi-tsyrkuliar-tekst",
   "mode": "v3",
-  "phases": {
-    "v3-A": {
-      "status": "complete",
-      "ts": "2026-02-19T13:29:44Z",
-      "task_id": "v3-valuevskyi-tsyrkuliar-tekst-pA",
-      "mode": "full"
-    }
-  }
+  "phases": {}
 }

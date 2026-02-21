@@ -6,36 +6,57 @@ version: '2.0'
 title: Advanced Motion Prefixes
 subtitle: Crossing, Passing, and Approaching
 content_outline:
-- section: Introduction / Вступ
+- section: Вступ (Introduction)
+  words: 400
   points:
   - 'Beyond In and Out: The geometry of complex paths — introduce the ''GPS instructions''
     metaphor: root is the engine, prefix is the steering wheel'
-  - Navigating the city like a local — focus on precise trajectories needed for 'City'
-    theme (§3)
-- section: Presentation / Презентація
+  - Navigating the city like a local — alignment with State Standard §3 (Travel and
+    City themes) for precise trajectories in urban environments
+  - 'The logic of distance: How prefixes signal proximity — distinguishing ''near''
+    (під-) vs ''touch/arrival'' (до-) as a bridge to B1 word formation (§4.3.8)'
+- section: 'Геометрія руху: Пере-, Про-, Об- (Geometry of Motion: Crossing, Through,
+    Around)'
+  words: 700
   points:
   - 'The Bridge: Пере- (Across) vs Про- (Through) — visual: X -> Y vs -> | | ->; cultural
-    hook: black cat crossing the path (перейти дорогу) superstition'
-  - 'The Visit: За- (Stopping by) vs При- (Arriving) — cultural hook: the ''Returning''
-    superstition (bad luck to return shortly after leaving); learner error: confusing
-    ''coming'' (при-) vs ''going'' (пі-)'
-  - 'The Reach: До- (Getting there) vs Під- (Approaching) — idiom: ''мені підходить''
-    (it suits me); learner error: using ''підійти в'' instead of ''підійти до'''
-  - 'The Circle: Об- (Around) — visual: O ->; context: bypassing obstacles or walking
-    around a building'
-  - 'Prepositional Harmony: Matching prefixes to cases — State Standard §4.2.2.4 alignment:
-    В/У/НА for destination, but ДО for approach/reach'
-  - 'The Logic of Distance: How prefixes signal proximity — distinguishing ''near''
-    (під-) vs ''touch/arrival'' (до-)'
-- section: Practice / Практика
+    hook: the ''black cat crossing the path'' (чорний кіт перейшов дорогу) superstition
+    and rituals to ward off bad luck'
+  - 'The Circle: Об- (Around) — visual: O ->; context: bypassing obstacles (обійти
+    перешкоду) or walking around a building, using text-based diagrams for geometric
+    clarity'
+  - 'Vocabulary in Motion: Deep dive into ''пройти повз'' (pass by) and ''перейти
+    на українську'' (switch to Ukrainian) as high-frequency Core A2 collocations'
+- section: 'Наближення та Прибуття: Під-, До-, За-, При- (Approach and Arrival: Approaching,
+    Reaching, Popping in, Arriving)'
+  words: 800
   points:
-  - Path visualization drills — use text-based diagrams to map prefixes to trajectories
-  - 'Giving complex directions in Lviv/Kyiv — learner error: using perfective future
-    ''буду прийти'' instead of ''прийду'''
-- section: Dialogues / Діалоги
+  - 'The Reach: До- (Getting there/Reach) vs Під- (Approaching) — grammatical harmony:
+    State Standard §4.2.2.4 (В/У/НА for destination) vs ''ДО'' for proximity/approach
+    (підійти до)'
+  - 'The Visit: За- (Stopping by) vs При- (Arriving) — cultural hook: the ''Returning''
+    superstition (bad luck to return home shortly after leaving) and the ''mirror
+    ritual'' to neutralize it'
+  - 'Abstract Motion: High-value idioms derived from spatial logic: ''мені підходить''
+    (it suits me) and ''дійти згоди'' (reach agreement)'
+- section: Практика та Корекція (Practice and Correction)
+  words: 600
+  points:
+  - 'Common Learner Errors: Explicitly correcting ''Preposition Mismatch'' (підійти
+    в vs підійти до) and ''Coming vs Going'' (прийшов vs пішов) confusion'
+  - 'Perfective Future Logic: Drills for conjugating prefixed motion verbs without
+    the auxiliary ''буду'' (e.g., ''прийду'' instead of ''буду прийти''), aligning
+    with State Standard §4.2.3.1'
+  - 'Directional drills: Giving complex instructions in a Lviv/Kyiv context using
+    ''пройти 5 кілометрів'' and ''перейти міст'''
+- section: Діалоги та Сценарії (Dialogues and Scenarios)
+  words: 500
   points:
   - 'Travel stories: A journey through the mountains or a complex commute — integrate
-    ''час пройшов'' (time passed) or ''сонце зайшло'' (sun set) for narrative flavor'
+    ''сонце зайшло'' (sun set) and ''час пройшов'' (time passed) for natural narrative
+    flavor'
+  - 'Conversational immersion: Roleplay scenario involving ''зайти до друга'' (visit
+    a friend) and using ''руки не доходять'' (never get around to it) for tasks'
 focus: grammar
 pedagogy: PPP
 objectives:
@@ -71,18 +92,25 @@ persona:
 vocabulary_hints:
   required:
   - перейти / переходити (to cross) — перейти вулицю, перейти міст, перейти на українську
-    (switch to Ukrainian)
+    (switch to Ukrainian); high frequency Core A2
   - пройти / проходити (to pass, walk distance) — пройти повз (pass by), пройти 5
-    кілометрів, час пройшов (time passed)
-  - 'підійти / підходити (to approach, suit) — підійти до карти, потяг підходить,
-    мені це підходить (idiom: this suits me)'
-  - дійти / доходити (to reach, get to) — як дійти до...?, дійти згоди (reach agreement)
+    кілометрів, час пройшов (time passed); high frequency Core A2
+  - 'підійти / підходити (to approach, suit) — підійти до карти (requires ''до'' +
+    Gen), потяг підходить, мені це підходить (idiom: this suits me); med-high frequency'
+  - дійти / доходити (to reach, get to) — як дійти до...?, дійти згоди (reach agreement);
+    med-high frequency
   - зайти / заходити (to enter, stop by) — зайти в магазин (pop in), сонце зайшло
-    (sun set), зайти до друга
-  - обійти / обходити (to go around) — обійти навколо, обійти перешкоду
-  - прийти / приходити (to arrive, come) — прийти додому, прийти вчасно
+    (sun set), зайти до друга; high frequency
+  - обійти / обходити (to go around) — обійти навколо, обійти перешкоду (bypass obstacle);
+    medium frequency
+  - прийти / приходити (to arrive, come) — прийти додому, прийти вчасно; very high
+    frequency
   recommended:
-  - 'руки не доходять (idiom: never get around to it)'
-  - чорний кіт перейшов дорогу (superstition phrase)
-  - повернутися (to return) — contrast with 'зайти' in the superstition context
+  - 'руки не доходять (idiom: never get around to it) — high-value conversational
+    phrase'
+  - чорний кіт перейшов дорогу (superstition phrase) — bad omen involving crossing
+  - подивитися у дзеркало (to look in the mirror) — ritual to neutralize the 'returning'
+    superstition
+  - повернутися / вернутися (to return) — contrast with 'зайти' or 'піти' in narrative
+    contexts
 word_target: 3000

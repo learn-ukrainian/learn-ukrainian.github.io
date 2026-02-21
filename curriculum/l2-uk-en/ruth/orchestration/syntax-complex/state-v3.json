@@ -1,0 +1,13 @@
+{
+  "track": "ruth",
+  "slug": "syntax-complex",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-20T11:01:06Z",
+      "task_id": "v3-syntax-complex-pA",
+      "mode": "full"
+    }
+  }
+}

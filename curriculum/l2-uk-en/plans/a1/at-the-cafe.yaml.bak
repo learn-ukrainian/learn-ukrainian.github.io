@@ -1,0 +1,89 @@
+module: a1-19
+level: A1
+sequence: 19
+slug: at-the-cafe
+version: '2.0'
+title: At the Café
+subtitle: Ordering Food and Drinks in Ukrainian
+content_outline:
+- section: Warm-up
+  points:
+  - 'Типова кав''ярня в Україні — cultural hook: Lviv coffee tradition and ''kava
+    na pisku'''
+  - Що зазвичай замовляють — focus on high-frequency items (кава, чай, тістечко)
+- section: Presentation
+  points:
+  - 'Привітання офіціанта (Добрий день! Що бажаєте?) — learner error: using informal
+    ''ти'' instead of respectful ''Ви'''
+  - 'Замовлення (Мені, будь ласка... / Я візьму...) — learner error: ''Я хочу'' implies
+    demand, use polite ''Мені, будь ласка''; grammar focus: Accusative case for objects
+    (каву, воду)'
+  - Уточнення (З молоком? / Великий чи маленький?) — focus on adjectives agreement
+  - 'Рахунок (Можна рахунок? / Скільки з мене?) — learner error: confusing ''рахунок''
+    (bill) with ''чек'' (receipt)'
+  - 'Оплата (Готівкою / Карткою) — communicative intention: purchasing/services (State
+    Standard §4.3.2)'
+- section: Practice
+  points:
+  - Діалоги офіціант-клієнт — integrate simple compound sentences with 'і', 'але'
+  - Читання меню
+  - Рольова гра замовлення
+- section: Production
+  points:
+  - Створення власного діалогу в кафе
+- section: Cultural Insight
+  points:
+  - Кавова культура в Україні (особливо Львів) — mention Yuriy Kulchytsky legend
+  - Етикет у кафе та чайові
+vocabulary_hints:
+  required:
+  - кава (coffee) — міцна кава, філіжанка кави, кава з молоком
+  - чай (tea) — чорний чай, зелений чай, чай з лимоном
+  - меню (menu) — принести меню, подивитися меню
+  - рахунок (bill) — просити рахунок, оплатити рахунок
+  - офіціант (waiter) — покликати офіціанта, ввічливий офіціант
+  - замовляти (to order) — замовляти каву, я замовлю
+  - принести (to bring)
+  - будь ласка (please) — Мені, будь ласка..., скажіть, будь ласка
+  recommended:
+  - круасан (croissant)
+  - тістечко (pastry)
+  - еспресо (espresso)
+  - капучіно (cappuccino)
+  - чайові (tip) — залишати чайові, добрі чайові
+  - картка (card)
+activity_hints:
+- type: fill-in
+  focus: Complete café ordering
+  items: 8
+- type: fill-in
+  focus: Customer and waiter
+  items: 6
+- type: fill-in
+  focus: Complete ordering phrases
+  items: 15
+- type: quiz
+  focus: Understand café dialogue
+  items: 10
+focus: practical
+pedagogy: PPP
+prerequisites:
+- a1-18 (Food and Shopping)
+connects_to:
+- a1-20 (Checkpoint Navigation)
+- a1-36 (At the Restaurant)
+objectives:
+- Learner can order food and drinks at a café
+- Learner can ask for recommendations
+- Learner can request the bill
+- Learner can use polite forms and cases correctly
+grammar:
+- Integration of Accusative, Genitive, Locative
+- Polite imperatives (принесіть, візьміть)
+- Future tense preview (візьму)
+register: розмовний
+phase: A1.2 [Navigation]
+persona:
+  voice: Patient Supportive Tutor
+  role: Chatty Barista
+word_target: 2000

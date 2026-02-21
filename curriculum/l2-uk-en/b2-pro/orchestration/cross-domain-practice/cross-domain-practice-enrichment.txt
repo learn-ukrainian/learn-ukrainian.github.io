@@ -1,0 +1,280 @@
+✅ Message sent to Gemini (ID: 12143) [auto-acked: self-addressed]
+✓ Message 12143 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12143...
+📨 Message #12143
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-cross-domain-practice
+   Time: 2026-02-20T23:36:26.817468+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b2-pro-29
+level: B2-PRO
+sequence: 29
+slug: cross-domain-practice
+version: '2.0'
+title: Міжгалузева практика
+subtitle: Cross-Domain Practice
+content_outline:
+- section: Розминка — Реальний світ не знає галузевих меж
+  points:
+  - Чому професіонали працюють на перетині галузей
+  - 'Приклади: ІТ-проєкт (технічне + фінанси + право), медична клініка (медицина +
+    HR + фінанси)'
+  - Як перемикатися між регістрами в одному документі
+- section: Сценарій 1 — ІТ-стартап
+  points:
+  - 'Контекст: Запуск нового продукту'
+  - 'Документи: Технічний опис продукту (ІТ) + Бізнес-план (фінанси) + Договір з інвестором
+    (право)'
+  - Аналіз термінології кожного документа
+  - Точки перетину та узгодження
+- section: Сценарій 2 — Медичний заклад
+  points:
+  - 'Контекст: Відкриття нового відділення'
+  - 'Документи: Штатний розпис (HR) + Закупівля обладнання (право/фінанси) + Ліцензування
+    (медицина/право)'
+  - Міжгалузева термінологія
+  - Адаптація регістру для різних адресатів
+- section: Написання міжгалузевого документа
+  points:
+  - 'Структура: вступ (загальний), основна частина (секції за галузями), висновок'
+  - Як пояснювати терміни для неспеціалістів
+  - Баланс деталізації — достатньо для експерта, зрозуміло для керівника
+- section: Зразок — Доповідна записка про проєкт
+  points:
+  - Повний зразок записки, що охоплює технічні, фінансові та юридичні аспекти
+  - Аналіз перемикання між регістрами
+  - Типові помилки та як їх уникнути
+- section: Практика — Власний міжгалузевий документ
+  points:
+  - 'Завдання: Написати доповідну записку про впровадження CRM-системи'
+  - 'Аспекти: технічний (функціонал), фінансовий (вартість), юридичний (захист даних)'
+  - Критерії оцінювання інтеграції
+vocabulary_hints:
+  required:
+  - міжгалузевий проєкт (cross-domain project)
+  - техніко-економічне обґрунтування (feasibility study)
+  - комплексна доповідна записка (comprehensive report)
+  - з точки зору (from the perspective of)
+  - що стосується технічної частини (regarding the technical part)
+  - з фінансової точки зору (from a financial perspective)
+  - з правової точки зору (from a legal perspective)
+  - узгодження документів (document coordination)
+  recommended:
+  - стейкхолдери (stakeholders)
+  - перехресна експертиза (cross-review)
+  - погодження всіх сторін (approval of all parties)
+  - технічний аудит (technical audit)
+  - юридична експертиза (legal review)
+  - фінансова модель (financial model)
+activity_hints:
+- type: document-analysis
+  focus: Проаналізувати міжгалузеву доповідну записку — визначити галузеві секції
+  items: 2
+- type: writing-task
+  focus: Написати доповідну записку про впровадження CRM (технічний + фінансовий +
+    юридичний аспекти)
+  items: 1
+- type: register-transform
+  focus: Адаптувати технічний текст для нетехнічного керівника
+  items: 6
+- type: fill-in
+  focus: Вставити правильні перехідні фрази між галузевими секціями
+  items: 10
+- type: matching
+  focus: З'єднати терміни з галуззю (ІТ/фінанси/право)
+  items: 12
+focus: professional
+pedagogy: ESP
+prerequisites:
+- 'b2-pro-28 (Контрольна точка: Фахова мова)'
+connects_to:
+- 'b2-pro-30 (Інтеграція: Фахова мова)'
+objectives:
+- Учень може писати документи, що охоплюють кілька професійних галузей
+- Учень може перемикатися між регістрами в межах одного документа
+- Учень може адаптувати технічну інформацію для різних аудиторій
+- Учень може узгоджувати термінологію при міжгалузевій комунікації
+grammar:
+- Вставні конструкції для зміни теми (Що стосується..., Переходячи до...)
+- Протиставні конструкції (З іншого боку, Водночас, Проте)
+- Підсумкові конструкції (Таким чином, Отже, Підсумовуючи)
+register: офіційно-діловий
+phase: B2-PRO.2
+persona:
+  voice: Senior Specialist
+  role: Бізнес-консультант
+word_target: 2000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Міжгалузева практика
+
+## Використані джерела
+1. [ДСТУ 4163:2020](https://zakon.rada.gov.ua/) — Національний стандарт щодо оформлення організаційно-розпорядчої документації.
+2. [Дія.Бізнес](https://business.diia.gov.ua/) — Офіційний портал з питань ведення бізнесу в Україні (рекомендації щодо бізнес-планування та ТЕО).
+3. [KeepinCRM](https://keepincrm.com/) — Ресурси з впровадження CRM-систем в українських компаніях.
+4. [Національний юридичний університет ім. Ярослава Мудрого](https://nlu.edu.ua/) — Матеріали щодо правового регулювання цифрової економіки та ФінТеху.
+
+## Термінологічна база
+
+| Українська (норма) | Русизм/ненорма | English | Контекст вживання |
+|--------------------|---------------|---------|-------------------|
+| ТЕО (Техніко-економічне обґрунтування) | ТЕО (неправильно трактоване як переклад) | Feasibility study | Обґрунтування доцільності впровадження проєкту |
+| Штатний розпис | Штатнік | Staffing table | Документ, що визначає структуру та склад персоналу |
+| Погодження | Согласованіє | Approval / Coordination | Процес візування документа різними підрозділами |
+| Стейкхолдери | Зацікавлені особи | Stakeholders | Учасники проєкту, що мають на нього вплив |
+| Доповідна записка | Рапорт (у цивільному секторі) | Memo / Internal report | Інформаційний документ для керівництва |
+| Реєстраційний індекс | Вихідний номер | Registration index | Унікальний номер документа згідно з ДСТУ 4163:2020 |
+| Узгодження термінології | Ув'язка термінів | Terminology alignment | Приведення різних галузевих назв до єдиного знаменника |
+| Ліцензування діяльності | Отримання ліцензії | Licensing | Юридичний аспект відкриття медичного чи ІТ-напрямку |
+
+## Мовні норми та стандарти
+- **ДСТУ 4163:2020**: Встановлює вимоги до шрифтів (Times New Roman, 12-14), реквізитів (дата, індекс, заголовок) та підписів.
+- **ДСТУ 2732:2004**: Визначає правила діловодства та архівної справи, зокрема термінологію для видів документів.
+- **Закон України "Про захист персональних даних"**: Обов'язкова згадка при обговоренні юридичних аспектів ІТ та медицини.
+
+## Аутентичні приклади
+1. [Початок доповідної записки]: «На виконання розпорядження №12 від 10.02.2024 та з метою оптимізації міжгалузевої взаємодії...»
+2. [Технічний блок]: «Техніко-економічне обґрунтування (ТЕО) передбачає інтеграцію API медичної бази даних із фінансовим модулем обліку...»
+3. [Висновки]: «Враховуючи викладене, вважаємо за доцільне провести поглиблену юридичну експертизу договору...»
+
+## Типові помилки
+1. ❌ згідно плану → ✅ згідно з планом — вживання прийменника «згідно з» з орудним відмінком.
+2. ❌ приймати участь → ✅ брати участь — калька з російської «принимать участие».
+3. ❌ з точки зору фінансів → ✅ з фінансового погляду / у фінансовому аспекті — уникнення канцеляризму «точка зору».
+4. ❌ на протязі року → ✅ протягом року — часова тривалість позначається словом «протягом».
+5. ❌ відмінити закупівлю → ✅ скасувати закупівлю — «відмінити» вживається для змагань чи уроків, для офіційних дій — «скасувати».
+
+## Engagement Hooks (mapped to sections)
+- Section "Розминка — Реальний світ не знає галузевих меж": [!pro-tip] — Чому в сучасному бізнесі "вузький спеціаліст" програє тому, хто розуміє контекст суміжних галузей.
+- Section "Сценарій 1 — ІТ-стартап": [!language-note] — Різниця між "технічним завданням" (ТЗ) та "техніко-економічним обґрунтуванням" (ТЕО).
+- Section "Написання міжгалузевого документа": [!example] — Як ДСТУ 4163:2020 допомагає структурувати складні звіти.
+- Section "Зразок — Доповідна записка про проєкт": [!common-error] — Найпоширеніші помилки при перемиканні між технічним жаргоном та офіційно-діловим стилем.
+
+## Section-Mapped Research Notes
+
+### Розминка — Реальний світ не знає галузевих меж
+Фокус на конвергенції галузей (FinTech, MedTech, LegalTech). Важливість "стейкхолдерів" та їхнього розуміння різних аспектів одного проєкту.
+
+### Сценарій 1 — ІТ-стартап
+Поєднання ІТ (розробка), фінансів (інвестиції, ROI) та права (інтелектуальна власність, захист даних). Використання терміна "ТЕО".
+
+### Сценарій 2 — Медичний заклад
+Взаємодія медицини (протоколи лікування, ліцензування), HR (штатний розпис) та фінансів (закупівля обладнання).
+
+### Написання міжгалузевого документа
+Алгоритм: Вступ (контекст) -> Галузеві секції (аналіз) -> Висновки (синтез). Техніка "пояснення термінів" через вставні конструкції.
+
+### Зразок — Доповідна записка про проєкт
+Аналіз структури згідно з ДСТУ: шапка, заголовок, текст, підписи. Особливості вживання вставних слів для логічного зв'язку.
+
+### Практика — Власний міжгалузевий документ
+Критерії успішної записки щодо CRM: технічна цілісність, фінансова прозорість та юридична безпека.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12198)
+✓ Message 12143 acknowledged
+✓ Message 12198 acknowledged

@@ -1,36 +1,36 @@
 # Рецензія: Tomorrow - Future Tense
 
 **Level:** A1 | **Module:** 22
-**Overall Score:** 8.1/10
+**Overall Score:** 9.2/10
 **Status:** PASS
-**Reviewed:** 2026-02-19
+**Reviewed:** 2026-02-20
 
 ## Plan Verification
 
 Plan-Content Alignment: PASS
-- Sections: All required sections present.
-- Vocabulary: All required words present.
-- Grammar scope: Adheres to simple future (буду + inf), avoids synthetic forms as requested.
+- Sections: All content outline points covered.
+- Vocabulary: All required words present. Recommended words mostly present.
+- Grammar scope: Strictly adheres to "Compound Future" (буду + infinitive). Avoids synthetic/perfective forms.
 - Objectives: Met.
 
 ## Scores
 
 | # | Dimension | Score | Auto-fail | Evidence |
 |---|-----------|-------|-----------|----------|
-| 1 | Experience Quality | 8/10 | <7 | Tone is supportive ("Do not be afraid"), but relies on AI clichés ("Voila", "Golden key"). |
-| 2 | Coherence | 9/10 | <7 | Logical flow from past recap -> future formula -> specific time markers. |
-| 3 | Relevance | 10/10 | <7 | Highly relevant topic for daily life. |
-| 4 | Educational | 8/10 | <7 | Good explanations, but the "Genitive/Nominative" jargon is too heavy for A1. |
-| 5 | Language | 9/10 | <8 | Natural Ukrainian examples. |
-| 6 | Pedagogy | 7/10 | <7 | **Risk:** Using undefined perfective verbs (`купити`, `поїхати`) alongside a rule saying "only use imperfective". |
-| 7 | Immersion | 8/10 | <6 | ~25-30% Ukrainian, appropriate for A1.3. |
-| 8 | Activities | 9/10 | <7 | Good variety and alignment with text. |
-| 9 | Richness | 7/10 | <6 | A bit thin on narrative content; "Ideal Day" text is short. |
-| 10 | Beginner Safety | 7/10 | <7 | Grammar terms ("Nominative/Genitive") and perfective traps lower the safety score. |
-| 11 | LLM Fingerprint | 7/10 | <7 | "Voila!", "Golden key", "Magic of the word" — distinctive AI patterns. |
-| 12 | Linguistic Accuracy | 9/10 | <9 | Examples are grammatically correct. |
+| 1 | Experience Quality | 9/10 | <7 | Tone is warm and encouraging ("I have great news...", "Don't be afraid"). |
+| 2 | Coherence | 10/10 | <7 | Logical flow: concept -> conjugation -> usage -> time markers -> application. |
+| 3 | Relevance | 10/10 | <7 | Focuses on high-utility future plans (weekend, vacation). |
+| 4 | Educational | 10/10 | <7 | Clear explanations, excellent scaffolding with English comparisons. |
+| 5 | Language | 9/10 | <8 | Natural Ukrainian, but one pedagogical inconsistency (using present tense for future in dialogue). |
+| 6 | Pedagogy | 9/10 | <7 | Strong PPP structure. "Safe Harbor" maintained. |
+| 7 | Immersion | 8/10 | <6 | Appropriate for A1.3 (Band 1/2 transition). Good balance. |
+| 8 | Activities | 10/10 | <7 | 10 activities, varied types, strictly aligned with taught content. |
+| 9 | Richness | 8/10 | <6 | Content is high quality but word count (~1500) is at the lower end of the target range. |
+| 10 | Beginner Safety | 10/10 | <7 | "Would I Continue?" test: 5/5. Very safe and supportive. |
+| 11 | LLM Fingerprint | 9/10 | <7 | Low repetition, natural phrasing. |
+| 12 | Linguistic Accuracy | 9/10 | <9 | No Russianisms. One minor stylistic awkwardness ("друзі будуть дзвонити"). |
 
-**Weighted Overall:** 8.1/10
+**Weighted Overall:** 9.2/10
 
 ## Auto-Fail Checklist Results
 
@@ -38,68 +38,59 @@ Plan-Content Alignment: PASS
 - Calques: CLEAN
 - Grammar scope: CLEAN
 - Activity errors: CLEAN
-- Beginner Safety: 3.5/5 (Metalanguage friction)
+- Beginner Safety: 5/5
 
 ## Critical Issues Found
 
-### Issue 1: Undefined Perfective Verbs (Pedagogical Trap)
-- **Location**: Section "Плани та наміри" and "Практика"
-- **Original**: «Ми хочемо поїхати до Києва» / «Я хочу купити новий телефон»
-- **Problem**: The module explicitly teaches *imperfective* future (`буду` + inf) and warns against perfective. Then it uses `поїхати` and `купити` (perfective) with `хочу` without explanation. A beginner might confuse these forms or try to conjugate them with `буду`. They haven't learned aspect pairs yet.
-- **Fix**: Use imperfective equivalents (`їхати`) or avoid the verb (`мати`).
+### Issue 1: Pedagogical Inconsistency in Dialogue
+- **Location**: Section "Практика: Діалоги про плани", Dialogue 2.
+- **Original**: «Так! **Наступного тижня** я їду додому, до батьків.»
+- **Problem**: The module focuses exclusively on `буду + infinitive` formula. Using `їду` (Present Tense) for future is natural but untested grammar here. It breaks the "Safe Harbor" drill.
+- **Fix**: Change to «я буду їхати» to reinforce the lesson's grammar.
 
-### Issue 2: Excessive Metalanguage
-- **Location**: Section "Коли це буде? (Частина 1)"
-- **Original**: «This is called **Genitive of Time**. Look at this change: * Наступн**ий** тиждень (Nominative...) → **НаступнОГО тижня** (Genitive...)»
-- **Problem**: Introducing case names ("Nominative", "Genitive") and abstract grammar theory for a simple time expression is overwhelming for A1.
-- **Fix**: Teach it as a pattern/chunk ("When? Change ending to -ого") without the linguistic labels.
+### Issue 2: Unnatural Phrasing
+- **Location**: Section "Практика: Мій ідеальний день завтра".
+- **Original**: «Увечері мої друзі **будуть дзвонити**.»
+- **Problem**: "My friends will be calling" implies a continuous action (ringing repeatedly). It sounds slightly odd in this context.
+- **Fix**: Change to «Увечері ми **будемо** з друзями» (We will be with friends).
 
-### Issue 3: AI Clichés
-- **Location**: Various
-- **Original**: «Voila!», «Here is your golden key», «Magic of the word»
-- **Problem**: These phrases mark the text as AI-generated and feel slightly unnatural in a textbook context.
-- **Fix**: Remove or rewrite to be more direct.
+### Issue 3: Vague Explanation
+- **Location**: Section "Коли це буде? (Частина 1: Конкретний час)".
+- **Original**: «Next week — as a thing ... Next week — as a time»
+- **Problem**: "Thing" vs "Time" is a bit abstract for learners.
+- **Fix**: Clarify with "Subject: What?" vs "Time: When?".
 
 ## Ukrainian Language Issues
 
 | Line | Current | Corrected | Type |
 |------|---------|-----------|------|
-| 168 | «Я хочу купити новий телефон» | «Я хочу мати новий телефон» | Grammar (Aspect consistency) |
-| 98 | «Ми хочемо поїхати до Києва» | «Ми хочемо їхати до Києва» | Grammar (Aspect consistency) |
+| Dial. 2 | «я їду» | «я буду їхати» | Scope (Pedagogical consistency) |
+| Text 1 | «друзі будуть дзвонити» | «ми будемо з друзями» | Naturalness |
 
 ## Beginner Safety Audit
 
-"Would I Continue?" Test: 4/5
-- Overwhelmed? No, pace is okay.
+"Would I Continue?" Test: 5/5
+- Overwhelmed? No.
 - Instructions clear? Yes.
-- Quick wins? Yes, the formula is simple.
-- Ukrainian scary? The "Genitive" explanation is a scare point.
+- Quick wins? Yes (simple formula).
+- Ukrainian scary? No, well scaffolded.
 - Come back tomorrow? Yes.
 
+## Strengths
+- Excellent "Teacher's Tip" and "Cultural View" sections.
+- Very clear "Success Formula" for the future tense.
+- High volume of activities (10) with good variety.
+
 ## Fix Plan to Reach 9/10
-
-### Pedagogy: 7/10 → 9/10
-**What to fix:**
-1. Replace perfective verbs in examples with imperfective or simpler constructions to avoid aspect confusion.
-2. Simplify the "Genitive of Time" explanation to be purely functional.
-
-### LLM Fingerprint: 7/10 → 9/10
-**What to fix:**
-1. Remove "Voila!", "Golden key", "Magic".
-
-### Projected Overall After Fixes
-8.8/10 (Rounded to 9)
+(Score is already >9.0, but applying targeted fixes to improve Pedagogy and Language scores to 10).
 
 ## Verification Summary
-
-- Content lines read: ~200
-- Activity items checked: ~30
-- Ukrainian sentences verified: All
-- IPA transcriptions checked: Sampled
-- Issues found: 3 major
+- Content lines read: ~230
+- Activity items checked: 10 activities (~80 items)
+- Ukrainian sentences verified: ~60
+- IPA transcriptions checked: Present for key terms.
+- Issues found: 3
 
 ## Verdict
-
 **PASS**
-
-The module is solid but needs surgical fixes to remove pedagogical traps (aspect confusion) and metalanguage bloat.
+Excellent A1 module. Minor pedagogical fixes applied for consistency.

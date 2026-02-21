@@ -1,0 +1,253 @@
+✅ Message sent to Gemini (ID: 10763) [auto-acked: self-addressed]
+✓ Message 10763 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10763...
+📨 Message #10763
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-kolyskovi-ta-dumy
+   Time: 2026-02-20T21:27:28.834824+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-050
+level: C1
+sequence: 50
+slug: kolyskovi-ta-dumy
+version: '2.0'
+title: 'Колискові та думи: Від колиски до вічності'
+subtitle: 'Lullabies and Dumas: From Cradle to Eternity'
+content_outline:
+- section: Розминка — Два жанри народної пісні
+  points:
+  - Колискова — інтимний жанр для немовляти
+  - Дума — героїчний епос про козаків
+  - Протилежності — від колиски до вічності
+- section: Колискові пісні
+  points:
+  - Структура колискової (рефрен, ритм, образи)
+  - Типові образи (місяць, зірки, кіт, голуби)
+  - Функції — заспокоєння, виховання, передача цінностей
+  - 'Приклад: "Ой ходить сон коло вікон"'
+- section: Думи — козацький епос
+  points:
+  - Історія жанру та виконавці (кобзарі, лірники)
+  - Структура думи (заспів, розгортання, закінчення)
+  - 'Знамениті думи: Козак Голота, Маруся Богуславка'
+  - Речитативний стиль виконання
+- section: Практика — аналіз фольклору
+  points:
+  - Проаналізувати текст колискової — знайти символи та рими
+  - Порівняти структуру думи та балади
+  - Написати стилізацію колискової
+  - Обговорити роль кобзарів у збереженні національної пам'яті
+focus: history
+pedagogy: CBI
+objectives:
+- Understand the role of lullabies in early linguistic development and enculturation
+- Analyze the structure and historical significance of Ukrainian Dumas
+- Compare the intimate register of lullabies with the epic register of dumas
+grammar:
+- Narrative historical registers
+- Poetic syntax
+phase: C1.5 Folk Culture & Fine Arts
+persona:
+  voice: Senior Specialist
+  role: Кобзар
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Колискові та думи: Від колиски до вічності
+
+## State Standard Reference
+§3.21: "Традиції, звичаї, свята: ... українські звичаї і традиції"
+§4.4.3: "Стилістичні засоби лексики: епітети... метафори... зменшувально-пестливі форми"
+§4.4.4: "Стилістичні засоби синтаксису: повтор... риторичні запитання"
+Alignment: Цей модуль аналізує два ключові жанри українського фольклору (традиції) через призму стилістичних засобів (зменшувальні форми у колискових, риторичні фігури та повтори у думах), що відповідає вимогам рівня С1 щодо лінгвокраїнознавчої та стилістичної компетенції.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| **Колискова** | Середня (культурна) | співати колискову, мотив колискової, ніжна мелодія, материнська любов |
+| **Дума** | Середня (історична) | козацька дума, героїчний епос, виконувати думу, речитатив |
+| **Кобзар** | Висока (символічна) | сліпий кобзар, мандрівний співець, кобзарська традиція, супровід бандури/кобзи |
+| **Речитатив** | Низька (специфічна) | протяжний речитатив, виконувати речитативом, характерний ритм |
+| **Епос** | Середня (літературна) | героїчний епос, народний епос, епічний твір |
+
+## Cultural Hooks
+1. **"Summertime" connection**: Легендарна арія Джорджа Гершвіна "Summertime" була написана під враженням від української колискової "Ой ходить сон коло вікон", яку композитор почув у Нью-Йорку у виконанні хору Олександра Кошиця.
+2. **Кобзарі як "жива преса"**: Кобзарі (часто незрячі) не лише зберігали історію, але й виконували роль новинних агентів, передаючи інформацію про повстання та ворожі напади між селами.
+
+## Common Learner Errors
+1. **Дума vs Думка**: Плутають жанр *дума* (epic song) зі словом *думка* (thought) або жанром *коломийка* (short dance song).
+   - *Error*: "У мене є одна дума." -> *Correct*: "У мене є одна думка." (або "Я знаю одну думу" про пісню).
+2. **Наголос у слові "кобзар"**: Часто ставлять наголос на першому складі.
+   - *Error*: кОбзар -> *Correct*: кобзАр.
+3. **Стилістична невідповідність**: Використання офіційно-ділової лексики при аналізі фольклору.
+   - *Error*: "Колискова функціонує для оптимізації сну." -> *Correct*: "Колискова покликана заспокоїти дитину."
+
+## Cross-References
+- Builds on: B2 History (Козацька доба, Гетьманщина)
+- Prepares for: C1 Literature (Лісова пісня, Тіні забутих предків), C1 History (Культурне відродження)
+
+## Notes for Content Writing
+- **Atmosphere**: Contrast the gentle, whisper-like quality of lullabies with the rugged, stern tone of dumas.
+- **Stylistics**: Focus heavily on diminutives (*кіточок, спатоньки*) for lullabies and syntactic parallelism/negation (*не ясний сокіл...*) for dumas.
+- **Persona**: The "Senior Specialist/Kobzar" voice should be respectful of tradition but analytical, bridging the gap between ancient ritual and modern literary analysis.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Від колиски до вічності (Introduction: From Cradle to Eternity)"
+  words: 600
+  points:
+  - "Порівняння двох полюсів народного життя: інтимного світу дитинства та героїчного світу козацтва"
+  - "Культурний зв'язок: вплив української колискової «Ой ходить сон коло вікон» на арію Джорджа Гершвіна «Summertime»"
+  - "Обговорення ролі фольклору як засобу передачі національних цінностей та ідентичності"
+- section: "Колискові пісні — магія першого слова (Lullabies — Magic of the First Word)"
+  words: 900
+  points:
+  - "Аналіз структури колискової: специфічний ритм, рефрени та заспокійлива інтонація"
+  - "Стилістичні засоби (§4.4.3): активне використання зменшувально-пестливих форм (кіточок, спатоньки) для створення атмосфери ніжності"
+  - "Традиційні образи: міфологічні Сон та Дрімота, коти та голуби як охоронці дитячого спокою"
+  - "Функції жанру: від гіпнотичного заспокоєння до першої мовної соціалізації дитини"
+- section: "Думи — жива пам'ять народу (Dumas — Living Memory of the People)"
+  words: 1000
+  points:
+  - "Історія кобзарства: незрячі співці як «жива преса», що розносила звістки про повстання та напади"
+  - "Поетичний синтаксис (§4.4.4): використання паралелізмів та заперечних порівнянь (не ясний сокіл...)"
+  - "Аналіз епічної структури: зачин (заспів), розгортання сюжету та величальний фінал"
+  - "Приклади класичних дум: Маруся Богуславка як символ патріотизму та Козак Голота як зразок мужності"
+- section: "Лінгвістичні тонкощі та типові помилки (Linguistic Nuances and Common Errors)"
+  words: 700
+  points:
+  - "Розрізнення паронімів: жанр «дума» (епос) vs. іменник «думка» (thought) — правильні контексти вживання"
+  - "Акцентологічний практикум: наголос у слові кобзАр (на останньому складі) та відпрацювання вимови"
+  - "Стилістичний регістр: виправлення помилки вживання офіційно-ділової лексики при описі фольклору (уникнення слів «функціонує», «оптимізація»)"
+  - "Речитативний стиль виконання: особливості протяжної вимови та ритмічної організації тексту"
+- section: "Практика та синтез (Practice and Synthesis)"
+  words: 800
+  points:
+  - "Аналітичне завдання: знайти епітети та метафори в тексті думи та порівняти їх із образами колискової"
+  - "Творча стилізація: написання власної колискової або фрагмента думи з дотриманням жанрових канонів"
+  - "Дискусія про сучасне переосмислення кобзарської традиції та роль народної пісні в деколонізації культури"
+  - "Підсумок: як фольклорні жанри формують наративні історичні регістри сучасної мови"
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "Колискова (lullaby) — співати колискову, мотив колискової; середня частотність, інтимний регістр"
+  - "Дума (duma/epic song) — козацька дума, виконувати думу; жанрово-специфічне, не плутати з «думка»"
+  - "Кобзар (kobzar/itinerant bard) — мандрівний співець, кобзарська традиція; висока символічність, наголос на -Ар"
+  - "Речитатив (recitative) — протяжний речитатив, виконувати речитативом; низька частотність, музикознавчий термін"
+  - "Епос (epic) — героїчний епос, народний епос; науковий стиль, літературознавча назва жанру"
+  recommended:
+  - "Зменшувально-пестливі форми (diminutives) — морфологічний засіб (§4.4.3) для вираження пестливості"
+  - "Паралелізм (parallelism) — характерна синтаксична фігура (§4.4.4) українських дум"
+  - "Бандура/Кобза (bandura/kobza) — традиційні музичні інструменти, супровід кобзарів"
+  - "Зачин (opening) — початкова частина думи або казки"
+  - "Стилізація (stylization) — імітація стилю певного жанру або автора"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (3621 chars)
+✅ Message sent to Claude (ID: 10768)
+✓ Message 10768 acknowledged
+   Auto-acknowledged reply #10768 (stdout delivery — no inbox accumulation)
+✓ Message 10763 acknowledged

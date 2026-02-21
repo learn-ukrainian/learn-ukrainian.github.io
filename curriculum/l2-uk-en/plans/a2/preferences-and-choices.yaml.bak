@@ -1,0 +1,68 @@
+module: a2-20
+level: A2
+sequence: 20
+slug: preferences-and-choices
+version: '2.0'
+title: Preferences and Choices
+subtitle: Expressing Likes and Dislikes
+content_outline:
+- section: Introduction / Вступ
+  points:
+  - 'Making choices in daily life — cultural hook: Lviv Coffee Culture (choosing between
+    ''кава з молоком'', ''кава з піском'', or ''львівська кава''), using phrases like
+    ''мені, будь ласка, філіжанку кави'''
+  - Politeness in preferences — use 'я хотів би' as a high-frequency polite chunk
+    for requests — bridges to B1 conditionals
+- section: Presentation / Презентація
+  points:
+  - '''Dative Logic: Мені подобається'' — learner error: Nominative Overload (''Я
+    подобається'' instead of ''Мені'') and Object Case Error (''книжку'' instead of
+    ''книжка'' as grammatical subject) — aligns with State Standard §4.2.2.3'
+  - '''Formal Preference: Віддавати перевагу'' — note intensity mismatch: ''любити''
+    (deep affection) vs ''подобатися'' (immediate/aesthetic liking)'
+  - Comparison structures for actions (краще ніж) — emphasize 'краще' functioning
+    as both adjective (better thing) and adverb (better action)
+  - '''Conditional: Я б вибрав (Hypothetical)'' — introduce as functional lexical
+    item without full conditional mood theory (A2 level scope) — prepares for M22
+    (Unreal conditionals)'
+- section: Practice / Практика
+  points:
+  - Decision making scenarios (Restaurant/Store) — enforce Dative experiencer logic
+    throughout — transition to Ukrainian for these choices per immersion policy
+  - Transformation drills — practice switching between 'Я люблю' and 'Мені подобається'
+- section: Dialogues / Діалоги
+  points:
+  - 'Choosing a gift or activity with a friend — cultural hook: proverb ''На колір
+    і смак товариш не всяк'' (To each their own)'
+focus: grammar
+pedagogy: PPP
+objectives:
+- Learner can express preferences and choices
+- Learner can compare options using comparative forms
+- Learner can use 'would' structures for hypothetical choices
+- Learner can politely decline or accept offers
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Preferences
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Communicative requirements for making choices
+- name: Ukrainian Language - Communicative Competence
+  url: https://uk.wikipedia.org/wiki/Комунікативна_компетентність
+  type: reference
+  notes: Expressions for polite refusal and preference
+immersion: 50-60% Ukrainian
+phase: A2.2
+persona:
+  voice: Encouraging Cultural Guide
+  role: Sommelier
+vocabulary_hints:
+  required:
+  - подобатися (to like) — мені подобається, дуже подобається, подобається бути...
+  - вибирати (to choose) — вибирати книжку, вибирати професію, вибирати між...
+  - краще (better) — краще ніж, краще зробити, так краще
+  - хотів би (would like) — я хотів би замовити, я хотіла би вибрати (polite request
+    chunk)
+  recommended:
+  - перевага (preference/advantage) — віддавати перевагу (to prefer), мати перевагу
+word_target: 3000

@@ -5,28 +5,28 @@
   "phases": {
     "v3-A": {
       "status": "complete",
-      "ts": "2026-02-19T21:50:23Z",
-      "task_id": "v3-the-locative-where-things-are-pA",
-      "mode": "full"
+      "ts": "2026-02-20T21:35:41Z",
+      "note": "migrated-from-v2"
     },
     "v3-B": {
       "status": "complete",
-      "ts": "2026-02-19T21:50:23Z"
+      "ts": "2026-02-20T21:35:41Z",
+      "note": "migrated-from-v2"
     },
     "v3-C": {
       "status": "complete",
-      "ts": "2026-02-19T21:50:24Z",
-      "note": "adopted-existing"
+      "ts": "2026-02-20T21:35:41Z",
+      "note": "migrated-from-v2"
     },
     "v3-audit": {
       "status": "complete",
-      "ts": "2026-02-19T21:50:25Z",
-      "attempts": 1
+      "ts": "2026-02-20T21:35:41Z",
+      "note": "migrated-from-v2"
     },
     "v3-D": {
       "status": "complete",
-      "ts": "2026-02-19T21:52:03Z",
-      "attempts": 1
+      "ts": "2026-02-20T21:35:41Z",
+      "note": "migrated-from-v2"
     }
   }
 }

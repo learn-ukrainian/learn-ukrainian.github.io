@@ -1,0 +1,335 @@
+✅ Message sent to Gemini (ID: 11116) [auto-acked: self-addressed]
+✓ Message 11116 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #11116...
+📨 Message #11116
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-khudozhniy-styl
+   Time: 2026-02-20T22:24:50.004710+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c2-006
+level: c2
+sequence: 6
+version: '2.0'
+title: Художній стиль — Літературна творчість
+focus: stylistics
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Антологія української літератури
+  url: https://litopys.org.ua/
+  type: primary
+  notes: Classic and contemporary literary examples
+- name: Письменники України — біографії та твори
+  url: https://ukrlib.com.ua/
+  type: reference
+  notes: Author styles and creative techniques
+- name: Ukrainian State Standard 2024 — Literary style
+  url: https://mon.gov.ua/
+  type: reference
+  notes: C2 requirements for artistic expression
+content_outline:
+- section: Вступ — Художній стиль як мистецтво слова
+  points:
+  - Функції художнього стилю
+  - Естетична функція мови
+  - Індивідуальний стиль автора
+- section: Оповідання — мала проза
+  points:
+  - Структура оповідання
+  - Композиційні елементи (зав'язка, кульмінація, розв'язка)
+  - Наратор та точка зору
+  - Приклади — Стефаник, Коцюбинський
+- section: Поезія — ліричний вимір
+  points:
+  - Ліричний герой
+  - Образна система
+  - Ритм і рима
+  - Сучасна українська поезія
+- section: Драматичний діалог
+  points:
+  - Специфіка драматичної мови
+  - Ремарки та дійові особи
+  - Конфлікт і характеротворення
+  - Українська драматургія
+- section: Літературні прийоми
+  points:
+  - Метафора, порівняння, епітет
+  - Символ та алегорія
+  - Іронія та сатира
+  - Інтертекстуальність
+- section: Хронотоп — простір і час
+  points:
+  - Художній час
+  - Художній простір
+  - Атмосфера та настрій
+  - Пейзаж і портрет
+- section: Практикум — Творче письмо
+  points:
+  - Написання flash fiction (500 слів)
+  - Аналіз наративних прийомів
+  - Зміна точки зору в тексті
+  - Створення художнього опису
+vocabulary:
+  required:
+  - оповідання (short story)
+  - наратор (narrator)
+  - кульмінація (climax)
+  - ліричний (lyrical)
+  - метафора (metaphor)
+  - епітет (epithet)
+  - символ (symbol)
+  - хронотоп (chronotope)
+  - характеротворення (characterization)
+  - композиція (composition)
+  recommended:
+  - ремарка (stage direction)
+  - зав'язка (exposition/setup)
+  - розв'язка (denouement)
+  - персоніфікація (personification)
+  - алегорія (allegory)
+  forbidden: '[]'
+activities:
+  types_required:
+  - quiz
+  - fill-in
+  - critical-analysis
+  - essay-response
+  - comparative-study
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c2-21 (Stylistic devices mastery)
+- 'c2-36 (Creative writing: poetry)'
+- 'c2-37 (Creative writing: prose)'
+- 'c2-28 (Poetics: verse analysis)'
+vocabulary_hints:
+  required:
+  - концепція (concept)
+  - аналіз (analysis)
+  - дискурс (discourse)
+  - методологія (methodology)
+  recommended:
+  - інтерпретація (interpretation)
+  - контекстуалізація (contextualization)
+  - синтез (synthesis)
+activity_hints:
+- type: reading
+  focus: Поглиблений аналіз тексту
+  items: 4
+- type: essay-response
+  focus: Критичне осмислення
+- type: discussion
+  focus: Дискусія та аргументація
+  items: 1
+persona:
+  voice: Senior Specialist
+  role: Writer-in-Residence
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Художній стиль — Літературна творчість
+
+## State Standard Reference
+§4.3.1.1: "Стилі української мови: ... художній"
+§4.3.3: "Стилістичні засоби лексики: епітети, метафори, уособлення, перифраз, метонімія..."
+§4.3.6: "Уміння створити текст певного стилю за планом."
+Alignment: Цей модуль безпосередньо реалізує вимогу стандарту щодо володіння художнім стилем та використання стилістичних засобів (лексичних і синтаксичних) для створення емоційно-образного тексту.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| оповідання | High (School/Lit) | коротке оповідання, збірка оповідань, писати оповідання |
+| наратор | Medium (Academic) | ненадійний наратор, всезнаючий наратор, голос наратора |
+| кульмінація | Medium (General) | наступила кульмінація, емоційна кульмінація, у момент кульмінації |
+| ліричний | High (Lit) | ліричний герой, ліричний відступ, лірична поезія |
+| метафора | High (General) | вживати метафору, розгорнута метафора, смілива метафора |
+| епітет | High (Lit) | постійний епітет, народнопоетичний епітет, влучний епітет |
+| символ | High (General) | символ волі, національний символ, глибокий символ |
+| хронотоп | Low (Academic) | хронотоп дороги, хронотоп міста, поняття хронотопу |
+| характеротворення | Low (Academic) | засоби характеротворення, психологічне характеротворення |
+| композиція | Medium (General) | кільцева композиція, складна композиція, елементи композиції |
+
+## Cultural Hooks
+1. **Кордоцентризм**: Українська літературна традиція часто описується як "кордоцентрична" (зосереджена на серці/почуттях), що впливає на емоційність художнього стилю (Сковорода, Куліш, "філософія серця").
+2. **Імпресіонізм Коцюбинського**: Новела "Intermezzo" як ідеальний приклад психологічного пейзажу та музикальності української прози, де межа між лірикою і прозою стирається.
+
+## Common Learner Errors
+1. **Зловживання пасивом**: Учні часто кажуть "Книга була написана автором", тоді як художній стиль вимагає активності: "Автор написав книгу" або "Книга вийшла з-під пера автора".
+2. **Стилістичний дисонанс**: Використання канцеляризмів ("здійснити прогулянку") замість художніх дієслів ("прогулятися", "поблукати") в описових текстах.
+3. **Плутанина епітета та означення**: Не кожне прикметник є епітетом. "Золотий перстень" — означення, "золоті руки" — епітет.
+
+## Cross-References
+- Builds on: C2-21 (Stylistic devices mastery), C2-05 (Publicistic style)
+- Prepares for: C2-36 (Creative writing: poetry), C2-37 (Creative writing: prose), C2-28 (Poetics)
+
+## Notes for Content Writing
+- Focus on the *aesthetic* function of language.
+- Use examples from classic authors (Stefanyk for drama/conciseness, Kotsiubynskyi for imagery, Kostenko for modern lyrical voice).
+- Ensure the distinction between "author" and "narrator" is clear in the prose section.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Художній стиль як естетичний феномен (Introduction: Artistic Style as an Aesthetic Phenomenon)"
+  words: 600
+  points:
+  - "Defining the aesthetic function of language according to State Standard §4.3.1.1 and its role in artistic expression"
+  - "Cultural hook: Cordocentrism ('philosophy of the heart') as a defining feature of Ukrainian literary emotionality from Skovoroda to modern authors"
+  - "Individual style vs. linguistic norms: analyzing how writers manipulate standard language to create a unique authorial voice"
+- section: "Жанрові особливості: Мала проза та наратологія (Genre Features: Short Prose and Narratology)"
+  words: 850
+  points:
+  - "Narratology in focus: distinguishing between the author and the narrator (наратор); exploring academic categories like 'всезнаючий' (omniscient) and 'ненадійний' (unreliable) narrators"
+  - "Cultural case study: Impressionism in Mykhailo Kotsiubynskyi's 'Intermezzo' as a model for psychological landscape and the musicality of Ukrainian prose"
+  - "Structural components of the short story (оповідання): composition elements from 'зав'язка' (exposition) to 'розв'язка' (denouement)"
+  - "Narrative perspective: exploring the 'voice' of the narrator and the blurring of lines between lyricism and prose"
+- section: "Художні засоби та образність (Artistic Devices and Imagery)"
+  words: 850
+  points:
+  - "In-depth study of stylistic devices per §4.3.3: metaphors (розгорнута, смілива), personification, periphrasis, and metonymy"
+  - "Learner error: Confusing epithets with simple adjectives — drill pairs like 'золотий перстень' (literal) vs 'золоті руки' (epithet)"
+  - "Imagery and symbolism: analyzing the 'символ волі' and other deep national archetypes in classic and contemporary texts"
+  - "Intertextuality: how modern Ukrainian literature utilizes allusions and symbols to reference the established literary canon"
+- section: "Драматургія та Хронотоп (Dramaturgy and Chronotope)"
+  words: 800
+  points:
+  - "Specifics of dramatic language: analyzing stage directions (ремарки) and characterization (характеротворення) through dialogue and conflict"
+  - "Bakhtin's Chronotope in the Ukrainian literary context: exploring the 'хронотоп дороги' (road) and 'хронотоп міста' (city)"
+  - "Establishing atmosphere and mood through artistic space and time (хронотоп) to create an immersive reader experience"
+  - "Conflict as a tool for character formation: techniques of psychological characterization in modern drama"
+- section: "Практикум: Творче письмо та стилістична корекція (Practicum: Creative Writing and Stylistic Correction)"
+  words: 900
+  points:
+  - "Application of §4.3.6: Creating a structured literary text based on a detailed plan, maintaining consistent stylistic register"
+  - "Learner error: Overuse of passive voice (e.g., 'Книга була написана') — practice replacing with active literary forms or idioms like 'вийшла з-під пера'"
+  - "Eliminating stylistic dissonance: identifying and replacing bureaucratic chancery (e.g., 'здійснити прогулянку') with evocative literary verbs (e.g., 'поблукати')"
+  - "Creative exercise: Writing flash fiction (approx. 500 words) with a focus on a specific narrative point of view or a sudden climax (кульмінація)"
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "оповідання (short story) — high frequency; collocations: 'коротке оповідання', 'збірка оповідань', 'писати оповідання'"
+  - "наратор (narrator) — academic register; types: 'ненадійний наратор' (unreliable), 'всезнаючий наратор' (omniscient)"
+  - "кульмінація (climax) — medium frequency; collocations: 'емоційна кульмінація', 'у момент кульмінації', 'наступила кульмінація'"
+  - "ліричний (lyrical) — high frequency; terms: 'ліричний герой', 'ліричний відступ', 'лірична поезія'"
+  - "метафора (metaphor) — high frequency; 'розгорнута метафора' (extended), 'смілива метафора', 'вживати метафору'"
+  - "епітет (epithet) — high frequency; 'постійний епітет' (folkloric), 'влучний епітет', 'постійний епітет'"
+  - "символ (symbol) — high frequency; archetypes: 'символ волі', 'національний символ', 'глибокий символ'"
+  - "хронотоп (chronotope) — low frequency/academic; types: 'хронотоп дороги', 'хронотоп міста', 'поняття хронотопу'"
+  - "характеротворення (characterization) — academic term; 'засоби характеротворення', 'психологічне характеротворення'"
+  - "композиція (composition) — medium frequency; 'кільцева композиція' (circular), 'складна композиція', 'елементи композиції'"
+  recommended:
+  - "ремарка (stage direction) — essential for the analysis of dramatic texts and character context"
+  - "зав'язка (exposition/setup) — the starting point of plot development; 'несподівана зав'язка'"
+  - "розв'язка (denouement) — the resolution of literary conflict; 'неминуча розв'язка'"
+  - "персоніфікація (personification) — stylistic device where inanimate objects take on human traits per §4.3.3"
+  - "алегорія (allegory) — complex symbolic representation often used in parables and fables"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (5107 chars)
+✅ Message sent to Claude (ID: 11127)
+✓ Message 11127 acknowledged
+   Auto-acknowledged reply #11127 (stdout delivery — no inbox accumulation)
+✓ Message 11116 acknowledged

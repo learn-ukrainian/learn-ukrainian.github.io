@@ -1,0 +1,289 @@
+✅ Message sent to Gemini (ID: 10117) [auto-acked: self-addressed]
+✓ Message 10117 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10117...
+📨 Message #10117
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-at-the-cafe-practical
+   Time: 2026-02-20T19:42:13.778943+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: a1-35
+level: A1
+sequence: 35
+slug: at-the-cafe-practical
+version: '2.0'
+title: At the Café
+subtitle: Ordering Drinks and Snacks
+content_outline:
+- section: Warm-up
+  points:
+  - 'Культура кав''ярень в Україні (особливо Львів!) — cultural hook: Львів як кавова
+    столиця, австрійський вплив та постать Юрія Кульчицького (Галичина), який відкрив
+    першу кав''ярню у Відні «Під синьою пляшкою»'
+  - Чим відрізняється кав'ярня від ресторану? — акцент на атмосфері та ритуалі споживання
+    кави
+- section: Presentation
+  points:
+  - Привітання (Добрий день! / Привіт!) — focus on politeness (State Standard §3.9)
+  - 'Запитання про меню (Що ви порадите?) — collocation: «подивитися меню», «що у
+    вас у меню?»'
+  - 'Замовлення (Мені, будь ласка... / Я візьму...) — learner error: уникнення буквального
+    перекладу «May I have» (використовувати «Можна мені...»); learner error: неприродна
+    позиція «будь ласка» на початку речення'
+  - 'Уточнення (З молоком? Великий чи маленький?) — learner error: використання називного
+    відмінка замість знахідного для прямого додатка (хочу кав**у**, а не кав**а**);
+    State Standard §4.2.3.2.1'
+  - 'Оплата (Можна рахунок? Готівкою / Карткою) — collocations: «оплатити рахунок»,
+    «окремий рахунок»; introduction of Instrumental case via fixed phrases «готівкою»/«карткою»'
+  - Подяка та прощання — mandatory use of «дякую»
+- section: Practice
+  points:
+  - 'Діалог 1: Замовлення кави та круасана — use «філіжанка» for Lviv flavor'
+  - 'Діалог 2: Питання про Wi-Fi та розетку'
+  - 'Діалог 3: Оплата рахунку — distinguish between «готівкою» and «карткою»'
+- section: Warm-up 2
+  points:
+  - Наратив про візит до львівської кав'ярні
+  - 'Атмосфера та типові фрази в контексті — cultural hook: використання слова «філіжанка»
+    замість «чашка» для підкреслення львівської традиції (Lviv coffee legend)'
+vocabulary_hints:
+  required:
+  - кава (coffee) — чорна кава, кава з молоком, філіжанка кави (High frequency)
+  - чай (tea) — зелений чай, чорний чай, чай з лимоном
+  - меню (menu) — подивитися меню, що у вас у меню?
+  - рахунок (bill) — можна рахунок?, оплатити рахунок, окремий рахунок
+  - будь ласка (please) — каву, будь ласка; сідайте, будь ласка (Politeness marker)
+  - дякую (thank you)
+  - готівка (cash) — платити готівкою (Instrumental case intro)
+  - картка (card) — розрахуватися карткою (Instrumental case intro)
+  recommended:
+  - круасан (croissant)
+  - тістечко (pastry)
+  - молоко (milk)
+  - цукор (sugar)
+  - філіжанка (cup - dialect) — Lviv tradition, synonym for чашка
+activity_hints:
+- type: fill-in
+  focus: Complete café ordering
+  items: 10
+- type: fill-in
+  focus: Customer and waiter
+  items: 6
+- type: quiz
+  focus: Understand café phrases
+  items: 10
+- type: fill-in
+  focus: Complete ordering sentences
+  items: 12
+focus: practical
+pedagogy: PPP
+prerequisites:
+- a1-19 (At the Café)
+- a1-34 (Checkpoint Core Grammar)
+connects_to:
+- a1-36 (At the Restaurant)
+- a1-37 (At the Market)
+objectives:
+- Learner can order a drink and a snack
+- Learner can ask for the bill
+- Learner can handle basic payment queries
+- Learner can make polite requests
+grammar:
+- Polite requests (Мені..., будь ласка)
+- Accusative for ordering
+- Questions (Можна...?, Скільки?)
+register: розмовний
+phase: A1.4 [Practical Scenarios]
+persona:
+  voice: Patient Supportive Tutor
+  role: Lviv Coffee Connoisseur
+word_target: 2000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: At the Café
+
+## State Standard Reference
+§4.2.3.2.1: "Без прийменника (об’єкт дії): Віра читає цікаву книжку."
+Alignment: This module explicitly teaches the Accusative case for ordering (direct object), matching the standard's requirement for expressing the object of an action without a preposition (e.g., "Я хочу кав**у**"). It also addresses Catalogue A (Communicative Intentions) for "висловити елементарні прохання" (express elementary requests) and Catalogue B (Themes) §3.9 "Ресторан, кафе".
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| кава | High (Top 500) | чорна кава, кава з молоком, філіжанка кави, пити каву |
+| чай | High (Top 500) | зелений чай, чорний чай, чай з лимоном, чашка чаю |
+| меню | Medium | винна карта, дитяче меню, попросити меню |
+| рахунок | Medium | оплатити рахунок, попросити рахунок, окремий рахунок |
+| будь ласка | Very High | скажіть будь ласка, дайте будь ласка, сідайте будь ласка |
+| готівка | Medium | платити готівкою (Instrumental fixed phrase) |
+
+## Cultural Hooks
+1. **Lviv Coffee Culture**: Lviv is considered the coffee capital of Ukraine. The phrase "Піти на каву" (To go for coffee) implies a social ritual, not just consuming a drink.
+2. **Yuriy Kulchytsky**: A Ukrainian noble from Halychyna who is credited with opening the first coffee house in Vienna, "Under the Blue Bottle," and inventing coffee with milk (Melange).
+3. **Філіжанка vs Чашка**: In Lviv and Western Ukraine, the word «філіжанка» (from Polish *filiżanka*) is preferred for a coffee cup, while «чашка» is standard elsewhere. Using «філіжанка» adds "Lviv flavor".
+
+## Common Learner Errors
+1. **Case Error**: Using Nominative instead of Accusative for the object ("Я буду кав**а**" instead of "Я буду кав**у**").
+2. **Word Order**: Placing "будь ласка" at the absolute beginning of a request like in English ("Будь ласка, дайте мені..." is less natural than "Дайте мені, будь ласка...").
+3. **Literal Translation**: Translating "Can I have...?" literally. The natural Ukrainian equivalent is "Можна мені...?" (Is it allowed to me?) or simply "Мені, будь ласка..." (To me, please...).
+
+## Cross-References
+- Builds on: a1-19 (At the Café - Intro), a1-34 (Checkpoint Core Grammar)
+- Prepares for: a1-36 (At the Restaurant), a1-37 (At the Market)
+
+## Notes for Content Writing
+- **Instrumental Case Strategy**: The plan requires introducing "готівкою" and "карткою". Since Instrumental is an A2 topic, these must be taught as **fixed lexical chunks** (adverbs) rather than a grammatical declension rule.
+- **Politeness**: Emphasize "Дякую" and "Будь ласка" as mandatory markers of politeness (Standard §3.9).
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ і культурний контекст (Introduction and Cultural Context)"
+  words: 400
+  points:
+  - "Культура кав’ярень: Львів як кавова столиця України, австрійський вплив та постать Юрія Кульчицького (Галичина), який відкрив першу кав’ярню у Відні «Під синьою пляшкою»."
+  - "Соціальний ритуал: пояснення фрази «піти на каву» як запрошення до спілкування. Різниця між кав'ярнею та рестораном (акцент на атмосфері)."
+  - "Використання слова «філіжанка» (Lviv flavor) як культурного маркера, що відрізняє західноукраїнську традицію від стандартного «чашка»."
+- section: "Мовні конструкції та етикет (Language Structures and Etiquette)"
+  words: 600
+  points:
+  - "Мовна норма та ввічливість (Standard §3.9): вивчення фраз «Можна мені...?» та «Мені, будь ласка...». Попередження про помилку буквального перекладу «Can I have...?»."
+  - "Знахідний відмінок об'єкта (Standard §4.2.3.2.1): функція прямого додатка без прийменника (Я буду кав**у**, хочу кав**у**). Порівняння з неправильним Називним відмінкком («хочу кава»)."
+  - "Порядок слів: позиціонування «будь ласка» в середині або в кінці прохання («Дайте мені, будь ласка...») як більш природне порівняно з англійською калькою на початку речення."
+- section: "Сценарії в кав'ярні (Café Scenarios)"
+  words: 600
+  points:
+  - "Діалог замовлення: вибір напоїв (кава чорна/з молоком, чай з лимоном) та смаколиків (круасан, тістечко). Коректні відповіді на питання «тут чи з собою?»."
+  - "Технічні деталі: як ввічливо запитати про пароль до Wi-Fi та наявність вільної розетки біля столика."
+  - "Оплата та розрахунок: введення сталих виразів «готівкою» та «карткою» (Instrumental case intro) як фіксованих лексичних блоків для відповіді на питання «Як ви будете платити?»."
+- section: "Наратив та підсумок (Narrative and Summary)"
+  words: 400
+  points:
+  - "Персоналізований наратив: віртуальний візит до львівської кав'ярні, опис інтер'єру та замовлення кави у «філіжанці»."
+  - "Закріплення етикетних норм: обов’язкове використання «Дякую» та «Будь ласка» у кожній репліці для відповідності комунікативним намірам Standard §3.9."
+  - "Самоперевірка: вживання правильних закінчень Знахідного відмінка для напоїв (воду, каву) та десертів."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "кава (coffee) — чорна кава, кава з молоком, філіжанка кави, пити каву; High frequency (Top 500)"
+  - "чай (tea) — зелений чай, чорний чай, чай з лимоном, чашка чаю; High frequency (Top 500)"
+  - "меню (menu) — подивитися меню, попросити меню, що у вас у меню?; Medium frequency"
+  - "рахунок (bill) — можна рахунок?, оплатити рахунок, окремий рахунок; Medium frequency"
+  - "будь ласка (please) — скажіть будь ласка, дайте будь ласка, сідайте будь ласка; Very High frequency politeness marker"
+  - "дякую (thank you) — щиро дякую, дякую за каву; mandatory for politeness (Standard §3.9)"
+  - "готівка (cash) — платити готівкою; Instrumental case fixed chunk"
+  - "картка (card) — розрахуватися карткою, термінал; Instrumental case fixed chunk"
+  recommended:
+  - "філіжанка (cup) — Lviv tradition/dialect; preferred synonym for 'чашка' in Western Ukraine"
+  - "круасан (croissant) — популярна випічка до кави"
+  - "тістечко (pastry/cake) — шоколадне тістечко, фруктове тістечко"
+  - "молоко (milk) — кава з молоком, без молока"
+  - "цукор (sugar) — один цукор, без цукру"
+  - "вершки (cream) — кава з вершками"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (3467 chars)
+✅ Message sent to Claude (ID: 10124)
+✓ Message 10124 acknowledged
+   Auto-acknowledged reply #10124 (stdout delivery — no inbox accumulation)
+✓ Message 10117 acknowledged

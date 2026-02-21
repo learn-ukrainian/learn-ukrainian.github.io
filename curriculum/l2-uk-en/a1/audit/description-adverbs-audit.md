@@ -1,7 +1,7 @@
 # Audit Report: M28 — description-adverbs.md
 **Level:** A1 | **Module:** M28 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-19 23:26:03
+**Generated:** 2026-02-21 00:51:00
 
 ## Configuration
 **Type:** A1-grammar
@@ -51,7 +51,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 35.1% (target 35-55% (M28))
+- **Immersion:** 🇺🇦 35.2% (target 35-55% (M28))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research

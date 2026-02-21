@@ -2,14 +2,14 @@
   "module": "the-gender-code",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-19T23:01:27.278418Z",
+  "last_audit": "2026-02-21T00:46:29.327783Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-19T20:40:22.271276Z",
+    "md": "2026-02-20T21:41:13.452366Z",
     "meta": "2026-02-19T20:15:44.029990Z",
     "activities": "2026-02-19T20:40:22.272540Z",
-    "vocabulary": "2026-02-19T20:40:22.273726Z",
-    "plan": "2026-02-18T19:03:32.226276Z",
+    "vocabulary": "2026-02-20T21:41:13.452876Z",
+    "plan": "2026-02-20T20:35:06.941729Z",
     "research": "2026-02-19T20:15:44.021330Z"
   },
   "gates": {
@@ -31,7 +31,7 @@
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "23/1"
+      "message": "26/1"
     },
     "naturalness": {
       "status": "info",

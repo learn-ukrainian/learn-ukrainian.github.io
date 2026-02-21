@@ -1,64 +1,50 @@
-## Phase 9: Final Adversarial QA Review — the-accusative-ii-people
+Confirmed: two instances of Latin "a" (U+0061) mixed into Cyrillic "брат". Now let me compile the full review.
 
 ---
+
+## Deep Adversarial Review: the-accusative-ii-people (A1 #12)
 
 ### Issues Found
 
-**Issue 1 — CRITICAL: Собака gender error (content + activity)**
+**Issue 1: Mixed Script — Latin "a" in Cyrillic word (CRITICAL)**
+- **File**: the-accusative-ii-people.md, lines 68 and 155
+- **Text**: `**братa**` — the final character is Latin "a" (U+0061), not Cyrillic "а" (U+0430)
+- **Impact**: Search, copy-paste, and programmatic processing will break. A student copying this into a dictionary lookup will get no result.
+- **Confirmed via hex analysis**: Line 68 `a=U+0061`, Line 155 `a=U+0061`. All other instances of "брата" in the file use correct Cyrillic.
 
-Content line 146: `Dog is feminine (**-а** → **-у**).`
-Activity YAML line 390: `Собака - жіночий рід, -а змінюється на -у.`
+**Issue 2: IPA Stress Error — дочка (MEDIUM)**
+- **File**: vocabulary/the-accusative-ii-people.yaml, line 57
+- **Text**: `ipa: '[dɔt͡ʃˈkɑ]'` — stress on second syllable
+- **Correct**: `[ˈdɔt͡ʃkɑ]` — stress is on the first syllable (дóчка)
+- **Impact**: Student learns wrong pronunciation for a high-frequency word.
 
-`Собака` in Ukrainian is grammatically **masculine** (чоловічий рід) per СУМ-11, despite following I declension (-а ending). Calling it "feminine" will cause learners to produce wrong adjective/pronoun agreement later (e.g., `*моя собака` instead of `мій собака`). The accusative form `собаку` is correct — the explanation is wrong.
+**Issue 3: Misleading Hard Consonant Generalization (MEDIUM)**
+- **File**: the-accusative-ii-people.md, line 74
+- **Text**: `Notice the pattern? Hard consonant (**т, н, р**) adds **-а**.`
+- **Problem**: Lists **р** as "hard consonant that adds -а", but the table 3 lines above shows **лікар → лікаря** (adds -я, not -а). The р in лікар is soft-stem. This directly contradicts what the student just read and will cause confusion.
+- **Fix**: Remove р from the hard list and clarify.
 
-**Issue 2 — CRITICAL: Батько in "Vowel Magic" table (content line 138)**
+**Issue 4: Redundant Description — Червона Рута (LOW)**
+- **File**: the-accusative-ii-people.md, lines 410-411
+- **Text**: "...about longing and love. The song is about love and longing..."
+- **Problem**: Same idea restated in consecutive sentences. LLM artifact.
 
-`| **Батько** | Я бачу **батька** | **-о** drops → **+а** |`
+**Issue 5: Собака Grouped Under "Жіночий рід" in Activities (LOW-MEDIUM)**
+- **File**: activities/the-accusative-ii-people.yaml, lines 389-396
+- **Problem**: Собака appears in activity titled "Кого я люблю? (Жіночий рід)" (Feminine gender). In standard Ukrainian, собака is grammatically **masculine** (чоловічий рід), though it declines following the I declension pattern (-а ending) like feminine nouns. The accusative form собаку is correct, but grouping it under "Feminine" misleads about its gender. The explanation should note the gender discrepancy.
 
-`Батько → батька` is standard II declension ending replacement (-о → -а), NOT a fleeting vowel or root alternation like кіт→кота (і→о) or пес→пса (е disappears). Grouping it here teaches learners that regular declension = "magic" irregularity. Must remove.
-
-**Issue 3 — MODERATE: "Zombie Rule" undefined reference (content line 225)**
-
-`The "Zombie Rule" was ignored here!`
-
-This term appears exactly once and is never defined anywhere in the module. The module's established metaphors are "Heart Box" / "Stone Box" / "Greedy Masculine." This is a leftover from a different draft.
-
-**Issue 4 — MODERATE: "it sounds okay" for кіта (content line 131)**
-
-`If we say "Кіта", it sounds okay. But historically, it changed to **Кота**.`
-
-Telling an A1 learner that the wrong form "sounds okay" undermines their confidence in the correct form. The form `кіта` is simply incorrect — don't validate it even hypothetically.
-
-**Issue 5 — MODERATE: Червона Рута factual embellishment (content line 407)**
-
-`The song is full of people — a perfect theme for today's lesson.`
-
-Червона Рута is a love song about a rare flower. It is NOT "full of people." This is an LLM-generated false connection.
-
-**Issue 6 — MINOR: "Джессіку" double с (content line 394)**
-
-`Я бачу **Джессіку**.`
-
-Standard Ukrainian transliteration does not double consonants from English. The correct form is **Джесіка** → **Джесіку**.
-
-**Issue 7 — MODERATE: подруга IPA stress error (vocabulary line 21)**
-
-`ipa: '[ˈpɔdruɦɑ]'`
-
-подру́га has stress on the second syllable. The stress marker `ˈ` is before `[pɔ]`, wrongly indicating first-syllable stress. Should be `[pɔˈdruɦɑ]`.
-
----
-
-### Strengths (confirmed)
-
-- "Heart Box" vs "Stone Box" metaphor is excellent A1 pedagogy
-- IPA in the content body (бачити, знати, любити, чекати) uses correct tie bars on affricates
-- No Russianisms, no Russian characters anywhere
-- All unjumble activities have correct word arrays matching answers
-- All fill-in sentences are grammatical with answers inserted
-- Plan compliance: all 5 sections present, all required vocabulary used
-- Activity variety is strong: group-sort, match-up, quiz, fill-in, unjumble
-- Dialogues are natural and contextually rich
+**Non-issues verified:**
+- IPA in content file: `[ˈbɑt͡ʃɪtɪ]`, `[ˈznɑtɪ]`, `[lʲuˈbɪtɪ]`, `[t͡ʃɛˈkɑtɪ]` — all correct with proper tie bars on affricates
+- Vocabulary IPA: uses `[ʋ]` for В (correct), `[ɦ]` for Г (correct), tie bars on `[t͡ʃ]` and `[t͡s]` — all good
+- No Russianisms, no Russian characters (ы, э, ё, ъ)
+- All unjumble word arrays match their answers
+- All fill-in items produce grammatical sentences
+- All case forms verified correct (лікаря, вчителя, кота, пса, маму, сестру, etc.)
+- Plan compliance: all 5 content_outline sections present, all required vocabulary used
+- Green Team review fixes (батько removed from Vowel Magic table, собака explanation in content fixed) — already applied
+- Чекати + accusative: standard A1 simplification, pedagogically sound
+- "Червона Рута" by Volodymyr Ivasyuk: factually correct
+- Word target (2000): content is substantial, automated audit confirms PASS
 
 ---
 
@@ -67,87 +53,56 @@ Standard Ukrainian transliteration does not double consonants from English. The 
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/the-accusative-ii-people.md
 ---OLD---
-| **Я люблю собака.** | **Я люблю собаку.** | Dog is feminine (**-а** → **-у**). |
+| **брат** | я бачу **братa** | I see (my) brother |
 ---NEW---
-| **Я люблю собака.** | **Я люблю собаку.** | Собака ends in **-а**, so it changes to **-у** (like **мама**). |
+| **брат** | я бачу **брата** | I see (my) brother |
 ===FIX_END===
 
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/the-accusative-ii-people.md
 ---OLD---
-| **Кіт** | Я бачу **кота** | **і** → **о** |
-| **Пес** | Я бачу **пса** | **е** disappears |
-| **Батько** | Я бачу **батька** | **-о** drops → **+а** |
+| **Masc.** | **Animate** | **брат** | я бачу **братa** | **+ а** |
 ---NEW---
-| **Кіт** | Я бачу **кота** | **і** → **о** |
-| **Пес** | Я бачу **пса** | **е** disappears |
+| **Masc.** | **Animate** | **брат** | я бачу **брата** | **+ а** |
 ===FIX_END===
 
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/the-accusative-ii-people.md
 ---OLD---
-These sentences have errors. Can you fix them? The "Zombie Rule" was ignored here!
+Notice the pattern? Hard consonant (**т, н, р**) adds **-а**. Soft sign (**ь**) or soft consonant adds **-я**.
 ---NEW---
-These sentences have errors. Can you fix them? The "Heart Box Rule" was ignored here!
+Notice the pattern? Hard consonant (**т, н**) adds **-а**. Soft sign (**ь**) or soft consonant (like **р** in лікар) adds **-я**.
 ===FIX_END===
 
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/the-accusative-ii-people.md
 ---OLD---
-*   **Кіт** (cat): If we say "Кіта", it sounds okay. But historically, it changed to **Кота**.
----NEW---
-*   **Кіт** (cat): You might expect "Кіта", but the vowel changes — the correct form is **Кота**.
-===FIX_END===
-
-===FIX_START===
-FILE: curriculum/l2-uk-en/a1/the-accusative-ii-people.md
----OLD---
-The song is full of people — a perfect theme for today's lesson.
----NEW---
+Do you know the famous song "Червона Рута" (Red Rue) by Volodymyr Ivasyuk? It is one of Ukraine's most beloved songs, about longing and love.
 The song is about love and longing — a perfect emotional connection to today's lesson about the people we love.
-===FIX_END===
-
-===FIX_START===
-FILE: curriculum/l2-uk-en/a1/the-accusative-ii-people.md
----OLD---
-*   **Jessica** (ends in -a) acts like Olena: Я бачу **Джессіку**.
 ---NEW---
-*   **Jessica** (ends in -a) acts like Olena: Я бачу **Джесіку**.
-===FIX_END===
-
-===FIX_START===
-FILE: curriculum/l2-uk-en/a1/activities/the-accusative-ii-people.yaml
----OLD---
-    explanation: Собака - жіночий рід, -а змінюється на -у.
----NEW---
-    explanation: Собака закінчується на -а, тому -а змінюється на -у.
+Do you know the famous song "Червона Рута" (Red Rue) by Volodymyr Ivasyuk? It is one of Ukraine's most beloved songs — about love and longing, a perfect emotional connection to today's lesson about the people we care about.
 ===FIX_END===
 
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/vocabulary/the-accusative-ii-people.yaml
 ---OLD---
-- ipa: '[ˈpɔdruɦɑ]'
-  lemma: подруга
+- ipa: '[dɔt͡ʃˈkɑ]'
+  lemma: дочка
 ---NEW---
-- ipa: '[pɔˈdruɦɑ]'
-  lemma: подруга
+- ipa: '[ˈdɔt͡ʃkɑ]'
+  lemma: дочка
 ===FIX_END===
 
----
-
-### Issues the Green Team review MISSED
-
-The existing review (8.8/10) caught issues 1 and 2 above but missed:
-- Issue 3 (undefined "Zombie Rule" term)
-- Issue 4 (validating wrong form "кіта sounds okay")
-- Issue 5 (false claim about Червона Рута)
-- Issue 6 (non-standard transliteration Джессіку)
-- Issue 7 (IPA stress error in vocabulary file)
+===FIX_START===
+FILE: curriculum/l2-uk-en/a1/activities/the-accusative-ii-people.yaml
+---OLD---
+    explanation: Собака закінчується на -а, тому -а змінюється на -у.
+---NEW---
+    explanation: Собака — чоловічий рід, але закінчується на -а, тому відмінюється як -а → -у.
+===FIX_END===
 
 ---
 
 ===VERDICT===
 APPROVE
 ===END_VERDICT===
-
-All issues are fixable with the patches above. After applying fixes: content is accurate, activities are well-formed, Ukrainian is clean (no Russianisms, correct morphology), word count exceeds 2000-word target, and all plan sections are covered. Module is strong.

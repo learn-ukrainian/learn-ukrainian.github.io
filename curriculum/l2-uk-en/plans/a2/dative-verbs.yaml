@@ -6,64 +6,78 @@ version: '2.0'
 title: Dative Verbs
 subtitle: Verbs That Demand the Dative Case
 content_outline:
-- section: Introduction / Вступ
+- section: Вступ (Introduction)
+  words: 450
   points:
-  - Concept of verb government (керування) — understanding verbs as case-drivers;
-    concept of recipient/beneficiary (State Standard §4.2.2.3) — use example «Подарувати
-    книжку студентові» from standard
-  - 'Comparison with English prepositions — English direct object ''thank YOU'' vs
-    Ukrainian indirect ''give thanks TO YOU''; mapping the invisible ''to'' — learner
-    error: avoiding direct translation like «Дякую тебе» (Acc)'
-- section: Presentation / Презентація
+  - Introduction to the concept of verb government (керування) where verbs act as
+    case-drivers, specifically focusing on the Dative case as the marker for recipient
+    or beneficiary (State Standard §4.2.2.3).
+  - 'Contrastive mapping of the ''invisible to'' preposition: Comparing English direct
+    objects (thank YOU) vs. Ukrainian indirect objects (give thanks TO YOU) to prevent
+    the calque error «Дякую тебе» (Acc).'
+- section: Теорія та Презентація (Theory & Presentation)
+  words: 750
   points:
-  - 'Dative-only verbs (допомагати, дякувати, вірити) — cultural hook: volunteering
-    (волонтерство) as a modern staple for ''допомагати'' (especially aiding army/displaced
-    persons); collocations: «щиро/красно дякувати», «наперед дякую»'
-  - 'Dative + Accusative verbs (давати, показувати) — double-object constructions:
-    «давати (комусь) (щось)»; adding ''повідомляти'' for official contexts — example:
-    «Повідомити групі про зміни в розкладі»'
-  - 'Impersonal usage (здається) — spotlight on ''подобатися'' (to please); learner
-    error: subject/object flip mismatch with English ''I like it'' — explicitly correct
-    «Я подобаю це» to «Мені подобається це»'
-- section: Practice / Практика
+  - 'Classification of dative-hungry verbs: purely dative verbs (допомагати, дякувати,
+    вірити) vs. double-object verbs (давати, повідомляти - Dat + Acc); use State Standard
+    example: «Повідомити групі про зміни в розкладі».'
+  - 'Addressing the ''I Like'' Trap: Deconstructing the impersonal usage of «подобатися»
+    (to please) to correct the subject/object flip mismatch (Standard English ''I
+    like it'' vs. Ukrainian ''It pleases me'').'
+- section: Культурний контекст та Волонтерство (Cultural Context & Volunteering)
+  words: 750
   points:
-  - 'Sentence formation with recipients — using high-frequency collocations: «допомагати
-    по господарству», «щиро дякувати», «сліпо довіряти», «допоможіть!» (SOS)'
-  - 'Error correction: dative vs accusative — focus on fixing ''Дякую тебе'' (Acc)
-    to ''Дякую тобі'' (Dat); ensuring correct masculine endings -ові/-еві — learner
-    error: correcting «Допомагаю брат» to «Допомагаю братові»'
-- section: Dialogues / Діалоги
+  - 'Volunteering (волонтерство) as a modern social pillar: Using ''допомагати'' in
+    the context of aiding the army and displaced persons; establishing ''допомога''
+    as a civic duty rather than just politeness.'
+  - 'Historical anchor: The ''Толока'' (Toloka) custom of communal labor; explaining
+    reciprocity through the lens of ancient mutual aid traditions and the phrase «взаємно
+    допомагати».'
+  - 'Sincerity markers and gestures: Mentioning the ''hand on heart'' gesture that
+    accompanies expressions of gratitude (дякую) or belief (вірю) to signal deep authenticity.'
+- section: Практика та Аналіз помилок (Practice & Error Analysis)
+  words: 650
   points:
-  - 'Contextual use of dative-hungry verbs — scenario: mutual aid (concept of to-loka)
-    and volunteering for displaced persons; levels of gratitude: ''Дякую'' vs ''Красно
-    дякую'' — mention ''hand on heart'' gesture and debt of gratitude («Ти допоміг
-    мені? Я допоможу тобі»)'
+  - 'Error correction drill: Systematic remediation of the ''Thank You'' trap (fixing
+    «Дякую тебе» to «Дякую тобі») and reinforcement of masculine -ові/-еві endings
+    for persons (e.g., «допомагаю братові»).'
+  - 'Collocation building: Practicing high-frequency pairings from research frequency
+    data: «щиро/красно дякувати», «наперед дякую», «сліпо довіряти», «допомагати по
+    господарству».'
+- section: Діалоги та Підсумок (Dialogues & Summary)
+  words: 400
+  points:
+  - 'Contextual dialogues: Reciprocal aid scenario in a volunteer center using the
+    pattern «Ти допоміг мені? Я допоможу тобі» to demonstrate the flow of dative relations.'
+  - 'Summary of gratitude registers: Moving from basic ''Дякую'' to the more sophisticated
+    and culturally resonant ''Красно дякую'' and ''Щиро співчуваю'' for A2 interpersonal
+    competency.'
 vocabulary_hints:
   required:
-  - допомагати (to help) — допомагати (комусь) з (чимось); допомагати по господарству;
-    допоможіть! (SOS)
+  - допомагати (to help) — High frequency (Top 500); допомагати по господарству, допомагати
+    армії/переселенцям, взаємно допомагати
+  - дякувати (to thank) — Very high frequency (Top 100); щиро дякувати, красно дякувати,
+    дякувати Богу; наперед дякую
+  - подобатися (to please/like) — Very high frequency (Top 200); мені дуже подобається,
+    страшенно подобатися; fix 'я подобаю це' error
+  - вірити (to believe) — вірити на слово; вірити людині (Dat) vs. вірити в Бога (Acc)
+  - довіряти (to trust) — сліпо довіряти, довіряти людям, не довіряти нікому
   - заважати (to bother) — вибачте, що заважаю; не заважай мені!; нікому не заважати
-  - 'подобатися (to please/like) — мені подобається це; learner error: avoid «я подобаю
-    це»'
-  - вірити (to believe) — вірити на слово; вірити в Бога (Acc) vs вірити людині (Dat)
-  - довіряти (to trust) — довіряти людям; сліпо довіряти; довіряти собі
-  - дякувати (to thank) — дякувати (комусь) за (щось); щиро/красно дякувати; наперед
-    дякую
-  - вибачати (to forgive) — вибачати (комусь) (щось); вибачте мені; вибачте (мені)
-  - пробачати (to excuse) — пробачте за запізнення
-  - заздрити (to envy) — заздрити успіху; біла заздрість (clean envy)
-  - симпатизувати (to sympathize) — симпатизувати колезі
-  - співчувати (to empathize) — щиро співчувати горю
-  - личити (to suit) — тобі личить ця сукня
-  - підходити (to suit/fit) — цей час мені підходить
-  - вистачати (to be enough) — мені вистачає грошей
-  - бракувати (to lack) — мені бракує терпіння
+  - вибачати (to forgive) — вибачати (комусь) (щось); вибачте мені; вибачте за запізнення
+  - пробачати (to excuse) — пробачте мені; пробачте за запізнення
+  - заздрити (to envy) — заздрити успіху; біла заздрість (clean/noble envy)
+  - симпатизувати (to sympathize) — симпатизувати колезі (Dat)
+  - співчувати (to empathize) — щиро співчувати горю/людині
+  - личити (to suit) — тобі личить ця сукня; це тобі не личить (behavioral)
+  - підходити (to suit/fit) — цей час мені підходить; це мені не підходить
+  - вистачати (to be enough) — мені вистачає грошей; мені вистачає часу
+  - бракувати (to lack) — мені бракує терпіння; мені бракує слів
   recommended:
-  - шкодити (to harm) — це шкодить здоров'ю
-  - служити (to serve) — служити народу
-  - належати (to belong) — це належить мені
-  - сподобатися (to come to like - pf) — мені сподобався фільм
-  - захотітися (to feel like - pf) — мені захотілося кави
+  - шкодити (to harm) — це шкодить здоров'ю; паління шкодить
+  - служити (to serve) — служити народу; служити в армії (Loc) vs. служити ідеї (Dat)
+  - належати (to belong) — це належить мені; книга належить студентові
+  - сподобатися (to come to like - pf) — мені сподобався фільм; мені сподобалася ідея
+  - захотітися (to feel like - pf) — мені захотілося кави; мені захотілося спати
 activity_hints:
 - type: fill-in
   focus: Complete sentences with dative verbs

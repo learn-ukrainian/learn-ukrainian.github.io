@@ -1,7 +1,7 @@
 # Audit Report: M27 — colors-and-clothing.md
 **Level:** A1 | **Module:** M27 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-19 23:01:58
+**Generated:** 2026-02-21 00:46:45
 
 ## Configuration
 **Type:** A1-vocab
@@ -44,7 +44,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 29/1
+- **Vocab:** ✅ 31/1
 - **Structure:** ✅ Valid Structure
 - **Ipa:** ⚠️ 5 IPA issues (run lint_ipa.py --fix)
 - **Lint:** ✅ Clean Format

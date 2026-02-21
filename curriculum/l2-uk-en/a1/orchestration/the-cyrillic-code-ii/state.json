@@ -2,7 +2,7 @@
   "slug": "the-cyrillic-code-ii",
   "track": "a1",
   "module_num": 2,
-  "mode": "e2e",
+  "mode": "v3",
   "phases": {
     "0": {
       "status": "complete",
@@ -62,13 +62,13 @@
     },
     "9-final-review": {
       "status": "complete",
-      "timestamp": "2026-02-19T20:10:15Z",
+      "timestamp": "2026-02-20T20:34:52Z",
       "verdict": "APPROVE"
     },
     "8": {
       "status": "complete",
-      "timestamp": "2026-02-19T20:26:48Z"
+      "timestamp": "2026-02-20T20:34:53Z"
     }
   },
-  "last_updated": "2026-02-19T20:26:48Z"
+  "last_updated": "2026-02-20T20:34:53Z"
 }

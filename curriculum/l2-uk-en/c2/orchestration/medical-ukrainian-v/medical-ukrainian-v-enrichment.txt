@@ -1,0 +1,337 @@
+✅ Message sent to Gemini (ID: 11282) [auto-acked: self-addressed]
+✓ Message 11282 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #11282...
+📨 Message #11282
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-medical-ukrainian-v
+   Time: 2026-02-20T22:34:34.766062+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c2-070
+level: c2
+sequence: 70
+version: '2.0'
+title: Медична українська V — Медичні дослідження
+focus: domain
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Український медичний часопис
+  url: https://www.umj.com.ua/
+  type: primary
+  notes: Наукові публікації українською
+- name: Вимоги ДАК до дисертацій
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Вимоги до наукових робіт у медицині
+- name: Етичні комітети та дослідження
+  url: https://moz.gov.ua/
+  type: reference
+  notes: Правила проведення клінічних досліджень
+content_outline:
+- section: Вступ — Наукова медична діяльність в Україні
+  points:
+  - Система медичної науки в Україні
+  - Наукові ступені та звання
+  - Вимоги до публікацій
+  - Медичні журнали українською
+- section: Структура наукової медичної статті
+  points:
+  - IMRAD-структура (Вступ, Методи, Результати, Обговорення)
+  - Особливості медичних публікацій
+  - Анотація та ключові слова
+  - Бібліографічні стандарти
+- section: Опис методології дослідження
+  points:
+  - Типи клінічних досліджень
+  - Дизайн дослідження
+  - Статистичні методи
+  - Вибірка та критерії включення
+- section: Представлення результатів
+  points:
+  - Таблиці та рисунки
+  - Статистична значущість
+  - Описова статистика
+  - Інтерпретація даних
+- section: Етика медичних досліджень
+  points:
+  - Інформована згода у дослідженнях
+  - Етичні комітети
+  - Конфлікт інтересів
+  - Хельсінська декларація
+- section: Презентація та захист результатів
+  points:
+  - Наукова доповідь
+  - Постерна презентація
+  - Захист дисертації
+  - Відповіді на запитання
+- section: Практикум — Наукове медичне письмо
+  points:
+  - Написання анотації дослідження
+  - Критичний аналіз статті
+  - Підготовка доповіді
+vocabulary:
+  required:
+  - клінічне дослідження (clinical study/trial)
+  - дизайн дослідження (study design)
+  - вибірка (sample)
+  - статистична значущість (statistical significance)
+  - етичний комітет (ethics committee)
+  - інформована згода (informed consent)
+  - рандомізація (randomization)
+  - плацебо (placebo)
+  - контрольна група (control group)
+  - первинна кінцева точка (primary endpoint)
+  recommended:
+  - подвійне сліпе (double-blind)
+  - когорта (cohort)
+  - метааналіз (meta-analysis)
+  - систематичний огляд (systematic review)
+  - довірчий інтервал (confidence interval)
+  forbidden: '[]'
+activities:
+  types_required:
+  - reading
+  - quiz
+  - fill-in
+  - match-up
+  - critical-analysis
+  - essay-response
+  - comparative-study
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c2-71 (Professional Portfolio I)
+- c2-74 (C2.3 Review)
+- c2-75 (C2.3 Checkpoint)
+vocabulary_hints:
+  required:
+  - концепція (concept)
+  - аналіз (analysis)
+  - дискурс (discourse)
+  - методологія (methodology)
+  recommended:
+  - інтерпретація (interpretation)
+  - контекстуалізація (contextualization)
+  - синтез (synthesis)
+activity_hints:
+- type: reading
+  focus: Поглиблений аналіз тексту
+  items: 4
+- type: essay-response
+  focus: Критичне осмислення
+- type: discussion
+  focus: Дискусія та аргументація
+  items: 1
+persona:
+  voice: Senior Specialist
+  role: Clinical Investigator
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Медична українська V — Медичні дослідження
+
+## State Standard Reference
+§4.3.8: "Уміння утворювати вторинні тексти, зокрема реферати, повідомлення, довідково-інформаційні тексти."
+§4.3.1.1: "Стилі української мови: ... науковий"
+Alignment: Цей модуль безпосередньо реалізує вимогу стандарту щодо володіння науковим стилем та вміння створювати вторинні наукові тексти (анотації, реферати) на рівні С2.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| клінічне дослідження | High (Medical) | рандомізоване ~, подвійне сліпе ~, проводити ~, протокол ~ |
+| вибірка | High (Scientific) | репрезентативна ~, обсяг ~и, критерії включення у ~у |
+| значущість | Medium (General) / High (Sci) | статистична ~, клінічна ~, рівень ~і (p-value) |
+| доказовий | High (Medical) | ~а медицина (EBM), ~і дані, на засадах ~ої медицини |
+| рандомізація | Medium (Specialized) | метод ~ії, стратифікована ~, блок ~ії |
+
+## Cultural Hooks
+1. **Національна академія медичних наук України (НАМН)**: Роль у координації досліджень, ключові інститути (напр., Інститут серцево-судинної хірургії ім. М.М. Амосова).
+2. **Українські медичні журнали**: "Український медичний часопис", "Львівський клінічний вісник" — як приклади сучасного наукового дискурсу та вимог до публікацій.
+
+## Common Learner Errors
+1. **Калькування пасивних конструкцій**: "Було проведено аналіз" (краще: "Ми проаналізували" або "Проаналізовано" - безособова форма на -но/-то).
+2. **Термінологічна плутанина**: "Ефективність" (effectiveness) vs "Дієвість" (efficacy) у контексті фармпрепаратів.
+3. **Хибні друзі перекладача**: "Акуратний" (accurate -> точний), "Дані" (data -> не "дата").
+
+## Cross-References
+- Builds on: C1 Academic Writing, B2 Medical vocabulary.
+- Prepares for: C2 Professional Portfolio (defense/presentation skills).
+
+## Notes for Content Writing
+- Focus on the **IMRAD** structure strictly as it is the global standard adopted by Ukraine.
+- Emphasize **Academic Integrity** (академічна доброчесність) as a crucial modern value in Ukrainian science.
+- Use impersonal sentences ending in **-но/-то** (досліджено, виявлено, встановлено) as a marker of high scientific style.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Наукова медична діяльність та Академія медичних наук (Introduction: Medical Science in Ukraine)"
+  words: 400
+  points:
+  - "Огляд системи медичної науки в Україні: роль Національної академії медичних наук (НАМН) та провідних установ, як-от Інститут серцево-судинної хірургії ім. М.М. Амосова"
+  - "Медична періодика як джерело наукового дискурсу: аналіз вимог видань «Український медичний часопис» та «Львівський клінічний вісник»"
+  - "Державний стандарт: опанування наукового стилю мовлення та створення вторинних текстів (анотацій, рефератів) відповідно до вимог С2"
+- section: "Структура наукової статті: Стандарт IMRAD та академічна доброчесність (Structure of a Scientific Article: IMRAD and Academic Integrity)"
+  words: 500
+  points:
+  - "Глобальний стандарт IMRAD (Вступ, Методи, Результати, Обговорення) в українському науковому контексті: логіка та взаємозв'язок частин"
+  - "Принципи академічної доброчесності (academic integrity): боротьба з плагіатом, етика цитування та відповідальність дослідника в епоху відкритої науки"
+  - "Стилістичні маркери високого наукового стилю: використання безособових форм на -но/-то (досліджено, виявлено, встановлено) замість застарілих пасивних конструкцій"
+- section: "Методологія: Дизайн дослідження та вибірка (Methodology: Study Design and Sampling)"
+  words: 500
+  points:
+  - "Типологія клінічних досліджень: рандомізовані контрольовані, подвійні сліпі та когортні дослідження; термінологія «доказової медицини» (EBM)"
+  - "Дизайн та протокол дослідження: формування репрезентативної вибірки, визначення обсягу вибірки та критеріїв включення/виключення"
+  - "Рандомізація як метод мінімізації систематичних помилок: стратифікована та блокова рандомізація; рандомізоване дослідження як 'золотий стандарт'"
+- section: "Результати: Статистична значущість та інтерпретація (Results: Statistical Significance and Interpretation)"
+  words: 500
+  points:
+  - "Обробка та візуалізація даних: вимоги до таблиць, рисунків та описової статистики в сучасних медичних публікаціях"
+  - "Поняття статистичної значущості: коректна інтерпретація p-value (рівень значущості) та довірчих інтервалів; розрізнення статистичної та клінічної значущості"
+  - "Коректна інтерпретація результатів: уникнення хибних кореляцій та обґрунтування наукової новизни отриманих даних"
+- section: "Етика та доказова медицина (Ethics and Evidence-Based Medicine)"
+  words: 400
+  points:
+  - "Етичні засади досліджень за Хельсінською декларацією: роль етичних комітетів та процедура отримання інформованої згоди (informed consent)"
+  - "Лексична точність у науці: розрізнення понять «ефективність» (effectiveness — у реальних умовах) та «дієвість» (efficacy — в ідеальних умовах дослідження)"
+  - "Конфлікт інтересів та прозорість фінансування: міжнародні вимоги до розкриття інформації в медичних статтях"
+- section: "Презентація та захист результатів (Presentation and Defense of Results)"
+  words: 400
+  points:
+  - "Підготовка наукової доповіді та постерної презентації: візуальна грамотність, структура тез та ораторське мистецтво Senior Specialist"
+  - "Процедура захисту дисертації в Україні: вимоги ДАК, ведення наукової дискусії та стратегії відповіді на критичні запитання опонентів"
+  - "Формулювання висновків та практичних рекомендацій: використання модального хеджування для відображення наукової обережності та точності"
+- section: "Практикум: Наукове письмо та аналіз помилок (Workshop: Scientific Writing and Error Analysis)"
+  words: 300
+  points:
+  - "Робота над типовими помилками: виправлення калькованих пасивів (заміна «було проведено аналіз» на «проаналізовано») та хибних друзів перекладача («акуратний» замість «точний»)"
+  - "Написання анотації (abstract) та підбір ключових слів українською мовою відповідно до вимог міжнародних баз даних (Scopus, Web of Science)"
+  - "Критичний аналіз медичної публікації: оцінка методологічної якості статті та перевірка логічної відповідності висновків отриманим результатам"
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "клінічне дослідження (clinical study/trial) — рандомізоване ~, подвійне сліпе ~, проводити ~; висока частотність у медичному дискурсі"
+  - "вибірка (sample) — репрезентативна ~, обсяг ~и, критерії включення у ~у; ключовий методологічний термін"
+  - "статистична значущість (statistical significance) — рівень ~і (p-value), досягти ~і; основний показник достовірності результатів"
+  - "доказова медицина (evidence-based medicine) — на засадах ~ої медицини, дані ~ої медицини; сучасна парадигма охорони здоров'я"
+  - "рандомізація (randomization) — метод ~ії, стратифікована ~; спеціалізований реєстр клінічних випробувань"
+  - "інформована згода (informed consent) — отримати ~у згоду, процедура ~ої згоди; юридичний та етичний стандарт"
+  - "академічна доброчесність (academic integrity) — дотримуватися принципів ~ої доброчесності; ключове поняття наукової етики"
+  - "первинна кінцева точка (primary endpoint) — досягнення ~ої точки; термін протоколу дослідження"
+  recommended:
+  - "дієвість (efficacy) — Note: розрізняти з «ефективність» (effectiveness) у контексті фармакологічних досліджень"
+  - "точний (accurate) — Note: уникати кальки «акуратний» (false friend meaning neat/tidy)"
+  - "проаналізовано (analyzed) — безособова форма на -но/-то; маркер високого наукового стилю замість «був проведений аналіз»"
+  - "встановлено (established) — стандартна фраза для розділу «Результати» або «Висновки»"
+  - "метааналіз (meta-analysis) — найвищий рівень доказовості в ієрархії наукових даних"
+  - "довірчий інтервал (confidence interval) — стандартний статистичний показник у медичних звітах"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (5735 chars)
+✅ Message sent to Claude (ID: 11296)
+✓ Message 11296 acknowledged
+   Auto-acknowledged reply #11296 (stdout delivery — no inbox accumulation)
+✓ Message 11282 acknowledged

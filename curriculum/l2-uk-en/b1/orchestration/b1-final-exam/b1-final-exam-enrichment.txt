@@ -1,0 +1,314 @@
+✅ Message sent to Gemini (ID: 10467) [auto-acked: self-addressed]
+✓ Message 10467 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10467...
+📨 Message #10467
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-b1-final-exam
+   Time: 2026-02-20T20:34:43.447108+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b1-95
+level: B1
+sequence: 95
+slug: b1-final-exam
+version: '1.0'
+title: Фінальний іспит B1
+subtitle: B1 Level Final Assessment
+content_outline:
+- section: Огляд
+  points:
+  - 'Список навичок — кумулятивні компетенції рівня B1: читання, аудіювання, письмо,
+    говоріння та лінгвістична компетенція згідно з державним стандартом'
+- section: Про іспит
+  points:
+  - Структура іспиту — симуляція реального тестування (на зразок НМТ/ЗНО) з освітнім
+    скафолдингом
+  - 'Оцінювання — пояснення української 12-бальної шкали: 1-3 (початковий), 4-6 (середній/достатній),
+    7-9 (достатній/високий), 10-12 (високий); cultural hook: відмінність від 5-бальної
+    системи'
+- section: 'Навичка 1: Читання'
+  points:
+  - 'Читання текстів — тексти про вступну кампанію та університетське життя; cultural
+    hook: НМТ (Національний мультипредметний тест) як заміна ЗНО під час війни'
+- section: 'Навичка 2: Аудіювання'
+  points:
+  - Аудіювання — діалоги студентів про підготовку до іспитів та інструкції екзаменатора
+- section: 'Навичка 3: Граматика — Вид дієслова'
+  points:
+  - 'Вид дієслова — розрізнення доконаного/недоконаного виду в контексті результатів;
+    learner error: «я здавав» (процес) vs «я склав» (успішний результат)'
+- section: 'Навичка 4: Дієслова руху'
+  points:
+  - 'Дієслова руху — односпрямовані vs різноспрямовані рухи в контексті відвідування
+    навчального закладу; learner error: «я йду в університет щодня» замість «я ходжу»'
+- section: 'Навичка 5: Складні речення'
+  points:
+  - Складні речення — використання підрядних речень для аргументації думки в академічному
+    контексті
+- section: 'Навичка 6: Лексика B1'
+  points:
+  - 'Лексика B1 — термінологія іспитів та навчання; learner error: плутанина між «здавати»
+    (процес/hand in) та «скласти» (pass successfully)'
+- section: Частина 4 — Письмо
+  points:
+  - Письмові завдання — написання есе про плани на майбутнє та вступ до університету,
+    використання лексики «вступна кампанія»
+- section: Частина 5 — Говоріння
+  points:
+  - 'Усні завдання — обговорення підготовки до іспитів та студентських забобонів;
+    cultural hook: «кликати Шару» та підручник під подушкою'
+- section: Результати та рекомендації
+  points:
+  - Таблиця результатів — інтерпретація балів (прохідний бал, середній бал) та рекомендації
+    щодо переходу на рівень B2
+vocabulary_hints:
+  required:
+  - іспит (exam) — складати/скласти іспит (take/pass), провалити іспит (fail), вступний
+    іспит (entrance exam)
+  - оцінка (grade, assessment) — отримати оцінку, 12-бальна шкала (12-point scale)
+  - результат (result) — оголосити результати (announce results), позитивний результат
+  - частина (part, section) — частина тесту
+  - завдання (task) — тестове завдання, виконувати завдання
+  - читання (reading) — розуміння прочитаного
+  - аудіювання (listening) — розуміння на слух
+  - письмо (writing) — письмове завдання
+  recommended:
+  - говоріння (speaking) — усне мовлення
+  - бал (point, score) — прохідний бал (passing score), набрати бали, середній бал
+  - проходити (to pass/undergo) — проходити тестування (undergo testing)
+  - готовність (readiness) — перевірка готовності
+  - рівень (level) — рівень володіння мовою
+  - критерій (criterion) — критерії оцінювання
+activity_hints:
+- type: quiz
+  focus: B1 level reading comprehension questions
+  items: 16
+- type: true-false
+  focus: B1 level comprehension verification
+  items: 16
+- type: fill-in
+  focus: Grammar and vocabulary in context
+  items: 25
+- type: fill-in
+  focus: Grammar practice
+  items: 12
+- type: match-up
+  focus: Vocabulary matching
+  items: 10
+focus: checkpoint
+pedagogy: TTT
+prerequisites:
+- b1-94 (Phonetics & Assimilation)
+connects_to:
+- b2-01 (Start of B2)
+objectives:
+- Learner demonstrates B1 reading comprehension
+- Learner demonstrates B1 listening comprehension
+- Learner demonstrates B1 grammar and vocabulary mastery
+- Learner demonstrates B1 writing ability
+- Learner demonstrates B1 speaking ability
+grammar:
+- All B1 grammar (aspect, motion verbs, complex sentences, participles)
+- Vocabulary from M52-86
+- Communication skills from M87-91
+register: нейтральний
+phase: B1.9 [Communication Skills]
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Certification Examiner
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Фінальний іспит B1
+
+## State Standard Reference
+§1: "Середній рівень першого ступеня (В1) засвідчує основне ознайомлення зі структурою української мови... здатність до тематично широкого спілкування в повсякденних ситуаціях... в умовах комунікації з елементами непередбачуваності."
+Alignment: This final exam module assesses the cumulative B1 competencies: reading, listening, writing, speaking, and linguistic competence (aspect, motion verbs, complex sentences) as defined in the standard.
+
+## Vocabulary Frequency
+| Word | Frequency | Key collocations |
+|------|-----------|------------------|
+| іспит | High | складати/скласти іспит, провалити іспит, готуватися до іспиту, вступний іспит |
+| оцінка | High | отримати оцінку, висока/низька оцінка, 12-бальна шкала, оцінювання знань |
+| результат | High | чекати на результат, оголосити результати, результат тесту, позитивний результат |
+| бал | Medium | прохідний бал, набрати бали, середній бал |
+| вступ | Medium | вступ до університету, умови вступу, вступна кампанія |
+
+## Cultural Hooks
+1. **12-point Grading System**: Ukraine uses a 12-point scale in schools. 1-3 is failing (Initial), 4-6 is passing (Sufficient), 7-9 is good (Average), and 10-12 is excellent (High). This differs from the 5-point system used in many post-Soviet countries.
+2. **NMT (National Multi-Subject Test)**: Since 2022, the ZNO (External Independent Evaluation) has been replaced by the NMT for university admission due to the war. It's a computer-based test covering Ukrainian language, math, and history + optional subject.
+3. **Student Superstitions**: Common beliefs include "calling Freebie" (кликати Шару) out the window before an exam, or putting a textbook under the pillow to absorb knowledge by osmosis.
+
+## Common Learner Errors
+1. **Aspect Confusion**: Using imperfective (`читав`) instead of perfective (`прочитав`) when reporting exam results (process vs. completion).
+   *   *Error*: "Я здавав екзамен і отримав 10." (implies incomplete action)
+   *   *Correct*: "Я склав екзамен і отримав 10." (implies success)
+2. **Motion Verbs**: Confusing unidirectional (`йти`) and multidirectional (`ходити`) in the context of attending school/university.
+   *   *Error*: "Я йду в університет щодня."
+   *   *Correct*: "Я ходжу в університет щодня."
+3. **False Friends**: Using `здавати іспит` (to take an exam/hand it in) vs `скласти іспит` (to pass an exam).
+   *   *Note*: In strict standard Ukrainian, `скласти іспит` is preferred for "to pass", while `здавати` often implies the process of taking it or handing in papers.
+
+## Cross-References
+- Builds on: B1.1 (Aspect), B1.2 (Motion), B1.3 (Complex Sentences), B1-91 (Communication)
+- Prepares for: B2-01 (Start of B2 Level - Academic/Professional focus)
+
+## Notes for Content Writing
+- **Tone**: Formal yet supportive. The persona is a "Certification Examiner".
+- **Structure**: The module acts as a "Final Exam" simulation. It should feel like a real test environment but with educational scaffolding.
+- **Pedagogy**: Use the "Analysis" section to explain *why* certain answers are correct in the mock exam, reinforcing B1 grammar points (aspect, motion, syntax).
+- **Immersion**: 100% Ukrainian. Explain exam rubrics and feedback in Ukrainian.
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Структура іспиту та оцінювання (Introduction: Exam Structure and Grading)"
+  words: 500
+  points:
+  - "Пояснення 12-бальної шкали оцінювання в Україні: деталізація рівнів від початкового (1-3 бали) до високого (10-12 балів) та культурний контекст відмінності від 5-бальної системи."
+  - "Огляд державних стандартів рівня B1 (§1): здатність до тематично широкого спілкування та готовність до комунікації з елементами непередбачуваності."
+- section: "Читання та аудіювання: Академічний контекст (Reading and Listening: Academic Context)"
+  words: 800
+  points:
+  - "Контекст НМТ (Національний мультипредметний тест): опис формату комп'ютерного тестування як заміни ЗНО під час війни; термінологія вступної кампанії."
+  - "Студентський фольклор та забобони: розповідь про «кликання Шари» (Freebie) та підручник під подушкою як частина завдань на розуміння культурного контексту."
+- section: "Граматика та лексика: Аналіз типових помилок (Grammar and Vocabulary: Common Error Analysis)"
+  words: 1000
+  points:
+  - "Аналіз видів дієслів у контексті результатів: виправлення помилки «я здавав іспит» (процес) на «я склав іспит» (успішний результат) з акцентом на доконаний вид."
+  - "Диференціація дієслів руху: drill на використання різноспрямованого дієслова «ходити в університет» для регулярних дій замість помилкового «йти щодня»."
+  - "Помилкові друзі перекладача: розрізнення значень «здавати» (процес або здача паперів) та «скласти» (успішне проходження іспиту) згідно зі стандартами."
+- section: "Продуктивні навички: Письмо та говоріння (Productive Skills: Writing and Speaking)"
+  words: 1000
+  points:
+  - "Письмове завдання: написання есе про плани на майбутнє та «вступ до університету», інтеграція лексики щодо «умов вступу» та «прохідного бала»."
+  - "Усне мовлення: симуляція діалогу з екзаменатором (Certification Examiner) про підготовку до тестів з використанням складних підрядних речень для аргументації."
+- section: "Результати та перехід до рівня B2 (Results and Transition to B2)"
+  words: 700
+  points:
+  - "Інтерпретація результатів: роз'яснення поняття «середній бал» та «позитивний результат» у межах фінального оцінювання рівня B1."
+  - "Підготовка до B2: огляд переходу від загальних тем до академічного та професійного мовлення, що базується на засвоєній граматиці (вид, рух, синтаксис)."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "іспит (exam) — складати/скласти іспит (take/pass), провалити іспит (fail), вступний іспит (entrance exam); висока частотність"
+  - "оцінка (grade, assessment) — отримати оцінку, висока/низька оцінка, 12-бальна шкала; висока частотність"
+  - "результат (result) — оголосити результати, результат тесту, позитивний результат; висока частотність"
+  - "бал (point, score) — прохідний бал (passing score), набрати бали, середній бал; ключовий термін оцінювання"
+  - "вступ (admission) — вступ до університету, умови вступу, вступна кампанія; контекст академічної мобільності"
+  - "завдання (task) — тестове завдання, виконувати завдання, частина тесту"
+  recommended:
+  - "оцінювання (evaluation) — критерії оцінювання, система оцінювання знань"
+  - "проходити (to pass/undergo) — проходити тестування, пройти відбір"
+  - "готовність (readiness) — перевірка готовності, рівень володіння мовою"
+  - "забобони (superstitions) — студентські забобони, вірити в прикмети"
+  - "складання (taking/passing) — термін для позначення процесу складання іспиту"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (3539 chars)
+✅ Message sent to Claude (ID: 10471)
+✓ Message 10471 acknowledged
+   Auto-acknowledged reply #10471 (stdout delivery — no inbox accumulation)
+✓ Message 10467 acknowledged

@@ -6,64 +6,75 @@ version: '2.0'
 title: Hotel Accommodation
 subtitle: Checking In and Out
 content_outline:
-- section: 'Introduction: Hotels in Ukraine'
+- section: 'Вступ: Готелі в Україні (Introduction: Hotels in Ukraine)'
+  words: 500
   points:
-  - 'Types of accommodation — aligns with State Standard §3.2: «Дім, помешкання...
+  - 'Introduction to accommodation types based on State Standard §3.2: «Дім, помешкання...
     резервування кімнати в готелі»'
-  - 'Booking options — collocation: бронювати онлайн; distinction: бронювати (process)
-    vs забронювати (result)'
-  - 'Hotel vocabulary overview — learner error: кімната (room in house) vs номер (hotel
-    room); learner error: номер is masculine (це гарний номер); collocation: п''ятизірковий
-    готель'
-- section: Making a Reservation
+  - 'Lexical distinction: Explain the learner error of using «кімната» (room in a
+    house) vs the correct term «номер» (hotel room)'
+  - 'Gender agreement drill: «Номер» is masculine; emphasize correct agreement «це
+    гарний номер» vs incorrect «це гарна номер»'
+  - Establishing the formal «Ви» address as the standard for all interactions with
+    hotel staff and administration
+- section: Бронювання та заселення (Booking and Check-in)
+  words: 800
   points:
-  - 'забронювати номер — collocation: забронювати готель; content note: distinguish
-    забронювати (completed) vs бронювати (process)'
-  - 'Room types (одномісний, двомісний) — collocation: номер люкс'
-  - 'Dates and duration — content note: use formal «Ви» address consistently (standard
-    for hotel staff interactions)'
-- section: Checking In
+  - 'Booking process: Distinguish between «бронювати» (imperfective/process) and «забронювати»
+    (perfective/result) with online booking examples'
+  - 'Room types and collocations: «одномісний/двомісний номер», «номер люкс», and
+    «ключ від номера»'
+  - 'Cultural Hook (Passport Control): Explain that Ukrainian law strictly requires
+    an original passport for *every* guest at check-in, not just a credit card'
+  - 'Check-in procedure: Vocabulary for «заселення» (check-in), «час заселення» (check-in
+    time), and «реєстрація» (registration)'
+- section: Послуги та зручності (Amenities and Services)
+  words: 700
   points:
-  - 'реєстрація, паспорт — cultural hook: original passport required for *every* guest
-    at check-in (compliance with state laws)'
-  - 'заселення, ключ — collocation: час заселення, пізнє заселення, ключ від номера'
-  - 'Room information — cultural hook: tourist tax (туристичний збір) often added
-    separately to the bill'
-- section: Hotel Amenities
+  - 'Interrogative Syntax (§4.4.1.2): Practical application for asking questions such
+    as «Сніданок включено?» (Is breakfast included?) and «Чи є Wi-Fi?»'
+  - 'Grammar Drill (Location vs Direction): Correcting the learner error «Я в готель»
+    (Accusative/Direction) vs the required «Я у готелі» (Locative/Location)'
+  - 'Essential items: Collocations for requesting items like «рушник», «мило», «шампунь»
+    and services like «прибирання»'
+- section: Проблеми та розрахунок (Problems and Payment)
+  words: 600
   points:
-  - 'сніданок, Wi-Fi, парковка — learner error: Я в готель (Accusative/Direction)
-    vs Я у готелі (Locative/Location)'
-  - 'рушник, мило, шампунь — collocation: прибирання (cleaning)'
-  - 'Requesting items — collocation: запитати адміністратора; content note: focus
-    on Interrogative Syntax (§4.4.1.2) for asking questions (Is breakfast included?)'
-- section: Problems and Solutions
+  - 'Resolving issues: Using the phrase «на стійці адміністратора» and «запитати адміністратора»
+    to handle common complaints'
+  - 'Cultural Hook (Tourist Tax): Explaining «туристичний збір» (tourist tax) as a
+    municipal fee often added separately to the bill'
+  - 'Check-out process: Vocabulary for «виселення» (check-out), «час виселення», and
+    «оплатити рахунок» (pay the bill)'
+- section: 'Практика: Проживання в готелі (Practice: Hotel Stay)'
+  words: 400
   points:
-  - 'Common complaints — collocation: час виселення, до виселення'
-  - 'Asking for help — collocation: на стійці адміністратора'
-  - 'Resolving issues — content note: maintain formal «Ви» tone'
-- section: 'Practice: Hotel Stay'
-  points:
-  - Check in dialogue — ensure passport request is included
-  - Request amenities — focus on asking questions and resolving minor issues
+  - 'Check-in simulation: Dialogue incorporating the formal passport request and clarification
+    of the room number'
+  - 'Problem-solving drill: Requesting amenities or resolving a minor issue while
+    maintaining the formal «Ви» register'
+  - Final review of interrogative patterns for hotel-specific inquiries
 vocabulary_hints:
   required:
-  - готель (hotel) — у готелі (Locative), п'ятизірковий готель, забронювати готель
-  - 'номер (room) — одномісний/двомісний номер, номер люкс, забронювати номер; note:
-    masculine gender'
-  - 'забронювати (to book) — забронювати номер, бронювати онлайн; pair: бронювати
-    (imp) / забронювати (perf)'
-  - заселення (check-in) — час заселення, пізнє заселення
-  - виселення (check-out) — час виселення, до виселення
-  - ключ (key) — ключ від номера
-  - сніданок (breakfast) — сніданок включено?
-  - рахунок (bill) — оплатити рахунок, туристичний збір
+  - готель (ч) — у готелі (Locative), п'ятизірковий готель, забронювати готель; High
+    frequency
+  - 'номер (ч) — одномісний/двомісний номер, номер люкс, забронювати номер; note:
+    masculine gender (гарний номер)'
+  - бронювати (недок) / забронювати (док) — бронювати онлайн, забронювати номер; pair
+    distinction (process vs completed)
+  - заселення (с) — час заселення, пізнє заселення; registration process
+  - виселення (с) — час виселення, до виселення; check-out process
+  - ключ (ч) — ключ від номера; masculine noun
+  - адміністратор (ч) — запитати адміністратора, на стійці адміністратора; receptionist
+  - рахунок (ч) — оплатити рахунок, туристичний збір (tourist tax); bill and mandatory
+    fees
   recommended:
-  - одномісний (single) — одномісний номер
-  - двомісний (double) — двомісний номер
-  - рушник (towel) — попросити рушник
-  - кондиціонер (air conditioning) — чи є кондиціонер?
-  - прибирання (cleaning) — замовити прибирання
-  - адміністратор (receptionist) — запитати адміністратора, на стійці адміністратора
+  - одномісний (прикм) — одномісний номер; single room
+  - двомісний (прикм) — двомісний номер; double room
+  - сніданок (ч) — сніданок включено?; interrogative usage
+  - рушник (ч) — попросити рушник; towel
+  - прибирання (с) — замовити прибирання; cleaning service
+  - кондиціонер (ч) — чи працює кондиціонер?; air conditioning
 activity_hints:
 - type: match-up
   focus: Check-in conversation

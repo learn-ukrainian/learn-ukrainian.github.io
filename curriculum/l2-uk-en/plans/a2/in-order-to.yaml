@@ -6,38 +6,58 @@ version: '2.0'
 title: In Order To
 subtitle: Expressing Purpose with Щоб
 content_outline:
-- section: Introduction / Вступ
+- section: Вступ (Introduction)
+  words: 450
   points:
-  - 'The logic of intentionality — State Standard §4.4.2: expressing purpose with
+  - 'The logic of intentionality per State Standard §4.4.2: expressing purpose with
     «щоб»; example: «Ми вчимо українську мову, щоб розмовляти з друзями»'
-  - 'Why ''Purpose'' requires a specific grammar bridge — Common Learner Error: Omitting
-    the comma before «щоб» in purpose clauses'
-- section: Presentation / Презентація
+  - Why 'Purpose' requires a specific grammar bridge — addressing the core syntax
+    competency for A2 involving complex sentences
+  - 'Common Learner Error: Omitting the comma before «щоб» in purpose clauses; emphasis
+    on strict punctuation rules in Ukrainian syntax'
+- section: 'Презентація: Логіка суб''єктів (Presentation: Subject Logic)'
+  words: 900
   points:
-  - 'Same Subject Logic: Щоб + Infinitive — Common Learner Error: The «For To» Calque
-    (using «для» + infinitive instead of «щоб», e.g., «Я йду для купити» vs «Я йду,
-    щоб купити»)'
-  - 'Different Subject Logic: Щоб + Past Tense (The Subjunctive twist) — Common Learner
-    Error: Subject Mismatch (using infinitive when subject changes, e.g., «Я хочу
-    тебе читати» vs «Я хочу, щоб ти читав»); Visual Logic: «Is the doer the same?»
-    → NO (Past Tense)'
-  - 'Formal Emphasis: Для того щоб — Register Check: Emphatic/Formal usage, builds
-    to C1 Stylistics'
-  - 'Gentle Purpose: Аби — Register Check: Informal/Spoken, implies «just so that»
-    or «if only» (e.g., «аби не спізнитися»)'
-  - 'Purpose with Nouns: Для + Genitive — Reinforces Genitive case usage (§4.2.2.2.2);
-    distinction from «щоб» clauses'
-  - 'Wishes as Commands: Щоб ти був здоровий! — Cultural Hook: The «Щоб» Toast Culture
-    (e.g., «Щоб їлося і пилося, щоб хотілося і моглося!»)'
-- section: Practice / Практика
+  - 'Same Subject Logic: Щоб + Infinitive — Visual logic: ''Is the doer the same?''
+    → YES (Infinitive usage)'
+  - 'Common Learner Error: The ''For To'' Calque — confusing «для» + infinitive with
+    «щоб» + infinitive (e.g., *Я йду для купити* vs correct *Я йду, щоб купити*);
+    clarification that «для» is for nouns/pronouns only'
+  - 'Different Subject Logic: Щоб + Past Tense (The Subjunctive twist) — Visual logic:
+    ''Is the doer the same?'' → NO (Past Tense usage)'
+  - 'Common Learner Error: Subject Mismatch — failing to switch to past tense when
+    the subject changes (e.g., *Я хочу тебе читати* vs correct *Я хочу, щоб ти читав*)'
+  - 'Purpose with Nouns: Для + Genitive — Reinforcing Genitive case usage (§4.2.2.2.2)
+    and distinguishing from «щоб» clauses'
+- section: Культурний контекст та Реєстр (Cultural Context and Register)
+  words: 600
   points:
-  - Subject-shifting drills — Use a clear flowchart/decision tree logic
-  - 'Planning an event with diverse goals — Cultural Hook: Proverb «На те коня кують,
-    щоб не спотикався.» (illustrates planning)'
-- section: Dialogues / Діалоги
+  - 'The ''Щоб'' Toast Culture: Playful social usage of purpose grammar; feature the
+    classic toast: «Щоб їлося і пилося, щоб хотілося і моглося!»'
+  - 'Wisdom in Grammar: Proverb «На те коня кують, щоб не спотикався.» (One shoes
+    a horse so it doesn''t stumble) to illustrate planning and intentionality'
+  - 'Register Check (Formal): «Для того щоб» — usage in emphatic or official contexts,
+    preparing learners for future C1 Stylistics'
+  - 'Register Check (Informal): «Аби» — spoken usage implying ''just so that'' or
+    ''if only'' (e.g., «аби не спізнитися»)'
+- section: Практичне застосування (Practical Application)
+  words: 650
   points:
-  - 'Discussing career goals, travel plans, or helping a colleague — integrate high-frequency
-    collocations: «Я хочу, щоб...», «Для того, щоб...»'
+  - 'Subject-shifting drills: Moving from same-subject goals to different-subject
+    wishes using a clear decision-tree flowchart'
+  - 'Comma placement and punctuation mastery: exercises focused on fixing the common
+    error of comma omission in complex sentences'
+  - 'De-calquing workshop: identifying and correcting the ''для + infinitive'' error
+    in sentence sets'
+- section: 'Комунікація: Цілі та плани (Communication: Goals and Plans)'
+  words: 400
+  points:
+  - 'Planning a social event or career path: integrating high-frequency collocations
+    like «Я хочу, щоб...» and «Для того, щоб...»'
+  - 'Role-play: helping a colleague or discussing travel plans using standard «щоб»
+    (80% focus) and informal «аби» (20% focus)'
+  - 'Summary: Review of the visual logic (same vs. different doers) and final comma
+    check'
 focus: grammar
 pedagogy: PPP
 objectives:
@@ -68,12 +88,12 @@ persona:
   role: Project Strategist
 vocabulary_hints:
   required:
-  - 'щоб (in order to) — High frequency; collocations: «Я хочу, щоб...», «Він пішов,
-    щоб...»'
-  - 'для (for) — High frequency; usage with nouns only; collocations: «для тебе»,
-    «для роботи», «для здоров''я»'
-  - 'аби (so that / if only) — Medium frequency; informal; collocations: «аби тільки»,
-    «аби не спізнитися»'
-  - 'мета (goal / purpose) — Medium frequency; collocations: «моя мета», «з метою»
-    (formal)'
+  - 'щоб (in order to) — High frequency (Top 100); used for purpose clauses; collocations:
+    «Я хочу, щоб...», «Він пішов, щоб...», «Для того, щоб...»'
+  - 'для (for) — High frequency (Top 50); usage strictly with nouns/pronouns in Genitive;
+    collocations: «для тебе», «для роботи», «для здоров''я»'
+  - 'аби (so that / if only) — Medium frequency; informal/spoken register; often implies
+    ''just so that'' or ''if only''; collocation: «аби не спізнитися»'
+  - 'мета (goal / purpose) — Medium frequency; used in planning; collocations: «моя
+    мета», «з метою» (formal/official style)'
 word_target: 3000

@@ -1,0 +1,32 @@
+- word: іменник
+  translation: noun
+  ipa: "iˈmɛnːɪk"
+  definition: "A word that identifies a person, place, or thing."
+- word: дієслово
+  translation: verb
+  ipa: "dijɛˈslɔwɔ"
+  definition: "A word used to describe an action, state, or occurrence."
+- word: прикметник
+  translation: adjective
+  ipa: "prɪkˈmɛtnɪk"
+  definition: "A word that modifies a noun or noun phrase."
+- word: множина
+  translation: plural
+  ipa: "mnɔʒɪˈnɑ"
+  definition: "A form of a word that denotes more than one."
+- word: однина
+  translation: singular
+  ipa: "ɔdnɪˈnɑ"
+  definition: "A form of a word that denotes one."
+- word: відмінок
+  translation: case
+  ipa: "vidˈminɔk"
+  definition: "A grammatical category determined by the syntactic role of a noun."
+- word: рід
+  translation: gender
+  ipa: "rid"
+  definition: "A grammatical category (masculine, feminine, neuter)."
+- word: час
+  translation: tense
+  ipa: "tʃɑs"
+  definition: "A grammatical category expressing time reference."

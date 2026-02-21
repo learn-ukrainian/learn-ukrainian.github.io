@@ -1,0 +1,13 @@
+{
+  "track": "oes",
+  "slug": "assault-battery",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-20T10:21:29Z",
+      "task_id": "v3-assault-battery-pA",
+      "mode": "full"
+    }
+  }
+}

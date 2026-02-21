@@ -1,0 +1,283 @@
+✅ Message sent to Gemini (ID: 12545) [auto-acked: self-addressed]
+✓ Message 12545 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12545...
+📨 Message #12545
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-career-development
+   Time: 2026-02-20T23:40:34.649517+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-pro-48
+level: C1-PRO
+sequence: 48
+slug: career-development
+version: '2.0'
+title: Кар'єрний розвиток
+subtitle: Career Development
+content_outline:
+- section: Розминка — Довгострокове планування кар'єри
+  points:
+  - Моделі кар'єрного розвитку (лінійна, спіральна, портфельна)
+  - Українськомовна кар'єра як стратегічна перевага
+  - Планування кар'єри на 3-5-10 років
+- section: Професійне зростання
+  points:
+  - 'Вертикальне та горизонтальне зростання: переваги та недоліки'
+  - Розвиток hard skills та soft skills
+  - Сертифікації та формальна освіта
+  - Безперервне навчання (lifelong learning)
+- section: Менторство та нетворкінг
+  points:
+  - 'Менторство: як знайти ментора та як бути ментором'
+  - Професійні спільноти в Україні
+  - Стратегії ефективного нетворкінгу
+  - Побудова професійних стосунків
+- section: Управління кар'єрою
+  points:
+  - Переговори про підвищення та зарплату
+  - Зміна роботи та галузі
+  - Work-life balance та профілактика вигорання
+  - Управління кар'єрними кризами
+- section: Зразки кар'єрних документів
+  points:
+  - Зразок плану індивідуального розвитку (ПІР)
+  - Приклад листа з проханням про підвищення
+  - Шаблон кар'єрного плану на 5 років
+- section: Практика — Кар'єрне планування
+  points:
+  - 'Завдання: Скласти план кар''єрного розвитку на 5 років'
+  - 'Вимоги: цілі, етапи, ресурси, метрики'
+  - Критерії оцінювання
+vocabulary_hints:
+  required:
+  - кар'єрний розвиток (career development)
+  - план індивідуального розвитку (individual development plan)
+  - менторство (mentorship)
+  - нетворкінг (networking)
+  - підвищення (promotion)
+  - вигорання (burnout)
+  - сертифікація (certification)
+  - безперервне навчання (lifelong learning)
+  recommended:
+  - кар'єрний шлях (career path)
+  - горизонтальне зростання (lateral move)
+  - ментор/менті (mentor/mentee)
+  - work-life balance (баланс роботи та життя)
+  - переговори про зарплату (salary negotiation)
+  - професійна криза (career crisis)
+activity_hints:
+- type: writing-task
+  focus: Скласти план індивідуального розвитку
+  items: 1
+- type: document-analysis
+  focus: Проаналізувати приклади кар'єрних планів
+  items: 2
+- type: role-play
+  focus: Провести переговори про підвищення
+  items: 1
+- type: fill-in
+  focus: Доповнити кар'єрний план конкретними діями
+  items: 8
+- type: case-study
+  focus: Опрацювати ситуацію кар'єрної кризи — запропонувати рішення
+  items: 1
+focus: professional
+pedagogy: ESP
+prerequisites:
+- c1-pro-47 (Особистий бренд)
+connects_to:
+- 'c1-pro-49 (Інтеграція: C1-PRO)'
+objectives:
+- Учень може планувати довгостроковий кар'єрний розвиток
+- Учень може ефективно використовувати менторство та нетворкінг
+- Учень може вести переговори про підвищення та зарплату
+- Учень може управляти кар'єрними викликами та кризами
+grammar:
+- Конструкції для планування (У найближчі 5 років я планую... / На першому етапі...
+  / Кінцевою метою є...)
+- Конструкції для переговорів (Я хотів/-ла б обговорити... / Враховуючи мої досягнення...
+  / Чи могли б ми розглянути...)
+- Конструкції для рефлексії (Оцінюючи свій досвід... / На цьому етапі кар'єри... /
+  Мої пріоритети змістились до...)
+register: напівформальний
+phase: C1-PRO.4
+persona:
+  voice: Senior Specialist
+  role: HR-партнер
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Кар'єрний розвиток (C1-PRO)
+
+## Використані джерела
+1. [Happy Monday](https://happymonday.ua/) — Провідний український ресурс про кар'єру, менторство та професійний розвиток.
+2. [Work.ua](https://www.work.ua/articles/job-seeker/) — Статті про переговори щодо зарплати, кар'єрне зростання та ринок праці України.
+3. [HR-Liga](https://hrliga.com/) — Професійний портал для HR-фахівців з питань діловодства та стандартів ДСТУ.
+4. [Дія.Бізнес](https://business.diia.gov.ua/) — Державні рекомендації щодо розвитку професійних навичок та підприємництва.
+5. [ДСТУ 4163:2020](https://zakon.rada.gov.ua/) — Державний стандарт щодо оформлення організаційно-розпорядчої документації.
+
+## Термінологічна база
+
+| Українська (норма) | Русизм/ненорма | English | Контекст вживання |
+|--------------------|---------------|---------|-------------------|
+| Індивідуальний план розвитку (ІПР) | Індивідуальний план розвИТКУ | Individual Development Plan (IDP) | HR-процеси, планування навчання |
+| Професійне вигорання | Професіональне вигорання | Job burnout | Психологія праці, управління ресурсами |
+| Брати участь | Приймати участь | To participate / Take part | Нетворкінг, конференції, проєкти |
+| Мати рацію | Бути правим | To be right | Дискусії, обговорення стратегій |
+| Вживати заходів | Приймати міри | To take measures | Управління кризами, безпека праці |
+| Горизонтальне зростання | Горизонтальний росТ | Lateral growth / Career sidestep | Кар'єрні стратегії, експертний розвиток |
+| Переговори про зарплату | Переговори по зарплаті | Salary negotiation | Обговорення компенсації |
+| Безперервне навчання | Непреривне навчання | Lifelong learning | Освітні стратегії |
+
+## Мовні норми та стандарти
+- **ДСТУ 4163:2020**: Основний стандарт оформлення документів.
+  - *Реквізит «Підпис»*: Власне ім'я та ПРІЗВИЩЕ (великими літерами). Наприклад: *Олександр ШЕВЧЕНКО*.
+  - *Датуванння*: Слово «року» не скорочується до «р.» у текстах наказів та офіційних листів.
+  - *Адресат*: Посада та ПІБ зазначаються у давальному відмінку (*Директору Івану ПЕТРЕНКУ*).
+- **Синтаксис планування**: Використання конструкцій «у найближчій перспективі», «протягом звітного періоду», «вважати за доцільне».
+
+## Аутентичні приклади
+1. **Запит на підвищення**: «Враховуючи розширення моєї зони відповідальності та досягнення ключових KPI за минулий квартал, прошу розглянути питання перегляду моєї заробітної плати».
+2. **ПІР (ціль)**: «Розвинути навички стратегічного менеджменту шляхом проходження сертифікації PMP до кінця року».
+3. **Менторство**: «Чи могли б ви стати моїм ментором у питаннях побудови особистого бренду на міжнародному ринку?»
+4. **Нетворкінг**: «Радий знайомству на вчорашній конференції. Було б цікаво обмінятися досвідом щодо впровадження Agile-методологій у вашій компанії».
+
+## Типові помилки
+1. ❌ **Бути правим** → ✅ **Мати рацію** — «Мати рацію» є сталою українською конструкцією, на відміну від кальки «бути правим».
+2. ❌ **На протязі дня** → ✅ **Протягом дня** — «На протязі» означає перебування на різкому струмені повітря (draft).
+3. ❌ **Приймати участь** → ✅ **Брати участь** — Участь можна лише брати, а приймати — ліки або закони.
+4. ❌ **Я вибачаюсь** → ✅ **Перепрошую / Вибачте** — Частка «-ся» вказує на зворотну дію (вибачати себе).
+5. ❌ **В кінці кінців** → ✅ **Зрештою / Врешті-решт** — Калька з російської фразеології.
+
+## Engagement Hooks (mapped to sections)
+- Розділ "Професійне зростання": [!pro-tip] — Різниця між "Senior" за вислугою років та за рівнем відповідальності.
+- Розділ "Менторство та нетворкінг": [!language-note] — Чому в українському професійному середовищі ми кажемо «наставництво», але частіше вживаємо запозичене «менторство» в IT-секторі.
+- Розділ "Управління кар'єрою": [!common-error] — Використання ультимативної форми «або підвищення, або звільнення» як найбільш ризикованої стратегії.
+- Розділ "Зразки документів": [!context] — Особливості оформлення сучасного CV в Україні: чи потрібно додавати фото та дату народження?
+
+## Section-Mapped Research Notes
+
+### Стратегічне планування та моделі кар'єри
+Опис трьох основних моделей: лінійної (вертикальний рух), спіральної (зміна напрямів для розширення кругозору) та портфельної (фріланс, поєднання ролей). Акцент на українському контексті: кар'єра як інструмент відбудови країни.
+
+### Вектори професійного розвитку: Skills та Lifelong Learning
+Аналіз концепції T-shaped фахівця. Розподіл Hard skills (технічні) та Soft skills (комунікативні). Офіційні рамки кваліфікацій та важливість міжнародних сертифікацій (CFA, ACCA, PMP) в Україні.
+
+### Екосистема підтримки: Менторство та професійний нетворкінг
+Практичні поради: як писати "cold emails" потенційним менторам. Огляд платформ: Projector Mentorship, LinkedIn. Етикет нетворкінгу: принцип взаємної цінності.
+
+### Мистецтво переговорів та кар'єрні переходи
+Методика підготовки до "Salary Review": збір доказів власної цінності. Психологічні аспекти переходу з найму у власну справу або зміну галузі (Reskilling).
+
+### Ресурсний стан та управління кар'єрними кризами
+Визначення вигорання за методикою ВООЗ. Специфіка "military-life balance" в Україні. Кризи як можливість для ревізії цінностей.
+
+### Документальний супровід кар'єрного шляху
+Детальний розбір ПІР (Індивідуального плану розвитку). Вимоги ДСТУ 4163:2020 до ділових листів: шрифт, відступи, оформлення підпису.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12584)
+✓ Message 12545 acknowledged
+✓ Message 12584 acknowledged

@@ -10,6 +10,8 @@
 
 Today we are entering the delicious world of Ukrainian cuisine. Imagine walking into a bustling Ukrainian kitchen. The smell of fresh bread is in the air. What do you see? What do you want to eat?
 
+There is a famous Ukrainian proverb: **Хліб — усьому голова** (Bread is the head of everything). This captures how deeply food — especially bread — is woven into Ukrainian culture. You will see why by the end of this lesson.
+
 In English, you just say "I see an apple" or "I want an apple." But in Ukrainian, the word "apple" changes depending on what you are doing with it. If it is just sitting on the table, it is **яблуко**. But if you want to *eat* it, the word might change form. This is our first major step into the **Accusative Case** (Знахідний відмінок) for food.
 
 ### Основні дієслова: їсти, пити, купувати
@@ -38,6 +40,9 @@ This verb changes slightly: the **-ува-** becomes **-у-** in the present ten
 
 > [!tip]
 > **Usage Note:** In English, we often use "have" for food ("I'll have a coffee"). In Ukrainian, we are more direct. We say "I drink coffee" (**Я п'ю каву**) or "I buy bread" (**Я купую хліб**).
+
+> [!warning]
+> **The Soup Verb Trap:** In English, we can "eat" or "drink" soup. In Ukrainian, you always say **їсти суп** (eat soup), never ~~пити суп~~. Soup is eaten with a spoon, so it is "eaten"! *Я їм суп* ✅ *Я п'ю суп* ❌
 
 ### Граматика: Знахідний відмінок (Accusative Case)
 When you say "I love pizza," the pizza is the direct object of your love. In Ukrainian, this is the **Accusative Case** (Знахідний відмінок).
@@ -154,7 +159,7 @@ Let's talk about what keeps us hydrated and awake.
 To ask for a drink, you simply use the verb **прошу** (I ask/please) or **дайте** (give me - polite/formal), plus the Accusative.
 
 *   *Дайте, будь ласка, **воду**.* (Give me water, please.)
-*   *Я буду **каву**.* (I will have/I will be coffee.) — This is a very common way to order!
+*   *Я буду **каву**.* (I will have coffee.) — Literally "I will [take] coffee." This is a very common way to order!
 
 ### Хлібобулочні вироби (Bakery)
 Хліб — це святе. Поговоримо про види хліба.
@@ -167,7 +172,7 @@ Bread is sacred. We will discuss the culture later, but first, the vocabulary.
 
 > [!myth-buster]
 > **The Password: Паляниця**
-> You may have heard the word **паляниця** [pɑlʲɑˈnɪt͡sʲɑ]. It is a type of traditional round wheat bread. But recently, it became famous as a "shibboleth" — a password used to identify non-native speakers. The combination of soft **л** and hard **ц** followed by soft **я** is extremely difficult for Russian speakers to pronounce correctly. For a Ukrainian, it is effortless. It represents safety and identity.
+> You may have heard the word **паляниця** [pɑlʲɑˈnɪt͡sʲɑ]. It is a type of traditional round wheat bread. But recently, it became famous as a "shibboleth" — a password used to identify non-native speakers. The palatalized **ля** [lʲɑ] and the soft **ця** [t͡sʲɑ] create a combination that is extremely difficult for Russian speakers to pronounce correctly — in Russian, **ц** is always hard, never palatalized. For a Ukrainian, it is effortless. It represents safety and identity.
 
 ### Одиниці виміру (Units of Measure)
 Ми купуємо продукти в пляшках, пакетах або кілограмах. Це важливо знати.
@@ -182,6 +187,7 @@ When you buy food, you rarely buy "one water" or "one sugar." You buy a bottle o
 *   **Пакет** [pɑˈkɛt] (Carton/Bag)
 *   **Склянка** [ˈsklʲɑnkɑ] (Glass)
 *   **Чашка** [ˈt͡ʃɑʃkɑ] (Cup)
+*   **Шматок** [ʃmɑˈtɔk] (Piece/Slice)
 
 **The Grammar Rule: The Genitive Case (Родовий відмінок)**
 When you quantify something ("a bottle OF water"), the second word must be in the **Genitive Case**.
@@ -195,9 +201,10 @@ When you quantify something ("a bottle OF water"), the second word must be in th
 *   **Gen:** Яблук — Of apples → *Кілограм **яблук***.
 
 **Pattern for Beginners:**
-1.  **Feminine (-а/я)** becomes **-и/і**. (Вода → Води).
-2.  **Neuter (-о)** becomes **-а**. (Молоко → Молока).
-3.  **Plural Genitive** (for kilograms of fruit) often drops the ending or adds -ів. For now, just memorize: *Кілограм **яблук*** (apples).
+1.  **Feminine (-а/я)** becomes **-и/і**. (Вода → Води, Кава → Кави).
+2.  **Neuter (-о)** becomes **-а**. (Молоко → Молока, Масло → Масла).
+3.  **Masculine (consonant)** becomes **-а** or **-у**. For food and drink words, memorize these common forms: *шматок **хліба*** (of bread), *шматок **сиру*** (of cheese), *склянка **соку*** (of juice), *чашка **чаю*** (of tea).
+4.  **Plural Genitive** (for kilograms of fruit) often drops the ending or adds -ів. For now, just memorize: *Кілограм **яблук*** (apples).
 
 **Important Note:** For mass items like **картопля** (potato) or **морква** (carrot), we often use the **Singular Genitive** (like "water").
 *   *Кілограм картоплі.* (A kilo of potato.)
@@ -322,6 +329,7 @@ While we learned basics like soup and potato today, remember that Ukrainian cuis
 *   **Борщ** is not just soup; it is a national identifier (UNESCO heritage!).
 *   **Вареники** (dumplings) can be sweet (with cherries) or savory (with potato/mushrooms).
 *   **Голубці** (cabbage rolls) are a festive dish.
+*   **Коровай** (decorated wedding bread) and **паска** (Easter bread) show how bread marks every important celebration.
 
 Knowing how to ask for ingredients—**капуста** (cabbage), **буряк** (beetroot), **сметана** (sour cream)—is the first step to cooking these legends yourself!
 

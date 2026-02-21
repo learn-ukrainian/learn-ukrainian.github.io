@@ -1,0 +1,298 @@
+✅ Message sent to Gemini (ID: 12913) [auto-acked: self-addressed]
+✓ Message 12913 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12913...
+📨 Message #12913
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-pereiaslav-tsykl
+   Time: 2026-02-20T23:43:07.573114+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-hist-082
+level: c1-hist
+sequence: 82
+version: '1.0'
+title: 'Переяславський цикл: Хмельницький → Руїна'
+focus: history
+pedagogy: seminar
+objectives:
+- 'Analyze the causes and consequences of переяславський цикл: хмельницький → руїна'
+- Evaluate the historical significance of класичний цикл
+content_outline:
+- section: Вступ — Класичний цикл
+  subsections:
+  - 1654 — початок
+  - Чому це приклад циклу
+  - Від обіцянок до знищення
+  - Структура модуля
+- section: Фаза 1 — Підкуп (1654)
+  subsections:
+  - Що обіцяли — Березневі статті
+  - Автономія — реальна
+  - 60,000 реєстр
+  - Захист від Польщі
+- section: Фаза 2 — Залежність (1654-1667)
+  subsections:
+  - Московські воєводи
+  - Обмеження контактів
+  - Війна за Україну
+  - Андрусівський мир — перший розподіл
+- section: Фаза 3 — Зрада (1667-1686)
+  subsections:
+  - Розподіл України — без питання
+  - Передача Києва — за 200,000
+  - 1686 — церква під Москвою
+  - Статті — систематичне порушення
+- section: Фаза 4 — Знищення (поступове)
+  subsections:
+  - Скасування козацьких прав
+  - Руїна — внутрішня війна
+  - Московська маніпуляція
+  - До Мазепи — що залишилось
+- section: Аналіз циклу
+  subsections:
+  - Що можна було зробити інакше
+  - Альтернативи Переяславу
+  - Уроки для майбутнього
+- section: Підсумок
+  subsections:
+  - Перший повний цикл
+  - Паттерн встановлено
+  - Перехід до Мазепи
+vocabulary:
+- Переяславська рада
+- статті
+- автономія
+- воєвода
+- Руїна
+- розподіл
+- цикл
+- зрада
+- маніпуляція
+- обіцянка
+- Березневі статті
+- Андрусівське перемир'я
+- реєстр
+- протекторат
+- васальна залежність
+activities:
+- type: critical-analysis
+  focus: Map Pereiaslav cycle through four phases
+- type: critical-analysis
+  focus: Compare 1654 promises vs. reality by 1686
+- type: essay-response
+  focus: What if Khmelnytsky chose differently?
+- type: critical-analysis
+  focus: Apply co-optation framework to Pereiaslav
+- type: essay-response
+  focus: На якому етапі Переяславська угода була приречена на провал?
+sources:
+- name: Переяславська рада (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Переяславська_рада
+  type: reference
+  notes: 1654 agreement
+- name: Руїна (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Руїна_(історія_України)
+  type: reference
+  notes: Ruin period
+- name: Статті Богдана Хмельницького (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Статті_Богдана_Хмельницького
+  type: reference
+  notes: Agreement articles
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
+persona:
+  voice: Academic Historiographer
+  role: Ruina Period Specialist
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Переяславський цикл: Хмельницький → Руїна
+
+## Використані джерела
+1. [Березневі статті // Енциклопедія історії України](http://history.org.ua) — фундаментальний аналіз умов договору 1654 року.
+2. [Літопис Самовидця // Ізборник](http://litopys.org.ua) — опис подій Руїни очима сучасника.
+3. [Андрусівське перемир'я 1667 // Енциклопедія Сучасної України](https://esu.com.ua) — умови поділу України.
+4. [Вічний мир 1686 // Енциклопедія історії України](http://history.org.ua) — остаточне закріплення поділу.
+5. [Гадяцький трактат 1658 // Ізборник](http://litopys.org.ua) — спроба виходу з "московського циклу".
+
+## Хронологія
+- **1654, січень**: Переяславська рада — усна домовленість про військовий союз.
+- **1654, березень**: Березневі статті — документальне оформлення: Гетьманщина зберігає адміністрацію, суд, фінанси, 60-тисячний реєстр.
+- **1658, вересень**: Гадяцька унія — спроба І. Виговського розірвати союз з Москвою і створити Велике Князівство Руське.
+- **1659**: Переяславські статті Ю. Хмельницького — перше суттєве звуження автономії (заборона зовнішньої політики, воєводи в містах).
+- **1667, січень**: Андрусівське перемир'я — таємний поділ України між Москвою та Польщею по Дніпру.
+- **1686**: Вічний мир — остаточна відмова Польщі від Києва та Лівобережжя на користь Москви, підпорядкування Київської митрополії Московському патріархату.
+
+## Ключові факти та цитати
+- **Березневі статті (1654)**: «То ми, великий государ, підданого нашого Богдана Хмельницького... i все наше Військо Запорозьке пожалували - веліли їм бути під нашою... високою рукою, згідно з давнішими їх правами і привілеями». (Формальне збереження прав, яке Москва трактувала як "пожалування", а козаки як "договір").
+- **Реакція на присягу (апокрифічна/сучасники)**: Іван Богун, Іван Сірко та Запорозька Січ відмовилися присягати царю в 1654 році.
+- **Андрусівський поділ (1667)**: «На Україні ж обом сторонам не мати ніякого діла... а бути тій Україні... так, як вона нині розділена» (Фактична зрада Москвою зобов'язань 1654 року щодо "захисту" всієї України).
+- **Вічний мир (1686)**: Купівля Києва за 146 тисяч рублів — юридичне оформлення анексії.
+
+## Engagement Hooks (mapped to sections)
+- Section "Фаза 1 — Підкуп (1654)": [!myth-buster] — **Міф про "Возз'єднання"**. Радянська історіографія подавала це як віковічне прагнення народу. Реальність: ситуативний військовий союз, де кожна сторона мала свої, часто протилежні, цілі.
+- Section "Фаза 1 — Підкуп (1654)": [!quote] — Цитата з Березневих статей про збереження прав (суд, фінанси), щоб показати контраст з реальністю.
+- Section "Фаза 2 — Залежність (1654-1667)": [!context] — **Московські воєводи**. Як "захисники" перетворилися на окупаційну адміністрацію, що втручалася у внутрішні справи (збирання податків, перепис населення).
+- Section "Фаза 3 — Зрада (1667-1686)": [!history-bite] — **Ціна Києва**. Як "мати міст руських" стала предметом торгу за 146 000 рублів у Вічному мирі.
+- Section "Фаза 4 — Знищення (поступове)": [!decolonization] — **Термін "Руїна"**. Як внутрішній розбрат був спровокований та підживлений зовнішніми гравцями (Москва, Варшава, Стамбул), а не був просто наслідком "української анархії".
+- Section "Аналіз циклу": [!historiography] — Порівняння оцінок: Грушевський (помилка Хмельницького), Липинський (втрата еліти), радянська школа ("менше зло").
+
+## Деколонізаційний контекст
+- **Imperial Myth**: Переяслав 1654 — це "возз'єднання" братніх народів, порятунок від польського гніту.
+- **Ukrainian Reality**: Це був військовий альянс, який Москва використала для поступового поглинання (інкорпорації) Гетьманщини. Березневі статті гарантували майже повну незалежність, але Москва одразу почала їх порушувати (Коломацькі статті, Переяславські статті-2).
+- **Agency**: Українці не були пасивними жертвами. Виговський (Конотоп), Дорошенко (союз з Туреччиною), Мазепа — це постійні спроби вирватися з "московського циклу".
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| Переяславська рада 1654 | Возз'єднання (Reunification) | Військовий союз (Military Alliance) / Протекторат |
+| Статус Гетьманщини | Невід'ємна частина Росії | Автономна держава (васал) з власною адміністрацією |
+| Руїна | Громадянська війна через "зради" гетьманів | Геополітична катастрофа, спровокована зовнішніми інтервенціями |
+| Вічний мир 1686 | Стабілізація кордонів | Розчленування України / Зрада союзника |
+
+## Section-Mapped Research Notes
+
+### Вступ — Класичний цикл
+Цикл поглинання: 1. Обіцянки та "підкуп" еліт (гарантії прав). 2. Встановлення контролю (війська, воєводи). 3. Порушення умов та "зрада" (сепаратні мири за рахунок України). 4. Повне знищення суб'єктності (ліквідація посади гетьмана, Січі).
+
+### Фаза 1 — Підкуп (1654)
+Березневі статті як документ конфедеративного типу. Гроші не йдуть царю (тільки залишок). Суд своїм правом. Реєстр 60 000 — це величезна армія, яку Москва зобов'язалась фінансувати (але не робила цього).
+
+### Фаза 2 — Залежність (1654-1667)
+Поступове "закручування гайок". Переяславські статті 1659 (Юрій Хмельницький) — фальсифікація попередніх умов. Введення воєвод у Київ, Ніжин, Чернігів, Переяслав, Брацлав, Умань. Заборона переобрання гетьмана без указу царя.
+
+### Фаза 3 — Зрада (1667-1686)
+Андрусівське перемир'я 1667 — шок для козаків. Дорошенко намагається об'єднати береги (за підтримки Туреччини). Москва і Варшава ділять Україну як колонію. Вічний мир 1686 — юридична крапка. Підпорядкування церкви (важливий ментальний аспект "Зради").
+
+### Фаза 4 — Знищення (поступове)
+Руїна як механізм самознищення під зовнішнім кураторством. Многогрішний, Самойлович — спроби стабілізації на Лівобережжі, які закінчуються Сибіром. Мазепа приходить на фоні Коломацьких статей (ще більші обмеження).
+
+### Аналіз циклу
+Чому Хмельницький обрав Москву? (Релігійний фактор, надія на династичний протекторат). Альтернативи: Гадяч (запізно, несприйняття низами), Османська протекція (культурна прірва). Урок: будь-який союз з Москвою закінчується поглинанням.
+
+### Підсумок
+Переяславський цикл став матрицею для майбутніх стосунків (радянська окупація 1917-1920, події 2014-2022). Схема та сама: гібридна війна, використання внутрішніх суперечностей, порушення договорів.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12941)
+✓ Message 12913 acknowledged
+✓ Message 12941 acknowledged

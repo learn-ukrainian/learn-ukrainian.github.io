@@ -1,0 +1,313 @@
+✅ Message sent to Gemini (ID: 10255) [auto-acked: self-addressed]
+✓ Message 10255 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10255...
+📨 Message #10255
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-at-the-pharmacy
+   Time: 2026-02-20T20:05:15.140046+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: a2-60
+level: A2
+sequence: 60
+slug: at-the-pharmacy
+version: '2.0'
+title: At the Pharmacy
+subtitle: Buying Medicine
+content_outline:
+- section: 'Introduction: Ukrainian Pharmacies'
+  points:
+  - 'Pharmacy types (аптека) — cultural hook: «Чергова аптека» (duty pharmacy) open
+    24/7 with green cross'
+  - 'Over-the-counter vs prescription — cultural hook: antibiotics require «е-рецепт»
+    (electronic prescription via SMS) since 2022; term: «безрецептурні ліки» (OTC
+    drugs)'
+  - 'Pharmacy vocabulary overview — learner error: «ліки» is always plural (pluralia
+    tantum); avoid Russianism «лікарство»; alignment: State Standard §3.12 «Здоров’я
+    й особиста гігієна»'
+- section: Asking for Medicine
+  points:
+  - 'Мені потрібно щось від... — grammar drill: «ліки від» + Genitive (not «для»);
+    e.g., «від голови», «від кашлю»; alignment: State Standard §4.2.2.2 (Genitive
+    for ''від'')'
+  - 'Describing symptoms — cultural hook: preference for herbal remedies (фітотерапія)
+    like tea with viburnum before synthetic drugs'
+  - 'Common ailments — collocations: «ліки від застуди» (cold), «від кашлю» (cough),
+    «від голови» (headache)'
+- section: Understanding Labels
+  points:
+  - 'дозування, застосування — usage note: standard «приймати ліки» vs colloquial
+    «пити таблетки»; alignment: State Standard §4.2.3.2 (Imperative for instructions)'
+  - протипоказання
+  - Reading instructions
+- section: Dosage Instructions
+  points:
+  - 'таблетка, капсула, сироп — collocations: «таблетки для розсмоктування» (lozenges)'
+  - 'раз на день, двічі на день — phrase: «приймати по одній таблетці» (take one pill
+    at a time)'
+  - Before/after meals
+- section: Side Effects and Warnings
+  points:
+  - побічні ефекти
+  - Allergies and interactions
+  - When to see a doctor
+- section: 'Practice: Pharmacy Dialogue'
+  points:
+  - Buy medicine for common ailments — incorporate distinction between OTC painkillers
+    and prescription antibiotics
+  - Ask about dosage
+vocabulary_hints:
+  required:
+  - 'аптека (pharmacy) — collocations: чергова аптека (24/7), купити в аптеці'
+  - 'ліки (medicine) — always plural! collocations: ліки від застуди, приймати ліки,
+    безрецептурні ліки'
+  - 'таблетка (pill) — collocations: таблетка від голови, приймати по одній таблетці,
+    таблетки для розсмоктування'
+  - 'рецепт (prescription) — collocations: електронний рецепт (е-рецепт), ліки за
+    рецептом, виписати рецепт'
+  - дозування (dosage)
+  - 'біль (pain) — use with «від»: таблетки від болю'
+  - 'кашель (cough) — collocations: сироп від кашлю, ліки від кашлю'
+  - 'температура (fever) — collocations: жарознижувальні (antipyretics)'
+  recommended:
+  - сироп (syrup)
+  - мазь (ointment)
+  - побічний ефект (side effect)
+  - протипоказання (contraindication)
+  - алергія (allergy)
+  - фармацевт (pharmacist)
+activity_hints:
+- type: match-up
+  focus: Pharmacy vocabulary
+  items: 25
+- type: fill-in
+  focus: Complete medicine instructions
+  items: 15
+focus: practical
+pedagogy: PPP
+prerequisites:
+- a2-59 (Medical Care)
+connects_to:
+- a2-61 (Hotel Accommodation)
+objectives:
+- Learner can ask for medicine by symptoms
+- Learner can understand dosage instructions
+- Learner can read medicine labels
+- Learner can discuss side effects
+grammar:
+- Asking for specific medicine by symptoms
+- Understanding dosage instructions
+- Side effects and warnings vocabulary
+register: розмовний
+immersion: 75-90% Ukrainian
+phase: A2.6 [Practical]
+persona:
+  voice: Encouraging Cultural Guide
+  role: Experienced Pharmacist
+word_target: 3000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: At the Pharmacy
+
+## State Standard Reference
+§3.12: "Здоров’я й особиста гігієна: ... самопочуття; хвороби й нездужання; візит до лікаря; аптека."
+Alignment: This module directly addresses the "аптека" (pharmacy) requirement of the "Здоров’я й особиста гігієна" thematic catalogue, utilizing Genitive case structures (§4.2.2.2) for requesting medicines ("від кашлю") and Imperative mood (§4.2.3.2) for understanding dosage instructions.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| **Ліки** (pl. only) | High (Everyday/Medical) | ліки від застуди (cold medicine), ліки від кашлю (cough medicine), приймати ліки (to take medicine), безрецептурні ліки (OTC drugs) |
+| **Аптека** | High (Infrastructure) | чергова аптека (24/7 pharmacy), в аптеці (at the pharmacy), купити в аптеці (to buy at the pharmacy) |
+| **Таблетка** | High (Common) | таблетка від голови (pill for headache), таблетки для розсмоктування (lozenges), приймати по одній таблетці (take one pill at a time) |
+| **Рецепт** | Medium (Medical) | електронний рецепт (e-prescription), ліки за рецептом (prescription drugs), виписати рецепт (to write a prescription) |
+
+## Cultural Hooks
+1. **Електронний рецепт (E-Recipe):** Since 2022, antibiotics and many other medicines in Ukraine require an electronic prescription ("е-рецепт"), which is sent via SMS. You cannot just buy antibiotics over the counter anymore.
+2. **Herbal & Natural Focus:** Ukrainians often prefer herbal remedies (фітотерапія) for minor ailments like colds or stress (e.g., tea with viburnum/kalyna, herbal syrups) before turning to synthetic drugs.
+3. **"Чергова аптека":** Many cities have designated "duty pharmacies" that remain open 24/7, marked with a green cross.
+
+## Common Learner Errors
+1. **Wrong Word:** Using "лікарство" (Russianism/Surzhyk) instead of **ліки**.
+   *   *Correction:* Always use "ліки".
+2. **Grammar Number:** Treating "ліки" as singular.
+   *   *Correction:* "Ліки" is **always plural** (pluralia tantum). "Ці ліки дорогі" (not "це ліки...").
+3. **Preposition Error:** Using "для" (for) with ailments instead of "від" (from/against).
+   *   *Correction:* "Ліки **від** голови" (Medicine *from* headache), not "для голови".
+4. **Verb Confusion:** Using "пити таблетки" (to drink pills) vs "приймати ліки" (to take medicine).
+   *   *Note:* "Пити" is colloquially common, but "приймати" is the correct standard form.
+
+## Cross-References
+- **Builds on:** a2-59 (Doctor Visit) — uses symptom vocabulary; a2-04 (Genitive Case) — structural foundation.
+- **Prepares for:** a2-61 (Hotel Accommodation) — resolving practical problems; B1-Health modules.
+
+## Notes for Content Writing
+- **Crucial Distinction:** Ensure the dialogue clarifies that antibiotics require a prescription (realism), while painkillers/cold meds are OTC.
+- **Genitive Drill:** The construction "щось від..." (something for/against...) is the core grammar point. Drill "від + Genitive" extensively.
+- **Immersion:** Use standard "приймати" in instructions, but allow "пити" in colloquial patient dialogue for authenticity.
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Українські аптеки (Introduction: Ukrainian Pharmacies)"
+  words: 400
+  points:
+  - "Cultural hook: Identifying a «чергова аптека» (duty pharmacy) open 24/7, marked by the iconic green cross; explaining the infrastructure of Ukrainian pharmacies."
+  - "Prescription system: The transition to «е-рецепт» (electronic prescription via SMS) since 2022 for antibiotics; distinguishing between «безрецептурні ліки» (OTC) and prescription-only meds."
+  - "Learner error: Clarifying that «ліки» is pluralia tantum (always plural); correcting the common mistake of treating it as singular (e.g., «Ці ліки», not «Це ліки»)."
+  - "Linguistic purity: Identifying and avoiding the Russianism «лікарство» in favor of the standard Ukrainian «ліки» (alignment with State Standard §3.12)."
+- section: "Пошук ліків: Симптоми та запити (Asking for Medicine: Symptoms and Requests)"
+  words: 750
+  points:
+  - "Grammar drill: Using «від» + Genitive case for ailments (State Standard §4.2.2.2); correcting the error of using «для» (e.g., «ліки від кашлю» vs incorrect «ліки для кашлю»)."
+  - "Cultural hook: Ukrainian preference for «фітотерапія» (herbal remedies); discussing common natural treatments like tea with «калина» (viburnum) or herbal syrups."
+  - "Functional language: Key phrases for describing symptoms such as «У мене болить...» and «Мені потрібно щось від...» for specific conditions like cold («застуда») or headache («біль голови»)."
+  - "Vocabulary expansion: Categorizing common OTC meds: «жарознижувальні» (antipyretics), «знеболювальні» (painkillers), and «таблетки для розсмоктування» (lozenges)."
+- section: "Інструкції та етикетки (Instructions and Labels)"
+  words: 650
+  points:
+  - "Standard vs Colloquial usage: Defining the formal «приймати ліки» used in labels versus the colloquial «пити таблетки» found in daily speech."
+  - "Reading labels: Identifying key terms on packaging: «дозування» (dosage), «застосування» (application), and «протипоказання» (contraindications)."
+  - "Grammar in context: Understanding instructions using the Imperative mood (State Standard §4.2.3.2) found on medicine leaflets."
+  - "Warning signs: Recognizing storage instructions like «зберігати в недоступному для дітей місці» and expiry dates."
+- section: "Дозування та побічні ефекти (Dosage and Side Effects)"
+  words: 700
+  points:
+  - "Precision in dosage: Phrases for frequency such as «раз на день», «двічі на добу», and the specific construction «приймати по одній таблетці»."
+  - "Meal-related instructions: Differentiating between «до їди» (before meals), «під час їди» (during meals), and «після їди» (after meals)."
+  - "Side effects and allergies: Essential vocabulary for «побічні ефекти» and «алергія»; discussing interactions with other substances."
+  - "Medical forms: Vocabulary for different delivery methods: «капсула» (capsule), «сироп» (syrup), «мазь» (ointment), and «краплі» (drops)."
+- section: "Практика: Діалог в аптеці (Practice: Pharmacy Dialogue)"
+  words: 500
+  points:
+  - "Roleplay: Buying medicine for a cold using the «від + Genitive» construction and asking about side effects."
+  - "Authenticity check: A scenario where the learner asks for antibiotics and the pharmacist explains the requirement for an «е-рецепт»."
+  - "Consultation: Asking the pharmacist («фармацевт») for a recommendation between a synthetic drug and a herbal alternative."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "аптека (pharmacy) — collocations: чергова аптека (24/7), купити в аптеці; high frequency"
+  - "ліки (medicine) — always plural! Avoid Russianism 'лікарство'; collocations: ліки від застуди, приймати ліки"
+  - "таблетка (pill) — collocations: таблетка від голови, приймати по одній таблетці, таблетки для розсмоктування"
+  - "рецепт (prescription) — collocations: електронний рецепт (е-рецепт), ліки за рецептом, виписати рецепт"
+  - "біль (pain) — use with 'від' for medicine: таблетки від болю; note gender (masculine)"
+  - "кашель (cough) — collocations: сироп від кашлю, ліки від кашлю"
+  - "температура (fever) — collocations: жарознижувальні (antipyretics), висока температура"
+  - "приймати (to take) — standard medical verb for dosage; distinguish from colloquial 'пити'"
+  recommended:
+  - "сироп (syrup) — collocation: сироп від кашлю"
+  - "мазь (ointment) — usage: наносити мазь (to apply ointment)"
+  - "дозування (dosage) — note the suffix -ння"
+  - "побічний ефект (side effect) — high frequency in warnings"
+  - "протипоказання (contraindication) — technical term for labels"
+  - "алергія (allergy) — usage: алергія на (allergy to + Acc)"
+  - "фармацевт (pharmacist) — the professional at the counter"
+  - "застосування (application/usage) — formal term on packaging"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4835 chars)
+✅ Message sent to Claude (ID: 10260)
+✓ Message 10260 acknowledged
+   Auto-acknowledged reply #10260 (stdout delivery — no inbox accumulation)
+✓ Message 10255 acknowledged

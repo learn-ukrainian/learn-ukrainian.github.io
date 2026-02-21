@@ -1,0 +1,301 @@
+✅ Message sent to Gemini (ID: 12273) [auto-acked: self-addressed]
+✓ Message 12273 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12273...
+📨 Message #12273
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-knyhy-butiia-shevchenko
+   Time: 2026-02-20T23:38:12.028923+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-hist-029
+level: c1-hist
+sequence: 29
+version: '1.0'
+title: 'Книги Буття: Шевченко та Кирило-Мефодіївці'
+focus: history
+pedagogy: seminar
+objectives:
+- 'Analyze the causes and consequences of книги буття: шевченко та кирило-мефодіївці'
+- Evaluate the historical significance of перша політична програма
+content_outline:
+- section: Вступ — Перша політична програма
+  subsections:
+  - 1846-1847 — контекст
+  - Кирило-Мефодіївське братство
+  - «Книги буття» — маніфест
+  - Чому важливий документ
+- section: Історичний контекст
+  subsections:
+  - Україна під Російською імперією
+  - Пробудження націй — європейський контекст
+  - Київський університет — інтелектуальне середовище
+  - Романтичний націоналізм
+- section: Братство і його члени
+  subsections:
+  - Костомаров — ідеолог
+  - Шевченко — поет
+  - Куліш — письменник
+  - Інші члени
+  - Як організувалися
+- section: «Книги буття» — зміст
+  subsections:
+  - Структура — біблійна форма
+  - Історія слов'ян
+  - Україна як месія народів
+  - Федерація — політичний ідеал
+  - Скасування кріпацтва
+- section: Фрагмент — Україна як месія
+  subsections:
+  - Текст (з глосами)
+  - Месіанський наратив
+  - Порівняння з польським месіанізмом
+  - Романтична мова
+- section: Доля братства
+  subsections:
+  - Донос і арешти
+  - Покарання — Шевченко найсуворіше
+  - Чому Шевченко?
+  - Довготривалий вплив
+- section: Підсумок
+  subsections:
+  - Перша політична програма
+  - Від романтизму до політики
+  - Зв'язок із пізнішими рухами
+vocabulary:
+- братство
+- маніфест
+- месіанізм
+- федерація
+- кріпацтво
+- романтичний націоналізм
+- пробудження
+- донос
+- покарання
+- програма
+- провіденціалізм
+- панславізм
+- утопія
+- змова
+- ідеологія
+activities:
+- type: reading
+  focus: «Ukraine as Messiah» passage with glosses
+- type: comparative-study
+  focus: Compare with Polish messianism (Mickiewicz)
+- type: critical-analysis
+  focus: Map political ideas in the manifesto
+- type: critical-analysis
+  focus: Why biblical form? Who was the audience?
+- type: essay-response
+  focus: Чому Кирило-Мефодіївське братство важливе для українського руху?
+sources:
+- name: Кирило-Мефодіївське братство (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Кирило-Мефодіївське_братство
+  type: reference
+  notes: Brotherhood overview
+- name: Книги буття українського народу
+  url: https://uk.wikipedia.org/wiki/Книги_буття_українського_народу
+  type: reference
+  notes: Brotherhood manifesto
+- name: Текст "Книг буття"
+  url: https://uk.wikisource.org/wiki/Книга_буття_українського_народу
+  type: primary
+  notes: Full text
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
+persona:
+  voice: Academic Historiographer
+  role: Romantic Nationalism Scholar
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Книги Буття: Шевченко та Кирило-Мефодіївці
+
+## Використані джерела
+1. [Енциклопедія історії України: Кирило-Мефодіївське товариство](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Kyrylo_Mefodiivske_tovarystvo) — фундаментальний огляд діяльності, складу та документів.
+2. [Ізборник: Книги битія українського народу (текст)](http://litopys.org.ua/rizne/knyhy.htm) — повний текст програмного документу.
+3. [Енциклопедія Сучасної України: Костомаров Микола Іванович](https://esu.com.ua/article-6115) — біографія головного ідеолога та автора "Книг буття".
+4. [Ізборник: Зайцев П. Життя Тараса Шевченка](http://litopys.org.ua/zajcev/zl.htm) — деталі про участь Шевченка та його арешт.
+
+## Хронологія
+- **Грудень 1845 — Січень 1846**: Заснування Кирило-Мефодіївського братства в Києві (М. Костомаров, М. Гулак, В. Білозерський).
+- **Квітень 1846**: Вступ Тараса Шевченка до братства.
+- **1846**: Написання Миколою Костомаровим "Книг буття українського народу" (Закону Божого).
+- **3 березня 1847**: Донос студента Олексія Петрова попечителю Київського учбового округу О. Траскіну.
+- **Березень — Квітень 1847**: Масові арешти членів братства в Києві та Петербурзі.
+- **5 квітня 1847**: Арешт Тараса Шевченка на переправі через Дніпро біля Києва.
+- **30 травня 1847**: Винесення вироків: Шевченка заслано в солдати із забороною писати й малювати, Костомарова — ув'язнено на рік, згодом заслано.
+
+## Ключові факти та цитати
+- **Авторство**: Основний текст написав Микола Костомаров, але ідеологічний вплив Шевченка (особливо поеми "Сон", "Кавказ", "І мертвим, і живим...") був вирішальним для радикалізації програми.
+- **Структура**: 109 параграфів, стилізованих під біблійні тексти.
+- **Цитата (месіанізм)**: "І встане Україна з своєї могили, і знову озоветься до всіх братів своїх слов’ян, і почують крик її, і встане Слов’янщина, і не позостанеться ні царя, ні царевича, ні царівни, ні князя, ні графа, ні герцога, ні сіятельства, ні превосходительства, ні пана, ні боярина, ні кріпака, ні холопа".
+- **Цитата (федералізм)**: "Україна буде неподлеглою Річчю Посполитою в союзі Слов’янськім".
+- **Паралелі**: Твір перегукується з "Книгами народу польського і пілігримства польського" Адама Міцкевича, але замість польського шляхетського месіанізму пропонує український народний (селянський/козацький) месіанізм.
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ — Перша політична програма": [!history-bite] — Братство мало власний перстень з написом "Св. Кирило і Мефодій", який носили члени як знак приналежності.
+- Section "Історичний контекст": [!context] — "Весна народів" 1848 року була вже на порозі; братчики передчували цей європейський вибух.
+- Section "Братство і його члени: Ідеологи та організація": [!myth-buster] — Братство не було "гуртом мрійників", це була перша структура з чітким політичним планом (федерація, республіка).
+- Section "«Книги буття» — зміст: Історіософія": [!quote] — "Лежить Україна в могилі, але не вмерла..." — пряма алюзія на Лазаря та Міцкевича.
+- Section "Фрагмент — Україна як месія": [!historiography] — Порівняння польського (шляхетського) та українського (егалітарного) месіанізму.
+- Section "Доля братства": [!decolonization] — Жорстокість вироку Шевченку ("під найсуворіший нагляд") свідчить, що імперія боялася слова більше, ніж зброї.
+
+## Деколонізаційний контекст
+- **Imperial Myth**: Радянська історіографія зображувала братчиків як "буржуазних лібералів" або, навпаки, намагалася прив'язати їх до російських революціонерів-декабристів/народників.
+- **Ukrainian Reality**: Це був *самодостатній* український проект. На відміну від російських слов'янофілів (які бачили центр у Москві/монархії), братчики бачили центр у Києві/республіці. Вони вперше сформулювали ідею української політичної нації.
+- **Agency**: Братство не "просило" реформ, а вимагало повної зміни світоустрою (знищення царату).
+
+## Contested Terms
+| Concept | Imperial/Soviet framing | Ukrainian (decolonized) framing |
+|---------|-----------------|-------------------------------|
+| **Малоросія** | Офіційна назва, частина імперії | **Україна** (термін вживається в "Книгах буття" як політична назва держави) |
+| **Слов'янофіли** | Російський рух за "об'єднання навколо Росії" | **Кирило-Мефодіївці** — рух за рівноправну федерацію вільних народів |
+| **Зрада (донос)** | "Викриття змови" | **Зрада Юди** (біблійна аналогія у Шевченка та Костомарова) |
+
+## Section-Mapped Research Notes
+
+### Вступ — Перша політична програма
+Перша спроба політичного самовизначення українців. Документ "Закон Божий" (Книги буття) — це не просто література, це маніфест.
+
+### Історичний контекст
+Середина XIX ст. — епоха романтизму. Вплив західноєвропейських ідей (французький утопічний соціалізм, німецька філософія, польський месіанізм). Київський університет як центр вільнодумства.
+
+### Братство і його члени
+Костомаров (мозок, історик), Шевченко (душа, пророк), Куліш (праця, ентузіазм), Гулак (організатор). Різні погляди: Костомаров — ліберал-федераліст, Шевченко — радикал-соціаліст (умовно).
+
+### «Книги буття» — зміст
+Синтез християнства та національної ідеї. Історія людства як боротьба правди (свободи) і кривди (тиранії). Царі — вороги Божі. Україна — країна, що найбільше любила свободу (козацтво), тому була розіп'ята.
+
+### Фрагмент — Україна як месія
+Образ України як Христа. Вона "в могилі", але воскресне і принесе свободу всім слов'янам. Це відповідь на польську концепцію "Польща — Христос народів". Український варіант демократичніший: він включає селянство, а не лише шляхту.
+
+### Доля братства
+Розгром організації завадив поширенню ідей, але "Книги" ходили в списках. Шевченко постраждав найбільше, бо його вірші ("Сон") вдарили особисто по імператору та його дружині.
+
+### Підсумок
+Ідеї братства лягли в основу модерного українського націєтворення (Драгоманов, Грушевський). Перехід від культурництва до політики.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12355)
+✓ Message 12273 acknowledged
+✓ Message 12355 acknowledged

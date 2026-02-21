@@ -1,0 +1,116 @@
+module: c2-034
+level: c2
+sequence: 34
+version: '2.0'
+title: Літературний переклад I — поезія
+focus: literature
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Переклад поезії — Вікіпедія
+  url: https://uk.wikipedia.org/wiki/Поетичний_переклад
+  type: reference
+  notes: Challenges of poetry translation
+- name: Український поетичний переклад
+  url: https://ukrlib.com.ua/
+  type: primary
+  notes: Examples of translated poetry
+- name: Максим Рильський — перекладач
+  url: https://uk.wikipedia.org/wiki/Максим_Рильський
+  type: reference
+  notes: Master poetry translator
+content_outline:
+- section: Вступ — Чи можна перекласти поезію?
+  points:
+  - Проблема перекладу поезії
+  - Що втрачається і що зберігається
+  - Переклад vs. переспів vs. адаптація
+- section: Переклад форми
+  points:
+  - Збереження метру і ритму
+  - Переклад рими
+  - Збереження строфіки
+  - Коли форму можна змінити
+- section: Переклад звукової організації
+  points:
+  - Алітерація і асонанс
+  - Звуковий символізм
+  - Компенсаційні стратегії
+  - Евфонія в перекладі
+- section: Переклад образності
+  points:
+  - Метафори і їх переклад
+  - Культурно-специфічні образи
+  - Інтертекстуальні посилання
+  - Збереження vs. адаптація
+- section: Практикум — переклад з англійської
+  points:
+  - Аналіз оригіналу
+  - Вибір стратегії
+  - Процес перекладу
+  - Самоаналіз результату
+- section: Практикум — переклад на англійську
+  points:
+  - Специфіка перекладу з української
+  - Що важливо зберегти
+  - Представлення української поезії світові
+- section: Підсумок
+  points:
+  - Критерії якості поетичного перекладу
+  - Роль перекладача як співавтора
+  - Від перекладу до власної творчості
+vocabulary:
+  required:
+  - поетичний переклад (poetry translation)
+  - переспів (adaptation/versification)
+  - метр (meter)
+  - рима (rhyme)
+  - звукопис (sound painting)
+  - образ (image)
+  - оригінал (original)
+  - еквівалент (equivalent)
+  - інтерпретація (interpretation)
+  - компенсація (compensation)
+  recommended:
+  - верлібр (free verse)
+  - строфіка (stanzaic form)
+  - калька (calque)
+  - трансформація (transformation)
+  - конотація (connotation)
+  forbidden: '[]'
+activities:
+  types_required:
+  - essay-response
+  - quiz
+  - comparative-study
+  - critical-analysis
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c2-35 (Literary Translation II — Prose)
+- 'c2-36 (Creative Writing: Poetry)'
+- c2-86 (C2.4 Translation Practice I)
+vocabulary_hints:
+  required:
+  - концепція (concept)
+  - аналіз (analysis)
+  - дискурс (discourse)
+  - методологія (methodology)
+  recommended:
+  - інтерпретація (interpretation)
+  - контекстуалізація (contextualization)
+  - синтез (synthesis)
+activity_hints:
+- type: reading
+  focus: Поглиблений аналіз тексту
+  items: 4
+- type: essay-response
+  focus: Критичне осмислення
+- type: discussion
+  focus: Дискусія та аргументація
+  items: 1
+persona:
+  voice: Senior Specialist
+  role: Poetry Translator

@@ -2,12 +2,5 @@
   "track": "c1-bio",
   "slug": "oleksander-potebnya",
   "mode": "v3",
-  "phases": {
-    "v3-A": {
-      "status": "complete",
-      "ts": "2026-02-19T15:02:21Z",
-      "task_id": "v3-oleksander-potebnya-pA",
-      "mode": "full"
-    }
-  }
+  "phases": {}
 }

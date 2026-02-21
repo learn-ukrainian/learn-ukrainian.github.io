@@ -1,0 +1,93 @@
+module: a2-21
+level: A2
+sequence: 21
+slug: numerals-and-nouns
+version: '2.0'
+title: Numerals and Nouns
+subtitle: Counting Things Correctly
+content_outline:
+- section: Introduction / Вступ
+  points:
+  - 'The concept of ''Zones'' in Ukrainian counting — use the mental model of Zone
+    1 (1), Zone 2 (2-4), Zone 3 (5-20) to simplify logic — Zone 1: ''1'' (Gender agreement);
+    Zone 2: ''2-4'' (Nominative Plural); Zone 3: ''5-20'' (Genitive Plural)'
+  - 'Why English logic fails here — mention State Standard §4.2.1.3 regarding quantitative
+    designation — learner error: assuming plural ''s'' works for all numbers > 1'
+- section: Presentation / Презентація
+  points:
+  - 'Zone 1: One (Agreement in gender) — learner error: forgetting gender agreement
+    for ''один''/''одна''/''одне'' (e.g., ''два пляшки'' instead of ''дві пляшки'');
+    collocations: один долар, одна година, одне вікно'
+  - 'Zone 2: Two, Three, Four (The dual trace - Genitive Singular) — cultural hook:
+    The Dual Legacy (Двоїна) explains the specific stress patterns that echo the old
+    dual number; learner error: L1 Interference (Russian) often leads to using Genitive
+    Singular (два стола) instead of Ukrainian Nominative Plural (два столи)'
+  - 'Zone 3: Five to Twenty (The Genitive Plural zone) — learner error: The ''11-14''
+    Trap — learners often apply the ''Last Digit Rule'' (1-4) to teens, forgetting
+    they belong entirely to Zone 3; collocations: п''ять гривень, десять євро, двадцять
+    хвилин'
+  - 'Compound Numbers: The ''Last Digit'' Rule — emphasize that only the *last word*
+    determines the agreement zone (e.g., 21 -> Zone 1, 22 -> Zone 2)'
+  - 'Exceptions: 11-14 — reinforce that 11-14 belong strictly to Zone 3 (Genitive
+    Plural) despite ending in 1-4'
+- section: Practice / Практика
+  points:
+  - Market counting drills — use market context (ринок) for natural repetition of
+    counting currency (гривні) and products (яблука, пляшки)
+  - 'Currency agreement (Gryvnia/Dollar) — cultural hook: Kyivan Rus Currency — ''Gryvnia''
+    was a unit of weight in IX-XIII centuries; collocations: дві гривні vs п''ять
+    гривень, один долар vs три долари'
+- section: Dialogues / Діалоги
+  points:
+  - 'Buying products in specific quantities at a market — include Animacy distinction
+    (Accusative case): ''Бачу два столи'' (inanimate = Nom) vs ''Бачу двох друзів''
+    (animate = Gen-like form)'
+activity_hints:
+- type: quiz
+  focus: Accusative with numerals (animate vs inanimate)
+  items: 8
+- type: fill-in
+  focus: Dative with numerals
+  items: 8
+- type: true-false
+  focus: Numeral case rules
+  items: 8
+focus: grammar
+pedagogy: PPP
+objectives:
+- Learner can use correct noun forms with numerals 1, 2-4, and 5+
+- Learner can identify agreement zones for compound numbers
+- Learner can use numerals in shopping contexts
+- Learner can count years and age
+- Learner can use numerals in accusative (animate vs inanimate)
+- Learner can use numerals in dative case
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Numerals
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Numeral-noun agreement requirements for A2
+- name: Historical Ukrainian Grammar - Dual Number
+  url: https://uk.wikipedia.org/wiki/Двоїна
+  type: reference
+  notes: Context for the 2-4 agreement pattern
+immersion: 60-75% Ukrainian
+phase: A2.2
+persona:
+  voice: Encouraging Cultural Guide
+  role: Inventory Manager
+vocabulary_hints:
+  required:
+  - один / одна / одне (one) — один долар, одна година, одне вікно
+  - 'два / дві (two) — два квитки, дві гривні, дві пляшки — learner error: gender
+    agreement'
+  - три (three) — три дні, три гривні — Zone 2 agreement
+  - чотири (four) — чотири роки — Zone 2 agreement
+  - п'ять (five) — п'ять гривень, п'ять доларів — Zone 3 agreement
+  - десять (ten) — десять євро, десять хвилин — Zone 3 agreement
+  - двадцять (twenty) — двадцять хвилин — Zone 3 agreement
+  - 'гривня (hryvnia) — три гривні, п''ять гривень, десять гривень — Cultural note:
+    Kyivan Rus currency'
+  - долар (dollar) — один долар, три долари, п'ять доларів
+  - євро (euro) — десять євро — Indeclinable noun
+word_target: 3000

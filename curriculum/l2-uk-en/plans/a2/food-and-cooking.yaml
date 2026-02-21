@@ -6,52 +6,86 @@ version: '2.0'
 title: Food and Cooking
 subtitle: In the Kitchen
 content_outline:
-- section: Вступ
+- section: Вступ (Introduction)
+  words: 450
   points:
-  - 'Cooking culture in Ukraine — cultural hook: «Чим хата багата, тим і рада» (hospitality
-    principle)'
-  - 'Traditional dishes — cultural hook: Borshch (UNESCO heritage; note ''зажарка''
-    process) and Varenyky (versatility of fillings)'
-  - Kitchen vocabulary — aligned with State Standard §3.10 (їжа, посуд, способи приготування)
-- section: Граматика
+  - 'The core principle of Ukrainian hospitality: «Чим хата багата, тим і рада» (What
+    the house is rich in, it is glad to offer); explanation of offering guests everything
+    available, starting with bread and salt (хліб-сіль).'
+  - 'Overview of the module objectives aligned with State Standard §3.10: identifying
+    kitchen equipment (посуд), cooking methods (способи приготування), and traditional
+    dishes.'
+  - Introduction to Borshch as UNESCO Intangible Cultural Heritage; the concept that
+    it is more than a soup, but a defining cultural process involving specific steps
+    like 'зажарка'.
+- section: 'Лексика: Кухня та приготування (Vocabulary: Kitchen and Cooking)'
+  words: 700
   points:
-  - 'Kitchen equipment (каструля, сковорода, духовка) — grammar focus: Instrumental
-    case for tools (ножем, ложкою) WITHOUT preposition ''з''; learner error: using
-    ''з'' for tools (§4.2.2.5); content note: include table comparing Nominative vs
-    Instrumental for all 3 genders (ніж->ножем, ложка->ложкою)'
-  - 'Cooking methods (варити, смажити, пекти) — learner error: confusing ''варити''
-    (boil/cook liquid) with general ''готувати'' (prepare food); usage note: you don''t
-    ''варити'' a sandwich'
-  - Meals of the day (сніданок, обід, вечеря)
-  - 'Tastes (солодкий, солоний, кислий) — cultural hook: varenyky as example of sweet
-    vs salty contrast'
-- section: Практика
+  - 'High-frequency kitchen equipment based on research: каструля (pot), сковорода
+    (pan), духовка (oven), ніж (knife); collocations: велика каструля, розігріта сковорода,
+    гаряча духовка.'
+  - 'Core cooking verbs and their nuances: варити (to boil/cook in liquid), смажити
+    (to fry), пекти (to bake), різати (to cut); collocations: варити борщ, смажити
+    м''ясо, пекти хліб, різати овочі.'
+  - 'Vocabulary nuance note: distinguishing ''варити'' (specific to liquids/boiling)
+    from the general ''готувати'' (to prepare); instruction that one does not ''варити''
+    a sandwich or salad.'
+  - 'Tastes and contrasts: солодкий (sweet) and солоний (salty); using the versatility
+    of varenyky fillings (cherry vs. potato) to illustrate the contrast.'
+- section: 'Граматика: Орудний відмінок та Наказовий спосіб (Grammar: Instrumental
+    Case and Imperative Mood)'
+  words: 750
   points:
-  - 'Dialogues: cooking with grandmother — focus: using cooking verbs in context'
-  - 'Recipe practice — focus: Imperative mood (наріж, додай) for instructions (§4.2.3.2)'
-  - 'Table phrases — cultural hook: hospitality context'
-- section: Підсумок
+  - 'Grammar focus §4.2.2.5: Instrumental case for tools and instruments. Critical
+    correction of common learner error: using the preposition ''з'' for tools (e.g.,
+    *ріжу з ножем). Correct form: різати ножем (Instrumental ONLY).'
+  - 'Comparative table of Nominative vs. Instrumental for all three genders to prevent
+    case ending confusion: ніж -> ножем (masc), ложка -> ложкою (fem), масло -> маслом
+    (neut).'
+  - 'Distinguishing ''Instrumental for tools'' (NO preposition) from ''Instrumental
+    for accompaniment'' (WITH preposition ''з''/''із''): різати ножем vs. чай із лимоном
+    or вареники зі сметаною.'
+  - 'Imperative mood for recipes and instructions (§4.2.3.2). Target 2nd person singular
+    forms: наріж (cut), додай (add), звари (boil), перемішай (mix).'
+- section: 'Культура: Традиційні страви (Culture: Traditional Dishes)'
+  words: 650
   points:
-  - Summary of learned vocabulary
-  - Cultural insights
+  - 'Deep dive into Borshch culture: the ''зажарка'' process (sautéing beets, carrots,
+    and onions) and the diversity of family recipes. Reflection on why every recipe
+    is considered ''authentic''.'
+  - 'Varenyky versatility: main dishes (potato, cabbage, meat) vs. desserts (cherries,
+    cottage cheese). The ritual of making varenyky as a family activity.'
+  - Table etiquette and hospitality phrases in the context of a Ukrainian home; the
+    role of the host as someone who 'is glad' to share food.
+- section: Практика та Підсумок (Practice and Summary)
+  words: 450
+  points:
+  - 'Dialogue practice: cooking with a grandmother. Contextual use of kitchen vocabulary,
+    instrumental case for tools, and imperative mood for following instructions.'
+  - Step-by-step recipe construction using sequence markers (спочатку, потім, наприкінці)
+    and imperative verbs (наріж овочі, поклади у каструлю).
+  - Summary of key §3.10 competencies and a final grammar check on the instrument/accompaniment
+    distinction in the Instrumental case.
 vocabulary_hints:
   required:
-  - 'варити (to boil/cook) — collocations: варити борщ, варити суп, варити каву; note:
-    specific to boiling/cooking in liquid'
-  - 'смажити (to fry) — collocations: смажити м''ясо, смажити рибу, смажити картоплю'
-  - 'пекти (to bake) — collocations: пекти пиріг, пекти хліб, пекти печиво'
-  - 'різати (to cut) — collocations: різати ножем (Instrumental), різати овочі, дрібно
-    різати'
-  - 'каструля (pot) — usage: велика каструля, у каструлі'
-  - 'сковорода (pan) — usage: на сковороді, розігріта сковорода'
-  - 'духовка (oven) — usage: у духовці, гаряча духовка'
+  - 'варити (to boil/cook) — high frequency core verb; specifically for liquids; collocations:
+    варити борщ, варити суп, варити каву'
+  - 'смажити (to fry) — high frequency; collocations: смажити м''ясо, смажити рибу,
+    смажити картоплю'
+  - 'пекти (to bake) — med-high frequency; collocations: пекти пиріг, пекти торт,
+    пекти хліб, пекти печиво'
+  - 'різати (to cut) — high frequency; collocations: різати ножем (pure Instrumental),
+    різати овочі, дрібно різати'
+  - 'каструля (pot) — household high frequency; usage: велика каструля, у каструлі'
+  - 'сковорода (pan) — household high frequency; usage: на сковороді, розігріта сковорода'
+  - 'духовка (oven) — household med frequency; usage: у духовці, гаряча духовка'
   - 'рецепт (recipe) — usage: слідувати рецепту, простий рецепт'
   recommended:
+  - 'додавати (to add) — core recipe verb; usage: додавати сіль, додавати цукор'
   - 'змішувати (to mix) — usage: змішувати інгредієнти'
-  - 'додавати (to add) — usage: додавати сіль, додавати цукор'
-  - 'солодкий (sweet) — collocations: солодкий чай, солодкі вареники'
-  - 'солоний (salty) — collocations: солоний огірок, солона страва'
-  - 'інгредієнт (ingredient) — usage: свіжі інгредієнти'
+  - 'солодкий (sweet) — high frequency; collocations: солодкий чай, солодкі вареники'
+  - 'солоний (salty) — high frequency; collocations: солоний огірок, солона страва'
+  - 'інгредієнт (ingredient) — usage: свіжі інгредієнти, список інгредієнтів'
   - 'страва (dish) — usage: національна страва, смачна страва'
 activity_hints:
 - type: match-up

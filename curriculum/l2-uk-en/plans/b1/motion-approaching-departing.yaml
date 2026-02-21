@@ -6,51 +6,79 @@ version: '2.0'
 title: 'Рух: наближення і віддалення'
 subtitle: Motion - Approaching & Departing
 content_outline:
-- section: Тест
+- section: 'Діагностика: Вступний тест (Diagnostic Test)'
+  words: 600
   points:
-  - 'Prefix diagnostic — learner error focus: confusing під- (approach) vs при- (arrive)'
-  - Intuition check
-- section: Пояснення
+  - 'Prefix diagnostic focusing on the common learner error: confusing під- (approach/come
+    up to) with при- (arrive) — identifying the semantic mismatch in ''Я підійшов
+    додому о 6-й'' versus the correct ''Я прийшов додому о 6-й''.'
+  - Intuition check on reaching a limit (до-) vs general arrival (при-) — testing
+    the learner's sense of 'дійти' as a process of walking all the way to a destination
+    versus simply appearing there.
+- section: 'Граматика: Простір та межі (Grammar: Space & Limits)'
+  words: 1000
   points:
-  - 'під-, від-, до- prefixes — strict preposition enforcement: підійти ДО (genitive),
-    відійти ВІД (genitive)'
-  - 'Approaching, departing, reaching — nuance: підійти implies proximity/closeness,
-    дійти implies reaching the end/limit'
-- section: Поглиблення
+  - 'Strict preposition enforcement as a grammatical anchor: підійти ДО (genitive)
+    and відійти ВІД (genitive) — mandatory drills for matching prefixes with their
+    required prepositions.'
+  - 'Semantic nuance breakdown based on State Standard §4.3.8: підійти implies proximity/getting
+    close to an object, whereas дійти implies reaching the physical end or boundary
+    of a path.'
+  - 'Prefix selection drills to correct the від- vs ви- confusion: explaining why
+    ''відійшов з кімнати'' is awkward and ''вийшов з кімнати'' (out of) is the correct
+    motion for leaving an enclosed space.'
+- section: 'Культурний контекст: Проводи та традиції (Cultural Context: Farewells
+    & Traditions)'
+  words: 800
   points:
-  - 'Extended patterns — cultural hook: «Проводи» and train station vocabulary (поїзд
-    відходить о...)'
-  - 'Nuanced usage — figurative meanings: дійти згоди (agree), відійти в минуле (become
-    history)'
-- section: Практика
+  - 'Cultural hook: «Присісти на дорогу» (Sit for the road) — detailing the superstition
+    of sitting in silence to trick house spirits (domovyk) before departure, now a
+    practical moment for reflection.'
+  - 'Railway station culture: «Проводи» (Farewells) — describing the tradition of
+    waiting on the platform until the train physically moves (поїзд рушив/відійшов),
+    emphasizing station-specific vocabulary.'
+- section: Переносне значення та фразеологія (Figurative Meanings & Phraseology)
+  words: 1000
   points:
-  - 'Prefix selection exercises — learner error focus: distinguishing від- (away from)
-    vs ви- (out of)'
-- section: Діалоги
+  - 'Abstract usage of motion verbs: mastering ''дійти згоди'' (to reach an agreement),
+    ''дійшли чутки'' (rumors reached/circulated), and ''відійти в минуле'' (to become
+    history/fade away).'
+  - 'Frequency-based collocations: using ''час підійти'' (time to approach), ''міра
+    наближення'' (degree of approach), and ''поступове віддалення'' (gradual moving
+    away) in formal or academic registers.'
+- section: 'Практика: Роль начальника станції (Practice: Station Master Persona)'
+  words: 600
   points:
-  - 'Journey dialogues — cultural hook: «Присісти на дорогу» tradition before departure'
-  - 'Natural usage — common collocations: час підійти, поїзд відійшов'
+  - 'Production task: Narrating a journey and departure schedule from the perspective
+    of a Station Master, using ''поїзд відходить о...'' and describing passengers
+    ''підходячи до каси''.'
+  - 'Final summary and synthesis: Consolidating the approach-depart-reach sequence
+    in a narrative about distance (відстань) and achieving a destination (досягнення).'
 vocabulary_hints:
   required:
   - підійти/підходити (to approach on foot) — підійти до вікна, підійти ближче, час
-    підійти
-  - під'їхати/під'їжджати (to approach by vehicle)
-  - відійти/відходити (to move away on foot) — відійти від краю, поїзд відійшов (departed),
-    відійти в минуле
-  - від'їхати/від'їжджати (to drive away)
+    підійти; High frequency; implies proximity
+  - під'їхати/під'їжджати (to approach by vehicle) — під'їхати до будинку, під'їхати
+    на таксі
+  - відійти/відходити (to move away on foot/depart) — відійти від краю, поїзд відійшов
+    (departed), відійти в минуле (figurative); High frequency
+  - від'їхати/від'їжджати (to drive away) — від'їхати від готелю, від'їжджати на літо
   - дійти/доходити (to reach on foot) — дійти додому, дійти згоди (figurative), дійшли
-    чутки
-  - доїхати/доїжджати (to reach by vehicle)
-  - наближення (approach) — наближення свята, міра наближення
-  - віддалення (moving away) — ефект віддалення, поступове віддалення
-  - досягнення (reaching)
-  - відстань (distance)
+    чутки; High frequency; implies reaching the end of a path
+  - доїхати/доїжджати (to reach by vehicle) — доїхати до міста, доїжджати до зупинки
+  - наближення (approach) — наближення свята, міра наближення; Medium frequency (Academic/News)
+  - віддалення (moving away) — ефект віддалення, поступове віддалення; Medium frequency
+    (Formal)
+  - досягнення (reaching/achievement) — досягнення мети, досягнення пункту призначення
+  - відстань (distance) — велика відстань, на відстані кроку
   recommended:
-  - підбігти/підбігати (to run up to)
-  - відбігти/відбігати (to run away)
-  - добігти/добігати (to reach running)
-  - наблизитися (to approach - reflexive)
-  - віддалитися (to move away - reflexive)
+  - підбігти/підбігати (to run up to) — підбігти до мами
+  - відбігти/відбігати (to run away) — відбігти від небезпеки
+  - добігти/добігати (to reach running) — добігти до фінішу
+  - наблизитися (to approach - reflexive) — наблизитися до розв'язки
+  - віддалитися (to move away - reflexive) — віддалитися від берега
+  - Присісти на дорогу (to sit for the road) — traditional superstition before departure
+  - Проводи (farewells) — railway station departure culture
 activity_hints:
 - type: quiz
   focus: під- vs від- vs до- selection

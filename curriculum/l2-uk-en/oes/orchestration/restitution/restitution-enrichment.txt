@@ -1,0 +1,212 @@
+✅ Message sent to Gemini (ID: 12719) [auto-acked: self-addressed]
+✓ Message 12719 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12719...
+📨 Message #12719
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-restitution
+   Time: 2026-02-20T23:41:50.374934+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 58
+module: oes-058
+module_number: 58
+slug: restitution
+title_uk: Відшкодування
+title_en: Restitution
+phase: 3
+phase_id: legal-tradition
+phase_name: Legal Tradition
+focus: Verbs of obligation
+content_outline:
+- section: Вступ
+  description: Introduction to Restitution
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Senior Paleographer
+  role: Judge's Clerk
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Restitution (Відшкодування)
+
+## Використані джерела
+1.  **Літопис (litopys.org.ua)** — Текст "Руської Правди" (Коротка та Розлога редакції), коментарі до статей про віру та головництво.
+2.  **Енциклопедія історії України (history.org.ua)** — Статті "Руська Правда", "Віра", "Головництво" (В. Ричка, О. Головко).
+3.  **Енциклопедія Сучасної України (esu.com.ua)** — Статті про давньоруське право та еволюцію системи покарань.
+4.  **Vernadsky Journals** — Аналіз еволюції від звичаєвого права (помсти) до державного (штрафів).
+
+## Хронологія
+-   **1016 р.** — "Правда Ярослава": кодифікація звичаєвого права, збереження права на кровну помсту (обмеженого колом близьких родичів).
+-   **1072 р.** — "Правда Ярославичів" (Вишгородська нарада): скасування кровної помсти, заміна її на грошовий штраф — **віру**.
+-   **Кінець XI ст.** — Розвиток інституту **"дикої віри"** (колективної відповідальності громади-верві).
+-   **1113 р.** — "Устав" Володимира Мономаха: регулювання боргового права (різи), обмеження лихварства, захист закупів від перетворення на холопів.
+-   **XII ст.** — Розлога редакція "Руської Правди": деталізація системи відшкодувань (**урок**, **головництво**) та процесуальних норм.
+
+## Ключові факти та цитати
+-   **Руська Правда (ст. 1, Правда Ярослава):** «Аще убьєть мужь мужа, то мьстить брату брата... аще ли не будеть хто мьстя, то положити за голову 80 гривенъ, аче будеть княжь мужь...».
+-   **Принцип таліону:** Поступова заміна принципу «око за око» на майнову компенсацію, що свідчить про гуманізацію права порівняно з візантійськими тілесними покараннями.
+-   **Види виплат:**
+    -   *Віра* — штраф князю за вбивство.
+    -   *Головництво* — компенсація родині вбитого (еквівалент віри).
+    -   *Урок* — відшкодування збитків потерпілому.
+    -   *Продажа* — штраф князю за менші злочини.
+
+## Engagement Hooks (mapped to sections)
+-   Section "Вступ: Правова свідомість Русі": `[!context]` — Руська Правда як феномен "правничого гуманізму" (відсутність смертної кари та тілесних покарань, на відміну від Заходу).
+-   Section "Читання I: Від помсти до віри": `[!history-bite]` — "Дика віра": як громада платила за нерозкритого вбивцю (кругова порука як соціальний інститут).
+-   Section "Граматика: Дієслова зобов'язання": `[!paleography]` — Як скорочували слова "гривня" та "платити" у берестяних грамотах та свитках.
+-   Section "Читання II: Система відшкодувань": `[!myth-buster]` — Міф про "жорстоке середньовіччя". Руське право було м'якшим за візантійське (еклога), де панували усічення кінцівок.
+-   Section "Історичний контекст: Статут Володимира Мономаха": `[!decolonization]` — Відмінність київської правової традиції (договірної, компенсаційної) від московської (каральної, авторитарної, Судебник 1497).
+-   Section "Підсумок: Гуманізм давньоруського права": `[!culture]` — Роль "вирника" (збирача штрафів) та його забезпечення громадою.
+
+## Деколонізаційний контекст
+-   **Imperial/Soviet myth**: Представлення "Руської Правди" як спільного "общерусского" кодексу, початок історії російського права.
+-   **Ukrainian reality**: "Руська Правда" — це продукт київського соціуму, що відображає устрій саме Русі-України. Московське право формувалося під впливом Орди та мало іншу, каральну природу.
+-   **Термінологія**: Уникнення терміну "давньоросійське право", вживання "давньоруське" або "староукраїнське".
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian framing |
+|---------|------------------|-------------------|
+| Руська Правда | "Русская Правда" (как начало права РФ) | Кодекс Русі-України, основа Литовських Статутів |
+| Віра | Просто штраф (ототожнення з казною) | Компенсаційний механізм, аналог германського вергельду |
+| Русин | Житель "Древней Руси" (русский) | Мешканець Русі, предок українців (політичний термін) |
+
+## Section-Mapped Research Notes
+
+### Вступ: Правова свідомість Русі
+Огляд переходу від звичаєвого права (усного) до писаного. Значення кодифікації Ярослава. Поняття "Правда" як закону і справедливості.
+
+### Читання I: Від помсти до віри
+Аналіз ст. 1 Правди Ярослава (дозвіл помсти) та ст. 2 Правди Ярославичів (скасування помсти). Термінологія: *убити*, *мстити*, *положити за голову*. Концепція *віри* (40 гривень за просту людину, 80 за княжого мужа).
+
+### Граматика: Дієслова зобов'язання
+Лексичний фокус: *імати* (мати, мусити), *платити*, *дати*, *погубити*. Конструкції з давальним відмінком (*платити кому*). Форми майбутнього часу в юридичному контексті (*аще хто не дасть*).
+
+### Читання II: Система відшкодувань
+Розгляд майнових злочинів (крадіжка коня, борті, плуга). Терміни: *урок* (компенсація власнику), *продажа* (штраф князю). Соціальна стратифікація штрафів (смерд vs. огнищанин).
+
+### Історичний контекст: Статут Володимира Мономаха
+Повстання 1113 року в Києві як причина реформ. Обмеження *різ* (відсотків). Захист *закупів* (боржників). Поняття банкрутства в Русі.
+
+### Практика: Судовий писар
+Вправи на складання "грамоти" про відшкодування збитків. Використання вивченої лексики (*яко*, *аще*, *тать*, *платити*).
+
+### Підсумок: Гуманізм давньоруського права
+Висновок про компенсаційний, а не каральний характер права Русі. Зв'язок із західноєвропейськими "варварськими правдами" (Salic Law) та відмінність від східного деспотизму.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12744)
+✓ Message 12719 acknowledged
+✓ Message 12744 acknowledged

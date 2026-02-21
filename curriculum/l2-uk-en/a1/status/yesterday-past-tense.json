@@ -2,14 +2,14 @@
   "module": "yesterday-past-tense",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-19T23:01:51.016164Z",
+  "last_audit": "2026-02-21T00:46:41.340286Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-19T22:28:37.973782Z",
+    "md": "2026-02-20T23:49:18.004124Z",
     "meta": "2026-02-19T22:27:20.045664Z",
-    "activities": "2026-02-19T22:28:37.974390Z",
+    "activities": "2026-02-20T23:49:17.192912Z",
     "vocabulary": "2026-02-19T10:35:11.486786Z",
-    "plan": "2026-02-18T19:03:32.305451Z",
+    "plan": "2026-02-20T20:41:12.306243Z",
     "research": "2026-02-19T22:27:20.036598Z"
   },
   "gates": {
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "2406/2000 (raw: 2742)"
+      "message": "2389/2000 (raw: 2725)"
     },
     "activities": {
       "status": "pass",

@@ -1,0 +1,13 @@
+{
+  "track": "ruth",
+  "slug": "baroque-letters",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-20T12:22:22Z",
+      "task_id": "v3-baroque-letters-pA",
+      "mode": "full"
+    }
+  }
+}

@@ -2,12 +2,5 @@
   "track": "c1",
   "slug": "obrazotvorche-mystetstvo-2",
   "mode": "v3",
-  "phases": {
-    "v3-A": {
-      "status": "complete",
-      "ts": "2026-02-19T19:09:31Z",
-      "task_id": "v3-obrazotvorche-mystetstvo-2-pA",
-      "mode": "full"
-    }
-  }
+  "phases": {}
 }

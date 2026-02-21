@@ -6,54 +6,84 @@ version: '2.0'
 title: 'Рух: перехід і обхід'
 subtitle: Motion - Passing & Crossing
 content_outline:
-- section: Тест
+- section: Вступ (Introduction)
+  words: 400
   points:
-  - Prefix diagnostic — focus on distinguishing direct crossing vs. avoiding (confusing
-    про- and об-)
-  - Intuition check — use visual scenarios (bridge, obstacle)
-- section: Пояснення
+  - 'Contextualize motion in an urban environment: the challenge of navigating barriers,
+    bridges, and complex routes.'
+  - 'Introduce the ''Kyiv Traffic Controller'' persona: an expert who values precision
+    in prefix usage for safety and efficiency.'
+  - Explicitly reference Ukrainian State Standard §4.3.8 regarding the formation of
+    prefixed verbs for B1 proficiency.
+- section: Тест (Diagnostic)
+  words: 600
   points:
-  - пере-, про-, об- prefixes — use Mermaid diagrams to distinguish trajectory (A
-    → B across vs. through vs. around)
-  - Crossing, passing, going around — emphasize that обійти implies a longer path
-    or avoiding something unpleasant
-- section: Поглиблення
+  - 'Diagnostic prefix selection: distinguish direct crossing (пере-) from avoiding
+    (об-) using visual scenarios of obstacles.'
+  - 'Calque detection: address the learner error of using motion verbs for academic
+    ''passing'' (скласти іспит ≠ пройти).'
+  - 'Intuition check: describe the trajectory across a major bridge like Міст Патона
+    vs. going around a traffic jam (затор).'
+- section: Пояснення (Explanation)
+  words: 1000
   points:
-  - 'Extended patterns — cover usage with ''через'' vs. direct Accusative (learner
-    error: ''перейти через вулицю'' is redundant)'
-  - Nuanced usage — distinguish physical motion vs. figurative meanings (перейти межу,
-    обійти увагою)
-- section: Практика
+  - 'Visual logic of trajectories: provide Mermaid diagrams for пере- (A → B across),
+    про- (A → B through/past), and об- (A ↺ B around).'
+  - 'Grammar focus: mastering the direct Accusative for crossing (перейти вулицю)
+    as per standard §4.2.2.4 to avoid redundant prepositions.'
+  - 'Contrastive semantics: explain why обійти implies a longer or more cautious path
+    compared to the direct transversal of перейти.'
+- section: Поглиблення (Expansion)
+  words: 1000
   points:
-  - 'Prefix selection exercises — context: crossing bridges (cultural hook: Інгульський
-    міст, міст Патона)'
-- section: Діалоги
+  - 'Cultural deep dive: usage of переїжджати vs проїжджати in the context of the
+    bascule Інгульський міст (lifting for ships).'
+  - 'Aesthetic landmarks: describing a train crossing the valley via the picturesque
+    Віадук у Плебанівці using precise motion verbs.'
+  - 'Figurative nuances: distinguish physical bypassing from figurative meanings like
+    ''overlooking'' (обійти увагою) or ''crossing the line'' (перейти межу).'
+- section: Практика (Practice)
+  words: 600
   points:
-  - 'Route description dialogues — context: GPS navigation style or asking directions
-    in a city'
-  - 'Natural usage — correct ''pass a test'' error (learner error: скласти іспит ≠
-    пройти)'
+  - 'Route planning simulation: drafting a GPS navigation sequence to navigate Kyiv
+    traffic, avoiding obstacles like яма and затор.'
+  - 'Error correction drill: identifying and fixing redundant usage of ''через'' with
+    crossing verbs (correction: перейти міст, not перейти через міст).'
+  - 'Situational drills: choosing between про- and об- when encountering a crowd (пройти
+    крізь натовп) vs. a physical barrier (обійти перешкоду).'
+- section: Підсумок (Production)
+  words: 400
+  points:
+  - 'Roleplay: acting as a navigator giving instructions to cross the Dnipro river,
+    emphasizing the structural importance of Міст Патона.'
+  - 'Linguistic reflection: summarizing the ''Theory-First'' logic of prefixation
+    as a tool for decolonizing and professionalizing communication.'
+  - 'Final synthesis: mapping specific verbs to the core B1 requirements of describing
+    complex city routes.'
 vocabulary_hints:
   required:
-  - перейти/переходити (to cross on foot) — перейти вулицю, перейти міст, перейти
-    на інший бік
+  - перейти/переходити (to cross on foot) — перейти вулицю (direct Accusative), перейти
+    на інший бік; High frequency
   - 'переїхати/переїжджати (to cross by vehicle) — переїжджати міст (cultural hook:
-    Інгульський міст)'
-  - пройти/проходити (to pass on foot) — пройти повз будинок, пройти крізь натовп
-  - 'проїхати/проїжджати (to pass by vehicle) — проїхати по мосту (cultural hook:
-    Віадук у Плебанівці)'
-  - обійти/обходити (to go around on foot) — обійти перешкоду, обійти стороною
-  - об'їхати/об'їжджати (to drive around) — об'їхати яму, об'їхати затор
-  - перехід (crossing) — підземний перехід, пішохідний перехід
-  - маршрут (route) — планувати маршрут, змінити маршрут
-  - вулиця (street) — перейти вулицю (direct Accusative)
-  - міст (bridge) — міст Патона, Інгульський міст
+    Міст Патона), переїхати кордон'
+  - 'пройти/проходити (to pass on foot) — пройти повз будинок, пройти крізь натовп;
+    Note: do not use for ''passing a test'''
+  - проїхати/проїжджати (to pass by vehicle) — проїхати по мосту, проїхати повз зупинку;
+    High frequency
+  - обійти/обходити (to go around on foot) — обійти перешкоду (to bypass), обійти
+    стороною (to avoid); Medium frequency
+  - об'їхати/об'їжджати (to drive around) — об'їхати яму, об'їхати затор (to avoid
+    traffic)
+  - маршрут (route) — планувати маршрут, слідувати за маршрутом; Medium frequency
+  - перешкода (obstacle) — долати перешкоду (overcome), обійти перешкоду (bypass)
   recommended:
-  - перебігти/перебігати (to run across) — перебігти дорогу
-  - пробігти/пробігати (to run past) — пробігти повз
-  - оббігти/оббігати (to run around) — оббігти навколо
-  - яма (hole/pit) — обійти яму
-  - перешкода (obstacle) — долати перешкоду, обійти перешкоду
+  - перебігти/перебігати (to run across) — перебігти дорогу (often implies danger)
+  - пробігти/пробігати (to run past) — пробігти повз крамницю
+  - оббігти/оббігати (to run around) — оббігти навколо будинку
+  - затор (traffic jam) — потрапити в затор, об'їхати затор
+  - яма (hole/pothole) — об'їхати яму на дорозі
+  - 'скласти іспит (to pass an exam) — Lexical distinction note: use instead of motion
+    verbs'
 activity_hints:
 - type: quiz
   focus: пере- vs про- vs об- selection

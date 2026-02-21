@@ -1,4 +1,4 @@
-PASS: build_module_v2.py c1-bio 67 — E2E
+FAIL: build_module_v2.py c1-bio 67 — E2E
 
   Module:   yevhen-paton
   Track:    c1-bio
@@ -6,5 +6,5 @@ PASS: build_module_v2.py c1-bio 67 — E2E
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  PASS
-  Date:     2026-02-19T20:50:15Z
+  Verdict:  FAIL
+  Date:     2026-02-20T23:33:59Z

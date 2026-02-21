@@ -6,78 +6,83 @@ version: '2.0'
 title: Структура речення
 subtitle: Sentence analysis terminology
 content_outline:
-- section: Introduction - Understanding Sentence Structure
+- section: 'Вступ: Анатомія мови (Introduction: Anatomy of Language)'
+  words: 500
   points:
-  - 'Why sentence analysis terminology matters — cultural hook: ''Anatomy of Language''
-    concept in Ukrainian education'
-  - 'How native speakers learn syntax — content writing note: Metalanguage Bridge
-    B1.0, allow English scaffolding here only'
-  - 'Connection to complex sentences in B1.3 — State Standard Reference §4.4: terminology
-    prepares for lines 2380-2431'
-- section: Sentence Parts (Члени речення)
+  - Why sentence analysis terminology matters — introduction of the 'Anatomy of Language'
+    concept as taught in Ukrainian schools
+  - 'Metalanguage Bridge B1.0: Transitioning from English scaffolding to Ukrainian
+    syntactic terms to prepare for State Standard §4.4 requirements'
+  - 'The logic of ''Parsing'': Presenting syntactic analysis (синтаксичний розбір)
+    not as a chore, but as a logical exercise akin to a mathematical proof'
+- section: Головні та другорядні члени речення (Main and Secondary Sentence Parts)
+  words: 1000
   points:
-  - 'підмет (subject), присудок (predicate) — cultural hook: underlining ritual (one
-    line/two lines); learner error: Pro-Drop ''Missing Subject'' panic'
-  - 'додаток (object), означення (attribute) — cultural hook: underlining (dotted/wavy);
-    learner error: confusing Object vs. Adverbial cases'
-  - 'обставина (adverbial) — cultural hook: underlining (dot-dash)'
-  - 'Identifying parts in example sentences — content writing note: visual underlining
-    is key for authentic teaching'
-- section: Sentence Types
+  - 'The Underlining Ritual: Introducing the universal Ukrainian visual code — Subject
+    (підмет) as one line, Predicate (присудок) as two lines'
+  - 'Visualizing secondary parts: Attribute (означення) with a wavy line (хвиляста
+    лінія), Object (додаток) with dots (пунктир), and Adverbial (обставина) with dot-dash
+    (штрих-пунктир)'
+  - 'Identifying the Grammatical Basis: Defining ''граматична основа'' as the core
+    of the sentence consisting of subject and predicate'
+  - 'Focus on ''узгодження'' (agreement): How the predicate must agree with the subject
+    in person, number, and gender'
+- section: Класифікація речень за Державним стандартом (Sentence Classification per
+    State Standard)
+  words: 1000
   points:
-  - просте речення (simple sentence)
-  - складне речення (complex sentence)
-- section: Clause Types
+  - Simple sentences (просте речення) vs. Complex sentences (складне речення) — establishing
+    the B1 baseline for syntax (lines 2367-2431)
+  - 'State Standard §4.4.2: Overview of ''ускладнене речення'' (complicated simple
+    sentences) including homogeneous parts and parenthetical words (вставні слова)'
+  - 'State Standard §4.4.3: Structural analysis of ''складносурядне'' (coordinate)
+    and ''складнопідрядне'' (subordinate) sentences'
+  - 'Clause relationships: Distinguishing the main clause (головне речення) from the
+    subordinate clause (підрядне речення) using subordinating conjunctions'
+- section: Аналіз типових помилок та нюансів (Analysis of Common Errors and Nuances)
+  words: 800
   points:
-  - головне речення (main clause)
-  - підрядне речення (subordinate clause)
-- section: Conjunctions
+  - 'Error Pattern 1: Confusing ''Part of Speech'' (noun/іменник) with ''Sentence
+    Part'' (subject/підмет) — explaining role vs. category'
+  - 'Error Pattern 2: Pro-Drop Panic — addressing the learner''s fear of ''missing
+    subjects'' in sentences like ''Люблю каву'', where the predicate implies the subject'
+  - 'Error Pattern 3: Object vs. Adverbial confusion — differentiating questions ''кого?
+    чого?'' (Object) from ''де? куди?'' (Adverbial) in prepositional phrases'
+  - 'Word order and Emphasis: Explaining the flexibility of Ukrainian syntax (SVO
+    vs. OVS) and how inversion affects the focus of the ''синтаксичний центр'''
+- section: 'Практика: Повний синтаксичний розбір (Practice: Full Syntactic Analysis)'
+  words: 700
   points:
-  - connecting parts together
-  - і, а, але, що, бо
-- section: Punctuation Terms
-  points:
-  - кома, крапка, знак питання
-  - двокрапка, крапка з комою
-- section: Additional Syntax Terms
-  points:
-  - 'синтаксис, пунктуація, інверсія — learner error: Rigid SVO order vs. OVS for
-    emphasis'
-- section: Practice Analyzing Sentences
-  points:
-  - 'Breaking down real Ukrainian sentences — collocations: зробити розбір, повний
-    синтаксичний аналіз'
-  - 'Identifying all components — cultural hook: syntactic analysis as a logic exercise'
-- section: Dialogues
-  points:
-  - '6 mini-dialogues illustrating concepts — content writing note: scenario where
-    a friend helps fix a text using these terms'
-- section: Summary
-  points:
-  - Key terms review
-  - Self-assessment checklist
+  - 'Step-by-step walkthrough of ''зробити розбір'': Applying the visual underlining
+    ritual to complex authentic sentences'
+  - 'Logic drill: Identifying sentence components in sequences where the subject is
+    not the first word, using specific question-asking techniques'
+  - 'Summary and self-assessment: Checklist for identifying all members of the grammatical
+    basis and secondary parts in preparation for B1.3 complexity'
 vocabulary_hints:
   required:
-  - підмет (subject) — головний член речення, підкреслюємо однією рискою
-  - присудок (predicate) — дієслівний присудок, узгоджується з підметом (підкреслюємо
+  - підмет (subject) — головний член речення; підкреслюємо однією рискою
+  - присудок (predicate) — дієслівний присудок; узгоджується з підметом (підкреслюємо
     двома рисками)
   - додаток (object) — прямий додаток, непрямий додаток (підкреслюємо пунктиром)
-  - означення (attribute) — узгоджене означення, відповідає на питання 'який?' (підкреслюємо
+  - означення (attribute) — узгоджене означення, поширене означення (підкреслюємо
     хвилястою лінією)
-  - обставина (adverbial) — обставина часу, обставина місця, обставина способу дії
-    (підкреслюємо штрих-пунктиром)
-  - головне речення (main clause) — незалежна частина складного речення
-  - підрядне речення (subordinate clause) — залежна частина, починається зі сполучника
-  - просте речення (simple sentence) — має одну граматичну основу
-  - складне речення (complex sentence) — має дві або більше граматичних основ
-  - складносурядне речення (compound sentence) — частини рівноправні
+  - обставина (adverbial) — обставина часу, місця, способу дії (підкреслюємо штрих-пунктиром)
+  - граматична основа (grammatical basis) — сукупність підмета і присудка
+  - просте речення (simple sentence) — речення з однією граматичною основою (§4.4.2)
+  - складне речення (complex sentence) — речення з двома або більше основами (§4.4.3)
+  - підрядне речення (subordinate clause) — залежна частина складного речення
   recommended:
-  - складнопідрядне речення (complex sentence with subordination) — частини нерівноправні
-  - кома (comma) — ставимо кому перед 'а', 'але', 'що'
-  - крапка (period) — ставимо в кінці розповідного речення
-  - сполучник (conjunction) — з'єднує частини речення
-  - інтонація (intonation) — розповідна, питальна, оклична
-  - синтаксичний розбір (syntactic analysis) — зробити розбір речення
+  - синтаксичний розбір (syntactic analysis) — зробити розбір речення; розібрати за
+    членами речення
+  - вставні слова (parenthetical words) — слова, що не є членами речення, але виражають
+    ставлення (§4.4.2)
+  - сполучник підрядності (subordinating conjunction) — з'єднує головне і підрядне
+    речення
+  - інверсія (inversion) — зміна звичного порядку слів для емоційного наголосу
+  - пунктуація (punctuation) — система розділових знаків (кома, крапка, двокрапка)
+  - ускладнене речення (complicated sentence) — просте речення з однорідними членами
+    або зворотами
 activity_hints:
 - type: mark-the-words
   focus: Identify sentence parts in Ukrainian sentences

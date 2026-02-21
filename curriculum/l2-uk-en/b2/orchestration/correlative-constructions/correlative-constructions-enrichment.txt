@@ -1,0 +1,281 @@
+✅ Message sent to Gemini (ID: 10553) [auto-acked: self-addressed]
+✓ Message 10553 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10553...
+📨 Message #10553
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-correlative-constructions
+   Time: 2026-02-20T20:41:49.701167+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b2-43
+level: B2
+sequence: 43
+slug: correlative-constructions
+version: '2.0'
+title: Співвідносні конструкції
+subtitle: Paired Demonstrative and Relative Words
+content_outline:
+- section: Розминка — Парні слова у складних реченнях
+  points:
+  - Що таке корелятиви (той...хто, там...де, такий...який)
+  - Чому вони парні — вказівне + відносне слово
+  - Де зустрічаються (прислів'я, офіційний стиль, література)
+- section: Common Pairs
+  points:
+  - той... хто (he... who / the one... who)
+  - те... що (that... which)
+  - такий... який (such... as)
+  - там... де (there... where)
+  - тоді... коли (then... when)
+- section: Examples
+  points:
+  - '*Той*, *хто* рано встає, тому Бог дає.'
+  - Роби *так*, *як* знаєш.
+  - Я куплю *те*, *що* мені подобається.
+- section: Практика — побудова складних речень
+  points:
+  - Об'єднати два речення в одне з корелятивом
+  - Вибрати правильну пару (той...хто чи такий...який?)
+  - Доповнити прислів'я правильним корелятивом
+  - Написати параграф з різними корелятивними конструкціями
+focus: grammar
+pedagogy: TTT
+objectives:
+- Learner can construct complex sentences using correlative pairs
+- Learner can distinguish between different types of correlative constructions
+- Learner can correctly punctuate sentences with correlative words
+- Learner can combine simple sentences using appropriate correlative pairs
+grammar:
+- Співвідносні (корелятивні) конструкції з вказівними та відносними словами
+- 'Парні конструкції: той...хто, те...що, такий...який'
+- 'Просторові корелятиви: там...де, туди...куди, звідти...звідки'
+- 'Часові корелятиви: тоді...коли, доти...поки'
+- 'Кількісні корелятиви: стільки...скільки, настільки...наскільки'
+register: науковий
+phase: B2.2 [Phraseology & Synonymy]
+vocabulary_hints:
+  required:
+  - термін (term)
+  - поняття (concept)
+  - процес (process)
+  - метод (method)
+  recommended:
+  - аналіз (analysis)
+  - синтез (synthesis)
+  - дослідження (research)
+activity_hints:
+- type: reading
+  focus: Аналіз тексту
+  items: 4
+- type: essay-response
+  focus: Практичне застосування
+- type: true-false
+  focus: Перевірка розуміння
+  items: 8
+persona:
+  voice: Professional Language Coach
+  role: Judge (Суддя)
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Співвідносні конструкції
+
+## State Standard Reference
+§4.3.4.2: "Складнопідрядні речення з означальною частиною зі сполучними словами який, котрий, що в називному та непрямих відмінках: Як радію за ту я людину, що загублену радість знайшла."
+Also relevant: §4.3.4.5 (Real condition): "Якщо буде дощ, то не підемо до лісу."
+Alignment: This module directly teaches the syntactic structures required for B2 competence in complex sentences with correlative (demonstrative + relative) connectors.
+
+## Vocabulary Frequency
+| Word/Phrase | Frequency / Source | Key collocations |
+|-------------|-------------------|------------------|
+| той... хто | High (Core Grammar) | той, хто знає; для тих, хто |
+| те... що | High (Core Grammar) | те, що треба; про те, що |
+| такий... який | Medium | такий самий, як; не такий, який |
+| там... де | Medium | там, де нас нема; саме там, де |
+| тоді... коли | Medium | тільки тоді, коли; саме тоді, коли |
+
+## Cultural Hooks
+1. **Folk Wisdom**: "Не все те золото, що блищить" (Not all that glitters is gold) — classic example of *те... що*.
+2. **Proverb**: "Хто рано підводиться, за тим і діло водиться" (Who rises early, business follows him) — example of *хто... за тим*.
+3. **Literature**: "Того, що було, не вернеш" (What has passed cannot be returned) — common literary trope regarding time and regret.
+
+## Common Learner Errors
+1. **Case mismatch in "те, що"**:
+   - Error: *Я дякую за то, що ти прийшов.* (Russian influence "за то")
+   - Correct: *Я дякую за **те**, що ти прийшов.* (Accusative for abstract object)
+   - Why: Confusion with Russian "то" or failure to decline "те" according to the main clause verb.
+2. **Number Agreement**:
+   - Error: *Ті, хто знає відповідь...* (Plural antecedent "ті" but singular verb "знає")
+   - Correct: *Ті, хто знають відповідь...* OR *Той, хто знає...*
+   - Why: "Хто" is grammatically singular, but when referring to "ті" (plural), usage often shifts or causes confusion.
+3. **Calque "The one who"**:
+   - Error: Overusing *Той, хто малює, це мій брат.*
+   - Natural: *Мій брат — художник.* or *Цей хлопець, що малює — мій брат.*
+   - Why: Direct translation of English structure where a simpler noun phrase exists.
+
+## Cross-References
+- Builds on: **B1 Pronouns** (Demonstrative & Relative), **B1 Syntax** (Basic Complex Sentences).
+- Prepares for: **C1 Academic Writing** (Abstract argumentation using *те, що...*), **C1 Stylistics** (Replacing explicit clauses with participles).
+
+## Notes for Content Writing
+- Focus heavily on **declension of the first part** (demonstrative pronoun). Students often freeze it in Nominative (*Я думаю про те, що...* vs *Я не згідний з тим, що...*).
+- Use the **"Pointer + Link"** analogy: The first word points to a missing piece, the second word links the explanation.
+- Ensure strict separation of "human" (*той, хто*) and "non-human/abstract" (*те, що*).
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 500
+  points:
+  - "Визначення корелятивів як синтаксичних пар: концепція 'Вказівник + Зв'язка' (Pointer + Link) для структурування логічних зв'язків у реченні."
+  - "Відповідність Державному стандарту (§4.3.4.2): опанування складнопідрядних речень з означальною частиною (який, котрий, що) через вказівні слова."
+  - "Культурний контекст: аналіз фольклорних паремій ('Не все те золото, що блищить') як фундаменту для розуміння парних конструкцій."
+- section: "Граматичний фундамент: Основні пари (Grammatical Foundation: Common Pairs)"
+  words: 1000
+  points:
+  - "Детальний розбір частотних пар 'той... хто' та 'те... що' з акцентом на їхню роль у науковому регістрі та академічному письмі."
+  - "Критична важливість відмінювання вказівного слова: тренінг на формах 'про те, що', 'з тим, що', 'того, що' для уникнення статичного вживання називного відмінка."
+  - "Виправлення типової помилки: диференціація нормативного 'за те, що' (Accusative) проти інтерференційного російського кальку 'за то, що'."
+  - "Специфіка узгодження у числі: порівняльний аналіз структур 'Ті, хто знають' та 'Той, хто знає' для забезпечення граматичної точності."
+- section: "Просторові, часові та кількісні зв'язки (Spatial, Temporal, and Quantitative Links)"
+  words: 800
+  points:
+  - "Застосування просторових корелятивів ('там... де', 'туди... куди', 'звідти... звідки') у наукових описах та географічних контекстах."
+  - "Часові маркери 'тоді... коли' та 'доти... поки': розгортання логічної послідовності та часових меж у дослідницьких текстах."
+  - "Кількісні корелятиви 'стільки... скільки' та 'настільки... наскільки': інструменти для точного вимірювання, порівняння та градації ознак."
+- section: "Стилістика та запобігання калькам (Stylistics and Calque Prevention)"
+  words: 900
+  points:
+  - "Подолання впливу англійської мови: заміна прямої кальки 'The one who' (Той, хто...) на природніші для української мови іменникові конструкції."
+  - "Функціональне розрізнення: суворий розподіл вживання 'той, хто' для осіб та 'те, що' для абстрактних понять або неживих предметів."
+  - "Літературний вимір: розбір емоційного навантаження корелятивів у тропах про час та незворотність подій (напр., 'Того, що було, не вернеш')."
+- section: "Практичне застосування та синтез (Practical Application and Synthesis)"
+  words: 800
+  points:
+  - "Трансформаційні вправи: синтез двох простих речень у складну конструкцію з використанням правильного корелятивного зв'язку."
+  - "Написання академічного параграфа: інтеграція термінів 'аналіз', 'синтез' та 'дослідження' у речення з вказівними словами."
+  - "Пунктуаційний контроль: правила відокремлення підрядних частин у корелятивних парах згідно з нормами офіційного стилю."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "термін (term) — вживається у конструкціях 'той термін, який...'; частотний елемент наукового опису"
+  - "поняття (concept) — абстрактне 'те поняття, що...'; основа для побудови наукових визначень"
+  - "процес (process) — 'той процес, під час якого...'; для деталізації процедурних етапів"
+  - "метод (method) — 'такий метод, що дозволяє...'; специфікація інструментарію дослідження"
+  - "те, що (that... which) — найвища частотність; вимагає уваги до відмінювання (про те, з тим, того)"
+  - "той, хто (the one who) — висока частотність для опису суб'єктів; узгодження в числі ('ті, хто знають')"
+  recommended:
+  - "аналіз (analysis) — 'аналіз того, що виявлено'; ключова когнітивна операція в академічному письмі"
+  - "синтез (synthesis) — 'синтез тих даних, які отримано'; поєднання елементів у цілісну структуру"
+  - "дослідження (research) — 'саме те дослідження, яке...'; фокусування уваги на конкретному об'єкті"
+  - "там, де (there... where) — маркер локалізації; часто вживається для опису середовища або умов"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (3925 chars)
+✅ Message sent to Claude (ID: 10566)
+✓ Message 10566 acknowledged
+   Auto-acknowledged reply #10566 (stdout delivery — no inbox accumulation)
+✓ Message 10553 acknowledged

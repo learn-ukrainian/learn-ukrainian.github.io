@@ -1,0 +1,231 @@
+✅ Message sent to Gemini (ID: 12839) [auto-acked: self-addressed]
+✓ Message 12839 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12839...
+📨 Message #12839
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-monomakh-statute-usury
+   Time: 2026-02-20T23:42:34.718822+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 68
+module: oes-068
+module_number: 68
+slug: monomakh-statute-usury
+title_uk: Статут Мономаха (лихварство)
+title_en: Monomakh's Statute (Usury)
+phase: 3
+phase_id: legal-tradition
+phase_name: Legal Tradition
+focus: Financial vocabulary
+content_outline:
+- section: Вступ
+  description: Introduction to Monomakh's Statute (Usury)
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Senior Paleographer
+  role: Social Reformer
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Статут Володимира Мономаха (Лихварство)
+
+## Використані джерела
+1. [Літопис Руський (за Іпатіївським списком)](http://litopys.org.ua/ipatlet/ipat.htm) — Першоджерело, що описує події 1113 року та прихід Мономаха.
+2. [Руська Правда (Просторова редакція)](http://litopys.org.ua/oldukr/oldukr.htm) — Текст самого Статуту (статті 47-121).
+3. [Енциклопедія історії України: Повстання киян 1113](http://history.org.ua) — Академічний аналіз причин та перебігу повстання.
+4. [Толочко П. П. Київська Русь](http://litopys.org.ua/tolochko/tol.htm) — Контекст соціально-економічного розвитку Києва ХІІ ст.
+
+## Хронологія
+- **16 квітня 1113**: Смерть князя Святополка Ізяславича, який потурає лихварям та спекулянтам сіллю.
+- **17-20 квітня 1113**: Початок Київського повстання. Розгром двору тисяцького Путяти та дворів сотцьких і лихварів.
+- **20 квітня 1113**: Київське віче вдруге запрошує Володимира Мономаха на стіл, погрожуючи погромом княжому двору та монастирям.
+- **Квітень-Травень 1113**: Прибуття Мономаха до Києва, придушення заворушень та скликання наради у Берестові.
+- **1113 рік**: Прийняття «Уставу Володимира Всеволодовича», що увійшов до Просторової Правди.
+
+## Ключові факти та цитати
+- **Лихварство (Рези)**: Статут обмежив відсотки («різи») до 20% (якщо брати «на третє») або 50% річних максимум.
+- **Банкрутство**: Чітке розрізнення «нещасного» банкрутства (через війну, пожежу) та «зловмисного» (через п'янство чи марнотратство).
+- **Цитата (Іпатіївський літопис)**: «Кияни ж розграбували двір Путяти тисяцького, і пішли на жидів, і розграбували їх...»
+- **Цитата (Устав, ст. 53)**: «Аже кто емлетъ по 10 кунъ от лета на гривну, то того не отметати» (Якщо хто бере 10 кун річних з гривні [20%], то того не відкидати).
+- **Соціальний захист**: Заборона перетворювати закупів (боржників) на повних холопів безпідставно.
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ. Криза 1113 року": `[!history-bite]` — Сіль та хліб як тригери революції: спекуляції Святополка призвели до голоду та бунту.
+- Section "Устав Володимира Мономаха": `[!context]` — «Нарада у Берестові»: це був перший відомий нам «круглий стіл» між владою та елітою для вирішення соціальної кризи.
+- Section "Регулювання лихварства": `[!myth-buster]` — Міф про «темні віки»: Русь мала складне фінансове законодавство, що захищало позичальника, тоді як у Західній Європі лихварство часто просто забороняли церквою (і ігнорували на практиці).
+- Section "Банкрутство": `[!culture]` — Ставлення до грошей: Руська Правда не карає за бідність, але карає за безвідповідальність (пропив товар).
+- Section "Соціальні категорії": `[!paleography]` — Як писарі розрізняли «закупа» та «холопа» на письмі (лігатури, скорочення).
+- Section "Історичне значення": `[!decolonization]` — Мономах не «общерусский» князь, а київський реформатор, який врятував державу від соціального вибуху через компроміс, а не лише силу.
+
+## Деколонізаційний контекст
+- **Імперський міф**: Радянська історіографія зображала повстання 1113 року як класову боротьбу пригноблених проти феодалів, а Мономаха — як хитрого феодала, що пішов на поступки.
+- **Український погляд**: Це прояв громадянського суспільства (віче), яке вимагало справедливості та законності. Устав — це суспільний договір, а не просто "подачка".
+- **Термінологія**: Уникати терміну «давньоросійська мова/право», вживати «давньоруська» або «давньоукраїнська».
+
+## Contested Terms
+| Concept | Imperial/Soviet framing | Ukrainian (decolonized) framing |
+|---------|-----------------|-------------------------------|
+| Повстання 1113 | Стихійний бунт черні, класова боротьба | Свідома політична акція віча, вимога реформ |
+| Руська Правда | Пам'ятка «общерусского права» | Пам'ятка київської правової традиції, джерело українського права |
+| Володимир Мономах | Збирач «земель руських» (Росії) | Київський князь, автор соціальних реформ, пов'язаний з європейською традицією |
+
+## Section-Mapped Research Notes
+
+### Вступ. Криза 1113 року
+- Смерть Святополка Ізяславича 16 квітня. Його непопулярність через зв'язки з лихварями.
+- Соляна криза: князь змовився з купцями, піднявши ціни.
+- Роль Путяти Вишатича — київського тисяцького, який прикривав фінансові махінації.
+
+### Повстання та прихід Мономаха
+- Вибух 17 квітня. Соціальний склад повсталих: кияни, можливо, смерди з передмість.
+- Погром лихварів (часто ідентифікованих як євреї, але суть була соціальна, а не етнічна).
+- Ультиматум віча Мономаху: «Якщо не прийдеш, то знайте, що багато зла станеться...»
+
+### Устав Володимира Мономаха: Структура та мета
+- Устав — це 69 статей Просторової Правди.
+- Прийнятий на раді у Берестові за участю тисяцьких з Києва, Білгорода, Переяслава (колективна законотворчість).
+- Мета: зняти соціальну напругу, легалізувати відносини кредитор-боржник.
+
+### Регулювання лихварства (Рези)
+- Термін «рези» (відсотки).
+- Обмеження: не брати «на третє» (третина суми) більше двох разів, бо третій раз — це вже повернення тіла кредиту.
+- Річна ставка не більше 50% (раніше сягала 100-200%).
+- Поняття «істо» (капітал, тіло кредиту).
+
+### Банкрутство та торгівельне право
+- Стаття про купців: якщо купець втратив товар через війну/пожежу — йому дають час віддати борг без відсотків.
+- Якщо «проп’є або проіб’є» (програє) — продають у холопство на відшкодування боргу.
+- Це свідчить про розвинену кредитну систему та страхування ризиків.
+
+### Соціальні категорії: Закупи
+- Закуп — напіввільна людина, що працює за борг («купу»).
+- Захист закупа: пан не може його бити без вини, не може продати в холопи (якщо продасть — закуп стає вільним).
+- Закуп зберігає право скарги судді (на відміну від холопа).
+
+### Холопство: Джерела та обмеження
+- Джерела холопства: самопродаж (при свідках), одруження з рабинею без договору, тіунство (урядова посада) без договору.
+- Обмеження: не можна насильно холопити за борг (якщо це не зловмисне банкрутство).
+
+### Лінгвістичний аналіз: Фінансова лексика
+- *kuna* (грошова одиниця, хутро куниці).
+- *rezy* (відсотки, букв. «те, що наростає/зрізається»).
+- *prok* (залишок, прибуток).
+- *mytnitsa* (місце збору мита).
+
+### Історичне значення та спадщина
+- Устав діяв століттями, увійшов до Литовських статутів.
+- Стабілізація Русі на 20 років правління Мономаха.
+- Приклад верховенства права над грубою силою.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit -9): 
+✅ Message sent to Claude (ID: 12872)
+✓ Message 12839 acknowledged
+✓ Message 12872 acknowledged

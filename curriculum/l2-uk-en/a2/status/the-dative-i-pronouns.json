@@ -2,15 +2,15 @@
   "module": "the-dative-i-pronouns",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-20T01:47:34.727194Z",
+  "last_audit": "2026-02-21T01:00:32.952146Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-19T13:02:57.420845Z",
-    "meta": "2026-02-19T12:53:02.170573Z",
-    "activities": "2026-02-19T13:02:57.422312Z",
-    "vocabulary": "2026-02-18T14:17:28.598663Z",
-    "plan": "2026-02-18T19:03:33.063214Z",
-    "research": "2026-02-19T12:53:02.165121Z"
+    "md": "2026-02-21T01:00:30.222963Z",
+    "meta": "2026-02-20T01:59:53.829795Z",
+    "activities": "2026-02-21T01:00:30.223563Z",
+    "vocabulary": "2026-02-21T01:00:30.224513Z",
+    "plan": "2026-02-20T20:59:22.435683Z",
+    "research": "2026-02-20T01:58:18.941469Z"
   },
   "gates": {
     "meta": {
@@ -19,9 +19,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "3504/3000 (raw: 3832) | pedagogy: 2 violations"
+      "status": "pass",
+      "violations": 0,
+      "message": "3504/3000 (raw: 3832)"
     },
     "activities": {
       "status": "pass",
@@ -31,7 +31,7 @@
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "30/1"
+      "message": "33/1"
     },
     "naturalness": {
       "status": "info",
@@ -39,9 +39,9 @@
       "message": "PENDING \u2014 awaiting review"
     },
     "ipa": {
-      "status": "warn",
+      "status": "pass",
       "violations": 0,
-      "message": "8 IPA issues (run lint_ipa.py --fix)"
+      "message": "Clean IPA"
     },
     "research": {
       "status": "pass",
@@ -49,16 +49,16 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "skipped",
+      "status": "pass",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "fail",
+    "status": "pass",
     "blocking_issues": [],
-    "pass_count": 4,
-    "fail_count": 1,
+    "pass_count": 7,
+    "fail_count": 0,
     "deferred_count": 0
   }
 }

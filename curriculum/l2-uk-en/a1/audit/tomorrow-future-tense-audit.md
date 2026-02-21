@@ -1,7 +1,7 @@
 # Audit Report: M22 — tomorrow-future-tense.md
 **Level:** A1 | **Module:** M22 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-19 23:01:52
+**Generated:** 2026-02-21 00:46:42
 
 ## Configuration
 **Type:** A1-grammar
@@ -38,7 +38,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2195/2000 (raw: 2523)
+- **Words:** ✅ 2218/2000 (raw: 2546)
 - **Activities:** ✅ 10/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -51,7 +51,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 35.7% (target 35-55% (M22))
+- **Immersion:** 🇺🇦 35.3% (target 35-55% (M22))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -61,12 +61,12 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Tomorrow - Future Tense** | ✅ | 64 | Included in Core |
-| **Розминка: Час летить (Time Flies)** | ✅ | 205 | Included in Core |
+| **Розминка: Час летить (Time Flies)** | ✅ | 213 | Included in Core |
 | **Граматика: Майбутній час (Я буду...)** | ✅ | 323 | Included in Core |
-| **Плани та наміри: Що ми будемо робити?** | ✅ | 270 | Included in Core |
+| **Плани та наміри: Що ми будемо робити?** | ✅ | 276 | Included in Core |
 | **Коли це буде? (Частина 1: Конкретний час)** | ✅ | 281 | Included in Core |
 | **Коли це буде? (Частина 2: Абстрактний час)** | ✅ | 253 | Included in Core |
 | **Наші плани: Вихідні та відпустка** | ✅ | 265 | Included in Core |
-| **Практика: Діалоги про плани** | ✅ | 186 | Included in Core |
+| **Практика: Діалоги про плани** | ✅ | 195 | Included in Core |
 | **Практика: Мій ідеальний день завтра** | ✅ | 179 | Included in Core |
 | **Підсумок (Summary)** | ✅ | 169 | Included in Core |

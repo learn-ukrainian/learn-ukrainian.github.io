@@ -6,35 +6,51 @@ version: '2.0'
 title: If I Were
 subtitle: The Conditional Mood
 content_outline:
-- section: Introduction / Вступ
+- section: Вступ (Introduction)
+  words: 500
   points:
   - Concept of the 'World of Dreams' — introduction to the conditional mood (Past
-    Tense + б/би) aligned with State Standard §4.2.3.3
-  - Difference between realization and imagination — establishing the core distinction
-    between real conditions (якщо) and hypothetical/unreal conditions (якби)
-- section: Presentation / Презентація
+    Tense + б/би) aligned with State Standard §4.2.3.3 and §4.4.2 requirements for
+    hypothetical situations.
+  - 'Semantic distinction: The Real World (якщо) vs. the World of Imagination (якби)
+    — establishing the core distinction between potential real-world outcomes and
+    pure fantasy.'
+- section: Презентація граматики (Grammar Presentation)
+  words: 800
   points:
-  - 'Formation: Past Tense + б/би — learner error: using ''би'' everywhere; rule:
-    ''б'' after vowels (Я б...), ''би'' after consonants (Він би...)'
-  - 'Comparison: Якщо (Real) vs Якби (Unreal) — essential visual table needed; learner
-    error: using ''якщо'' for unreal conditions (e.g., ''Якщо я був королем...'' ->
-    ''Якби я був королем...'')'
-  - 'Structure Warning — learner error: forgetting to attach ''би'' to ''як'' (Як
-    я був би -> Якби я був); ''якби'' is a single conjunction unit'
-  - Polite requests (Мені б хотілося) — emphasize 'Я б хотів...' as a softer, more
-    polite alternative to 'Я хочу' in service settings
-  - 'Proverbial usage of conditions — cultural hook: ''Якби та аби, та виросли в роті
-    гриби'' (If and maybe, then mushrooms would grow in the mouth)'
-- section: Practice / Практика
+  - 'Formation mechanics: Past Tense + particle б/би. Explicit rule for the phonological
+    variation: ''б'' after vowels (Я б...) and ''би'' after consonants (Він би...)
+    to correct the common error of using ''би'' everywhere.'
+  - 'The ''Jakby'' Unit: Addressing the learner error of splitting the conjunction
+    (e.g., correcting ''Як я був би...'' to the unified ''Якби я був...'').'
+  - 'Visual Contrast Table: Real Condition (Якщо + Present/Future) vs Unreal Condition
+    (Якби + Past). Emphasize that while English uses ''if'' for both, the Ukrainian
+    conjunction choice determines the reality of the premise.'
+- section: Культурний контекст (Cultural Context)
+  words: 500
   points:
-  - Dreaming about the lottery/future — context for using collocations like 'виграти
-    в лотерею', 'здійснити мрію'
-  - Transformation drills (Real to Unreal) — focused practice on switching conjunctions
-    and verb forms (Якщо я маю -> Якби я мав)
-- section: Dialogues / Діалоги
+  - 'The ''Hrybi'' Proverb: ''Якби та аби, та виросли в роті гриби'' (If and maybe,
+    then mushrooms would grow in the mouth). Explanation of its use to mock empty
+    ''what ifs'' and passive dreaming.'
+  - 'Lviv Coffeehouse Philosophy: A narrative exploration of dreams and hypothetical
+    scenarios (''Я б хотів...''), utilizing the persona of an encouraging guide to
+    introduce modal hedging markers.'
+- section: Практика та аналіз помилок (Practice and Error Analysis)
+  words: 700
   points:
-  - Planning a dream vacation or career — integrating vocabulary 'планувати подорож',
-    'мріяти про' into natural conversation
+  - 'Transformation drills: Converting real situations (якщо) into unreal ones (якби),
+    focusing on the mandatory shift to Past Tense forms (e.g., ''Якщо я маю гроші...''
+    -> ''Якби я мав гроші...'').'
+  - 'Politeness Lab: Practicing ''Я б хотів...'' and ''Мені б хотілося'' as softer,
+    more polite alternatives to ''Я хочу'' in service settings, connecting to the
+    ''want-need'' prerequisite and social register.'
+- section: Діалоги та застосування (Dialogues and Application)
+  words: 500
+  points:
+  - 'Scenario: The Lottery Win. Integrating vocabulary ''виграти в лотерею'' and ''здійснити
+    мрію'' into a conversation about hypothetical life changes and priorities.'
+  - 'Planning a Dream Trip: Using ''планувати подорож'' and ''вирушити в подорож''
+    to practice conditional questions (''Що б ти побачив, якби поїхав до Львова?'').'
 focus: grammar
 pedagogy: PPP
 objectives:
@@ -64,15 +80,17 @@ persona:
   role: Lviv Coffeehouse Philosopher
 vocabulary_hints:
   required:
-  - 'якби (if - unreal) — collocations: якби я був, якби ми мали; note: triggers conditional
-    mood'
-  - 'якщо (if - real) — collocations: якщо буде час, якщо хочете; note: triggers indicative
-    mood (contrast with якби)'
-  - 'хотіти (to want) — polite forms: я б хотів (I would like), хотілося б (one would
-    like)'
-  - 'мрія (dream) — collocations: здійснити мрію (to fulfill a dream), мріяти про
-    (to dream about)'
+  - 'якби (if - unreal) — High frequency; triggers conditional mood (якби + past tense);
+    collocations: якби я був, якби ми мали'
+  - 'якщо (if - real) — Very high frequency; triggers indicative mood; collocations:
+    якщо буде час, якщо хочете'
+  - 'хотіти (to want) — Focus on polite forms: я б хотів (masc.), я б хотіла (fem.),
+    хотілося б (impersonal)'
+  - 'мрія (dream) — High frequency; collocations: здійснити мрію (to fulfill a dream),
+    мріяти про (to dream about)'
   recommended:
-  - 'виграти (to win) — collocations: виграти в лотерею, виграти приз'
-  - 'подорож (trip/journey) — collocations: планувати подорож, вирушити в подорож'
+  - 'виграти (to win) — Medium frequency; collocations: виграти в лотерею, виграти
+    приз'
+  - 'подорож (trip/journey) — High frequency; collocations: планувати подорож, вирушити
+    в подорож'
 word_target: 3000

@@ -1,0 +1,205 @@
+✅ Message sent to Gemini (ID: 12910) [auto-acked: self-addressed]
+✓ Message 12910 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12910...
+📨 Message #12910
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-chronicle-lab
+   Time: 2026-02-20T23:43:07.440624+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 85
+module: ruth-085
+module_number: 85
+slug: chronicle-lab
+title_uk: Лабораторія літопису
+title_en: Chronicle Lab
+phase: 4
+phase_id: cossack-word
+phase_name: Cossack Word
+focus: Drafting a chronicle entry for a modern event
+content_outline:
+- section: Вступ
+  description: Introduction to Chronicle Lab
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+- grammar-lab
+persona:
+  voice: Baroque Scholar
+  role: Cossack Chronicler
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Chronicle Lab
+
+## Використані джерела
+1. [Litopys.org.ua](http://litopys.org.ua) — першоджерела (тексти літописів Самовидця, Граб'янки, Величка).
+2. [Енциклопедія Сучасної України](https://esu.com.ua) — статті про козацьке бароко та літописання.
+3. [History.org.ua](http://resource.history.org.ua) — аналіз жанрових особливостей та історичного контексту.
+
+## Хронологія
+- 1648: Початок Національно-визвольної війни під проводом Б. Хмельницького (початок оповіді багатьох літописів).
+- 1672: Орієнтовне завершення написання першої частини «Літопису Самовидця».
+- 1710: Створення «Літопису Григорія Граб'янки» (гадяцький полковник).
+- 1720: Завершення праці над фундаментальним «Літописом» Самійла Величка.
+- 1728: Смерть Самійла Величка, останнього великого козацького літописця.
+
+## Ключові факти та цитати
+- **Самовидець (про причини війни):** «Початок і причина войни Хмельницького єст єдино од ляхов на православіє гоненіє і козаком отягощеніє».
+- **Величко (про Руїну):** Описує Україну як «матір, розшарпану і знесилену», де «все було знищене і перетворене на пустку».
+- **Стилістика:** Синтез середньовічної хроніки (порічні записи) та барокової історіографії (риторичні відступи, панегірики, вірші).
+- **Мова:** Книжна українська мова (староукраїнська) з елементами народнорозмовної, церковнослов'янізмами та полонізмами (канцелярський стиль).
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ": [!context] — Унікальність козацького літопису як жанру: не просто фіксація, а політичний маніфест.
+- Section "Літопис Самовидця": [!quote] — Цитата про "паління печей і догляд за псами" як приниження козацької гідності.
+- Section "Літопис Граб'янки": [!myth-buster] — Спростування міфу про "неосвічених козаків": Граб'янка спирався на західні джерела (Пуфендорф).
+- Section "Літопис Величка": [!history-bite] — Величко вставив у літопис портрети гетьманів, що було новаторством.
+- Section "Лабораторія стилю": [!culture] — Як барокова риторика (метафори, алегорії) допомагала осмислювати трагічні події.
+- Section "Підсумок": [!decolonization] — Козацькі літописи як доказ суб'єктності української історії всупереч імперським наративам.
+
+## Деколонізаційний контекст
+- **Imperial/Soviet myth:** "Возз'єднання" (Reunification) України з Росією як кульмінація історії. Радянська історіографія цензурувала антимосковські випади літописців.
+- **Ukrainian reality:** Літописи фіксують "Визвольну війну" (Liberation War) за права і вольності, а Переяславська угода часто розглядається як вимушений військовий союз, а не "злиття". Термін "Руїна" підкреслює трагедію втрати державності через зовнішні втручання та внутрішні чвари.
+
+## Contested Terms (if applicable)
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| Визвольна війна | Громадянська війна в Речі Посполитій / Бунт | Національно-визвольна війна / Козацька революція |
+| Переяславська рада | "Возз'єднання" братніх народів | Військово-політичний союз / Протекторат |
+| Руїна | Період анархії та "зради" гетьманів | Геополітична катастрофа, боротьба за збереження державності |
+
+## Section-Mapped Research Notes
+
+### Вступ: Феномен козацького літописання
+Літописи XVII-XVIII ст. — це не сухі хроніки, а історико-літературні твори. Автори — представники козацької старшини (канцеляристи, писарі), що пояснює високий рівень освіченості та патріотичну позицію.
+
+### Основний матеріал I: Літопис Самовидця
+Стиль "очевидця": стриманий, фактографічний, мінімум прикрас. Але присутня оцінка подій. Цінний опис соціальних причин повстання.
+
+### Основний матеріал II: Літопис Григорія Граб'янки
+"Сказаніє про війну козацьку". Героїзація Б. Хмельницького. Складніша барокова структура, віршовані вставки.
+
+### Основний матеріал III: Літопис Самійла Величка
+Наймонументальніший твір (4 томи). Складний бароковий стиль: нагромадження епітетів, метафор. Концепція "Руїни". Використання документів (універсалів, листів) — часто сфальсифікованих заради ідеї.
+
+### Лабораторія стилю: Творимо літопис сучасності
+Як описати оборону Києва 2022 року стилем Величка?
+- **Провіденціалізм:** "За гріхи наші попустив Господь орду зі сходу..."
+- **Гіперболізація:** "І було того заліза ворожого, як піску морського..."
+- **Етикетність:** Титулування захисників ("славні лицарі", "оборонці вітчизни").
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12953)
+✓ Message 12910 acknowledged
+✓ Message 12953 acknowledged

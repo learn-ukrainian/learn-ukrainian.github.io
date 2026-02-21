@@ -6,63 +6,91 @@ version: '2.0'
 title: Aspect Mastery — Pairs
 subtitle: Automating Perfective and Imperfective
 content_outline:
-- section: Introduction / Вступ
+- section: Вступ (Introduction)
+  words: 500
   points:
-  - 'Theoretical review vs Practical drilling — address the Process/Result Confusion
-    (e.g., ''Я мию'' vs ''Я помив'') — learner error: confusing process (duration)
-    with result, e.g., ''Я купив молоко дві години'' instead of ''Я купував...'''
-  - Decision tree for aspect choice — visualize the choice between process/habit (imperfective)
-    and result/sequence (perfective) using a Mermaid diagram
-- section: Presentation / Презентація
+  - 'Theoretical review vs Practical drilling: moving from simple recognition to automated
+    high-frequency application. Alignment with State Standard §4.3.2 requirements
+    for mastering fundamental pairs like робити/зробити, писати/написати, and виходити/вийти.'
+  - 'Visual Decision Tree (Mermaid diagram): distinguishing between process/habit/general
+    description (imperfective) and one-time result/sequential action (perfective)
+    based on contextual triggers.'
+- section: Презентація (Presentation)
+  words: 700
   points:
-  - 'The Core 30 Pairs (Tiers 1, 2, 3) — group by formation method: Prefixation (мити-помити),
-    Suffixation (розповідати-розповісти), Suppletive (брати-взяти) — learner error:
-    Prefix Overgeneralization (using ''з-'' for everything instead of specific prefixes
-    like ''по-'' or ''на-'')'
-  - Drill patterns (Past/Future context) — focus on the rhythm of the pairs for automation
-  - Common pitfalls and how to avoid them — specifically the Present-Perfective Trap
-    ('Я напишу зараз' instead of 'Я пишу') and Prefix Overgeneralization
-- section: Practice / Практика
+  - 'The Core 30 Pairs Formation Taxonomy: Prefixation (мити-помити), Suffixation
+    (розповідати-розповісти), and Suppletive forms (брати-взяти). Instruction on §4.2.3.1
+    regarding compound future (буду писати) vs simple perfective future (напишу).'
+  - 'Learner Error Focus: Prefix Overgeneralization. Correcting the tendency to use
+    ''з-'' for all perfectives (e.g., *змити instead of ''помити'' or *зробити квиток
+    instead of ''купити'') through pattern recognition drills.'
+  - 'Automation Rhythms: Grouping pairs by Tiers (1-3) to create auditory anchors
+    and melodic patterns that facilitate faster recall during speech.'
+- section: Практика (Practice)
+  words: 700
   points:
-  - Rapid fire drills — prompt immediate aspect choice based on keywords (зараз, вчора,
-    завтра)
-  - 'Narrative sequencing practice — use sequential actions (First I did X, then Y)
-    to practice perfective strings — cultural hook: use ''cooking borscht'' sequence
-    (UNESCO intangible heritage)'
-- section: Dialogues / Діалоги
+  - 'Rapid-fire choice drills based on temporal markers: identifying when keywords
+    like ''часто'', ''довго'', and ''зараз'' require imperfective, while ''раптом'',
+    ''вже'', and ''завтра'' (as a result) require perfective.'
+  - 'Narrative sequencing - Cultural Hook: Cooking Borscht. Using perfective strings
+    (купив, помив, приготував) to highlight UNESCO intangible heritage status and
+    regional variations (over 100 variations) in a step-by-step narrative.'
+  - 'Correction of Process/Result Confusion: Addressing the learner error of using
+    perfective for durations (e.g., *''Я купив молоко дві години'' instead of ''Я
+    купував молоко дві години'').'
+- section: Діалоги (Dialogues)
+  words: 600
   points:
-  - 'Peer review dialogue on aspect choices — scenario options: planning a ''toloka''
-    (building a house) or cooking borscht (process vs. result) — cultural hook: ''toloka''
-    rituals like leaving grain overnight to check for ''clean'' energy'
+  - 'Peer-review dialogues - Cultural Hook: The ''Toloka'' tradition. Scenario involving
+    communal labor to build a ''khata-mazanka'' (traditional house), focusing on the
+    distinction between the ongoing effort and the completed structure.'
+  - 'Authentic Ritual Integration: Discussing the practice of leaving grain overnight
+    to check building site energy (вибирати/вибрати місце, залишати/залишити зерно),
+    utilizing sequential perfective verbs to describe the ritual.'
+- section: Підсумок (Summary)
+  words: 500
+  points:
+  - 'The ''Present-Perfective Trap'': Dedicated drill to eliminate the error of using
+    perfective for current actions (e.g., *''Я напишу зараз'' vs ''Я пишу''), clarifying
+    that perfective prefixes in this context denote the future.'
+  - 'High-Frequency Mastery Check: Applying the top 10 verbs identified in frequency
+    research (купувати, дзвонити, знаходити, забувати) to diverse situational prompts
+    to verify automated choice.'
 vocabulary_hints:
   required:
   - 'готувати/приготувати (to cook) — ~ вечерю, ~ страву, ~ уроки (prepare lessons);
-    cultural hook: cooking Borscht as intangible heritage (UNESCO)'
-  - 'мити/помити (to wash) — ~ посуд, ~ руки, ~ підлогу, ~ вікна; learner error: confusing
-    process ''I am washing'' with result ''I washed'''
-  - прибирати/прибрати (to clean up) — ~ кімнату, ~ зі столу
-  - дзвонити/подзвонити (to call) — ~ мамі, ~ другові, ~ у двері, ~ за номером
-  - питати/запитати (to ask) — ~ дорогу, ~ ціну, ~ про здоров'я
+    cultural hook: UNESCO intangible heritage status of Ukrainian Borscht'
+  - мити/помити (to wash) — ~ посуд, ~ руки, ~ підлогу, ~ вікна; high frequency household
+    verb for process/result distinction
+  - дзвонити/подзвонити (to call) — ~ мамі, ~ другові, ~ у двері, ~ за номером; high
+    social frequency usage
+  - 'купувати/купити (to buy) — ~ продукти, ~ квиток, ~ подарунок, ~ квартиру; very
+    high daily frequency; error: using imperfective for a result'
+  - знаходити/знайти (to find) — ~ ключі, ~ рішення, ~ роботу, ~ спільну мову; used
+    for both physical items and abstract solutions
+  - забувати/забути (to forget) — ~ ім'я, ~ пароль, ~ номер телефону, ~ вдома; high
+    frequency mental verb; don't confuse with 'залишати' (to leave)
+  - 'будувати/побудувати (to build) — ~ дім, ~ плани, ~ стосунки; cultural hook: ''toloka''
+    tradition for communal house building'
+  - питати/запитати (to ask) — ~ дорогу, ~ ціну, ~ про здоров'я; high frequency communicative
+    verb
   - відповідати/відповісти (to answer) — ~ на питання, ~ на лист, ~ за вчинки (be
     responsible)
-  - платити/заплатити (to pay) — ~ карткою, ~ готівкою, ~ за каву, ~ рахунок
-  - 'купувати/купити (to buy) — ~ продукти, ~ квиток, ~ подарунок, ~ квартиру; learner
-    error: using imperfective for a completed purchase result'
+  - платити/заплатити (to pay) — ~ карткою, ~ готівкою, ~ за каву, ~ рахунок; essential
+    finance register frequency
   - продавати/продати (to sell) — ~ квартиру, ~ машину
-  - знаходити/знайти (to find) — ~ ключі, ~ рішення, ~ роботу, ~ спільну мову
   - губити/загубити (to lose) — ~ гаманець, ~ надію
   - пам'ятати/запам'ятати (to remember) — ~ адресу, ~ правило
-  - 'забувати/забути (to forget) — ~ ім''я, ~ пароль, ~ номер телефону, ~ вдома; learner
-    error: mixing up with ''to leave behind'' (залишати)'
-  - малювати/намалювати (to draw) — ~ картину, ~ портрет
-  - 'будувати/побудувати (to build) — ~ дім, ~ плани, ~ стосунки (build relationships);
-    cultural hook: ''toloka'' tradition for communal house building'
+  - малювати/намалювати (to draw) — ~ картину, ~ портрет; specific prefix 'на-' often
+    overgeneralized to 'з-'
+  - прибирати/прибрати (to clean up) — ~ кімнату, ~ зі столу
   recommended:
   - ремонтувати/відремонтувати (to repair) — ~ машину, ~ телефон
-  - чекати/зачекати (to wait) — ~ хвилину, ~ на автобус
+  - чекати/зачекати (to wait) — ~ хвилину, ~ на автобус; note the preposition 'на'
+    + Accusative
   - пробувати/спробувати (to try) — ~ страву, ~ зробити це
   - показувати/показати (to show) — ~ фото, ~ дорогу
-  - допомагати/допомогти (to help) — ~ батькам, ~ з перекладом
+  - допомагати/допомогти (to help) — ~ батькам, ~ з перекладом; takes Dative case
 activity_hints:
 - type: match-up
   focus: Speed match - rapid pair matching

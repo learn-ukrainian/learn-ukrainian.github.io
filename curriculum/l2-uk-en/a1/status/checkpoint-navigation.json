@@ -2,14 +2,14 @@
   "module": "checkpoint-navigation",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-19T23:01:49.685418Z",
+  "last_audit": "2026-02-21T00:46:40.660641Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-19T23:00:57.477582Z",
+    "md": "2026-02-20T23:42:54.006414Z",
     "meta": "2026-02-19T22:59:27.857161Z",
-    "activities": "2026-02-19T23:00:57.477956Z",
+    "activities": "2026-02-20T23:42:54.008037Z",
     "vocabulary": "2026-02-19T10:40:30.123395Z",
-    "plan": "2026-02-18T19:03:32.020364Z",
+    "plan": "2026-02-20T20:40:58.184385Z",
     "research": "2026-02-19T22:59:27.846910Z"
   },
   "gates": {
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "2529/1500 (raw: 2724)"
+      "message": "2572/1500 (raw: 2773)"
     },
     "activities": {
       "status": "pass",

@@ -1,0 +1,299 @@
+✅ Message sent to Gemini (ID: 12229) [auto-acked: self-addressed]
+✓ Message 12229 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12229...
+📨 Message #12229
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-syntez-kozatski-dzherela
+   Time: 2026-02-20T23:37:35.619506+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-hist-028
+level: c1-hist
+sequence: 28
+version: '1.0'
+title: 'Синтез: Голоси козацької доби'
+focus: history
+pedagogy: seminar
+objectives:
+- 'Analyze the causes and consequences of синтез: голоси козацької доби'
+- Evaluate the historical significance of що ми вивчили
+content_outline:
+- section: Вступ — Що ми вивчили
+  subsections:
+  - Огляд модулів 19-27
+  - Різноманітність козацьких джерел
+  - Мета синтезу — системний погляд
+- section: Типологія козацьких джерел
+  subsections:
+  - Літописи — три головні
+  - Документи — універсали, статті
+  - Листування — дипломатичне, приватне
+  - Правові документи — Конституція, суди
+  - Таблиця порівняння
+- section: Голоси епохи — хто говорить?
+  subsections:
+  - Старшина — домінуючий голос
+  - Рядові козаки — де їхній голос?
+  - Селяни — майже мовчать
+  - Жінки — відсутні
+  - Інші — поляки, росіяни
+- section: Що джерела кажуть vs. що замовчують
+  subsections:
+  - Героїзація vs. критика
+  - Внутрішні конфлікти — приховані
+  - Насильство — як описано
+  - Соціальні протиріччя
+  - Реконструкція замовчаного
+- section: Методологічні уроки
+  subsections:
+  - Порівняння джерел — ключ до правди
+  - Критика упередженості
+  - Польські джерела — альтернатива
+  - Російські джерела — інша перспектива
+  - Комплексний підхід
+- section: Практикум — комплексний аналіз
+  subsections:
+  - Одна подія — кілька джерел
+  - 'Наприклад: Полтава в різних джерелах'
+  - Що збігається, що суперечить
+  - Реконструкція події
+- section: Підсумок
+  subsections:
+  - Від середньовіччя до модерну
+  - Чек-ліст для козацьких джерел
+  - Підготовка до XIX-XX ст.
+vocabulary:
+- синтез
+- типологія
+- голос / голоси
+- замовчування
+- реконструкція
+- комплексний підхід
+- упередженість
+- старшина
+- рядовий козак
+- альтернативна перспектива
+- просопографія
+- соціальна історія
+- мікроісторія
+- субалтерн
+- агенція
+activities:
+- type: essay-response
+  focus: Create comprehensive source matrix for modules 19-27
+- type: critical-analysis
+  focus: One event from 4+ sources — compare
+- type: critical-analysis
+  focus: What social groups are missing from sources?
+- type: essay-response
+  focus: Чий голос домінує в козацьких джерелах і чому?
+sources:
+- name: Козацькі літописи (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Козацькі_літописи
+  type: reference
+  notes: Overview
+- name: Джерелознавство
+  url: https://uk.wikipedia.org/wiki/Джерелознавство
+  type: reference
+  notes: Source studies
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
+persona:
+  voice: Academic Historiographer
+  role: Hetmanate Source Specialist
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Синтез: Голоси козацької доби
+
+## Використані джерела
+1. [Енциклопедія історії України: Козацькі літописи](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Kozatski_litopysy) — Огляд жанру та ключових творів.
+2. [Ізборник: Самійло Величко](http://litopys.org.ua/velichko/vel.htm) — Первинні тексти літопису.
+3. [Ізборник: Літопис Самовидця](http://litopys.org.ua/samovyd/sam.htm) — Текст та аналіз.
+4. [Діаріуш Якова Марковича](http://litopys.org.ua/old18/old18_06.htm) — Приклад мемуаристики старшини.
+5. [Енциклопедія Сучасної України: Жінка в історії України](https://esu.com.ua/article-10000) — Контекст про правовий статус жінок.
+
+## Хронологія
+- 1648–1657: Події Національно-визвольної війни (основа сюжетів).
+- 1672: Початок написання "Літопису Самовидця" (орієнтовно).
+- 1710: "Пакти і Конституції" Пилипа Орлика — вершина правової думки.
+- 1717–1728: Робота Самійла Величка над літописом.
+- 1760: Завершення "Діаріуша" Миколи Ханенка (фінал епохи).
+- 1764: Скасування гетьманства — кінець доби, яку фіксували хроністи.
+
+## Ключові факти та цитати
+- Самійло Величко про мету праці: "...бачив я, що славу нашу схованих у собі, як у безодні, літ, нікчема якась, всепагубна, в забуття пустила".
+- Цитата з передмови Граб'янки: Про необхідність фіксації історії для нащадків, щоб не "загинула слава козацька".
+- Факт про жінок: У літописах жінки майже відсутні як суб'єкти, але в актових документах фіксується поняття "материзна" (власність жінки, незалежна від чоловіка).
+- Факт про мову: "Книжна українська мова" барокової доби — суміш церковнослов'янської, польської та живої народної мови.
+
+## Engagement Hooks (mapped to sections)
+- Section "Типологія козацьких джерел: I — Козацькі літописи": [!context] — Бароковий стиль: це не просто сухий звіт, а художній твір з пишними метафорами та провіденціалізмом (усе від Бога).
+- Section "Типологія козацьких джерел: II — Его-документи та право": [!history-bite] — "Діаріуш" Якова Марковича містить не лише політику, а й ціни на горілку, погоду та рецепти ліків.
+- Section "Голоси епохи: Хто говорить?": [!myth-buster] — Міф про "неосвічених козаків". Реальність: Автори літописів були випускниками Києво-Могилянської академії, знали латину та польську.
+- Section "Що джерела кажуть vs. що замовчують": [!decolonization] — Імперська історіографія часто ігнорувала ці джерела як "недостовірні", бо вони суперечили тезі про "возз'єднання".
+- Section "Методологічні уроки": [!quote] — "Історія — це політика, перекинута в минуле" (адаптація для пояснення упередженості джерел).
+- Section "Практикум: Комплексний аналіз": [!source] — Порівняння опису битви під Конотопом у Величка та в російських джерелах.
+
+## Деколонізаційний контекст
+- **Imperial Myth**: "Малоросія" — це принизлива назва, ознака меншовартості та провінційності.
+- **Ukrainian Reality**: У XVII-XVIII ст. термін "Мала Росія" (за аналогією з Малою Грецією) означав "Первинна/Корінна Русь", тобто метрополію православ'я та культури, на противагу "Великій" (колонізованій/зовнішній) Росії. Козацька старшина вживала цей термін з гордістю.
+- **Imperial Myth**: Козацькі літописи — це "вигадки".
+- **Ukrainian Reality**: Це фундамент національної ідентичності, де вперше сформульовано концепцію України як окремого політичного тіла.
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| Малоросія | Провінція Російської імперії, частина "общерусского" народу. | Політична назва Гетьманщини; "Мала" як "Центральна/Корінна" (грецька традиція). |
+| "Воссоєдінєніє" | Добровільне повернення під руку царя. | Військовий союз, протекторат, який згодом був порушений Москвою (статті Б. Хмельницького). |
+| Козацька старшина | Експлуататори, зрадники (радянський погляд). | Політична еліта, творці державності та культури. |
+
+## Section-Mapped Research Notes
+
+### Вступ: Що ми вивчили
+Огляд попередніх модулів (Хмельниччина, Руїна, Мазепа). Акцент на тому, що ми знаємо про ці події саме завдяки джерелам, які розглядаємо сьогодні. Синтез — це спроба побачити "кухню" історика.
+
+### Типологія козацьких джерел: I — Козацькі літописи
+"Велика трійка": Самовидець (найбільш об'єктивний, очевидець), Граб'янка (панегірик Хмельницькому, концепція "від хозар"), Величко (монументальний твір, включення документів, бароковий стиль).
+
+### Типологія козацьких джерел: II — Его-документи та право
+Мемуаристика (діаріуші): Яків Маркович (побут, мікроісторія), Микола Ханенко (дипломатія). Правові пам'ятки: "Березневі статті" (оригінал втрачено, реконструкція), Конституція Пилипа Орлика (політична філософія, договірна теорія держави).
+
+### Голоси епохи: Хто говорить?
+Домінантний голос — козацька старшина. Це елітарна історія. Духовенство (через проповіді та полеміку). "Мовчазна більшість": селяни, міщани — згадуються лише в контексті податків або бунтів.
+
+### Що джерела кажуть vs. що замовчують
+Героїзація гетьманів. Ігнорування "чорної ради" як легітимного волевиявлення. Замовчування ролі жінок (окрім винятків, як-от Ганна Золотаренко чи Мотря Кочубей). Відсутність голосу "низів".
+
+### Методологічні уроки
+Як читати упереджені джерела? Метод перехресного аналізу. "Читання між рядків". Розуміння мети автора (apologia, justification). Важливість порівняння з іноземними джерелами (польськими, турецькими, шведськими).
+
+### Практикум: Комплексний аналіз
+Кейс-стаді: Полтавська битва. Як її описує Величко (трагедія, але стримано), як Петро I (тріумф), як Мазепа (у листах — як вимушений крок). Завдання: знайти спільне і відмінне.
+
+### Підсумок
+Значення козацького літописання для формування модерної української нації. "Історія Русів" як завершальний акорд цієї традиції (хоча і пізніший/суперечливий твір).
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12291)
+✓ Message 12229 acknowledged
+✓ Message 12291 acknowledged

@@ -1,0 +1,191 @@
+✅ Message sent to Gemini (ID: 13004) [auto-acked: self-addressed]
+✓ Message 13004 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #13004...
+📨 Message #13004
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-affinity-srodna-pratsia
+   Time: 2026-02-20T23:43:43.321579+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 93
+module: ruth-093
+module_number: 93
+slug: affinity-srodna-pratsia
+title_uk: Спорідненість
+title_en: Affinity
+phase: 4
+phase_id: cossack-word
+phase_name: Cossack Word
+focus: The concept of Сродна праця
+content_outline:
+- section: Вступ
+  description: Introduction to Affinity
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Baroque Scholar
+  role: Vocational Guide
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Affinity Srodna Pratsia (Сродна праця)
+
+## Використані джерела
+1. [Григорій Сковорода. "Розмова, звана Алфавіт, чи Буквар світу"](http://litopys.org.ua/skovoroda/skov207.htm) — litopys.org.ua. Основний першоджерельний текст, де розкривається концепція "сродної праці".
+2. [Чижевський Д. "Нариси з історії філософії на Україні"](http://litopys.org.ua/chyzh/chy04.htm) — Аналіз барокових витоків та зв'язку з античністю.
+3. [Ушкалов Л. "Сковорода і біблійна герменевтика"](http://litopys.org.ua/) — Глибоке дослідження богословського підґрунтя "сродності".
+4. [Енциклопедія Сучасної України: Сковорода Григорій Савич](https://esu.com.ua/search_articles.php?id=skovoroda) — Біографічні дані та загальний огляд філософії.
+
+## Хронологія
+- **1722**: Народження Григорія Сковороди у Чорнухах.
+- **1753–1759**: Викладання у Переяславському колегіумі, конфлікт через "нові методи" — практичний досвід нерозуміння "сродності" системою.
+- **1769**: Остаточний перехід до мандрівного способу життя (свідома відмова від "несродних" посад).
+- **1774**: Написання діалогу "Розмова, звана Алфавіт, чи Буквар світу" — маніфесту сродної праці.
+- **1794**: Смерть філософа. Епітафія "Світ ловив мене, та не впіймав" як підсумок життя за покликанням.
+
+## Ключові факти та цитати
+
+### Першоджерела ("Алфавіт, чи Буквар світу")
+- **Визначення**: "Сродність до діла є істинне щастя".
+- **Про природу**: "Бог і природа — одне й те саме". Не йти проти природи — означає виконувати волю Божу.
+- **Про соціальну роль**: "Черепаха проклинає день, коли народилася, тому що не може літати, як орел? ... Бог не образив нікого; усі його дії благі. Він створив... і черепаху для повзання".
+- **Про щастя**: "Не те, що цвіте, а те, що плодоносить" — щастя не в зовнішньому блиску, а в реалізації потенціалу.
+
+### Байка "Бджола та Шершень"
+- Бджола збирає мед не для того, щоб його їсти (результат), а тому що сам процес їй солодкий ("сродність"). Шершень бачить лише споживання.
+
+## Engagement Hooks
+- Section "Вступ": [!quote] "Світ ловив мене, та не впіймав" — як гачок про ціну свободи.
+- Section "Основний матеріал: I — Алфавіт світу": [!context] Пояснення жанру "діалогу" (Григорій, Яків, Афанасій) як популярної барокової форми.
+- Section "Основний матеріал: II — Нерівна рівність": [!decolonization] Чому Сковорода не був "селянським демократом" (радянський міф). Він вірив у ієрархію, але природну, а не станову.
+- Section "Основний матеріал: III — Античні витоки": [!history-bite] Концепція "Епікур-Христос" — сміливий синтез гедонізму (щастя) та християнства.
+- Section "Практика: Деколонізація": [!myth-buster] Спростування міфу про Сковороду як "атеїста-матеріаліста" або "простого мандрівника-жебрака" (любив пармезан, дорогі вина, спілкувався з елітою).
+- Section "Підсумок": [!culture] "Сродна праця" в сучасній Україні — від вибору професії до волонтерства (робити те, що маєш, там, де ти є).
+
+## Деколонізаційний контекст
+- **Радянський міф**: Сковорода — "народний просвітитель", борець проти панів, предтеча соціалізму. "Сродна праця" трактувалася як просто "праця на благо суспільства" (колективізм).
+- **Українська реальність**: Сковорода — елітарний бароковий мислитель, містик. "Сродна праця" — це глибоко індивідуалістична, екзистенційна категорія (самопізнання), а не соціально-економічна. Це про гармонію з Божественним задумом, а не про "виконання п'ятирічки".
+- **Імперський міф**: Спроба привласнити Сковороду як "російського філософа" (насправді його мова — книжна українська (староукраїнська) з латинізмами, мислення — західноєвропейське).
+
+## Contested Terms
+| Concept | Imperial/Soviet framing | Ukrainian (decolonized) framing |
+|---------|-------------------------|---------------------------------|
+| **Сродна праця** | Суспільно-корисна праця, трудова повинність | Екзистенційне покликання, шлях до спасіння душі, "officium" (обов'язок перед собою/Богом) |
+| **Нерівна рівність** | Класова нерівність (негатив) або зрівнялівка (позитив) | Природна різноманітність талантів; справедливість як відповідність місця здібностям |
+| **Мова Сковороди** | "Наріччя російської", "суржик" | Українська книжна мова (Baroque Slavic), органічна частина української літературної традиції |
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 13037)
+✓ Message 13004 acknowledged
+✓ Message 13037 acknowledged

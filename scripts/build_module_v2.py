@@ -421,17 +421,14 @@ MAX_FINAL_FIX_ITERS = 3       # Final comprehensive — one extra for edge cases
 
 
 def _with_flash(ctx: ModuleContext, fn):
-    """Run a phase function with flash model, restoring original model after."""
-    original = ctx.track_config.get("model", PRO_MODEL)
-    ctx.track_config["model"] = FLASH_MODEL
-    try:
-        return fn(ctx)
-    finally:
-        ctx.track_config["model"] = original
+    """DEPRECATED: Previously ran phases with flash. Now uses Pro for all phases.
+    Research and meta need real reasoning — flash is too weak."""
+    # No model swap — use whatever the track config says (Pro for core, Pro for seminar)
+    return fn(ctx)
 
 
 def phase_0_v2(ctx: ModuleContext) -> bool:
-    """Phase 0: Research. Skips if research file already exists, else uses flash."""
+    """Phase 0: Research. Skips if research file already exists."""
     force = getattr(ctx, "force_research", False)
     research_path = ctx.paths.get("research")
     if not force and research_path and research_path.exists() and research_path.stat().st_size > 200:
@@ -446,12 +443,12 @@ def phase_0_v2(ctx: ModuleContext) -> bool:
         if "0" in state:
             del state["0"]
             save_state(ctx)
-    return _with_flash(ctx, phase_0_research)
+    return phase_0_research(ctx)
 
 
 def phase_1_v2(ctx: ModuleContext) -> bool:
-    """Phase 1: Meta/Outline. Uses flash (structured YAML template)."""
-    return _with_flash(ctx, phase_1_meta)
+    """Phase 1: Meta/Outline."""
+    return phase_1_meta(ctx)
 
 
 def _check_archive_fits_outline(ctx: ModuleContext) -> tuple[bool, list[str], list[str]]:

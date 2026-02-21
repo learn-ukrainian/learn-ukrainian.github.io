@@ -348,7 +348,7 @@ This prepares us for "My Daily Routine".
 — Дякую. (Thank you.)
 
 **Ситуація 3: У магазині**
-— Добрий день. **Можна** поміряти цю сорочку? (Good day. May I try on this shirt?)
+— Добрий день. **Можна** приміряти цю сорочку? (Good day. May I try on this shirt?)
 — Так, звичайно. Примірочна там. (Yes, of course. The fitting room is there.)
 — Дякую. (Thank you.)
 — Вона гарна? (Is it nice?)
@@ -388,7 +388,7 @@ This prepares us for "My Daily Routine".
 > [!quote] **Народна мудрість**
 > **«Хто хоче — той може»**
 > (He who wants — can.)
-> Це український аналог прислівя "Where there's a will, there's a way". Мотивація — це сила. Ви **хочете** вивчити українську? Ви точно **можете**!
+> Це український аналог прислів'я "Where there's a will, there's a way". Мотивація — це сила. Ви **хочете** вивчити українську? Ви точно **можете**!
 
 ---
 

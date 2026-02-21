@@ -1,98 +1,58 @@
-Now I have everything I need. Let me perform the thorough adversarial review.
+Now let me do a thorough, adversarial review.
 
----
+## Issues Found
 
-## Adversarial QA Review: my-daily-routine (A1-25)
+### Issue 1: IPA Error — обідати stress placement
+**File:** `my-daily-routine.md`, line 94
+**Current:** `[oˈbʲidɑtɪ]`
+**Problem:** Stress placed on the second syllable (бі), but обідати is stressed on the third syllable: обіДАти.
+**Correct:** `[obʲiˈdɑtɪ]`
 
-### Issues Found
+### Issue 2: IPA Error — зазвичай vowel
+**File:** `my-daily-routine.md`, line 194
+**Current:** `[zɑzʋiˈt͡ʃɑj]`
+**Problem:** Ukrainian "и" is [ɪ], not [i]. The [i] symbol represents "і" in Ukrainian IPA. Using [i] here implies the sound of "і" which is incorrect for "зазвичай".
+**Correct:** `[zɑzʋɪˈt͡ʃɑj]`
 
-**CRITICAL — Activity Bugs (break learner experience)**
+### Issue 3: Missing Plan Requirement — "жайворонки і сови" hook
+**File:** `my-daily-routine.md`, intro section
+**Problem:** Both the plan (source of truth) and meta explicitly require: *"Hook: Ask 'Are you a morning person or a night owl?' (using simple A1 cognates/phrases like 'жайворонки і сови' with translation)."* This is completely absent. Confirmed by Green Team review.
 
-**Issue 1: Fill-in missing double negation "не" — broken grammar exercise**
-- File: `activities/my-daily-routine.yaml`, line 297
-- Text: `"Я ___ спізнююся, бо я не люблю чекати."` with answer `"ніколи"`
-- Problem: Inserting "ніколи" yields "Я ніколи спізнююся..." which is **grammatically wrong**. Ukrainian requires double negation: "Я ніколи **не** спізнююся." The "не" is missing from the sentence template. The module itself teaches this rule explicitly at line 207: "You must use **не** with the verb." This activity contradicts its own teaching.
+### Issue 4: Missing Plan Requirement — "домашній одяг" cultural hook
+**File:** `my-daily-routine.md`
+**Problem:** The plan's "Продукування та Підсумок" section requires: *"Evening transitions and the 'домашній одяг' (home clothes) cultural hook: Explaining the significance of changing clothes immediately upon returning home to separate public and private spheres."* Completely absent.
 
-**Issue 2: Quiz item with no blank + untaught vocabulary "готувати"**
-- File: `activities/my-daily-routine.yaml`, lines 89-98
-- Text: `"Він зараз готує смачний сніданок."` — complete sentence, no `___` blank
-- Problem: (a) Every other quiz item in this block has a `___` blank. This one doesn't — the student sees a complete sentence and has nothing to fill in. (b) The verb "готувати" (to cook) is not taught in the module content, not in the vocabulary YAML, and not in the plan's vocabulary_hints. A student cannot solve this.
+### Issue 5: Missing Plan Vocabulary — "обідня перерва"
+**File:** `my-daily-routine.md`, day section
+**Problem:** Plan vocabulary_hints.recommended lists "обідня перерва (lunch break) — §3.5 concept; crucial for the working day description." Not mentioned anywhere in the prose.
 
-**Issue 3: Untaught "вчитися" in group-sort**
-- File: `activities/my-daily-routine.yaml`, line 27
-- Text: `items: ["працювати", "обідати", "йти на роботу", "вчитися"]`
-- Problem: "вчитися" (to study) does not appear in the module prose, vocabulary YAML, or plan vocabulary hints. Learner has no basis to categorize it. Green review caught this.
+### Issue 6: LLM Fingerprint — mechanical roadmap in intro
+**File:** `my-daily-routine.md`, line 24
+**Current:** "In this lesson, we will learn how to narrate your day step by step. We will start with the morning, move to the busy afternoon, and finish with the evening relaxation."
+**Problem:** Robotic syllabus-dump typical of LLM-generated educational content.
 
-**Issue 4: "цікавий телевізор" — unnatural collocation**
-- File: `activities/my-daily-routine.yaml`, line 67
-- Text: `"Вона часто ___ цікавий телевізор увечері."`
-- Problem: "Цікавий телевізор" (interesting TV set) is semantically wrong. "Телевізор" in "дивитися телевізор" is a fixed collocation — you don't modify the TV set with an adjective. You'd say "цікавий фільм" (interesting film) or "цікаву передачу" (interesting program).
+### Issue 7: LLM Fingerprint — congratulatory outro
+**File:** `my-daily-routine.md`, line 277
+**Current:** "Congratulations! You have just mastered one of the most practical topics in any language."
+**Problem:** Classic LLM cheerleading.
 
-**Issue 5: A2-scope "ходимо" in activity fill-in**
-- File: `activities/my-daily-routine.yaml`, line 300
-- Text: `"Ми ___ ходимо в парк у неділю."`
-- Problem: "ходити" (multidirectional motion verb) is A2 scope, not taught in this module, and not in the vocabulary. Same issue as line 248 in prose but in an activity where the learner must interact with it.
+### Issue 8: Activity Tests Untaught Content — "На добраніч"
+**File:** `activities/my-daily-routine.yaml`, lines 212-222
+**Problem:** Quiz question "Коли ми зазвичай кажемо «На добраніч»?" tests a phrase that appears nowhere in the module content. You cannot test what you didn't teach.
 
-**SIGNIFICANT — IPA Stress Errors**
+### Issue 9: Unnatural Ukrainian in Quiz — "свої зуби"
+**File:** `activities/my-daily-routine.yaml`, line 45
+**Current:** "Ти ___ свої зуби кожного ранку?"
+**Problem:** Ukrainians don't say "свої зуби" — the possessive is redundant and unnatural. Standard: "Ти чистиш зуби?"
 
-**Issue 6: потім — wrong stress placement**
-- File: `my-daily-routine.md`, line 175
-- Text: `[ˈpotʲim]`
-- Problem: Stress is on the **second** syllable: потíм → `[poˈtʲim]`
+### Issue 10: Unnatural Ukrainian in Quiz — "на свою роботу"
+**File:** `activities/my-daily-routine.yaml`, line 100
+**Current:** "Вони швидко ___ на свою роботу."
+**Problem:** "На свою роботу" is unnatural. Standard: "на роботу."
 
-**Issue 7: цього — wrong stress placement**
-- File: `my-daily-routine.md`, line 179
-- Text: `[ˈpʲislʲɐ ˈt͡sʲɔɦo]`
-- Problem: "цього" has stress on the **last** syllable: цьогó → `[t͡sʲɔˈɦo]`
-
-**Issue 8: іноді — wrong stress placement**
-- File: `my-daily-routine.md`, line 198
-- Text: `[ˈinodʲi]`
-- Problem: Stress is on the **second** syllable: інóді → `[iˈnodʲi]`
-
-**Issue 9: сирники — wrong stress placement**
-- File: `my-daily-routine.md`, line 79
-- Text: `[ˈsɪrnɪkɪ]`
-- Problem: Stress is on the **second** syllable: сирникú → `[sɪrˈnɪkɪ]`
-
-**SIGNIFICANT — Grammar and Scope**
-
-**Issue 10: "Ходжу в піжамі" — A2 multidirectional verb in prose**
-- File: `my-daily-routine.md`, line 248
-- Text: `Одягаюся зручно. Ходжу в піжамі.`
-- Problem: "ходити" is an A2 multidirectional motion verb, distinct from "йти" taught in A1. Introduces untaught grammar without explanation. Green review caught this.
-
-**Issue 11: Ukrainian grammar error — "Не треба складна граматика"**
-- File: `my-daily-routine.md`, line 273
-- Text: `Не треба складна граматика.`
-- Problem: "Не треба" requires the **genitive case**: "Не треба складної граматики." Alternatively: "Складна граматика не потрібна." (nominative with "потрібний"). Using nominative after "не треба" is a grammatical error — unacceptable in a teaching module.
-
-**Issue 12: English word order "(I never am late.)"**
-- File: `my-daily-routine.md`, line 208
-- Text: `(I never am late.)`
-- Problem: Unnatural English. Should be "(I am never late.)" Green review caught this.
-
-**Issue 13: Confusing meta-talk about conjugation tables**
-- File: `my-daily-routine.md`, line 136
-- Text: `Standard conjugation tables usually simplify this to **-ся** for almost all forms except sometimes the "I" form.`
-- Problem: A1 learners don't know what "standard conjugation tables" are or what they "usually" do. This is linguistics meta-talk that confuses beginners. Green review caught this.
-
-**MINOR — Punctuation/Format**
-
-**Issue 14: Unjumble missing comma before "а"**
-- File: `activities/my-daily-routine.yaml`, lines 314-315
-- Text: `answer: "Спочатку я вмиваюся а потім одягаюся"`
-- Problem: Ukrainian orthography requires a comma before "а" connecting clauses. Missing comma + missing comma token in words array.
-
-**Issue 15: Vocabulary YAML uses `items:` wrapper instead of bare list**
-- File: `vocabulary/my-daily-routine.yaml`, line 1
-- Text: `items:` with 2-space-indented entries
-- Problem: All other A1 vocabulary files (e.g., `this-is-i-am.yaml`) use bare list format at root. This file uses a dictionary wrapper, inconsistent with project convention.
-
-**NOTED (not fixing — enrichment scope):**
-- Vocabulary YAML is missing entries for дивитися, іноді, нарешті, щодня, після цього — all taught in module
-- Meta hook "жайворонки і сови" (morning person/night owl) from plan not implemented in content
-- Vocabulary entries lack IPA fields (unlike other A1 vocab files)
+### Issue 11: Vocabulary File Missing from Review Prompt
+**File:** `vocabulary/my-daily-routine.yaml`
+**Note:** The prompt claimed "(file not found)" but the file actually exists with 21 entries. Not a content issue, just a review pipeline discrepancy.
 
 ---
 
@@ -101,392 +61,143 @@ Now I have everything I need. Let me perform the thorough adversarial review.
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/my-daily-routine.md
 ---OLD---
-**сирники** [ˈsɪrnɪkɪ] (cottage cheese pancakes)
+In this lesson, we will learn how to narrate your day step by step. We will start with the morning, move to the busy afternoon, and finish with the evening relaxation. Ми почнемо з ранку, продовжимо днем і закінчимо вечором. We will also learn special "sequence words" like "first", "then", and "finally" to make your speech flow naturally. Ми вивчимо слова «спочатку», «потім» та «нарешті».
 ---NEW---
-**сирники** [sɪrˈnɪkɪ] (cottage cheese pancakes)
+By the way — are you a **жайворонок** [ʒɑjˈʋɔronok] (lark — a morning person) or a **сова** [soˈʋɑ] (owl — a night person)? Ви жайворонок чи сова? In Ukrainian, we divide people into these two types when talking about daily habits. No matter which one you are, this lesson will give you the words to describe your day — from the first alarm to the last yawn. Ми вивчимо слова «спочатку», «потім» та «нарешті», щоб розповісти вашу історію.
 ===FIX_END===
 
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/my-daily-routine.md
 ---OLD---
-**Потім** [ˈpotʲim] (Then / Later)
+**Обідати** [oˈbʲidɑtɪ] (to have lunch)
 ---NEW---
-**Потім** [poˈtʲim] (Then / Later)
+**Обідати** [obʲiˈdɑtɪ] (to have lunch)
 ===FIX_END===
 
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/my-daily-routine.md
 ---OLD---
-**Після цього** [ˈpʲislʲɐ ˈt͡sʲɔɦo] (After that)
+Like *снідати*, this is a dedicated verb. Як і *снідати*, це окреме дієслово.
+*   Я **обідаю** о першій годині. (I have lunch at one o'clock.)
+*   Де ти **обідаєш**? (Where do you have lunch?)
 ---NEW---
-**Після цього** [ˈpʲislʲɐ t͡sʲɔˈɦo] (After that)
+Like *снідати*, this is a dedicated verb. Як і *снідати*, це окреме дієслово. In the working world, lunch is protected time: **обідня перерва** [oˈbʲidnʲɐ peˈrɛrʋɐ] (lunch break), usually one hour. На роботі є **обідня перерва** — зазвичай одна година.
+*   Я **обідаю** о першій годині. (I have lunch at one o'clock.)
+*   Де ти **обідаєш**? (Where do you have lunch?)
 ===FIX_END===
 
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/my-daily-routine.md
 ---OLD---
-**Іноді** [ˈinodʲi] (Sometimes)
+**Повертатися** [poʋerˈtɑtɪsʲɐ] (to return / come back)
+A reflexive verb meaning to turn yourself back to where you started. Це зворотне дієслово: ви повертаєте себе туди, де були.
+*   Я **повертаюся** додому о шостій. (I return home at six.)
+*   Коли ти **повертаєшся**? (When do you come back?)
 ---NEW---
-**Іноді** [iˈnodʲi] (Sometimes)
+**Повертатися** [poʋerˈtɑtɪsʲɐ] (to return / come back)
+A reflexive verb meaning to turn yourself back to where you started. Це зворотне дієслово: ви повертаєте себе туди, де були.
+*   Я **повертаюся** додому о шостій. (I return home at six.)
+*   Коли ти **повертаєшся**? (When do you come back?)
+
+> [!culture]
+> **Домашній одяг (Home Clothes)**
+> When Ukrainians come home, one of the first things they do is change into **домашній одяг** [doˈmɑʃnʲij oˈdʲɐɦ] (home clothes). Коли українці приходять додому, вони переодягаються. This is a deeply ingrained habit: street clothes stay at the door, and comfortable clothes go on. Вуличний одяг — це для вулиці. Домашній одяг — це для дому. It marks the boundary between the public and private sphere. Це межа між роботою і відпочинком.
 ===FIX_END===
 
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/my-daily-routine.md
 ---OLD---
-*   Я **ніколи не** спізнююся. (I never am late.) - literally "never not am late".
+**Зазвичай** [zɑzʋiˈt͡ʃɑj] (Usually)
 ---NEW---
-*   Я **ніколи не** спізнююся. (I am never late.) — literally "never not am late".
+**Зазвичай** [zɑzʋɪˈt͡ʃɑj] (Usually)
 ===FIX_END===
 
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/my-daily-routine.md
 ---OLD---
-*   *Note:* Standard conjugation tables usually simplify this to **-ся** for almost all forms except sometimes the "I" form. For A1, sticking to **-ся** is always correct and safe.
+Congratulations! You have just mastered one of the most practical topics in any language. Вітаємо! Ви щойно опанували одну з найбільш практичних тем. Describing your daily routine allows you to share your life with others. Опис розпорядку — це важливо. Ви ділитеся своїм життям. You learned how to wake up, wash, dress, work, and rest — all in Ukrainian. Ви навчилися прокидатися, вмиватися, одягатися, працювати та відпочивати. Тепер ви знаєте все.
 ---NEW---
-*   *Note:* At A1 level, using **-ся** is always correct and safe. You may hear **-сь** in everyday speech (вмиваюсь instead of вмиваюся), but both forms are accepted.
+So — what does your day look like now, in Ukrainian? Як виглядає ваш день? You can wake up, wash, dress, work, eat, rest, and go to sleep — all with the right words. Ви навчилися прокидатися, вмиватися, одягатися, працювати та відпочивати. Тепер у вас є слова для кожної частини дня.
 ===FIX_END===
 
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/my-daily-routine.md
 ---OLD---
-| **Одяг** | Одягаюся швидко. Одягаю костюм. | Одягаюся зручно. Ходжу в піжамі. |
+Your routine is your story. Ваш розпорядок — це ваша історія. Whether it is chaotic or organized, early or late, you can now express it. Хаотична чи організована, рання чи пізня — тепер ви можете її розповісти. In the next module, we will add color to this black-and-white sketch by learning **adjectives**. Далі ми вивчимо **прикметники**. Це буде цікаво. You will be able to say not just *what* you do, but *how* it feels — was the coffee delicious? Was the morning sunny? But for now, celebrate your ability to narrate your day! Ми чекаємо на ваші історії!
 ---NEW---
-| **Одяг** | Одягаюся швидко. Одягаю костюм. | Одягаюся зручно. Я у піжамі. |
-===FIX_END===
-
-===FIX_START===
-FILE: curriculum/l2-uk-en/a1/my-daily-routine.md
----OLD---
-Не треба складна граматика. Розкажіть про свій день.
----NEW---
-Складна граматика не потрібна. Розкажіть про свій день.
+Ваш розпорядок — це ваша історія. Whether it is chaotic or organized, early or late — you now have the language for it. Хаотична чи організована, рання чи пізня — тепер ви можете її розповісти. In the next module, we add color: **adjectives** will let you say not just *what* you do, but *how* it feels. Was the coffee delicious? Was the morning sunny? Далі ми вивчимо **прикметники**. Розкажіть комусь про свій день — сьогодні!
 ===FIX_END===
 
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/activities/my-daily-routine.yaml
 ---OLD---
-      items: ["працювати", "обідати", "йти на роботу", "вчитися"]
----NEW---
-      items: ["працювати", "обідати", "йти на роботу", "читати"]
-===FIX_END===
-
-===FIX_START===
-FILE: curriculum/l2-uk-en/a1/activities/my-daily-routine.yaml
----OLD---
-    - question: "Вона часто ___ цікавий телевізор увечері."
-      explanation: "Дієслово «дивитися» належить до II групи, тому закінчення -ить."
----NEW---
-    - question: "Вона часто ___ цікавий фільм увечері."
-      explanation: "Дієслово «дивитися» належить до II групи, тому закінчення -ить."
-===FIX_END===
-
-===FIX_START===
-FILE: curriculum/l2-uk-en/a1/activities/my-daily-routine.yaml
----OLD---
-    - question: "Він зараз готує смачний сніданок."
-      explanation: "Займенник «він» вимагає закінчення -є."
+    - question: "Коли ми зазвичай кажемо «На добраніч»?"
+      explanation: "Цю фразу використовують перед сном або коли прощаються пізно ввечері."
       options:
-        - text: "готує"
+        - text: "Коли лягаємо спати"
           correct: true
-        - text: "готуєш"
+        - text: "Коли прокидаємося"
           correct: false
-        - text: "готую"
+        - text: "Коли йдемо на роботу"
           correct: false
-        - text: "готують"
+        - text: "Коли обідаємо"
           correct: false
 ---NEW---
-    - question: "Він зазвичай ___ о першій годині."
-      explanation: "Займенник «він» вимагає закінчення -є."
+    - question: "Що українці роблять першим, коли повертаються додому?"
+      explanation: "В українській культурі прийнято переодягатися в домашній одяг."
       options:
-        - text: "обідає"
+        - text: "Переодягаються в домашній одяг"
           correct: true
-        - text: "обідаєш"
+        - text: "Обідають"
           correct: false
-        - text: "обідаю"
+        - text: "Лягають спати"
           correct: false
-        - text: "обідають"
+        - text: "Йдуть на роботу"
           correct: false
 ===FIX_END===
 
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/activities/my-daily-routine.yaml
 ---OLD---
-    - sentence: "Я ___ спізнююся, бо я не люблю чекати."
-      answer: "ніколи"
-      options: ["ніколи", "завжди", "іноді", "рідко"]
+    - question: "Ти ___ свої зуби кожного ранку?"
+      explanation: "Займенник «ти» вимагає закінчення -еш/-єш."
 ---NEW---
-    - sentence: "Я ___ не спізнююся, бо я не люблю чекати."
-      answer: "ніколи"
-      options: ["ніколи", "завжди", "іноді", "рідко"]
+    - question: "Ти ___ зуби кожного ранку?"
+      explanation: "Займенник «ти» вимагає закінчення -еш/-єш."
 ===FIX_END===
 
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/activities/my-daily-routine.yaml
 ---OLD---
-    - sentence: "Ми ___ ходимо в парк у неділю."
-      answer: "зазвичай"
-      options: ["зазвичай", "ніколи", "рідко", "іноді"]
+    - question: "Вони швидко ___ на свою роботу."
+      explanation: "Займенник «вони» вимагає закінчення -уть/-ють."
 ---NEW---
-    - sentence: "Ми ___ відпочиваємо вдома у вихідні."
-      answer: "зазвичай"
-      options: ["зазвичай", "ніколи", "рідко", "іноді"]
-===FIX_END===
-
-===FIX_START===
-FILE: curriculum/l2-uk-en/a1/activities/my-daily-routine.yaml
----OLD---
-    - words: ["Спочатку", "я", "вмиваюся", "а", "потім", "одягаюся"]
-      answer: "Спочатку я вмиваюся а потім одягаюся"
----NEW---
-    - words: ["Спочатку", "я", "вмиваюся,", "а", "потім", "одягаюся"]
-      answer: "Спочатку я вмиваюся, а потім одягаюся"
-===FIX_END===
-
-===FIX_START===
-FILE: curriculum/l2-uk-en/a1/vocabulary/my-daily-routine.yaml
----OLD---
-items:
-  - lemma: "прокидатися"
-    translation: "to wake up"
-    pos: "verb"
-    aspect: "imperfective"
-    notes: "reflexive verb"
-    usage: "Я прокидаюся о сьомій."
-  - lemma: "вставати"
-    translation: "to get up"
-    pos: "verb"
-    aspect: "imperfective"
-    usage: "Він встає рано."
-  - lemma: "вмиватися"
-    translation: "to wash oneself (face)"
-    pos: "verb"
-    aspect: "imperfective"
-    notes: "reflexive verb"
-    usage: "Ти вмиваєшся холодною водою."
-  - lemma: "чистити"
-    translation: "to clean (to brush)"
-    pos: "verb"
-    aspect: "imperfective"
-    example: "чистити зуби"
-    usage: "Ми чистимо зуби щоранку."
-  - lemma: "одягатися"
-    translation: "to get dressed"
-    pos: "verb"
-    aspect: "imperfective"
-    notes: "reflexive verb"
-    usage: "Я швидко одягаюся."
-  - lemma: "снідати"
-    translation: "to have breakfast"
-    pos: "verb"
-    aspect: "imperfective"
-    usage: "Вони снідають на кухні."
-  - lemma: "йти"
-    translation: "to go (on foot)"
-    pos: "verb"
-    aspect: "imperfective"
-    usage: "Я йду на роботу."
-  - lemma: "працювати"
-    translation: "to work"
-    pos: "verb"
-    aspect: "imperfective"
-    usage: "Ми працюємо в офісі."
-  - lemma: "обідати"
-    translation: "to have lunch"
-    pos: "verb"
-    aspect: "imperfective"
-    usage: "Коли ти обідаєш?"
-  - lemma: "повертатися"
-    translation: "to return"
-    pos: "verb"
-    aspect: "imperfective"
-    notes: "reflexive verb"
-    usage: "Я повертаюся додому."
-  - lemma: "вечеряти"
-    translation: "to have dinner"
-    pos: "verb"
-    aspect: "imperfective"
-    usage: "Ми вечеряємо о сьомій."
-  - lemma: "відпочивати"
-    translation: "to rest"
-    pos: "verb"
-    aspect: "imperfective"
-    usage: "Увечері я відпочиваю."
-  - lemma: "лягати"
-    translation: "to lie down"
-    pos: "verb"
-    aspect: "imperfective"
-    example: "лягати спати"
-    usage: "Діти лягають спати."
-  - lemma: "спати"
-    translation: "to sleep"
-    pos: "verb"
-    aspect: "imperfective"
-    usage: "Я люблю спати."
-  - lemma: "спочатку"
-    translation: "first / at first"
-    pos: "adverb"
-    usage: "Спочатку я снідаю."
-  - lemma: "потім"
-    translation: "then"
-    pos: "adverb"
-    usage: "Потім я йду на роботу."
-  - lemma: "зазвичай"
-    translation: "usually"
-    pos: "adverb"
-    usage: "Я зазвичай встаю рано."
-  - lemma: "завжди"
-    translation: "always"
-    pos: "adverb"
-    usage: "Він завжди спізнюється."
-  - lemma: "рідко"
-    translation: "rarely"
-    pos: "adverb"
-    usage: "Ми рідко ходимо в кіно."
-  - lemma: "ніколи"
-    translation: "never"
-    pos: "adverb"
-    notes: "requires 'не' before the verb"
-    usage: "Я ніколи не курю."
-  - lemma: "дієслово"
-    translation: "verb"
-    pos: "noun"
-    gender: "neuter"
-    usage: "Це дієслово має закінчення -ся."
----NEW---
-- lemma: "прокидатися"
-  translation: "to wake up"
-  pos: "verb"
-  aspect: "imperfective"
-  notes: "reflexive verb"
-  usage: "Я прокидаюся о сьомій."
-- lemma: "вставати"
-  translation: "to get up"
-  pos: "verb"
-  aspect: "imperfective"
-  usage: "Він встає рано."
-- lemma: "вмиватися"
-  translation: "to wash oneself (face)"
-  pos: "verb"
-  aspect: "imperfective"
-  notes: "reflexive verb"
-  usage: "Ти вмиваєшся холодною водою."
-- lemma: "чистити"
-  translation: "to clean (to brush)"
-  pos: "verb"
-  aspect: "imperfective"
-  example: "чистити зуби"
-  usage: "Ми чистимо зуби щоранку."
-- lemma: "одягатися"
-  translation: "to get dressed"
-  pos: "verb"
-  aspect: "imperfective"
-  notes: "reflexive verb"
-  usage: "Я швидко одягаюся."
-- lemma: "снідати"
-  translation: "to have breakfast"
-  pos: "verb"
-  aspect: "imperfective"
-  usage: "Вони снідають на кухні."
-- lemma: "йти"
-  translation: "to go (on foot)"
-  pos: "verb"
-  aspect: "imperfective"
-  usage: "Я йду на роботу."
-- lemma: "працювати"
-  translation: "to work"
-  pos: "verb"
-  aspect: "imperfective"
-  usage: "Ми працюємо в офісі."
-- lemma: "обідати"
-  translation: "to have lunch"
-  pos: "verb"
-  aspect: "imperfective"
-  usage: "Коли ти обідаєш?"
-- lemma: "повертатися"
-  translation: "to return"
-  pos: "verb"
-  aspect: "imperfective"
-  notes: "reflexive verb"
-  usage: "Я повертаюся додому."
-- lemma: "вечеряти"
-  translation: "to have dinner"
-  pos: "verb"
-  aspect: "imperfective"
-  usage: "Ми вечеряємо о сьомій."
-- lemma: "відпочивати"
-  translation: "to rest"
-  pos: "verb"
-  aspect: "imperfective"
-  usage: "Увечері я відпочиваю."
-- lemma: "лягати"
-  translation: "to lie down"
-  pos: "verb"
-  aspect: "imperfective"
-  example: "лягати спати"
-  usage: "Діти лягають спати."
-- lemma: "спати"
-  translation: "to sleep"
-  pos: "verb"
-  aspect: "imperfective"
-  usage: "Я люблю спати."
-- lemma: "спочатку"
-  translation: "first / at first"
-  pos: "adverb"
-  usage: "Спочатку я снідаю."
-- lemma: "потім"
-  translation: "then"
-  pos: "adverb"
-  usage: "Потім я йду на роботу."
-- lemma: "зазвичай"
-  translation: "usually"
-  pos: "adverb"
-  usage: "Я зазвичай встаю рано."
-- lemma: "завжди"
-  translation: "always"
-  pos: "adverb"
-  usage: "Він завжди спізнюється."
-- lemma: "рідко"
-  translation: "rarely"
-  pos: "adverb"
-  usage: "Ми рідко ходимо в кіно."
-- lemma: "ніколи"
-  translation: "never"
-  pos: "adverb"
-  notes: "requires 'не' before the verb"
-  usage: "Я ніколи не курю."
-- lemma: "дієслово"
-  translation: "verb"
-  pos: "noun"
-  gender: "neuter"
-  usage: "Це дієслово має закінчення -ся."
+    - question: "Вони швидко ___ на роботу."
+      explanation: "Займенник «вони» вимагає закінчення -уть/-ють."
 ===FIX_END===
 
 ---
 
 ## Review Summary
 
-| Category | Issues | Fixed |
-|----------|--------|-------|
-| Activity bugs (broken exercises) | 5 | 5 |
-| IPA stress errors | 4 | 4 |
-| Ukrainian grammar error in prose | 1 | 1 |
-| A2 scope leak (prose + activity) | 2 | 2 |
-| English translation error | 1 | 1 |
-| Beginner-unfriendly meta-talk | 1 | 1 |
-| Punctuation (unjumble) | 1 | 1 |
-| Vocabulary YAML format | 1 | 1 |
-| **Total** | **16** | **16** |
+| Check | Result | Notes |
+|-------|--------|-------|
+| IPA accuracy | 2 errors fixed | обідати stress, зазвичай vowel |
+| Russianisms | CLEAN | No Russianisms found |
+| Russian characters | CLEAN | No ы, э, ё, ъ |
+| Grammar/agreement | CLEAN | All conjugations verified |
+| Plan compliance | 3 gaps fixed | жайворонки hook, домашній одяг, обідня перерва |
+| LLM artifacts | 2 fixed | Intro roadmap, congratulatory outro |
+| Activity correctness | 3 fixed | На добраніч untaught, свої зуби/роботу unnatural |
+| Unjumble integrity | CLEAN | All words match answers |
+| Fill-in grammar | CLEAN | All sentences grammatical |
+| Cultural claims | CLEAN | Accurate |
+| Factual accuracy | CLEAN | No errors |
+| Word count | PASS | Meets 2000 target |
 
-**Green Team missed:** 11 of 16 issues (caught 4: ходжу, вчитися, English word order, meta-talk; partially caught "готує" item). Critically missed: the double-negation bug in the "ніколи" fill-in, the broken quiz item without a blank, the grammar error "Не треба складна граматика", all 4 IPA stress errors, the "цікавий телевізор" collocation, and the A2 "ходимо" in activities.
-
-**Remaining unfixed (enrichment scope, not blocking):** Vocabulary YAML missing entries for дивитися, іноді, нарешті, щодня, після цього. Vocabulary entries lack IPA fields. Meta hook "жайворонки і сови" not implemented.
-
-**Strengths the module does well:**
-- Excellent cultural context (обід as main meal, traditional breakfast)
-- Clear вмиватися vs мити distinction with memorable "washing your hands' face" joke
-- Well-structured progression morning → day → evening
-- Good dialogue variety (workday vs weekend contrast)
-- Meets word target
+**Remaining minor notes (not blocking):**
+- Quiz option "Я не сплю ніколи" is technically grammatical in Ukrainian but pedagogically defensible to mark wrong at A1 for canonical word order teaching.
+- Vocabulary YAML is basic (no IPA enrichment) but functionally complete.
 
 ===VERDICT===
 APPROVE

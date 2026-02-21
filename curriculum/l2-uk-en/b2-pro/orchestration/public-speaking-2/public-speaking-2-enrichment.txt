@@ -1,0 +1,279 @@
+✅ Message sent to Gemini (ID: 12271) [auto-acked: self-addressed]
+✓ Message 12271 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12271...
+📨 Message #12271
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-public-speaking-2
+   Time: 2026-02-20T23:38:12.028488+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b2-pro-35
+level: B2-PRO
+sequence: 35
+slug: public-speaking-2
+version: '2.0'
+title: 'Ораторство II: Переконання'
+subtitle: 'Public Speaking: Persuasion'
+content_outline:
+- section: Розминка — Мистецтво переконання
+  points:
+  - Переконання vs маніпуляція — етичні межі
+  - Класична риторика (етос, пафос, логос) та сучасність
+  - Коли професіоналу потрібно переконувати
+- section: Три стовпи переконання
+  points:
+  - 'Етос — авторитет оратора: досвід, репутація, чесність'
+  - 'Пафос — емоції аудиторії: історії, приклади, візуалізація'
+  - 'Логос — логіка аргументів: факти, статистика, причинно-наслідкові зв''язки'
+  - Баланс трьох елементів залежно від аудиторії
+- section: Техніки емоційного впливу
+  points:
+  - 'Сторітелінг: особисті історії, кейси, анекдоти'
+  - 'Візуалізація: Уявіть собі, коли...'
+  - 'Контраст: проблема vs рішення, минуле vs майбутнє'
+  - 'Повтор: ключова фраза для запам''ятовування'
+  - Етичне використання емоцій
+- section: Логічна аргументація
+  points:
+  - 'Структура аргументу: теза, доказ, висновок'
+  - 'Типи доказів: факти, статистика, експертна думка, приклади'
+  - 'Контраргументи: як передбачати та спростовувати'
+  - Логічні помилки та як їх уникати
+- section: Робота з аудиторією
+  points:
+  - Як читати реакцію слухачів
+  - Запитання з аудиторії — загроза чи можливість
+  - Робота зі скептичною або ворожою аудиторією
+  - Адаптація в реальному часі
+- section: Практика — Переконливий виступ
+  points:
+  - 'Завдання: Підготувати 5-хвилинний переконливий виступ'
+  - 'Тема: Запропонувати зміну (в компанії, місті, галузі)'
+  - Критерії оцінювання переконливості
+vocabulary_hints:
+  required:
+  - переконання (persuasion)
+  - етос/пафос/логос (ethos/pathos/logos)
+  - аргументація (argumentation)
+  - контраргумент (counterargument)
+  - сторітелінг (storytelling)
+  - візуалізація (visualization)
+  - заклик до дії (call to action)
+  - цільова аудиторія (target audience)
+  recommended:
+  - риторичний прийом (rhetorical device)
+  - емоційний вплив (emotional impact)
+  - логічна помилка (logical fallacy)
+  - спростування (refutation)
+  - апеляція до авторитету (appeal to authority)
+  - маніпуляція (manipulation)
+activity_hints:
+- type: document-analysis
+  focus: Проаналізувати переконливий виступ — визначити етос, пафос, логос
+  items: 2
+- type: writing-task
+  focus: Написати емоційну історію для вступу до виступу
+  items: 1
+- type: fill-in
+  focus: Підібрати тип доказу до тези (факт/статистика/приклад/експерт)
+  items: 10
+- type: error-detection
+  focus: Знайти логічні помилки в аргументації
+  items: 6
+- type: writing-task
+  focus: Підготувати переконливий виступ з пропозицією змін
+  items: 1
+- type: role-play
+  focus: Відповісти на скептичні запитання аудиторії
+  items: 4
+focus: professional
+pedagogy: ESP
+prerequisites:
+- 'b2-pro-34 (Ораторство I: Структура)'
+connects_to:
+- 'b2-pro-36 (Дебати: Формальна структура)'
+objectives:
+- Учень розуміє три стовпи переконання (етос, пафос, логос)
+- Учень може використовувати сторітелінг та візуалізацію для емоційного впливу
+- Учень може будувати логічну аргументацію з доказами
+- Учень може працювати з контраргументами та скептичною аудиторією
+grammar:
+- Умовні конструкції (Якби ми..., Уявіть, що...)
+- Риторичні повтори (Ми можемо... Ми повинні... Ми зробимо...)
+- Контрастні конструкції (Не X, а Y; Замість X — Y)
+register: публіцистичний
+phase: B2-PRO.3
+persona:
+  voice: Senior Specialist
+  role: Громадський лідер
+word_target: 2000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Ораторство II: Переконання
+
+## Використані джерела
+1. [Happy Monday: Як підготувати переконливий виступ](https://happymonday.ua/yak-pidgotuvaty-vystup/) — поради щодо структури та емоційного зв'язку.
+2. [Oratorske: Типові помилки ораторів](https://oratorske.com.ua/statti/typovi-pomylky-oratoriv/) — аналіз психологічних та технічних вад виступів.
+3. [Pidru4niki: Логіка та аргументація](https://pidru4niki.com/15210522/logika/argumentatsiya_dovedennya) — академічна база щодо побудови доказів та видів спростування.
+4. [ДСТУ 4163:2020](https://zakon.rada.gov.ua/) — державний стандарт щодо оформлення документів та професійної етики (використовується для визначення офіційного реєстру).
+
+## Термінологічна база
+
+| Українська (норма) | Русизм/ненорма | English | Контекст вживання |
+|--------------------|---------------|---------|-------------------|
+| Переконання        | Убєждєнія      | Persuasion | Процес впливу на думку аудиторії |
+| Аргументація       | Доводка        | Argumentation | Система доказів для тези |
+| Спростування       | Опроверженіє   | Refutation | Доведення хибності аргументів опонента |
+| Заклик до дії      | Призив до дії  | Call to action | Фінальна частина переконливої промови |
+| Цільова аудиторія  | Цельова        | Target audience | Слухачі, на яких спрямовано вплив |
+| Логічна хиба       | Логічна ошибка | Logical fallacy | Порушення законів логіки в міркуванні |
+| Підміна тези       | Підміна понятій | Straw man | Коли оратор спростовує не те, що сказав опонент |
+| Ораторське мистецтво | Красіворєчіє | Public speaking | Майстерність публічного виступу |
+
+## Мовні норми та стандарти
+- **Кличний відмінок**: Обов'язкове використання при звертанні до аудиторії (*Шановні колеги!*, *Пане директоре!*).
+- **ДСТУ 4163:2020**: Вимагає використання нейтрального, стриманого тону в офіційних виступах, навіть за наявності "пафосу".
+- **Синтаксис переконання**: Використання активних конструкцій (*Ми пропонуємо...* замість *Нами пропонується...*) для підвищення довіри (етосу).
+
+## Аутентичні приклади
+1. [Вступ зі сторітелінгом]: «Уявіть собі: світанок над Дніпром, туман повільно розсіюється... Саме таким я бачу потенціал нашого проекту — ми лише на порозі великих відкриттів».
+2. [Логічний блок]: «Факти говорять самі за себе: за останній квартал ефективність зросла на 12%. Отже, наша стратегія працює».
+3. [Робота зі скептиками]: «Я ціную ваше зауваження щодо ризиків. Саме тому ми передбачили три рівні страхування, про які я розповім далі».
+
+## Типові помилки
+1. ❌ **Підміна тези** → ✅ **Чітка фокусована теза**. Оратор починає говорити про бюджет, а закінчує "поганою погодою".
+2. ❌ **Доброго дня!** → ✅ **Добрий день!** (або "Вітаю!"). В українській мові привітання в називному відмінку є стандартом для початку виступу.
+3. ❌ **Аргументувати за...** → ✅ **Аргументувати на користь...** (або просто "аргументувати щось"). Уникнення калькованих прийменникових конструкцій.
+4. ❌ **Апеляція до страху** (маніпуляція) → ✅ **Апеляція до цінностей** (пафос). Переконання має бути етичним.
+5. ❌ **Ігнорування контраргументів** → ✅ **Метод "Випередження заперечень"**. Спростування потенційного скептицизму до того, як він озвучений.
+
+## Engagement Hooks (mapped to sections)
+- Section "Розминка — Мистецтво переконання": [!context] — Різниця між переконанням (зміна думки) та маніпуляцією (примус).
+- Section "Три стовпи переконання": [!pro-tip] — Як "Етос" (ваша репутація) починає працювати ще до того, як ви відкрили рот.
+- Section "Техніки емоційного впливу": [!language-note] — Використання умовного способу (*Якби ми...*) для м'якої візуалізації майбутнього.
+- Section "Логічна аргументація": [!common-error] — Помилка "Post hoc ergo propter hoc" (після цього — значить через це).
+
+## Section-Mapped Research Notes
+
+### Розминка — Мистецтво переконання
+Етика оратора в українському бізнес-культурному просторі. Переконання як інструмент лідерства. Важливість розрізнення щирого впливу від маніпулятивних технік (напр. "N-L-P" або тиск).
+
+### Три стовпи переконання
+Аристотелівська тріада в сучасному контексті. Етос: як професійний сертифікат або досвід у галузі формує довіру. Пафос: не істерика, а апеляція до спільних цілей аудиторії. Логос: структура "Теза — Аргумент — Демонстрація".
+
+### Техніки емоційного впливу
+Сторітелінг за схемою: Виклик — Дія — Результат. Використання метафор та порівнянь. Техніка "картинки майбутнього" (візуалізація успіху команди).
+
+### Логічна аргументація
+Побудова сильного аргументу: твердження, доказ (статистика Держстату, кейси), висновок. Як "заземлювати" абстрактні цифри на реальний досвід слухача.
+
+### Робота з аудиторією
+Скептицизм як ознака зацікавленості. Техніка "так, і..." (не заперечувати, а доповнювати). Як зберігати спокій при провокаційних запитаннях.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12316)
+✓ Message 12271 acknowledged
+✓ Message 12316 acknowledged

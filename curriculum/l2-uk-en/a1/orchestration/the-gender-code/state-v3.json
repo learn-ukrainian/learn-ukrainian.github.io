@@ -5,28 +5,28 @@
   "phases": {
     "v3-A": {
       "status": "complete",
-      "ts": "2026-02-19T19:15:44Z",
-      "task_id": "v3-the-gender-code-pA",
-      "mode": "full"
+      "ts": "2026-02-20T20:34:55Z",
+      "note": "migrated-from-v2"
     },
     "v3-B": {
       "status": "complete",
-      "ts": "2026-02-19T19:15:44Z"
+      "ts": "2026-02-20T20:34:55Z",
+      "note": "migrated-from-v2"
     },
     "v3-C": {
       "status": "complete",
-      "ts": "2026-02-19T19:15:44Z",
-      "note": "adopted-existing"
+      "ts": "2026-02-20T20:34:55Z",
+      "note": "migrated-from-v2"
     },
     "v3-audit": {
       "status": "complete",
-      "ts": "2026-02-19T19:31:11Z",
-      "attempts": 2
+      "ts": "2026-02-20T20:34:55Z",
+      "note": "migrated-from-v2"
     },
     "v3-D": {
       "status": "complete",
-      "ts": "2026-02-19T19:32:42Z",
-      "attempts": 1
+      "ts": "2026-02-20T20:34:55Z",
+      "note": "migrated-from-v2"
     }
   }
 }

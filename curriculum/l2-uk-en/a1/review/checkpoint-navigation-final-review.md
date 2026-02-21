@@ -1,189 +1,177 @@
-Files confirmed. Now running the deep adversarial check.
+Good. Status confirms 2529 words (above 2000 target) and an IPA warning flagged by the linter. Let me now write the full adversarial review.
 
 ---
 
-## Issues Found
+## Adversarial QA Review: checkpoint-navigation (a1-20)
 
-### CRITICAL — Issue 1: Wrong grammatical rule for numerals 2–4 (content, line 151)
+### Issues Found
 
-**Quoted text:**
-> After the numbers 2, 3, and 4, we use the Genitive singular form. This is unique to Slavic languages.
+**Issue 1: Pragmatically bizarre example — "на подрузі" (CRITICAL)**
+- **File:** `checkpoint-navigation.md`, line 109
+- **Text:** `*   **г → з**: подруга → **на подрузі**.`
+- **Problem:** "На подрузі" literally means "on top of the female friend." Grammatically valid for demonstrating г→з, but semantically absurd for A1 learners. The meta outline explicitly specifies "дорога → на дорозі" as the example. This also fits the navigation theme perfectly.
+- Green Team flagged this. Confirmed — must fix.
 
-**Problem:** This is the *Russian* rule, not the Ukrainian rule. Ukrainian uses the **Nominative plural** after 2, 3, 4 — not the Genitive singular. The distinction is crucial:
-- Ukrainian: **два студенти** (Nominative plural)
-- Russian: **два студента** (Genitive singular)
+**Issue 2: Missing formal possessive "Ваш" (MODERATE)**
+- **File:** `checkpoint-navigation.md`, Навичка 4 (lines 193-239)
+- **Problem:** The module teaches polite navigation phrases (Вибачте, Скажіть будь ласка) but only covers informal possessive "Твій." In real navigation scenarios, a learner addressing a stranger would need "Ваш квиток" not "Твій квиток." A brief note after the "Your" section is needed.
 
-The examples shown are actually correct Ukrainian forms (студенти, долари, квитки are all Nominative plural), but the metalinguistic label is wrong. Teaching learners that Ukrainian uses "Genitive singular" after 2–4 will cause direct errors: they will produce "два студента" (Russian form) thinking it is correct Ukrainian.
+**Issue 3: IPA wrong for "її" (MODERATE)**
+- **File:** `checkpoint-navigation.md`, line 212
+- **Text:** `**її** [jiˈji]`
+- **Problem:** "Її" is і + ї = [iˈji]. The transcription [jiˈji] adds a spurious [j] before the initial "і", making it sound like "її" (two ї letters). Standard citation form is [iˈji].
 
-Evidence: студент → Gen.sg. = **студента**; Nom.pl. = **студенти** — the module uses "студенти," which is Nominative plural.
+**Issue 4: IPA garbled for "гривні" (MODERATE)**
+- **File:** `checkpoint-navigation.md`, line 156
+- **Text:** `**Три гривні** [ɦrɪu̯n⁽ʲ⁾i]`
+- **Problem:** Missing stress mark. Palatalization of н before і is mandatory, not optional (⁽ʲ⁾). Should be [ˈɦrɪu̯nʲi].
 
----
+**Issue 5: IPA wrong vowel + missing stress for "прямо" (MINOR)**
+- **File:** `checkpoint-navigation.md`, line 260
+- **Text:** `**Прямо** [prʲɑmɔ]`
+- **Problem:** After palatalized р, the vowel represented by "я" is [a] not [ɑ]. Also missing stress mark. Should be [ˈprʲamɔ].
 
-### CRITICAL — Issue 2: Three activity explanations propagate the same wrong rule (activities, lines 230, 252, 285)
+**Issue 6: IPA missing stress for "часу" (MINOR)**
+- **File:** `checkpoint-navigation.md`, line 140
+- **Text:** `**Немає часу** [t͡ʃɑsu]`
+- **Problem:** Missing stress mark. Should be [t͡ʃɑˈsu].
 
-**Line 230:**
-```
-explanation: 'Після чисел 2, 3, 4 вживаємо Родовий відмінок однини (студенти).'
-```
-**Wrong.** Gen.sg. of "студент" = **студента**. "студенти" is Nom.pl.
+**Issue 7: IPA optional palatalization on mandatory contexts (MINOR)**
+- **File:** `checkpoint-navigation.md`, lines 121-122
+- **Text:** `**у школі** [ʃkɔl⁽ʲ⁾i]` and `**у місті** [m⁽ʲ⁾isʲt⁽ʲ⁾i]`
+- **Problem:** л before і and м before і are mandatory palatalizations in Ukrainian, not optional. Also missing stress marks. Should be [ʃkɔˈlʲi] and [ˈmʲistʲi].
 
-**Line 252:**
-```
-explanation: 'Квиток у родовому однини: квитки.'
-```
-**Wrong.** Gen.sg. of "квиток" = **квитка**. "квитки" is Nom.pl.
+**Issue 8: Quiz explanation contradicts itself (MODERATE)**
+- **File:** `checkpoint-navigation.yaml`, line 68
+- **Text:** `'Більшість іменників у Місцевому відмінку мають закінчення -і (у парку, у школі).'`
+- **Problem:** The explanation says the ending is -і and cites "у парку" as an example — but "парку" ends in -у, not -і. This directly contradicts the point. Should use examples that actually demonstrate -і (e.g., "у школі, у місті").
 
-**Line 285:**
-```
-explanation: 'День у родовому однини: дні.'
-```
-**Wrong.** Gen.sg. of "день" = **дня**. "дні" is Nom.pl. The correct answer ("дні") is fine, but the explanation mislabels it — doubly bad because a learner who checks this with "дня" would think they're wrong.
+**Issue 9: "поїзд" in activity not in plan vocabulary or prose (MINOR)**
+- **File:** `checkpoint-navigation.yaml`, line 38-39
+- **Text:** `left: 'поїзд'` / `right: 'train'`
+- **Problem:** "Поїзд" doesn't appear in the plan's vocabulary_hints or in the prose content. The prose lists автобус, трамвай, метро, таксі. Not a blocker since it's a common A1 word, but it's scope creep.
 
----
-
-### MODERATE — Issue 3: "Я дома" labeled incorrect when it is valid Ukrainian (content, lines 93–97)
-
-**Quoted text:**
-```
-> English speakers often say "I'm home." In Ukrainian, this is impossible without a preposition.
-> *   ❌ *Incorrect:* Я дома.
-> *   ✅ *Correct:* **Я вдома**.
-```
-
-**Problem:** "Дома" is a standalone adverb in Ukrainian meaning "at home" — it is grammatically valid. Neither "дома" nor "вдома" uses a preposition in the modern sense; both are adverbs. Calling "Я дома" incorrect is factually wrong and will confuse learners who hear native speakers use it daily. The warning box's stated rationale ("impossible without a preposition") is false for this particular example. A genuinely broken example (where the preposition is actually missing from a case-governed phrase) is needed to make the pedagogical point correctly.
-
----
-
-### MINOR — Issue 4: Typo "серендій рід" (activities, line 149)
-
-```
-explanation: 'Місто — воно (серендій рід), тому "твоє".'
-```
-Should be **середній рід**.
+**Issue 10: Non-IPA transcription "[park]" (COSMETIC)**
+- **File:** `checkpoint-navigation.md`, line 70
+- **Text:** `**Я бачу парк** [park].`
+- **Problem:** "[park]" is English romanization, not IPA. Either remove (unnecessary for a word already taught) or use proper [pɑrk]. Low priority.
 
 ---
 
-### MINOR — Issue 5: Sentence capitalization (content, line 100)
-
-```
-This is the "golden rule" of the Locative case. almost all singular nouns get the ending **-і**.
-```
-"almost" begins a new sentence and must be capitalized: **Almost**.
-
----
-
-### IPA Verification — PASS
-
-- ʋ used correctly for В throughout (not w) ✓
-- t͡ʃ has tie bar in [t͡ʃɑsu] ✓  
-- [ɦrɪu̯n⁽ʲ⁾i] for гривні — valid: В before consonant cluster vocalizes to u̯ in Ukrainian ✓
-- All other transcriptions verified ✓
-
-### Russianisms — CLEAN
-### Russian characters — CLEAN
-### Plan Compliance — PASS (all sections present, required vocabulary covered)
-### Unjumble arrays — PASS (all arrays contain all tokens)
-### Fill-in answers — PASS (all produce grammatical sentences)
-
----
-
-## Fixes
+### Fixes
 
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/checkpoint-navigation.md
 ---OLD---
-### Quantity: 2, 3, 4
-After the numbers 2, 3, and 4, we use the Genitive singular form. This is unique to Slavic languages.
-*   **Один студент**.
-*   **Два студенти** [stuˈdɛntɪ].
+*   **г → з**: подруга → **на подрузі**.
+---NEW---
+*   **г → з**: дорога → **на дорозі**.
+===FIX_END===
+
+===FIX_START===
+FILE: curriculum/l2-uk-en/a1/checkpoint-navigation.md
+---OLD---
+### Your (Твій, Твоя, Твоє)
+This works exactly the same way as "my". Use this with friends, family, and children (informal "you").
+*   **Де твій квиток?** (Where is your ticket?)
+*   **Де твої речі?** (Where are your things?)
+---NEW---
+### Your (Твій, Твоя, Твоє)
+This works exactly the same way as "my". Use this with friends, family, and children (informal "you").
+*   **Де твій квиток?** (Where is your ticket?)
+*   **Де твої речі?** (Where are your things?)
+
+### Formal "Your" (Ваш, Ваша, Ваше)
+When speaking to strangers or in polite situations (which is most of navigation!), use **Ваш** instead of **Твій**. It follows the same gender pattern.
+*   **Вибачте, це Ваш квиток?** (Excuse me, is this your ticket?)
+*   **Це Ваша валіза?** (Is this your suitcase?)
+===FIX_END===
+
+===FIX_START===
+FILE: curriculum/l2-uk-en/a1/checkpoint-navigation.md
+---OLD---
+**його** [jɔˈɦɔ] (his) and **її** [jiˈji] (her) **do not change**.
+---NEW---
+**його** [jɔˈɦɔ] (his) and **її** [iˈji] (her) **do not change**.
+===FIX_END===
+
+===FIX_START===
+FILE: curriculum/l2-uk-en/a1/checkpoint-navigation.md
+---OLD---
 *   **Три гривні** [ɦrɪu̯n⁽ʲ⁾i].
-*   **Чотири долари**.
-
-Wait, what about 5? From 5 onwards, we switch to the *Genitive Plural* (п'ять студентів), but for now, just focus on 2, 3, and 4.
 ---NEW---
-### Quantity: 2, 3, 4
-After the numbers 2, 3, and 4, Ukrainian uses the **Nominative plural** form. This is an important difference from Russian, which uses the Genitive singular in the same position (Russian: "два студента"; Ukrainian: "два студенти").
-*   **Один студент**.
-*   **Два студенти** [stuˈdɛntɪ].
-*   **Три гривні** [ɦrɪu̯n⁽ʲ⁾i].
-*   **Чотири долари**.
-
-What about 5? From 5 onwards, we switch to the *Genitive Plural* (п'ять студентів), but for now, just focus on 2, 3, and 4.
+*   **Три гривні** [ˈɦrɪu̯nʲi].
 ===FIX_END===
 
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/checkpoint-navigation.md
 ---OLD---
-> [!warning]
-> **Don't lose your prepositions!**
-> English speakers often say "I'm home." In Ukrainian, this is impossible without a preposition.
-> *   ❌ *Incorrect:* Я дома.
-> *   ✅ *Correct:* **Я вдома**.
+*   **Прямо** [prʲɑmɔ] — Straight. Go straight ahead.
 ---NEW---
-> [!warning]
-> **Don't drop prepositions!**
-> Ukrainian location expressions require a preposition — you cannot skip it the way English sometimes does.
-> *   ❌ *Incorrect:* Я школі. (No preposition — the sentence is broken.)
-> *   ✅ *Correct:* **Я в школі.** (Preposition included — correct.)
->
-> Note: **вдома** (at home) is the standard literary form for "at home."
+*   **Прямо** [ˈprʲamɔ] — Straight. Go straight ahead.
 ===FIX_END===
 
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/checkpoint-navigation.md
 ---OLD---
-This is the "golden rule" of the Locative case. almost all singular nouns get the ending **-і**.
+**Немає часу** [t͡ʃɑsu]. (There is no time.)
 ---NEW---
-This is the "golden rule" of the Locative case. Almost all singular nouns get the ending **-і**.
+**Немає часу** [t͡ʃɑˈsu]. (There is no time.)
+===FIX_END===
+
+===FIX_START===
+FILE: curriculum/l2-uk-en/a1/checkpoint-navigation.md
+---OLD---
+*   школа → **у школі** [ʃkɔl⁽ʲ⁾i].
+*   місто → **у місті** [m⁽ʲ⁾isʲt⁽ʲ⁾i].
+---NEW---
+*   школа → **у школі** [ʃkɔˈlʲi].
+*   місто → **у місті** [ˈmʲistʲi].
 ===FIX_END===
 
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/activities/checkpoint-navigation.yaml
 ---OLD---
-    - question: 'Виберіть правильну форму слова після числа 2: Два ____'
-      explanation: 'Після чисел 2, 3, 4 вживаємо Родовий відмінок однини (студенти).'
+      explanation: 'Більшість іменників у Місцевому відмінку мають закінчення -і (у парку, у школі).'
 ---NEW---
-    - question: 'Виберіть правильну форму слова після числа 2: Два ____'
-      explanation: 'Після чисел 2, 3, 4 вживаємо Називний відмінок множини: студент → студенти.'
+      explanation: 'Більшість іменників у Місцевому відмінку мають закінчення -і (у школі, у місті). Але є винятки: у парку (-у).'
 ===FIX_END===
 
-===FIX_START===
-FILE: curriculum/l2-uk-en/a1/activities/checkpoint-navigation.yaml
----OLD---
-    - question: 'Яка форма правильна після числа 3: Три ____'
-      explanation: 'Гривня (жіночий рід) у родовому однини: гривні.'
----NEW---
-    - question: 'Яка форма правильна після числа 3: Три ____'
-      explanation: 'Гривня (жіночий рід) у Називному відмінку множини: гривня → гривні.'
-===FIX_END===
+---
 
-===FIX_START===
-FILE: curriculum/l2-uk-en/a1/activities/checkpoint-navigation.yaml
----OLD---
-    - question: 'Оберіть закінчення після числа 4: Чотири ____'
-      explanation: 'Квиток у родовому однини: квитки.'
----NEW---
-    - question: 'Оберіть закінчення після числа 4: Чотири ____'
-      explanation: 'Квиток у Називному відмінку множини: квиток → квитки.'
-===FIX_END===
+### Issues NOT fixed (minor, non-blocking)
 
-===FIX_START===
-FILE: curriculum/l2-uk-en/a1/activities/checkpoint-navigation.yaml
----OLD---
-    - question: 'Правильна форма для слова "день" після числа 2: Два ____'
-      explanation: 'День у родовому однини: дні.'
----NEW---
-    - question: 'Правильна форма для слова "день" після числа 2: Два ____'
-      explanation: 'День у Називному відмінку множини: день → дні.'
-===FIX_END===
+- **"поїзд" in match-up activity:** Common A1 word, not harmful. Replacing it would reduce activity richness for no real gain.
+- **"[park]" on line 70:** Cosmetic inconsistency. Harmless for learners.
+- **Meta deviation on integration scenario:** Meta says "Арсенальна → парк Вічної Слави" but content follows the plan (source of truth) with "Золоті Ворота → кав'ярня." Plan takes precedence — no fix needed.
+- **Missing х → с alternation example:** Meta lists all three (г→з, к→ц, х→с) but finding a natural navigation-themed х→с example is forced. The two shown are sufficient for a checkpoint review.
 
-===FIX_START===
-FILE: curriculum/l2-uk-en/a1/activities/checkpoint-navigation.yaml
----OLD---
-      explanation: 'Місто — воно (серендій рід), тому "твоє".'
----NEW---
-      explanation: 'Місто — воно (середній рід), тому "твоє".'
-===FIX_END===
+---
+
+### Verification Summary
+
+| Check | Result |
+|-------|--------|
+| Word count (target 2000) | 2529 — PASS |
+| Plan sections covered | All 4 plan sections present |
+| Meta sections covered | All 7 meta sections present |
+| Required vocabulary in prose | All 8 required items used |
+| Russianisms | CLEAN |
+| Russian characters (ы, э, ё, ъ) | CLEAN |
+| Grammar scope (no beyond-level forms) | CLEAN |
+| Activity YAML format (bare list) | CLEAN |
+| Unjumble words↔answer match | All 6 verified ✅ |
+| Fill-in answers produce grammatical sentences | All 24 verified ✅ |
+| Quiz correct answers verified | All 16 verified ✅ |
+| Group-sort classifications | All 3 sorts verified ✅ |
+| Match-up translations | All 16 pairs verified ✅ |
+| Factual claims (Arsenalna depth, Zoloti Vorota) | Accurate |
+| LLM artifacts | None detected |
+| Beginner safety | Excellent — supportive tone, clear scaffolding |
+| IPA tie bars on affricates (t͡ʃ, t͡s) | Present where needed ✅ |
+| В transcribed as ʋ (not w) | ✅ |
+
+---
 
 ===VERDICT===
 APPROVE

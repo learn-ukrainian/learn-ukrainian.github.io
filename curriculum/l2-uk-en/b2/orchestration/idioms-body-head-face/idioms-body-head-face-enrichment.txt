@@ -1,0 +1,275 @@
+✅ Message sent to Gemini (ID: 10565) [auto-acked: self-addressed]
+✓ Message 10565 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10565...
+📨 Message #10565
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-idioms-body-head-face
+   Time: 2026-02-20T20:42:22.225853+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b2-49
+level: B2
+sequence: 49
+slug: idioms-body-head-face
+version: '2.0'
+title: 'Соматичні фразеологізми: Голова та обличчя'
+subtitle: Idioms about Head and Face
+content_outline:
+- section: Розминка — Голова як центр мислення
+  points:
+  - Голова в українській фразеології — розум, думки, характер
+  - Обличчя — емоції, чесність, репутація
+  - Граматичні особливості — відмінок, число, прийменник
+- section: Фразеологізми з "голова"
+  points:
+  - Ламати голову (напружено думати)
+  - Втратити голову (збожеволіти від чогось)
+  - Голова йде обертом (запаморочення від кількості)
+  - Мати голову на плечах (бути розумним)
+  - Як сніг на голову (несподівано)
+  - Вішати голову (сумувати)
+- section: Фразеологізми з частинами обличчя
+  points:
+  - Око за око (помста)
+  - Закривати очі на щось (ігнорувати)
+  - Водити за ніс (обманювати)
+  - Задирати носа (бути пихатим)
+  - Не в бров, а в око (влучно)
+  - Розвісити вуха (довірливо слухати)
+- section: Практика — ідіоми в діалозі
+  points:
+  - Обрати ідіому для опису ситуації
+  - Визначити, чи вираз позитивний, негативний чи нейтральний
+  - Написати діалог з 3-4 ідіомами
+  - Порівняти з ідіомами попередніх модулів (M47-48)
+focus: phraseology
+pedagogy: CBI
+objectives:
+- Learner can recognize and interpret 8 core Ukrainian somatic idioms about head and
+  face
+- Learner can distinguish literal vs figurative meanings of body-related idioms
+- Learner can use head/face idioms appropriately in context with correct register
+grammar:
+- Fixed expressions (фразеологічні одиниці)
+- Idiom structure and variation
+immersion: 100
+register: varies
+phase: B2.2 [Phraseology & Synonymy]
+vocabulary_hints:
+  required:
+  - термін (term)
+  - поняття (concept)
+  - процес (process)
+  - метод (method)
+  recommended:
+  - аналіз (analysis)
+  - синтез (synthesis)
+  - дослідження (research)
+activity_hints:
+- type: reading
+  focus: Аналіз тексту
+  items: 4
+- type: essay-response
+  focus: Практичне застосування
+- type: true-false
+  focus: Перевірка розуміння
+  items: 8
+persona:
+  voice: Professional Language Coach
+  role: Portrait Painter (Портретист)
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Соматичні фразеологізми: Голова та обличчя
+
+## State Standard Reference
+§4.4.1.2: "Стилістичні засоби лексики: ... епітети, метафори, ... фразеологізми"
+Alignment: Цей модуль розвиває компетентність у використанні фразеологізмів (ідіом) для збагачення мовлення, що є вимогою рівня B2 (див. також лінію 2752: "доречно використовувати відомі фразеологізми та ідіоми").
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| **Голова** | Висока (топ-100 іменників) | світла голова, гаряча голова, голова йде обертом, морочити голову, на свою голову |
+| **Обличчя** | Середня | втратити обличчя, обличчям до лиця, змінитися в обличчі |
+| **Ніс** | Середня | водити за ніс, сунути носа, задерти носа, не бачити далі свого носа |
+| **Око** | Висока | впасти в око, краєм ока, око за око, замилювати очі |
+| **Вухо** | Середня | розвісити вуха, нашорошити вуха, пропустити повз вуха |
+
+## Cultural Hooks
+1. **Водити за ніс**: Походження фразеологізму пов'язане з ярмарковими розвагами, де цигани або дресирувальники водили ведмедів за кільце, просилене в ніс. Це дозволяло повністю контролювати тварину і змушувати її робити фокуси, часто обманюючи очікування глядачів або самої тварини.
+2. **Символіка покривання голови**: В українській традиції голова мала сакральне значення. Обряд "покривання" молодої на весіллі (зміна вінка на очіпок/хустку) символізував перехід до статусу заміжньої жінки. "Засвітити волоссям" (ходити без головного убору заміжній жінці) вважалося гріхом і соромом, звідси фразеологізм "опростоволоситися" (зганьбитися), хоча він і застарілий, але корінь поняття важливий.
+
+## Common Learner Errors
+1. **Калькування з російської** → *Кидатися в очі* (неправильно) → **Впадати в око** (правильно). Це класична інтерференція.
+2. **Контамінація (змішування)** → *Грати значення* (неправильно) → **Мати значення** або **Відігравати роль**. Хоча це загальний помилковий патерн, він часто трапляється в контексті обговорення "ролі голови/розуму".
+3. **Сплутування значень** → *Ламати голову* (напружено думати) vs *Морочити голову* (набридати комусь або обманювати). Учні часто вживають "Don't break my head" (не мороч мені голову), що є грубою помилкою.
+4. **Неправильне вживання прийменників** → *Сміятися над кимось* (калька) → **Сміятися з когось**.
+
+## Cross-References
+- **Builds on**:
+    - `set-expressions-i-body-animals` (M47): Базові анімалістичні ідіоми.
+    - `set-expressions-ii-objects-abstract` (M48): Ідіоми з об'єктами.
+- **Prepares for**:
+    - `idioms-body-hands-legs` (M50): Продовження теми соматизмів (руки, ноги, серце).
+
+## Notes for Content Writing
+- **Tone**: Professional yet engaging. The "Portrait Painter" persona suggested in the plan fits perfectly — visualizing these idioms as elements of a portrait (e.g., "smart eyes", "high nose" of arrogance).
+- **Differentiation**: Clearly distinguish between "голова" as intelligence (світла голова) and "голова" as the leader/main element (голова зборів).
+- **Actuality**: Mention that "втратити обличчя" is originally an eastern concept (face saving) but fully integrated into Ukrainian bureaucratic/formal language.
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Голова як семантичний центр (Introduction: Head as a Semantic Center)"
+  words: 600
+  points:
+  - "Концепт голови в українській мові: поєднання інтелекту (світла голова), емоцій (гаряча голова) та лідерства (голова зборів)"
+  - "Вимоги Державного стандарту (§4.4.1.2): використання фразеологізмів як стилістичного засобу для збагачення мовлення рівня B2"
+  - "Персона Портретиста: сприйняття фразеологізмів як рис обличчя, що формують характер персонажа"
+- section: "Культурний код та етимологія (Cultural Code and Etymology)"
+  words: 850
+  points:
+  - "Історія виразу «водити за ніс»: ярмаркові ведмеді та повний контроль через фізичний біль як метафора маніпуляції"
+  - "Сакральність покриття голови в традиції: від весільного «покривання» до фразеологізму «опростоволоситися» (зганьбитися)"
+  - "Сучасна інтеграція концепту «втратити обличчя»: перехід від східної філософії до українського офіційно-ділового та бюрократичного стилів"
+- section: "Майстерня фразеології: Голова та очі (Idiom Workshop: Head and Eyes)"
+  words: 950
+  points:
+  - "Аналіз ідіом про голову: «мати голову на плечах» (розум), «як сніг на голову» (раптовість), «вішати голову» (відчай)"
+  - "Помилка інтерференції: заміна російської кальки «кидатися в очі» на нормативний український варіант «впадати в око»"
+  - "Високочастотні колокації з «око»: «замилювати очі» (обманювати), «краєм ока» (неуважно), «хоч око виколи» (темрява)"
+- section: "Аналіз помилок: Носи, вуха та прийменники (Error Analysis: Noses, Ears and Prepositions)"
+  words: 800
+  points:
+  - "Диференціація схожих значень: «ламати голову» (думати) vs. «морочити голову» (набридати/обманювати) — вправа на розрізнення"
+  - "Соматизми «ніс» та «вухо»: «задирати носа» (пиха), «розвісити вуха» (довірливість), «пропустити повз вуха» (ігнорування)"
+  - "Граматична корекція: заміна калькованого «сміятися над кимось» на нормативне «сміятися з когось» у контексті іронічних ідіом"
+- section: "Практичний синтез та творча продукція (Practical Synthesis and Creative Production)"
+  words: 800
+  points:
+  - "Створення лінгвістичного портрета: опис видатної особистості або знайомого, використовуючи мінімум 5 вивчених соматизмів"
+  - "Регістри вживання: поділ ідіом на книжні (втратити обличчя) та розмовні (водити за ніс, задирати носа)"
+  - "Підготовка до M50: порівняння функцій «голови» (мислення) та майбутніх тем «рук і ніг» (дія та рух) у фразеології"
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "світла голова (bright mind) — про розумну, розсудливу людину; висока частотність"
+  - "впадати в око (to catch the eye) — правильно вживати замість кальки 'кидатися в очі'"
+  - "водити за ніс (to lead by the nose) — обманювати, давати пусті обіцянки; розмовний стиль"
+  - "замилювати очі (to pull the wool over someone's eyes) — створювати хибне враження; часто у формальному контексті"
+  - "втратити обличчя (to lose face) — втратити авторитет, репутацію; книжний/діловий стиль"
+  recommended:
+  - "опростоволоситися (to make a fool of oneself) — зробити грубу помилку, зганьбитися (культурний контекст)"
+  - "нашорошити вуха (to prick up one's ears) — уважно прислухатися; метафора обережності"
+  - "морочити голову (to mess with someone's head) — дурити або набридати; не плутати з 'ламати голову'"
+  - "не в бров, а в око (hit the nail on the head) — сказати або зробити щось дуже влучно"
+  - "сміятися з когось (to laugh at someone) — правильне прийменникове керування"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (3553 chars)
+✅ Message sent to Claude (ID: 10572)
+✓ Message 10572 acknowledged
+   Auto-acknowledged reply #10572 (stdout delivery — no inbox accumulation)
+✓ Message 10565 acknowledged

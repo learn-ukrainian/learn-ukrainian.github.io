@@ -2,12 +2,5 @@
   "track": "c2",
   "slug": "c1-bridge-assessment",
   "mode": "v3",
-  "phases": {
-    "v3-A": {
-      "status": "complete",
-      "ts": "2026-02-20T00:11:24Z",
-      "task_id": "v3-c1-bridge-assessment-pA",
-      "mode": "full"
-    }
-  }
+  "phases": {}
 }

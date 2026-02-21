@@ -56,7 +56,7 @@ These letters are your "Safe Harbor." They look exactly like their Latin counter
 
 > [!culture]
 > **The Ukrainian "O"**
-> In Ukrainian, **О** is always pronounced fully and clearly, regardless of stress. Unlike in Russian, where an unstressed "O" often turns into an "A" sound (akanje), in Ukrainian, an **О** is always an **О**. This gives the language its melodic, rhythmic quality.
+> In Ukrainian, **О** is always pronounced fully and clearly, regardless of stress. An unstressed **О** stays **О** — it never weakens or shifts to another vowel. This consistency is part of what gives Ukrainian its melodic, rhythmic quality. Every **О** you see is an **О** you hear.
 
 #### The Consonants: К, М, Т
 -   **К к** — [k]. As in "**k**ite."
@@ -163,9 +163,9 @@ These shapes are new to you. They have no "baggage" from English, so you can lea
 
 > [!myth-buster]
 > **The Anti-Surzhyk Alert**
-> You might have seen foreign characters in other apps or textbooks that look like an "e" with two dots or a backwards "e". These are **Russian letters**. They **do not exist** in Ukrainian.
+> You might see characters in some apps or textbooks that look like an "e" with two dots, a backwards "e", or a "bl" combination. These three letters **do not exist** in Ukrainian.
 >
-> If you see two dots over an "e", run away! That is not Ukrainian. Ukrainian is elegant and distinct. We don't use the "backwards N" for the "ee" sound; we use the European **І**.
+> If you spot them in a "Ukrainian" resource, that resource is mixing in Russian. Ukrainian has its own elegant system — **Є** for the "ye" sound, **І** for the "ee" sound, and **И** for the deep vowel. Trust the real Ukrainian alphabet.
 
 ---
 
@@ -190,13 +190,13 @@ Now that we have our decoding tools, let's apply them to words you will definite
 ### Collocation Context
 In Ukrainian, we rarely speak in isolated words. We speak in chunks (**фрази**). Let's practice some very common combinations to get your tongue moving.
 
-1.  **У банку** [u ˈbɑnku] — In the bank.
+1.  **У банку** — In the bank.
     *   *Usage*: "Де мама?" (Where is mom?) — "**У банку**."
-2.  **Це факт** [t͡sɛ fɑkt] — It is a fact.
+2.  **Це факт** — It is a fact.
     *   *Usage*: Use this to agree with someone emphatically. "Земля кругла? **Це факт**."
-3.  **Мій кіт** [mʲij kʲit] — My cat.
+3.  **Мій кіт** — My cat.
     *   *Usage*: Introducing your pet. "**Це мій кіт** Мурчик."
-4.  **Моя мама** [mɔˈjɑ ˈmɑmɑ] — My mom.
+4.  **Моя мама** — My mom.
     *   *Usage*: The most important person to talk about! "**Моя мама найкраща.**" (My mom is the best.)
 
 ### Visualizing the Scene
@@ -226,14 +226,17 @@ A small but important distinction:
 ## Культурний контекст: Українська ідентичність літери «І»
 
 ### The "I" Identity
-You might have noticed that Ukrainian uses the letter **І** (with a dot), which looks exactly like the Latin "I". This is a unique feature among East Slavic languages. Russian, for example, does not use this letter at all; they use **И** for the "ee" sound.
+Ukrainian uses the letter **І** (with a dot), which looks exactly like the Latin "I". Among Slavic languages using Cyrillic, this is a distinctly Ukrainian feature — a bridge between the Latin alphabet you already know and the Cyrillic world you are entering.
 
-This small dot is a big deal (**велика справа**). Historically, the letter **І** became a symbol of Ukrainian identity (**ідентичність**). During the 19th century, there were actual "Alphabet Wars" where imperial authorities tried to ban Ukrainian spelling rules to make the language look more like Russian. They wanted to erase the unique features of Ukrainian. Keeping the **І** was an act of cultural resistance.
+This small dot is a big deal (**велика справа**). The letter **І** became a symbol of Ukrainian identity (**ідентичність**). During the 19th century, there were actual "Alphabet Wars" where imperial authorities tried to ban Ukrainian spelling rules. They wanted to erase the unique features of Ukrainian. Keeping the **І** was an act of cultural resistance — and Ukrainians won.
 
-### Visual European-ness
-Because Ukrainian uses **І** (and also **Є** and **Ї**, which we will meet later), written Ukrainian text looks visually distinct. It has a vertical rhythm that is different from the flatter look of Russian script. To a Western eye, Ukrainian text often feels slightly more familiar because of these Latin-like vertical strokes.
+### Visual Character
+Ukrainian has a distinctive set of four letters that, taken together, set it apart from its East Slavic neighbors: **І** (with its familiar vertical stroke), **Ї** (crowned with two dots), **Є** (a graceful curve), and **Ґ** (a Г with an upturn). While individual letters like І also appear in Belarusian, the combination of all four is the fingerprint of Ukrainian. When you spot them together on a page, you know instantly: this is Ukrainian.
 
-When you write **Україна** (Ukraine), you are using two distinct letters (**і** and **ї**) that mark the language as separate, independent, and beautiful.
+When you write **Україна** (Ukraine), the letter **ї** appears right in the heart of the word — carrying two dots like a quiet signature of the language.
+
+### The Letter That Came Back
+The letter **Ґ** has a dramatic story. In 1933, Soviet authorities removed it from the Ukrainian alphabet, replacing it with **Г**. For almost 60 years, **Ґ** was a "ghost letter" — used only by Ukrainians in the diaspora. When Ukraine moved toward independence, **Ґ** was officially restored in 1990. Today, it lives in words like **ґанок** (porch) and **ґудзик** (button). It is small but mighty — a symbol of linguistic survival.
 
 ### Pronunciation Nuance
 This letter isn't just for show. It represents a very specific sound.
@@ -256,13 +259,13 @@ Let's bring it all together. You have learned True Friends (easy), False Friends
 **Це факт: мама і тато в метро.**
 
 Let's break it down:
-1.  **Це** [t͡sɛ] (This) — *Standard starter word.*
-2.  **факт** [fɑkt] (fact) — *Cognate.* Note the **Ф** (hands on hips).
-3.  **мама** [ˈmɑmɑ] (mom) — *True Friend.*
-4.  **і** [i] (and) — *The connector.*
+1.  **Це** [t͡sɛ] (This) — *A high-frequency starter word. The letter Ц is a sneak preview — you will learn it properly in Module 2.*
+2.  **факт** (fact) — *Cognate.* Note the **Ф** (hands on hips).
+3.  **мама** (mom) — *True Friend.*
+4.  **і** (and) — *The connector.*
 5.  **тато** [ˈtɑtɔ] (dad) — *True Friend.*
 6.  **в** [u/v] (in) — *Preposition.*
-7.  **метро** [meˈtrɔ] (metro) — *Cognate.*
+7.  **метро** (metro) — *Cognate.*
 
 *Meaning: It's a fact: mom and dad are in the metro.*
 
@@ -272,7 +275,7 @@ Before we finish, let's do one final check on our "False Friends." These are the
 1.  **The "P" Check**: Say "**Парк**".
     *   Did you roll the **Р**? Make sure it sounds like a purring cat, not a puff of air.
     *   *Correct*: [pɑrk] (make that Р roll!)
-    *   *Incorrect*: [pɑhk] (Don't drop the R!)
+    *   *Incorrect*: [pɑɹk] (Don't use the flat English R — make it vibrate!)
 2.  **The "B" vs "V" Check**: Say "**База**" vs "**Ваза**".
     *   **База** (base) starts with a B-boy sound. Explosive.
     *   **Ваза** (vase) starts with a V-vehicle sound. Buzzing.
@@ -298,12 +301,12 @@ Visualizing these letters in the real world will help your brain accept them as 
 
 ---
 
-# Summary
+# Підсумок
 
-### Підсумок (Review Checklist)
+### Review Checklist
 Сьогодні ви вивчили 19 літер. (Today you learned 19 letters).
 
--   **True Friends**: А, Е, І, О, К, М, Т
+-   **True Friends**: І, А, Е, О, К, М, Т
 -   **False Friends**: В, Н, Р, С, У, Х
 -   **New Letters**: Б, Д, З, Л, П, Ф
 

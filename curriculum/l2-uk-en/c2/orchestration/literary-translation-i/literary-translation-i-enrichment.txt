@@ -1,0 +1,331 @@
+✅ Message sent to Gemini (ID: 11187) [auto-acked: self-addressed]
+✓ Message 11187 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #11187...
+📨 Message #11187
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-literary-translation-i
+   Time: 2026-02-20T22:29:02.488411+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c2-034
+level: c2
+sequence: 34
+version: '2.0'
+title: Літературний переклад I — поезія
+focus: literature
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Переклад поезії — Вікіпедія
+  url: https://uk.wikipedia.org/wiki/Поетичний_переклад
+  type: reference
+  notes: Challenges of poetry translation
+- name: Український поетичний переклад
+  url: https://ukrlib.com.ua/
+  type: primary
+  notes: Examples of translated poetry
+- name: Максим Рильський — перекладач
+  url: https://uk.wikipedia.org/wiki/Максим_Рильський
+  type: reference
+  notes: Master poetry translator
+content_outline:
+- section: Вступ — Чи можна перекласти поезію?
+  points:
+  - Проблема перекладу поезії
+  - Що втрачається і що зберігається
+  - Переклад vs. переспів vs. адаптація
+- section: Переклад форми
+  points:
+  - Збереження метру і ритму
+  - Переклад рими
+  - Збереження строфіки
+  - Коли форму можна змінити
+- section: Переклад звукової організації
+  points:
+  - Алітерація і асонанс
+  - Звуковий символізм
+  - Компенсаційні стратегії
+  - Евфонія в перекладі
+- section: Переклад образності
+  points:
+  - Метафори і їх переклад
+  - Культурно-специфічні образи
+  - Інтертекстуальні посилання
+  - Збереження vs. адаптація
+- section: Практикум — переклад з англійської
+  points:
+  - Аналіз оригіналу
+  - Вибір стратегії
+  - Процес перекладу
+  - Самоаналіз результату
+- section: Практикум — переклад на англійську
+  points:
+  - Специфіка перекладу з української
+  - Що важливо зберегти
+  - Представлення української поезії світові
+- section: Підсумок
+  points:
+  - Критерії якості поетичного перекладу
+  - Роль перекладача як співавтора
+  - Від перекладу до власної творчості
+vocabulary:
+  required:
+  - поетичний переклад (poetry translation)
+  - переспів (adaptation/versification)
+  - метр (meter)
+  - рима (rhyme)
+  - звукопис (sound painting)
+  - образ (image)
+  - оригінал (original)
+  - еквівалент (equivalent)
+  - інтерпретація (interpretation)
+  - компенсація (compensation)
+  recommended:
+  - верлібр (free verse)
+  - строфіка (stanzaic form)
+  - калька (calque)
+  - трансформація (transformation)
+  - конотація (connotation)
+  forbidden: '[]'
+activities:
+  types_required:
+  - essay-response
+  - quiz
+  - comparative-study
+  - critical-analysis
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c2-35 (Literary Translation II — Prose)
+- 'c2-36 (Creative Writing: Poetry)'
+- c2-86 (C2.4 Translation Practice I)
+vocabulary_hints:
+  required:
+  - концепція (concept)
+  - аналіз (analysis)
+  - дискурс (discourse)
+  - методологія (methodology)
+  recommended:
+  - інтерпретація (interpretation)
+  - контекстуалізація (contextualization)
+  - синтез (synthesis)
+activity_hints:
+- type: reading
+  focus: Поглиблений аналіз тексту
+  items: 4
+- type: essay-response
+  focus: Критичне осмислення
+- type: discussion
+  focus: Дискусія та аргументація
+  items: 1
+persona:
+  voice: Senior Specialist
+  role: Poetry Translator
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Літературний переклад I — поезія
+
+## State Standard Reference
+§4.3.3, §4.3.7: "Стилістичні засоби лексики: епітети, метафори, уособлення, перифраз, метонімія, синекдоха... Уміння трансформувати текст з одного стилю в інший."
+Alignment: Цей модуль розвиває навички відтворення художнього стилю (поезії) засобами української мови, зосереджуючись на збереженні стилістичних фігур та емоційного впливу оригіналу.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| **поетичний переклад** | Medium / Academic | теорія поетичного перекладу, майстерність поетичного перекладу, адекватний поетичний переклад |
+| **переспів** | Low / Literary | вільний переспів, авторський переспів, зробити переспів |
+| **рима** | High / General | точна/неточна рима, чоловіча/жіноча рима, багата рима, підібрати риму |
+| **метр** | Medium / Literary | віршовий метр, збереження метру, ямб, хорей |
+| **звукопис** | Low / Specialist | засоби звукопису, алітерація та асонанс, відтворення звукопису |
+| **образ** | High / General | художній образ, відтворення образу, система образів, наскрізний образ |
+
+## Cultural Hooks
+1. **Максим Рильський**: Видатний український перекладач, який вважав переклад "змаганням" з автором. Його переклади Міцкевича ("Пан Тадеуш") та французької поезії є еталоном збереження форми та змісту.
+2. **Микола Лукаш**: Геній перекладу, який знав понад 20 мов. Відомий тим, що для перекладу діалектизмів або архаїзмів оригіналу використовував відповідні українські пласта (наприклад, у "Декамероні" або "Фаусті"), що демонструє багатство української мови.
+3. **Неокласики (Микола Зеров)**: Київська школа неокласиків сповідувала принцип "ad fontes" (до джерел) і високої перекладацької культури, виступаючи проти дилетантизму.
+
+## Common Learner Errors
+1. **Калькування синтаксису**: Спроба зберегти порядок слів оригіналу, що ламає природний ритм української фрази.
+   *Correct form*: Зміна порядку слів для збереження ритму та емфази.
+2. **"Рима заради рими"**: Використання невдалих або спотворених слів лише щоб зберегти римування, жертвуючи змістом або стилем.
+   *Correct form*: Пошук точнішого еквівалента або використання неточної рими, але зі збереженням образу.
+3. **Втрата звукопису**: Ігнорування алітерації чи асонансу, які є ключовими для атмосфери вірша.
+   *Correct form*: Використання компенсації — створення звукового ефекту в іншому місці рядка/строфи.
+
+## Cross-References
+- Builds on: C2.1 Stylistics modules (M01-M25), specifically phonetic and lexical stylistics.
+- Prepares for: C2-35 (Літературний переклад II — проза), C2-36 (Творче письмо: поезія), C2-86 (Перекладацька практика I).
+
+## Notes for Content Writing
+- Важливо чітко розмежувати "переклад" (translation) і "переспів" (adaptation/imitation).
+- Практичні завдання мають бути сфокусовані на конкретних проблемах: "ось строфа, де головне — ритм", "ось рядок з алітерацією".
+- Використовувати приклади класичних перекладів (Рильський, Лукаш, Кочур) як ілюстрацію майстерності.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Чи можна перекласти поезію? (Introduction: Is Poetry Translatable?)"
+  words: 500
+  points:
+  - "Проблема поетичного перекладу: що втрачається (Loss in Translation) і що залишається в основі ліричного твору."
+  - "Чітке розмежування термінів: «поетичний переклад» (еквівалентність), «переспів» (вільна адаптація) та «наслідування» (imitations)."
+  - "Рильський як теоретик: концепція перекладу як «змагання» з оригіналом; збереження авторського голосу через призму іншої культури."
+- section: "Традиції української школи перекладу (Traditions of the Ukrainian School of Translation)"
+  words: 900
+  points:
+  - "Геній Миколи Лукаша: використання різних пластів української мови (архаїзми, діалектизми) для відтворення багатства оригіналу (на прикладі перекладів «Декамерона» та «Фауста»)."
+  - "Київські неокласики (Микола Зеров): принцип 'ad fontes' (до джерел), виступ проти дилетантизму та боротьба за високу перекладацьку культуру."
+  - "Григорій Кочур та його роль у збереженні тяглості перекладацької традиції в умовах цензури; філософський підхід до вибору тексту."
+- section: "Техніка відтворення форми та звукопису (Technique: Reproducing Form and Sound Painting)"
+  words: 1000
+  points:
+  - "Метрика та ритміка: специфіка збереження віршових метрів (ямб, хорей) в українській мові; коли зміна форми є допустимою."
+  - "Рима в перекладі: класифікація (точна/неточна, багата, чоловіча/жіноча); помилка «рима заради рими» — втрата змісту заради співзвучності."
+  - "Звукопис (Sound Painting): алітерація та асонанс як засоби створення атмосфери; використання стратегії компенсації для відтворення звукового ефекту в іншому місці строфи."
+- section: "Стилістика та образність за Державним стандартом (Stylistics and Imagery per State Standard)"
+  words: 1000
+  points:
+  - "Трансформація художнього стилю (§4.3.3): відтворення епітетів, метафор та уособлень засобами цільової мови зі збереженням емоційного впливу."
+  - "Стилістичні фігури (§4.3.7): робота з перифразом, метонімією та синекдохою; навичка перекодування складних образів без втрати конотацій."
+  - "Культурно-специфічні образи та інтертекстуальні посилання: стратегії адаптації vs. збереження екзотизмів оригіналу."
+- section: "Аналіз типових помилок та практикум (Analysis of Common Errors and Workshop)"
+  words: 700
+  points:
+  - "Помилка калькування синтаксису: як пряме збереження порядку слів ламає природну мелодику української фрази; вправи на ритмічну трансформацію."
+  - "Практичне завдання: аналіз оригіналу з англійської мови, виявлення наскрізних образів та вибір стратегії (фокус на ритмі чи на метафориці)."
+  - "Порівняльний аналіз: зіставлення різних перекладів одного твору (наприклад, Шекспіра чи Рільке) для оцінки майстерності відтворення звукопису."
+- section: "Підсумок: Перекладач як співавтор (Summary: The Translator as Co-author)"
+  words: 400
+  points:
+  - "Критерії якості поетичного тексту: адекватність, поетичність та здатність перекладу жити самостійним життям у новій літературі."
+  - "Творча етика: межа між інтерпретацією та свавіллям перекладача; важливість представлення української поезії світові через високу якість перекладу."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "поетичний переклад (poetry translation) — collocations: теорія, майстерність, адекватний; academic/literary register."
+  - "переспів (adaptation/versification) — collocations: вільний/авторський переспів; distinguishing from strict translation."
+  - "метр (meter) — collocations: віршовий метр, ямб, хорей, збереження метру; literary focus."
+  - "рима (rhyme) — collocations: точна/неточна, багата, чоловіча/жіноча рима; high frequency in poetry analysis."
+  - "звукопис (sound painting) — collocations: засоби звукопису, алітерація та асонанс; specialist/academic register."
+  - "образ (image) — collocations: художній, наскрізний образ, система образів; central concept in literary analysis."
+  - "оригінал (original) — collocations: мова оригіналу, вірність оригіналу."
+  - "еквівалент (equivalent) — collocations: функціональний/стилістичний еквівалент."
+  - "інтерпретація (interpretation) — collocations: авторська інтерпретація, простір для інтерпретації."
+  - "компенсація (compensation) — collocations: стратегія компенсації, лексична/фонетична компенсація."
+  recommended:
+  - "верлібр (free verse) — free verse form without rhyme or meter."
+  - "строфіка (stanzaic form) — structure of stanzas; consistency in translation."
+  - "калька (calque) — negative connotation in translation; avoid syntactic calquing."
+  - "трансформація (transformation) — collocations: стилістична трансформація (§4.3.3)."
+  - "конотація (connotation) — preserving emotional overtones."
+  - "евфонія (euphony) — the pleasantness of sound in poetry."
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4857 chars)
+✅ Message sent to Claude (ID: 11194)
+✓ Message 11194 acknowledged
+   Auto-acknowledged reply #11194 (stdout delivery — no inbox accumulation)
+✓ Message 11187 acknowledged

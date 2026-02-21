@@ -2,12 +2,5 @@
   "track": "c1",
   "slug": "degrees-of-certainty",
   "mode": "v3",
-  "phases": {
-    "v3-A": {
-      "status": "complete",
-      "ts": "2026-02-19T18:04:33Z",
-      "task_id": "v3-degrees-of-certainty-pA",
-      "mode": "full"
-    }
-  }
+  "phases": {}
 }

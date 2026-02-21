@@ -1,7 +1,7 @@
 # Audit Report: M04 — this-is-i-am.md
 **Level:** A1 | **Module:** M04 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-19 23:01:28
+**Generated:** 2026-02-21 00:46:29
 
 ## Configuration
 **Type:** A1-grammar
@@ -37,12 +37,12 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2376/2000 (raw: 2639)
+- **Words:** ✅ 2507/2000 (raw: 2770)
 - **Activities:** ✅ 9/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 6/3
+- **Engagement:** ✅ 7/3
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 21/1
 - **Structure:** ✅ Valid Structure
@@ -50,7 +50,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 10.1% (target 10-25% (M04))
+- **Immersion:** 🇺🇦 10.9% (target 10-25% (M04))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -59,9 +59,9 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 65 | Included in Core |
-| **Вступ: Де дієслово «бути»?** | ✅ | 381 | Included in Core |
-| **Граматика: Займенники та «нульова зв'язка»** | ✅ | 647 | Included in Core |
+| **Вступ: Де дієслово «бути»?** | ✅ | 382 | Included in Core |
+| **Граматика: Займенники та «нульова зв'язка»** | ✅ | 688 | Included in Core |
 | **Практикум: Хто це і що це?** | ✅ | 465 | Included in Core |
-| **Ваш вихід: Розкажіть про себе** | ✅ | 278 | Included in Core |
+| **Ваша черга: Розкажіть про себе** | ✅ | 340 | Included in Core |
 | **Культура: Тонкощі «Ти» і «Ви»** | ✅ | 342 | Included in Core |
-| **Підсумок** | ✅ | 198 | Included in Core |
+| **Підсумок** | ✅ | 225 | Included in Core |

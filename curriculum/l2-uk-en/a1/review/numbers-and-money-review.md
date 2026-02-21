@@ -1,36 +1,36 @@
 # Рецензія: Numbers & Money
 
 **Level:** A1 | **Module:** 17
-**Overall Score:** 9.4/10
+**Overall Score:** 8.9/10
 **Status:** PASS
-**Reviewed:** 2026-02-19
+**Reviewed:** 2026-02-20
 
 ## Plan Verification
 
 Plan-Content Alignment: PASS
-- Sections: Matches `meta.yaml` exactly.
-- Vocabulary: All required words present (`один`, `два`, `гривня`, etc.).
-- Grammar scope: Covers 0-100 and 1-2-5 rule correctly.
-- Objectives: Met.
+- Sections: All content_outline sections are present (Warm-up, Presentation, Practice, Cultural Insight).
+- Vocabulary: All required hints (один, два, п'ять, гривня...) are covered.
+- Grammar scope: Appropriately limited to Cardinals 0-100 and the 1-2-5 agreement rule.
+- Objectives: Learning objectives are met.
 
 ## Scores
 
 | # | Dimension | Score | Auto-fail | Evidence |
 |---|-----------|-------|-----------|----------|
-| 1 | Experience Quality | 10/10 | <7 | Excellent "Patient Tutor" persona; warm, encouraging, not overwhelming. |
-| 2 | Coherence | 10/10 | <7 | Logical flow from 0-10 to 100, then grammar, then shopping. |
-| 3 | Relevance | 10/10 | <7 | Immediately useful for survival (shopping, prices). |
-| 4 | Educational | 8/10 | <7 | Promisses stress accents in text but fails to deliver them (Critical Issue 1). |
-| 5 | Language | 10/10 | <8 | Simple, correct Ukrainian; excellent English scaffolding. |
-| 6 | Pedagogy | 10/10 | <7 | 1-2-5 rule explanation is pedagogically perfect ("Zones"). |
-| 7 | Immersion | 10/10 | <6 | Appropriate mix for A1.2; English used for complex grammar explanation. |
-| 8 | Activities | 9/10 | <7 | Good variety; one minor confusion in group-sort labelling (5-0 vs 5-20). |
-| 9 | Richness | 9/10 | <6 | Cultural context about Hryvnia is great. |
-| 10 | Beginner Safety | 9/10 | <7 | "Would I Continue?" 5/5. |
-| 11 | LLM Fingerprint | 9/10 | <7 | Natural voice; avoids "In this lesson we will explore". |
-| 12 | Linguistic Accuracy | 9/10 | <9 | Phonetics and grammar are correct, barring the missing accents. |
+| 1 | Experience Quality | 9/10 | <7 | Tone is very supportive ("We will build this step-by-step"). |
+| 2 | Coherence | 9/10 | <7 | Logical flow from 0-10 -> 11-19 -> 20-100 -> Money. |
+| 3 | Relevance | 10/10 | <7 | Immediately practical for shopping and survival. |
+| 4 | Educational | 8/10 | <7 | Good explanation of "Zones", but the "16" spelling note is confusing. |
+| 5 | Language | 9/10 | <8 | English is clear; Ukrainian is correct. |
+| 6 | Pedagogy | 8/10 | <7 | "1-2-5 Rule" table uses technical terms "Nominative Sg" which breaks the "Zone" simplification. |
+| 7 | Immersion | 9/10 | <6 | Appropriate A1 mix of English explanations and Ukrainian examples. |
+| 8 | Activities | 10/10 | <7 | Excellent variety and clear feedback. |
+| 9 | Richness | 9/10 | <6 | Good cultural context (History of Hryvnia). |
+| 10 | Beginner Safety | 9/10 | <7 | "Don't worry" callouts and simple scaffolding. |
+| 11 | LLM Fingerprint | 9/10 | <7 | Natural voice, avoids "In this lesson..." clichés. |
+| 12 | Linguistic Accuracy | 8/10 | <9 | Minor issue with the explanation of "16" spelling. |
 
-**Weighted Overall:** 9.4/10
+**Weighted Overall:** 8.9/10
 
 ## Auto-Fail Checklist Results
 
@@ -42,59 +42,65 @@ Plan-Content Alignment: PASS
 
 ## Critical Issues Found
 
-### Issue 1: Missing Stress Accents
-- **Location**: Section "Числа 0-10" and "Числа 11-19"
-- **Original**: "Read them aloud, paying attention to the stress (marked with an acute accent `´`). ... * **1 — один** [ɔˈdɪn]."
-- **Problem**: The text explicitly promises visual stress accents (´) on the Cyrillic words to help beginners, but they are missing from the lists. The IPA has them, but the instruction implies they are on the words themselves, which is standard for A1 materials.
-- **Fix**: Add accents to the Cyrillic numbers: `оди́н`, `чоти́ри`, `одина́дцять`, etc.
+### Issue 1: Confusing Explanation of "16"
+- **Location**: Section "Числа 11-19", Item "16"
+- **Original**: «16 — шістнадцять... (Notice: the 'т' from 'шість' drops out for easier pronunciation)»
+- **Problem**: This is factually confusing. The letter 'т' is present in the spelling of `шістнадцять` (it does NOT drop out of writing). It is the soft sign 'ь' that drops out. The 'т' is often silent in pronunciation, but the text implies it disappears entirely like the soft sign.
+- **Fix**: Clarify that 'ь' drops, and 'т' is written but often silent.
 
-### Issue 2: English Plural Typo
-- **Location**: Section "Zone 1: The Number 1 (Nominative Singular)"
-- **Original**: "* **21 гривня** (twenty-one hryvnia)"
-- **Problem**: In English, 21 takes the plural ("hryvnias"). While the Ukrainian `21 гривня` is singular, the translation in parentheses usually reflects the English equivalent meaning. Leaving it as singular might confuse the learner about the *English* translation vs the *Ukrainian* structure.
-- **Fix**: Change to "(twenty-one hryvnias)" for correct English, or clarify. Given the context is teaching the singular Ukrainian form, it's a minor point, but standardizing English helps. I will prioritize the stress accent fix.
+### Issue 2: Invalid Callout Type
+- **Location**: Section "Математика: Плюс і Мінус"
+- **Original**: `> [!observe]`
+- **Problem**: `observe` is not a valid callout type in the project styling system. It will not render correctly.
+- **Fix**: Change to `> [!tip]` or `> [!note]`.
+
+### Issue 3: Technical Terminology in Scaffolding
+- **Location**: Section "Візуальна таблиця (Visual Summary Table)"
+- **Original**: `Nominative Sg`, `Nominative Pl`, `Genitive Pl`
+- **Problem**: The text beautifully introduces "Zones" to simplify grammar, but the table reverts to raw Latin grammatical terms which can scare A1 learners.
+- **Fix**: Label them "Zone 1 (Nom Sg)", etc., to maintain the bridge.
 
 ## Ukrainian Language Issues
 
 | Line | Current | Corrected | Type |
 |------|---------|-----------|------|
-| 70 | один | оди́н | Pedagogy (Missing Stress) |
-| 73 | чотири | чоти́ри | Pedagogy (Missing Stress) |
-| 95 | одинадцять | одина́дцять | Pedagogy (Missing Stress) |
+| N/A | (16 description) | (Clarified spelling) | Pedagogy |
 
 ## Beginner Safety Audit
 
 "Would I Continue?" Test: 5/5
-- Overwhelmed? Pass
-- Instructions clear? Pass
-- Quick wins? Pass
-- Ukrainian scary? Pass
-- Come back tomorrow? Pass
+- Overwhelmed? No, zones help.
+- Instructions clear? Yes.
+- Quick wins? Counting 0-10 is easy.
+- Ukrainian scary? No, transliteration/IPA helps.
+- Come back tomorrow? Yes.
 
 ## Strengths
-- The explanation of the 1-2-5 rule using "Zones" is brilliant for beginners.
-- The "Cultural Context" about the Hryvnia neck ring adds depth without overwhelming.
-- The distinction between `два` and `дві` is highlighted well.
+- Excellent use of the "Zone" concept to explain complex case agreement without overwhelming grammar theory.
+- The "History of Hryvnia" section adds nice cultural depth.
+- Clear distinction between "12" and "20" pronunciation.
 
-## Fix Plan to Reach 10/10
+## Fix Plan to Reach 9/10
 
-### Educational: 8/10 → 10/10
+### Educational / Linguistic Accuracy: 8/10 → 9/10
 **What to fix:**
-1. Sections "Числа 0-10", "Числа 11-19", "Десятки 20-90": Add the promised stress accents to the Cyrillic words. This aligns the content with the instructions and supports the "Patient Tutor" persona.
+1. Fix the "16" note to accurately describe the spelling change (loss of soft sign).
+2. Fix the Callout type.
+3. Update table headers to be friendlier.
 
 ### Projected Overall After Fixes
-9.6/10
+9.2/10
 
 ## Verification Summary
 
-- Content lines read: ~230
-- Activity items checked: ~35
+- Content lines read: ~180
+- Activity items checked: 30+
 - Ukrainian sentences verified: All
 - IPA transcriptions checked: All
-- Issues found: 1 Major (Missing accents)
+- Issues found: 3
 
 ## Verdict
 
 **PASS**
 
-The module is excellent quality, safe for beginners, and pedagogically sound. The only significant issue is the missing stress marks which were promised in the text. I will apply these fixes inline.
+Excellent module that needs only minor polish on the "16" explanation and callout formatting.

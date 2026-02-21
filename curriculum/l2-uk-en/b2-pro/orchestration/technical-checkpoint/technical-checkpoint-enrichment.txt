@@ -1,0 +1,270 @@
+✅ Message sent to Gemini (ID: 12135) [auto-acked: self-addressed]
+✓ Message 12135 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12135...
+📨 Message #12135
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-technical-checkpoint
+   Time: 2026-02-20T23:36:25.746984+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b2-pro-28
+level: B2-PRO
+sequence: 28
+slug: technical-checkpoint
+version: '2.0'
+title: 'Контрольна точка: Фахова мова'
+subtitle: Technical Domains Checkpoint
+content_outline:
+- section: Огляд фази B2-PRO.2
+  points:
+  - Ключові навички фази (ІТ, фінанси, право, медицина, HR, наукове письмо)
+  - Особливості професійної термінології кожної галузі
+  - Критерії оцінювання фахової компетентності
+- section: Завдання 1 — Технічна документація
+  points:
+  - 'Сценарій: Написати інструкцію для користувача програми'
+  - 'Критерії: послідовність кроків, технічна точність, зрозумілість'
+  - Оцінювання ІТ-термінології
+- section: Завдання 2 — Фінансовий документ
+  points:
+  - 'Сценарій: Проаналізувати фрагмент квартального звіту'
+  - 'Критерії: розуміння показників, коментарі, порівняння'
+  - Оцінювання фінансової термінології
+- section: Завдання 3 — Юридичний аналіз
+  points:
+  - 'Сценарій: Знайти ключові пункти в договорі оренди'
+  - 'Критерії: права, обов''язки, відповідальність сторін'
+  - Оцінювання юридичної термінології
+- section: Завдання 4 — Комплексний сценарій
+  points:
+  - 'Ситуація: Впровадження нової системи — технічний опис, бюджет, договір'
+  - 'Завдання: Написати коротку довідку, що поєднує три аспекти'
+  - Інтеграція термінології різних галузей
+- section: Підсумок та рекомендації
+  points:
+  - Чек-лист фахової компетентності B2-PRO.2
+  - Визначення сильних сторін та зон для покращення
+  - Підготовка до фази B2-PRO.3 (медіа та публічна комунікація)
+vocabulary_hints:
+  required:
+  - технічна документація (technical documentation)
+  - квартальний звіт (quarterly report)
+  - договір оренди (lease agreement)
+  - показники ефективності (performance indicators)
+  - права та обов'язки сторін (rights and obligations of the parties)
+  - впровадження системи (system implementation)
+  - бюджет проєкту (project budget)
+  - технічне завдання (technical specification)
+  recommended:
+  - інструкція користувача (user manual)
+  - рентабельність (profitability)
+  - санкції за порушення (penalties for violation)
+  - комплексне рішення (comprehensive solution)
+activity_hints:
+- type: writing-task
+  focus: Написати інструкцію для користувача (5-7 кроків)
+  items: 1
+- type: document-analysis
+  focus: Проаналізувати фрагмент фінансового звіту
+  items: 1
+- type: document-analysis
+  focus: Знайти ключові пункти в договорі
+  items: 1
+- type: case-study
+  focus: Виконати комплексне завдання — впровадження системи
+  items: 1
+- type: self-assessment
+  focus: Заповнити чек-лист фахової компетентності
+  items: 1
+focus: checkpoint
+pedagogy: TTT
+prerequisites:
+- b2-pro-27 (Основи наукового письма)
+connects_to:
+- b2-pro-29 (Міжгалузева практика)
+objectives:
+- Учень демонструє володіння технічною термінологією ІТ-сфери
+- Учень може аналізувати фінансові документи та використовувати відповідну лексику
+- Учень розуміє структуру та термінологію юридичних документів
+- Учень може інтегрувати термінологію різних галузей в одному документі
+grammar:
+- Інфінітивні конструкції в інструкціях (Натиснути, Вибрати, Зберегти)
+- Числівникові конструкції у фінансових документах (збільшення на 15%)
+- Дієприслівникові звороти в юридичних текстах (укладаючи договір, порушуючи умови)
+register: офіційно-діловий
+phase: B2-PRO.2
+persona:
+  voice: Senior Specialist
+  role: Головний інженер
+word_target: 2000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Контрольна точка: Фахова мова (B2-PRO)
+
+## Використані джерела
+1. [ДСТУ 4163:2020](https://zakon.rada.gov.ua/rada/show/v0144774-20) — Державна система документаційного забезпечення. Вимоги до оформлення документів.
+2. [Цивільний кодекс України](https://zakon.rada.gov.ua/laws/show/435-15#Text) — Глава 58 (Найм (оренда)), юридична термінологія.
+3. [ДСТУ ISO/IEC 2382:2017](http://uas.org.ua) — Інформаційні технології. Словник термінів (уніфікація ІТ-лексики).
+4. [НП(С)БО 1 «Загальні вимоги до фінансової звітності»](https://mof.gov.ua/uk/nacionalni-polozhennja-standarti-buhgalterskogo-obliku) — Стандарти фінансової термінології.
+5. [Дія.Бізнес](https://business.diia.gov.ua/handbook/finance/finansova-zvitnist) — Довідник з фінансової звітності та бізнес-термінології.
+
+## Термінологічна база
+
+| Українська (норма) | Русизм/ненорма | English | Контекст вживання |
+|--------------------|---------------|---------|-------------------|
+| Технічне завдання (ТЗ) | Специфікація (як ТЗ) | Technical Specification | Проєктування та розробка ІТ-систем |
+| Орендодавець | Хазяїн / Хозяїн | Lessor | Юридичні договори оренди |
+| Наймач (Орендар) | Квартирант | Lessee | Офіційне листування та договори |
+| Дебіторська заборгованість | Борги клієнтів | Accounts Receivable | Фінансова звітність та аудит |
+| Чистий прибуток | Навар | Net Profit | Аналіз фінансових результатів |
+| Інтерфейс користувача | Морда (жарг.) | User Interface (UI) | Технічна документація для користувачів |
+| Рентабельність | Доходність | Profitability | Квартальні звіти, оцінка бізнесу |
+| Впровадження системи | Імплементація | System Implementation | Опис процесів автоматизації |
+
+## Мовні норми та стандарти
+- **ДСТУ 4163:2020**: Регламентує склад реквізитів (підпис, дата, адресат). Прізвище в підписі пишеться ВЕЛИКИМИ літерами (напр. *Олександр ПЕТРЕНКО*).
+- **Цивільний кодекс (ст. 759)**: Термін "найм" і "оренда" є тотожними, але в бізнесі частіше вживається "оренда".
+- **Стилістика інструкцій**: Використання інфінітивів (*Натиснути*, *Вибрати*) або наказового способу 2-ї особи множини (*Натисніть*, *Виберіть*) для чіткості кроків.
+
+## Аутентичні приклади
+1. [ІТ-інструкція]: «Для авторизації в системі введіть логін та пароль у відповідні поля та натисніть кнопку "Увійти"».
+2. [Фінанси]: «Рентабельність активів підприємства за звітний період склала 15,4%, що свідчить про ефективне використання ресурсів».
+3. [Юридичний договір]: «Орендар зобов'язується використовувати орендоване приміщення виключно за його цільовим призначенням».
+
+## Типові помилки
+1. ❌ **Згідно наказу** → ✅ **Згідно з наказом** — прийменник "згідно з" вимагає орудного відмінка.
+2. ❌ **Прийняти заходи** → ✅ **Вжити заходів** — усталене дієслівне сполучення в діловому стилі.
+3. ❌ **По пошті** → ✅ **Поштою** — використання безприйменникової форми для засобів зв'язку.
+4. ❌ **Укласти сделку** → ✅ **Укласти угоду / правочин** — уникнення кальки з російської.
+5. ❌ **Задавати питання** → ✅ **Ставити питання** — нормативне вживання дієслова в офіційному контексті.
+
+## Engagement Hooks (mapped to sections)
+- Section "Огляд фази B2-PRO.2": [!context] — Пояснення переходу від загальної бізнес-мови до вузькоспеціалізованих доменів (ІТ, Право, Фінанси).
+- Section "Завдання 1 — Технічна документація": [!pro-tip] — Використання безособових конструкцій та інфінітивів для створення універсальних інструкцій.
+- Section "Завдання 2 — Фінансовий документ": [!common-error] — Різниця між поняттями "дохід" (revenue) та "прибуток" (profit) в українській звітності.
+- Section "Завдання 3 — Юридичний аналіз": [!language-note] — Чому в офіційних договорах краще писати "Наймодавець", хоча "Орендодавець" також допустимо.
+
+## Section-Mapped Research Notes
+
+### Огляд фази B2-PRO.2
+Аналіз прогресу: студент перейшов від основ комунікації до складних текстів. Оцінка за 4 критеріями: термінологічна точність, стилістична єдність, граматична коректність (згідно з ДСТУ 4163:2020) та логіка викладу.
+
+### Завдання 1 — Технічна документація
+На основі ДСТУ 2226-93. Ключові моменти: структура документа (вступ, опис функцій, крок за кроком). Використання ІТ-лексики: *база даних, верифікація, налаштування конфігурації*.
+
+### Завдання 2 — Фінансовий документ
+Аналіз за НП(С)БО 1. Оперування цифрами та відсотками. Фразеологія: *динаміка зростання, чистий грошовий потік, дебіторська заборгованість*. Важливо розрізняти *дебіт* та *кредит*.
+
+### Завдання 3 — Юридичний аналіз
+Юридична логіка договору оренди. Істотні умови: об'єкт оренди, орендна плата, строк дії. Використання дієприслівникових зворотів: *укладаючи цей договір*, *виконуючи умови*.
+
+### Завдання 4 — Комплексний сценарій
+Синтез навичок. Підготовка "аналітичної довідки" (довідка — за ДСТУ 4163:2020). Об'єднання технічного опису системи, її вартості (фінанси) та умов постачання (право).
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12209)
+✓ Message 12135 acknowledged
+✓ Message 12209 acknowledged

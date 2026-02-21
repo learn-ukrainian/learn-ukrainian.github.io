@@ -1,0 +1,304 @@
+✅ Message sent to Gemini (ID: 11235) [auto-acked: self-addressed]
+✓ Message 11235 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #11235...
+📨 Message #11235
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-c2-3-midpoint-checkpoint
+   Time: 2026-02-20T22:32:05.707188+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c2-055
+level: c2
+sequence: 55
+version: '2.0'
+title: Контрольна точка C2.3 — Середина фази
+focus: checkpoint
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Ukrainian State Standard 2024 — Professional C2
+  url: https://mon.gov.ua/
+  type: reference
+  notes: C2 professional communication requirements
+- name: CEFR C2 Professional Competence
+  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  type: reference
+  notes: C2 can-do statements for professional contexts
+- name: Національна рамка кваліфікацій України
+  url: https://zakon.rada.gov.ua/
+  type: reference
+  notes: Ukrainian qualifications framework for professional skills
+content_outline:
+- section: Вступ — Структура контрольної оцінки
+  points:
+  - Огляд компетенцій М46-54
+  - Формат та критерії оцінювання
+  - Зв'язок з подальшими модулями
+- section: Частина I — Термінологічні компетенції (М47-48)
+  points:
+  - Словотворчі моделі в термінології
+  - Побудова та використання глосаріїв
+  - Контекстуальна інференція
+- section: Частина II — Читання фахових текстів (М49-50)
+  points:
+  - Стратегії читання (skimming, scanning)
+  - Критичний аналіз джерел
+  - Синтез інформації
+- section: Частина III — Типи документів та письмо (М51-53)
+  points:
+  - Класифікація професійних документів
+  - Написання звітів та рефератів
+  - Пропозиції та презентації
+- section: Частина IV — Усна комунікація (М54)
+  points:
+  - Професійна презентація
+  - Участь у нарадах
+  - Конференційна комунікація
+- section: Підсумок та рекомендації
+  points:
+  - Загальна оцінка професійних компетенцій
+  - Виявлення прогалин
+  - Підготовка до М56-75
+vocabulary:
+  required:
+  - контрольна точка (checkpoint)
+  - оцінювання (assessment)
+  - компетенція (competency)
+  - критерій (criterion)
+  - прогалина (gap)
+  - рубрика (rubric)
+  - стандарт (standard)
+  - рівень володіння (proficiency level)
+  - діагностика (diagnostics)
+  - рекомендація (recommendation)
+  recommended:
+  - проміжний (intermediate/midpoint)
+  - формативний (formative)
+  - валідація (validation)
+  - індикатор (indicator)
+  - траєкторія (trajectory)
+  forbidden: '[]'
+activities:
+  types_required:
+  - essay-response
+  - quiz
+  - critical-analysis
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c2-56 (Professional Correspondence — continues C2.3)
+- c2-75 (C2.3 Complete Checkpoint — end of phase)
+vocabulary_hints:
+  required:
+  - концепція (concept)
+  - аналіз (analysis)
+  - дискурс (discourse)
+  - методологія (methodology)
+  recommended:
+  - інтерпретація (interpretation)
+  - контекстуалізація (contextualization)
+  - синтез (synthesis)
+activity_hints:
+- type: reading
+  focus: Поглиблений аналіз тексту
+  items: 4
+- type: essay-response
+  focus: Критичне осмислення
+- type: discussion
+  focus: Дискусія та аргументація
+  items: 1
+persona:
+  voice: Senior Specialist
+  role: External Auditor
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Контрольна точка C2.3 — Середина фази
+
+## State Standard Reference
+§4.3.6: "Уміння створити текст певного стилю за планом."
+§4.3.8: "Уміння утворювати вторинні тексти, зокрема реферати, повідомлення, довідково-інформаційні тексти."
+Alignment: Цей модуль перевіряє здатність учня створювати та аналізувати фахові тексти (звіти, реферати) та використовувати професійну термінологію відповідно до вимог офіційно-ділового та наукового стилів.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| концепція | High (Academic/Pro) | розробка концепції, концептуальні засади, в рамках концепції |
+| аналіз | High (General/Pro) | глибокий аналіз, порівняльний аналіз, аналіз даних, критичний аналіз |
+| дискурс | Medium (Academic) | науковий дискурс, політичний дискурс, дискурсивна практика |
+| методологія | Medium (Academic) | методологія дослідження, сучасна методологія, методологічний підхід |
+| інтерпретація | Medium (Academic/Arts) | інтерпретація результатів, вільна інтерпретація, хибна інтерпретація |
+
+## Cultural Hooks
+1. **Києво-Могилянська академія**: Історична роль у формуванні української наукової термінології та збереженні інтелектуальної традиції (риторика, філософія).
+2. **Національна комісія зі стандартів державної мови**: Сучасний орган, що регулює та стандартизує професійну термінологію (заснована 2019 року), відхід від радянських кальок.
+
+## Common Learner Errors
+1. **Лексичні кальки**: Вживання "приймати участь" замість "брати участь", "відноситися до" замість "належати до" (у класифікаціях).
+2. **Змішування регістрів**: Використання розмовних конструкцій або емоційно забарвленої лексики в офіційних звітах чи наукових текстах.
+3. **Керування дієслів**: Помилки у відмінках при професійному спілкуванні (наприклад, "дякувати когось" замість "дякувати комусь", "вибачатися" замість "перепрошувати").
+
+## Cross-References
+- Builds on: c2-46 (Professional Foundations), c2-47-48 (Terminology), c2-49-50 (Reading), c2-51-53 (Writing), c2-54 (Speaking)
+- Prepares for: c2-56 (Professional Correspondence), c2-75 (Phase End Checkpoint)
+
+## Notes for Content Writing
+- Модуль має бути суворим та академічним за тоном ("External Auditor" persona).
+- Використовувати реальні приклади професійних стандартів та критеріїв оцінювання.
+- Акцент на мета-навичках: як вчитися далі, як створювати власні глосарії.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Огляд компетенцій М46-54 через призму Державного стандарту 2024 року (§4.3.6) та вимог до професійного мовлення рівня C2."
+  - "Роль Національної комісії зі стандартів державної мови у деколонізації термінології та відході від радянських лексичних кальок."
+- section: "Частина I — Термінологія та наукові традиції (Part I — Terminology and Scientific Traditions)"
+  words: 650
+  points:
+  - "Історичний внесок Києво-Могилянської академії у формування української наукової терміносистеми, риторики та філософського дискурсу."
+  - "Аналіз словотворчих моделей: виправлення кальки «відноситися до» на нормативне «належати до» у термінологічних класифікаціях."
+  - "Розробка концептуальних засад для створення власних фахових глосаріїв як ключова мета-навичка спеціаліста."
+- section: "Частина II — Читання та критичний аналіз фахових текстів (Part II — Reading and Critical Analysis of Professional Texts)"
+  words: 650
+  points:
+  - "Стратегії читання та критичний аналіз джерел згідно з вимогами до створення вторинних текстів (§4.3.8 Державного стандарту)."
+  - "Синтез інформації та інтерпретація результатів у науковому дискурсі: уникнення змішування регістрів та розмовних конструкцій."
+  - "Діагностика типових помилок керування: перехід від «вибачатися» до етикетної форми «перепрошувати» у професійному середовищі."
+- section: "Частина III — Письмова фахова комунікація та документація (Part III — Written Professional Communication and Documentation)"
+  words: 650
+  points:
+  - "Написання звітів, рефератів та пропозицій: дотримання суворого академічного тону та уникнення емоційно забарвленої лексики."
+  - "Корекція лексичної кальки «приймати участь» — відпрацювання вживання нормативної конструкції «брати участь» у діловому листуванні."
+  - "Застосування методологічного підходу при структуруванні довідково-інформаційних текстів та професійних звітів."
+- section: "Частина IV — Усна презентація та конференційна комунікація (Part IV — Oral Presentation and Conference Communication)"
+  words: 650
+  points:
+  - "Мистецтво професійної презентації та ведення дискусій: використання модальних маркерів для точності висловлювання думок."
+  - "Корекція граматичного керування дієслів: тренінг з правильного вживання «дякувати тобі/вам» (Dat) замість помилкової форми з знахідним відмінком."
+  - "Аналіз та контекстуалізація даних під час участі у професійних нарадах та конференціях."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "концепція (concept) — розробка концепції, концептуальні засади, в рамках концепції; ключовий термін академічного дискурсу"
+  - "аналіз (analysis) — критичний аналіз, порівняльний аналіз, глибокий аналіз даних; базова компетенція для C2"
+  - "дискурс (discourse) — науковий дискурс, політичний дискурс, дискурсивна практика; маркер високого регістру"
+  - "методологія (methodology) — методологія дослідження, методологічний підхід; обов'язково для наукових текстів"
+  - "брати участь (to participate) — нормативна конструкція; заміна поширеної кальки «приймати участь»"
+  recommended:
+  - "інтерпретація (interpretation) — інтерпретація результатів, вільна інтерпретація; часто вживається при аналізі даних"
+  - "належати до (to belong to) — правильне вживання у класифікаціях замість кальки «відноситися до»"
+  - "контекстуалізація (contextualization) — навичка вписування фактів у ширшу концепцію"
+  - "синтез (synthesis) — процес об'єднання розрізнених даних у єдиний вторинний текст"
+  - "перепрошувати (to apologize/excuse me) — професійний етикет; заміна ненормативного «вибачатися»"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (3704 chars)
+✅ Message sent to Claude (ID: 11243)
+✓ Message 11243 acknowledged
+   Auto-acknowledged reply #11243 (stdout delivery — no inbox accumulation)
+✓ Message 11235 acknowledged

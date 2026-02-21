@@ -1,0 +1,106 @@
+module: c1-011
+level: C1
+sequence: 11
+slug: summary-paraphrase
+version: '2.0'
+title: Резюме та парафраз
+content_outline:
+- section: Вступ — Мистецтво переказу
+  points:
+  - Різниця між резюме і парафразом
+  - Роль у академічному письмі
+  - Етика використання джерел
+- section: Техніки резюмування
+  points:
+  - Виділення головних ідей
+  - Опущення деталей і прикладів
+  - Збереження оригінального змісту
+- section: Техніки парафразування
+  points:
+  - Використання синонімів
+  - Зміна структури речення
+  - Зміна граматичних конструкцій
+- section: Маркери парафразу
+  points:
+  - Іншими словами, ...
+  - Тобто, ...
+  - Інакше кажучи, ...
+- section: Резюме vs цитата vs парафраз
+  points:
+  - Коли використовувати кожну форму
+  - Переваги та недоліки
+  - Баланс у тексті
+- section: Плагіат та його уникнення
+  points:
+  - Що вважається плагіатом
+  - Критерії правильного парафразу
+  - Інструменти перевірки
+- section: Практика переказу
+  points:
+  - Резюмування абзацу
+  - Парафразування речень
+  - Інтеграція в академічний текст
+vocabulary_hints:
+  required:
+  - резюме (summary)
+  - парафраз (paraphrase)
+  - переказ (retelling)
+  - оригінал (original)
+  - синонім (synonym)
+  - структура (structure)
+  - плагіат (plagiarism)
+  - скорочення (abbreviation)
+  - суть (essence)
+  - передача (conveyance)
+  recommended:
+  - конспектування (note-taking)
+  - реферування (abstracting)
+  - адаптація (adaptation)
+  - трансформація (transformation)
+  - інтерпретація (interpretation)
+activity_hints:
+- type: fill-in
+  focus: Summarize a paragraph in 2-3 sentences
+  items: 10+
+- type: fill-in
+  focus: Paraphrase sentences without changing meaning
+  items: 12+
+- type: quiz
+  focus: Identify plagiarism vs proper paraphrase
+  items: 15+
+- type: match-up
+  focus: Original to acceptable paraphrase
+  items: 12+
+- type: cloze
+  focus: Paraphrase markers in context
+  items: 10+
+- type: essay-response
+  focus: Summarize article in 100 words
+focus: grammar
+prerequisites:
+- c1-07 (Citation & Reference)
+- c1-10 (Counterarguments)
+connects_to:
+- c1-12 (Research Article)
+- c1-14 (Literature Review)
+- c1-19 (Article Critique)
+module_type: grammar
+sources:
+- name: Academic Writing Skills in Ukrainian
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Paraphrasing and summarizing guidelines
+- name: Academic Integrity Resources
+  url: https://mova.info/
+  type: secondary
+  notes: Avoiding plagiarism through proper paraphrasing
+immersion: 100% Ukrainian
+phase: C1.1 Academic Ukrainian
+objectives:
+- Identify and correctly use резюме та парафраз
+- Form and apply мистецтво переказу
+- Distinguish between практика переказу
+persona:
+  voice: Senior Specialist
+  role: Референт
+word_target: 4000

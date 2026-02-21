@@ -350,9 +350,18 @@ async def handle_receive_messages(args: dict) -> list[TextContent]:
     return [TextContent(type="text", text=json.dumps(result, indent=2))]
 
 async def handle_check_inbox(args: dict) -> list[TextContent]:
-    """Quick inbox check."""
+    """Quick inbox check. Also sweeps stale messages (TTL: 6h)."""
     conn = get_db()
     cursor = conn.cursor()
+
+    # TTL sweep: auto-ack messages older than 6 hours (prevents unbounded queue growth)
+    cursor.execute("""
+        UPDATE messages SET acknowledged = 1
+        WHERE acknowledged = 0
+          AND timestamp < datetime('now', '-6 hours')
+    """)
+    if cursor.rowcount > 0:
+        conn.commit()
 
     cursor.execute("""
         SELECT COUNT(*) FROM messages

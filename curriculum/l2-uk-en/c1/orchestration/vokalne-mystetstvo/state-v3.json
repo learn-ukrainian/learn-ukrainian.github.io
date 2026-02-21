@@ -2,12 +2,5 @@
   "track": "c1",
   "slug": "vokalne-mystetstvo",
   "mode": "v3",
-  "phases": {
-    "v3-A": {
-      "status": "complete",
-      "ts": "2026-02-19T19:06:06Z",
-      "task_id": "v3-vokalne-mystetstvo-pA",
-      "mode": "full"
-    }
-  }
+  "phases": {}
 }

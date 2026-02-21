@@ -6,38 +6,55 @@ version: '2.0'
 title: Adjective Suffixes — Qualities
 subtitle: Making Descriptions Richer
 content_outline:
-- section: Introduction / Вступ
+- section: Вступ (Introduction)
+  words: 400
   points:
   - 'The power of the suffix: descriptiveness without ''very'' — introduce the ''Temperature
     Scale'' concept: Neutral (малий) → Warm (маленький) → Intense (малесенький)'
-  - Why Ukrainian adjectives are emotionally charged — explain that diminutives often
-    signal respect and intimacy (e.g., рідненька), not just physical smallness — reference
-    State Standard §4.5.1 on 'emotional-expressive lexis'
-- section: Presentation / Презентація
+  - Ukrainian as the language of 'Sweetness' — explain that diminutives (пестливі
+    форми) signal respect and intimacy (e.g., рідненька матуся vs. рідна мати), not
+    just physical smallness — reference State Standard §4.5.1 on 'emotional-expressive
+    lexis'
+- section: 'Презентація 1: Пестливість та периферія (Presentation 1: Diminutives and
+    Precision)'
+  words: 750
   points:
-  - '''Diminutive Magic: -Еньк- and -Есеньк- (Sweetness and Precision)'' — use examples
-    like «гарненька дівчина», «тепленьке молоко»; learner error: register mismatch
-    (using diminutives in formal contexts, e.g. asking a boss for a ''підписочок'')'
-  - '''The Scale of Giants: -Енн- and -Езн- (Enormous and Intense)'' — cultural hook:
-    use «страшенний» (terrible/huge) to explain Ukrainian hyperbole in storytelling;
-    learner error: stress shift confusion with passive participles (нездійсне́нний
-    vs незді́йснений)'
-  - '''The Material Link: -Ян- and -Ов- (What it is made of)'' — reference State Standard
-    §4.3.6 on noun-to-adjective derivation (осінь – осінній)'
-  - '''Professional Identity: -Ськ- (Places and Groups)'' — content writing note:
-    focus heavily on the K/Ch/Ts -> TsK mutation rule (e.g., Прага -> празький); learner
-    error: writing «пражський» or «козакський» instead of «козацький»'
-  - '''General Relationships: The universal -Н- suffix'''
-  - '''Suffix Grammar: Does a suffix affect the case ending?'''
-- section: Practice / Практика
+  - 'Diminutive Magic: -Еньк- and -Есеньк- (Sweetness and Precision) — focus on high-frequency
+    conversational forms like «гарненька дівчина», «тепленьке молоко» and emphatic
+    precision like «малесенький котик», «чистесенька вода»'
+  - 'The ''Register Mismatch'' Trap: Why context matters — explain the social error
+    of using diminutives in formal settings (e.g., asking a boss for a «підписочок»
+    instead of a «підпис») and how it affects perceived professionalism'
+- section: 'Презентація 2: Гіпербола та Відношення (Presentation 2: Hyperbole and
+    Relationships)'
+  words: 750
   points:
-  - Suffix transformation drills — include specific drills for the K/Ch/Ts -> TsK
-    mutation rule
-  - 'Emotional re-writing: Neutral to Diminutive to Intensive'
-- section: Dialogues / Діалоги
+  - 'The Scale of Giants: -Енн- and -Езн- (Enormous and Intense) — cultural hook:
+    explain Ukrainian hyperbole in storytelling and folk tales using «страшенний змій»
+    or «здоровенний чоловік»'
+  - 'Stress and Spelling Alert: Distinguishing emphatic adjectives (-енний) from passive
+    participles (-ений) — focus on the double ''н'' and stress shift in pairs like
+    «нездійсне́нний» (impossible) vs. «незді́йснений» (unfulfilled)'
+  - 'The Universal Link: -Н-, -Ян-, and -Ов- (Materials and Groups) — reference State
+    Standard §4.3.6 on noun-to-adjective derivation rules (осінь → осінній, дерево
+    → дерев''яний)'
+- section: Практика та орфографія (Practice and Orthography)
+  words: 650
   points:
-  - 'On the market: Choosing between ''big'' and ''gigantic'' watermelons — use collocations
-    like «здоровенний кавун» vs «гарненький кавунчик»'
+  - 'Mastering the Consonant Mutation: The K/Ch/Ts + -ськ- = -ЦЬК- rule — intensive
+    spelling drill to correct common learner errors like «пражський» (wrong) → «празький»
+    (correct) and «козакський» (wrong) → «козацький» (correct)'
+  - 'Emotional Transformation Drills: Re-writing neutral sentences into ''warm'' (diminutive)
+    and ''intense'' (emphatic) versions to practice register control and suffix selection'
+- section: Діалоги та підсумок (Dialogues and Summary)
+  words: 450
+  points:
+  - 'On the Market: Choosing between a «здоровенний кавун» (gigantic watermelon) and
+    a «гарненький кавунчик» (nice little watermelon) — dialogue focusing on size vs.
+    affection'
+  - 'Summary: Suffixes as the key to linguistic decolonization — moving away from
+    English-style ''very'' modifiers toward authentic Ukrainian morphological depth,
+    preparing for B1 participles'
 focus: grammar
 pedagogy: PPP
 objectives:
@@ -63,26 +80,37 @@ persona:
   role: Character Witness
 vocabulary_hints:
   required:
-  - 'маленький (small/little) — collocations: маленька дитина, маленьке село'
-  - 'гарненький (pretty/nice - diminutive) — collocations: гарненька дівчина, гарненький
-    будиночок'
-  - 'тепленький (warm - diminutive) — collocations: тепленьке молоко, тепленька вода'
-  - 'рідненький (dear/kindred - diminutive) — cultural hook: рідненька матуся (deep
-    affection)'
-  - 'тихенький (quiet - diminutive) — collocations: тихенький голос'
-  - 'малесенький (tiny - emphatic) — collocations: малесенький котик'
-  - 'чистесенький (pure/clean - emphatic) — collocations: чистесенька вода'
-  - 'страшенний (terrible/huge - expressive) — cultural hook: страшенний вітер, страшенний
-    змій'
-  - 'здоровенний (huge/enormous - expressive) — collocations: здоровенний чоловік,
-    здоровенний собака'
-  - 'величезний (huge/gigantic) — collocations: величезний будинок'
-  - 'київський (Kyiv adjective) — collocations: київський торт'
-  - 'львівський (Lviv adjective) — collocations: львівська кава'
-  - 'український (Ukrainian) — collocations: українська мова'
-  - 'студентський (student adjective) — collocations: студентський квиток'
+  - 'маленький (small/little) — High frequency; collocations: маленька дитина, маленьке
+    село'
+  - 'гарненький (pretty/nice - diminutive) — High frequency; collocations: гарненька
+    дівчина, гарненький будинок'
+  - 'тепленький (warm - diminutive) — High frequency; collocations: тепленьке молоко,
+    тепленька вода'
+  - 'рідненький (dear/kindred - diminutive) — Cultural hook: рідненька матуся (deep
+    affection/intimacy)'
+  - 'тихенький (quiet - diminutive) — High frequency; collocations: тихенький голос'
+  - 'малесенький (tiny - emphatic) — Medium frequency; collocations: малесенький котик'
+  - 'чистесенький (pure/clean - emphatic) — Medium frequency; collocations: чистесенька
+    вода'
+  - 'страшенний (terrible/huge - expressive) — High frequency in storytelling; collocations:
+    страшенний вітер, страшенний змій'
+  - 'здоровенний (huge/enormous - expressive) — High frequency; collocations: здоровенний
+    чоловік, здоровенний собака'
+  - 'величезний (huge/gigantic) — High frequency; collocations: величезний будинок'
+  - 'київський (Kyiv adjective) — High frequency; collocations: київський торт, київські
+    вулиці'
+  - 'львівський (Lviv adjective) — High frequency; collocations: львівська кава, львівський
+    дворик'
+  - 'український (Ukrainian) — High frequency; collocations: українська мова, українська
+    пісня'
+  - 'студентський (student adjective) — High frequency; collocations: студентський
+    квиток, студентське життя'
   recommended:
   - 'білесенький (white - emphatic) — collocations: білесенький сніг'
   - 'тонесенький (thin - emphatic) — collocations: тонесенька нитка'
   - 'довжелезний (long - emphatic) — collocations: довжелезний шлях'
+  - 'козацький (Cossack adjective) — Note: spelling rule K+ськ=цьк; collocations:
+    козацький драйв'
+  - 'празький (Prague adjective) — Note: spelling rule G/H+ськ=зьк; collocations:
+    празький торт'
 word_target: 3000

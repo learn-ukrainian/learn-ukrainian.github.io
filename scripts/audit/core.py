@@ -55,6 +55,7 @@ from .checks import (
 from .checks.content_purity import check_content_purity
 from .checks.prose_quality import check_prose_quality
 from .checks.imperial_terminology import check_imperial_terminology
+from .checks.colonial_framing import check_colonial_framing
 from .checks.euphony import check_euphony_violations
 from .checks.content_quality import (
     ACADEMIC_LATIN_ALLOWLIST,
@@ -1742,6 +1743,14 @@ def audit_module(file_path: str, skip_activities: bool = False) -> bool:
             print(f"     {icon} [{v['type']}] {v['issue']}")
         content_quality_violations.extend(imperial_violations)
 
+    # Run colonial framing checks (Russian-as-baseline)
+    colonial_violations = check_colonial_framing(content, file_path)
+    if colonial_violations:
+        print(f"  🏛️  Colonial framing warnings: {len(colonial_violations)}")
+        for v in colonial_violations:
+            print(f"     ⚠️  [{v['type']}] {v['issue']}")
+        content_quality_violations.extend(colonial_violations)
+
     # Run euphony checks (і/й, у/в, з/із/зі, conjunction variety)
     euphony_violations = check_euphony_violations(content, file_path)
     if euphony_violations:
@@ -2226,9 +2235,12 @@ def audit_module(file_path: str, skip_activities: bool = False) -> bool:
     print(f"\nReport: {report_path}")
 
     # Review Validation (final gate — only checked if all content gates pass)
+    # Skipped in content-only mode (skip_activities) because Phase D creates the review
     review_violations = []
     review_gate_status = "skipped"
-    if not has_critical_failure:
+    if skip_activities:
+        review_gate_status = "deferred"
+    elif not has_critical_failure:
         module_slug_for_review = Path(file_path).stem
         review_violations = check_review_validity(file_path, level_code, module_slug_for_review)
         if review_violations:

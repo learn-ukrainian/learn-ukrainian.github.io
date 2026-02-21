@@ -6,43 +6,86 @@ version: '2.0'
 title: Здоров'я та самопочуття
 subtitle: Health and Wellness
 content_outline:
-- section: Вступ
+- section: Вступ (Introduction)
+  words: 600
   points:
-  - Beyond basic illness words — focus on 'хворіти на...' (Prep/Acc) vs Russism 'хворіти грипом' (Instr); learner error: confusing
-      'почуватися' (state) vs 'відчувати' (sense)
-  - Wellness concept — introduction of 'самопочуття' (well-being) vs 'стан здоров'я'
-    (health condition)
-  - Ukrainian health context — cultural hook: fear of 'протяг' (drafts) as a cause
-      of illness; herbal wisdom (kalyna, romashka) and the ubiquity of pharmacies
-- section: Читання
+  - 'Introduction of the core concepts: ''здоров''я'' (health) vs. ''самопочуття''
+    (well-being/state). Connect to module b1-62 by discussing how environmental factors
+    like ecology impact one''s ''стан здоров''я''.'
+  - 'Establish the ''Active Patient'' persona: learners practice asking ''Як ваше
+    самопочуття?'' and ''На що ви скаржитеся?'' while taking an active role in describing
+    their condition rather than passively receiving advice.'
+- section: Термінологія та симптоми (Terminology and Symptoms)
+  words: 1000
   points:
-  - Health texts — identifying symptoms using 'У мене болить [part]' vs 'Я хворий
-    на [disease]'
-  - Wellness advice — focus on 'профілактика' (prevention) and 'зміцнення імунітету'
-    (strengthening immunity)
-- section: Діалоги
+  - 'Linguistic accuracy focus: Correction of the common Russism ''хворіти грипом''
+    (Instrumental) to the correct Ukrainian construction ''хворіти на грип'' (на +
+    Accusative). Drill with various diseases (кір, ангіна, застуда).'
+  - 'Grammar of Sensation: Clarify the distinction between ''почуватися'' (to feel
+    as a state) and ''відчувати'' (to sense/perceive). Explicitly correct the error
+    ''Я відчуваю добре'' to ''Я почуваюся добре''.'
+  - 'Pain Construction: Detailed drill on the structure [У мене] (Genitive) + [болить/болять]
+    (Verb) + [частина тіла] (Nominative). Contrast with English ''I have a...'' to
+    ensure proper syntax.'
+- section: 'Культурний контекст: Протяг та траволікування (Cultural Context: Drafts
+    and Herbal Wisdom)'
+  words: 800
   points:
-  - Discuss wellness topics — register differentiation: formal (doctor interaction)
-      vs informal (friends describing symptoms)
-  - Give health advice — active patient role; asking 'Як ваше самопочуття?' and responding
-    with 'одужувати' context
+  - 'The Cult of ''Protyah'': Explore the uniquely Ukrainian fear of drafts (''протяг'').
+    Discuss social scenarios like closing windows in public transport and the belief
+    that ''протяг'' is a primary cause of ''нездужання'' even in summer.'
+  - 'Herbalism and Home Remedies: Introduction to ''народна медицина''. Focus on ''калина''
+    (viburnum) for colds, ''ромашка'' (chamomile) for inflammation, and ''м''ята''
+    (mint) for digestion. Note the ubiquity of pharmacies (''аптеки'') that sell these
+    alongside modern drugs.'
+- section: 'Практика: У лікаря та в аптеці (Practice: At the Doctor and Pharmacy)'
+  words: 1000
+  points:
+  - 'Medical Competencies (State Standard §3.7): Functional language for ''діагностика''
+    (diagnostics), including ''здавати аналізи'' (to take tests) and ''проходити обстеження''
+    (to undergo examination).'
+  - 'Register Differentiation: Practice formal interaction with a doctor (describing
+    history, receiving a ''діагноз'') vs. informal registers (complaining to a friend
+    or asking for advice on ''лікування'' at the pharmacy).'
+  - 'Pharmacy Scenarios: Asking for ''ліки'' (medicine) and ''засоби профілактики''
+    (preventative measures), focusing on ''зміцнення імунітету'' (strengthening immunity).'
+- section: Підсумок та поради (Summary and Advice)
+  words: 600
+  points:
+  - 'Wellness Advice: Using ''варто/треба'' with health verbs. Focus on ''профілактика''
+    as ''краще ніж лікування''. Discuss ''здорове харчування'' and ''режим дня'' for
+    ''міцне здоров''я''.'
+  - 'Social Etiquette and Wishes: Proper use of the toast/response ''На здоров''я!''
+    and the standard wish for a sick person ''Бажаю швидкого одужання!''.'
 vocabulary_hints:
   required:
-  - здоров'я (health) — міцне здоров'я, берегти здоров'я, на здоров'я (toast)
-  - самопочуття (well-being) — як ваше самопочуття?, скаржитися на самопочуття (common
-    phrase)
-  - симптом (symptom) — описувати симптоми, явні симптоми
-  - лікування (treatment) — проходити курс лікування, ефективне лікування, лікуватися
-    вдома
-  - харчування (nutrition) — здорове харчування, режим харчування
-  - стрес (stress) — боротися зі стресом, вплив стресу на здоров'я
-  - фітнес (fitness) — займатися фітнесом, підтримувати форму
-  - одужувати (to recover) — швидко одужувати, бажаю одужання (common wish)
+  - здоров'я (health) — міцне здоров'я, берегти здоров'я, стан здоров'я; High-frequency
+    core term
+  - самопочуття (well-being) — погане/гарне самопочуття, скаржитися на самопочуття;
+    Essential for B1 state description
+  - хворіти на... (to be ill with) — хворіти на грип/застуду; Must use 'на' + Accusative,
+    avoid Instrumental case
+  - почуватися (to feel [state]) — я почуваюся добре/кепсько; Reflects internal state,
+    reflexive verb
+  - боліти (to hurt) — у мене болить голова, у мене болять зуби; Verb agrees with
+    the body part (subject)
+  - одужувати (to recover) — швидко одужувати, бажаю одужання; Medium frequency, vital
+    for social empathy
+  - протяг (draft) — боятися протягу, зачинити вікно через протяг; High cultural relevance
+    in Ukraine
+  - лікування (treatment) — проходити курс лікування, ефективне лікування; Focus on
+    the process of recovery
+  - аптека (pharmacy) — купувати трави в аптеці, зайти в аптеку по ліки; Ubiquitous
+    medical point of contact
   recommended:
-  - діагноз (diagnosis) — поставити діагноз, попередній діагноз
-  - профілактика (prevention) — профілактика захворювань, краще ніж лікування
-  - імунітет (immunity) — зміцнювати імунітет, слабкий імунітет
-  - релаксація (relaxation) — методи релаксації, для покращення самопочуття
+  - діагностика (diagnostics) — аналізи й обстеження; State Standard §3.7 competency
+  - профілактика (prevention) — профілактика захворювань, краще ніж лікування; Formal
+    register
+  - імунітет (immunity) — зміцнювати імунітет, слабкий імунітет; Common wellness topic
+  - калина (viburnum) — чай з калини, народний засіб від застуди; Cultural icon of
+    health
+  - ромашка (chamomile) — полоскати горло ромашкою; Standard home remedy
+  - діагноз (diagnosis) — поставити діагноз, попередній діагноз; Doctor-patient interaction
 activity_hints:
 - type: match-up
   focus: Health noun phrases

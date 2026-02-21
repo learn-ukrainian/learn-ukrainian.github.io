@@ -1,0 +1,93 @@
+module: b1-12
+level: B1
+sequence: 12
+slug: aspect-pairs-essential-40
+version: '2.0'
+title: 'Видові пари: 40 найважливіших'
+subtitle: Essential Aspect Pairs - The 40 most common verb pairs
+content_outline:
+- section: Тест
+  points:
+  - Diagnostic aspect pair recognition — target 'Perfective Present' error trap (e.g.
+    'Я зроблю це зараз')
+  - Intuition check
+- section: Пояснення
+  points:
+  - '40 essential aspect pairs — alignment: State Standard §4.2.3.1 (B1); prioritize
+    Top 10/20 verbs like робити/зробити, говорити/сказати'
+  - Formation patterns (prefix, suffix, suppletive)
+  - 'Usage in context — visual aid: Process vs Result timeline; cultural hook: «Вода
+    камінь точить» (Imperfective focus); use icons 🔄/✅'
+- section: Практика
+  points:
+  - Pair matching exercises
+  - 'Context selection — learner error: mixing ''буду'' + perfective infinitive (''Я
+    буду прочитати'')'
+- section: Діалоги
+  points:
+  - 'Aspect pairs in conversation — learner error: using perfective for present tense
+    meaning; usage: «Вчора я читав» (process) vs «Вчора я прочитав» (result)'
+  - 'Natural usage — cultural hook: «Зробив діло – гуляй сміло» (Result focus)'
+vocabulary_hints:
+  required:
+  - робити/зробити (to do/make) — робити домашнє завдання, зробити помилку (Top 10
+    verbs)
+  - писати/написати (to write) — писати листа, написати книгу
+  - читати/прочитати (to read) — читати новини, прочитати до кінця
+  - говорити/сказати (to speak/say) — говорити правду, сказати «ні» (Top 20 verbs)
+  - брати/взяти (to take) — брати участь, взяти до уваги (Top 50 verbs)
+  - давати/дати (to give) — давати слово, дати пораду (Top 50 verbs)
+  - їсти/з'їсти (to eat) — їсти сніданок, з'їсти все
+  - пити/випити (to drink) — пити каву, випити ліки
+  - класти/покласти (to put)
+  - ставити/поставити (to put standing)
+  recommended:
+  - відкривати/відкрити (to open)
+  - закривати/закрити (to close)
+  - починати/почати (to begin)
+  - закінчувати/закінчити (to finish)
+  - вчити/вивчити (to study/learn) — вчити мову, вивчити вірш
+activity_hints:
+- type: match-up
+  focus: Imperfective → Perfective pairs
+  items: 40+
+- type: fill-in
+  focus: Choose correct form in context
+  items: 20+
+- type: true-false
+  focus: By formation type (prefix, suffix, suppletive)
+  items: 40+
+- type: quiz
+  focus: Identify pair type and use correctly
+  items: 15+
+focus: grammar
+pedagogy: TTT
+prerequisites:
+- b1-11 (Aspect in imperatives)
+- All aspect theory modules M06-11
+connects_to:
+- b1-13 (Work week - aspect in action)
+- b1-14 (Aspect integration practice)
+objectives:
+- Learner knows the 40 most essential aspect pairs
+- Learner can recognize and use both forms correctly
+- Learner understands common aspect formation patterns
+grammar:
+- 40 essential aspect pairs
+- Imperfective-perfective correspondence
+module_type: grammar
+sources:
+- name: Ukrainian Frequency Dictionaries
+  url: https://uk.wikipedia.org/wiki/Частотний_словник
+  type: reference
+  notes: Most frequent verbs in Ukrainian corpus
+- name: Ukrainian Aspectual Pairs
+  url: https://uk.wikipedia.org/wiki/Видові_пари_дієслів
+  type: reference
+  notes: Formation patterns for aspectual pairs
+immersion: 100% Ukrainian
+phase: B1.1 Aspect
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Drill Sergeant
+word_target: 4000

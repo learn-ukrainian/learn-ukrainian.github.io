@@ -6,54 +6,75 @@ version: '2.0'
 title: 'Числівники: збірні та дроби'
 subtitle: Numerals - Collectives and Fractions
 content_outline:
-- section: Тест
+- section: Вступ та діагностика (Introduction and Diagnostics)
+  words: 600
   points:
-  - Collective vs cardinal numerals — diagnostic of 'нас двоє' vs 'два студенти'
-  - Fractional expressions — basic recognition of 'пів', 'третина'
-- section: Пояснення
+  - Diagnostic analysis of cardinal vs collective numeral usage — testing the distinction
+    between 'два студенти' and 'нас двоє' in conversational contexts.
+  - Alignment with State Standard §4.2.1.3 — bridging the gap between basic cardinal
+    list and the functional necessity of collectives for natural Ukrainian speech.
+- section: Збірні числівники та 'Пастки' (Collective Numerals and 'Traps')
+  words: 1200
   points:
-  - Collective numerals — definition and forms (двоє, троє, четверо); focus on masculine
-    living beings and pluralia tantum
-  - 'When to use collectives — Rule: living males, young animals, objects like ''ножиці'';
-    Learner Error: ''троє бабусь'' (Grandmother Trap) or ''двоє телефонів'' (Phone
-    Trap); case rule: requires Genitive Plural'
-- section: Дроби та відсотки
+  - 'The ''Who/What counts?'' logic flowchart — defining triggers for collectives:
+    living males (двоє хлопців), baby animals (четверо цуценят), and plurale tantum
+    nouns (двоє саней, троє дверей).'
+  - Deep dive into the 'Grandmother Trap' and 'Phone Trap' — explicit rules forbidding
+    collectives with feminine nouns (use 'три бабусі') and inanimate masculine nouns
+    (use 'два телефони').
+  - Addressing the Case Mismatch — enforcing the mandatory Genitive Plural case after
+    collective numerals (двоє студентів, четверо коней) to ensure grammatical elegance.
+- section: Дроби, відсотки та особливі форми (Fractions, Percentages, and Special
+    Forms)
+  words: 800
   points:
-  - 'Fractions — common forms: половина, третина, чверть, півтора (+ Gen. Sg.); usage
-    in time-telling'
-  - Percentages and decimals — basic formation and agreement
-- section: Практика
+  - 'Fractional numerals in daily life — common forms: половина, третина, чверть;
+    integration into time-telling expressions (чверть на третю, о пів на другу).'
+  - Mastering 'півтора' (one and a half) — highlighting high-frequency usage and the
+    unique requirement for the following noun to be in Genitive Singular (півтора
+    місяця, півтора року).
+  - Percentages and decimals — basic formation rules and agreement with the Genitive
+    case (п'ять відсотків, нуль цілих п'ять десятих).
+- section: 'Культурний контекст: Магія чисел (Cultural Context: Magic of Numbers)'
+  words: 800
   points:
-  - Choose cardinal vs collective — exercises focusing on distinguishing 'три брати'
-    vs 'троє братів' (style) and mandatory collectives ('двоє дверей')
-  - Express fractions — matching fractions to text, time expressions
-- section: Діалоги
+  - The Magical Number 3 in Ukrainian Folklore — exploration of the proverb 'Бог трійцю
+    любить' and the recurrence of 'three brothers/tasks' in traditional folktales.
+  - The Holy Number 12 and the '12 Dishes' — cultural anchoring of Christmas Eve (Sviat
+    Vecher) traditions representing the apostles and the months of the year.
+- section: Мовленнєва практика та підсумок (Speech Practice and Summary)
+  words: 600
   points:
-  - 'Real-world numeral usage — counting people at a table (''нас п''ятеро''), ordering
-    food (portions); Cultural hook: ''God loves the trinity'' (Бог трійцю любить)'
-  - 'Mathematical contexts — simple arithmetic or recipes; Cultural hook: ''12 dishes''
-    (12 страв) for Christmas'
-- section: Потрібно більше практики?
-  points:
-  - Additional exercises — reinforcement of Genitive Plural case with collectives
+  - Real-world social scenarios — counting people at a table ('нас п'ятеро'), ordering
+    portions in a restaurant, and discussing statistics using fractions.
+  - Mathematical contexts and recipes — applying fractional numerals to measurements
+    and simple arithmetic with a focus on conversational fluidity.
 vocabulary_hints:
   required:
-  - збірний числівник (collective numeral) — used for groups of people or pluralia
-    tantum objects
-  - дробовий числівник (fractional numeral) — e.g., одна друга, півтора
-  - 'двоє (two - collective) — двоє дітей, двоє друзів, нас двоє; learner error: do
-    not use with feminine nouns'
-  - 'троє (three - collective) — троє синів, троє дверей; cultural hook: Бог трійцю
-    любить'
-  - половина (half) — половина часу, о пів на другу
-  - третина (third) — третина населення
-  - чверть (quarter) — чверть на третю, чверть століття
-  - відсоток (percent) — use with Genitive case
+  - двоє (two - collective) — high frequency; used for male groups, mixed groups,
+    or children (двоє друзів, двоє дітей, нас двоє)
+  - 'троє (three - collective) — high frequency; used with babies and pluralia tantum
+    (троє дверей, троє саней); cultural hook: ''Бог трійцю любить'''
+  - четверо (four - collective) — medium frequency; used for groups of young animals
+    (четверо цуценят, четверо кошенят)
+  - півтора (one and a half) — high frequency; mandatory agreement with Genitive Singular
+    nouns (півтора місяця, півтора року, півтора літра)
+  - 'половина (half) — very high frequency; collocations: половина часу, о пів на
+    другу (time)'
+  - 'третина (third) — medium frequency; population/statistics: третина населення,
+    одна третя'
+  - 'чверть (quarter) — high frequency; time: чверть на третю; historical: чверть
+    століття'
+  - відсоток (percent) — formal/practical register; requires Genitive case agreement
+    (п'ять відсотків)
   recommended:
-  - кількісний (cardinal) — один, два, три
-  - десятковий (decimal) — нуль цілих п'ять десятих
-  - множина (plural) — required for collective numerals (Genitive Plural)
+  - утрьох (the three of us/them) — high frequency conversational adverbial form derived
+    from collective root
   - 'ножиці (scissors) — plurale tantum noun requiring collective numeral: двоє ножиць'
+  - 'окуляри (glasses) — plurale tantum noun requiring collective numeral: троє окулярів'
+  - 'кількісний числівник (cardinal numeral) — grammar term: один, два, три'
+  - 'дробовий числівник (fractional numeral) — grammar term: одна друга, півтора'
+  - множина (plural) — required for collective numerals (specifically Genitive Plural)
 activity_hints:
 - type: fill-in
   focus: Choose cardinal or collective

@@ -1,0 +1,54 @@
+{
+  "slug": "being-and-becoming",
+  "track": "a2",
+  "module_num": 6,
+  "mode": "v3",
+  "phases": {
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-02-20T08:00:35Z",
+      "words": 3770,
+      "attempts": 2
+    },
+    "3a": {
+      "status": "complete",
+      "timestamp": "2026-02-20T08:02:06Z",
+      "note": "v3-phase-C"
+    },
+    "3b": {
+      "status": "complete",
+      "timestamp": "2026-02-20T08:02:06Z",
+      "note": "v3-phase-C"
+    },
+    "3": {
+      "status": "complete",
+      "timestamp": "2026-02-20T08:27:32Z",
+      "note": "v3-audit"
+    },
+    "5-enrich": {
+      "status": "complete",
+      "timestamp": "2026-02-20T08:27:32Z",
+      "note": "v3-audit"
+    },
+    "6": {
+      "status": "complete",
+      "timestamp": "2026-02-20T08:28:42Z",
+      "note": "v3-phase-D"
+    },
+    "6b": {
+      "status": "complete",
+      "timestamp": "2026-02-20T08:28:42Z",
+      "note": "v3-phase-D"
+    },
+    "7-final": {
+      "status": "complete",
+      "timestamp": "2026-02-20T08:28:42Z",
+      "note": "v3-phase-D"
+    },
+    "8": {
+      "status": "complete",
+      "timestamp": "2026-02-20T08:39:19Z"
+    }
+  },
+  "last_updated": "2026-02-20T08:39:19Z"
+}

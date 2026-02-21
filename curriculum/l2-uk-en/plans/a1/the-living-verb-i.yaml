@@ -6,52 +6,70 @@ version: '2.0'
 title: The Living Verb I
 subtitle: First Conjugation (-ати/-яти)
 content_outline:
-- section: Warm-up
+- section: Вступ (Introduction)
+  words: 400
   points:
-  - Moving from "this is" to "I do" — action verbs unlock — transition from static
-    descriptions to dynamic actions
-  - 'First Conjugation (-ати verbs) are everywhere in daily life — aligned with State
-    Standard §4.2.4.1 (examples: читати, працювати)'
-  - Reading, writing, working, walking, playing — core actions that define daily routine
-- section: Presentation
+  - Transition from static descriptions (a1-05 'My World - Objects') to dynamic action
+    verbs — the shift from 'this is' to 'I do'.
+  - 'Historical hook: The ''Apostol'' (1574) by Ivan Fedorov, the first printed book
+    in Ukraine, symbolizing a deep-rooted literacy tradition and the importance of
+    the verb ''читати''.'
+  - 'Aligning with State Standard §4.2.4.1: Introduction to indicative mood conjugation
+    in the present tense using high-frequency examples like читати and працювати.'
+- section: Презентація (Presentation)
+  words: 600
   points:
-  - 'Pattern: -ати → -аю, -аєш, -ає, -аємо, -аєте, -ають — visual aid: clear ''Stem
-    + Ending'' table (чит + аю)'
-  - 'Example paradigm: читати → читаю, читаєш, читає... — standard example for regularity'
-  - 'All verbs here are imperfective (ongoing/habitual actions) — learner error: confusing
-    process (читати) with result (прочитати)'
-  - 'Pro-drop — endings tell who, so pronouns optional (Читаю = I read) — learner
-    error: overuse of ''Я'' when ending is sufficient; learner error: using infinitive
-    ''Я читати'''
-  - Common verbs (писати, працювати, слухати, питати, грати) — focus on high-frequency
-    actions
-- section: Practice
+  - 'Visualizing the First Conjugation pattern: -ати → -аю, -аєш, -ає, -аємо, -аєте,
+    -ають — using a ''Stem + Ending'' table (e.g., чит + аю).'
+  - 'Concept of Imperfective Aspect: Focus on ongoing or habitual actions (process
+    vs. result) — explaining that these verbs describe what you are doing now or usually.'
+  - 'Pro-drop feature: Explain that the ending ''is'' the pronoun; while English requires
+    ''I/You/He'', Ukrainian verb endings allow pronouns to be optional.'
+  - 'Visual aid for regularity: Applying the pattern to the State Standard examples
+    (читати, працювати) to show universal application across hundreds of verbs.'
+- section: Практика (Practice)
+  words: 600
   points:
-  - 'Conjugation drills with multiple -ати verbs — strict constraint: SVO sentences,
-    inanimate masculine/neuter objects (журнал, лист, радіо) to avoid case confusion'
-  - 'Describing daily activities (Я працюю, Ти читаєш) — context: working at home,
-    reading a magazine, listening to music'
-- section: Cultural Insight
+  - 'Error Correction: Addressing ''Infinitive Abuse'' — drill replacing the infinitive
+    base ''Я читати'' with the conjugated ''Я читаю'' to break English transfer habits.'
+  - 'Error Correction: Reducing ''Pronoun Overuse'' — exercises that strip away the
+    constant ''Я'' to achieve natural flow: ''Читаю. Працюю. Знаю.'''
+  - 'SVO Sentence Drills: Use inanimate masculine and neuter objects (журнал, лист,
+    радіо) where Nominative equals Accusative to avoid early case confusion while
+    building fluency.'
+  - 'Contextual application: Describing a daily routine using common verbs (працювати
+    вдома, слухати радіо, писати повідомлення).'
+- section: Культурний аспект та підсумок (Cultural Insight and Summary)
+  words: 400
   points:
-  - 'Ukrainians drop pronouns — verb endings are clear — cultural hook: ''Птицю пізнати
-    по пір''ю, а людину по мові'' (value of eloquence)'
-  - 'Master key metaphor — one pattern unlocks hundreds of verbs — historical context:
-    high literacy tradition, ''Apostol'' (1574)'
+  - 'Cultural Proverb: ''Птицю пізнати по пір''ю, а людину по мові'' (A bird is known
+    by its feathers, a person by their speech) — linking grammatical accuracy to personal
+    character.'
+  - 'The ''Master Key'' metaphor: Summarizing how this one conjugation pattern unlocks
+    the vast majority of everyday Ukrainian verbs.'
+  - Summary of the transition from English instructional scaffolding to initial Ukrainian
+    immersion through action statements.
 vocabulary_hints:
   required:
-  - читати (to read) — читати журнал, читати вголос
-  - писати (to write) — писати лист, писати текст
-  - знати (to know) — знати все, не знати
-  - працювати (to work) — працювати багато, працювати вдома
-  - слухати (to listen) — слухати музику, слухати радіо
-  - 'питати (to ask) — питати про це (warning: requires accusative for person)'
-  - грати (to play) — грати в ігри
-  - чекати (to wait) — чекати на автобус
+  - читати (to read) — читати книгу, читати вголос, читати новини; High frequency
+    (Top 100 verbs)
+  - писати (to write) — писати листа, писати повідомлення, гарно писати; High frequency
+    (Top 100 verbs)
+  - знати (to know) — знати все, знати правду, не знати; Very High frequency (Top
+    20 verbs)
+  - працювати (to work) — працювати вдома, працювати багато, працювати над проєктом;
+    High frequency (Top 50 verbs)
+  - слухати (to listen) — слухати музику, слухати уважно, слухати радіо; High frequency
+    verb
+  - 'питати (to ask) — питати про це; warning: requires accusative for the person
+    being asked'
+  - грати (to play) — грати в ігри; грати на гітарі
+  - чекати (to wait) — чекати на автобус; чекати на відповідь
   recommended:
-  - думати (to think) — думати про це
-  - розуміти (to understand) — розуміти все
-  - вивчати (to study) — вивчати мову
-  - відпочивати (to rest) — відпочивати вдома
+  - думати (to think) — думати про це; думати багато
+  - розуміти (to understand) — розуміти все; не розуміти
+  - вивчати (to study) — вивчати мову; вивчати слова
+  - відпочивати (to rest) — відпочивати вдома; відпочивати влітку
 activity_hints:
 - type: fill-in
   focus: Conjugate First Conjugation verbs

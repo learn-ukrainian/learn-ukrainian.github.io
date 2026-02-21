@@ -2,14 +2,14 @@
   "module": "weather-and-nature",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-19T23:55:51.044861Z",
+  "last_audit": "2026-02-21T01:01:43.444286Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-19T23:46:36.018390Z",
+    "md": "2026-02-21T01:01:03.457117Z",
     "meta": "2026-02-19T23:27:35.878760Z",
-    "activities": "2026-02-19T23:46:36.018717Z",
+    "activities": "2026-02-21T01:01:24.143868Z",
     "vocabulary": "2026-02-19T23:30:28.520843Z",
-    "plan": "2026-02-18T19:03:32.286774Z",
+    "plan": "2026-02-20T20:42:13.256407Z",
     "research": "2026-02-19T23:27:35.871821Z"
   },
   "gates": {
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "2979/2000 (raw: 3262)"
+      "message": "2991/2000 (raw: 3274)"
     },
     "activities": {
       "status": "pass",
@@ -41,7 +41,7 @@
     "ipa": {
       "status": "warn",
       "violations": 0,
-      "message": "15 IPA issues (run lint_ipa.py --fix)"
+      "message": "1 IPA issues (run lint_ipa.py --fix)"
     },
     "research": {
       "status": "pass",

@@ -1,0 +1,294 @@
+✅ Message sent to Gemini (ID: 12936) [auto-acked: self-addressed]
+✓ Message 12936 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12936...
+📨 Message #12936
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-olha-basarab
+   Time: 2026-02-20T23:43:21.786331+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-bio-88
+level: C1-BIO
+sequence: 88
+slug: olha-basarab
+version: '2.0'
+title: 'Ольга Басараб: Розвідниця і мучениця'
+content_outline:
+- section: Вступ — Незламна розвідниця
+  points:
+  - Басараб як символ жіночого героїзму в підпіллі
+  - Трагічна загибель під тортурами
+  - Значення для українського визвольного руху
+- section: Молодість та формування (1889-1914)
+  points:
+  - Народження у Львові в інтелігентній родині
+  - Навчання та музична освіта
+  - Участь у культурному житті Львова
+  - Шлюб з Дмитром Басарабом
+- section: Перша світова війна та УСС (1914-1918)
+  points:
+  - Благодійна діяльність під час війни
+  - Зв'язки з Українськими Січовими Стрільцями
+  - Формування підпільної мережі
+  - Початок розвідницької діяльності
+- section: Розвідниця УВО (1920-1924)
+  points:
+  - Вступ до Української Військової Організації
+  - Організація розвідницької мережі у Львові
+  - Координація з центром у Відні
+  - Ризикована подвійна гра
+- section: Арешт та загибель (1924)
+  points:
+  - Викриття та арешт польською поліцією
+  - Жорстокі допити та тортури
+  - Відмова видати товаришів
+  - Загибель у в'язниці — офіційно «самогубство»
+- section: Посмертна слава та пам'ять
+  points:
+  - Реакція українського суспільства на загибель
+  - Культ Ольги Басараб в українському русі
+  - Пісні та вірші, присвячені їй
+  - Вшанування в незалежній Україні
+vocabulary_hints:
+  required:
+  - розвідниця (female intelligence agent)
+  - підпілля (underground)
+  - УВО (Ukrainian Military Organization)
+  - тортури (torture)
+  - допит (interrogation)
+  - в'язниця (prison)
+  - мучениця (martyr)
+  - зрада (betrayal)
+  - конспірація (conspiracy/secrecy)
+  - героїзм (heroism)
+  recommended:
+  - польська поліція (Polish police)
+  - Січові Стрільці (Sich Riflemen)
+  - розвідницька мережа (intelligence network)
+  - подвійна гра (double game)
+  - самогубство (suicide)
+activity_hints:
+- type: reading
+  focus: Історія підпілля
+  source: Історичні дослідження та мемуари
+  items: 3 passages
+- type: essay-response
+  focus: Чому Басараб стала символом?
+  output: Історичне есе
+focus: biography
+prerequisites:
+- c1-bio-44 (Симон Петлюра)
+connects_to:
+- c1-bio-61 (Олена Степанів)
+- c1-bio-68 (Олена Теліга)
+- c1-bio-108 (Євген Коновалець)
+module_type: biography
+sources:
+- name: Ольга Басараб (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Басараб_Ольга_Михайлівна
+  type: primary
+  notes: Біографія, розвідницька діяльність, загибель
+- name: Музей визвольної боротьби України
+  url: https://mvbu.org.ua
+  type: reference
+  notes: УВО та розвідка
+- name: Центр досліджень визвольного руху
+  url: https://cdvr.org.ua
+  type: reference
+  notes: Дослідження підпільної діяльності
+immersion: 100% Ukrainian
+phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of ольга басараб: розвідниця і мучениця'
+- Evaluate the contributions of незламна розвідниця
+- Trace the career and influence of посмертна слава та пам'ять
+persona:
+  voice: Senior Biographer
+  role: Underground Liaison
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Ольга Басараб: Розвідниця і мучениця
+
+## Використані джерела
+1. [Енциклопедія Сучасної України](https://esu.com.ua/article-40662) — академічна біографічна довідка.
+2. [Історична Правда](https://www.istpravda.com.ua) — статті про обставини загибелі та ексгумацію.
+3. [Локальна Історія](https://localhistory.org.ua) — матеріали про розвідницьку діяльність та особисте життя.
+4. [Український Інститут Національної Пам'яті](https://uinp.gov.ua) — офіційні дані про вшанування.
+5. [Збруч](https://zbruc.eu) — аналіз архівних документів польської поліції.
+
+## Хронологія
+- 1 вересня 1889: Народилася в с. Підгороддя (Рогатинщина) в родині священника Михайла Левицького.
+- 1914: Шлюб з Дмитром Басарабом (загинув 1915 на італійському фронті).
+- 1918-1923: Секретар українського посольства у Фінляндії, бухгалтер у Відні; розвідувальні місії в Німеччині, Норвегії, Данії.
+- 1923: Переїзд до Львова, робота в Головній управі філії Союзу Українок, зв'язкова Євгена Коновальця.
+- 9 лютого 1924: Арешт польською поліцією у Львові (разом з Ольгою Мизь).
+- 12-13 лютого 1924: Загибель у камері в'язниці «Бригідки» (офіційно — самогубство, фактично — закатована).
+- 26 лютого 1924: Ексгумація та перепоховання на Янівському цвинтарі.
+
+## Ключові факти та цитати
+- **Зовнішність**: «Круглолиця, жвава, рухлива, зграбна... щира усмішка, що рідко сходила з її лиця».
+- **Напис на стіні камери**: «Умираю замучена. Помстіть».
+- **З підпільної листівки (5-та річниця смерті)**: «Жадали від Неї зради посестер і побратимів, жадали підлоти, та вона осталася вірною великій ідеї... Її посвята — це лаврові листки над символами нашої державности».
+- **Тортури**: Сліди електричного струму, вивернуті суглоби, численні гематоми.
+- **Діяльність**: Поєднувала легальну роботу (благодійність, жіночий рух) з нелегальною (кур'єр УВО, збір розвідданих).
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ: Символ жіночого героїзму": [!quote] "Умираю замучена. Помстіть" — передсмертне послання.
+- Section "Молодість: I — Родинне коріння та освіта": [!context] Освіта жінок у Галичині на зламі століть — шлях до емансипації.
+- Section "Війна: I — Благодійність та «Комітет допомоги»": [!history-bite] Трагедія втрати чоловіка на фронті як каталізатор боротьби.
+- Section "Розвідка: I — Дипломатія та шпигунство": [!myth-buster] Міф про "терористку" — Басараб була професійною розвідницею з дипломатичним прикриттям.
+- Section "Загибель: I — Арешт і слідство": [!decolonization] Методи польської поліції ("Defensywa") як інструмент колоніального терору.
+- Section "Загибель: II — Мученицька смерть": [!analysis] "Самогубство" vs Вбивство: анатомія поліцейського прикриття злочину.
+- Section "Пам'ять: Культ та спадщина": [!culture] Вірш Олени Теліги або пісні, присвячені Басараб.
+
+## Деколонізаційний контекст
+- **Imperial (Polish) myth**: Ольга Басараб — шпигунка, терористка, вчинила самогубство через слабкість або фанатизм. Польська влада — легітимний правопорядок.
+- **Ukrainian reality**: Ольга Басараб — комбатант, офіцер розвідки (хоч і без погонів), жертва поліцейського свавілля окупаційної адміністрації. Її смерть — результат катувань, а не добровільний вибір.
+
+## Contested Terms
+| Concept | Imperial (Polish/Soviet) framing | Ukrainian (decolonized) framing |
+|---------|-----------------|-------------------|
+| Діяльність УВО | Тероризм, бандитизм | Національно-визвольна боротьба, підпілля |
+| Польська влада в Галичині | Законний уряд, відновлення порядку | Окупаційна адміністрація, режим пацифікації |
+| Смерть Басараб | Самогубство в камері | Політичне вбивство, закатування |
+| Статус Басараб | Шпигунка (neg.) | Розвідниця (pos.), учасниця визвольних змагань |
+
+## Section-Mapped Research Notes
+
+### Вступ: Символ жіночого героїзму
+Ольга Басараб стала іконою для наступних поколінь (ОУН, УПА). Її смерть сколихнула Галичину, викликавши масові протести.
+
+### Молодість: I — Родинне коріння та освіта
+Народилася в родині інтелігенції (священник). Європейська освіта (Вайсвассер, Відень) дала їй мови та манери, необхідні для дипломатії та розвідки.
+
+### Молодість: II — Громадський активізм
+Активна учасниця "Пласту", "Січі". Знайомство з Дмитром Басарабом (керівник студентського товариства "Основа"). Шлюб 1914 року.
+
+### Війна: I — Благодійність та "Комітет допомоги"
+Перша світова війна. Робота в "Українському жіночому комітеті допомоги пораненим". Загибель чоловіка (1915) — переломний момент.
+
+### Війна: II — Перші кроки у підпіллі
+Співпраця з УСС. Формування перших навичок конспірації. Організація допомоги інтернованим українцям.
+
+### Розвідка: I — Дипломатія та шпигунство
+Робота в посольстві УНР у Фінляндії. Бухгалтер у Відні. Місії до Скандинавії та Німеччини — збір інформації про військові плани та політичні настрої.
+
+### Розвідка: II — Зв'язкова Коновальця
+Повернення до Львова (1923). Офіційно — благодійність, неофіційно — зв'язкова полковника Коновальця. Координація мережі, передача директив, фінансів.
+
+### Загибель: I — Арешт і слідство
+Арешт 9 лютого 1924 року на квартирі по вул. Виспянського (нині вул. О. Басараб). Облава. Знайдено матеріали розвідки. Допити в тюрмі на Лонцького / Бригідках. Відмова свідчити.
+
+### Загибель: II — Мученицька смерть
+Ніч на 13 лютого. Версія поліції: "повісилася на рушнику". Факти: вивернуті руки, сліди струму. Ексгумація під тиском громадськості підтвердила тортури.
+
+### Пам'ять: Культ та спадщина
+Масові маніфестації. Створення культу "Святої Ольги" підпілля. Вплив на Олену Телігу та жіноцтво ОУН. Сучасні вулиці та пам'ятники.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12975)
+✓ Message 12936 acknowledged
+✓ Message 12975 acknowledged

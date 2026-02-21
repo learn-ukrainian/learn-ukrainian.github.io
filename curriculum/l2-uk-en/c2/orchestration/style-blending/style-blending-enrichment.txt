@@ -1,0 +1,327 @@
+✅ Message sent to Gemini (ID: 11163) [auto-acked: self-addressed]
+✓ Message 11163 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #11163...
+📨 Message #11163
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-style-blending
+   Time: 2026-02-20T22:27:37.035675+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c2-024
+level: c2
+sequence: 24
+version: '2.0'
+title: Змішування стилів і гібридні регістри
+focus: stylistics
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Функціональні стилі української мови
+  url: https://uk.wikipedia.org/wiki/Функціональний_стиль
+  type: reference
+  notes: Foundation of 7 Ukrainian styles
+- name: Науково-популярний стиль
+  url: https://uk.wikipedia.org/wiki/Науково-популярний_стиль
+  type: reference
+  notes: Example of hybrid style analysis
+- name: Сучасна українська публіцистика
+  url: https://ukrlib.com.ua/
+  type: primary
+  notes: Examples of style blending in contemporary journalism
+content_outline:
+- section: Вступ — коли стилі змішуються
+  points:
+  - Чисті стилі vs. гібриди
+  - Функції змішування стилів
+  - Комунікативна доцільність
+- section: Науково-популярний стиль
+  points:
+  - Елементи наукового стилю (термінологія, логіка)
+  - Елементи розмовного (доступність, приклади)
+  - Баланс точності та зрозумілості
+  - Приклади з українських медіа
+- section: Художньо-публіцистичний стиль
+  points:
+  - Літературна журналістика
+  - Есей як гібридний жанр
+  - Репортаж з елементами белетристики
+  - Колонки Курков, Андрухович
+- section: Офіційно-публіцистичний стиль
+  points:
+  - Державна комунікація з громадянами
+  - Пом'якшення бюрократичної мови
+  - Прес-релізи та офіційні заяви
+  - Соціальні мережі державних органів
+- section: Розмовно-художній стиль
+  points:
+  - Сказ як літературний прийом
+  - Діалектизми в літературі
+  - Стилізація усного мовлення
+  - Приклади з української прози
+- section: Епістолярно-есеїстичний стиль
+  points:
+  - Лист як літературна форма
+  - Відкритий лист як публіцистика
+  - Есеїстичні елементи в листуванні
+  - Письменницькі листи як жанр
+- section: Підсумок та практика
+  points:
+  - Оцінка доцільності змішування
+  - Ризики невдалого змішування
+  - Створення власного гібридного тексту
+vocabulary:
+  required:
+  - гібридний (hybrid)
+  - змішування (blending)
+  - науково-популярний (popular science)
+  - художньо-публіцистичний (literary journalism)
+  - регістр (register)
+  - сказ (skaz/oral narrative style)
+  - есей (essay)
+  - доцільність (appropriateness)
+  - адаптація (adaptation)
+  - синтез (synthesis)
+  recommended:
+  - белетристика (belles-lettres)
+  - репортаж (reportage)
+  - колонка (column)
+  - фейлетон (feuilleton)
+  - нарис (sketch/essay)
+  forbidden: '[]'
+activities:
+  types_required:
+  - quiz
+  - match-up
+  - critical-analysis
+  - essay-response
+  - comparative-study
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c2-25 (C2.1 Final Checkpoint)
+- c2-32 (Writing Literary Essays)
+- 'c2-37 (Creative Writing: Prose)'
+vocabulary_hints:
+  required:
+  - концепція (concept)
+  - аналіз (analysis)
+  - дискурс (discourse)
+  - методологія (methodology)
+  recommended:
+  - інтерпретація (interpretation)
+  - контекстуалізація (contextualization)
+  - синтез (synthesis)
+activity_hints:
+- type: reading
+  focus: Поглиблений аналіз тексту
+  items: 4
+- type: essay-response
+  focus: Критичне осмислення
+- type: discussion
+  focus: Дискусія та аргументація
+  items: 1
+persona:
+  voice: Senior Specialist
+  role: Avant-Garde Writer
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Змішування стилів і гібридні регістри
+
+## State Standard Reference
+§4.3.7: "Уміння трансформувати текст з одного стилю в інший, зокрема науковий у науково-популярний, офіційний у публіцистичний тощо."
+Alignment: Цей модуль безпосередньо реалізує вимогу стандарту щодо трансформації та змішування стилів, фокусуючись на створенні гібридних текстів (науково-популярних, художньо-публіцистичних).
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| гібридний | Medium (Academic/Tech) | гібридний жанр, гібридна війна, гібридна форма, гібридне авто |
+| змішування | High (General) | змішування стилів, змішування мов, змішування фарб |
+| науково-популярний | High (Education/Media) | науково-популярне видання, науково-популярний фільм, науково-популярна література |
+| художньо-публіцистичний | Low (Literary Term) | художньо-публіцистичний твір, художньо-публіцистичний стиль |
+| регістр | Low (Linguistics/Music) | мовний регістр, високий регістр, низький регістр, перемикання регістрів |
+| сказ | Very Low (Literary Term) | літературний сказ, манера сказу, елементи сказу |
+| есей | High (Academic/Lit) | писати есей, філософський есей, критичний есей |
+| доцільність | Medium-High (Formal) | економічна доцільність, комунікативна доцільність, доцільність використання |
+
+## Cultural Hooks
+1. **Феномен сучасної української есеїстики**: Оксана Забужко та Юрій Андрухович як майстри "високого" змішування стилів (інтелектуального, публіцистичного та художнього). Їхні тексти є ідеальними зразками для аналізу.
+2. **"Розстріляне відродження"**: Памфлети Миколи Хвильового як приклад пристрасної, "атакуючої" публіцистики з сильними художніми елементами. Це додає історичної глибини темі.
+
+## Common Learner Errors
+1. **Суржик vs. Стилізація**: Студенти часто плутають несвідоме вживання суржику (помилка) зі свідомою стилізацією під розмовну мову (літературний прийом). *Correction*: Чіткий аналіз авторського наміру та контексту.
+2. **Недоречне змішування (Register Clash)**: Вживання сленгу або надмірно емоційної лексики в офіційних документах під виглядом "демократизації" стилю. *Correction*: Наголос на понятті "комунікативна доцільність".
+3. **Втрата наукової точності**: При популяризації науки (науково-популярний стиль) студенти можуть надмірно спрощувати терміни, викривляючи зміст. *Correction*: Баланс між доступністю та фактажем.
+
+## Cross-References
+- Builds on: Всі модулі C2.1a (Stylistic Perfection) — знання чистих стилів є базою для їх змішування.
+- Prepares for: c2-32 (Writing Literary Essays), c2-37 (Creative Writing: Prose) — практичне застосування навичок.
+
+## Notes for Content Writing
+- Важливо чітко розмежовувати "гібридні жанри" (які є нормою, наприклад, есей) і "стилістичні помилки" (невмотивоване змішування).
+- Використовувати приклади з реальних українських медіа (The Ukrainians, Куншт, Локальна історія) як зразки якісного науково-популярного та художньо-публіцистичного стилів.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: феномен стильової дифузії (Introduction: Phenomenon of Style Diffusion)"
+  words: 500
+  points:
+  - "Теоретичне обґрунтування: чисті стилі як ідеальні моделі vs. реальна практика гібридизації; поняття стильової дифузії та інтерференції"
+  - "Вимоги Державного стандарту (§4.3.7): здатність до трансформації текстів між реєстрами як ключова компетенція рівня C2"
+  - "Комунікативна доцільність: коли змішування стилів є виправданим стратегічним вибором, а коли — свідченням низької мовної культури"
+- section: "Науково-популярний стиль — інтелектуальна популяризація (Popular Science Style — Intellectual Popularization)"
+  words: 750
+  points:
+  - "Синтез наукової точності та розмовної доступності: аналіз успішних кейсів у сучасних медіа («Куншт», «Локальна історія»)"
+  - "Типова помилка: втрата наукової достовірності через надмірне спрощення термінології; методи збереження фактологічної глибини"
+  - "Інструментарій популяризатора: використання метафор, сторітелінгу та аналогій для пояснення складних концепцій"
+- section: "Художньо-публіцистичний синтез та сучасна есеїстика (Literary-Journalistic Synthesis and Modern Essayistics)"
+  words: 900
+  points:
+  - "Майстри сучасної есеїстики: аналіз інтелектуального письма Оксани Забужко та Юрія Андруховича як взірців високого стильового змішування"
+  - "Історична ретроспектива: пристрасна публіцистика Миколи Хвильового («Розстріляне відродження») та елементи художнього памфлету"
+  - "Жанрові гібриди: есей, літературний репортаж та колонка — розмежування понять «нарис» та «есей» у сучасному контексті"
+- section: "Офіційно-публіцистичні гібриди в цифрову епоху (Official-Journalistic Hybrids in the Digital Era)"
+  words: 650
+  points:
+  - "Демократизація державної комунікації: аналіз мови прес-релізів та соціальних мереж держорганів (кейс застосунку «Дія»)"
+  - "Learner Error (Register Clash): небезпека використання сленгу або надмірної емоційності в офіційних зверненнях; межа між близькістю до народу та бюрократичним етикетом"
+  - "Пом'якшення канцеляризмів: трансформація «сухої» мови документів у зрозумілу публічну комунікацію без втрати юридичної сили"
+- section: "Стилізація vs. Помилка: розмовно-художній регістр (Stylization vs. Error: Oral-Literary Register)"
+  words: 600
+  points:
+  - "Літературний прийом «сказ»: імітація усного мовлення, діалектизмів та просторіччя в художній прозі"
+  - "Критична диференціація: свідоме вживання суржику як засобу характеристики персонажа vs. несвідома помилка студента"
+  - "Аналіз авторського наміру: як контекст та цільова аудиторія визначають допустимість розмовних елементів у письмовій мові"
+- section: "Підсумок: стратегії міжстильової трансформації (Summary: Strategies of Inter-Stylistic Transformation)"
+  words: 600
+  points:
+  - "Практикум: трансформація фрагмента суто наукового тексту в науково-популярний допис для соціальних мереж"
+  - "Чек-лист для самоперевірки: оцінка балансу точності, емоційності та відповідності обраному гібридному регістру"
+  - "Ризики стильової еклектики: як уникнути перетворення тексту на хаотичне нагромадження несумісних мовних елементів"
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "гібридний (hybrid) — гібридний жанр, гібридна форма; висока частотність в академічному та медійному дискурсах"
+  - "змішування (blending) — змішування стилів, змішування регістрів; базова лексема для опису стильової дифузії"
+  - "науково-популярний (popular science) — науково-популярне видання, науково-популярна література; висока частотність у медіа"
+  - "художньо-публіцистичний (literary-journalistic) — художньо-публіцистичний твір; специфічний термін для аналізу синтетичних жанрів"
+  - "регістр (register) — мовний регістр, перемикання регістрів; низька частотність у побуті, але ключове поняття для рівня C2"
+  - "сказ (skaz) — літературний сказ, манера сказу; вузькоспеціалізований термін для опису імітації усного мовлення"
+  - "есей (essay) — критичний есей, філософський есей; часто вживається в академічному та літературному середовищах"
+  - "доцільність (appropriateness) — комунікативна доцільність; ключовий критерій оцінки якості та доречності змішування стилів"
+  recommended:
+  - "белетристика (belles-lettres) — елементи белетристики; вживається при описі художньої журналістики"
+  - "репортаж (reportage) — художній репортаж; популярний гібридний жанр сучасної української журналістики"
+  - "контекстуалізація (contextualization) — контекстуалізація стилістичних засобів; важливий аналітичний процес"
+  - "суржик (surzhyk) — стилістичне використання суржику; розгляд як інструменту стилізації, а не просто помилки"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4716 chars)
+✅ Message sent to Claude (ID: 11171)
+✓ Message 11171 acknowledged
+   Auto-acknowledged reply #11171 (stdout delivery — no inbox accumulation)
+✓ Message 11163 acknowledged

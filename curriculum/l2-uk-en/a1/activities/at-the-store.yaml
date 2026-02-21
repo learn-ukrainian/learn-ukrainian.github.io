@@ -1,0 +1,378 @@
+- type: match-up
+  title: "Відділи супермаркету"
+  instruction: "Match the product to the correct department."
+  pairs:
+    - left: "молоко"
+      right: "молочний відділ"
+    - left: "ковбаса"
+      right: "м'ясний відділ"
+    - left: "торт"
+      right: "кондитерський відділ"
+    - left: "хліб"
+      right: "випічка"
+    - left: "яблуко"
+      right: "овочі та фрукти"
+    - left: "вода"
+      right: "напої"
+    - left: "сметана"
+      right: "молочний відділ"
+    - left: "цукерки"
+      right: "кондитерський відділ"
+    - left: "м'ясо"
+      right: "м'ясний відділ"
+    - left: "сік"
+      right: "напої"
+    - left: "булочка"
+      right: "випічка"
+    - left: "картопля"
+      right: "овочі та фрукти"
+
+- type: group-sort
+  title: "Що де знаходиться?"
+  instruction: "Sort the items into the correct categories."
+  groups:
+    - name: "Молочний відділ"
+      items: ["сметана", "кефір", "масло", "молоко", "ряжанка"]
+    - name: "Кондитерський відділ"
+      items: ["шоколад", "печиво", "торт", "цукерка", "мармелад"]
+    - name: "М'ясний відділ"
+      items: ["ковбаса", "курка", "сосиски", "сало", "м'ясо"]
+
+- type: quiz
+  title: "Культура покупок"
+  instruction: "Choose the correct answer based on the lesson."
+  items:
+    - question: "Яка мережа супермаркетів відома своїм унікальним дизайном?"
+      explanation: "Сільпо is famous for its themed supermarkets."
+      options:
+        - text: "Сільпо"
+          correct: true
+        - text: "АТБ"
+          correct: false
+        - text: "Метро"
+          correct: false
+        - text: "Ашан"
+          correct: false
+    - question: "Як називається великий магазин самообслуговування?"
+      explanation: "A large self-service store is called a supermarket."
+      options:
+        - text: "супермаркет"
+          correct: true
+        - text: "кіоск"
+          correct: false
+        - text: "базар"
+          correct: false
+        - text: "ринок"
+          correct: false
+    - question: "Що часто можна знайти на чеку в Сільпо?"
+      explanation: "Receipts often feature a prediction or quote."
+      options:
+        - text: "передбачення"
+          correct: true
+        - text: "рецепт"
+          correct: false
+        - text: "новини"
+          correct: false
+        - text: "погоду"
+          correct: false
+    - question: "Як ввічливо звернутися до працівника магазину?"
+      explanation: "Use 'Скажіть, будь ласка' to be polite."
+      options:
+        - text: "Скажіть, будь ласка..."
+          correct: true
+        - text: "Гей, ти!"
+          correct: false
+        - text: "Де це?"
+          correct: false
+        - text: "Я хочу це!"
+          correct: false
+    - question: "Що означає слово «знижка» на ціннику?"
+      explanation: "Знижка means discount."
+      options:
+        - text: "discount"
+          correct: true
+        - text: "price"
+          correct: false
+        - text: "bag"
+          correct: false
+        - text: "cashier"
+          correct: false
+    - question: "Як українці часто називають пакет із пакетами?"
+      explanation: "It is jokingly called a 'package of packages'."
+      options:
+        - text: "пакет з пакетами"
+          correct: true
+        - text: "сумка для сумок"
+          correct: false
+        - text: "мішок щастя"
+          correct: false
+        - text: "колекція пластику"
+          correct: false
+    - question: "Яке питання ви обов'язково почуєте на касі?"
+      explanation: "Cashiers always ask if you need a bag."
+      options:
+        - text: "Пакет потрібен?"
+          correct: true
+        - text: "Де ви живете?"
+          correct: false
+        - text: "Як вас звати?"
+          correct: false
+        - text: "Що ви робите?"
+          correct: false
+    - question: "Що означає жовтий цінник з написом АКЦІЯ?"
+      explanation: "Aktsiia indicates a special promotion or sale."
+      options:
+        - text: "спеціальна пропозиція"
+          correct: true
+        - text: "новий товар"
+          correct: false
+        - text: "зіпсований товар"
+          correct: false
+        - text: "дорогий товар"
+          correct: false
+
+- type: fill-in
+  title: "Знахідний відмінок: Я купую..."
+  instruction: "Complete the sentences using the Accusative case (-а changes to -у)."
+  items:
+    - sentence: "Я йду в магазин і купую _____."
+      answer: "воду"
+      options: ["воду", "вода", "води", "воді"]
+      explanation: "Feminine 'вода' changes to 'воду' in Accusative."
+    - sentence: "Сьогодні я купую смачну _____."
+      answer: "каву"
+      options: ["каву", "кава", "кави", "каві"]
+      explanation: "Feminine 'кава' changes to 'каву' in Accusative."
+    - sentence: "Мама купує свіжу _____."
+      answer: "сметану"
+      options: ["сметану", "сметана", "сметани", "сметані"]
+      explanation: "Feminine 'сметана' changes to 'сметану' in Accusative."
+    - sentence: "Ми купуємо _____ на вечерю."
+      answer: "ковбасу"
+      options: ["ковбасу", "ковбаса", "ковбаси", "ковбасі"]
+      explanation: "Feminine 'ковбаса' changes to 'ковбасу' in Accusative."
+    - sentence: "Він бере _____ на касі."
+      answer: "картку"
+      options: ["картку", "картка", "картки", "картці"]
+      explanation: "Feminine 'картка' changes to 'картку' in Accusative."
+    - sentence: "Я бачу велику _____."
+      answer: "чергу"
+      options: ["чергу", "черга", "черги", "черзі"]
+      explanation: "Feminine 'черга' (queue) changes to 'чергу' in Accusative."
+    - sentence: "Вибачте, я шукаю _____."
+      answer: "випічку"
+      options: ["випічку", "випічка", "випічки", "випічці"]
+      explanation: "Feminine 'випічка' changes to 'випічку' in Accusative."
+    - sentence: "Вона купує свіжу _____."
+      answer: "картоплю"
+      options: ["картоплю", "картопля", "картоплі", "картоплею"]
+      explanation: "Feminine 'картопля' changes to 'картоплю' in Accusative."
+
+- type: unjumble
+  title: "Побудуйте речення"
+  instruction: "Arrange the words to form correct sentences."
+  items:
+    - words: ["Я", "йду", "в", "супермаркет"]
+      answer: "Я йду в супермаркет"
+    - words: ["Де", "знаходиться", "свіжий", "хліб"]
+      answer: "Де знаходиться свіжий хліб"
+    - words: ["Скажіть", "будь", "ласка", "де", "молоко"]
+      answer: "Скажіть будь ласка де молоко"
+    - words: ["Ви", "хочете", "пакет"]
+      answer: "Ви хочете пакет"
+    - words: ["Я", "плачу", "карткою", "будь", "ласка"]
+      answer: "Я плачу карткою будь ласка"
+    - words: ["У", "якому", "відділі", "цукерки"]
+      answer: "У якому відділі цукерки"
+    - words: ["Сметана", "там", "у", "молочному", "відділі"]
+      answer: "Сметана там у молочному відділі"
+    - words: ["Цей", "супермаркет", "дуже", "великий"]
+      answer: "Цей супермаркет дуже великий"
+
+- type: match-up
+  title: "Фрази та переклад"
+  instruction: "Match the Ukrainian phrase to its English meaning."
+  pairs:
+    - left: "Пакет потрібен?"
+      right: "Do you need a bag?"
+    - left: "Готівкою чи карткою?"
+      right: "Cash or card?"
+    - left: "Де знаходиться хліб?"
+      right: "Where is the bread located?"
+    - left: "Скажіть, будь ласка..."
+      right: "Tell me, please..."
+    - left: "Яка ціна?"
+      right: "What is the price?"
+    - left: "Скільки коштує?"
+      right: "How much does it cost?"
+    - left: "У якому відділі...?"
+      right: "In which department...?"
+    - left: "Ваш чек."
+      right: "Your receipt."
+    - left: "Акція"
+      right: "Promotion/Sale"
+    - left: "Знижка"
+      right: "Discount"
+    - left: "Картка є?"
+      right: "Do you have a card?"
+    - left: "У додатку"
+      right: "In the app"
+
+- type: fill-in
+  title: "Діалог на касі"
+  instruction: "Complete the dialogue with the correct words."
+  items:
+    - sentence: "Касир: Добрий день! _____ потрібен?"
+      answer: "Пакет"
+      options: ["Пакет", "Чек", "Товар", "Хліб"]
+      explanation: "Cashiers ask about the bag first."
+    - sentence: "Клієнт: Так, будь _____."
+      answer: "ласка"
+      options: ["ласка", "дякую", "добре", "прошу"]
+      explanation: "'Будь ласка' means 'please'."
+    - sentence: "Касир: Картка _____?"
+      answer: "є"
+      options: ["є", "буде", "має", "тут"]
+      explanation: "'Картка є?' asks if you have a loyalty card."
+    - sentence: "Клієнт: Так, у _____."
+      answer: "додатку"
+      options: ["додатку", "телефоні", "кишені", "сумці"]
+      explanation: "Ukrainians often use the app ('додаток') for loyalty cards."
+    - sentence: "Касир: Добре. _____ чи карткою?"
+      answer: "Готівкою"
+      options: ["Готівкою", "Грошима", "Доларами", "Євро"]
+      explanation: "The choice is usually cash ('готівка') or card."
+    - sentence: "Клієнт: _____, будь ласка."
+      answer: "Карткою"
+      options: ["Карткою", "Готівкою", "Чек", "Пакет"]
+      explanation: "Paying by card ('карткою')."
+    - sentence: "Касир: Дякую. Ваш _____."
+      answer: "чек"
+      options: ["чек", "пакет", "телефон", "товар"]
+      explanation: "The cashier gives you the receipt ('чек')."
+    - sentence: "Клієнт: Дякую! Гарного _____."
+      answer: "дня"
+      options: ["дня", "вечора", "ранку", "свята"]
+      explanation: "Wishing a good day ('гарного дня')."
+
+- type: quiz
+  title: "Знаки в магазині"
+  instruction: "Identify the meaning of signs you might see in a store."
+  items:
+    - question: "Ви бачите напис «ВИПІЧКА». Що там продають?"
+      explanation: "Випічка means bakery/pastry."
+      options:
+        - text: "хліб та булочки"
+          correct: true
+        - text: "м'ясо"
+          correct: false
+        - text: "молоко"
+          correct: false
+        - text: "овочі"
+          correct: false
+    - question: "Ви бачите напис «НАПОЇ». Що там є?"
+      explanation: "Напої means drinks/beverages."
+      options:
+        - text: "вода та сік"
+          correct: true
+        - text: "цукерки"
+          correct: false
+        - text: "ковбаса"
+          correct: false
+        - text: "риба"
+          correct: false
+    - question: "Ви бачите напис «КАСА». Що там роблять?"
+      explanation: "Каса is the checkout."
+      options:
+        - text: "платять за товар"
+          correct: true
+        - text: "беруть візок"
+          correct: false
+        - text: "зважують овочі"
+          correct: false
+        - text: "ріжуть хліб"
+          correct: false
+    - question: "Ви бачите напис «ВХІД». Що це?"
+      explanation: "Вхід means Entrance."
+      options:
+        - text: "entrance"
+          correct: true
+        - text: "exit"
+          correct: false
+        - text: "staff only"
+          correct: false
+        - text: "toilet"
+          correct: false
+    - question: "Ви бачите напис «ВИХІД». Що це?"
+      explanation: "Вихід means Exit."
+      options:
+        - text: "exit"
+          correct: true
+        - text: "entrance"
+          correct: false
+        - text: "open"
+          correct: false
+        - text: "closed"
+          correct: false
+    - question: "Ви бачите напис «ВІДЧИНЕНО». Що це?"
+      explanation: "Відчинено means Open."
+      options:
+        - text: "open"
+          correct: true
+        - text: "closed"
+          correct: false
+        - text: "push"
+          correct: false
+        - text: "pull"
+          correct: false
+    - question: "Ви бачите напис «ЗАЧИНЕНО». Що це?"
+      explanation: "Зачинено means Closed."
+      options:
+        - text: "closed"
+          correct: true
+        - text: "open"
+          correct: false
+        - text: "break"
+          correct: false
+        - text: "sale"
+          correct: false
+    - question: "Ви бачите напис «ОХОРОНА». Хто це?"
+      explanation: "Охорона means Security."
+      options:
+        - text: "security"
+          correct: true
+        - text: "manager"
+          correct: false
+        - text: "cashier"
+          correct: false
+        - text: "cleaner"
+          correct: false
+
+- type: match-up
+  title: "Знайдіть пару"
+  instruction: "Match related words."
+  pairs:
+    - left: "жовтий цінник"
+      right: "акція"
+    - left: "пластиковий"
+      right: "пакет"
+    - left: "молочний"
+      right: "відділ"
+    - left: "смачні"
+      right: "цукерки"
+    - left: "свіжий"
+      right: "хліб"
+    - left: "висока"
+      right: "ціна"
+    - left: "велика"
+      right: "черга"
+    - left: "банківська"
+      right: "картка"
+    - left: "готівка"
+      right: "гроші"
+    - left: "касир"
+      right: "працівник"
+    - left: "візок"
+      right: "для продуктів"
+    - left: "овочі"
+      right: "картопля і морква"

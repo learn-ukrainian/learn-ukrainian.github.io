@@ -2,7 +2,13 @@
   "slug": "mykhailo-boichuk",
   "track": "c1-bio",
   "module_num": 80,
-  "mode": "v3",
-  "phases": {},
-  "last_updated": "2026-02-18T23:19:07Z"
+  "mode": "e2e",
+  "phases": {
+    "0": {
+      "status": "complete",
+      "timestamp": "2026-02-20T22:48:34Z",
+      "task_id": "yw-mykhailo-boichuk-p0"
+    }
+  },
+  "last_updated": "2026-02-20T22:48:34Z"
 }

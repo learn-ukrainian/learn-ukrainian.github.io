@@ -6,69 +6,73 @@ version: '2.0'
 title: 'Checkpoint: Core Grammar'
 subtitle: Confirm Grammar Readiness Before Practical Scenarios
 content_outline:
-- section: Overview
+- section: Вступ та огляд (Introduction and Overview)
+  words: 400
   points:
-  - Фінальна перевірка граматики A1 перед практикою — consolidation of morphological
-    and syntactic foundations (§4.2 State Standard)
-  - Структура контрольної точки — Diagnostic Task (Test) -> Remediation (Teach) ->
-    Final Challenge (Test) approach
-  - Як оцінити свої результати
-- section: 'Skill 1: Читання кирилиці'
+  - Фінальна перевірка граматичних основ рівня А1 (морфологія та синтаксис) згідно
+    з §4.2 Державного стандарту — огляд ключових компетенцій перед переходом до практичних
+    сценаріїв.
+  - 'Методологія Test-Teach-Test (TTT): проведення діагностичного тесту для виявлення
+    індивідуальних прогалин, цільове пояснення складних моментів та фінальне закріплення
+    знань.'
+  - 'Культурний гачок: Українська мова як одна з наймилозвучніших у світі (легендарний
+    конкурс 1934 року в Парижі) — практичне значення евфонії та правил чергування
+    у/в та і/й для мелодійності мовлення.'
+- section: Рід та узгодження (Gender and Agreement)
+  words: 500
   points:
-  - Швидке читання без транслітерації — emphasis on abandoning Latin script completely
-  - Складні поєднання літер (щ, ї, ь) — specific practice reading words like «борщ»,
-    «їжа», «день»
-  - 'Наголос та інтонація — melodic quality of Ukrainian (3rd most melodious language
-    cultural note) — cultural hook: In 1934, at a language contest in Paris, Ukrainian
-    was ranked the 3rd most melodious language in the world'
-- section: 'Skill 2: Рід та узгодження'
+  - Систематизація визначення роду іменників за закінченнями (§4.2.1 Стандарту) та
+    правила узгодження прикметників і присвійних займенників у реченні.
+  - 'Аналіз та корекція типової помилки: порівняння неправильного «Гарний книга» (M
+    adj + F noun) з правильним «Гарна книга» — впровадження алгоритму ''спочатку перевір
+    рід іменника''.'
+  - 'Соціальний аспект граматики: вивчення культурної цінності шанобливості через
+    граматичну різницю між формами «ти» та «ви» (2-га особа однини vs множини) у дієвідмінюванні.'
+- section: Дієслівна система (Verb System)
+  words: 600
   points:
-  - Визначення роду за закінченням
-  - 'Узгодження прикметників (гарний дім, гарна книга) — learner error: mixing genders
-    (e.g., *гарний книга*) — learner error: *Гарна книга* (Correct) vs *Гарний книга*
-    (Error)'
-  - Узгодження присвійних займенників
-- section: 'Skill 3: Система дієслів'
+  - 'Консолідація дієслівних форм (§4.2.4.1): відмінювання у теперішньому часі (I
+    та II дієвідміни), утворення форм минулого часу та складеної форми майбутнього
+    часу недоконаного виду.'
+  - 'Подолання «пастки дієслова бути»: робота над викоріненням помилки «Я є студент»
+    (вплив англійської мови) на користь нормативного «Я студент» у теперішньому часі.'
+  - Практика вживання високочастотних модальних дієслів (могти, хотіти) та дієслів
+    руху (йти) у повсякденних контекстах з акцентом на правильне керування.
+- section: Система відмінків та практика (Case System and Practice)
+  words: 500
   points:
-  - Теперішній час (I та II дієвідміни) — visual comparison table of conjugation types
-  - 'Минулий час (був, була, було, були) — learner error: unnecessary use of ''є''
-    (to be) in present tense vs required ''був'' in past — learner error: *Я студент*
-    (Correct) vs *Я є студент* (Redundant)'
-  - Майбутній час (буду + інфінітив, -тиму) — §4.2.4.1 State Standard alignment
-- section: 'Skill 4: Система відмінків'
-  points:
-  - Називний — хто? що? — Subject role (підмет)
-  - 'Знахідний — кого? що? куди? — Direction vs Location distinction (learner error:
-    *в магазин* vs *в магазині*) — learner error: *Я йду в магазин* (Accusative: Direction)
-    vs *Я в магазині* (Locative: Location)'
-  - Родовий — кого? чого? звідки? — Functional subset for negation/absence (Module
-    16 review)
-  - Місцевий — де? на чому? — Location focus; §4.2 State Standard requirement
-- section: 'Skill 5: Практичні ситуації'
-  points:
-  - Замовлення в кафе — preparation for Module 35
-  - Покупки в магазині — Accusative case application
-  - Запитання про дорогу — Directional verbs focus
-- section: Integration Task
-  points:
-  - Комплексний діалог з усіма граматичними елементами
-  - Готовність до практичних сценаріїв A1.4
+  - Огляд функцій чотирьох базових відмінків (Називний, Знахідний, Родовий, Місцевий)
+    згідно з §4.2.3 Державного стандарту — від позначення суб'єкта до заперечення
+    та місця.
+  - 'Розрізнення категорій ''Напрямок'' vs ''Місце'': вправа на виправлення помилки
+    «Я йду в магазині» (Locative) на правильну форму «Я йду в магазин» (Accusative).'
+  - 'Фінальне інтеграційне завдання: застосування граматичних структур у діалогах
+    ''Замовлення в кафе'', ''Покупки'' та ''Запитання про дорогу'' як перепустка до
+    практичного блоку А1.4.'
 vocabulary_hints:
   required:
-  - 'бути (to be) — бути вдома, бути вчора, буде завтра; learner error: overuse of
-    ''є'' in present tense'
-  - мати (to have) — мати час, мати гроші, мати роботу
-  - йти (to go) — йти додому, йти в магазин, йти на роботу
-  - робити (to do) — робити покупки, робити каву, що ти робиш?
-  - хотіти (to want) — хочу пити, хотіти спати, хочу кави (Genitive)
-  - могти (can) — я можу допомогти, ви можете сказати?
-  - знати (to know) — знати мову, знати відповідь, я знаю це
-  - говорити (to speak) — говорити українською, говорити про справу
+  - 'бути (to be) — бути вдома, не бути (absence); Top 10 frequency; learner error:
+    redundant ''є'' in present tense'
+  - 'мати (to have) — мати час, мати рацію (idiom: to be right), мати можливість;
+    Top 20 frequency'
+  - хотіти (to want) — хотіти їсти/пити, хотіти спати; modal usage required for basic
+    needs
+  - могти (can) — я можу допомогти, ви можете сказати?; essential for requests and
+    politeness
+  - йти (to go) — йти додому, йти в магазин, йти в кіно; motion verb with Accusative
+    for direction
+  - знати (to know) — я не знаю, знати мову, знати відповідь; cognitive verb for A1
+    level check
+  - робити (to do) — робити покупки, робити каву, що ти робиш?; high-frequency general
+    activity verb
+  - говорити (to speak) — говорити українською, говорити про справу; focus on language
+    ability
   recommended:
-  - читати (to read) — читати книгу, читати вголос
-  - писати (to write) — писати листа, писати вправу
-  - їсти (to eat) — їсти сніданок, хотіти їсти
-  - пити (to drink) — пити воду, пити чай
+  - читати (to read) — читати книгу, читати вголос; practice for Cyrillic fluency
+  - писати (to write) — писати листа, писати вправу; focus on conjugation and case
+    agreement
+  - їсти (to eat) — їсти сніданок, хотіти їсти; irregular conjugation awareness
+  - пити (to drink) — пити воду, пити чай; high-frequency verb for service scenarios
 activity_hints:
 - type: quiz
   focus: A1.3 grammar comprehensive

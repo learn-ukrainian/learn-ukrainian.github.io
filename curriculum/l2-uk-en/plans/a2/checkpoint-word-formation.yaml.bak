@@ -1,0 +1,106 @@
+module: a2-44
+level: A2
+sequence: 44
+slug: checkpoint-word-formation
+version: '2.0'
+title: 'Checkpoint: Word Formation'
+subtitle: Review and Mastery Assessment
+content_outline:
+- section: Огляд
+  points:
+  - Skills overview — bridges to B1 standards (verbal nouns, suffixes)
+  - Checkpoint goals
+- section: 'Skill 1: Verb Prefixes'
+  points:
+  - 'Direction prefixes — learner error: avoiding Surzhyk prefixes (спів- vs со-,
+    авто- vs само-)'
+  - Practice exercises
+  - 'Myth Buster and History — cultural hook: ''Вороженьки'' (anthem) and emotional
+    nuance in word formation'
+- section: 'Skill 2: Noun Suffixes'
+  points:
+  - 'Verbal noun -ння — high productivity; learner error: using -к (розробка) instead
+    of -ння (розроблення)'
+  - Abstract noun -ість — productive for abstract concepts
+  - Agent noun -ач — productive for active agents
+- section: 'Skill 3: Adjective Suffixes'
+  points:
+  - 'General relation -ний — learner error: confusion with -овий (material/type)'
+  - Material/type -овий
+  - Place/nation -ський
+- section: 'Skill 4: Root Families'
+  points:
+  - Core root meaning
+  - Root recognition practice
+  - 'Extended root families — visual: ''Word Families'' trees or flowers; cultural
+    hook: ''Мрія'' (Starytsky) as conscious formation'
+- section: Integration Challenge
+  points:
+  - 'Word analysis practice — cultural hook: ''Паляниця'' shibboleth and -иця suffix'
+  - Common mistakes — wrong suffix calques and Surzhyk forms
+- section: Підсумок
+  points:
+  - Summary table
+  - Linguistic insight — word formation as the engine of the language
+vocabulary_hints:
+  required:
+  - корінь (root) — спільний корінь, корінь слова
+  - префікс (prefix) — додати префікс, префікс з-
+  - суфікс (suffix) — суфікс -ння, словотворчий суфікс
+  - слово (word) — утворення слів
+  - утворення (formation) — словотворення, рік утворення
+  - значення (meaning) — лексичне значення, змінити значення
+  - помилка (error) — виправити помилку, груба помилка
+  - правильний (correct)
+  recommended:
+  - морфема (morpheme)
+  - аналіз (analysis)
+  - синтез (synthesis)
+  - похідний (derivative)
+activity_hints:
+- type: quiz
+  focus: Word formation comprehensive
+  items: 12
+- type: fill-in
+  focus: Create correct forms
+  items: 12
+- type: error-correction
+  focus: Fix formation errors
+  items: 8
+- type: match-up
+  focus: Root families and meanings
+  items: 12
+- type: group-sort
+  focus: Sort by suffix types
+  items: 12
+- type: cloze
+  focus: Word formation in context
+  items: 12
+- type: unjumble
+  focus: Word formation sentences
+  items: 8
+- type: translate
+  focus: Form equivalents
+  items: 8
+focus: checkpoint
+pedagogy: TTT
+prerequisites:
+- a2-43 (WF Mastery)
+connects_to:
+- a2-45 (Food and Cooking)
+objectives:
+- Demonstrate confidence in identifying root families
+- Deduce meaning using morphological clues
+- Form words using correct prefixes and suffixes
+- Correct common word formation errors
+grammar:
+- Word formation comprehensive review
+- Root families review
+- Prefix/suffix application
+register: розмовний
+immersion: 60-75% Ukrainian
+phase: A2.4 [Word Formation]
+persona:
+  voice: Encouraging Cultural Guide
+  role: Linguistics Professor
+word_target: 3000

@@ -6,40 +6,74 @@ version: '2.0'
 title: Наука і дослідження
 subtitle: Science & Research
 content_outline:
-- section: Розминка — Українська наука
+- section: 'Вступ: Українська наука та видатні вчені (Introduction: Ukrainian Science
+    and Distinguished Scientists)'
+  words: 600
   points:
-  - НАН України та університети як наукові центри
-  - Видатні українські вчені (Вернадський, Патон, Сікорський)
-  - Наука під час війни — виклики та адаптація
-- section: Структура наукового дослідження
+  - Introduction to the National Academy of Sciences (NAS) of Ukraine and universities
+    as central hubs for research and innovation.
+  - 'Cultural Hook: Volodymyr Vernadsky (1863–1945) — his refusal of Russian citizenship,
+    the concept of the Noosphere, and his legacy as the founder of the Ukrainian Academy
+    of Sciences.'
+  - 'Cultural Hook: Borys Paton — pioneering electric welding in space and the development
+    of bloodless surgery through soft tissue welding.'
+  - 'Cultural Hook: Ihor Sikorsky — his early Kyiv-based inventions, including the
+    first helicopter (1910) and the ''Ilya Muromets'' aircraft.'
+- section: Структура наукового дослідження та академічна етика (Structure of Scientific
+    Research and Academic Ethics)
+  words: 700
   points:
-  - Етапи дослідження (гіпотеза, методологія, експеримент, висновки)
-  - Типи досліджень (експериментальне, теоретичне, прикладне)
-  - Наукова етика та доброчесність
-  - Рецензування та публікація
-- section: Наукова термінологія
+  - 'Stages of research: from formulating a hypothesis (висунути гіпотезу) and choosing
+    methodology to conducting experiments and reaching conclusions (дійти висновку).'
+  - Defining the standard IMRAD structure (Introduction, Methods, Results, and Discussion)
+    for organizing academic content and reading efficiency.
+  - 'Scientific ethics: understanding academic integrity (доброчесність) and the peer
+    review process (рецензування), including blind review (сліпе рецензування).'
+  - 'Terminology nuance: distinguishing between the generic ''вчений'' (scientist)
+    and the more active/professional ''науковець'' (researcher/scholar).'
+- section: Наукова термінологія та академічний регістр (Scientific Terminology and
+    Academic Register)
+  words: 700
   points:
-  - Загальнонаукова лексика (дослідження, аналіз, синтез, кореляція)
-  - Природничі науки (фізика, хімія, біологія) — базові терміни
-  - Технічні науки (інженерія, матеріалознавство)
-  - Суспільні науки (соціологія, психологія, економіка)
-- section: Читання наукових текстів
+  - 'Bridging the stylistics gap: differentiating between the Academic Register (Академічний
+    стиль) and Conversational Register (Розмовний стиль).'
+  - 'General scientific vocabulary across disciplines: analysis, synthesis, correlation,
+    and conducting research (проводити ґрунтовне дослідження).'
+  - 'Learner Error: Correcting the common Russianism ''В якості науковця...'' to the
+    idiomatic Ukrainian ''Як науковець...''.'
+  - 'Grammar in Science: Prioritizing the active voice (''Ми проаналізували'') over
+    the clunky passive calques (''Нами було проведено аналіз'') common in learner
+    output.'
+- section: Критичне читання наукових текстів (Critical Reading of Scientific Texts)
+  words: 700
   points:
-  - Структура наукової статті (анотація, вступ, методи, результати)
-  - Розуміння графіків та таблиць
-  - Критичне читання — оцінка надійності джерел
-  - Науково-популярна література vs академічні тексти
-- section: Обговорення наукових тем
+  - 'Analysis of abstracts and introductions: identifying the object, subject, and
+    goals of a study within the text.'
+  - 'Decoding visual information: understanding graphs and tables and describing data
+    trends using academic vocabulary.'
+  - 'Naturalness Check: Avoiding the collocation error ''Зустрічаються помилки'' (meeting
+    people) in favor of the correct ''Трапляються помилки'' (occurring errors).'
+  - 'Stylistic precision: identifying and removing pleonasms like ''дисертаційне дослідження''
+    in favor of the concise ''дисертація''.'
+- section: Обговорення наукових тем та представлення результатів (Discussing Scientific
+    Topics and Presenting Results)
+  words: 700
   points:
-  - Формулювання наукових питань
-  - Аргументація на основі даних
-  - Вираження невпевненості (можливо, ймовірно, за нашими даними)
-  - Дискусія про наукові відкриття
-- section: Підсумок та практика
+  - Formulating research questions and expressing degrees of certainty or hedging
+    (можливо, ймовірно, за нашими даними) during academic discussion.
+  - 'State Standard §3.17: Discussing scientific discoveries and inventions that changed
+    the world (комп’ютеризація, телекомунікація).'
+  - 'Science under pressure: a thematic discussion on the challenges and adaptation
+    of Ukrainian science during the war.'
+- section: Підсумок та практика (Summary and Practice)
+  words: 600
   points:
-  - Аналіз науково-популярної статті
-  - Представлення наукового відкриття — усна презентація
-  - Підготовка до capstone проєкту
+  - 'Practical task: Analyzing a popular science article vs. an academic abstract
+    to identify register shifts.'
+  - 'Production: Delivering a short oral presentation on a scientific topic or a planned
+    research project (§3.10: academic titles and degrees).'
+  - Final review of key scientific collocations and preparatory notes for the B2 Capstone
+    project.
 focus: domain
 pedagogy: CBI
 objectives:
@@ -52,14 +86,30 @@ grammar:
 phase: B2.4 Skills & Capstone
 vocabulary_hints:
   required:
-  - термін (term)
-  - поняття (concept)
-  - процес (process)
-  - метод (method)
+  - дослідження (research) — проводити ґрунтовне дослідження, результати дослідження,
+    об'єкт дослідження; high frequency academic term
+  - термін (term) — науковий термін, тлумачення терміна; defines the building blocks
+    of academic register
+  - поняття (concept) — ключове поняття, вводити поняття; used for theoretical frameworks
+  - метод (method) — метод аналізу, експериментальний метод; essential for describing
+    research design
+  - процес (process) — процес дослідження, складний процес; describes ongoing scientific
+    or technical activities
+  - гіпотеза (hypothesis) — висунути гіпотезу, підтвердити/спростувати гіпотезу; core
+    component of the scientific method
   recommended:
-  - аналіз (analysis)
-  - синтез (synthesis)
-  - дослідження (research)
+  - аналіз (analysis) — глибокий аналіз, піддавати аналізу, на основі аналізу; high
+    frequency in data description
+  - синтез (synthesis) — синтез результатів, теоретичний синтез; often contrasted
+    with analysis in research methodology
+  - висновок (conclusion) — дійти висновку, зробити висновки, попередні висновки;
+    crucial for summary sections
+  - експеримент (experiment) — ставити експеримент, у ході експерименту; used in empirical
+    and natural sciences
+  - рецензування (peer review) — процес рецензування, сліпе рецензування; specific
+    to academic publishing and quality control
+  - науковець (scientist/researcher) — молодий науковець, відомий науковець; modern
+    preferred term over 'вчений'
 activity_hints:
 - type: reading
   focus: Аналіз тексту

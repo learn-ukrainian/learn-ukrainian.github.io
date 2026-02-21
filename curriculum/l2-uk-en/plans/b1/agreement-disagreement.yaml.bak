@@ -1,0 +1,100 @@
+module: b1-55
+level: B1
+sequence: 55
+slug: agreement-disagreement
+version: '2.0'
+title: Згода і незгода
+subtitle: Agreement & Disagreement — Vocabulary & Phrases
+content_outline:
+- section: Вступ
+  points:
+  - Importance in conversation — based on State Standard §2.4.3.2 (expressing agreement/refusal
+    and reacting to proposals)
+  - 'Cultural considerations — cultural hook: «Де два українці, там три гетьмани»
+    (illustrates individualism and debate culture)'
+  - Politeness strategies — emphasis on 'soft' disagreement strategies («Так, але...»,
+    «Можливо...») to avoid rudeness
+- section: Вивчення слів
+  points:
+  - Six vocabulary groups — grouping by intensity and function
+  - 'Full agreement, strengthening agreement — collocations: «цілком погоджуватися»,
+    «безперечно», «дати згоду»'
+  - 'Disagreement, strengthening disagreement — collocations: «категорично заперечувати»,
+    «виникли незгоди»'
+  - 'Discussion and compromise — idiom: «дійти згоди» (reach an agreement)'
+- section: Вживання
+  points:
+  - 'Agreement levels (weak to strongest) — learner error: confusion of gender forms
+    (Чоловік: «Я згоден», Жінка: «Я згодна»)'
+  - 'Disagreement levels (polite to categorical) — learner error: calque «Я є згоден»
+    (from ''I am agree'') -> Correct: «Я згоден» / «Я погоджуюся»'
+  - Register considerations — distinction between «правильно» (correctly) and «вірно»
+    (loyally/faithfully); avoid «вірно» for agreement
+- section: Читання
+  points:
+  - Work meeting text — formal register, using «безперечно» and «не можу не погодитися»
+    (Diplomat persona)
+  - Ecology debate — expressing opinions and partial agreement («Цікава думка, однак...»)
+  - Messenger chat (informal) — short forms, emojis, «+1», «згоден»
+- section: Діалоги
+  points:
+  - Colleagues at work (neutral) — seeking consensus, «на знак згоди»
+  - Friends (informal) — emotional agreement/disagreement, «Ти що!», «Та ні!»
+  - Formal discussion, family — navigating «яблуко незгоди» (bone of contention) with
+    polite refusal
+- section: Підсумок
+  points:
+  - Key vocabulary recap — review of gender forms and correct usage of «правильно»
+  - Practice recommendations — using «Так, але...» pattern in daily life
+vocabulary_hints:
+  required:
+  - згода (agreement) — дати згоду, за згодою, мовчазна згода
+  - незгода (disagreement) — виникли незгоди, серйозні незгоди
+  - згоден/згодна (agree - adj) — short form adjective; MUST agree with gender of
+    speaker
+  - погоджуватися (to agree) — цілком погоджуватися, не можу не погодитися
+  - заперечувати (to object) — категорично заперечувати, не буду заперечувати
+  - частково (partially) — погоджуватися частково
+  - абсолютно (absolutely) — абсолютно згоден
+  - категорично (categorically) — категорично проти
+  recommended:
+  - безумовно (unconditionally/undoubtedly) — used as strong agreement marker
+  - визнавати (to acknowledge) — визнавати правоту
+  - спростовувати (to refute) — спростовувати думку
+  - підтримувати (to support) — підтримувати пропозицію
+  - безперечно (undoubtedly) — це безперечно так (discourse marker)
+  - яблуко незгоди (bone of contention) — idiom
+activity_hints:
+- type: fill-in
+  focus: Debate scenarios
+  items: 20
+- type: fill-in
+  focus: Adjust agreement intensity
+  items: 20
+- type: fill-in
+  focus: Complete debate exchanges
+  items: 15
+- type: quiz
+  focus: Identify agreement/disagreement
+  items: 15
+focus: vocabulary
+pedagogy: PPP
+prerequisites:
+- b1-54 (Expressing Opinions)
+connects_to:
+- b1-56 (Discourse Markers Basic)
+objectives:
+- Learner can express agreement at different levels of intensity
+- Learner can express polite disagreement in formal and informal contexts
+- Learner can participate in debates using appropriate vocabulary
+- Learner can manage conversational flow with agreement markers
+grammar:
+- Expression patterns for agreement and disagreement
+- Concessive structures (хоча, але)
+- Partial agreement constructions
+register: розмовний
+phase: B1.5 [Vocabulary Expansion I]
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Diplomat
+word_target: 4000

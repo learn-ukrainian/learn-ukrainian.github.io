@@ -1,0 +1,278 @@
+✅ Message sent to Gemini (ID: 12888) [auto-acked: self-addressed]
+✓ Message 12888 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12888...
+📨 Message #12888
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-dmytro-dontsov
+   Time: 2026-02-20T23:42:50.709028+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-bio-82
+level: C1-BIO
+sequence: 82
+slug: dmytro-dontsov
+version: '2.0'
+title: 'Дмитро Донцов: Ідеолог націоналізму'
+content_outline:
+- section: Вступ — Апостол волюнтаризму
+  points:
+  - Найвпливовіший ідеолог українського націоналізму
+  - Творець концепції «вольового націоналізму»
+  - Суперечлива постать української історії
+- section: Юність та ідейне формування (1883-1913)
+  points:
+  - Народження в Мелітополі
+  - Юнацький соціалізм
+  - Навчання у Відні та Львові
+  - Еволюція до націоналізму
+- section: Від соціаліста до націоналіста (1913-1926)
+  points:
+  - «Модерне москвофільство» (1913)
+  - Діяльність під час Першої світової війни
+  - Еміграція та редакторська робота
+  - «Націоналізм» (1926) — головна праця
+- section: Літературний Критик (1926-1939)
+  points:
+  - Редактор «Літературно-наукового вісника»
+  - Формування «празької школи» поезії
+  - Вплив на молоде покоління
+  - Полеміка з опонентами
+- section: Друга світова та еміграція (1939-1973)
+  points:
+  - Ставлення до подій Другої світової війни
+  - Еміграція до Канади
+  - Подальша публіцистика
+  - Смерть у Монреалі
+- section: Спадщина — Між генієм і демоном
+  points:
+  - Вплив на українську політичну думку
+  - Критика ідеології Донцова
+  - Сучасні дискусії
+  - Донцов у контексті європейського націоналізму
+vocabulary_hints:
+  required:
+  - націоналізм (nationalism)
+  - ідеолог (ideologue)
+  - волюнтаризм (voluntarism)
+  - інтегральний націоналізм (integral nationalism)
+  - публіцист (publicist)
+  - редактор (editor)
+  - еміграція (emigration)
+  - ідеологія (ideology)
+  - полеміка (polemics)
+  - доктрина (doctrine)
+  recommended:
+  - москвофільство (Muscophilia)
+  - радикалізм (radicalism)
+  - політична філософія (political philosophy)
+  - пропаганда (propaganda)
+  - модерний (modern)
+activity_hints:
+- type: reading
+  focus: Українська політична думка XX ст.
+  source: Political philosophy sources
+  items: 3 passages
+- type: essay-response
+  focus: Як оцінювати суперечливих історичних постатей?
+  output: Analytical essay
+focus: biography
+prerequisites:
+- c1-bio-51
+connects_to:
+- c1-bio-42
+- c1-bio-44
+module_type: biography
+sources:
+- name: Дмитро Донцов (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Донцов_Дмитро_Іванович
+  type: primary
+  notes: Biography of the controversial nationalist ideologue
+- name: Енциклопедія українознавства
+  url: http://esu.com.ua/
+  type: reference
+  notes: Academic analysis of Dontsov's ideology
+immersion: 100% Ukrainian
+phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of дмитро донцов: ідеолог націоналізму'
+- Evaluate the contributions of апостол волюнтаризму
+- Trace the career and influence of між генієм і демоном
+persona:
+  voice: Senior Biographer
+  role: Nationalist Editor
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Дмитро Донцов: Ідеолог націоналізму
+
+## Використані джерела
+1. [Енциклопедія Сучасної України (esu.com.ua)](http://esu.com.ua/search_articles.php?id=20869) — Академічна біографія та аналіз творчості.
+2. [Національна історична бібліотека України](https://nibu.kyiv.ua/) — Біографічні матеріали до 140-річчя.
+3. [Літопис (litopys.org.ua)](http://litopys.org.ua/dontsov/don.htm) — Тексти праць Донцова («Націоналізм»).
+4. [Одеська національна наукова бібліотека](http://odnb.odessa.ua/) — Матеріали про вісниківство.
+
+## Хронологія
+- **1883, 29 серпня**: Народився в Мелітополі в родині землевласників.
+- **1900**: Переїзд до Царського Села, початок навчання на юридичному факультеті Петербурзького університету.
+- **1905**: Вступ до УСДРП, перший арешт за революційну діяльність.
+- **1908**: Другий арешт (Лук'янівська в'язниця), переїзд до Галичини (Австро-Угорщина).
+- **1913**: Вихід брошури «Сучасне політичне положення нації і наші завдання» (Львів) — маніфест розриву з москвофільством.
+- **1914, серпень**: Голова Союзу визволення України (СВУ) у Львові; згодом переїзд до Берліна.
+- **1918, травень**: Директор Українського телеграфічного агентства (УТА) та Бюро преси при гетьмані Павлі Скоропадському.
+- **1921**: Переїзд до Львова, початок редагування «Літературно-наукового вістника» (ЛНВ).
+- **1926**: Публікація праці «Націоналізм» — біблії українського інтегрального націоналізму.
+- **1939**: Еміграція через Бухарест і Берлін до Праги, потім до Парижа.
+- **1947**: Переїзд до Канади (Монреаль), викладання в Монреальському університеті (1949–1952).
+- **1973, 30 березня**: Помер у Монреалі, похований у Баунд-Бруці (США).
+
+## Ключові факти та цитати
+- **Волюнтаризм**: "Націю може врятувати лише народження нової психології переможців, а не вічний стогін скривджених рабів та сльози."
+- **Антиросійська позиція**: "Наш національний ідеал може здійснитися тільки в безкомпромісовій боротьбі з Росією."
+- **Елітаризм**: Теорія "активної меншості" («ініціативної меншості»), яка веде за собою пасивну масу ("юрбу").
+- **Вісниківство**: Створив "празьку школу" поетів (Є. Маланюк, О. Ольжич, О. Теліга) навколо ідеї "трагічного оптимізму" і культу чину.
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ — Апостол волюнтаризму": [!myth-buster] — Міф про Донцова як "фашиста" vs реальність його "інтегрального націоналізму" як захисної реакції бездержавної нації.
+- Section "Юність та ідейне формування": [!context] — Парадокс походження: російськомовна родина з Таврії, що виховала найрадикальнішого українофіла.
+- Section "Від соціаліста до націоналіста": [!quote] — Цитата з промови 1913 року про "сепаратизм" як єдиний шлях порятунку від "російського хаосу".
+- Section "Літературний Критик": [!culture] — Феномен "вісниківства" як літературного "спецназу" української ідеї.
+- Section "Спадщина": [!decolonization] — Вплив Донцова на ОУН і УПА: ідеологія, що зробила можливим опір двом тоталітарним режимам.
+- Section "Спадщина": [!history-bite] — Донцов ніколи не був членом ОУН, хоча був її духовним батьком.
+
+## Деколонізаційний контекст
+- **Imperial Myth**: Російська пропаганда таврувала Донцова як "людоненависника" і "фашиста".
+- **Ukrainian Reality**: Донцов діагностував "провансальство" (малоросійство) як хворобу української інтелігенції і пропонував "націоналізм діла" як ліки. Він перший чітко сформулював, що демократизація Росії не принесе свободи Україні (актуально і сьогодні).
+
+## Contested Terms
+| Concept | Imperial/Soviet framing | Ukrainian framing |
+|---------|-------------------------|-------------------|
+| Націоналізм | Буржуазний націоналізм, фашизм, нацизм | Інтегральний націоналізм, визвольний рух, захисна ідеологія бездержавної нації |
+| СВУ (1914) | Австро-німецька агентура | Політична організація для здобуття незалежності України |
+| Вісниківці | Декаденти, націоналістичні фанатики | Провідні інтелектуали, творці "вільового неоромантизму" |
+
+## Section-Mapped Research Notes
+
+### Вступ — Апостол волюнтаризму
+Донцов — фігура, що поєднує в собі блискучого стиліста і безкомпромісного доктринера. Його "Націоналізм" (1926) змінив мислення цілого покоління, перетворивши "плаксивих українофілів" на "залізних борців".
+
+### Юність та ідейне формування (1883-1913)
+Мелітопольське коріння. Вплив російської культури в дитинстві і свідомий вибір українства. Петербурзький період: захоплення соціалізмом (мода того часу). Арешти як каталізатор радикалізації. Переїзд до Львова і знайомство з В. Липинським (майбутнім опонентом).
+
+### Від соціаліста до націоналіста (1913-1926)
+Переломний 1913 рік: промова на ІІ Всеукраїнському студентському з'їзді — повний розрив з ідеєю федерації з Росією. Робота в СВУ. Гетьманат 1918: Донцов — державний чиновник (парадокс: революціонер на службі консерватора Скоропадського). Еміграція і кристалізація ідеології "чинного націоналізму".
+
+### Літературний Критик (1926-1939)
+Львівський період. Редагування ЛНВ (пізніше "Вісника"). Створення культу "сильної людини" в літературі. Війна з "радянськофільством" (Хвильовий, Винниченко) і "католицьким консерватизмом". Виховання когорти поетів-воїнів (Ольжич, Теліга). Естетика "трагічного оптимізму".
+
+### Друга світова та еміграція (1939-1973)
+Поневіряння Європою. Відмова співпрацювати з нацистами (попри ідеологічні паралелі в ранніх працях). Переїзд до Канади. Викладацька діяльність. Пізній період: містицизм і релігійність, відхід від чистої політики до філософії духу.
+
+### Спадщина — Між генієм і демоном
+Суперечливість: надихнув ОУН, але сварився з Бандерою і Мельником. Його ідеї (аморальність в політиці заради нації) критикували демократи і християни. Сучасна рецепція: актуальність тези "Росія — ворог" і небезпека тоталітаризму.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12907)
+✓ Message 12888 acknowledged
+✓ Message 12907 acknowledged

@@ -1,0 +1,297 @@
+✅ Message sent to Gemini (ID: 10417) [auto-acked: self-addressed]
+✓ Message 10417 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10417...
+📨 Message #10417
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-synonymy-speaking-verbs
+   Time: 2026-02-20T20:31:55.489669+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b1-69
+level: B1
+sequence: 69
+slug: synonymy-speaking-verbs
+version: '2.0'
+title: 'Синоніми II: дієслова мовлення'
+subtitle: 'Synonymy II: Speaking Verbs'
+content_outline:
+- section: Вступ
+  points:
+  - 'Beyond казати and говорити — expressiveness focus per Standard §4.5.1.1; learner
+    error: overuse of generic verbs'
+  - 'Verb categories — distinction between monologue (говорити, розповідати) and dialogue
+    (розмовляти, спілкуватися); learner error: using ''говорити'' for interactive
+    conversation'
+  - Register awareness — from formal 'повідомляти' (to inform) to informal 'балакати'
+    (to chat/babble)
+- section: Читання
+  points:
+  - 'Speaking verb texts — cultural hook: The Kobzar Tradition (telling history, not
+    reading) and ''Solov''ina Mova'' (bird metaphors like ''щебетати'')'
+  - 'Semantic differences — learner error: using ''казати'' for storytelling (must
+    be ''розповідати''); aspect nuance: ''казати'' (process) vs ''сказати'' (result)'
+- section: Діалоги
+  points:
+  - Use varied speaking verbs — introduce manner of speech verbs like 'шепотіти' (whisper)
+    and 'кричати' (shout)
+  - 'Report conversations — reinforce indirect speech structure (§4.4.3) with ''що''
+    clauses; learner error: ''говорити на'' instead of instrumental case'
+vocabulary_hints:
+  required:
+  - казати (to say) — казати правду, казати «дякую», як кажуть
+  - говорити (to speak) — говорити українською (instrumental case!), говорити про
+    справу
+  - розповідати (to tell) — розповідати історію, розповідати про себе
+  - повідомляти (to inform) — повідомляти новини, офіційно повідомляти
+  - розмовляти (to converse) — розмовляти з другом, розмовляти по телефону
+  - обговорювати (to discuss) — обговорювати плани, обговорювати проблему
+  - пояснювати (to explain) — пояснювати правила, пояснювати причину
+  - запитувати (to ask) — запитувати дорогу, запитувати про здоров'я
+  recommended:
+  - заявляти (to declare) — офіційно заявляти
+  - стверджувати (to claim) — стверджувати, що це правда
+  - описувати (to describe) — описувати ситуацію
+  - спілкуватися (to communicate) — спілкуватися з колегами, спілкуватися в інтернеті
+  - балакати (to chat) — балакати про дурниці (informal)
+  - шепотіти (to whisper) — шепотіти на вухо
+  - кричати (to shout) — кричати від радості
+activity_hints:
+- type: match-up
+  focus: Match verbs to contexts
+  items: 25
+- type: fill-in
+  focus: Choose correct speaking verb
+  items: 20
+- type: fill-in
+  focus: Vary reporting verbs
+  items: 15
+- type: fill-in
+  focus: Report dialogues
+  items: 10
+focus: vocabulary
+pedagogy: PPP
+prerequisites:
+- b1-68 (Synonymy Thinking Verbs)
+connects_to:
+- b1-70 (Collocations Expressions)
+objectives:
+- Learner can distinguish between казати/говорити/розповідати/повідомляти
+- Learner can use 20 speaking verbs with appropriate collocations
+- Learner can select verbs by register (formal vs informal)
+- Learner can report speech using varied verbs
+grammar:
+- Verb collocations with speaking vocabulary
+- Register differentiation in reporting verbs
+- Direct and indirect speech verb patterns
+register: розмовний
+phase: B1.6 [Vocabulary Expansion II]
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Theater Actor
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Синоніми II: дієслова мовлення
+
+## State Standard Reference
+§4.5.1.1: "Стилістичні засоби лексики: синоніми..."
+§4.4.3: "Складнопідрядні речення зі з’ясувальною підрядною частиною (сполучні слова що...)"
+Alignment: This module implements the B1 requirement for lexical synonymy to enhance expressiveness and covers the syntactic structures needed for indirect speech (reporting what was said).
+
+## Vocabulary Frequency
+| Word | Frequency / Nuance | Key collocations |
+|------|-------------------|------------------|
+| **говорити** | High / General ability, serious tone | говорити українською, говорити правду, говорити про справу |
+| **казати** | High / Content focus, "to say" | казати «дякую», казати правду (informal), як кажуть |
+| **розповідати** | Medium / Narrative, "to tell" | розповідати історію, розповідати про себе, розповідати казки |
+| **повідомляти** | Medium / Formal, "to inform" | повідомляти новини, повідомляти про зміни, офіційно повідомляти |
+| **розмовляти** | Medium / Interactive, "to converse" | розмовляти з другом, розмовляти по телефону |
+| **спілкуватися** | Medium / "To communicate" | спілкуватися з колегами, спілкуватися в інтернеті |
+| **балакати** | Low / Informal, "to chat" | балакати про дурниці, просто балакати |
+
+## Cultural Hooks
+1. **The Kobzar Tradition**: Kobzars were not just musicians but oral historians. They didn't read from books; they "told" (*розповідали*) the history of the people through *dumy*. Taras Shevchenko is known as "The Great Kobzar".
+2. **"Solov'ina Mova" (Nightingale Language)**: Ukrainian has a rich array of verbs describing the *manner* of speech (щебетати, воркувати, сокотати), often comparing human speech to birdsong, which reflects the cultural value placed on melodic and gentle speech.
+
+## Common Learner Errors
+1. **Казати vs. Сказати**: Using *казати* (impf) for a single completed statement instead of *сказати* (pf).
+   - *Error:* Він казав мені вчора, що прийде. (If it was a single info point) → *Correct:* Він сказав мені...
+2. **Speaking a Language**: Using preposition *на* instead of instrumental case.
+   - *Error:* Я говорю на українській мові. → *Correct:* Я говорю українською (мовою).
+3. **Говорити vs. Розмовляти**: Using *говорити* for interactive dialogue where *розмовляти* is more natural.
+   - *Context:* "We talked for hours." → *Better:* Ми розмовляли годинами.
+4. **Tell vs. Say**: Using *казати* for "tell a story".
+   - *Error:* Він казав мені цікаву історію. → *Correct:* Він розповідав мені цікаву історію.
+
+## Cross-References
+- **Builds on**: A1/A2 basic usage of *говорити/читати/писати*, B1-68 (Thinking Verbs).
+- **Prepares for**: B1-70 (Collocations & Expressions), B2 Reported Speech patterns (Sequence of Tenses).
+
+## Notes for Content Writing
+- **Register Distinction**: Clearly distinguish between the neutral *говорити*, the slightly more casual/oral *казати*, and the formal *повідомляти*.
+- **Reported Speech**: Use this topic to reinforce the *що* clause structure naturally.
+- **Manner of Speech**: Introduce expressive verbs like *шепотіти* (whisper) and *кричати* (shout) to move beyond "he said/she said".
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 600
+  points:
+  - "Lexical synonymy importance per Standard §4.5.1.1 to move beyond overused generic verbs like 'казати' and 'говорити'."
+  - "Register awareness: identifying the spectrum from formal 'повідомляти' (to inform) to informal 'балакати' (to chat/babble)."
+  - "Categorization of verbs by interaction type: monologue-focused (говорити) vs. interactive dialogue (розмовляти, спілкуватися)."
+- section: "Культурний контекст (Cultural Context)"
+  words: 800
+  points:
+  - "The Kobzar Tradition: Exploring the oral historian role where history was 'told' (розповідали) via 'dumy' rather than read from books."
+  - "Solov'ina Mova (Nightingale Language): Cultural value of bird metaphors like 'щебетати' (to chirp) and 'воркувати' (to coo) for melodic speech."
+  - "Taras Shevchenko as 'The Great Kobzar' and the cultural weight of the verb 'розповідати' in preserving national memory."
+- section: "Лексичні нюанси та граматика (Lexical Nuances and Grammar)"
+  words: 1000
+  points:
+  - "Semantic differentiation: when to use 'розповідати' for narratives vs. 'казати' for discrete content or simple reporting."
+  - "Standard §4.4.3 implementation: Constructing indirect speech using 'що' clauses to report statements with varied introductory verbs."
+  - "Manner of speech verbs: Introducing 'шепотіти' (whisper) and 'кричати' (shout) to enhance descriptive depth in storytelling."
+  - "Aspect nuance drill: 'казати' (process/habitual) vs. 'сказати' (result/single instance) in reporting contexts."
+- section: "Робота над помилками (Addressing Learner Errors)"
+  words: 800
+  points:
+  - "Learner error: 'говорити на українській мові' (wrong preposition) vs. correct instrumental 'говорити українською мовою'."
+  - "Learner error: using 'казати' for 'to tell a story' (must be 'розповідати') — drill with narrative contexts."
+  - "Learner error: using generic 'говорити' for interactive conversations where 'розмовляти' is more natural and precise."
+  - "Aspect error: using 'казати' (impf) for a single completed info point instead of 'сказати' (pf)."
+- section: "Практика та застосування (Practice and Application)"
+  words: 800
+  points:
+  - "Theater Actor role-play: expressing different emotions through manner of speech verbs (whispering secrets, shouting joy)."
+  - "Professional simulation: writing a formal update using 'повідомляти' and 'заявляти' vs. a casual coffee chat using 'балакати'."
+  - "Reporting task: summarizing a conversation using 'він стверджував, що...' and 'вона пояснювала, що...' to master indirect speech."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "говорити (to speak) — High frequency; denotes general ability or serious tone (говорити українською, говорити про справу)."
+  - "казати (to say) — High frequency; focus on content of speech (казати правду, як кажуть, казати «дякую»)."
+  - "розповідати (to tell) — Medium frequency; narrative focus (розповідати історію, розповідати казки)."
+  - "повідомляти (to inform) — Medium frequency; formal/official register (повідомляти новини, офіційно повідомляти)."
+  - "розмовляти (to converse) — Medium frequency; interactive dialogue (розмовляти з другом, розмовляти по телефону)."
+  - "спілкуватися (to communicate) — Medium frequency; broad interaction (спілкуватися з колегами, спілкуватися в інтернеті)."
+  - "пояснювати (to explain) — focus on clarity (пояснювати правила, пояснювати причину)."
+  - "запитувати (to ask) — requesting information (запитувати дорогу, запитувати про здоров'я)."
+  recommended:
+  - "балакати (to chat) — Low frequency; informal/oral (балакати про дурниці, просто балакати)."
+  - "заявляти (to declare) — Formal/Public (офіційно заявляти)."
+  - "стверджувати (to claim) — Logical/Formal (стверджувати, що це правда)."
+  - "шепотіти (to whisper) — Manner of speech (шепотіти на вухо)."
+  - "кричати (to shout) — Manner of speech (кричати від радості)."
+  - "щебетати (to chirp) — Cultural metaphor for melodic/birds-like speech (щебетати українською)."
+  - "описувати (to describe) — (описувати ситуацію, описувати зовнішність)."
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4205 chars)
+✅ Message sent to Claude (ID: 10424)
+✓ Message 10424 acknowledged
+   Auto-acknowledged reply #10424 (stdout delivery — no inbox accumulation)
+✓ Message 10417 acknowledged

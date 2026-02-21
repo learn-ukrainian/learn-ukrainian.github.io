@@ -1,31 +1,194 @@
-All fixes confirmed. Here is the complete summary of issues found and fixed:
+Good — the vocabulary file exists. Now I've found a critical error in it. Let me compile my full review.
 
 ---
 
-## Issues Found and Fixed
+## Adversarial QA Review: the-genitive-i-absence (a1-16)
 
-### Issue 1 — HIGH: "телефона" is factually wrong (should be "телефону")
-**Prose** line 77: "телефон → немає **телефона**" — foreign loanwords take -у, not -а. The module itself uses "Я без телефону" (line 146) correctly, directly contradicting the rule on line 77. **Fixed** in prose and fill-in activity. Also moved "телефон" from the -а group to the -у group in group-sort.
+### Issues Found
 
-### Issue 2 — HIGH: Київ listed as a -у location noun
-**Prose** line 101: "Locations/Spaces: Київ, парк, магазин." The correct genitive of Київ is **Києва**, not Києву. Replaced "Київ" with "ліс" in the list.
+**CRITICAL — Vocabulary file: wrong Genitive form for телефон**
+- **File:** `vocabulary/the-genitive-i-absence.yaml`, line 36
+- **Current:** `notes: Concrete object → Genitive ending -а (телефона)`
+- **Problem:** The correct Genitive of телефон is **телефону** (-у), as consistently used throughout the lesson prose (line 77) and all activities. The vocabulary file claims -а, directly contradicting every other file. "Телефона" is not standard Ukrainian.
 
-### Issue 3 — MEDIUM: Україна incorrectly placed under the -ія → -ії rule
-**Prose** lines 130-131: Україна ends in -а (not -ія), so it follows the simple hard -а → -и rule, not the -ія rule. Split into two clearly separate rules.
+**IMPORTANT — Content: "телефон → телефону" misplaced under -а section**
+- **File:** `the-genitive-i-absence.md`, line 77
+- **Current:** Under "### Genitive Endings: Masculine Hard Nouns (-а)", the example `**телефон** → немає **телефону**` is listed
+- **Problem:** This example shows -у ending but lives in the -а section. A learner reading "add -а" then seeing "телефону" will be confused. Must be moved to the -у section.
 
-### Issue 4 — MEDIUM: "немає = не + має" is misleading
-**Prose** line 62: немає is the negative of **є** (there is), not of "має" (has). Teaching it as не + має conflates the verb мати with the existential є. Fixed to "negative counterpart of є."
+**IMPORTANT — Content: "Сон → сну" misplaced under -а section**
+- **File:** `the-genitive-i-absence.md`, line 86
+- **Current:** `**Сон** (dream/sleep) → немає **сну** (The 'о' disappears).` under "Masculine Hard Nouns (-а)"
+- **Problem:** сну is a -у ending. Listed under -а section. Green Team caught this too.
 
-### Issue 5 — MEDIUM: Pedagogical contradiction in match-up activity
-"Це цукор" paired with "Тут немає цукру" directly contradicts the module's explicit teaching that "Це не цукор" (identity) ≠ "Тут немає цукру" (absence). Fixed to "Тут є цукор" → "Тут немає цукру."
+**IMPORTANT — Content: Misleading "loanword" rule in warning box**
+- **File:** `the-genitive-i-absence.md`, lines 110-111
+- **Current:** `Is it a substance (sugar, tea), concept (time), or foreign loanword (телефон)? Use **-у**.`
+- **Problem:** "паспорт" is a foreign loanword but takes -а. So do "автобус", "студент". The "foreign loanword → -у" claim directly contradicts the lesson's own examples.
 
-### Issue 6 — LOW: Warning box still listed "phone" under -а after prose fix
-**Prose** line 110: Warning box said "concrete object (ticket, passport, **phone**) → -а." Updated to exclude foreign loanwords from the -а rule.
+**IMPORTANT — Activities: Match-up "Є чи немає?" has 3 semantically broken pairs**
+- **File:** `activities/the-genitive-i-absence.yaml`, lines 259-264
+- **Current:** `Це паспорт ↔ Тут немає паспорта`, `Це чай ↔ Тут немає чаю`, `Це борщ ↔ Тут немає борщу`
+- **Problem:** "Це X" is an identity statement ("This IS X"). Its negation is "Це не X" (identity negation with **не**). Matching it with "Тут немає X" (absence) contradicts the lesson's explicit teaching about не vs немає (lines 155-172). The other 5 pairs correctly use "Тут є X / У мене є X" → "Тут немає X / У мене немає X" (existence → absence).
 
-### Issue 7 — LOW: "ввічливий щит" is an LLM invention with no corpus attestation
-**Prose** line 331: Not an established Ukrainian phrase. Removed the scare-quoted invented term.
+**IMPORTANT — Content: Missing "газ/без газу" collocation**
+- **File:** `the-genitive-i-absence.md`
+- **Problem:** The plan's vocabulary_hints specifically lists `газ (gas/sparkling) — Gen: газу; used in the essential collocation «без газу» for ordering water` and the required vocab for вода mentions `contrast «вода з газом» vs «вода без газу»`. The content has zero mentions of газ or без газу. This is the single most important ordering phrase for water in Ukraine.
+
+**MINOR — Vocabulary file: wrong IPA for квиток**
+- **File:** `vocabulary/the-genitive-i-absence.yaml`, line 24
+- **Current:** `'[kʋeˈtɔk]'`
+- **Problem:** Ukrainian "и" is [ɪ], not [e]. Content file correctly uses [kʋɪˈtɔk] (line 27). The vocab file contradicts.
+
+**MINOR — Activities: Quiz explanation for "немає проблем" is misleading**
+- **File:** `activities/the-genitive-i-absence.yaml`, line 234
+- **Current:** `Слово «проблема» (ж.р., -а) змінюється на «проблеми» (множина) у фразі «немає проблем».`
+- **Problem:** "Проблеми" is nominative plural. The phrase "немає проблем" uses the **genitive plural** "проблем" (zero ending). The explanation conflates these forms.
 
 ---
+
+### Fixes
+
+===FIX_START===
+FILE: curriculum/l2-uk-en/a1/the-genitive-i-absence.md
+---OLD---
+*   **паспорт** → немає **паспорта**
+*   **брат** → немає **брата**
+*   **телефон** → немає **телефону** [teleˈfɔnu]
+---NEW---
+*   **паспорт** → немає **паспорта**
+*   **брат** → немає **брата**
+*   **хліб** → немає **хліба** [ˈxlʲibɑ]
+===FIX_END===
+
+===FIX_START===
+FILE: curriculum/l2-uk-en/a1/the-genitive-i-absence.md
+---OLD---
+**Special Mentions:**
+*   **День** (day) → немає **дня** [dnʲɑ] (The 'е' disappears).
+*   **Батько** (father) → немає **батька** (The 'о' changes to 'а').
+*   **Сон** (dream/sleep) → немає **сну** (The 'о' disappears).
+---NEW---
+**Special Mentions:**
+*   **День** (day) → немає **дня** [dnʲɑ] (The 'е' disappears).
+*   **Батько** (father) → немає **батька** (The 'о' changes to 'а').
+===FIX_END===
+
+===FIX_START===
+FILE: curriculum/l2-uk-en/a1/the-genitive-i-absence.md
+---OLD---
+**Memorize these key A1 words that take -у:**
+*   **час** (time) → немає **часу** [ˈt͡ʃɑsu]
+*   **цукор** (sugar) → без **цукру** [ˈt͡sukru] (Notice the fleeting 'o'!)
+*   **чай** (tea) → немає **чаю** [ˈt͡ʃɑju]
+*   **обід** (lunch) → немає **обіду** [oˈbʲidu]
+---NEW---
+**Memorize these key A1 words that take -у:**
+*   **час** (time) → немає **часу** [ˈt͡ʃɑsu]
+*   **цукор** (sugar) → без **цукру** [ˈt͡sukru] (Notice the fleeting 'o'!)
+*   **чай** (tea) → немає **чаю** [ˈt͡ʃɑju]
+*   **обід** (lunch) → немає **обіду** [oˈbʲidu]
+*   **телефон** (phone) → немає **телефону** [tɛlɛˈfɔnu]
+*   **сон** (dream/sleep) → немає **сну** (The 'о' disappears, like цукор → цукру!)
+===FIX_END===
+
+===FIX_START===
+FILE: curriculum/l2-uk-en/a1/the-genitive-i-absence.md
+---OLD---
+> [!warning] **Увага: Типова помилка (-а vs. -у)**
+> *   Is it a concrete native object (ticket, passport)? Use **-а**.
+> *   Is it a substance (sugar, tea), concept (time), or foreign loanword (телефон)? Use **-у**.
+---NEW---
+> [!warning] **Увага: Типова помилка (-а vs. -у)**
+> *   Is it a concrete, countable object (ticket, passport, key)? Use **-а**.
+> *   Is it a substance (sugar, tea) or abstract concept (time, peace)? Use **-у**.
+===FIX_END===
+
+===FIX_START===
+FILE: curriculum/l2-uk-en/a1/the-genitive-i-absence.md
+---OLD---
+**Food & Drink:**
+*   **Кава без цукру.** (Coffee without sugar.) — *цукор* (substance) → *цукру*
+*   **Чай без молока.** (Tea without milk.) — *молоко* (neuter -o → -a) → *молока*
+*   **Бургер без м'яса.** (Burger without meat.) — *м'ясо* (neuter -o → -a) → *м'яса*
+---NEW---
+**Food & Drink:**
+*   **Кава без цукру.** (Coffee without sugar.) — *цукор* (substance) → *цукру*
+*   **Чай без молока.** (Tea without milk.) — *молоко* (neuter -o → -a) → *молока*
+*   **Вода без газу.** (Water without gas/sparkling.) — *газ* (substance) → *газу*
+*   **Бургер без м'яса.** (Burger without meat.) — *м'ясо* (neuter -o → -a) → *м'яса*
+===FIX_END===
+
+===FIX_START===
+FILE: curriculum/l2-uk-en/a1/activities/the-genitive-i-absence.yaml
+---OLD---
+  - left: Це паспорт
+    right: Тут немає паспорта
+  - left: Це чай
+    right: Тут немає чаю
+  - left: Це борщ
+    right: Тут немає борщу
+---NEW---
+  - left: Тут є паспорт
+    right: Тут немає паспорта
+  - left: Тут є чай
+    right: Тут немає чаю
+  - left: Тут є борщ
+    right: Тут немає борщу
+===FIX_END===
+
+===FIX_START===
+FILE: curriculum/l2-uk-en/a1/activities/the-genitive-i-absence.yaml
+---OLD---
+  - explanation: Слово «проблема» (ж.р., -а) змінюється на «проблеми» (множина) у фразі «немає проблем».
+---NEW---
+  - explanation: «Немає проблем» — це родовий відмінок множини від слова «проблема». Запам'ятайте цю фразу цілком.
+===FIX_END===
+
+===FIX_START===
+FILE: curriculum/l2-uk-en/a1/vocabulary/the-genitive-i-absence.yaml
+---OLD---
+- ipa: '[teleˈfɔn]'
+  lemma: телефон
+  notes: Concrete object → Genitive ending -а (телефона)
+  pos: noun (masc.)
+  translation: phone
+---NEW---
+- ipa: '[tɛlɛˈfɔn]'
+  lemma: телефон
+  notes: Device/technology → Genitive ending -у (телефону)
+  pos: noun (masc.)
+  translation: phone
+===FIX_END===
+
+===FIX_START===
+FILE: curriculum/l2-uk-en/a1/vocabulary/the-genitive-i-absence.yaml
+---OLD---
+- ipa: '[kʋeˈtɔk]'
+  lemma: квиток
+---NEW---
+- ipa: '[kʋɪˈtɔk]'
+  lemma: квиток
+===FIX_END===
+
+---
+
+### Summary
+
+| Category | Finding |
+|---|---|
+| IPA | Vocab file had wrong phoneme for квиток ([e] → [ɪ]), wrong IPA for телефон. Content IPA is clean. |
+| Russianisms | None detected |
+| Russian chars | None detected |
+| Grammar agreement | Clean |
+| Pedagogical | 3 match-up pairs violate the не vs немає distinction the lesson teaches; телефон and сон misplaced under -а section |
+| Factual | Vocab file claims телефон → телефона (wrong — should be телефону) |
+| LLM artifacts | None significant |
+| Plan compliance | Missing "газ/без газу" collocation (recommended vocab + specifically called out in plan) |
+
+**Strengths**: Excellent pedagogy overall. The "Nominative Trap" framing is genuinely useful. Cultural section is authentic. Activity volume (82 items) is strong. Dialogue scenes are natural. The є/немає contrast is well-scaffolded.
+
+After applying the 8 fixes above, all identified issues are resolved. No remaining blockers.
 
 ===VERDICT===
 APPROVE

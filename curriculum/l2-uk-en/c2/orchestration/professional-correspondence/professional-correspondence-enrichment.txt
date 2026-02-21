@@ -1,0 +1,314 @@
+✅ Message sent to Gemini (ID: 11240) [auto-acked: self-addressed]
+✓ Message 11240 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #11240...
+📨 Message #11240
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-professional-correspondence
+   Time: 2026-02-20T22:32:27.440673+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c2-056
+level: c2
+sequence: 56
+version: '2.0'
+title: Професійна кореспонденція
+focus: grammar
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: ДСТУ 4163:2020 — Вимоги до оформлювання документів
+  url: https://dnaop.com/
+  type: reference
+  notes: Ukrainian state standard for document formatting including letters
+- name: Кабінет Міністрів України — зразки листів
+  url: https://www.kmu.gov.ua/
+  type: reference
+  notes: Examples of official government correspondence
+- name: Ділова кореспонденція — навчальний посібник
+  url: https://nbuv.gov.ua/
+  type: reference
+  notes: Academic textbook on Ukrainian business correspondence
+content_outline:
+- section: Вступ — Культура ділової кореспонденції
+  points:
+  - Роль листування в професійному житті
+  - Еволюція ділової кореспонденції (паперові vs. електронні)
+  - Універсальні принципи ефективного листування
+- section: Офіційні листи
+  points:
+  - Типи офіційних листів (запит, пропозиція, скарга, подяка)
+  - Структура офіційного листа
+  - Реквізити та оформлення
+  - Формули ввічливості (звертання, завершення)
+- section: Ділові електронні листи
+  points:
+  - Специфіка email-комунікації
+  - Структура ділового email
+  - Тема листа та її значення
+  - Вкладення та посилання
+- section: Запити та відповіді
+  points:
+  - Формулювання запитів
+  - Структура відповіді на запит
+  - Негативні відповіді та ввічлива відмова
+  - Follow-up листи
+- section: Скарги та претензії
+  points:
+  - Структура скарги
+  - Аргументація та докази
+  - Вимоги та очікування
+  - Реагування на скарги
+- section: Практичні вправи
+  points:
+  - Написання офіційного запиту
+  - Складання ділового email
+  - Формулювання відповіді на скаргу
+vocabulary:
+  required:
+  - кореспонденція (correspondence)
+  - офіційний лист (official letter)
+  - запит (request/inquiry)
+  - відповідь (response)
+  - скарга (complaint)
+  - претензія (claim)
+  - звертання (salutation)
+  - реквізит (requisite)
+  - вкладення (attachment)
+  - підпис (signature)
+  recommended:
+  - follow-up (follow-up)
+  - шаблон (template)
+  - адресат (addressee)
+  - відправник (sender)
+  - вихідний номер (outgoing number)
+  forbidden: '[]'
+activities:
+  types_required:
+  - essay-response
+  - quiz
+  - fill-in
+  - critical-analysis
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c2-57 (Professional Discussions)
+- c2-58 (Cross-Domain Communication)
+- c2-71 (Professional Portfolio I)
+vocabulary_hints:
+  required:
+  - концепція (concept)
+  - аналіз (analysis)
+  - дискурс (discourse)
+  - методологія (methodology)
+  recommended:
+  - інтерпретація (interpretation)
+  - контекстуалізація (contextualization)
+  - синтез (synthesis)
+activity_hints:
+- type: reading
+  focus: Поглиблений аналіз тексту
+  items: 4
+- type: essay-response
+  focus: Критичне осмислення
+- type: discussion
+  focus: Дискусія та аргументація
+  items: 1
+persona:
+  voice: Senior Specialist
+  role: Diplomat
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Професійна кореспонденція
+
+## State Standard Reference
+§1.3.2: "Типи текстів: ... приватні та ділові листи; ... гарантії, рецепти, інструкції; ... програми, контракти, звіти"
+Alignment: Цей модуль безпосередньо реалізує вимогу стандарту щодо вміння писати ділові листи та офіційну документацію, використовуючи відповідний стилістичний регістр (офіційно-діловий стиль, §4.3.1.1).
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| кореспонденція | Medium (Business) | ділова кореспонденція, вести кореспонденцію, вхідна/вихідна кореспонденція |
+| запит | High (Official) | надіслати запит, запит на інформацію, у відповідь на Ваш запит |
+| скарга | Medium (General) | подати скаргу, книга скарг, розгляд скарги |
+| реквізит | Low (Specialized) | обов'язкові реквізити, банківські реквізити, оформити реквізити |
+| вкладення | High (Digital) | див. у вкладенні, файл у вкладенні, надіслати вкладенням |
+
+## Cultural Hooks
+1. **Capitalized "Ви"**: Унікальна риса українського ділового етикету — використання великої літери у займенниках "Ви", "Ваш" при звертанні до однієї особи в офіційному листуванні як вияв особливої поваги.
+2. **De-bureaucratization**: Сучасна тенденція відходу від радянського "канцеляриту" (сухих, громіздких конструкцій) до "human-to-human" комунікації навіть у діловій сфері, при збереженні офіційного тону.
+
+## Common Learner Errors
+1. **Prepositional Governance**: *Згідно інструкції* (помилка) → *Згідно з інструкцією* (правильно, Орудний відмінок).
+2. **English Calques**: *Я пишу, щоб запитати* (калька) → *Звертаюся до Вас із запитанням* або *Маю на меті дізнатися* (питома конструкція).
+3. **Closing Formulas**: *Щиро Ваш* (калька Yours sincerely) → *З повагою* (стандартна українська норма).
+
+## Cross-References
+- Builds on: c2-46 (Professional Vocabulary), c2-51 (Stylistic Nuances)
+- Prepares for: c2-57 (Professional Discussions), c2-71 (Professional Portfolio)
+
+## Notes for Content Writing
+- Акцентувати на різниці між "сухим" офіційним стилем (заяви, протоколи) та "живим" діловим листуванням (email, партнерська комунікація).
+- Чітко розмежувати реквізити паперового листа (шапка, дата, підпис) та електронного (тема, підпис-блок).
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ — Культура та еволюція кореспонденції (Introduction — Culture and Evolution of Correspondence)"
+  words: 500
+  points:
+  - "Роль листування в професійному житті та дебюрократизація: перехід від радянського «канцеляриту» до концепції «human-to-human» комунікації при збереженні офіційного тону"
+  - "Універсальні принципи ефективного листування та відповідність вимогам державного стандарту щодо стилістичного регістру (§4.3.1.1)"
+- section: "Офіційні листи та ДСТУ 4163:2020 (Official Letters and DSTU 4163:2020)"
+  words: 800
+  points:
+  - "Типологія офіційних документів згідно з ДСТУ (§1.3.2): запити, пропозиції, скарги, гарантії та звіти"
+  - "Обов'язкові реквізити та оформлення «шапки» листа, датування та підпису відповідно до вимог «Вимог до оформлювання документів»"
+- section: "Специфіка ділової електронної комунікації (Specificity of Business Electronic Communication)"
+  words: 700
+  points:
+  - "Етикет використання великої літери у займенниках «Ви», «Ваш» як унікальна риса українського ділового етикету для вияву поваги до адресата"
+  - "Структура ділового email: від інформативної теми листа до блоку цифрового підпису; правила роботи з вкладеннями (файлами)"
+- section: "Етика запитів та стратегії відповідей (Ethics of Requests and Response Strategies)"
+  words: 700
+  points:
+  - "Формулювання запитів на інформацію: відмова від англійських кальок (напр., заміна «Я пишу, щоб запитати» на питоме «Звертаюся до Вас із запитанням»)"
+  - "Структура ввічливої відмови та «follow-up» листи як інструмент підтримки партнерських стосунків"
+- section: "Скарги, претензії та культура відмови (Complaints, Claims, and Rejection Culture)"
+  words: 700
+  points:
+  - "Аргументація у скаргах та претензіях: юридична точність та доказова база; розгляд скарги як етап діловодного процесу"
+  - "Мовні формули ввічливості при реагуванні на претензії: баланс між професійною відповідальністю та корпоративним інтересом"
+- section: "Практикум: Мовна чистота та запобігання калькам (Workshop: Language Purity and Calque Prevention)"
+  words: 600
+  points:
+  - "Корекція типових помилок керування: вживання «згідно з» виключно з Орудним відмінком (напр., «згідно з інструкцією»)"
+  - "Заміна ненормативних закриваючих формул: заміна кальки «Щиро Ваш» на стандартне українське «З повагою»"
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "кореспонденція (correspondence) — ділова кореспонденція, вести кореспонденцію, вхідна/вихідна кореспонденція"
+  - "офіційний лист (official letter) — документ, оформлений за державним стандартом; офіційно-діловий стиль"
+  - "запит (request/inquiry) — надіслати запит на інформацію, у відповідь на Ваш запит; висока частотність в офіційній сфері"
+  - "відповідь (response) — надати вичерпну відповідь; терміни реагування"
+  - "скарга (complaint) — подати скаргу, розгляд скарги, книга скарг"
+  - "претензія (claim) — висунути претензію, обґрунтованість претензій"
+  - "звертання (salutation) — офіційне звертання до посадової особи; використання кличного відмінка"
+  - "реквізит (requisite) — обов'язкові реквізити, банківські реквізити, оформити реквізити за ДСТУ"
+  - "вкладення (attachment) — файл у вкладенні, надіслати вкладенням, див. у вкладенні"
+  - "підпис (signature) — електронний цифровий підпис (ЕЦП), завірити підписом"
+  recommended:
+  - "згідно з (according to) — вживається з Орудним відмінком; критично для офіційно-ділового стилю"
+  - "шаблон (template) — типовий шаблон документа; уніфікація текстів"
+  - "адресат (addressee) — отримувач кореспонденції; зазначення посади та прізвища"
+  - "вихідний номер (outgoing number) — реєстраційний індекс документа"
+  - "З повагою (Sincerely / With respect) — нормативна формула завершення листа"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (3824 chars)
+✅ Message sent to Claude (ID: 11249)
+✓ Message 11249 acknowledged
+   Auto-acknowledged reply #11249 (stdout delivery — no inbox accumulation)
+✓ Message 11240 acknowledged

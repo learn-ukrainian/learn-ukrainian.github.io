@@ -1,0 +1,13 @@
+{
+  "track": "ruth",
+  "slug": "ostrih-legacy",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-20T10:11:49Z",
+      "task_id": "v3-ostrih-legacy-pA",
+      "mode": "full"
+    }
+  }
+}

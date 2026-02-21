@@ -2,12 +2,5 @@
   "track": "c1",
   "slug": "research-article",
   "mode": "v3",
-  "phases": {
-    "v3-A": {
-      "status": "complete",
-      "ts": "2026-02-19T13:06:45Z",
-      "task_id": "v3-research-article-pA",
-      "mode": "full"
-    }
-  }
+  "phases": {}
 }

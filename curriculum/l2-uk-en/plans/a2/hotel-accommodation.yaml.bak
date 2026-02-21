@@ -1,0 +1,96 @@
+module: a2-61
+level: A2
+sequence: 61
+slug: hotel-accommodation
+version: '2.0'
+title: Hotel Accommodation
+subtitle: Checking In and Out
+content_outline:
+- section: 'Introduction: Hotels in Ukraine'
+  points:
+  - 'Types of accommodation — aligns with State Standard §3.2: «Дім, помешкання...
+    резервування кімнати в готелі»'
+  - 'Booking options — collocation: бронювати онлайн; distinction: бронювати (process)
+    vs забронювати (result)'
+  - 'Hotel vocabulary overview — learner error: кімната (room in house) vs номер (hotel
+    room); learner error: номер is masculine (це гарний номер); collocation: п''ятизірковий
+    готель'
+- section: Making a Reservation
+  points:
+  - 'забронювати номер — collocation: забронювати готель; content note: distinguish
+    забронювати (completed) vs бронювати (process)'
+  - 'Room types (одномісний, двомісний) — collocation: номер люкс'
+  - 'Dates and duration — content note: use formal «Ви» address consistently (standard
+    for hotel staff interactions)'
+- section: Checking In
+  points:
+  - 'реєстрація, паспорт — cultural hook: original passport required for *every* guest
+    at check-in (compliance with state laws)'
+  - 'заселення, ключ — collocation: час заселення, пізнє заселення, ключ від номера'
+  - 'Room information — cultural hook: tourist tax (туристичний збір) often added
+    separately to the bill'
+- section: Hotel Amenities
+  points:
+  - 'сніданок, Wi-Fi, парковка — learner error: Я в готель (Accusative/Direction)
+    vs Я у готелі (Locative/Location)'
+  - 'рушник, мило, шампунь — collocation: прибирання (cleaning)'
+  - 'Requesting items — collocation: запитати адміністратора; content note: focus
+    on Interrogative Syntax (§4.4.1.2) for asking questions (Is breakfast included?)'
+- section: Problems and Solutions
+  points:
+  - 'Common complaints — collocation: час виселення, до виселення'
+  - 'Asking for help — collocation: на стійці адміністратора'
+  - 'Resolving issues — content note: maintain formal «Ви» tone'
+- section: 'Practice: Hotel Stay'
+  points:
+  - Check in dialogue — ensure passport request is included
+  - Request amenities — focus on asking questions and resolving minor issues
+vocabulary_hints:
+  required:
+  - готель (hotel) — у готелі (Locative), п'ятизірковий готель, забронювати готель
+  - 'номер (room) — одномісний/двомісний номер, номер люкс, забронювати номер; note:
+    masculine gender'
+  - 'забронювати (to book) — забронювати номер, бронювати онлайн; pair: бронювати
+    (imp) / забронювати (perf)'
+  - заселення (check-in) — час заселення, пізнє заселення
+  - виселення (check-out) — час виселення, до виселення
+  - ключ (key) — ключ від номера
+  - сніданок (breakfast) — сніданок включено?
+  - рахунок (bill) — оплатити рахунок, туристичний збір
+  recommended:
+  - одномісний (single) — одномісний номер
+  - двомісний (double) — двомісний номер
+  - рушник (towel) — попросити рушник
+  - кондиціонер (air conditioning) — чи є кондиціонер?
+  - прибирання (cleaning) — замовити прибирання
+  - адміністратор (receptionist) — запитати адміністратора, на стійці адміністратора
+activity_hints:
+- type: match-up
+  focus: Check-in conversation
+  items: 25
+- type: fill-in
+  focus: Hotel scenarios
+  items: 15
+focus: practical
+pedagogy: PPP
+prerequisites:
+- a2-60 (At the Pharmacy)
+connects_to:
+- a2-62 (Rental Accommodation)
+- a2-46 (Home and Furniture)
+objectives:
+- Learner can book a hotel room
+- Learner can check in and check out
+- Learner can ask for amenities
+- Learner can resolve common hotel issues
+grammar:
+- Booking vocabulary (забронювати, номер)
+- Check-in phrases (заселення, виселення)
+- Requests and complaints
+register: розмовний
+immersion: 75-90% Ukrainian
+phase: A2.6 [Practical]
+persona:
+  voice: Encouraging Cultural Guide
+  role: Hotel Concierge
+word_target: 3000

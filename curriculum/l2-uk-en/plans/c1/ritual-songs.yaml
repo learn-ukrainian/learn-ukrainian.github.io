@@ -11,9 +11,57 @@ objectives:
 - Learner understands the pre-Christian roots of Ukrainian holidays
 - Learner can analyze the symbolism of ritual songs
 content_outline:
-- section: Introduction
-  subsections:
-  - TBD
+- section: 'Вступ: Календарно-обрядовий цикл (Introduction: The Calendar-Ritual Cycle)'
+  words: 500
+  points:
+  - Explain the core concept of the 'календарно-обрядовий цикл' as a structural backbone
+    of Ukrainian folk life, aligning with State Standard §3.21 regarding traditions
+    and customs.
+  - Introduce the historical transition from pre-Christian (pagan) agricultural cults
+    to religious syncretism with the Christian liturgical year.
+  - Outline the seasonal divisions of the ritual year and the primary function of
+    song as a tool for magical influence on nature and community well-being.
+- section: 'Зимовий цикл: Колядки та Щедрівки (Winter Cycle: Kolyadky and Shchedrivky)'
+  words: 1000
+  points:
+  - Differentiate between 'колядки' (Christmas/Birth of Christ) and 'щедрівки' (New
+    Year/Prosperity); address the common learner error of performing shchedrivky on
+    Christmas day.
+  - 'Analyze the ''Щедрик'' (Carol of the Bells) phenomenon: explain the spring symbolism
+    of the ''ластівка'' (swallow) reflecting the ancient practice of celebrating the
+    New Year in spring.'
+  - Contrast the 'Дідух' (wheat sheaf) as the ancestral spirit symbol against the
+    modern Christmas tree tradition, highlighting the 'культ предків'.
+- section: 'Весняний цикл: Закликання природи (Spring Cycle: Invoking Nature)'
+  words: 800
+  points:
+  - Examine 'Веснянки' and 'Гаївки' as ritual tools for 'закликати весну' (invoking
+    spring) and the role of the 'культ сонця' in early agrarian life.
+  - 'Practice session: distinguish between the verbs ''святкувати'' (to celebrate
+    a holiday) and ''відзначати/вшановувати'' (to observe/honor a ritual or date)
+    to correct register-specific stylistic errors.'
+  - Analyze the melodic and rhythmic simplicity of spring songs as markers of their
+    ancient, ritualistic function.
+- section: 'Літньо-осінній цикл: Купала та Жнива (Summer-Autumn Cycle: Kupala and
+    Harvest)'
+  words: 1000
+  points:
+  - Discuss Kupala rituals as the peak of the 'аграрний культ', focusing on fire and
+    water symbolism and the syncretism of Christian St. John's Day.
+  - Explore 'жниварські пісні' (harvest songs) and the sanctity of bread, linking
+    them to the culmination of the agricultural labor cycle.
+  - Reflect on the motifs of fertility and community protection that bridge the summer
+    rituals with the autumn transition to indoor labor.
+- section: 'Підсумок: Синкретизм як культурний код (Summary: Syncretism as a Cultural
+    Code)'
+  words: 700
+  points:
+  - Synthesize how 'релігійний синкретизм' allowed for the preservation of ancient
+    folk beliefs within the modern Ukrainian cultural identity.
+  - Review key terminology (обряд, синкретизм, культ) and collocations (здійснювати
+    обряд, весільний обряд) in academic and senior specialist registers.
+  - Provide a bridge to upcoming literature modules (Lesya Ukrainka, Mykola Lysenko)
+    by showing how folk ritual songs influenced classical Ukrainian arts.
 vocabulary:
   required: '[]'
   recommended: '[]'
@@ -22,3 +70,21 @@ persona:
   voice: Senior Specialist
   role: Збирач фольклору
 word_target: 4000
+vocabulary_hints:
+  required:
+  - Обряд (ritual) — здійснювати обряд, стародавній обряд, весільний обряд; High frequency
+    in cultural/academic contexts
+  - Колядка (Christmas carol) — співати колядки, різдвяна колядка; Seasonal high frequency;
+    specifically for Christmas
+  - Щедрівка (New Year carol) — виконувати щедрівку, щедрий вечір, водити Меланку;
+    Distinguished from kolyadka by timing (New Year)
+  - Веснянка (Spring song) — закликати весну, водити гаївки; Focus on ritual invocation
+    verbs
+  recommended:
+  - Синкретизм (syncretism) — релігійний синкретизм, християнсько-язичницький синкретизм;
+    Essential for C1-level academic discussion
+  - Культ (cult) — культ сонця, культ предків, аграрний культ; Used to explain the
+    roots of rituals
+  - Дідух (Didukh) — традиційний символ Різдва; Key cultural term for contrast with
+    western traditions
+  - Ластівка (swallow) — символ весни; Crucial for explaining the lyrics of 'Shchedryk'

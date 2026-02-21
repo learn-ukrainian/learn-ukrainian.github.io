@@ -1,0 +1,212 @@
+✅ Message sent to Gemini (ID: 12836) [auto-acked: self-addressed]
+✓ Message 12836 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12836...
+📨 Message #12836
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-the-ruin
+   Time: 2026-02-20T23:42:34.569189+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 77
+module: ruth-077
+module_number: 63
+slug: the-ruin
+title_uk: Руїна
+title_en: The Ruin
+phase: 3
+phase_id: baroque-fight
+phase_name: Baroque Fight
+focus: Describing chaos — Vocabulary of war/destruction
+content_outline:
+- section: Вступ
+  description: Introduction to The Ruin
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Baroque Scholar
+  role: Lament Writer
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Руїна (1657–1687)
+
+## Використані джерела
+1. [Енциклопедія історії України: Руїна](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Ruina) — академічний огляд періоду.
+2. [Літопис Самовидця](http://litopys.org.ua/samovyd/sam.htm) — ключове джерело, опис хаосу та руйнувань.
+3. [Іван Мазепа. Дума ("Всі покою щиро прагнуть")](http://litopys.org.ua/old17/old17_08.htm) — поетичне осмислення політичної незгоди.
+4. [Дмитро Дорошенко. Нарис історії України](http://litopys.org.ua/doroshenko/dor02.htm) — історіографічний огляд доби.
+
+## Хронологія
+- 1657: Смерть Богдана Хмельницького, обрання Івана Виговського. Початок боротьби за владу.
+- 1658: Гадяцький договір (спроба перебудови Речі Посполитої у Велике Князівство Руське).
+- 1659: Конотопська битва (перемога Виговського над московським військом).
+- 1663: "Чорна рада" в Ніжині. Обрання Івана Брюховецького, страта Якима Сомка. Розкол на Лівобережжя та Правобережжя.
+- 1667: Андрусівське перемир'я — поділ України між Річчю Посполитою та Московським царством по Дніпру.
+- 1669: Корсунська рада, визнання Петром Дорошенком протекторату Туреччини.
+- 1676: Зречення Петра Дорошенка. Кнець спроб об'єднання.
+- 1678: Чигиринські походи, повне руйнування Чигирина (символ "Великої Руїни").
+- 1681: Бахчисарайський мир.
+- 1686: "Вічний мир" між Польщею та Московією, остаточне закріплення поділу.
+- 1687: Обрання Івана Мазепи, умовне завершення доби Руїни.
+
+## Ключові факти та цитати
+
+### Літопис Самовидця (про наслідки розбрату)
+> «В которих місто великоє убозтво, вмісто розкоші — срокгая неволя, вмісто карет дорогих і возников — простий возок, теліжка московськая з подводником, вмісто слуг нарядних — сторожа стрельцов, вмісто музики позитивов — плач щоденний і нарікання на своє глупство пихи, вмісто усіх розкошей панських — вічная неволя.»
+
+### Іван Мазепа (Дума)
+> «През незгоду всі пропали, / Самі себе звоювали.»
+> «Жалься, Боже, України, / Що не вкупі має сини!»
+
+### Великий згін (1678-1679)
+Насильницьке переселення (депортація) населення з Правобережжя на Лівобережжя за наказом Самойловича та Москви. Перетворення квітучого Правобережжя на пустку.
+
+## Engagement Hooks
+
+- Section "Вступ": [!history-bite] — Про термін "Руїна". Вперше вжито літописцем Величком («на позорище тое смутное и велми жалосное Украины через незгоду оной запустеніе, которое названо Руиною»), пізніше популяризовано Костомаровим.
+- Section "Початок Руїни: Розкол Гетьманщини": [!myth-buster] — Міф про "народне повстання" проти Виговського. Реальність: інспірована Москвою громадянська війна (Пушкар і Барабаш) для підриву Гадяцької унії.
+- Section "Чорна рада і Велика Руїна": [!context] — Пояснення терміну "Чорна рада" (участь "черні" — рядового козацтва). Як популізм Брюховецького призвів до втрати автономії (Московські статті 1665).
+- Section "Сонце Руїни: Петро Дорошенко": [!biography] — Дорошенко як "Сонце Руїни". Його трагічний вибір турецького протекторату як останнього шансу на об'єднання ("краще під турка, ніж під Москву чи Польщу").
+- Section "Культура доби Руїни": [!culture] — Бароко як відповідь на травму. Естетика "vanitas" (марнота) у віршах.
+- Section "Підсумок": [!reflection] — Паралелі з сучасністю. Ціна внутрішньої незгоди перед обличчям зовнішньої агресії.
+
+## Деколонізаційний контекст
+- **Imperial Myth:** Руїна як доказ нездатності українців до державотворення ("failed state"), що виправдовує поглинання Росією ("возз'єднання").
+- **Ukrainian Reality:** Руїна — це наслідок колоніального втручання трьох імперій (Московії, Польщі, Туреччини), які цілеспрямовано розпалювали внутрішні конфлікти ("divide et impera"). Андрусівський мир — це змова імперій за спиною України.
+
+## Contested Terms
+
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| Андрусівське перемир'я | Примирення двох братніх держав | "Андрусівський торг", розчленування живої країни |
+| "Возз'єднання" | Добровільне входження під руку царя | Військова анексія, поступове обмеження автономії |
+| Громадянська війна | Внутрішній хаос через анархію козаків | Гібридна війна сусідніх держав руками українських маріонеток |
+
+## Section-Mapped Research Notes
+
+### Вступ
+Означення періоду 1657–1687. Метафора "Руїни" в культурі. Загальна характеристика: від вершини могутності Хмельницького до повного занепаду і поділу.
+
+### Початок Руїни: Розкол Гетьманщини (1657-1663)
+Смерть Хмельницького. Іван Виговський і спроба європейського вибору (Гадяч). Московська інтервенція і "гібридна війна" (підтримка опозиції). Юрій Хмельницький: слабкий лідер, Чуднівська кампанія, поділ на два береги (Тетеря vs Брюховецький).
+
+### Чорна рада і Велика Руїна (1663-1678)
+1663 рік — Чорна рада. Перемога охлократії та популізму. Андрусів 1667 — дипломатична катастрофа. Реакція українського суспільства (повстання проти московських воєвод).
+
+### Сонце Руїни: Петро Дорошенко
+Спроба "зібрати береги". Союз з Османами — вимушений крок відчаю. Чигиринські походи. Героїчна оборона Чигирина (українські Фермопіли). Зречення Дорошенка і кінець надій. "Великий згін" Самойловича.
+
+### Культура доби Руїни: Слово як зброя
+Літопис Самовидця як моральна оцінка епохи. Поезія Лазаря Барановича, Івана Величковського. "Козацьке бароко" — пишність форми при трагізмі змісту. Мова канцелярії (універсали) vs мова літератури.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit -9): 
+✅ Message sent to Claude (ID: 12866)
+✓ Message 12836 acknowledged
+✓ Message 12866 acknowledged

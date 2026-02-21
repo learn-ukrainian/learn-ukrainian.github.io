@@ -1,0 +1,321 @@
+✅ Message sent to Gemini (ID: 10301) [auto-acked: self-addressed]
+✓ Message 10301 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10301...
+📨 Message #10301
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-aspect-pairs-essential-40
+   Time: 2026-02-20T20:18:49.178271+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b1-12
+level: B1
+sequence: 12
+slug: aspect-pairs-essential-40
+version: '2.0'
+title: 'Видові пари: 40 найважливіших'
+subtitle: Essential Aspect Pairs - The 40 most common verb pairs
+content_outline:
+- section: Тест
+  points:
+  - Diagnostic aspect pair recognition — target 'Perfective Present' error trap (e.g.
+    'Я зроблю це зараз')
+  - Intuition check
+- section: Пояснення
+  points:
+  - '40 essential aspect pairs — alignment: State Standard §4.2.3.1 (B1); prioritize
+    Top 10/20 verbs like робити/зробити, говорити/сказати'
+  - Formation patterns (prefix, suffix, suppletive)
+  - 'Usage in context — visual aid: Process vs Result timeline; cultural hook: «Вода
+    камінь точить» (Imperfective focus); use icons 🔄/✅'
+- section: Практика
+  points:
+  - Pair matching exercises
+  - 'Context selection — learner error: mixing ''буду'' + perfective infinitive (''Я
+    буду прочитати'')'
+- section: Діалоги
+  points:
+  - 'Aspect pairs in conversation — learner error: using perfective for present tense
+    meaning; usage: «Вчора я читав» (process) vs «Вчора я прочитав» (result)'
+  - 'Natural usage — cultural hook: «Зробив діло – гуляй сміло» (Result focus)'
+vocabulary_hints:
+  required:
+  - робити/зробити (to do/make) — робити домашнє завдання, зробити помилку (Top 10
+    verbs)
+  - писати/написати (to write) — писати листа, написати книгу
+  - читати/прочитати (to read) — читати новини, прочитати до кінця
+  - говорити/сказати (to speak/say) — говорити правду, сказати «ні» (Top 20 verbs)
+  - брати/взяти (to take) — брати участь, взяти до уваги (Top 50 verbs)
+  - давати/дати (to give) — давати слово, дати пораду (Top 50 verbs)
+  - їсти/з'їсти (to eat) — їсти сніданок, з'їсти все
+  - пити/випити (to drink) — пити каву, випити ліки
+  - класти/покласти (to put)
+  - ставити/поставити (to put standing)
+  recommended:
+  - відкривати/відкрити (to open)
+  - закривати/закрити (to close)
+  - починати/почати (to begin)
+  - закінчувати/закінчити (to finish)
+  - вчити/вивчити (to study/learn) — вчити мову, вивчити вірш
+activity_hints:
+- type: match-up
+  focus: Imperfective → Perfective pairs
+  items: 40+
+- type: fill-in
+  focus: Choose correct form in context
+  items: 20+
+- type: true-false
+  focus: By formation type (prefix, suffix, suppletive)
+  items: 40+
+- type: quiz
+  focus: Identify pair type and use correctly
+  items: 15+
+focus: grammar
+pedagogy: TTT
+prerequisites:
+- b1-11 (Aspect in imperatives)
+- All aspect theory modules M06-11
+connects_to:
+- b1-13 (Work week - aspect in action)
+- b1-14 (Aspect integration practice)
+objectives:
+- Learner knows the 40 most essential aspect pairs
+- Learner can recognize and use both forms correctly
+- Learner understands common aspect formation patterns
+grammar:
+- 40 essential aspect pairs
+- Imperfective-perfective correspondence
+module_type: grammar
+sources:
+- name: Ukrainian Frequency Dictionaries
+  url: https://uk.wikipedia.org/wiki/Частотний_словник
+  type: reference
+  notes: Most frequent verbs in Ukrainian corpus
+- name: Ukrainian Aspectual Pairs
+  url: https://uk.wikipedia.org/wiki/Видові_пари_дієслів
+  type: reference
+  notes: Formation patterns for aspectual pairs
+immersion: 100% Ukrainian
+phase: B1.1 Aspect
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Drill Sergeant
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Видові пари: 40 найважливіших
+
+## State Standard Reference
+§4.2.3.1 (B1): "Дійсний спосіб... утворення форм роду і числа дієслів минулого часу недоконаного і доконаного виду... дієвідмінювання дієслів недоконаного виду в майбутньому часі... дієвідмінювання дієслів доконаного виду в майбутньому часі"
+Alignment: This module directly fulfills the requirement to distinguish and conjugate aspectual pairs in all tenses, focusing on the core high-frequency verbs required for B1 communicative competence.
+
+## Vocabulary Frequency
+| Word Pair (Imp/Perf) | Frequency Notes | Key Collocations |
+|----------------------|----------------|------------------|
+| робити / зробити | Top 10 verbs | робити домашнє завдання, зробити помилку |
+| говорити / сказати | Top 20 verbs | говорити правду, сказати «ні» |
+| брати / взяти | Top 50 verbs | брати участь, взяти до уваги |
+| давати / дати | Top 50 verbs | давати слово, дати пораду |
+| бачити / побачити | Top 50 verbs | радий бачити, побачити світ |
+| їсти / з'їсти | High Freq | їсти сніданок, з'їсти все |
+| пити / випити | High Freq | пити каву, випити ліки |
+| писати / написати | High Freq | писати листа, написати книгу |
+| читати / прочитати | High Freq | читати новини, прочитати до кінця |
+| вчити / вивчити | High Freq | вчити мову, вивчити вірш |
+
+## Cultural Hooks
+1. **Proverb (Result Focus):** «Зробив діло – гуляй сміло» (Done the job – walk boldly). Captures the essence of the Perfective aspect (completion implies freedom/result).
+2. **Proverb (Process Focus):** «Вода камінь точить» (Water wears away the stone). Illustrates the Imperfective aspect (continuous, repetitive action causing change).
+3. **Folk Wisdom:** «Куй залізо, поки гаряче» (Strike while the iron is hot). Highlights the concept of simultaneous action often expressed with imperfective forms in complex sentences.
+
+## Common Learner Errors
+1. **The "Perfective Present" Trap:**
+   - *Error:* «Я зроблю це зараз» (meaning "I am doing it now") or attempting to conjugate perfective in present structure.
+   - *Correction:* Perfective verbs *cannot* exist in the present tense. Their "present" form usually has future meaning.
+   - *Fix:* Drill that Present = Imperfective ONLY.
+
+2. **Future Tense Confusion:**
+   - *Error:* «Я буду прочитати» (Mixing compound future auxiliary with perfective infinitive).
+   - *Correction:* «Я буду читати» (Imp) OR «Я прочитаю» (Perf).
+   - *Fix:* Contrast "Process Future" (буду + Imp) vs. "Result Future" (Simple Perf).
+
+3. **Past Tense Nuance (Did vs. Was Doing):**
+   - *Error:* «Вчора я прочитав книгу» (when meaning "I was reading it but didn't finish").
+   - *Correction:* «Вчора я читав книгу».
+   - *Fix:* Emphasize that "reading" (process) ≠ "read" (completion).
+
+## Cross-References
+- **Builds on:** B1-06 to B1-11 (Aspect Theory phases), A2 verb basics.
+- **Prepares for:** B1-13 (Work Week - Narrative application), B1-14 (Aspect Integration), B1-26+ (Complex Sentences).
+
+## Notes for Content Writing
+- **Visuals:** Use a "Process vs. Result" timeline visual description.
+- **Pedagogy:** Strictly adhere to TTT. Start with a diagnostic that traps them in "Perfective Present" or "Future Mix-up" errors to create the "teachable moment."
+- **Immersion:** 100% Ukrainian. Use icons (🔄 vs ✅) to symbolize Imperfective/Perfective instead of English translation where possible in tables.
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ та діагностика (Introduction & Diagnostics)"
+  words: 600
+  points:
+  - "Diagnostic aspect pair recognition focusing on the 'Perfective Present' error trap (e.g., using «Я зроблю це зараз» for immediate action) to establish a baseline of current intuition."
+  - "Intuition check for future tense forms: identifying the mistake in «Я буду прочитати» (mixing compound future with perfective infinitive) vs. correct usage."
+  - "Initial contrast of past tense nuances: distinguishing between 'was doing' (process) and 'did' (result) using high-frequency verbs from the Top 10 list."
+- section: "Морфологія та типи творення (Morphology & Formation Types)"
+  words: 800
+  points:
+  - "Alignment with State Standard §4.2.3.1 (B1) regarding the formation and conjugation of imperfective and perfective aspectual pairs in all tenses."
+  - "Detailed breakdown of the three primary formation patterns: prefixation (писати/написати), suffixation (відкривати/відкрити), and suppletive forms (говорити/сказати)."
+  - "Explicit presentation of the 'Present = Imperfective ONLY' rule, clarifying that perfective verbs cannot express the present tense and typically convey future meaning."
+- section: "Системний огляд 40 пар (Systematic Overview of 40 Pairs)"
+  words: 1000
+  points:
+  - "Prioritization of Top 10/20 verbs based on Frequency Dictionaries: робити/зробити, говорити/сказати, брати/взяти, давати/дати, бачити/побачити."
+  - "Comprehensive list of high-frequency pairs for eating (їсти/з'їсти), drinking (пити/випити), and learning (вчити/вивчити) with specific B1-level collocations."
+  - "Introduction of visual symbols 🔄 (Process) and ✅ (Result) to guide selection in exercises, alongside a 'Process vs. Result' timeline visual description."
+- section: "Культурний та фразеологічний вимір (Cultural & Phraseological Dimension)"
+  words: 600
+  points:
+  - "Cultural hook (Result focus): Analysis of the proverb «Зробив діло – гуляй сміло» as the quintessential expression of the Perfective aspect's completion and freedom."
+  - "Cultural hook (Process focus): Analysis of «Вода камінь точить» to illustrate the continuous, repetitive nature of the Imperfective aspect over time."
+  - "Folk wisdom for simultaneous action: Exploration of «Куй залізо, поки гаряче» to highlight timing and aspectual selection in complex sentences."
+- section: "Корекція типових помилок (Correction of Common Errors)"
+  words: 600
+  points:
+  - "Addressing 'Future Tense Confusion': Drills to eliminate the mixing of 'буду' with perfective infinitives by contrasting Process Future vs. Result Future."
+  - "Past Tense Nuance Drill: Refining the choice between «Вчора я читав» (process focus) and «Вчора я прочитав» (result focus) through situational context."
+  - "Remediation of the 'Perfective Present' trap through minimal pair drills emphasizing that «Я роблю» is the only way to express current action."
+- section: "Підсумок та практичне застосування (Summary & Practical Application)"
+  words: 400
+  points:
+  - "Aspect pairs in natural conversation: Synthesizing the 40 essential pairs into a narrative dialogue regarding a completed work day and future plans."
+  - "Final self-assessment checklist ensuring mastery of the Top 50 frequency verbs and their corresponding formation patterns."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "робити/зробити (to do/make) — робити домашнє завдання, зробити помилку (Top 10 verbs)"
+  - "говорити/сказати (to speak/say) — говорити правду, сказати «ні» (Top 20 verbs)"
+  - "брати/взяти (to take) — брати участь, взяти до уваги (Top 50 verbs)"
+  - "давати/дати (to give) — давати слово, дати пораду (Top 50 verbs)"
+  - "бачити/побачити (to see) — радий бачити, побачити світ (Top 50 verbs)"
+  - "їсти/з'їсти (to eat) — їсти сніданок, з'їсти все (High frequency)"
+  - "пити/випити (to drink) — пити каву, випити ліки (High frequency)"
+  - "писати/написати (to write) — писати листа, написати книгу (High frequency)"
+  - "читати/прочитати (to read) — читати новини, прочитати до кінця (High frequency)"
+  - "вчити/вивчити (to study/learn) — вчити мову, вивчити вірш (High frequency)"
+  recommended:
+  - "відкривати/відкрити (to open) — suffix pattern 🔄/✅"
+  - "закривати/закрити (to close) — suffix pattern 🔄/✅"
+  - "починати/почати (to begin) — transition verb pair"
+  - "закінчувати/закінчити (to finish) — transition verb pair"
+  - "класти/покласти (to put) — suppletive/prefix mix"
+  - "ставити/поставити (to put standing) — prefix pattern"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4600 chars)
+✅ Message sent to Claude (ID: 10310)
+✓ Message 10310 acknowledged
+   Auto-acknowledged reply #10310 (stdout delivery — no inbox accumulation)
+✓ Message 10301 acknowledged

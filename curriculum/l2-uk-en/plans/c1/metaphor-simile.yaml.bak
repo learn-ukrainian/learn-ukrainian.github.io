@@ -1,0 +1,39 @@
+module: c1-036
+level: C1
+sequence: 36
+slug: metaphor-simile
+version: '2.0'
+title: 'Метафора та порівняння: Образна мова'
+subtitle: 'Metaphor & Simile: Figurative Language'
+content_outline:
+- section: Розминка — Образність української мови
+  points:
+  - Метафора vs порівняння — в чому різниця
+  - Маркери порівняння (як, мов, наче, ніби, немов)
+  - Роль образності в літературі та повсякденному мовленні
+- section: Типи метафор
+  points:
+  - 'Пряма метафора: Життя — це дорога'
+  - 'Розгорнута метафора: Extended metaphorical narrative'
+  - 'Персоніфікація: Сонце сміється'
+- section: Практика — аналіз образної мови
+  points:
+  - Знайти метафори та порівняння в поетичному тексті (Шевченко, Франко)
+  - Визначити тип метафори (пряма, розгорнута, персоніфікація)
+  - Написати опис природи з використанням 5+ образних засобів
+  - Порівняти українську та англійську метафорику
+focus: style
+pedagogy: Immersion
+objectives:
+- Distinguish between direct and extended metaphors
+- Use simile markers correctly in context
+- Identify and analyze personification in literary texts
+grammar:
+- Direct and extended metaphors
+- Simile markers (як, мов, наче, ніби)
+- Personification
+phase: C1.4 Advanced Stylistics & Rhetoric
+persona:
+  voice: Senior Specialist
+  role: Поет-символіст
+word_target: 4000

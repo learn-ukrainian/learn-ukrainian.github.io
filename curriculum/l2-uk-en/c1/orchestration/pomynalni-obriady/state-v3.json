@@ -2,12 +2,5 @@
   "track": "c1",
   "slug": "pomynalni-obriady",
   "mode": "v3",
-  "phases": {
-    "v3-A": {
-      "status": "complete",
-      "ts": "2026-02-19T18:33:45Z",
-      "task_id": "v3-pomynalni-obriady-pA",
-      "mode": "full"
-    }
-  }
+  "phases": {}
 }

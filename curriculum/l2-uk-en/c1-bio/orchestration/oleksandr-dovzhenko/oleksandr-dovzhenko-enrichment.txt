@@ -1,0 +1,334 @@
+✅ Message sent to Gemini (ID: 13054) [auto-acked: self-addressed]
+✓ Message 13054 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #13054...
+📨 Message #13054
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-oleksandr-dovzhenko
+   Time: 2026-02-20T23:44:00.109553+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-bio-99
+level: C1-BIO
+sequence: 99
+slug: oleksandr-dovzhenko
+version: '2.0'
+title: 'Олександр Довженко: Батько українського кіно'
+content_outline:
+- section: Вступ — Геній світового кінематографу
+  points:
+  - Довженко як один із найвидатніших режисерів світу
+  - Україна як головна тема його творчості
+  - Трагічна доля митця під радянською владою
+- section: Ранні роки та освіта
+  points:
+  - Дитинство на Чернігівщині (Сосниця, 1894)
+  - Освіта та вчителювання
+  - Участь у революційних подіях
+- section: Шлях до кіно
+  points:
+  - Дипломатична служба (Варшава, Берлін)
+  - Художник-карикатурист
+  - Перші кроки в кінематографі (Одеса)
+- section: Українська трилогія
+  points:
+  - «Звенигора» (1928) — міфопоетичний епос
+  - «Арсенал» (1929) — революційний фільм
+  - «Земля» (1930) — шедевр світового кіно
+  - Поетичне кіно та революційний монтаж
+- section: Конфлікти з владою
+  points:
+  - Критика «Землі» як «контрреволюційної»
+  - «Іван» та звинувачення в націоналізмі
+  - «Україна в огні» — заборонений сценарій (1943)
+  - Особиста розмова зі Сталіним
+  - Щоденники Довженка як свідчення трагедії
+- section: Пізня творчість
+  points:
+  - Воєнні фільми та документалістика
+  - «Мічурін» та сталінські замовлення
+  - Нездійснені проєкти («Поема про море»)
+- section: Спадщина та вплив
+  points:
+  - Вплив на світовий кінематограф
+  - Кіностудія імені Довженка
+  - «Зачарована Десна» як літературний шедевр
+  - Довженко в незалежній Україні
+vocabulary_hints:
+  required:
+  - кінорежисер (film director)
+  - кінематограф (cinema)
+  - монтаж (montage)
+  - сценарій (screenplay)
+  - поетичне кіно (poetic cinema)
+  - документальний фільм (documentary)
+  - кіностудія (film studio)
+  - цензура (censorship)
+  - щоденник (diary)
+  - шедевр (masterpiece)
+  recommended:
+  - авангард (avant-garde)
+  - німе кіно (silent film)
+  - звукове кіно (sound film)
+  - кадр (frame/shot)
+activity_hints:
+- type: reading
+  focus: Фрагменти «Щоденника» Довженка
+  source: Первинне джерело
+  items: 3 passages
+- type: essay-response
+  focus: Україна у творчості Довженка
+  output: Аргументований есей
+- type: critical-analysis
+  focus: Порівняння долі Довженка та інших митців Розстріляного відродження
+focus: biography
+prerequisites:
+- b2-hist/rozstriliane-vidrodzennia
+connects_to:
+- c1-bio/les-kurbas
+- c1-bio/mykola-khvylovyi
+module_type: biography
+sources:
+- name: Олександр Довженко (Енциклопедія історії України)
+  url: https://esu.com.ua/article-5367
+  type: primary
+  notes: Академічна біографія
+- name: Довженко О. Щоденник
+  type: primary
+  notes: Особисті записи режисера
+- name: Довженко О. «Зачарована Десна»
+  type: primary
+  notes: Автобіографічна повість
+- name: Корнієнко Н. Довженко. Кіноплівка життя
+  type: reference
+  notes: Сучасна біографія
+immersion: 100% Ukrainian
+phase: C1-BIO
+objectives:
+- Дізнатися про життя та творчість Олександра Довженка
+- Проаналізувати його найважливіші фільми
+- Зрозуміти його внесок у світове кіномистецтво
+- Оцінити складні відносини митця з радянською владою
+notes: 'Dovzhenko is considered one of the most important filmmakers in cinema history.
+
+  His poetic style influenced generations of directors worldwide. "Earth" (1930)
+
+  is regularly listed among the greatest films ever made. His relationship with
+
+  Soviet power was complex — he celebrated Ukrainian identity in his films while
+
+  navigating censorship and political pressure. His banned screenplay "Ukraine in
+
+  Flames" (1943) was a passionate defense of Ukrainian identity that Stalin
+
+  personally condemned. Unlike Kurbas and Kulish, Dovzhenko survived but lived
+
+  in creative anguish, as revealed in his diaries.
+
+  '
+persona:
+  voice: Senior Biographer
+  role: Cinema Visionary
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Олександр Довженко: Батько українського кіно
+
+## Використані джерела
+1. [Олександр Довженко (Енциклопедія історії України)](https://esu.com.ua/article-5367) — Академічна стаття про життя та творчість, детальний опис фільмографії та політичних переслідувань.
+2. [Олександр Довженко: Біографія (УІНП)](https://uinp.gov.ua/istorichny-kalendar/veresen/10/1894-narodyvsya-oleksandr-dovzhenko-kinoreszhyser-i-pysmennyk) — Матеріали Українського інституту національної пам'яті, акцент на дипломатичній службі та репресіях.
+3. [Щоденник Олександра Довженка (УкрЛіб)](https://www.ukrlib.com.ua/bio/printit.php?tid=1569) — Тексти щоденникових записів 1941–1956 років, які розкривають внутрішній світ митця.
+
+## Хронологія
+- 10 вересня 1894: Народився на хуторі В'юнище (нині смт Сосниця) на Чернігівщині.
+- 1911–1914: Навчання у Глухівському вчительському інституті.
+- 1918: Служба в 3-му Сердюцькому полку Армії УНР, участь у придушенні більшовицького повстання на «Арсеналі».
+- 1921–1923: Дипломатична служба у Варшаві та Берліні; навчання малярству у Віллі Єккеля.
+- 1926: Переїзд до Одеси, початок роботи на Одеській кінофабриці ВУФКУ.
+- 1928: Вихід фільму «Звенигора» — початок легендарної трилогії.
+- 1930: Прем'єра «Землі» та її заборона через 9 днів.
+- 1934: Вимушений переїзд до Москви («почесне заслання»).
+- 31 січня 1944: Засідання Політбюро ЦК ВКП(б), де Сталін розгромив кіноповість «Україна в огні».
+- 25 листопада 1956: Помер у Москві, похований на Новодівочому цвинтарі (заповідав, щоб його серце поховали в Україні, але цього не виконали).
+
+## Ключові факти та цитати
+- **Дитинство**: «Плач і похорон» — з 14 дітей вижили лише двоє (Олександр і Поліна).
+- **Освіта**: Вступав до інституту не за покликанням, а заради стипендії (120 крб).
+- **Цитата (Щоденник)**: «Я належу до людства як художник і до свого народу як син. Немає в мене ні власного життя, ні власного щастя...»
+- **Цитата (про історію)**: «Народ, що не знає своєї історії, є народ сліпців».
+- **Цитата (про творчість)**: «Слов’янство поки що дало світові в кінематографії одного великого митця — мислителя і поета Олександра Довженка» (Чарлі Чаплін).
+
+## Engagement Hooks
+- Section "Вступ — Геній світового кінематографу": [!context] — Довженко входить до переліку 10 найкращих режисерів світу за версією міжнародного журі в Брюсселі (1958).
+- Section "Ранні роки та освіта": [!history-bite] — У 1918 році петлюрівець Довженко штурмував «Арсенал», а через 10 років зняв про це більшовицький фільм, в якому сам себе «вбив».
+- Section "Шлях до кіно": [!culture] — Карикатуристом у Харкові він підписувався псевдонімом «Сашко».
+- Section "Українська трилогія: I": [!myth-buster] — «Звенигора» не була повністю сценарієм Довженка, він переробив текст Майка Йогансена та Юрка Тютюнника.
+- Section "Українська трилогія: II": [!quote] — «Земля» була названа «контрреволюційною» через «біологізм» і оголену натуру.
+- Section "Конфлікти з владою: II": [!decolonization] — Сталін особисто редагував і забороняв твори Довженка, перетворюючи генія на рупор пропаганди (приклад фільму «Мічурін»).
+
+## Деколонізаційний контекст
+- **Imperial Myth**: Радянська історіографія малювала Довженка як відданого комуніста, «співця соціалістичного будівництва».
+- **Ukrainian Reality**: Довженко був воїном УНР, який пішов на компроміс із владою, щоб вижити, але все життя страждав від неможливості творити вільно. Його «Щоденник» — це документ про трагедію українця в імперії.
+- **Imperial Myth**: «Україна в огні» була «помилковим» твором.
+- **Ukrainian Reality**: Це був крик душі про те, що Україна стала жертвою двох тоталітарних режимів, і саме за цей україноцентризм Сталін знищив митця морально.
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian (decolonized) framing |
+|---------|-----------------|-------------------------------|
+| Визволення Києва (1918) | Боротьба з буржуазним націоналізмом | Оборона УНР від більшовицької агресії |
+| «Земля» | Кулацька пропаганда / Гімн колективізації | Філософський трактат про вічність життя і зв'язок з ґрунтом |
+| Переїзд до Москви | Визнання та кар'єрний ріст | Почесне заслання та ізоляція від України |
+| «Україна в огні» | Націоналістичний ухил | Правдивий документ про трагедію народу у Другій світовій |
+
+## Section-Mapped Research Notes
+
+### Вступ — Геній світового кінематографу
+- Визнання світом: топ-10 режисерів (Брюссель 1958).
+- Порівняння з Гомером кіно (епічність).
+- Головний конфлікт життя: любов до України vs служба імперії.
+
+### Ранні роки та освіта
+- Сосниця, річка Десна — джерело натхнення.
+- Глухівський інститут — формування світогляду, знайомство з українською літературою (забороненою).
+- Участь у визвольних змаганнях (УНР) — факт, який він приховував усе життя в анкетах.
+
+### Шлях до кіно
+- Дипломатія: Варшава (обмін полоненими), Берлін (секретар консульства).
+- Берлінський період: навчання у експресіоніста Віллі Єккеля — вплив експресіонізму на майбутні фільми.
+- Харків: карикатурист газети «Вісті», дружба з ВАПЛІТЕ (Хвильовий, Курбас).
+- Одеса: втеча в кіно як спроба знайти нову мову («Я просидів ніч і написав сценарій»).
+
+### Українська трилогія: I — Народження поетичного кіно
+- «Звенигора» (1928): 1000 років історії за 90 хвилин. Поєднання легенд і революції. Ейзенштейн назвав це «справжнім кіно».
+- «Арсенал» (1929): експресіонізм, психологічна атака («не вбиває» куля українця). Парадокс: учасник оборони Києва знімає фільм про перемогу більшовиків.
+
+### Українська трилогія: II — «Земля» і вічність
+- «Земля» (1930): відсутність сюжету в класичному розумінні. Життя — смерть — життя. Яблука, соняшники, оголена наречена (скандал).
+- Звинувачення: пантеїзм, біологізм, захист куркульства. Заборона через 9 днів після прем'єри.
+
+### Конфлікти з владою: I — Цькування та компроміси
+- Фільм «Іван» (1932) — спроба «виправитися», але знову звинувачення.
+- Втеча до Москви (1934): лист до Сталіна з проханням «захистити».
+- Сталін як «перший глядач» і цензор. Створення «Аерограду» (про Далекий Схід) — плата за життя.
+
+### Конфлікти з владою: II — «Україна в огні»
+- 1943 рік: сценарій про трагедію окупації.
+- Теза: «У нас немає історії, тому ми такі беззахисні».
+- 31 січня 1944: Кремль, Політбюро. Сталін кричить, що це «ревізія ленінізму». Заборона друкувати і знімати. Інфаркт/хвороба Довженка після цього.
+
+### Пізня творчість
+- «Мічурін» (1949): переробляв багато разів на вимогу цензури («Колір життя», «Життя в цвіту»).
+- «Прощай, Америко!» (незавершений, пропагандистський).
+- Мрії про «Поему про море» (Каховка) — затоплення історичних земель, яке він мусив оспівувати, хоча душа боліла (записи в щоденнику).
+
+### Спадщина та вплив
+- Кіностудія ім. Довженка в Києві.
+- «Зачарована Десна» (1956) — повернення до витоків, автобіографічна проза, написана в Москві.
+- Вплив на Параджанова, Іллєнка (Українське поетичне кіно 60-х).
+- Заповіт: «Серце моє поховайте в Україні». Не виконано.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 13073)
+✓ Message 13054 acknowledged
+✓ Message 13073 acknowledged

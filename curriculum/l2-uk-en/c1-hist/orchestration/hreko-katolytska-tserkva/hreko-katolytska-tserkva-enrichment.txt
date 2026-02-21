@@ -1,0 +1,300 @@
+✅ Message sent to Gemini (ID: 12723) [auto-acked: self-addressed]
+✓ Message 12723 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12723...
+📨 Message #12723
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-hreko-katolytska-tserkva
+   Time: 2026-02-20T23:41:50.563430+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-hist-061
+level: c1-hist
+sequence: 61
+version: '1.0'
+title: 'Греко-католицька церква: Між Сходом і Заходом'
+focus: history
+pedagogy: seminar
+objectives:
+- 'Analyze the causes and consequences of греко-католицька церква: між сходом і заходом'
+- Evaluate the historical significance of унікальна церква
+content_outline:
+- section: Вступ — Унікальна церква
+  subsections:
+  - УГКЦ — що це
+  - Між Римом і Константинополем
+  - Чому важлива для ідентичності
+  - Структура модуля
+- section: Від Берестя до Галичини
+  subsections:
+  - Перші століття — боротьба за виживання
+  - Втрата території на сході
+  - Зосередження в Галичині
+  - Під Австрією — золота доба
+- section: Церква і національний рух
+  subsections:
+  - Священики — національні лідери
+  - Селянство і церква
+  - Просвіта і церква
+  - Москвофіли vs. народовці
+  - Церква як нація-замінник
+- section: Андрей Шептицький
+  subsections:
+  - Біографія — польський граф стає українським митрополитом
+  - 44 роки служіння
+  - Рятування євреїв
+  - Складні відносини з ОУН
+  - Спадщина
+- section: Знищення і підпілля
+  subsections:
+  - 1946 — Львівський псевдособор
+  - Примусове «возз'єднання» з РПЦ
+  - Церква в катакомбах
+  - Переслідування священиків
+  - Діаспора — збереження
+- section: Відродження
+  subsections:
+  - 1989 — легалізація
+  - Повернення храмів
+  - Сучасна УГКЦ
+  - Роль у війні 2022
+- section: Підсумок
+  subsections:
+  - УГКЦ — маркер ідентичності
+  - Між Сходом і Заходом
+  - Підготовка до радянської антирелігійної політики
+vocabulary:
+- УГКЦ
+- греко-католицький
+- митрополит
+- катакомби
+- підпілля
+- псевдособор
+- возз'єднання
+- легалізація
+- священик
+- обряд
+- василіани
+- єпарх
+- прелат
+- душпастирство
+- примас
+activities:
+- type: reading
+  focus: Sheptytsky — complex figure analysis
+- type: comparative-study
+  focus: Analyze 1946 pseudo-council — how liquidation worked
+- type: comparative-study
+  focus: UGCC vs. Orthodox in identity formation
+- type: critical-analysis
+  focus: UGCC role in 2022 — what changed?
+- type: essay-response
+  focus: Чому УГКЦ стала символом галицької української ідентичності?
+sources:
+- name: УГКЦ (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Українська_греко-католицька_церква
+  type: reference
+  notes: Church history
+- name: Андрей Шептицький (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Шептицький_Андрей
+  type: reference
+  notes: Key 20th century figure
+- name: Львівський собор 1946
+  url: https://uk.wikipedia.org/wiki/Львівський_собор_(1946)
+  type: reference
+  notes: Soviet liquidation
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
+persona:
+  voice: Academic Historiographer
+  role: Church Union Historian
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Греко-католицька церква: Між Сходом і Заходом
+
+## Використані джерела
+1. [Енциклопедія Сучасної України (УГКЦ)](https://esu.com.ua/search_articles.php?id=UHKTs) — фундаментальна стаття про історію та структуру церкви.
+2. [Інститут історії України НАНУ (Берестейська унія)](http://resource.history.org.ua/) — академічний аналіз передумов та наслідків унії 1596 року.
+3. [Ізборник (Андрей Шептицький)](http://litopys.org.ua/) — первинні тексти та пастирські послання митрополита.
+4. [Історична Правда (Львівський собор 1946)](https://www.istpravda.com.ua/) — детальний розбір механізмів радянської ліквідації УГКЦ.
+5. [Локальна історія (Підпілля)](https://localhistory.org.ua/) — усна історія та спогади про катакомбний період.
+
+## Хронологія
+- **1596**: Берестейська унія — утворення Руської унійної церкви (майбутньої УГКЦ).
+- **1795**: Третій поділ Польщі — початок репресій проти Унійної церкви в Російській імперії (Катерина II).
+- **1839**: Полоцький собор — ліквідація унії на землях підросійської України (Микола I).
+- **1901**: Інтронізація Андрея Шептицького на митрополичий престол у Львові.
+- **1946 (8-10 березня)**: Львівський псевдособор — офіційна радянська ліквідація УГКЦ, арешт ієрархії.
+- **1963**: Звільнення Йосипа Сліпого із заслання, його прибуття до Риму.
+- **1987 (квітень)**: Грушівське диво — масові паломництва, початок публічного виходу з підпілля.
+- **1989 (1 грудня)**: Офіційна легалізація УГКЦ в СРСР після зустрічі Горбачова з Іваном Павлом II.
+- **2002**: Перенесення осідку Глави УГКЦ зі Львова до Києва (Патріарший собор Воскресіння Христового).
+
+## Ключові факти та цитати
+- **Цитата Шептицького (про єдність)**: «Не треба Україні інших ворогів, коли самі українці українцям ворогами, що себе взаємно ненавидять і навіть не стидаються вже тої ненависти...»
+- **Цитата Шептицького (про майбутнє)**: «В Бозі надія, що на підвалинах солідарности й усильної праці всіх Українців повстане Соборна Україна...»
+- **Факт**: УГКЦ була найбільшою забороненою церквою у світі (1946–1989), діючи як "ілегал" в СРСР.
+- **Факт**: "Священичі династії" в Галичині стали основою української інтелігенції (Грушевський, Трильовський, Барвінський — вихідці зі священичих родин).
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ — Унікальна церква": [!context] — УГКЦ як єдина церква, що поєднує східний обряд (візантійська традиція) з західною юрисдикцією (Рим), ставши мостом між цивілізаціями.
+- Section "Від Берестя до Галичини": [!history-bite] — "Золота доба" під Габсбургами: чому австрійська влада підтримувала греко-католиків як противагу польській шляхті ("Tiroler des Ostens").
+- Section "Церква і національний рух": [!culture] — Феномен "попівських дітей": як родинні зв'язки священиків сформували кістяк українського національного відродження.
+- Section "Андрей Шептицький": [!biography] — Парадокс Шептицького: польський граф, онук Александра Фредра, що став духовним батьком українського націоналізму.
+- Section "Знищення і підпілля": [!myth-buster] — Міф про "добровільне возз'єднання" 1946 року: чому Львівський собор є неканонічним (відсутність єпископів, режисура НКВС).
+- Section "Відродження": [!quote] — Слова Йосипа Сліпого: "Посидьте у тюрмі 18 років, і тоді ви станете патріархом".
+
+## Деколонізаційний контекст
+- **Imperial/Soviet Myth**: Уніатство як "польська інтрига" та "зрада прадідівської віри", штучне утворення, приречене на зникнення. Радянський термін "возз'єднання" (з РПЦ) для опису ліквідації 1946 року.
+- **Ukrainian Reality**: УГКЦ як національна церква, що зберегла українську ідентичність в умовах полонізації та русифікації. Греко-католицизм не як "перехідна ланка", а як самодостатня київська християнська традиція в єдності з Європою. "Возз'єднання" було актом державного терору (спецоперація НКВС).
+
+## Contested Terms
+| Concept | Imperial/Soviet framing | Ukrainian (decolonized) framing |
+|---------|-------------------------|--------------------------------|
+| Львівський собор 1946 | Собор возз'єднання, повернення до лона РПЦ | Львівський псевдособор, сталінська ліквідація церкви |
+| Греко-католики | Уніати (зневажливо), відступники | Греко-католики, вірні УГКЦ, Церква Київської традиції |
+| 1946–1989 роки | Період відсутності уніатської церкви | Період "катакомбної церкви", "церква у підпіллі" |
+
+## Section-Mapped Research Notes
+
+### Вступ — Унікальна церква
+УГКЦ як синтез: візантійський обряд, юліанський календар (традиційно), але догматична єдність з Римом. Це дозволило зберегти "руську" (українську) ідентичність, уникнувши асиміляції поляками (латинізації) та росіянами (русифікації).
+
+### Від Берестя до Галичини
+Берестейська унія 1596: спроба київських ієрархів отримати рівноправність у Речі Посполитій. Розкол суспільства. Поступова ліквідація на Правобережжі (після 1795). "Австрійський фактор": Марія Терезія та Йосиф II надали греко-католикам права, семінарії (Barbareum), що перетворило церкву на потужну просвітницьку силу в Галичині.
+
+### Церква і національний рух
+Священик на селі — не просто духівник, а агроном, вчитель, організатор кооперативу та "Просвіти". Боротьба течій: москвофіли (обрядовірство, орієнтація на царя) проти народовців (українська ідея). Перемога народовців завдяки Шептицькому.
+
+### Андрей Шептицький
+Велетенська постать. Реформатор чину Василіан. Меценат (Національний музей). Рятівник євреїв під час Голокосту (понад 150 врятованих, лист до Гіммлера). Відносини з ОУН: засудження терору, але підтримка боротьби за незалежність ("не вбивай", але капеланство УПА).
+
+### Знищення і підпілля
+План ліквідації розроблений НКДБ. Арешт всього єпископату (Сліпий, Хомишин, Чарнецький). "Ініціативна група" Костельника. Псевдособор без жодного єпископа. Життя в катакомбах: таємні літургії в квартирах, "літаючі священики", радіо Ватикан. Роль діаспори (Блаженніший Любачівський).
+
+### Відродження
+Кінець 80-х: голодування на Арбаті, масові мітинги у Львові. 1989 — легалізація. Конфлікти за храми з РПЦ. Візит Івана Павла II (2001). Переїзд до Києва (2005) — ствердження загальнонаціонального статусу. УГКЦ під час війни: капеланство, гуманітарна місія, "Патріарша криївка".
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12747)
+✓ Message 12723 acknowledged
+✓ Message 12747 acknowledged

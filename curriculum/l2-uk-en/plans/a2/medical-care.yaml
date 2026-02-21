@@ -6,44 +6,61 @@ version: '2.0'
 title: Medical Care
 subtitle: Doctor Consultations, Diagnosis & Prescriptions
 content_outline:
-- section: Introduction / Вступ
+- section: Вступ (Introduction)
+  words: 400
   points:
-  - 'From symptoms to consultation — builds on a2-34 (body parts, боліти) and a2-55
-    (wellness, healthcare system); now: full doctor visit from start to finish'
-  - 'Cultural hook: mandatory use of «бахіли» (shoe covers) in clinics; the «декларація
-    з лікарем» system'
-- section: Запис до лікаря
+  - From symptoms to consultation — builds on a2-34 (body parts, боліти) and a2-55
+    (wellness, healthcare system); aligns with State Standard §3.12 regarding health
+    communication and expressing physical states.
+  - 'Cultural hook: mandatory use of «бахіли» (blue plastic shoe covers) in clinics;
+    entering a doctor''s office in street shoes is a serious social faux pas.'
+  - The «декларація з лікарем» system — brief overview of the Ukrainian family doctor
+    model.
+- section: Запис до лікаря (Making an Appointment)
+  words: 600
   points:
-  - 'Making appointments — записатися до лікаря (online/phone), вибрати час прийому;
-    cultural note: Helsi.me as the main appointment platform'
-  - 'Calling a doctor home — викликати лікаря додому; when to call швидку допомогу;
-    learner error: «ангіна» = tonsillitis (not heart attack!)'
-- section: На прийомі у лікаря
+  - Booking procedures — «записатися на прийом» via phone or online; focus on Helsi.me
+    as the primary national appointment platform.
+  - Emergency vs. Routine — when to call «швидка допомогу» (103) versus «викликати
+    лікаря додому» (calling a doctor home).
+  - Register and etiquette — the necessity of formal register (Ви) when speaking to
+    medical staff and receptionists.
+- section: На прийомі у лікаря (At the Consultation)
+  words: 1000
   points:
-  - 'Doctor''s questions — formal «Ви» strictly required; «Що вас турбує?», «Де болить?»,
-    «Як давно?»; learner error: using «ти» with a doctor'
-  - 'Patient''s answers — describing medical history: «У мене алергія на...», «Я приймаю
-    ліки від...», «Це почалося вчора»'
-  - 'Physical examination — дихайте/не дихайте, відкрийте рот, покажіть язик; standard
-    ref: §4.2.3.2 imperative forms'
-  - 'Measurement vocabulary — міряти температуру, вимірювати тиск, зважитися; collocations:
-    нормальний тиск, підвищена температура'
-- section: Діагноз і лікування
+  - Doctor's opening questions — «Що вас турбує?», «Де болить?», «Як давно?»; drill
+    the strictly formal «Ви» address.
+  - Describing symptoms — focus on the standard A2 pattern «У мене болить [Nominative]»
+    (e.g., голова, горло, живіт).
+  - 'Learner error: drill the difference between English transitive ''I hurt my head''
+    and Ukrainian intransitive «У мене болить голова»; correct the common error «Я
+    болю голову».'
+  - 'Physical examination commands — using medical imperatives: «дихайте / не дихайте»,
+    «відкрийте рот», «покажіть язик».'
+  - 'Expressing general states — using the Dative case for experiencers: «Мені погано»,
+    «Мені краще» (ref: §4.2.2.3).'
+  - Measurement and testing — «міряти температуру», «вимірювати тиск», «здати аналізи»
+    (blood/urine tests).
+- section: Діагноз та лікування (Diagnosis and Treatment)
+  words: 600
   points:
-  - 'Understanding the diagnosis — діагноз, застуда, грип, ангіна, отруєння; collocations:
-    поставити діагноз, підтвердити діагноз'
-  - 'Prescriptions — виписати рецепт, приймати ліки; learner error: рецепт (prescription)
-    ≠ чек (receipt); dosage: двічі/тричі на день, до/після їжі'
-  - 'Sick leave — лікарняний (sick leave certificate), взяти лікарняний; cultural
-    note: the bureaucratic process of getting лікарняний'
-- section: Practice / Практика
+  - 'Understanding the diagnosis — «поставити діагноз», «підтвердити діагноз»; vocabulary
+    for common ailments: «застуда», «грип», «отруєння».'
+  - 'False Friend ''Angina'' — explicit correction: «ангіна» = tonsillitis/strep throat,
+    NOT a heart attack (серцевий напад).'
+  - 'Prescriptions and dosage — «виписати рецепт», «приймати ліки»; learner error:
+    «рецепт» (prescription) vs. «чек» (receipt/proof of payment).'
+  - Usage instructions — frequency (двічі/тричі на день) and timing relative to meals
+    (до/після їжі).
+- section: Підсумок та народні засоби (Summary and Folk Remedies)
+  words: 400
   points:
-  - Full consultation role-play — from greeting to diagnosis to prescription
-  - Calling to make an appointment — phone dialogue with receptionist
-- section: Narrative / Розповідь
-  points:
-  - Story of a doctor visit — complete narrative from feeling sick to recovery; integrates
-    all vocabulary from the module
+  - Sick leave procedures — «взяти лікарняний», «бути на лікарняному»; the bureaucratic
+    importance of the sick leave certificate.
+  - 'Cultural hook: «Народна медицина» — how Ukrainians treat minor colds at home
+    first with tea with viburnum (калина), raspberry jam (малина), or honey.'
+  - Narrative summary — a complete story from feeling the first symptoms and wearing
+    «бахіли» to receiving a «рецепт» and recovering with tea.
 focus: practical
 pedagogy: PPP
 prerequisites:
@@ -74,21 +91,32 @@ persona:
   role: Emergency Dispatcher
 vocabulary_hints:
   required:
-  - лікар (doctor) — сімейний лікар, записатися до лікаря, викликати лікаря
-  - пацієнт (patient) — огляд пацієнта, скарги пацієнта, картка пацієнта
-  - 'рецепт (prescription) — виписати рецепт, рецепт на ліки; learner error: ≠ чек
-    (receipt)'
-  - діагноз (diagnosis) — поставити діагноз, підтвердити діагноз
-  - лікарняний (sick leave) — взяти лікарняний, бути на лікарняному
-  - приймати (to take [medicine]) — приймати ліки двічі на день, до/після їжі
-  - прийом (appointment/consultation) — час прийому, на прийомі у лікаря
+  - лікар (doctor) — сімейний лікар, записатися до лікаря, викликати лікаря; High
+    frequency
+  - пацієнт (patient) — огляд пацієнта, скарги пацієнта, картка пацієнта; High frequency
+  - 'боліти (to hurt) — Що у вас болить?, У мене болить голова; Note: intransitive
+    usage'
+  - температура (temperature/fever) — міряти температуру, висока температура, у мене
+    температура; High frequency
+  - 'рецепт (prescription) — виписати рецепт, рецепт на ліки; Learner error: ≠ чек
+    (receipt); Medium frequency'
+  - діагноз (diagnosis) — поставити діагноз, підтвердити діагноз; Medium frequency
+  - лікарняний (sick leave certificate) — взяти лікарняний, бути на лікарняному; Essential
+    for work context
+  - приймати (to take [medicine]) — приймати ліки двічі на день, до/після їжі; High
+    frequency collocations
+  - прийом (appointment/consultation) — записатися на прийом, час прийому, на прийомі
+    у лікаря
   recommended:
-  - алергія (allergy) — алергія на пилок, алергічна реакція
-  - тиск (blood pressure) — вимірювати тиск, підвищений тиск
-  - аналіз (test/analysis) — здати аналізи, аналіз крові
-  - направлення (referral) — направлення до спеціаліста
-  - застуда (cold) — застудитися, лікувати застуду
-  - отруєння (poisoning) — харчове отруєння
+  - бахіли (shoe covers) — одягнути бахіли; Essential cultural hygiene requirement
+  - тиск (blood pressure) — вимірювати тиск, високий/низький тиск; §3.12 State Standard
+  - аналіз (test/analysis) — здати аналізи, аналіз крові, результати аналізів
+  - направлення (referral) — направлення до спеціаліста, дати направлення
+  - застуда (cold) — застудитися, лікувати застуду, симптоми застуди
+  - отруєння (poisoning) — харчове отруєння, легке отруєння
+  - алергія (allergy) — алергія на пилок, алергічна реакція, у мене алергія на...
+  - 'ангіна (tonsillitis) — хворіти на ангіну; False friend alert: ≠ heart attack'
+  - калина (viburnum) — чай з калиною; Cultural folk medicine reference
 activity_hints:
 - type: match-up
   focus: Medical consultation vocabulary

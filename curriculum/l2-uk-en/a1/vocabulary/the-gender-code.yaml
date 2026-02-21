@@ -113,3 +113,18 @@
   notes: Adjective used for grammatical gender
   pos: adj
   translation: neuter; middle; average
+- ipa: '[ɑr.teˈfɑkt]'
+  lemma: артефакт
+  notes: S.T.A.L.K.E.R. hook; masculine consonant ending
+  pos: noun
+  translation: artifact
+- ipa: '[ˈzɔ.nɑ]'
+  lemma: зона
+  notes: S.T.A.L.K.E.R. hook; feminine -a ending
+  pos: noun
+  translation: zone
+- ipa: '[uˈkrɪtːʲɑ]'
+  lemma: укриття
+  notes: S.T.A.L.K.E.R. hook; neuter -я ending after doubled consonant
+  pos: noun
+  translation: shelter; cover

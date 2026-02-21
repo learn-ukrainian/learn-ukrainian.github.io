@@ -1,0 +1,230 @@
+✅ Message sent to Gemini (ID: 12246) [auto-acked: self-addressed]
+✓ Message 12246 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12246...
+📨 Message #12246
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-andrusyak-adventures
+   Time: 2026-02-20T23:38:10.151404+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 29
+module: lit-juvenile-29
+level: LIT.JUVENILE
+slug: andrusyak-adventures
+version: '2.0'
+title: Andrusyak Adventures
+subtitle: Andrusyak Adventures
+content_outline:
+- section: Вступ та контекст
+  points: []
+- section: Аналіз ключових творів
+  points: []
+- section: Стилістика та мова автора
+  points: []
+- section: Деколонізаційна перспектива
+  points:
+  - Як цей автор руйнує імперські міфи
+  - Українська суб'єктність у тексті
+- section: Підсумок та спадщина
+  points: []
+vocabulary_hints:
+  required:
+  - історіографія
+  - наратив
+  - суб'єктність
+  recommended:
+  - деколонізація
+activity_hints:
+- type: reading
+  focus: Аналіз першоджерела
+- type: essay-response
+  focus: Критичне есе
+- type: critical-analysis
+  focus: Деконструкція тексту
+focus: literature
+pedagogy: literature
+immersion: 100% Ukrainian
+phase: LIT Expansion
+objectives:
+- Проаналізувати творчість Andrusyak Adventures у контексті української літератури
+- Дослідити вплив автора на формування національної ідентичності
+persona:
+  voice: Senior Specialist
+  role: Expedition Guide
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Andrusyak Adventures (Творчість Івана Андрусяка для дітей)
+
+## Використані джерела
+1. [Енциклопедія сучасної України (ЕСУ)](https://esu.com.ua/article-44265) — Стаття «Андрусяк Іван Михайлович», біографічні відомості та огляд творчості.
+2. [БараБука: Простір української дитячої книги](http://www.barabooka.com.ua/ivan-andrusyak/) — Професійний огляд стилістики, ключових творів та внеску І. Андрусяка в сучасну дитячу літературу.
+3. [Вікіпедія: Іван Андрусяк](https://uk.wikipedia.org/wiki/Андрусяк_Іван_Михайлович) — Загальна хронологія, бібліографія та перелік нагород письменника.
+
+## Хронологія
+- 1968: Народився в селі Літячі на Тернопільщині.
+- 1990-ті: Активна участь у літературному процесі як поет-модерніст, співзасновник літугруповання «Нова дегенерація».
+- 2007: Вихід у світ знакової повісті-казки «Стефа і її Чакалка», що стала поворотною у його дитячій прозі.
+- 2012: Публікація повісті «Вісім днів із життя Бурундука», яка отримала відзнаку «Діти вибирають».
+- 2014: Співзасновник та головний редактор видавництва «Фонтан казок», яке спеціалізується на сучасній українській дитячій літературі.
+- 2016: Лауреат Премії Кабінету Міністрів України імені Лесі Українки за літературно-мистецькі твори для дітей та юнацтва.
+
+## Ключові факти та цитати
+- Іван Андрусяк — один із ключових авторів, які на початку 2000-х років здійснили якісний перехід української дитячої літератури від радянської дидактики до сучасної психологічної, розважальної та партнерської розмови з дитиною.
+- Його повість «Вісім днів із життя Бурундука» увійшла до престижного щорічного каталогу найкращих дитячих видань світу «Білі ворони» (White Ravens).
+- Цитата з твору (про Чакалку): «Чакалка — це таке страшне створіння, яке приходить уночі до неслухняних дітей, забирає їх у звуконепроникний мішок і несе в темний ліс... Але насправді виявляється, що вона просто дуже самотня і сама потребує виховання».
+- Цитата письменника про дитячу літературу: «Дитяча література не має права на фальш. З дитиною треба говорити чесно, відверто і обов'язково — з повагою до її особистості».
+
+## Engagement Hooks (mapped to sections)
+- Section "Аналіз ключових творів: Деконструкція страху в казці «Стефа і її Чакалка»": [!history-bite] — Звідки взялася "Чакалка"? Це автентичний фольклорний персонаж-страховисько зі Слобожанщини, яким лякали дітей, але Андрусяк перетворив її на комічного персонажа, що потребує любові.
+- Section "Вступ та контекст: Перехід до дитячої літератури": [!context] — На початку 2000-х український книжковий ринок був переповнений російськомовними перекладами. Поява яскравих, сучасних українських авторів, як Андрусяк, стала актом культурної резистенції.
+- Section "Аналіз ключових творів: Шкільна психологія у повісті «Вісім днів із життя Бурундука»": [!culture] — Як література вчить долати комплекси: головний герой повісті страждає через свою зовнішність і нерозуміння однолітків, що робить його універсально зрозумілим для сучасних українських школярів.
+- Section "Стилістика та мова автора: Психологізм та партнерський діалог з дитиною": [!quote] — Наведення яскравого каламбуру чи жарту з поезії Андрусяка для демонстрації його словесної гри.
+- Section "Деколонізаційна перспектива: Подолання радянської дидактики": [!myth-buster] — Міф про те, що дитяча книжка має лише "навчати правильної поведінки". Українська деколонізована література доводить: книга має насамперед давати простір для емоцій та уяви дитини, формуючи вільну особистість, а не гвинтик системи.
+- Section "Підсумок та спадщина: Вплив на сучасний ринок дитячої книги": [!decolonization] — Створення видавництва "Фонтан казок" стало стратегічним кроком у формуванні незалежного, питомо українського ринку літератури, що плекає українську суб'єктність з наймолодшого віку.
+
+## Деколонізаційний контекст
+- **Imperial/Soviet myth**: Радянська дитяча література розглядала дитину як об'єкт виховання в дусі колективізму та підпорядкування системі ("піонерія", "слухняність партії"). Українська дитяча література часто маргіналізувалася до "сільської екзотики" або суто фольклорних адаптацій.
+- **Ukrainian reality**: Сучасна українська література для дітей (репрезентована Андрусяком) є глибоко індивідуалістичною, психологічною та урбаністичною. Вона виховує вільну, критично мислячу людину зі своєю суб'єктністю. Автор інтегрує багату українську мову та фольклорні елементи у сучасний повсякденний контекст, деконструюючи комплекс меншовартості.
+
+## Contested Terms (if applicable)
+| Concept | Imperial/Soviet framing | Ukrainian (decolonized) framing |
+|---------|-----------------|-------------------|
+| Мета дитячої літератури | Дидактизм, ідеологічне виховання колективіста | Психологічна підтримка, партнерський діалог, виховання вільної особистості |
+| Мова дитячої книги | Збіднена, спрощена, "шаблонна" | Багата на неологізми, мовну гру, словотворчість, жива та природна |
+
+## Section-Mapped Research Notes
+
+### Вступ та контекст: Формування письменника
+Іван Андрусяк народився у 1968 році. Починав як яскравий представник постмодерністської поезії 90-х років (група «Нова дегенерація»). Цей поетичний, метафоричний бекграунд став фундаментом для його подальшої віртуозної роботи з мовою у творах для дітей.
+
+### Вступ та контекст: Перехід до дитячої літератури
+Як і багато авторів, Андрусяк почав писати для дітей, коли з'явилися власні діти (донька Стефа стала прототипом відомої героїні). Усвідомлюючи брак якісної україномовної прози для найменших, він активно долучився до розбудови цього сегменту, згодом співзаснувавши видавництво «Фонтан казок» (2014).
+
+### Аналіз ключових творів: Деконструкція страху в казці «Стефа і її Чакалка»
+Твір (2007) є революційним для української дитячої прози завдяки психотерапевтичному ефекту. Автор бере фольклорне страховисько (Чакалку) і поміщає його в сучасне місто. Через сміх, абсурд і гру діти (і сама Стефа) долають свої страхи, а саме страховисько виявляється травмованою істотою, якій потрібна школа хороших манер і співчуття.
+
+### Аналіз ключових творів: Шкільна психологія у повісті «Вісім днів із життя Бурундука»
+Повість (2012) зосереджена на реаліях сучасного школяра. Івась "Бурундук" має проблеми із зайвою вагою, фізкультурою та спілкуванням з однокласниками. Андрусяк майстерно описує спроби хлопця знайти своє місце ("магічний ритуал" з вирощування чортика), що зрештою приводить до розуміння цінності справжньої дружби та роботи над собою.
+
+### Аналіз ключових творів: Морально-етичні виміри у «Третьому снігу»
+Казка про лісову школу, де вчителює їжак, а головним антагоністом виступає хижа куниця. Твір порушує складні питання добра і зла, справедливості, законів природи та морального вибору, доводячи, що дитяча казка здатна на глибокий філософський вимір без нудного моралізаторства.
+
+### Стилістика та мова автора: Мовна гра та словотворчість
+Тексти Андрусяка (особливо поетичні збірки "М'яке і пухнасте", "Лякація") сповнені алітерацій, каламбурів та кумедних неологізмів. Це розвиває мовне чуття дитини, показуючи українську мову як живий, гнучкий і надзвичайно багатий інструмент для творчості.
+
+### Стилістика та мова автора: Психологізм та партнерський діалог з дитиною
+Автор відмовляється від позиції "всезнаючого дорослого". Він дивиться на світ очима дитини, легітимізуючи її право на помилки, страхи, фантазії та пустощі. Цей партнерський підхід є ключовим для сучасної європейської дитячої літератури.
+
+### Деколонізаційна перспектива: Подолання радянської дидактики
+Розглядається, як твори Андрусяка протистоять радянській спадщині "правильної" ідеологізованої літератури. Його герої — живі сучасні українці, з власною суб'єктністю. Вони помиляються, бешкетують, але самостійно роблять моральні висновки, руйнуючи шаблон "піонера-героя".
+
+### Підсумок та спадщина: Вплив на сучасний ринок дитячої книги
+Іван Андрусяк є не лише знаковим письменником (лауреат премії Лесі Українки, присутність у "Білих воронах"), але й інституційним діячем (редактор, видавець), який сприяв появі цілої генерації нових українських дитячих письменників та художників, остаточно утверджуючи повноцінність українського дитячого книговидання.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12313)
+✓ Message 12246 acknowledged
+✓ Message 12313 acknowledged

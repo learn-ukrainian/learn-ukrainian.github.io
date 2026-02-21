@@ -6,55 +6,87 @@ version: '2.0'
 title: 'Робочий тиждень: вид у дії'
 subtitle: Work Week - Aspect in Real-Life Context
 content_outline:
-- section: Тест
+- section: 'Вступ: Робота та вид дієслова (Introduction: Work and Verb Aspect)'
+  words: 500
   points:
-  - Diagnostic contrast for workplace aspect usage — focus on Process vs. Result confusion
-    (робив vs зробив)
-  - Intuition check — check gender agreement with 'дедлайн' (masculine)
-- section: Пояснення
+  - 'Introduction to workplace communication focusing on State Standard §4.2.3.1:
+    mastering aspect in all tenses within the ''Job'' (§3.9) thematic context.'
+  - 'The visual metaphor for B1 learners: The wavy line for ''Недоконаний вид'' (process)
+    vs. the ''X'' mark for ''Доконаний вид'' (result/point in time).'
+  - 'Diagnostic contrast check: Workplace scenarios to differentiate between ''робив''
+    (ongoing/repetitive) and ''зробив'' (completed task).'
+- section: 'Презентація: Робочі завдання та звіти (Presentation: Work Tasks and Reports)'
+  words: 900
   points:
-  - Aspect in workplace context — aligned with State Standard §4.2.3.1 (Aspect in
-    all tenses, work theme)
-  - 'Plans and tasks (ДВ) — collocations: ставити завдання, термінове завдання'
-  - 'Progress reports (НДВ) — collocations: складати звіт, подавати звіт'
-  - 'Weekly communication patterns — cultural hook: Standard 40h week vs. Flexible
-    IT schedules (гнучкий графік)'
-- section: Практика
+  - 'Deep dive into High-Frequency vocabulary: ''завдання'' (technical/urgent) and
+    ''звіт'' (annual/work report) with aspectual collocations.'
+  - 'Grammar of progress reporting (НДВ): ''складати звіт'', ''подавати звіт'' vs.
+    the result of the action (ДВ): ''склав'', ''подав''.'
+  - 'Cultural Hook: Standard 40-hour work week vs. modern IT ''гнучкий графік'' (flexible
+    schedule) and ''віддалена робота'' (remote work).'
+  - 'Verb conjugation focus: Using Imperfective Future (складена та синтетична форми)
+    for planning the work week.'
+- section: 'Аналіз помилок: Пастки для іноземців (Error Analysis: Traps for Learners)'
+  words: 900
   points:
-  - 'Decision-making framework — visual metaphor: Wavy line (process/imperfective)
-    vs. X mark (result/perfective)'
-  - 'Common mistakes section — learner error: Using Perfective in Present (e.g., *Я
-    напишу зараз* instead of *Я пишу зараз*)'
-- section: Діалоги
+  - 'Learner Error 1: Using Perfective in the Present. Correction of phrases like
+    ''*Я напишу звіт зараз*'' (incorrect for current action) to ''Я пишу звіт зараз''
+    (НДВ).'
+  - 'Learner Error 2: Process vs. Result confusion. Drills to differentiate ''Я робив
+    звіт'' (spent time) from ''Я зробив звіт'' (it is finished).'
+  - 'Linguistic Nuance: The ''Deadline'' gender check. Confirming ''дедлайн'' as masculine
+    and practicing agreement: ''жорсткий дедлайн'', ''цей дедлайн''.'
+  - 'Register check: Comparing the slangy ''планірка'' with the formal ''нарада''
+    and practicing the aspectual pair ''проводити/провести нараду''.'
+- section: Ділові ситуації та діалоги (Business Situations and Dialogues)
+  words: 1000
   points:
-  - '5-6 authentic dialogues — scenario: The ''Deadline'' vs ''Реченець'' debate (purist
-    vs. modern usage)'
-  - 'Grammar in natural context — collocations: призначити/скасувати/перенести зустріч'
-  - 'Various situations — scenario: Missing a deadline (пропустити дедлайн/кінцевий
-    термін)'
+  - 'Authentic Dialogue scenario: The ''Deadline'' vs ''Реченець'' debate. Explaining
+    the use of ''кінцевий термін'' in official documents vs. the purist ''реченець''
+    vs. common office slang.'
+  - 'Situation - Scheduling: Collocations for meetings — ''призначити/скасувати/перенести
+    зустріч'' with aspect shifts based on status (planned vs. happened).'
+  - 'Situation - Missing the mark: Vocabulary for missed opportunities — ''пропустити
+    дедлайн'' vs. ''вкластися в термін''.'
+  - 'Interactive scenario: A progress report meeting where the learner must switch
+    between Past (results) and Present/Future (ongoing processes).'
+- section: Підсумок та професійна комунікація (Summary and Professional Communication)
+  words: 700
+  points:
+  - 'Synthesis activity: Writing a weekly report narrative that integrates all aspect
+    contexts (past completions, current tasks, future plans).'
+  - Review of 'Доконаний/Недоконаний вид' pairs essential for professional life, building
+    on b1-12 pairs.
+  - Self-correction checklist for workplace aspect usage based on the 'Process vs.
+    Result' framework.
+  - Preview of b1-61 (Professional Communication) and the b2-pro business track.
 vocabulary_hints:
   required:
-  - 'завдання (task) — collocations: виконувати завдання, ставити завдання, термінове
-    завдання'
-  - 'звіт (report) — collocations: складати звіт, подавати звіт, річний звіт'
+  - 'завдання (task) — collocations: виконувати завдання (НДВ), поставити завдання
+    (ДВ), технічне завдання (technical assignment), термінове завдання (urgent task)'
+  - 'звіт (report) — collocations: складати звіт (process), подавати звіт (submit),
+    річний звіт (annual), звіт про роботу (work report)'
+  - 'дедлайн (deadline) — High-Frequency business; gender: masculine; collocations:
+    жорсткий дедлайн, вкластися в дедлайн, пропустити дедлайн'
+  - кінцевий термін (final deadline) — official register synonym for 'дедлайн'
   - 'зустріч (meeting) — collocations: призначити зустріч, скасувати зустріч, перенести
-    зустріч'
-  - 'дедлайн (deadline) — collocations: жорсткий дедлайн, пропустити дедлайн, вкластися
-    в дедлайн; synonyms: кінцевий термін, реченець'
-  - 'проект (project) — context: working on a project (працювати над проектом - НДВ)
-    vs finished a project (закінчити проект - ДВ)'
-  - 'колега (colleague) — context: discussing tasks with colleagues'
-  - 'начальник (boss) — context: reporting to the boss (звітувати перед начальником)'
-  - 'офіс (office) — context: working in the office vs remote work (віддалена робота)'
-  - робочий день (workday) — standard vs flexible hours
-  - робочий тиждень (work week) — 40-hour standard
+    зустріч, ділова зустріч'
+  - 'нарада (meeting/conference) — formal; collocations: проводити нараду (НДВ), бути
+    на нараді, планірка (colloquial planning meeting)'
+  - 'результат (result) — context: working for the result (працювати на результат)'
+  - 'процес (process) — context: focusing on the process vs. completion'
+  - 'колега (colleague) — gender: common (чоловічий/жіночий рід); plural: колеги'
+  - 'начальник (boss) — register: formal; context: звітувати перед начальником (report
+    to the boss)'
   recommended:
-  - 'презентація (presentation) — collocations: готувати презентацію (process), підготувати
-    презентацію (result)'
-  - 'нарада (meeting/conference) — collocations: проводити нараду, бути на нараді'
-  - 'план (plan) — context: making plans vs realizing plans'
-  - 'графік (schedule) — collocations: гнучкий графік (flexible schedule)'
-  - 'відпустка (vacation/leave) — context: going on leave (йти у відпустку)'
+  - реченець (deadline) — archaic/purist synonym for 'deadline'; used for cultural
+    nuance
+  - 'гнучкий графік (flexible schedule) — context: modern IT work culture'
+  - 'віддалена робота (remote work) — context: working from home or outside the office'
+  - 'презентація (presentation) — collocations: готувати презентацію (НДВ), підготувати
+    презентацію (ДВ)'
+  - 'відпустка (vacation/leave) — collocations: йти у відпустку, бути у відпустці'
+  - 'план (plan) — collocations: складати план, виконувати план'
 activity_hints:
 - type: fill-in
   focus: Work reports with correct aspect

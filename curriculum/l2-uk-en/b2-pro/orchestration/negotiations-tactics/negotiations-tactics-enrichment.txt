@@ -1,0 +1,278 @@
+✅ Message sent to Gemini (ID: 11828) [auto-acked: self-addressed]
+✓ Message 11828 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #11828...
+📨 Message #11828
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-negotiations-tactics
+   Time: 2026-02-20T23:33:26.290876+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b2-pro-11
+level: B2-PRO
+sequence: 11
+slug: negotiations-tactics
+version: '2.0'
+title: 'Переговори: Тактика'
+subtitle: Negotiation Tactics
+content_outline:
+- section: Розминка — Переговори як гра стратегій
+  points:
+  - Чому переговори — це не поле бою, а пошук рішення
+  - Виграш-виграш vs виграш-програш
+  - Роль емоцій та як ними керувати
+- section: Переконання та аргументація
+  points:
+  - 'Логічні аргументи: Це вигідно, тому що... / Якщо порівняти... / За статистикою...'
+  - 'Апеляція до інтересів: Це дозволить вам... / Ви отримаєте...'
+  - 'Авторитет: Згідно з досвідом... / За даними експертів...'
+  - Як уникати маніпуляцій та розпізнавати їх
+- section: Поступки та компроміс
+  points:
+  - 'Умовна поступка: Ми готові піти на..., якщо ви... / За умови, що...'
+  - 'Пакетна угода: Якщо ми погодимося на X, то ви погодитеся на Y'
+  - 'Відмова від поступки: На жаль, це наша межа / Це питання не обговорюється'
+  - Коли поступатися, а коли стояти на своєму
+- section: Подолання глухого кута
+  points:
+  - 'Визнання складності: Бачу, що ми зайшли в глухий кут / Це складне питання'
+  - 'Пропозиція перерви: Пропоную зробити перерву / Повернімося до цього пізніше'
+  - 'Пошук альтернатив: А якщо розглянути інший варіант? / Можливо, є третій шлях?'
+  - Залучення третьої сторони (медіатор)
+- section: Завершення переговорів
+  points:
+  - 'Підсумок: Отже, ми домовилися про... / Підсумовуючи наші домовленості...'
+  - 'Фіксація угоди: Давайте зафіксуємо це письмово / Коли ми можемо підписати договір?'
+  - 'Завершення без угоди: На жаль, ми не дійшли згоди / Пропоную повернутися до цього
+    питання'
+- section: Практика — рольова гра переговорів
+  points:
+  - 'Сценарій: Переговори про умови контракту з двома конфліктними питаннями'
+  - Застосування тактик поступок та переконання
+  - Аналіз результату та стратегій
+vocabulary_hints:
+  required:
+  - ми готові піти на (we are ready to concede)
+  - за умови, що (on condition that)
+  - це наша межа (this is our limit)
+  - ми домовилися про (we have agreed on)
+  - дійти згоди (to reach an agreement)
+  - глухий кут (deadlock)
+  - пакетна угода (package deal)
+  - це вигідно, тому що (this is beneficial because)
+  recommended:
+  - взаємна поступка (mutual concession)
+  - зафіксувати домовленість (to formalize an agreement)
+  - третій шлях (third way)
+  - медіатор (mediator)
+  - тиск (pressure)
+  - маніпуляція (manipulation)
+activity_hints:
+- type: document-analysis
+  focus: Проаналізувати переговори — визначити тактики сторін
+  items: 1
+- type: role-play
+  focus: Провести повні переговори від відкриття до закриття
+  items: 1
+- type: register-transform
+  focus: Перетворити ультиматуми на дипломатичні пропозиції
+  items: 6
+- type: fill-in
+  focus: Вставити правильні фрази для поступок та компромісу
+  items: 10
+- type: matching
+  focus: З'єднати проблему з тактикою вирішення
+  items: 8
+- type: case-study
+  focus: Проаналізувати кейс невдалих переговорів — що пішло не так?
+  items: 1
+focus: professional
+pedagogy: ESP
+prerequisites:
+- 'b2-pro-10 (Переговори: Основи)'
+connects_to:
+- 'b2-pro-12 (Нетворкінг: Налагодження контактів)'
+objectives:
+- Учень може використовувати різні типи аргументів для переконання
+- Учень може робити умовні поступки та пропонувати пакетні угоди
+- Учень може виходити з глухого кута в переговорах
+- Учень може професійно завершувати переговори та фіксувати домовленості
+grammar:
+- Умовні конструкції II типу (Якби ви погодилися..., ми б могли...)
+- Модальні дієслова для пом'якшення (могли б, хотіли б, були б готові)
+- Сполучники умови та наслідку (за умови, у випадку, внаслідок)
+register: офіційно-діловий
+phase: B2-PRO.1
+persona:
+  voice: Senior Specialist
+  role: Медіатор конфліктів
+word_target: 2000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Переговори: Тактика
+
+## Використані джерела
+1. [ДСТУ 4163:2020](https://zakon.rada.gov.ua/rada/show/v0144731-21#Text) — Уніфікована система організаційно-розпорядчої документації. Вимоги до оформлення документів.
+2. [Дія.Бізнес](https://business.diia.gov.ua/handbook/peregovori/peregovori-ak-instrument-dosagnenna-cilej) — Поради щодо ведення переговорів та комунікації.
+3. [Бізнес-брокер](https://business-broker.com.ua/psihologiya-peregovoriv/) — Психологія та тактики бізнес-переговорів.
+4. [Cambridge.ua](https://cambridge.ua/blog/frazy-dlya-peregovoriv-ukrainskoyu/) — Професійна лексика для переговорів.
+
+## Термінологічна база
+
+| Українська (норма) | Русизм/ненорма | English | Контекст вживання |
+|--------------------|---------------|---------|-------------------|
+| Поступка           | Уступка       | Concession | Процес досягнення компромісу |
+| Глухий кут         | Тупик         | Deadlock / Impasse | Відсутність прогресу в переговорах |
+| Порядок денний     | Повестка дня  | Agenda | План зустрічі/обговорення |
+| Взаємовигідний     | Обоюдовигідний| Win-win / Mutually beneficial | Опис стратегії співпраці |
+| Пакетна угода      | Пакетна сдєлка| Package deal | Об'єднання кількох питань в одну домовленість |
+| Медіатор           | Посередник    | Mediator | Нейтральна сторона для вирішення конфлікту |
+| Маніпуляція        | -             | Manipulation | Прихований вплив на партнера |
+| Аргументація       | -             | Argumentation | Наведення доказів на користь своєї позиції |
+
+## Мовні норми та стандарти
+- **ДСТУ 4163:2020**: Обов'язковий стандарт для оформлення протоколів переговорів та офіційного листування.
+- **Правило підпису**: Згідно з новим ДСТУ, ініціали не ставляться, лише ПРІЗВИЩЕ та Ім'я (наприклад, Олена ПЕТРЕНКО).
+- **Словесно-цифровий спосіб датування**: Бажано використовувати формат "20 лютого 2026 року" в офіційних протоколах.
+
+## Аутентичні приклади
+1. [Пропозиція поступки]: «Ми готові розглянути можливість зниження ціни на 5%, за умови, що обсяг замовлення буде збільшено на 20%.»
+2. [Вихід з глухого кута]: «Пропоную на деякий час відкласти обговорення цього пункту та перейти до наступного питання порядку денного, щоб не втрачати динаміку зустрічі.»
+3. [Фіксація домовленості]: «Отже, зафіксуймо наші домовленості: ми забезпечуємо логістику, а ви берете на себе митне оформлення. Чи правильно я зрозумів нашу позицію?»
+
+## Типові помилки
+1. ❌ «Яка ваша послєдня ціна?» → ✅ «Якою є ваша остаточна пропозиція?» — Калька з російської "последняя цена".
+2. ❌ «Ми пішли на уступки» → ✅ «Ми зробили поступки / Ми пішли на поступки» — Використання ненормативного слова "уступка".
+3. ❌ «Ми зайшли в тупик» → ✅ «Ми зайшли в глухий кут» — Пряма калька "зайти в тупик".
+4. ❌ «Давайте договоримося» → ✅ «Домовмося / Давайте дійдемо згоди» — Російське "договориться" замість українського "домовитися".
+5. ❌ «По моєму мнєнію» → ✅ «На мою думку / Як на мене» — Калька "по моему мнению".
+
+## Engagement Hooks (mapped to sections)
+- Section "Розминка — Переговори як гра стратегій": [!pro-tip] — Різниця між тактикою (конкретні кроки) та стратегією (загальний план).
+- Section "Переконання та аргументація": [!language-note] — Використання вставних слів (отже, по-перше, по-друге) для структурування аргументів.
+- Section "Поступки та компроміс": [!example] — Формула "If-Then" (Якщо..., то...) як основа професійної поступки.
+- Section "Подолання глухого кута": [!context] — Психологічний аспект "збереження обличчя" (saving face) під час виходу з конфлікту.
+
+## Section-Mapped Research Notes
+
+### Розминка — Переговори як гра стратегій
+Основна концепція — перехід від конфронтації до партнерства. Використання терміна "позиційний торг" (positional bargaining) vs "інтерес-орієнтовані переговори" (interest-based negotiation). Важливо наголосити на керуванні емоціями (емоційний інтелект у бізнесі).
+
+### Переконання та аргументація
+Три типи аргументів: логічні (логос), емоційні (патос) та посилання на авторитет (етос). В українській діловій культурі логічні аргументи з посиланням на статистику та ДСТУ мають найвищу вагу. Важливо розрізняти "аргумент" та "маніпуляцію".
+
+### Поступки та компроміс
+Поступка не повинна бути безкоштовною. Кожна поступка має бути взаємною (reciprocity). Пакетна угода дозволяє обмінювати другорядні для нас поступки на принципово важливі рішення партнера.
+
+### Подолання глухого кута
+Методи: зміна теми ("паркування" питання), залучення медіатора, технічна перерва. Важливо визнати факт глухого кута прямо, але конструктивно: "Я бачу, що наші позиції зараз розходяться...".
+
+### Завершення переговорів
+Обов'язкове резюмування (summarizing). Фіксація домовленостей у "Протоколі зустрічі" (Minutes of the meeting) згідно з ДСТУ 4163:2020. Важливо професійно завершити навіть ті переговори, які не закінчилися угодою, щоб зберегти стосунки на майбутнє.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 11849)
+✓ Message 11828 acknowledged
+✓ Message 11849 acknowledged

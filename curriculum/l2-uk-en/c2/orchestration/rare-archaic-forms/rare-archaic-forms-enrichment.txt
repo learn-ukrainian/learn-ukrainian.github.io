@@ -1,0 +1,326 @@
+✅ Message sent to Gemini (ID: 11306) [auto-acked: self-addressed]
+✓ Message 11306 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #11306...
+📨 Message #11306
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-rare-archaic-forms
+   Time: 2026-02-20T22:37:21.219630+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c2-077
+level: c2
+sequence: 77
+version: '2.0'
+title: Рідкісні та архаїчні форми
+focus: grammar
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Історична граматика української мови
+  url: https://inmo.org.ua/
+  type: primary
+  notes: Історичний розвиток граматичних форм
+- name: Словник української мови XVI—XVII ст.
+  url: https://lcorp.ulif.org.ua/
+  type: reference
+  notes: Історична лексика та форми
+- name: Церковнослов'янсько-український словник
+  url: https://uk.wikipedia.org/
+  type: reference
+  notes: Церковнослов'янізми в українській мові
+content_outline:
+- section: Вступ — Мовна археологія
+  points:
+  - Що таке архаїзми та історизми
+  - Джерела архаїчних форм
+  - Функції архаїзмів у сучасній мові
+  - Контексти вживання
+- section: Архаїчні іменникові форми
+  points:
+  - Давні відмінкові закінчення
+  - Двоїна та її залишки
+  - Кличний відмінок — повна система
+  - Варіантні закінчення
+- section: Архаїчні дієслівні форми
+  points:
+  - Аорист та імперфект (у текстах)
+  - Давноминулий час
+  - Архаїчні форми наказового способу
+  - Церковнослов'янські дієслівні форми
+- section: Архаїчні займенники та прикметники
+  points:
+  - Сей, той, оний — повні парадигми
+  - Стягнені форми прикметників
+  - Короткі прикметники
+  - Давні займенникові форми
+- section: Книжна та урочиста лексика
+  points:
+  - Церковнослов'янізми в українській
+  - Книжні слова та вирази
+  - Урочиста лексика
+  - Поетизми
+- section: Архаїзми в сучасних контекстах
+  points:
+  - Художня література
+  - Релігійні тексти
+  - Офіційно-урочистий стиль
+  - Стилізація та пародія
+- section: Практикум — Робота з архаїчними текстами
+  points:
+  - Читання давніх текстів
+  - Ідентифікація архаїзмів
+  - Переклад на сучасну мову
+vocabulary:
+  required:
+  - архаїзм (archaism)
+  - історизм (historicism)
+  - церковнослов'янізм (Church Slavonicism)
+  - двоїна (dual number)
+  - давноминулий час (pluperfect)
+  - поетизм (poeticism)
+  - книжний (bookish)
+  - урочистий (solemn)
+  - стилізація (stylization)
+  - рідкісний (rare)
+  recommended:
+  - аорист (aorist)
+  - імперфект (imperfect)
+  - стягнена форма (contracted form)
+  - лексичний (lexical)
+  - морфологічний (morphological)
+  forbidden: '[]'
+activities:
+  types_required:
+  - reading
+  - group-sort
+  - quiz
+  - fill-in
+  - match-up
+  - critical-analysis
+  - essay-response
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c2-78 (Regional Varieties)
+- c2-79 (Sociolinguistic Mastery)
+- c2-81 (Native-Like Fluency)
+vocabulary_hints:
+  required:
+  - концепція (concept)
+  - аналіз (analysis)
+  - дискурс (discourse)
+  - методологія (methodology)
+  recommended:
+  - інтерпретація (interpretation)
+  - контекстуалізація (contextualization)
+  - синтез (synthesis)
+activity_hints:
+- type: reading
+  focus: Поглиблений аналіз тексту
+  items: 4
+- type: essay-response
+  focus: Критичне осмислення
+- type: discussion
+  focus: Дискусія та аргументація
+  items: 1
+persona:
+  voice: Senior Specialist
+  role: Paleographer
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Рідкісні та архаїчні форми
+
+## State Standard Reference
+§4.1.1.4: "...а також: цей, ця, це, ці; такий, така, таке, такі; стільки, отакий, отой, оцей, сей, ся, се..."
+§4.1.2.7: "акцентований адресат мовлення – нейтралізований суб’єкт: Зоре моя! Мій друже єдиний! І хто знає, що діється в нас… Дунаю, Дунаю, чому смутний течеш..."
+Alignment: Модуль розкриває архаїчні форми (сей, ся, се), поетичний кличний відмінок та стилістичне використання давніх форм, що вимагається стандартом для рівня C2.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| сей, ся, се | Low (Archaic/Dialectal) | Сей світ, від сього дня, по сей день |
+| град | Low (Poetic/Solemn) | Град Божий, стольний град |
+| глас | Low (Solemn) | Глас народу, глас вопіющого в пустелі |
+| давноминулий час | Low (Literature/Oral) | ходив був, казала була, бачили були |
+| двоїна | Scientific/Historical | форми двоїни, залишки двоїни (очі, плечі) |
+
+## Cultural Hooks
+1. **Пересопницьке Євангеліє (1561)**: Символ живої староукраїнської мови на тлі книжної церковнослов'янської. Присяга президентів України.
+2. **"Енеїда" Котляревського**: Використання бурлеску та "низького" стилю як противаги "високій" архаїчній книжній мові XVIII ст.
+
+## Common Learner Errors
+1. **Зловживання архаїзмами**: Використання "сей/той" у нейтральному офіційному стилі → Сучасна норма: цей/той.
+2. **Плутанина історизмів та архаїзмів**: *Смерд* (історизм, зникло явище) vs *перст* (архаїзм, є сучасне "палець").
+3. **Неправильне утворення давноминулого часу**: *Був ходив* замість *ходив був*.
+
+## Cross-References
+- Builds on: c2-40 (Literary Translation), c2-20 (Stylistics Checkpoint)
+- Prepares for: c2-78 (Regional Varieties), c2-81 (Native-Like Fluency)
+
+## Notes for Content Writing
+- Focus on the *stylistic* function of these forms. At C2, students don't need to produce them for daily life, but must understand them in literature (Shevchenko, Franko) and solemn speeches.
+- Distinguish clearly between "dialectal archaic" (living in dialects) and "bookish archaic" (dead, only in texts).
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Мовна археологія (Introduction: Linguistic Archaeology)"
+  words: 400
+  points:
+  - "Дефініція та класифікація застарілої лексики: розрізнення архаїзмів (перст) та історизмів (смерд) на основі зникнення явища чи лише слова."
+  - "Джерела формування архаїчного шару: церковнослов’янізми, давньоукраїнська книжна лексика та діалектні релікти, що зберігають давню структуру."
+  - "Функціональне навантаження архаїзмів у сучасному дискурсі: від створення урочистості та поетичної піднесеності до засобів іронії та пародіювання."
+- section: "Архаїчна морфологія: Іменник та двоїна (Archaic Morphology: Noun and Dual Number)"
+  words: 700
+  points:
+  - "Релікти двоїни (dual number) в сучасній українській мові: аналіз відмінювання слів 'очі', 'плечі', 'вуха' та вживання архаїчних форм 'дві руці' у високому стилі."
+  - "Поетичний кличний відмінок згідно з §4.1.2.7 Держстандарту: використання 'акцентованого адресата' для посилення емоційності звертання (напр., 'Зоре моя!', 'Дунаю')."
+  - "Варіантні та рідкісні відмінкові закінчення іменників, характерні для класичної літератури XVIII–XIX століть."
+- section: "Дієслівні релікти: Давноминулий час (Verbal Relics: Pluperfect)"
+  words: 800
+  points:
+  - "Давноминулий час (pluperfect) як засіб позначення дистанційованого минулого: морфологічна структура 'ходив був', 'казала була' та її стилістична роль."
+  - "Аналіз типових помилок: коригування неправильного порядку слів (уникнення форми 'був ходив') та відпрацювання нормативного вживання."
+  - "Traces of aorist and imperfect: ідентифікація залишків праслов’янських часових форм у сучасних церковних текстах та історичній прозі."
+- section: "Займенникові та прикметникові архаїзми (Pronominal and Adjectival Archaisms)"
+  words: 600
+  points:
+  - "Парадигма займенників 'сей, ся, се' згідно з §4.1.1.4 Держстандарту: порівняння з нейтральним 'цей' та контексти збереження в діалектах і поезії."
+  - "Тріада 'сей, той, оний': семантичні нюанси просторової та часової віддаленості в текстах барокової літератури та офіційних урочистих актах."
+  - "Короткі та стягнені форми прикметників (рад, ладен, повен, золота) як засіб поетичної економії та фольклорної стилізації."
+- section: "Культурний контекст: Від Євангелія до Котляревського (Cultural Context: From the Gospel to Kotlyarevsky)"
+  words: 800
+  points:
+  - "Пересопницьке Євангеліє (1561) як лінгвістичний та державний символ: аналіз переходу від книжної до живої мови та роль пам’ятки у сучасній інавгурації."
+  - "Стилістична революція І. Котляревського в 'Енеїді': використання бурлеску як реакції на засилля 'високих' архаїчних форм XVIII століття."
+  - "Церковнослов’янізми (град, глас, древо) як маркери високого штилю: від сакрального змісту до фразеологізмів ('глас вопіющого в пустелі')."
+- section: "Стилістичний практикум та аналіз помилок (Stylistic Workshop and Error Analysis)"
+  words: 700
+  points:
+  - "Виправлення 'стилістичної недоречності': ідентифікація та заміна архаїзмів, що створюють дисонанс у нейтральному офіційному або бізнес-мовленні."
+  - "Коментоване читання фрагментів творів Т. Шевченка та І. Франка: розкодування архаїчних маркерів та інтерпретація їхнього emotive impact."
+  - "Вправи на трансформацію: переклад фрагментів староукраїнських текстів на сучасну літературну норму із збереженням регістру."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "сей, ся, се (this) — архаїчні вказівні займенники (§4.1.1.4); collocations: 'сей світ', 'від сього дня', 'по сей день'"
+  - "давноминулий час (pluperfect) — рідкісна дієслівна форма ('ходив був'); позначає дію, що передувала іншій минулій дії; порядок слів: V + був"
+  - "двоїна (dual number) — граматична категорія числа для означення пари; залишки у формах 'очі', 'плечі', 'вуха', 'дві руці'"
+  - "глас (voice) — церковнослов’янізм урочистого стилю; часто у значенні публічного волевиявлення ('глас народу')"
+  - "град (city) — поетичний архаїзм; вживається в книжних контекстах ('стольний град', 'град Божий')"
+  recommended:
+  - "архаїзм (archaism) — слово, витіснене сучасним синонімом; приклад: 'перст' (палець), 'уста' (губи)"
+  - "історизм (historicism) — слово, що зникло разом із предметом; приклад: 'смерд' (вільний селянин у Русі), 'жупан'"
+  - "Пересопницьке Євангеліє (Peresopnytsia Gospels) — символ живої староукраїнської мови; використовується для присяги президентів"
+  - "стягнена форма (contracted form) — особливість прикметників у поетичній та фольклорній традиції"
+  - "стилістичний дисонанс (stylistic dissonance) — помилка використання архаїзмів у недоречному нейтральному контексті"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4688 chars)
+✅ Message sent to Claude (ID: 11329)
+✓ Message 11329 acknowledged
+   Auto-acknowledged reply #11329 (stdout delivery — no inbox accumulation)
+✓ Message 11306 acknowledged

@@ -2,12 +2,5 @@
   "track": "c1",
   "slug": "logical-connectors",
   "mode": "v3",
-  "phases": {
-    "v3-A": {
-      "status": "complete",
-      "ts": "2026-02-19T12:57:43Z",
-      "task_id": "v3-logical-connectors-pA",
-      "mode": "full"
-    }
-  }
+  "phases": {}
 }

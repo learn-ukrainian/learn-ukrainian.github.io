@@ -1,0 +1,285 @@
+✅ Message sent to Gemini (ID: 11791) [auto-acked: self-addressed]
+✓ Message 11791 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #11791...
+📨 Message #11791
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-young-shevchenko
+   Time: 2026-02-20T23:31:34.682175+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 11
+module: lit-11
+level: LIT
+slug: young-shevchenko
+version: '2.0'
+title: 'Тарас Шевченко: Від Кріпака до Пророка'
+subtitle: 'LIT-011: Анатомія Генія'
+content_outline:
+- section: Вступ — Світ кріпацтва
+  points:
+  - Історичний контекст (1814-1840)
+  - Що таке кріпацтво і як воно працювало
+  - Шанси кріпака стати вільним
+- section: Дитинство і юність (1814-1831)
+  points:
+  - Село Моринці та родина
+  - Дякова школа і перші малюнки
+  - '"Козачок" пана Енгельгардта'
+- section: Петербург — місто контрастів
+  points:
+  - Переїзд до столиці імперії
+  - Зустріч з Іваном Сошенком
+  - Літній сад — доленосна зустріч
+- section: Викуп — детективна історія
+  points:
+  - Брюллов, Жуковський, Венеціанов
+  - Лотерея з портретом Жуковського
+  - 2500 рублів — ціна свободи
+- section: Академія і "Кобзар"
+  points:
+  - Навчання у Брюллова
+  - 1840 рік — вихід "Кобзаря"
+  - Психологія "вільної людини"
+- section: Підсумок — Шанс, Талант, Солідарність
+  points:
+  - Формула успіху Шевченка
+  - Роль випадку в історії
+  - Перехід до аналізу творчості
+vocabulary_hints:
+  required:
+  - кріпацтво (serfdom)
+  - кріпак (serf)
+  - поміщик (landowner)
+  - панщина (corvée)
+  - викуп (ransom/redemption)
+  - дяк (church clerk/teacher)
+  - академія (academy)
+  - лотерея (lottery)
+  - пророк (prophet)
+  - геній (genius)
+  recommended:
+  - козачок (servant boy)
+  - меценат (patron)
+  - портрет (portrait)
+  - живопис (painting)
+  - свобода (freedom)
+activity_hints:
+- type: reading
+  focus: Біографічні матеріали про Шевченка
+  source: UkrLib biography
+  items: 4+
+- type: essay-response
+  focus: Роль випадку в долі генія
+  output: Біографічне есе
+focus: biography
+pedagogy: literature
+prerequisites:
+- lit-01 to lit-10 (Kotliarevsky and Kvitka phases)
+- Understanding of early 19th century Ukraine
+connects_to:
+- lit-12 (The Ballads — рання творчість)
+- lit-17 (The Artist — Шевченко-маляр)
+objectives:
+- Outline Shevchenko's path to freedom
+- Analyze the role of the 1838 lottery
+- Explore the "Romantic Hero" image
+grammar:
+- Historical narrative style
+- Biography lexicon
+- Art and freedom vocabulary
+module_type: biography
+sources:
+- name: Тарас Шевченко — біографія
+  url: https://www.ukrlib.com.ua/bio/printit.php?tid=1749
+  type: primary
+  notes: Офіційна біографія на UkrLib
+- name: Кобзар — повний текст
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=1
+  type: secondary
+  notes: Для контексту ранньої творчості
+- name: Шевченко і Академія мистецтв
+  url: https://uk.wikipedia.org/wiki/Тарас_Шевченко
+  type: reference
+  notes: Петербурзький період
+immersion: 100% Ukrainian
+phase: LIT.3 The Prophet (Taras Shevchenko)
+persona:
+  voice: Senior Philologist & Critic
+  role: Young Artist
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Тарас Шевченко: Від Кріпака до Пророка
+
+## Використані джерела
+1. [Енциклопедія історії України (history.org.ua)](http://resource.history.org.ua/) — стаття "Шевченко Тарас Григорович", фундаментальний академічний огляд біографії та історичного контексту.
+2. [Енциклопедія Сучасної України (esu.com.ua)](https://esu.com.ua/) — енциклопедичний контекст інституту кріпацтва та мистецького середовища ХІХ ст., у якому формувався Шевченко.
+3. [Ізборник (litopys.org.ua)](http://litopys.org.ua/) — першоджерела: автобіографічні матеріали, листи та повість "Художник", що розкривають психологію звільнення Т. Шевченка.
+
+## Хронологія
+- 1814, 9 березня: Народження Тараса Шевченка в с. Моринці, Звенигородського повіту.
+- 1822–1823: Навчання грамоти у сільського дяка (перший доступ до літератури).
+- 1829: Переїзд разом з паном П. Енгельгардтом до Вільно; перші спроби малювання як "козачок".
+- 1831: Переїзд Енгельгардта з челяддю (разом із Шевченком) до Петербурга.
+- 1836, літо: Доленосна зустріч з Іваном Сошенком у Літньому саду Петербурга.
+- 1838, 22 квітня (4 травня): Офіційний викуп із кріпацтва за 2500 рублів після аукціону-лотереї.
+- 1840: Вихід у світ першого видання "Кобзаря" (8 творів), що змінив хід української літератури.
+
+## Ключові факти та цитати
+- "Історія мого життя становить частину історії моєї батьківщини." (Т. Шевченко, "Автобіографія")
+- "Велике щастя буть вольним чоловіком: робиш, що хочеш, ніхто тебе не спинить." (Т. Шевченко, з листа до брата Микити, 1839)
+- За 2500 рублів (ціна викупу Шевченка) у 1838 році можна було купити невеликий маєток або ціле село. Це була астрономічна сума за звичайного кріпака, що підтверджувало визнання його геніальності ще до офіційного звільнення.
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ — Світ кріпацтва: Епоха і система": `[!context]` — Що насправді означало бути кріпаком у Російській імперії (статус "мовленої власності", а не суб'єкта права).
+- Section "Дитинство і юність (1814-1831): Школа та кріпацьке служіння": `[!myth-buster]` — Спростування міфу про виключно "темне" дитинство: як посада "козачка" (кімнатного слуги) дозволила Тарасові доторкнутися до європейського мистецтва в панських покоях.
+- Section "Петербург — місто контрастів: Зустріч з мистецькою елітою": `[!history-bite]` — Літній сад і білі ночі Петербурга: як нелегальні нічні етюди кріпака привели до знайомства із Сошенком.
+- Section "Викуп — детективна історія: Змова заради генія": `[!culture]` — Брюллов, Жуковський, Венеціанов: як інтелектуальна еліта імперії (багато з яких мали українське або європейське коріння) об'єдналася, щоб вирвати генія з рабства.
+- Section "Викуп — детективна історія: Ціна свободи": `[!quote]` — Перші відчуття звільненої людини: аналіз листа до брата Микити про "щастя буть вольним".
+- Section "Академія і Кобзар: Народження Пророка": `[!decolonization]` — Феномен "Кобзаря" 1840 року: чому це був не просто збірник "мужицьких віршів", а продуманий маніфест зрілого інтелектуала та художника-європейця, який повертав Україні суб'єктність.
+
+## Деколонізаційний контекст
+- Imperial/Soviet myth: Радянська історіографія маргіналізувала академічний період Шевченка, зображуючи його переважно як "селянського поета-революціонера", пролетарського борця, сфокусованого виключно на класовій ненависті до панів. Водночас царська цензура намагалася звести його до статусу "регіонального етнографічного римотворця".
+- Ukrainian reality: Шевченко — блискучий європейський інтелектуал, елітарний художник (учень Брюллова) та денді петербурзького періоду. Його свідома відмова асимілюватися в імперську культуру і створення "Кобзаря" була актом високої літературної стратегії. Він використав здобутки європейського романтизму, щоб перетворити український національний міф на зброю деколонізації.
+
+## Contested Terms (if applicable)
+| Concept | Imperial/Soviet framing | Ukrainian (decolonized) framing |
+|---------|-----------------|-------------------|
+| Селянський поет | "Мужицький римотворець", голос пригноблених мас. | Поет-пророк, національний будитедь, високоосвічений творець модерної нації. |
+| Викуп Шевченка | "Царська милість", подарунок російської інтелігенції російському кріпаку. | Солідарність митців; визнання об'єктивної геніальності незалежно від статусу; вирвана свобода. |
+
+## Section-Mapped Research Notes
+
+### Вступ — Світ кріпацтва: Епоха і система
+Аналіз історичного контексту 1814-1840 років. Кріпацтво як інституціоналізоване рабство в Російській імперії: економічна суть панщини, юридична безправність кріпака (продаж без землі, розлучення родин). Шанси на звільнення були мізерними.
+
+### Дитинство і юність (1814-1831): Родина та перші таланти
+Рідне село Моринці. Роль родини (зокрема діда Івана) у формуванні історичної пам'яті (розповіді про Коліївщину). Перші прояви художнього таланту як форма внутрішньої втечі від реалій кріпацтва.
+
+### Дитинство і юність (1814-1831): Школа та кріпацьке служіння
+Освіта у сільського дяка (жорстокість, але і перший доступ до текстів). Переведення до двору П. Енгельгардта на посаду "козачка". Віленський період як перша зустріч із західноєвропейською культурою та повстанням (1830-1831).
+
+### Петербург — місто контрастів: Переїзд і нове оточення
+У 1831 році Енгельгардт переїжджає до столиці. Контраст між блиском імперського центру і становищем дворової челяді. Передача Шевченка в науку до "живописних справ цехового" В. Ширяєва.
+
+### Петербург — місто контрастів: Зустріч з мистецькою елітою
+Символічне значення Літнього саду. Літо 1836 року — знайомство з Іваном Сошенком. Входження кріпака в коло українського і російського петербурзького земляцтва (Євген Гребінка, Василь Григорович).
+
+### Викуп — детективна історія: Змова заради генія
+Оцінка таланту Шевченка Карлом Брюлловим та поетом Василем Жуковським. Перемовини з Енгельгардтом, який побачив у своєму кріпакові джерело збагачення і заправив безпрецедентну суму — 2500 рублів.
+
+### Викуп — детективна історія: Ціна свободи
+Механізм звільнення: портрет Жуковського пензля Брюллова, приватна лотерея за участю імператорської родини. 22 квітня 1838 року — вручення відпускної. Психологічний перелом: усвідомлення власної суб'єктності.
+
+### Академія і "Кобзар": Академічне визнання
+Навчання в Академії мистецтв. Блискучі успіхи (срібні медалі). Шевченко стає улюбленим учнем Карла Великого (Брюллова), відвідує салони, читає європейську літературу, інтегрується в еліту.
+
+### Академія і "Кобзар": Народження Пророка
+Синтез досвіду. Відчувши свободу особисту, Шевченко починає формулювати ідею свободи національної. 1840 рік — "Кобзар". Як європейська форма романтизму і блискуча академічна підготовка дозволили створити геніальну українську поезію.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 11832)
+✓ Message 11791 acknowledged
+✓ Message 11832 acknowledged

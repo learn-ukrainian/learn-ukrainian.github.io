@@ -1,0 +1,203 @@
+✅ Message sent to Gemini (ID: 12741) [auto-acked: self-addressed]
+✓ Message 12741 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12741...
+📨 Message #12741
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-bridge-builders
+   Time: 2026-02-20T23:42:06.306300+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 60
+module: oes-060
+module_number: 48
+slug: bridge-builders
+title_uk: Мостники
+title_en: The Bridge Builders
+phase: 2
+phase_id: literary-tradition
+phase_name: Literary Tradition
+focus: First fee schedule — Economic vocabulary
+content_outline:
+- section: Вступ
+  description: Introduction to The Bridge Builders
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Senior Paleographer
+  role: Master Mason
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Bridge Builders (Мостники)
+
+## Використані джерела
+1. [Руська Правда (Коротка редакція)](http://litopys.org.ua/yushkov/yu02.htm) — текст статті 43 «Урок мостникам».
+2. [Енциклопедія історії України: Руська Правда](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Ruska_Pravda) — аналіз правового контексту.
+3. [Толочко П. П. «Древняя Русь» (Розділ про господарство)](http://litopys.org.ua/) — дані про ремесла та будівництво.
+4. [Словник староукраїнської мови XIV-XV ст.](http://litopys.org.ua/djvu/slovnyk_staroukr.htm) — етимологія слів «міст», «город», «ногата».
+
+## Хронологія
+- **1016–1054**: Правління Ярослава Мудрого, укладання «Правди Ярослава» (найдавнішої частини Руської Правди).
+- **Кінець XI ст.** (бл. 1072): «Правда Ярославичів», до якої входить «Урок мостникам» (ст. 43 Короткої редакції).
+- **X–XIII ст.**: Активне будівництво мостових (дерев’яних настилів) у Києві, Новгороді, Львові (археологічно підтверджено).
+- **1113**: Редакція Володимира Мономаха (Просторова Правда), що розширює соціальні гарантії.
+
+## Ключові факти та цитати
+- **Текст ст. 43**: «А се урок мостникам: аще помостивше мост, взяти от дела ногата, а от городници ногата; аще ли ветхаго моста потворити несколько досок, или 3, или 4, или 5, то тое же взяти».
+- **Термінологія**:
+    - «Мостник» — професійний будівельник мостів та доріг.
+    - «Городниця» — ланка мосту або частина укріплення (городні).
+    - «Ногата» — грошова одиниця (1/20 гривні), висока плата за кваліфіковану працю.
+- **Соціальний статус**: Мостники — вільні ремісники, чия праця регулювалася законом, а не примусом.
+- **Технологія**: Мости будували на «городнях» (зрубах, засипаних землею/камінням).
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ": [!history-bite] — «Міст» у давнину означав не лише переправу через річку, а й будь-яку вимощену дорогу (бруківку). Київ був «мощеним» містом.
+- Section "Основний матеріал: I": [!context] — Закон про мостників стоїть поруч із законами про кровну помсту, що підкреслює вагу інфраструктури для держави.
+- Section "Основний матеріал: II": [!paleography] — Аналіз графіки літери «ѣ» (ять) у слові «дѣла» в списках Руської Правди.
+- Section "Основний матеріал: III": [!myth-buster] — Міф про «бездоріжжя» Русі. Археологія Новгорода та Києва показує складні багатошарові дерев'яні магістралі.
+- Section "Основний матеріал: IV": [!decolonization] — Радянська наука часто трактувала це як феодальну повинність, тоді як текст прямо говорить про *оплату* (взяті від діла), тобто ринкові відносини.
+- Section "Підсумок": [!culture] — Символіка мосту в фольклорі як переходу між світами, що коріниться в давніх практиках.
+
+## Деколонізаційний контекст
+- **Imperial myth**: Представлення Київської Русі як примітивної прото-держави без складної інфраструктури та правового регулювання праці. Акцент на «общині» і «повинностях».
+- **Ukrainian reality**: Руська Правда фіксує розвинену систему *договірних* відносин та *грошової* оплати праці ремісників. Інфраструктура (мости, дороги) була предметом державного піклування та законодавчого захисту, що свідчить про високу інституційну зрілість держави.
+
+## Section-Mapped Research Notes
+
+### Вступ
+Поняття інфраструктури в середньовіччі. Чому міст — це стратегічний об'єкт (торгівля, війна). Місце «Уроку мостникам» у Руській Правді.
+
+### Основний матеріал: I — Текстологія та джерелознавство
+Повний текст ст. 43 старослов’янською/давньоруською. Палеографічні особливості (титла, єри). Розбіжності в списках (Академічний, Троїцький).
+
+### Основний матеріал: II — Лексичний світ: Міст, Город, Ногата
+Етимологія слова «міст» (*met-). Зв'язок з «місце». «Городниця» — як конструктивний елемент (зруб). «Ногата» — вартість праці (порівняння з ціною коня чи мечa).
+
+### Основний матеріал: III — Технологія та інфраструктура
+Як будували? Дерев'яні зруби (городні), засипка. Археологічні розкопки на Подолі (Київ): ярусність мостових. Інженерна думка предків.
+
+### Основний матеріал: IV — Соціальний вимір
+Хто такі мостники? Артільна організація праці. Чи були вони князівськими слугами чи вільними підрядниками? Аналіз оплати: «від діла» (відрядна оплата).
+
+### Практика
+Завдання на транскрипцію уривка. Пошук спільнокореневих слів у сучасній мові (міст, містити, намісник?).
+
+### Підсумок
+Значення «Уроку» для історії права та економіки. Міст як цивілізаційний маркер.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12777)
+✓ Message 12741 acknowledged
+✓ Message 12777 acknowledged

@@ -6,51 +6,77 @@ version: '2.0'
 title: Shopping and Services
 subtitle: Buying and Paying
 content_outline:
-- section: Вступ
+- section: Вступ (Introduction)
+  words: 400
   points:
-  - Types of stores — distinguish between магазин (shop), супермаркет (supermarket),
-    and ринок (market) — State Standard §3.9
-  - 'Shopping culture — introduce Bessarabka Market as a cultural landmark (built
-    1912 by Lazar Brodsky, Art Nouveau); mention the idiom ''Expensive as in Bessarabka'';
-    note market etiquette: ''Чи є у вас свіже...?'' instead of ''Ти маєш...?'''
-- section: Граматика
+  - 'Introduction to the shopping theme aligned with State Standard §3.9. Distinguish
+    between different store types: магазин (general shop), супермаркет (supermarket),
+    and ринок (traditional market).'
+  - 'Cultural landmark spotlight: Bessarabka Market (Бессарабський ринок) in Kyiv.
+    Explain its history (built 1912 by Lazar Brodsky) and its Art Nouveau architecture
+    as an urban monument.'
+  - Introduce the famous Kyiv idiom 'Expensive as in Bessarabka' (Дорого, як на Бессарабці)
+    to discuss price perception and the market's premium reputation.
+- section: Лексика та культура (Vocabulary and Culture)
+  words: 700
   points:
-  - 'Store vocabulary (магазин, супермаркет, ринок) — collocations: йти в магазин
-    (Accusative for motion); learner error: using Locative (в магазині) for direction'
-  - 'Prices and paying (Скільки коштує?, платити) — distinguish Accusative for ''what''
-    (купувати хліб) vs Instrumental for ''how'' (платити карткою/готівкою); learner
-    error: платити картою -> платити карткою (Instrumental)'
-  - 'Checkout vocabulary (каса, чек, здача) — collocations: потрібен чек, фіскальний
-    чек'
-  - Services (хімчистка, перукарня, ремонт) — introduce basic service vocabulary per
-    State Standard §3.11; keep focus on shopping transaction flow
-- section: Практика
+  - 'Essential commodities from State Standard §3.9: groceries (овочі, фрукти, м’ясо,
+    хліб, молочні продукти) and hygiene products (мило, шампунь, зубна паста).'
+  - 'Traditional market etiquette: Explain why ''Чи є у вас свіже...?'' (Is there
+    at you fresh...?) is the standard polite opener, contrasted with the unnatural
+    direct translation ''Ти маєш...?'' (Do you have?).'
+  - 'Units of weight and volume (одиниці ваги й об’єму): kilo, liter, and pieces (штуки)
+    as required by the Standard for transactional competency.'
+- section: Граматика (Grammar)
+  words: 800
   points:
-  - 'Shopping dialogues — focus on natural queries: ''Чи є у вас...?'' instead of
-    ''Ти маєш...?'' (learner error: direct translation); flow: Store -> Selection
-    -> Price -> Payment'
-  - Service requests — use basic service vocabulary
-- section: Підсумок
+  - 'Direction vs. Location: Correcting the common learner error of using the Locative
+    (''Я йду в магазині'') instead of the Accusative (''Я йду в магазин'') for motion
+    toward a shop.'
+  - 'The Instrumental case for payment methods: Explicit drill on ''платити карткою''
+    (pay with card) to fix the frequent error ''платити картою''. Contrast with ''платити
+    готівкою'' (pay with cash).'
+  - 'Verbal patterns for shopping: Conjugation and usage of купувати (to buy), продавати
+    (to sell), and платити (to pay) in the context of prices (Скільки коштує?).'
+- section: Діалоги та практика (Dialogues and Practice)
+  words: 700
   points:
-  - Summary of vocabulary
+  - 'Simulated market dialogue: Practice asking about freshness, weight, and price
+    using natural immersion patterns. Roleplay as a Bessarabka vendor and an encouraging
+    guide.'
+  - 'Supermarket checkout flow: Dialogues involving asking for a bag (пакет), a receipt
+    (потрібен чек/фіскальний чек), and clarifying payment method (карткою чи готівкою?).'
+  - 'Correction drill for ''Do you have?'': Replace the learner''s direct translation
+    ''Ти маєш хліб?'' with the natural ''Чи є у вас хліб?'' in various shopping contexts.'
+- section: Послуги та підсумок (Services and Summary)
+  words: 400
+  points:
+  - 'Introduction to basic services per State Standard §3.11: перукарня (hairdresser),
+    хімчистка (dry cleaning), and ремонт (repair). Focus on simple service requests.'
+  - Final summary of high-frequency vocabulary and collocations. Review of the distinction
+    between buying (what - Accusative) and paying (how - Instrumental).
 vocabulary_hints:
   required:
-  - 'магазин (store) — collocations: йти в магазин, продуктовий магазин (High Frequency)'
-  - 'ціна (price) — collocations: висока ціна, яка ціна? (High Frequency)'
-  - 'купувати (to buy) — collocations: купувати продукти, купувати одяг (High Frequency)'
-  - 'платити (to pay) — collocations: платити карткою, платити готівкою; note: Instrumental
-    case (High Frequency)'
-  - гроші (money) — State Standard §3.9
-  - 'картка (card) — collocations: банківська картка, платити карткою (High Frequency)'
-  - 'готівка (cash) — collocations: платити готівкою, мати готівку (Medium Frequency)'
-  - 'чек (receipt) — collocations: потрібен чек, фіскальний чек (Medium Frequency)'
+  - магазин (store) — йти в магазин, продуктовий магазин; High Frequency (Standard
+    §3.9)
+  - ціна (price) — висока ціна, яка ціна?, ціна за кілограм; High Frequency
+  - купувати (to buy) — купувати продукти, купувати одяг; High Frequency
+  - платити (to pay) — платити карткою, платити готівкою; Instrumental case requirement;
+    High Frequency
+  - гроші (money) — паперові гроші, мати гроші; High Frequency (Standard §3.9)
+  - картка (card) — банківська картка, платити карткою; High Frequency
+  - готівка (cash) — платити готівкою, мати готівку; Medium Frequency
+  - чек (receipt) — потрібен чек, фіскальний чек; Medium Frequency
   recommended:
-  - 'знижка (discount) — collocations: знижка 50%, сезонні знижки (Medium Frequency)'
-  - каса (checkout)
-  - здача (change)
-  - пакет (bag)
-  - примірка (fitting room)
-  - розмір (size)
+  - знижка (discount) — знижка 50%, сезонні знижки; Medium Frequency
+  - каса (checkout) — де каса?, на касі
+  - здача (change) — ваша здача, без здачі
+  - пакет (bag) — чи потрібен вам пакет?
+  - примірка (fitting room) — де примірка?
+  - розмір (size) — який розмір?, мій розмір
+  - перукарня (hairdresser) — йти в перукарню; (Standard §3.11)
+  - хімчистка (dry cleaning) — віддати в хімчистку; (Standard §3.11)
+  - ремонт (repair) — ремонт взуття, ремонт одягу; (Standard §3.11)
 activity_hints:
 - type: match-up
   focus: Shopping vocabulary

@@ -48,8 +48,8 @@ Identifying colors is your first step in description. It anchors your vocabulary
 
 *   **Зима** — біла. Сніг лежить на землі. Все світле і чисте.
 *   **Весна** — зелена. Трава і дерева прокидаються. Це життя.
-*   **Літо** — жовте і синє. Жовте сонце і синє небо. А також золота пшениця.
-*   **Осінь** — червона і жовта. Листя падає, і світ стає яскравим.
+* **Літо** — жовте і синє. Жовте сонце та синє небо. А також золота пшениця.
+* **Осінь** — червона і жовта. Листя падає, та світ стає яскравим.
 
 Кожен місяць має свій колір:
 *   **Січень** — білий.
@@ -258,7 +258,7 @@ When pointing at these items, you must use the plural demonstrative pronoun **ц
 Одяг — це частина культури. В Україні головний одяг — це **вишиванка**.
 
 ### Вишиванка: Одяг-Оберіг
-The **вишиванка** [ʋɪʃɪˈʋɑnkɑ] is an embroidered shirt. But traditionally, it was not just decoration. It was an **оберіг** [ɔbeˈrʲih] — a protective talisman.
+The **вишиванка** [ʋɪʃɪˈʋɑnkɑ] is an embroidered shirt. But traditionally, it was not just decoration. It was an **оберіг** [ɔbeˈrʲiɦ] — a protective talisman.
 
 Embroidery was placed on the collar, cuffs, and hem — the places where the shirt "opened" to the world. The patterns were believed to seal the wearer's energy and protect them from bad spirits or the "evil eye."
 

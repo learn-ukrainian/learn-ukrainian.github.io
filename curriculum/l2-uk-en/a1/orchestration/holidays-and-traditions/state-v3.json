@@ -3,20 +3,30 @@
   "slug": "holidays-and-traditions",
   "mode": "v3",
   "phases": {
-    "v3-A": {
-      "status": "complete",
-      "ts": "2026-02-20T00:36:36Z",
-      "task_id": "v3-holidays-and-traditions-pA",
-      "mode": "full"
-    },
     "v3-B": {
       "status": "complete",
-      "ts": "2026-02-20T00:38:01Z"
+      "ts": "2026-02-20T21:49:54Z",
+      "note": "migrated-from-v2"
     },
     "v3-C": {
       "status": "complete",
-      "ts": "2026-02-20T00:39:18Z",
-      "task_id": "v3-holidays-and-traditions-pC"
+      "ts": "2026-02-20T21:49:54Z",
+      "note": "migrated-from-v2"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-20T21:49:54Z",
+      "note": "migrated-from-v2"
+    },
+    "v3-D": {
+      "status": "complete",
+      "ts": "2026-02-20T21:49:54Z",
+      "note": "migrated-from-v2"
+    },
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-20T21:49:55Z",
+      "note": "adopted-existing-meta"
     }
   }
 }

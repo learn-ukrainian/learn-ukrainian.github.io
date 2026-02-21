@@ -6,71 +6,84 @@ version: '2.0'
 title: The Gender Code
 subtitle: Unlocking Ukrainian Gender Patterns
 content_outline:
-- section: Warm-up
+- section: Вступ (Introduction)
+  words: 300
   points:
-  - 'Every Ukrainian noun has a gender — masculine, feminine, or neuter — cultural
-    hook: contrast sun (neuter) with other languages; seen as gentle/impartial life-giver'
-  - 'The ending reveals the gender (pattern recognition, not memorization) — Mnemonic
-    aids: M = Hard/Stop, F = Open/A, N = Round/Circle'
-  - '95% predictable from the word ending — learner error: over-reliance on English
-    ''it'' for objects'
-- section: Presentation
+  - 'Introduction to the Ukrainian three-gender system: Masculine, Feminine, and Neuter
+    — stressing that gender is a linguistic category for all nouns, not just people.'
+  - 'Cultural Hook: The Neuter Sun (сонце) — explain its role as an impartial, gentle
+    life-giver in Ukrainian folklore, contrasting it with the masculine sun in Romance
+    languages (el sol/le soleil).'
+  - 'Visual Mnemonic Framework: Categorization logic using color codes — Blue for
+    Masculine (Hard/Consonant), Red for Feminine (Open/A-ending), and Yellow for Neuter
+    (Round/O-E-ending).'
+- section: Презентація правил (Presentation of Rules)
+  words: 500
   points:
-  - 'Masculine: consonant ending (стіл, хліб, дім) — collocations: новий дім, дерев''яний
-    стіл; include ''гарний день'' (M) from research'
-  - 'Feminine: -а or -я ending (книга, кімната, земля) — collocations: цікава книга,
-    рідна земля; include ''добра ніч'' (F)'
-  - 'Neuter: -о or -е ending (вікно, місто, море) — collocations: відкрите вікно,
-    велике місто, тепле море; include ''добре серце'' (N)'
-  - 'Gender affects adjectives, pronouns, and case endings — State Standard §4.2.2:
-    introduction of мій, моя, моє'
-  - Mini-dialogue demonstrating all three genders — include high-frequency family
-    context (брат, сестра, мама); add 'тато' (dad) and 'мій/моя' agreement
-- section: Practice
+  - 'Pattern Recognition for Endings: Masculine (consonant: стіл, хліб, дім), Feminine
+    (-а/-я: книга, кімната, земля), and Neuter (-о/-е: вікно, місто, море).'
+  - 'State Standard §4.2.2 Integration: Introduction of possessive pronouns ''мій,
+    моя, моє'' as the primary diagnostic tool for gender agreement and identity.'
+  - 'Syntactic Agreement: How gender dictates the form of adjectives and pronouns
+    — examples with ''великий стіл'' (M), ''цікава книга'' (F), and ''чисте вікно''
+    (N).'
+  - 'Identity and Family Dialogue: High-frequency context using ''брат'' (M), ''сестра''
+    (F), ''мама'' (F), and ''тато'' (M) to demonstrate natural vs. grammatical gender.'
+- section: Практичні вправи (Practice Exercises)
+  words: 500
   points:
-  - '4 declension families overview (відміни) — State Standard §4.2.1.1: focus on
-    singular general gender meanings'
-  - 'Family 1: -а/-я (mostly feminine) — мама, земля — learner error: ''тато'' ends
-    in -o but is M due to natural gender; biological sex overrides ending'
-  - 'Family 2: masculine consonant + neuter -о/-е — стіл, вікно — learner error: ''день''
-    is M (consonant) despite soft sign; ''м''який знак'' trap'
-  - 'Family 3: feminine consonant (rare) — ніч, любов — learner error: ''ніч'' is
-    F; common ''ь'' trap for learners (compare with день-M)'
-  - 'Family 4: neuter -а/-я with stem changes — імʼя, теля — learner error: ''ім''я''
-    is N, not F; ends in -я but is Neuter'
-- section: Production
+  - 'Natural Gender Override Trap: The case of ''тато'' — explain that biological
+    sex overrides the ''-o'' ending, making it Masculine (мій тато); contrast with
+    ''місто'' (N).'
+  - 'The Soft Sign Ambiguity (Ь): Drill with the high-frequency minimal pair ''день''
+    (Masculine) vs. ''ніч'' (Feminine); strategy for memorizing these essential ''soft''
+    exceptions.'
+  - 'The ''Name'' Trap and Family 4: Explaining why ''ім''я'' (name) is Neuter despite
+    ending in ''-я'' — contrast with Feminine ''земля'' to avoid common learner confusion.'
+  - 'State Standard §4.2.1.1 Drill: Categorizing high-frequency nouns ''чоловік''
+    (man), ''жінка'' (woman), and ''місто'' (city) into their respective gender buckets.'
+- section: Самостійна робота (Independent Work/Production)
+  words: 400
   points:
-  - 'Categorize nouns by gender from endings — Use visual memory hooks: Blue (M),
-    Red (F), Yellow (N)'
-  - Identify declension family for common words — Focus on high-frequency heart and
-    nature terms (серце, море)
-- section: Cultural Insight
+  - 'The ''It'' Trap Correction: Targeted drill to stop learners from using neuter
+    ''воно'' for all objects; reinforcing ''стіл = він'' and ''книга = вона''.'
+  - 'Mapping Gender to Modern Contexts: Using S.T.A.L.K.E.R. vocabulary — ''Артефакт''
+    (M), ''Зона'' (F), and ''Укриття'' (N) as classification anchors.'
+  - 'Applying Agreement: Creating simple descriptive phrases for personal items and
+    nature terms using ''мій/моя/моє'' and basic adjectives (новий, цікавий, великий).'
+- section: Культурний код та підсумок (Cultural Code and Summary)
+  words: 300
   points:
-  - S.T.A.L.K.E.R. Ukrainian game vocabulary example — артефакт (M), зона (F), укриття
-    (N) as modern hooks
-  - 'Home vocabulary across all three genders — State Standard §4.2.1.1: чоловік,
-    жінка, місто examples; include ''собака'' (M) distinction'
+  - 'Summary of gender prediction from endings: 95% predictability rule — reinforcement
+    of the ''Soft Sign'' and ''Natural Gender'' exceptions.'
+  - 'Cultural Reflection: How gendered language shapes the Ukrainian worldview — personification
+    of nature (земля-мати, сонце-життя).'
+  - 'Final Competency Check: Identification of gender for core identity vocabulary
+    (ім''я, тато, мама, місто) as per State Standard requirements.'
 vocabulary_hints:
   required:
-  - брат (brother) — старший брат (older brother)
-  - сестра (sister) — молодша сестра (younger sister)
-  - мама (mother) — моя мама (my mom), люба мама (dear mom)
-  - тато (father) — мудрий тато (wise dad); natural gender overrides -o ending; мій
-    тато (my dad)
-  - дім (house) — новий дім (new house), рідний дім (native home)
-  - вікно (window) — відкрите вікно (open window)
-  - книга (book) — цікава книга (interesting book)
-  - місто (city) — моє місто (my city), велике місто (big city)
+  - брат (brother) — старший брат (older brother); high-frequency family term
+  - сестра (sister) — молодша сестра (younger sister); high-frequency family term
+  - мама (mother) — моя мама; люба мама; high-frequency feminine
+  - тато (father) — мій тато (my dad); natural gender overrides -o ending; masculine
+    trap
+  - дім (house) — новий дім; рідний дім; high-frequency masculine
+  - вікно (window) — відкрите вікно; велике вікно; чисте вікно; high-frequency neuter
+  - книга (book) — цікава книга; стара книга; електронна книга; high-frequency feminine
+  - місто (city) — моє місто; велике місто; State Standard §4.2.1.1 example
   recommended:
-  - стіл (table) — дерев'яний стіл (wooden table)
-  - море (sea) — синє море (blue sea), тепле море (warm sea)
-  - ніч (night) — добра ніч (good night), темна ніч (dark night); feminine exception
-    with soft sign
-  - день (day) — гарний день (good day); masculine with soft sign
-  - земля (earth) — рідна земля (native land), чорна земля (black earth)
-  - серце (heart) — добре серце (kind heart), моє серце (my heart)
-  - собака (dog) — мій собака (my dog); masculine gender trap
-  - ім'я (name) — моє ім'я (my name); neuter family 4 exception
+  - стіл (table) — дерев'яний стіл; великий стіл; новий стіл; core masculine
+  - море (sea) — синє море; тепле море; high-frequency neuter
+  - ніч (night) — добра ніч (good night); feminine exception with soft sign
+  - день (day) — гарний день (good day); masculine contrast with 'ніч'
+  - земля (earth) — рідна земля; чорна земля; feminine ending in -я
+  - серце (heart) — добре серце; моє серце; high-frequency neuter
+  - сонце (sun) — ясне сонце; cultural hook; neuter life-giver
+  - собака (dog) — мій собака (my dog); masculine gender trap for -a endings
+  - ім'я (name) — моє повне ім'я; гарне ім'я; neuter exception (Family 4)
+  - артефакт (artifact) — S.T.A.L.K.E.R. hook; masculine consonant ending
+  - зона (zone) — S.T.A.L.K.E.R. hook; feminine -a ending
+  - укриття (shelter) — S.T.A.L.K.E.R. hook; neuter -я ending with stem change
 activity_hints:
 - type: match-up
   focus: Sort nouns by gender

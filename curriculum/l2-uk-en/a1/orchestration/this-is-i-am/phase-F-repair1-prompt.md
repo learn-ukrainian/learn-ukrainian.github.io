@@ -20,14 +20,16 @@
 ────────────────────────────────────────────────────────────
   audit script returned non-zero exit code
   overall status is 'fail' (must be 'pass')
-  2 Outline Compliance Errors
   failing gates:
-    lesson: 2028/2000 (raw: 2281) | pedagogy: 1 violations
+    lesson: 2376/2000 (raw: 2639) | pedagogy: 1 violations
 
   Hetman has NOT completed this module.
   Fix the issues above and re-run this script.
 
 ─── Audit output (last 15 lines) ───
+  📚 PEDAGOGICAL VIOLATIONS FOUND:
+    [EUPHONY] Line 227: «**Ти і я**» — і між голосними; має бути «й я**»
+       → FIX: Replace «і» with «й» (between vowels)
 
 
   📝 RECOMMENDATION: UPDATE (patch fixes) (severity 5/100)
@@ -38,9 +40,6 @@
   Status: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/status/this-is-i-am.json
 
   ❌ AUDIT FAILED. Correct errors before proceeding.
-
-  Critical Failures:
-    • 2 Outline Compliance Errors
 
   ❌ AUDIT FAILED (see curriculum/l2-uk-en/krisztiankoos/audit/this-is-i-am-audit.log for details)
         ```

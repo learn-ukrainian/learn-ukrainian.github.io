@@ -1,0 +1,304 @@
+✅ Message sent to Gemini (ID: 10877) [auto-acked: self-addressed]
+✓ Message 10877 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10877...
+📨 Message #10877
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-asyndetic-semantics
+   Time: 2026-02-20T21:33:27.860397+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-107
+level: C1
+sequence: 107
+slug: asyndetic-semantics
+version: '2.0'
+title: 'Безсполучникове речення: логіка тире і двокрапки'
+subtitle: 'Asyndetic Sentences: The Logic of Dash and Colon'
+content_outline:
+- section: Вступ — Речення без сполучників
+  points:
+  - State Standard §4.3.4.2 alignment — asyndetic complex sentences and their semantic
+    relations
+  - 'Why asyndetic style matters: it is the hallmark of mature Ukrainian prose — tighter,
+    more rhythmic, and more literary than syndetic equivalents'
+  - Cross-reference with M16 (advanced-punctuation) — this module focuses on MEANING,
+    not mechanics
+- section: 'Двокрапка — пояснення і причина (Colon: explanation & cause)'
+  points:
+  - 'Colon replaces бо/тому що: Він не прийшов: захворів. (He didn''t come — he got
+    sick.)'
+  - 'Colon replaces а саме/тобто: Я люблю три речі: каву, книжки і тишу.'
+  - 'Pattern: general statement : specific explanation/enumeration'
+  - Literary examples from Kotsiubynsky, Franko
+- section: 'Тире — наслідок і контраст (Dash: consequence & contrast)'
+  points:
+  - 'Dash replaces тому/отже: Прийшла весна — зацвіли сади. (Spring came — gardens
+    bloomed.)'
+  - 'Dash replaces але/проте: Шукав щастя — знайшов біду. (Sought happiness — found
+    trouble.)'
+  - 'Dash for rapid sequence: Блискавка — грім — злива. (Lightning — thunder — downpour.)'
+  - 'Pattern: cause/condition — result/consequence'
+- section: 'Кома — послідовність і одночасність (Comma: sequence & simultaneity)'
+  points:
+  - 'Comma for parallel actions: Сонце сідало, вітер стихав, птахи замовкали.'
+  - Comma vs dash vs colon — decision tree based on semantic relationship
+  - 'Learner error: defaulting to syndetic constructions when asyndetic is more natural'
+- section: 'Трансформація: від сполучникового до безсполучникового'
+  points:
+  - 'Practice: rewrite syndetic sentences as asyndetic (тому що → :, але → —)'
+  - 'Reverse practice: expand asyndetic to syndetic to verify semantic understanding'
+  - 'Style analysis: compare paired texts (one syndetic, one asyndetic) for rhythm
+    and impact'
+- section: Підсумок
+  points:
+  - Decision tree for colon vs dash vs comma in asyndetic sentences
+  - Register guidance — asyndetic style is more literary/formal
+vocabulary_hints:
+  required:
+  - безсполучниковий (asyndetic) — безсполучникове речення
+  - двокрапка (colon) — ставити двокрапку
+  - тире (dash) — тире між підметом і присудком
+  - причина (cause) — вказувати на причину
+  - наслідок (consequence) — причина і наслідок
+  - пояснення (explanation) — двокрапка вводить пояснення
+  - протиставлення (contrast) — тире для протиставлення
+  recommended:
+  - перерахування (enumeration)
+  - одночасність (simultaneity)
+  - послідовність (sequence)
+  - ритм (rhythm) — ритм прози
+activity_hints:
+- type: quiz
+  focus: Choose correct punctuation mark for semantic relationship
+  items: 15
+- type: fill-in
+  focus: Transform syndetic sentences to asyndetic
+  items: 15
+- type: match-up
+  focus: Match asyndetic sentence to its semantic type
+  items: 12
+- type: error-correction
+  focus: Fix punctuation in asyndetic sentences
+  items: 10
+focus: grammar
+pedagogy: PPP
+prerequisites:
+- c1-106 (C1.6 Checkpoint)
+connects_to:
+- c1-108 (Persuasive Speech)
+- c1-016 (Advanced Punctuation)
+objectives:
+- Learner can identify the semantic relationship in asyndetic sentences
+- Learner can choose correct punctuation (colon, dash, comma) based on meaning
+- Learner can transform syndetic sentences into asyndetic equivalents
+- Learner can use asyndetic style for literary and rhetorical effect
+grammar:
+- Asyndetic complex sentences (безсполучникові складні речення)
+- Colon for explanation/cause
+- Dash for consequence/contrast
+- Semantic analysis of punctuation choices
+register: літературний
+immersion: 100% Ukrainian
+phase: C1.5 [Literature]
+persona:
+  voice: Senior Specialist
+  role: Literary Editor
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Безсполучникове речення: логіка тире і двокрапки
+
+## State Standard Reference
+§4.3.4.2: "Складне безсполучникове речення: складні безсполучникові речення відкритої структури... складні безсполучникові речення закритої структури..."
+Alignment: Модуль повністю покриває вимоги стандарту щодо безсполучникових речень, фокусуючись на семантичних відношеннях (причина, наслідок, пояснення, одночасність) та відповідній пунктуації.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| безсполучниковий | Середня (термін) | безсполучникове складне речення, безсполучниковий зв'язок, динаміка безсполучникового речення |
+| двокрапка | Висока | ставити двокрапку, двокрапка вказує на, після двокрапки |
+| тире | Висока | ставити тире, авторське тире, інтонаційне тире, тире замість сполучника |
+| причина | Висока | вказувати на причину, з причини того що, головна причина |
+| наслідок | Висока | як наслідок, причинно-наслідковий зв'язок, мати наслідком |
+| пояснення | Висока | давати пояснення, вимагати пояснення, логічне пояснення |
+| ритм | Середня (стилістика) | ритм прози, рваний ритм, динамічний ритм, мелодика речення |
+
+## Cultural Hooks
+1. **Михайло Коцюбинський ("Intermezzo")**: Майстер імпресіоністичного синтаксису. Його "рвана" проза, насичена безсполучниковими конструкціями, передає миттєві враження та психологічну напругу ("Махнула осінь в ліси – вони зацвіли пурпуровими...").
+2. **Василь Стефаник**: Представник експресіонізму, відомий своїми "короткими, нервовими фразами". Його лаконічний синтаксис — це засіб передачі трагізму та болю без зайвих слів.
+
+## Common Learner Errors
+1. **Плутанина тире і двокрапки**: Вживання тире там, де друге речення пояснює перше (потрібна двокрапка), або навпаки.
+   *   *Помилка*: Я знаю — він прийде. (Правильно: Я знаю: він прийде [пояснення]).
+2. **Надуживання сполучниками**: Студенти C1 часто калькують англійську або спрощену українську ("тому що", "через те що"), ігноруючи лаконічність безсполучникового зв'язку (Захворів — не прийшов).
+3. **Ігнорування інтонації**: Нерозуміння того, що розділовий знак у безсполучниковому реченні диктує інтонацію (пауза, підвищення/пониження тону).
+
+## Cross-References
+- **Builds on**: C1-016 (Advanced Punctuation) — поглиблює тему, фокусуючись на семантиці, а не просто правилах.
+- **Prepares for**: C1-108 (Persuasive Speech) — риторична сила коротких фраз; C1-Literature (аналіз стилю модерністів).
+
+## Notes for Content Writing
+- Акцент на **семантиці**: розділовий знак — це не просто графіка, це смисловий маркер.
+- Використовувати приклади з класичної літератури (Коцюбинський, Хвильовий, Підмогильний) для ілюстрації "ритму".
+- У розділі "Трансформація" показати, як зміна сполучникового речення на безсполучникове змінює *регістр* і *емоційне забарвлення* (сухість факту vs художній образ).
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ — Природа безсполучникового зв'язку (Introduction — The Nature of Asyndetic Connection)"
+  words: 500
+  points:
+  - "Alignment with State Standard §4.3.4.2 regarding open and closed structures of asyndetic complex sentences and their inherent semantic relations."
+  - "The philosophy of the semantic marker: Punctuation in asyndetic sentences is a carrier of meaning and intonation (pauses, tone shifts), not just a graphic requirement."
+  - "Learner error: Over-reliance on syndetic conjunctions (тому що, але) as a calque from English; introducing the 'laconic efficiency' of Ukrainian prose."
+- section: "Двокрапка — Пояснення, причина та уточнення (Colon — Explanation, Cause, and Specification)"
+  words: 1000
+  points:
+  - "Cause and Explanation: Replacing 'бо/тому що' in cases like 'Він не прийшов: захворів'; distinguishing between direct cause and logical expansion."
+  - "Specification and Enumeration: Replacing 'а саме/тобто' with a colon; the pattern of moving from a general statement to specific components."
+  - "Semantic hierarchy: Analyzing how the second part clarifies or lists elements hinted at in the first part, requiring a specific 'explanatory' intonation."
+  - "Correction of common confusion: Why 'Я знаю: він прийде' (explanation) requires a colon, while learners often incorrectly default to a dash."
+- section: "Тире — Наслідок, контраст та динаміка (Dash — Consequence, Contrast, and Dynamics)"
+  words: 1000
+  points:
+  - "Cause-Result relationship: Replacing 'тому/отже' where the second part carries the primary semantic weight (e.g., 'Прийшла весна — зацвіли сади')."
+  - "Contrast and Opposition: Using the dash to replace 'але/проте' for sharp semantic transitions ('Шукав щастя — знайшов біду')."
+  - "Dynamics and Rapid Sequence: The use of dashes for 'broken' rhythm and immediate succession of events ('Блискавка — грім — злива')."
+  - "The concepts of 'Authorial Dash' and 'Intonational Dash' as tools for psychological emphasis, common in modernist literature."
+- section: "Кома та трансформаційний аналіз (Comma and Transformational Analysis)"
+  words: 800
+  points:
+  - "Simultaneity and Sequence: Using the comma for parallel actions where no strong cause-effect or contrast is present ('Сонце сідало, вітер стихав')."
+  - "Decision Tree strategy: Choosing between comma, dash, and colon based on the intended logical relationship and desired rhetorical effect."
+  - "Transformation Practice: Rewriting syndetic sentences to asyndetic equivalents to observe how register shifts from dry facts to artistic imagery."
+  - "Semantic expansion: Validating understanding by re-inserting conjunctions to verify if the inferred semantic link matches the intended logic."
+- section: "Майстерність ритму: Коцюбинський та Стефаник (Mastery of Rhythm: Kotsiubynsky and Stefanyk)"
+  words: 700
+  points:
+  - "Impressionistic syntax: Mikhailo Kotsiubynsky ('Intermezzo') — analyzing 'broken' prose and asyndetic structures that convey psychological tension and momentary impressions."
+  - "Expressionist laconicism: Vasyl Stefanyk — using short, 'nervous' asyndetic phrases to convey tragedy and existential pain without verbal excess."
+  - "Stylistic analysis: Comparing the rhythm and impact of paired texts to demonstrate how asyndetic style enhances the emotional resonance of the narrative."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "безсполучниковий (asyndetic) — безсполучникове складне речення; термін для позначення зв'язку без сполучників"
+  - "двокрапка (colon) — ставити двокрапку; вказує на пояснення, причину або уточнення"
+  - "тире (dash) — авторське тире, інтонаційне тире; вживається для позначення наслідку, контрасту або швидкої зміни подій"
+  - "причина (cause) — вказувати на причину; причинно-наслідковий зв'язок (high frequency in semantic analysis)"
+  - "наслідок (consequence) — мати наслідком; логічний результат дії, що відображається через тире"
+  - "пояснення (explanation) — давати пояснення; функція другого речення після двокрапки"
+  - "протиставлення (contrast) — тире для протиставлення; вживання замість сполучників «а», «але»"
+  recommended:
+  - "ритм (rhythm) — ритм прози, динамічний ритм; характеристика модерністського тексту"
+  - "перерахування (enumeration) — вживання двокрапки при деталізації списку"
+  - "одночасність (simultaneity) — паралельність дій, що передається через кому"
+  - "послідовність (sequence) — логічна черговість подій у безсполучниковому реченні"
+  - "стилістика (stylistics) — вивчення засобів мовної виразності, зокрема синтаксичних"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4672 chars)
+✅ Message sent to Claude (ID: 10882)
+✓ Message 10882 acknowledged
+   Auto-acknowledged reply #10882 (stdout delivery — no inbox accumulation)
+✓ Message 10877 acknowledged

@@ -1,0 +1,296 @@
+✅ Message sent to Gemini (ID: 10123) [auto-acked: self-addressed]
+✓ Message 10123 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10123...
+📨 Message #10123
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-at-the-store
+   Time: 2026-02-20T19:42:42.230471+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 38
+module: a1-38
+level: A1
+slug: at-the-store
+version: '2.0'
+title: At the Store
+subtitle: Supermarket Shopping
+content_outline:
+- section: Warm-up
+  points:
+  - 'Структура українського супермаркету — cultural hook: ''Silpo'' themed supermarkets
+    offer immersive cultural experiences (e.g., GTA, Steampunk themes)'
+  - 'Відділи (молочний, м''ясний, кондитерський) — collocation: у якому відділі?'
+- section: Presentation
+  points:
+  - 'Питання про місцезнаходження (Де знаходиться...? / В якому відділі...?) — learner
+    error: Inanimate Masculine Over-correction (e.g., ''я купую магазин'', not ''магазина'')'
+  - Прохання допомогти (Вибачте, де тут...?)
+  - 'На касі (Пакет потрібен? / Готівкою чи карткою?) — emphasizing the ''Bag Ritual''
+    (''Пакет потрібен?''); learner error: avoid Russian calque ''покупка'', use ''купівля''
+    or ''закупи'''
+  - 'Акції та знижки (Це в акції? / Скільки відсотків знижка?) — collocation: акційна
+    знижка'
+  - 'Проблеми (Ця ціна неправильна / Чек, будь ласка) — cultural hook: tradition of
+    printing predictions/quotes on receipts (''чек'')'
+- section: Practice
+  points:
+  - 'Діалог 1: Пошук товару в магазині — writing note: use high-frequency feminine
+    nouns (кава, вода) to reinforce Accusative -у/-ю ending'
+  - 'Діалог 2: Оплата на касі — collocation: розрахуватися на касі'
+  - 'Діалог 3: Повернення товару'
+- section: Warm-up 2
+  points:
+  - 'Наратив про похід у супермаркет — collocation: іти в магазин (movement context)'
+  - Типові ситуації та фрази
+vocabulary_hints:
+  required:
+  - магазин (store) — продуктовий магазин, іти в магазин
+  - супермаркет (supermarket) — Silpo themed stores
+  - каса (checkout) — на касі, черга до каси
+  - відділ (section/department) — у якому відділі?, молочний/м'ясний відділ
+  - пакет (bag) — пакет потрібен?, покласти в пакет
+  - знижка (discount) — велика знижка, акційна знижка
+  - ціна (price) — ціна за кілограм, низька ціна
+  - чек (receipt) — чек, будь ласка; predictions on receipts
+  recommended:
+  - кошик (basket)
+  - візок (cart)
+  - полиця (shelf)
+  - акція (sale/promotion)
+activity_hints:
+- type: fill-in
+  focus: Supermarket conversation
+  items: 10
+- type: match-up
+  focus: Store section names
+  items: 20
+- type: quiz
+  focus: Checkout interactions
+  items: 10
+- type: fill-in
+  focus: Shopping scenario
+  items: 5
+focus: practical
+pedagogy: PPP
+prerequisites:
+- a1-37 (At the Market)
+connects_to:
+- a1-39 (Buying Tickets)
+objectives:
+- Learner can navigate a supermarket
+- Learner can find items and ask for help
+- Learner can complete checkout process
+- Learner can read basic product labels
+grammar:
+- Location questions (Де знаходиться...?)
+- Accusative for shopping
+- Quantity expressions
+register: розмовний
+phase: A1.4 [Practical Scenarios]
+persona:
+  voice: Patient Supportive Tutor
+  role: Supermarket Manager
+word_target: 2000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: At the Store
+
+## State Standard Reference
+§3.8: "Купівля (закупи): магазини і ринки; споживчі товари (овочі, фрукти, м’ясо і молочні продукти, хліб, яйця); ... гроші."
+Alignment: This module directly addresses the "Shopping" theme, covering store navigation, departments, and checkout interactions as required by the A1 standard. It also reinforces the Accusative case for direct objects (§4.2.3.2).
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| магазин | High (A1 Core) | іти в магазин (Acc.), продуктовий магазин |
+| супермаркет | High | у супермаркеті (Loc.), великий супермаркет |
+| відділ | Medium | молочний відділ, у якому відділі? |
+| каса | High | на касі, вільна каса, черга до каси |
+| пакет | High | пакет потрібен?, великий пакет |
+| знижка | Medium | акційна знижка, картка на знижку |
+| чек | High | ваш чек, передбачення на чеку |
+| готівка | Medium | платити готівкою (Instr. fragment) |
+| картка | High | платити карткою (Instr. fragment) |
+
+## Cultural Hooks
+1. **Themed Supermarkets (Silpo)**: The Ukrainian chain "Silpo" is famous for its unique design themes (e.g., Grand Theft Auto style in Lviv, Steampunk in Kyiv, Alice in Wonderland). It turns grocery shopping into an immersive cultural experience, unlike standardized Western supermarkets.
+2. **Receipt Predictions**: A beloved tradition in Silpo is "Передбачення на чеках" (Predictions on receipts). Customers often check the bottom of their receipt for a funny or inspiring quote/prediction alongside their purchase total.
+3. **The "Bag Ritual"**: The cashier's question "Пакет потрібен?" (Do you need a bag?) is a universal Ukrainian interaction, almost a meme.
+
+## Common Learner Errors
+1. **Case Confusion (Direction vs Location)**: Learners often say "Я йду в магазині" (Locative) instead of "Я йду в магазин" (Accusative) when expressing movement.
+   *   *Correction*: Use Accusative for destination with "іти/їхати".
+2. **Lexical Interference (Russism)**: Using "покупка" (from Russian/Surzhyk) instead of the correct Ukrainian terms "купівля" (process) or "закупи" (shopping trip).
+   *   *Correction*: "Я йду на закупи" or "робити закупи".
+3. **Gender Agreement**: "Цей ціна" (incorrect) vs "Ця ціна" (correct, feminine).
+   *   *Correction*: Reinforce feminine gender of "ціна", "каса", "знижка".
+
+## Cross-References
+- **Builds on**: A1-37 (At the Market) - reuses basic food vocabulary.
+- **Prepares for**: A1-39 (Buying Tickets) - transactional dialogue patterns.
+
+## Notes for Content Writing
+- **Instrumental Case Handling**: Phrases like "карткою чи готівкою" technically use the Instrumental case (A2 topic). For A1, teach these as fixed lexical chunks or "set phrases" without deep grammatical explanation, focusing on communicative competence.
+- **Accusative Reinforcement**: Use high-frequency feminine nouns (кава, вода, сметана) in examples to clearly demonstrate the -у/-ю ending change in the Accusative case.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 300
+  points:
+  - "Структура українського супермаркету — cultural hook: 'Silpo' themed supermarkets (GTA, Steampunk) offer immersive cultural experiences unlike standardized Western stores"
+  - "The 'Bag Ritual' — the universal interaction 'Пакет потрібен?' (Do you need a bag?) as a cultural meme and essential communicative script"
+  - "Alignment with State Standard §3.8: Shopping for essential goods (bread, eggs, dairy) and store navigation competencies"
+- section: "Презентація (Presentation)"
+  words: 500
+  points:
+  - "Відділи магазину (молочний, м'ясний, кондитерський, хлібний) — collocation: 'у якому відділі?' (Locative context)"
+  - "Питання про місцезнаходження (Де знаходиться...?) та прохання допомогти (Вибачте, де тут...?)"
+  - "Граматика: Accusative case for shopping items (§4.2.3.2) — reinforcing -у/-ю endings using high-frequency feminine nouns (кава, вода, сметана, олія)"
+  - "На касі (Пакет потрібен? / Готівкою чи карткою?) — teaching 'карткою чи готівкою' as fixed lexical chunks (Instrumental case) for A1 communicative success"
+- section: "Практика (Practice)"
+  words: 500
+  points:
+  - "Learner error drill: Case confusion between destination (Acc) and location (Loc) — 'іти в магазин' vs 'бути в магазині'"
+  - "Lexical interference (Russism) correction: Avoiding 'покупка' (Russian/Surzhyk) in favor of correct terms 'купівля' (process) or 'закупи' (shopping trip)"
+  - "Gender agreement practice: Reinforcing 'ця ціна' (fem), 'ця каса', 'ця знижка' to avoid agreement errors common with inanimate direct objects"
+  - "Learner error: Inanimate Masculine Over-correction — drill to reinforce 'я купую магазин' (Acc=Nom) instead of incorrect 'магазина'"
+- section: "Продукція (Production)"
+  words: 400
+  points:
+  - "Ситуація: Пошук товарів за списком згідно зі Стандартом (овочі, фрукти, м’ясо, хліб) та запит про ціну"
+  - "Ситуація: Розрахунок на касі — використання картки на знижку та вибір способу оплати (карткою/готівкою)"
+  - "Вирішення проблем: 'Ця ціна неправильна' та прохання про надання чека — 'Чек, будь ласка'"
+- section: "Підсумок (Summary)"
+  words: 300
+  points:
+  - "Cultural hook: The tradition of 'Передбачення на чеках' (Predictions on receipts) in Ukrainian stores as an engaging reading activity"
+  - "Review of high-frequency collocations: 'акційна знижка', 'черга до каси', 'ціна за кілограм'"
+  - "Підсумок комунікативних навичок: Навігація в супермаркеті та завершення транзакції згідно з вимогами рівня A1"
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "магазин (store) — High frequency (A1 Core); іти в магазин (Acc.), продуктовий магазин"
+  - "супермаркет (supermarket) — High frequency; Silpo themed stores; у супермаркеті (Loc.)"
+  - "каса (checkout) — High frequency; на касі, вільна каса, черга до каси"
+  - "відділ (section/department) — Medium frequency; у якому відділі?, молочний/м'ясний відділ"
+  - "пакет (bag) — High frequency; 'Пакет потрібен?' (Bag Ritual); покласти в пакет"
+  - "знижка (discount) — Medium frequency; велика знижка, акційна знижка, картка на знижку"
+  - "ціна (price) — High frequency; 'ця ціна' (feminine agreement); ціна за кілограм"
+  - "чек (receipt) — High frequency; передбачення на чеку (predictions); чек, будь ласка"
+  recommended:
+  - "готівка (cash) — Medium frequency; платити готівкою (fixed Instrumental chunk)"
+  - "картка (card) — High frequency; платити карткою (fixed Instrumental chunk)"
+  - "кошик (basket) — Medium frequency; покласти в кошик"
+  - "візок (cart) — Medium frequency; взяти візок"
+  - "полиця (shelf) — High frequency; на полиці"
+  - "акція (sale/promotion) — High frequency; це в акції?, товар по акції"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (3793 chars)
+✅ Message sent to Claude (ID: 10132)
+✓ Message 10132 acknowledged
+   Auto-acknowledged reply #10132 (stdout delivery — no inbox accumulation)
+✓ Message 10123 acknowledged

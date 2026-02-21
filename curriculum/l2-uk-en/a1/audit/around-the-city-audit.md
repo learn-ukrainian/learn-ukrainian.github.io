@@ -1,7 +1,7 @@
 # Audit Report: M15 — around-the-city.md
 **Level:** A1 | **Module:** M15 | **Phase:** A1.2 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-19 23:06:47
+**Generated:** 2026-02-21 00:46:37
 
 ## Configuration
 **Type:** A1
@@ -38,20 +38,20 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2594/2000 (raw: 2973)
+- **Words:** ✅ 2635/2000 (raw: 3016)
 - **Activities:** ✅ 10/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 6/3
+- **Engagement:** ✅ 7/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 20/1
+- **Vocab:** ✅ 23/1
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ⚠️ 9 IPA issues (run lint_ipa.py --fix)
+- **Ipa:** ⚠️ 4 IPA issues (run lint_ipa.py --fix)
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 25.2% (target 25-40% (M15))
+- **Immersion:** 🇺🇦 25.1% (target 25-40% (M15))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -61,10 +61,10 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Around the City** | ✅ | 59 | Included in Core |
-| **Вступ: Місто та орієнтири** | ✅ | 368 | Included in Core |
-| **Лексика: Напрямки та місця** | ✅ | 552 | Included in Core |
+| **Вступ: Місто та орієнтири** | ✅ | 410 | Included in Core |
+| **Лексика: Напрямки та місця** | ✅ | 553 | Included in Core |
 | **Граматика: Прийменники та рух** | ✅ | 557 | Included in Core |
-| **Практика: Маршрути та діалоги** | ✅ | 371 | Included in Core |
+| **Практика: Маршрути та діалоги** | ✅ | 369 | Included in Core |
 | **Творче завдання: Ваш шлях** | ✅ | 200 | Included in Core |
 | **Культура: Українська навігація** | ✅ | 321 | Included in Core |
 | **Підсумок** | ✅ | 166 | Included in Core |

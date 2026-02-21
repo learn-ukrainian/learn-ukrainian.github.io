@@ -1,7 +1,7 @@
 # Audit Report: M23 — what-time-is-it.md
 **Level:** A1 | **Module:** M23 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-19 23:01:53
+**Generated:** 2026-02-21 00:46:42
 
 ## Configuration
 **Type:** A1-grammar
@@ -38,14 +38,14 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2304/2000 (raw: 2519)
+- **Words:** ✅ 2308/2000 (raw: 2523)
 - **Activities:** ✅ 10/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 5/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 9/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 20/1
+- **Vocab:** ✅ 22/1
 - **Structure:** ✅ Valid Structure
 - **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
@@ -62,7 +62,7 @@
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **What Time Is It?** | ✅ | 51 | Included in Core |
 | **Warm-up** | ✅ | 236 | Included in Core |
-| **Presentation: The Clock Face** | ✅ | 509 | Included in Core |
+| **Presentation: The Clock Face** | ✅ | 513 | Included in Core |
 | **Days of the Week** | ✅ | 278 | Included in Core |
 | **Months of the Year** | ✅ | 296 | Included in Core |
 | **Time Prepositions** | ✅ | 240 | Included in Core |

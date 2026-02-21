@@ -1,0 +1,250 @@
+✅ Message sent to Gemini (ID: 10779) [auto-acked: self-addressed]
+✓ Message 10779 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10779...
+📨 Message #10779
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-kozatski-lehendy
+   Time: 2026-02-20T21:28:15.070894+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-058
+level: C1
+sequence: 58
+slug: kozatski-lehendy
+version: '2.0'
+title: Козацькі легенди
+subtitle: Cossack Legends and Myths
+content_outline:
+- section: Розминка — Козаки в народній уяві
+  points:
+  - Козацтво як історичний феномен та міф
+  - Легенди vs історія — як народ пам'ятає
+  - Роль козацьких легенд у національній ідентичності
+- section: Героїчні легенди
+  points:
+  - Легенди про Байду (Дмитро Вишневецький)
+  - Козак Мамай — народний архетип
+  - Характерники — козаки-чарівники
+  - Легенди про Сірка та інших отаманів
+- section: Топонімічні легенди
+  points:
+  - Легенди про Хортицю та Січ
+  - Козацькі могили та скарби
+  - 'Походження назв: Умань, Батурин, Чигирин'
+  - Місця козацької слави
+- section: Практика — аналіз легенд
+  points:
+  - Порівняти легенду з історичними фактами
+  - Проаналізувати образ козака-характерника
+  - Написати есе про козацький міф у сучасній культурі
+  - Обговорити функцію легенд у збереженні пам'яті
+focus: vocabulary
+pedagogy: Immersion & Analysis
+objectives:
+- Learner can analyze Cossack mythological archetypes (e.g., kharakternyky)
+- Learner understands the role of Cossack myths in national identity construction
+- Learner can use epic and heroic vocabulary in analytical contexts
+grammar:
+- Heroic narrative register
+- Epic stylistics
+phase: C1.5 Folk Culture & Fine Arts
+persona:
+  voice: Senior Specialist
+  role: Характерник
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Козацькі легенди
+
+## State Standard Reference
+§3.21 "Традиції, звичаї, свята": "українські звичаї і традиції; забобони; місця пам’яті та пам’ятники".
+§4.4.3 "Стилістичні засоби лексики": "епітети (веселий хлопець), метафори (тепла атмосфера), згрубілі форми (вітрище)".
+Alignment: Module develops cultural competence through analysis of folklore texts (legends) and linguistic competence through "epic stylistics" (augmentatives, epithets) mandated for C1 stylistic mastery.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| **характерник** | Low (Historical/Folk) | козак-характерник, надприродні здібності, перетворюватися на вовка, наводити ману, ловити кулі руками |
+| **Січ** | High (Cultural) | Запорозька Січ, їхати на Січ, руйнування Січі, закони Січі |
+| **отаман** | Medium (Historical) | кошовий отаман, обирати отамана, батько-отаман, наказний отаман |
+| **байрак** | Medium (Poetic) | у глибокому байраку, козацька могила в байраку |
+| **побратим** | High (Cultural) | вірний побратим, козацьке побратимство, рятувати побратима |
+| **перевертень** | Medium (Folk) | вовкулака-перевертень, обернутися перевертнем |
+
+## Cultural Hooks
+1. **Іван Сірко (Урус-Шайтан)**: Народився з зубами (знак перевертня). Заповідав відрубати свою праву руку після смерті й носити її в походи, щоб козаки перемагали (рука допомагала ще 7 років).
+2. **Козак Мамай**: Сакральна картина-оберіг. Символіка: Кобза (душа народу), Кінь (воля/війна), Дуб (сила роду/довголіття), Спис (готовність до смерті).
+3. **Байда Вишневецький**: Легендарна смерть у Царграді — підвішений за ребро на гак, він три дні висів і глузував із султана, доки його не застрелили (пісня "В Царграді на риночку").
+
+## Common Learner Errors
+1. **Gender of "Січ"**: Learners often treat it as masculine (*цей Січ*). Correct: *ця Січ* (feminine, 3rd declension, like *ніч*).
+2. **Міф vs Легенда**: Confusing terms. *Міф* = sacred narrative defining world structure; *Легенда* = narrative about historical figures/events with fantastic elements.
+3. **Stylistic Mismatch**: Using elevated epic vocabulary (*звитяга, рать*) in neutral everyday contexts.
+
+## Cross-References
+- Builds on: B2 History modules (Cossack era), C1.4 Folk Culture.
+- Prepares for: C1 Literature (Module 87 "Marusia Churai", Module 89 "Black Council").
+
+## Notes for Content Writing
+- Focus on **"Epic Stylistics"**: Use fixed epithets (*ясний сокіл, буйний вітер*), tautologies (*думу думати*), and augmentatives (*ручище, шаблюка*).
+- Differentiate between the "historical truth" (History track) and "folk truth" (Culture track). Here, the legend *is* the truth we study.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Козаки в народній уяві (Introduction: Cossacks in Folk Imagination)"
+  words: 600
+  points:
+  - "Аналіз козацтва як історичного феномену та центрального міфологічного пласта національної ідентичності."
+  - "Розмежування понять «міф» (сакральна розповідь про світоустрій) та «легенда» (оповідь про героїв з елементами фантастики) для усунення помилок у вживанні."
+  - "Морфологічний акцент на слові «Січ»: виправлення помилок у визначенні роду (іменник жіночого роду III відміни, як «ніч»)."
+  - "Роль легенд у збереженні «народної правди» порівняно з академічною історією."
+- section: "Героїчні постаті та легендарні звитяги (Heroic Figures and Legendary Exploits)"
+  words: 1000
+  points:
+  - "Дмитро «Байда» Вишневецький: аналіз пісні «В Царграді на риночку» та легенди про смерть на гаку (висміювання султана як прояв козацького духу)."
+  - "Іван Сірко (Урус-Шайтан): легенда про народження із зубами та магічну силу правої руки, яка допомагала козакам перемагати протягом 7 років після смерті отамана."
+  - "Поняття «побратимство»: козацька етика взаємодопомоги та сакральний статус вірного побратима у фольклорних текстах."
+  - "Топонімічні міфи: походження назв Чигирин та Батурин через призму козацької слави."
+- section: "Феномен характерництва та епічна стилістика (The Phenomenon of Kharakternytstvo and Epic Stylistics)"
+  words: 1000
+  points:
+  - "Козак-характерник: дослідження надприродних здібностей (вміння «наводити ману», ловити кулі руками, перетворюватися на вовка-перевертня)."
+  - "Опанування епічного регістра мовлення: використання сталих епітетів (ясний сокіл, буйний вітер) та тавтологій (думу думати, кличе-закликає)."
+  - "Стилістичні засоби лексики: вживання згрубілих форм та аугментативів (шаблюка, ручище, козачище) для підсилення образу сили."
+  - "Диференціація лексики: попередження помилок при вживанні високого стилю (звитяга, рать) у побутовому контексті."
+- section: "Козак Мамай — сакральний архетип-оберіг (Cossack Mamay — Sacred Archetype-Talisman)"
+  words: 800
+  points:
+  - "Семантичний розбір картини «Козак Мамай» як народного оберега: аналіз символіки кобзи (душа), коня (воля), дуба (сила роду) та списа (готовність до смерті)."
+  - "Топонімічні легенди про Хортицю, байраки та козацькі могили-кургани як місця пам’яті."
+  - "Практичне вживання слова «байрак» у поетичному та фольклорному контекстах (козацька могила в глибокому байраку)."
+- section: "Аналіз та продукція: Козацький міф сьогодні (Analysis and Production: Cossack Myth Today)"
+  words: 600
+  points:
+  - "Дискусія: «Історична правда vs народна легенда» — порівняльний аналіз історичних фактів про Дмитра Вишневецького та його легендарного образу."
+  - "Написання есе: функція козацьких архетипів у сучасній культурі (кіно, література, відеоігри)."
+  - "Вправи на закріплення епічної стилістики: переказ легенди про характерника з використанням метафор та аугментативів."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "характерник (sorcerer-cossack) — козак-характерник, надприродні здібності, наводити ману; фольклорний термін для воїна-мага"
+  - "Січ (Sich) — Запорозька Січ, закони Січі, руйнування Січі; жіночий рід (ця Січ), відмінюється як «ніч»"
+  - "отаман (ataman/chieftain) — кошовий отаман, батько-отаман, обирати отамана; історичний військовий чин"
+  - "байрак (wooded ravine) — у глибокому байраку, за байраком; часто зустрічається в думах та поезії Шевченка"
+  - "побратим (sworn brother) — вірний побратим, козацьке побратимство; високий культурний статус"
+  - "перевертень (shapeshifter/werewolf) — вовкулака-перевертень, обернутися перевертнем; пов'язано з легендами про Івана Сірка"
+  recommended:
+  - "звитяга (valor/victory) — козацька звитяга; високий регістр, не використовувати в побуті"
+  - "мана (illusion/spell) — наводити ману (to cast a spell/delusion); ключове для характерників"
+  - "оберіг (talisman/amulet) — сакральна картина-оберіг; роль Козака Мамая в українській хаті"
+  - "шаблюка (huge saber) — гостра шаблюка; аугментатив (згрубіла форма) для епічної стилістики"
+  - "вус (mustache) — козацький вус, підкручувати вуса; важливий елемент козацького антропотипу"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4246 chars)
+✅ Message sent to Claude (ID: 10786)
+✓ Message 10786 acknowledged
+   Auto-acknowledged reply #10786 (stdout delivery — no inbox accumulation)
+✓ Message 10779 acknowledged

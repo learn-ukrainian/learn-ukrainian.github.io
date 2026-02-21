@@ -1,0 +1,94 @@
+module: b1-44
+level: B1
+sequence: 44
+slug: active-participles-phrases
+version: '2.0'
+title: Активні дієприкметники та їхній стиль
+subtitle: Active Participles & Phrases
+content_outline:
+- section: Вступ
+  points:
+  - Participles as verbal adjectives
+  - 'Agreement with nouns — learner error: failing to match gender/number with the
+    modified noun'
+- section: Теоретичне пояснення
+  points:
+  - 'Active present participles (-учий/-ючий) — strict hard line: recognize and avoid,
+    replace with «той, хто...» constructions'
+  - Active past participles (-лий) — normative status for resultative states (e.g.,
+    «посивілий», «зів'ялий»)
+  - 'Stylistic considerations — cultural hook: the «Anti-Cancelyarit» movement rejecting
+    Soviet bureaucratic language'
+  - 'Канцелярит and russicisms — examples: «бажаючі» → «охочі», «оточуюче середовище»
+    → «довкілля»'
+- section: Практика
+  points:
+  - Identify participle types — distinguish between «adjectivized» forms (родючий,
+    квітучий) and artificial ones (працюючий)
+  - 'Replace with relative clauses — correction of Russian calques: «Я бачу йдучого»
+    → «Я бачу того, хто йде»'
+- section: Приклади використання
+  points:
+  - 'Natural vs artificial constructions — learner error: Professional Titles (Командуючий
+    → Командувач)'
+  - 'Style guide recommendations — cultural hook: Folk Wisdom «Не бійся гостя сидячого...»
+    showing historical roots vs modern misuse'
+- section: Потрібно більше практики?
+  points:
+  - Additional exercises
+vocabulary_hints:
+  required:
+  - дієприкметник (participle - adjective)
+  - активний (active)
+  - теперішній час (present tense)
+  - минулий час (past tense)
+  - канцелярит (bureaucratese) — medium frequency, meta-topic; struggle against artificial
+    language
+  - узгодження (agreement)
+  - 'працюючий (working - participle) — low frequency as participle, high as error;
+    better: «пенсіонер, який працює» or «справний телефон»'
+  - минулий (past/passed)
+  recommended:
+  - стилістика (stylistics)
+  - русизм (russicism)
+  - відносне речення (relative clause)
+  - природність (naturalness)
+  - палаючий (burning) — medium frequency, poetic/literary; e.g., «палаючі очі»
+  - родючий (fertile) — high frequency, adjectivized; fully normative (e.g., «родюча
+    земля»)
+  - завідуючий (head of...) — low frequency, deprecated; incorrect → «завідувач»
+  - оточуюче (surrounding) — incorrect/artificial → «довкілля» or «навколишнє»
+activity_hints:
+- type: quiz
+  focus: Identify participle types
+  items: 25
+- type: fill-in
+  focus: Participle to relative clause
+  items: 20
+- type: error-correction
+  focus: Fix stylistic errors
+  items: 15
+- type: fill-in
+  focus: Choose participle or clause
+  items: 10
+focus: grammar
+pedagogy: TTT
+prerequisites:
+- b1-43 (Adverbial Participles Perfective)
+connects_to:
+- b1-45 (Past Passive Participles 1)
+objectives:
+- Learner can recognize active present participles (-учий/-ючий)
+- Learner can recognize active past participles (-лий)
+- Learner understands stylistic markedness of participles
+- Learner can avoid bureaucratic forms and russicisms
+grammar:
+- Активні дієприкметники теперішнього часу (-учий/-ючий)
+- Активні дієприкметники минулого часу (-лий)
+- Стилістична маркованість та канцелярит
+register: розмовний
+phase: B1.4a [Participles]
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Poet
+word_target: 4000

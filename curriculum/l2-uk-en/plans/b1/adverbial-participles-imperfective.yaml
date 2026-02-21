@@ -6,53 +6,93 @@ version: '2.0'
 title: Дієприслівники недоконаного виду
 subtitle: Adverbial Participles - Imperfective (-ючи/-ачи)
 content_outline:
-- section: Вступ
+- section: Вступ (Introduction)
+  words: 600
   points:
-  - 'Дієприслівники as verbal adverbs — State Standard §4.4.2 alignment; pedagogy:
-    ''Sentence Compression'' technique (transforming ''Коли я йшов...'' -> ''Йдучи...'')'
-  - Difference from дієприкметники
-- section: Пояснення
+  - 'Alignment with State Standard §4.4.2: Introduction of adverbial participle phrases
+    (дієприслівникові звороти) as a tool for expressing simultaneous actions in simple
+    complicated sentences.'
+  - 'Pedagogical hook: ''Sentence Compression'' technique — demonstrating how to transform
+    clunky subordinate clauses from module b1-41 (''Коли я йшов...'') into elegant,
+    streamlined participle phrases (''Йдучи...'').'
+  - 'Cultural hook: ''Юлій Цезар по-українськи'' — exploring the cultural concept
+    of the multitasking ''Caesar'' as a motivator for learning how to describe multiple
+    simultaneous actions using imperfective participles.'
+- section: 'Граматичне пояснення: Творення та вживання (Grammar: Formation and Usage)'
+  words: 1000
   points:
-  - 'Formation -ючи/-ачи suffixes — learner error: confusion between I (-учи/-ючи)
-    and II (-ачи/-ячи) conjugations (e.g., *писачи* instead of *пишучи*)'
-  - 'Expressing simultaneous actions — cultural hook: ''Юлій Цезар'' reference for
-    multitasking; visual aid: parallel timelines for main vs simultaneous action'
-  - 'Common imperfective participles — focus on high-frequency discourse markers:
-    *чесно кажучи*, *м''яко кажучи*, *інакше кажучи*'
-- section: Практика
+  - 'Suffix formation rules for -ючи/-ачи: Mapping the connection to the 3rd person
+    plural present tense, emphasizing the distinction between I (-учи/-ючи) and II
+    (-ачи/-ячи) conjugations.'
+  - 'Critical Error Prevention: Addressing suffix confusion to avoid mistakes like
+    ''писачи'' (wrong) vs ''пишучи'' (correct, from пишуть) and ''бачачи'' (correct,
+    from бачать) vs ''бачучи'' (wrong).'
+  - 'Visualizing Simultaneity: Using a parallel timeline model to show the main verb
+    action and the adverbial participle action running concurrently, reinforcing the
+    ''doing while doing'' logic.'
+  - 'High-frequency discourse markers: Practical focus on ''fixed'' conversational
+    forms essential for B1 fluency, such as ''чесно кажучи'', ''інакше кажучи'', and
+    ''м’яко кажучи''.'
+- section: Синтаксичні пастки та помилки (Syntactic Traps and Errors)
+  words: 800
   points:
-  - Form participles from verbs
-  - 'Transform clauses to participles — learner error: Dangling Participle (Дисбаланс
-    підметів) e.g., ''Йдучи додому, почався дощ'''
-- section: Діалоги
+  - 'The ''Dangling Participle'' (Дисбаланс підметів): Detailed analysis of the error
+    ''Йдучи додому, почався дощ'' and drills on ensuring the subject of the main verb
+    is also the performer of the participle action.'
+  - 'Impersonal Sentence Restriction: Explaining why constructions like ''Читаючи
+    цей текст, мені стало сумно'' are grammatically forbidden and practicing transformations
+    into personal sentences (''Читаючи... я засмутився'').'
+  - 'Semantic Distinction: Differentiating between the literal adverbial use of ''не
+    дивлячись'' (not looking) and the abstract prepositional use ''не дивлячись на''
+    (despite/regardless of).'
+- section: Практика та культурний контекст (Practice and Cultural Context)
+  words: 900
   points:
-  - 'Participles in conversation — cultural hook: ''За двома зайцями'' (chasing two
-    hares = doing two things at once)'
-  - 'Real-world usage — distinction: *не дивлячись на* (prepositional usage ''despite'')
-    vs *не дивлячись* (literal ''not looking'')'
-- section: Потрібно більше практики?
+  - 'Cultural Deep Dive: ''За двома зайцями'' — using the iconic Ukrainian proverb
+    and play/film to illustrate the chaos of trying to do too many things simultaneously
+    through narrative exercises.'
+  - 'Contextual Collocations: Vocabulary-building drills using high-frequency clusters
+    from research, such as ''читаючи новини'', ''йдучи вулицею'', and ''знаючи правду''.'
+  - 'Transformational Dialogue: Roleplay scenarios (e.g., multitasking at work or
+    home) requiring learners to compress complex descriptions into professional-sounding
+    B1-level participle phrases.'
+- section: Підсумок та самоконтроль (Summary and Self-Control)
+  words: 700
   points:
-  - Additional exercises — focus on correcting impersonal constructions (e.g., 'Читаючи...,
-    мені стало сумно')
+  - Synthesized review of simultaneity (одночасність) as the hallmark of the imperfective
+    adverbial participle, setting the stage for the contrast with perfective forms
+    in b1-43.
+  - 'Self-correction checklist: A ''Screenwriter’s Checklist'' for learners to verify
+    subject alignment and suffix accuracy in their own writing and speech.'
+  - 'Final production task: Describing a chaotic or multitasking scene from a film
+    using at least five different imperfective adverbial participles.'
 vocabulary_hints:
   required:
-  - дієприслівник (adverbial participle)
-  - недоконаний вид (imperfective aspect)
-  - одночасність (simultaneity)
-  - суфікс (suffix)
-  - читаючи (while reading) — читаючи книгу, читаючи новини
-  - роблячи (while doing)
-  - слухаючи (while listening)
-  - бачачи (while seeing)
-  - кажучи (saying/speaking) — чесно кажучи, м'яко кажучи (discourse markers)
-  - йдучи (walking/going) — йдучи вулицею, йдучи додому
+  - дієприслівник (adverbial participle) — grammar term for verbal adverbs
+  - недоконаний вид (imperfective aspect) — signals ongoing or simultaneous action
+  - одночасність (simultaneity) — State Standard §4.4.2 concept; two actions happening
+    at once
+  - суфікс (suffix) — -ючи/-ачи (I vs II conjugation markers)
+  - 'читаючи (while reading) — High frequency: читаючи книгу, читаючи новини, читаючи
+    вголос'
+  - 'дивлячись (looking/while looking) — High frequency: дивлячись у вікно, дивлячись
+    в очі; note ''не дивлячись на'' (despite)'
+  - 'йдучи (while walking/going) — High frequency motion: йдучи вулицею, йдучи додому,
+    йдучи на роботу'
+  - 'знаючи (knowing/while knowing) — Cognitive usage: знаючи правду, не знаючи дороги'
+  - 'кажучи (saying/speaking) — Discourse markers: чесно кажучи, інакше кажучи, м''яко
+    кажучи'
   recommended:
-  - підмет (subject)
-  - трансформація (transformation)
-  - підрядне речення (subordinate clause)
-  - замінювати (to replace)
-  - дивлячись (looking) — дивлячись у вікно, не дивлячись на (despite)
-  - знаючи (knowing) — знаючи правду, не знаючи дороги
+  - підмет (subject) — essential for the 'Same Subject' rule in syntax
+  - 'трансформація (transformation) — pedagogy: sentence compression from clauses
+    to phrases'
+  - підрядне речення (subordinate clause) — the 'uncompressed' version of the sentence
+  - замінювати (to replace) — for swapping clauses with participles
+  - роблячи (while doing) — general action participle
+  - слухаючи (while listening) — слухаючи музику, слухаючи лекцію
+  - бачачи (while seeing) — бачачи результат, бачачи проблему
+  - дисбаланс підметів (dangling participle) — label for the most common learner syntax
+    error
 activity_hints:
 - type: fill-in
   focus: Verb to participle conversion

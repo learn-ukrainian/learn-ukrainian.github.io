@@ -1,0 +1,312 @@
+✅ Message sent to Gemini (ID: 12688) [auto-acked: self-addressed]
+✓ Message 12688 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12688...
+📨 Message #12688
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-syntez-khmelnychchyna
+   Time: 2026-02-20T23:41:37.884543+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b2-hist-062
+level: B2-HIST
+sequence: 62
+slug: syntez-khmelnychchyna
+version: '2.0'
+title: 'Синтез: Козацька революція'
+content_outline:
+- section: 'Вступ: Вибух, що змінив усе'
+  points:
+  - The definition of the Khmelnytsky Uprising as a revolution — change of social
+    order, not just a rebellion; [!context] — Хмельниччина відбувалася одночасно з
+    Англійською революцією Кромвеля (1640-1660)
+  - 'The scale of changes: social, political, geopolitical — emergence of a new player
+    on the European map; parallels with Westphalian Peace (1648)'
+- section: 'Причини революції: Чому вибухнуло?'
+  points:
+  - 'Social oppression (serfdom) — [!quote] — Гійом ле Вассер де Боплан про гноблення
+    селян: «Вони живуть у гіршому рабстві, ніж галерники»'
+  - Religious discrimination (Uniate Church) — friction from Union of Brest; Ordinance
+    of 1638 liquidating Cossack rights
+  - Political lack of rights for Cossacks — attempt to turn Cossacks into peasants;
+    «Золотий спокій» was an illusion
+  - Personal tragedy of Khmelnytsky — raid on Subotiv as the spark
+- section: 'Етапи боротьби: Від тріумфу до компромісу'
+  points:
+  - Initial victories (Yellow Waters, Korsun) — spring-autumn 1648; Battle of Pyliavtsi
+  - The Treaty of Zboriv (1649) and statehood — recognition of autonomy; Register
+    set at 40,000
+  - Defeats (Berestechko) and the Treaty of Bila Tserkva — June 1651; betrayal by
+    Tatars; Register reduced to 20,000; [!history-bite] — Битва під Берестечком була
+    однією з найбільших битв Європи XVII ст. (до 300 тис. учасників)
+  - The Pereiaslav Council (1654) and the alliance with Moscow — military alliance
+    against three fronts; choice of «lesser evil»
+  - The death of Khmelnytsky and the start of the Ruin — 1657; struggle for power
+    begins
+- section: 'Соціальні трансформації: Народження нації'
+  points:
+  - 'Liquidation of serfdom — de facto freedom on controlled territories; [!culture]
+    — «Покозачення»: масовий перехід селян у козацький стан як спосіб здобути свободу'
+  - Formation of the Cossack starshyna as a new elite — merger of former nobility
+    and meritorious Cossacks
+  - The role of the Orthodox Church — increased influence and consolidation
+- section: 'Читання: Аналіз історичних документів'
+  points:
+  - Analysis of the Zboriv Treaty — defined three voivodeships (Kyiv, Chernihiv, Bratslav);
+    amnesty and expulsion of Jesuits/Jews
+  - Analysis of the March Articles — 11 (or 23) points; rights to foreign policy (except
+    Poland/Turkey); confederative model or protectorate
+- section: Первинні джерела
+  points:
+  - 'Eyewitness accounts (Paul of Aleppo, etc.) — [!quote] — Павло Алеппський: «Ми
+    помітили в цьому благословенному народі набожність, богобоязливість і благочестя»;
+    notes on high literacy rate'
+  - Khmelnytsky's universals — instrument of executive power; calls to uprising and
+    protection decrees
+- section: Деколонізаційний погляд
+  points:
+  - 'Debunking the myth of ''reunification'' — [!myth-buster] — Міф про «возз''єднання»:
+    Переяславська рада була військовим союзом, а не злиттям держав; Soviet concept
+    of «вікове прагнення»'
+  - Ukraine as a subject of international law — independent diplomatic relations (Turkey,
+    Sweden)
+  - The European context of the revolution — betrayal by Moscow in Vilna Truce (1656);
+    pragmatism over «brotherhood»
+  - 'Legacy: The birth of the modern Ukrainian state tradition — idea of Cossack statehood
+    persisted until late 18th century'
+focus: history
+pedagogy: CBI
+prerequisites: '[]'
+learning_outcomes: '[]'
+phase: HIST.6 [Khmelnytsky & Cossack State]
+objectives:
+- 'Analyze the causes and consequences of синтез: козацька революція'
+- Evaluate the historical significance of вибух, що змінив усе
+- Trace the development of деколонізаційний погляд
+vocabulary_hints:
+  required:
+  - історія (history) — [!collocation] творити історію; переписувати історію
+  - держава (state) — [!collocation] будувати державу; козацька держава; суверенна
+    держава
+  - народ (people) — [!collocation] український народ; воля народу; Paul of Aleppo
+    quote regarding «благословенний народ»
+  - влада (power) — [!collocation] гетьманська влада; виконавча влада; боротьба за
+    владу
+  - період (period) — [!collocation] період Руїни; перехідний період
+  - подія (event) — [!collocation] історична подія; трагічні події
+  - джерело (source) — [!collocation] первинне джерело; історичні джерела; згідно
+    з джерелами
+  - спадщина (heritage) — [!collocation] козацька спадщина; культурна спадщина
+  recommended:
+  - аналіз (analysis) — [!collocation] критичний аналіз; аналіз договору
+  - контекст (context) — [!collocation] європейський контекст; історичний контекст
+  - вплив (influence) — [!collocation] вплив церкви; політичний вплив
+  - наслідки (consequences) — [!collocation] далекосяжні наслідки; трагічні наслідки
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: critical-analysis
+  focus: Аналіз причинно-наслідкових зв'язків між подіями
+  items: 3
+- type: critical-analysis
+  focus: Критична оцінка історичних тверджень та міфів
+  items: 5
+persona:
+  voice: Senior Professor of History
+  role: Military Chronicler
+word_target: 5000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Синтез: Козацька революція
+
+## Використані джерела
+1. [Енциклопедія історії України (history.org.ua)](http://resource.history.org.ua/) — Фундаментальні статті про Національно-визвольну війну, Березневі статті та Переяславську раду.
+2. [Ізборник (litopys.org.ua)](http://litopys.org.ua/) — Первинні джерела: літописи, описи чужинців (Боплан, Павло Алеппський).
+3. [Енциклопедія Сучасної України (esu.com.ua)](https://esu.com.ua/) — Сучасний погляд на поняття "Козацька революція" та державотворення.
+
+## Хронологія
+- 1648, травень — Битви під Жовтими Водами та Корсунем (перші перемоги).
+- 1648, вересень — Битва під Пилявцями (відкриття шляху на захід).
+- 1649, серпень — Зборівська битва та Зборівський договір (визнання автономії Гетьманщини).
+- 1651, червень — Битва під Берестечком (поразка через зраду татар).
+- 1651, вересень — Білоцерківський договір (обмеження прав козацтва).
+- 1654, січень-березень — Переяславська рада та Березневі статті (військовий союз з Московією).
+- 1656, жовтень — Віленське перемир'я (зрада Москви, сепаратний мир з Польщею).
+- 1657, серпень — Смерть Богдана Хмельницького.
+
+## Ключові факти та цитати
+- **Гійом ле Вассер де Боплан про селян:** «Тутешні селяни заслуговують на співчуття. Вони живуть у гіршому рабстві, ніж галерники».
+- **Павло Алеппський про освіту:** «По всій Козацькій землі ми помітили прекрасну рису: всі вони, за винятком небагатьох, навіть більшість їхніх жінок та дочок, уміють читати».
+- **Павло Алеппський про демографію:** «У країні козаків дітей більше ніж трави, і всі вміють читати, навіть сироти».
+- **Зборівський договір:** Реєстр 40 тис., влада гетьмана у Київському, Чернігівському, Брацлавському воєводствах.
+- **Березневі статті:** 11 пунктів, збереження прав і вольностей, право на дипломатію (окрім Польщі та Туреччини).
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ: Вибух, що змінив усе": [!context] — Хмельниччина відбувалася синхронно з Англійською революцією та Вестфальським миром, що змінив карту Європи.
+- Section "Причини революції: Чому вибухнуло?": [!quote] — Гійом де Боплан про становище українських селян ("гірше, ніж галерники").
+- Section "Етапи боротьби: Від тріумфу до компромісу": [!history-bite] — Битва під Берестечком була однією з наймасштабніших у Європі XVII ст. (до 300 тис. комбатантів).
+- Section "Соціальні трансформації: Народження нації": [!culture] — Феномен "покозачення": масовий перехід селян у козацький стан як соціальний ліфт і спосіб здобуття особистої свободи.
+- Section "Читання: Аналіз історичних документів": [!analysis] — Порівняння Зборівського (40 тис. реєстру) та Білоцерківського (20 тис. реєстру) договорів як індикатора успіхів і поразок.
+- Section "Первинні джерела": [!quote] — Павло Алеппський про тотальну грамотність українців ("дітей більше ніж трави, і всі вміють читати").
+- Section "Деколонізаційний погляд": [!myth-buster] — Міф про "возз'єднання" 1654 року: це був типовий для того часу тимчасовий військовий альянс (протекторат), а не "вікове прагнення двох народів".
+
+## Деколонізаційний контекст
+- **Imperial/Soviet myth:** Переяславська рада 1654 року як акт "возз'єднання" двох братніх народів, кульмінація історичного шляху України.
+- **Ukrainian reality:** Це був прагматичний і вимушений військово-політичний союз (протекторат) для війни на три фронти. Москва зрадила умови вже у 1656 році (Віленське перемир'я). Українська еліта розглядала це як рівноправне партнерство (конфедерацію), а не підданство.
+
+## Contested Terms (if applicable)
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| Події 1648–1657 рр. | Громадянська війна в Польщі / Польський бунт | Національно-визвольна війна / Українська національна революція |
+| Переяславська рада | Возз'єднання України з Росією | Військовий союз / Протекторат (тимчасовий альянс) |
+| Б. Хмельницький | "Вірний син Росії", що прагнув "під руку царя" | Творець Української козацької держави, прагматичний політик |
+| Козаки | Розбійники, анархічна сила | Носії державності, політична еліта (лицарський стан) |
+
+## Section-Mapped Research Notes
+
+### Вступ: Вибух, що змінив усе
+- Хмельниччина — це не просто повстання, а повноцінна революція. Вона змінила соціальний лад (ліквідація кріпацтва на значній території) та геополітичну карту Східної Європи.
+- Синхронність: 1648 рік — це також рік Вестфальського миру (кінець Тридцятилітньої війни). Україна виходить на арену як суб'єкт, коли Європа формує нову систему міжнародних відносин.
+
+### Причини революції: Чому вибухнуло?
+- Соціальні: наджорстка експлуатація селян (Боплан: "гірше галерників"). Панщина доходила до 4-6 днів.
+- Релігійні: тиск на православ'я після Берестейської унії 1596 р., закриття церков.
+- Політичні: "Ординація" 1638 р. скасувала права козаків ("на вічні часи" перетворила на хлопів).
+- Особиста трагедія Хмельницького (напад Чаплинського на Суботів) стала іскрою ("сірником"), що підпалила бочку з порохом народного гніву.
+
+### Етапи боротьби: Від тріумфу до компромісу
+- **1648 (Тріумф):** Жовті Води, Корсунь, Пилявці. Повний розгром коронного війська.
+- **1649 (Державність):** Зборівський договір. Визнання Гетьманщини (Київське, Чернігівське, Брацлавське воєводства). Реєстр 40 000.
+- **1651 (Криза):** Берестечко. Татари зрадили і полонили гетьмана. Героїчна оборона табору (Богун).
+- **1653-1654 (Пошук союзника):** Жванецька облога. Відмова султана. Вибір "меншого зла" — Москви. Переяславська рада.
+- **1657 (Кінець епохи):** Смерть Хмельницького, початок боротьби за булаву (Руїна).
+
+### Соціальні трансформації: Народження нації
+- Ліквідація великого землеволодіння польських магнатів. Земля перейшла до Війська Запорозького та селян.
+- "Покозачення": селяни масово записувалися в козаки, щоб не бути кріпаками. Де-факто кріпацтво було скасовано на контрольованих територіях.
+- Формування нової еліти: козацька старшина замінила шляхту як провідна верства.
+
+### Читання: Аналіз історичних документів
+- **Зборівський договір:** компроміс, але переможний. Окреслює кордони першої козацької держави.
+- **Березневі статті:** оригінали втрачені (є лише московські копії/чернетки). Ключове: право на зовнішню політику (окрім Польщі/Туреччини), виборність гетьмана, незалежний суд. Це ознаки конфедерації, а не інкорпорації.
+
+### Первинні джерела
+- **Павло Алеппський:** залишив унікальні свідчення про високу культуру та освіченість українців ("всі вміють читати"). Це руйнує міф про "дике поле" чи "неосвічених бунтарів".
+- **Універсали Хмельницького:** діяли як закони. Вони демонструють функціонування державної машини (податки, суди, охорона кордонів).
+
+### Деколонізаційний погляд
+- Розвінчання радянського міфу про "возз'єднання". Хмельницький не хотів "віддати Україну Росії", він шукав військової допомоги.
+- Московські посли у Переяславі відмовилися присягати за царя (цар підданим не присягає), що стало першим тривожним дзвінком нерівноправності.
+- Віленське перемир'я 1656 р. (Москва і Польща домовилися за спиною України) показало справжні наміри Москви — поділ сфер впливу, а не захист одновірців.
+- Україна стала суб'єктом міжнародного права, уклавши союзи зі Швецією, Туреччиною, Трансільванією, Молдовою.
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12726)
+✓ Message 12688 acknowledged
+✓ Message 12726 acknowledged

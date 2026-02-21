@@ -1,0 +1,208 @@
+✅ Message sent to Gemini (ID: 12963) [auto-acked: self-addressed]
+✓ Message 12963 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12963...
+📨 Message #12963
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-slovo-defeat
+   Time: 2026-02-20T23:43:25.097000+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 80
+module: oes-080
+module_number: 80
+slug: slovo-defeat
+title_uk: 'Слово: Поразка'
+title_en: 'Slovo: The Defeat'
+phase: 4
+phase_id: literary-art
+phase_name: Literary Art
+focus: Metaphor — "Sowing fields with bones"
+content_outline:
+- section: Вступ
+  description: 'Introduction to Slovo: The Defeat'
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Senior Paleographer
+  role: Survivor of Kayala
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Slovo Defeat
+
+## Використані джерела
+1. [Ізборник](http://litopys.org.ua/) — Оригінальний текст та переклади "Слова о полку Ігоревім", історичні коментарі.
+2. [Енциклопедія Сучасної України](https://esu.com.ua/) — Статті про Ігоря Святославича, битву на Каялі та історіографію "Слова".
+3. [Інститут історії України НАНУ](http://resource.history.org.ua/) — Дослідження про русько-половецькі війни XII ст.
+
+## Хронологія
+- 23 квітня 1185: Виступ Ігоря Святославича у похід з Новгорода-Сіверського.
+- 1 травня 1185: Сонячне затемнення ("чорне сонце") — поганий знак біля річки Оскіл.
+- 10 травня 1185: Перша зустріч з половцями, перемога передового загону русичів.
+- 11 травня 1185: Початок головної битви на річці Каялі; оточення руського війська силами ханів Кончака і Гзи.
+- 12 травня 1185 (неділя): Остаточна поразка, полон князів Ігоря та Всеволода.
+
+## Ключові факти та цитати
+- **Метафора бенкету**: Битва описується як "пир" (бенкет), де воїни "сватів напоїли", а самі "полягли за землю Руську".
+- **Метафора посіву**: "Чорна земля під копитами кістьми була засіяна, а кровію политая: тугою зійшли вони по Руській землі".
+- **Персоніфікація туги**: Карна і Жля (вісники мертвих) поскакали по Руській землі, розносячи вогонь у рогу.
+- **Цитата (Оригінал)**: «Ту кроваваго вина не доста; ту пиръ докончаша храбріи русичи: сваты попоиша, а сами полегоша за землю Рускую. Ничить трава жалощами, а древо с тугою къ земли преклонилось.»
+- **Цитата (Оригінал)**: «Бишася день, бишася другый; третьяго дни къ полуднію падоша стязи Игоревы. Ту ся брата разлучиста на брезѣ быстрой Каялы.»
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ: Фатальний похід 1185 року": [!context] — Політична роздробленість Русі та амбіції сіверських князів.
+- Section "Читання: I — Битва на Каялі": [!history-bite] — Загадка річки Каяли: це не географічна назва, а, ймовірно, "річка жалю" (від "каятися").
+- Section "Читання: II — Бенкет смерті": [!culture] — Символіка "кривавого вина" та весільні метафори смерті у фольклорі.
+- Section "Читання: III — Плач землі": [!paleography] — Як у рукописі зображено Карну і Жлю (міфологічні фігури).
+- Section "Мова: Граматика втрати": [!note] — Використання аориста для завершених дій минулого ("падоша", "разлучиста").
+- Section "Деколонізація: Чия це трагедія?": [!myth-buster] — "Слово" — не "загальноросійський" твір, а пам'ятка, глибоко вкорінена в київській та чернігівській традиції.
+
+## Деколонізаційний контекст
+- **Imperial/Soviet myth**: "Слово" як доказ "єдності трьох братніх народів" або чисто "російський" епос (привласнення назви "Русь"). Трактування походу Ігоря як "загальноруської" справи.
+- **Ukrainian reality**: Пам'ятка належить до києво-чернігівського ареалу. Мова твору рясніє українізмами (кличний відмінок, лексика). Похід Ігоря — епізод локальних воєн, який геніальний автор підніс до рівня загальнонаціональної трагедії України-Русі. "Русь" у тексті — це передусім Київщина, Чернігівщина та Переяславщина, а не Залісся (майбутня Росія).
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| Каяла | Реальна річка (часто шукають в РФ) | Символічна "річка смутку" або притока Сіверського Дінця |
+| Руська земля | "Русская земля" (Russia) | Руська земля (державне утворення з центром у Києві) |
+| Ігор Святославич | "Русский князь" | Князь Новгород-Сіверський (українська династія Ольговичів) |
+
+## Section-Mapped Research Notes
+
+### Вступ: Фатальний похід 1185 року
+Амбіції Ігоря ("хочу списа приломити кінець поля Половецького"). Сонячне затемнення як зловісний знак, який князь проігнорував. Склад війська: Ігор, Всеволод, Володимир Ігорович, Святослав Ольгович.
+
+### Читання: I — Битва на Каялі
+Три дні битви. Перший успіх (захоплення половецьких веж). Другий день — оточення. Третій день — поразка ("падоша стязі Ігореві"). Трагедія розлуки братів на березі Каяли.
+
+### Читання: II — Бенкет смерті
+Метафора битви як бенкету ("пир"). "Сватів напоїли" (ворогів), самі полягли. Естетизація смерті через образи вина та частування. Зв'язок з давньою дружинною поезією.
+
+### Читання: III — Плач землі
+Природа співчуває поразці: трава никне, дерево схиляється. Міфологічні образи Карни (плакальниці) та Жлі (жалоби), що скачуть по землі. Метафора "засіяна кістками" — аграрний образ смерті-врожаю.
+
+### Мова: Граматика втрати
+Аналіз граматичних форм, що передають незворотність. Аорист ("падоша", "бишася") для динаміки. Двоїна ("разлучиста") — унікальна риса, що зберіглася в діалектах. Лексика: "стяг", "черлений щит".
+
+### Історія: Наслідки для Русі
+Відкриття воріт для половецьких набігів на Посулля, Чернігів та Київ. Зміна балансу сил. Реакція Святослава Київського ("Золоте слово").
+
+### Деколонізація: Чия це трагедія?
+Аналіз терміну "Руська земля" в контексті 1185 року. Чому це українська спадщина: географія (Сіверщина, Київ), мовні ознаки, ментальність (індивідуалізм князів vs самодержавство).
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12992)
+✓ Message 12963 acknowledged
+✓ Message 12992 acknowledged

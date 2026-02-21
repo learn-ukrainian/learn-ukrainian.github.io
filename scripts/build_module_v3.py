@@ -56,7 +56,7 @@ from build_module_v2 import (
     dispatch_gemini, log,
     # Phase helpers
     run_verify_prose_only, run_verify,
-    _build_fix_prompt, _apply_section_fixes,
+    _build_fix_prompt, _apply_section_fixes, _identify_affected_sections,
     fill_template, _dispatch_prompt, _gemini_output_path,
     mark_phase_locked,
     # Phase E + F (MDX + Claude final review) — reuse directly
@@ -108,6 +108,14 @@ PHASE_LABELS_V3: dict[str, str] = {
 
 MAX_AUDIT_FIX_ITERS = 3
 MAX_D_ITERS = 2
+ESCALATION_MODEL_CLAUDE = "claude-opus-4-6"       # Escalation: Claude fixes what Gemini can't
+ESCALATION_MODEL_GEMINI = PRO_MODEL                # Escalation: Gemini fixes what Claude can't
+
+# Dispatch timeouts (seconds) — fail fast instead of hanging
+TIMEOUT_CONTENT = 600       # Phase A/B: research + content generation (10 min)
+TIMEOUT_ACTIVITIES = 600    # Phase C: activities + vocab (10 min)
+TIMEOUT_FIX = 600           # Audit/D/F fix dispatches (10 min — was 300, too tight)
+TIMEOUT_REVIEW = 600        # Phase D review+fix (10 min)
 
 # Cap for track context injection
 TRACK_CONTEXT_MAX_MODULES_CORE = 5      # Core tracks: last 5 modules for consistency
@@ -162,6 +170,176 @@ def _mark_phase_v3(ctx: ModuleContext, state: dict, phase_id: str, status: str, 
 
 
 # ---------------------------------------------------------------------------
+# Layer 3: v2 → v3 state migration (one-time, non-destructive)
+# ---------------------------------------------------------------------------
+
+# Mapping from v2 phase groups to v3 phase IDs.
+# ALL v2 phases in "required" must be complete for the migration to fire.
+# "optional" phases don't block migration but are checked for completeness.
+_V2_TO_V3_MIGRATION_MAP: list[dict[str, Any]] = [
+    {
+        "v3_phase": "A",
+        "required_v2": ["0", "1"],
+        "optional_v2": ["0.5"],
+        "artifact_check": "meta",  # Meta must exist — v2 phase 1 should have created it
+    },
+    {
+        "v3_phase": "B",
+        "required_v2": ["2"],
+        "optional_v2": [],
+        "artifact_check": "md",  # Content .md must exist
+    },
+    {
+        "v3_phase": "C",
+        "required_v2": ["3a", "3b"],
+        "optional_v2": [],
+        "artifact_check": "activities",  # Activities file must exist
+    },
+    {
+        "v3_phase": "audit",
+        "required_v2": ["3", "5-enrich"],
+        "optional_v2": [],
+        "artifact_check": None,
+    },
+    {
+        "v3_phase": "D",
+        "required_v2": ["6", "7-final"],
+        "optional_v2": ["6b"],
+        "artifact_check": None,
+    },
+]
+
+
+def _migrate_v2_state_to_v3(ctx: ModuleContext, state: dict) -> bool:
+    """One-time migration of v2 state.json phases into v3 state-v3.json.
+
+    Only runs if v3 state has NO phases yet (fresh state). Reads the v2
+    state.json and maps completed v2 phase groups to v3 phase IDs.
+
+    Returns True if any phases were migrated (for logging).
+    """
+    # Guard: only migrate if v3 state is empty (one-time)
+    if state.get("phases"):
+        return False
+
+    # Read v2 state
+    v2_state = ctx.state  # v2 state is loaded by preflight_v2 into ctx.state
+    v2_phases = v2_state.get("phases", {})
+    if not v2_phases:
+        return False
+
+    migrated = []
+    for mapping in _V2_TO_V3_MIGRATION_MAP:
+        v3_phase = mapping["v3_phase"]
+        required = mapping["required_v2"]
+        artifact_key = mapping["artifact_check"]
+
+        # All required v2 phases must be complete
+        all_required = all(
+            v2_phases.get(p, {}).get("status") == "complete"
+            for p in required
+        )
+        if not all_required:
+            continue
+
+        # Artifact check: the output file must exist
+        if artifact_key:
+            artifact_path = ctx.paths.get(artifact_key)
+            if not artifact_path or not artifact_path.exists():
+                continue
+            # For content .md, also verify it's non-trivial
+            if artifact_key == "md":
+                try:
+                    wc = len(artifact_path.read_text("utf-8").split())
+                    if wc < 100:  # Trivially small = not real content
+                        continue
+                except Exception:
+                    continue
+
+        _mark_phase_v3(ctx, state, v3_phase, "complete",
+                       note="migrated-from-v2")
+        migrated.append(v3_phase)
+
+    # Also check Phase F (9-final-review) — maps directly
+    if v2_phases.get("9-final-review", {}).get("status") == "complete":
+        _mark_phase_v3(ctx, state, "F", "complete",
+                       note="migrated-from-v2",
+                       verdict=v2_phases["9-final-review"].get("verdict", ""))
+        migrated.append("F")
+
+    if migrated:
+        log(f"  State migration: v2→v3 — migrated phases: {', '.join(migrated)}")
+        # Note: audit+D revalidation against current rules is handled by
+        # _validate_audit_state() in run_pipeline_v3 (runs after migration).
+        return True
+    return False
+
+
+def _validate_audit_state(ctx: ModuleContext, state: dict) -> None:
+    """Ensure v3 audit+D completion is consistent with current audit rules.
+
+    Handles two cases:
+    1. Migrated states where post-migration gate didn't exist yet (stale files)
+    2. Non-migrated states that passed under old rules but fail under new ones
+
+    If audit and D are both marked complete but full audit fails, clears them
+    so the fix loops run. Skipped when audit is already failed (let it re-run)
+    or when force flags are set.
+    """
+    if ctx.force_phase or getattr(ctx, "refresh", False):
+        return
+
+    phases = state.get("phases", {})
+    audit_phase = phases.get("v3-audit", {})
+    audit_status = audit_phase.get("status")
+
+    # Handle failed modules with exhausted state — reset for fresh tries under new rules
+    if audit_status == "failed":
+        content_path = ctx.paths.get("md")
+        if content_path and content_path.exists():
+            passed, _ = run_verify(content_path, content_only=True)
+            if passed:
+                # Now passes! Mark complete.
+                _mark_phase_v3(ctx, state, "audit", "complete",
+                               attempts=audit_phase.get("attempts", 0),
+                               note="revalidation-pass")
+                log(f"  Audit revalidation: previously FAILED but now PASSES — marking complete")
+                return
+            # Still fails — but clear exhaustion state so it gets fresh Gemini tries
+            cleared = []
+            for phase_key in ("audit", "D"):
+                for sid in _V3_PHASE_STATE_IDS.get(phase_key, []):
+                    if phases.pop(sid, None):
+                        cleared.append(sid)
+            if cleared:
+                _save_state_v3(ctx, state)
+                log(f"  Audit revalidation: clearing stale FAILED state — fresh fix loop")
+        return
+
+    # Only validate if audit is marked complete
+    if audit_status != "complete":
+        return
+
+    content_path = ctx.paths.get("md")
+    if not content_path or not content_path.exists():
+        return
+
+    passed, _ = run_verify(content_path, content_only=False)
+    if passed:
+        return
+
+    # Full audit fails under current rules — clear audit (and D if present) for fix loops
+    cleared = []
+    for phase_key in ("audit", "D"):
+        for sid in _V3_PHASE_STATE_IDS.get(phase_key, []):
+            if phases.pop(sid, None):
+                cleared.append(sid)
+    if cleared:
+        _save_state_v3(ctx, state)
+        log(f"  Audit revalidation: FAIL under current rules — cleared {', '.join(cleared)} for fix loops")
+
+
+# ---------------------------------------------------------------------------
 # Claude headless dispatch (Phase A and C via Claude CLI)
 # ---------------------------------------------------------------------------
 
@@ -182,7 +360,6 @@ def _dispatch_claude_phase(
     calls `claude --model {model} -p <prompt>`, returns (ok, output).
     """
     import shutil
-    import subprocess
     claude_bin = shutil.which("claude") or "claude"
     env = __import__("os").environ.copy()
     env.pop("CLAUDECODE", None)  # Prevent nested-session error
@@ -196,8 +373,12 @@ def _dispatch_claude_phase(
         cmd.extend(["--allowedTools", ",".join(allow_tools)])
 
     try:
-        result = subprocess.run(
-            cmd, capture_output=True, text=True, timeout=timeout,
+        from build_module import _run_with_heartbeat
+        result = _run_with_heartbeat(
+            cmd,
+            label=f"Claude {phase_label}",
+            timeout=timeout,
+            capture_output=True, text=True,
             cwd=str(PROJECT_ROOT), env=env,
         )
         if result.returncode != 0:
@@ -305,14 +486,58 @@ def phase_A_v3(ctx: ModuleContext, state: dict) -> bool:
     Extracts META_OUTLINE_START/END → updates meta file (both paths).
     """
     phase = "A"
-    if _is_phase_v3_complete(ctx, phase, state):
-        # Health-check the existing meta — if sections are oversized, silently re-run
-        if _meta_has_oversized_sections(ctx):
+
+    # Layer 2A: Artifact guard — don't rewrite the blueprint of a house that's already built.
+    # If content .md exists and meets word target, meta is "locked" regardless of health checks.
+    force_research = getattr(ctx, "force_research", False)
+    if not force_research and _is_phase_v3_complete(ctx, phase, state):
+        content_path = ctx.paths.get("md")
+        content_exists = content_path and content_path.exists()
+        content_sufficient = False
+        if content_exists:
+            try:
+                wc = len(content_path.read_text("utf-8").split())
+                content_sufficient = wc >= ctx.word_target * 0.8
+            except Exception:
+                pass
+
+        if content_sufficient:
+            # Content was built against this meta — lock it, skip health checks entirely
+            log(f"  Phase A: SKIP (meta locked — content exists at {wc}w, target {ctx.word_target}w)")
+            return True
+        elif _meta_has_oversized_sections(ctx):
+            # No content yet, meta is bad — re-run
             log("  Phase A: Meta health check FAILED — oversized section detected, re-running")
             _mark_phase_v3(ctx, state, phase, "pending", note="health-check-reset")
         else:
-            log("  Phase A: SKIP (already complete)")
-            return True
+            # Sanity: meta file must actually exist before skipping
+            meta_path = ctx.paths.get("meta")
+            if meta_path and not meta_path.exists():
+                log("  Phase A: State says complete but meta missing — re-running")
+                _mark_phase_v3(ctx, state, phase, "pending", note="missing-meta-reset")
+            else:
+                log("  Phase A: SKIP (already complete)")
+                return True
+    elif not force_research and not getattr(ctx, "refresh", False) and not _is_phase_v3_complete(ctx, phase, state):
+        # Phase A not yet complete in v3 state — but check if content already exists
+        # (v2-built module where migration didn't fire, or partial migration)
+        # Skipped on --rebuild (refresh=True) so Phase A can regenerate meta
+        content_path = ctx.paths.get("md")
+        meta_path = ctx.paths.get("meta")
+        if content_path and content_path.exists() and meta_path and meta_path.exists():
+            try:
+                import yaml as _yaml
+                wc = len(content_path.read_text("utf-8").split())
+                meta_data = _yaml.safe_load(meta_path.read_text("utf-8")) or {}
+                has_outline = (isinstance(meta_data.get("content_outline"), list)
+                               and len(meta_data.get("content_outline", [])) >= 2)
+                has_target = bool(meta_data.get("word_target"))
+                if wc >= ctx.word_target * 0.8 and has_outline and has_target:
+                    log(f"  Phase A: ADOPT — existing content ({wc}w) + valid meta → locking")
+                    _mark_phase_v3(ctx, state, phase, "complete", note="adopted-existing-meta")
+                    return True
+            except Exception:
+                pass
 
     is_seminar = ctx.track in SEMINAR_TRACKS or ctx.track.startswith("lit-")
     is_pro = ctx.track in PRO_TRACKS
@@ -362,6 +587,7 @@ def phase_A_v3(ctx: ModuleContext, state: dict) -> bool:
             _dispatch_prompt(ctx, prompt_file),
             task_id=f"v3-{ctx.slug}-pA",
             model=ctx.model, stdout_only=True, output_file=output_file,
+            timeout=TIMEOUT_CONTENT,
         )
         # Save raw output to orchestration dir for debugging
         if raw_output:
@@ -449,6 +675,24 @@ def phase_B_v3(ctx: ModuleContext, state: dict, use_track_context: bool = True) 
         log("  Phase B: SKIP (already complete)")
         return True
 
+    # Layer 2B: Artifact guard — if content .md already exists and is substantial,
+    # adopt it rather than regenerating. This prevents v2-built content from being
+    # overwritten when v3 runs on a track with existing v2 modules.
+    if not getattr(ctx, "refresh", False):
+        content_path = ctx.paths.get("md")
+        if content_path and content_path.exists():
+            try:
+                wc = len(content_path.read_text("utf-8").split())
+                if wc >= ctx.word_target * 0.8:
+                    log(f"  Phase B: ADOPT — existing content ({wc}w, target {ctx.word_target}w)")
+                    _mark_phase_v3(ctx, state, phase, "complete", note="adopted-existing-content",
+                                   words=wc)
+                    # Also mark v2 phase 2 so v2 doesn't try to regenerate
+                    mark_phase_locked(ctx, "2", "complete", note="v3-phase-B-adopt", words=wc)
+                    return True
+            except Exception:
+                pass
+
     if ctx.dry_run:
         log("  Phase B: DRY-RUN — would dispatch content (phase-2-content.md)")
         return True
@@ -473,9 +717,41 @@ def phase_B_v3(ctx: ModuleContext, state: dict, use_track_context: bool = True) 
 
     if ok:
         _mark_phase_v3(ctx, state, phase, "complete")
+        # Invalidate downstream artifacts — status cache and review files are now stale
+        _invalidate_stale_artifacts(ctx)
     else:
         _mark_phase_v3(ctx, state, phase, "failed")
     return ok
+
+
+def _invalidate_stale_artifacts(ctx: ModuleContext) -> None:
+    """Delete stale audit cache and review files after content rebuild.
+
+    When Phase B writes new content, any previous audit results and review
+    files are from the OLD content and must not be served by the API.
+    """
+    slug = ctx.slug
+    track_dir = ctx.paths.get("md", Path()).parent
+
+    # 1. Delete status cache
+    status_file = track_dir / "status" / f"{slug}.json"
+    if status_file.exists():
+        status_file.unlink()
+        log(f"  Phase B: Invalidated stale status cache: {status_file.name}")
+
+    # 2. Delete old review files (Phase D will regenerate them)
+    review_dir = track_dir / "review"
+    for review_name in [f"{slug}-review.md", f"{slug}-final-review.md"]:
+        review_file = review_dir / review_name
+        if review_file.exists():
+            review_file.unlink()
+            log(f"  Phase B: Invalidated stale review: {review_name}")
+
+    # 3. Delete old audit log
+    audit_file = track_dir / "audit" / f"{slug}-audit.md"
+    if audit_file.exists():
+        audit_file.unlink()
+        log(f"  Phase B: Invalidated stale audit: {audit_file.name}")
 
 
 def _inject_track_context_placeholder(ctx: ModuleContext, key: str) -> None:
@@ -561,6 +837,7 @@ def phase_C_v3(ctx: ModuleContext, state: dict, use_track_context: bool = True) 
             _dispatch_prompt(ctx, prompt_file),
             task_id=f"v3-{ctx.slug}-pC",
             model=ctx.model, stdout_only=True, output_file=output_file,
+            timeout=TIMEOUT_ACTIVITIES,
         )
     if not ok:
         log(f"  Phase C: FAILED — {'Claude' if use_claude else 'Gemini'} dispatch error")
@@ -600,6 +877,127 @@ def phase_C_v3(ctx: ModuleContext, state: dict, use_track_context: bool = True) 
 
 
 # ---------------------------------------------------------------------------
+# Agent escalation: hand fix to the other agent when primary exhausts
+# ---------------------------------------------------------------------------
+
+def _escalate_fix(ctx: ModuleContext, audit_output: str, phase_label: str,
+                  content_only: bool = True) -> bool:
+    """Escalate a failed fix to Claude Opus when Gemini exhausts (or vice versa).
+
+    Builds a targeted fix prompt, dispatches to Claude Opus via CLI (-p mode),
+    applies section fixes from delimiter output, then re-audits.
+    Returns True if audit passes after fix.
+    """
+    # Pre-flight: retry audit once — borderline cases can flip between runs.
+    # Avoids wasting an Opus call on a non-deterministic flake.
+    passed_retry, _ = run_verify(ctx.paths["md"], content_only=content_only)
+    if passed_retry:
+        log(f"  {phase_label}: Pre-escalation retry PASS — no escalation needed")
+        return True
+
+    import textwrap
+
+    # Build a targeted escalation prompt — always use section-level format
+    # since Claude CLI outputs to stdout (can't edit files directly)
+    lines = audit_output.strip().split("\n")
+    error_excerpt = "\n".join(lines[-60:])
+
+    content_path = ctx.paths["md"]
+    affected = _identify_affected_sections(audit_output, content_path)
+
+    # Read the affected sections so Claude has context
+    section_content = ""
+    if affected and content_path.exists():
+        full_text = content_path.read_text("utf-8")
+        for section_name in affected:
+            # Extract the section text
+            import re
+            pattern = rf"(^## {re.escape(section_name)}.*?)(?=^## |\Z)"
+            match = re.search(pattern, full_text, re.MULTILINE | re.DOTALL)
+            if match:
+                section_content += f"\n---\n{match.group(1).strip()}\n"
+
+    if not affected:
+        # Fallback: read last 200 lines of the file for context
+        if content_path.exists():
+            all_lines = content_path.read_text("utf-8").split("\n")
+            section_content = "\n".join(all_lines[-200:])
+
+    prompt_text = textwrap.dedent(f"""\
+        # Escalation Fix — {phase_label}
+
+        You are an expert Ukrainian language editor. The previous agent could not fix
+        these audit violations. Fix them precisely.
+
+        ## Audit Errors
+
+        ```
+        {error_excerpt}
+        ```
+
+        ## Current Content of Affected Section(s)
+
+        {section_content}
+
+        ## File Path
+
+        `{content_path}`
+
+        ## Instructions
+
+        1. Fix ONLY the violations listed above
+        2. For euphony (в/у, і/й): apply Ukrainian euphony rules strictly
+        3. Do NOT add or remove content — only fix the specific violations
+        4. Preserve all markdown formatting, headers, and structure
+
+        ## Output Format (MANDATORY)
+
+        Output ONLY the fixed section(s) between delimiters:
+
+        ```
+        ===SECTION_FIX_START===
+        ## {{section title}}
+        {{fixed section content}}
+        ===SECTION_FIX_END===
+        ```
+
+        If multiple sections need fixing, output each in its own delimiter block.
+        Do NOT output anything else — no explanations, no commentary.
+    """)
+
+    fix_file = ctx.orch_dir / f"{phase_label}-escalation-prompt.md"
+    fix_file.write_text(prompt_text, "utf-8")
+
+    log(f"  {phase_label}: Escalating to Claude Opus...")
+    ok, output = _dispatch_claude_phase(
+        fix_file,
+        phase_label=f"{phase_label}-escalation",
+        model=ESCALATION_MODEL_CLAUDE,
+        timeout=900,  # 15 min — Opus needs more time for large audit+content
+    )
+    if not ok:
+        log(f"  {phase_label}: Claude escalation dispatch failed")
+        return False
+
+    # Apply section fixes from Claude's output
+    if output and "===SECTION_FIX_START===" in output:
+        _apply_section_fixes(ctx.paths["md"], output)
+        log(f"  {phase_label}: Claude escalation fixes applied")
+    elif output:
+        log(f"  {phase_label}: Claude output missing SECTION_FIX delimiters — cannot apply")
+        # Save raw output for debugging
+        (ctx.orch_dir / f"{phase_label}-escalation-raw.md").write_text(output, "utf-8")
+
+    # Re-audit
+    passed, _ = run_verify(ctx.paths["md"], content_only=content_only)
+    if passed:
+        log(f"  {phase_label}: Escalation PASS — Claude Opus fixed the issues")
+    else:
+        log(f"  {phase_label}: Escalation FAIL — both agents exhausted")
+    return passed
+
+
+# ---------------------------------------------------------------------------
 # Audit loop (combined prose + enrichment)
 # ---------------------------------------------------------------------------
 
@@ -615,9 +1013,61 @@ def phase_audit_v3(ctx: ModuleContext, state: dict) -> bool:
         log("  Audit: SKIP (already complete)")
         return True
 
+    # Handle previously exhausted audit — skip Gemini, try escalation directly
+    audit_state = state.get("phases", {}).get("v3-audit", {})
+    if audit_state.get("status") == "failed" and not ctx.force_phase:
+        prev_attempts = audit_state.get("attempts", 0)
+        was_escalated = "escalation" in audit_state.get("note", "")
+        if prev_attempts >= MAX_AUDIT_FIX_ITERS:
+            if was_escalated:
+                log(f"  Audit: SKIP — both agents exhausted. Use --force-phase audit to retry.")
+                return False
+            if ctx.dry_run:
+                log(f"  Audit: DRY-RUN — Gemini previously exhausted, would escalate to Claude")
+                return True
+            # Gemini exhausted but escalation not tried — go straight to Claude
+            log(f"  Audit: Gemini previously exhausted — trying direct escalation")
+            passed, output = run_verify(ctx.paths["md"], content_only=True)
+            if passed:
+                log(f"  Audit: PASS (issues resolved since last run)")
+                _mark_phase_v3(ctx, state, phase, "complete", attempts=prev_attempts)
+                mark_phase_locked(ctx, "3", "complete", note="v3-audit")
+                mark_phase_locked(ctx, "5-enrich", "complete", note="v3-audit")
+                return True
+            if _escalate_fix(ctx, output, "Audit", content_only=True):
+                _mark_phase_v3(ctx, state, phase, "complete",
+                               attempts=prev_attempts, note="escalation-claude")
+                mark_phase_locked(ctx, "3", "complete", note="v3-audit-escalation")
+                mark_phase_locked(ctx, "5-enrich", "complete", note="v3-audit-escalation")
+                return True
+            _mark_phase_v3(ctx, state, phase, "failed",
+                           attempts=prev_attempts, note="escalation-failed")
+            return False
+
     if ctx.dry_run:
         log("  Audit: DRY-RUN — would run audit loop")
         return True
+
+    # Auto-fix pass: apply deterministic fixes (euphony, formatting) before
+    # calling any LLM. Zero API cost, instant.
+    content_path = ctx.paths["md"]
+    if content_path.exists():
+        from audit.checks.euphony import auto_fix_euphony
+        text = content_path.read_text("utf-8")
+        fixed_text, num_fixes = auto_fix_euphony(text, str(content_path))
+        if num_fixes > 0:
+            content_path.write_text(fixed_text, "utf-8")
+            log(f"  Audit: Auto-fixed {num_fixes} euphony violation(s) — no API call needed")
+
+            # Re-audit after auto-fix — may already pass
+            passed, output = run_verify(content_path, content_only=True)
+            if passed:
+                log("  Audit: PASS (auto-fix only — zero LLM calls)")
+                _mark_phase_v3(ctx, state, phase, "complete", attempts=0, note="auto-fix")
+                mark_phase_locked(ctx, "3", "complete", note="v3-audit-autofix")
+                mark_phase_locked(ctx, "5-enrich", "complete", note="v3-audit-autofix")
+                return True
+            log("  Audit: Auto-fix applied but other issues remain — entering LLM fix loop")
 
     for attempt in range(1, MAX_AUDIT_FIX_ITERS + 1):
         if attempt == 1:
@@ -645,8 +1095,16 @@ def phase_audit_v3(ctx: ModuleContext, state: dict) -> bool:
             log(f"  Audit: FAIL (fix {attempt - 1} insufficient)")
 
         if attempt >= MAX_AUDIT_FIX_ITERS:
-            log(f"  Audit: EXHAUSTED — {MAX_AUDIT_FIX_ITERS - 1} fix attempts")
-            _mark_phase_v3(ctx, state, phase, "failed", attempts=attempt)
+            log(f"  Audit: EXHAUSTED — {MAX_AUDIT_FIX_ITERS - 1} Gemini fix attempts")
+            # Escalate to Claude Opus before giving up
+            if _escalate_fix(ctx, output, "Audit", content_only=True):
+                _mark_phase_v3(ctx, state, phase, "complete",
+                               attempts=attempt, note="escalation-claude")
+                mark_phase_locked(ctx, "3", "complete", note="v3-audit-escalation")
+                mark_phase_locked(ctx, "5-enrich", "complete", note="v3-audit-escalation")
+                return True
+            _mark_phase_v3(ctx, state, phase, "failed",
+                           attempts=attempt, note="escalation-failed")
             return False
 
         # Dispatch fix
@@ -661,6 +1119,7 @@ def phase_audit_v3(ctx: ModuleContext, state: dict) -> bool:
             _dispatch_prompt(ctx, fix_prompt_file),
             task_id=f"v3-{ctx.slug}-pAudit-fix{fix_num}",
             model=ctx.model, allow_write=True, output_file=fix_output,
+            timeout=TIMEOUT_FIX,
         )
         if not ok:
             log(f"  Audit: Fix dispatch {fix_num} failed")
@@ -714,6 +1173,7 @@ def phase_D_v3(ctx: ModuleContext, state: dict) -> bool:
             _dispatch_prompt(ctx, prompt_file),
             task_id=f"v3-{ctx.slug}-pD-{attempt}",
             model=ctx.model, stdout_only=True, output_file=output_file,
+            timeout=TIMEOUT_REVIEW,
         )
         if not ok:
             log(f"  Phase D: Dispatch failed (attempt {attempt})")
@@ -756,8 +1216,17 @@ def phase_D_v3(ctx: ModuleContext, state: dict) -> bool:
             return True
 
         if attempt == MAX_D_ITERS:
-            log(f"  Phase D: EXHAUSTED — {MAX_D_ITERS} attempts, audit still failing")
-            _mark_phase_v3(ctx, state, phase, "failed", attempts=attempt)
+            log(f"  Phase D: EXHAUSTED — {MAX_D_ITERS} Gemini attempts, audit still failing")
+            # Escalate to Claude Opus before giving up
+            if _escalate_fix(ctx, audit_out, "Phase D", content_only=False):
+                _mark_phase_v3(ctx, state, phase, "complete",
+                               attempts=attempt, note="escalation-claude")
+                mark_phase_locked(ctx, "6", "complete", note="v3-phase-D-escalation")
+                mark_phase_locked(ctx, "6b", "complete", note="v3-phase-D-escalation")
+                mark_phase_locked(ctx, "7-final", "complete", note="v3-phase-D-escalation")
+                return True
+            _mark_phase_v3(ctx, state, phase, "failed",
+                           attempts=attempt, note="escalation-failed")
             return False
 
         log(f"  Phase D: Audit failed after attempt {attempt} — retrying review+fix")
@@ -803,6 +1272,13 @@ def run_pipeline_v3(ctx: ModuleContext, research_only: bool = False,
     """Execute the v3 optimised pipeline."""
     state = _load_state_v3(ctx)
     use_tc = not no_track_context
+
+    # Layer 3: One-time v2→v3 state migration (skipped on --force-phase and --rebuild)
+    if not ctx.force_phase and not getattr(ctx, "refresh", False):
+        _migrate_v2_state_to_v3(ctx, state)
+
+    # Revalidate audit+D against current rules (catches stale state from old runs)
+    _validate_audit_state(ctx, state)
 
     log(f"\nPipeline v3: 4-call optimised — {len(PHASE_SEQUENCE_V3)} phases")
     if ctx.dry_run:
@@ -884,37 +1360,56 @@ def _run_final_phases(ctx: ModuleContext, state: dict) -> bool:
     """Run Phase F (optional) then Phase E (always). Returns overall success."""
     # Phase F: Claude Final Review (optional)
     if getattr(ctx, "final_review", False):
+        # Check if Phase F already completed (skip → no post-F repair needed)
+        phase_f_already_done = _is_phase_v3_complete(ctx, "F", state) or is_phase_complete(ctx, "9-final-review")
+
         log(f"\n  Phase F: {PHASE_LABELS_V3['F']}")
         if not phase_F_v3(ctx):
             log("\n  PIPELINE STOPPED at phase F (REJECT verdict)")
             return False
 
-        # Post-F audit fix loop: Phase F may apply fixes that break compliance.
-        # Run up to 2 additional Gemini fix iterations to repair any regressions.
-        passed, output = run_verify(ctx.paths["md"], content_only=False)
-        if not passed:
-            log("  Phase F: Post-fix audit FAIL — running repair loop (max 2 iters)")
-            for fix_iter in range(1, 3):
-                fix_prompt = _build_fix_prompt(ctx, output, content_only=False)
-                fix_file = ctx.orch_dir / f"phase-F-repair{fix_iter}-prompt.md"
-                fix_file.write_text(fix_prompt, "utf-8")
-                log(f"  Phase F: Dispatching repair fix {fix_iter}/2...")
-                fix_output = _gemini_output_path(ctx.slug, f"phase-F-repair{fix_iter}")
-                ok, _ = dispatch_gemini(
-                    _dispatch_prompt(ctx, fix_file),
-                    task_id=f"v3-{ctx.slug}-F-repair{fix_iter}",
-                    model=ctx.model, allow_write=True, output_file=fix_output,
-                )
-                if not ok:
-                    log(f"  Phase F: Repair {fix_iter} dispatch failed")
-                    break
-                passed, output = run_verify(ctx.paths["md"], content_only=False)
-                if passed:
-                    log(f"  Phase F: Repair PASS (after {fix_iter} fix(es))")
-                    break
-                log(f"  Phase F: Repair {fix_iter} insufficient")
+        # Post-F audit fix loop: Only needed when Phase F actually RAN and may
+        # have applied fixes that break compliance. Skip if F was already done.
+        if phase_f_already_done:
+            log("  Phase F: Skipped post-fix audit (Phase F was already complete)")
+        else:
+            # Auto-fix euphony before checking — Phase F review may have introduced violations
+            from audit.checks.euphony import auto_fix_euphony
+            text = ctx.paths["md"].read_text("utf-8")
+            fixed_text, n_auto = auto_fix_euphony(text, str(ctx.paths["md"]))
+            if n_auto > 0:
+                ctx.paths["md"].write_text(fixed_text, "utf-8")
+                log(f"  Phase F: Auto-fixed {n_auto} euphony violation(s)")
+
+            passed, output = run_verify(ctx.paths["md"], content_only=False)
             if not passed:
-                log("  Phase F: Repair loop EXHAUSTED — proceeding to MDX anyway")
+                log("  Phase F: Post-fix audit FAIL — running repair loop (max 2 iters)")
+                for fix_iter in range(1, 3):
+                    fix_prompt = _build_fix_prompt(ctx, output, content_only=False)
+                    fix_file = ctx.orch_dir / f"phase-F-repair{fix_iter}-prompt.md"
+                    fix_file.write_text(fix_prompt, "utf-8")
+                    log(f"  Phase F: Dispatching repair fix {fix_iter}/2...")
+                    fix_output = _gemini_output_path(ctx.slug, f"phase-F-repair{fix_iter}")
+                    ok, _ = dispatch_gemini(
+                        _dispatch_prompt(ctx, fix_file),
+                        task_id=f"v3-{ctx.slug}-F-repair{fix_iter}",
+                        model=ctx.model, allow_write=True, output_file=fix_output,
+                        timeout=TIMEOUT_FIX,
+                    )
+                    if not ok:
+                        log(f"  Phase F: Repair {fix_iter} dispatch failed")
+                        break
+                    passed, output = run_verify(ctx.paths["md"], content_only=False)
+                    if passed:
+                        log(f"  Phase F: Repair PASS (after {fix_iter} fix(es))")
+                        break
+                    log(f"  Phase F: Repair {fix_iter} insufficient")
+                if not passed:
+                    # Escalate to Claude Opus (Gemini repair exhausted)
+                    if _escalate_fix(ctx, output, "Phase F repair", content_only=False):
+                        passed = True
+                    else:
+                        log("  Phase F: Repair loop EXHAUSTED — proceeding to MDX anyway")
 
     # Phase E: MDX — always last, always regenerates
     log(f"\n  Phase E: {PHASE_LABELS_V3['E']} (post-review)")
@@ -971,6 +1466,49 @@ def preflight_v3(args: argparse.Namespace) -> ModuleContext:
         ctx.restart_from = getattr(args, "restart_from", None)  # type: ignore[attr-defined]
 
     return ctx
+
+
+# ---------------------------------------------------------------------------
+# Layer 1: Batch skip helpers
+# ---------------------------------------------------------------------------
+
+def _is_final_review_done(paths: dict[str, Path]) -> bool:
+    """Check if final review (Phase F / v2 phase 9) is done in either state file."""
+    import json
+    orch_dir = paths.get("orchestration")
+    if not orch_dir:
+        # Derive from md path: .../b1/slug.md → .../b1/orchestration/slug/
+        md = paths.get("md")
+        if md:
+            orch_dir = md.parent / "orchestration" / md.stem
+    if not orch_dir or not Path(orch_dir).is_dir():
+        return False
+
+    orch = Path(orch_dir)
+
+    # Check v3 state
+    v3_state = orch / "state-v3.json"
+    if v3_state.exists():
+        try:
+            data = json.loads(v3_state.read_text("utf-8"))
+            info = data.get("phases", {}).get("9-final-review", {})
+            if info.get("status") == "complete":
+                return True
+        except Exception:
+            pass
+
+    # Check v2 state
+    v2_state = orch / "state.json"
+    if v2_state.exists():
+        try:
+            data = json.loads(v2_state.read_text("utf-8"))
+            info = data.get("phases", {}).get("9-final-review", {})
+            if info.get("status") == "complete":
+                return True
+        except Exception:
+            pass
+
+    return False
 
 
 # ---------------------------------------------------------------------------
@@ -1070,16 +1608,39 @@ def main() -> int:
             print(f"[{i}/{len(nums)}] {args.track} #{n} — {slug}", flush=True)
             print(f"{'='*70}", flush=True)
 
-            # Skip already-complete unless --rebuild
+            # Layer 1: Tiered batch skip — avoid running full audit on v2-built modules
+            # that already pass. Even if they fall through, Layer 2 guards prevent
+            # Phase A/B/C from overwriting existing artifacts.
             if not args.rebuild and not args.force_phase:
                 try:
                     paths = get_module_paths(args.track, slug)
                     if paths["md"].exists():
-                        check_passed, _ = run_verify(paths["md"], content_only=False)
-                        if check_passed:
-                            print(f"  SKIP: already passing audit", flush=True)
-                            skipped_list.append((n, slug))
-                            continue
+                        # Tier 1: Full audit pass — cheapest check
+                        full_passed, _ = run_verify(paths["md"], content_only=False)
+                        if full_passed:
+                            want_final_review = getattr(args, "final_review", False)
+                            if not want_final_review:
+                                # No --final-review → skip entirely
+                                print(f"  SKIP: already passing full audit", flush=True)
+                                skipped_list.append((n, slug))
+                                continue
+                            elif _is_final_review_done(paths):
+                                # --final-review requested but already done → skip
+                                print(f"  SKIP: passing audit + final review done", flush=True)
+                                skipped_list.append((n, slug))
+                                continue
+                            else:
+                                # --final-review requested, not done yet → fall through
+                                # Layer 2 guards protect A/B/C; pipeline runs only F+E
+                                print(f"  PARTIAL: audit passes, needs final review", flush=True)
+                        else:
+                            # Full audit fails — check content-only
+                            co_passed, _ = run_verify(paths["md"], content_only=True)
+                            if co_passed:
+                                # Content OK, but review/enrichment gates fail
+                                # Fall through — Layer 2 guards protect A/B/C
+                                print(f"  PARTIAL: content passes, needs review/enrichment", flush=True)
+                            # else: both fail → full pipeline (no print, just fall through)
                 except Exception:
                     pass
 
@@ -1088,12 +1649,17 @@ def main() -> int:
                 build_all=False, build_range=None,
                 rebuild=args.rebuild, force_phase=args.force_phase,
                 restart_from=getattr(args, "restart_from", None),
-                force_research=args.force_research, dry_run=args.dry_run,
-                refresh=args.refresh, verify=False,
+                force_research=getattr(args, "force_research", False),
+                dry_run=args.dry_run,
+                refresh=getattr(args, "refresh", False), verify=False,
                 no_track_context=args.no_track_context,
                 research_only=args.research_only,
                 claude_review=getattr(args, "claude_review", False),
                 final_review=getattr(args, "final_review", False),
+                use_claude=getattr(args, "use_claude", ""),
+                claude_model_A=getattr(args, "claude_model_A", None),
+                claude_model_C=getattr(args, "claude_model_C", None),
+                claude_model_F=getattr(args, "claude_model_F", None),
             )
             rc = _run_single_module(single_args)
             if rc == 0:

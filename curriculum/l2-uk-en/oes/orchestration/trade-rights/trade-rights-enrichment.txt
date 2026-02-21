@@ -1,0 +1,209 @@
+✅ Message sent to Gemini (ID: 12889) [auto-acked: self-addressed]
+✓ Message 12889 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12889...
+📨 Message #12889
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-trade-rights
+   Time: 2026-02-20T23:42:50.711536+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 72
+module: oes-072
+module_number: 58
+slug: trade-rights
+title_uk: Торговельні права
+title_en: Trade Rights
+phase: 3
+phase_id: legal-tradition
+phase_name: Legal Tradition
+focus: '"Mesyachnoe" (Monthly allowance)'
+content_outline:
+- section: Вступ
+  description: Introduction to Trade Rights
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Senior Paleographer
+  role: Guild Master
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Trade Rights (Торговельні права)
+
+## Використані джерела
+1.  [Енциклопедія історії України: Руська Правда](http://www.history.org.ua/?termin=Ruska_Pravda) — фундаментальний аналіз правового кодексу, включаючи норми про кредитування та банкрутство.
+2.  [Ізборник: Руська Правда (Текст)](http://litopys.org.ua/oldukr2/oldukr01.htm) — першоджерело, статті про «різ» (відсотки) та купців.
+3.  [Енциклопедія історії України: Договори Русі з греками](http://www.history.org.ua/?termin=Dogovory_Rusi_Z_Grekamy_911_944_971) — аналіз перших міжнародних торговельних угод Русі.
+4.  [Статут Володимира Мономаха](http://litopys.org.ua/oldukr2/oldukr01.htm) — частина Поширеної Правди, що регулює лихварство.
+
+## Хронологія
+- 911: Укладення торговельного договору князя Олега з Візантією (право безмитної торгівлі).
+- 944: Договір князя Ігоря (введення обмежень, обов'язковість княжих грамот для купців).
+- 1016–1054: Укладення «Правди Ярослава» — найдавнішої частини Руської Правди.
+- 1113: Київське повстання проти лихварів; прийняття «Статуту Володимира Мономаха», що обмежив відсотки за боргами.
+- ХІІ ст.: Розквіт «грецького» та «залозного» торговельних шляхів.
+
+## Ключові факти та цитати
+- **«Місячне» (Місячний різ)**: У контексті Руської Правди це не пайок, а **щомісячний відсоток** за короткостроковим кредитом. Володимир Мономах обмежив його, щоб запобігти закабаленню вільних людей.
+- **Банкрутство**: Чітке розмежування між нещасним випадком (пожежа, потоплення товару) та зловмисним банкрутством (пропив, програв).
+  > «Аже купець дасть другому купцеві куни в куплю або в гостітбу, а купець мало здобуде, то як кремить, так платить» (Якщо купець дасть гроші іншому... і той зазнає збитків не з власної вини, то нехай платить так, як домовляться/дозволить час).
+  > «Аже хто п'яний губить або пробиється (програється)... то як (кредитори) хотять: чи ждуть, а чи продадуть його» (Якщо проп'є або програє... то кредитори можуть продати його в рабство).
+- **Гість**: Міжнародний купець мав вищий статус і захист («Закон Руський» гарантував захист майна гостя).
+
+## Engagement Hooks (mapped to sections)
+- Section "Джерела права: Від договорів до Руської Правди": `[!context]` — Договори 911 року фіксують унікальне право русинів митися в лазнях Константинополя та отримувати «місячне» (тут — утримання) за рахунок імперії.
+- Section "Статус купця: «Гості» та місцеві": `[!culture]` — Різниця між «гостем» (міжнародна торгівля) і «купцем» (внутрішня).
+- Section "Фінансове право: Кредит і «Місячне»": `[!myth-buster]` — Спростування хибного уявлення про примітивність економіки Русі. Наявність складної системи відсотків («різ») свідчить про розвинений капітал.
+- Section "Банкрутство: Нещасний випадок чи злочин?": `[!paleography]` — Аналіз термінів «погубить» (втратить випадково) та «проб’ється» (розтратить марно).
+- Section "Соціальний вимір: Лихварі та повстання 1113 року": `[!history-bite]` — Як високі відсоткові ставки ледь не спалили Київ і привели на трон Мономаха.
+- Section "Підсумок: Правова спадщина": `[!decolonization]` — Руська Правда — це українська правова пам'ятка, яку привласнила Росія, назвавши «Русская Правда».
+
+## Деколонізаційний контекст
+- **Imperial/Soviet myth**: Радянська історіографія зображувала Русь як феодально-аграрну державу, де торгівля була маргінальною, а класова боротьба — примітивною. Імперська Росія привласнила «Руську Правду» як виток власного права.
+- **Ukrainian reality**: Русь була потужною торговельною імперією («Гардаріки» — країна міст), інтегрованою у глобальні ринки. Правова система захищала приватну власність і капітал на рівні передових європейських держав. Термін «Руська» означає «Русь-Україна», а не «Росія».
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| Руська Правда | «Русская Правда», початок російського права | Кодекс Київської Русі, пам'ятка української правової культури |
+| Куни | Грошова одиниця загальноросійського простору | Грошова одиниця Русі (хутра або монети), специфічна для київської економіки |
+| 1113 рік | Класова боротьба пригнічених мас | Громадянський протест київського віча проти фінансових зловживань та адміністрації Святополка |
+
+## Section-Mapped Research Notes
+
+### Вступ: Торговельний горизонт Русі
+Торгівля як основа процвітання. Шлях «із варягів у греки» та «залозний» шлях. Експорт: хутра, віск, мед, челядь. Імпорт: вина, тканини, зброя.
+
+### Джерела права: Від договорів до Руської Правди
+Аналіз договорів 911 та 944 рр. Еволюція від звичаєвого права («Закон Руський») до кодифікованого (Правда Ярослава, Правда Ярославичів).
+
+### Статус купця: «Гості» та місцеві
+Особливий захист «гостя». Відповідальність за вбивство купця. Охорона товару («таті» — злодії).
+
+### Фінансове право: Кредит і «Місячне»
+**Центральна тема**. «Різ» (відсоток). Види відсотків: місячний (короткостроковий, найвищий), третинний (річний). Зловживання лихварів. «Місячне» в плані помилково названо «allowance», насправді в контексті права — це відсоток.
+
+### Банкрутство: Нещасний випадок чи злочин?
+Статті Просторової Правди про банкрутство. «Без вини» (вогонь, вода, війна) — розстрочка боргу. «З вини» (п'янство, протринькування) — продаж у холопство.
+
+### Соціальний вимір: Лихварі та повстання 1113 року
+Криза 1113 року після смерті Святополка. Погроми дворів лихварів та адміністрації. Рішучі дії Мономаха: обмеження різу до 20% (або 50% залежно від тлумачення «третини») для запобігання соціальному вибуху.
+
+### Підсумок: Правова спадщина
+Вплив норм Руської Правди на Литовські статути та магдебурзьке право в Україні.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12919)
+✓ Message 12889 acknowledged
+✓ Message 12919 acknowledged

@@ -1,0 +1,299 @@
+✅ Message sent to Gemini (ID: 10205) [auto-acked: self-addressed]
+✓ Message 10205 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10205...
+📨 Message #10205
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-checkpoint
+   Time: 2026-02-20T20:02:32.337597+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: a2-35
+level: A2
+sequence: 35
+slug: checkpoint
+version: '2.0'
+title: Checkpoint
+subtitle: Complex Sentences & Health
+content_outline:
+- section: Overview / Огляд
+  points:
+  - Transitioning from simple reports to complex ideas — aligned with State Standard
+    §4.4.2 for complex sentence structure and §3.12 for health vocabulary
+  - The map of Level A2.2 proficiency
+- section: Skill 1
+  points:
+  - 'Conjunction Masterclass: Cause & Effect (Тому що, бо, через) — learner error:
+    overusing formal ''тому що'' in casual speech where ''бо'' is more natural'
+  - Model, Practice, and Self-Check structure
+- section: Skill 2
+  points:
+  - 'Logic of Intent: Purpose & Desire (Щоб + Inf vs Щоб + Past) — learner error:
+    confusing conjunction ''щоб'' (in order to) with ''що б'' (what would)'
+  - Model, Practice, and Self-Check structure
+- section: Skill 3
+  points:
+  - 'Relative Chameleon: Який in all cases — learner error: failing to decline ''який''
+    to match the gender/case of the noun it replaces (e.g. using ''який'' for feminine
+    noun)'
+  - Model, Practice, and Self-Check structure
+- section: Skill 4
+  points:
+  - 'Time Coordination: Коли, поки, після того як — prepares for B1 complex syntax
+    (conditional ''якби'')'
+  - Model, Practice, and Self-Check structure
+- section: Skill 5
+  points:
+  - 'Health and Body: Integrating body parts and symptoms — vocab focus: голова, живіт,
+    горло, рука/нога; learner error: using literal translation for ''take medicine''
+    instead of ''приймати ліки'' (though ''пити'' is colloquial)'
+  - 'Model, Practice, and Self-Check structure — cultural hook: treating colds with
+    raspberry (малина), viburnum (калина) tea, or honey (мед) for their natural antipyretic
+    properties'
+- section: Integration Challenge / Інтеграційне завдання
+  points:
+  - 'Combined task using all skills — context: explaining symptoms (cause) and desired
+    outcome (purpose) to a doctor'
+- section: Dialogues / Діалоги
+  points:
+  - 'A summary dialogue combining review items — cultural hook: usage of ''Будьмо!''
+    (Let us be!) as a toast to health, implying ''let us be alive/healthy'''
+focus: checkpoint
+pedagogy: TTT
+objectives:
+- Learner can build complex arguments using logical connectors
+- Learner can use relative clauses to define and describe
+- Learner can navigate medical situations confidently
+- Learner can correct common errors in complex sentences
+grammar:
+- logical connectors review
+- relative clauses review
+- health vocabulary review
+- complex sentence structure
+module_type: checkpoint
+sources:
+- name: Ukrainian State Standard 2024 - A2.2 Assessment
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Proficiency benchmarks for complex sentences and health communication at
+    A2.2
+- name: Review of Ukrainian Syntax for A2
+  url: https://uk.wikipedia.org/wiki/Синтаксис_української_мови
+  type: reference
+  notes: Synthesized logic for coordinating multiple subordinate clauses
+immersion: 60-75% Ukrainian
+phase: A2.2
+persona:
+  voice: Encouraging Cultural Guide
+  role: Border Control Officer
+vocabulary_hints:
+  required:
+  - голова (head) — болить голова (headache), мити голову (wash hair)
+  - горло (throat) — червоне горло (red/sore throat), болить горло (sore throat)
+  - температура (temperature/fever) — висока температура (high fever), міряти температуру
+    (take temperature)
+  - ліки (medicine) — приймати ліки (take medicine - formal/correct), купити ліки
+    (buy medicine)
+  - лікар (doctor) — йти до лікаря (go to the doctor), записатися до лікаря (make
+    an appointment)
+  recommended:
+  - живіт (stomach/belly) — болить живіт (stomach ache)
+  - рука/нога (arm/hand / leg/foot) — зламати руку (break an arm), права нога (right
+    leg)
+  - застуда (cold) — мати застуду (have a cold), лікувати застуду (treat a cold)
+word_target: 3000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Checkpoint
+
+## State Standard Reference
+§3.12: "Здоров’я й особиста гігієна: частини тіла; особиста гігієна; самопочуття; хвороби й нездужання; візит до лікаря; аптека."
+§4.4.2: "Складне речення: ... складнопідрядні речення зі сполучниками тому що, бо ... складнопідрядні реченні зі сполучником щоб для вираження мети"
+Alignment: This module directly addresses the A2 requirement for health vocabulary and specific complex sentence structures (causal and purpose clauses).
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| голова | High (Body Parts) | болить голова, мити голову |
+| рука/нога | High (Body Parts) | зламати руку, права нога |
+| живіт | High (Body Parts) | болить живіт |
+| горло | High (Illness) | червоне горло, болить горло |
+| температура | High (Illness) | висока температура, міряти температуру |
+| ліки | High (Medicine) | приймати ліки (NOT пити formally), купити ліки |
+| лікар | High (Professions) | йти до лікаря, записатися до лікаря |
+| застуда | High (Illness) | мати застуду, лікувати застуду |
+
+## Cultural Hooks
+1. **Tea with Raspberry & Viburnum**: Ukrainians traditionally treat colds with hot tea containing raspberry jam (*малина*) or viburnum (*калина*), believing in their natural antipyretic properties. Honey (*мед*) is often added instead of sugar.
+2. **"Будьмо!"**: The universal Ukrainian toast "Будьмо!" literally means "Let us be!" (implied: healthy/alive), connecting social rituals directly to health.
+
+## Common Learner Errors
+1. **Який Agreement**: Learners often fail to decline *який* to match the gender/case of the noun it replaces (e.g., using *який* for a feminine noun instead of *яка*).
+2. **Щоб vs. Що б**: Confusing the conjunction *щоб* (in order to, one word) with the pronoun+particle *що б* (what would, two words).
+3. **Тому що vs. Бо**: Overusing *тому що* in casual speech where *бо* is more natural, or using *бо* in very formal writing where *тому що* is preferred.
+4. **Taking Medicine**: Using literal translations for "take medicine" instead of the correct *приймати ліки* (though *пити ліки* is common colloquially).
+
+## Cross-References
+- Builds on: A2 Modules covering basic case usage (Genitive/Accusative for body parts/pain), basic sentence structure.
+- Prepares for: B1 Health modules (more specific diseases), B1 complex syntax (conditional *якби*).
+
+## Notes for Content Writing
+- **Grammar Scaffolding**: Ensure distinct sections for *Cause* (тому що), *Purpose* (щоб), and *Relative* (який) before mixing them.
+- **Immersion**: Use Ukrainian for the dialogue and practical advice; keep grammar explanations for syntax in English/mixed as per A2 Band 2.
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ та цілі (Introduction and Objectives)"
+  words: 400
+  points:
+  - "Mapping Level A2.2 proficiency: transitioning from simple reports to complex logical structures aligned with State Standard §4.4.2"
+  - "Defining competencies for health communication, pharmacy interactions, and describing physical states per State Standard §3.12"
+- section: "Синтаксис логіки: Причина та Мета (Syntax of Logic: Cause and Purpose)"
+  words: 750
+  points:
+  - "Conjunction Masterclass: Cause & Effect (Тому що, бо, через). Focus on register: correcting the overuse of 'тому що' in casual speech where 'бо' is more natural"
+  - "The Logic of Intent: Purpose & Desire (Щоб + Inf vs Щоб + Past). Critical drill for the 'щоб' (in order to) vs 'що б' (what would) learner error"
+  - "Scaffolding causal and final clauses with specific medical contexts: explaining why one goes to the doctor or takes specific medicine"
+- section: "Опис та послідовність дій (Description and Sequence of Actions)"
+  words: 750
+  points:
+  - "The Relative Chameleon: Using 'який' to define nouns. Targeted correction of 'який agreement' errors (matching gender/case with the antecedent noun)"
+  - "Time Coordination: Integrating 'коли', 'поки', and 'після того як' to sequence health-related events (e.g., 'Take medicine after you eat')"
+  - "Preparing for B1 syntax: how complex A2 structures pave the way for conditional 'якби' sentences"
+- section: "Медицина, тіло та народні методи (Medicine, Body and Folk Methods)"
+  words: 700
+  points:
+  - "Integrating body parts (голова, живіт, горло, рука/нога) with pain expression using Accusative and Genitive cases"
+  - "Pharmacy interactions: Correcting the literal translation of 'take medicine' from 'брати' to 'приймати ліки' (formal) or 'пити ліки' (colloquial)"
+  - "Cultural Hook: Traditional Ukrainian treatments for colds—hot tea with raspberry (малина), viburnum (калина), and honey (мед) as natural antipyretics"
+- section: "Практичне застосування та підсумок (Practical Application and Summary)"
+  words: 400
+  points:
+  - "Integration Challenge: navigating a medical consultation by combining cause, purpose, and description skills"
+  - "Cultural Hook: Usage of the toast 'Будьмо!' (Let us be!) in social health rituals, emphasizing its literal meaning of being healthy and alive"
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "голова (head) — болить голова (headache), мити голову (wash hair); high-frequency body part"
+  - "горло (throat) — червоне горло (red/sore throat), болить горло (sore throat); high frequency for illness"
+  - "температура (temperature/fever) — висока температура (high fever), міряти температуру (take temperature)"
+  - "ліки (medicine) — приймати ліки (formal/correct), пити ліки (colloquial); avoid literal 'take' translations"
+  - "лікар (doctor) — йти до лікаря (go to the doctor), записатися до лікаря (make an appointment)"
+  - "живіт (stomach/belly) — болить живіт (stomach ache); essential for pain description"
+  - "застуда (cold) — мати застуду (have a cold), лікувати застуду (treat a cold)"
+  recommended:
+  - "рука/нога (arm/hand / leg/foot) — зламати руку (break an arm), права нога (right leg)"
+  - "малина (raspberry) — малина з чаєм; used in traditional cold treatments"
+  - "калина (viburnum) — чай з калиною; traditional natural medicine"
+  - "мед (honey) — додавати мед у чай; natural antipyretic"
+  - "щоб (in order to) — conjunction of purpose; learner error: distinguish from 'що б'"
+  - "бо (because) — natural/casual register; contrast with formal 'тому що'"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (3662 chars)
+✅ Message sent to Claude (ID: 10212)
+✓ Message 10212 acknowledged
+   Auto-acknowledged reply #10212 (stdout delivery — no inbox accumulation)
+✓ Message 10205 acknowledged

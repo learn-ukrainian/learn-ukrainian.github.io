@@ -2,14 +2,14 @@
   "module": "questions-and-negation",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-19T23:01:32.466754Z",
+  "last_audit": "2026-02-21T00:46:31.959614Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-19T18:53:23.639222Z",
+    "md": "2026-02-20T22:02:51.428887Z",
     "meta": "2026-02-19T18:39:15.452435Z",
-    "activities": "2026-02-19T18:44:29.076231Z",
-    "vocabulary": "2026-02-19T18:52:36.481815Z",
-    "plan": "2026-02-18T19:03:32.160720Z",
+    "activities": "2026-02-20T22:02:51.430780Z",
+    "vocabulary": "2026-02-20T22:02:51.429909Z",
+    "plan": "2026-02-20T20:36:43.855202Z",
     "research": "2026-02-19T18:39:15.443200Z"
   },
   "gates": {
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "2720/2000 (raw: 2885)"
+      "message": "2723/2000 (raw: 2888)"
     },
     "activities": {
       "status": "pass",

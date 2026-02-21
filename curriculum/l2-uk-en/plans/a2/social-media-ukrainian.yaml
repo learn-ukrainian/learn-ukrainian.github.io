@@ -6,55 +6,86 @@ version: '2.0'
 title: Social Media Ukrainian
 subtitle: Digital Life
 content_outline:
-- section: Introduction / Вступ
+- section: Вступ (Introduction)
+  words: 450
   points:
-  - Popular platforms — Telegram as primary news/comms source (75% for news, 90% daily
-    usage, official updates), Instagram for business (often replacing websites)
-  - 'Digital culture — State Standard §3.4 alignment; cultural hook: ''Пишіть у дірект''
-    (Write to DM) as standard business phrase'
-- section: Presentation / Презентація
+  - 'Alignment with State Standard §3.4: Navigating social networks (соціальні мережі)
+    as a core leisure and information competency.'
+  - 'The Telegram Phenomenon: Explaining why Telegram is the primary news source for
+    75% of Ukrainians and used daily by 90%; mention its role for air raid alerts
+    and official government updates.'
+  - 'Instagram as a Business Ecosystem: How Instagram often replaces traditional websites
+    for Ukrainian micro-businesses; introduce the essential business phrase ''Пишіть
+    у дірект'' (Write to DM).'
+- section: Презентація (Presentation)
+  words: 800
   points:
-  - 'Social media vocabulary — ''сторінка'' vs ''сайт'' (false friend); UI terms:
-    кнопка ''Стежити'', іконка серця'
-  - 'Posts, likes, comments — ''лайк'' vs ''вподобайка'' (purist alternative), ''світлина''
-    (photo); learner error: confusing case for ''підписатися на...'' (Accusative:
-    на канал, на сторінку)'
-- section: Practice / Практика
+  - 'Core UI Vocabulary and False Friends: Distinguishing between ''сторінка'' (profile/page)
+    and ''сайт'' (website); warn against the common error of calling a social media
+    profile a ''сайт''.'
+  - 'Navigating the Interface: Key UI elements like ''кнопка «Стежити»'' (Follow button),
+    ''іконка серця'' (heart icon), and ''стрічка'' (feed).'
+  - 'Grammar of Subscription: Drill the use of ''підписатися на...'' + Accusative
+    case; contrast masculine inanimate ''на канал'' (no change) with feminine ''на
+    сторінку'' (ending change to -у) to address common learner errors.'
+  - 'Slang vs. Purism: Presenting standard slang like ''лайк'' alongside cultural/purist
+    alternatives like ''вподобайка'' (like) and ''світлина'' (photo) for stylistic
+    depth.'
+- section: Практика (Practice)
+  words: 600
   points:
-  - Write posts and comments — 'поширити допис' (share post), 'знімати сторіз' (film
-    stories), 'кидати в сторіз' (post to stories)
-- section: Dialogues / Діалоги
+  - 'Digital Action Verbs: Drilling the conjugation and usage of ''постити'', ''лайкати'',
+    and ''репостити'' in casual registers.'
+  - 'Sharing and Posting: Practical application of ''поширити допис'' (share a post)
+    versus ''поділитися з друзями'' (share with friends); practice phrases like ''знімати
+    сторіз'' and ''кидати в сторіз''.'
+  - 'Correcting Case Errors: Exercises focused on correctly using the Accusative case
+    for subscription targets and the Prepositional case for platform locations (''в
+    інстаграмі'', ''в телеграмі'').'
+- section: Діалоги та Взаємодія (Dialogues & Interaction)
+  words: 600
   points:
-  - Online conversations — casual register, focus on Telegram (news/messaging) and
-    Instagram (visuals) context
-  - 'Commenting exchanges — interacting with ''підписники'' (followers); collocation:
-    ''кількість підписників'', ''мої підписники'''
-- section: Narrative / Розповідь
+  - 'Telegram Register: Contextual dialogues for messaging friends versus interacting
+    with official news channels and alerts.'
+  - 'The Instagram Shopping Experience: A dialogue between a customer and a shop owner
+    using ''Яка ціна?'', ''Пишіть у дірект'', and ''скиньте посилання''.'
+  - 'Managing Engagement: Interacting with ''підписники'' (followers) in comments;
+    discussing ''кількість підписників'' and ''накрутка''.'
+- section: Розповідь та Підсумок (Narrative & Summary)
+  words: 550
   points:
-  - Social media story — focus on navigating UI ('кнопка', 'іконка') and digital interactions
-    ('поширити', 'лайкнути')
-- section: Need More Practice?
-  points:
-  - Summary and links
+  - 'Narrative: A ''Day in Digital Ukraine'' — checking Telegram for news/alerts in
+    the morning, posting a ''світлина'' to Instagram, and interacting with the community.'
+  - 'Refining Digital Style: Summary of when to use casual slang (''лайк'') versus
+    more formal or poetic terms (''вподобайка'', ''світлина'') to sound more natural.'
+  - 'State Standard Check: Final review of competencies for managing profile settings
+    and understanding digital notifications (''сповіщення'').'
 vocabulary_hints:
   required:
-  - 'профіль (profile) — learner error: confuse with ''сторінка'' (page)'
-  - пост (post) — писати пост, опублікувати пост, новий пост
-  - 'лайк (like) — ставити лайк, збирати лайки; alt: вподобайка (purist)'
-  - коментар (comment) — common UI term
-  - підписник (follower) — мої підписники, кількість підписників, накрутка підписників
-  - підписатися (to subscribe) — підписатися на канал (Accusative case warning), підписатися
-    на сторінку
-  - 'поділитися (to share) — поділитися з друзями; synonym: поширити допис'
-  - сторіз (stories) — знімати сторіз, кидати в сторіз, дивитися сторіз
+  - 'лайк (like) — ставити лайк, збирати лайки; very high frequency internet slang;
+    alt: вподобайка'
+  - пост (post) — писати пост, новий пост, опублікувати пост; refers to any feed content
+  - сторіз (stories) — знімати сторіз, кидати в сторіз, дивитися сторіз; dominates
+    daily social media usage
+  - підписник (follower) — мої підписники, кількість підписників; key term for influencer/business
+    culture
+  - підписатися (to subscribe/follow) — підписатися на канал, підписатися на сторінку;
+    MUST use Accusative case
+  - сторінка (page/profile) — твоя сторінка в інстаграмі; contrast with 'сайт' (false
+    friend)
+  - поширити (to share) — поширити допис; standard UI term for 'Share' action
+  - дірект (direct/DM) — пишіть у дірект; essential for Ukrainian Instagram business
+    communication
   recommended:
-  - стрічка (feed)
-  - хештег (hashtag)
-  - репост (repost)
-  - приватність (privacy)
-  - блокувати (to block)
-  - сповіщення (notification)
-  - світлина (photo)
+  - вподобайка (like) — purist alternative to 'лайк' increasingly seen in localized
+    interfaces
+  - світлина (photo) — poetic and elegant alternative to 'фото' or 'пост'
+  - стрічка (feed) — гортати стрічку; the main social media feed
+  - сповіщення (notification) — вмикати сповіщення; essential for app settings and
+    Telegram alerts
+  - посилання (link) — скинути посилання; standard for sharing web content
+  - накрутка (boosting/faking) — накрутка підписників; buying fake engagement
+  - 'профіль (profile) — learner error: often confused with ''сторінка'''
 activity_hints:
 - type: match-up
   focus: Social media vocabulary

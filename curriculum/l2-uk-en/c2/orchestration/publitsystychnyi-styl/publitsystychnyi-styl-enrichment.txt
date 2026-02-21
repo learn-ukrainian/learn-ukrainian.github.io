@@ -1,0 +1,329 @@
+✅ Message sent to Gemini (ID: 11112) [auto-acked: self-addressed]
+✓ Message 11112 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #11112...
+📨 Message #11112
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-publitsystychnyi-styl
+   Time: 2026-02-20T22:24:44.473652+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c2-005
+level: c2
+sequence: 5
+version: '2.0'
+title: Публіцистичний стиль — Журналістика
+focus: stylistics
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Українська правда
+  url: https://www.pravda.com.ua/
+  type: reference
+  notes: Contemporary Ukrainian journalism examples
+- name: Стандарти журналістики — ІМІ
+  url: https://imi.org.ua/
+  type: primary
+  notes: Institute of Mass Information journalism standards
+- name: Ukrainian State Standard 2024 — Media communication
+  url: https://mon.gov.ua/
+  type: reference
+  notes: C2 requirements for publicistic style
+content_outline:
+- section: Вступ — Публіцистика як стиль впливу
+  points:
+  - Функції публіцистичного стилю
+  - Інформування vs переконування
+  - Об'єктивність та суб'єктивність
+- section: Новина — інформаційний жанр
+  points:
+  - Перевернута піраміда
+  - Лід — 5W+H (хто, що, де, коли, як, чому)
+  - Заголовок — приваблення уваги
+  - Фактчекінг та джерела
+- section: Репортаж та інтерв'ю
+  points:
+  - Репортаж — "бути очевидцем"
+  - Структура та мова репортажу
+  - Інтерв'ю — підготовка та подання
+  - Пряма мова та цитування
+- section: Аналітична стаття
+  points:
+  - Структура аналітики
+  - Аргументація та докази
+  - Експертна думка
+  - Баланс точок зору
+- section: Колонка та есей
+  points:
+  - Авторська позиція
+  - Риторичні прийоми
+  - Іронія та сатира
+  - Персональний голос журналіста
+- section: Мовні особливості публіцистики
+  points:
+  - Емоційність та експресивність
+  - Суспільно-політична лексика
+  - Риторичні запитання
+  - Метафори та образність
+- section: Практикум — Створення журналістських текстів
+  points:
+  - Написання новини за фактами
+  - Написання колонки на актуальну тему
+  - Порівняльний аналіз медійного висвітлення
+  - Редагування журналістського тексту
+vocabulary:
+  required:
+  - новина (news)
+  - репортаж (report/feature)
+  - інтерв'ю (interview)
+  - колонка (column)
+  - фактчекінг (fact-checking)
+  - лід (lead)
+  - заголовок (headline)
+  - джерело (source)
+  - об'єктивність (objectivity)
+  - аналітика (analysis/analytics)
+  recommended:
+  - ексклюзив (exclusive)
+  - редакційний (editorial)
+  - медійний (media-related)
+  - висвітлення (coverage)
+  - маніпуляція (manipulation)
+  forbidden: '[]'
+activities:
+  types_required:
+  - quiz
+  - fill-in
+  - error-correction
+  - critical-analysis
+  - essay-response
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c2-11 (Transforming official to journalistic)
+- c2-06 (Literary techniques enhance journalism)
+- c2-14 (Individual voice development)
+vocabulary_hints:
+  required:
+  - концепція (concept)
+  - аналіз (analysis)
+  - дискурс (discourse)
+  - методологія (methodology)
+  recommended:
+  - інтерпретація (interpretation)
+  - контекстуалізація (contextualization)
+  - синтез (synthesis)
+activity_hints:
+- type: reading
+  focus: Поглиблений аналіз тексту
+  items: 4
+- type: essay-response
+  focus: Критичне осмислення
+- type: discussion
+  focus: Дискусія та аргументація
+  items: 1
+persona:
+  voice: Senior Specialist
+  role: Investigative Journalist
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Публіцистичний стиль — Журналістика
+
+## State Standard Reference
+§4.3.1.1: "Стилі української мови: ... публіцистичний"
+§4.3.6: "Уміння створити текст певного стилю за планом"
+§3.20: "Медіа й соціальні мережі: преса; ... незалежність медіа та свобода слова; пропаганда та фейкові новини"
+
+Alignment: This module directly addresses the C2 requirement to master the publicistic functional style, specifically focusing on media creation, fact-checking, and genre-specific structures (news, reportage, analysis) as outlined in the thematic section §3.20.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| **новина** | High (General/Media) | свіжа новина, фейкова новина, стрічка новин, розповсюджувати новину, спростовувати новину |
+| **джерело** | High (Media/Academic) | надійне джерело, перевірене джерело, анонімні джерела, посилатися на джерело, витік інформації |
+| **висвітлення** | Med-High (Media) | об'єктивне висвітлення, всебічне висвітлення, медійне висвітлення подій, висвітлювати тему |
+| **вплив** | High (General) | вплив на громадську думку, здійснювати вплив, інструмент впливу, сфера впливу |
+| **об'єктивність** | Med (Academic/Media) | журналістська об'єктивність, дотримуватися об'єктивності, принцип об'єктивності |
+
+## Cultural Hooks
+1. **Премія імені Георгія Ґонґадзе**: Founded in 2019 to honor independent journalists. Named after Georgiy Gongadze, whose murder sparked the "Ukraine without Kuchma" protests and became a turning point for freedom of speech.
+2. **StopFake**: A world-renowned Ukrainian fact-checking project founded in 2014 to debunk Russian propaganda. It highlights Ukraine's frontline role in the global information war.
+
+## Common Learner Errors
+1. **Passive Voice Overuse**: "Було повідомлено про подію..." → *Active*: "ЗМІ повідомили про подію..." (Ukrainian publicistic style values active agency).
+2. **Lexical Calques**: "Приймати міри" (from Rus. принимать меры) → *Correct*: "Вживати заходів"; "Згідно закону" → *Correct*: "Згідно із законом".
+3. **Register Confusion**: Mixing bureaucratic clichés (kantseliaryzmy) into lively reportage (e.g., using "з метою здійснення" instead of "щоб зробити").
+
+## Cross-References
+- **Builds on**: C2-004 (Official-Business Style) — contrasts formal constraints with publicistic expressiveness.
+- **Prepares for**: C2-006 (Literary Style) — introduces rhetorical devices that will be deepened in fiction analysis.
+
+## Notes for Content Writing
+- Ensure distinction between "standard news" (neutral) and "authorial column" (subjective) is clear, as Ukrainian media landscape blends them often.
+- Emphasize "Standards of Journalism" (BBC/IMI standards) to counteract low-quality "clickbait" examples students might encounter online.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Публіцистичний стиль як інструмент впливу (Introduction: Publicistic Style as a Tool of Influence)"
+  words: 600
+  points:
+  - "Визначення функцій публіцистики згідно з Державним стандартом (§4.3.1.1): інформування, переконання та формування громадської думки."
+  - "Культурний контекст: Премія імені Георгія Ґонґадзе як символ незалежної журналістики та її роль у розвитку свободи слова в Україні."
+  - "Аналіз поняття «вплив на громадську думку» та етичні межі журналістського втручання в суспільні процеси."
+- section: "Жанри інформаційної журналістики та стандарти фактчекінгу (Information Journalism Genres and Fact-checking Standards)"
+  words: 800
+  points:
+  - "Структура новини: розширене застосування моделі «перевернутої піраміди» та формула 5W+H для побудови ефективного ліду."
+  - "Стандарти журналістики (IMI/BBC): об'єктивність, баланс думок, точність та відокремлення фактів від коментарів."
+  - "Методологія StopFake (§3.20): практичні алгоритми деконструкції пропаганди, фейкових новин та верифікації джерел інформації."
+  - "Робота з джерелами: надійні vs анонімні джерела, поняття «витік інформації» та відповідальність за поширення неперевірених даних."
+- section: "Репортаж та інтерв'ю: ефект присутності та етика діалогу (Reportage and Interview: Presence Effect and Dialogue Ethics)"
+  words: 600
+  points:
+  - "Мова репортажу: створення «ефекту очевидця» через деталізацію, динаміку та використання активних дієслівних конструкцій."
+  - "Типова помилка: надмірне вживання пасивного стану («було повідомлено») — тренування переходу до активної агентності («ЗМІ повідомили»)."
+  - "Інтерв'ю як жанр: підготовка, стратегії ставлення запитань та етичне цитування прямої мови героя."
+- section: "Аналітична стаття та авторська колонка (Analytical Article and Authorial Column)"
+  words: 700
+  points:
+  - "Структура аналітичного тексту: від постановки проблеми до аргументованих висновків та експертних прогнозів."
+  - "Розвиток авторського голосу в колонці та есеї: використання риторичних запитань, іронії та метафор для підсилення позиції."
+  - "Різниця між «стандартом новини» (нейтральність) та «авторським поглядом» (суб'єктивність) у сучасному українському медіапросторі."
+- section: "Культура мови та стилістична коректність (Linguistic Culture and Stylistic Correctness)"
+  words: 700
+  points:
+  - "Подолання лексичних кальок: заміна суржикових висловів (напр., «приймати міри») на нормативні відповідники («вживати заходів»)."
+  - "Усунення канцеляризмів та офіційно-ділових штампів у журналістському тексті для досягнення живої та експресивної мови."
+  - "Дотримання норм узгодження: правильне вживання конструкцій «згідно із законом» замість помилкового «згідно закону»."
+- section: "Практикум: Створення та критичний аналіз медіатекстів (Workshop: Creating and Critically Analyzing Media Texts)"
+  words: 600
+  points:
+  - "Написання оперативного повідомлення (новини) з дотриманням стандартів об'єктивності та перевірки фактів (§4.3.6)."
+  - "Трансформація офіційного прес-релізу в цікавий для аудиторії журналістський матеріал (репортаж або за замітку)."
+  - "Редагування тексту: виявлення маніпуляцій, прихованої пропаганди та мовних помилок у запропонованих медіа-кейсах."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "новина (news) — свіжа новина, фейкова новина, стрічка новин, спростовувати новину"
+  - "джерело (source) — надійне джерело, перевірене джерело, витік інформації, посилатися на джерело"
+  - "висвітлення (coverage) — об'єктивне висвітлення подій, всебічне висвітлення теми, медійне висвітлення"
+  - "вплив (influence) — вплив на громадську думку, здійснювати вплив, сфера впливу"
+  - "об'єктивність (objectivity) — журналістська об'єктивність, дотримуватися принципу об'єктивності"
+  - "фактчекінг (fact-checking) — інструмент боротьби з дезінформацією, проект StopFake"
+  - "вживати заходів (to take measures) — нормативний вислів; уникати кальки «приймати міри»"
+  recommended:
+  - "спростування (refutation) — офіційне спростування недостовірної інформації"
+  - "ексклюзив (exclusive) — ексклюзивне інтерв'ю, отримати ексклюзивні дані"
+  - "згідно із (according to) — вживати «згідно із законом / правилами»; уникати «згідно закону»"
+  - "маніпуляція (manipulation) — маніпуляція фактами, прихована маніпуляція свідомістю"
+  - "свобода слова (freedom of speech) — фундаментальний принцип демократичних медіа, Премія імені Ґонґадзе"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4523 chars)
+✅ Message sent to Claude (ID: 11121)
+✓ Message 11121 acknowledged
+   Auto-acknowledged reply #11121 (stdout delivery — no inbox accumulation)
+✓ Message 11112 acknowledged

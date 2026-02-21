@@ -1,0 +1,301 @@
+✅ Message sent to Gemini (ID: 12033) [auto-acked: self-addressed]
+✓ Message 12033 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12033...
+📨 Message #12033
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-cyrillo-methodian-brotherhood
+   Time: 2026-02-20T23:35:30.201694+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 25
+module: lit-25
+level: LIT
+slug: cyrillo-methodian-brotherhood
+version: '2.0'
+title: Кирило-Мефодіївське братство
+subtitle: The Cyrillo-Methodian Brotherhood
+content_outline:
+- section: Вступ — Перша політична організація
+  points:
+  - Київ, 1845-1847 роки
+  - Чому це було революційно
+  - Таємне товариство в імперіях
+- section: Засновники і члени
+  points:
+  - Микола Костомаров — ідеолог
+  - Пантелеймон Куліш — організатор
+  - Тарас Шевченко — найрадикальніший
+- section: Книги буття українського народу
+  points:
+  - Жанр і структура документу
+  - Ідея слов'янської федерації
+  - Україна як "месія народів"
+- section: Політична програма
+  points:
+  - Скасування кріпацтва
+  - Демократія і рівність
+  - Християнський соціалізм
+- section: Розгром і наслідки
+  points:
+  - Донос і арешти (1847)
+  - Покарання членів
+  - Шевченко — найсуворіший вирок
+- section: Підсумок — Ідея, що пережила репресії
+  points:
+  - Вплив братства на українську думку
+  - Від 1847 до 1991 року
+  - Завершення фази "Інтелектуалів"
+vocabulary_hints:
+  required:
+  - братство (brotherhood)
+  - таємне товариство (secret society)
+  - федерація (federation)
+  - месіанізм (messianism)
+  - ідеолог (ideologist)
+  - програма (program)
+  - донос (denunciation)
+  - арешт (arrest)
+  - кріпацтво (serfdom)
+  - рівність (equality)
+  recommended:
+  - маніфест (manifesto)
+  - утопія (utopia)
+  - панславізм (pan-Slavism)
+  - репресії (repressions)
+  - заслання (exile)
+activity_hints:
+- type: reading
+  focus: Уривки з "Книг буття українського народу"
+  source: Wikipedia and historical sources
+  items: 4+
+- type: essay-response
+  focus: Україна як \"месія народів\" — утопія чи візія?
+  output: Політико-філософське есе
+focus: history
+pedagogy: Analysis
+prerequisites:
+- lit-21 (Panteleimon Kulish)
+- lit-14 (Son — контекст арешту Шевченка)
+connects_to:
+- lit-26 (Nechuy-Levytsky — наступна фаза)
+- lit-20 (Cult of Shevchenko — Шевченко-революціонер)
+- c1-hist (Historical modules)
+grammar:
+- Political Terminology
+- Religious Rhetoric
+- Historical Narrative
+module_type: history
+sources:
+- name: Кирило-Мефодіївське братство — стаття
+  url: https://uk.wikipedia.org/wiki/Кирило-Мефодіївське_братство
+  type: primary
+  notes: Історія організації
+- name: Книги буття українського народу
+  url: https://uk.wikipedia.org/wiki/Книги_буття_українського_народу
+  type: primary
+  notes: Програмний документ
+- name: Микола Костомаров — біографія
+  url: https://uk.wikipedia.org/wiki/Микола_Костомаров
+  type: secondary
+  notes: Біографія одного з лідерів
+immersion: 100% Ukrainian
+phase: LIT.4 The Intellectuals (Kulish & Kostomarov)
+objectives:
+- Analyze the causes and consequences of кирило-мефодіївське братство
+- Evaluate the historical significance of перша політична організація
+persona:
+  voice: Senior Philologist & Critic
+  role: Brotherhood Member
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Кирило-Мефодіївське братство
+
+## Використані джерела
+1. [Енциклопедія історії України: Кирило-Мефодіївське товариство](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Kyrylo_Mefodiivske_t_vo) — Фундаментальна стаття про виникнення, програмні документи, діяльність та розгром братства.
+2. [Ізборник: Книги буття українського народу (Закон Божий)](http://litopys.org.ua/rizne/knyhy.htm) — Оригінальний текст головного програмного документа братчиків.
+3. [Енциклопедія сучасної України: Костомаров Микола Іванович](https://esu.com.ua/article-3965) — Біографічна та історіографічна довідка про головного ідеолога товариства.
+
+## Хронологія
+- **Грудень 1845 – Січень 1846**: Формальне заснування Кирило-Мефодіївського братства у Києві (М. Костомаров, М. Гулак, В. Білозерський).
+- **Квітень 1846**: До товариства приєднується Тарас Шевченко, що суттєво посилює радикальне (революційне) крило гуртка.
+- **Березень 1847**: Студент Олексій Петров робить донос попечителю Київського навчального округу Олександру Траскіну.
+- **Березень – Квітень 1847**: Масові арешти членів братства у Києві, Варшаві (Куліш), Чернігові (Шевченко).
+- **Травень – Червень 1847**: Слідство у Петербурзі (Третій відділ Власної Й. І. В. Канцелярії) та винесення суворих вироків без суду за особистою конфірмацією імператора Миколи I.
+
+## Ключові факти та цитати
+- Це була **перша українська таємна політична організація**, яка поставила за мету не лише культурне відродження, а й політичні зміни (скасування кріпацтва, створення федерації).
+- "І встане Україна з своєї домовини і знову озоветься до всіх братів своїх слов'ян, і почують крик її, і встане Слов'янщина..." («Книги буття українського народу»).
+- "Вона [Україна] не любила ні царя, ні пана, а скомпонувала собі козацтво..." («Книги буття українського народу»).
+- "За сочинение возмутительных и в высшей степени дерзких стихотворений... определить рядовым в Оренбургский отдельный корпус с правом выслуги, поручив начальству иметь строжайшее наблюдение, дабы от него, ни под каким видом, не могло выходить возмутительных и пасквильных сочинений" (З вироку Тарасу Шевченку).
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ — Перша політична організація: II — Від гуртка до таємного товариства": `[!context]` — Контекст європейської "Весни народів" 1848 року. Братство діяло в дусі ідей "Молодої Європи" Джузеппе Мадзіні.
+- Section "Засновники і члени: III — Радикальне крило Тараса Шевченка": `[!myth-buster]` — Радянська історіографія штучно ділила братство на "революційних демократів" (Шевченко) і "буржуазних лібералів" (Костомаров, Куліш). Насправді розкол був менш класовим і стосувався переважно тактики (повільна еволюція та освіта проти повстання).
+- Section "Книги буття українського народу: I — Жанр та біблійна стилістика": `[!history-bite]` — "Книги буття" (або "Закон Божий") були навмисно стилізовані під Біблію. Це робило ідеї зрозумілими для звичайного неписьменного селянина, звиклої лише до церковних текстів, сакралізуючи національну ідею.
+- Section "Книги буття українського народу: III — Концепт українського месіанізму": `[!decolonization]` — Ідея українського месіанізму полягала в тому, що Україна, як найбільш гноблена нація, котра завжди цінувала свободу, повинна стати "каменем, який відкинули будівничі", щоб лягти в основу нової вільної Слов'янської федерації (на противагу російському деспотичному панславізму).
+- Section "Політична програма: I — Скасування кріпацтва та демократія": `[!culture]` — Перстень з написом "Св. Кирило і Мефодій, січень 1846", який був замовлений Миколою Гулаком і слугував таємним розпізнавальним знаком братчиків.
+- Section "Розгром і наслідки: I — Донос Петрова і масові арешти": `[!quote]` — Донос студента Олексія Петрова був класичним прикладом "зради за 30 срібняків". За те, що він підслухав через стіну розмови братчиків, імперія нагородила його місцем в урядовому апараті та фінансово забезпечила.
+
+## Деколонізаційний контекст
+- **Imperial/Soviet myth**: Братство трактувалося імперією як небезпечна "мазепинська" секта сепаратистів, яка загрожує цілісності держави. У СРСР їх штучно розполовили на "правильних" (Шевченко) і "реакційних" (Костомаров) діячів. Російський офіційний панславізм пропагував об'єднання всіх слов'ян під скіпетром російського православного царя ("злиття слов'янських рік у російське море").
+- **Ukrainian reality**: Це була перша зріла спроба сформулювати модерну українську політичну націю. Братчики запропонували **альтернативний, демократичний панславізм** — конфедерацію рівних, вільних республік (за зразком США), де спільний сейм збирався б у Києві, а не в Петербурзі. Це був відверто антиімперський концепт.
+
+## Contested Terms
+
+| Concept | Imperial/Soviet framing | Ukrainian (decolonized) framing |
+|---------|-------------------------|--------------------------------|
+| Кирило-Мефодіївське братство | Буржуазно-ліберальна сепаратистська змова | Перша модерна українська політична та ідеологічна організація |
+| Слов'янська федерація | Прикриття "мазепинського" сепаратизму | Демократична конфедерація рівних республік як антиімперська альтернатива |
+| Микола Костомаров і Пантелеймон Куліш | "Буржуазні ліберали", консерватори | Видатні ідеологи, творці українського національного та політичного наративу |
+
+## Section-Mapped Research Notes
+
+### Вступ — Перша політична організація: I — Київ 1840-х років
+Київський університет св. Володимира (заснований 1834 р.) став центром тяжіння інтелектуалів. Атмосфера романтизму, зацікавленість козацьким минулим. Знайомство М. Костомарова, В. Білозерського, М. Гулака.
+
+### Вступ — Перша політична організація: II — Від гуртка до таємного товариства
+Формалізація гуртка у грудні 1845 – січні 1846 року. Натхненні ідеями "Весни народів" та "Молодої Європи" Мадзіні, братчики обрали таємний формат, популярний в тодішній бездержавній Європі.
+
+### Засновники і члени: I — Ідеолог Микола Костомаров
+Професор-історик М. Костомаров став головним ідеологом, написавши "Книги буття". Він просував бачення історії народу, а не держави, та сформулював концепцію "двох руських народностей" (демократична українська vs авторитарна московська).
+
+### Засновники і члени: II — Організатор Пантелеймон Куліш
+П. Куліш зосередився на просвітництві, виданні книг, збереженні мови. Його позиція була еволюційною: перш ніж робити політичну революцію, треба освічувати народ і збирати фольклор.
+
+### Засновники і члени: III — Радикальне крило Тараса Шевченка
+Вступ Шевченка у 1846 році додав радикалізму. Його поезія зі збірки "Три літа" ("Сон", "Кавказ") пропонувала не лише просвіту, а й соціальне та національне повстання, жорстко висміюючи імперію.
+
+### Книги буття українського народу: I — Жанр та біблійна стилістика
+Текст написаний під впливом Міцкевича. Стилізований під Біблію (звідси друга назва "Закон Божий"), щоб надати національній ідеї сакрального виміру та зробити її зрозумілою народові.
+
+### Книги буття українського народу: II — Ідея слов'янської федерації
+Візія союзу вільних слов'янських республік (Україна, Польща, Чехія, Росія та ін.) за зразком США. Спільний сейм у Києві. Заперечення імперського російського панславізму.
+
+### Книги буття українського народу: III — Концепт українського месіанізму
+Україна, зберігаючи козацький дух свободи попри найжорстокіше пригноблення, мала відіграти роль месії — звільнити інші народи і стати духовним центром нового союзу ("камінь, який відкинули будівничі").
+
+### Політична програма: I — Скасування кріпацтва та демократія
+Вимоги, викладені у Статуті: негайне скасування кріпосного права як антихристиянського явища. Знищення станової нерівності, проголошення демократичних прав для всіх.
+
+### Політична програма: II — Християнський соціалізм
+Поєднання раннього християнства з ідеями європейського демократизму. Наголос на рівній освіті для всіх верств населення рідною мовою.
+
+### Розгром і наслідки: I — Донос Петрова і масові арешти
+Донос студента О. Петрова у березні 1847 року призвів до блискавичного втручання Третього відділу та масових арештів братчиків по всій імперії (Костомарова забрали перед весіллям).
+
+### Розгром і наслідки: II — Слідство та жорстокі вироки
+Слідство під контролем графа Орлова і Миколи I. Найсуворіший вирок без суду дістав Шевченко (заслання солдатом із забороною писати й малювати). Гулак опинився у Шліссельбурзі, інші — на засланні.
+
+### Підсумок — Ідея, що пережила репресії: I — Трансформація української ідеї
+За 14 місяців існування братство перевело український рух від етнографічного колекціонування до рівня чіткої політичної програми національного визволення.
+
+### Підсумок — Ідея, що пережила репресії: II — Завершення фази романтиків
+Розгром став трагічним завершенням доби інтелектуального романтизму. Однак ідеї Братства лягли в основу громадівського руху і впливали на українську політичну думку аж до 1991 року.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12107)
+✓ Message 12033 acknowledged
+✓ Message 12107 acknowledged

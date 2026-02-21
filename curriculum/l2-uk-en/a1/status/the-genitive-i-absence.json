@@ -2,14 +2,14 @@
   "module": "the-genitive-i-absence",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-19T23:23:24.858947Z",
+  "last_audit": "2026-02-21T00:46:37.954631Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-19T23:23:19.497867Z",
+    "md": "2026-02-20T23:17:28.313748Z",
     "meta": "2026-02-19T23:22:03.581107Z",
-    "activities": "2026-02-19T23:23:19.498534Z",
-    "vocabulary": "2026-02-18T21:50:41.786601Z",
-    "plan": "2026-02-18T19:03:32.234835Z",
+    "activities": "2026-02-20T23:17:28.314853Z",
+    "vocabulary": "2026-02-20T23:17:28.316073Z",
+    "plan": "2026-02-20T20:40:36.206524Z",
     "research": "2026-02-19T23:22:03.572508Z"
   },
   "gates": {
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "2225/2000 (raw: 2671)"
+      "message": "2248/2000 (raw: 2694)"
     },
     "activities": {
       "status": "pass",

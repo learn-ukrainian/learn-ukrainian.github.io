@@ -305,9 +305,29 @@ Follow the full review protocol. In summary:
 ### STEP 3: Auto-Fail Checklist
 - Russianisms (кушать→їсти, приймати участь→брати участь, etc.)
 - Calques (робити сенс→мати сенс, брати місце→відбуватися, etc.)
+- **Colonial framing** — Ukrainian defined by contrast with Russian (see below)
 - Grammar scope violations
 - Activity errors
 - Beginner safety ("Would I Continue?" test)
+
+### STEP 3a: Colonial Framing Check (MANDATORY)
+
+**Search the content for any passage that defines Ukrainian by contrast with Russian.** This is colonial framing and must be flagged.
+
+**Flag these patterns:**
+- "Unlike Russian..." / "Different from Russian..."
+- "Russian does not have/use..." (defining Ukrainian via Russian's absence)
+- "Looks/sounds like Russian..."
+- References to "Russian script/alphabet/letters" as comparison point
+- "To a Western eye..." (patronizing framing)
+
+**Legitimate exceptions** — do NOT flag these:
+- `[!myth-buster]` blocks explicitly debunking Russian propaganda
+- `[!decolonization]` blocks discussing resistance or language independence
+- Historical context about Russification, bans, or colonial repression
+- Kyiv/Kiev transliteration context
+
+**If colonial framing is found:** Score Language ≤ 7, flag as Critical Issue, and include a fix that presents the Ukrainian feature on its own terms without Russian as baseline.
 
 ### STEP 3b: LLM Fingerprint Scan (MANDATORY)
 

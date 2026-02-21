@@ -6,55 +6,88 @@ version: '2.0'
 title: All Cases Practice
 subtitle: Consolidating the Case System
 content_outline:
-- section: Introduction / Вступ
+- section: Вступ (Introduction)
+  words: 450
   points:
-  - 'Importance of the 7-case system — cultural hook: Ukrainian has 7 cases (unlike
-    English''s few) which creates its famous melody and emotional nuance (Vocative);
-    often ranked 2nd most melodic language after Italian'
-  - Quick reference table — establish 'Court Translator' persona for precision in
-    endings, encouraging 'legal' accuracy
-- section: Presentation / Презентація
+  - Establish the 'Court Translator' persona, emphasizing that precision in the 7-case
+    system is equivalent to legal accuracy; introduce the importance of the case system
+    for Ukrainian's melody.
+  - 'Cultural Hook: Ukrainian is often ranked as the 2nd most melodic language after
+    Italian; explain how the 7-case system creates the rhythmic flow and emotional
+    nuance that defines this melody.'
+  - Quick reference table comparing the 7 cases (State Standard §4.2.2) to English's
+    limited system, setting expectations for the A2 level mastery of both singular
+    and plural forms.
+- section: 'Презентація: Система та Логіка (Presentation: System and Logic)'
+  words: 750
   points:
-  - Case-by-case review (Nom to Voc) — aligns with State Standard §4.2.2 (all 7 cases,
-    singular/plural)
-  - 'Gender forms summary — learner error: confusing Genitive and Accusative for animate
-    masculine nouns (''Я бачу друга'', not ''Я бачу друг'')'
-  - 'Strategic question-based approach — focus on question words as triggers: хто/що,
-    кого/чого, кому/чому, ким/чим, на кому/на чому'
-- section: Practice / Практика
+  - 'Strategic question-based approach focusing on the interrogative triggers: хто/що,
+    кого/чого, кому/чому, ким/чим, на кому/на чому; provide a comparative table of
+    these question words for all 7 cases.'
+  - 'Alignment with State Standard §4.2.2: Systematic review of case functions—Nominative
+    (Subject), Genitive (Negation/Quantity), Dative (Addressee), Accusative (Direct
+    Object), Instrumental (Instrument/Accompaniment), Locative (Place), and Vocative
+    (Address).'
+  - Gender forms summary for singular and plural nouns, focusing on the structural
+    'Declension Group' approach preferred by the learner.
+- section: 'Культурний аспект: Кличний відмінок (Cultural Aspect: The Vocative Case)'
+  words: 450
   points:
-  - 'Mixed case identification — learner error: using Locative without a preposition
-    (''Я працюю в лікарні'', not ''Я працюю лікарні'')'
-  - 'Paradigms for key nouns (друг, книга) — learner error: using Nominative for age
-    instead of Dative (''Мені 20 років'', not ''Я 20 років'')'
-- section: Dialogues / Діалоги
+  - 'Deep dive into the Vocative Case (Кличний відмінок) as a unique feature preserved
+    from Proto-Slavic times; explain how it adds emotional depth to the language (Source:
+    verba.school).'
+  - Practice using the Vocative in social and professional contexts, reinforcing the
+    'Court Translator's' need for formal and respectful address.
+- section: Практика та Аналіз Помилок (Practice and Error Analysis)
+  words: 850
   points:
-  - 'Real-world application of mixed cases — focus on precision and correctness in
-    everyday scenarios; context: legal/official scenarios to fit Court Translator
-    persona'
+  - 'Focus on Learner Error 1: Locative without a preposition (e.g., ''Я працюю лікарні''
+    vs. correct ''Я працюю в лікарні''); emphasize that Locative ALWAYS requires a
+    preposition in Ukrainian.'
+  - 'Focus on Learner Error 2: Genitive vs. Accusative for animate masculine nouns
+    (e.g., ''Я бачу друг'' vs. correct ''Я бачу друга''); drill the pattern where
+    animate masculine nouns share Genitive and Accusative endings.'
+  - 'Focus on Learner Error 3: Using Nominative for age instead of Dative (e.g., ''Я
+    є 20 років'' vs. correct ''Мені 20 років''); drill the ''Мені/Тобі/Йому'' paradigm
+    for expressing age.'
+  - Mixed case identification drills with paradigms for key nouns like 'друг' and
+    'книга', covering all 7 cases in singular and plural.
+- section: Діалоги та Реальне Застосування (Dialogues and Real-world Application)
+  words: 500
+  points:
+  - Real-world application of mixed cases in legal and official scenarios to fit the
+    Court Translator persona; focus on high-stakes precision in everyday bureaucracy.
+  - 'Final consolidation dialogue: A ''Courtroom'' simulation where the learner must
+    use correct case endings for evidence, participants (Vocative), and locations
+    to avoid ''legal'' misunderstandings.'
+  - Summary checklist for A2 case mastery, ensuring alignment with State Standard
+    requirements for expressing basic syntactic roles fluently.
 vocabulary_hints:
   required:
-  - хто (who) — хто це? (High freq)
-  - що (what) — що це? (High freq)
-  - кого (whom - acc/gen) — нема кого (High freq)
-  - чого (of what) — нема чого (High freq)
-  - кому (to whom) — дати комусь (High freq)
-  - чому (to what / why) — чому ти тут? (High freq)
-  - ким (by whom) — бути кимсь (High freq)
-  - чим (by what) — задоволений чимсь (High freq)
-  - відмінок (case) — відмінювати за відмінками (Academic)
-  - називний (nominative) — суб'єкт (State Standard)
-  - родовий (genitive) — заперечення, кількість (State Standard)
-  - давальний (dative) — адресат (State Standard)
-  - знахідний (accusative) — прямий об'єкт (State Standard)
-  - орудний (instrumental) — знаряддя, супровід (State Standard)
-  - місцевий (locative) — місце, на кому / на чому (State Standard)
+  - хто (who) — хто це? (High frequency interrogative)
+  - що (what) — що це? (High frequency interrogative)
+  - кого (whom) — нема кого; Accusative/Genitive question for animate objects
+  - чого (of what) — нема чого; Genitive question for inanimate objects
+  - кому (to whom) — дати комусь; Dative recipient marker
+  - чому (to what / why) — чому ти тут?; Dative/Adverbial trigger
+  - ким (by whom) — бути кимсь; Instrumental agent/predicate marker
+  - чим (by what) — задоволений чимсь; Instrumental tool marker
+  - на кому / на чому (on whom / on what) — стояти на чомусь; Locative markers (Always
+    with preposition)
+  - відмінок (case) — відмінювати за відмінками; Academic/Standard terminology
+  - називний (nominative) — суб'єкт (State Standard); naming case
+  - родовий (genitive) — заперечення, кількість (State Standard); possession/absence
+  - давальний (dative) — адресат (State Standard); recipient case
+  - знахідний (accusative) — прямий об'єкт (State Standard); direct action case
+  - орудний (instrumental) — знаряддя, супровід (State Standard); tool/company case
+  - місцевий (locative) — місце (State Standard); location case (Always with prep)
+  - кличний (vocative) — звертання (State Standard); used for direct address
   recommended:
-  - кличний (vocative) — звертання (State Standard)
-  - однина (singular)
-  - множина (plural)
-  - закінчення (ending)
-  - відмінювати (to decline)
+  - однина (singular) — form for one subject
+  - множина (plural) — form for multiple subjects
+  - закінчення (ending) — focus on the variable part of the word
+  - відмінювати (to decline) — the process of changing noun forms
+  - прийменник (preposition) — critical for Locative and other cases
 activity_hints:
 - type: fill-in
   focus: Choose correct case for context

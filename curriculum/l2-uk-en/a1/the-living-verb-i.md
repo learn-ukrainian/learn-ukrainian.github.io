@@ -310,12 +310,12 @@ See how natural that feels? You are describing reality.
 The verb **писати** (to write) is slightly rebellious. It belongs to this group, but it has a tiny sound change in the stem.
 Instead of "писа-ю", the "с" changes to "ш".
 
-*   **Я пишу.** (I write.) — *Note the stress shift!*
-*   **Ти пишеш.**
-*   **Він пише.**
-*   **Ми пишемо.**
-*   **Ви пишете.**
-*   **Вони пишуть.**
+*   **Я пишу́.** (I write.) — *Stress on the ending!*
+*   **Ти пи́шеш.** — *Stress jumps to the stem.*
+*   **Він пи́ше.**
+*   **Ми пи́шемо.**
+*   **Ви пи́шете.**
+*   **Вони пи́шуть.**
 
 It still follows the pattern of endings (-у/ю, -еш/єш, -е/є...), but just watch out for that **ш**. It makes the word easier to pronounce. Try saying "писаю" — the stress pattern is awkward. **Пишу** is crisper and clearer.
 
@@ -388,6 +388,6 @@ Today you transformed your language from a collection of labels into a tool for 
 3. Чому фраза «Я читати журнал» неправильна?
 4. Як перекласти «You (singular) listen» (слово **слухати**)?
 5. Що означає прислів'я «Птицю пізнати по пір'ю...»?
-6. Правда чи Неправда: **Він працює** означає і «He works», і «He is working».
+6. Правда чи Неправда: **Він працює** означає і «He works», та «He is working».
 
 In the next module, we will learn how to ask questions like "Do you read?" and how to say "I do *not* read." But for now, practice your power. Tell the world what you are doing. **Ви читаєте!**

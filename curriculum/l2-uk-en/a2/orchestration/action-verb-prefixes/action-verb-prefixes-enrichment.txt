@@ -1,0 +1,279 @@
+✅ Message sent to Gemini (ID: 10211) [auto-acked: self-addressed]
+✓ Message 10211 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10211...
+📨 Message #10211
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-action-verb-prefixes
+   Time: 2026-02-20T20:02:58.088630+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: a2-38
+level: A2
+sequence: 38
+slug: action-verb-prefixes
+version: '2.0'
+title: Action Verb Prefixes
+subtitle: Redoing, Finishing, and Opening
+content_outline:
+- section: Introduction / Вступ
+  points:
+  - 'From GPS to Transformation: The LEGO logic of Ukrainian verbs'
+  - Why phrasal verbs don't exist in Ukrainian
+- section: Presentation / Презентація
+  points:
+  - 'The Meaning Map: 8 core action transformers'
+  - 'The Logic of Re- (Пере-): Redoing and correcting — learner error: Confusing переписати
+    (do it again/copy) with дописати (finish what was started)'
+  - 'The Logic of Finish (До-): Reaching the limit — cultural hook: The ''Bread Respect''
+    (доїсти reflects reverence for food/scarcity trauma)'
+  - 'The Open/Close Wars: Відчинити (physical) vs Відкрити (abstract/general) — cultural
+    hook: The ''Hinges Rule'' (physical barrier vs abstract opening); learner error:
+    The ''Open'' Trap (using відкрити for doors)'
+  - 'The Triple Trap of За-: Close, Start, and Excess — learner error: The ''Za-''
+    Trap (using закрити for physical doors or confusing with ''to shut down'')'
+  - 'The "Give" Family: Distinguishing Віддати, Передати, Здати'
+  - 'Nuances of "A Little": The power of По- — scaffolding note: Carefully distinguish
+    по- as "a little bit" (delimitative) vs по- as perfective marker (starting vs
+    doing for a while)'
+- section: Practice / Практика
+  points:
+  - Transformation drills (Pysaty -> ?)
+  - 'Real-world scenario: Office chaos and housework'
+- section: Dialogues / Діалоги
+  points:
+  - A conversation between a writer and an editor about deadlines and rewrites
+focus: grammar
+pedagogy: PPP
+objectives:
+- Learner can express re-doing an action (rewriting, reading)
+- Learner can express finishing an action
+- Learner can describe opening and closing things
+- Learner can modify action verbs to add nuance
+- Learner can differentiate between 'start' and 'excess' meanings of prefixes
+grammar:
+- prefix пере- (re-doing)
+- prefix до- (finishing)
+- prefix від-/роз- (opening)
+- prefix за- (closing/starting)
+- prefix по- (little/start)
+- prefix на- (accumulate)
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Verb Morphology
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Standards for non-motion verb prefixes and semantic transformation at A2
+- name: Grammar of Ukrainian Language - Semantic Prefixes
+  url: https://uk.wikipedia.org/wiki/Префікси_в_українській_мові
+  type: reference
+  notes: Functional analysis of Po-, Za-, Vy-, and Pere- in action stems
+immersion: 60-75% Ukrainian
+phase: A2.3
+persona:
+  voice: Encouraging Cultural Guide
+  role: Film Director
+vocabulary_hints:
+  required:
+  - переписати (to rewrite/copy) — переписати вправу, переписати текст, переписати
+    майно
+  - дописати (to finish writing) — дописати речення, дописати листа, дописати до кінця
+  - відчинити (to open [physical]) — відчинити двері, відчинити вікно, відчинити кватирку
+  - відкрити (to open [abstract/general]) — відкрити очі, відкрити рахунок, відкрити
+    Америку, відкрити бізнес
+  - зачинити (to close [physical]) — зачинити вікно, зачинити за собою двері
+  - закрити (to close [abstract/general]) — закрити тему, закрити очі (на щось), закрити
+    засідання
+word_target: 3000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Action Verb Prefixes
+
+## State Standard Reference
+§4.3.2: "Видові пари дієслів: робити – зробити, ділити – поділити, писати – написати, виходити – вийти, забувати – забути."
+Alignment: This module explicitly teaches the semantic logic of prefixes (`пере-`, `до-`, `за-`, `від-`) used to form these aspectual pairs and modify verb meanings, directly addressing the A2 requirement for word formation and aspectual usage.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| **переписати** | High (Academic/Office) | переписати вправу, переписати текст, переписати майно |
+| **дописати** | High (General) | дописати речення, дописати листа, дописати до кінця |
+| **відчинити** | High (Specific) | відчинити двері, відчинити вікно, відчинити кватирку |
+| **відкрити** | Very High (General) | відкрити очі, відкрити рахунок, відкрити Америку, відкрити бізнес |
+| **зачинити** | High (Specific) | зачинити вікно, зачинити за собою двері |
+| **закрити** | Very High (General) | закрити тему, закрити очі (на щось), закрити засідання |
+
+## Cultural Hooks
+1. **The "Hinges" Rule**: Ukrainian logic rigorously distinguishes between opening a physical barrier with hinges (`відчинити` - doors, windows, gates) and abstract "opening" (`відкрити` - season, soul, bank account). Using `відкрити` for a door is a marker of "Surzhyk" or Russian influence.
+2. **The "Bread" Respect**: The prefix `до-` (finish to the end) is culturally heavy. You don't just "eat" (`їсти`), you `доїсти` (finish eating everything on the plate), reflecting the traditional reverence for bread and food scarcity trauma.
+
+## Common Learner Errors
+1. **The "Open" Trap**: `Відкрити двері` (Incorrect) → `Відчинити двері` (Correct). *Why*: Russian interference ("открыть дверь") or English generalization ("open" is one word).
+2. **Rewrite vs. Finish**: Confusing `переписати` (do it again/copy) with `дописати` (finish what was started). *Why*: Both add to the root "write", meaning overlaps in English "write more/again".
+3. **The "Za-" Trap**: Using `закрити` for physical doors. *Why*: See "Open Trap". Also `закрити` has a secondary meaning "to shut down" (a business), adding ambiguity.
+
+## Cross-References
+- Builds on: Basic A1 verbs (`писати`, `читати`, `робити`), A2.1 Aspect Introduction.
+- Prepares for: B1 Motion Verbs (where prefixes `по-`, `при-`, `за-` indicate direction), B1 Advanced Aspect.
+
+## Notes for Content Writing
+- **Visuals**: Use a clear "Hinge vs. Abstract" comparison table for Open/Close verbs.
+- **Scaffolding**: Carefully distinguish `по-` as "a little bit" (delimitative) vs `по-` as perfective marker. Focus on "doing something for a while" (`почитати`) vs "starting" (`піти`).
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Логіка LEGO в українських дієсловах (Introduction: The LEGO logic of Ukrainian verbs)"
+  words: 400
+  points:
+  - "The 'Meaning Map' concept: Moving from basic A1 stems (писати, читати, робити) to semantic transformation using prefixes as 'GPS coordinates' for action."
+  - "Why phrasal verbs don't exist in Ukrainian: Explaining how prefixes replace English particles (write down, write over, write out) with internal morphological logic."
+  - "Cultural Motivation: The 'Bread Respect' (доїсти) — introducing the prefix до- through the lens of traditional reverence for food and historical scarcity trauma."
+- section: "Презентація: Світ префіксів пере-, до- та по- (Presentation: The world of prefixes Pere-, Do-, and Po-)"
+  words: 850
+  points:
+  - "The Logic of Re- (Пере-): Distinguishing between 'doing again' (переписати вправу) and 'copying' (переписати текст) vs 'transferring' (передати)."
+  - "The Logic of Completion (До-): Reaching the limit — following State Standard §4.3.2 for aspectual pairs (писати – написати vs дописати листа до кінця)."
+  - "The 'A Little' Power (По-): Scaffolding the delimitative meaning (почитати трохи) vs the perfective marker; cautioning against confusing it with a simple start of action."
+  - "Learner Error Focus: The Rewrite vs. Finish Trap — clarifying the overlap where English 'write more' confuses переписати with дописати."
+- section: "Відчинити чи відкрити? Битва за простір (To open or to reveal? The battle for space)"
+  words: 750
+  points:
+  - "The 'Hinges Rule': Rigorous distinction between opening physical barriers (відчинити двері, вікно, кватирку) and abstract 'opening' (відкрити рахунок, очі, Америку)."
+  - "The 'Open' Trap: Explicitly debunking the Surzhyk 'відкрити двері' (incorrect) by highlighting the physical hinge logic vs the Russian interference pattern."
+  - "The Closing Counterparts: Applying the same logic to зачинити (physical doors/windows) vs закрити (abstract themes, eyes, or sessions)."
+  - "The 'Za-' Triple Trap: Managing the three faces of за- (Closing physical objects, Starting an action, and Excess/Shutting down a business)."
+- section: "Практика: Трансформація смислів (Practice: Transformation of meanings)"
+  words: 600
+  points:
+  - "Visualizing Grammar: Completing a 'Hinge vs. Abstract' comparison table based on research frequency data (High-frequency collocations for office and home)."
+  - "Scenario Training: 'The Messy Office' — drills on correcting errors (переписати), finishing tasks (дописати), and managing physical vs abstract openings (відчинити вікно vs відкрити файл)."
+  - "The 'Give' Family Drill: Contextual practice distinguishing віддати (give back), передати (pass), and здати (hand in/surrender)."
+- section: "Діалоги та підсумок (Dialogues and Summary)"
+  words: 400
+  points:
+  - "Writer vs. Editor Dialogue: A high-immersion conversation about deadlines, where the writer must decide whether to redo (переписати) or just finish (дописати) the chapter."
+  - "Mastery Check: Identifying the 'Excess' vs 'Start' meanings in sentences using за-, and verifying the correct choice of 'Open' for business vs windows."
+  - "Final synthesis: Reviewing the aspectual logic mandated by State Standard §4.3.2 and the cultural significance of the prefix до-."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "відчинити (to open [physical]) — відчинити двері, вікно, кватирку, ворота; High Frequency (Specific)"
+  - "відкрити (to open [abstract/general]) — відкрити рахунок, очі, бізнес, сезон, душу; Very High Frequency"
+  - "зачинити (to close [physical]) — зачинити вікно, зачинити за собою двері; High Frequency"
+  - "закрити (to close [abstract/general]) — закрити тему, закрити очі (на щось), закрити засідання, закрити бізнес; Very High Frequency"
+  - "переписати (to rewrite/copy) — переписати вправу, переписати текст, переписати майно; Academic/Office register"
+  - "дописати (to finish writing) — дописати речення, дописати листа, дописати до кінця; High Frequency"
+  recommended:
+  - "доїсти (to finish eating) — доїсти все з тарілки; reflects cultural reverence for food"
+  - "почитати (to read for a while) — почитати книжку перед сном; delimitative usage"
+  - "здати (to hand in/give back) — здати тест, здати здачу, здати в оренду"
+  - "віддати (to give back/return) — віддати борг, віддати книжку в бібліотеку"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4470 chars)
+✅ Message sent to Claude (ID: 10218)
+✓ Message 10218 acknowledged
+   Auto-acknowledged reply #10218 (stdout delivery — no inbox accumulation)
+✓ Message 10211 acknowledged

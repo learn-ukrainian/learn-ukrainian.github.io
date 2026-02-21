@@ -1,36 +1,36 @@
 # Рецензія: At the Café
 
 **Level:** A1 | **Module:** 19
-**Overall Score:** 9.4/10
+**Overall Score:** 9.2/10
 **Status:** PASS
-**Reviewed:** 2026-02-18
+**Reviewed:** 2026-02-20
 
 ## Plan Verification
 
 Plan-Content Alignment: PASS
-- Sections: PASS (All sections present and match outline)
-- Vocabulary: PASS (22 items covers required list + recommended)
-- Grammar scope: PASS (Focus on Accusative/Imperative as planned)
-- Objectives: PASS (Clear focus on ordering)
+- Sections: Matches `content_outline` structure perfectly.
+- Vocabulary: Covers all required items (`кава`, `чай`, `меню`, `рахунок` etc.). `Еспресо` mentioned in dialogue but not explicitly drilled, which is acceptable.
+- Grammar scope: Accusative case (feminine nouns) and Polite Imperatives coverage is accurate.
+- Objectives: All learning objectives met.
 
 ## Scores
 
 | # | Dimension | Score | Auto-fail | Evidence |
 |---|-----------|-------|-----------|----------|
-| 1 | Experience Quality | 10/10 | <7 | Excellent "Safe Harbor" feel; metaphor "dressing up for dinner" is brilliant for case explanation. |
-| 2 | Coherence | 10/10 | <7 | Logical flow from greeting -> ordering -> paying. |
-| 3 | Relevance | 10/10 | <7 | Highly relevant; covers "Big Three" drinks and essential phrases. |
-| 4 | Educational | 10/10 | <7 | Clear distinction between *рахунок* and *чек*; excellent grammar scaffolding. |
-| 5 | Language | 10/10 | <8 | Natural, polite Ukrainian. No Russianisms found. |
-| 6 | Pedagogy | 10/10 | <7 | Teaching chunks (*з молоком*) before grammar rules is perfect for A1. |
-| 7 | Immersion | 9/10 | <6 | ~40% Ukrainian (appropriate for A1.2), good scaffolding. |
-| 8 | Activities | 10/10 | <7 | 9 diverse activities; excellent reinforcement of polite forms. |
-| 9 | Richness | 9/10 | <6 | Good cultural context (Kulchytsky, slow coffee culture). |
-| 10 | Beginner Safety | 10/10 | <7 | "Would I Continue?" 5/5. Very encouraging tone. |
-| 11 | LLM Fingerprint | 8/10 | <7 | Some clichés ("soul of the city", "more than just a drink"), but voice is consistent. |
-| 12 | Linguistic Accuracy | 8/10 | <9 | Minor stress errors in IPA for *джемом* and *медом*. |
+| 1 | Experience Quality | 10/10 | <7 | Tone is warm, inviting ("I am so glad you stopped by"). Uses "we" inclusivity. |
+| 2 | Coherence | 10/10 | <7 | Logical flow from Greeting -> Ordering -> Paying. |
+| 3 | Relevance | 9/10 | <7 | Focuses on high-frequency café interactions. |
+| 4 | Educational | 9/10 | <7 | Clear explanation of "The Magic of Change" (Accusative). |
+| 5 | Language | 9/10 | <8 | Natural Ukrainian phrasing. |
+| 6 | Pedagogy | 8/10 | <7 | Adjective agreement + Case introduction is slightly heavy, but scaffolded well. |
+| 7 | Immersion | 9/10 | <6 | Good balance of Ukrainian examples with English scaffolding. |
+| 8 | Activities | 9/10 | <7 | Variety is good (Match-up, Quiz, Fill-in). |
+| 9 | Richness | 9/10 | <6 | Cultural notes on Lviv coffee culture are excellent. |
+| 10 | Beginner Safety | 9/10 | <7 | "Would I Continue?" test passed easily. Encouraging. |
+| 11 | LLM Fingerprint | 10/10 | <7 | No obvious AI patterns; voice is distinct. |
+| 12 | Linguistic Accuracy | 9/10 | <9 | Minor contextual oddity with "fish" in a café setting. |
 
-**Weighted Overall:** 9.4/10
+**Weighted Overall:** 9.2/10
 
 ## Auto-Fail Checklist Results
 
@@ -42,63 +42,60 @@ Plan-Content Alignment: PASS
 
 ## Critical Issues Found
 
-### Issue 1: Linguistic Accuracy (IPA Stress)
-- **Location**: Line 224, 225, 229
-- **Original**:
-  - «з джемом [z dʒɛˈmɔm]»
-  - «з медом [z mɛˈdɔm]»
-  - «без меду [bɛz mɛˈdʊ]»
-- **Problem**: Incorrect stress placement. *Мед* and *Джем* usually retain stress on the stem in singular oblique cases (or first syllable). Standard Ukrainian stress is *дже́мом*, *ме́дом*, *ме́ду*.
-- **Fix**: Update IPA to reflect correct stress.
+### Issue 1: Contextual Oddity
+- **Location**: Section "Comparison Table"
+- **Original**: «| **риба** | Feminine | **рибу** (-у) | Я буду рибу. |»
+- **Problem**: "Fish" (`риба`) is a strange example for a module titled "At the Café" focused on coffee/cakes. It disrupts the thematic immersion.
+- **Fix**: Replace with `булка` (bun) or another café-relevant feminine noun.
 
-### Issue 2: Phrasing (LLM Fingerprint)
-- **Location**: Line 38
-- **Original**: «the "Big Three" liquids»
-- **Problem**: "Liquids" sounds slightly clinical/robotic. "Drinks" or "Beverages" is more natural.
-- **Fix**: Change to "drinks".
+### Issue 2: Unnatural English Phrasing
+- **Location**: Section "Practice Drills", Item 3 & 4
+- **Original**: «If you desire pizza... If you wish for juice...»
+- **Problem**: "Desire" and "wish for" sound unnaturally formal/archaic in English instructions.
+- **Fix**: Change to "If you want..."
 
 ## Ukrainian Language Issues
 
 | Line | Current | Corrected | Type |
 |------|---------|-----------|------|
-| 224 | [z dʒɛˈmɔm] | [z ˈdʒɛ.mɔm] | IPA Stress |
-| 225 | [z mɛˈdɔm] | [z ˈmɛ.dɔm] | IPA Stress |
-| 229 | [bɛz mɛˈdʊ] | [bɛz ˈmɛ.dʊ] | IPA Stress |
+| Table | **риба** | **булка** | Context |
 
 ## Beginner Safety Audit
 
 "Would I Continue?" Test: 5/5
-- Overwhelmed? Pass (Pacing is excellent)
-- Instructions clear? Pass
-- Quick wins? Pass ("Kava -> Kavu" rhyme is satisfying)
-- Ukrainian scary? Pass (Gentle introduction)
-- Come back tomorrow? Pass
+- Overwhelmed? No.
+- Instructions clear? Yes.
+- Quick wins? Yes ("I will have coffee").
+- Ukrainian scary? No, introduced gently.
+- Come back tomorrow? Yes.
 
 ## Strengths
-- The metaphor "The word is dressing up for dinner!" to explain case endings is pedagogically brilliant for A1.
-- Clear distinction between *рахунок* and *чек*.
-- Explicit permission to learn chunks (*з молоком*) without analyzing the grammar yet.
+- Excellent cultural framing with the Lviv coffee tradition.
+- "The Magic of Change" explanation is intuitive and non-threatening.
+- Clear distinction between `чек` and `рахунок`.
 
 ## Fix Plan to Reach 10/10
 
-### Linguistic Accuracy: 8/10 → 10/10
+### Relevance: 9/10 → 10/10
 **What to fix:**
-1. Lines 224-229: Correct IPA stress for *джемом*, *медом*, *меду*.
+1. Replace "fish" with a café item to maintain thematic consistency.
+2. Smooth out English instructions to be less formal.
 
-### LLM Fingerprint: 8/10 → 9/10
-**What to fix:**
-1. Line 38: Change "liquids" to "drinks".
+**Expected score after fix:** 10/10
+
+### Projected Overall After Fixes
+9.3/10
 
 ## Verification Summary
 
-- Content lines read: 379
-- Activity items checked: 9 activities
-- Ukrainian sentences verified: ~50
-- IPA transcriptions checked: ~20
-- Issues found: 2 (1 IPA, 1 phrasing)
+- Content lines read: ~160
+- Activity items checked: ~40
+- Ukrainian sentences verified: All
+- IPA transcriptions checked: Sampled
+- Issues found: 2
 
 ## Verdict
 
 **PASS**
 
-Excellent module. Safe, encouraging, and pedagogically sound. Only minor IPA stress corrections needed.
+Excellent module that meets all criteria for A1 safety and engagement. Minor contextual fixes recommended.

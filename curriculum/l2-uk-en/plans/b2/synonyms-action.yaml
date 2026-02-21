@@ -6,31 +6,54 @@ version: '2.0'
 title: 'Синоніми: Дія та Перетворення'
 subtitle: Synonyms - Action and Transformation
 content_outline:
-- section: Розминка — Що значить \"робити\"?
+- section: 'Вступ: Природа дії та синонімії (Introduction: The Nature of Action and
+    Synonymy)'
+  words: 500
   points:
-  - Робити vs чинити vs діяти — різні сфери вживання
-  - Виконувати vs здійснювати — офіційний стиль
-  - Брати vs хапати vs отримувати — манера дії
-- section: Do/Make
+  - Introduction to stylistic synonymy in verbs of action according to State Standard
+    §4.4.1.2, focusing on the semantic fields of 'doing' and 'taking'.
+  - 'Cultural hook: Discussion of the proverb «Під лежачий камінь вода не тече» to
+    illustrate the conceptual difference between passive state and active effort (дія).'
+  - Mapping the movement from physical action (B1 M57) to abstract and stylistic choices
+    in the B2 register.
+- section: Тонкощі «робити», «чинити» та «діяти» (Nuances of 'Do', 'Act', and 'Behave')
+  words: 900
   points:
-  - робити (do/make - general)
-  - чинити (do - formal/legal)
-  - діяти (act - take action)
-  - виконувати (perform - fulfill)
-  - здійснювати (realize - implement)
-- section: Take
+  - Contrast between the general verb «робити» (conclusions, mistakes) and the moral/legal
+    register of «чинити» (resistance, pressure, evil/good).
+  - Functional usage of «діяти» for abstract or official contexts (the law is in effect,
+    medicine works) and technical agent noun formation (§4.2.5).
+  - 'Learner error: Generalizing ''do'' for specific collocations. Correction of «робити
+    на мене тиск» to the correct «чинити на мене тиск».'
+- section: 'Офіційність та творчість: «виконувати» та «здійснювати» (Officialdom and
+    Creativity: ''Perform'' and ''Realize'')'
+  words: 900
   points:
-  - брати (take - general)
-  - взяти (take - perfective)
-  - хапати (grab - quick)
-  - вихоплювати (snatch - sudden)
-  - отримувати (receive - get given)
-- section: Практика — дієслова дії
+  - 'Distinguishing «виконувати» (formal tasks or artistic performance: fulfill a
+    role, sing a song) from «здійснювати» (implementation of dreams or crimes).'
+  - 'Cultural concept analysis: «Здійснення мрій» (Realization of dreams) as a poetic
+    aspiration vs. bureaucratic «виконання плану».'
+  - 'Learner error: Performance confusion. Correcting the use of «здійснити пісню»
+    with the accurate «виконати пісню» for artistic contexts.'
+- section: Багатогранність «брати», «хапати» та «здобувати» (Versatility of 'Take',
+    'Grab', and 'Acquire')
+  words: 900
   points:
-  - Обрати дієслово дії відповідно до контексту (офіційний документ vs розповідь)
-  - Переписати текст, змінивши манеру дії (швидко vs повільно, різко vs плавно)
-  - Написати інструкцію з точними дієсловами дії
-  - Зв'язок з M57 (рух) — комплексний опис діяльності
+  - 'Nuance gate: Distinguishing «отримувати» (passive receipt of education/salary)
+    from «здобувати» (active struggle/effort for victory/independence).'
+  - 'Expressive synonymy: Using «хапати» for quick actions and idiomatic expressions
+    like «хапати дрижаки» (to shiver) or «хапати за душу» (to touch the soul).'
+  - 'Idiomatic usage of «брати»: explaining collocations like «брати участь» (take
+    part) and «брати до уваги» (take into account) to avoid literal English translations.'
+- section: 'Практика: Точність у контексті (Practice: Precision in Context)'
+  words: 800
+  points:
+  - 'Anti-calque drill: Correcting English ''take'' calques for bus/break/photo (сідати
+    на автобус, робити перерву, фотографувати) to ensure naturalness.'
+  - 'Production task: Rewriting a narrative to change the ''manner of action'' using
+    intensive synonyms (sudden vs. gradual, official vs. expressive).'
+  - Synthesis through the proverb «Діло майстра величає», emphasizing how the choice
+    of action verb reflects the speaker's command of the language.
 focus: phraseology
 pedagogy: CBI
 objectives:
@@ -46,13 +69,30 @@ register: публіцистичний
 phase: B2.2 [Phraseology & Synonymy]
 vocabulary_hints:
   required:
-  - синонім (synonym)
-  - вираз (expression)
-  - значення (meaning)
-  - контекст (context)
+  - синонім (synonym) — linguistic term for words with similar meanings
+  - 'робити (to do/make) — high frequency; collocations: робити висновки, робити помилки'
+  - 'чинити (to do/commit/exert) — moral/legal register; collocations: чинити опір,
+    чинити тиск, чинити справедливо'
+  - 'діяти (to act/operate) — abstract/official; collocations: закон діє, ліки діють,
+    діяти рішуче'
+  - 'виконувати (to perform/fulfill) — formal/artistic; collocations: виконувати роль,
+    виконувати пісню, виконувати наказ'
+  - 'здійснювати (to realize/implement) — high register for intentions/crimes; collocations:
+    здійснювати мрію, здійснювати злочин'
+  - 'отримувати (to receive) — passive receipt; collocations: отримувати освіту, отримувати
+    насолоду, отримувати зарплату'
+  - значення (meaning) — core semantic content
+  - контекст (context) — essential for synonym choice
   recommended:
-  - переносне значення (figurative meaning)
-  - стилістичне забарвлення (stylistic coloring)
+  - 'здобувати (to win/acquire with effort) — active struggle; collocations: здобувати
+    перемогу, здобувати незалежність'
+  - 'хапати (to grab/snatch) — expressive/sudden; collocations: хапати дрижаки, хапати
+    за душу, хапати вершки'
+  - вчинок (deed/act) — moral act related to 'чинити'
+  - вихоплювати (to snatch/pull out) — sudden physical or metaphorical action
+  - переносне значення (figurative meaning) — stylistic extension of verbs
+  - стилістичне забарвлення (stylistic coloring) — formal vs. expressive register
+    markers
 activity_hints:
 - type: reading
   focus: Контекстне використання

@@ -1,0 +1,327 @@
+✅ Message sent to Gemini (ID: 10655) [auto-acked: self-addressed]
+✓ Message 10655 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10655...
+📨 Message #10655
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-pluperfect-tense
+   Time: 2026-02-20T20:47:11.828856+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b2-95
+level: B2
+sequence: 95
+slug: pluperfect-tense
+version: '2.0'
+title: Давноминулий час
+subtitle: The Pluperfect Tense
+content_outline:
+- section: Розминка — Час до минулого
+  points:
+  - State Standard §4.1.3.1 alignment — pluperfect (давноминулий) as B2 indicative
+    mood requirement
+  - 'Why Ukrainian has a "long ago past": expressing actions completed before another
+    past action'
+  - 'Cultural hook: the pluperfect in literature — Шевченко, Франко, and folk tales
+    use this form naturally'
+  - 'Register note: rare in everyday speech, common in literary/formal/historical
+    writing'
+- section: Утворення (Formation)
+  points:
+  - 'Formula: past tense of main verb + був/була/було/були'
+  - Він ходив був до школи, коли почався дощ. (He had been going to school when the
+    rain started.)
+  - Вона написала була листа, перш ніж він зателефонував. (She had written the letter
+    before he called.)
+  - 'Gender/number agreement: був/була/було/були agrees with subject, NOT with verb'
+  - 'Word order: був typically follows the main verb (ходив був), but can precede
+    in emphatic position'
+- section: Значення (Meaning & Usage)
+  points:
+  - 'Primary function: action completed BEFORE another past action (anterior past)'
+  - 'Contrast with simple past: Я прочитав книжку (I read the book) vs Я прочитав
+    був книжку, коли ти прийшов (I had read the book when you arrived)'
+  - 'In folk narratives: Жив-був один чоловік... (There once lived a man...)'
+  - 'In historical writing: Козаки відступили були до Чигирина... (The Cossacks had
+    retreated to Chyhyryn...)'
+  - 'Temporal markers: перш ніж (before), до того як (before), вже (already), ще (still/yet)'
+- section: Давноминулий vs минулий (Pluperfect vs Simple Past)
+  points:
+  - 'When pluperfect is required: two sequential past events, emphasizing the earlier
+    one'
+  - 'When simple past suffices: single past event or chronological narration'
+  - 'Learner error: overusing pluperfect (English speakers transfer "had" too liberally)'
+  - 'Learner error: wrong gender agreement (*Вона ходив був → Вона ходила була)'
+- section: Практика — Літературний час
+  points:
+  - Transform simple past sentences into pluperfect with temporal context
+  - Analyze folk tale openings for pluperfect forms
+  - Write a short historical narrative using pluperfect for backgrounding
+  - 'Text analysis: find pluperfect in authentic literary excerpt'
+- section: Підсумок
+  points:
+  - Formation summary table (all gender/number forms)
+  - Usage decision tree (when to use pluperfect vs simple past)
+  - Register guidance (literary/formal/folk vs conversational)
+focus: grammar
+pedagogy: PPP
+objectives:
+- Learner can form the pluperfect tense with correct gender/number agreement
+- Learner can use the pluperfect to express anterior past actions
+- Learner can distinguish pluperfect from simple past in context
+- Learner can recognize pluperfect in literary and folk texts
+grammar:
+- Pluperfect formation (past tense + був/була/було/були)
+- Gender and number agreement in pluperfect
+- Temporal sequencing with pluperfect
+- Pluperfect in literary and folk register
+vocabulary_hints:
+  required:
+  - давноминулий (pluperfect) — давноминулий час
+  - був/була/було/були (auxiliary was/were) — допоміжне дієслово
+  - перш ніж (before) — перш ніж він прийшов
+  - до того як (before) — до того як ми зустрілися
+  - вже (already) — я вже прочитав був
+  - оповідання (narrative/story) — народне оповідання
+  recommended:
+  - передування (precedence) — хронологічне передування
+  - послідовність (sequence) — послідовність подій
+  - народна казка (folk tale) — жив-був
+  - літературний (literary) — літературний стиль
+activity_hints:
+- type: quiz
+  focus: Choose pluperfect vs simple past in context
+  items: 15
+- type: fill-in
+  focus: Form pluperfect with correct agreement
+  items: 15
+- type: error-correction
+  focus: Fix gender agreement and formation errors
+  items: 10
+- type: match-up
+  focus: Match temporal sequence to correct tense pair
+  items: 12
+phase: B2.4 Communication Skills
+prerequisites:
+- b2-93 (Discussion & Debate)
+connects_to:
+- b2-96 (B2 Final Exam)
+register: літературний
+immersion: 100% Ukrainian
+persona:
+  voice: Professional Language Coach
+  role: Literary Historian
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Давноминулий час
+
+## State Standard Reference
+§4.1.3.1: "Дійсний спосіб: ... дієвідмінювання дієслів недоконаного й доконаного виду в минулому часі..."
+Alignment: The standard explicitly covers the Indicative Mood (§4.1.3.1) and past tense usage. While the specific term "давноминулий час" is not enumerated in the raw text of the 2024 Standard, the B2 curriculum interprets the mastery of "complex aspect usage" and "stylistic variation" within this section to include the Pluperfect tense, aligning with the "Literary" and "Stylistic" competence requirements of B2/C1.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| **перш ніж** | High (Conjunction) | перш ніж сказати, перш ніж зробити, перш ніж піти |
+| **до того як** | High (Conjunction) | до того як він прийшов, до того як стало відомо |
+| **був / була / було / були** | High (Auxiliary) | ходив був, читала була, казали були |
+| **вже** | Very High | вже зробив був, вже пішла була |
+
+## Cultural Hooks
+1. **Folk Tale Formula**: The classic opening "Жив-був..." (Once upon a time there lived...) is the most recognizable remnant of the pluperfect in the collective consciousness. It signals entry into a "mythic time" before the current reality.
+2. **"Жив-був пес"**: The legendary 1982 animation (based on a Ukrainian folk tale) is a perfect cultural anchor. The title itself uses the form.
+3. **Literary Revival**: In the 1920s (Ukrainian Modernism) and again in independent Ukraine, translators and authors (like Oksana Zabuzhko) revived the pluperfect to accurately render the nuance of English Past Perfect or French Plus-que-parfait, moving it from "archaic" to "intellectual/precise".
+
+## Common Learner Errors
+1. **Over-mapping from English**: Learner uses pluperfect for *every* "had done" instance, even when simple past is sufficient in Ukrainian.
+   * *Error*: Я написав був листа вчора. (Simple fact)
+   * *Correction*: Я написав листа вчора.
+   * *Reason*: Unlike English, Ukrainian often relies on context/adverbs for sequence. Pluperfect is marked/emphatic.
+2. **Auxiliary Disagreement**: Learner treats "був" as an invariable particle (like "би").
+   * *Error*: Вона *ходив був* до магазину. / Вона *ходила був*...
+   * *Correction*: Вона *ходила була* до магазину.
+   * *Reason*: The auxiliary *бути* must agree in gender and number with the subject, just like the main verb.
+3. **Confusion with "було"**: Confusing the pluperfect with the particle "було" (used for repetitive past action: "ходив було" = used to go).
+   * *Differentiation*: Pluperfect = anteriority (completed before). "Було" particle = habituality/annulled result.
+
+## Cross-References
+- **Builds on**: A1/A2 Past Tense (Simple formation), B1 Aspect (Perfective/Imperfective).
+- **Prepares for**: C1 Literature (Archaic forms), C2 Stylistics (Narrative depth).
+
+## Notes for Content Writing
+- **Tone**: Strike a balance between "folk magic" (personas) and "grammatical precision".
+- **Visuals**: Use a timeline visualization description to clarify T1 (Previous Action) vs T2 (Past Action) vs T0 (Now).
+- **Avoid**: Do not present it as "dead" or "useless". Frame it as a "Stylistic Superpower" for storytelling.
+- **Persona Integration**:
+    - *Ethnographer*: Focus on "Жив-був" and legends.
+    - *Urbanist*: Focus on translating precise English timelines in IT/Business ("Ми вже протестували були код, коли...").
+    - *Storyteller*: Use it to create "flashbacks" in narratives.
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ та культурний контекст (Introduction & Cultural Context)"
+  words: 600
+  points:
+  - "Alignment with State Standard §4.1.3.1 — mastering the indicative mood (дійсний спосіб) through stylistic depth and anteriority (передування)."
+  - "The 'Once Upon a Time' hook: Analyzing the classic opening «Жив-був...» as a portal into mythic time, signaling events before the current reality."
+  - "Pop culture anchor: The legendary 1982 animation «Жив-був пес» — why the title uses this specific form to establish a legendary, timeless register."
+  - "Historical perspective: From archaic roots in folk tales to the modern 'intellectual' revival in contemporary literature (e.g., Oksana Zabuzhko) for precise narrative mapping."
+- section: "Граматичне утворення та узгодження (Grammatical Formation & Agreement)"
+  words: 800
+  points:
+  - "The Pluperfect Formula: Past tense of the main verb + the auxiliary «бути» in its past form (був, була, було, були)."
+  - "The Agreement Trap: Detailed drill on gender and number agreement. Unlike the conditional particle «би», the auxiliary «був» MUST agree with the subject (Вона ходила була, NOT *Вона ходила був)."
+  - "Word order dynamics: Typically following the main verb («бачив був»), but shifting to the emphatic position («був бачив») for narrative stress."
+  - "Refining the sound: How agreement in the pluperfect adds a rhythmic, poetic quality to literary prose compared to the simple past."
+- section: "Значення та вживання: часова лінія (Meaning & Usage: The Timeline)"
+  words: 900
+  points:
+  - "The Concept of Anteriority: Visualizing the timeline with T1 (Previous Action), T2 (Recent Past Action), and T0 (The Present Moment)."
+  - "Stylistic Superpower: Using the pluperfect to create 'narrative flashbacks' and layers of depth in storytelling without using complex clausal structures."
+  - "The 'Annulled Result' nuance: Situations where the pluperfect implies the action happened but its effect is no longer valid (e.g., «Я приходив був до тебе» — I had come, but I'm not there now)."
+  - "Temporal markers and conjunctions: Deep dive into High-Frequency connectors like «перш ніж», «до того як», and «вже» as triggers for the pluperfect."
+- section: "Типові помилки та контрастивний аналіз (Common Errors & Contrastive Analysis)"
+  words: 800
+  points:
+  - "The English Transfer Error: Debunking the myth that every English 'had done' requires a Ukrainian pluperfect. Most sequential actions in Ukrainian use the simple past with adverbs."
+  - "The 'Buvaie' Confusion: Distinguishing between the pluperfect («ходив був» — anteriority) and the habitual particle «було» («ходив було» — used to go, repetitive past action)."
+  - "Auxiliary Disagreement Drills: Correcting the common error of treating «був» as invariable. Practice set: «Ми написали були», «Дитина спала була»."
+  - "Translation exercise: Translating precise English/French timelines (Past Perfect / Plus-que-parfait) into Ukrainian using both lexical and grammatical means."
+- section: "Практика та стилістичне моделювання (Practice & Stylistic Modeling)"
+  words: 600
+  points:
+  - "Ethnographer Workshop: Re-writing standard past-tense folk legends using the pluperfect to enhance 'archaic' authenticity."
+  - "Urbanist Challenge: Applying the pluperfect to modern professional contexts, such as IT or Business reports («Ми вже протестували були код, коли виявили баг»)."
+  - "Literary Analysis: Finding and interpreting the pluperfect in excerpts from Shevchenko, Franko, and Zabuzhko to understand register shifts."
+  - "Creative Writing: Developing a short historical narrative using the pluperfect for backgrounding events (anterior actions) versus the foregrounded simple past."
+- section: "Підсумок та вибір стилю (Summary & Register Guidance)"
+  words: 300
+  points:
+  - "Decision Tree: When to use pluperfect (marked, emphatic, anterior) versus simple past (chronological, neutral)."
+  - "Formation Quick-Reference: Final table of all gender/number auxiliary forms."
+  - "Final Polish: Encouraging the use of pluperfect as a tool for intellectual precision and narrative elegance in B2-level communication."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "давноминулий час (pluperfect tense) — основний граматичний термін"
+  - "був / була / було / були (auxiliary verb) — допоміжне дієслово; висока частотність у давноминулому часі"
+  - "перш ніж (before / prior to) — сполучник; часто вживається з давноминулим часом для позначення черговості"
+  - "до того як (before / by the time) — сполучник; вказує на часову межу перед іншою подією"
+  - "вже (already) — прислівник; підсилює значення завершеності дії перед іншою подією"
+  - "передування (precedence / anteriority) — ключове поняття для пояснення значення часу"
+  recommended:
+  - "аннульований результат (annulled result) — ситуація, коли дія відбулася, але її наслідок уже не триває"
+  - "послідовність подій (sequence of events) — хронологічний порядок дій"
+  - "народна казка (folk tale) — основний жанр, де зберігся давноминулий час (жив-був)"
+  - "літературний стиль (literary style) — книжний регістр вживання"
+  - "черговість (order / succession) — порядок виконання дій у минулому"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (5307 chars)
+✅ Message sent to Claude (ID: 10660)
+✓ Message 10660 acknowledged
+   Auto-acknowledged reply #10660 (stdout delivery — no inbox accumulation)
+✓ Message 10655 acknowledged

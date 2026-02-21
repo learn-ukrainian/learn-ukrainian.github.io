@@ -1,0 +1,214 @@
+✅ Message sent to Gemini (ID: 12681) [auto-acked: self-addressed]
+✓ Message 12681 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12681...
+📨 Message #12681
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-body-injury-dual
+   Time: 2026-02-20T23:41:34.185354+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 55
+module: oes-055
+module_number: 45
+slug: body-injury-dual
+title_uk: Тіло та ушкодження
+title_en: The Body & Injury
+phase: 2
+phase_id: literary-tradition
+phase_name: Literary Tradition
+focus: Dual Number — Eyes, ears, legs
+content_outline:
+- section: Вступ
+  description: Introduction to The Body & Injury
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Senior Paleographer
+  role: Field Surgeon
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Body Injury Dual (Тіло та ушкодження)
+
+## Використані джерела
+1. [Енциклопедія Сучасної України: Двоїна](https://esu.com.ua/article-23497) — академічний огляд граматичної категорії двоїни, її історії та залишків.
+2. [Ізборник: Руська Правда](http://litopys.org.ua/pravda/pravda.htm) — тексти Короткої та розширеної редакцій, статті про каліцтва.
+3. [Літопис Руський](http://litopys.org.ua/litop/litop.htm) — пошук контекстних прикладів вживання форм двоїни (очима, ушима).
+4. [Історія української мови: Морфологія](http://litopys.org.ua/ium/ium.htm) — детальне описання відмінкових закінчень іменників у двоїні.
+
+## Хронологія
+- **X-XI ст.** — Активне функціонування двоїни в живій давньоруській мові (свідчення графіті Софії Київської).
+- **1016 рік** — Укладення «Правди Ярослава» (найдавніша частина «Руської Правди»), де фіксуються норми покарань за тілесні ушкодження (усічення руки, ноги, пошкодження ока).
+- **1072 рік** — «Правда Ярославичів», розширення системи штрафів за каліцтва.
+- **1187 рік** — Створення «Слова о полку Ігоревім», де двоїна використовується як жива і продуктивна категорія (наприклад, метафоричні образи двох сонць).
+- **XIV-XV ст.** — Поступовий занепад двоїни як обов'язкової категорії, але закріплення її форм у парадигмі множини (очі, плечі) та числівникових конструкціях (дві руки).
+
+## Ключові факти та цитати
+- **Граматика**: Двоїна мала лише три форми відмінкових закінчень: одна для називного/знахідного/кличного (*очи, руцѣ*), друга для родового/місцевого (*очию, руку*), третя для давального/орудного (*очима, рукама*).
+- **Цитата (очі)**: «И начаста очи єю темнѣти» (І почали очі їхні тьмяніти) — Іпатіївський літопис.
+- **Цитата (каліцтво)**: «Аже оутнеть роукоу, і отпадеть роука... то 40 гривенъ» (Якщо відітне руку, і відпаде рука... то 40 гривень) — Руська Правда (хоча тут однина, контекст парності важливий для розуміння тяжкості втрати).
+- **Цитата (метафорична двоїна)**: «Два солнца помѣркоста, оба багряная стлъпа погасоста» (Два сонця померкли, обидва багряні стовпи згасли) — Слово о полку Ігоревім.
+- **Тілесна термінологія**: *Очи* (від *око*), *уши* (від *ухо*), *руцѣ* (від *рука*), *нозѣ* (від *нога*), *колѣнѣ* (від *колѣно*), *рамѣ* (плечі).
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ": [!history-bite] — Знаєте, чому ми кажем "дві руки", але "п'ять рук" (а не "п'ять руків")? Це "привид" давньої двоїни, що живе в нашій граматиці.
+- Section "Основний матеріал: ІІ — Очи: Дзеркало душі": [!quote] — "бѣльма начѧхъ имѣти въ очию" (про сліпоту в літописах).
+- Section "Основний матеріал: ІІІ — Уши: Слух віків": [!culture] — Чому в українській "вуха", а в російській "уши"? Українська зберегла корінь, але адаптувала закінчення, тоді як російська зберегла архаїчну основу двоїни як множину.
+- Section "Основний матеріал: IV — Руцѣ": [!paleography] — Як писарі скорочували закінчення двоїни під титлами в рукописах.
+- Section "Основний матеріал: VI — Руська Правда": [!context] — Ціна руки в 40 гривень — це вартість 20 коней. Тіло вільної людини було дорогим капіталом.
+- Section "Підсумок": [!myth-buster] — Міф про те, що двоїна "зникла безслідно". Вона розчинилася в граматиці, створивши унікальні форми (називний відмінок множини *очі, плечі* — це колишня двоїна, а не множина *очеса, плечеса*).
+
+## Деколонізаційний контекст
+- **Imperial/Soviet myth**: Трактування двоїни як "архаїзму", спільного для "давньоросійської мови", без акценту на діалектних відмінностях. Ігнорування того факту, що російська мова втратила категорію двоїни набагато радикальніше, замінивши її новими формами, тоді як українська зберегла її органічні рефлекси.
+- **Ukrainian reality**: Двоїна є однією з визначальних рис, що пов'язує сучасну українську мову безпосередньо з протослов'янською спадщиною, оминаючи стадію "спільноруської єдності" в імперському розумінні. Форми типу "дві руки" (називний відмінок, а не родовий однини, як у російській "две руки") свідчать про глибоку вкоріненість категорії парності в українському мовному мисленні.
+
+## Contested Terms (if applicable)
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| Давньоруська мова | Спільний предок трьох братніх народів, "Old Russian" | Давньоукраїнська мова (або давньокиївська/давньосхіднослов'янська), безпосередній предок української мови з виразними діалектними рисами. |
+| Руська Правда | Пам'ятка російського права | Пам'ятка права Київської Русі-України, кодифікована київськими князями на українських теренах. |
+
+## Section-Mapped Research Notes
+
+### Вступ
+Введення поняття двоїни (dualis) як третього числа. Це не "множина для двох", а окрема категорія для парних об'єктів (очі, вуха, руки) та природних пар.
+
+### Основний матеріал: І — Граматика двоїни
+Загальні правила утворення. Іменники чоловічого роду (*брата, города*), жіночого/середнього на -а/-о (*руцѣ, сестрѣ*), основи на приголосний (*очи, уши*). Три форми відмінків замість шести-семи.
+
+### Основний матеріал: ІІ — Очи: Дзеркало душі
+Детальний розбір слова *око* в двоїні. *Очи* (Н.в.), *очию* (Р.в.), *очима* (О.в.). Цитати з літописів про зір.
+
+### Основний матеріал: ІІІ — Уши: Слух віків
+Слово *ухо* в двоїні. *Уши*. Чергування приголосних х/ш (палаталізація не завжди відбувалася, але форма *уши* закріпилася).
+
+### Основний матеріал: IV — Руцѣ: Знаряддя праці
+Жіночий рід на -а (*рука*). Двоїна *руцѣ* (з другою палаталізацією к -> ц). Важливість рук у правовому та побутовому контексті.
+
+### Основний матеріал: V — Нозѣ: Опора
+Аналогія з *руцѣ*. *Нога* -> *нозѣ* (г -> з). Приклади з текстів (ходіння, поклони).
+
+### Основний матеріал: VI — Руська Правда: Ціна каліцтва
+Аналіз статей про ушкодження. Вира за відсікання руки/ноги. Поняття каліцтва в середньовіччі. Хоча закон пише про одну руку, розуміння цінності базується на парності та функціональності.
+
+### Практика
+Вправи на розпізнавання двоїни в текстах. Відмінність *руцѣ* (дві) від *рукы* (багато). Етимологічний зв'язок з сучасними формами.
+
+### Підсумок
+Двоїна не зникла, а трансформувалася. Сучасні *очі, вуха, плечі* — це нащадки двоїни. Числівник *дві* вимагає форм, що історично походять від двоїни.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12710)
+✓ Message 12681 acknowledged
+✓ Message 12710 acknowledged

@@ -1,34 +1,41 @@
 # Дослідження: Taking Transport
 
 ## State Standard Reference
-§4.2.3.3: "Місцевий відмінок: у, в, на (позначення місця): Спортивний костюм у великій сумці. Студент працює в новій лабораторії. Гроші лежать на столі;"
-§4.2.4.2: "Наказовий спосіб. Форми 2-ї особи однини і множини наказового способу деяких дієслів: читати (читай, читайте)... сідати (сідай, сідайте), сидіти (сиди, сидіть)."
-Alignment: This module addresses the A1 requirement for expressing location using the Locative case (for stops and stations) and uses basic 2nd person imperative forms for giving/following directions in transport contexts. It also covers the thematic areas of "місто" (city) and "подорожі" (travel) as per §3.
+§3.3: "Місто (заклади, транспорт і місця)... громадський транспорт; таксі"
+§3.7: "Подорожі... основні дії на позначення руху (іти, їхати – у базових фразах)"
+§4.2.3.2 (Знахідний): "в, у, на (указівка на кінцевий пункт руху або переміщення)"
+§4.2.3.3 (Місцевий): "у, в, на (позначення місця)"
+Alignment: This module directly addresses the State Standard's requirements for navigating city transport, using motion verbs (іти/їхати) and the distinction between location (Locative) and direction (Accusative).
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| зупинка | High / General | наступна зупинка, автобусна зупинка, вийти на зупинці |
-| метро | High / Urban | їхати на метро, станція метро, вхід у метро |
-| маршрутка | Very High / Daily life | сісти в маршрутку, водій маршрутки, номер маршрутки |
-| квиток | High / Practical | купити квиток, проїзний квиток, один квиток |
-| станція | High / Metro | кінцева станція, станція пересадки |
-| пересадка | Medium / Practical | робити пересадку, станція з пересадкою |
+| метро | High / Common | їхати на метро, станція метро, жетон (archaic but cultural), карта метро |
+| маршрутка | High / Spoken | зупиніть на зупинці, передайте за проїзд, повна маршрутка |
+| зупинка | High / Common | наступна зупинка, на зупинці, автобусна зупинка |
+| пересадка | Medium / Transport | робити пересадку, станція пересадки, без пересадок |
+| валідатор | Rising / Modern | прикласти картку до валідатора, не працює валідатор |
 
 ## Cultural Hooks
-1. **Arsenalna Metro Station**: Located in Kyiv, it is the deepest metro station in the world, plunging 105.5 meters (346 feet) underground. Reaching the platform requires two long escalators. (Source: museumstudiesabroad.org, yourkievguide.com)
-2. **The Voice of the Metro**: For decades, the "voice" of the Kyiv Metro announcements belonged to Mykola Petrenko. His calm, deep voice became an iconic part of the city's identity. (Source: film.ua, Kyiv Metro official history)
+1. **Kyiv Metro Depth**: Arsenalna station is the deepest in the world (105.5m). The long escalator ride is a specific Kyiv experience where people read, listen to music, or run down (though not allowed).
+2. **"Pass the fare" (Передайте за проїзд)**: In marshrutkas, passengers pass cash from hand to hand to the driver, often across the whole bus. It requires trust and social interaction ("За одного, будь ласка").
+3. **Kyiv Digital**: The shift from plastic tokens ("жетони") to QR-codes and NFC payments. The "Kyiv Digital" app is now central to city transport.
 
 ## Common Learner Errors
-1. **Confusing Direction vs. Location**: Learners often say "Я їду в метро" (using Locative) instead of "Я їду в метро" (using Accusative for direction) or confusing "Де ти йдеш?" instead of "Куди ти йдеш?".
-2. **Case mismatches with prepositions**: Misusing the Locative case when the Accusative is required for motion (e.g., "Поверніть на ліву вулицю" vs "На вулиці").
-3. **Transport Instrumentality**: Forgetting to use the Instrumental case or the `на` + Locative construction for "by bus/train" (e.g., saying "Я їду автобус" instead of "Я їду автобусом" or "Я їду на автобусі").
+1. **Motion Verbs**: Confusing *іти* (to go by foot) and *їхати* (to go by vehicle).
+   *   *Error*: "Я йду на метро." → *Correction*: "Я їду на метро."
+2. **Case Confusion (Instrumental vs Locative)**:
+   *   *Error*: "Я їду автобус." (Direct translation)
+   *   *Correction*: "Я їду автобусом" (Instrumental - means) OR "Я їду на автобусі" (Locative - location).
+3. **Direction vs Location**:
+   *   *Error*: "Де ти йдеш?" (Where are you walking inside something?)
+   *   *Correction*: "Куди ти йдеш?" (Where are you going to?)
 
 ## Cross-References
-- Builds on: a1-15 (Around the City), a1-39 (Buying Tickets)
-- Prepares for: a1-41 (Phone Basics), a1-42 (Emergencies)
+- Builds on: `a1-15` (Around the City - locations), `a1-39` (Buying Tickets - basics)
+- Prepares for: `a1-41` (Phone Basics), `a1-42` (Emergencies - lost in city)
 
 ## Notes for Content Writing
-- Focus on the distinction between **зупинка** (bus/tram stop) and **станція** (metro station).
-- Include the essential phrase **"Ви виходите?"** (Are you getting off?) as it's the most common phrase used to move through a crowd in Ukrainian transport.
-- Ensure IPA is provided for all new terms, especially multi-syllable ones like "прокомпостувати" or "тролейбус".
+- **Decolonization**: Avoid Soviet-style terms if outdated. Focus on modern Ukrainian urban reality (QR codes, electronic tickets) but acknowledge the persisting "marshrutka culture".
+- **Pedagogy**: Explicitly scaffold the difference between "Де?" (Locative) and "Куди?" (Accusative) as it's a frequent sticking point.
+- **Tone**: Keep it practical. The "Marshrutka Veteran" persona aspect should be helpful/street-smart, not grumpy.

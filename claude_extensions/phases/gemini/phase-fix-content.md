@@ -65,6 +65,7 @@ After applying all fixes from the Fix Plan, verify the result does not INTRODUCE
 4. ☐ **Callout spread**: New callouts should not bunch with existing ones — spread evenly across sections
 5. ☐ **English contamination**: Fixes must not introduce English text into immersion >= 85% content
 6. ☐ **Table narrative wrapping**: If you added a table, include 2+ sentences of context before and after it
+7. ☐ **Colonial framing**: Fixes must not define Ukrainian by contrast with Russian — present Ukrainian on its own terms (e.g., "Unlike Russian..." → "Ukrainian has...")
 
 If applying fixes INTRODUCES any of these problems, fix them too before outputting.
 

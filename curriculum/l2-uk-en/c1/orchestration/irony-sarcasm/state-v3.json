@@ -2,12 +2,5 @@
   "track": "c1",
   "slug": "irony-sarcasm",
   "mode": "v3",
-  "phases": {
-    "v3-A": {
-      "status": "complete",
-      "ts": "2026-02-19T18:00:08Z",
-      "task_id": "v3-irony-sarcasm-pA",
-      "mode": "full"
-    }
-  }
+  "phases": {}
 }

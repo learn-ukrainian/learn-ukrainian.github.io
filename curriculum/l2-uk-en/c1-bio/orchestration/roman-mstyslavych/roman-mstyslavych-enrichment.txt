@@ -1,0 +1,317 @@
+✅ Message sent to Gemini (ID: 11768) [auto-acked: self-addressed]
+✓ Message 11768 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #11768...
+📨 Message #11768
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-roman-mstyslavych
+   Time: 2026-02-20T23:30:27.391583+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-bio-8
+level: C1-BIO
+sequence: 8
+slug: roman-mstyslavych
+version: '2.0'
+title: 'Роман Мстиславич: Засновник Галицько-Волинської держави'
+subtitle: 'Roman the Great: Founder of the Galicia-Volhynia State'
+content_outline:
+- section: Вступ — Самодержець усієї Русі
+  points:
+  - Титул "великий князь, самодержець усієї Русі" у літописі
+  - Значення об'єднання Галичини та Волині
+  - Роман як попередник Данила Галицького
+- section: Походження та молодість
+  points:
+  - Народження у родині Мстислава Ізяславича
+  - Княжіння в Новгороді (1168-1170)
+  - Успадкування Волині (1170)
+- section: Боротьба за Галич
+  points:
+  - Політична ситуація в Галичині
+  - Конфлікт з боярством
+  - Перша спроба захопити Галич (1188)
+  - Остаточне об'єднання (1199)
+- section: Створення Галицько-Волинської держави
+  points:
+  - Об'єднання двох князівств
+  - Політика централізації
+  - Боротьба з боярською опозицією
+  - Захоплення Києва (1202)
+- section: Зовнішня політика
+  points:
+  - Відносини з Польщею та Угорщиною
+  - Походи на половців
+  - Контакти з папою Інокентієм III
+  - Пропозиція королівської корони
+- section: Загибель та спадщина
+  points:
+  - Битва під Завихостом (1205)
+  - Польська засідка та смерть
+  - Криза після смерті Романа
+  - Значення для нащадків
+- section: Підсумок — Будівничий держави
+  points:
+  - Роман як об'єднувач земель
+  - Порівняння з іншими європейськими монархами
+  - Спадщина для української державності
+vocabulary_hints:
+  required:
+  - самодержець (autocrat)
+  - князівство (principality)
+  - боярство (boyar class)
+  - об'єднання (unification)
+  - літопис (chronicle)
+  - усобиця (internecine strife)
+  - засідка (ambush)
+  - спадкоємець (heir)
+  - данина (tribute)
+  - похід (campaign)
+  recommended:
+  - престол (throne)
+  - династія (dynasty)
+  - васал (vassal)
+  - магнат (magnate)
+  - грамота (charter)
+activity_hints:
+- type: reading
+  focus: Chronicle descriptions of Roman's reign
+  source: Галицько-Волинський літопис (adapted)
+  items: 3 passages
+- type: essay-response
+  focus: Evaluate Roman's strategy for unifying Galicia and Volhynia
+  output: Analytical argument with evidence
+- type: critical-analysis
+  focus: Why did Roman succeed where others failed?
+  output: Comparative analysis
+focus: biography
+pedagogy: seminar
+prerequisites:
+- c1-bio-05 (Anna Yaroslavna - earlier period)
+- c1-bio-06 (Mykhailo Chernihivskyi - later consequence)
+- Understanding of Kyivan Rus fragmentation
+connects_to:
+- c1-bio-danylo-halytskyi (Danylo - son)
+- c1-bio-lev-danylovych (Lev - grandson)
+- c1-bio-06 (Mykhailo Chernihivskyi - Mongol era)
+objectives:
+- Analyze the political strategy of uniting Galicia and Volhynia
+- Evaluate Roman's role in the decline of Kyivan Rus' fragmentation
+- Master vocabulary related to medieval state formation
+grammar:
+- Historical narrative register
+- Chronicle quotations
+- Participial constructions
+module_type: biography
+sources:
+- name: Роман Мстиславич (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Роман_Мстиславич
+  type: primary
+  notes: Biography, military campaigns, unification of principalities
+- name: Галицько-Волинське князівство
+  url: https://uk.wikipedia.org/wiki/Галицько-Волинське_князівство
+  type: primary
+  notes: Context for state formation
+- name: Галицько-Волинський літопис
+  url: https://uk.wikipedia.org/wiki/Галицько-Волинський_літопис
+  type: reference
+  notes: Primary chronicle source
+immersion: 100% Ukrainian
+phase: C1-BIO
+persona:
+  voice: Senior Biographer
+  role: Autocrat
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Роман Мстиславич: Засновник Галицько-Волинської держави
+
+## Використані джерела
+1. [Енциклопедія історії України: Роман Мстиславич](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Roman_Mstyslavych) — академічна біографія, дати правління.
+2. [Ізборник. Галицько-Волинський літопис](http://litopys.org.ua/ipatlet/ipat24.htm) — першоджерело, цитати, характеристика князя.
+3. [Войтович Л. В. Князівські династії Східної Європи](http://litopys.org.ua/dynasty/dyn.htm) — генеалогія та династичні зв'язки.
+4. [Котляр М. Ф. Данило Галицький](http://history.org.ua/LiberUA/966-518-112-X/966-518-112-X.pdf) — контекст діяльності батька Данила.
+
+## Хронологія
+- **1168–1170**: Княжіння Романа Мстиславича у Великому Новгороді.
+- **1170**: Смерть батька Мстислава Ізяславича; Роман стає князем Володимирським (Волинським).
+- **1188**: Перша невдала спроба оволодіти Галичем; втеча Володимира Ярославича.
+- **1199**: Остаточне приєднання Галицького князівства до Волинського після смерті Володимира Ярославича; утворення Галицько-Волинської держави.
+- **1202**: Успішний похід на половців; взяття Києва та посадження там інгерника Інгвара Ярославича.
+- **1204**: Ймовірна пропозиція королівської корони від Папи Інокентія III (близько цього року).
+- **19 червня 1205**: Загибель у битві під Завихостом у сутичці з поляками.
+
+## Ключові факти та цитати
+
+### Цитати з першоджерел (Галицько-Волинський літопис):
+1. **Характеристика сили**: «Він бо кинувся був на поганих, як той лев, сердитий же був, як та рись, і губив [їх], як той крокодил, і переходив землю їх, як той орел, а хоробрий був, як той тур, бо він ревно наслідував предка свого Мономаха».
+2. **Про боротьбу з боярами**: «Не можна безпечно їсти меду, не винищивши рою, не буде пахнути коріння, поки його не потовчеш». (Приписується Роману у пізніших переказах, що увійшли до історичної традиції).
+3. **Титулатура**: «...самодержця всеї Русі».
+
+### Факти:
+- Роман був сином київського князя Мстислава Ізяславича та польської князівни Агнешки (дочки Болеслава Кривоустого), що пояснює його активну участь у польських справах.
+- Він став першим, хто реально об'єднав два потужних центри — Галич і Володимир, створивши нову політичну вагу, яка змістила центр тяжіння Русі на захід.
+- За його правління Київ фактично перетворився на васальне місто, куди Роман призначав посадників (князів-підручних).
+
+## Engagement Hooks (mapped to sections)
+
+1. **Section "Вступ — Самодержець усієї Русі"**:
+   - `[!decolonization]` — Титул "самодержець" (autokrator) у візантійській традиції означав суверенного правителя, незалежного від зовнішньої влади, а не деспота московського зразка. Роман носив цей титул, підкреслюючи свою рівність з імператорами.
+
+2. **Section "Походження та молодість"**:
+   - `[!context]` — Роман починав кар'єру в Новгороді, де навчився приборкувати непокірне боярство/вече. Цей досвід став вирішальним для його методів у Галичі.
+
+3. **Section "Боротьба за Галич"**:
+   - `[!myth-buster]` — Міф про "жорстокість заради жорстокості". Репресії Романа проти бояр (легенда про те, як він закопував їх живцем) — це часто пізніші нашарування або політична необхідність для збереження єдності держави, аналогічна діям європейських монархів-централізаторів (наприклад, Філіпа II Августа).
+
+4. **Section "Створення Галицько-Волинської держави"**:
+   - `[!history-bite]` — "Крокодил у літописі". Літописець порівнює Романа з крокодилом («губив їх, як той крокодил»). Це свідчить про широку ерудицію книжників Русі, які знали про екзотичну фауну через візантійські фізіологи (бестіарії).
+
+5. **Section "Зовнішня політика"**:
+   - `[!myth-buster]` — Легенда про "Меч Петра". Історія, нібито Роман відповів папському послу: "Чи має Папа такий меч, як у мене? Доки маю меч, не купуватиму володінь іншою ціною", — є пізнішою літературною вигадкою. Проте факт переговорів і відмови від корони є історичним.
+
+6. **Section "Загибель та спадщина"**:
+   - `[!culture]` — "Роман у епосі". Роман Мстиславич — один з небагатьох князів, який (ймовірно) став прототипом билинного героя (Роман Васильович/Дмитрович), що бореться зі змієм (половцями).
+
+## Деколонізаційний контекст
+- **Imperial Myth**: Російська історіографія (Татіщєв, Карамзін) намагалася представити "переїзд" столиці Русі з Києва до Владимира-на-Клязмі.
+- **Ukrainian Reality**: Політичний центр Русі не зник і не перемістився на північний схід. Він трансформувався у Галицько-Волинську державу (Regnum Russiae), де зберігалися європейські традиції, династична спадкоємність Мономаховичів та титулатура "всієї Русі". Роман Мстиславич — прямий творець цієї альтернативи "заліському" шляху розвитку.
+- **Термінологія**: Важливо вживати "Русь", "Руська земля" виключно щодо території сучасної України, протиставляючи її "Суздальщині" чи "Заліссю".
+
+## Contested Terms
+
+| Concept | Imperial/Russian framing | Ukrainian (decolonized) framing |
+|---------|--------------------------|---------------------------------|
+| Спадщина Русі | Перейшла до Владимира-Суздаля, потім Москви | Залишилася в Києві та Галичі-Волині (Королівство Русь) |
+| Самодержавство | Абсолютна влада монарха-деспота (як Іван Грозний) | Суверенність, незалежність від Візантії та Орди (Autokrator) |
+| Об'єднання земель | "Збирання земель руських" Москвою | Європейський процес централізації та державного будівництва |
+
+## Section-Mapped Research Notes
+
+### Вступ — Самодержець усієї Русі
+У 1201–1205 роках Роман контролював Київ, Галич і Володимир — 3 з 4 ключових центрів Русі (крім Чернігова). Титул "самодержець" у літописі підкреслює його винятковий статус. Він не просто "князь", він — суверен. Це пік могутності Русі перед монгольською навалою.
+
+### Походження та молодість
+Син Мстислава II (Великого князя Київського) та Агнешки Польської. Виховувався в атмосфері західноєвропейської політики. Новгородський етап (1168–1170) навчив його жорсткої реальної політики. У 1170 році, після смерті батька, отримує Волинь — свою головну базу.
+
+### Боротьба за Галич
+Галицьке боярство було унікальним феноменом — олігархією, яка могла виганяти князів. Роман вперше спробував узяти Галич у 1188, але невдало. Лише у 1199, після смерті останнього Ростиславича, він за підтримки польського загону та лояльних бояр займає місто. Жорстока розправа з опозицією була необхідною умовою виживання держави.
+
+### Створення Галицько-Волинської держави
+Об'єднання 1199 року — це не просто сума двох князівств, а створення нової геополітичної якості. Потужна економіка (сіль Галичини + аграрна Волинь) та військовий потенціал. Роман проводив політику централізації, спираючись на "служивих бояр" та міщан, протиставляючи їх старій аристократії.
+
+### Зовнішня політика
+Активна експансія.
+1. Половці: успішні походи 1202, 1204 рр. Визволення тисяч бранців. "Романове плем'я" — половці лякали дітей ім'ям Романа.
+2. Візантія: союзні відносини, допомога Олексію III Ангелу (за однією з версій).
+3. Рим: переговори з Інокентієм III. Відмова від унії, але сам факт звернення Папи свідчить про визнання Романа ключовим гравцем регіону.
+
+### Загибель та спадщина
+Похід 1205 року проти Лешка Білого. Причини не до кінця зрозумілі (можливо, суперечка за Люблін або саксонські землі). Випадкова смерть у невеликій сутичці під Завихостом змінила хід історії. Держава занурилася у 40-річну війну (Громадянська війна 1205–1245), але фундамент, закладений Романом, вистояв. Його сини Данило і Василько відновили батьківську спадщину.
+
+### Підсумок — Будівничий держави
+Роман — це "український Карл Великий" або "Філіп Август". Він створив каркас держави, яка проіснувала ще 150 років і стала щитом Європи та мостом між Заходом і Сходом. Його образ "самодержця" став ідеалом правителя для літописців.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 11845)

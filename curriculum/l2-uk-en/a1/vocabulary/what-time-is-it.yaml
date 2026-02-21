@@ -1,86 +1,107 @@
-items:
-  - lemma: "година"
-    translation: "hour"
-    pos: "noun"
-    gender: "f"
-    example: "Котра година?"
-  - lemma: "хвилина"
-    translation: "minute"
-    pos: "noun"
-    gender: "f"
-    example: "Зачекайте одну хвилину."
-  - lemma: "день"
-    translation: "day"
-    pos: "noun"
-    gender: "m"
-    example: "Сьогодні гарний день."
-  - lemma: "тиждень"
-    translation: "week"
-    pos: "noun"
-    gender: "m"
-    example: "Я працюю весь тиждень."
-  - lemma: "місяць"
-    translation: "month"
-    pos: "noun"
-    gender: "m"
-    example: "У році дванадцять місяців."
-  - lemma: "рік"
-    translation: "year"
-    pos: "noun"
-    gender: "m"
-    example: "З Новим роком!"
-  - lemma: "ранок"
-    translation: "morning"
-    pos: "noun"
-    gender: "m"
-    example: "Доброго ранку."
-  - lemma: "вечір"
-    translation: "evening"
-    pos: "noun"
-    gender: "m"
-    example: "Доброго вечора."
-  - lemma: "зараз"
-    translation: "now"
-    pos: "adverb"
-    example: "Я зараз зайнятий."
-  - lemma: "о котрій"
-    translation: "at what time"
-    pos: "phrase"
-    example: "О котрій ти прийдеш?"
-  - lemma: "понеділок"
-    translation: "Monday"
-    pos: "noun"
-    gender: "m"
-  - lemma: "вівторок"
-    translation: "Tuesday"
-    pos: "noun"
-    gender: "m"
-  - lemma: "середа"
-    translation: "Wednesday"
-    pos: "noun"
-    gender: "f"
-  - lemma: "четвер"
-    translation: "Thursday"
-    pos: "noun"
-    gender: "m"
-  - lemma: "п'ятниця"
-    translation: "Friday"
-    pos: "noun"
-    gender: "f"
-  - lemma: "субота"
-    translation: "Saturday"
-    pos: "noun"
-    gender: "f"
-  - lemma: "неділя"
-    translation: "Sunday"
-    pos: "noun"
-    gender: "f"
-  - lemma: "сьогодні"
-    translation: "today"
-    pos: "adverb"
-  - lemma: "завтра"
-    translation: "tomorrow"
-    pos: "adverb"
-  - lemma: "пізно"
-    translation: "late"
-    pos: "adverb"
+- ipa: '[ɦɔˈdɪ.nɑ]'
+  lemma: година
+  notes: f; Котра година? О першій годині
+  pos: noun
+  translation: hour
+- ipa: '[xʋɪˈlɪ.nɑ]'
+  lemma: хвилина
+  notes: f; за п'ять хвилин, одна хвилина
+  pos: noun
+  translation: minute
+- ipa: '[dɛnʲ]'
+  lemma: день
+  notes: m; добрий день, робочий день
+  pos: noun
+  translation: day
+- ipa: '[ˈtɪʒ.dɛnʲ]'
+  lemma: тиждень
+  notes: m; на цьому тижні (Loc), наступного тижня (Gen)
+  pos: noun
+  translation: week
+- ipa: '[ˈmʲi.sʲɑt͡sʲ]'
+  lemma: місяць
+  notes: m; у цьому місяці (Loc)
+  pos: noun
+  translation: month
+- ipa: '[rʲik]'
+  lemma: рік
+  notes: m; новий рік, цього року (Gen)
+  pos: noun
+  translation: year
+- ipa: '[ˈrɑ.nɔk]'
+  lemma: ранок
+  notes: m; доброго ранку, о восьмій ранку
+  pos: noun
+  translation: morning
+- ipa: '[ˈʋɛ.t͡ʃir]'
+  lemma: вечір
+  notes: m; добрий вечір, о сьомій вечора
+  pos: noun
+  translation: evening
+- ipa: '[ˈzɑ.rɑz]'
+  lemma: зараз
+  notes: Зараз третя десять.
+  pos: adverb
+  translation: now
+- ipa: '[ɔ kɔˈtrij]'
+  lemma: о котрій
+  notes: О котрій ти прийдеш?
+  pos: phrase
+  translation: at what time
+- ipa: '[pɔ.nɛˈdʲi.lɔk]'
+  lemma: понеділок
+  notes: m; у понеділок (Acc)
+  pos: noun
+  translation: Monday
+- ipa: '[ʋiu̯ˈtɔ.rɔk]'
+  lemma: вівторок
+  notes: m; у вівторок (Acc)
+  pos: noun
+  translation: Tuesday
+- ipa: '[sɛ.rɛˈdɑ]'
+  lemma: середа
+  notes: f; у середу (Acc)
+  pos: noun
+  translation: Wednesday
+- ipa: '[t͡ʃɛtˈʋɛr]'
+  lemma: четвер
+  notes: m; у четвер (Acc)
+  pos: noun
+  translation: Thursday
+- ipa: '[ˈpjɑt.nɪ.t͡sʲɑ]'
+  lemma: п'ятниця
+  notes: f; у п'ятницю (Acc)
+  pos: noun
+  translation: Friday
+- ipa: '[suˈbɔ.tɑ]'
+  lemma: субота
+  notes: f; у суботу (Acc)
+  pos: noun
+  translation: Saturday
+- ipa: '[nɛˈdʲi.lʲɑ]'
+  lemma: неділя
+  notes: f; у неділю (Acc)
+  pos: noun
+  translation: Sunday
+- ipa: '[sʲɔˈɦɔd.nʲi]'
+  lemma: сьогодні
+  pos: adverb
+  translation: today
+- ipa: '[ˈzɑu̯.trɑ]'
+  lemma: завтра
+  pos: adverb
+  translation: tomorrow
+- ipa: '[ˈpʲiz.nɔ]'
+  lemma: пізно
+  pos: adverb
+  translation: late
+- ipa: '[ˈu̯t͡ʃɑs.nɔ]'
+  lemma: вчасно
+  notes: бути вчасно, прийти вчасно
+  pos: adverb
+  translation: on time
+- ipa: '[ˈrɑ.nɔ]'
+  lemma: рано
+  notes: Ще рано.
+  pos: adverb
+  translation: early

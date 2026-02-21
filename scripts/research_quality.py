@@ -25,7 +25,9 @@ RUBRIC_REGISTRY = {
                         "learner_errors", "cross_references", "pedagogy_notes"],
     },
     "history": {
-        "tracks": {"b2-hist", "c1-bio", "c1-hist"},
+        "tracks": {"b2-hist", "c1-bio", "c1-hist", "oes", "ruth",
+                    "lit", "lit-essay", "lit-fantastika", "lit-hist-fic",
+                    "lit-humor", "lit-juvenile", "lit-war"},
         "max_score": 10,
         "dimensions": ["sources", "chronology", "primary_quotes",
                         "engagement_hooks", "decolonization", "section_notes"],
@@ -505,11 +507,11 @@ def _check_content_alignment_professional(dims: dict, content_text: str) -> dict
 
 def quality_label(score: int) -> str:
     """Map score (0-10) to quality label."""
-    if score >= 8:
+    if score >= 9:
         return "exemplary"
-    elif score >= 6:
+    elif score >= 7:
         return "solid"
-    elif score >= 4:
+    elif score >= 5:
         return "adequate"
     elif score >= 2:
         return "thin"

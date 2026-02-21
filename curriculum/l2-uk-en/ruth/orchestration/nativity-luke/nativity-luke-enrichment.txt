@@ -1,0 +1,200 @@
+✅ Message sent to Gemini (ID: 12166) [auto-acked: self-addressed]
+✓ Message 12166 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12166...
+📨 Message #12166
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-nativity-luke
+   Time: 2026-02-20T23:37:16.427116+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 28
+module: ruth-028
+module_number: 28
+slug: nativity-luke
+title_uk: Різдво (Лука 2)
+title_en: The Nativity
+phase: 2
+phase_id: sacred-word
+phase_name: Sacred Word
+focus: Narrative style comparison
+content_outline:
+- section: Вступ
+  description: Introduction to The Nativity
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Baroque Scholar
+  role: Vertep Director
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Різдво (Лука 2)
+
+## Використані джерела
+1. [litopys.org.ua](http://litopys.org.ua/ukrpoez/ukrpoez.htm) — Українська поезія. Середина XVII ст. (Твори Памва Беринди).
+2. [esu.com.ua](https://esu.com.ua/article-87353) — Пересопницьке Євангеліє (мовні особливості, історія створення).
+3. [history.org.ua](http://resource.history.org.ua/) — Сокиринський вертеп 1770 р. (історія, структура).
+4. [litopys.org.ua](http://litopys.org.ua/) — Євангеліє учительне (Кирило Транквіліон-Ставровецький).
+
+## Хронологія
+- 1556–1561: Створення Пересопницького Євангелія (архімандрит Григорій, Михайло Василевич).
+- 1581: Видання Острозької Біблії (перше повне друковане видання церковнослов'янською мовою).
+- 1616: Видання збірки «На Рождество Христа Бога нашего вірші» Памва Беринди у Львові.
+- 1619: Видання «Євангелія учительного» Кирила Транквіліона-Ставровецького.
+- 1770: Запис тексту Сокиринського (Галаганівського) вертепу київськими спудеями.
+
+## Ключові факти та цитати
+
+### Пересопницьке Євангеліє (Лука 2)
+- **Мовні риси:** Жива народна мова проникає в сакральний текст.
+  - Фонетика: перехід `о`, `е` в `і` в новозакритих складах (*радість*, *віра*).
+  - Морфологія: дієслівні закінчення `-мо`, `-ш` (*бачимо*, *знаєш*), давальний відмінок `-ови`/`-еви` (*пастухови*).
+  - Лексика: глоси (пояснення) народною мовою на полях (наприклад, до церковнослов'янського *чресла* — *бедра*).
+
+### Памво Беринда «На Рождество...» (1616)
+- Перший друкований зразок української декламації (діалог пастухів).
+- **Цитата:**
+  > «Десь ангел був раптово узявсь, став над нами,
+  > Не бридячись бідацтвом отим, пастухами…»
+- **Цитата (теологічна):**
+  > «Тобі, Боже, буде хай честь, також похвала,
+  > Що простота наша того дочекала...»
+
+### Сокиринський вертеп (1770)
+- **Структура:** Двоповерхова скринька (Верхній ярус — небесне/сакральне, Нижній ярус — земне/комічне).
+- **Сюжет (Верхній поверх):** Різдвяна драма (Цар Ірод, Ангели, Пастухи).
+- **Мова:** Церковнослов'янська (високий стиль) у драмі vs. народна розмовна (низький стиль) в інтермедіях.
+
+## Engagement Hooks (mapped to sections)
+- **Вступ:** `[!history-bite]` — Різдво святкували не як "тихе сімейне свято", а як гучну містерію (вертеп, шкільна драма).
+- **Сакральне Слово:** `[!myth-buster]` — Міф про "єдину російську мову церкви". Реальність: Пересопницьке Євангеліє доводить існування староукраїнської літературної мови вже у XVI ст.
+- **Барокова Поезія:** `[!context]` — Памво Беринда був не лише поетом, а й друкарем і лексикографом (автор "Лексикона").
+- **Живий Вертеп:** `[!culture]` — Вертепна скринька як модель світобудови (небо — земля — пекло).
+- **Підсумок:** `[!legacy]` — Вплив барокової традиції на сучасну українську колядку та вертеп.
+
+## Деколонізаційний контекст
+- **Імперський міф:** Українська культура XVII-XVIII ст. як "провінційна" або "малоросійська" копія російської.
+- **Українська реальність:** Українське бароко було частиною європейського контексту, яке Росія згодом апропріювала (через випускників Києво-Могилянської академії). Вертепна драма — це самобутній жанр, що поєднує західну містерію з українським фольклором.
+
+## Contested Terms (Термінологічне мапування)
+| Поняття | Імперський наратив | Український (деколонізований) наратив |
+|---------|--------------------|---------------------------------------|
+| Руська мова | "Западнорусский язык", діалект російської | Староукраїнська мова, "проста мова" — самостійна мова канцелярії та літератури |
+| Вертеп | Ляльковий театр (етнографія) | Сакральна драма, форма барокового театру |
+| Малоросійське наріччя | Зіпсована російська мова | Окрема слов'янська мова з власною традицією перекладів |
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12260)
+✓ Message 12166 acknowledged
+✓ Message 12260 acknowledged

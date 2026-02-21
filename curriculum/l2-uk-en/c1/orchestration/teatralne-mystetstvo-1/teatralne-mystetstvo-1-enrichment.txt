@@ -1,0 +1,243 @@
+✅ Message sent to Gemini (ID: 10831) [auto-acked: self-addressed]
+✓ Message 10831 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10831...
+📨 Message #10831
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-teatralne-mystetstvo-1
+   Time: 2026-02-20T21:31:00.155407+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-084
+level: C1
+sequence: 84
+slug: teatralne-mystetstvo-1
+version: '2.0'
+title: Театральне мистецтво I
+subtitle: Theater Arts I — From Origins to Kurbas
+content_outline:
+- section: Розминка — Витоки українського театру
+  points:
+  - Від вертепу до професійної сцени
+  - Театр корифеїв — Заньковецька, Кропивницький
+  - Лесь Курбас — геній світового рівня
+- section: Content Areas
+  points:
+  - 'Origins: Вертеп, шкільна драма — folk and religious roots'
+  - '19th century: Котляревський, Кропивницький, **Марія Заньковецька** — national
+    theater birth'
+  - 'Revolutionary: **Лесь Курбас**, Театр "Березіль" — world-class experimental theater,
+    Executed Renaissance martyr'
+- section: Практика — історія театру
+  points:
+  - Описати структуру вертепу — персонажі, сюжет
+  - Проаналізувати внесок Марії Заньковецької
+  - Написати есе про революційний театр Курбаса
+  - Обговорити розстріл Курбаса та знищення "Березолю"
+focus: fine-arts
+pedagogy: CBI
+objectives:
+- Learner explores the origins of Ukrainian theater (Vertep, School Drama).
+- Learner understands the role of the Coryphaei Theater.
+- Learner analyzes the revolutionary impact of Les Kurbas and Berezil.
+grammar:
+- Dramatic terminology
+- Analysis of staging
+phase: C1.5 Folk Culture & Fine Arts
+persona:
+  voice: Senior Specialist
+  role: Театральний режисер
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Театральне мистецтво I
+
+## State Standard Reference
+§3.4: "Культурне дозвілля і відпочинок: ... театр, кінотеатр, філармонія"
+Alignment: Цей модуль безпосередньо розкриває тему "Культурне дозвілля" (театр) та "Мистецтво", забезпечуючи лексичну та змістову базу для обговорення історії та розвитку українського театру на рівні C1.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| **Вертеп** | High (Cultural) | *ходити з вертепом, двоповерховий вертеп, вертепна драма, ляльковий вертеп* |
+| **Корифеї** | Medium (Historical) | *театр корифеїв, плеяда корифеїв, українські корифеї* |
+| **Мізансцена** | Low (Term) | *будувати мізансцену, складна мізансцена, продумана мізансцена* |
+| **Перевтілення** | Medium | *мистецтво перевтілення, повне перевтілення, акторське перевтілення* |
+| **Умовність** | High (Academic) | *театральна умовність, сценічна умовність, відмова від умовності* |
+| **Лаштунки** | Medium | *за лаштунками, відкрити лаштунки, по той бік лаштунків* |
+
+## Cultural Hooks
+1. **Двоповерховий Всесвіт**: Український вертеп мав унікальну двоярусну будову, що відображала барокову модель світу: верхній поверх — «небо» (сакральні сюжети), нижній — «земля» (народно-побутові комедійні сценки).
+2. **Тримовний примус**: Театр корифеїв був змушений (через Емський указ та цензуру) ставити вистави трьома мовами в один вечір або чергувати їх, щоб "легалізувати" українську п'єсу.
+3. **Куля в серці**: Лесь Курбас носив у серці кулю після спроби самогубства через нерозділене кохання (до Катерини Рубчакової), жартуючи, що вона "допомагає йому творити".
+
+## Common Learner Errors
+1. **Вистава vs П'єса**: Студенти часто кажуть "Ми дивилися цікаву п'єсу" замість "виставу". *Correct form*: П'єса — це текст (читати), вистава — це дійство (дивитися).
+2. **Спектакль vs Вистава**: Вживання русизму "спектакль". *Correct form*: В українській літературній мові та мистецтвознавстві перевага надається терміну "вистава".
+3. **Грати роль vs Відігравати роль**: Калька "роль грає велике значення". *Correct form*: Актор *грає роль* (у театрі), але фактор *відіграє роль* (має значення).
+
+## Cross-References
+- Builds on: B2-HIST (Module 021 Culture of Rus', Module 082 Executed Renaissance)
+- Prepares for: C1-BIO (M133 Kurbas, M134 Zankovetska), C1-LIT (Drama modules)
+
+## Notes for Content Writing
+- Акцентувати на тяглості традиції: від барокового вертепу до авангарду Курбаса (Курбас переосмислював вертепну естетику).
+- Використовувати термінологію не сухо, а в контексті аналізу стилів (реалізм vs авангард).
+- У розділі про Курбаса обов'язково згадати про "Березіль" як філософський театр, а не просто розважальний заклад.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Витоки та бароковий Вертеп (Introduction: Origins and Baroque Vertep)"
+  words: 700
+  points:
+  - "Еволюція українського театру від народних обрядових ігор до барокового явища вертепу — аналіз тяглості традицій."
+  - "Культурний гачок: Двоповерховий Всесвіт — розбір унікальної двоярусної будови вертепу, що відображала модель світу (Верхній поверх — 'небо' для сакральних сюжетів, Нижній — 'земля' для комедійних народних сценок)."
+  - "Лексична база: Використання термінології 'вертепна драма' та 'ляльковий вертеп' у контексті аналізу культурного дозвілля (§3.4 Державного стандарту)."
+- section: "Театр Корифеїв: Боротьба за професійну сцену (Theater of the Coryphaei: Struggle for the Professional Stage)"
+  words: 900
+  points:
+  - "Фундатори національного театру: Внесок Івана Котляревського, Марка Кропивницького та Марії Заньковецької у становлення професійної трупи."
+  - "Культурний гачок: Тримовний примус — аналіз впливу Емського указу та цензури, що змушували акторів чергувати мови або ставити вистави трьома мовами за один вечір для легалізації української мови."
+  - "Типова помилка студента: Розрізнення понять 'Вистава' (дійство, яке ми дивимося) та 'П'єса' (літературний текст, який ми читаємо) — вправи на контекстуальне вживання."
+- section: "Лесь Курбас: Театральний авангард та 'Березіль' (Les Kurbas: Theater Avant-Garde and Berezil)"
+  words: 1100
+  points:
+  - "Лесь Курбас як реформатор світового рівня: перехід від етнографічного реалізму до естетики театральної 'умовності' та експресіонізму."
+  - "Культурний гачок: 'Куля в серці' — біографічний факт про Леся Курбаса (спроба самогубства через Катерину Рубчакову) як метафора його трагічного та напруженого творчого шляху."
+  - "Театр 'Березіль' як філософська лабораторія: розбір концепції акторського 'перевтілення' та побудови складної 'мізансцени' як інструментів інтелектуального впливу."
+- section: "Практика: Мистецтвознавчий аналіз та корекція (Practice: Arts Criticism and Correction)"
+  words: 700
+  points:
+  - "Аналітична вправа: Описати структуру вертепу та персонажів, використовуючи професійну лексику (лаштунки, умовність, сюжет)."
+  - "Корекція лексичних кальок: Відмова від русизму 'спектакль' на користь 'вистави', а також виправлення кальки 'роль грає значення' на правильне 'відіграє роль'."
+  - "Дискусія про спадкоємність: Як Курбас переосмислював барокову естетику вертепу в авангардному контексті 1920-х років."
+- section: "Підсумок: Розстріляне відродження та сучасна сцена (Summary: Executed Renaissance and the Modern Stage)"
+  words: 600
+  points:
+  - "Трагічний фінал: Обговорення розстрілу Леся Курбаса та знищення театру 'Березіль' як акту репресій проти української еліти (Розстріляне відродження)."
+  - "Вплив спадщини на сучасне культурне дозвілля: Як досвід корифеїв та експерименти Курбаса формують обличчя сучасного українського театру."
+  - "Фінальна рефлексія: Театр як простір боротьби за національну ідентичність та високе мистецтво."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "Вертеп (Vertep/Puppet theater) — ходити з вертепом, двоповерховий вертеп, вертепна драма; ключове барокове поняття."
+  - "Корифеї (Coryphaei/Pioneers) — театр корифеїв, плеяда корифеїв; фундатори професійного театру."
+  - "Вистава (Performance) — дивитися виставу, театральна вистава; вживається для опису дійства, часто плутається з 'п'єсою'."
+  - "Мізансцена (Mise-en-scène) — будувати мізансцену, продумана мізансцена; розташування акторів на сцені."
+  - "Умовність (Convention/Artificiality) — театральна умовність, сценічна умовність; відхід від побутового реалізму."
+  required_grammar:
+  - "Відігравати роль (To play a role/matter) — вживається у значенні 'мати значення', на відміну від акторського 'грати роль'."
+  recommended:
+  - "Лаштунки (Backstage) — за лаштунками, відкрити лаштунки; прихована частина сцени."
+  - "Перевтілення (Transformation) — мистецтво перевтілення, акторське перевтілення; здатність актора змінювати образ."
+  - "П'єса (Play/Script) — читати п'єсу, драматична п'єса; літературна основа для театру."
+  - "Культурне дозвілля (Cultural leisure) — організовувати дозвілля, змістовне дозвілля; термін з Державного стандарту."
+  - "Березіль (Berezil) — назва театру Курбаса; символ революційного експерименту."
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4379 chars)
+✅ Message sent to Claude (ID: 10840)
+✓ Message 10840 acknowledged
+   Auto-acknowledged reply #10840 (stdout delivery — no inbox accumulation)
+✓ Message 10831 acknowledged

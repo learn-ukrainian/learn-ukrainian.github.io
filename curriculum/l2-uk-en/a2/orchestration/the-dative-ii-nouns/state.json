@@ -60,15 +60,10 @@
       "timestamp": "2026-02-19T12:03:35Z",
       "note": "v3-phase-D"
     },
-    "9-final-review": {
-      "status": "complete",
-      "timestamp": "2026-02-19T12:10:59Z",
-      "verdict": "APPROVE"
-    },
     "8": {
       "status": "complete",
-      "timestamp": "2026-02-19T12:28:55Z"
+      "timestamp": "2026-02-20T01:03:16Z"
     }
   },
-  "last_updated": "2026-02-19T12:28:55Z"
+  "last_updated": "2026-02-20T01:03:16Z"
 }

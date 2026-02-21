@@ -1,7 +1,7 @@
 # Audit Report: M07 — questions-and-negation.md
 **Level:** A1 | **Module:** M07 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-19 23:01:32
+**Generated:** 2026-02-21 00:46:31
 
 ## Configuration
 **Type:** A1-grammar
@@ -36,7 +36,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2720/2000 (raw: 2885)
+- **Words:** ✅ 2723/2000 (raw: 2888)
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 5/4 types
@@ -62,6 +62,6 @@
 | **Вступ: Мистецтво ставити питання** | ✅ | 458 | Included in Core |
 | **Граматика: Як будувати питання** | ✅ | 1004 | Included in Core |
 | **Практика: Інтонація та конструктор** | ✅ | 462 | Included in Core |
-| **Застосування: Розмова в реальному житті** | ✅ | 312 | Included in Core |
+| **Застосування: Розмова в реальному житті** | ✅ | 315 | Included in Core |
 | **Культурний контекст: Ввічливість і гумор** | ✅ | 269 | Included in Core |
 | **Підсумок** | ✅ | 165 | Included in Core |

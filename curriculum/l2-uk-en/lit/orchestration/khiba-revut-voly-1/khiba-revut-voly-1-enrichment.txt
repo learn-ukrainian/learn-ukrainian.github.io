@@ -1,0 +1,266 @@
+✅ Message sent to Gemini (ID: 12185) [auto-acked: self-addressed]
+✓ Message 12185 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12185...
+📨 Message #12185
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-khiba-revut-voly-1
+   Time: 2026-02-20T23:37:20.242343+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 32
+module: lit-32
+level: LIT
+slug: khiba-revut-voly-1
+version: '2.0'
+title: 'Хіба ревуть воли...: Генезис та сюжет'
+subtitle: Khiba Revut Voly 1
+content_outline:
+- section: Вступ та культурний контекст
+  points:
+  - Історичні умови появи твору/автора
+  - Місце в літературному каноні
+  - Чому цей текст важливий сьогодні
+- section: 'Аналіз твору: Сюжет та структура'
+  points:
+  - Ключові етапи життя/розвитку сюжету
+  - Впливи та джерела
+  - Конфлікт як рушійна сила
+- section: Герменевтика та ключові образи
+  points:
+  - Детальний розбір символіки
+  - Система персонажів та їхня еволюція
+  - Архетипи та міфологічні підтексти
+- section: Мова, стиль та поетика
+  points:
+  - Стилістичні інновації автора
+  - Робота з народною мовою або неохотизмами
+  - Особливості ритміки та синтаксису
+- section: Деколонізаційний вимір
+  points:
+  - Який імперський міф руйнує цей текст?
+  - Агентність українського героя
+  - Опір асиміляції та культурне самоствердження
+- section: Підсумок та рецепція
+  points:
+  - Вплив на наступні покоління письменників
+  - Світовий контекст твору
+  - Питання для дискусії
+vocabulary_hints:
+  required:
+  - канон (canon)
+  - метафора (metaphor)
+  - дискурс (discourse)
+  - інтерпретація (interpretation)
+  recommended:
+  - алегорія (allegory)
+  - контекст (context)
+  - рецепція (reception)
+activity_hints:
+- type: reading
+  focus: Аналіз ключових уривків khiba-revut-voly-1
+  source: UkrLib
+  items: 5+
+- type: essay-response
+  focus: Філософський або літературознавчий аспект твору
+  output: Аналітичне есе
+focus: literature
+pedagogy: Seminar
+prerequisites:
+- lit-31
+connects_to:
+- lit-33
+module_type: literature
+sources:
+- name: 'Хіба ревуть воли...: Генезис та сюжет — тексти та аналіз'
+  url: https://www.ukrlib.com.ua/
+  type: primary
+  notes: Основне джерело
+immersion: 100% Ukrainian
+phase: LIT.1 Foundations 1798-1890s
+objectives:
+- 'Проаналізувати твір Хіба ревуть воли...: Генезис та сюжет у контексті епохи'
+- Дослідити стилістичні особливості тексту
+- Зрозуміти деколонізаційне значення автора
+persona:
+  voice: Senior Philologist & Critic
+  role: Genealogist
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Хіба ревуть воли...: Генезис та сюжет
+
+## Використані джерела
+1. [УкрЛіб: Панас Мирний](https://www.ukrlib.com.ua/) — детальна історія створення, аналіз редакцій твору та біографічний контекст.
+2. [Енциклопедія Сучасної України](https://esu.com.ua/) — відомості про співпрацю Панаса Мирного та Івана Білика, розвиток психологічної прози.
+3. [Вікіпедія: Хіба ревуть воли, як ясла повні?](https://uk.wikipedia.org/) — хронологія, заборона Емським указом та обставини женевського видання.
+
+## Хронологія
+- 1872 (квітень): Подорож Панаса Мирного з Полтави до Гадяча, під час якої він почув від візника історію про місцевого розбійника Василя Гнидку.
+- 1872 (листопад): Панас Мирний завершує роботу над первісним варіантом — повістю під назвою «Чіпка».
+- 1873-1875: До роботи долучається брат автора Іван Білик (Рудченко); повість розростається до масштабного соціально-психологічного роману (пройдено 6 редакцій).
+- 1876: Виданню твору в Російській імперії перешкоджає сумнозвісний Емський указ, який забороняє українське друковане слово.
+- 1880: Перше видання роману в Женеві за сприяння Михайла Драгоманова.
+- 1905: Перше легальне видання твору на території підросійської України під зміненою (через цензуру) назвою «Пропаща сила».
+
+## Ключові факти та цитати
+- Назва твору є алюзією на біблійну Книгу Йова (в перекладі П. Куліша), що підкреслює філософський і екзистенційний масштаб конфлікту.
+- **Цитата:** «Піду ж туди, де шанують людей, а не таких злодюг, як оце у нас. Піду служити правді!» (бунт Чіпки як пошук справедливості).
+- **Цитата:** «Дуже любив Чіпка казки слухати. В казках його зроду розумна голова знаходила немалу роботу. Казка була йому не вигадкою, а билицею...» (внутрішній світ та схильність до рефлексії).
+- Чіпка — це втілення «пропащої сили», потужної національної енергії, яка не знаходить конструктивного виходу в умовах колоніального гноблення.
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ та культурний контекст: Історія створення": [!history-bite] — роман був заборонений Емським указом і вперше побачив світ за кордоном, у Женеві, як справжній дисидентський текст.
+- Section "Герменевтика та ключові образи: Символіка": [!context] — назва походить з Книги Йова, ставлячи українську соціальну проблему в один ряд зі світовими екзистенційними трагедіями.
+- Section "Аналіз твору: Сюжет та структура — Життєвий шлях": [!quote] — слова Чіпки про "службу правді" демонструють, що його шлях починається не як кримінал, а як ідеалістичний бунт.
+- Section "Деколонізаційний вимір: Руйнування імперського міфу": [!myth-buster] — розвінчання міфу про реформу 1861 року як про "царську милість"; насправді вона пограбувала селян, лишивши їх без землі.
+- Section "Деколонізаційний вимір: Агентність та опір": [!decolonization] — Чіпка не є пасивним "малоросом"; його лють є проявом української суб'єктності, навіть якщо вона вибухає руйнівно.
+- Section "Мова, стиль та поетика": [!culture] — використання полтавського говору і багатства народної мови як інструмент спротиву асиміляційній політиці імперії.
+
+## Деколонізаційний контекст
+- **Imperial/Soviet myth:** Селянство було темним і пасивним, а бунтівники — просто кримінальними елементами. Реформа 1861 року була "прогресивною". Радянська критика часто зводила роман лише до вузькокласової боротьби.
+- **Ukrainian reality:** Роман є діагнозом імперській системі. Неможливість досягти справедливості легально змушує талановиту, мислячу людину ставати на шлях насильства. Це трагедія втраченого потенціалу ("пропащої сили") нації в колоніальних умовах.
+
+## Contested Terms 
+| Concept | Imperial/Soviet framing | Ukrainian (decolonized) framing |
+|---------|-------------------------|---------------------------------|
+| Селянська реформа 1861 | Визволення, дар "Царя-Визволителя" | Грабіжницька реформа, втрата землі, що спричинила новий виток боротьби |
+| Чіпка Варениченко | Кримінальний елемент, або борець за класові інтереси | Втілення "пропащої сили" нації, людина, що шукає правди в несправедливому суспільстві |
+
+## Section-Mapped Research Notes
+
+### Вступ та культурний контекст: Історія створення
+Історія Василя Гнидки (1872), еволюція від повісті «Чіпка» до роману за участі І. Білика. Вплив Емського указу 1876 року, публікація в Женеві 1880 року.
+
+### Вступ та культурний контекст: Місце в каноні
+Перший великий соціально-психологічний роман в українській літературі. Злам стереотипу про "провінційність" української прози.
+
+### Аналіз твору: Сюжет та структура — Життєвий шлях
+Аналіз біографії Чіпки: дитинство "виродка", вплив баби Оришки, пошуки справедливості, втрата землі, духовний злам і падіння.
+
+### Аналіз твору: Сюжет та структура — Джерела та конфлікт
+Джерела твору. Конфлікт між особистістю та гнилою суспільною системою. Зовнішній конфлікт (з панами та законом) та внутрішній (з власним сумлінням).
+
+### Герменевтика та ключові образи: Символіка
+Біблійна назва з Книги Йова: воли ревуть лише тоді, коли їм нічого їсти. Символіка землі як екзистенційної основи українця.
+
+### Герменевтика та ключові образи: Система персонажів
+Контрасти: Чіпка (бунтар) — Грицько (пристосуванець). Максим Ґудзь як паралельна лінія. Роль жіночих персонажів (Мотря, Галя, баба Оришка).
+
+### Мова, стиль та поетика
+Синтез реалізму та глибокого психологізму. Багатство народного синтаксису, психологічний пейзаж, поліфонія думок.
+
+### Деколонізаційний вимір: Руйнування імперського міфу
+Критика Російської імперії періоду реформ. Показ земства та царського суду як корумпованих механізмів придушення.
+
+### Деколонізаційний вимір: Агентність та опір
+Бунт Чіпки як спотворений прояв боротьби за власну гідність. Демонстрація того, що українське суспільство не було покірним.
+
+### Підсумок та рецепція
+Оцінка твору наступними поколіннями (від Франка до сучасності). Значення концепту "пропащої сили" для розуміння колоніальної травми.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12255)
+✓ Message 12185 acknowledged
+✓ Message 12255 acknowledged

@@ -6,60 +6,82 @@ version: '2.0'
 title: Being and Becoming
 subtitle: Professions and Instrumental Case
 content_outline:
-- section: Introduction / Вступ
+- section: Вступ (Introduction)
+  words: 500
   points:
   - 'Concept of role vs identity — distinguish Present Tense Identity (Nom. - *Я лікар*)
     vs. Role/Function/Process (Instr. - *Я буду лікарем*) — focus: State Standard
     §4.2.2.5.1: ''Без прийменника: характеристика особи за професією чи статусом'''
-  - 'Present tense (Nom) vs Past/Future (Instr) — learner error: Nominative trap after
-    *бути*/*стати* (e.g., *хоче стати лікар* instead of *лікарем*)'
-- section: Presentation / Презентація
+  - Explicit English explanation of the logic behind 'Identity (Nom) vs Function (Instr)'
+    to provide scaffolding for A2.1 learners as suggested in research notes
+  - The 'Nominative Trap' warning — explain L1 interference where learners say *Він
+    хоче бути лікар* instead of the correct Instrumental *лікарем* (English 'to be
+    a doctor' influence)
+- section: 'Презентація: Дієслова та відмінювання (Presentation: Verbs and Governing)'
+  words: 700
   points:
-  - '"бути" + instrumental (Past/Future) — key collocation: *буде лікарем*, *був вчителем*
-    (Very High frequency)'
-  - '"стати/ставати" + instrumental (Change) — cultural hook: IT Hub Prestige (*програміст*,
-    *айтішник*, *тестувальник*)'
-  - '"працювати" + instrumental (Current) — learner error: "Work as" calque (*працюю
-    як менеджер* instead of *працюю менеджером*); interference from English "work
-    as" or German "arbeiten als"'
-  - 'Gender forms of professions — cultural hook: 2020 reform on femininitives (*директорка*,
-    *інженерка*, *президентка*) reflecting societal shift — content writing note:
-    Ensure consistent use of both masculine and feminine forms for all profession
-    examples'
-- section: Practice / Практика
+  - '''бути'' + instrumental (Past/Future) — key high-frequency collocations: *був
+    студентом*, *буде лікарем*; distinguish from Present Tense null-copula + Nominative'
+  - '''стати/ставати'' + instrumental (Change of State) — teaching *хоче стати...*
+    constructions; mention formal *програмувальник* vs. universally used *програміст*'
+  - '''працювати'' + instrumental (Current Role) — explicit focus on the ''Work as''
+    calque error: explain that *працює як менеджер* is incorrect and must be *працює
+    менеджером*'
+  - 'Introduction of primary profession vocabulary: *лікар*, *вчитель*, *інженер*,
+    *програміст*, *журналіст*, *юрист* with their instrumental forms'
+- section: 'Соціокультурний контекст: Фемінітиви та IT (Sociocultural Context: Femininitives
+    and IT)'
+  words: 600
   points:
-  - 'Transformation drills (Present to Past) — focus: Present (Nom) to Past/Future
-    (Instr)'
-  - 'Career aspiration exercises — learner error: Gender mismatch (*хороший лікарка*
-    instead of *хороша лікарка*)'
-- section: Dialogues / Діалоги
+  - 'The 2020 Grammar Reform: Official status of femininitives (*директорка*, *менеджерка*,
+    *філологиня*) reflecting modern Ukrainian societal shifts towards gender equality'
+  - 'IT Industry Prestige: Discussing Ukraine as a European IT hub; teaching the high-prestige
+    *програміст* alongside the ubiquitous colloquialism *айтішник*'
+  - 'Usage note: Consistent use of both masculine and feminine forms for all profession
+    examples to reflect contemporary linguistic standards'
+- section: Практика та запобігання помилкам (Practice and Error Prevention)
+  words: 600
   points:
-  - '"What do you do?" conversations — focus: Modern IT context (*айтішник*, *тестувальник*)'
-  - Career history scenarios — model modern Ukrainian usage with IT professions
+  - Transformation drills (Present Identity to Past/Future Role) focusing on the shift
+    from Nominative to Instrumental case endings
+  - 'Addressing Gender Mismatch: Drilling agreement between gendered person nouns
+    and professions (e.g., correcting *Вона хороший лікар* to *Вона хороша лікарка*)'
+  - 'Correction of translation calques: Exercises specifically designed to root out
+    the use of ''як'' after the verb *працювати*'
+- section: Діалоги та кар'єрні плани (Dialogues and Career Plans)
+  words: 600
+  points:
+  - '''What do you do?'' conversations — modeling natural modern usage in IT and professional
+    contexts (*працюю айтішником*, *став тестувальником*)'
+  - 'Career history scenarios: Describing past roles (*був офіціантом*) and future
+    aspirations (*мрію стати громадянкою України*) as per State Standard examples'
+  - 'Synthesis activity: Learners describe their path of ''being and becoming'' using
+    the full range of grammar and vocabulary introduced'
 vocabulary_hints:
   required:
-  - бути (to be) — буде лікарем, був вчителем (Very High frequency)
-  - стати (to become) — стати спеціалістом, стати успішним (High Frequency)
-  - ставати (to be becoming) — process of change
-  - 'працювати (to work) — працювати інженером, працювати в офісі (High Frequency);
-    learner error: do not use *як*'
-  - служити (to serve) — instrumental usage
-  - залишатися (to remain) + instr.
-  - виявитися (to turn out) + instr.
-  - здаватися (to seem) + instr.
-  - лікар (doctor) — працювати лікарем, викликати лікаря (High Frequency)
-  - вчитель (teacher) — перша вчителька, працювати вчителем (High Frequency)
-  - інженер (engineer) — головний інженер, стати інженером (Medium-High Frequency)
-  - програміст (programmer) — high prestige profession in Ukraine; colloquial *айтішник*
-  - журналіст (journalist)
-  - юрист (lawyer)
-  - економіст (economist)
+  - бути (to be) — був студентом, буде лікарем; Very High Frequency; Past/Future requires
+    Instrumental
+  - стати (to become) — стати спеціалістом, хоче стати...; High Frequency; perfective
+    aspect
+  - ставати (to be becoming) — ставати кращим; process of change; imperfective
+  - 'працювати (to work) — працює менеджером, працювати вчителем; High Frequency;
+    note: do not use ''як'' (calque)'
+  - лікар / лікарка (doctor) — працювати лікарем; High Frequency; note femininitiv
+    reform
+  - вчитель / вчителька (teacher) — буде вчителем; High Frequency
+  - 'програміст / програмістка (programmer) — працювати програмістом; High prestige;
+    formal: програмувальник'
+  - айтішник / айтішниця (IT professional) — став айтішником; High Frequency colloquial
+  - інженер / інженерка (engineer) — працював інженером; Medium-High Frequency
+  - журналіст / журналістка (journalist) — стати журналістом
+  - юрист / юристка (lawyer) — працює юристкою
   recommended:
-  - художник (artist)
-  - музикант (musician)
-  - письменник (writer)
-  - актор (actor)
-  - директор (director)
+  - економіст / економістка (economist)
+  - менеджер / менеджерка (manager) — common in modern business context
+  - спеціаліст / спеціалістка (specialist) — стати хорошим спеціалістом
+  - громадянин / громадянка (citizen) — мріє стати громадянкою України (State Standard
+    example)
+  - директор / директорка (director) — 2020 reform focus
 activity_hints:
 - type: fill-in
   focus: Transform present to past with instrumental

@@ -1,0 +1,293 @@
+✅ Message sent to Gemini (ID: 10053) [auto-acked: self-addressed]
+✓ Message 10053 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10053...
+📨 Message #10053
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-the-accusative-ii-people
+   Time: 2026-02-20T19:38:30.418635+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: a1-12
+level: A1
+sequence: 12
+slug: the-accusative-ii-people
+version: '2.0'
+title: 'The Accusative II: People'
+subtitle: Animate Nouns and the Genitive Connection
+content_outline:
+- section: Warm-up
+  points:
+  - Контраст з неістотами (книгу vs брата) — use 'Heart Words' (Animate) vs 'Stone
+    Words' (Inanimate) visual metaphor
+  - Введення поняття "істота" — aligns with State Standard §4.2.1.1 (animate masculine
+    nouns)
+- section: Presentation
+  points:
+  - Чому істоти особливі (знахідний = родовий) — masculine animate nouns are 'greedy'
+    and take the Genitive ending to distinguish themselves from objects
+  - 'Чоловічий рід: брат → брата, тато → тата — learner error: Masculine Animate Trap
+    (leaving it as ''брат'' instead of ''брата'')'
+  - 'Жіночий рід: як неістоти (сестра → сестру) — learner error: Feminine Overthinking
+    (wrongly applying Genitive rule ''сестри'' instead of standard Accusative ''сестру'')'
+  - 'Тварини як істоти (кіт → кота, пес → пса) — learner error: Animal Animacy Confusion
+    (forgetting pets are grammatically ''alive'')'
+- section: Practice
+  points:
+  - Розрізнення істот і неістот
+  - Трансформація речень з людьми
+  - Дієслова з людьми (бачити, знати, любити, чекати)
+- section: Production
+  points:
+  - Опис сім'ї (Я люблю маму, тата, брата...) — mention affectionate forms (матусю,
+    татуся) frequently used by adults
+  - 'Діалог про друзів (Ти знаєш Андрія?) — cultural hook: ''Друг'' implies deep trust/soulmate
+    vs ''знайомий'' (acquaintance)'
+- section: Cultural Insight
+  points:
+  - Українські імена та їх відмінювання
+  - Як питати про людей ввічливо
+vocabulary_hints:
+  required:
+  - 'брат (brother) — рідний брат, старший/молодший брат; diminutive: братик'
+  - 'сестра (sister) — рідна сестра, старша/молодша сестра; diminutive: сестричка'
+  - друг (friend m.) — вірний друг, давній друг; implies deep trust
+  - подруга (friend f.)
+  - 'мама (mother) — люба мама, моя мама; diminutive: матуся'
+  - 'тато (father) — любий тато, мій тато; diminutive: татусь'
+  - лікар (doctor)
+  - вчитель (teacher)
+  recommended:
+  - кіт (cat) — grammatically animate (кота)
+  - пес (dog) — grammatically animate (пса)
+  - студент (student)
+  - колега (colleague)
+  - сусід (neighbor)
+  - дитина (child)
+activity_hints:
+- type: fill-in
+  focus: Change animate nouns to accusative
+  items: 25
+- type: match-up
+  focus: Animate vs inanimate
+  items: 20
+- type: fill-in
+  focus: Complete with correct accusative
+  items: 20
+focus: grammar
+pedagogy: PPP
+prerequisites:
+- a1-11 (The Accusative I - Things)
+connects_to:
+- a1-13 (The Locative)
+- a1-32 (My Family)
+objectives:
+- Learner can use accusative case for animate nouns (people/animals)
+- Learner can distinguish between animate and inanimate accusative
+- Learner understands when accusative = genitive
+- Learner can talk about people as direct objects
+grammar:
+- Accusative for animate nouns
+- 'Masculine animate: accusative = genitive'
+- 'Feminine animate: same as inanimate'
+register: розмовний
+phase: A1.2 [Navigation]
+persona:
+  voice: Patient Supportive Tutor
+  role: HR Recruiter
+word_target: 2000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: The Accusative II: People
+
+## State Standard Reference
+§4.2.1.1: "форми знахідного та місцевого відмінків іменників чоловічого роду...: син (сина...), тато (тата...); учитель (учителя...); форми знахідного... іменників жіночого роду...: мама (маму...), сестра (сестру...)"
+Alignment: This module explicitly teaches the forms listed in §4.2.1.1 for animate nouns, covering the deviation for masculine nouns (Acc=Gen) and the standard pattern for feminine nouns.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| брат | High (Core A1) | рідний брат, старший брат, мій брат |
+| сестра | High (Core A1) | рідна сестра, молодша сестра |
+| друг | High (Core A1) | найкращий друг, старий друг (old friend) |
+| мама | Very High | люблю маму, чекаю маму |
+| тато | Very High | бачу тата, знаю тата |
+| лікар | High (Professions) | чекати лікаря, викликати лікаря |
+
+## Cultural Hooks
+1. **Friend vs. Acquaintance**: The word `друг` implies a much deeper bond in Ukrainian than "friend" in English. It is reserved for people you trust explicitly ("soulmates"). Casual contacts are `знайомий`.
+2. **Diminutives**: Adult Ukrainians frequently use diminutive forms for parents (`матуся`, `татусь`) and siblings (`братик`, `сестричка`) within the family circle, indicating warmth and closeness.
+
+## Common Learner Errors
+1. **The Masculine Animate Trap**: `Я бачу *брат*` (Incorrect) → `Я бачу брата` (Correct). Learners often fail to apply the specific animate rule for masculine nouns, leaving them in Nominative like objects (`стіл`).
+2. **Feminine Overthinking**: `Я бачу *сестри*` (Incorrect) → `Я бачу сестру` (Correct). Learners wrongly generalize the "Accusative = Genitive" rule to feminine nouns, where it does NOT apply (Feminine Accusative is unique: -у/-ю).
+3. **Animal Animacy Confusion**: `Я маю *кіт*` (Incorrect) → `Я маю кота` (Correct). Learners forget that animals are grammatically "people" (animate).
+
+## Cross-References
+- Builds on: `a1-11` (The Accusative I - Things), `a1-05` (Genders & Nouns)
+- Prepares for: `a1-13` (The Locative - uses similar endings for some forms), `a1-32` (My Family - expands vocabulary)
+
+## Notes for Content Writing
+- **Scaffolding**: This is A1.2. Use clear English explanations for the "Animate Rule" logic.
+- **Visuals**: Use the "Heart Words" (Animate) vs "Stone Words" (Inanimate) metaphor suggested in the plan to make the grammatical category concrete.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Розминка (Warm-up)"
+  words: 300
+  points:
+  - "Введення метафори 'Живі слова' (Heart Words) проти 'Кам'яних слів' (Stone Words) для візуалізації категорії істот/неістот"
+  - "Контраст між Accusative I (things) та Accusative II (people) — чому граматика змінюється, коли ми говоримо про живих істот"
+  - "Посилання на Державний стандарт §4.2.1.1: компетенція розрізнення відмінкових форм для назв людей (син, тато, учитель, мама, сестра)"
+- section: "Презентація (Presentation)"
+  words: 650
+  points:
+  - "Логіка чоловічого роду: знахідний = родовий (Acc=Gen) — чоловічі назви істот 'жадібні' до закінчень, щоб відрізнятися від об'єктів (бачу сина, тата, учителя)"
+  - "Логіка жіночого роду: збереження стандартного закінчення знахідного відмінка (-у/-ю), ігноруючи правило 'Acc=Gen' (бачу маму, сестру)"
+  - "Тварини як люди: пояснення, що домашні улюбленці (кіт, пес) граматично є істотами і потребують закінчень знахідного-родового (бачу кота, пса)"
+  - "Специфіка м'якої та мішаної груп для назв професій (учителя, лікаря) згідно з параграфом §4.2.1.1"
+- section: "Культурний контекст (Cultural Context)"
+  words: 400
+  points:
+  - "Глибинне значення слова 'друг' в українській культурі — відмінність між близьким другом (soulmate) та просто знайомим (acquaintance)"
+  - "Експресивна роль демінутивів (пестливих форм) у сімейному колі — використання форм 'матуся', 'татусь', 'братик', 'сестричка' дорослими як знак тепла та близькості"
+  - "Ввічливе звертання та запитання про людей в українському соціумі: використання назв професій та імен"
+- section: "Типові помилки та практика (Common Errors and Practice)"
+  words: 450
+  points:
+  - "Learner error: 'The Masculine Animate Trap' — залишення назви істоти в називному відмінку (напр. 'Я бачу брат' замість правильного 'Я бачу брата')"
+  - "Learner error: 'Feminine Overthinking' — помилкове застосування правила Acc=Gen до жіночого роду (напр. 'Я бачу сестри' замість 'Я бачу сестру')"
+  - "Learner error: 'Animal Animacy Confusion' — сприйняття тварин як неістот через порівняння з іншими мовами (напр. 'Я маю кіт' замість 'Я маю кота')"
+  - "Трансформаційні вправи: перетворення речень з неістотами (бачу стіл) на речення з людьми (бачу студента)"
+- section: "Вироблення навичок та підсумок (Production and Summary)"
+  words: 200
+  points:
+  - "Опис своєї родини та друзів з використанням дієслів 'любити', 'знати', 'чекати' (Я люблю свою матусю і тата)"
+  - "Діалог-знайомство: обговорення друзів та колег (Ти знаєш мого найкращого друга Андрія?)"
+  - "Підсумковий чек-лист: коли Accusative дорівнює Genitive, а коли ні"
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "брат (brother) — рідний брат, старший/молодший брат; diminutive: братик (High frequency)"
+  - "сестра (sister) — рідна сестра, старша/молодша сестра; diminutive: сестричка (High frequency)"
+  - "друг (friend m.) — найкращий друг, вірний друг; implies deep trust/soulmate connection"
+  - "подруга (friend f.) — вірна подруга, давня подруга"
+  - "мама (mother) — люба мама, чекаю маму; diminutive: матуся (Very high frequency)"
+  - "тато (father) — бачу тата, знаю тата; diminutive: татусь (Very high frequency)"
+  - "лікар (doctor) — викликати лікаря, чекати лікаря; professions often follow the animate rule"
+  - "вчитель (teacher) — знати вчителя, бачу вчителя (State Standard §4.2.1.1 example)"
+  recommended:
+  - "кіт (cat) — grammatically animate (бачу кота); focus on Acc=Gen ending"
+  - "пес (dog) — grammatically animate (маю пса); irregular stem change (пес -> пса)"
+  - "студент (student) — знати студента, бачу студента"
+  - "колега (colleague) — чекати колегу; note: declines like feminine nouns"
+  - "сусід (neighbor) — знати сусіда, бачу сусіда"
+  - "дитина (child) — люблю дитину, бачу дитину"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (3862 chars)
+✅ Message sent to Claude (ID: 10056)
+✓ Message 10056 acknowledged
+   Auto-acknowledged reply #10056 (stdout delivery — no inbox accumulation)
+✓ Message 10053 acknowledged

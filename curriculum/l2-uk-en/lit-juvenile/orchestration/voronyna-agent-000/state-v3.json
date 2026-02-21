@@ -1,0 +1,13 @@
+{
+  "track": "lit-juvenile",
+  "slug": "voronyna-agent-000",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-20T23:20:26Z",
+      "task_id": "v3-voronyna-agent-000-pA",
+      "mode": "full"
+    }
+  }
+}

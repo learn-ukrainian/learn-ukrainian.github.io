@@ -1,0 +1,303 @@
+✅ Message sent to Gemini (ID: 12433) [auto-acked: self-addressed]
+✓ Message 12433 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12433...
+📨 Message #12433
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-kozatstvo-vytoky
+   Time: 2026-02-20T23:39:36.248693+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b2-hist-041
+level: B2-HIST
+sequence: 41
+slug: kozatstvo-vytoky
+version: '2.0'
+title: 'Козацтво: витоки'
+subtitle: Origins of Cossackdom
+content_outline:
+- section: 'Вступ: Дике поле як колиска свободи'
+  points:
+  - Географічне поняття Дикого поля — степова зона на південь від лінії Канів-Черкаси,
+    зона ризику та природних багатств
+  - Геополітичне розташування між християнським світом і Степом — [!context] Дике
+    поле не було пустелею, а «Великим Кордоном», де зустрічалися цивілізації
+  - Значення козацтва для сучасної української ідентичності — архетип свободи та опору,
+    центральний міф націєтворення
+- section: 'Читання: Генезис та уходництво'
+  points:
+  - Етимологія слова «козак» та його еволюція — тюркське «kazak» (вільна людина, вартовий),
+    вперше у Codex Cumanicus (XIII ст.)
+  - Феномен уходництва як економічна база — сезонні промисли (риба, мед), перетворення
+    на воїнів для захисту здобичі; [!history-bite] Козаки-«амфібії»
+  - Втеча від кріпацтва та соціальний протест — перші згадки (1489, 1492); «хліб козацький»
+    (слави і здобичі) як мотивація для шляхти
+- section: Козацький побут та військова організація
+  points:
+  - Формування куренів та принцип побратимства — [!culture] ритуал обміну хрестами,
+    зв'язок сильніший за кровний
+  - Військова тактика та озброєння (табір, чайки) — «рухома фортеця» з возів, маневрені
+    човни без кіля, тактика «галасу»
+  - Аскетизм побуту як необхідність виживання — [!quote] Боплан про витривалість до
+    голоду, спраги і спеки
+- section: Первинні джерела
+  points:
+  - Аналіз описів Гійома де Боплана — «Опис України» (1651) французького інженера;
+    погляд іноземця на «майстрів виживання»
+  - Документальні свідчення про перші козацькі атаки — скарга хана Менглі-Гірея (1492)
+    на пограбування корабля під Тягинею
+  - Лінгвістичний аналіз мови джерел — Літопис Самовидця як приклад козацького самоопису
+- section: Козацтво у геополітиці
+  points:
+  - 'Відносини з Кримським ханством: війна і торгівля — [!myth-buster] не лише війна,
+    а й ситуативні союзи та спільні походи'
+  - 'Політика Речі Посполитої: реєстр та контроль — Універсал Сигізмунда II Августа
+    (1572) про 300 козаків; конфлікт через «випищиків»'
+- section: Деколонізаційний погляд
+  points:
+  - Спростування міфу про «бандитизм» — [!decolonization] козацтво як полісоціальне
+    явище (шляхта, міщани), а не лише селянський бунт
+  - Козацтво як суб'єкт державотворення — самостійна дипломатія (з Імператором, Папою),
+    Дмитро Вишневецький та перша Січ (1550-ті)
+  - Сучасна інтерпретація спадщини — фундамент політичної культури (виборність, контрактові
+    відносини)
+vocabulary_hints:
+  required:
+  - уходник (frontier industrialist) — сезонний промисловий, що ставав воїном
+  - здобичник (booty seeker) — шукач «козацького хліба»
+  - 'ясир (captives) — context: slave trade raids by Tatars'
+  - реєстр (register) — список 1572 року, еліта війська
+  - Дике поле (Wild Fields) — Великий Кордон, frontier zone
+  - побратимство (brotherhood) — ritual kinship, exchange of crosses
+  - етимологія (etymology) — Turkic origin 'kazak', Codex Cumanicus
+  - кріпацтво (serfdom) — escape from serfdom vs attraction of freedom
+  recommended:
+  - промисел (industry/trade) — fishing, beekeeping, hunting
+  - ватага (band/group) — organized group of ukhodnyky
+  - шабля (sabre) — symbol of knightly status
+  - чайка (cossack boat) — maneuverable boat for river/sea raids
+activity_hints:
+- type: reading
+  focus: Аналіз описів Гійома де Боплана
+  source: Боплан, «Опис України»
+- type: essay-response
+  focus: Деколонізаційний аналіз витоків козацтва
+- type: critical-analysis
+  focus: Порівняння уходництва та кріпацтва
+focus: history
+pedagogy: seminar
+prerequisites:
+- Знання історії Великого князівства Литовського та Люблінської унії
+connects_to:
+- 'b2-hist-42: Запорізька Січ'
+- 'b2-hist-43: Дмитро Вишневецький'
+objectives:
+- Учень може пояснити етимологію терміна «козак» та його тюркське коріння
+- Учень може проаналізувати соціально-економічні причини виникнення козацтва, зокрема
+  роль уходництва
+- Учень може описати географічний контекст Дикого поля та його вплив на формування
+  козацького соціуму
+- Учень може оцінити деколонізаційну перспективу на козацтво як на самостійну політичну
+  силу
+grammar:
+- 'Історичний наратив: вживання минулого часу'
+- Пасивні конструкції в історичних описах
+- Складнопідрядні речення з підрядними причини та наслідку
+sources:
+- name: Гійом Левассер де Боплан, «Опис України»
+  url: http://litopys.org.ua/boplan/bop.htm
+  type: primary
+  notes: Ключове джерело XVII століття про побут та характер козаків
+- name: 'Ярослав Грицак, «Подолати минуле: глобальна історія України»'
+  url: https://shron1.chtyvo.org.ua/Hrytsak_Yaroslav/Podolaty_mynule_hlobalna_istoriia_Ukrainy.pdf
+  type: secondary
+  notes: Сучасний синтез історії України з акцентом на глобальних процесах
+register: публіцистичний
+phase: HIST.5 [Становлення козацтва]
+persona:
+  voice: Senior Professor of History
+  role: Runaway Serf
+word_target: 5000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Козацтво: витоки
+
+## Використані джерела
+1. [Енциклопедія історії України (history.org.ua)](http://resource.history.org.ua/) — Академічні статті про виникнення козацтва, Дмитра Вишневецького та перші писемні згадки.
+2. [Ізборник (litopys.org.ua)](http://litopys.org.ua/boplan/bop.htm) — Гійом Левассер де Боплан «Опис України» (першоджерело XVII ст.).
+3. [Енциклопедія Сучасної України (esu.com.ua)](https://esu.com.ua/) — Статті про етимологію слова «козак» та соціальну структуру раннього козацтва.
+4. [Studies.in.ua](https://studies.in.ua/) — Аналіз уходництва та економічних передумов виникнення козацтва.
+
+## Хронологія
+- кін. XIII ст.: Перша фіксація слова «козак» (kazak) у словнику Codex Cumanicus (значення: «варта», «вільна людина»).
+- 1489: Перша писемна згадка про українських козаків у «Хроніці» Марціна Бєльського (козаки як провідники польського війська на Поділлі).
+- 1492: Перший задокументований військовий виступ козаків — напад на турецьку галеру під Тягинею (скарга хана Менглі-Гірея).
+- 1553–1556: Будівництво Дмитром Вишневецьким («Байдою») замку-фортеці на острові Мала Хортиця — прототипу Запорозької Січі.
+- 5 червня 1572: Універсал короля Сигізмунда II Августа про створення реєстрового козацького війська (300 осіб).
+
+## Ключові факти та цитати
+- **Етимологія**: Тюркське слово *kazak* означало «вільна людина», «той, хто відбився від орди», а також «найманець», «вартовий».
+- **Уходництво**: Економічне підґрунтя козацтва. Сезонні промисли (рибальство, бортництво, полювання) у «Нічиїй землі» вимагали військової організації для захисту від татар. «Козацький хліб» — метафора здобичі та небезпечного заробітку.
+- **Цитата (Боплан)**: «Сотня цих козаків... не боїться тисячі поляків чи навіть тисячі татар». (Про військову майстерність).
+- **Цитата (Боплан)**: «Мало хто з козаків помирає від хвороби, хіба що в глибокій старості, бо більшість гине почесною смертю на війні».
+- **Цитата (Менглі-Гірей, 1492)**: «Прийшли дніпрові козаки і пограбували корабель твій під Тягинею». (Перша дипломатична згадка).
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ: Дике поле як колиска свободи": [!context] Дике Поле не було пусткою, а «Великим Кордоном» (Great Frontier), де стикалися цивілізації, подібно до американського Дикого Заходу, але на століття раніше.
+- Section "Читання: Генезис та уходництво": [!history-bite] Козаки-«амфібії»: уходники часто ховалися від татар під водою, дихаючи через очеретину, що шокувало європейських мандрівників.
+- Section "Козацький побут та військова організація": [!culture] Побратимство — ритуал обміну натільними хрестами, який робив чужих людей ріднішими за братів по крові (сакральний зв'язок).
+- Section "Козацький побут та військова організація": [!quote] Гійом де Боплан про витривалість козаків до холоду і голоду.
+- Section "Козацтво у геополітиці": [!myth-buster] Козаки не завжди воювали з татарами. Існували ситуативні союзи, спільна торгівля і навіть мовні запозичення (майдан, кобза, шаровари).
+- Section "Деколонізаційний погляд": [!decolonization] Козацтво — це не «селянський бунт» проти панів (радянський міф), а лицарський орден, до якого входила шляхта (Вишневецький, Сагайдачний), що будував власну державність.
+
+## Деколонізаційний контекст
+- **Imperial/Soviet myth**: Козаки — це «втікачі-кріпаки», «розбійники», «анархічна маса», яка прагнула «возз'єднання з Росією». Радянська історіографія маргіналізувала державницький аспект, зводячи все до класової боротьби.
+- **Ukrainian reality**: Козацтво — це полісоціальне явище (шляхта, міщани, селяни), яке перебрало на себе функцію захисту віри і краю, фактично замінивши еліту. Дмитро Вишневецький будував не «розбійницьке кубло», а форпост європейської цивілізації (дипломатія з Литвою, Москвою, Туреччиною). Козацька держава мала ознаки республіки.
+
+## Contested Terms (if applicable)
+| Concept | Imperial/Polish framing | Ukrainian (decolonized) framing |
+|---------|-------------------------|---------------------------------|
+| Козацькі виступи | Bunt (бунт), rebelia (заколот), swawola (свавілля) | Повстання, національно-визвольна боротьба, захист прав |
+| Козаки | Розбійники, холопи, чернь (в негативному сенсі) | Лицарі, захисники віри, політичний народ (нація) |
+| Дике Поле | Пустка, terra nullius (нічийна земля) | Великий Кордон, простір свободи і колонізації |
+
+## Section-Mapped Research Notes
+
+### Вступ: Дике поле як колиска свободи
+- **Географія**: Степова смуга на південь від лінії Канів-Черкаси. Багатющі ґрунти, риба, дичина, але постійна загроза від татарських чамбулів.
+- **Фронтир**: Це не кордон-лінія, а кордон-зона. Тут не діяли феодальні закони. «Людина з рушницею» ставала єдиним господарем своєї долі.
+- **Ідентичність**: Козак як архетип українця. Воля (свобода) як найвища цінність, вища за безпеку чи добробут.
+
+### Читання: Генезис та уходництво
+- **Етимологія**: Тюркське походження терміну незаперечне (Codex Cumanicus). Це вказує на глибокий зв'язок зі Степом.
+- **Уходництво**: Навесні ватаги йшли на «уходи» (промисли), восени поверталися в міста (Київ, Канів, Черкаси). З часом перестали повертатися, будуючи укріплені «січі» (засіки) для зимівлі.
+- **Соціальний склад**: Не лише селяни-втікачі. Шляхта йшла за здобиччю і славою, міщани — за прибутком. Втеча від кріпацтва стала масовою пізніше (після Литовського статуту 1588 р.).
+
+### Козацький побут та військова організація
+- **Побут**: Аскетизм. Відсутність жінок на Січі (у ранній період). Суворі покарання за крадіжку («киями») та пияцтво під час походу (смерть).
+- **Військо**:
+  - **Табір**: Рухома фортеця з возів, скріплених ланцюгами. Непробивна для татарської кінноти.
+  - **Чайки**: Безпалубні човни, обшиті очеретом (для плавучості). Маневрені, непомітні.
+  - **Галас**: Тактика раптового нападу з криками для деморалізації ворога.
+- **Побратимство**: Найвищий ступінь довіри. Побратими ділили майно, викупляли з полону, дбали про сім'ю загиблого.
+
+### Первинні джерела
+- **Боплан**: Французький інженер, служив польському королю. Його «Опис України» — це погляд західного європейця, який захоплюється «дикунами», що вміють виживати краще за будь-яку регулярну армію. Він детально описав вибори гетьмана, покарання, тактику бою.
+- **1492 рік**: Символічна дата народження козацтва як військової сили. Атака на турецький корабель — це вихід на міжнародну арену (хоч і через скандал).
+
+### Козацтво у геополітиці
+- **Крим**: Складні стосунки. Не вічна війна. Торгівля (сіль, риба), обмін полоненими, спільні походи проти Москви чи Молдови. Козаки часто наймалися до ханів.
+- **Річ Посполита**: Спроба взяти стихію під контроль. Реєстр 1572 року (300 козаків) — це визнання козацтва як стану, але й спроба розколоти його на «лояльних» (реєстрових) і «бандитів» (випищиків). Це заклало міну уповільненої дії.
+
+### Деколонізаційний погляд
+- **Суб'єктність**: Козаки самі вели дипломатію. Дмитро Вишневецький їздив до Івана Грозного, до турецького султана, пропонуючи свої послуги як суверенний володар.
+- **Державотворення**: Запорозька Січ — це не просто військовий табір, а християнська козацька республіка з прямим народоправством (Ради). Це фундамент української демократичної традиції, який відрізняє Україну від монархічної/авторитарної Росії.
+- **Шляхетський вплив**: Ранні ватажки — князі та шляхта (Вишневецький, Ружинські, Острозькі). Це руйнує міф про «мужицьке» походження руху.
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12466)
+✓ Message 12433 acknowledged
+✓ Message 12466 acknowledged

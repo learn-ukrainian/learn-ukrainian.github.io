@@ -2,12 +2,5 @@
   "track": "c1-bio",
   "slug": "yuriy-lvovych",
   "mode": "v3",
-  "phases": {
-    "v3-A": {
-      "status": "complete",
-      "ts": "2026-02-19T11:54:01Z",
-      "task_id": "v3-yuriy-lvovych-pA",
-      "mode": "meta-only"
-    }
-  }
+  "phases": {}
 }

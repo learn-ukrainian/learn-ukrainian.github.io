@@ -1,0 +1,106 @@
+module: c1-033
+level: C1
+sequence: 33
+slug: case-studies
+version: '2.0'
+title: Практичні кейси
+content_outline:
+- section: Вступ — Метод кейсів
+  points:
+  - Що таке кейс-метод
+  - Як аналізувати кейси
+  - Критерії оцінювання
+- section: Кейс 1 — Мовна політика
+  points:
+  - Опис ситуації
+  - Чинники та контекст
+  - Аналіз і дискусія
+  - Пропозиції рішень
+- section: Кейс 2 — Медіааналіз
+  points:
+  - Новинний матеріал
+  - Виявлення маніпуляцій
+  - Порівняння джерел
+- section: Кейс 3 — Діалект чи суржик?
+  points:
+  - Зразок мовлення
+  - Лінгвістичний аналіз
+  - Соціальний контекст
+- section: Кейс 4 — Політичний дискурс
+  points:
+  - Аналіз промови
+  - Риторичні прийоми
+  - Критична оцінка
+- section: Груповий проєкт
+  points:
+  - Командна робота
+  - Підготовка презентації
+  - Обговорення результатів
+- section: Підсумок
+  points:
+  - Аналітичні навички
+  - Зворотний зв'язок
+  - Подальший розвиток
+vocabulary_hints:
+  required:
+  - аналіз (analysis)
+  - дослідження (research)
+  - випадок (case)
+  - ситуація (situation)
+  - контекст (context)
+  - чинник (factor)
+  - причина (cause)
+  - наслідок (consequence)
+  - рішення (solution)
+  - висновок (conclusion)
+  recommended:
+  - рекомендація (recommendation)
+  - оцінка (evaluation)
+  - критика (critique)
+  - порівняння (comparison)
+  - узагальнення (generalization)
+activity_hints:
+- type: essay-response
+  focus: Case study analysis report
+- type: quiz
+  focus: Case analysis methodology
+  items: 15+
+- type: match-up
+  focus: Problem → solution strategy
+  items: 12+
+- type: fill-in
+  focus: Analytical vocabulary
+  items: 12+
+- type: cloze
+  focus: Case study discourse
+  items: 10+
+- type: group-sort
+  focus: Classify factors and causes
+  items: 12+
+focus: practice
+prerequisites:
+- c1-25 to c1-31 (Sociolinguistic knowledge)
+- c1-32 (Professional Scenarios)
+connects_to:
+- c1-34 (C1.2 Review)
+- c1-35 (C1.2 Checkpoint)
+- c1-19 (Article Critique skills)
+module_type: practice
+sources:
+- name: Case Study Methodology
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Academic case study standards
+- name: Ukrainian Sociolinguistic Studies
+  url: https://mova.info/
+  type: secondary
+  notes: Real-world language situations
+immersion: 100% Ukrainian
+phase: C1.2 Professional Communication
+objectives:
+- Understand and apply практичні кейси
+- Analyze and evaluate метод кейсів
+persona:
+  voice: Senior Specialist
+  role: Бізнес-консультант
+word_target: 4000

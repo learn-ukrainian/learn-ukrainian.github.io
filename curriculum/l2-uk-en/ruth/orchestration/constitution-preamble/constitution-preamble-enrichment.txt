@@ -1,0 +1,206 @@
+✅ Message sent to Gemini (ID: 12923) [auto-acked: self-addressed]
+✓ Message 12923 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12923...
+📨 Message #12923
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-constitution-preamble
+   Time: 2026-02-20T23:43:08.043569+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 86
+module: ruth-086
+module_number: 86
+slug: constitution-preamble
+title_uk: 'Конституція: Преамбула'
+title_en: The Constitution
+phase: 4
+phase_id: cossack-word
+phase_name: Cossack Word
+focus: Historical justification of Cossack rights
+content_outline:
+- section: Вступ
+  description: Introduction to The Constitution
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Baroque Scholar
+  role: General Pysar
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Constitution Preamble
+
+## Використані джерела
+1. [Конституція Пилипа Орлика (текст староукраїнською та сучасною мовами)](http://litopys.org.ua/old18/old18_07.htm) — повний текст пам'ятки на сайті "Ізборник".
+2. [Омелян Пріцак. Пилип Орлик. Конституція 1710 р.](http://litopys.org.ua/coss4/orlyk.htm) — фундаментальний аналіз історичного та політичного контексту.
+3. [Енциклопедія історії України: Конституція Пилипа Орлика](http://www.history.org.ua/?termin=Konstytutsiia_Pylypa_Orlyka) — академічна стаття про значення документу.
+4. [Через "хозарський міф" до націєтворення](https://localhistory.org.ua/rubrics/history/cherez-khozarskii-mif-do-notsietvorennia/) — аналіз ідеологічного підґрунтя преамбули.
+
+## Хронологія
+- 1648: Початок Визвольної війни під проводом Богдана Хмельницького (згадується як відновлення свобод).
+- 1654: Укладення союзу з Московською державою (трактується як добровільний акт, згодом порушений Москвою).
+- 1708: Перехід гетьмана Івана Мазепи на бік Карла XII (початок відкритого розриву з Москвою).
+- 1709 (27 червня): Поразка під Полтавою, відступ козаків у Бендери.
+- 1710 (5 квітня): Ухвалення "Пактів і Конституцій" у Бендерах під час обрання Пилипа Орлика гетьманом.
+
+## Ключові факти та цитати
+- **Цитата про тиранію Москви (староукраїнська)**: «Але кгди по смерти... гетмана Богдана Хмелницкого, Панство Московское, розными вынайденими способами, намагалося праве и волности войсковыє, нюю ж потверженные, нарушити, и внивец обернути, а народ волный козацкий, нюю николи не завойований, ярмом неволницким упрягти».
+- **Хозарський міф**: Преамбула виводить родовід козаків від "войовничого і стародавнього народу Хозарського", щоб обґрунтувати незалежність від "руської" спадщини, на яку претендувала Москва, та право на союз із Кримом.
+- **Титулатура**: У документі народ іменується "Gens Roxolana" (Роксоланський народ) або "Народ Козацький", підкреслюючи його шляхетність і давнину.
+- **Божественне право**: Вступ починається з теологічного обґрунтування: Бог підносить і карає народи за гріхи, що пояснює занепад Русі та нинішні випробування.
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ: Природа документу": [!history-bite] — Про термін "Конституція" (Constitutio), який у Польщі означав сеймову ухвалу, а тут набув значення фундаментального закону держави.
+- Section "Основний матеріал: I — Хозарський міф": [!myth-buster] — "Хозарське походження" не було історичним фактом, а бароковим політичним інструментом для легітимізації незалежності від Москви (ми не "спільна Русь", ми окремий давній народ).
+- Section "Основний матеріал: II — Золота доба і занепад": [!context] — Барокове сприйняття історії як циклічного процесу (Бог карає народи за гріхи і винагороджує за покаяння).
+- Section "Основний матеріал: III — Обвинувачення Москви": [!quote] — Наведення оригінального тексту про "ярмо невільниче", яке Москва накинула на "народ вільний".
+- Section "Основний матеріал: IV — Шведський протекторат": [!decolonization] — Спростування радянського міфу про "зраду Мазепи". Преамбула трактує союз зі Швецією як вимушений крок для захисту законних прав.
+- Section "Підсумок: Політичний заповіт": [!culture] — Латинська версія документу як доказ європейської політичної культури козацької старшини (на відміну від московського "холопства").
+
+## Деколонізаційний контекст
+- **Imperial/Soviet myth**: Конституція Орлика — це незначний документ купки емігрантів-зрадників ("мазепинців"), інспірований шведськими інтригами.
+- **Ukrainian reality**: Це перший конституційний акт, що юридично обґрунтував вихід України з-під протекторату Москви через порушення останньою васальних зобов'язань (права на опір тиранії).
+- **Термінологія**: Важливо вживати "Московська держава" (як у тексті), а не "Росія" (назва ще не була офіційною), і "Військо Запорозьке" як назва держави.
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| Хозарське походження | Історична нісенітниця, вигадка | Політична ідеологема для утвердження суверенітету (окремішності від Московії) |
+| Мазепинці | Зрадники "спільної вітчизни" | Борці за конституційні права та незалежність |
+| Шведський союз | Підступна інтрига Карла XII | Легітимний міжнародний альянс для захисту від агресії |
+
+## Section-Mapped Research Notes
+
+### Вступ: Природа документу
+Бендери як місце народження першої української конституції. Дві мовні версії: староукраїнська для внутрішнього вжитку та латинська для європейської дипломатії. Унікальність форми: договір між володарем і народом.
+
+### Основний матеріал: I — Хозарський міф та Божественне право
+Початок "In nomine...". Теорія "Козаки-Хозари". Чому саме хозари? Щоб бути рівними шляхті (сарматизм) та мати право на спадщину Криму, і головне — не мати нічого спільного з Москвою. Бог як вершитель долі народів ("Бог... народи і держави то підвищує... то упокорює").
+
+### Основний матеріал: II — Історичний наратив: від князів до Хмельницького
+Прийняття християнства з Константинополя (наголос на юрисдикції Царгорода). Занепад через гріхи предків і польське панування. Поява Богдана Хмельницького як "Мойсея", що визволив народ від "польського рабства".
+
+### Основний матеріал: III — Обвинувачення Москви: Тиранія замість протекції
+Ключова частина. Переяславська рада як добровільний акт вільного народу. Зрада Москви: порушення прав, насадження воєвод, здирства. Юридичне обґрунтування права на повстання (Jus resistendi): якщо сюзерен порушує угоду, васал звільняється від присяги.
+
+### Основний матеріал: IV — Шведський альянс та Кримське братерство
+Виправдання дій Мазепи ("ревнуючи про цілість прав"). Карл XII як "Найясніший Протектор". Обґрунтування союзу з Кримським ханством через спільне (хозарське) походження та "закони близького сусідства".
+
+### Підсумок: Спадщина правової думки
+Значення преамбули як маніфесту державної незалежності. Тяглість української політичної думки. Чому цей текст важливий сьогодні (право на опір, договірна природа влади).
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12957)
+✓ Message 12923 acknowledged
+✓ Message 12957 acknowledged

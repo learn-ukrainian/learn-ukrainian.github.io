@@ -5,28 +5,28 @@
   "phases": {
     "v3-A": {
       "status": "complete",
-      "ts": "2026-02-19T22:43:25Z",
-      "task_id": "v3-food-and-shopping-pA",
-      "mode": "full"
+      "ts": "2026-02-20T22:23:46Z",
+      "note": "migrated-from-v2"
     },
     "v3-B": {
       "status": "complete",
-      "ts": "2026-02-19T22:43:25Z"
+      "ts": "2026-02-20T22:23:46Z",
+      "note": "migrated-from-v2"
     },
     "v3-C": {
       "status": "complete",
-      "ts": "2026-02-19T22:43:26Z",
-      "note": "adopted-existing"
+      "ts": "2026-02-20T22:23:46Z",
+      "note": "migrated-from-v2"
     },
     "v3-audit": {
       "status": "complete",
-      "ts": "2026-02-19T22:43:26Z",
-      "attempts": 1
+      "ts": "2026-02-20T22:23:46Z",
+      "note": "migrated-from-v2"
     },
     "v3-D": {
       "status": "complete",
-      "ts": "2026-02-19T22:44:46Z",
-      "attempts": 1
+      "ts": "2026-02-20T22:23:46Z",
+      "note": "migrated-from-v2"
     }
   }
 }

@@ -6,26 +6,61 @@ version: '2.0'
 title: Класична музика III — Модернізм і сучасність
 subtitle: Classical Music III — Modernism & Contemporary
 content_outline:
-- section: Розминка — Українська музика XX-XXI ст.
+- section: 'Вступ: Естетика українського модернізму (Introduction: Aesthetics of Ukrainian
+    Modernism)'
+  words: 500
   points:
-  - Від пізнього романтизму до авангарду
-  - Вплив радянських репресій на розвиток музики
-  - Сучасна українська класична музика на світовій сцені
-- section: Content Areas
+  - 'The role of the Philharmonic curator in preserving national heritage: introducing
+    the transition from late Romanticism to early 20th-century experimentation.'
+  - Linguistic distinction between «модерна музика» (Modernist era music) and «сучасна
+    музика» (contemporary/living music) — addressing a common learner confusion.
+  - Overview of the Kyivan Avant-garde as a phenomenon of European importance, mapping
+    the shift from folklore roots to abstract symphonism.
+- section: Музичний авангард та лещата цензури (Musical Avant-garde and the Vise of
+    Censorship)
+  words: 1000
   points:
-  - '**Борис Лятошинський** (1895-1968): Симфонії, "Золотий обруч" — greatest Ukrainian
-    symphonist'
-  - 'Левко Ревуцький: Симфонії, концерти — major Soviet-era voice'
-  - '**Мирослав Скорик** (1938-2020): **"Мелодія"**, film scores — iconic contemporary
-    composer'
-  - 'Валентин Сильвестров: "Тихі пісні" — avant-garde master'
-  - 'Євген Станкович: Симфонії, балети — living legend'
-- section: Практика — сучасна класика
+  - 'Boris Lyatoshynsky as the father of Ukrainian symphonism: analyzing Symphony
+    No. 3 ''Peace Shall Defeat War'' and the tragic narrative of its forced revision
+    by Soviet censors.'
+  - 'Case study: Levko Revutsky and the challenge of maintaining artistic integrity
+    within the Soviet cultural framework — using ''semantic nuance'' markers (hedging)
+    to discuss composers'' hidden intents.'
+  - 'Technical vocabulary of the score: defining «партитура» and «дисонанс» in the
+    context of modernist complexity and ideological rejection of ''formalism''.'
+- section: 'Постаті шістдесятників: від неофольклоризму до тиші (Figures of the Sixtiers:
+    From Neofolklorism to Silence)'
+  words: 1000
   points:
-  - Прослухати "Мелодію" Скорика — описати емоційний вплив
-  - Порівняти Сильвестрова та західних мінімалістів
-  - Написати рецензію на сучасний український концерт
-  - Обговорити майбутнє української класичної музики
+  - 'The concept of «неофольклоризм» (neofolklorism): how composers rediscovered folk
+    roots through a modernist lens.'
+  - 'Yevhen Stankovych''s folk-opera ''When the Fern Blooms'': the history of its
+    1978 ban and its status as a symbol of repressed identity (Standard §3.4 compliance
+    regarding theater/festivals).'
+  - 'Valentin Silvestrov and ''Quiet Songs'': exploring the philosophy of silence
+    and the transition from avant-garde radicalism to ''metamusic''.'
+- section: 'Сучасна класика: між традицією та глобальною сценою (Contemporary Classics:
+    Between Tradition and the Global Stage)'
+  words: 800
+  points:
+  - 'Myroslav Skoryk and the iconic ''Melody'': from film score to spiritual anthem
+    — discussing its emotional impact and frequent performance at state events.'
+  - 'Analysis of contemporary Ukrainian classical music in the global context: how
+    modern composers represent Ukraine at international festivals and philharmonic
+    halls.'
+  - 'The lexicon of the Philharmonic: describing the architecture of a concert, the
+    role of the conductor, and the internal structure of a performance.'
+- section: 'Практика: Майстерність музичної рецензії (Practice: Mastery of Musical
+    Review)'
+  words: 700
+  points:
+  - 'Correcting the learner error: using «частина» instead of «рух» when referring
+    to movements of a symphony or concerto.'
+  - 'Writing workshop: ''Impression from the concert'' — drilling the correct prepositional
+    usage «враження від концерту» (correcting the common «враження про» error).'
+  - 'Developing the register of academic critique: using sophisticated collocations
+    to describe a ''complex score'' («складна партитура») and ''resolving dissonance''
+    («розв''язати дисонанс»).'
 focus: fine-arts
 pedagogy: CBI
 objectives:
@@ -40,3 +75,26 @@ persona:
   voice: Senior Specialist
   role: Куратор філармонії
 word_target: 4000
+vocabulary_hints:
+  required:
+  - модернізм (modernism) — український модернізм, епоха модернізму; High (Academic)
+    register
+  - авангард (avant-garde) — київський авангард, музичний авангард; specifically the
+    'Sixtiers' (шістдесятники) generation
+  - 'симфонія (symphony) — третя симфонія, симфонічний оркестр; note: use «частина»
+    for movements'
+  - партитура (score) — читати партитуру, оркестрова партитура; professional music
+    terminology
+  - дисонанс (dissonance) — звуковий дисонанс, розв'язати дисонанс; also used figuratively
+    for cognitive dissonance
+  - неофольклоризм (neofolklorism) — хвиля неофольклоризму, риси неофольклоризму;
+    specialized art-history term
+  recommended:
+  - частина (movement) — used for symphonies/concertos; avoids the error of using
+    «рух»
+  - враження від (impression of/from) — mandatory prepositional phrase; avoids the
+    error «враження про»
+  - сучасна (contemporary) — relating to living composers; distinct from «модерна»
+    (Modernist era)
+  - шістдесятники (Sixtiers) — cultural generation of the 1960s who revitalized Ukrainian
+    art

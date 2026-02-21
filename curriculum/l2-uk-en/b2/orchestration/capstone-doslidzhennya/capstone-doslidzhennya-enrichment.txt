@@ -1,0 +1,284 @@
+✅ Message sent to Gemini (ID: 10629) [auto-acked: self-addressed]
+✓ Message 10629 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10629...
+📨 Message #10629
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-capstone-doslidzhennya
+   Time: 2026-02-20T20:45:58.274420+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b2-81
+level: B2
+sequence: 81
+slug: capstone-doslidzhennya
+version: '2.0'
+title: 'Capstone: Дослідження'
+subtitle: 'Capstone: Research'
+content_outline:
+- section: Огляд — Етап написання
+  points:
+  - Від плану-проспекту (М79) до повного тексту
+  - Стратегії написання — від чернетки до фіналу
+  - Управління часом та дедлайнами
+- section: Написання вступу
+  points:
+  - Формулювання проблеми та актуальності
+  - Чітка теза — що ви будете доводити
+  - Огляд структури роботи
+  - Визначення ключових термінів
+- section: Основна частина
+  points:
+  - Розгортання аргументів згідно з планом
+  - Інтеграція джерел (цитування, парафраз, узагальнення)
+  - Логічні переходи між абзацами та розділами
+  - Баланс опису, аналізу та власних висновків
+- section: Висновки
+  points:
+  - Узагальнення основних тверджень
+  - Відповідь на дослідницьке питання
+  - Ширші імплікації та перспективи
+  - Чого НЕ робити у висновках
+- section: Редагування та оформлення
+  points:
+  - Самоперевірка змісту — логіка, повнота, точність
+  - Мовне редагування — граматика, стиль, лексика
+  - Оформлення — структура, цитати, бібліографія
+  - Peer review — зворотній зв'язок від колег
+- section: Підготовка до здачі
+  points:
+  - Контрольний список готовності тексту
+  - Формат подання — електронний/друкований
+  - Підготовка до презентації (М82)
+focus: project
+pedagogy: CBI
+objectives:
+- Select a research topic for Capstone Project
+- Gather and evaluate sources
+- Create a detailed research outline
+grammar:
+- Research methodology
+- Formulating hypotheses
+phase: B2.4 Skills & Capstone
+vocabulary_hints:
+  required:
+  - термін (term)
+  - поняття (concept)
+  - процес (process)
+  - метод (method)
+  recommended:
+  - аналіз (analysis)
+  - синтез (synthesis)
+  - дослідження (research)
+activity_hints:
+- type: reading
+  focus: Аналіз тексту
+  items: 4
+- type: essay-response
+  focus: Практичне застосування
+- type: true-false
+  focus: Перевірка розуміння
+  items: 8
+persona:
+  voice: Professional Language Coach
+  role: Grant Manager (Грантовий менеджер)
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Capstone: Дослідження
+
+## State Standard Reference
+§1.3.1.1: "Особа вміє: написати доповідь, твір чи повідомлення з елементами роздуму на обрану тему відповідно до складеного плану... узагальнювати інформацію, отриману з різних джерел, та відтворювати її на письмі; написати повідомлення з розвиненою аргументацією..."
+Alignment: This module directly addresses the B2 requirement for synthesizing information from multiple sources and writing argumentative texts (reports/essays) based on a plan.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| **Дослідження** | High (Academic) | проводити ~, наукове ~, об'єкт/предмет ~, мета ~, результати ~ |
+| **Джерело** | High (General/Acad) | першоджерело, надійне ~, посилання на ~, список використаних джерел |
+| **Аналіз** | High (Academic) | критичний ~, порівняльний ~, глибокий ~, піддати ~у, на основі ~у |
+| **Висновок** | High (Academic) | дійти ~у (NOT прийти до), зробити ~, головний ~, логічний ~, підсумовуючи |
+| **Теза** | Medium (Academic) | формулювати ~у, аргументувати ~у, захищати ~у, основна ~ |
+| **Аргумент** | Medium (Academic) | переконливий ~, наводити ~и, вагомий ~, контраргумент |
+
+## Cultural Hooks
+1. **Ivan Puluj (Іван Пулюй)**: Constructed a cathode-ray tube 14 years before Roentgen and took the first X-ray of a human skeleton. His contribution was overshadowed, highlighting the importance of publishing and attribution in research.
+2. **Maryna Viazovska (Марина В'язовська)**: 2022 Fields Medal winner (second woman in history) for solving the sphere-packing problem in 8 dimensions. A modern example of world-class Ukrainian research.
+3. **Agapuit of Pechersk (Агапіт Печерський)**: Considered the first "doctor-researcher" of Kyivan Rus (11th century), using observational methods to treat patients, bridging faith and early empirical medicine.
+
+## Common Learner Errors
+1. **Calques from English/Russian**: "прийти до висновку" (Error) → **дійти висновку** (Correct). "В якості прикладу" (Error) → **Як приклад / Наприклад** (Correct).
+2. **Improper Passive Voice**: "Було зроблено аналіз" (Weak/Passive) → **Ми проаналізували / Аналіз показав** (Active/Agency). Ukrainian scientific style prefers active constructions or -но/-то forms over reflexive passives.
+3. **Pleonasms**: "головний пріоритет" (Error) → **пріоритет**; "перша прем'єра" → **прем'єра**. In research writing, precision is key.
+4. **Dangling Participles**: "Читаючи статтю, виникло питання" (Error - who read?) → **Коли я читав статтю, виникло питання** (Correct).
+
+## Cross-References
+- **Builds on**: M79 (Writing a Prospectus), M10/M30 (Passive Voice & Participles), M41-M70 (Phraseology).
+- **Prepares for**: M82 (Project Presentation), M94 (Final Exam), C1 Academic Writing.
+
+## Notes for Content Writing
+- **Tone**: Formal, academic, but clear. Avoid overly bureaucratic language ("канцелярит").
+- **Agency**: Emphasize that *researchers* do things, not just "things happen". Use "дослідники вважають", "автор стверджує" rather than "вважається".
+- **Structure**: Strongly enforce the Introduction-Body-Conclusion structure described in the outline.
+- **Citation**: Briefly explain *how* to cite (introductory phrases like "За словами...", "Як зазначає...", "На думку...") without getting bogged down in specific style guides (APA/MLA) unless necessary for the genre.
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Огляд: Етап написання (Overview: The Writing Phase)"
+  words: 600
+  points:
+  - "Перехід від плану-проспекту (М79) до повного тексту: стратегії розгортання аргументації згідно з вимогами Держстандарту §1.3.1.1."
+  - "Історичний контекст: Іван Пулюй (Ivan Puluj) та важливість публікації результатів — як конструктор катодної трубки втратив пріоритет у відкритті рентгенівських променів через зволікання."
+  - "Управління часом та етапність: від чернетки до фінального редагування."
+- section: "Написання вступу (Writing the Introduction)"
+  words: 600
+  points:
+  - "Формулювання проблеми та актуальності: як обґрунтувати вибір теми науковим стилем."
+  - "Чітка теза (thesis) та визначення ключових термінів: сучасний приклад Марини В'язовської (Fields Medal 2022) та її прориву в математичних дослідженнях."
+  - "Огляд структури роботи: логічна карта майбутнього дослідження."
+- section: "Основна частина (The Main Body)"
+  words: 1000
+  points:
+  - "Інтеграція джерел: використання вставних конструкцій для цитування та парафразу («За словами...», «Як зазначає...», «На думку...»)."
+  - "Спадщина дослідника: Агапіт Печерський як перший лікар-дослідник Київської Русі — поєднання спостереження та ранньої емпіричної медицини."
+  - "Мовна агентивність: перевага активних конструкцій («Ми проаналізували») або безособових форм на -но/-то над пасивними («Було зроблено аналіз»)."
+- section: "Висновки (Conclusions)"
+  words: 600
+  points:
+  - "Узагальнення основних тверджень та відповідь на дослідницьке питання."
+  - "Культура мовлення: типова помилка «прийти до висновку» (калька) та вживання нормативного «дійти висновку»."
+  - "Ширші імплікації: як висновки впливають на подальші перспективи дослідження."
+- section: "Редагування та оформлення (Editing and Formatting)"
+  words: 800
+  points:
+  - "Академічна точність: усунення плеоназмів (напр. «головний пріоритет», «перша прем'єра») та канцеляриту."
+  - "Синтаксична норма: виправлення помилок із дієприслівниковими зворотами (неправильно: «Читаючи статтю, виникло питання»)."
+  - "Оформлення списку використаних джерел та посилань: точність бібліографічного опису."
+- section: "Підготовка до здачі (Preparation for Submission)"
+  words: 400
+  points:
+  - "Контрольний список готовності тексту: логіка, повнота та відповідність тезі."
+  - "Практичний дриль: заміна кальки «в якості прикладу» на правильні форми «як приклад» або «наприклад»."
+  - "Зв'язок із майбутнім: підготовка написаного звіту до усної презентації проєкту (М82)."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "дослідження (research) — проводити дослідження, наукове ~, об'єкт/предмет ~, мета ~, результати ~"
+  - "джерело (source) — першоджерело, надійне ~, посилання на ~, список використаних джерел"
+  - "аналіз (analysis) — критичний ~, порівняльний ~, глибокий ~, піддати аналізу, на основі аналізу"
+  - "висновок (conclusion) — дійти висновку (not прийти до), зробити ~, головний ~, логічний ~, підсумовуючи"
+  recommended:
+  - "теза (thesis/proposition) — формулювати тезу, аргументувати ~у, захищати ~у, основна теза"
+  - "аргумент (argument) — переконливий ~, наводити аргументи, вагомий ~, контраргумент"
+  - "термін (term) — визначати ~, ключовий ~, вузькоспеціальний ~"
+  - "поняття (concept) — апарат понять, базове ~, розмежування понять"
+  - "актуальність (relevance) — обґрунтувати ~, наукова ~, соціальна ~"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (3477 chars)
+✅ Message sent to Claude (ID: 10636)
+✓ Message 10636 acknowledged
+   Auto-acknowledged reply #10636 (stdout delivery — no inbox accumulation)
+✓ Message 10629 acknowledged

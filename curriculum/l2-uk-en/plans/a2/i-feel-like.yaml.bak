@@ -1,0 +1,84 @@
+module: a2-30
+level: A2
+sequence: 30
+slug: i-feel-like
+version: '2.0'
+title: I Feel Like...
+subtitle: Physical and Emotional States
+content_outline:
+- section: Introduction / Вступ
+  points:
+  - 'The difference between ''Who I am'' and ''How I feel'' — explicit contrast table
+    to prevent learner error: ''Я холодний'' (I am a cold person) vs ''Мені холодно''
+    (I feel cold); learner error: confusing personal quality (adjective) with temporary
+    state (adverb)'
+  - 'The Dative logic: It is cold to me — aligns with State Standard §4.2.2.3 on subjective
+    states and impersonal constructions (Мені не спиться)'
+- section: Presentation / Презентація
+  points:
+  - 'Physical States: Мені жарко, мені холодно, мені боляче — collocations: ''мені
+    стало холодно'', ''мені боляче''; learner error: ''Я гарячий'' (sexual connotation)
+    vs ''Мені жарко'''
+  - 'Emotional States: Мені сумно, мені весело, мені нудно — collocations: ''нам весело'',
+    ''мені сумно'', ''стало сумно'' (change of state)'
+  - 'Psychological Reflexives: Я хвилююся, я боюся, я тішуся — contrast structure:
+    ''я боюся'' (Nominative subject) vs ''мені страшно'' (Dative state)'
+  - 'Distinction: Радий (Glad) vs Щасливий (Happy) — distinguish ''радий'' (short
+    adj, agrees with gender: я радий/рада) vs ''щасливий'' (long adj, deep feeling)
+    vs ''мені весело'' (adverbial state)'
+  - 'Describing Health and Comfort — cultural hook: Meteosensitivity (Метеозалежність)
+    and complaints about ''magnetic storms'' (магнітні бурі) as a socially acceptable
+    conversation starter'
+- section: Practice / Практика
+  points:
+  - 'Dative conversion drills — focus on correcting ''Вона сумно'' to ''Їй сумно'';
+    drill pronoun mapping: я→мені, ти→тобі, він→йому, вона→їй'
+  - 'Emotional reaction role-play — scenario: reacting to bad weather or unexpected
+    news using ''мені...'''
+- section: Dialogues / Діалоги
+  points:
+  - 'Comforting a friend or complaining about the weather/health — include cultural
+    proverb: ''Ломить руки, або коліна – буде погоди переміна''; cultural note: complaining
+    about health is a bonding activity'
+focus: vocabulary
+pedagogy: PPP
+objectives:
+- Learner can describe physical states (hot, cold, painful)
+- Learner can describe emotional states (sad, happy, bored)
+- Learner can ask others about their feelings
+- Learner can distinguish between personal traits and temporary states
+module_type: vocabulary
+sources:
+- name: Ukrainian State Standard 2024 - States and Emotions
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Standards for expressing subjective physical and mental states at A2
+- name: Psychology of Language - Slavic Subjective Dative
+  url: https://uk.wikipedia.org/wiki/Безособові_речення
+  type: reference
+  notes: Syntax of impersonal sentences for expressing feelings
+immersion: 60-75% Ukrainian
+phase: A2.2
+persona:
+  voice: Encouraging Cultural Guide
+  role: Melancholy Poet
+vocabulary_hints:
+  required:
+  - 'холодно (cold/coldly) — ''мені холодно'' (I feel cold), ''надворі холодно'' (it
+    is cold outside); antonym: жарко'
+  - 'жарко (hot/hotly) — ''мені жарко'' (I feel hot); warning: do not use ''я гарячий'''
+  - 'сумно (sad/sadly) — ''мені сумно'' (I feel sad); collocation: ''стало сумно''
+    (became sad)'
+  - весело (fun/merrily) — 'нам весело' (we are having fun), 'проводити час весело'
+    (to have a fun time)
+  - боляче (painfully/hurts) — 'мені боляче' (it hurts me), 'робити боляче' (to hurt
+    someone)
+  - мені (to me) — Dative case marker for subjective states; often the first word
+    in the sentence
+  recommended:
+  - 'радий (glad) — short adjective, agrees with gender (я радий/рада); context: situational
+    gladness'
+  - щасливий (happy) — long adjective describing a permanent trait or deep feeling
+  - нудно (boring/bored) — 'мені нудно' (I am bored); distinct from 'нудний' (boring
+    person/thing)
+word_target: 3000

@@ -1,0 +1,278 @@
+✅ Message sent to Gemini (ID: 12521) [auto-acked: self-addressed]
+✓ Message 12521 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12521...
+📨 Message #12521
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-professional-portfolio
+   Time: 2026-02-20T23:40:33.486648+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-pro-46
+level: C1-PRO
+sequence: 46
+slug: professional-portfolio
+version: '2.0'
+title: Професійне портфоліо
+subtitle: Professional Portfolio
+content_outline:
+- section: Розминка — Портфоліо як інструмент кар'єри
+  points:
+  - Що таке професійне портфоліо та навіщо воно потрібне
+  - 'Типи портфоліо: академічне, професійне, творче'
+  - Українськомовне портфоліо як конкурентна перевага
+- section: Структура портфоліо
+  points:
+  - Обов'язкові елементи професійного портфоліо
+  - Вступна сторінка та професійне резюме
+  - 'Розділ проєктів: як презентувати досвід'
+  - Рекомендації та відгуки
+- section: Зразки робіт
+  points:
+  - Відбір найкращих зразків для портфоліо
+  - Опис проєктів та своєї ролі в них
+  - Візуалізація результатів та досягнень
+  - Адаптація зразків для різних позицій
+- section: Цифрове портфоліо
+  points:
+  - Платформи для створення портфоліо (GitHub, Behance, особистий сайт)
+  - SEO-оптимізація портфоліо українською
+  - Інтеграція з LinkedIn та іншими платформами
+  - Підтримка та оновлення портфоліо
+- section: Зразки елементів портфоліо
+  points:
+  - Зразок професійного резюме українською
+  - Приклад опису проєкту для портфоліо
+  - Шаблон сторінки «Про мене»
+- section: Практика — Створення портфоліо
+  points:
+  - 'Завдання: Створити структуру професійного портфоліо'
+  - 'Вимоги: резюме, опис проєктів, візуалізація'
+  - Критерії оцінювання
+vocabulary_hints:
+  required:
+  - портфоліо (portfolio)
+  - зразок роботи (work sample)
+  - професійне резюме (professional resume)
+  - досягнення (achievement)
+  - проєкт (project)
+  - рекомендація (recommendation)
+  - компетенція (competency)
+  - кар'єрний профіль (career profile)
+  recommended:
+  - кейс-стаді (case study)
+  - метрики (metrics)
+  - KPI (ключові показники ефективності)
+  - ROI (повернення інвестицій)
+  - showcase (вітрина)
+  - proof of work (підтвердження досвіду)
+activity_hints:
+- type: writing-task
+  focus: Написати професійне резюме українською
+  items: 1
+- type: document-analysis
+  focus: Проаналізувати приклади портфоліо — оцінити ефективність
+  items: 2
+- type: fill-in
+  focus: Доповнити опис проєкту для портфоліо
+  items: 8
+- type: matching
+  focus: З'єднати елементи портфоліо з їхніми функціями
+  items: 6
+- type: writing-task
+  focus: Описати проєкт для портфоліо за шаблоном
+  items: 1
+focus: professional
+pedagogy: ESP
+prerequisites:
+- 'c1-pro-45 (Інтеграція: Галузева практика)'
+connects_to:
+- c1-pro-47 (Особистий бренд)
+objectives:
+- Учень може створити структуроване професійне портфоліо
+- Учень може ефективно описувати свої проєкти та досягнення
+- Учень може адаптувати портфоліо для різних кар'єрних цілей
+- Учень може підтримувати цифрове портфоліо на різних платформах
+grammar:
+- Конструкції для опису досвіду (У межах проєкту я... / Моя роль полягала в... / Результатом
+  стало...)
+- Конструкції для досягнень (Завдяки цьому вдалося... / Це дозволило... / Ефективність
+  зросла на...)
+- Конструкції для компетенцій (Володію навичками... / Маю досвід у... / Здатний/-а...)
+register: напівформальний
+phase: C1-PRO.4
+persona:
+  voice: Senior Specialist
+  role: Агент талантів
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Професійне портфоліо
+
+## Використані джерела
+1. [ДСТУ 4163:2020](https://buhgalter.com.ua/zakonodavstvo/dstu-4163-2020/) — Національний стандарт щодо оформлення організаційно-розпорядчих документів (актуальний для резюме та офіційних складових портфоліо).
+2. [Happy Monday: Як створити портфоліо](https://happymonday.ua/yak-stvoryty-portfolio) — Професійні поради щодо структури та презентації досвіду.
+3. [Work.ua: Помилки в резюме](https://work.ua/articles/resumes/2704/) — Аналіз типових лексичних та структурних помилок в українськомовному професійному контексті.
+4. [Дія.Бізнес: Професійний розвиток](https://business.diia.gov.ua) — Рекомендації щодо цифрових компетенцій та особистого бренду.
+
+## Термінологічна база
+
+| Українська (норма) | Русизм/ненорма | English | Контекст вживання |
+|--------------------|---------------|---------|-------------------|
+| Здобувач / Кандидат | Претендент | Candidate / Applicant | Офіційне листування |
+| Здобути освіту | Отримати освіту | To graduate / Get education | Розділ «Освіта» |
+| За фахом / За спеціальністю | По спеціальності | By profession | Опис кваліфікації |
+| Брати участь | Приймати участь | To participate | Опис ролі в проєкті |
+| Набувати досвіду | Отримувати досвід | To gain experience | Кар'єрний шлях |
+| Вжити заходів | Прийняти міри | To take measures | Опис вирішення проблем |
+| Протягом / Впродовж | На протязі | During / Throughout | Часові межі проєкту |
+| Обсяг роботи | Об'єм роботи | Workload / Scope | Технічний опис кейсу |
+
+## Мовні норми та стандарти
+- **ДСТУ 4163:2020**: Визначає правила написання прізвищ (ВЕЛИКИМИ ЛІТЕРАМИ), оформлення дат (без крапки в кінці) та підписів (Ім'я ПРІЗВИЩЕ).
+- **Новий правопис (2019)**: Важливо використовувати форму «проєкт» замість застарілого «проект» та «кейси» (без подвоєння).
+- **Стандарт професійної назви**: Використання назв посад згідно з Класифікатором професій України (ДК 003:2010), хоча в портфоліо допустимі сучасні міжнародні аналоги.
+
+## Аутентичні приклади
+1. [Про мене]: «Я — фахівець із проєктного менеджменту з 5-річним досвідом у сфері Fintech. Моя місія — створювати прозорі процеси, що забезпечують сталий розвиток бізнесу».
+2. [Опис проєкту]: «Моя роль у проєкті полягала в координації крос-функціональної команди з 12 осіб. Результатом впровадження нової системи стало скорочення операційних витрат на 15% протягом першого кварталу».
+3. [Досягнення]: «Здобув сертифікацію PMP, що дозволило оптимізувати методологію управління ризиками в компанії».
+
+## Типові помилки
+1. ❌ ВУЗ → ✅ ЗВО (Заклад вищої освіти) — офіційний термін згідно із законодавством України.
+2. ❌ Навчальна учоба → ✅ Навчання — слово «учоба» є грубим русизмом.
+3. ❌ Робота по сумісництву → ✅ Робота за сумісництвом — правильне використання прийменника «за».
+4. ❌ Халатне відношення → ✅ Недбале ставлення — «відношення» в українській мові вживається переважно в математичному контексті.
+5. ❌ Прийняти участь у конференції → ✅ Взяти участь у конференції — стала дієслівна сполука.
+
+## Engagement Hooks (mapped to sections)
+- Section "Розминка — Портфоліо як інструмент кар'єри": [!pro-tip] — Портфоліо — це не просто архів робіт, а ваша візуалізована стратегія успіху.
+- Section "Структура портфоліо": [!language-note] — Використовуйте термін «здобутки» або «досягнення» замість калькованого «достіженія».
+- Section "Зразки елементів портфоліо": [!example] — Зразок підпису за ДСТУ 4163:2020: Менеджер проєктів (особистий підпис) Олександр МЕЛЬНИК.
+- Section "Цифрове портфоліо": [!context] — Посилання на LinkedIn у портфоліо підвищує довіру рекрутерів на 40% (згідно з даними Work.ua).
+
+## Section-Mapped Research Notes
+
+### Розминка — Портфоліо як інструмент кар'єри
+Визначення портфоліо як «showcase» професійних компетенцій. Різниця між резюме (що ви знаєте) та портфоліо (що ви зробили). Поняття конкурентної переваги на ринку праці через якісну українську термінологію.
+
+### Структура портфоліо
+Аналіз обов'язкових блоків: професійний профіль (Executive Summary), матриця навичок (Hard & Soft Skills), галерея проєктів, блок відгуків та соціальних доказів.
+
+### Зразки робіт
+Методологія STAR (Situation, Task, Action, Result) для опису кейсів українською мовою. Акцент на метриках (KPI, ROI) та використанні активних дієслів («розробив», «впровадив», «оптимізував»).
+
+### Цифрове портфоліо
+Особливості SEO-оптимізації контенту українською мовою. Платформи для різних галузей: GitHub (IT), Behance (Creative), Google Sites (General). Правила інтеграції посилань та QR-кодів.
+
+### Зразки елементів портфоліо
+Застосування ДСТУ 4163:2020 до оформлення супровідних листів та резюме. Шаблони опису «Про мене» для різних професійних рівнів (Junior, Middle, Senior).
+
+### Практика — Створення портфоліо
+Критерії оцінювання: цілісність структури, чистота мови (відсутність русизмів), якість візуалізації та наявність конкретних результатів у кейсах.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12580)
+✓ Message 12521 acknowledged
+✓ Message 12580 acknowledged

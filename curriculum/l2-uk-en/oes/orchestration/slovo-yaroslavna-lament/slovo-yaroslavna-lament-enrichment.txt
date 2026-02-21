@@ -1,0 +1,220 @@
+✅ Message sent to Gemini (ID: 12974) [auto-acked: self-addressed]
+✓ Message 12974 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12974...
+📨 Message #12974
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-slovo-yaroslavna-lament
+   Time: 2026-02-20T23:43:25.568312+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 83
+module: oes-083
+module_number: 83
+slug: slovo-yaroslavna-lament
+title_uk: 'Слово: Плач Ярославни'
+title_en: 'Slovo: Yaroslavna''s Lament'
+phase: 4
+phase_id: literary-art
+phase_name: Literary Art
+focus: Lyrical genre — Address to Wind/Sun/Dnipro
+content_outline:
+- section: Вступ
+  description: 'Introduction to Slovo: Yaroslavna''s Lament'
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Senior Paleographer
+  role: Putyvl Guard
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Slovo Yaroslavna Lament
+
+## Використані джерела
+1. [Ізборник — Слово о полку Ігоревім](http://litopys.org.ua/slovo67/slovo.htm) — Оригінальний текст та переклади.
+2. [Енциклопедія Сучасної України — Слово о полку Ігоревім](https://esu.com.ua/search_articles.php?id=Sl0v0) — Академічний огляд.
+3. [Літературне місто — Образ Ярославни](http://litmisto.org.ua/) — Аналіз поетики.
+
+## Хронологія
+- **1185 р., квітень-травень**: Невдалий похід Ігоря Святославича проти половців.
+- **1185 р., травень**: Битва на річці Каялі, поразка і полон Ігоря.
+- **1185 р., літо**: Ярославна плаче в Путивлі на валу (історичний момент Плачу).
+- **1187 р.**: Ймовірна дата написання "Слова".
+- **1790-ті рр.**: Відкриття рукопису О. Мусіним-Пушкіним.
+- **1812 р.**: Знищення оригінального рукопису під час пожежі в Москві.
+
+## Ключові факти та цитати
+- **Оригінал (початок)**: "На Дунаи Ярославнынъ гласъ слышитъ, зегзицею незнаема рано кычеть..."
+- **Звернення до Вітру**: "О вѣтрѣ, вѣтрило! Чему, господине, насильно вѣеши?"
+- **Звернення до Дніпра**: "О Днепре Словутицю! Ты пробилъ еси каменныя горы сквозѣ землю Половецкую..."
+- **Звернення до Сонця**: "Свѣтлое и тресвѣтлое слънце! Всѣмъ тепло и красно еси..."
+- **Єфросинія Ярославна**: Дочка галицького князя Ярослава Осмомисла. Символ єднання західних (Галич) і східних (Путивль) земель Русі.
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ: Історичне тло 1185 року": [!context] — Похід Ігоря був "сепаратною" авантюрою, яку засуджував автор "Слова", але співчував героям.
+- Section "Постать Ярославни": [!biography] — Ярославна — це Єфросинія, дочка могутнього Ярослава Осмомисла, що підкреслює династичні зв'язки всієї України-Русі.
+- Section "Читання: I — Звернення до Вітру": [!paleography] — Розбір слова "вѣтрило" (зменшувальне чи поважне?) та графіки "ять" (ѣ).
+- Section "Читання: II — Звернення до Дніпра": [!myth-buster] — "Славутич" — це не просто епітет, а стародавнє, можливо, персоніфіковане ім'я річки.
+- Section "Мовний аналіз": [!decolonization] — Повноголосся (золотий, хоробрий) та кличний відмінок (Ігоре, дружино) у тексті XII ст. — прямі докази української мовної основи.
+- Section "Символізм": [!culture] — "Зегзиця" (зозуля) — символ туги і зв'язку зі світом мертвих у фольклорі.
+
+## Деколонізаційний контекст
+- **Imperial Myth**: "Слово" — пам'ятка "російської" літератури, бо знайдене в Росії і написане "давньоросійською" мовою.
+- **Ukrainian Reality**: Текст насичений суто українськими лексичними та граматичними рисами (повноголосся, закінчення -ові/-еві, лексика типу "кожух", "яруга", "болонь"). Сюжет прив'язаний до українських теренів (Київ, Чернігів, Путивль, Галич).
+- **Contested Term**: Імперська наука ігнорує діалектну основу пам'ятки, називаючи її "спільносхіднослов'янською", тоді як це фіксація живої протоукраїнської мови.
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| Мова пам'ятки | Давньоросійська (Old Russian) | Давньоукраїнська / Давньоруська (Old Rus / Proto-Ukrainian) |
+| Географія | "Южная Русь" (як частина Росії) | Русь-Україна (метрополія) |
+| Ярославна | Русская княгиня | Українська княгиня, дочка Осмомисла |
+
+## Section-Mapped Research Notes
+
+### Вступ: Історичне тло 1185 року
+Похід Ігоря на половців. Політична роздробленість Русі. Автор "Слова" закликає до єдності. Плач Ярославни — лірична вершина поеми.
+
+### Постать Ярославни: Єдність земель
+Хто така Ярославна? Єфросинія, дочка Ярослава Осмомисла Галицького і Ольги Юріївни (дочки Юрія Долгорукого). Шлюб 1169 року. Символ зв'язку Галичини і Сіверщини.
+
+### Читання: I — Звернення до Вітру
+Текст: "О вѣтрѣ, вѣтрило!.." Аналіз звертання "господине". Вітер як ворожа сила, що розвіює стріли "ханів" (половців). Граматика: кличний відмінок.
+
+### Читання: II — Звернення до Дніпра
+Текст: "О Днепре Словутицю!.." Дніпро як могутня сила, що пробиває гори. Прохання "прилеліяти" (принести на хвилях) князя. Міфологія води.
+
+### Читання: III — Звернення до Сонця
+Текст: "Свѣтлое и тресвѣтлое слънце!.." Сонце як дарувальник життя, але в степу воно стає ворогом (спрага, спека). Контраст "тепло/красно" і "безводдя".
+
+### Мовний аналіз: Протоукраїнські риси
+Чому це український текст?
+1. Повноголосся: *ворота* (не врата), *голова*, *голос*.
+2. Кличний відмінок: *Ігоре*, *Бояне*, *Дніпре*.
+3. Лексика: *яруга*, *кожух*, *лисиця*, *брехати* (гавкати).
+4. Закінчення дієслів 3 ос. одн.: *плачетъ* -> *плаче* (тверде 'т' зникає).
+
+### Символізм і міфологія: Язичництво в християнську добу
+Плач як заклинання стихій. Триєдність всесвіту: Повітря (Вітер), Вода (Дніпро), Вогонь/Небо (Сонце). Перетворення на зозулю ("зегзицею полечу"). Християнська княгиня використовує язичницьку магію.
+
+### Практика: Палеографія і переклад
+Робота з уривком факсиміле (якщо є) або реконструкція уставом. Завдання на транскрипцію: "Ꙗрославна рано плачетъ". Етимологія слова "зегзиця".
+
+### Підсумок: Спадщина Плачу
+Вплив на літературу (Шевченко, Мирний). Опера "Князь Ігор". Символ вірності і сили української жінки.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12986)
+✓ Message 12974 acknowledged
+✓ Message 12986 acknowledged

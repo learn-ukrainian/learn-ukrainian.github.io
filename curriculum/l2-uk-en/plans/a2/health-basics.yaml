@@ -6,45 +6,67 @@ version: '2.0'
 title: Health Basics
 subtitle: Body Parts, Symptoms & Pain Expressions
 content_outline:
-- section: Introduction / Вступ
+- section: 'Вступ: Здоров’я — це скарб (Introduction: Health is a Treasure)'
+  words: 400
   points:
-  - 'Health as a conversation topic — cultural hook: «У здоровому тілі — здоровий
-    дух» as universal Ukrainian wisdom; health smalltalk norms'
-  - Why health vocabulary comes first — foundational body parts and the боліти construction
-    are prerequisites for all later health modules
-- section: Частини тіла
+  - 'Cultural hook: «У здоровому тілі — здоровий дух» (In a healthy body, a healthy
+    spirit). Health as a primary smalltalk topic and the cultural norm of home visits
+    (викликати лікаря додому) versus western clinic-only systems.'
+  - 'Contextualizing the State Standard §3.12: Why mastery of ''самопочуття'' (well-being)
+    is a foundational A2 competency for navigating daily life in Ukraine.'
+- section: Частини тіла та анатомія (Body Parts and Anatomy)
+  words: 600
   points:
-  - 'Core body parts — голова, рука, нога, живіт, спина, горло, око/очі, вухо/вуха;
-    visual aid: body map with labels'
-  - 'Singular vs plural pairs — learner error: irregular plurals (око→очі, вухо→вуха);
-    gender agreement patterns with adjectives'
-  - 'Internal organs (basic) — серце, легені, шлунок; cultural note: «серце» in Ukrainian
-    idioms (від щирого серця)'
-- section: Конструкція «У мене болить»
+  - 'Core vocabulary for physical assessment: голова, рука, нога, живіт, спина, горло.
+    Focus on internal organs often mentioned in symptoms: серце (heart), шлунок (stomach),
+    легені (lungs).'
+  - 'Grammar focus: Irregular plurals and agreement patterns. Drills on the shift
+    from singular ''око'' to plural ''очі'' and ''вухо'' to ''вуха'', including gender
+    agreement with adjectives (червоне горло, сильний біль).'
+  - 'Cultural idiom: «Від щирого серця» (From the bottom of the heart) to demonstrate
+    the linguistic beauty of anatomical terms in non-medical contexts.'
+- section: 'Конструкція «У мене болить»: Граматика болю (The ''It Hurts'' Construction)'
+  words: 600
   points:
-  - 'Impersonal pain construction — У мене болить + Nominative singular (голова, живіт,
-    горло); learner error: «Я болить голову» instead of «У мене болить голова»'
-  - 'Plural agreement — У мене болять + Nominative plural (ноги, очі, зуби); learner
-    error: «У мене болить ноги» (number mismatch)'
-  - 'Extended pain expressions — standard ref: §4.2.1.4; крутиться голова, болить
-    серце, пече в грудях'
-- section: Симптоми і стани
+  - 'Primary grammar competency: У мене болить + Nominative (singular) vs. У мене
+    болять + Nominative (plural). Learner error correction: Prevent ''Я болю'' or
+    ''У мене болить ноги'' through repetitive matching drills.'
+  - 'Standard vs. Archaic usage: Clarifying that the literary standard for physical
+    pain is Genitive with preposition (У мене болить...), whereas the Dative ''Мені
+    болить'' is reserved for emotional pain or poetic contexts (e.g., ''Мені болить
+    за Україну'').'
+  - 'Expressing physical states using the Dative Case (§4.2.2.3): ''Мені погано/добре/нудно''.
+    Correction of the common error ''Я погано'' instead of the required impersonal
+    Dative structure.'
+- section: Симптоми, хвороби та народна медицина (Symptoms, Illnesses, and Folk Remedies)
+  words: 600
   points:
-  - 'Common symptoms — температура, кашель, нежить, біль; collocations: висока температура,
-    сильний кашель, гострий біль'
-  - 'State expressions — Мені погано/добре/нудно; learner error: «Я погано» instead
-    of «Мені погано» (Dative for states)'
-  - 'Хворий vs боліти vs хворіти — learner error: confusing adjective (хворий), body-pain
-    verb (боліти), person-sick verb (хворіти)'
-- section: Practice / Практика
+  - 'Symptom vocabulary: температура (висока/низька), кашель (сухий/вологий), нежить
+    (мати нежить), біль (гострий/тупий). Integration of ''міряти температуру'' (to
+    take temperature).'
+  - 'Linguistic distinction: хворіти (to be ill/sick with something) vs. боліти (to
+    hurt/ache). Explicit drill for the construction ''хворіти на + Accusative'' (Я
+    хворію на грип) to fix the error ''Я болю грип''.'
+  - 'Cultural hook: Traditional Ukrainian remedies as the first line of defense—чай
+    з малиною (raspberry tea) and the traditional (though fading) use of гірчичники
+    (mustard plasters).'
+- section: У поліклініці та аптеці (At the Clinic and Pharmacy)
+  words: 500
   points:
-  - Describing what hurts — fill-in drills with болить/болять agreement
-  - Symptom description mini-dialogues — «Що з тобою?» «У мене болить горло і кашель»
-- section: Діалоги / Dialogues
+  - 'Institutional mapping: The distinction between ''поліклініка'' (outpatient checkups)
+    and ''лікарня'' (inpatient hospital). Introduction of modern terms like ''сімейний
+    лікар'' (family doctor) and ''підписати декларацію''.'
+  - 'Medical Imperatives (§4.2.3.2): Following doctor''s instructions using 2nd person
+    plural forms—''Відкрийте рот'', ''Дихайте'', ''Не дихайте'', ''Пийте ці ліки''.'
+  - 'Navigating the pharmacy (аптека): Common phrases for ''засоби від нежитю'' (cold
+    medicine) and recognizing ''швидка допомога'' (ambulance) terminology.'
+- section: 'Практика: Що трапилося? (Practice: What Happened?)'
+  words: 300
   points:
-  - 'Calling a friend about feeling sick — casual register; cultural hook: health
-    proverbs in everyday speech'
-  - First aid phrases — Тобі погано? Тримайся! Давай виклику лікаря
+  - 'Role-play: Calling a friend or the clinic to report an illness. Synthesis of
+    ''Що з тобою?'' and answering with symptoms and ''У мене болить'' structures.'
+  - 'Emergency production: ''Викличте швидку!'' (Call an ambulance!) and providing
+    basic information about the patient''s state to a dispatcher.'
 focus: vocabulary
 pedagogy: PPP
 objectives:
@@ -73,18 +95,27 @@ vocabulary_hints:
   - 'голова (head) — collocations: болить голова, головний біль, крутиться голова'
   - 'рука (arm/hand) — note: права/ліва рука, зламати руку'
   - 'нога (leg/foot) — collocations: болять ноги, зламати ногу'
-  - 'живіт (stomach) — usage: болить живіт'
+  - 'живіт (stomach) — usage: болить живіт (stomach ache)'
   - 'горло (throat) — collocations: червоне горло, болить горло'
-  - 'боліти (to hurt) — impersonal: у мене болить X (sg) / болять Y (pl)'
-  - 'температура (fever) — collocations: висока температура, міряти температуру'
+  - 'боліти (to hurt) — impersonal: у мене болить X (sg) / болять Y (pl); contrast
+    with хворіти'
+  - 'хворіти на (to be sick with) — usage: хворіти на грип/застуду; never ''я болю
+    грип'''
+  - 'температура (fever/temperature) — collocations: висока температура, міряти температуру'
   - 'кашель (cough) — collocations: сильний кашель, сухий кашель'
+  - сімейний лікар (family doctor) — modern term for primary care provider in Ukraine
+  - поліклініка (outpatient clinic) — high frequency; where you go for non-emergencies
+  - 'аптека (pharmacy) — collocations: цілодобова аптека, купити в аптеці'
   recommended:
-  - нежить (runny nose) — мати нежить, засоби від нежитю
+  - 'нежить (runny nose) — masculine; collocations: мати нежить, засоби від нежитю'
   - хворий (sick, adj.) — він хворий, хвора дитина
   - здоровий (healthy) — у здоровому тілі — здоровий дух
   - спина (back) — болить спина, біль у спині
   - зуб (tooth) — болить зуб, зубний біль
-  - серце (heart) — від щирого серця (idiom)
+  - 'серце (heart) — idiom: від щирого серця (from the bottom of my heart)'
+  - 'швидка допомога (ambulance) — collocations: викликати швидку, приїхала швидка'
+  - 'погано (bad/unwell) — used with Dative: мені погано'
+  - 'дихати (to breathe) — medical command: дихайте / не дихайте'
 activity_hints:
 - type: match-up
   focus: Body parts vocabulary

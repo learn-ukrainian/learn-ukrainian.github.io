@@ -1,0 +1,13 @@
+{
+  "track": "ruth",
+  "slug": "dialogue-with-latins",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-20T11:16:06Z",
+      "task_id": "v3-dialogue-with-latins-pA",
+      "mode": "full"
+    }
+  }
+}

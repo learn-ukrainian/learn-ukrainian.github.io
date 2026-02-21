@@ -1,0 +1,13 @@
+{
+  "track": "ruth",
+  "slug": "baroque-lists",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-20T19:41:04Z",
+      "task_id": "v3-baroque-lists-pA",
+      "mode": "full"
+    }
+  }
+}

@@ -1,223 +1,165 @@
-Now I have all the information I need. Let me compile my full adversarial review:
+Now I have everything. Here is my full adversarial review.
 
 ---
 
-## Adversarial QA Review — Around the City (A1 #15)
+## Deep Adversarial Review: around-the-city (a1-15)
 
 ### Issues Found
 
 ---
 
-**ISSUE 1 — IPA inconsistency: [t͡se] vs [t͡sɛ]**
-- **File:** `around-the-city.md`, line 218
-- **Text:** `[t͡se tɑm]`
-- **Problem:** Every other instance of Ukrainian «е» in this module is transcribed as [ɛ] (open-mid front vowel), which is correct for Ukrainian phonology. «Це там» uses [e] (close-mid), which is both phonetically wrong for Ukrainian and inconsistent with the module's own transcription convention. Compare: аптека [ɑpˈtɛkɑ], Перед [ˈpɛrɛd], Поверніть [pɔʋɛrˈnʲitʲ] — all use [ɛ] correctly.
-- **Fix:** Change `[t͡se tɑm]` → `[t͡sɛ tɑm]`
+**Issue 1: IPA inconsistency — vocabulary file uses [v] instead of project-standard [ʋ]**
+
+The project convention for Ukrainian В is [ʋ] (labiodental approximant), confirmed across all other A1 vocabulary files. The `around-the-city.yaml` vocab file uses [v] in 5 entries: наліво, направо, ліворуч, праворуч, вулиця. The content `.md` file correctly uses [ʋ]. This is a hard inconsistency that must be fixed.
+
+- `vocabulary/around-the-city.yaml:41` — `[nɑˈlʲivɔ]` should be `[nɑˈlʲiʋɔ]`
+- `vocabulary/around-the-city.yaml:43` — `[nɑˈprɑvɔ]` should be `[nɑˈprɑʋɔ]`
+- `vocabulary/around-the-city.yaml:49` — `[lʲiˈvɔrʊt͡ʃ]` should be `[lʲiˈʋɔrʊt͡ʃ]`
+- `vocabulary/around-the-city.yaml:55` — `[prɑˈvɔrʊt͡ʃ]` should be `[prɑˈʋɔrʊt͡ʃ]`
+- `vocabulary/around-the-city.yaml:1` — `[ˈvulɪt͡sʲɑ]` should be `[ˈʋulɪt͡sʲɑ]`
 
 ---
 
-**ISSUE 2 — Pedagogical trap: activity item with wrong framing ("Подивіться направо на світлофорі")**
-- **File:** `activities/around-the-city.yaml`, lines 292–299 (fill-in "Дієслова руху", item 3)
-- **Sentence:** `"_____ направо на світлофорі."`
-- **Answer:** `"Подивіться"`
-- **Problem:** "Подивіться направо на світлофорі" means "Look right at the traffic light" — but this sentence is in the section about direction commands and the explanation says "«Подивіться» означає look/check." This is linguistically defensible but contextually bizarre as a direction command. More critically, the natural real-world equivalent of "Turn right at the light" is **"Поверніть направо на світлофорі"** — that's the standard driving direction phrase. Telling someone to *look* right at a traffic light is not a coherent direction instruction. An A1 learner studying navigation will form the incorrect mental model that "Подивіться направо" is how you direct someone to turn right. The answer should be "Поверніть" to match the navigation context. The other two "direction" items in the same fill-in both use "Поверніть".
-- **Fix:** Change answer and options for this item.
+**Issue 2: Calque — "руху містом" (content line 47)**
+
+«Для впевненого руху містом» — "рух містом" implies physical movement/traffic flow. For a learner orienting themselves, the correct concept is "орієнтування в місті" (navigating in the city). Green Team flagged this; still unfixed.
 
 ---
 
-**ISSUE 3 — Unjumble item contains vocabulary outside the plan (activity)**
-- **File:** `activities/around-the-city.yaml`, lines 217–218
-- **Item:** `words: ["Як", "справи", "у", "тебе"]` → `answer: "Як у тебе справи"`
-- **Problem:** "Як у тебе справи?" (How are you?) is a **social greeting** with zero connection to city navigation. It does not appear anywhere in the module prose. It tests vocabulary and a phrase ("справи") not taught in this module. This is a rogue item that trains the wrong skill. The unjumble activity is titled "Прості запитання" and every other item is a navigation question. This one breaks the pedagogical coherence entirely.
-- **Fix:** Replace this item with a navigation question using in-scope vocabulary.
+**Issue 3: Slang — "Це база" (content line 75)**
+
+«Це база для кожного туриста» — "база" in this context reads as internet slang ("based") or military jargon. The standard educational term is "основа" (foundation).
 
 ---
 
-**ISSUE 4 — Gender inconsistency in prose: маршрутка pronoun**
-- **File:** `around-the-city.md`, line 305
-- **Text:** `Маршрутка — це маленький автобус. ... Він швидкий, але іноді хаотичний. ... Вона зупиняється на зупинках. Іноді вона не зупиняється.`
-- **Problem:** «маршрутка» is a feminine noun (ends in -ка). The Ukrainian prose correctly uses «вона» for маршрутка. But it first introduces it as «маленький автобус» (masculine), then uses «Він швидкий» — pronoun **він** refers to автобус (masculine, grammatically fine) but then immediately switches to **вона** for маршрутка without a clear re-establishment of the antecedent. For a native speaker this is slightly awkward — the sentences treat both nouns as interchangeable referents. More importantly, «маленький автобус» is masculine but маршрутка is feminine, so the pronoun switch mid-paragraph is confusing for an A1 learner who is trying to learn gender agreement. This is an LLM artifact — the author didn't think about how a learner reads the pronoun switch.
-- **Fix:** Rewrite to keep одна pronoun reference consistent. Use only «вона» since the topic is маршрутка.
+**Issue 4: Calque/unnatural modal — "Ви повинні бути ввічливими" (content line 225)**
+
+«Ви шукаєте допомогу. Ви повинні бути ввічливими.» — Two problems: "Ви шукаєте допомогу" is a calque of "You are looking for help" (more natural: "Вам потрібна допомога"). "Ви повинні бути ввічливими" uses the heavy modal "повинні" (obliged/must), which is too strong for politeness advice. Natural: "Будьте ввічливі."
 
 ---
 
-**ISSUE 5 — Calque in prose (previously identified by green review, NOT fixed)**
-- **File:** `around-the-city.md`, line 244
-- **Text:** `Там є парк.`
-- **Problem:** The green review identified this exact pattern ("Там є школа" at line 189 in the template, which corresponds to dialogue line 244 in the actual file: «Там є парк.»). The construction «Там є X» as a calque of "There is X there" — in natural spoken Ukrainian for pointing out a landmark, one says «Там парк» or «Там стоїть парк». The copula «є» in locational/existential statements is typically dropped in everyday speech. The green review said to fix it and it was NOT fixed — the exact pattern still exists on line 244.
-- **Fix:** Remove «є» → «Там парк.»
+**Issue 5: English-only section heading (content line 101)**
+
+`### Locative Case Usage (Where?)` — Every other heading in the module uses Ukrainian with English in parentheses. This one is English-only, breaking the pattern.
 
 ---
 
-**ISSUE 6 — Section heading in English in Ukrainian-titled section**
-- **File:** `around-the-city.md`, line 17
-- **Text:** `### The Heart of the City`
-- **Problem:** Every other subsection heading within `## Вступ: Місто та орієнтири` uses Ukrainian: `### Де чи Куди? (Location vs. Direction)`, `### Navigating by Landmarks` — wait, there are actually TWO English-only section headings: "The Heart of the City" (line 17) and "Navigating by Landmarks" (line 37). These are inconsistent with the rest of the module, where section headings are either Ukrainian or bilingual. For a curriculum module that aims at Ukrainian immersion, English-only sub-headings inside Ukrainian-titled sections are an LLM artifact (the pipeline wrote English-language structural markers). The later sections all use proper Ukrainian/bilingual headings.
-- **Fix:** Add Ukrainian to both headings for consistency.
+**Issue 6: Plan compliance gap — missing "Де ти йдеш?" error correction**
+
+The plan explicitly requires: «виправлення помилки "Де ти йдеш?" на коректне "Куди ти йдеш?"». This specific error correction is absent from the content. The Де/Куди distinction is explained, but the common learner mistake is never shown and corrected.
 
 ---
 
-**ISSUE 7 — Lesson template item in "Творче завдання" contains «є» calque**
-- **File:** `around-the-city.md`, line 280
-- **Text:** `2.  Там є... (парк / магазин / школа).`
-- **Problem:** This is the same calque issue. The template given to learners uses «Там є...» — which then *trains* learners to use this unnatural construction. This is particularly bad because learners will produce output based on this template. The template should use natural Ukrainian.
-- **Fix:** Change `Там є...` → `Там...` with the explanation that the copula is dropped in pointing-out statements.
+**Issue 7: Fill-in distractor form mismatch (activities lines 308-315, 332-339)**
+
+Two fill-in items have infinitive distractors ("стояти", "жити", "бути") competing against a conjugated answer ("йдемо"). A student can eliminate the infinitives purely by grammar form without understanding meaning, defeating the exercise's purpose. Additionally, these two items use identical distractor sets — lazy duplication.
 
 ---
 
-**ISSUE 8 — Activity YAML: fill-in sentence "Пошта знаходиться _____ цій вулиці" — answer choice ambiguity**
-- **File:** `activities/around-the-city.yaml`, line 156–163
-- **Sentence:** `"Пошта знаходиться _____ цій вулиці."`
-- **Answer:** `"на"`
-- **Options include:** `"на"`, `"в"`, `"у"`, `"біля"`
-- **Problem:** The options include both `"в"` and `"у"` — but «у» is simply the phonetic variant of «в» used before consonant clusters (у цій = correct, в цій = also correct phonetically). So a learner who picks «у» for "у цій вулиці" is arguably giving a correct and MORE natural answer than «на» (i.e., «у цій вулиці» = on this street). Wait — actually the answer is «на» and «у цій вулиці» would give "у цій вулиці" which is the wrong preposition+case combo. Let me re-read: the blank is for the preposition before «цій вулиці». «на цій вулиці» is correct. «у цій вулиці» is wrong (вулиця takes «на»). So the answer is correct. BUT: having both «в» and «у» as wrong choices when they are the same preposition (phonetic variants) is redundant and potentially confusing — a learner doesn't understand why «у» is wrong if they know «у = в». This is a minor pedagogical issue, not a blocking error. However, since «у» and «в» are essentially the same word at A1, presenting them as two distinct wrong answers is misleading. The options should not include both. Replace one of them with a genuinely different wrong answer like «за» or «до».
-- **Severity:** Minor/pedagogical. Not blocking.
+**Issue 8: Beyond-scope grammar in unjumble (activities line 440-441)**
+
+`["Аптека", "біля", "старої", "пошти"]` — "старої" is the Genitive feminine adjective form. This module teaches genitive of NOUNS with біля/навпроти, not genitive adjective declension. Including this form without teaching it creates confusion.
 
 ---
 
-**ISSUE 9 — IPA missing for «назад» in the vocabulary but used in activities**
-- **File:** `activities/around-the-city.yaml`, line 109 (match-up: "назад" → "back")
-- **Problem:** «назад» is used in the match-up activity and the group-sort activity but has NO IPA transcription in the module prose. The plan lists directions as a required vocabulary set, and the module teaches прямо, наліво, направо, ліворуч, праворуч — but «назад» is absent from the prose vocabulary section. It appears in activities (match-up has "назад → back"; group-sort has "назад" in the Куди group) but was never taught in the lesson. This is a forward-testing problem — testing vocabulary not introduced.
-- **Fix:** Add «назад» to the directional adverbs section, or remove it from the activities.
+**Issue 9: Missing vocabulary entry — "світлофор"**
+
+Used in the fill-in activity (line 292: "направо на світлофорі") and listed as recommended in the plan, but absent from the vocabulary file. A word used in activities must appear in the vocabulary file.
 
 ---
 
-**ISSUE 10 — Maidan etymology claim: "Persian origin via Turkic" — verify**
-- **File:** `around-the-city.md`, lines 327
-- **Text:** `The word **майдан** is of Persian origin, coming to Ukrainian via Turkic languages.`
-- **Assessment:** This is factually accurate. «Майдан» derives from Persian «میدان» (meydān = open space/field), spread through Arabic and Turkic languages into Ukrainian. This is linguistically documented. Not a factual error.
+**Issue 10: Missing vocabulary entry — "маршрутка"**
+
+Central to the cultural section, has IPA in the content ([mɑrˈʃrutkɑ]), but absent from the vocabulary file.
 
 ---
 
-**ISSUE 11 — Activity "Дієслова руху": duplicate fill-in items**
-- **File:** `activities/around-the-city.yaml`
-- **Items 1 and 7** are identical: `"_____ наліво біля банку."` → `"Поверніть"`
-- **Items 5 and 8** are identical: `"Ми _____ додому."` → `"йдемо"` and `"Ми _____ в парк."` → `"йдемо"` (not exact duplicates but test the same thing with the same answer)
-- **Problem:** Items 1 and 7 are verbatim duplicates. Learners encounter the same sentence twice in the same activity. This is an LLM artifact from activity generation — it ran out of ideas and repeated. For a fill-in with 8 items, this means only 7 unique items, padding with a repeat.
-- **Fix:** Replace the duplicate item 7 with a new distinct sentence.
+**Minor observations (not fixing):**
+- Content uses [u] for unstressed у where [ʊ] is more precise (куди, зупинка, спочатку) — acceptable in broad transcription
+- Quiz explanation (line 379) calls площа "м'яка група" — it's technically "мішана група" (mixed declension), but the answer "площі" is correct and the distinction is beyond A1
+- "банк" and "назад" are used in activities but confirmed as already introduced in earlier modules (a1-01/a1-13 and a1-12 respectively) — no fix needed
+- Plan asks for "Майдан Незалежності vs Площа Ринок" contrast; content discusses both concepts but doesn't name these specific examples — minor gap in the meta, not content error
 
 ---
 
-Now I'll apply the fixes. The clearly blocking issues are: IPA error (#1), activity pedagogical trap (#2), rogue unjumble item (#3), gender pronoun confusion (#4), unfixed calque (#5 and #7), untaught vocabulary in activities (#9), and duplicate activity item (#11). The section heading inconsistency (#6) is an LLM artifact fix.
+## Fixes
 
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/around-the-city.md
 ---OLD---
-4.  **Це там.** [t͡se tɑm] (It is there.)
----NEW---
-4.  **Це там.** [t͡sɛ tɑm] (It is there.)
-===FIX_END===
-
-===FIX_START===
-FILE: curriculum/l2-uk-en/a1/around-the-city.md
----OLD---
-### The Heart of the City
----NEW---
-### Серце міста (The Heart of the City)
-===FIX_END===
-
-===FIX_START===
-FILE: curriculum/l2-uk-en/a1/around-the-city.md
----OLD---
-### Navigating by Landmarks
----NEW---
-### Орієнтири міста (Navigating by Landmarks)
-===FIX_END===
-
-===FIX_START===
-FILE: curriculum/l2-uk-en/a1/around-the-city.md
----OLD---
-Маршрутка — це маленький автобус. Це дуже популярний транспорт в Україні. Він швидкий, але іноді хаотичний. Це як таксі, але дешевше. Вона зупиняється на зупинках. Іноді вона не зупиняється. Треба кричати!
----NEW---
-Маршрутка — це маленький автобус. Це дуже популярний транспорт в Україні. Вона швидка, але іноді хаотична. Це як таксі, але дешевше. Вона зупиняється на зупинках. Іноді вона не зупиняється. Треба кричати!
-===FIX_END===
-
-===FIX_START===
-FILE: curriculum/l2-uk-en/a1/around-the-city.md
----OLD---
-**Місцевий**: Так. Там є парк. Метро **біля парку**.
----NEW---
-**Місцевий**: Так. Там парк. Метро **біля парку**.
-===FIX_END===
-
-===FIX_START===
-FILE: curriculum/l2-uk-en/a1/around-the-city.md
----OLD---
-1.  Я йду... (прямо / наліво / направо).
-2.  Там є... (парк / магазин / школа).
-3.  Магазин... (біля парку / навпроти школи).
----NEW---
-1.  Я йду... (прямо / наліво / направо).
-2.  Там... (парк / магазин / школа).
-3.  Магазин... (біля парку / навпроти школи).
-===FIX_END===
-
-===FIX_START===
-FILE: curriculum/l2-uk-en/a1/around-the-city.md
----OLD---
-#### Основні напрямки (Basic Directions)
 Для впевненого руху містом вивчіть чотири головні команди.
-
-To move through the city, you need a few core adverbs. These are your controls—forward, left, right, and back.
-
-#### Прямо (Straight)
 ---NEW---
-#### Основні напрямки (Basic Directions)
-Для впевненого руху містом вивчіть чотири головні команди.
+Для впевненого орієнтування в місті вивчіть чотири головні команди.
+===FIX_END===
 
-To move through the city, you need a few core adverbs. These are your controls—forward, left, right, and back.
+===FIX_START===
+FILE: curriculum/l2-uk-en/a1/around-the-city.md
+---OLD---
+Створімо ментальну карту міста. Знайдімо найважливіші місця: аптеку, вокзал, зупинку. Це база для кожного туриста.
+---NEW---
+Створімо ментальну карту міста. Знайдімо найважливіші місця: аптеку, вокзал, зупинку. Це основа для кожного туриста.
+===FIX_END===
 
-#### Назад (Back)
-**Назад** [nɑˈzɑd] means "back" or "backwards." You use it when you need to go back the way you came.
-*   «Ідіть назад.» (Go back.)
-*   «Поверніться назад.» (Turn back / Go back.)
+===FIX_START===
+FILE: curriculum/l2-uk-en/a1/around-the-city.md
+---OLD---
+Ви турист. Ви загубились. Ви шукаєте допомогу. Ви повинні бути ввічливими. Використовуйте слова "Вибачте" або "Перепрошую".
+---NEW---
+Ви турист. Ви загубились. Вам потрібна допомога. Будьте ввічливі. Використовуйте слова «Вибачте» або «Перепрошую».
+===FIX_END===
 
-#### Прямо (Straight)
+===FIX_START===
+FILE: curriculum/l2-uk-en/a1/around-the-city.md
+---OLD---
+### Locative Case Usage (Where?)
+---NEW---
+### Вживання Місцевого відмінка (Locative Case Usage)
+===FIX_END===
+
+===FIX_START===
+FILE: curriculum/l2-uk-en/a1/around-the-city.md
+---OLD---
+2.  **Куди?** [kuˈdɪ] (Where to?) — This asks about **direction** or **motion**. It implies movement from point A to point B.
+    *   Example: «Куди ми йдемо?» (Where are we going?)
+
+> [!note]
+---NEW---
+2.  **Куди?** [kuˈdɪ] (Where to?) — This asks about **direction** or **motion**. It implies movement from point A to point B.
+    *   Example: «Куди ми йдемо?» (Where are we going?)
+
+> [!warning]
+> **Common Mistake**: Do not say «Де ти йдеш?» — this is wrong! If someone is walking somewhere, the correct question is «**Куди** ти йдеш?» because they are in motion. Reserve **Де** for static location: «Де ти?» (Where are you?).
+
+> [!note]
 ===FIX_END===
 
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/activities/around-the-city.yaml
 ---OLD---
-    - words: ["Як", "справи", "у", "тебе"]
-      answer: "Як у тебе справи"
+    - sentence: "Ми _____ додому."
+      answer: "йдемо"
+      options:
+        - "йдемо"
+        - "стояти"
+        - "жити"
+        - "бути"
+      explanation: "«Йдемо» означає рух пішки."
+    - sentence: "Де _____ аптека?"
 ---NEW---
-    - words: ["Де", "тут", "банк"]
-      answer: "Де тут банк"
+    - sentence: "Ми _____ додому."
+      answer: "йдемо"
+      options:
+        - "йдемо"
+        - "стоїмо"
+        - "живемо"
+        - "сидимо"
+      explanation: "«Йдемо» означає рух пішки."
+    - sentence: "Де _____ аптека?"
 ===FIX_END===
 
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/activities/around-the-city.yaml
 ---OLD---
-    - sentence: "_____ направо на світлофорі."
-      answer: "Подивіться"
-      options:
-        - "Подивіться"
-        - "Ідіть"
-        - "Слухайте"
-        - "Пишіть"
-      explanation: "«Подивіться» означає look/check."
----NEW---
-    - sentence: "_____ направо на світлофорі."
-      answer: "Поверніть"
-      options:
-        - "Поверніть"
-        - "Стійте"
-        - "Слухайте"
-        - "Пишіть"
-      explanation: "Для зміни напрямку ми кажемо «поверніть». «Поверніть направо на світлофорі» — стандартна інструкція водію."
-===FIX_END===
-
-===FIX_START===
-FILE: curriculum/l2-uk-en/a1/activities/around-the-city.yaml
----OLD---
-    - sentence: "_____ направо біля аптеки."
-      answer: "Поверніть"
-      options:
-        - "Поверніть"
-        - "Стійте"
-        - "Дивіться"
-        - "Читайте"
-      explanation: "Для зміни напрямку ми кажемо «поверніть»."
     - sentence: "Ми _____ в парк."
       answer: "йдемо"
       options:
@@ -227,59 +169,129 @@ FILE: curriculum/l2-uk-en/a1/activities/around-the-city.yaml
         - "бути"
       explanation: "«Йдемо» означає рух пішки."
 ---NEW---
-    - sentence: "_____ назад. Ми пропустили зупинку."
-      answer: "Поверніться"
-      options:
-        - "Поверніться"
-        - "Стійте"
-        - "Дивіться"
-        - "Читайте"
-      explanation: "«Поверніться назад» означає go back/turn around."
     - sentence: "Ми _____ в парк."
       answer: "йдемо"
       options:
         - "йдемо"
-        - "стояти"
-        - "жити"
-        - "бути"
+        - "стоїмо"
+        - "живемо"
+        - "їмо"
       explanation: "«Йдемо» означає рух пішки."
 ===FIX_END===
 
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/activities/around-the-city.yaml
 ---OLD---
-      options:
-        - "на"
-        - "в"
-        - "у"
-        - "біля"
-      explanation: "Вулиця — це відкритий простір, тому «на вулиці»."
+    - words: ["Аптека", "біля", "старої", "пошти"]
+      answer: "Аптека біля старої пошти"
 ---NEW---
-      options:
-        - "на"
-        - "в"
-        - "за"
-        - "біля"
-      explanation: "Вулиця — це відкритий простір, тому «на вулиці»."
+    - words: ["Аптека", "знаходиться", "біля", "пошти"]
+      answer: "Аптека знаходиться біля пошти"
+===FIX_END===
+
+===FIX_START===
+FILE: curriculum/l2-uk-en/a1/vocabulary/around-the-city.yaml
+---OLD---
+- ipa: '[ˈvulɪt͡sʲɑ]'
+  lemma: вулиця
+  pos: noun
+  translation: street
+---NEW---
+- ipa: '[ˈʋulɪt͡sʲɑ]'
+  lemma: вулиця
+  pos: noun
+  translation: street
+===FIX_END===
+
+===FIX_START===
+FILE: curriculum/l2-uk-en/a1/vocabulary/around-the-city.yaml
+---OLD---
+- ipa: '[nɑˈlʲivɔ]'
+  lemma: наліво
+  pos: adverb
+  translation: to the left
+- ipa: '[nɑˈprɑvɔ]'
+  lemma: направо
+  pos: adverb
+  translation: to the right
+- ipa: '[lʲiˈvɔrʊt͡ʃ]'
+  lemma: ліворуч
+  pos: adverb
+  translation: on the left
+- ipa: '[prɑˈvɔrʊt͡ʃ]'
+  lemma: праворуч
+  pos: adverb
+  translation: on the right
+---NEW---
+- ipa: '[nɑˈlʲiʋɔ]'
+  lemma: наліво
+  pos: adverb
+  translation: to the left
+- ipa: '[nɑˈprɑʋɔ]'
+  lemma: направо
+  pos: adverb
+  translation: to the right
+- ipa: '[lʲiˈʋɔrʊt͡ʃ]'
+  lemma: ліворуч
+  pos: adverb
+  translation: on the left
+- ipa: '[prɑˈʋɔrʊt͡ʃ]'
+  lemma: праворуч
+  pos: adverb
+  translation: on the right
+===FIX_END===
+
+===FIX_START===
+FILE: curriculum/l2-uk-en/a1/vocabulary/around-the-city.yaml
+---OLD---
+- ipa: '[ˈpɔtʲim]'
+  lemma: потім
+  pos: adverb
+  translation: then, later
+---NEW---
+- ipa: '[ˈpɔtʲim]'
+  lemma: потім
+  pos: adverb
+  translation: then, later
+- ipa: '[nɑˈzɑd]'
+  lemma: назад
+  pos: adverb
+  translation: back, backwards
+- ipa: '[sʲʋitlɔˈfɔr]'
+  lemma: світлофор
+  pos: noun
+  translation: traffic light
+- ipa: '[mɑrˈʃrutkɑ]'
+  lemma: маршрутка
+  pos: noun
+  translation: minibus
 ===FIX_END===
 
 ---
 
-## Summary of All Issues
+## Review Summary
 
-| # | Severity | Type | Description | Fixed? |
-|---|----------|------|-------------|--------|
-| 1 | Medium | IPA error | [t͡se] → [t͡sɛ] — inconsistent with module's own convention | ✅ Fixed |
-| 2 | High | Pedagogy | "Подивіться направо на світлофорі" — wrong verb for direction command | ✅ Fixed |
-| 3 | High | Activity | Rogue unjumble item "Як у тебе справи" — unrelated to navigation | ✅ Fixed |
-| 4 | Medium | Grammar | Maршрутка pronoun: «Він» for a feminine noun — learner confusion | ✅ Fixed |
-| 5 | Medium | Calque | «Там є парк» — unfixed from green review, natural Ukrainian drops «є» | ✅ Fixed |
-| 6 | Low | LLM artifact | English-only section headings inside Ukrainian-titled section | ✅ Fixed |
-| 7 | Medium | Calque | Template «Там є...» trains learners to produce unnatural Ukrainian | ✅ Fixed |
-| 8 | Low | Pedagogy | Options include «в» and «у» (same preposition, phonetic variants) | ✅ Fixed |
-| 9 | High | Scope | «назад» tested in activities but never taught in lesson | ✅ Fixed |
-| 10 | None | Factual | Maidan etymology — verified correct | N/A |
-| 11 | Medium | LLM artifact | Duplicate fill-in item ("_____ наліво біля банку" appears twice) | ✅ Fixed |
+| Check | Result |
+|---|---|
+| IPA accuracy (tie bars, ʋ) | Content ✓, Vocab **FIXED** (5x [v]→[ʋ]) |
+| Russianisms | CLEAN |
+| Russian characters (ы, э, ё, ъ) | CLEAN |
+| Gender/case/aspect agreement | CLEAN |
+| Vocabulary scope in activities | CLEAN after fixes (світлофор, назад added to vocab) |
+| Grammar scope for level | **FIXED** (removed genitive adjective "старої" from unjumble) |
+| Unjumble word arrays vs answers | All match ✓ |
+| Fill-in grammaticality | All correct ✓ |
+| Fill-in distractor quality | **FIXED** (infinitives → conjugated forms) |
+| Factual accuracy | CLEAN (Euromaidan dates, майдан etymology correct) |
+| LLM artifacts | Minimal — acceptable for tutor persona |
+| Plan compliance | **FIXED** (added "Де ти йдеш?" error correction) |
+| Calques | **FIXED** (3 instances) |
+| Word target (2000 min) | Met (~2500+ words) |
+| YAML format (bare list) | Correct ✓ |
+| All plan sections present | Yes ✓ |
+| Objectives map to self-check | Yes ✓ |
+
+All issues identified have corresponding fixes above. No unfixable problems remain.
 
 ===VERDICT===
 APPROVE

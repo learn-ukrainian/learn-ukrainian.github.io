@@ -1,0 +1,273 @@
+✅ Message sent to Gemini (ID: 11750) [auto-acked: self-addressed]
+✓ Message 11750 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #11750...
+📨 Message #11750
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-meeting-participation
+   Time: 2026-02-20T23:30:14.602896+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b2-pro-06
+level: B2-PRO
+sequence: 6
+slug: meeting-participation
+version: '2.0'
+title: 'Наради: Участь та дискусія'
+subtitle: Meeting Participation
+content_outline:
+- section: Розминка — Культура нарад в Україні
+  points:
+  - Чому українські наради формальніші за західні
+  - Роль ієрархії — хто говорить першим, хто приймає рішення
+  - Типові помилки іноземців (перебивання, занадто неформальний тон)
+- section: Як взяти слово та висловити думку
+  points:
+  - 'Прохання слова: Дозвольте додати... / Чи можу я висловитися? / Хотів(-ла) б зазначити...'
+  - 'Висловлення думки: На мою думку... / Вважаю, що... / Мені здається...'
+  - 'Посилання на факти: Згідно з даними... / Як показує практика... / За нашим досвідом...'
+  - Різниця між категоричним та м'яким висловлюванням
+- section: Згода та незгода — мистецтво дипломатії
+  points:
+  - 'Повна згода: Цілком погоджуюся / Підтримую цю пропозицію / Саме так'
+  - 'Часткова згода: Загалом погоджуюся, але... / Це слушна думка, однак...'
+  - 'М''яка незгода: Дозвольте не погодитися... / Маю дещо інший погляд...'
+  - 'Категорична незгода: Не можу підтримати цю пропозицію / Це суперечить...'
+  - Як критикувати ідею, не критикуючи людину
+- section: Пропозиції та голосування
+  points:
+  - 'Внесення пропозиції: Пропоную... / Вношу на розгляд... / Прошу розглянути...'
+  - 'Підтримка пропозиції: Підтримую / Приєднуюся до пропозиції'
+  - 'Процедура голосування: Хто за? Хто проти? Хто утримався?'
+  - 'Формулювання рішення: Ухвалено... / Вирішено... / Постановили...'
+- section: Зразок діалогу з наради
+  points:
+  - Реалістичний діалог з 4-5 учасниками
+  - Різні ролі (головуючий, доповідач, опоненти)
+  - Аналіз мовних засобів кожного учасника
+- section: Практика — рольова гра
+  points:
+  - 'Сценарій: Нарада щодо впровадження нового проєкту'
+  - Завдання для кожної ролі
+  - Оцінка ввічливості та професійності
+vocabulary_hints:
+  required:
+  - дозвольте додати (allow me to add)
+  - на мою думку (in my opinion)
+  - цілком погоджуюся (I completely agree)
+  - дозвольте не погодитися (allow me to disagree)
+  - пропоную на розгляд (I propose for consideration)
+  - хто за/проти/утримався (who is for/against/abstained)
+  - ухвалено (approved/adopted)
+  - порядок денний (agenda)
+  recommended:
+  - прошу слова (I request to speak)
+  - слушна думка (valid point)
+  - маю заперечення (I have an objection)
+  - приєднуюся до пропозиції (I support the proposal)
+  - кворум (quorum)
+  - головуючий (chairperson)
+activity_hints:
+- type: document-analysis
+  focus: Проаналізувати діалог з наради — визначити регістр кожного учасника
+  items: 1
+- type: role-play
+  focus: Провести міні-нараду з розподілом ролей
+  items: 1
+- type: register-transform
+  focus: Перетворити неформальні репліки на професійні (Я не згоден → Дозвольте не
+    погодитися)
+  items: 8
+- type: fill-in
+  focus: Вставити правильні фрази для взяття слова та висловлення думки
+  items: 10
+- type: matching
+  focus: З'єднати ситуацію з відповідною фразою (згода, незгода, пропозиція)
+  items: 10
+focus: professional
+pedagogy: ESP
+prerequisites:
+- 'b2-pro-05 (Звітність: Аналіз та висновки)'
+connects_to:
+- 'b2-pro-07 (Наради: Протоколювання)'
+objectives:
+- Учень може ввічливо взяти слово та висловити думку на нараді
+- Учень може висловлювати згоду та незгоду з різним ступенем категоричності
+- Учень може вносити пропозиції та брати участь у голосуванні
+- Учень розуміє ієрархічну культуру українських ділових нарад
+grammar:
+- Ввічливі імперативи (Дозвольте... / Прошу...)
+- Модальні конструкції для пом'якшення (Хотів би зазначити... / Мені здається...)
+- Безособові конструкції (Вважається, що... / Прийнято рішення...)
+register: офіційно-діловий
+phase: B2-PRO.1
+persona:
+  voice: Senior Specialist
+  role: Керівник департаменту
+word_target: 2000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Наради: Участь та дискусія
+
+## Використані джерела
+1. [Державний архів](https://archives.gov.ua) — стандарти ДСТУ 4163:2020 щодо оформлення протоколів нарад.
+2. [Дія.Бізнес](https://business.diia.gov.ua) — рекомендації щодо професійної комунікації та культури нарад.
+3. [LIGA ZAKON](https://ligazakon.net) — юридичні аспекти документування рішень колегіальних органів.
+4. [Київський національний університет імені Тараса Шевченка](http://www.univ.kiev.ua) — навчальні матеріали з культури ділового мовлення.
+
+## Термінологічна база
+
+| Українська (норма) | Русизм/ненорма | English | Контекст вживання |
+|--------------------|---------------|---------|-------------------|
+| Порядок денний     | Повістка дня  | Agenda  | Офіційна структура наради |
+| Головуючий         | Председатель  | Chairperson | Керівник наради |
+| Ухвалити           | Прийняти (рішення) | To adopt/approve | Фіксація рішення |
+| Порушити питання   | Підняти питання | To raise an issue | Початок обговорення |
+| Брати участь       | Приймати участь | To participate | Професійна активність |
+| Погоджуватися      | Згоджуватися  | To agree | Висловлення підтримки |
+| Вважати            | Рахувати      | To think/opine | Висловлення думки |
+| Враховуючи         | Приймаючи до уваги | Considering | Обґрунтування думки |
+
+## Мовні норми та стандарти
+- **ДСТУ 4163:2020**: Визначає чітку структуру протоколу наради (Голова, Секретар, Присутні, Порядок денний, СЛУХАЛИ, ВИСТУПИЛИ, УХВАЛИЛИ).
+- **Офіційно-діловий стиль**: Вимагає використання безособових конструкцій («Вирішено», «Постановлено») та стандартних мовних кліше.
+- **Етикет**: В українській професійній культурі критично важливим є дотримання ієрархії при наданні слова та прийнятті фінальних рішень.
+
+## Аутентичні приклади
+1. [Протокол]: «СЛУХАЛИ: Сидоренка А. П., головного інженера, який доповів про стан виконання плану виробництва за січень 2024 року.»
+2. [Лист-запрошення]: «Запрошуємо Вас взяти участь у робочій нараді щодо впровадження нового проєкту. Просимо підтвердити участь до 18:00.»
+3. [Ухвала]: «УХВАЛИЛИ: 1.1. Взяти до відома інформацію керівника відділу маркетингу. 1.2. Доопрацювати стратегію до 07.02.2024.»
+
+## Типові помилки
+1. ❌ **Я рахую, що...** → ✅ **Я вважаю/переконаний, що...** — «Рахувати» стосується лише цифр, для думок використовується «вважати».
+2. ❌ **Повістка дня** → ✅ **Порядок денний** — Калька з російського «повестка дня».
+3. ❌ **Піднімати питання** → ✅ **Порушувати питання** — Фізично піднімати можна предмети, питання — «порушують».
+4. ❌ **Приймати участь** → ✅ **Брати участь** — Стійка норма української мови.
+5. ❌ **Давайте проголосуємо** → ✅ **Пропоную проголосувати** — В офіційному контексті форма з «давайте» вважається занадто неформальною та стилістично зниженою.
+
+## Engagement Hooks (mapped to sections)
+- Section "Розминка — Культура нарад в Україні": [!pro-tip] — В українських компаніях ієрархія має велике значення: слово зазвичай першим надають керівнику або найстаршому за посадою.
+- Section "Як взяти слово та висловити думку": [!language-note] — Використовуйте конструкцію «Згідно з даними...» замість «Згідно даних...», оскільки прийменник «згідно з» вимагає орудного відмінка.
+- Section "Згода та незгода — мистецтво дипломатії": [!context] — Пряма незгода може сприйматися як особиста образа, тому в українському діловому етикеті прийнято спочатку знайти «зерно істини» в словах колеги, а потім м'яко заперечити.
+- Section "Пропозиції та голосування": [!example] — Типове формулювання під час голосування: «Хто за дану пропозицію? Прошу голосувати. Хто проти? Хто утримався?»
+
+## Section-Mapped Research Notes
+
+### Розминка — Культура нарад в Україні
+Українські наради часто мають вертикальну структуру. Важливо підкреслити роль головуючого (chairperson) та секретаря. Ієрархія проявляється не лише в порядку виступів, а й у формі звертання (на «Ви» та за ім'ям по батькові у традиційних структурах або лише на «Ви» у сучасних).
+
+### Як взяти слово та висловити думку
+Фокус на ввічливих формулах переривання («Чи можу я додати?»), які не порушують регламент. Важливо навчити студента відрізняти «суб'єктивну думку» (Мені здається...) від «професійної оцінки» (За нашими розрахунками...).
+
+### Згода та незгода — мистецтво дипломатії
+Дослідження показує, що «м'яка незгода» будується через конструкції «Безумовно, Ви маєте рацію в тому, що..., водночас...». Використання модальних часток (можливо, ймовірно) допомагає зберегти професійне обличчя під час дискусії.
+
+### Пропозиції та голосування
+Юридична точність формулювань. Вживання дієслів «Пропоную», «Вношу на розгляд». Процедура голосування вимагає чітких термінів: «За», «Проти», «Утримався». Фіксація рішення дієсловом «Ухвалено» (Adopted).
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 11813)
+✓ Message 11750 acknowledged
+✓ Message 11813 acknowledged

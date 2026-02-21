@@ -1,0 +1,203 @@
+✅ Message sent to Gemini (ID: 11841) [auto-acked: self-addressed]
+✓ Message 11841 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #11841...
+📨 Message #11841
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-the-seim
+   Time: 2026-02-20T23:33:32.234604+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 10
+module: ruth-010
+module_number: 8
+slug: the-seim
+title_uk: Сейм
+title_en: The Seim
+phase: 1
+phase_id: chancery-legal
+phase_name: Chancery & Legal
+focus: Parliamentary vocabulary — Ухвала
+content_outline:
+- section: Вступ
+  description: Introduction to The Seim
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Baroque Scholar
+  role: Deputy to the Sejm
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: The Seim
+
+## Використані джерела
+1. [Енциклопедія Сучасної України](https://esu.com.ua) — статті "Вальний сейм", "Сеймики".
+2. [Ізборник](http://litopys.org.ua) — промови Лаврентія Древинського та Адама Киселя.
+3. [Інститут історії України НАНУ](http://history.org.ua) — матеріали про шляхетську демократію та руські землі.
+4. [Бібліотека ім. Вернадського](http://nbuv.gov.ua) — дослідження сеймових інструкцій Волинського воєводства.
+
+## Хронологія
+- 1569: Люблінська унія — утворення єдиного Вального сейму Речі Посполитої; руська шляхта отримує рівні права.
+- 1573: Варшавська конфедерація — гарантія релігійної толерантності (активна участь русинів).
+- 1595: Інструкція Волинського сеймику — протест проти порушення прав руської шляхти.
+- 1620: Промова Лаврентія Древинського на Варшавському сеймі на захист православ'я.
+- 1638: "Ординація Війська Запорозького" — сеймова конституція, що обмежила права козацтва.
+- 1641: Промова Адама Киселя на сеймі про "утиски руської віри".
+
+## Ключові факти та цитати
+- **Адам Кисіль (1641):** «...Шляхетський стан наповнено утисками... справедливий розподіл заслуженого обминає [нас] з огляду на релігію».
+- **Лаврентій Древинський (1620):** «Якби в даний час не йшлося про таку велику небезпеку для держави, я б утримався... утисків зазнає східна церква, мати...».
+- **Принцип:** *Nihil novi* (Нічого нового) — король не міг приймати нових законів без згоди шляхти.
+- **Термін:** *Laudum* (ухвала) — рішення місцевого сеймику.
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ": [!context] — Сейм як "театр" барокової політики, де русини були акторами, а не глядачами.
+- Section "Структура": [!fact] — Руські воєводства мали свої особливі сеймики (генеральний сеймик у Вишні).
+- Section "Аналіз: Древинський": [!quote] — Цитата про "Східну церкву, матір нашу".
+- Section "Аналіз: Кисіль": [!biography] — Адам Кисіль як "міст" між двома світами (православний сенатор).
+- Section "Політична культура": [!myth-buster] — "Liberum Veto" часто демонізують, але для меншості (православних) це був єдиний захист від католицької більшості.
+- Section "Термінологія": [!etymology] — Походження слова "ухвала" та його зв'язок з польським "uchwała".
+
+## Деколонізаційний контекст
+- **Imperial Myth:** Українські землі були пасивним об'єктом польського гноблення. Сейм — чужа інституція.
+- **Ukrainian Reality:** Руська шляхта (Острозькі, Киселі, Древинські) активно використовувала сеймові механізми для захисту своїх прав. Українська політична культура формувалася саме в дебатах сеймиків, а не в московському авторитаризмі. Козацька рада перейняла багато рис шляхетського сеймику.
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| Річ Посполита | Польська окупація / "панська Польща" | Спільна держава "обох народів" (де-юре), де русини боролися за статус "третього народу". |
+| Liberum Veto | Анархія, причина занепаду | Інструмент захисту прав меншості (зокрема релігійної). |
+| Шляхетська демократія | Класове гноблення селян | Унікальна для Європи система громадянських прав (хоч і обмежена станом), предтеча республіканізму. |
+
+## Section-Mapped Research Notes
+
+### Вступ
+Сейм як центральний орган. Три стани: Король, Сенат, Посольська Ізба. Місце русинів у цій структурі.
+
+### Сеймики та Інструкції
+Роль місцевих сеймиків (Луцьк, Житомир, Вишня). "Lauda" та "Instruktsia" — як формувалася воля шляхти знизу. Зв'язок депутата з інструкцією (імперативний мандат).
+
+### Аналіз: Древинський (1620)
+Риторика захисту віри. Використання емоційних аргументів ("мати-церква"). Посилання на права і привілеї.
+
+### Аналіз: Кисіль (1641)
+Риторика прагматизму. Попередження про козацьку загрозу. Аргументація через "спільне благо" (bonum publicum).
+
+### Термінологія: Ухвала
+Юридична лексика: "артикул", "конституція" (в значенні закону), "ухвала", "вето". Порівняння з сучасною термінологією ВРУ.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 11882)
+✓ Message 11841 acknowledged
+✓ Message 11882 acknowledged

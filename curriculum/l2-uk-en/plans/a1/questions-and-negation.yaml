@@ -6,54 +6,77 @@ version: '2.0'
 title: Questions & Negation
 subtitle: Asking Questions and Saying No
 content_outline:
-- section: Warm-up
+- section: 'Вступ: Основи заперечення та інтонації (Introduction: Basics of Negation
+    and Intonation)'
+  words: 400
   points:
-  - Conversations need questions and answers, not just statements
-  - 'Ukrainian is simpler — just add чи or use rising intonation — content note: use
-    arrows (↗) to visualize intonation'
-  - 'Negation — just put не before the verb — learner error: confusion between ні
-    (no) and не (not)'
-- section: Presentation
+  - 'The simplicity of Ukrainian syntax: unlike English, there is no auxiliary ''do/does''.
+    This section explicitly addresses the ''Do Trap'' by comparing direct statement-to-question
+    transformations.'
+  - 'Introducing the negation particle ''не'' (not) vs the response ''ні'' (no). Learner
+    error focus: avoiding the phonetic and functional confusion between these two
+    essential words (''Ні, я не знаю'').'
+  - 'Visualizing the voice: using arrows (↗) to illustrate rising intonation in questions
+    without ''чи'', contrasting with the falling tone (↘) of negative statements.'
+- section: 'Презентація: Питальні конструкції (Presentation: Interrogative Structures)'
+  words: 600
   points:
-  - 'Yes/No questions with чи: Чи ти читаєш? (Do you read?)'
-  - 'Casual alternative — rising intonation without чи — cultural hook: ''Чи'' is
-    standard/polite; dropping it is conversational/casual'
-  - 'Answers: Так (yes), Ні (no)'
-  - 'Question words: що, хто, де, куди, звідки, коли, чому, як, скільки — content
-    note: teach ''що'' but mention common spoken variant ''шо'''
-  - 'No "do/does" needed — question word signals the question — learner error: The
-    ''Do'' Trap (translating auxiliary ''do'')'
-- section: Practice
+  - Standard yes/no questions using the particle 'чи'. Contextualizing 'чи' as a marker
+    of politeness, emphasis, or formal register in sentences like 'Чи ви розумієте?'.
+  - 'The spoken alternative: rising intonation alone. Explain that dropping ''чи''
+    is standard in casual conversation but requires a sharp pitch rise (↗) on the
+    focus word to avoid sounding like a statement.'
+  - 'Comprehensive set of interrogative words aligned with State Standard §4.3.1 (A1):
+    що, хто, де, коли, куди, звідки. Note on the standard ''що'' vs the ubiquitous
+    spoken variant ''шо''.'
+  - 'Answering patterns: ''Так'' vs ''Ні''. Practice responding to ''чи''-questions
+    with confirmation or negation using ''так'' or ''ні'' + ''не'' + verb.'
+- section: 'Практика: Тренування заперечень та запитань (Practice: Drilling Negation
+    and Questions)'
+  words: 400
   points:
-  - Forming questions from statements — focus on rising intonation (↗) for yes/no
-    questions without чи
-  - Choosing correct question word for context
-- section: Production
+  - 'Sentence transformation drills: turning positive statements into negative ones
+    and then into interrogative forms (e.g., ''Ти знаєш'' -> ''Ти не знаєш'' -> ''Чи
+    ти знаєш?'').'
+  - 'Error correction lab: identifying and fixing ''English-transfer'' questions that
+    incorrectly use auxiliary verbs or flat intonation patterns.'
+  - 'Matching exercise: pairing question words (''хто'', ''що'', ''де'', ''куди'')
+    with appropriate situational answers to build contextual syntactic intuition.'
+- section: 'Продукція: Комунікативні сценарії (Production: Communicative Scenarios)'
+  words: 400
   points:
-  - Mini-dialogues at café with questions
-  - Question-and-answer practice
-- section: Cultural Insight
+  - 'The Café Scenario: asking questions about the menu, availability, and prices
+    (e.g., ''Де кава?'', ''Скільки це коштує?'', ''Чи є цукор?'').'
+  - 'Roleplay: ''The Investigative Journalist'' (Persona). Students interview each
+    other using a checklist of question words to uncover basic facts about their partners.'
+  - 'Negative responses and frequency: practicing ''Ні, я ніколи не...'' to integrate
+    frequency adverbs like ''ніколи'', ''завжди'', and ''часто'' into negative statements.'
+- section: Культурний контекст та ALF (Cultural Context and ALF)
+  words: 200
   points:
-  - Register difference — formal uses чи, casual uses intonation
-  - 'Pop culture examples from Ukrainian dubbing — include iconic ALF quote: "Ти не
-    любиш котів? Ти просто не вмієш їх готувати!"'
+  - 'Register nuances: when to use the formal ''чи'' (standard/polite) versus intonation-only
+    questions (conversational/casual) in various Ukrainian social settings.'
+  - 'Pop culture integration: the iconic ALF quote ''Ти не любиш котів? Ти просто
+    не вмієш їх готувати!''. Use this to demonstrate negation, rhetorical intonation,
+    and a touch of dark Ukrainian humor.'
 vocabulary_hints:
   required:
-  - чи (question particle) — Чи ти...? Чи це...? (High frequency)
-  - що (what) — Що це? Що ти робиш? (Top 50 word)
-  - хто (who) — Хто це? Хто там?
-  - де (where) — Де ти? Де це?
+  - чи (question particle) — Чи ти...? Чи це...? (Polite/Standard question marker)
+  - що (what) — Що це? Що ти робиш?; mention spoken variant 'шо' (Top 10 word)
+  - хто (who) — Хто це? Хто там? (Top 50 word)
+  - де (where) — Де ти? Де туалет? (High frequency adverb)
   - коли (when) — Коли сніданок? Коли ти вдома?
-  - не (not) — не знаю, не розумію, не хочу (Very high frequency)
+  - не (not) — не знаю, не розумію, не хочу (Top 5 particle; always before the verb)
   - так (yes) — так, звичайно; так, будь ласка
-  - ні (no) — ні, дякую; ні, не...
+  - ні (no) — ні, дякую; ні, не... (Phonetic contrast with 'не')
   recommended:
-  - куди (where to)
-  - чому (why)
-  - як (how)
-  - скільки (how much)
-  - завжди (always)
-  - ніколи (never)
+  - куди (where to) — Куди ви їдете? (Standard §4.3.1)
+  - звідки (from where) — Звідки ти? (Standard §4.3.1)
+  - чому (why) — Чому ти тут? Чому ні?
+  - як (how) — Як справи? Як це?
+  - скільки (how much) — Скільки це коштує?
+  - завжди (always) — я завжди тут
+  - ніколи (never) — я ніколи не... (Requires double negation)
 activity_hints:
 - type: fill-in
   focus: Form questions with чи

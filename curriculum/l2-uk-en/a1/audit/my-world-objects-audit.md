@@ -1,7 +1,7 @@
 # Audit Report: M05 — my-world-objects.md
 **Level:** A1 | **Module:** M05 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-19 23:01:29
+**Generated:** 2026-02-21 00:46:30
 
 ## Configuration
 **Type:** A1-grammar
@@ -37,7 +37,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2256/2000 (raw: 2635)
+- **Words:** ✅ 2255/2000 (raw: 2634)
 - **Activities:** ✅ 9/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 5/4 types
@@ -60,7 +60,7 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **My World: Objects** | ✅ | 71 | Included in Core |
-| **Вступ: Вказуємо на світ** | ✅ | 356 | Included in Core |
+| **Вступ: Вказуємо на світ** | ✅ | 355 | Included in Core |
 | **Теорія: Вказівні займенники (Цей і Той)** | ✅ | 445 | Included in Core |
 | **Практика: Побут і речі** | ✅ | 555 | Included in Core |
 | **Культурний контекст: Український дім** | ✅ | 423 | Included in Core |

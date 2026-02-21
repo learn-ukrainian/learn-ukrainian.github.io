@@ -1,7 +1,7 @@
 # Audit Report: M21 — yesterday-past-tense.md
 **Level:** A1 | **Module:** M21 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-19 23:01:51
+**Generated:** 2026-02-21 00:46:41
 
 ## Configuration
 **Type:** A1-grammar
@@ -38,7 +38,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2406/2000 (raw: 2742)
+- **Words:** ✅ 2389/2000 (raw: 2725)
 - **Activities:** ✅ 10/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -51,7 +51,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 40.5% (target 35-55% (M21))
+- **Immersion:** 🇺🇦 40.9% (target 35-55% (M21))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -60,8 +60,8 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Yesterday - Past Tense** | ✅ | 52 | Included in Core |
-| **Розминка: Вчора і сьогодні** | ✅ | 515 | Included in Core |
+| **Yesterday - Past Tense** | ✅ | 53 | Included in Core |
+| **Розминка: Вчора і сьогодні** | ✅ | 516 | Included in Core |
 | **Граматика: Минулий час дієслів** | ✅ | 1044 | Included in Core |
 | **Практика: Спогади про вчора** | ✅ | 600 | Included in Core |
-| **Підсумок** | ✅ | 195 | Included in Core |
+| **Підсумок** | ✅ | 176 | Included in Core |

@@ -1,0 +1,204 @@
+✅ Message sent to Gemini (ID: 12494) [auto-acked: self-addressed]
+✓ Message 12494 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12494...
+📨 Message #12494
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-pvl-blinding-vasylko
+   Time: 2026-02-20T23:40:09.517720+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 38
+module: oes-038
+module_number: 38
+slug: pvl-blinding-vasylko
+title_uk: 'ПВЛ: Осліплення Василька'
+title_en: 'PVL: Blinding of Vasylko'
+phase: 2
+phase_id: literary-tradition
+phase_name: Literary Tradition
+focus: Psychological horror — complex syntax
+content_outline:
+- section: Вступ
+  description: 'Introduction to PVL: Blinding of Vasylko'
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Senior Paleographer
+  role: Court Physician
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Pvl Blinding Vasylko
+
+## Використані джерела
+1. [Літопис руський (переклад Л. Махновця)](http://litopys.org.ua/litop/lit12.htm) — повний текст подій 1097 року.
+2. [Енциклопедія історії України: Любецький з'їзд 1097](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Liubetskyj_z_izd_1097) — історичний контекст.
+3. [Вікіджерела: Повість врем'яних літ](https://uk.wikisource.org/wiki/%D0%9F%D0%BE%D0%B2%D1%96%D1%81%D1%82%D1%8C_%D0%B2%D1%80%D0%B5%D0%BC%27%D1%8F%D0%BD%D0%B8%D1%85_%D0%BB%D1%96%D1%82) — оригінальний текст та адаптації.
+
+## Хронологія
+- **Листопад 1097**: Любецький з'їзд князів. Ухвалення принципу «Кожен хай держить отчину свою».
+- **Листопад 1097**: Змова Давида Ігоровича проти Василька. Давид переконує київського князя Святополка, що Василько планує захопити владу.
+- **Грудень 1097**: Арешт Василька у Києві після відмови від пересторог.
+- **Ніч після арешту**: Вивезення Василька до Звенигорода (під Києвом) та жорстоке осліплення торчином Бередієм.
+- **1098**: Каральний похід Володимира Мономаха та інших князів проти Давида та Святополка («Чому губимо Руську землю?»).
+- **1124**: Смерть Василька Ростиславича. Він правив Теребовлянським князівством сліпим понад 25 років, що є унікальним випадком політичної суб'єктності.
+
+## Ключові факти та цитати
+- **Цитата (Любеч)**: «Пощо ми губимо Руську землю, самі проти себе зваду маючи? А половці землю нашу розносять і раді є, що межи нами війна донині. Відтепер з’єднаймося в одне серце і обережімо Руську землю».
+- **Цитата (Сцена жаху)**: «І, приступивши, торчин, на ймення Бередій, і гострий ніж узявши, хотів ударити його в око. Але схибив і перерізав йому лице... Потім же вгородив він ніж в око і вийняв зіницю...» (Деталізація фізіологічного жаху — рідкісна для літератури того часу).
+- **Психологізм**: Літописець (імовірно, Василь, свідок подій) детально описує емоційний стан жертви: плач, благання, фізичний біль, шок. Це зародження психологічної прози.
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ": [!context] — Любецький з'їзд як спроба федералізації, а не просто «феодальна роздробленість».
+- Section "Основний матеріал: I": [!history-bite] — Як Давид Ігорович використав дезінформацію (фейк) про змову Василька і Мономаха, щоб маніпулювати Святополком.
+- Section "Основний матеріал: II": [!quote] — Уривок про дошку на грудях (тортури), що показує фізику процесу осліплення.
+- Section "Основний матеріал: III": [!myth-buster] — Міф про те, що каліцтво означало політичну смерть. Василько залишився ефективним правителем.
+- Section "Основний матеріал: IV": [!paleography] — Особливості передачі емоційного стану через синтаксис (нагромадження дієслів).
+
+## Деколонізаційний контекст
+- **Imperial myth**: Розпад Київської Русі як «трагедія» і «слабкість» перед монголами.
+- **Ukrainian reality**: Любецький з'їзд — це перехід до децентралізованої (федеративної) моделі, нормальної для середньовічної Європи. Князівські міжусобиці — це політична конкуренція, а не «хаос».
+- **Agency**: Акцент на Василькові не як на жертві, а як на суб'єкті, який вижив і продовжив будувати державу (Теребовлянське князівство як прообраз Галицького).
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| Київська Русь | Колиска трьох братніх народів, єдина держава | Русь-Україна, Київська держава, поліцентрична структура |
+| Феодальна роздробленість | Період занепаду, хаосу | Період удільного устрою, децентралізації, розвитку регіональних центрів |
+| Міжусобні війни | Самознищення, братовбивство | Династична боротьба, політична культура середньовіччя |
+
+## Section-Mapped Research Notes
+
+### Вступ: Любецький з'їзд та передумови
+Контекст 1097 року. Спроба кодифікувати спадкові права («отчину»). Роль Мономаха. Крихкість угод.
+
+### Основний матеріал: I — Змова та арешт
+Роль Давида Ігоровича (підбурювач). Психологічна маніпуляція Святополком. Арешт Василька, який «не знав про підступ».
+
+### Основний матеріал: II — Сцена осліплення (Психологічний горрор)
+Детальний аналіз тексту. Натуралізм сцени: дошка, що тріщить на грудях; ніж; кров. Це не просто хроніка, це літературний твір з метою викликати емпатію та жах. Роль оповідача (Василя).
+
+### Основний матеріал: III — Життя після: Політична суб'єктність
+Василько не здався. Повернення до Теребовлі. Успішне правління. Це спростовує уявлення про те, що сліпий князь — не князь.
+
+### Основний матеріал: IV — Мовна майстерність (Синтаксис напруги)
+Як літописець використовує складні речення та дієслівні ряди для нагнітання динаміки.
+
+### Практика та Підсумок
+Закріплення лексики тортур, зради та політичної влади. Висновок про моральний урок літопису.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12531)
+✓ Message 12494 acknowledged
+✓ Message 12531 acknowledged

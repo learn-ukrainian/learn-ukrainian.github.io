@@ -1,0 +1,295 @@
+✅ Message sent to Gemini (ID: 10453) [auto-acked: self-addressed]
+✓ Message 10453 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10453...
+📨 Message #10453
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-novyny-yak-chytaty
+   Time: 2026-02-20T20:33:48.297963+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b1-87
+level: B1
+sequence: 87
+slug: novyny-yak-chytaty
+version: '2.0'
+title: 'Новини: як читати'
+subtitle: News Reading Strategies for Ukrainian Media
+content_outline:
+- section: Вступ
+  points:
+  - 'Новини як спосіб вивчення мови — State Standard §3.4: навігація в інтернеті та
+    пресі як ключова компетенція B1'
+  - 'Де шукати якісні джерела — cultural hook: Suspilne (87% trust rating) та «Українська
+    правда» (Gongadze Prize context) як стандарти якості'
+- section: Огляд
+  points:
+  - 'Стратегія 1: Розуміння заголовків — learner error: плутанина через «Headlinese»
+    (пропущені дієслова, номінативні речення); візуальна структура (шапка, стрічка)'
+  - 'Стратегія 2: Читання ліду — fix: сканування підмета/присудка перед розбором довгих
+    дієприкметникових зворотів'
+  - 'Стратегія 3: Факти проти думок — cultural hook: поняття «джинса» (paid political
+    advertising disguised as news)'
+  - 'Стратегія 4: Оцінка надійності джерел — content writing note: правило трьох джерел
+    (standard media literacy practice)'
+  - Автентична стаття з анотаціями — фокус на розпізнаванні активних дієприкметників
+    у контексті
+- section: Практика
+  points:
+  - 'Тексти з культурними, економічними новинами — State Standard §3.6: суспільні
+    проблеми, війна і мир; learner error: актуальний ≠ actual (real)'
+- section: Продукція
+  points:
+  - 'Діалоги про обговорення новин — State Standard §4.5.1: офіційне/неофіційне спілкування;
+    learner error: оперативний ≠ operative (medical)'
+- section: Підсумок — Читай, думай, перевіряй
+  points:
+  - Рекомендації для самостійної практики — контекст телемарафону «Єдині новини» та
+    незалежних ЗМІ
+- section: Потрібно більше практики?
+  points: []
+vocabulary_hints:
+  required:
+  - новини (news) — свіжі/останні новини, стрічка новин, фейкові новини
+  - стаття (article) — публіцистична/редакційна стаття, опублікувати статтю
+  - заголовок (headline) — гучний заголовок, винести в заголовок
+  - джерело (source) — надійне/перевірене джерело, посилатися на джерело
+  - факт (fact) — перевірка фактів (fact-checking)
+  - думка (opinion) — власна думка, експертна думка
+  - журналіст (journalist) — професійна етика, розслідування
+  - ЗМІ (mass media) — засоби масової інформації, незалежні ЗМІ
+  recommended:
+  - редакція (editorial office) — редакційна політика
+  - кореспондент (correspondent) — спеціальний кореспондент
+  - огляд (review) — огляд подій
+  - коментар (commentary) — офіційний коментар
+activity_hints:
+- type: reading
+  focus: Authentic news articles
+  items: 15
+- type: match-up
+  focus: Match headlines to content
+  items: 20
+- type: fill-in
+  focus: Complete news summaries
+  items: 15
+focus: skills
+pedagogy: CBI
+prerequisites:
+- b1-86 (Ukrainian Holidays and Festivals)
+connects_to:
+- b1-88 (Interviews and Podcasts)
+objectives:
+- Learner can apply news reading strategies to authentic Ukrainian texts
+- Learner can identify headlines, leads, and main points in news articles
+- Learner can distinguish fact from opinion in Ukrainian news
+- Learner is prepared for autonomous news reading at B2
+grammar:
+- News vocabulary and register
+- Headline patterns
+- Reporting structures
+register: розмовний
+phase: B1.8 [Skills & Integration]
+persona:
+  voice: Senior Language & Culture Specialist
+  role: News Analyst
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Новини: як читати
+
+## State Standard Reference
+§3.4: "Дозвілля, відпочинок: ... преса, радіо, телебачення, інтернет"
+§3.6: "Суспільні відносини: ... суспільні проблеми; державний устрій країни; війна і мир; суспільно-політичні події"
+§4.5.1: "Офіційне й неофіційне спілкування... Стилістичні засоби лексики: антоніми, синоніми, епітети, метафори"
+Alignment: This module directly addresses the B1 requirement to navigate media sources (press, internet) and understand socio-political vocabulary through the lens of official/publicistic style.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| **Новини** (News) | High / General | *свіжі/останні новини* (breaking/latest), *головні новини* (top stories), *фейкові новини* (fake news), *стрічка новин* (news feed) |
+| **Стаття** (Article) | High / Media | *публіцистична стаття* (op-ed), *редакційна стаття* (editorial), *аналітична стаття*, *опублікувати статтю* |
+| **Джерело** (Source) | High / Media | *надійне/перевірене джерело* (reliable source), *офіційне джерело*, *анонімне джерело*, *посилатися на джерело* (cite a source) |
+| **Заголовок** (Headline) | Med / Media | *гучний заголовок* (loud/clickbait headline), *винести в заголовок*, *читати лише заголовки* |
+| **ЗМІ** (Media) | High / Abbr. | *засоби масової інформації*, *офіційні ЗМІ*, *незалежні ЗМІ* |
+
+## Cultural Hooks
+1. **Ukrainska Pravda & Gongadze**: Founded in 2000 by Georgiy Gongadze, whose murder sparked the "Ukraine without Kuchma" protests. It remains a symbol of independent journalism. The *Gongadze Prize* (est. 2019) honors journalistic integrity.
+2. **Suspilne (Public Broadcasting)**: Reformed in 2017 from state TV to independent public broadcaster (PBS style). In 2022, it became a trusted pillar of the "United News" telethon, with 87% trust rating.
+3. **The "Jeansa" Phenomenon**: A specifically Ukrainian term (*джинса*) for paid political advertising disguised as news. A critical media literacy concept for B1 learners.
+
+## Common Learner Errors
+1. **Headline Grammar**: Learners confuse "Headlinese" (dropped verbs, nominal sentences) with standard grammar.
+   *   *Error*: Trying to find the verb in "Візит президента на фронт" (President's visit to front) and getting lost.
+2. **False Cognates in Media**:
+   *   *Error*: Confusing *актуальний* (current/relevant) with English "actual" (real).
+   *   *Error*: Confusing *оперативний* (rapid/prompt news) with medical "operative".
+3. **Getting Lost in Participles**: B1 learners struggle with long participial phrases common in news leads (*активний дієприкметник*).
+   *   *Fix*: Teach scanning for the main subject and predicate first.
+
+## Cross-References
+- **Builds on**: `b1-86` (Holidays - cultural context), `b1-35/41` (Complex sentences - essential for reading leads).
+- **Prepares for**: `b1-88` (Interviews/Podcasts - listening skills), `b1-91` (Debates - forming opinions based on news).
+
+## Notes for Content Writing
+- **Tone**: The "News Analyst" persona should use professional yet accessible language.
+- **Visuals**: Describe the visual structure of a news site (Header, Feed, Sidebar) in Ukrainian (*шапка, стрічка, бічна панель*).
+- **Fact-Checking**: Emphasize the rule of "Three Sources" (*правило трьох джерел*) as a standard practice taught in Ukrainian media literacy courses.
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 500
+  points:
+  - "Медіа як інструмент вивчення мови — State Standard §3.4: навігація в інтернеті та пресі як ключова компетенція рівня B1 для інтеграції в інформаційний простір."
+  - "Еволюція незалежних медіа в Україні: від заснування 'Української правди' Георгієм Гонгадзе у 2000 році до створення 'Суспільного' (Public Broadcasting) з рейтингом довіри 87%."
+- section: "Стратегії читання: Заголовки та ліди (Reading Strategies: Headlines and Leads)"
+  words: 1100
+  points:
+  - "Аналіз граматики заголовків: робота з номінативними реченнями та пропущеними дієсловами — подолання труднощів при читанні 'Headlinese' (напр., 'Візит президента на фронт')."
+  - "Структура новинного ліду: фокус на розпізнаванні активних дієприкметників та складних синтаксичних конструкцій — стратегія пошуку підмета та присудка для швидкого розуміння суті."
+  - "Візуальна грамотність: розпізнавання елементів сайту — шапка (header), стрічка новин (news feed) та бічна панель (sidebar) як орієнтири для пошуку інформації."
+- section: "Медіаграмотність: Факти та маніпуляції (Media Literacy: Facts and Manipulations)"
+  words: 1000
+  points:
+  - "Факти проти думок: розрізнення об'єктивних новин та авторських колонок (op-eds) — аналіз маркерів суб'єктивності за вимогами Стандарту §4.5.1."
+  - "Критичне сприйняття: поняття 'джинси' (paid political advertising) як специфічного явища в українському медіапросторі — ідентифікація ознак замовних матеріалів."
+  - "Алгоритм перевірки: правило 'трьох джерел' (three sources rule) як золотий стандарт журналістики та практичний інструмент для фактчекінгу (fact-checking)."
+- section: "Лексичні пастки та автентичний контекст (Lexical Traps and Authentic Context)"
+  words: 900
+  points:
+  - "Хибні друзі перекладача: робота над типовими помилками — розрізнення 'актуальний' (current/relevant) від англ. 'actual', та 'оперативний' (prompt) від 'operative'."
+  - "Читання автентичних текстів: тематика суспільно-політичних подій, війни та миру згідно зі Стандартом §3.6 — засвоєння високої лексики офіційного стилю."
+  - "Джерела інформації: робота з термінологією цитування — офіційні, анонімні та перевірені джерела (надійне джерело, посилатися на джерело)."
+- section: "Продукція та підсумок (Production and Summary)"
+  words: 500
+  points:
+  - "Дискусія про новини: офіційне спілкування щодо суспільних проблем — практика висловлення власної думки на основі прочитаних матеріалів (Стандарт §4.5.1)."
+  - "Підсумок 'Читай, думай, перевіряй': рекомендації щодо незалежних ЗМІ та розуміння ролі телемарафону 'Єдині новини' в сучасному контексті."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "новини (news) — свіжі/останні новини (breaking news), стрічка новин (news feed), головні новини (top stories)"
+  - "стаття (article) — публіцистична стаття (op-ed), редакційна стаття (editorial), опублікувати статтю"
+  - "заголовок (headline) — гучний заголовок (clickbait), винести в заголовок, читати лише заголовки"
+  - "джерело (source) — надійне/перевірене джерело, посилатися на джерело (cite a source), анонімне джерело"
+  - "ЗМІ (mass media) — засоби масової інформації, незалежні ЗМІ, офіційні ЗМІ"
+  - "факт (fact) — перевірка фактів (fact-checking), незаперечний факт"
+  - "думка (opinion) — авторська думка, суб'єктивна позиція, розбіжність у думках"
+  - "актуальний (current/relevant) — актуальні події, актуальне питання; хибний когнат до англ. 'actual'"
+  recommended:
+  - "джинса (paid news) — розпізнати джинсу; сленговий термін для прихованої реклами"
+  - "редакція (editorial office) — редакційна політика, звернутися до редакції"
+  - "кореспондент (correspondent) — власний кореспондент, військовий кореспондент"
+  - "огляд (review) — аналітичний огляд, огляд преси"
+  - "оперативний (prompt/rapid) — оперативна інформація, оперативно реагувати; не плутати з медичним терміном"
+  - "шапка (header) — шапка сайту; елемент візуальної структури медіа"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4047 chars)
+✅ Message sent to Claude (ID: 10460)
+✓ Message 10460 acknowledged
+   Auto-acknowledged reply #10460 (stdout delivery — no inbox accumulation)
+✓ Message 10453 acknowledged

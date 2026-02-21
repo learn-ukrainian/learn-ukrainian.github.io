@@ -1,0 +1,297 @@
+✅ Message sent to Gemini (ID: 12380) [auto-acked: self-addressed]
+✓ Message 12380 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12380...
+📨 Message #12380
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-svidchennia-holodomoru-i
+   Time: 2026-02-20T23:39:03.606129+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-hist-036
+level: c1-hist
+sequence: 36
+version: '1.0'
+title: 'Свідчення Голодомору I: Усна історія'
+focus: history
+pedagogy: seminar
+objectives:
+- 'Analyze the causes and consequences of свідчення голодомору i: усна історія'
+- Evaluate the historical significance of голоси вижилих
+content_outline:
+- section: Вступ — Голоси вижилих
+  subsections:
+  - Усна історія — що це?
+  - Чому важлива для Голодомору
+  - Свідчення як джерело
+  - Методологічні питання
+- section: Методологія усної історії
+  subsections:
+  - Як збирають свідчення
+  - Інтерв'ю — техніка
+  - Пам'ять і травма
+  - Обмеження методу
+  - Етичні питання
+- section: Проєкти збору свідчень
+  subsections:
+  - UCRDC — Україно-канадський дослідницький центр
+  - Комісія конгресу США (1980-ті)
+  - Українські проєкти після 1991
+  - Що збережено
+- section: Типові теми свідчень
+  subsections:
+  - Голод — як описують
+  - Конфіскація зерна
+  - Смерті в родині
+  - Виживання — стратегії
+  - Табу і замовчування
+- section: Фрагменти свідчень
+  subsections:
+  - Свідчення 1 — дитина 1932
+  - Свідчення 2 — мати
+  - Свідчення 3 — село
+  - Як читати травму
+- section: Критика джерела
+  subsections:
+  - Ретроспективність — через десятиліття
+  - Вплив пізніших наративів
+  - Репрезентативність — хто вижив
+  - Як верифікувати
+- section: Підсумок
+  subsections:
+  - Усна історія як доповнення
+  - Голос жертв
+  - Зв'язок із документами
+vocabulary:
+- усна історія
+- свідчення
+- вижилий
+- травма
+- пам'ять
+- інтерв'ю
+- конфіскація
+- голод
+- виживання
+- табу
+- ретроспективність
+- репрезентативність
+- наратив
+- посттравматичний
+- архів
+activities:
+- type: reading
+  focus: Two survivor testimonies
+- type: critical-analysis
+  focus: What are the strengths/weaknesses of oral history?
+- type: reading
+  focus: Identify recurring themes across testimonies
+- type: essay-response
+  focus: How to work with trauma testimonies responsibly?
+- type: essay-response
+  focus: Як усна історія допомагає зрозуміти Голодомор?
+sources:
+- name: Голодомор (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Голодомор
+  type: reference
+  notes: Overview
+- name: Архів свідчень Голодомору (UCRDC)
+  url: https://ucrdc.org/
+  type: primary
+  notes: Testimony archive
+- name: Усна історія (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Усна_історія
+  type: reference
+  notes: Methodology
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
+persona:
+  voice: Academic Historiographer
+  role: Oral History Archivist
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Свідчення Голодомору I: Усна історія
+
+## Використані джерела
+1. **Тетяна Боряк. «Усна історія у джерельній базі студій Голодомору» (2024)** — Фундаментальна монографія про еволюцію, методологію та інформаційний потенціал усних свідчень.
+2. **Архів свідчень UCRDC (Українсько-канадський дослідницький-документаційний центр)** — Перший системний проєкт збору свідчень у діаспорі (Торонто).
+3. **Матеріали Комісії Конгресу США з питань голоду в Україні (Комісія Джеймса Мейса, 1980-ті)** — Свідчення, що стали основою для визнання Голодомору геноцидом на міжнародному рівні.
+4. **«33-й: голод: Народна Книга-Меморіал» (1991)** — Перша масова публікація свідчень в Україні за редакцією Лідії Коваленко та Володимира Маняка.
+5. **Інститут історії України НАНУ** — Академічні статті про методику усної історії та травму.
+
+## Хронологія
+- **Осінь 1932**: Початок масових обшуків та вилучення не лише зерна, а й будь-якої їжі («натуральні штрафи»).
+- **Листопад 1932**: Запровадження режиму «чорних дощок» для окремих сіл та колгоспів.
+- **Весна 1933**: Пік смертності від голоду; фіксація випадків канібалізму у свідченнях.
+- **1983**: Заснування Українсько-канадського дослідницько-документаційного центру (UCRDC) у Торонто для збору свідчень.
+- **1985**: Створення Комісії Конгресу США з питань голоду в Україні (виконавчий директор Джеймс Мейс).
+- **1991**: Вихід «Народної Книги-Меморіал» — переломний момент повернення пам'яті в Україні.
+
+## Ключові факти та цитати
+- **Цитата (Анастасія Зінківська, 1915 р.н.)**: «Активісти забирали у людей все зерно після збору урожаю... Навіть віниками вимітали з горища, щоб не залишилося і зернини. Ми боялись партійних працівників, мовчки вмирали, бо говорити про голод не можна було».
+- **Цитата (Марія Порохня)**: «У селі люди втрачали розум... Щоб вижити, люди варили їжу з усього, що було під ногами: трава, кора дерев, жолуді. Ловили їжаків... Але багато людей вмирало від голоду».
+- **Факт**: Усна історія заповнює прогалини після «архівоциду» (знищення документів радянською владою), надаючи докази *наміру* (вилучення всієї їжі, блокада сіл).
+- **Факт**: Методологія Джеймса Мейса («post-genocidal society») базувалася саме на аналізі травми через усні свідчення.
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ — Голоси вижилих": [!quote] — Цитата Джеймса Мейса про «постгеноцидне суспільство» та роль живої пам'яті.
+- Section "Методологія усної історії": [!context] — Пояснення різниці між «історією згори» (документи) та «історією знизу» (свідчення).
+- Section "Проєкти збору свідчень": [!decolonization] — Як діаспора зберегла правду, поки в УРСР тема була табуйована (роль UCRDC).
+- Section "Типові теми свідчень": [!myth-buster] — Міф про «неврожай» vs реальність тотальної конфіскації (свідчення про «буксирні бригади»).
+- Section "Фрагменти свідчень": [!history-bite] — Про сурогати їжі: коржі з лободи, "маторженики" з гнилої картоплі.
+- Section "Критика джерела": [!analysis] — Проблема «помилкової пам'яті» (зміщення дат) vs емоційна правда травми.
+
+## Деколонізаційний контекст
+- **Imperial/Soviet myth**: Голод був наслідком «перегинів на місцях» або посухи; селяни самі ховали хліб (саботаж).
+- **Ukrainian reality**: Свідчення доводять централізований характер терору (однакові методи в різних регіонах), блокаду виїзду та вилучення непродовольчих товарів. Усна історія повертає суб'єктність жертвам, перетворюючи їх зі статистики на людей з іменами.
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| Хлібозаготівля | Економічна необхідність, державний план | Грабунок, конфіскація, терор голодом |
+| Куркулі | Класові вороги, експлуататори | Господарі, носії української ідентичності |
+| Продовольчі труднощі | Тимчасові негаразди | Геноцид, штучно організований голод |
+| Евакуація | Порятунок населення | Депортація, примусове виселення |
+
+## Section-Mapped Research Notes
+
+### Вступ — Голоси вижилих
+Свідчення як єдине джерело правди в умовах тотального знищення документів («архівоциду»). Усна історія не просто доповнює, а *змінює* розуміння події з економічної катастрофи на гуманітарну катастрофу та злочин.
+
+### Методологія усної історії
+Специфіка опитування травмованих респондентів. Проблема «мовчання» (silence) як частина свідчення. Етичні аспекти: не ретравматизувати оповідача. Важливість фіксації емоцій, пауз, невербальної поведінки.
+
+### Проєкти збору свідчень
+Два етапи: 1) Діаспорний (80-ті) — політична мета (визнання геноциду), фокус на фактах злочину. UCRDC та Комісія Конгресу США. 2) Український (90-ті - наш час) — меморіальна мета, повернення родинної пам'яті. «Народна Книга-Меморіал» (Коваленко, Маняк).
+
+### Типові теми свідчень
+Сюжети, що повторюються: обшуки («штрикали щупами»), вилучення останнього, смерть дітей, поїдання сурогатів, канібалізм (як крайня межа розпаду психіки), страх перед владою, стратегії виживання (втеча в місто, приховування зерна).
+
+### Фрагменти свідчень
+Аналіз конкретних наративів. Дитячий погляд (нерозуміння причин, фіксація на відчутті голоду). Погляд матері (відчай, вибір кого рятувати). Свідчення про «активістів» (своїх же односельців) — механізм розпаду громади.
+
+### Критика джерела
+Пам'ять не є ідеальною: плутанина років (1932 чи 1947), накладання пізніших знань на власні спогади. Але свідчення дають «емоційну правду», яку не можуть дати звіти НКВС. Репрезентативність: вижили ті, хто мав стратегію або удачу; голоси загиблих ми чуємо лише опосередковано.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12446)
+✓ Message 12380 acknowledged
+✓ Message 12446 acknowledged

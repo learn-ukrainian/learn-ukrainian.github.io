@@ -1,0 +1,281 @@
+✅ Message sent to Gemini (ID: 12115) [auto-acked: self-addressed]
+✓ Message 12115 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12115...
+📨 Message #12115
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-conference-presentations
+   Time: 2026-02-20T23:36:15.091067+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-pro-23
+level: C1-PRO
+sequence: 23
+slug: conference-presentations
+version: '2.0'
+title: Конференційні виступи
+subtitle: Conference Presentations
+content_outline:
+- section: Розминка — Конференція як платформа
+  points:
+  - Чому виступ на конференції важливий для кар'єри
+  - Типи конференційних виступів (усна доповідь, постер, круглий стіл)
+  - Особливості українських та міжнародних конференцій
+- section: Підготовка презентації
+  points:
+  - 'Структура наукової презентації: вступ, методи, результати, висновки'
+  - Візуальне оформлення слайдів для академічної аудиторії
+  - Скільки інформації на слайд — правило мінімалізму
+  - Часовий розподіл — як вкластися в регламент
+- section: Техніка виступу
+  points:
+  - Як починати виступ — привітання, представлення, структура
+  - Робота з голосом та темпом мовлення
+  - Взаємодія з аудиторією — погляд, жести, простір
+  - Як завершувати виступ — висновки та заклик до дискусії
+- section: Відповіді на запитання
+  points:
+  - Як готуватися до запитань заздалегідь
+  - Техніки відповіді — повторення, уточнення, визнання незнання
+  - Як реагувати на критичні запитання
+  - Типові фрази для Q&A сесії
+- section: Зразок конференційної презентації
+  points:
+  - Структура 15-хвилинної доповіді
+  - Приклади вступних та завершальних фраз
+  - Типові помилки доповідачів
+- section: Практика — Підготовка виступу
+  points:
+  - 'Завдання: Підготувати 10-хвилинну презентацію за своїм дослідженням'
+  - 'Вимоги: структура, слайди, відповіді на питання'
+  - Критерії оцінювання
+vocabulary_hints:
+  required:
+  - конференційний виступ (conference presentation)
+  - слайд (slide)
+  - регламент (time limit)
+  - Q&A сесія (Q&A session)
+  - постерна сесія (poster session)
+  - модератор (moderator)
+  - доповідач (presenter/speaker)
+  - дискусія (discussion)
+  recommended:
+  - візуалізація даних (data visualization)
+  - круглий стіл (round table)
+  - воркшоп (workshop)
+  - нетворкінг (networking)
+  - coffee break (перерва на каву)
+  - сертифікат участі (certificate of participation)
+activity_hints:
+- type: document-analysis
+  focus: Проаналізувати структуру конференційної презентації
+  items: 2
+- type: role-play
+  focus: Провести 10-хвилинний виступ та відповісти на запитання
+  items: 1
+- type: fill-in
+  focus: Вставити правильні фрази для вступу, переходів та завершення
+  items: 10
+- type: writing-task
+  focus: Написати сценарій конференційного виступу
+  items: 1
+- type: matching
+  focus: З'єднати ситуації під час Q&A з відповідними відповідями
+  items: 8
+focus: professional
+pedagogy: ESP
+prerequisites:
+- c1-pro-22 (Тези конференцій)
+connects_to:
+- c1-pro-24 (Написання грантів)
+objectives:
+- Учень може готувати ефективні презентації для наукових конференцій
+- Учень може виступати перед академічною аудиторією з дотриманням регламенту
+- Учень може відповідати на запитання під час Q&A сесії
+- Учень може адаптувати виступ для різних форматів (усний, постер)
+grammar:
+- Конструкції для вступу (Шановні колеги, дозвольте представити... / Моя доповідь
+  присвячена...)
+- Конструкції для переходів (Переходячи до результатів... / Як ви бачите на слайді...)
+- Конструкції для Q&A (Дякую за запитання. Якщо я правильно зрозумів... / Це цікаве
+  зауваження, і я хотів би додати...)
+register: науковий
+phase: C1-PRO.2
+persona:
+  voice: Senior Specialist
+  role: Ключовий спікер конференції
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Конференційні виступи
+
+## Використані джерела
+1. [КНУ ім. Т. Шевченка](https://univ.kiev.ua) — Рекомендації щодо підготовки наукових доповідей та презентацій.
+2. [ХНУ ім. В. Каразіна](https://univer.kharkov.ua) — Методичні вказівки до публічних виступів на наукових заходах.
+3. [ДСТУ 4163:2020](https://zakon.rada.gov.ua) — Уніфікована система організаційно-розпорядчої документації (вимоги до оформлення титульних аркушів).
+4. [ДСТУ 8302:2015](https://zakon.rada.gov.ua) — Правила оформлення бібліографічних посилань (актуально для слайдів із джерелами).
+5. [Освітній портал "На Урок"](https://naurok.com.ua) — Типові мовні кліше для наукових дискусій.
+
+## Термінологічна база
+
+| Українська (норма) | Русизм/ненорма | English | Контекст вживання |
+|--------------------|---------------|---------|-------------------|
+| Доповідач          | Виступаючий   | Presenter / Speaker | Офіційне представлення учасника |
+| Наступний слайд    | Слідуючий слайд| Next slide | Перехід під час презентації |
+| Регламент          | Ліміт часу    | Time limit / Regulations | Дотримання часових рамок |
+| Підбивати підсумки | Підводити ітоги| To summarize | Завершальна частина виступу |
+| Брати участь       | Приймати участь| To participate | Опис професійного досвіду |
+| Стосуватися        | Відноситися до| To concern / relate | Відповіді на запитання |
+| Слушне запитання   | Влучне питання| Pertinent question | Етикет дискусії (Q&A) |
+| Постерна сесія     | Стендова доповідь| Poster session | Формат конференції |
+
+## Мовні норми та стандарти
+- **ДСТУ 4163:2020**: Визначає шрифт (без зарубок для екранів) та структуру титульного блоку (назва установи, тема, автор).
+- **Академічний етикет**: Обов'язкове використання форми «Ви» при зверненні до аудиторії та опонентів.
+- **Мовний пуризм**: Уникнення конструкцій на «-уючий» (заміна на іменники або підрядні речення).
+- **Бібліографія**: Відповідно до ДСТУ 8302:2015 (скорочений формат для слайдів).
+
+## Аутентичні приклади
+1. [Вступ]: «Шановні колеги! Дозвольте представити вашій увазі результати дослідження на тему...»
+2. [Перехід]: «Переходячи до аналізу отриманих даних, зверніть, будь ласка, увагу на діаграму, що на слайді №5...»
+3. [Відповідь на запитання]: «Дякую за цікаве запитання. Якщо я правильно зрозумів, вас цікавить методологія вибірки. У нашому дослідженні ми керувалися...»
+4. [Завершення]: «Підсумовуючи, зазначу, що перспективи подальших розвідок лежать у площині... Дякую за увагу та запрошую до дискусії!»
+
+## Типові помилки
+1. ❌ **Слідуючий слайд** → ✅ **Наступний слайд** — прикметник «слідуючий» є калькою з російської.
+2. ❌ **Приймати участь у конференції** → ✅ **Брати участь у конференції** — стала дієслівна сполука в українській мові.
+3. ❌ **Підводити ітоги** → ✅ **Підбивати підсумки** — уникнення лексичного русизму.
+4. ❌ **Вибачаюсь за затримку** → ✅ **Перепрошую за затримку** — форма «вибачаюсь» є зворотною (сам себе вибачаю), що неприпустимо в офіційному мовленні.
+5. ❌ **Питання стосується до...** → ✅ **Запитання стосується...** — дієслово «стосуватися» вживається без прийменника.
+
+## Engagement Hooks (mapped to sections)
+- Section "Розминка — Конференція як платформа": [!pro-tip] — Різниця між науковою конференцією (conference) та симпозіумом (symposium) в українському контексті.
+- Section "Підготовка презентації": [!language-note] — Використання терміну «тези» (abstracts) vs «доповідь» (presentation).
+- Section "Техніка виступу": [!common-error] — Наголос у слові «ознака» та інших професійних термінах під час стресового мовлення.
+- Section "Відповіді на запитання": [!context] — Культура академічної ввічливості: як вказати на помилку колеги, не порушуючи етики.
+
+## Section-Mapped Research Notes
+
+### Розминка — Конференція як платформа
+Важливо розрізняти формати: пленарне засідання (keynote), секційна робота, постерна сесія. Конференція в Україні — це часто інструмент апробації дисертаційного дослідження (вимоги МОН).
+
+### Підготовка презентації
+Правило «10-20-30» (Гая Кавасакі) в адаптації до українських реалій: 10 слайдів, 15-20 хвилин, шрифт не менше 24 пт. Структура має повторювати логіку IMRAD (Introduction, Methods, Results, and Discussion).
+
+### Техніка виступу
+Звернення «Пане модераторе», «Вельмишановне товариство». Техніка «активного слухання» під час виступів колег. Темпоритм наукового мовлення: 100-120 слів за хвилину для кращого сприйняття термінології.
+
+### Відповіді на запитання
+Алгоритм: подяка → повторення запитання (для аудиторії) → відповідь → перевірка задоволеності відповіддю. Техніки «затягування часу» (фрази-кліше) для обдумування складної відповіді.
+
+### Зразок конференційної презентації
+Аналіз реального виступу на конференції «Мова і культура». Розбір помилок у слайдах (надлишок тексту, нечитабельні графіки).
+
+### Практика — Підготовка виступу
+Критерії оцінювання: відповідність регламенту, чистота мови (відсутність суржику), візуальна якість слайдів, впевненість під час Q&A.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12228)
+✓ Message 12115 acknowledged
+✓ Message 12228 acknowledged

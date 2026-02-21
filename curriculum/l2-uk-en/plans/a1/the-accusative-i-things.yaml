@@ -6,57 +6,66 @@ version: '2.0'
 title: 'The Accusative I: Things'
 subtitle: Making Direct Objects Work
 content_outline:
-- section: Warm-up
+- section: Вступ (Introduction)
+  words: 400
   points:
-  - Що я бачу в кімнаті? (називний) — start with concrete, visible objects to anchor
-    the concept before introducing case change; use 'бачити' + object to prime the
-    structure
-  - 'Перехід до знахідного відмінка — introduce the concept of ''Direct Object'' (object
-    of action) vs Subject; learner error: misunderstanding grammatical role (Conceptual
-    Nominative)'
-- section: Presentation
+  - 'Warm-up: ''Що я бачу в кімнаті?'' (Nominative review) to anchor concrete objects
+    before introducing case change. Use high-frequency verbs from a1-06 (Verbs I)
+    like ''бачити'' to prime the direct object structure.'
+  - Conceptual introduction of the Accusative case (Знахідний відмінок) for inanimate
+    objects, aligning with State Standard §4.2.3.2.1 (e.g., 'Віра читає цікаву книжку').
+    Contrast Subject vs. Direct Object.
+- section: 'Презентація: Знахідний відмінок (Presentation: Accusative Case)'
+  words: 600
   points:
-  - 'Коли вживається знахідний (прямий додаток) — align with State Standard §4.2.3.2.1;
-    focus strictly on inanimate objects; context: shopping (''Я купую...'')'
-  - '''Жіночий рід: -а → -у, -я → -ю (книга → книгу)'' — learner error: leaving feminine
-    nouns in Nominative (-a); emphasize change is mandatory for Feminine Singular'
-  - '''Чоловічий рід неістот: без змін (стіл → стіл)'' — emphasize ''Safe Harbor''
-    concept; learner error: adding -a ending (Masculine Inanimate Confusion)'
-  - '''Середній рід: без змін (вікно → вікно)'' — reinforce that only Feminine singular
-    hard/soft usually changes here; contrast with Feminine to highlight the pattern'
-  - 'Дієслова зі знахідним (бачити, чути, брати, мати, хотіти, купувати) — use high-freq
-    collocations: мати рацію, брати участь, хотіти їсти; emphasize these verbs as
-    triggers'
-- section: Practice
+  - 'Feminine Singular transformation: -а → -у, -я → -ю (книга → книгу, кава → каву).
+    Emphasize that the change is mandatory to avoid the ''Conceptual Nominative''
+    error common at A1.'
+  - 'Masculine and Neuter ''Safe Harbor'': Explain that inanimate masculine and neuter
+    nouns do not change (стіл → стіл, вікно → вікно). Explicitly warn against ''Masculine
+    Inanimate Confusion'' (adding -a endings like ''бачу стола'').'
+  - 'High-frequency Action Verbs as triggers: Presentation of ''мати'' (мати рацію,
+    мати час), ''хотіти'' (хотіти їсти), ''брати'' (брати каву/участь), ''чути'',
+    ''бачити'', and ''купувати''.'
+- section: Практика та запобігання помилкам (Practice and Error Prevention)
+  words: 600
   points:
-  - Трансформація називного → знахідний — focus on distinguishing when change happens
-    (Fem) vs when it doesn't (Masc/Neut); ensure mix of inanimate nouns only
-  - 'Заповнення речень правильною формою — prioritize high-frequency verbs: бачити,
-    чути, брати, мати'
-- section: Production
+  - 'Transformation drills: Nominative to Accusative focusing on the contrast between
+    changing Feminine forms and stable Masculine/Neuter inanimate nouns.'
+  - 'Error Prevention: Targeted drills to correct ''Conceptual Nominative'' (e.g.,
+    changing ''Я читаю книга'' to ''Я читаю книгу'') and preventing over-application
+    of endings to masculine inanimate things.'
+  - 'High-frequency collocations practice using research-backed items: ''бачити проблему'',
+    ''чути голос'', ''брати трубку'', and ''мати можливість''.'
+- section: Виробництво та культура (Production and Culture)
+  words: 400
   points:
-  - Описати, що є в магазині (Я бачу...) — use 'бачити' + variety of inanimate objects
-  - 'Список покупок (Я хочу купити...) — cultural hook: include staples like ''хліб'',
-    ''гречка'' (buckwheat), daily rituals'
-- section: Cultural Insight
-  points:
-  - 'Типові покупки в українському магазині — mention ''базар'' (market) vs supermarket;
-    cultural hook: the ubiquitous ''Пакет потрібен?'' question at checkouts'
+  - 'Cultural Hook: The ''Пакет потрібен?'' checkout meme. Discussion of shopping
+    dynamics: the impersonal ''супермаркет'' vs. the social hub of the ''базар''.'
+  - 'Production: Creating a shopping list (''Я хочу купити...'') including staples
+    ''хліб'' and ''гречка''. Describe items in a Ukrainian store context using ''Я
+    бачу...'' and ''Я купую...''.'
 vocabulary_hints:
   required:
-  - бачити (to see) — бачити проблему, я бачу...
-  - чути (to hear) — чути музику, чути голос
-  - брати (to take) — брати участь, брати трубку, брати каву
-  - мати (to have) — мати рацію, мати час, мати можливість
-  - хотіти (to want) — хотіти їсти, хотіти спати, я хочу...
-  - купувати (to buy) — купувати продукти, купувати одяг
-  - книга (book) — читати книгу, цікава книга
-  - каву (coffee acc.) — пити каву, замовляти каву
+  - бачити (to see) — бачити проблему, я бачу...; High frequency core verb
+  - чути (to hear) — чути музику, чути голос; High frequency core verb
+  - брати (to take) — брати участь, брати трубку, брати каву; High frequency
+  - мати (to have) — мати рацію, мати час, мати можливість; Very High frequency (Core
+    A1)
+  - хотіти (to want) — хотіти їсти, хотіти спати, я хочу...; Very High frequency (Core
+    A1)
+  - купувати (to buy) — купувати продукти, купувати одяг; High frequency
+  - книга (book) — читати цікаву книгу; High frequency; paradigm example for Feminine
+    Accusative
+  - кава (coffee) — пити каву, замовляти каву; Feminine -а to -у pattern
+  - хліб (bread) — купувати хліб; Masculine inanimate (no change)
+  - гречка (buckwheat) — хочу купити гречку; Cultural staple; Feminine pattern
+  - пакет (bag/packet) — 'Пакет потрібен?'; Key checkout vocabulary; Masculine inanimate
   recommended:
-  - любити (to love)
-  - шукати (to look for)
-  - знаходити (to find)
-  - відкривати (to open)
+  - любити (to love) — я люблю каву; triggers Accusative
+  - шукати (to look for) — шукати вихід, шукати книгу
+  - знаходити (to find) — знаходити час, знаходити відповідь
+  - відкривати (to open) — відкривати вікно, відкривати книгу
 activity_hints:
 - type: fill-in
   focus: Change nominative to accusative

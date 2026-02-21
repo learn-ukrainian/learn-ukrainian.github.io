@@ -178,6 +178,32 @@ Connect 2-3 grammar or vocabulary points to Ukrainian cultural context:
 
 This is the #1 generation error from previous rebuilds. Scan EVERY sentence before submitting. If you find ANY English word that is not inside parentheses `()` as a translation, fix it immediately.
 
+### Colonial Framing: Ukrainian Stands on Its Own (HARD FAIL if found)
+
+**NEVER define Ukrainian by contrast with Russian.** Ukrainian is an independent language with its own history — it does not need Russian as a reference point.
+
+**BANNED patterns:**
+- "Unlike Russian, Ukrainian..." — presents Russian as the baseline
+- "Different from Russian..." — positions Russian as the default
+- "Russian does not have/use..." — defines Ukrainian by what Russian lacks
+- "Looks/sounds like Russian..." — treats Ukrainian as derivative
+- "To a Western eye..." — patronizing outsider framing
+- Any reference to "Russian script", "Russian alphabet", or "Russian letters" as comparison point
+
+**How to write instead:**
+- Present Ukrainian features positively: "Ukrainian has..." / "In Ukrainian, ..."
+- Name the feature directly: "The letter Ї is uniquely Ukrainian — it exists in no other alphabet"
+- Use typological comparisons to non-Russian languages when helpful: "Similar to how Portuguese nasalizes vowels..."
+- Anchor in Ukrainian identity: "This letter has been part of Ukrainian writing since..."
+
+**Legitimate exceptions** (must be explicitly framed as decolonization/myth-busting):
+- `[!myth-buster]` blocks debunking Russian propaganda about Ukrainian
+- `[!decolonization]` blocks discussing language resistance and independence
+- Historical context about Russification, language bans, or colonial repression
+- Kyiv/Kiev transliteration context
+
+**Why this matters:** For decades, Ukrainian was presented in textbooks as "a dialect of Russian" or defined solely through differences from Russian. This is colonial framing. Our curriculum presents Ukrainian on its own terms — as a rich, independent European language.
+
 ### Russianisms (Pre-Output Scan — HARD FAIL if found)
 
 Before submitting, scan your ENTIRE output for these. They cause automatic audit failure:
@@ -270,6 +296,48 @@ Use tables for comparing patterns/paradigms/categories. Use mermaid flowcharts f
 
 ---
 
+## Pre-Submission Verification (MANDATORY — do this BEFORE writing your final output)
+
+After drafting your content, run these three checks. Fix any issues found before outputting.
+
+### Check 1: Plan Compliance
+
+Open the `content_outline` from `{META_PATH}`. Go through EVERY `points:` item in EVERY section:
+- Does your content address this point with dedicated prose (not just a passing mention)?
+- If a point is missing or only touched in a phrase, **add it now** — write a full paragraph or subsection for it.
+- Each outline point should map to at least 50-100 words of content.
+
+### Check 2: Fact-Check Absolute Claims
+
+Search your draft for these signal words (in both Ukrainian and English):
+**«унікальний»**, **«єдиний»**, **«перший»**, **«ніколи»**, **«жодний»**, **«тільки»**, **«лише»**, **unique**, **only**, **first**, **never**, **no other**, **the oldest**, **the most**
+
+For EACH occurrence, ask: **Is this literally true? Can I name a counterexample?**
+- If the claim is uncertain or an overgeneralization, **soften it now**:
+  - «єдиний» → «один із небагатьох» or «характерний для»
+  - «unique to Ukrainian» → «distinctive in Ukrainian» or «sets Ukrainian apart from its neighbors»
+  - «the first» → «one of the earliest» or «among the first» (unless you have a citation)
+  - «never» → «rarely» or «almost never» (unless it's a grammatical absolute)
+- Historical dates and biographical facts: verify against the research file. If the research doesn't confirm it, **remove the claim**.
+
+### Check 3: Section Word Counts
+
+Count words per section. Compare against the `words:` allocation in the content_outline:
+- If any section is below 70% of its budget → **expand it** (add examples, callouts, tables)
+- If the total is below {WORD_TARGET} → expand the thinnest sections first
+- Report the counts honestly in the `===WORD_COUNTS===` block
+
+### Check 4: Anti-Surzhyk & Language Scan
+
+Re-read your entire draft one more time looking for:
+- Any Russianisms from the table above (кушати, получати, etc.)
+- Any Russian characters (ы, э, ё, ъ)
+- Any English words outside of parenthetical translations
+- Any colonial framing ("Unlike Russian...", "Different from Russian...")
+- If you find any, fix them now.
+
+---
+
 ## Output Format
 
 > **Content outside delimiters is discarded by extraction.**
@@ -327,6 +395,16 @@ Total: {total} words (target: {WORD_TARGET}, ratio: {total/WORD_TARGET}x)
 ===WORD_COUNTS===
 ```
 
+Then report your verification results:
+
+```
+===VERIFICATION_START===
+Plan compliance: {X}/{Y} outline points addressed (list any points you added during verification)
+Absolute claims: {number checked} — {list each softened or removed claim, or "all verified"}
+Language scan: {CLEAN or list of fixes made}
+===VERIFICATION_END===
+```
+
 ## Friction Report (MANDATORY)
 
 ```
@@ -347,5 +425,6 @@ Total: {total} words (target: {WORD_TARGET}, ratio: {total/WORD_TARGET}x)
 - Do NOT skip sections from the content_outline
 - Do NOT write fewer than {WORD_TARGET} words total
 - Do NOT request skills or delegate to Claude
-- Do NOT fabricate quotes, dates, or historical facts
+- Do NOT fabricate quotes, dates, or historical facts — if the research file doesn't confirm it, don't claim it
+- Do NOT make absolute claims ("unique", "only", "first", "never") without verification — soften if uncertain
 - Do NOT use straight quotes "..." — always «...»

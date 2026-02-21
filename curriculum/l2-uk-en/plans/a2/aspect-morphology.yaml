@@ -6,57 +6,86 @@ version: '2.0'
 title: Aspect Morphology
 subtitle: Prefixes and Suffixes
 content_outline:
-- section: Introduction / Вступ
+- section: 'Вступ: Концепція видових пар (Introduction: The Aspectual Pair Concept)'
+  words: 450
   points:
-  - Concept of aspectual pairs as a family — use the 'aspectual pair as a family'
-    concept to make prefixation feel less like a random addition and more like a relationship;
-    include Visuals comparing 'Process' vs 'Result' icons
-  - Morphological predictability — highlight that *по-* often means 'for a little
-    while' or 'completion' and *з-* often means 'making/doing' to build intuition
-- section: Presentation / Презентація
+  - 'The ''Family'' Analogy: Introduce aspectual pairs not as separate words, but
+    as a family relationship where one completes the other; use this to lower the
+    cognitive load of learning prefixes.'
+  - 'Visualizing Aspect: Use icons representing ''Process'' (ongoing circle) vs ''Result''
+    (check mark) to distinguish imperfective and perfective meanings clearly.'
+  - 'Alignment with State Standard §4.3.2: Transition from basic recognition to active
+    formation of pairs like ''писати – написати'', focusing on the shift from process
+    to completed action.'
+- section: Творення префіксами та правило правопису (Prefixal Formation and Spelling
+    Rules)
+  words: 750
   points:
-  - 'Prefixation (the primary method: про-, на-, з-, по-) — focus on standard pairs
-    from State Standard: робити–зробити, писати–написати, ділити–поділити'
-  - 'Suffixation (secondary imperfectives: -ва-, -ува-) — connect to ''Morning Rhythm''
-    cultural hook: daily routines (умиватися, снідати) provide context for suffixal
-    pairs'
-  - Suppletive pairs (irregular roots)
-  - Spelling rules for prefixes (з- vs с-) — explain the *з-* vs *с-* rule (перед
-    к, п, т, ф, х) clearly as it is a high-frequency spelling error
-- section: Practice / Практика
+  - 'Prefix Predictability: Focus on high-frequency prefixes (про-, на-, з-, по-)
+    and their semantic hints: ''по-'' often indicates duration/completion (''поділити''),
+    while ''з-'' often denotes a transformative result (''зробити'').'
+  - 'Spelling Alert: Detailed explanation of the ''з-'' vs ''с-'' rule (перед к, п,
+    т, ф, х) as a high-frequency learner error when forming perfectives.'
+  - 'Standard Prefixal Pairs: Detailed analysis of pairs mandated by the State Standard:
+    робити–зробити, писати–написати, ділити–поділити.'
+- section: Творення суфіксами та суплетивні пари (Suffixal Formation and Suppletive
+    Pairs)
+  words: 750
   points:
-  - Pattern recognition drills — address Future Tense Mismatch learner error (e.g.,
-    *Я буду написати* is incorrect)
-  - Matching and transformation — address Process vs. Result Confusion learner error
-    (читав vs прочитав)
-- section: Dialogues / Діалоги
+  - 'Secondary Imperfectives: Explain the use of suffixes (-ва-, -ува-) to derive
+    imperfectives, connecting to the ''Morning Rhythm'' cultural hook (daily routines
+    like умиватися vs. вмитися).'
+  - 'Stem Changes: Highlight internal vowel shifts (e.g., -о- to -і-) and consonant
+    changes that often accompany suffixation to ensure morphological accuracy.'
+  - 'Irregular (Suppletive) Pairs: Presentation of high-frequency irregular roots
+    from the State Standard, specifically ''виходити – вийти'' and ''забувати – забути''.'
+- section: 'Практика: Помилки та вибір аспекту (Practice: Errors and Aspect Choice)'
+  words: 600
   points:
-  - 'Dialogue on learning patterns — use a hospitality context: ''preparing'' (приготувати)
-    a meal for a ''guest'' (гість) who just ''arrived'' (приїхав/прийшов); address
-    Imperative Choice error (Читай vs Прочитай) to highlight politeness/urgency nuances'
+  - 'Process vs. Result Contrast: Drill to address the ''Process vs. Result Confusion''
+    (e.g., ''читав цю книгу'' vs ''прочитав цю книгу'' when the book is finished).'
+  - 'Future Tense Correction: Explicitly address the ''Future Tense Mismatch'' error
+    where learners use perfective stems with ''буду'' (e.g., incorrect ''Я буду написати''
+    vs correct ''Я напишу'').'
+  - 'Imperative Nuance: Practice the distinction between ''Читай!'' (general process/advice)
+    and ''Прочитай!'' (specific task) to master politeness and urgency.'
+- section: Культурний контекст та діалоги (Cultural Context and Dialogues)
+  words: 450
+  points:
+  - 'Hospitality Dialogue: Use the context of preparing (''приготувати'') a meal for
+    a guest (''гість'') who just arrived (''приїхав/прийшов'') to ground aspect in
+    social tradition.'
+  - 'The Morning Rhythm Narrative: Describe a morning routine using sequential perfectives
+    (встав, вмився) vs. ongoing imperfective processes (снідав, збирався) to showcase
+    narrative flow.'
+  - 'Grammatical Summary: Recap of word-formation patterns as a strategic tool for
+    independent vocabulary expansion and dictionary usage.'
 vocabulary_hints:
   required:
-  - відпочивати/відпочити (to rest) — відпочивати на морі, гарно відпочити
-  - вставати/встати (to get up) — встати рано, вставати з ліжка (Morning Rhythm hook)
-  - одягатися/одягнутися (to dress) — тепло одягнутися, одягатися на роботу
-  - сідати/сісти (to sit down)
-  - лягати/лягти (to lie down)
-  - відкривати/відкрити (to open) — відкрити вікно, відкривати двері
-  - закривати/закрити (to close)
-  - вмикати/увімкнути (to turn on)
-  - вимикати/вимкнути (to turn off)
-  - починати/почати (to begin) — почати роботу, починати урок
-  - закінчувати/закінчити (to finish)
-  - отримувати/отримати (to receive)
-  - посилати/послати (to send)
-  - вибирати/вибрати (to choose)
-  - вирішувати/вирішити (to decide) — вирішити проблему, вирішувати завдання
+  - відпочивати/відпочити (to rest) — відпочивати на морі, гарно відпочити; high-frequency
+    daily life
+  - вставати/встати (to get up) — встати рано, вставати з ліжка; 'Morning Rhythm'
+    routine hook
+  - одягатися/одягнутися (to dress) — тепло одягнутися, одягатися на роботу; routine
+    context
+  - відкривати/відкрити (to open) — відкрити вікно, відкривати двері; general utility
+  - починати/почати (to begin) — почати роботу, починати урок; structural frequency
+  - вирішувати/вирішити (to decide) — вирішити проблему, вирішувати завдання; cognitive
+    action
+  - закривати/закрити (to close) — закрити двері, закривати очі
+  - вмикати/увімкнути (to turn on) — увімкнути світло, вмикати комп'ютер
+  - вимикати/вимкнути (to turn off) — вимкнути телефон, вимикати телевізор
+  - закінчувати/закінчити (to finish) — закінчити школу, закінчувати проект
+  - отримувати/отримати (to receive) — отримати лист, отримувати подарунки
+  - вибирати/вибрати (to choose) — вибрати колір, вибирати подарунок
+  - сідати/сісти (to sit down) — сісти на стілець, сідати за стіл
+  - лягати/лягти (to lie down) — лягати спати, лягти на диван
   recommended:
-  - префікс (prefix)
-  - суфікс (suffix)
-  - корінь (root)
-  - основа (stem)
-  - утворення (formation)
+  - префікс (prefix) — grammatical term for word-formation
+  - суфікс (suffix) — grammatical term for word-formation
+  - корінь (root) — the core of the word 'family'
+  - основа (stem) — linguistic base for adding suffixes
+  - утворення (formation) — process of creating new verb forms
 activity_hints:
 - type: match-up
   focus: Extended aspect pairs

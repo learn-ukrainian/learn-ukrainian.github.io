@@ -1,0 +1,215 @@
+✅ Message sent to Gemini (ID: 12431) [auto-acked: self-addressed]
+✓ Message 12431 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12431...
+📨 Message #12431
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-herasym-smotrytsky-poems
+   Time: 2026-02-20T23:39:35.668388+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 43
+module: ruth-043
+module_number: 35
+slug: herasym-smotrytsky-poems
+title_uk: 'Герасим Смотрицький: Вірші'
+title_en: 'Herasym Smotrytsky: Poems'
+phase: 2
+phase_id: sacred-word
+phase_name: Sacred Word
+focus: Early Ukrainian verse — Ключ Царства
+content_outline:
+- section: Вступ
+  description: 'Introduction to Herasym Smotrytsky: Poems'
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Baroque Scholar
+  role: Court Panegyrist
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Herasym Smotrytsky Poems
+
+## Використані джерела
+1.  [Енциклопедія Сучасної України (ЕСУ)](https://esu.com.ua/article-10156) — Біографія та загальний огляд творчості першого ректора Острозької академії.
+2.  [Ізборник (Litopys.org.ua)](http://litopys.org.ua/ukrpoet/up1.htm) — Тексти віршів «Зри сія знаменія...», «До чительника», «Плютархус» та уривки з «Ключа царства небесного».
+3.  [Енциклопедія історії України (history.org.ua)](http://resource.history.org.ua/) — Історичний контекст Острозького гуртка та полемічної літератури.
+4.  [Вісник Львівського університету](http://publications.lnu.edu.ua/) — Літературознавчий аналіз барокових рис у поезії Смотрицького.
+
+## Хронологія
+- **~1520-1530-ті рр.** — Народження Герасима Смотрицького на Поділлі (с. Смотрич).
+- **До 1576 р.** — Працює міським писарем (кам'янецьким підстаростою) у Кам'янці-Подільському.
+- **1576 р.** — Запрошений князем Василем-Костянтином Острозьким до Острога.
+- **~1580 р.** — Стає першим ректором Острозької слов'яно-греко-латинської академії.
+- **1581 р.** — Видання Острозької Біблії, де вміщено віршовані передмови Смотрицького («Зри сія знаменія...», «До чительника»).
+- **1587 р.** — Видання в Острозі полемічної праці «Ключ царства небесного» та трактату «Календар римський новий».
+- **Жовтень 1594 р.** — Смерть Герасима Смотрицького в Острозі.
+
+## Ключові факти та цитати
+- **Першість:** Автор першої друкованої пам'ятки української версифікації (вірш на герб Острозького).
+- **Титул:** Сучасники називали його «першим руським богословом».
+- **Цитата (з вірша на герб):** «Зри сія знаменія княжате славнаго / В книзЂ сій списаннаго, умом високаго».
+- **Цитата (про освіту):** Називав себе «простаком невченим», підкреслюючи християнську смиренність, хоча володів латиною та грецькою.
+- **Полеміка:** «Ключ царства небесного» — відповідь на твір єзуїта Бенедикта Гербеста «Wypis wiary kościoła rzymskiego».
+- **Родина:** Батько видатного мовознавця та церковного діяча Мелетія Смотрицького.
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ": [!context] — The cultural explosion in Ostroh as a counter-weight to Jesuit expansion.
+- Section "Основний матеріал: I": [!history-bite] — Smotrytsky was a nobleman and scribe before becoming a theologian, bridging secular administration and sacred text.
+- Section "Основний матеріал: II": [!myth-buster] — The "Heraldic Verse" is not just praise; it's a political manifesto declaring the Ostrozky princes equal to Byzantine emperors.
+- Section "Основний матеріал: III": [!decolonization] — Direct continuity claimed from Volodymyr the Great to Ostrozky, bypassing Moscow completely.
+- Section "Основний матеріал: IV": [!quote] — "Училища ніколи не бачив" — interpreting this distinct baroque humility topos versus reality.
+- Section "Основний матеріал: VI": [!culture] — The strategic use of "prosta mova" (Old Ukrainian) to reach the masses vs Church Slavonic for liturgy.
+
+## Деколонізаційний контекст
+- **Imperial/Soviet myth:** Often labeled merely as a "defender of Orthodoxy" in a pan-Slavic/Russian context, or his "vernacular" minimized as a dialect. Soviet historiography downplayed his noble status.
+- **Ukrainian reality:** Smotrytsky represents a distinct *Ruthenian* (Ukrainian) political theology. He constructs a Kyiv-centric lineage of power (St. Volodymyr -> Ostrozky). He uses the vernacular as a weapon of intellectual independence, proving Ukrainian was capable of high theological debate long before the 19th century.
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| **Русь / Руський** | Often conflated with "Russian" or "All-Russian" identity. | Specifically **Ukrainian/Belarusian** lands and people of the Commonwealth. Distinct from Muscovy. |
+| **Проста мова** | "South-Russian dialect" or "corrupted Russian". | **Old Ukrainian literary language**, a distinct administrative and literary standard. |
+| **Острозька Біблія** | Shared East Slavic monument. | A project of Ukrainian national consolidation and distinct translation tradition. |
+
+## Section-Mapped Research Notes
+
+### Основний матеріал: I — Острозький контекст та роль ректора
+- Focus on the intellectual circle: Ivan Fedorov, Greek scholars.
+- Smotrytsky's role not just as admin, but as the ideological soul of the Academy.
+
+### Основний матеріал: II — Геральдична поезія: «Зри сія знаменія»
+- Analyze the structure: 14 lines (or variation).
+- Symbolism: St. George defeating the Dragon = Ostrozky defeating heresy.
+- The "Moon" and "Star" in the coat of arms interpreted as spiritual enlightenment.
+
+### Основний матеріал: III — Поетична тяглість: «До чительника»
+- Theme: The book (Bible) as a weapon.
+- Comparison of Kostiantyn Ostrozky to Volodymyr the Great (Baptizer) and Yaroslav the Wise (Builder).
+- Establishing a Kyiv-centric dynastic legitimacy.
+
+### Основний матеріал: IV — Полемічний шедевр: «Ключ царства небесного»
+- Context: Response to Benedict Herbest.
+- Argument: The "Key" is not the Pope, but true faith.
+- Critique of clerical corruption.
+
+### Основний матеріал: VI — Мовна програма
+- Use of vernacular for polemics (to be understood by the szlachta and burghers).
+- Use of Church Slavonic for the Bible (sacred status).
+- This digraphia was a conscious cultural choice, not a lack of education.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12468)
+✓ Message 12431 acknowledged
+✓ Message 12468 acknowledged

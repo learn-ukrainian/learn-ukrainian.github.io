@@ -237,7 +237,7 @@
 
 - type: fill-in
   title: "Неправильні дієслова (Irregular Verbs)"
-  instruction: "Select the correct form of 'їсти' (to eat) or 'йти' (to go)."
+  instruction: "Select the correct form of 'їсти' (to eat), 'йти' (to go), or 'ходити' (to go regularly)."
   items:
     - sentence: "Вчора він __________ піцу на обід."
       answer: "їв"

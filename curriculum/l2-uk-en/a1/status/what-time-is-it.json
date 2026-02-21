@@ -2,14 +2,14 @@
   "module": "what-time-is-it",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-19T23:01:53.614580Z",
+  "last_audit": "2026-02-21T00:46:42.813713Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-19T21:27:50.017083Z",
+    "md": "2026-02-21T00:03:02.547305Z",
     "meta": "2026-02-19T20:41:17.088538Z",
-    "activities": "2026-02-19T21:25:04.686397Z",
-    "vocabulary": "2026-02-19T21:03:00.533599Z",
-    "plan": "2026-02-18T19:03:32.297359Z",
+    "activities": "2026-02-20T14:37:05.116191Z",
+    "vocabulary": "2026-02-21T00:03:02.547810Z",
+    "plan": "2026-02-20T20:41:22.101612Z",
     "research": "2026-02-19T20:41:17.082249Z"
   },
   "gates": {
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "2304/2000 (raw: 2519)"
+      "message": "2308/2000 (raw: 2523)"
     },
     "activities": {
       "status": "pass",
@@ -31,7 +31,7 @@
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "20/1"
+      "message": "22/1"
     },
     "naturalness": {
       "status": "info",

@@ -1,0 +1,272 @@
+✅ Message sent to Gemini (ID: 12102) [auto-acked: self-addressed]
+✓ Message 12102 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12102...
+📨 Message #12102
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-ivan-vyhovskyi
+   Time: 2026-02-20T23:36:10.708121+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-bio-24
+level: C1-BIO
+sequence: 24
+slug: ivan-vyhovskyi
+version: '2.0'
+title: 'Іван Виговський: Гетьман-дипломат'
+content_outline:
+- section: Вступ — Архітектор Гадяцької унії
+  points:
+  - Виговський як альтернатива московському курсу
+  - Значення Гадяцької угоди
+  - Трагедія невикористаного шансу
+- section: Життєпис
+  points:
+  - Основні етапи життя гетьмана
+  - Шлях до булави
+  - Походження та освіта
+  - Служба генеральним писарем
+  - Довіра Хмельницького
+  - Обрання гетьманом 1657 р.
+- section: Історичний контекст
+  points:
+  - Руїна: Початок
+  - Гадяцька ідея
+  - Передумови та переговори
+  - Зміст угоди - Велике князівство Руське
+- section: Внесок
+  points:
+  - Дипломатія
+  - Військовий талант Виговського
+  - Конотопська битва 1659 р.
+- section: Останні роки
+  points:
+  - Падіння та загибель
+  - Внутрішня опозиція
+  - Зречення гетьманства
+  - Трагічна смерть 1664 р.
+- section: Спадщина
+  points:
+  - Оцінки в історіографії
+  - Реабілітація образу
+  - Уроки для сучасності
+- section: Підсумок
+  points:
+  - Значення постаті Виговського
+focus: biography
+pedagogy: seminar
+prerequisites:
+- c1-bio-20 (Богдан Хмельницький)
+- Розуміння Переяславської угоди
+connects_to:
+- c1-bio-22 (Іван Сірко)
+- b2-hist ruina-i module
+objectives:
+- Аналізувати альтернативні моделі української державності
+- Оцінити значення Гадяцької угоди
+- Порівняти з іншими федеративними проектами
+grammar:
+- Дипломатична термінологія
+- Правовий регістр
+module_type: biography
+sources:
+- name: Іван Виговський (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Іван_Виговський
+  type: primary
+  notes: Біографія та гетьманування
+- name: Гадяцький договір (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Гадяцький_договір
+  type: primary
+  notes: Зміст та значення угоди
+- name: Конотопська битва (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Конотопська_битва
+  type: reference
+  notes: Військова перемога
+immersion: 100% Ukrainian
+phase: C1-BIO
+vocabulary_hints:
+  required:
+  - гетьман (hetman)
+  - Гадяцька унія (Hadiach Union)
+  - Велике князівство Руське (Grand Duchy of Ruthenia)
+activity_hints:
+- type: reading
+  focus: Гадяцький договір та маніфести
+  source: Primary sources (adapted)
+- type: essay-response
+  focus: Альтернативна історія
+persona:
+  voice: Senior Biographer
+  role: Grand Chancellor
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Іван Виговський: Гетьман-дипломат
+
+## Використані джерела
+1. [Виговський Іван Остапович — Енциклопедія Сучасної України](https://esu.com.ua/article-33964) — академічна біографічна стаття.
+2. [Гадяцький договір 1658 — Інститут історії України НАНУ](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Gadiatskyj_dogovir_1658) — детальний аналіз умов та наслідків угоди.
+3. [Маніфест до європейських володарів (1658)](http://litopys.org.ua/) — першоджерело, пояснення причин розриву з Москвою (доступно в збірках документів на Ізборнику).
+
+## Хронологія
+- **1608 (бл.)**: Народження в Овручі в православній шляхетській родині.
+- **1648**: Битва під Жовтими Водами, полон, викуп Богданом Хмельницьким.
+- **1650**: Призначення Генеральним писарем Війська Запорозького.
+- **1657, серпень**: Смерть Б. Хмельницького, обрання Виговського наказним гетьманом, згодом — повноправним гетьманом (Корсунська рада).
+- **1658, 16 вересня**: Підписання Гадяцького договору.
+- **1658, жовтень**: Маніфест до європейських дворів з обґрунтуванням війни проти Москви.
+- **1659, 27-29 червня**: Конотопська битва, розгром московського війська.
+- **1659, вересень**: Зречення булави під тиском опозиції (Чорна рада в Германівці).
+- **1664, 16 березня**: Страта поляками поблизу с. Вільховець за звинуваченням у зраді.
+
+## Ключові факти та цитати
+- **Освіта**: Навчався, ймовірно, в Київській братській школі, володів латиною, польською, руською мовами. Досконалий каліграф.
+- **Канцелярія**: Створив Генеральну військову канцелярію як повноцінне міністерство закордонних справ і внутрішньої політики.
+- **Цитата (Маніфест 1658)**: «Причина війни, що розгорілася, не в нас... Москва, зламавши присягу, хотіла нас у ярмо запрягти». (Адаптовано з першоджерела).
+- **Цитата (Гадяцький договір)**: «Велике князівство Руське» як третій рівноправний суб'єкт Речі Посполитої поряд з Короною Польською та Великим князівством Литовським.
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ": [!history-bite] — Виговський був не просто "наступником", а архітектором адміністративної машини Хмельницького ще за його життя.
+- Section "Життєпис": [!context] — Роль "генерального писаря" як канцлера держави, а не просто секретаря.
+- Section "Історичний контекст": [!myth-buster] — Гадяцька унія не була "зрадою" чи "поверненням до Польщі", а спробою перебудови Східної Європи на конфедеративних засадах.
+- Section "Внесок": [!military] — Конотоп як зразок взаємодії козацької піхоти та татарської кінноти (тактичний шедевр).
+- Section "Внесок": [!quote] — Уривок з Маніфесту до європейських дворів.
+- Section "Останні роки": [!reflection] — Трагізм української еліти: бути знищеним тими, з ким намагався домовитися (поляками), через наклеп своїх же (Тетеря).
+- Section "Спадщина": [!decolonization] — Як радянська історіографія таврувала Виговського "зрадником" за спробу вирватися з московських обіймів.
+
+## Деколонізаційний контекст
+- **Imperial Myth**: Радянська пропаганда зображала Виговського виключно як "польського прислужника" та зрадника справи Хмельницького (Переяславської ради).
+- **Ukrainian Reality**: Виговський продовжував державницьку лінію Хмельницького на пошук оптимальних союзів. Розрив з Москвою був вимушеним кроком через порушення царем прав Гетьманщини. Гадяцький проект — вершина української політичної думки XVII ст.
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| Гадяцька унія | "Зрада" інтересів народу, повернення під "польське ярмо" | Спроба створення рівноправної федерації трьох народів (Велике князівство Руське) |
+| Конотопська битва | Замовчувана або применшувана подія ("незначна сутичка") | Одна з найбільших перемог української зброї, розгром елітної московської кінноти |
+| Політика Виговського | "Пропольська орієнтація" | Багатовекторна дипломатія задля збереження суверенітету |
+
+## Section-Mapped Research Notes
+
+### Вступ — Архітектор Гадяцької унії
+Виговський — інтелектуал при владі. Його проект "Великого князівства Руського" був спробою модернізації Речі Посполитої і порятунку України від московського поглинання.
+
+### Життєпис
+Походження з православного шляхетського роду (Овруччина). Кар'єра в польському війську, полон, перехід до Хмельницького. Створення Генеральної канцелярії — мозкового центру революції. Виговський тримав у руках усі дипломатичні нитки Хмельницького.
+
+### Історичний контекст
+Криза після смерті Богдана. Московські воєводи починають втручатися у внутрішні справи (порушення Березневих статей). Підтримка Москвою опозиції (Пушкар, Барабаш). Гадяцька ідея як відповідь на московську експансію. 30 тис. реєстрового козацтва, православ'я зрівняне з католицизмом, Києво-Могилянська колегія отримує статус академії.
+
+### Внесок
+Дипломатичний геній: союз зі Швецією, Кримом, Туреччиною, Трансільванією. Конотопська битва 1659 — блискуча перемога союзного війська (козаки + татари) над армією Трубецького. Знищення цвіту московського дворянства.
+
+### Останні роки
+Чому перемога під Конотопом не дала політичного результату? Внутрішній розкол (Руїна), повстання Івана Сірка на Запоріжжі, недовіра рядового козацтва до "панів". Зречення. Життя на Волині та в Галичині. Фальшиві звинувачення у змові проти Польщі, арешт і розстріл без суду.
+
+### Спадщина
+Переосмислення постаті в XIX-XXI ст. (Костомаров, Грушевський, Липинський). Виговський як символ європейського вибору України та втраченого шансу на цивілізовану державність.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12170)
+✓ Message 12102 acknowledged
+✓ Message 12170 acknowledged

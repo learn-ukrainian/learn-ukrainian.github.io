@@ -1,0 +1,267 @@
+✅ Message sent to Gemini (ID: 12018) [auto-acked: self-addressed]
+✓ Message 12018 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12018...
+📨 Message #12018
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-bohdan-khmelnytskyy
+   Time: 2026-02-20T23:35:25.749797+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-bio-21
+level: C1-BIO
+sequence: 21
+slug: bohdan-khmelnytskyy
+version: '2.0'
+title: 'Богдан Хмельницький: Гетьман-державотворець'
+content_outline:
+- section: Вступ — Творець козацької держави
+  points:
+  - Хмельницький як символ суб'єктності
+  - Унікальність поєднання воїна та дипломата
+  - Значення для українського державотворення
+- section: Життєпис
+  points:
+  - Походження та освіта
+  - Чигиринська трагедія
+  - Початок Великої війни 1648 р.
+  - Тріумфальні перемоги
+- section: Історичний контекст
+  points:
+  - Європа середини XVII ст.
+  - Геополітичний трикутник
+- section: Внесок
+  points:
+  - Будівництво державних інституцій
+  - Військова реформа
+- section: Останні роки
+  points:
+  - Переяславська рада 1654 р.
+  - Пошук нових союзників
+  - Смерть гетьмана
+- section: Спадщина
+  points:
+  - Образ "батька нації"
+  - Історичні оцінки
+- section: Підсумок
+  points:
+  - Уроки Хмельниччини
+focus: biography
+pedagogy: seminar
+prerequisites:
+- c1-bio-10 (Данило Галицький)
+- b2-hist hmelnychyna module
+connects_to:
+- c1-bio-24 (Іван Виговський)
+- b2-hist ruina-i module
+objectives:
+- Аналізувати стратегію державотворення Хмельницького
+- Оцінити дипломатичні маневри між великими державами
+- Дослідити причини та наслідки Переяславської угоди
+grammar:
+- Архаїчна та офіційна лексика (універсали)
+- Аналітичні конструкції
+module_type: biography
+sources:
+- name: Богдан Хмельницький (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Богдан_Хмельницький
+  type: primary
+  notes: Фундаментальна біографія
+- name: Документи Богдана Хмельницького
+  url: http://izbornyk.org.ua/
+  type: primary
+  notes: Тексти універсалів та листів
+immersion: 100% Ukrainian
+phase: C1-BIO
+vocabulary_hints:
+  required:
+  - гетьман (hetman)
+  - універсал (universal)
+  - Гетьманщина (Hetmanate)
+activity_hints:
+- type: reading
+  focus: Аналіз гетьманських універсалів
+  source: Primary sources (adapted)
+- type: comparative-study
+  focus: Хмельницький vs Кромвель
+persona:
+  voice: Senior Biographer
+  role: Rebellion Leader
+word_target: 5000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Богдан Хмельницький: Гетьман-державотворець
+
+## Використані джерела
+1. [Енциклопедія історії України (history.org.ua)](http://resource.history.org.ua/) — Фундаментальні статті про Хмельниччину та біографію гетьмана.
+2. [Ізборник (litopys.org.ua)](http://litopys.org.ua/) — Тексти універсалів, листів та козацьких літописів (Самовидця, Грабянки).
+3. [Енциклопедія сучасної України (esu.com.ua)](https://esu.com.ua/) — Сучасна академічна оцінка постаті.
+4. [NV Подкасти: Міфи Переяславської ради](https://nv.ua/) — Деколонізаційний контекст.
+5. [Дніпропетровська ОУНБ: Міф про "возз'єднання"](https://www.libr.dp.ua/) — Аналіз радянських історіографічних штампів.
+
+## Хронологія
+- **1595, 27 грудня**: Народження Богдана Зиновія Хмельницького (ймовірно, Суботів або Чигирин).
+- **1620**: Битва під Цецорою; загибель батька Михайла, Богдан потрапляє у турецький полон.
+- **1648, січень**: Початок повстання; захоплення Микитинської Січі.
+- **1648, травень**: Перші блискучі перемоги під Жовтими Водами та Корсунем.
+- **1648, грудень**: Тріумфальний в’їзд до Києва; проголошення себе "самодержцем руським".
+- **1649, серпень**: Зборівська битва і Зборівський договір (визнання автономії 3 воєводств).
+- **1651, червень**: Поразка під Берестечком через зраду кримського хана.
+- **1654, 8 січня**: Переяславська рада; військово-політичний союз із Московією.
+- **1657, 27 липня**: Смерть гетьмана у Чигирині.
+
+## Ключові факти та цитати
+- **Цитата 1 (Промова у Києві, 1648)**: «Виб'ю з лядської неволі руський нарід увесь! Перше я за свою шкоду і кривду воював, тепер буду воювати за нашу православну віру!» (Літопис).
+- **Цитата 2 (Універсал)**: «Ридання всієї України голосами пробиває небо» (1648).
+- **Цитата 3 (Промова до польських послів)**: «Ставши над Віслою, скажу дальшим ляхам: сидіть і мовчіть, ляхи!»
+- **Факт**: Хмельницький не просто "бунтував", а легітимізував свою владу через титул "Гетьман Війська Запорозького", фактично створюючи монархічну структуру.
+- **Факт**: Універсали Хмельницького стали прообразом державних актів незалежної України.
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ — Творець козацької держави": [!myth-buster] — Спростування міфу про Хмельницького як про "селянського ватажка". Він був шляхтичем і будував елітарну державу.
+- Section "Життєпис": [!context] — "Чигиринська трагедія" (конфлікт з Чаплинським) як приклад свавілля шляхти, що стало іскрою, але не причиною війни.
+- Section "Історичний контекст": [!history-bite] — Порівняння Хмельницького з Олівером Кромвелем (обидва діяли в один час, будували республіки на руїнах монархій).
+- Section "Внесок": [!quote] — Цитата з листа до короля про "свободу, здобуту кров'ю".
+- Section "Останні роки": [!decolonization] — Переяслав 1654: не "возз'єднання", а ситуативний військовий альянс, який Московія зрадила вже у 1656 (Віленське перемир'я).
+- Section "Спадщина": [!culture] — Образ Хмельницького на 5 гривнях: еволюція зображення від "радянського" до "державницького".
+
+## Деколонізаційний контекст
+- **Imperial/Soviet myth**: "Возз'єднання України з Росією" як одвічна мрія українського народу; Хмельницький як "вірний син Росії".
+- **Ukrainian reality**: Хмельницький будував суверенну державу (Військо Запорозьке). Переяславська угода була рівноправним договором про протекторат (васалітет), типовим для тогочасної Європи, який Москва згодом сфальсифікувала ("Березневі статті" vs "Переяславські статті" 1659).
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| Війна 1648–1657 рр. | Громадянська війна / Польський бунт | Національно-визвольна війна / Українська революція XVII ст. |
+| Переяславська рада | Возз'єднання України з Росією | Військово-політичний союз / Протекторат |
+| Держава Хмельницького | Малоросія (частина Росії) | Гетьманщина / Військо Запорозьке (суверенний суб'єкт) |
+
+## Section-Mapped Research Notes
+
+### Вступ — Творець козацької держави
+Хмельницький перетворив козацтво з військового стану на державотворчу еліту. Він вперше сформулював ідею незалежності українських земель ("по Львів, Холм і Галич").
+
+### Життєпис
+Освіта в єзуїтському колегіумі (знання латини, польської). Служба королю (Золота шабля за хоробрість). Особиста драма (Чаплинський, смерть сина, викрадення Мотрони) як каталізатор, що переріс у національний вибух. Битви під Жовтими Водами та Корсунем — знищення регулярної польської армії ("розпушив ляхів").
+
+### Історичний контекст
+Європа після Тридцятилітньої війни. Вестфальська система. Криза Речі Посполитої ("золотий спокій" шляхти vs безправ'я козаків/селян).
+
+### Внесок
+Створення адміністративної системи (полки і сотні). Дипломатія: союзи з Кримом, Туреччиною, Молдовою, Швецією. Формування козацької еліти (старшини).
+
+### Останні роки
+Пошук союзників проти Польщі після зради татар під Берестечком і Жванцем. Переяслав 1654: вимушений крок. "Березневі статті" гарантували повну автономію (суди, податки, військо, дипломатія). Зрада Москви 1656 року (Віленське перемир'я з Польщею) і пошук Хмельницьким нових союзників (шведський "Потоп", Раднотська угода про поділ Польщі).
+
+### Спадщина
+Культ Хмельницького в народній пам'яті ("Батько Богдан"). Шевченківська критика ("Ой Богдане, Богдане, нерозумний сину..."). Використання образу імперіями vs реальний історичний вклад.
+
+### Підсумок
+Хмельниччина — переломний момент історії Східної Європи. Поява української політичної нації.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12096)
+✓ Message 12018 acknowledged
+✓ Message 12096 acknowledged

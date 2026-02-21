@@ -1,0 +1,284 @@
+✅ Message sent to Gemini (ID: 10063) [auto-acked: self-addressed]
+✓ Message 10063 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10063...
+📨 Message #10063
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-the-living-verb-ii
+   Time: 2026-02-20T19:39:21.508619+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: a1-08
+level: A1
+sequence: 8
+slug: the-living-verb-ii
+version: '2.0'
+title: The Living Verb II
+subtitle: Second Conjugation (-ити verbs)
+content_outline:
+- section: Warm-up
+  points:
+  - Second Conjugation — the -ити family (говорити, робити)
+  - Still imperfective (ongoing/habitual actions)
+  - Powers actions from speaking and seeing to loving
+- section: Presentation
+  points:
+  - 'Pattern: -ити → -ю, -иш, -ить, -имо, -ите, -ять — Visual Paradigms: Compare 1st
+    (читати) vs 2nd (говорити) side-by-side to highlight vowel difference (е/є vs
+    и/і)'
+  - 'Example paradigm: говорити → говорю, говориш, говорить...'
+  - 'Consonant mutations in some verbs (д→дж, т→ч) — State Standard: сидіти (сиджу...);
+    frame ''labial L'' (роблю, люблю) as a helpful sound for easier pronunciation,
+    not just an exception'
+  - 'Common verbs (робити, бачити, любити, ходити) — include їсти and пити as ''Bonus
+    Verbs''; learner error: Conjugation Mix-up (using 1st conjugation endings like
+    роб-еш)'
+- section: Practice
+  points:
+  - Conjugation drills with -ити verbs
+  - Sorting verbs by conjugation (1st vs 2nd)
+- section: Production
+  points:
+  - 'Describing what people do (Вона бачить, Вони люблять) — use collocations: робити
+    помилки, любити читати, бачити світ'
+- section: Cultural Insight
+  points:
+  - 'The -ити ending is over 1000 years old (Proto-Slavic) — Proto-Slavic Roots: Direct
+    descendant of *-iti class, structurally recognizable for 1000+ years'
+  - 'Shared with Polish, Czech, and other Slavic languages — The Etymology of ''Любити'':
+    Shares roots with ''люди'' (people), implying to love is to be part of the community'
+vocabulary_hints:
+  required:
+  - говорити (to speak) — говорити українською, говорити повільно
+  - робити (to do) — робити помилки, робити вибір
+  - любити (to love) — любити читати, любити музику
+  - бачити (to see) — бачити світ, бачити сон
+  - 'їсти (to eat) — хочу їсти, готувати їсти; learner error: attempting regular conjugation
+    (я їджу)'
+  - пити (to drink) — пити каву, пити воду
+  - ходити (to walk) — ходити в парк, ходити до школи
+  - просити (to ask)
+  recommended:
+  - сидіти (to sit) — State Standard example for consonant mutation (сиджу)
+  - стояти (to stand)
+  - платити (to pay)
+  - вчити (to teach/learn)
+activity_hints:
+- type: fill-in
+  focus: Conjugate Second Conjugation verbs
+  items: 30
+- type: match-up
+  focus: Sort verbs by conjugation type
+  items: 20
+- type: fill-in
+  focus: Complete with mutated forms
+  items: 15
+focus: grammar
+pedagogy: PPP
+prerequisites:
+- a1-06 (The Living Verb I)
+- a1-07 (Questions and Negation)
+connects_to:
+- a1-09 (Reflexive Verbs)
+- a1-21 (Past Tense)
+objectives:
+- Learner can conjugate Second Conjugation verbs (-ити) in present tense
+- Learner can distinguish between First and Second Conjugation
+- Learner can use common irregular verbs (їсти, пити)
+- Learner can form basic sentences with action verbs
+grammar:
+- Second Conjugation pattern (-ити → -у, -иш...)
+- Consonant mutation patterns
+- Irregular verbs
+register: розмовний
+phase: A1.1 [First Contact]
+persona:
+  voice: Patient Supportive Tutor
+  role: Choreographer
+word_target: 2000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: The Living Verb II
+
+## State Standard Reference
+§4.2.4.1: "дієвідмінювання дієслів у теперішньому часі: ... сидіти (сиджу, сидиш, сидить, сидимо, сидите, сидять)"
+Alignment: This module explicitly teaches the Second Conjugation pattern demonstrated by the Standard's example 'сидіти', including the required consonant mutation (д→дж) in the first person singular.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| говорити | High (Top 100) | говорити українською, говорити правду, говорити з другом |
+| робити | High (Top 50) | робити домашнє завдання, робити покупки, що ти робиш? |
+| бачити | High (Top 200) | я бачу, радий бачити, бачити на власні очі |
+| любити | High (Top 100) | я люблю тебе, любити читати, любити природу |
+| їсти | High (Top 500) | їсти сніданок, хотіти їсти, смачно їсти |
+
+## Cultural Hooks
+1. **The Etymology of "Любити"**: The verb *любити* (to love) shares a Proto-Indo-European root (*lewdh-*) with *люди* (people) and *людство* (humanity). This linguistic connection suggests that in the Slavic worldview, love is intrinsically connected to community and belonging to the people.
+2. **Hospitality & Verbs**: The verbs *їсти* (to eat), *пити* (to drink), and *говорити* (to speak) form the triad of Ukrainian hospitality. A guest is always fed, given a drink, and engaged in conversation (*розмова*). Refusing to eat (*не їсти*) can be seen as rejecting the host's goodwill.
+
+## Common Learner Errors
+1. **Conjugation Mixing**: Learners often apply First Conjugation endings to Second Conjugation verbs (e.g., *ти робеш* instead of *ти робиш*).
+2. **Mutation Omission**: Learners forget the consonant mutation in the 'Я' form (e.g., *я сидю* or *я ходю* instead of *я сиджу*, *я ходжу*).
+3. **Irregular "Їсти"**: Learners attempt to conjugate *їсти* like a regular verb (e.g., *я їм* is correct, but learners often try *я їджу* or *я їстю*).
+
+## Cross-References
+- **Builds on**: a1-06 (The Living Verb I - introduces conjugation concept), a1-07 (Questions and Negation - needed for drill sentences).
+- **Prepares for**: a1-09 (Reflexive Verbs - many are 2nd conjugation), a1-21 (Past Tense - needing infinitive stems).
+
+## Notes for Content Writing
+- The "Labial L" (epenthetic l) in *люблю*, *роблю* must be taught not just as a rule, but as a phonetic aid to separate the lips (*б/п/в/м/ф*) from the *ю* sound.
+- Ensure the distinction between *бачити* (to see - faculty/result) and *дивитися* (to watch - process) is clear if *дивитися* is introduced, though the plan focuses on *бачити*.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Тріада гостинності (Introduction: The Triad of Hospitality)"
+  words: 400
+  points:
+  - "Introduction to Second Conjugation verbs (-ити): establishing this family as the second pillar of Ukrainian verbal action, focusing on ongoing and habitual meanings."
+  - "Cultural Motivator - The Triad of Hospitality: Establishing the verbs 'їсти' (to eat), 'пити' (to drink), and 'говорити' (to speak) as the core of Ukrainian social interaction, where connection is built through feeding and conversation."
+  - "Concept check: reviewing the difference between 'doing' (imperfective) and 'completing', anchoring the module in the learner's existing understanding of present tense from Module 06."
+- section: "Презентація: Моделі та мутації (Presentation: Paradigms and Mutations)"
+  words: 650
+  points:
+  - "Systematic introduction of endings: -ити → -ю, -иш, -ить, -имо, -ите, -ять. Side-by-side comparison with First Conjugation (читати vs говорити) to highlight the critical vowel difference (е/є vs и/і)."
+  - "State Standard competency (§4.2.4.1): Using 'сидіти' (я сиджу) as the primary model for consonant mutation (д→дж) in the first person singular."
+  - "Phonetic framing of the 'Labial L' in 'люблю' and 'роблю': teaching the epenthetic 'l' not just as a rule, but as a physical aid to separate labial consonants (б, п, в, м, ф) from the 'ю' sound."
+  - "The irregularity of 'їсти' (to eat): explicitly teaching the correct 'я їм' form and contrasting it with the common learner error 'я їджу' or 'я їстю'."
+  - "Distinction between 'бачити' (to see - result/faculty) and 'дивитися' (to watch - process) to prevent semantic confusion in early sentence building."
+- section: "Практика: Помилки та автоматизація (Practice: Errors and Automation)"
+  words: 500
+  points:
+  - "Contrastive drills to prevent Conjugation Mixing: identifying and correcting the habit of applying 1st conjugation endings to 2nd conjugation verbs (e.g., 'ти робиш' vs incorrect 'ти робеш')."
+  - "Mutation Mastery: intensive 'Я'-form drills with verbs like 'ходити' (ходжу), 'сидіти' (сиджу), and 'платити' (плачу) to eliminate omission errors like 'я ходю' or 'я сидю'."
+  - "Sorting exercises: categorization of 1st and 2nd conjugation verbs to build structural intuition for vowel patterns in endings."
+- section: "Продукування та культурний контекст (Production and Cultural Context)"
+  words: 450
+  points:
+  - "Contextual Production: describing daily routines and interests using high-frequency collocations such as 'робити домашнє завдання', 'любити природу', and 'говорити українською'."
+  - "Deep Culture - The Etymology of 'Любити': exploring the PIE root (*lewdh-) shared with 'люди' (people) and 'людство' (humanity), illustrating how love is intrinsically linked to community belonging."
+  - "Social Ethics of Hospitality: discussing the weight of 'їсти' and 'пити' in hosting, noting that refusing a meal ('не їсти') can be perceived as a rejection of the host's goodwill."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "говорити (to speak) — говорити українською, говорити правду; High Frequency (Top 100). Part of the 'Hospitality Triad'."
+  - "робити (to do) — робити домашнє завдання, робити покупки, робити вибір; High Frequency (Top 50). Note labial mutation: 'я роблю'."
+  - "бачити (to see) — я бачу, радий бачити, бачити на власні очі; High Frequency (Top 200). Focus on result/faculty."
+  - "любити (to love) — я люблю тебе, любити природу, любити читати; shares PIE root with 'люди' (people). Note labial mutation: 'я люблю'."
+  - "їсти (to eat) — хотіти їсти, смачно їсти; Irregular: 'я їм', 'ти їси', 'він їсть'. Learner error: avoid 'я їджу'."
+  - "пити (to drink) — пити каву, пити воду; High Frequency. Essential for cultural hospitality contexts."
+  - "ходити (to walk) — ходити в парк, ходити до школи; involves mutation 'я ходжу' (д→дж)."
+  - "просити (to ask) — просити допомоги; involves mutation 'я прошу' (с→ш)."
+  recommended:
+  - "сидіти (to sit) — State Standard example for consonant mutation (я сиджу)."
+  - "стояти (to stand) — high frequency positional verb; note 'вони стоять' ending."
+  - "платити (to pay) — useful for practical scenarios; involves mutation 'я плачу' (т→ч)."
+  - "вчити (to teach/learn) — вчити мову; frequent 2nd conjugation verb with 'и' stem."
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4420 chars)
+✅ Message sent to Claude (ID: 10071)
+✓ Message 10071 acknowledged
+   Auto-acknowledged reply #10071 (stdout delivery — no inbox accumulation)
+✓ Message 10063 acknowledged

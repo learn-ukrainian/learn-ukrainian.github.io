@@ -1,0 +1,280 @@
+✅ Message sent to Gemini (ID: 12103) [auto-acked: self-addressed]
+✓ Message 12103 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12103...
+📨 Message #12103
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-ivan-sirko
+   Time: 2026-02-20T23:36:11.104530+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-bio-25
+level: C1-BIO
+sequence: 25
+slug: ivan-sirko
+version: '2.0'
+title: 'Іван Сірко: Легендарний кошовий отаман'
+content_outline:
+- section: Вступ — Легенда Запорозької Січі
+  points:
+  - Сірко як символ непереможності
+  - Урус-Шайтан: образ у ворогів
+  - Феномен характерництва
+- section: Життєпис
+  points:
+  - Походження та ранні роки
+  - Шлях до отаманства
+  - Десятикратне обрання кошовим
+  - Заслання до Сибіру та повернення
+- section: Історичний контекст
+  points:
+  - Епоха Руїни
+  - Запорожжя як автономний центр сили
+- section: Внесок
+  points:
+  - Військова тактика (рейдова війна)
+  - Звільнення невільників
+- section: Останні роки
+  points:
+  - Оборона Чигирина 1677–1678 рр.
+  - Життя на пасіці
+  - Смерть 1680 р.
+- section: Спадщина
+  points:
+  - Образ у фольклорі та мистецтві (Рєпін)
+  - Меморіал у Капулівці
+- section: Підсумок
+  points:
+  - Сірко як вічний чатовий українського Степу
+focus: biography
+pedagogy: seminar
+prerequisites:
+- c1-bio-24 (Іван Виговський)
+- Розуміння контексту турецько-татарських набігів
+connects_to:
+- c1-bio-26 (Юрій Немирич)
+- b2-hist ruina-ii module
+objectives:
+- Проаналізувати військові стратегії Івана Сірка
+- Оцінити роль Запорозької Січі в епоху Руїни
+- Дослідити міфологізацію постаті Сірка в народній культурі
+grammar:
+- Епічний стиль розповіді
+- Термінологія козацького звичаєвого права
+module_type: biography
+sources:
+- name: Іван Сірко (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Іван_Сірко
+  type: primary
+  notes: Біографія та походи
+- name: Дмитро Яворницький "Історія запорозьких козаків"
+  url: http://izbornyk.org.ua/
+  type: reference
+  notes: Класичне дослідження
+immersion: 100% Ukrainian
+phase: C1-BIO
+vocabulary_hints:
+  required:
+  - характерник (kharakternyk)
+  - кошовий отаман (koshovyi otaman)
+  - невільник (slave / captive)
+activity_hints:
+- type: reading
+  focus: Лист запорожців турецькому султану (легендарний)
+  source: Folklore (adapted)
+- type: essay-response
+  focus: Феномен непереможності Сірка
+persona:
+  voice: Senior Biographer
+  role: Kish Otaman
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Іван Сірко: Легендарний кошовий отаман
+
+## Використані джерела
+1. [Енциклопедія історії України (history.org.ua)](http://resource.history.org.ua/) — Фундаментальні дані про біографію, походи та політичну діяльність.
+2. [Літопис Самійла Величка (litopys.org.ua)](http://litopys.org.ua/velichko/) — Першоджерело, характеристика сучасника, опис похорону.
+3. [Дмитро Яворницький "Історія запорозьких козаків"](http://izbornyk.org.ua/yavorn/yavorn.htm) — Класична історіографія, деталізація побуту та легенд.
+4. [Юрій Мицик "Іван Сірко"](http://history.org.ua/) — Сучасні дослідження, спростування міфів (Дюнкерк, народження).
+
+## Хронологія
+- ~1605–1610: Народження (ймовірно Східне Поділля, Мурафа).
+- 1644: Перша письмова згадка (участь у перемовинах з французами у Варшаві).
+- 1646: Участь у взятті фортеці Дюнкерк (Франція) у складі корпусу найманців (дискусійно, але канонічно для культурного міфу).
+- 1654: Відмова присягати московському царю після Переяславської ради.
+- 1658–1660: Кальницький полковник.
+- 1663: Перше обрання кошовим отаманом (загалом обирався від 8 до 15 разів).
+- 1672: Арешт та заслання до Сибіру (Тобольськ) за звинуваченням у "зраді" Москві.
+- 1673: Повернення із заслання на вимогу козацтва та через загрозу турецького наступу.
+- 1675: Блискучий похід на Крим, розгром ханських військ.
+- 1676: Підписання листа турецькому султану Мехмеду IV (легендарна подія).
+- 1677–1678: Участь в обороні Чигирина під час Чигиринських походів.
+- 1 серп. 1680: Смерть на пасіці в Грушівці (сучасна Дніпропетровщина).
+
+## Ключові факти та цитати
+- **Прізвисько**: "Урус-Шайтан" (Руський диявол) — так називали його турки та татари.
+- **Характерництво**: Легенди про те, що його не брала куля, що він народився з зубами ("гризти ворогів"), і про відрубану правицю, яка допомагала перемагати посмертно.
+- **Політичне кредо**: «Нужда закон міняє» — пояснення частих змін союзників заради інтересів Січі.
+- **Цитата (Яворницький про Сірка)**: «Іван Сірко представляв собою тип істинного запорожця... Він був хоробрий, відважний, завзятий, не завжди постійний, але завжди вірний своєму обов'язку захисника православної віри і рідної землі».
+- **Цитата (Султан до козаків)**: «Я, султан і владика Блискучої Порти... наказую вам, запорозькі козаки, здатися мені добровільно...» (і відповідь Сірка).
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ — Легенда Запорозької Січі": [!myth-buster] — Сірко не був "святим" лицарем; це була людина жорстокої епохи, яка грала за своїми правилами.
+- Section "Життєпис": [!context] — Участь у Тридцятилітній війні: де закінчується правда і починається міф про "барона де Сіро".
+- Section "Історичний контекст": [!history-bite] — "Нужда закон міняє": як Сірко виправдовував союзи то з Москвою, то з Польщею, то з Татарами проти своїх же гетьманів.
+- Section "Внесок": [!military] — Тактика "вовчих зграй" та нічних рейдів, яка дозволяла перемагати переважаючі сили.
+- Section "Останні роки": [!culture] — Історія картини Рєпіна: як Сірко став центральною фігурою найвідомішого полотна про козаків.
+- Section "Спадщина": [!legacy] — Історія з відрубаною рукою та перепохованнями: містичний посмертний шлях отамана.
+
+## Деколонізаційний контекст
+- **Imperial/Soviet myth**: Радянська історіографія намагалася зобразити Сірка як поборника "возз'єднання" з Росією, ігноруючи його жорсткий опір Переяславським статтям та заслання до Сибіру.
+- **Ukrainian reality**: Сірко був "січовим сепаратистом" у хорошому сенсі — він відстоював повну автономію Запорожжя від будь-якої метрополії (Чигирина, Варшави чи Москви). Його "промосковські" кроки були лише тактичними маневрами проти Польщі чи Туреччини.
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| Діяльність під час Руїни | "Зрадник" / "Непостійний елемент" | Політик, що керувався інтересами Січі ("Realpolitik" XVII ст.) |
+| Заслання до Сибіру | Покарання за "злочини" | Політична репресія Москви для усунення незручного лідера |
+| Визволення бранців | Гуманітарна місія "старшого брата" | Сакральний обов'язок козака, демографічний порятунок нації |
+
+## Section-Mapped Research Notes
+
+### Вступ — Легенда Запорозької Січі
+- Феномен "Урус-Шайтана". Турки лякали ним дітей.
+- Характерництво: не просто магія, а психологічна зброя. Віра у його невразливість деморалізувала ворога ще до битви.
+- Символ Січі: Сірко — це і є Січ епохи Руїни.
+
+### Життєпис
+- Ранні роки: версії про Мурафу (Поділля) vs Мерефу (Слобожанщина). Сучасна наука за Поділля.
+- Дюнкерк: участь у французькій кампанії 1646 р. Важливий елемент європейського контексту козацтва.
+- Хмельниччина: активна участь, але категорична відмова від присяги 1654 р. Сірко як опозиція авторитаризму гетьманів.
+
+### Історичний контекст
+- Епоха Руїни: хаос, громадянська війна. Січ як "третя сила".
+- Відносини з Гетьманщиною: конфлікти з Виговським, Тетерею, Дорошенком, Самойловичем. Сірко часто виступав дестабілізуючим фактором, прагнучи зберегти вольності Низу.
+
+### Внесок
+- Військова статистика: понад 50 (до 65) перемог. Жодної стратегічної поразки.
+- Кримські походи: превентивні удари. Стратегія "випаленої землі" у відповідь на набіги.
+- Заслання: 1672 р. арешт полтавським полковником Жученком, видача Москві, Тобольськ. Повернення через потребу в таланті полководця.
+
+### Останні роки
+- Чигиринські походи: роль Сірка у захисті Правобережжя.
+- Лист султану (1676): аналіз історичної основи легенди. Літературна пам'ятка сміхової культури бароко.
+- Смерть: мирна, на власній пасіці, що парадоксально для воїна.
+
+### Спадщина
+- Фольклор: думи про Сірка.
+- Рєпін: консультації з Яворницьким, пошук типажів. Сірко на картині — центр композиції.
+- Могила: перепоховання через затоплення Каховським морем. Історія з черепом (реконструкція Герасимова).
+
+### Підсумок
+- Вічний Чатовий. Архетип захисника.
+- Його життя — дзеркало суперечливої, кривавої, але героїчної епохи.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12169)
+✓ Message 12103 acknowledged
+✓ Message 12169 acknowledged

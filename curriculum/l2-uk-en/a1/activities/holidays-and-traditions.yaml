@@ -14,6 +14,10 @@
       right: '24 грудня'
     - left: 'День народження'
       right: 'особисте свято'
+    - left: 'День знань'
+      right: '1 вересня'
+    - left: 'День матері'
+      right: 'травень'
 
 - type: match-up
   title: 'Правильне привітання'
@@ -31,6 +35,10 @@
       right: 'Універсальне привітання'
     - left: 'Христос народився!'
       right: 'Різдвяне вітання'
+    - left: 'З Днем Незалежності!'
+      right: '24 серпня'
+    - left: 'З іменинами!'
+      right: 'День ангела'
 
 - type: quiz
   title: 'Українські традиції'
@@ -69,8 +77,8 @@
           correct: false
         - text: 'сало'
           correct: false
-    - question: 'Хто написав музику до всесвітньо відомого «Щедрика»?'
-      explanation: 'Микола Леонтович створив обробку народної пісні, яка стала Carol of the Bells.'
+    - question: 'Хто створив знамениту обробку «Щедрика»?'
+      explanation: 'Микола Леонтович створив хорову обробку народної пісні, яка стала Carol of the Bells.'
       options:
         - text: 'Микола Леонтович'
           correct: true
@@ -102,6 +110,28 @@
           correct: false
         - text: 'дарують сіль'
           correct: false
+    - question: 'Що ми кажемо, коли піднімаємо келихи?'
+      explanation: 'Традиційний український тост — «Будьмо!» (Let us be / Cheers).'
+      options:
+        - text: 'Будьмо!'
+          correct: true
+        - text: 'Смачного!'
+          correct: false
+        - text: 'Вітаю!'
+          correct: false
+        - text: 'Гірко!'
+          correct: false
+    - question: 'Чи можна дарувати ножі в Україні?'
+      explanation: 'Забобон каже, що гострі предмети приносять сварку. Краще взяти за них символічну монету.'
+      options:
+        - text: 'краще не дарувати (або взяти монету)'
+          correct: true
+        - text: 'так, це найкращий подарунок'
+          correct: false
+        - text: 'тільки на весілля'
+          correct: false
+        - text: 'тільки чоловікам'
+          correct: false
 
 - type: fill-in
   title: 'Граматика вітань'
@@ -127,10 +157,18 @@
       answer: 'народження'
       options: ['народження', 'народжувати', 'народ', 'день']
       explanation: 'Fixed phrase: День народження (Genitive used inside the name).'
-    - sentence: 'З {{answer}} днем!'
-      answer: 'гарним'
-      options: ['гарним', 'гарний', 'гарного', 'гарна']
-      explanation: 'Instrumental case adjective: гарний -> гарним.'
+    - sentence: 'Вітаю з {{answer}}!'
+      answer: 'іменинами'
+      options: ['іменинами', 'іменини', 'іменин', 'іменинам']
+      explanation: 'Instrumental case: іменини -> іменинами.'
+    - sentence: 'Вітаю з Днем {{answer}}!'
+      answer: 'ангела'
+      options: ['ангела', 'ангел', 'ангелом', 'ангели']
+      explanation: 'Genitive case inside the phrase: Day of Angel.'
+    - sentence: 'Вітаю з {{answer}}!'
+      answer: 'перемогою'
+      options: ['перемогою', 'перемога', 'перемоги', 'перемогу']
+      explanation: 'Instrumental case: перемога -> перемогою.'
 
 - type: fill-in
   title: 'Найкращі побажання'
@@ -160,6 +198,14 @@
       answer: 'миру'
       options: ['миру', 'мир', 'миром', 'мирний']
       explanation: 'After бажаю we use Genitive: мир -> миру.'
+    - sentence: 'Бажаю {{answer}}!'
+      answer: 'достатку'
+      options: ['достатку', 'достаток', 'достатком', 'багато']
+      explanation: 'After бажаю we use Genitive: достаток -> достатку.'
+    - sentence: 'Бажаю творчого {{answer}}!'
+      answer: 'натхнення'
+      options: ['натхнення', 'натхненням', 'натхненний', 'натхненні']
+      explanation: 'After бажаю we use Genitive: натхнення.'
 
 - type: unjumble
   title: 'Складіть речення'
@@ -183,9 +229,9 @@
   instruction: 'Sort the words based on whether they follow "З" (Instrumental) or "Бажаю" (Genitive).'
   groups:
     - name: 'З ... (Орудний)'
-      items: ['Новим роком', 'Різдвом', 'святом', 'Великоднем']
+      items: ['Новим роком', 'Різдвом', 'святом', 'Великоднем', 'Днем народження', 'Днем ангела']
     - name: 'Бажаю ... (Родовий)'
-      items: ['щастя', 'здоров''я', 'успіху', 'любові', 'миру', 'добра']
+      items: ['щастя', 'здоров''я', 'успіху', 'любові', 'миру', 'добра', 'достатку', 'натхнення']
 
 - type: true-false
   title: 'Правда чи ні?'
@@ -209,29 +255,33 @@
     - statement: 'Кутя — це головна страва на Великдень.'
       correct: false
       explanation: 'Кутя — це головна страва на Різдво (Святвечір). Паска — на Великдень.'
+    - statement: 'Новий рік в Україні святкують влітку.'
+      correct: false
+      explanation: 'Новий рік — це зимове свято (1 січня).'
+    - statement: 'Святий Миколай приносить подарунки 6 грудня.'
+      correct: true
+      explanation: 'Так, за новим календарем День Святого Миколая — 6 грудня.'
 
-- type: anagram
-  title: 'Святкові слова'
-  instruction: 'Rearrange the letters to find the holiday words.'
-  items:
-    - scrambled: 'С В Я Т О'
-      answer: 'СВЯТО'
-      hint: 'Holiday'
-    - scrambled: 'Р І З Д В О'
-      answer: 'РІЗДВО'
-      hint: 'Christmas'
-    - scrambled: 'Щ А С Т Я'
-      answer: 'ЩАСТЯ'
-      hint: 'Happiness'
-    - scrambled: 'К У Т Я'
-      answer: 'КУТЯ'
-      hint: 'Christmas dish'
-    - scrambled: 'З И М А'
-      answer: 'ЗИМА'
-      hint: 'Winter'
-    - scrambled: 'В Е С Н А'
-      answer: 'ВЕСНА'
-      hint: 'Spring'
+- type: match-up
+  title: 'Святковий словник'
+  instruction: 'Match the holiday word to its meaning.'
+  pairs:
+    - left: 'Кутя'
+      right: 'Різдвяна страва'
+    - left: 'Колядка'
+      right: 'Різдвяна пісня'
+    - left: 'Щедрик'
+      right: 'Різдвяна щедрівка'
+    - left: 'Святвечір'
+      right: 'Вечір перед Різдвом'
+    - left: 'Подарунок'
+      right: 'Сюрприз для друга'
+    - left: 'Листівка'
+      right: 'Картка з вітанням'
+    - left: 'Тост'
+      right: 'Слова за столом'
+    - left: 'Іменинник'
+      right: 'Людина, у якої день народження'
 
 - type: fill-in
   title: 'Заповніть діалог'
@@ -261,3 +311,11 @@
       answer: 'друг'
       options: ['друг', 'свято', 'день', 'рік']
       explanation: 'Context: You are the best friend.'
+    - sentence: 'Коли твій день {{answer}}?'
+      answer: 'народження'
+      options: ['народження', 'народжувати', 'святкувати', 'іменини']
+      explanation: 'Question: When is your birthday?'
+    - sentence: 'Він у {{answer}}.'
+      answer: 'травні'
+      options: ['травні', 'травень', 'травня', 'травнем']
+      explanation: 'Locative case: у травні (in May).'

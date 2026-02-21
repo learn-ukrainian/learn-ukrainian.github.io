@@ -1,4 +1,4 @@
-        # Fix Phase — full audit failures
+        # Fix Phase — content-only audit failures
 
         The following audit errors must be fixed for module `checkpoint-first-contact`:
 
@@ -6,39 +6,38 @@
 
         ```
         ============================================================
-  HETMAN VERIFY: checkpoint-first-contact
+  OTAMAN VERIFY: checkpoint-first-contact
 ============================================================
 
-[1/4] Running full audit...
-[2/4] Checking sidecar files...
-[3/4] Reading status JSON...
-[4/4] Checking overall status...
+[1/3] Running audit with --skip-activities...
+[2/3] Reading status JSON...
+[3/3] Checking orchestration artifacts...
 
 ────────────────────────────────────────────────────────────
   VERDICT: FAIL
   Module:  checkpoint-first-contact
 ────────────────────────────────────────────────────────────
   audit script returned non-zero exit code
-  overall status is 'fail' (must be 'pass')
-  2 Outline Compliance Errors
+  failing gates:
+    lesson: 2436/1500 (raw: 2706) | pedagogy: 1 violations
 
-  Hetman has NOT completed this module.
+  Otaman has NOT completed this module.
   Fix the issues above and re-run this script.
 
 ─── Audit output (last 15 lines) ───
-  Grammar      ℹ️ N/A (covered by naturalness)
-  Naturalness  ℹ️ PENDING — awaiting review
-  Activity_quality ℹ️ Quality validation N/A (A1/A2)
-  Research     ⚠️ Refresh recommended: Content predates research (research file is newer)
-  Immersion    🇺🇦 20.4% (checkpoint - no gate)
+  📚 PEDAGOGICAL VIOLATIONS FOUND:
+    [EUPHONY] Line 359: «з сиру» — з перед з/с/ш/ч; має бути «із сиру»
+       → FIX: Replace «з» with «із» (before sibilant)
+
+
+  📝 RECOMMENDATION: UPDATE (patch fixes) (severity 5/100)
+     → 1 violations (minor)
+
 
   Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/checkpoint-first-contact-audit.md
   Status: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/status/checkpoint-first-contact.json
 
   ❌ AUDIT FAILED. Correct errors before proceeding.
-
-  Critical Failures:
-    • 2 Outline Compliance Errors
 
   ❌ AUDIT FAILED (see curriculum/l2-uk-en/krisztiankoos/audit/checkpoint-first-contact-audit.log for details)
         ```
@@ -46,8 +45,8 @@
         ## Files to Fix
 
         - Content: `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/checkpoint-first-contact.md`
-        - Activities: `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/activities/checkpoint-first-contact.yaml`
-        - Vocabulary: `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/vocabulary/checkpoint-first-contact.yaml`
+
+
 
         ## Instructions
 

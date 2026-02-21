@@ -1,0 +1,32 @@
+{
+  "track": "a1",
+  "slug": "buying-tickets",
+  "mode": "v3",
+  "phases": {
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-20T22:44:08Z",
+      "note": "migrated-from-v2"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-20T22:44:08Z",
+      "note": "migrated-from-v2"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-20T22:44:08Z",
+      "note": "migrated-from-v2"
+    },
+    "v3-D": {
+      "status": "complete",
+      "ts": "2026-02-20T22:44:08Z",
+      "note": "migrated-from-v2"
+    },
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-20T22:44:10Z",
+      "note": "adopted-existing-meta"
+    }
+  }
+}

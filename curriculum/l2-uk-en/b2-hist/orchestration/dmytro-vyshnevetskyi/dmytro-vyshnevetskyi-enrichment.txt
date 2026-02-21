@@ -1,0 +1,318 @@
+✅ Message sent to Gemini (ID: 12445) [auto-acked: self-addressed]
+✓ Message 12445 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12445...
+📨 Message #12445
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-dmytro-vyshnevetskyi
+   Time: 2026-02-20T23:39:41.125635+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b2-hist-043
+level: B2-HIST
+sequence: 43
+slug: dmytro-vyshnevetskyi
+version: '2.0'
+title: 'Дмитро Вишневецький: Перший кошовий'
+subtitle: The Legendary Founder of the First Sich
+content_outline:
+- section: Вступ
+  points:
+  - 'The transition from princes to cossack leaders — Vyshnevetskyi as the ''last
+    knight'' of the princely era and ''first knight'' of the Cossack era; cultural
+    hook: the synthesis of old aristocracy and new steppe tactics'
+  - Dmytro Vyshnevetskyi as a figure of the frontier — living on the border of settled
+    Rzeczpospolita and nomadic Wild Fields; [!history-bite] he was an elite magnate,
+    debunking the myth that all Cossacks were runaway serfs
+- section: 'Шлях князя: Від Волині до Степу'
+  points:
+  - Origins and noble status — born ~1517 in Vyshnivets, Volhynia, of the Gedyminovych
+    lineage
+  - Early military experience — Starosta of Kaniv and Cherkasy (1550-1553), the frontline
+    defense against Tatar raids
+  - Diplomatic maneuvers — realizing passive castle defense was insufficient, shifting
+    to active steppe tactics to intercept raiders
+- section: Заснування Малої Хортиці
+  points:
+  - Strategic necessity of the 1550s — establishing a base in 1556 on Mala Khortytsia
+    island to control river crossings; [!context] why Khortytsia was the ideal 'Dnipro
+    castle'
+  - Life in the first fortress — not just a camp, but a fortress with earthworks and
+    wooden log structures
+  - Historical legacy — the first precedent of a permanent Cossack garrison beyond
+    the rapids
+- section: Читання
+  points:
+  - Analysis of folk ballads and primary accounts — specifically 'Song of Baida' and
+    Marcin Bielski's chronicle; [!culture] connecting Baida's image to the 'kharakternyk'
+    archetype
+- section: Геополітика і Дипломатія
+  points:
+  - Relations with Poland, Lithuania, and Moscow — the 'Moscow episode' (1558-1561)
+    as a pragmatic resource grab for the anti-Crimean war; [!myth-buster] Vyshnevetskyi
+    was an ally, not a servant, and left when priorities shifted
+  - The anti-Tatar coalition strategy — attempts to unite Poland, Lithuania, Moscow,
+    and potentially Moldova against the Ottoman threat
+- section: Первинні джерела
+  points:
+  - Chronicle accounts of Vyshnevetskyi's death — Marcin Bielski's detailed description
+    of his execution in Istanbul (1563) by hanging from a rib; [!quote] French ambassador's
+    account confirming the legend
+  - Ballad of Baida — symbolism of refusing the Sultan's daughter/faith as an affirmation
+    of Christian knightly honor
+- section: Деколонізаційний погляд
+  points:
+  - Vyshnevetskyi as an independent actor — acting as a sovereign who sent ambassadors
+    and built fortresses; [!decolonization] treating him as a geopolitical player,
+    not a vassal
+  - The myth of Moscow's protectorate — refuting the Soviet narrative of 'eternal
+    attraction' to Russia; it was a situational alliance broken by Vyshnevetskyi
+activity_hints:
+- type: reading
+  focus: 'Ballad of Baida: Analysis of folk imagery'
+- type: essay-response
+  focus: Vyshnevetskyi as the bridge between Rus princes and Cossack hetmans
+- type: comparative-study
+  focus: Vyshnevetskyi vs later Cossack leaders
+- type: critical-analysis
+  focus: Analyzing primary source accounts of his martyrdom
+focus: history
+pedagogy: CBI
+objectives:
+- Learner can describe the role of Dmytro Vyshnevetskyi in the founding of the first
+  Sich
+- Learner can analyze the geopolitical significance of the Khortytsia fortress
+- Learner can understand the legendary status of Baida in Ukrainian folklore
+grammar:
+- 'Historical narrative: past perfective'
+- Passive voice in historical descriptions
+register: публіцистичний
+phase: HIST.5 [Rise of Cossacks]
+vocabulary_hints:
+  required:
+  - історія (history) — козацька історія, історія України, сторінки історії
+  - держава (state) — будувати державу, інтереси держави, захист держави
+  - народ (people) — український народ, пам'ять народу, воля народу
+  - влада (power) — князівська влада, військова влада, боротьба за владу
+  - період (period) — період Руїни, княжий період, історичний період
+  - подія (event) — історична подія, трагічна подія, важлива подія
+  - джерело (source) — першоджерело, історичне джерело, надійне джерело
+  - спадщина (heritage) — культурна спадщина, козацька спадщина, історична спадщина
+  recommended:
+  - аналіз (analysis) — критичний аналіз, аналіз джерел, глибокий аналіз
+  - контекст (context) — історичний контекст, політичний контекст, культурний контекст
+  - вплив (influence) — політичний вплив, культурний вплив, вплив на події
+  - наслідки (consequences) — політичні наслідки, історичні наслідки, непередбачувані
+    наслідки
+persona:
+  voice: Senior Professor of History
+  role: Fortress Builder
+word_target: 5000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Дмитро Вишневецький: Перший кошовий
+
+## Використані джерела
+1. [Енциклопедія Сучасної України](https://esu.com.ua/article-34246) — біографічні відомості, родовід.
+2. [Ізборник (Litopys.org.ua)](http://litopys.org.ua/old18/old18_09.htm) — текст "Пісні про Байду", хроніка Мартина Бєльського (перекази).
+3. [History.org.ua](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Vyshnevetskyj_D) — стаття про Вишневецького, деталі про Хортицький замок.
+4. [JNSM.com.ua](https://jnsm.com.ua/h/102213/) — хронологія заснування Січі та московського періоду.
+
+## Хронологія
+- **~1517**: Народження у Вишнівці на Волині в родині Івана Вишневецького (Гедиміновича).
+- **1550–1553**: Призначення старостою Черкаським і Канівським; перехід до активної оборони від татар.
+- **1553**: Тимчасовий від'їзд до Туреччини (Стамбул) для переговорів (демонстрація незалежності від польського короля).
+- **1556**: Заснування укріплення (замку) на острові Мала Хортиця — прообразу Січі.
+- **1557**: Героїчна оборона Хортиці (24 дні) від військ Девлет-Гірея; руйнування замку.
+- **1558–1561**: Московський період. Участь у походах на Крим та Кавказ; розрив через початок Лівонської війни.
+- **1563**: Втручання у молдавські міжусобиці, полон, видача туркам.
+- **1563 (жовтень)**: Страта у Стамбулі за наказом султана Сулеймана I Пишного.
+
+## Ключові факти та цитати
+
+### Страта (за переказами Мартина Бєльського та Жана де ла Віня)
+Французький посол у Стамбулі **Жан Кавенак де ла Вінь** (Jean Cavenac de la Vigne) писав у своїх донесеннях про "князя Дімітрашку", який був повішений на гаку, але протягом трьох днів, поки був живий, ганив султана та його віру. За легендою, турки, не витримавши прокльонів, застрелили його з луків.
+
+### Пісня про Байду (Уривок)
+> «Ой крикне цар на свої гайдуки:
+> "Візьміть Байду добре в руки,
+> Візьміть Байду, істяжніте,
+> На гак ребром зачепіте!"
+> Ой висить Байда не день, не два,
+> Не одну нічку й не годиночку;
+> Ой висить Байда та й гадає,
+> Та на свого джуру споглядає...»
+
+### Родовід
+Вишневецький — нащадок **Гедиміна** (Великого князя Литовського) та **Корибута-Дмитра** (князя Сіверського). Це спростовує міф про "мужицьке" походження козацтва. Він був аристократом найвищого ґатунку, який обрав Степ.
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ": [!myth-buster] — Козацтво заснували не лише "селяни-втікачі". Його лідером був магнат-Гедимінович, "останній лицар" княжої доби.
+- Section "Шлях князя": [!context] — Чому князь покинув комфорт Волині? (Ідея християнського обов'язку та "сарматський" етос).
+- Section "Заснування Малої Хортиці": [!history-bite] — Замок був не просто табором, а справжньою фортецею з дерев'яними зрубами та земляними валами, гарнізон ~300 осіб.
+- Section "Читання": [!culture] — Зв'язок образу Байди з "характерниками" (невразливість до болю, надлюдська витривалість на гаку).
+- Section "Геополітика і Дипломатія": [!decolonization] — Вишневецький використовував Москву, а не служив їй. Як тільки інтереси розійшлися (Лівонська війна замість війни з Кримом), він пішов.
+- Section "Первинні джерела": [!quote] — Свідчення французького посла де ла Віня про героїчну смерть "Дімітрашки".
+
+## Деколонізаційний контекст
+- **Імперський міф**: Вишневецький шукав "захисту єдиновірної Москви", що було предтечею Переяславської ради.
+- **Українська реальність**: Це був ситуативний військовий союз. Вишневецький діяв як суверенний суб'єкт, маневруючи між Литвою, Польщею, Туреччиною та Москвою. Його метою був захист українського південного кордону, а не "возз'єднання". Коли Іван Грозний переключився на війну з Литвою (Лівонська війна 1558-1583), Вишневецький відмовився воювати проти своєї батьківщини і повернувся.
+
+## Contested Terms
+| Concept | Enemy/Imperial framing | Ukrainian (decolonized) framing |
+|---------|----------------------|-------------------------------|
+| Статус Вишневецького | Служилий князь, авантюрист | Козацький ватажок, засновник Січі, суверенний політик |
+| Похід у Москву | Прагнення "возз'єднання", вірність царю | Прагматичний військовий альянс проти спільного ворога (Криму) |
+| Козаки | Розбійники, втікачі від панів | Лицарський орден, захисники кордонів ("antemurale christianitatis") |
+
+## Section-Mapped Research Notes
+
+### Вступ
+- Дмитро Вишневецький — унікальна постать на зламі епох. Він поєднав у собі стару княжу аристократію (Рюриковичі/Гедиміновичі) і нову пасіонарну силу (Козацтво).
+- Міф про "селянське" походження козацтва тріщить по швах, коли ми бачимо, що першу Січ заснував один з найбагатших магнатів Волині.
+- Прізвисько "Байда": етимологія (безтурботний, гульвіса) vs. історична роль (стратег, будівничий).
+
+### Шлях князя: Від Волині до Степу
+- Народився у Вишнівці. Герб Корибут (золотий хрест без правого рамена, знизу перехрещений, на червоному щиті, внизу місяць).
+- Старостування у Каневі та Черкасах (1550-ті): зіткнення з проблемою пасивної оборони. Татари прориваються повз замки.
+- Рішення: треба перенести лінію оборони вглиб Степу, перехоплювати ворога *до* того, як він дійде до населених земель.
+- 1553: Поїздка до Стамбула. Дипломатичний демарш, спроба домовитися з Султаном напряму (показує його незалежність від польського короля Сигізмунда II Августа).
+
+### Заснування Малої Хортиці
+- **1556 рік**: Будівництво замку на острові Мала Хортиця (нині острів Байда, Запоріжжя).
+- Локація: стратегічний контроль над переправами через Дніпро нижче порогів.
+- Фортифікація: дерево-земляна. Земляні вали + дерев'яні зруби.
+- Гарнізон: близько 300 козаків та слуг.
+- Значення: Це був перший *постійний* християнський форпост у Дикому Полі. Психологічний злам: татари більше не господарі в Степу.
+- 1557: Облога Девлет-Гіреєм. 24 дні оборони. Вишневецький змушений відступити через брак продовольства, замок зруйновано.
+
+### Читання
+- "Пісня про Байду": фольклорна інтерпретація.
+- Основний мотив: вірність своїй вірі та честі ("Твоя, царю, віра проклятая").
+- Відмова від спокуси (царівна, багатство) заради принципів.
+- Гіперболізація сили: висить на гаку, але просить лук і вбиває царя (символ незламності духу).
+- Зв'язок з реальністю: страта була реальною, але деталі "помсти" — народна фантазія, що компенсує трагізм смерті.
+
+### Геополітика і Дипломатія
+- "Московський епізод" (1558-1561).
+- Причина: Польща і Литва не хотіли відкритої війни з Туреччиною. Вишневецькому потрібні були ресурси для відновлення фортець і походів.
+- Діяльність: очолив походи московських військ на Кавказ і під Азов.
+- Розрив: Іван Грозний почав Лівонську війну проти Литви. Вишневецький відмовився воювати проти "своїх" і повернувся в Україну (тоді у складі ВКЛ). Це руйнує російський міф про "зрадника Мазепу" як виняток — українські лідери завжди ставили інтереси своєї землі вище лояльності монархам.
+
+### Первинні джерела
+- **Мартин Бєльський ("Хроніка Польська")**: Описує, як Вишневецького і його товариша П'ясецького скинули з вежі на гаки. П'ясецький помер одразу, а Вишневецький зачепився ребром і жив три дні.
+- **Жан де ла Вінь**: Підтверджує факт героїчної смерті у дипломатичному листуванні. Це переводить подію з розряду легенд у задокументований факт європейської історії.
+
+### Деколонізаційний погляд
+- Вишневецький — не "слуга царя" і не "польський шляхтич", а самостійний гравець (proto-state builder).
+- Він проводив власну зовнішню політику (переговори з Москвою, Туреччиною, Молдовою).
+- Його дії заклали фундамент для козацької державності: територія (Запоріжжя), військова організація, незалежна дипломатія.
+- Спростування радянського наративу про "одвічне прагнення до возз'єднання": союз з Москвою був суто прагматичним і тимчасовим.
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12501)
+✓ Message 12445 acknowledged
+✓ Message 12501 acknowledged

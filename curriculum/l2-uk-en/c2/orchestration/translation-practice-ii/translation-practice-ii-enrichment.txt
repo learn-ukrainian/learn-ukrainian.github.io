@@ -1,0 +1,312 @@
+✅ Message sent to Gemini (ID: 11336) [auto-acked: self-addressed]
+✓ Message 11336 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #11336...
+📨 Message #11336
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-translation-practice-ii
+   Time: 2026-02-20T22:39:00.812321+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c2-087
+level: c2
+sequence: 87
+version: '2.0'
+title: Практика перекладу II — Спеціалізований переклад
+focus: practice
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Карабан — Переклад науково-технічної літератури
+  url: https://uk.wikipedia.org/wiki/Карабан_В'ячеслав_Іванович
+  type: primary
+  notes: Standard textbook for technical translation Ukrainian-English
+- name: ISO 17100 — Translation Services Requirements
+  url: https://www.iso.org/
+  type: reference
+  notes: International standard for translation quality
+- name: Державний стандарт термінології
+  url: https://dstu-online.com/
+  type: reference
+  notes: Ukrainian terminology standardization
+content_outline:
+- section: Вступ — Світ спеціалізованого перекладу
+  points:
+  - Види спеціалізованого перекладу
+  - Вимоги до технічного перекладача
+  - Ринок перекладацьких послуг в Україні
+- section: Науковий і технічний переклад
+  points:
+  - Термінологічна точність
+  - Робота з терміносистемами
+  - Стандарти оформлення (ДСТУ)
+  - Переклад формул, таблиць, графіків
+- section: Юридичний переклад
+  points:
+  - Особливості правничої мови
+  - Еквівалентність правових понять
+  - Переклад договорів і контрактів
+  - Сертифікований переклад документів
+- section: Медичний переклад
+  points:
+  - Латинська термінологія
+  - Переклад медичної документації
+  - Фармацевтична література
+  - Етичні аспекти медичного перекладу
+- section: Інструменти перекладача
+  points:
+  - CAT-системи (Trados, MemoQ)
+  - Термінологічні бази
+  - Машинний переклад як допоміжний інструмент
+  - Контроль якості перекладу
+- section: Практична майстерня
+  points:
+  - Переклад технічного тексту
+  - Переклад юридичного документа
+  - Створення термінологічного глосарію
+  - Редагування машинного перекладу
+vocabulary:
+  required:
+  - технічний переклад (technical translation)
+  - термін (term)
+  - терміносистема (terminology system)
+  - юридичний переклад (legal translation)
+  - медичний переклад (medical translation)
+  - CAT-система (CAT tool)
+  - термінологічна база (terminology database)
+  - глосарій (glossary)
+  - машинний переклад (machine translation)
+  - контроль якості (quality control)
+  recommended:
+  - локалізація (localization)
+  - постредагування (post-editing)
+  - пам'ять перекладів (translation memory)
+  - сертифікований переклад (certified translation)
+  - апостиль (apostille)
+  forbidden: '[]'
+activities:
+  types_required:
+  - critical-analysis
+  - essay-response
+  - quiz
+  - match-up
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c2-88 (Interpretation Basics)
+- c2-89 (Capstone Topic Selection)
+vocabulary_hints:
+  required:
+  - концепція (concept)
+  - аналіз (analysis)
+  - дискурс (discourse)
+  - методологія (methodology)
+  recommended:
+  - інтерпретація (interpretation)
+  - контекстуалізація (contextualization)
+  - синтез (synthesis)
+activity_hints:
+- type: reading
+  focus: Поглиблений аналіз тексту
+  items: 4
+- type: essay-response
+  focus: Критичне осмислення
+- type: discussion
+  focus: Дискусія та аргументація
+  items: 1
+persona:
+  voice: Senior Specialist
+  role: Technical Translator
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Практика перекладу II — Спеціалізований переклад
+
+## State Standard Reference
+§4.3.7: "Уміння трансформувати текст з одного стилю в інший, зокрема науковий у науково-популярний, офіційний у публіцистичний тощо."
+Alignment: Цей модуль розвиває навичку точної передачі змісту та стилю спеціалізованих текстів (наукових, юридичних, медичних), що є ключовою компетенцією для трансформації та адаптації текстів на рівні C2.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| технічний переклад | High / Professional | виконувати технічний переклад, особливості технічного перекладу, бюро технічних перекладів |
+| терміносистема | Medium / Academic | впорядкована терміносистема, розвиток терміносистеми, галузева терміносистема |
+| юридичний переклад | High / Professional | нотаріально засвідчений юридичний переклад, точність юридичного перекладу |
+| CAT-система | High / Professional | використання CAT-систем, переваги CAT-систем, популярні CAT-системи (Trados, MemoQ) |
+| локалізація | High / IT & Business | локалізація програмного забезпечення, локалізація веб-сайтів, культурна адаптація |
+
+## Cultural Hooks
+1. **Євроінтеграція та переклад:** Масштабний проект перекладу законодавства ЄС (Acquis communautaire) українською мовою. Це тисячі сторінок юридичних текстів, що вимагають уніфікації термінології та створення нових термінів.
+2. **ДСТУ та стандартизація:** Роль Державного підприємства «Український науково-дослідний і навчальний центр проблем стандартизації, сертифікації та якості» у розробці термінологічних стандартів (ДСТУ). Технічний перекладач має спиратися на чинні стандарти, а не вигадувати власні терміни.
+
+## Common Learner Errors
+1. **Калькування (Calques):** Дослівний переклад термінів, що призводить до спотворення змісту (наприклад, англ. "civil servant" як "цивільний слуга" замість "державний службовець").
+2. **Зловживання пасивним станом:** Надмірне використання конструкцій типу "було виконано" замість активних або безособових форм ("виконали", "виконано"), що є впливом російської та англійської канцелярської мови.
+3. **Хибні друзі перекладача:** Помилки у перекладі схожих за звучанням, але різних за значенням слів (наприклад, "data" – це "дані", а не "дата"; "academic" – це часто "навчальний" або "науковий", а не лише "академічний").
+
+## Cross-References
+- Builds on: c2-87 (Practicum I - General Translation - *assumed previous module based on naming*)
+- Prepares for: c2-88 (Interpretation Basics), c2-89 (Capstone Topic Selection)
+
+## Notes for Content Writing
+- Акцентувати на відповідальності перекладача: помилка в медичному чи юридичному перекладі може коштувати життя або свободи.
+- Використовувати приклади з реальних стандартів ДСТУ або фрагменти законодавства ЄС для ілюстрації.
+- Чітко розмежовувати "переклад" (translation) і "тлумачення/інтерпретацію" (interpretation), хоча цей модуль фокусується на письмовому.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Світ спеціалізованого перекладу (Introduction: The World of Specialized Translation)"
+  words: 400
+  points:
+  - "Вимоги Державного стандарту (§4.3.7) щодо компетенції перекладача: здатність трансформувати текст між науковим, офіційним та публіцистичним стилями."
+  - "Огляд ринку спеціалізованого перекладу в Україні крізь призму стандарту ISO 17100: кваліфікаційні вимоги та професійна етика."
+- section: "Науково-технічний переклад та стандартизація (Scientific-Technical Translation and Standardization)"
+  words: 600
+  points:
+  - "Роль ДСТУ та ДП «УкрНДНЦ» у розробці термінологічних стандартів; важливість опори на чинні нормативи замість самостійного вигадування термінів."
+  - "Робота з галузевими терміносистемами: методи впорядкування та верифікації науково-технічної термінології в українському контексті."
+- section: "Юридичний переклад та євроінтеграція (Legal Translation and Eurointegration)"
+  words: 700
+  points:
+  - "Масштабний проєкт перекладу законодавства ЄС (Acquis communautaire) як приклад викликів уніфікації термінології та створення нових правничих лексем."
+  - "Learner error: Аналіз калькування (calques) юридичних термінів, наприклад, помилковий переклад «civil servant» як «цивільний слуга» замість нормативного «державний службовець»."
+  - "Особливості еквівалентності правових понять при перекладі міжнародних контрактів та сертифікованих документів."
+- section: "Медичний переклад: Точність та відповідальність (Medical Translation: Precision and Responsibility)"
+  words: 500
+  points:
+  - "Етичні аспекти медичного перекладу: розбір критичної відповідальності перекладача за життя та здоров’я пацієєнта через точність передачі діагнозів."
+  - "Специфіка взаємодії латинської термінології з українськими медичними текстами та переклад фармацевтичної документації."
+- section: "Інструменти та контроль якості (Translator Tools and Quality Control)"
+  words: 400
+  points:
+  - "Використання CAT-систем (SDL Trados, MemoQ) для забезпечення термінологічної єдності в межах великих проєктів та галузевих баз даних."
+  - "Learner error: Зловживання пасивним станом («було виконано») під впливом російської канцелярської мови; стратегії переходу до активних та безособових форм."
+- section: "Практична майстерня: Аналіз та корекція (Practical Workshop: Analysis and Correction)"
+  words: 400
+  points:
+  - "Дрилі на розрізнення «хибних друзів перекладача»: правильний переклад термінів «data» (дані, а не дата) та «academic» (науковий/навчальний, а не лише академічний)."
+  - "Практичне редагування результатів машинного перекладу (MTPE) з акцентом на виправлення стилістичних кальок та термінологічних неточностей."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "технічний переклад (technical translation) — виконувати технічний переклад; ключовий термін для професійної сфери"
+  - "терміносистема (terminology system) — впорядкована терміносистема, галузева терміносистема; фокус на системності"
+  - "юридичний переклад (legal translation) — нотаріально засвідчений юридичний переклад; вимагає високої юридичної еквівалентності"
+  - "CAT-система (CAT tool) — використання CAT-систем (Trados, MemoQ); базова технологія для сучасного перекладача"
+  - "локалізація (localization) — локалізація програмного забезпечення, культурна адаптація; висока частотність в IT-секторі"
+  - "Acquis communautaire (Acquis communautaire) — правова спадщина ЄС; обов'язковий термін у контексті євроінтеграційного перекладу"
+  recommended:
+  - "ДСТУ (DSTU) — Державний стандарт України; посилання на нормативну базу термінології"
+  - "калькування (calquing) — уникати калькування; термін для опису типових помилок (напр. civil servant)"
+  - "хибні друзі перекладача (false friends) — слова, схожі за звучанням, але різні за змістом (напр. data, academic)"
+  - "постредагування (post-editing) — редагування машинного перекладу (MTPE); актуальна компетенція рівня C2"
+  - "термінологічна база (terminology database) — створення та підтримка термінологічних глосаріїв"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4110 chars)
+✅ Message sent to Claude (ID: 11345)
+✓ Message 11345 acknowledged
+   Auto-acknowledged reply #11345 (stdout delivery — no inbox accumulation)
+✓ Message 11336 acknowledged

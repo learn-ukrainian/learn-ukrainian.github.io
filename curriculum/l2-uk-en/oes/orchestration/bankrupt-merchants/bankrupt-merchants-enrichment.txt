@@ -1,0 +1,210 @@
+✅ Message sent to Gemini (ID: 12845) [auto-acked: self-addressed]
+✓ Message 12845 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12845...
+📨 Message #12845
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-bankrupt-merchants
+   Time: 2026-02-20T23:42:34.821712+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 69
+module: oes-069
+module_number: 69
+slug: bankrupt-merchants
+title_uk: Банкрути-купці
+title_en: Bankrupt Merchants
+phase: 3
+phase_id: legal-tradition
+phase_name: Legal Tradition
+focus: Trade law basics
+content_outline:
+- section: Вступ
+  description: Introduction to Bankrupt Merchants
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Senior Paleographer
+  role: Debt Bailiff
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Банкрути-купці (Bankrupt Merchants)
+
+## Використані джерела
+1. [Ізборник](http://litopys.org.ua/yushkov/yu.htm) — текст "Руської Правди" (Пространна редакція), статті 54-55 (за академічним виданням С. Юшкова).
+2. [Енциклопедія історії України](http://history.org.ua) — статті "Руська Правда", "Володимир Мономах", "Повстання киян 1113".
+3. [Літопис Руський](http://litopys.org.ua/licum/licum.htm) — контекст повстання 1113 року проти лихварів.
+
+## Хронологія
+- **1016 рік**: Ярослав Мудрий видає "Правду Ярослава" (найдавніша частина, регулює кримінальне право).
+- **1072 рік**: "Правда Ярославичів" (розширює захист князівської власності).
+- **1113 рік**: Повстання у Києві проти лихварів та адміністрації Святополка.
+- **1113 рік**: Володимир Мономах видає свій "Устав" (входить до Пространної Правди), який обмежує відсотки (рези) та регулює банкрутство, захищаючи купців (статті 46-55).
+- **XII ст.**: Розквіт "грецького" та "залозного" торгових шляхів, активний розвиток кредитного права.
+
+## Ключові факти та цитати (Давньоруська мова)
+- **Стаття 54 (Невинуваті банкрути)**: «Аже который купець, кдҌ любо шедъ съ чюжими кунами, истопиться, любо рать возметь, ли огнь, то не насилити ему, ни продати его; но како начнеть от лҌта платити, тако же платить, зане же пагуба от Бога есть, а не виноватъ есть».
+- **Стаття 55 (Злісні банкрути)**: «Аже ли пропиеться или пробиеть, а в безумьи чюжь товаръ испортить, то како любо тҌмъ, чии то товаръ: ждуть ли ему, а своя имъ водити, продадять ли, а своя имъ возмяти».
+- **Пріоритет боргів (Стаття 55)**: «Аже кто многимъ долженъ будеть, а пришедъ гость из иного города... продати же и отдати же первое гостины куны, а домашнимъ, что ся останеть кунъ... паки ли будуть княжи куны, то княжи куны первое взяти».
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ": [!context] — Ризики давніх подорожей: "грецький шлях" був не просто маршрутом, а виживанням (печеніги, пороги).
+- Section "Основний матеріал: I — Види банкрутства": [!myth-buster] — "Середньовічне право було жорстоким?" Руська Правда розрізняла форс-мажор і злочин, на відміну від боргових ям пізніших епох.
+- Section "Основний матеріал: I — Види банкрутства": [!quote] — "Зане же пагуба от Бога есть" — юридичне формулювання форс-мажору ХІІ ст.
+- Section "Основний матеріал: II — Черга кредиторів": [!culture] — "Гость" vs "Купець". Чому іноземець мав пріоритет? (Захист міжнародних інвестицій).
+- Section "Практика": [!paleography] — Як скорочували слово "куни" та "гривні" у берестяних грамотах.
+- Section "Підсумок": [!decolonization] — Руська Правда як основа української правової культури (договір, компроміс) vs московська традиція (холопство, колективна провина).
+
+## Деколонізаційний контекст
+- **Імперський міф**: Росія привласнює "Руську Правду" як "пам'ятку російського права" (рос. "Русская Правда").
+- **Українська реальність**: Пам'ятка створена у Києві київськими князями для регулювання суспільства Русі-України. Норми про банкрутство виникли як реакція на київське повстання 1113 року. Правова культура Русі (захист власності, диференціація провини) ближча до європейської (Lex Mercatoria), ніж до пізнішого московського деспотизму.
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian (decolonized) framing |
+|---------|-----------------|-------------------------------|
+| Руська Правда | "Первый кодекс русского права" | Кодекс права Русі-України; пам'ятка української мови та юридичної думки. |
+| Куни | Просто "гроші" або хутро | Грошова одиниця Русі, прив'язана до срібного стандарту (гривні), а не лише хутро. |
+| Холопство за борг | Природний стан для "древней Руси" | Екстремальна міра покарання лише для зловмисних банкрутів; Мономах обмежив джерела холопства. |
+
+## Section-Mapped Research Notes
+
+### Вступ: Торгівля як ризик
+- Купці ("гості" та місцеві) були кровоносною системою економіки.
+- Кредитування ("куни в різ") було поширеним, але небезпечним через високі відсотки (до 50% і вище до реформи Мономаха).
+- Головні загрози: "рать" (війна/набіг), "потік" (утоплення/кораблетроща), "огнь" (пожежа).
+
+### Основний матеріал: I — Невинне та злісне банкрутство
+- **Стаття 54**: Вводить поняття "невинуватого банкрутства" (форс-мажор).
+- Причини: стихійні лиха (вода, вогонь) або війна.
+- Наслідок: розстрочка боргу ("како начнеть от лҌта платити"). Заборона продавати в холопство.
+- **Стаття 55**: "Злісне банкрутство".
+- Причини: пияцтво ("пропиеться"), азартні ігри ("пробиеть"), безумство ("в безумьи").
+- Наслідок: кредитори вирішують долю — або чекати, або продати в рабство ("продати") для відшкодування збитків.
+
+### Основний матеріал: II — Черга кредиторів та захист інвестицій
+- Регулювання ситуації, коли боржників багато ("многимъ долженъ будеть").
+- **Ієрархія виплат**:
+  1. Князь ("княжи куни") — державний інтерес/податки.
+  2. Іноземний купець ("гость") — якщо він не знав про борги. Це стимулювало притік іноземного капіталу.
+  3. Місцеві кредитори ("домашнии") — ділять залишок ("тем же ся подҌлять").
+- Це свідчить про високий розвиток комерційного права: захист добросовісного кредитора-іноземця.
+
+### Практика
+- Граматика умовних речень (Conditionals): "Аже... то..." (Якщо... то...).
+- Лексика: "истопиться" (затонути/загинути), "пагуба" (згуба/втрата), "насилити" (застосовувати силу).
+
+### Підсумок
+- Устав Мономаха 1113 року став відповіддю на соціальний запит (захист від боргової ями).
+- Гуманізація права: розрізнення наміру і випадку.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit -9): 
+✅ Message sent to Claude (ID: 12871)
+✓ Message 12845 acknowledged
+✓ Message 12871 acknowledged

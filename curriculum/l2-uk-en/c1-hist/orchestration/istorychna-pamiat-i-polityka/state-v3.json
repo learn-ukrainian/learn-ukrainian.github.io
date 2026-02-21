@@ -5,9 +5,9 @@
   "phases": {
     "v3-A": {
       "status": "complete",
-      "ts": "2026-02-19T11:41:58Z",
+      "ts": "2026-02-21T00:00:53Z",
       "task_id": "v3-istorychna-pamiat-i-polityka-pA",
-      "mode": "full"
+      "mode": "meta-only"
     }
   }
 }

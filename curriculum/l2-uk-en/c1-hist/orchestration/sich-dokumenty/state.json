@@ -1,0 +1,14 @@
+{
+  "slug": "sich-dokumenty",
+  "track": "c1-hist",
+  "module_num": 27,
+  "mode": "e2e",
+  "phases": {
+    "0": {
+      "status": "complete",
+      "timestamp": "2026-02-20T22:48:52Z",
+      "task_id": "yw-sich-dokumenty-p0"
+    }
+  },
+  "last_updated": "2026-02-20T22:48:52Z"
+}

@@ -1,7 +1,7 @@
 # Audit Report: M17 — numbers-and-money.md
 **Level:** A1 | **Module:** M17 | **Phase:** A1.2 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-19 23:25:48
+**Generated:** 2026-02-21 00:46:38
 
 ## Configuration
 **Type:** A1-grammar
@@ -38,7 +38,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2632/2000 (raw: 2947)
+- **Words:** ✅ 2641/2000 (raw: 2964)
 - **Activities:** ✅ 10/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -62,7 +62,7 @@
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Numbers & Money** | ✅ | 53 | Included in Core |
 | **Розминка: Числа в житті** | ✅ | 307 | Included in Core |
-| **Теорія: Числа та гроші** | ✅ | 1220 | Included in Core |
+| **Теорія: Числа та гроші** | ✅ | 1229 | Included in Core |
 | **Практика: У магазині** | ✅ | 685 | Included in Core |
 | **Культурний контекст: Історія гривні** | ✅ | 211 | Included in Core |
 | **Підсумок** | ✅ | 156 | Included in Core |

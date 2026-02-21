@@ -1,0 +1,304 @@
+✅ Message sent to Gemini (ID: 10433) [auto-acked: self-addressed]
+✓ Message 10433 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10433...
+📨 Message #10433
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-ukrainian-cinema-and-tv
+   Time: 2026-02-20T20:32:53.740348+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b1-77
+level: B1
+sequence: 77
+slug: ukrainian-cinema-and-tv
+version: '2.0'
+title: Українське кіно та серіали
+subtitle: Ukrainian Cinema and Television
+content_outline:
+- section: Вступ — Україна на екрані
+  points:
+  - Українське кіно як мистецтво
+  - Від Довженка до сьогодення
+- section: Золота ера — Довженко і поетичне кіно
+  points:
+  - Олександр Довженко та "Земля"
+  - Українська школа поетичного кіно
+  - Параджанов і "Тіні забутих предків"
+- section: Сучасне кіно — Нова хвиля
+  points:
+  - '"Атлантида" та "Погані дороги" — війна на екрані'
+  - Комедії та серіали українського виробництва
+  - '"Слуга народу" — від серіалу до президентства'
+- section: Документальне кіно
+  points:
+  - Фільми про Майдан і війну
+  - '"20 днів у Маріуполі" — Оскар 2024'
+- section: Як говорити про фільми
+  points:
+  - Лексика кінокритики
+  - Жанри і рекомендації
+- section: Підсумок — Дивись українською!
+  points:
+  - Де знайти українське кіно
+- section: Потрібно більше практики?
+vocabulary_hints:
+  required:
+  - фільм (film)
+  - кіно (cinema)
+  - серіал (TV series)
+  - режисер (director)
+  - актор/акторка (actor/actress)
+  - документальний (documentary)
+  - жанр (genre)
+  - прем'єра (premiere)
+  recommended:
+  - комедія (comedy)
+  - драма (drama)
+  - історичний фільм (historical film)
+  - кінофестиваль (film festival)
+activity_hints:
+- type: reading
+  focus: Film reviews and descriptions
+  items: 15
+- type: match-up
+  focus: Match films to genres
+  items: 20
+- type: fill-in
+  focus: Complete film reviews
+  items: 15
+- type: quiz
+  focus: Recommend Ukrainian films
+  items: 10
+focus: culture
+pedagogy: CBI
+prerequisites:
+- b1-76 (Ukrainian Music Today)
+connects_to:
+- b1-78 (Technology and Startups)
+objectives:
+- Learner can discuss Ukrainian films and television series
+- Learner can understand authentic texts about Ukrainian cinema
+- Learner can use film industry vocabulary in context
+- Learner can compare Ukrainian cinema with their own cultural experience
+grammar:
+- Film and media vocabulary
+- Review and critique patterns
+- Expressing opinions about media
+register: розмовний
+phase: B1.7 [Contemporary Ukraine]
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Film Critic
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Українське кіно та серіали
+
+## State Standard Reference
+§3.4: "Дозвілля, відпочинок: способи проведення вільного часу; хобі та зацікавлення... театр, кінотеатр, філармонія; фестиваль."
+Alignment: Module covers "кінотеатр" and "фестиваль" (Odesa International Film Festival, Molodist), addressing the leisure topic through the lens of national cinema.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| фільм | High (General) | дивитися фільм, цікавий фільм, документальний фільм, художній фільм |
+| кіно | High (Spoken/General) | йти в кіно, українське кіно, любити кіно, кінотеатр |
+| серіал | High (Media) | новий серіал, сезон серіалу, дивитися серіали на Netflix |
+| знімати | High (Action) | знімати фільм (shoot a film), зніматися в кіно (act in movies) |
+| стрічка | Medium (Journalistic) | нова стрічка, кінострічка (synonym for film) |
+| режисер | Medium (Professional) | відомий режисер, український режисер |
+| дубляж | Medium (Specific) | український дубляж, дивитися в дубляжі |
+
+## Cultural Hooks
+1. **"Тіні забутих предків" (Shadows of Forgotten Ancestors)**: Directed by Serhiy Parajanov (1965). A masterpiece of "Poetic Cinema" that defied Soviet socialist realism by celebrating Hutsul culture and mythology. It is visually stunning and crucial for understanding Ukrainian artistic identity.
+2. **Ukrainian Dubbing Culture**: Since the 2006/2019 language laws, Ukrainian dubbing has become a cultural phenomenon known for its high quality and wit (e.g., "Alf", "The Simpsons", "Cars"). It is a point of national pride.
+3. **"20 днів у Маріуполі" (20 Days in Mariupol)**: Mstyslav Chernov's documentary won Ukraine's first Oscar in 2024. It represents the vital role of documentary cinema in documenting the war and Russian crimes.
+
+## Common Learner Errors
+1. **Case Mismatch with "Подобатися"**: *Я подобаю цей фільм* (I like this film - incorrect) → **Мені подобається цей фільм** (To me appeals this film). Source: Dative subject structure difficulty.
+2. **False Friend "Series/Episode"**: Confusing *серіал* (TV series) with *серія* (episode). *Я дивлюся нову серію* (I am watching a new episode) vs *Я дивлюся новий серіал* (I am watching a new series).
+3. **Preposition "In the movie"**: *На фільмі* (On the film - incorrect) → **У фільмі** (In the film).
+4. **Passive Voice Overuse**: *Фільм був знятий режисером...* (The film was shot by...) → **Режисер зняв фільм...** (The director shot the film...). Violation of "Agency Pass".
+
+## Cross-References
+- **Builds on**: b1-76 (Ukrainian Music Today) — expands cultural vocabulary (genre, style).
+- **Prepares for**: b1-78 (Technology and Startups) — media technology; C1-LIT/HIST modules — deep cultural analysis.
+
+## Notes for Content Writing
+- **Agency Pass**: Ensure directors and actors "do" things (win awards, create art), rather than things "happening" to them.
+- **Modern Context**: Balance the classic "Poetic Cinema" (Dovzhenko/Parajanov) with the "New Wave" (Lukich, Tsilyk, Nariman Aliev) to show cinema is alive, not just a museum artifact.
+- **Dubbing**: Mention "український дубляж" as a specific selling point for watching movies in Ukrainian learners.
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ — Україна на екрані (Introduction — Ukraine on Screen)"
+  words: 500
+  points:
+  - "Українське кіно як мистецтво та засіб самовираження; висвітлення теми дозвілля та хобі за Державним стандартом (§3.4)."
+  - "Від Довженка до сьогодення: короткий огляд еволюції від німого кіно до сучасних стрімінгів."
+  - "Термінологічна різниця: вживання лексем «кіно», «фільм» та синоніма «стрічка» (кінострічка) у журналістському контексті."
+- section: "Золота ера — Довженко і поетичне кіно (The Golden Era — Dovzhenko and Poetic Cinema)"
+  words: 800
+  points:
+  - "Олександр Довженко та його шедевр «Земля»: візуальна мова та світове визнання."
+  - "Українська школа поетичного кіно як опір радянському соцреалізму через фольклор та міфологію."
+  - "Культурний гачок: Сергій Параджанов і «Тіні забутих предків» (1965) — маніфест гуцульської культури та української ідентичності."
+- section: "Сучасне кіно та феномен дубляжу (Modern Cinema and the Dubbing Phenomenon)"
+  words: 900
+  points:
+  - "Нова хвиля: «Атлантида» та «Погані дороги» — осмислення війни та посттравматичного досвіду через екран."
+  - "Культурний феномен: історія успіху українського дубляжу (від «Альфа» до сучасних блокбастерів) як точки національної гордості."
+  - "Комедії та серіали: «Слуга народу» та його вплив на реальну політику."
+  - "Типова помилка: розрізнення понять «серіал» (TV series) та «серія» (episode) — «Дивлюся новий серіал» vs «Дивлюся нову серію»."
+- section: "Документальне кіно та голос правди (Documentary Cinema and the Voice of Truth)"
+  words: 700
+  points:
+  - "Роль документалістики у фіксації подій Майдану та повномасштабного вторгнення."
+  - "Тріумф «20 днів у Маріуполі» Мстислава Чернова: перший Оскар в історії України (2024) та документування воєнних злочинів."
+  - "Дієслівне керування: вживання «знімати фільм» (shoot) та «зніматися в кіно» (act/appear)."
+- section: "Як говорити про фільми: лексика та граматика (Talking About Movies: Vocab and Grammar)"
+  words: 700
+  points:
+  - "Лексика кінокритики: як описати сюжет, акторську гру та режисерську роботу."
+  - "Граматична пастка: правильна структура з дієсловом «подобатися» — тренування моделі «Мені подобається цей фільм» (Dative subject) проти помилкового «Я подобаю...»."
+  - "Прийменниковий контроль: вживання «у фільмі» замість помилкового «на фільмі»."
+  - "Agency Pass: надання переваги активному стану («Режисер зняв фільм») над пасивним («Фільм був знятий...»)."
+- section: "Підсумок — Дивись українською! (Summary — Watch in Ukrainian!)"
+  words: 400
+  points:
+  - "Де дивитися: онлайн-платформи (Netflix, Takflix) та кінофестивалі (Одеський МКФ, «Молодість»)."
+  - "Рекомендації: створення власного списку перегляду (watchlist) та використання фразеології рецензування."
+- section: "Потрібно більше практики? (Need More Practice?)"
+  words: 0
+  points:
+  - "Додаткові вправи на закріплення лексики кіно та відпрацювання давального відмінка."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "фільм (film) — дивитися фільм, художній фільм; висока частотність"
+  - "кіно (cinema) — йти в кіно, українське кіно; розмовний та загальний регістр"
+  - "серіал (TV series) — новий серіал, дивитися серіали на стрімінгах; не плутати з «серія»"
+  - "режисер (director) — відомий режисер, український режисер; професійна лексика"
+  - "актор/акторка (actor/actress) — грати роль, зніматися в кіно"
+  - "документальний (documentary) — документальна стрічка, фіксувати правду"
+  - "жанр (genre) — улюблений жанр, змішування жанрів"
+  - "прем'єра (premiere) — довгоочікувана прем'єра, світова прем'єра"
+  - "знімати (to shoot/film) — знімати фільм, знімати сцену; активна дія"
+  - "стрічка (film/tape) — нова стрічка, кінострічка; синонім середньої частотності в журналістиці"
+  recommended:
+  - "дубляж (dubbing) — український дубляж, дивитися в дубляжі; культурний маркер"
+  - "комедія (comedy) — смішна комедія, чорна комедія"
+  - "драма (drama) — психологічна драма, історична драма"
+  - "кінофестиваль (film festival) — міжнародний кінофестиваль, перемога на фестивалі"
+  - "серія (episode) — наступна серія, перша серія; часто плутають із серіалом"
+  - "мені подобається (I like/it appeals to me) — вживання з давальним відмінком; граматичний фокус"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4337 chars)
+✅ Message sent to Claude (ID: 10440)
+✓ Message 10440 acknowledged
+   Auto-acknowledged reply #10440 (stdout delivery — no inbox accumulation)
+✓ Message 10433 acknowledged

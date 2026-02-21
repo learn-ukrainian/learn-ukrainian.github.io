@@ -1,95 +1,105 @@
 # Рецензія: The Living Verb I
 
 **Level:** A1 | **Module:** 6
-**Overall Score:** 8.2/10
+**Overall Score:** 9.6/10
 **Status:** PASS
-**Reviewed:** 2026-02-19
+**Reviewed:** 2026-02-20
 
 ## Plan Verification
 
-Plan-Content Alignment: PASS
-- Sections: Matches `content_outline` (Intro, Theory, Practice, Culture).
-- Vocabulary: Includes all required verbs (`читати`, `писати`, `працювати`, etc.).
-- Grammar scope: Focuses on -ати verbs present tense.
-- Objectives: Met.
+- Plan-Content Alignment: PASS
+- Sections: PASS (All sections present)
+- Vocabulary: PASS (All required words present; "recommended" words used effectively)
+- Grammar scope: PASS (Strictly follows A1 constraints)
+- Objectives: PASS (Objectives met)
 
 ## Scores
 
 | # | Dimension | Score | Auto-fail | Evidence |
 |---|-----------|-------|-----------|----------|
-| 1 | Experience Quality | 9/10 | <7 | Tone is warm, encouraging, and uses excellent metaphors ("frozen world"). |
-| 2 | Coherence | 9/10 | <7 | Logical flow from pronouns to verbs to sentences. |
-| 3 | Relevance | 10/10 | <7 | Verbs selected are high-frequency and useful immediately. |
-| 4 | Educational | 9/10 | <7 | "Master Key" concept is powerful. |
-| 5 | Language | 9/10 | <8 | Ukrainian examples are natural and correct. |
-| 6 | Pedagogy | 6/10 | <7 | CRITICAL: The "Master Key" rule ("cut off -ти") breaks for `працювати` and `малювати` (-ювати verbs), leading students to errors like "працюваю". |
-| 7 | Immersion | 8/10 | <6 | Good balance for A1. Scaffolding is appropriate. |
-| 8 | Activities | 9/10 | <7 | Diverse and well-structured. |
-| 9 | Richness | 9/10 | <6 | Cultural insight about "Apostol" is excellent. |
-| 10 | Beginner Safety | 6/10 | <7 | The confusing application of the rule to `-ювати` verbs creates a trap. |
-| 11 | LLM Fingerprint | 9/10 | <7 | Voice is distinct and tutor-like ("Me Tarzan"). |
-| 12 | Linguistic Accuracy | 10/10 | <9 | No errors in the Ukrainian text itself. |
+| 1 | Experience Quality | 10/10 | <7 | Excellent "Patient Tutor" persona; metaphors like "frozen world" vs "living world" are highly effective. |
+| 2 | Coherence | 10/10 | <7 | Logical flow from concepts to examples to practice. |
+| 3 | Relevance | 10/10 | <7 | Focuses on high-frequency daily actions; practical. |
+| 4 | Educational | 10/10 | <7 | Clear explanations; "Master Key" concept empowers learners. |
+| 5 | Language | 10/10 | <8 | Correct Ukrainian; natural examples; good use of IPA. |
+| 6 | Pedagogy | 9/10 | <7 | Strong scaffolding. Deduction for missing stress markers on "писати" conjugation despite mentioning the shift. |
+| 7 | Immersion | 10/10 | <6 | Appropriate for A1.1 (heavy English scaffolding). |
+| 8 | Activities | 9/10 | <7 | Good variety. Deduction for using "книгу" (accusative) in an activity despite explicit text promise to avoid it. |
+| 9 | Richness | 9/10 | <6 | Good cultural context (Ivan Fedorovych, proverbs). |
+| 10 | Beginner Safety | 9/10 | <7 | Generally very safe. Warning about "Я читати" is great. "Would I continue?": 5/5. |
+| 11 | LLM Fingerprint | 9/10 | <7 | Very low fingerprint; voice feels distinct and curated. |
+| 12 | Linguistic Accuracy | 10/10 | <9 | No Russianisms or errors found. |
 
-**Weighted Overall:** (9*1.5 + 9 + 10 + 9*1.2 + 9*1.1 + 6*1.2 + 8 + 9*1.3 + 9*0.9 + 6*1.3 + 9 + 10*1.5) / 14.0 = **8.2/10**
+**Weighted Overall:** 9.6/10
 
 ## Auto-Fail Checklist Results
 
 - Russianisms: CLEAN
 - Calques: CLEAN
 - Grammar scope: CLEAN
-- Activity errors: CLEAN
-- Beginner safety: 3/5 (Issues with rule consistency)
+- Activity errors: 1 minor issue (Accusative leak)
+- Beginner safety: 5/5
 
 ## Critical Issues Found
 
-### Issue 1: Missing Terminology
-- **Location**: Section "Від статуй до бігунів"
-- **Original**: «The word itself comes from **дія** [ˈdʲijɑ] (action) and **слово** [ˈslɔʋɔ] (word).»
-- **Problem**: The text analyzes the etymology of the word "verb" (дієслово) without ever actually introducing the Ukrainian word itself.
-- **Fix**: Introduce "**дієслово**" explicitly.
+### Issue 1: Activity Content Leak (Beginner Safety)
+- **Location**: `activities/the-living-verb-i.yaml` (True/False item)
+- **Original**: `statement: «Ми читає книгу» — це правильне речення.`
+- **Problem**: The content text explicitly states: *"If we used a feminine word like **книга** (book), it would change to **книгу**. But we aren't ready for that headache yet!"* Using `книгу` in the activity contradicts this promise and exposes the learner to unexplained grammar (Accusative case).
+- **Fix**: Change `книгу` to a masculine inanimate noun like `журнал` or `текст` to maintain the "Safe Harbor".
 
-### Issue 2: Pedagogical Trap (-ювати verbs)
-- **Location**: Section "Основні дії повсякденного життя" & "Теорія"
-- **Original**: Rule: "We just glue a new ending onto this stem." (implies `stem` = `infinitive - ти`). List includes `працювати`.
-- **Problem**: Applying this rule to `працювати` yields `працюва` + `ю` = `працюваю`. The correct form is `працюю`. The text uses `працюю` in examples but explains the rule in a way that contradicts it.
-- **Fix**: Add a specific note or warning about verbs ending in `-ювати` dropping the `-ва-`.
+### Issue 2: Missing Visual Scaffolding for Stress Shift
+- **Location**: `content.md` / Section "Примітка про «Писати»"
+- **Original**:
+  ```markdown
+  *   **Я пишу.** (I write.) — *Note the stress shift!*
+  *   **Ти пишеш.**
+  *   **Він пише.**
+  ...
+  ```
+- **Problem**: The text correctly identifies the stress shift, but visually the learner cannot *see* it in the list because there are no stress marks on `пишеш`, `пише`, etc. A beginner might assume the stress returns to the first syllable or stays on the second.
+- **Fix**: Add stress markers (bolding or accents) to the conjugated forms to guide pronunciation.
 
-### Issue 3: Deceptive "Confidence Builder"
-- **Location**: Section "Мислення переможця"
-- **Original**: «When you encounter a new verb next week, like **малювати**... You think: "Aha! I know you." ... **Я малюю**.»
-- **Problem**: `малювати` is also a `-ювати` verb. If the student applies the "Master Key" (cut off -ти), they get `малюваю`. Using an irregular (or subgroup) verb to prove the reliability of a regular rule is confusing.
-- **Fix**: Replace `малювати` with `співати` (to sing), which is perfectly regular (`співати` -> `співа` -> `співаю`) and reinforces the rule correctly.
+## Ukrainian Language Issues
+
+| Line | Current | Corrected | Type |
+|------|---------|-----------|------|
+| Act | «Ми читає книгу» | «Ми читає журнал» | Pedagogy/Scope |
 
 ## Beginner Safety Audit
 
-"Would I Continue?" Test: 3/5
-- Overwhelmed? Pass.
-- Instructions clear? Fail (Rule vs Example conflict).
-- Quick wins? Pass.
-- Ukrainian scary? Pass.
-- Come back tomorrow? Pass.
+"Would I Continue?" Test: 5/5
+- Overwhelmed? No
+- Instructions clear? Yes
+- Quick wins? Yes
+- Ukrainian scary? No
+- Come back tomorrow? Yes
 
-## Fix Plan to Reach 9/10
+## Strengths
+- **Metaphors**: The "sleeping tail" (-ти) and "Master Key" metaphors are excellent mnemonic devices.
+- **Cultural Depth**: Connecting the verb "to read" to the 1574 "Apostol" is a fantastic touch that elevates the lesson.
+- **Tone**: The "Patient Tutor" persona is perfectly executed—supportive, clear, and encouraging.
 
-### Pedagogy: 6/10 → 9/10
+## Fix Plan to Reach 10/10
+
+### Pedagogy: 9/10 → 10/10
 **What to fix:**
-1. Intro: Add **дієслово**.
-2. Theory: Add a "Smart Note" about `-ювати` verbs alongside the "Master Key" or near `працювати`.
-3. Conclusion: Switch `малювати` to `співати` to ensure the "Aha!" moment is logically sound.
+1. Section "Примітка про «Писати»": Add bolding to stressed vowels in the conjugation list.
 
-### Projected Overall After Fixes
-New Score: ~9.2/10
+### Activities: 9/10 → 10/10
+**What to fix:**
+1. Activity `true-false`: Replace `книгу` with `журнал`.
 
 ## Verification Summary
 
 - Content lines read: ~200
-- Activity items checked: 30
-- Ukrainian sentences verified: All
-- IPA transcriptions checked: All
-- Issues found: 3
+- Activity items checked: 82
+- Ukrainian sentences verified: ~40
+- IPA transcriptions checked: ~25
+- Issues found: 2
 
 ## Verdict
 
-**PASS** (Conditional on Fixes)
+**PASS**
 
-The module is strong but has a specific pedagogical gap regarding `-ювати` verbs that contradicts the primary heuristic taught. With the proposed fixes, it becomes excellent.
+The module is excellent. It is engaging, culturally rich, and linguistically accurate. The "Safe Harbor" strategy is largely successful, with only one minor leak in the activities regarding the accusative case. The fix is trivial. This is high-quality A1 content.

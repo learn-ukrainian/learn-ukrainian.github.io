@@ -1,0 +1,310 @@
+✅ Message sent to Gemini (ID: 10379) [auto-acked: self-addressed]
+✓ Message 10379 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10379...
+📨 Message #10379
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-integrated-grammar-lab
+   Time: 2026-02-20T20:29:46.840960+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b1-50
+level: B1
+sequence: 50
+slug: integrated-grammar-lab
+version: '2.0'
+title: Інтегрована граматична лабораторія
+subtitle: Integrated Grammar Lab - B1.4 Synthesis
+content_outline:
+- section: Вступний тест
+  points:
+  - 'Why integration matters — State Standard 2024: distinction between official and
+    unofficial registers'
+  - Beyond isolated grammar — focus on stylistic flexibility and active text production
+- section: Пояснення
+  points:
+  - 'Synthesis overview — cultural hook: avoiding "kantseliaryt" (bureaucratese) and
+    passive voice overuse'
+- section: 'Сценарій 1: Офіційний звіт'
+  points:
+  - Formal register usage — preference for active constructions (e.g., «Комісія ухвалила»,
+    not «Було ухвалено»)
+  - 'Statistics and reports — learner error: confusing impersonal sentences with incomplete
+    ones'
+- section: 'Сценарій 2: Сімейна розмова'
+  points:
+  - 'Informal register — cultural hook: rich synonymy and diminutives for emotional
+    nuance'
+  - Emotional tone — using specific vocabulary (e.g., «купити» instead of «здійснити
+    покупку»)
+- section: 'Сценарій 3: Новини'
+  points:
+  - News register — one-member sentences for brevity and impact
+  - Passive in journalism — limited use for specific stylistic effect
+- section: 'Практика: Редагування стилю'
+  points:
+  - 'Identify style inconsistencies — learner error: register mismatch (e.g., high-style
+    words in casual context)'
+  - 'Revise for target audience — task: transform one message into 3 styles (official,
+    informal, news)'
+- section: Діалоги
+  points:
+  - Multi-feature usage — synthesis of numerals, aspect, and register
+  - Register switching — distinguishing «здійснити» vs «купити»
+- section: Потрібно більше практики?
+  points:
+  - Additional exercises
+vocabulary_hints:
+  required:
+  - інтеграція (integration) — інтеграція в суспільство, інтеграція зусиль
+  - синтез (synthesis) — синтез мистецтв, аналіз і синтез
+  - стиль (style) — офіційно-діловий стиль, розмовний стиль, власний стиль
+  - регістр (register) — високий/низький регістр, перемикання регістрів
+  - редагування (editing) — літературне редагування, внести правки
+  - гнучкість (flexibility) — стилістична гнучкість
+  - перемикання (switching) — перемикання кодів/регістрів
+  - зв'язність (coherence) — зв'язність тексту
+  recommended:
+  - послідовність (consistency) — логічна послідовність
+  - доречність (appropriateness) — доречність використання
+  - текстотворення (text production) — навички текстотворення
+  - аудиторія (audience) — цільова аудиторія
+activity_hints:
+- type: error-correction
+  focus: Revise texts for style
+  items: 20
+- type: fill-in
+  focus: Create multi-feature paragraphs
+  items: 15
+- type: error-correction
+  focus: Fix style inconsistencies
+  items: 15
+- type: quiz
+  focus: Choose appropriate form
+  items: 20
+focus: grammar
+pedagogy: TTT
+prerequisites:
+- b1-49 (Numerals Collectives Fractions)
+connects_to:
+- b1-51 (Checkpoint Advanced Grammar)
+objectives:
+- Learner can combine B1.4 grammar constructions in coherent texts
+- Learner can distinguish between styles and registers
+- Learner can edit texts for appropriate style
+- Learner can flexibly switch between constructions
+grammar:
+- 'Синтез: дієприкметники + пасив + демінутиви + числівники'
+- Стилістична гнучкість (stylistic flexibility)
+- Перемикання регістрів (register switching)
+- Односкладні речення (one-member sentences) — State Standard 2024
+register: розмовний
+phase: B1.4b [Advanced Grammar Synthesis]
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Linguistic Researcher
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Інтегрована граматична лабораторія
+
+## State Standard Reference
+§4.5.1: "Офіційне й неофіційне спілкування... Стилістичні засоби лексики: антоніми, синоніми... Стилістичні засоби синтаксису: звертання, еліпсис, повтор..."
+Alignment: Модуль безпосередньо реалізує вимогу стандарту щодо розрізнення офіційного та неофіційного регістрів спілкування через практичні сценарії (звіт vs сімейна розмова) та вправи на редагування.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| **інтеграція** | Середня (Media/Science) | *інтеграція в суспільство*, *інтеграція зусиль*, *європейська інтеграція* (але краще *входження до*), *процес інтеграції* |
+| **синтез** | Низька (Scientific) | *синтез мистецтв*, *аналіз і синтез*, *гармонійний синтез*, *синтез ідей* |
+| **стиль** | Висока (General) | *офіційно-діловий стиль*, *розмовний стиль*, *художній стиль*, *власний стиль*, *змінити стиль* |
+| **регістр** | Низька (Linguistic) | *високий/низький регістр*, *перемикання регістрів*, *мовний регістр* |
+| **редагування** | Середня (Professional) | *літературне редагування*, *редагування тексту*, *внести правки* |
+
+## Cultural Hooks
+1. **Боротьба з "канцеляритом"**: В українській культурі існує сильна традиція критики надмірного вживання офіційно-ділового стилю в живому спілкуванні (відомий як "канцелярит"). Використання пасивних конструкцій ("питання розглядається") замість активних ("ми розглядаємо питання") часто сприймається як ознака радянської бюрократичної спадщини.
+2. **Стилістичне багатство синонімів**: Українська мова славиться величезними синонімічними рядами (наприклад, до слова "горизонт" — *обрій, небокрай, видноколо, виднокруг, крайнебо*), що дозволяє дуже точно налаштовувати регістр мовлення від поетичного до сухого наукового.
+
+## Common Learner Errors
+1. **Зловживання пасивом (Passive Voice Overuse)** → *Книга читається учнем* (неприродно) → *Учень читає книгу* (природно). Вплив англійської/російської мов; українська тяжіє до активних конструкцій.
+2. **Плутанина безособових та неповних речень** → Учні часто не розрізняють речення типу *«Немає часу»* (безособове, односкладне) і *«Я не маю часу»* (двоскладне).
+3. **Невідповідність регістру (Register Mismatch)** → Використання слів типу *«здійснити»* (здійснити покупку) у розмові замість *«купити»*, або *«даний»* (даний випадок) замість *«цей»*.
+
+## Cross-References
+- Builds on: b1-49 (Numerals), b1-06-15 (Aspect), b1-26-41 (Complex Sentences)
+- Prepares for: b1-51 (Checkpoint), B2-01 (Advanced Syntax)
+
+## Notes for Content Writing
+- **Односкладні речення**: Хоча повна класифікація є у програмі B2, на рівні B1 важливо подати їх як інструмент стилістики (лаконічність у новинах, безособовість у звітах).
+- **Синтез**: У розділі "Практика" варто дати завдання на перетворення одного й того ж змісту (наприклад, "Я запізнився") у три різні стилі: пояснювальна записка (офіційний), повідомлення другу (розмовний), заголовок новини (публіцистичний/еліптичний).
+- **Акцент на актив**: При вивченні стилів підкреслити, що навіть в офіційному стилі українська мова надає перевагу активним конструкціям («Комісія ухвалила рішення», а не «Рішення було ухвалене комісією» — хоча останнє допустиме, перше краще).
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступний тест: Стилістична діагностика (Initial Test: Stylistic Diagnostics)"
+  words: 400
+  points:
+  - "State Standard 2024 Alignment (§4.5.1): Diagnostic check on the learner's ability to distinguish between official and unofficial registers."
+  - "Initial register check: Identifying stylistic inconsistencies, such as using high-style words ('здійснити') in casual contexts."
+- section: "Пояснення: Синтез і стилістична гнучкість (Explanation: Synthesis and Stylistic Flexibility)"
+  words: 600
+  points:
+  - "Cultural hook: The struggle against 'kantseliaryt' (bureaucratese) and the historical preference for active voice over passive constructions (e.g., 'ми розглядаємо' vs 'питання розглядається')."
+  - "The power of synonymy: How Ukrainian synonymic rows (e.g., 'обрій', 'небокрай', 'горизонт') allow for precise calibration of speech registers from poetic to scientific."
+- section: "Сценарій 1: Офіційно-діловий звіт (Scenario 1: Official Business Report)"
+  words: 700
+  points:
+  - "Formal register mastery: Prioritizing active agency ('Комісія ухвалила') over the passive ambiguity often found in Soviet-era bureaucratic styles."
+  - "Grammar integration: Synthesizing complex numerals and collective nouns within the framework of a formal report or proposal."
+- section: "Сценарій 2: Неофіційна сімейна розмова (Scenario 2: Informal Family Conversation)"
+  words: 700
+  points:
+  - "Informal register nuances: Utilizing diminutives and rich synonyms for emotional depth without slipping into register mismatch (avoiding 'даний' or 'здійснити')."
+  - "Synthesis of diminutives and pronouns: Building natural-sounding dialogue that reflects authentic family interactions."
+- section: "Сценарій 3: Новини та медіа (Scenario 3: News and Media)"
+  words: 600
+  points:
+  - "News register syntax: Implementing one-member sentences and ellipsis for brevity and impact in headlines and bulletins."
+  - "Synthesizing B1.4 features: Combining aspectual nuances with the concise syntax required for modern Ukrainian journalism."
+- section: "Практика: Лабораторія редагування (Practice: Editing Laboratory)"
+  words: 600
+  points:
+  - "Register transformation task: Transforming a single content item (e.g., 'Я запізнився') into three styles: an official note, a friend message, and a news headline."
+  - "Error correction drill: Identifying and fixing passive voice overuse (Learner Error: 'Книга читається учнем' -> 'Учень читає книгу') and impersonal sentence confusion."
+- section: "Діалоги та текстотворення (Dialogues and Text Production)"
+  words: 300
+  points:
+  - "Register switching exercise: Rapidly adapting tone and vocabulary in a multi-stage dialogue involving different social hierarchies."
+  - "Advanced synthesis: Integrating numerals, aspect, and stylistic flexibility into coherent, paragraph-length text production."
+- section: "Підсумок: Потрібно більше практики? (Summary: Need More Practice?)"
+  words: 100
+  points:
+  - "Final reflection on stylistic appropriateness and communicative effectiveness across B1.4 scenarios."
+  - "Review of core collocations for professional and social integration."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "інтеграція (integration) — інтеграція в суспільство, інтеграція зусиль; середня частота, медіа/науковий контекст"
+  - "синтез (synthesis) — синтез мистецтв, аналіз і синтез; низька частота, науковий стиль"
+  - "стиль (style) — офіційно-діловий стиль, розмовний стиль, художній стиль; висока частота"
+  - "регістр (register) — високий/низький регістр, перемикання регістрів; лінгвістичний термін"
+  - "редагування (editing) — літературне редагування, редагування тексту, внести правки; середня частота"
+  - "гнучкість (flexibility) — стилістична гнучкість, гнучкість мислення"
+  - "перемикання (switching) — перемикання кодів/регістрів"
+  - "зв'язність (coherence) — зв'язність тексту"
+  recommended:
+  - "послідовність (consistency) — логічна послідовність"
+  - "доречність (appropriateness) — доречність використання, доречність стилю"
+  - "текстотворення (text production) — навички текстотворення"
+  - "аудиторія (audience) — цільова аудиторія"
+  - "канцелярит (bureaucratese) — боротьба з канцеляритом; культурно значущий термін для критики бюрократичної мови"
+  - "актив (active voice) — перевага активних конструкцій над пасивними"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4439 chars)
+✅ Message sent to Claude (ID: 10386)
+✓ Message 10386 acknowledged
+   Auto-acknowledged reply #10386 (stdout delivery — no inbox accumulation)
+✓ Message 10379 acknowledged

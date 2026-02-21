@@ -1,0 +1,295 @@
+✅ Message sent to Gemini (ID: 13097) [auto-acked: self-addressed]
+✓ Message 13097 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #13097...
+📨 Message #13097
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-zakhid-2014
+   Time: 2026-02-20T23:44:25.206073+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-hist-101
+level: c1-hist
+sequence: 101
+version: '1.0'
+title: '2014: Анексія без відповіді'
+focus: history
+pedagogy: seminar
+objectives:
+- 'Analyze the causes and consequences of 2014: анексія без відповіді'
+- Evaluate the historical significance of безкарність
+content_outline:
+- section: Вступ — Безкарність
+  subsections:
+  - Лютий-березень 2014
+  - Росія захоплює Крим
+  - Захід — що зробив
+  - Структура модуля
+- section: Анексія — хроніка
+  subsections:
+  - «Зелені чоловічки»
+  - «Референдум»
+  - Анексія — 18 березня
+  - Швидкість шокує
+- section: Західна реакція
+  subsections:
+  - Заяви засудження
+  - Санкції — символічні
+  - «Летальна зброя» — відмова
+  - «Деескалація» — пріоритет
+- section: Мінськ — капітуляція під виглядом дипломатії
+  subsections:
+  - Мінськ I, Мінськ II
+  - Що підписали
+  - Чому невигідно Україні
+  - Меркель і Олланд — посередники чи?
+- section: Чому слабка відповідь
+  subsections:
+  - Економічні інтереси
+  - Nord Stream 2
+  - «Не провокувати»
+  - Нерозуміння загрози
+- section: Наслідки
+  subsections:
+  - Путін бачить безкарність
+  - 2015-2021 — підготовка
+  - Україна — сама
+- section: Підсумок
+  subsections:
+  - 2014 — повторення паттерну
+  - Але щось змінюється
+  - Перехід до 2022
+vocabulary:
+- анексія
+- санкції
+- Мінські угоди
+- безкарність
+- «зелені чоловічки»
+- летальна зброя
+- деескалація
+- посередник
+- капітуляція
+- засудження
+- Nord Stream 2
+- «заморожений конфлікт»
+- реальполітик
+- символічний
+- двосторонні переговори
+activities:
+- type: critical-analysis
+  focus: What did the West actually do in 2014?
+- type: critical-analysis
+  focus: Minsk Agreements — who benefited?
+- type: comparative-study
+  focus: Why was Western response weak?
+- type: critical-analysis
+  focus: 2014 as continuation of Western pattern
+- type: essay-response
+  focus: Чи слабка відповідь Заходу у 2014 спричинила 2022?
+sources:
+- name: Анексія Криму (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Анексія_Криму_(2014)
+  type: reference
+  notes: Annexation
+- name: Санкції проти Росії (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Санкції_проти_Росії
+  type: reference
+  notes: Western response
+- name: Мінські угоди (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Мінські_угоди
+  type: reference
+  notes: Minsk process
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
+persona:
+  voice: Academic Historiographer
+  role: Global Security Analyst
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: 2014: Анексія без відповіді
+
+## Використані джерела
+1. [Енциклопедія Сучасної України: Анексія Криму](https://esu.com.ua/article-44338) — детальна хронологія та правовий аналіз окупації.
+2. [Інститут історії України: Хронологія 2014](http://resource.history.org.ua/) — академічний огляд подій Революції Гідності та початку війни.
+3. [Указ Президента України №117/2021](https://www.president.gov.ua/documents/1172021-37533) — Стратегія деокупації та реінтеграції тимчасово окупованої території Автономної Республіки Крим.
+4. [Аналітичні матеріали Національного інституту стратегічних досліджень](https://niss.gov.ua/) — оцінка міжнародної реакції та санкційної політики.
+
+## Хронологія
+- **20 лютого 2014**: Офіційна дата початку окупації (викарбувана на російській медалі «За повернення Криму»).
+- **23 лютого 2014**: Проросійський мітинг у Севастополі, «обрання» громадянина РФ Олексія Чалого «народним мером».
+- **27 лютого 2014**: Захоплення будівлі Верховної Ради АРК російськими спецпризначенцями без розпізнавальних знаків («зелені чоловічки»).
+- **16 березня 2014**: Проведення незаконного «референдуму» під дулами автоматів.
+- **18 березня 2014**: Підписання «договору» про прийняття Криму до складу РФ у Кремлі.
+- **5 вересня 2014**: Підписання перших Мінських угод (Мінський протокол).
+- **12 лютого 2015**: Підписання других Мінських угод (Комплекс заходів).
+
+## Ключові факти та цитати
+- **Цитата (Рефат Чубаров)**: «Крим — це не територія, це люди. І коли ми говоримо про деокупацію, ми говоримо про порятунок людей».
+- **Факт**: Медаль «За повернення Криму» датує початок операції 20 лютого, коли Янукович ще перебував у Києві, що спростовує міф про «спонтанну реакцію» на «державний переворот».
+- **Термінологія**: Захід довго вживав термін «українська криза» замість «російська агресія», що розмивало відповідальність.
+- **Військовий аспект**: Україна не отримала летальної зброї від США у 2014 році через політику адміністрації Обами, спрямовану на «непровокування» Росії.
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ — Безкарність": [!context] — Поняття «Deep Concern» (глибоке занепокоєння) як символ безсилля західної дипломатії.
+- Section "Анексія — хроніка": [!myth-buster] — Міф про «мирне волевиявлення». Реальність: окупація почалася до референдуму, парламент голосував під прицілом.
+- Section "Західна реакція": [!comparative-study] — Порівняння реакції на окупацію Кувейту (1990) та Криму (2014).
+- Section "Мінськ — капітуляція...": [!analysis] — Чому Мінські угоди були юридичною пасткою (вибори до контролю над кордоном).
+- Section "Чому слабка відповідь": [!history-bite] — Роль бізнесу: Siemens продовжував постачати турбіни в Крим в обхід санкцій.
+- Section "Наслідки": [!quote] — Слова Джона Маккейна про те, що слабкість провокує агресію.
+
+## Деколонізаційний контекст
+- **Imperial/Soviet myth**: «Крим — ісконно руская зємля», «подарунок Хрущова».
+- **Ukrainian reality**: Крим був економічно та інфраструктурно інтегрований з материковою Україною; депортація кримських татар 1944 року як акт геноциду та зачистки півострова для російської колонізації. Анексія 2014 року — продовження імперської політики експансії.
+- **Agency**: Українські військові в Криму не «здали» півострів, а стали заручниками політичного вакууму в Києві та зради частини командування, проте багато хто залишився вірним присязі.
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian (decolonized) framing |
+|---------|-----------------|-------------------------------|
+| Події весни 2014 | «Кримська весна», «Возз'єднання» | Окупація, Анексія, Гібридна агресія |
+| Учасники подій | «Ввічливі люди», «Самооборона Криму» | Російські окупаційні війська, «Зелені чоловічки» |
+| Причина дій РФ | Захист російськомовних від «фашистів» | Імперський реваншизм, стратегічне захоплення плацдарму |
+| Референдум 16 березня | Волевиявлення народу Криму | Фарс під дулами автоматів, юридично нікчемний акт |
+
+## Section-Mapped Research Notes
+
+### Вступ — Безкарність
+Акцент на тому, що 2014 рік став крахом системи безпеки, створеної після Другої світової війни. Будапештський меморандум виявився фікцією. Відсутність жорсткої реакції (наприклад, відключення SWIFT, нафтове ембарго) переконала Путіна, що Захід слабкий і розділений.
+
+### Анексія — хроніка
+Важливо розділити на етапи: 1) приховане вторгнення (20-26 лютого), 2) відкрите силове захоплення адмінбудівель (27 лютого), 3) блокування українських частин, 4) легітимізація через псевдореферендум. «Зелені чоловічки» — це були елітні підрозділи ГРУ та ССО РФ.
+
+### Західна реакція
+Санкції були запроваджені поетапно, але мали багато дірок. Персональні санкції проти чиновників не зупинили державну машину. Секторальні санкції були обмеженими. Головна помилка — страх перед ескалацією («don't provoke Putin»).
+
+### Мінськ — капітуляція під виглядом дипломатії
+Мінськ-1 та Мінськ-2 були підписані на тлі прямих військових вторгнень РФ (Іловайськ, Дебальцеве). Це був диктат сили. Захід (Меркель, Олланд) тиснули на Порошенка, щоб зупинити велику війну ціною поступок суверенітетом (особливий статус ОРДЛО).
+
+### Чому слабка відповідь
+Економічний егоїзм Європи (Німеччина будувала Північний потік-2 вже після анексії!). Ілюзія, що Росію можна «інтегрувати» або «умиротворити». Небажання США брати на себе роль глобального поліцейського після Іраку та Афганістану.
+
+### Наслідки
+Крим перетворився на «непотоплюваний авіаносець» РФ. Репресії проти кримських татар та українців. Мілітаризація свідомості дітей в Криму. Підготовка плацдарму для вторгнення на південь України у 2022 році.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 13126)
+✓ Message 13097 acknowledged
+✓ Message 13126 acknowledged

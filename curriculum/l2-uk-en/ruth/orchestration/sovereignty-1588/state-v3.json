@@ -1,0 +1,13 @@
+{
+  "track": "ruth",
+  "slug": "sovereignty-1588",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-20T19:23:09Z",
+      "task_id": "v3-sovereignty-1588-pA",
+      "mode": "full"
+    }
+  }
+}

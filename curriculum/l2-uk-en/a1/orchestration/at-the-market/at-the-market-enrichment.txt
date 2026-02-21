@@ -1,0 +1,289 @@
+✅ Message sent to Gemini (ID: 10121) [auto-acked: self-addressed]
+✓ Message 10121 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10121...
+📨 Message #10121
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-at-the-market
+   Time: 2026-02-20T19:42:31.311631+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 37
+module: a1-37
+level: A1
+slug: at-the-market
+version: '2.0'
+title: At the Market
+subtitle: Buying Fresh Produce
+content_outline:
+- section: Warm-up
+  points:
+  - 'Культура ринків в Україні (Бессарабський, Привоз) — культурний контекст: Привоз
+    (Одеса, гумор, торг, заснований 1827 р., легенда про слона Мурзу), Бессарабський
+    (Київ, модерн 1912 р., перші холодильники, найкраще сало)'
+  - 'Чому українці люблять ринки — атмосфера: можливість скуштувати товар («Спробуйте!»,
+    «Беріть, не пошкодуєте!»), живе спілкування з продавцем'
+- section: Presentation
+  points:
+  - 'Одиниці виміру (кілограм, грам, штука, пучок) — граматичний фокус: конструкція
+    «кілограм + родовий відмінок» як цілісна фраза (без глибокої теорії для А1, State
+    Standard §3.8)'
+  - 'Запитання про ціну (Скільки коштує...? / По скільки...?) — частотність: «Скільки
+    з мене?» як фінальне питання'
+  - 'Прохання (Дайте, будь ласка... / Можна...?) — learner error: уникнення прямого
+    «Я хочу...» (занадто різко), перевага ввічливим формам'
+  - 'Якість (свіжий, стиглий, солодкий) — колокації: свіжі овочі, свіже молоко, дуже
+    свіжий'
+  - 'Торгування (ввічливе) (А дешевше можна?) — культурний аспект: торг як частина
+    спілкування, особливо на Привозі (Одеса)'
+- section: Practice
+  points:
+  - 'Діалог 1: Купівля овочів (картопля, помідори) — лексика: використання «пучок»
+    для зелені'
+  - 'Діалог 2: Купівля фруктів на вагу — learner error: відсутність родового відмінка
+    після числівників (наприклад, «Два кілограм картопля» замість «Два кілограми картоплі»)'
+  - 'Діалог 3: Запитання про здачу — лексичний нюанс: «здача» (гроші) vs «решта» (загальне),
+    фраза «без здачі», «візьміть здачу»'
+- section: Warm-up 2
+  points:
+  - 'Наратив про похід на ринок — State Standard alignment: реалізація комунікативного
+    наміру купівлі споживчих товарів (овочі, фрукти, м’ясо)'
+  - 'Атмосфера українського базару — акцент: «свіже», «домашнє», «тільки з грядки»'
+vocabulary_hints:
+  required:
+  - ринок (market) — на ринку, піти на ринок, фермерський ринок
+  - кілограм (kilogram) — один кілограм, пів кілограма, два кілограми
+  - штука (piece) — одна штука, п'ять штук (для поштучного товару)
+  - свіжий (fresh) — свіжі овочі, свіже молоко, дуже свіжий
+  - овочі (vegetables) — свіжі овочі, купити овочі
+  - фрукти (fruits) — солодкі фрукти, сезонні фрукти
+  - скільки (how much) — скільки коштує?, скільки з мене?
+  - дайте (give me) — дайте, будь ласка; дайте два кілограми
+  recommended:
+  - здача (change) — без здачі, візьміть здачу
+  - продавець (vendor) — ввічливий продавець, запитати продавця
+  - яблука (apples) — кілограм яблук, червоні яблука
+  - картопля (potatoes) — мішок картоплі, молода картопля
+  - помідори (tomatoes) — червоні помідори, салат з помідорів
+  - огірки (cucumbers) — свіжі огірки, солоні огірки
+activity_hints:
+- type: fill-in
+  focus: Market shopping conversation
+  items: 10
+- type: fill-in
+  focus: Buyer and vendor
+  items: 6
+- type: fill-in
+  focus: Complete market phrases
+  items: 15
+- type: quiz
+  focus: Market transactions
+  items: 10
+focus: practical
+pedagogy: PPP
+prerequisites:
+- a1-18 (Food and Shopping)
+- a1-36 (At the Restaurant)
+connects_to:
+- a1-38 (At the Store)
+objectives:
+- Learner can buy fresh produce at a market
+- Learner can ask about prices and quantities
+- Learner can negotiate politely
+- Learner can describe what they want
+grammar:
+- Genitive for quantities (кілограм + genitive)
+- Accusative for requests
+- Numbers with nouns
+register: розмовний
+phase: A1.4 [Practical Scenarios]
+persona:
+  voice: Patient Supportive Tutor
+  role: Privoz Market Vendor
+word_target: 2000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: At the Market
+
+## State Standard Reference
+§3.8: "Купівля (закупи): магазини і ринки; споживчі товари (овочі, фрукти...); одиниці ваги й об’єму; гроші."
+Alignment: Module teaches specific vocabulary for "units of weight" (кілограм) and "consumer goods" (vegetables/fruits) directly addressing the thematic requirement of §3.8 and the grammatical application of Numerals (§4.2.1.3).
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| ринок | High (Common) | на ринку, піти на ринок, фермерський ринок, "базар" (colloquial synonym) |
+| кілограм | High (Shopping) | один кілограм, два кілограми (Nom.Pl), п'ять кілограмів (Gen.Pl), пів кілограма |
+| свіжий | High (General) | свіжі овочі, свіже молоко, свіжий хліб, "тільки з грядки" (idiom: fresh from the garden) |
+| скільки | High (Basic) | Скільки коштує?, Скільки з мене?, Скільки це важить? |
+| дайте | High (Request) | Дайте, будь ласка; Дайте мені...; Можна... (polite alternative) |
+
+## Cultural Hooks
+1. **Бессарабський ринок (Київ)**: Побудований у 1910-1912 рр. (архітектор Генрик Гай), стиль модерн. Перший критий ринок з холодильними камерами. Відомий як "найдорожчий" ринок ("дорого, як на Бессарабці").
+2. **Привоз (Одеса)**: Легендарний ринок (1827 р.), символ одеського гумору та торгівлі. Назва від "привозити" (продаж з возів). Тут "можна купити все" і обов'язково треба торгуватися.
+3. **Культура "Спробуйте!"**: На українському базарі нормально і навіть бажано куштувати товар (сир, фрукти) перед покупкою.
+
+## Common Learner Errors
+1. **Case after Numbers (2-4)**: Using singular or wrong plural form (e.g., "Два кілограм" instead of "Два кілограми"). Correct: 2, 3, 4 + Nominative Plural.
+2. **Genitive Object**: Using Nominative for the substance being measured (e.g., "Кілограм картопля" instead of "Кілограм картоплі").
+3. **Change vs. Rest**: Confusion between "здача" (money change) and "решта" (remainder/rest). In shopping, "здача" is the standard term.
+
+## Cross-References
+- Builds on: a1-18 (Food and Shopping), a1-36 (At the Restaurant) - reuses food vocab.
+- Prepares for: a1-38 (At the Store), A2 Genitive case (full declension).
+
+## Notes for Content Writing
+- Focus on the "lexical chunk" approach for Genitive: teach "кілограм + [noun in Genitive]" as a pattern without deep case theory declension tables.
+- Use "Привоз" for the narrative section to inject humor and atmosphere.
+- Highlight the politeness marker "будь ласка" in all requests.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ та культура (Introduction & Culture)"
+  words: 450
+  points:
+  - "Культура українських ринків: Бессарабський ринок (Київ, 1912 р., стиль модерн, перші холодильники, репутація 'найдорожчого') та легендарний Привоз (Одеса, 1827 р., гумор, легенда про слона Мурзу)."
+  - "Традиція «Спробуйте!»: культурна значущість дегустації товару (сир, мед, фрукти) перед покупкою як спосіб встановлення довіри між продавцем та покупцем."
+- section: "Презентація лексики та граматики (Vocabulary & Grammar Presentation)"
+  words: 650
+  points:
+  - "Одиниці виміру та споживчі товари згідно зі Стандартом §3.8: вивчення слів «кілограм», «грам», «штука», «пучок» у контексті овочів та фруктів."
+  - "Граматична конструкція «кілограм + родовий відмінок»: засвоєння сталих виразів «кілограм яблук», «кілограм картоплі» як цілісних лексичних блоків без заглиблення в теорію відмінків."
+  - "Ввічливі запити та ціна: використання «Дайте, будь ласка» та «Можна...» замість різкого «Я хочу»; питання «Скільки з мене?» як фінальний етап транзакції."
+- section: "Мовні помилки та практика (Learner Errors & Practice)"
+  words: 450
+  points:
+  - "Типова помилка: відмінювання після числівників 2-4 — вправа на корекцію форми «Два кілограм» на правильну «Два кілограми» (Nom.Pl) у порівнянні з «П'ять кілограмів» (Gen.Pl)."
+  - "Лексичний нюанс «Здача» vs «Решта»: закріплення слова «здача» для грошей; відпрацювання фраз «без здачі» та «візьміть здачу»."
+  - "Помилка вживання називного відмінка замість родового після міри ваги: дриль на заміну «Кілограм картопля» на «Кілограм картоплі»."
+- section: "Діалоги та рольові ігри (Dialogues & Roleplay)"
+  words: 450
+  points:
+  - "Атмосфера одеського Привозу: рольова гра з елементами торгу («А дешевше можна?») та використанням колоритних фразеологізмів, як-от «тільки з грядки»."
+  - "Сценарій купівлі на вагу та поштучно: інтеграція всіх вивчених одиниць виміру та ввічливих форм у реалістичний діалог на ринку."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "ринок (market) — на ринку, піти на ринок; розмовний синонім «базар»"
+  - "кілограм (kilogram) — один кілограм, два кілограми (Nom.Pl), п'ять кілограмів (Gen.Pl), пів кілограма"
+  - "штука (piece) — одна штука, п'ять штук; часто використовується для поштучного товару"
+  - "свіжий (fresh) — свіжі овочі, свіже молоко; ідіома «тільки з грядки» (fresh from the garden)"
+  - "овочі (vegetables) — свіжі овочі, купити овочі на вагу"
+  - "фрукти (fruits) — солодкі фрукти, сезонні фрукти"
+  - "скільки (how much) — скільки коштує?, скільки з мене?, скільки це важить?"
+  - "дайте (give me) — дайте, будь ласка; ввічлива форма наказового способу"
+  recommended:
+  - "здача (change) — без здачі (exact change), візьміть здачу; не плутати з «решта»"
+  - "продавець (vendor) — ввічливий продавець, запитати продавця про якість"
+  - "яблука (apples) — кілограм яблук, солодкі яблука"
+  - "картопля (potatoes) — кілограм картоплі, молода картопля"
+  - "помідори (tomatoes) — червоні помідори, два кілограми помідорів"
+  - "огірки (cucumbers) — свіжі огірки, п'ять штук огірків"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (3181 chars)
+✅ Message sent to Claude (ID: 10126)
+✓ Message 10126 acknowledged
+   Auto-acknowledged reply #10126 (stdout delivery — no inbox accumulation)
+✓ Message 10121 acknowledged

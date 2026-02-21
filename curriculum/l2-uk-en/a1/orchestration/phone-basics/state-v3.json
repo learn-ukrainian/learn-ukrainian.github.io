@@ -1,0 +1,33 @@
+{
+  "track": "a1",
+  "slug": "phone-basics",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-20T22:56:09Z",
+      "task_id": "v3-phone-basics-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-20T22:58:13Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-20T22:59:44Z",
+      "task_id": "v3-phone-basics-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-20T23:02:37Z",
+      "attempts": 2
+    },
+    "v3-D": {
+      "status": "complete",
+      "ts": "2026-02-20T23:09:34Z",
+      "attempts": 2,
+      "note": "escalation-claude"
+    }
+  }
+}

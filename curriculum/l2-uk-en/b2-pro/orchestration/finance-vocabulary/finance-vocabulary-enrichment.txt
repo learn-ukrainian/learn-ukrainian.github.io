@@ -1,0 +1,279 @@
+✅ Message sent to Gemini (ID: 11986) [auto-acked: self-addressed]
+✓ Message 11986 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #11986...
+📨 Message #11986
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-finance-vocabulary
+   Time: 2026-02-20T23:35:05.481140+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b2-pro-19
+level: B2-PRO
+sequence: 19
+slug: finance-vocabulary
+version: '2.0'
+title: Фінансова лексика
+subtitle: Finance Vocabulary
+content_outline:
+- section: Розминка — Фінансова грамотність українською
+  points:
+  - Чому фінансова термінологія важлива для бізнесу
+  - Українські vs міжнародні терміни (МСФЗ, GAAP)
+  - Гривня та валютні операції
+- section: Банківська справа
+  points:
+  - 'Рахунки: поточний рахунок, депозитний рахунок, кредитний рахунок'
+  - 'Операції: переказ коштів, зняття готівки, поповнення рахунку'
+  - 'Кредитування: кредит, позика, відсоткова ставка, застава'
+  - 'Документи: виписка з рахунку, платіжне доручення, довіреність'
+- section: Бухгалтерський облік
+  points:
+  - 'Основні поняття: актив, пасив, власний капітал, баланс'
+  - 'Доходи та витрати: виручка, прибуток, собівартість, амортизація'
+  - 'Звітність: фінансовий звіт, звіт про прибутки та збитки, звіт про рух коштів'
+  - 'Податки: ПДВ, податок на прибуток, єдиний податок'
+- section: Інвестиції та цінні папери
+  points:
+  - 'Інструменти: акція, облігація, депозит, інвестиційний фонд'
+  - 'Показники: дохідність, ризик, дивіденди, курс акцій'
+  - 'Дії: інвестувати, купити/продати, отримати дохід'
+- section: Зразок фінансового документа
+  points:
+  - Бюджет проєкту з поясненнями
+  - Фінансова пропозиція для інвестора
+  - Аналіз термінології
+- section: Практика — фінансовий аналіз
+  points:
+  - 'Завдання: Прочитати фінансовий звіт і відповісти на питання'
+  - Опис фінансової ситуації компанії
+  - Типові помилки в фінансовій документації
+vocabulary_hints:
+  required:
+  - поточний рахунок (current account)
+  - відсоткова ставка (interest rate)
+  - баланс (balance sheet)
+  - прибуток/збиток (profit/loss)
+  - виручка (revenue)
+  - собівартість (cost of goods sold)
+  - дохідність (yield/return)
+  - податок на додану вартість (VAT)
+  recommended:
+  - депозитний рахунок (deposit account)
+  - платіжне доручення (payment order)
+  - амортизація (depreciation)
+  - власний капітал (equity)
+  - дивіденди (dividends)
+  - інвестиційний портфель (investment portfolio)
+activity_hints:
+- type: document-analysis
+  focus: Проаналізувати спрощений фінансовий звіт компанії
+  items: 1
+- type: writing-task
+  focus: Скласти бюджет проєкту з обґрунтуванням
+  items: 1
+- type: vocabulary-domain
+  focus: Підібрати визначення до фінансових термінів
+  items: 15
+- type: fill-in
+  focus: Вставити правильні фінансові терміни в текст
+  items: 12
+- type: matching
+  focus: З'єднати термін з його еквівалентом (укр-англ)
+  items: 10
+- type: reading-comprehension
+  focus: Прочитати виписку з рахунку та відповісти на питання
+  items: 6
+focus: professional
+pedagogy: ESP
+prerequisites:
+- b2-pro-18 (Технічна документація)
+connects_to:
+- b2-pro-20 (Фінансова звітність)
+objectives:
+- Учень знає основну банківську термінологію українською
+- Учень може читати та розуміти базові фінансові документи
+- Учень знає термінологію бухгалтерського обліку
+- Учень може описати фінансову ситуацію правильною лексикою
+grammar:
+- Числівники у фінансовому контексті (мільйон гривень, відсотки)
+- Дієслова фінансової сфери (інвестувати, кредитувати, амортизувати)
+- Прийменники з фінансовими термінами (на рахунок, з рахунку, під відсотки)
+register: офіційно-діловий
+phase: B2-PRO.2
+persona:
+  voice: Senior Specialist
+  role: Фінансовий директор (CFO)
+word_target: 2000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Фінансова лексика
+
+## Використані джерела
+1. [Zakon.rada.gov.ua](https://zakon.rada.gov.ua/laws/show/1591-20) — Закон України «Про платіжні послуги», основне джерело термінології платіжного ринку.
+2. [Buhplatforma.com.ua](https://buhplatforma.com.ua/article/8121-platshna-nstruktsya-zrazok-zapovnennya) — Професійне видання для бухгалтерів щодо оформлення платіжних інструкцій (новий стандарт).
+3. [Business.diia.gov.ua](https://business.diia.gov.ua/guide/finansy) — Державний портал з фінансового менеджменту для МСБ.
+4. [ДСТУ 4163:2020](http://ukrndnc.org.ua) — Національний стандарт щодо оформлення організаційно-розпорядчої документації.
+
+## Термінологічна база
+
+| Українська (норма) | Русизм/ненорма | English | Контекст вживання |
+|--------------------|---------------|---------|-------------------|
+| Платіжна інструкція| Платіжка / Доручення | Payment Instruction | Офіційне розпорядження банку на переказ |
+| Поточний рахунок   | Розрахунковий рахунок | Current Account | Основний банківський рахунок бізнесу |
+| Виручка / Виторг   | Доход (в значенні выручки)| Revenue | Кошти від продажу товарів/послуг |
+| Прибуток           | Вигода (калька) | Profit | Дохід мінус витрати |
+| Власний капітал    | Свій капітал  | Equity | Частка активів після віднімання зобов'язань |
+| Відсоткова ставка  | Процентна ставка | Interest Rate | Вартість використання кредитних коштів |
+| Післяплата         | Наложенний платіж | Cash on Delivery | Оплата при отриманні товару |
+| Обігові кошти      | Оборотні засоби | Working Capital | Активи, що використовуються в циклі виробництва |
+
+## Мовні норми та стандарти
+- **Закон України № 1591-IX**: Ввів термін «платіжна інструкція» замість «платіжне доручення». Важливо для професійної мови банкірів та бухгалтерів.
+- **ДСТУ 4163:2020**: Встановлює правила написання назв посад (з великої літери в документах), дат (цифровий та словесно-цифровий способи) та підписів.
+- **МСФЗ (IFRS)**: Використання термінів «Звіт про фінансовий стан» замість застарілого «Баланс» у міжнародній звітності.
+
+## Аутентичні приклади
+1. [Виписка з рахунку]: «Залишок коштів на поточному рахунку № UA... станом на 01.01.2024 становить 150 000,00 грн.»
+2. [Ділове листування]: «Просимо здійснити оплату згідно з рахунком-фактурою № 45 від 15 лютого 2024 року протягом трьох банківських днів.»
+3. [Фінансова звітність]: «Чистий прибуток компанії за звітний період зріс на 12% завдяки оптимізації собівартості реалізованої продукції.»
+
+## Типові помилки
+1. ❌ **Заключати договір** → ✅ **Укладати договір** — юридично коректний термін в українському праві.
+2. ❌ **Приймати міри** → ✅ **Вживати заходів** — типова калька з російської («принимать меры»).
+3. ❌ **На рахунок цього** → ✅ **Щодо цього / З цього приводу** — помилка у вживанні прийменників у діловому мовленні.
+4. ❌ **Підвести підсумки** → ✅ **Підбити підсумки** — правильна дієслівна сполука для фінансових результатів.
+5. ❌ **Термін істьов** → ✅ **Термін закінчився / сплив** — уникнення суржику в описах кредитних лімітів.
+
+## Engagement Hooks (mapped to sections)
+- Section "Розминка — Фінансова грамотність українською": [!language-note] — Пояснення переходу від «платіжки» до «платіжної інструкції» як ознака дерадянізації термінології.
+- Section "Банківська справа": [!pro-tip] — Як правильно читати IBAN та чому MFO більше не вказується окремо.
+- Section "Бухгалтерський облік": [!common-error] — Різниця між «виручкою» та «прибутком», яку часто плутають навіть фахівці.
+- Section "Зразок фінансового документа": [!example] — Аналіз реальної структури бюджету IT-проєкту.
+
+## Section-Mapped Research Notes
+
+### Розминка — Фінансова грамотність українською
+Обговорення важливості точності термінів. Використання англіцизмів у фінтеху (кешбек, овердрафт, еквайринг) та їх адаптація. Порівняння ПСБО (національні стандарти) та МСФЗ.
+
+### Банківська справа
+Алгоритм відкриття рахунку для ФОП/ТОВ. Термінологія кредитування: ануїтет, пеня, штраф, тіло кредиту. Поняття «бенефіціарний власник».
+
+### Бухгалтерський облік
+Різниця між «активом» (те, що приносить гроші) та «пасивом» (джерела формування). Поняття дебету та кредиту. Види податків: ПДВ (VAT), ЄСВ, ПДФО. Термін «амортизація» як поступове списання вартості.
+
+### Інвестиції та цінні папери
+Ринок капіталу в Україні. ОВДП (облігації внутрішньої державної позики) як найпопулярніший інструмент. Дивіденди та капіталізація.
+
+### Зразок фінансового документа
+Структура бюджету (CAPEX vs OPEX). Пояснювальна записка до фінансового плану.
+
+### Практика — фінансовий аналіз
+Коефіцієнти рентабельності. Аналіз «cash flow» (руху грошових коштів). Пошук слабких місць у звіті (дебіторська заборгованість).
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12045)
+✓ Message 11986 acknowledged
+✓ Message 12045 acknowledged

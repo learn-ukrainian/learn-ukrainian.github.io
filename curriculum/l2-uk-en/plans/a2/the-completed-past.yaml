@@ -6,59 +6,77 @@ version: '2.0'
 title: The Completed Past
 subtitle: Using Perfective Aspect
 content_outline:
-- section: Introduction / Вступ
+- section: Вступ (Introduction)
+  words: 450
   points:
-  - 'Perfective past overview — State Standard Reference §4.2.3.1: ''Утворення форм
-    минулого часу дієслів: мріяти (мріяв...)''; also §4.3.2: ''Видові пари дієслів:
-    робити – зробити'''
-  - 'Result-focused mindset — Cultural hook: Proverb ''Діло майстра величає'' (The
-    deed glorifies the master) and ''Кінець — справі вінець'' (The end is the crown
-    of the work); learner error: Process vs. Result (Aspect Drift) - confusing ''я
-    писав'' (process) with ''я написав'' (result)'
-- section: Presentation / Презентація
+  - Welcome by the Museum Archivist persona; introduce the result-focused mindset
+    through the Ukrainian proverbs «Діло майстра величає» (The deed glorifies the
+    master) and «Кінець — справі вінець» (The end is the crown of the work) to highlight
+    the cultural value of completion.
+  - Overview of Ukrainian State Standard §4.3.2 regarding aspectual pairs (робити
+    – зробити) and §4.2.3.1 for past tense formation, setting the theoretical foundation
+    for A2.2 proficiency.
+- section: Творення та граматична узгодженість (Formation and Grammatical Agreement)
+  words: 750
   points:
-  - 'Formation of perfective past (-в, -ла, -ло, -ли) — Common Learner Error: Gender/Number
-    Agreement (forgetting that past tense verbs must agree with subject)'
-  - 'Usage scenarios (Single event, Result, Markers) — Common Learner Error: Double
-    Past (Tense Confusion) - avoiding auxiliary words for ''have done''; visual aid:
-    decision tree for ''Did I finish it?'' vs ''Was I doing it?'''
-  - 'Narrative sequencing (Building stories) — Content writing note: Emphasize the
-    ''Chain of Events'' pattern (first I did A, then I did B) using markers like «спочатку»,
-    «потім», «нарешті»'
-- section: Practice / Практика
+  - Detailed presentation of perfective past formation using suffixes -в, -ла, -ло,
+    -ли; focus on correcting the Common Learner Error of Gender/Number Agreement (e.g.,
+    preventing «Анна написав» in favor of correct «Анна написала»).
+  - Explanation of the 'Zero Auxiliary' rule to combat the 'Double Past' error where
+    English speakers attempt to use auxiliary verbs for completed actions; emphasize
+    that aspect is built into the verb form itself.
+- section: Процес проти результату (Process vs. Result)
+  words: 800
   points:
-  - 'Situation-based aspect choice — Focus on high frequency verbs: зробив, сказав,
-    написав, прочитав, пішов, прийшов, зрозумів, забув, знайшов'
-  - Narrative transformations — Prepares for a2-26 (Telling Stories); practice transforming
-    linear lists of actions into coherent narrative
-- section: Dialogues / Діалоги
+  - 'Analysis of ''Aspect Drift'' errors: contrasting «я писав листа» (process/unfinished)
+    with «я написав листа» (result/finished); provide a visual decision tree logic
+    for learners: ''Was I doing it?'' vs. ''Did I finish it?''.'
+  - Drilling high-frequency perfective verbs (зробив, сказав, зрозумів) with result-oriented
+    contexts; identify how these forms function as complete units of narrative meaning
+    in the past.
+- section: Наративна послідовність у музеї (Narrative Sequencing in the Museum)
+  words: 600
   points:
-  - 'Yesterday evening dialogue — Setting: ''Yesterday in the Museum'' (Archivist
-    persona); use narrative markers «спочатку», «потім»; Content writing note: keep
-    grammar theory in English but use Ukrainian for dialogue'
+  - Instruction on the 'Chain of Events' narrative pattern; introduce essential sequencing
+    markers «спочатку» (first), «потім» (then), and «нарешті» (finally) to link a
+    series of perfective actions.
+  - Applying narrative markers within the Archivist persona's stories; transforming
+    linear lists of museum activities into a coherent story of a completed workday
+    or historical event.
+- section: Практика та усунення помилок (Practice and Error Correction)
+  words: 400
+  points:
+  - Situation-based aspect choice practice focusing on high-frequency collocations
+    from research, such as «зробив вибір», «сказав правду», and «знайшов рішення».
+  - Final review of correction patterns for 'Aspect Drift' and 'Double Past' confusions;
+    preparation for narrative transformations in a2-26 by summarizing the result-focused
+    mindset.
 vocabulary_hints:
   required:
-  - зробив (did/made - m) — зробив помилку, зробив висновок, зробив вибір
-  - написав (wrote - m) — написав листа, написав книгу, написав пост
-  - прочитав (read - m) — прочитав до кінця, прочитав повідомлення
-  - сказав (said - m) — сказав правду, сказав чесно, сказав «так»
-  - побачив (saw - m)
-  - почув (heard - m)
-  - взяв (took - m)
-  - дав (gave - m)
-  - пішов (went - m) — пішов додому, пішов на прогулянку, пішов геть
-  - прийшов (came - m) — прийшов вчасно, прийшов на допомогу
-  - приїхав (arrived - m)
-  - почав (began - m)
-  - закінчив (finished - m)
-  - зрозумів (understood - m) — зрозумів ідею, зрозумів ситуацію, нарешті зрозумів
-  - забув (forgot - m) — забув пароль, забув ключі, забув про все
+  - зробив (did/made - m) — зробив помилку, зробив висновок, зробив вибір; Very High
+    frequency (Top 100 verbs)
+  - сказав (said - m) — сказав правду, сказав чесно, сказав «так»; Very High frequency
+    (Top 50 verbs)
+  - написав (wrote - m) — написав листа, написав книгу, написав пост; High frequency
+  - прочитав (read - m) — прочитав до кінця, прочитав повідомлення; High frequency
+  - пішов (went - m) — пішов додому, пішов на прогулянку, пішов геть; Very High frequency
+  - прийшов (came - m) — прийшов вчасно, прийшов на допомогу; High frequency
+  - зрозумів (understood - m) — зрозумів ідею, зрозумів ситуацію, нарешті зрозумів;
+    High frequency
+  - забув (forgot - m) — забув пароль, забув ключі, забув про все; Medium-High frequency
+  - знайшов (found - m) — знайшов рішення, знайшов вихід, знайшов час; High frequency
+  - побачив (saw - m) — noticed a detail, saw for the first time
+  - почув (heard - m) — heard the news, caught a specific sound
+  - взяв (took - m) — took a seat, took the opportunity
+  - дав (gave - m) — gave an answer, gave back
+  - приїхав (arrived - m) — arrived by transport/vehicle
+  - почав (began - m) — started a completed action
+  - закінчив (finished - m) — reached the end of a task
   recommended:
-  - запам'ятав (remembered - m)
-  - знайшов (found - m) — знайшов рішення, знайшов вихід, знайшов час
-  - загубив (lost - m)
-  - вийшов (exited - m)
-  - увійшов (entered - m)
+  - запам'ятав (remembered - m) — fixed in memory, committed to mind
+  - загубив (lost - m) — lost an object; opposite of знайшов; Medium frequency
+  - вийшов (exited - m) — left a room or building
+  - увійшов (entered - m) — entered a defined space
 activity_hints:
 - type: fill-in
   focus: Transform imperfective to perfective past

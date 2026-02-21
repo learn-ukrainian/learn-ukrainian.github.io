@@ -22,6 +22,8 @@ This word is your key. It is short, simple, and exactly like the English "Where"
 
 You have already met the Nominative case (the dictionary form) and the Accusative case (for direct objects). Today, we meet the **Locative case** (Місцевий відмінок). As the name suggests, it is used exclusively for location.
 
+One important distinction: Ukrainian has two location questions. **Де?** [dɛ] means "Where is it?" — static location. **Куди?** [kuˈdɪ] means "Where to?" — direction of motion. Today, we focus only on **Де?** — where things ARE right now, not where they are going.
+
 > [!observe]
 > **Look at these changes:**
 > *   **Банк** (Bank) → Я у **банку** — I am in the bank.
@@ -39,7 +41,7 @@ Before we dive into the rules of changing word endings, let's look at three phra
     Наприклад: «Я **вдома**» — I am at home.
 
 2.  **На роботі** [nɑ rɔˈbɔtʲi] — At work.
-    Ukrainians never say "in work". Work is treated as an activity. Therefore we say **на**.
+    Ukrainians never say "in work". Work is treated as an activity or event. Therefore we say **на**.
     Наприклад: «Де тато? Тато **на роботі**» — Where is dad? Dad is at work.
 
 3.  **У школі** [u ˈʃkɔlʲi] — At school.
@@ -142,7 +144,9 @@ Good news in Ukrainian grammar: The Locative case is very regular. For most noun
 *   **Вікно** (window) → **На вікні** (on the window).
 *   **Село** (village) → **У селі** (in the village).
 
-There are exceptions, but for A1 ending **-і** is your best friend. It covers about 80% of the words.
+There are exceptions, but for A1 the ending **-і** is your best friend and covers the majority of nouns.
+
+One exception to notice: some masculine nouns take **-у** instead of **-і** — like **парк → у парку** and **банк → у банку**. You already saw these earlier! Don't worry about the rule behind this yet; just memorize them as fixed phrases. The key pattern for A1 remains **-і**.
 
 > [!tip]
 > **Soft Endings**
@@ -186,18 +190,18 @@ This often happens with body parts or geographical names.
     Example: «Ми у **Празі**» — We are in Prague.
 
 #### Mutation Х → С
-This is the rarest of the three, but important for body parts.
+This is the rarest of the three, but still important.
 *   **Вухо** [ˈʋuxɔ] (ear) → **У вусі**.
     Example: «Музика у **вусі**» — Music in the ear.
-*   **Муха** (fly) → **На мусі**.
-    Example: «Муха на **мусі**» — A fly on a fly (rare in real life, but grammatically correct!).
+*   **Черепаха** [t͡ʃɛrɛˈpɑxɑ] (turtle) → **На черепасі**.
+    Example: «Кіт сидить на **черепасі**» — The cat is sitting on the turtle.
 
 > [!context]
 > **Memory Aid: Рука, Нога, Вухо (Hand, Leg, Ear)**
 > Remember this simply. Point to yourself:
-> 1.  **Рука** (Hand) → **У руці** (K → C).
-> 2.  **Нога** (Leg) → **На нозі** (G → Z).
-> 3.  **Вухо** (Ear) → **У вусі** (Kh → S).
+> 1.  **Рука** (Hand) → **У руці** (К → Ц).
+> 2.  **Нога** (Leg) → **На нозі** (Г → З).
+> 3.  **Вухо** (Ear) → **У вусі** (Х → С).
 >
 > Remember the trio: **Руці, Нозі, Вусі**. That is the whole rule!
 
@@ -340,7 +344,7 @@ Try to create sentences involving:
 When describing where you live in a Ukrainian city, context matters.
 
 If you say "Я живу **у центрі**" — I live in the center, you might live in a "Stalinka" (**сталінка**) — an old building with high ceilings and thick walls.
-If you say "Я живу **у спальному районі**" — I live in a dormitory suburb/sleeping district, you likely live in a high-rise.
+If you say "Я живу **у спальному районі**" — I live in a residential area (literally: a "sleeping district"), you likely live in a high-rise.
 
 Locations in the city follow our rules:
 *   **Центр** (center) → **У центрі**.

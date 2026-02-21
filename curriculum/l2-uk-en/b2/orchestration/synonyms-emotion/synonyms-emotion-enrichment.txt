@@ -1,0 +1,285 @@
+✅ Message sent to Gemini (ID: 10577) [auto-acked: self-addressed]
+✓ Message 10577 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10577...
+📨 Message #10577
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-synonyms-emotion
+   Time: 2026-02-20T20:43:01.698389+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b2-55
+level: B2
+sequence: 55
+slug: synonyms-emotion
+version: '2.0'
+title: 'Синоніми: Емоції та почуття'
+content_outline:
+- section: Розминка — Нюанси емоційної лексики
+  points:
+  - Чому "сум" і "журба" — не одне й те саме
+  - Інтенсивність, регістр, стилістичне забарвлення
+  - Зв'язок з фразеологією M47-54 (емоції в ідіомах)
+- section: Joy
+  points:
+  - радість (joy - general)
+  - щастя (happiness - deeper)
+  - задоволення (satisfaction - from achievement)
+  - втіха (delight - often from children)
+  - насолода (pleasure - sensory)
+- section: Sadness
+  points:
+  - сум (sadness - general)
+  - журба (melancholy - poetic)
+  - смуток (sorrow - deeper)
+  - горе (grief - intense)
+  - туга (longing - nostalgic)
+- section: Практика — вибір точного слова
+  points:
+  - Обрати синонім відповідно до контексту (офіційний лист vs художній текст)
+  - Градуювати синоніми за інтенсивністю (сум → журба → горе)
+  - Переписати текст, замінивши нейтральні слова на експресивні
+  - Написати психологічний портрет з багатою емоційною лексикою
+focus: phraseology
+pedagogy: CBI
+objectives:
+- Розрізняти відтінки значень між синонімами на позначення радості, суму, гніву та
+  страху
+- Вживати емоційну лексику відповідно до ситуації та регістру
+- Описувати складні психологічні стани, використовуючи багатий словниковий запас
+grammar:
+- Nuance in synonymy
+- Register and intensity
+register: varies
+phase: B2.2 [Phraseology & Synonymy]
+vocabulary_hints:
+  required:
+  - синонім (synonym)
+  - вираз (expression)
+  - значення (meaning)
+  - контекст (context)
+  recommended:
+  - переносне значення (figurative meaning)
+  - стилістичне забарвлення (stylistic coloring)
+activity_hints:
+- type: reading
+  focus: Контекстне використання
+  items: 4
+- type: fill-in-the-blank
+  focus: Практичне застосування
+  items: 10
+- type: true-false
+  focus: Розуміння значень
+  items: 8
+persona:
+  voice: Professional Language Coach
+  role: Psychotherapist (Психотерапевт)
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Синоніми: Емоції та почуття
+
+## State Standard Reference
+§4.4.1.2: "Лексичні засоби стилістики: синоніми (говорити, розмовляти, спілкуватися), антоніми, омоніми..."
+Alignment: Модуль безпосередньо реалізує вимогу стандарту щодо використання лексичних синонімів для збагачення мовлення та вираження нюансів емоційного стану на рівні B2.
+
+## Vocabulary Frequency & Collocations
+
+### Радість / Щастя / Втіха / Насолода
+| Word | Nuance | Key Collocations |
+|------|--------|------------------|
+| **Радість** | General joy, emotion | нестримна радість, сльози радості, світитися від радості, приносити радість |
+| **Щастя** | Deep, state of being | безмежне щастя, сімейне щастя, запорука щастя, "на сьомому небі від щастя" |
+| **Втіха** | Comfort, solace, relief | єдина втіха, шукати втіхи, слабка втіха, на втіху (комусь), "діти — втіха" |
+| **Насолода** | Pleasure (sensory/aesthetic) | отримувати насолоду, справжня насолода, естетична насолода, з насолодою |
+
+### Сум / Журба / Туга / Розпач / Горе
+| Word | Nuance | Key Collocations |
+|------|--------|------------------|
+| **Сум** | General sadness | легкий сум, навіювати сум, сум в очах, "сумно на душі" |
+| **Журба** | Poetic, deep, lingering | тяжка журба, журба за рідним краєм, розвіяти журбу, "журба гризе" |
+| **Туга** | Longing, yearning, nostalgia | нестерпна туга, туга за Батьківщиною, туга за минулим, "серце стискає туга" |
+| **Розпач** | Despair, hopelessness | впасти в розпач, доводити до розпачу, жест розпачу, у стані розпачу |
+| **Горе** | Grief, tragedy | велике горе, убитий горем, пережити горе, "горе лукове" (ironic) |
+
+## Cultural Hooks
+1.  **Журба в українській душі**: Концепт "журба" в українській культурі — це не просто смуток, а глибокий, часто екзистенційний стан, оспіваний у фольклорі та літературі (Т. Шевченко: "Журба в шинку мед-горілку п'є"). Це почуття часто персоніфікується.
+2.  **Туга за краєм**: Історично обумовлене почуття (еміграція, заслання). В українській літературі "туга за Україною" є окремим потужним мотивом (діаспорна література, листи політв'язнів).
+
+## Common Learner Errors
+1.  **Втіха vs Fun**: Learners confuse *втіха* (solace/comfort/delight in a specific source) with *розвага* (entertainment).
+    *   *Wrong*: Ми пішли в парк для втіхи.
+    *   *Right*: Ми пішли в парк для розваги. / Музика була її єдиною втіхою.
+2.  **Радість vs Насолода**: Using *радість* for sensory pleasure.
+    *   *Wrong*: Я отримав радість від масажу.
+    *   *Right*: Я отримав насолоду від масажу.
+3.  **Physical vs Emotional Pain**: Using *біль* indiscriminately.
+    *   *Correction*: For emotional contexts, prefer *страждання*, *горе*, *мука*, or specifically *душевний біль*.
+
+## Cross-References
+- **Builds on**: B1 M47-54 (Emotion idioms), A2 Emotions vocab.
+- **Prepares for**: C1 Stylistics (Nuanced emotional expression in literature), C1-BIO (Describing tragic biographies).
+
+## Notes for Content Writing
+- **Persona Flavor**: Use the **Psychotherapist** persona mentioned in the plan (`role: Psychotherapist`) combined with the assigned **Ethnographer/Storyteller** flavor to analyze emotions deeply.
+- **Differentiation**: Clearly distinguish *журба* (poetic/folk) from *депресія* (medical/modern) to fit the "Synonyms" focus.
+- **Stylistics**: Emphasize that *журба* and *туга* belong to high/poetic style, while *сум* is neutral.
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Розминка: Психологія та лексика емоцій (Warm-up: Psychology and Emotional Lexis)"
+  words: 600
+  points:
+  - "Вступне слово психотерапевта про важливість точного іменування почуттів для емоційного інтелекту; розрізнення понять 'емоція' (короткочасна) та 'стан' (тривалий)"
+  - "Аналіз нюансів: чому 'сум' (нейтральний) і 'журба' (поетична, екзистенційна) — не одне й те саме; інтенсивність та стилістичне забарвлення"
+  - "Зв'язок з фразеологією (M47-54): як ідіоми типу 'на сьомому небі від щастя' або 'серце стискає туга' підсилюють експресивність мовлення"
+- section: "Спектр світлих почуттів (The Spectrum of Positive Emotions)"
+  words: 1000
+  points:
+  - "Радість vs Щастя: розрізнення нестримної, але миттєвої радості та глибокого стану щастя; сталі сполуки: 'світитися від радості', 'безмежне щастя'"
+  - "Втіха vs Розвага: аналіз типової помилки учнів (Fun vs Solace); вживання 'втіхи' як розради (єдина втіха, шукати втіхи) порівняно з парком 'розваг'"
+  - "Насолода: акцент на сенсорному та естетичному досвіді (естетична насолода, насолода від масажу), на противагу загальній 'радості'"
+- section: "Глибини смутку та культурний контекст (Depths of Sadness and Cultural Context)"
+  words: 1100
+  points:
+  - "Градація за інтенсивністю та тривалістю: легкий сум → смуток → тяжка журба → нестерпна туга → велике горе → розпач (безнадія)"
+  - "Культурний гачок: концепт 'Журба' в українській душі та літературі (Т. Шевченко); персоніфікація журби у фольклорі"
+  - "Мотив 'Туга за краєм': історичний контекст еміграції та заслання; різниця між тугою за минулим та тугою за Батьківщиною"
+- section: "Практика: Мистецтво вибору точного слова (Practice: The Art of Precise Word Choice)"
+  words: 800
+  points:
+  - "Вправа на регістр: вибір синоніма для офіційного звіту про задоволення потреб vs художнього опису душевного болю (страждання, мука)"
+  - "Корекція помилок: розрізнення фізичного та душевного болю; доречність вживання слова 'насолода' замість 'радість' у контексті відчуттів"
+  - "Творче завдання: написання психологічного портрета персонажа у стані розпачу або піднесення, використовуючи специфічні колокації з дослідження"
+- section: "Підсумок та рефлексія (Summary and Reflection)"
+  words: 500
+  points:
+  - "Підведення підсумків: як розширення емоційного словника допомагає відповідати Стандарту B2 (§4.4.1.2) щодо стилістичного багатства"
+  - "Фінальна порада від психотерапевта: використання модальних маркерів (ймовірно, водночас) для опису складних, змішаних почуттів"
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "радість (joy) — нестримна радість, світитися від радості; загальна емоція"
+  - "щастя (happiness) — безмежне щастя, на сьомому небі від щастя; глибинний стан"
+  - "втіха (delight/solace) — єдина втіха, на втіху комусь; джерело розради або втіхи в дітях"
+  - "насолода (pleasure) — отримувати насолоду, естетична насолода; сенсорне/естетичне задоволення"
+  - "сум (sadness) — легкий сум, навіювати сум; нейтральне позначення"
+  - "журба (melancholy/sorrow) — тяжка журба, розвіяти журбу; поетичний, глибокий стиль"
+  - "туга (longing/yearning) — нестерпна туга, туга за Батьківщиною; ностальгічний відтінок"
+  - "розпач (despair) — впасти в розпач, доводити до розпачу; стан повної безнадії"
+  - "горе (grief/tragedy) — убитий горем, пережити горе; інтенсивне трагічне почуття"
+  recommended:
+  - "синонім (synonym) — засіб збагачення мовлення за Стандартом B2"
+  - "стилістичне забарвлення (stylistic coloring) — різниця між нейтральним 'сумом' та високою 'журбою'"
+  - "контекст (context) — вирішальний фактор при виборі між 'втіхою' та 'розвагою'"
+  - "переносне значення (figurative meaning) — використання назв емоцій у метафорах"
+  - "душевний біль (emotional pain) — правильна альтернатива фізичному 'болю' в психологічному контексті"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (3909 chars)
+✅ Message sent to Claude (ID: 10582)
+✓ Message 10582 acknowledged
+   Auto-acknowledged reply #10582 (stdout delivery — no inbox accumulation)
+✓ Message 10577 acknowledged

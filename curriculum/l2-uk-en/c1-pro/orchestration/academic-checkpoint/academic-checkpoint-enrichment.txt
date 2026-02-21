@@ -1,0 +1,272 @@
+✅ Message sent to Gemini (ID: 12196) [auto-acked: self-addressed]
+✓ Message 12196 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12196...
+📨 Message #12196
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-academic-checkpoint
+   Time: 2026-02-20T23:37:22.250507+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-pro-28
+level: C1-PRO
+sequence: 28
+slug: academic-checkpoint
+version: '2.0'
+title: 'Контрольна точка: Академічне письмо'
+subtitle: Academic Checkpoint
+content_outline:
+- section: Огляд фази — Академічне письмо
+  points:
+  - 'Ключові компетенції C1-PRO.2: структура IMRAD, огляд літератури, методологія'
+  - Критерії оцінювання академічного письма
+  - Самодіагностика — що засвоєно добре, що потребує роботи
+- section: Оцінка наукового письма
+  points:
+  - 'Завдання 1: Написати вступ до наукової статті за структурою IMRAD'
+  - 'Завдання 2: Написати огляд літератури з синтезом 5 джерел'
+  - 'Критерії: структура, аргументація, цитування, стиль'
+- section: Оцінка результатів та дискусії
+  points:
+  - 'Завдання 3: Описати результати дослідження за наданими даними'
+  - 'Завдання 4: Написати дискусію з інтерпретацією та імплікаціями'
+  - 'Критерії: об''єктивність, логіка, хеджування'
+- section: Оцінка наукової комунікації
+  points:
+  - 'Завдання 5: Написати тези для конференції'
+  - 'Завдання 6: Підготувати рецензію на науковий текст'
+  - 'Критерії: стислість, конструктивність, формат'
+- section: Оцінка академічного листування
+  points:
+  - 'Завдання 7: Написати cover letter до наукового журналу'
+  - 'Завдання 8: Оформити список літератури за ДСТУ'
+  - 'Критерії: тон, структура, коректність оформлення'
+- section: Підсумок та зворотний зв'язок
+  points:
+  - Аналіз результатів та рекомендації
+  - Індивідуальний план розвитку на наступну фазу
+vocabulary_hints:
+  required:
+  - самодіагностика (self-assessment)
+  - компетенція (competency)
+  - критерії оцінювання (assessment criteria)
+  - академічний стандарт (academic standard)
+  - портфоліо наукових робіт (academic portfolio)
+  - наукова публікація (scientific publication)
+  - академічна доброчесність (academic integrity)
+  - науковий регістр (academic register)
+  recommended:
+  - рубрика оцінювання (assessment rubric)
+  - зразкова робота (exemplary work)
+  - типові помилки (common errors)
+  - точки зростання (growth areas)
+  - зворотний зв'язок (feedback)
+  - редакційні правки (editorial corrections)
+activity_hints:
+- type: writing-task
+  focus: Написати вступ та огляд літератури для наукової статті
+  items: 2
+- type: writing-task
+  focus: Описати результати та написати дискусію
+  items: 2
+- type: writing-task
+  focus: Написати тези та рецензію
+  items: 2
+- type: writing-task
+  focus: Написати cover letter та оформити бібліографію
+  items: 2
+- type: self-assessment
+  focus: Оцінити власний прогрес за компетенціями фази
+  items: 1
+focus: checkpoint
+pedagogy: TTT
+prerequisites:
+- c1-pro-27 (Дипломна робота)
+connects_to:
+- 'c1-pro-29 (Інтеграція: Наукова комунікація)'
+objectives:
+- Учень демонструє майстерність у всіх компетенціях C1-PRO.2
+- Учень може писати наукові тексти за структурою IMRAD
+- Учень може проводити огляд літератури з синтезом та критичним аналізом
+- Учень може комунікувати в академічному середовищі (тези, рецензії, листи)
+- Учень може оформлювати цитування за стандартами
+grammar:
+- Інтеграція всіх конструкцій академічного письма фази
+- Безособові конструкції та пасивний стан для об'єктивності
+- Конструкції хеджування для наукових тверджень
+register: науковий
+phase: C1-PRO.2
+persona:
+  voice: Senior Specialist
+  role: Завідувач кафедри
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Контрольна точка: Академічне письмо (C1-PRO)
+
+## Використані джерела
+1. [ДСТУ 8302:2015](https://dstu.ua) — Національний стандарт України щодо бібліографічних посилань.
+2. [Посібник з академічного письма (КНУКіМ)](https://knukim.edu.ua) — Правила формального тону, структурованість та уникнення двозначності.
+3. [Платформа Дія.Бізнес — Академічна мова](https://business.diia.gov.ua) — Офіційні рекомендації щодо професійної комунікації.
+4. [Sibac.info](https://sibac.info) — Рекомендації щодо структури рецензій та супровідних листів.
+5. [ResearchGate — Синтез наукових джерел](https://researchgate.net) — Методологія узагальнення та критичного розгляду літератури.
+
+## Термінологічна база
+
+| Українська (норма) | Русизм/ненорма | English | Контекст вживання |
+|--------------------|---------------|---------|-------------------|
+| Академічна доброчесність | Академічна чесність | Academic integrity | Етичні стандарти дослідження |
+| Рецензування | Отзивання / Крітіка | Peer review | Процес оцінки наукової роботи |
+| Тези доповідей | Тезіси | Conference abstracts | Стислий виклад ідей для конференції |
+| Бібліографічне посилання | Ссилка | Bibliographic reference | Оформлення списку літератури |
+| Супровідний лист | Ковер леттер | Cover letter | Лист до редакції журналу |
+| Науковий апарат | Наукова база | Scientific apparatus | Методологічне обґрунтування роботи |
+| Хеджування | Мовне пом'якшення | Hedging | Використання модальних засобів обережності |
+| Реєстр | Стиль / Слой | Register | Рівень формальності мови |
+
+## Мовні норми та стандарти
+- **ДСТУ 8302:2015**: Регламентує правила бібліографічного опису. Важливе нововведення — спрощене оформлення (крапка-тире замінюється крапкою).
+- **IMRAD (Introduction, Methods, Results, and Discussion)**: Міжнародний стандарт структури статті, який активно впроваджується в українських журналах (категорії А та Б).
+- **ДСТУ 4163:2020**: Стандарт оформлення організаційно-розпорядчої документації, що застосовується і в академічній кореспонденції.
+
+## Аутентичні приклади
+1. [Супровідний лист]: «Просимо розглянути статтю [Назва] для публікації у журналі [Назва]. Рукопис є оригінальним дослідженням, яке раніше не публікувалося...»
+2. [Рецензія]: «Робота має високу наукову новизну, проте потребує уточнення методологічного апарату в частині опису вибірки дослідження.»
+3. [Результати]: «На основі отриманих даних можна стверджувати, що рівень кореляції між X та Y є статистично значущим (p < 0.05).»
+4. [Хеджування]: «Дані дослідження дають підстави припустити, що обрана стратегія є найбільш ефективною в умовах...»
+
+## Типові помилки
+1. ❌ В роботі приведено... → ✅ У роботі наведено... — Русифіковане вживання дієслова "приводити".
+2. ❌ Точка зору автора... → ✅ Погляд / Позиція автора... — Калька з російської "точка зрения".
+3. ❌ Приймати участь у дискусії → ✅ Брати участь у дискусії — Стійка українська конструкція.
+4. ❌ Згідно результатів... → ✅ Згідно з результатами... — Вимагає прийменника "з" та орудного відмінка.
+5. ❌ По сьогоднішній день → ✅ До сьогодні / Донині — Русизм, заміна на нормативні аналоги.
+
+## Engagement Hooks (mapped to sections)
+- Section "Огляд фази — Академічне письмо": [!pro-tip] — Розуміння IMRAD — це "перепустка" до журналів Scopus та Web of Science.
+- Section "Оцінка наукового письма": [!language-note] — Використовуйте "ми" або безособові форми ("досліджено", "встановлено") замість "я".
+- Section "Оцінка наукової комунікації": [!example] — Рецензія має починатися з визнання здобутків автора, а лише потім переходити до критики.
+- Section "Оцінка академічного листування": [!common-error] — Не пишіть у cover letter весь зміст статті; фокусуйтеся на тому, ЧОМУ вона підходить саме цьому журналу.
+
+## Section-Mapped Research Notes
+
+### Огляд фази — Академічне письмо
+Фокус на самодіагностиці (С1-PRO рівень). Академічна доброчесність як база. Ключові компетенції: структурування ідей, критичний синтез, академічний етикет.
+
+### Оцінка наукового письма (IMRAD + Lit Review)
+Вступ: лійкоподібна структура (від загального до конкретного). Огляд літератури: відмова від "переліку імен" на користь синтезу концепцій. Використання сполучних фраз: "водночас", "на противагу цьому", "узагальнюючи підходи...".
+
+### Оцінка результатів та дискусії
+Об'єктивність опису. Мова хеджування: «ймовірно», «можна припустити», «не виключено, що». Відмінність між Results (що ми знайшли) та Discussion (що це означає в контексті інших робіт).
+
+### Оцінка наукової комунікації (Тези та рецензії)
+Тези: структура "Мета - Методи - Результати - Висновки" на 2000-4000 знаків. Рецензування: принцип "сендвіча" (позитив - критика - позитив/висновок). Конструктивні фрази: "автору варто звернути увагу на...", "доцільно було б розширити...".
+
+### Оцінка академічного листування
+Cover letter: чітка структура (Header, Addressing, Pitch, Closing). Бібліографія: ДСТУ 8302:2015. Спрощення знаків пунктуації. Обов'язковість DOI для сучасних джерел.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12261)
+✓ Message 12196 acknowledged
+✓ Message 12261 acknowledged

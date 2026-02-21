@@ -17,7 +17,7 @@ Related: a1-17 (Numbers), a1-22 (Future Tense), a1-25 (Daily Routine)
 Вітаємо на уроці про час. Уявіть вокзал **Київ-Пасажирський**. Поїзди прибувають. Люди чекають. Вони дивляться на годинник. Час — це важливо. В Україні поїзди точні.
 
 > [!culture] **Ukrzaliznytsia Punctuality**
-> The Ukrainian railway system, **Укрзалізниця** [ukr.zɑ.lʲizˈnɪ.t͡sʲɑ], is legendary for its resilience and punctuality. Even during the most difficult times of war, the vast majority of trains continue to run on schedule. In Ukraine, time is respected. Being "on time" (**вчасно** [ˈu̯t͡ʃɑs.nɔ]) is a sign of reliability.
+> The Ukrainian railway system, **Укрзалізниця** [u.kr.zɑ.ˈlʲi.znɪ.t͡sʲɑ], is legendary for its resilience and punctuality. Even during the most difficult times of war, the vast majority of trains continue to run on schedule. In Ukraine, time is respected. Being "on time" (**вчасно** [ˈu̯t͡ʃɑs.nɔ]) is a sign of reliability.
 
 Тут ми маємо два питання. Перше питання: "Котра година?". Друге питання: "О котрій годині?".
 
@@ -82,10 +82,10 @@ For minutes (**хвилини**), we use a simple "digital" style. It is perfect
 *   05:30 — **П'ята тридцять** [ˈpjɑ.tɑ ˈtrɪ.t͡sʲɑtʲ]
 *   08:15 — **Восьма п'ятнадцять** [ˈʋɔsʲ.mɑ pjɑtˈnɑ.t͡sʲɑtʲ]
 *   02:45 — **Друга сорок п'ять** [ˈdru.ɦɑ ˈsɔ.rɔk pjɑtʲ]
-*   11:10 — **Одинадцята десять**
-*   12:50 — **Дванадцята п'ятдесят**
+*   11:10 — **Одинадцята десять** [ɔ.dɪ.nɑˈd͡t͡sʲɑ.tɑ ˈdɛ.sʲɑtʲ]
+*   12:50 — **Дванадцята п'ятдесят** [dʋɑ.nɑˈd͡t͡sʲɑ.tɑ pjɑt.dɛˈsʲɑt]
 
-Цей метод — простий. Ви говорите годину і хвилини. Це ввічливо і правильно.
+Цей метод — простий. Ви говорите годину і хвилини. Це ввічливо та правильно.
 
 > [!note] **Preview: Half and Quarter**
 > In everyday speech, you may also hear **пів на другу** (half past one, literally "half to the second hour") and **чверть на третю** (quarter past two). These forms are common but more complex — we will learn them at a later stage. For now, the telegraphic style covers all your needs.
@@ -94,7 +94,7 @@ For minutes (**хвилини**), we use a simple "digital" style. It is perfect
 
 To say "now", use the word **зараз** [ˈzɑ.rɑz].
 
-*   **Зараз третя десята.** (It is 3:10 now.)
+*   **Зараз третя десять.** (It is 3:10 now.)
 *   **Зараз шоста сорок.** (It is 6:40 now.)
 
 ### Nuances: Exact and Approximate Time
@@ -292,7 +292,7 @@ Let's look at a typical day for a conductor (**провідник**) on Ukrzaliz
 *   **снідати** [ˈsʲnʲi.dɑ.tɪ] — to have breakfast
 *   **працювати** [prɑ.t͡sʲuˈʋɑ.tɪ] — to work
 *   **обідати** [ɔˈbʲi.dɑ.tɪ] — to have lunch
-*   **вечеряти** [ʋɛˈt͡ʃɛ.rʲɑ.tɪ] — to have dinner
+*   **вечеряти** [ʋɛ.t͡ʃɛˈrʲɑ.tɪ] — to have dinner
 *   **лягати спати** [lʲɑˈɦɑ.tɪ ˈspɑ.tɪ] — to go to sleep
 
 **Example Schedule:**
@@ -320,7 +320,7 @@ Let's look at a typical day for a conductor (**провідник**) on Ukrzaliz
 Прочитайте текст про ідеальний день.
 
 Мене звати Максим. Я люблю планувати свій день.
-Я прокидаюся о сьомій ранку. Це ідеальний час. Я снідаю о сьомій тридцять. Я п'ю каву і їм круасан.
+Я прокидаюся о сьомій ранку. Це ідеальний час. Я снідаю о сьомій тридцять. Я п'ю каву та їм круасан.
 О восьмій я йду на роботу. Я працюю в офісі. Офіс у центрі міста.
 Ми обідаємо о першій годині дня. Ми любимо піцу або суп.
 Я закінчую працювати о шостій вечора.

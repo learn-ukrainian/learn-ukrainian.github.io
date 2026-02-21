@@ -2,12 +2,5 @@
   "track": "c1",
   "slug": "thesis-development",
   "mode": "v3",
-  "phases": {
-    "v3-A": {
-      "status": "complete",
-      "ts": "2026-02-19T13:03:13Z",
-      "task_id": "v3-thesis-development-pA",
-      "mode": "full"
-    }
-  }
+  "phases": {}
 }

@@ -6,55 +6,92 @@ version: '2.0'
 title: Aspect Introduction
 subtitle: Process vs. Result
 content_outline:
-- section: Introduction / Вступ
+- section: Вступ (Introduction)
+  words: 500
   points:
-  - 'Concept of aspect (Process vs Result) — cultural hook: Proverbial Wisdom ''Без
-    труда нема плода'' emphasizes process leading to result'
-  - 'Importance of verb pairs — aligns with State Standard §4.3.2: foundational competence
-    for A2'
-- section: Presentation / Презентація
+  - Concept of aspect (Process vs Result) — introduce the cultural hook 'Без труда
+    нема плода' (Without labor there is no fruit) to illustrate that a result (fruit)
+    is impossible without a process (labor).
+  - Importance of verb pairs for A2 linguistic competence — align with State Standard
+    §4.3.2 requirements for identifying basic aspectual relationships in daily communication.
+  - 'Cultural Hook: The Borsch Ritual — contrast the long, symbolic process of cooking
+    (варити - imperfective) with the finished culinary masterpiece (зварити - perfective),
+    noting UNESCO''s 2022 recognition of Ukrainian borsch culture.'
+- section: 'Презентація: Видові пари (Presentation: Aspect Pairs)'
+  words: 750
   points:
-  - 'Imperfective (недоконаний) vs Perfective (доконаний) — learner error: assuming
-    English ''-ing'' always maps to imperfective; learner error: using perfective
-    in present tense for ongoing action'
-  - 'Common aspect pairs (Prefixation vs Suppletion) — content note: clearly categorize
-    by formation: prefixation (писати/написати), suffix/stem change (купувати/купити),
-    suppletion (говорити/сказати, брати/взяти)'
-  - 'Time markers and context clues — learner error: confusion in negation between
-    ''didn''t do'' (process/habit) and ''didn''t finish'' (result)'
-- section: Practice / Практика
+  - 'Classification of aspect pairs by formation: prefixation (писати/написати, робити/зробити,
+    ділити/поділити), suffix/stem change (купувати/купити, забувати/забути), and suppletion
+    (говорити/сказати, брати/взяти).'
+  - The Present Tense Constraint — explain that perfective verbs DO NOT have a present
+    tense form. Drill the common error where 'Я напишу' is mistakenly used for 'I
+    am writing now' instead of 'I will write/finish'.
+  - 'Identification via time markers: teach context clues for imperfective (часто,
+    щодня, довго, зараз) vs. perfective (уже, нарешті, раптом) to help learners choose
+    the correct form.'
+- section: Нюанси та типові помилки (Nuances and Common Errors)
+  words: 700
   points:
-  - Process/Result identification
-  - Aspect pair matching
-- section: Dialogues / Діалоги
+  - 'Learner error: English ''-ing'' mapping — address the tendency to assume all
+    ''-ing'' forms are imperfective; explain cases where focus on completion requires
+    the perfective aspect despite duration.'
+  - 'Negation nuances: ''Не робив'' (habit/general process) vs. ''Не зробив'' (failed
+    result/unfinished task). Provide minimal pairs: ''Я не читав'' (I haven''t been
+    reading) vs. ''Я не прочитав'' (I haven''t finished/read it all).'
+  - 'Contextual shift: how the choice of aspect changes the perceived meaning of a
+    sentence from a simple description of activity to a statement of achievement.'
+- section: Практика та вправи (Practice and Exercises)
+  words: 550
   points:
-  - '"Did you finish?" situational exchange — cultural hook: The Borsch Ritual (cooking
-    process vs. finished masterpiece); note: UNESCO recognized Ukrainian borscht cooking
-    as intangible heritage in 2022'
+  - 'Drill: Transformation of sentences from process to result using State Standard
+    §4.3.2 verb pairs (e.g., ''Я писав тест'' to ''Я написав тест'').'
+  - 'Contextual sorting: categorizing sentences as ''Process'' or ''Result'' based
+    on the presence of specific adverbs and aspectual verb forms.'
+  - 'Error correction activity: identifying and fixing ''Present Tense Perfective''
+    errors in simple A2-level diary entries or messages.'
+- section: Діалоги та підсумок (Dialogues and Summary)
+  words: 500
+  points:
+  - 'Dialogue: ''The Kitchen Check-in'' — a situational exchange using ''Did you finish?''
+    (Ти вже зробив...?) vs ''Are you still doing...?'' (Ти ще робиш...?) in the context
+    of cooking or chores.'
+  - 'Summary of A2 competence: recapping how mastery of aspect pairs allows for more
+    precise descriptions of daily routines and accomplishments.'
+  - 'Final reflection on ''The Borsch Ritual'': connecting the grammar back to the
+    cultural identity of achieving excellence through dedicated process.'
 vocabulary_hints:
   required:
-  - читати/прочитати (to read)
-  - писати/написати (to write) — писати лист, написати книгу, написати тест
+  - писати/написати (to write) — писати лист, написати книгу, написати тест; Top 100
+    verbs
   - робити/зробити (to do/make) — робити вправи, зробити домашнє завдання, робити
-    помилку
-  - говорити/сказати (to say/speak) — говорити правду, сказати слово, сказати комплімент
-  - бачити/побачити (to see)
-  - брати/взяти (to take)
-  - давати/дати (to give)
-  - їсти/з'їсти (to eat)
-  - пити/випити (to drink) — пити каву, випити склянку води
-  - вчити/вивчити (to learn)
-  - купувати/купити (to buy) — купувати продукти, купити подарунок
-  - продавати/продати (to sell)
-  - вид (aspect)
-  - недоконаний (imperfective)
-  - доконаний (perfective)
+    помилку; Top 50 verbs
+  - говорити/сказати (to say/speak) — говорити правду, сказати слово, сказати комплімент;
+    Top 50 (Suppletive)
+  - купувати/купити (to buy) — купувати продукти, купити подарунок; High frequency
+    (A2 Shopping)
+  - пити/випити (to drink) — пити каву, випити склянку води; High frequency (A2 Daily
+    Life)
+  - ділити/поділити (to divide) — State Standard §4.3.2 example
+  - виходити/вийти (to go out) — State Standard §4.3.2 example
+  - забувати/забути (to forget) — State Standard §4.3.2 example
+  - читати/прочитати (to read) — читати статтю, прочитати новини
+  - бачити/побачити (to see) — побачити друга, бачити результат
+  - брати/взяти (to take) — брати участь, взяти таксі; Suppletive pair
+  - давати/дати (to give) — давати пораду, дати відповідь
+  - їсти/з'їсти (to eat) — їсти обід, з'їсти все
+  - вчити/вивчити (to learn) — вчити слова, вивчити правило
+  - продавати/продати (to sell) — продавати квитки, продати машину
+  - вид (aspect) — grammar term
+  - недоконаний (imperfective) — grammar term
+  - доконаний (perfective) — grammar term
   recommended:
-  - процес (process)
-  - результат (result)
-  - тривалість (duration)
-  - завершення (completion)
-  - повторення (repetition)
+  - процес (process) — emphasis on duration
+  - результат (result) — emphasis on completion
+  - тривалість (duration) — temporal marker
+  - завершення (completion) — perfective focus
+  - повторення (repetition) — imperfective focus
+  - раптом (suddenly) — perfective trigger
+  - щодня (every day) — imperfective trigger
 activity_hints:
 - type: match-up
   focus: Imperfective to perfective pairs

@@ -1,0 +1,196 @@
+✅ Message sent to Gemini (ID: 12277) [auto-acked: self-addressed]
+✓ Message 12277 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12277...
+📨 Message #12277
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-the-passion
+   Time: 2026-02-20T23:38:12.179701+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 33
+module: ruth-033
+module_number: 27
+slug: the-passion
+title_uk: Страсті
+title_en: The Passion
+phase: 2
+phase_id: sacred-word
+phase_name: Sacred Word
+focus: Dramatic narrative — Polish loanwords in legal terms
+content_outline:
+- section: Вступ
+  description: Introduction to The Passion
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Baroque Scholar
+  role: Lenten Preacher
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: The Passion (Страсті)
+
+## Використані джерела
+1. [Litopys.org.ua](http://litopys.org.ua/old17/old17_07.htm) — Тексти української літератури XVII ст., зокрема драма «Слово о збуреню пекла».
+2. [Історія української культури](http://izbornyk.org.ua/istkult/ikult.htm) — Розділи про шкільну драму та барокову літературу.
+3. [Енциклопедія Сучасної України (esu.com.ua)](https://esu.com.ua/) — Статті про Йоаникія Волковича та бароковий театр.
+4. [Мовні запозичення в українській мові](http://litopys.org.ua/) — Дослідження польських запозичень у діловій мові XVI-XVII ст.
+
+## Хронологія
+- 1619: Вихід «Граматики» Мелетія Смотрицького (нормування мови).
+- 1631: Публікація та постановка драми Йоаникія Волковича «Розмышлян[н]є о муцЂ Христа».
+- Середина XVII ст.: Створення анонімної драми «Слово о збуреню пекла».
+- 1646: Вихід збірки «Перло многоцінне» Кирила Ставровецького.
+- 1670-ті: Розквіт шкільної драми у Києво-Могилянській академії.
+
+## Ключові факти та цитати
+
+### «Слово о збуреню пекла»
+- Унікальна пам'ятка, що поєднує високий теологічний стиль з живими народними інтонаціями.
+- **Цитата (Люципер до Ада):** «О старосто Люциперу, стражею затвори пекло, / Жеби жадної душі з нього не втекло... / І тисящу тисящ маю войська збройного, / Може, і Христос не ходить так гойно».
+- Діалогічна форма надає динамізму; персонажі (Ад, Люципер) наділені людськими рисами (страх, розпач).
+
+### Йоаникій Волкович
+- Львівський братчик, автор перших друкованих драматичних творів.
+- **Цитата:** «О душе моя, душе моя уязвленна, / Острим копієм болю сродзе прободенна».
+- Використання алегоричних фігур (Милість, Істина) та емоційно насиченої лексики (бароковий експресіонізм).
+
+### Полонізми в діловій мові (Legal Terms)
+- Українська ділова мова (руська мова) 17 ст. активно засвоювала польську юридичну термінологію через адміністративну практику Речі Посполитої.
+- **Ключові терміни:**
+    - *Аліяш* (alias) — «інакше», «званий».
+    - *Сейм* (sejm) — збори, урядовий орган.
+    - *Слушний* (słuszny) — правильний, справедливий, належний (*слушний час*).
+    - *Певний* (pewny) — надійний, конкретний (*певна сума*).
+    - *Касувати* (kasować) — скасовувати, анулювати (*касувати вирок*).
+    - *Справа* (sprawa) — судовий процес, діло.
+    - *Вирок* (wyrok) — судове рішення.
+    - *Кревний* (krewny) — родич.
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ": [!context] — Театр як головна розвага і повчання барокової людини.
+- Section "Основний матеріал: I": [!quote] — Діалог Люципера і Ада як зразок "високого бурлеску".
+- Section "Основний матеріал: II": [!history-bite] — Шкільні драми виконувалися студентами (спудеями), які часто мандрували і заробляли цим на життя.
+- Section "Основний матеріал: III": [!myth-buster] — Полонізми не були "засміченням", а ознакою фахової юридичної освіченості того часу (як латина в Європі).
+- Section "Основний матеріал: IV": [!culture] — Як судовий процес над Христом зображувався через призму тогочасного судочинства.
+- Section "Підсумок": [!legacy] — Вплив барокової драми на вертеп і модерний театр.
+
+## Деколонізаційний контекст
+- **Imperial Myth:** Українська література 17 ст. — це лише "спільна руська спадщина" або наслідування польських зразків без оригінальності.
+- **Ukrainian Reality:** Українська шкільна драма (зокрема великодній цикл) — це самобутнє явище, що синтезувало західну форму (шкільний театр єзуїтів) з київською православною традицією та народним гумором. Руська (українська) мова функціонувала як повноцінна мова адміністрації та літератури.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12345)
+✓ Message 12277 acknowledged
+✓ Message 12345 acknowledged

@@ -5,28 +5,28 @@
   "phases": {
     "v3-A": {
       "status": "complete",
-      "ts": "2026-02-19T20:00:59Z",
-      "task_id": "v3-the-cyrillic-code-ii-pA",
-      "mode": "full"
+      "ts": "2026-02-20T20:28:58Z",
+      "note": "migrated-from-v2"
     },
     "v3-B": {
       "status": "complete",
-      "ts": "2026-02-19T20:00:59Z"
+      "ts": "2026-02-20T20:28:58Z",
+      "note": "migrated-from-v2"
     },
     "v3-C": {
       "status": "complete",
-      "ts": "2026-02-19T20:00:59Z",
-      "note": "adopted-existing"
+      "ts": "2026-02-20T20:28:58Z",
+      "note": "migrated-from-v2"
     },
     "v3-audit": {
       "status": "complete",
-      "ts": "2026-02-19T20:01:01Z",
-      "attempts": 1
+      "ts": "2026-02-20T20:28:58Z",
+      "note": "migrated-from-v2"
     },
     "v3-D": {
       "status": "complete",
-      "ts": "2026-02-19T20:03:48Z",
-      "attempts": 2
+      "ts": "2026-02-20T20:28:58Z",
+      "note": "migrated-from-v2"
     }
   }
 }

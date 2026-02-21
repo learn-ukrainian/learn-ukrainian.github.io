@@ -1,0 +1,25 @@
+{
+  "slug": "the-instrumental-i-accompaniment",
+  "track": "a2",
+  "module_num": 4,
+  "mode": "v3",
+  "phases": {
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-02-20T01:53:06Z",
+      "words": 2663,
+      "attempts": 1
+    },
+    "3a": {
+      "status": "complete",
+      "timestamp": "2026-02-20T01:54:43Z",
+      "note": "v3-phase-C"
+    },
+    "3b": {
+      "status": "complete",
+      "timestamp": "2026-02-20T01:54:43Z",
+      "note": "v3-phase-C"
+    }
+  },
+  "last_updated": "2026-02-20T11:26:23Z"
+}

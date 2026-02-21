@@ -1,0 +1,254 @@
+✅ Message sent to Gemini (ID: 11823) [auto-acked: self-addressed]
+✓ Message 11823 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #11823...
+📨 Message #11823
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-mykhailo-chernihivskyi
+   Time: 2026-02-20T23:33:26.046280+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-bio-9
+level: C1-BIO
+sequence: 9
+slug: mykhailo-chernihivskyi
+version: '2.0'
+title: 'Михайло Чернігівський: Князь-мученик'
+content_outline:
+- section: Вступ — Вибір між життям і вірою
+  points:
+  - Михайло як символ духовного опору Орді
+  - Значення його мучеництва для ідентичності
+  - Формування етосу "страстотерпців"
+- section: 'Життєпис: Князь у часи випробувань'
+  points:
+  - Династія Ольговичів та боротьба за Київ
+  - Битва на Калці 1223 р.
+  - Подорож до Європи у пошуках союзників
+  - Повернення на понівечену батьківщину
+- section: 'Внесок: Подорож до Орди як духовний подвиг'
+  points:
+  - Виклик до ставки хана Батия 1246 р.
+  - Відмова від язичницьких ритуалів
+  - Аргументація князя та боярина Федора
+- section: 'Останні роки: Мученицька смерть'
+  points:
+  - Деталі страти в Орді
+  - Свідчення Плано Карпіні
+  - Резонанс у християнському світі
+- section: 'Спадщина: Святий Михайло'
+  points:
+  - Канонізація та перенесення мощів
+  - Іконографія та культ святого в Україні
+  - Михайлівський Золотоверхий монастир
+- section: Підсумок — Віра вища за життя
+  points:
+  - Моральна перемога над загарбником
+  - Уроки для сучасного спротиву
+focus: biography
+pedagogy: seminar
+prerequisites:
+- c1-bio-08 (Роман Мстиславич)
+- b2-hist mongolska-navala module
+connects_to:
+- c1-bio-10 (Данило Галицький)
+- b2-hist hrystyianstvo module
+objectives:
+- Проаналізувати мотиви Михайла Чернігівського у протистоянні з Ордою
+- Оцінити вплив його вчинку на формування національної свідомості
+- Дослідити джерела (літописи, свідчення мандрівників) про його смерть
+grammar:
+- Агіографічний стиль (опис житія)
+- Теологічна лексика
+module_type: biography
+sources:
+- name: Михайло Всеволодович (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Михайло_Всеволодович
+  type: primary
+  notes: Життєпис та канонізація
+- name: Сказання про вбивство в Орді
+  url: http://izbornyk.org.ua/
+  type: primary
+  notes: Оригінальне джерело
+immersion: 100% Ukrainian
+phase: C1-BIO
+persona:
+  voice: Senior Biographer
+  role: Martyr Prince
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Михайло Чернігівський: Князь-мученик
+
+## Використані джерела
+1. [Енциклопедія Сучасної України: Михайло Всеволодович](https://esu.com.ua/article-64843) — академічний огляд біографії та політичної діяльності.
+2. [Ізборник: Сказання про вбивство в Орді](http://litopys.org.ua/) — першоджерело, текст «Сказання про вбивство в Орді князя Михайла Чернігівського і його боярина Феодора».
+3. [History.org.ua: Битва на Калці](http://resource.history.org.ua/) — контекст участі Михайла у першому зіткненні з монголами.
+4. [RisU: Доля мощей святих](https://risu.ua/) — інформація про перенесення мощей до Москви у 1572 році.
+5. [Plano Carpini: Historia Mongalorum](http://litopys.org.ua/) — свідчення європейського мандрівника про страту.
+
+## Хронологія
+- **~1179**: Народження Михайла, сина Всеволода Чермного з династії Ольговичів.
+- **1206**: Початок князювання у Переяславі; активна участь у міжусобицях.
+- **1223**: Участь у битві на річці Калка; Михайло — один з небагатьох князів, що врятувалися.
+- **1224**: Стає Чернігівським князем після загибелі дядька Мстислава на Калці.
+- **1235**: Захоплення Галича; короткочасне князювання в Галичині.
+- **1238**: Вокняжіння у Києві; спроба організувати оборону від монголів.
+- **1239**: Відмова здати Київ монгольським послам (вбивство послів); втеча до Угорщини та Польщі.
+- **1241**: Повернення до зруйнованого Києва; проживання на острові поблизу Подолу через руйнацію міста.
+- **1246, 20 вересня**: Страта в Золотій Орді (Сарай-Бату) за відмову пройти язичницький обряд очищення вогнем.
+- **1547**: Офіційна канонізація православною церквою.
+- **1572**: Вивезення мощей князя з Чернігова до Москви за наказом Івана Грозного (імперська апропріація).
+
+## Ключові факти та цитати
+- **Цитата (Сказання)**: Відповідь Хану: «Тобі, царю, кланяюся, тому що бог доручив тобі царювати на цьому світі. А тому, чому велиш поклонитися, — не поклонюся».
+- **Цитата (Сказання)**: Діалог з катом Єлдегою. Єлдега: «Михайло, знай — ти мертвий!» Михайло: «Я того й хочу, щоб мені за Христа мого постраждати і за православну віру свою пролити кров».
+- **Цитата (Плано Карпіні)**: Слова втіхи князю (реконструкція): «Будь твердим, бо ця мука (haec poena) недовго для тебе триватиме».
+- **Факт**: Разом з Михайлом мученицьку смерть прийняв його вірний боярин Федір, що підкреслює спільність подвигу аристократії та служилої знаті.
+- **Факт**: Європейський вояж (1239–1241) включав Угорщину (король Бела IV), Польщі та Сілезію, де князя пограбували німецькі феодали, що свідчить про кризу європейської солідарності перед лицем Орди.
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ — Вибір між життям і вірою": [!context] — Порівняння вибору Михайла (мучеництво) та Данила Галицького (компроміс заради держави).
+- Section "Життєпис: Князь у часи випробувань": [!history-bite] — Участь у битві на Калці як "репетиція" апокаліпсису 1240 року.
+- Section "Внесок: Подорож до Орди як духовний подвиг": [!quote] — "Тобі, царю, кланяюся..." як формула розмежування світської та духовної влади.
+- Section "Останні роки: Мученицька смерть": [!source] — Свідчення Джованні да Плано Карпіні як незалежного верифікатора подій.
+- Section "Спадщина: Святий Михайло": [!myth-buster] — Викриття російського міфу про "спільного святого" через факт викрадення мощей у 1572 році.
+- Section "Підсумок — Віра вища за життя": [!reflection] — Етична дилема: чи варте життя зради переконань?
+
+## Деколонізаційний контекст
+- **Імперський міф**: Російська історіографія розглядає Михайла Чернігівського як частину "загальноросійського" пантеону, ігноруючи його специфічну чернігівсько-київську ідентичність та контекст боротьби Ольговичів.
+- **Українська реальність**: Михайло — представник української політичної культури, що опинилася сам-на-сам зі Сходом і Заходом. Його "втеча" в Європу — це спроба дипломатичного альянсу, а не просто "боягузтво" (як таврували радянські історики).
+- **Крадіжка спадщини**: Перенесення мощей до Москви у 1572 році — класичний приклад сакральної апропріації, коли імперія забирає собі святині підкорених народів для легітимації власного статусу "Третього Риму".
+
+## Contested Terms (if applicable)
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| **Мучеництво** | Акцент на покорі владі (навіть татарській, як "божій карі") | Акцент на духовному опорі та збереженні ідентичності (гідність понад життя) |
+| **Втеча 1239 р.** | Зрада, боягузтво (радянський наратив) | Дипломатична місія, пошук союзників у Європі |
+| **Мощі** | "Збирання руських святинь" Москвою | Апропріація та викрадення культурно-релігійної спадщини |
+
+## Section-Mapped Research Notes
+
+### Вступ — Вибір між життям і вірою
+Михайло Чернігівський постає як архетип "Князя-Мученика". Його історія — це не просто біографія, а філософська драма. На відміну від Олександра Невського (який пішов на повну співпрацю) чи Данила Галицького (який пішов на компроміс), Михайло обрав радикальну відмову. Це задало етичний стандарт для майбутніх поколінь української еліти.
+
+### Життєпис: Князь у часи випробувань
+Період до 1246 року насичений війнами. Династія Ольговичів традиційно конкурувала з Мономаховичами. Битва на Калці (1223) стала шоком — Михайло бачив смерть старшого покоління князів. Його боротьба за Київ у 1230-х роках відбувалася на тлі наближення Орди. Епізод 1239 року (вбивство послів) — це точка неповернення. Подорож до Угорщини та Польщі показала байдужість Європи, що змусило його повернутися в руїни Києва.
+
+### Внесок: Подорож до Орди як духовний подвиг
+1246 рік. Батий вимагає повної покори. Ритуал проходження крізь вогонь (очищення) та поклоніння зображенню Чингісхана (або сонцю/кущу) був тестом на лояльність. Для монголів це політика, для християнина — ідолопоклонство. Михайло свідомо їде в Орду, розуміючи ризик. Його діалог з Федором — це взаємне зміцнення у вірі.
+
+### Останні роки: Мученицька смерть
+Деталі страти вражають жорстокістю: побиття в груди, відрізання голови. Тіла кинули на поталу псам, але (за легендою) вони лишилися нетлінними. Свідчення Плано Карпіні підтверджують факт страти та її релігійне підґрунтя, спростовуючи пізніші спроби представити це як суто політичну розправу за вбивство послів.
+
+### Спадщина: Святий Михайло
+Канонізація відбулася швидко (1547 рік — це вже офіційне затвердження, але шанування почалося раніше). Чорний епізод 1572 року: Іван Грозний, захопивши Чернігів, вивозить мощі до Москви (Архангельський собор). Це символічний акт позбавлення Чернігова його сакрального захисника. В Україні культ Михайла зберігся в іконографії та назвах церков.
+
+### Підсумок — Віра вища за життя
+Фінальний акорд. Смерть Михайла стала моральною перемогою. Вона показала, що монголи можуть знищити тіло, але не можуть змусити зрадити віру (ідентичність). Цей урок резонує з сучасною боротьбою України за екзистенційне виживання.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 11874)
+✓ Message 11823 acknowledged
+✓ Message 11874 acknowledged

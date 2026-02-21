@@ -315,7 +315,7 @@
     explanation: Incorrect. Ь (soft sign) has no sound; it modifies the previous consonant.
     statement: The letter Ь is pronounced like a hard 'b'.
   - correct: false
-    explanation: Incorrect. It is spelled Київ (Kyiv), not Kiev.
+    explanation: Incorrect. It is spelled Київ (Kyiv).
     statement: Kyiv is spelled with 'ie' in Ukrainian.
   - correct: true
     explanation: Correct. І requires a wide smile position.

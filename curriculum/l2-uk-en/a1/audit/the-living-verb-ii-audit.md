@@ -1,7 +1,7 @@
 # Audit Report: M08 — the-living-verb-ii.md
 **Level:** A1 | **Module:** M08 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-19 23:01:33
+**Generated:** 2026-02-21 00:46:32
 
 ## Configuration
 **Type:** A1-grammar
@@ -38,7 +38,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2464/2000 (raw: 2691)
+- **Words:** ✅ 2459/2000 (raw: 2686)
 - **Activities:** ✅ 10/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -51,7 +51,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 26.3% (target 15-35% (M08))
+- **Immersion:** 🇺🇦 26.1% (target 15-35% (M08))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -63,7 +63,7 @@
 | **The Living Verb II** | ✅ | 34 | Included in Core |
 | **Вступ: Родина -ити** | ✅ | 307 | Included in Core |
 | **Презентація: Друга дієвідміна** | ✅ | 1051 | Included in Core |
-| **Практика: Тренування форм** | ✅ | 293 | Included in Core |
+| **Практика: Тренування форм** | ✅ | 300 | Included in Core |
 | **Використання: Розповіді про дії** | ✅ | 293 | Included in Core |
-| **Культурний контекст: Глибина слова** | ✅ | 296 | Included in Core |
-| **Підсумок** | ✅ | 190 | Included in Core |
+| **Культурний контекст: Глибина слова** | ✅ | 280 | Included in Core |
+| **Підсумок** | ✅ | 194 | Included in Core |

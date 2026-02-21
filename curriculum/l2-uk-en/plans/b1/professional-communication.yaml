@@ -6,66 +6,102 @@ version: '2.0'
 title: Професійна комунікація
 subtitle: Professional & Educational Communication
 content_outline:
-- section: Вступ
+- section: Вступ (Introduction)
+  words: 500
   points:
-  - Workplace and education communication needs — aligns with State Standard §3.9
-    (Work) and §3.8 (Education) covering official employment, contracts, and educational
-    processes
-  - 'Formal vs informal register — addresses stylistic competence (§4.5.1); cultural
-    hook: use of «Ви» and «Пане/Пані» forms versus Soviet-style Name+Patronymic'
-  - Professional and academic context
-- section: На роботі — Робоча комунікація
+  - Overview of professional and educational communication needs per State Standard
+    §3.9 and §3.8, covering official employment and educational organization.
+  - 'The significance of formal register: The mandatory use of ''Ви'' (capitalized
+    in writing) and the modern Ukrainian shift to ''Пане/Пані'' + [Title/Surname]
+    as a marker of identity.'
+  - 'Stylistic competence per §4.5.1: Introduction to address etiquette that distinguishes
+    modern Ukrainian sectors from legacy naming conventions.'
+- section: Робоча комунікація та етикет (Workplace Communication & Etiquette)
+  words: 1100
   points:
-  - 'Workplace vocabulary (колега, керівник, нарада, звіт) — collocations: шановний
-    колега, безпосередній керівник, проводити нараду, річний звіт'
-  - 'Professional dialogues and scenarios — address register confusion: transition
-    to «Ти» must be invited or mutually agreed upon'
-  - 'Formal correspondence — learner error: case mismatch in «Дякую Вам» (Dative)
-    vs incorrect «Дякую Вас»'
-- section: В університеті — Освітня комунікація
+  - 'Core workplace vocabulary (колега, керівник, нарада, звіт) with essential collocations:
+    ''шановний колега'', ''безпосередній керівник'', and ''річний звіт''.'
+  - 'Navigating professional hierarchies: Explicit rules for the transition from ''Ви''
+    to ''Ти'', emphasizing that it must be invited by the senior person or mutually
+    agreed upon.'
+  - 'Official employment and labor conditions: Vocabulary for working hours (робочий
+    час), vacation (відпустка), and salary (оплата праці) per Standard §3.9.'
+  - 'Formal correspondence standards: Formatting emails and reports using professional
+    address formulas like ''Пане Професоре'' or ''Пані Колего''.'
+- section: Освітня комунікація та традиції (Educational Communication & Traditions)
+  words: 1000
   points:
-  - 'Education vocabulary (студент, викладач, лекція, семінар) — collocations: звертатися
-    до викладача, готуватися до семінару; learner error: distinguish «навчатися» (being
-    a student) vs «вивчати» (learning a subject)'
-  - 'Academic communication (іспит, залік, курсова робота) — covers organization of
-    educational process: consultation, credit, exam, semester'
-  - 'University life (гуртожиток, бібліотека, деканат) — cultural hook: «Екватор»
-    (Equator) tradition celebrating the midpoint of studies'
-- section: Діалоги — Робота та навчання
+  - Academic environment vocabulary (студент, викладач, лекція, семінар, консультація)
+    and the organization of the educational process per Standard §3.8.
+  - 'Assessment and milestones: Understanding the distinction between ''залік'' (credit/pass)
+    and ''іспит'' (exam) within the semester (семестр) structure.'
+  - 'Cultural hook: The ''Екватор'' (Equator) tradition celebrating the midpoint of
+    studies (winter of the 3rd year) as a major rite of passage for Ukrainian students.'
+  - 'Communicating with instructors: Practical scenarios for seeking consultations
+    and addressing academic staff using respectful vocative forms.'
+- section: Аналіз помилок та фразеологія (Error Analysis & Phraseology)
+  words: 700
   points:
-  - 'Professional dialogues (at work scenarios) — learner error: usage of «брати участь»
-    instead of calque «приймати участь»'
-  - Academic dialogues (with professor, classmates)
-- section: Практика
+  - 'Correcting common calques: Explicit drill on ''брати участь'' (to participate)
+    to replace the incorrect Russian-influenced ''приймати участь''.'
+  - 'Verb differentiation: Minimal pairs and context drills to distinguish ''навчатися''
+    (being a student) versus ''вивчати'' (learning a specific subject/object).'
+  - 'Case mismatch correction: Addressing the learner error ''Дякую Вас'' (Acc) by
+    enforcing the correct Dative form ''Дякую Вам''.'
+  - 'Stylistic markers: Using antonyms and synonyms for professional nuance and modal
+    hedging expressions per State Standard §4.5.1.'
+- section: Практика та підсумок (Practice & Summary)
+  words: 700
   points:
-  - Role-play work and education scenarios
-  - Written communication practice
+  - 'Role-play simulation: An official employment interview and contract (договір)
+    discussion using formal register and professional collocations.'
+  - 'Writing workshop: Drafting a formal email or a academic term paper (курсова робота)
+    proposal incorporating correct case usage and address etiquette.'
+  - 'Final summary: Review of essential professional collocations and the ''Corporate
+    HR Manager'' perspective on effective Ukrainian communication.'
 vocabulary_hints:
   required:
-  - колега (colleague) — шановний колега, звертатися до колеги, нарада з колегами
-  - керівник (manager/supervisor) — безпосередній керівник, звіт керівнику, зустріч
-    з керівником
-  - нарада (meeting) — проводити нараду, бути на нараді, планова нарада
-  - звіт (report) — річний звіт, писати звіт, здати звіт
-  - договір (contract)
-  - співпрацювати (to collaborate)
-  - обговорювати (to discuss)
-  - відділ (department)
-  - студент (student)
-  - викладач (lecturer/instructor) — звертатися до викладача, запитати викладача
-  - лекція (lecture)
-  - семінар (seminar) — готуватися до семінару, виступати на семінарі
-  - іспит (exam)
-  - залік (credit/pass)
+  - 'колега (colleague) — High frequency (B1 Core); collocations: шановний колега,
+    звертатися до колеги, нарада з колегами'
+  - 'керівник (manager/supervisor) — High frequency (B1 Core); collocations: безпосередній
+    керівник, звіт керівнику, зустріч з керівником'
+  - 'нарада (meeting) — Med-High frequency; collocations: проводити нараду, бути на
+    нараді, планова нарада'
+  - 'звіт (report) — High frequency; collocations: річний звіт, писати звіт, здати
+    звіт'
+  - 'брати участь (to participate) — Essential phraseology; note: NEVER use the calque
+    ''приймати участь'''
+  - 'викладач (lecturer/instructor) — High academic frequency; collocations: звертатися
+    до викладача, запитати викладача'
+  - 'семінар (seminar) — Med frequency; collocations: готуватися до семінару, виступати
+    на семінарі'
+  - 'іспит (exam) — State Standard §3.8 terminology; collocations: складати іспит,
+    успішно здати іспит'
+  - залік (credit/pass) — State Standard §3.8 terminology; distinct from exam
+  - 'навчатися (to study/be a student) — Note: refers to the process or place (навчатися
+    в університеті)'
+  - 'вивчати (to study/learn a subject) — Note: requires a direct object (вивчати
+    право)'
+  - договір (contract) — Related to official employment and §3.9 standards
+  - співпрацювати (to collaborate) — Professional interaction verb
+  - обговорювати (to discuss) — Key verb for meetings and academic consultations
+  - відділ (department) — Workplace structure vocabulary
+  - лекція (lecture) — Core academic format
+  - студент (student) — Standard academic participant
   recommended:
-  - презентація (presentation)
-  - протокол (minutes/protocol)
-  - делегувати (to delegate)
-  - координувати (to coordinate)
-  - курсова робота (term paper)
-  - гуртожиток (dormitory)
-  - деканат (dean's office)
-  - стипендія (scholarship)
+  - Екватор (Equator) — Major student tradition celebrating the midpoint of studies
+  - Пане/Пані (Mr./Ms.) — Modern formal address markers; used with title, profession,
+    or surname
+  - Ви (You - formal) — Capitalized in written correspondence when addressing a specific
+    person
+  - презентація (presentation) — Common workplace and academic task
+  - протокол (minutes/protocol) — Documentation of meetings
+  - делегувати (to delegate) — Advanced workplace management verb
+  - координувати (to coordinate) — Professional collaboration term
+  - курсова робота (term paper) — Standard university requirement
+  - гуртожиток (dormitory) — University life context
+  - деканат (dean's office) — Administrative university office
+  - стипендія (scholarship) — Academic financial support terminology
 activity_hints:
 - type: match-up
   focus: Professional noun phrases

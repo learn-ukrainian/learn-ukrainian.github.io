@@ -2,14 +2,14 @@
   "module": "colors-and-clothing",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-19T23:01:58.945673Z",
+  "last_audit": "2026-02-21T00:46:45.480353Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-19T22:47:45.912908Z",
+    "md": "2026-02-21T00:25:03.780667Z",
     "meta": "2026-02-19T22:26:17.357667Z",
     "activities": "2026-02-19T22:40:39.407760Z",
-    "vocabulary": "2026-02-19T22:32:44.416225Z",
-    "plan": "2026-02-18T19:03:32.029970Z",
+    "vocabulary": "2026-02-21T00:25:03.018325Z",
+    "plan": "2026-02-20T20:41:52.372125Z",
     "research": "2026-02-19T22:26:17.351042Z"
   },
   "gates": {
@@ -31,7 +31,7 @@
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "29/1"
+      "message": "31/1"
     },
     "naturalness": {
       "status": "info",

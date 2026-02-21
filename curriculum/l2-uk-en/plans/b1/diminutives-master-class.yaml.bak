@@ -1,0 +1,100 @@
+module: b1-48
+level: B1
+sequence: 48
+slug: diminutives-master-class
+version: '2.0'
+title: 'Демінутиви: майстер-клас'
+subtitle: Diminutives - Forms, Usage, and Nuance
+content_outline:
+- section: Тест
+  points:
+  - Why diminutives matter — Ukraine is unique among Slavic languages for having verbal/adverbial
+    diminutives (спатоньки, тихенько)
+  - Cultural significance — reflects 'cordocentrism' (heart-centeredness) of Ukrainian
+    culture; contrast with professional 'hospital register' (укольчик, ручка)
+- section: Пояснення
+  points:
+  - 'Noun diminutive suffixes — bridge A2 forms to B1 mastery; learner error: tautology
+    (маленький килимок)'
+  - Adjective diminutives — highly productive -еньк- forms (гарненький, тихенький)
+  - Pragmatic functions — primary tool for irony/sarcasm in adult speech (e.g., 'Ну
+    ти й розумничок!')
+  - Context-dependent meaning — semantic shifts where diminutive becomes neutral (ручка
+    = pen/handle, not small hand)
+- section: Практика
+  points:
+  - Form diminutives — focus on correct suffix choice and avoiding double diminutives
+    unless intentional
+  - Choose for context — distinguish between genuine politeness and 'bribing/manipulative'
+    tone (документики, підписочок)
+- section: Діалоги
+  points:
+  - Real-world diminutive usage — family tenderness (матуся, сонечко) vs. urban coffee
+    culture (кавуся)
+  - 'Register shifts — learner error: using diminutives in formal/official contexts
+    (perceived as unprofessional)'
+- section: Потрібно більше практики?
+  points:
+  - Additional exercises — reinforce distinction between literal size and emotional
+    attitude
+vocabulary_hints:
+  required:
+  - 'матуся (mommy) — high frequency, family context; collocations: рідна матуся,
+    люба матуся'
+  - 'сонечко (sun/darling) — term of endearment; collocations: моє сонечко, ясне сонечко'
+  - 'гарненько (nicely/well) — adverbial diminutive; collocations: сядь гарненько,
+    зроби гарненько'
+  - 'хлібчик (bread) — hospitality context; collocations: свіжий хлібчик, шматочок
+    хлібчика'
+  - ручка (hand/pen/handle) — desemanticized or polite medical context
+  - 'кавуся (coffee) — urban culture; collocations: попити кавусі, смачна кавуся'
+  - демінутив (diminutive) — linguistic term
+  - зменшувальний (diminutive - adj) — grammatical category
+  - ніжність (tenderness) — key emotional driver for usage
+  - ввічливість (politeness) — pragmatic function
+  - іронія (irony) — pragmatic function, contrary to sweetness
+  - суфікс (suffix) — morphological builder
+  - відтінок (nuance/shade) — stylistic distinction
+  - прагматика (pragmatics) — context-dependent usage rules
+  recommended:
+  - 'спатоньки (to sleep) — unique verbal diminutive; collocations: хотіти спатоньки'
+  - 'їстоньки (to eat) — unique verbal diminutive; collocations: пора їстоньки'
+  - ніжка (leg/table leg) — desemanticized or medical context
+  - пестливий (affectionate) — emotional quality
+  - емоційний (emotional) — usage driver
+  - зневажливий (dismissive) — possible negative nuance
+  - інтенсифікація (intensification) — grammatical function
+activity_hints:
+- type: fill-in
+  focus: Create diminutives from base forms
+  items: 25
+- type: quiz
+  focus: Identify pragmatic function
+  items: 20
+- type: fill-in
+  focus: Complete with appropriate diminutive
+  items: 15
+- type: fill-in
+  focus: Match diminutive to situation
+  items: 10
+focus: grammar
+pedagogy: TTT
+prerequisites:
+- b1-47 (Passive Constructions)
+connects_to:
+- b1-49 (Numerals Collectives Fractions)
+objectives:
+- Learner can form diminutives from nouns and adjectives
+- Learner understands different pragmatic functions of diminutives
+- 'Learner can distinguish nuances: tenderness, irony, politeness'
+- Learner can use diminutives appropriately in context
+grammar:
+- 'Суфікси демінутивів: -ик, -ок, -очок, -еньк-, -оньк-, -ечк-'
+- Прагматичні функції демінутивів
+- Регістрові та стилістичні відтінки
+register: розмовний
+phase: B1.4b [Word Formation]
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Kindergarten Teacher
+word_target: 4000

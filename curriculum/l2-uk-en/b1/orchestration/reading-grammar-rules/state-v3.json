@@ -2,31 +2,5 @@
   "track": "b1",
   "slug": "reading-grammar-rules",
   "mode": "v3",
-  "phases": {
-    "v3-A": {
-      "status": "complete",
-      "ts": "2026-02-20T00:10:55Z",
-      "task_id": "v3-reading-grammar-rules-pA",
-      "mode": "full"
-    },
-    "v3-B": {
-      "status": "complete",
-      "ts": "2026-02-20T00:14:37Z"
-    },
-    "v3-C": {
-      "status": "complete",
-      "ts": "2026-02-20T00:15:48Z",
-      "task_id": "v3-reading-grammar-rules-pC"
-    },
-    "v3-audit": {
-      "status": "complete",
-      "ts": "2026-02-20T00:43:17Z",
-      "attempts": 3
-    },
-    "v3-D": {
-      "status": "complete",
-      "ts": "2026-02-20T00:44:34Z",
-      "attempts": 1
-    }
-  }
+  "phases": {}
 }

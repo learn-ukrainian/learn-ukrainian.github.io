@@ -2,12 +2,5 @@
   "track": "c1",
   "slug": "c1-6-review",
   "mode": "v3",
-  "phases": {
-    "v3-A": {
-      "status": "complete",
-      "ts": "2026-02-19T19:36:56Z",
-      "task_id": "v3-c1-6-review-pA",
-      "mode": "full"
-    }
-  }
+  "phases": {}
 }

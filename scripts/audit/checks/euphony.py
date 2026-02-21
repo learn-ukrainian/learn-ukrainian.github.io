@@ -80,6 +80,22 @@ def _starts_with_z_cluster(word: str) -> bool:
     return len(clean) >= 2 and clean[:2] in _Z_CLUSTERS
 
 
+_CYRILLIC = set("абвгґдеєжзиіїйклмнопрстуфхцчшщьюяАБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯ")
+_LATIN = set("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
+
+
+def _is_predominantly_latin(line: str) -> bool:
+    """Return True if line has more Latin than Cyrillic characters.
+
+    Skips lines that are English text — euphony rules don't apply there.
+    """
+    cyrillic = sum(1 for c in line if c in _CYRILLIC)
+    latin = sum(1 for c in line if c in _LATIN)
+    if cyrillic + latin == 0:
+        return False
+    return latin > cyrillic
+
+
 def _skip_line(line: str) -> bool:
     """Return True for non-prose lines that should be skipped."""
     stripped = line.strip()
@@ -94,6 +110,9 @@ def _skip_line(line: str) -> bool:
         return True
     # Markdown links/images on their own line
     if stripped.startswith("![") or stripped.startswith("[!"):
+        return True
+    # English text — euphony rules only apply to Ukrainian prose
+    if _is_predominantly_latin(stripped):
         return True
     return False
 
@@ -306,6 +325,167 @@ def _check_rule4_variety(content: str, line_offset: int = 0) -> List[Dict]:
         char_pos += len(sentence) + 1  # +1 for the split delimiter
 
     return violations
+
+
+# ---------------------------------------------------------------------------
+# Auto-fixer
+# ---------------------------------------------------------------------------
+
+def _swap_preserve_case(original: str, old_char: str, new_char: str) -> str:
+    """Swap a single character while preserving case. E.g., В→У, в→у."""
+    if original[0].isupper():
+        return original.replace(old_char.lower(), new_char.lower(), 1).replace(
+            old_char.upper(), new_char.upper(), 1
+        )
+    return original.replace(old_char, new_char, 1)
+
+
+def _fix_line_rule1(words: list[str]) -> tuple[list[str], int]:
+    """Fix Rule 1: і↔й alternation. Returns (fixed_words, fix_count)."""
+    result = list(words)
+    fixes = 0
+    for i, word in enumerate(result):
+        lower = word.lower().strip(".,;:!?«»\"'()\u201c\u201d")
+        if lower not in ("і", "й"):
+            continue
+        prev_word = _clean_word(result[i - 1]) if i > 0 else ""
+        next_word = _clean_word(result[i + 1]) if i + 1 < len(result) else ""
+        if not prev_word or not next_word:
+            continue
+
+        if lower == "і" and _ends_with_vowel(prev_word) and _starts_with_vowel(next_word):
+            result[i] = result[i].replace("і", "й").replace("І", "Й")
+            fixes += 1
+        elif lower == "й" and not _ends_with_vowel(prev_word):
+            result[i] = result[i].replace("й", "і").replace("Й", "І")
+            fixes += 1
+    return result, fixes
+
+
+def _fix_line_rule2(words: list[str]) -> tuple[list[str], int]:
+    """Fix Rule 2: у↔в alternation. Returns (fixed_words, fix_count)."""
+    result = list(words)
+    fixes = 0
+    for i, word in enumerate(result):
+        lower = word.lower().strip(".,;:!?«»\"'()\u201c\u201d")
+        if lower not in ("у", "в"):
+            continue
+        next_word = _clean_word(result[i + 1]) if i + 1 < len(result) else ""
+        if not next_word:
+            continue
+
+        if lower == "у" and _starts_with_vowel(next_word):
+            result[i] = _swap_preserve_case(result[i], "у", "в")
+            fixes += 1
+        elif lower == "в" and _starts_with_v_or_f(next_word):
+            result[i] = _swap_preserve_case(result[i], "в", "у")
+            fixes += 1
+        elif lower == "в" and _starts_with_consonant_cluster(next_word):
+            result[i] = _swap_preserve_case(result[i], "в", "у")
+            fixes += 1
+    return result, fixes
+
+
+def _fix_line_rule3(words: list[str]) -> tuple[list[str], int]:
+    """Fix Rule 3: з→із/зі alternation. Returns (fixed_words, fix_count)."""
+    result = list(words)
+    fixes = 0
+    for i, word in enumerate(result):
+        lower = word.lower().strip(".,;:!?«»\"'()\u201c\u201d")
+        if lower != "з":
+            continue
+        next_word = _clean_word(result[i + 1]) if i + 1 < len(result) else ""
+        if not next_word:
+            continue
+
+        if _starts_with_z_or_s(next_word) or _starts_with_z_cluster(next_word):
+            result[i] = result[i].replace("з", "із").replace("З", "Із")
+            fixes += 1
+    return result, fixes
+
+
+def auto_fix_euphony(content: str, file_path: str = "") -> tuple[str, int]:
+    """Apply deterministic euphony fixes to Ukrainian prose.
+
+    Processes Rules 1-3 (word-level). Rule 4 (conjunction variety: і→та)
+    is also handled.
+
+    Returns (fixed_content, total_fixes).
+    """
+    track = _detect_track(file_path)
+    if track in EXEMPT_TRACKS:
+        return content, 0
+
+    lines = content.split("\n")
+    total_fixes = 0
+    in_frontmatter = False
+    frontmatter_count = 0
+
+    for i, line in enumerate(lines):
+        stripped = line.strip()
+
+        if stripped == "---":
+            frontmatter_count += 1
+            if frontmatter_count <= 2:
+                in_frontmatter = not in_frontmatter
+            continue
+        if in_frontmatter:
+            continue
+        if _skip_line(line):
+            continue
+
+        words = line.split()
+        if len(words) < 2:
+            continue
+
+        # Apply Rules 1-3
+        fixed_words = list(words)
+        line_fixes = 0
+
+        fixed_words, n = _fix_line_rule1(fixed_words)
+        line_fixes += n
+        fixed_words, n = _fix_line_rule2(fixed_words)
+        line_fixes += n
+        fixed_words, n = _fix_line_rule3(fixed_words)
+        line_fixes += n
+
+        if line_fixes > 0:
+            # Reconstruct line preserving leading whitespace
+            leading = line[: len(line) - len(line.lstrip())]
+            lines[i] = leading + " ".join(fixed_words)
+            total_fixes += line_fixes
+
+    # Rule 4: Replace repeated і/й with та (sentence-level)
+    fixed_content = "\n".join(lines)
+    fixed_content, r4_fixes = _fix_rule4_variety(fixed_content, file_path)
+    total_fixes += r4_fixes
+
+    return fixed_content, total_fixes
+
+
+def _fix_rule4_variety(content: str, file_path: str = "") -> tuple[str, int]:
+    """Fix Rule 4: Replace second standalone і/й with та when no та present."""
+    fixes = 0
+    # Process sentence by sentence is complex; instead, scan for the pattern
+    # and fix line by line — look for lines with 2+ standalone і/й and no та
+    lines = content.split("\n")
+    for i, line in enumerate(lines):
+        if _skip_line(line):
+            continue
+        words = line.split()
+        # Find standalone і/й positions
+        iy_positions = [j for j, w in enumerate(words)
+                        if w.lower().strip(".,;:!?«»\"'()") in ("і", "й")]
+        has_ta = any(w.lower().strip(".,;:!?«»\"'()") == "та" for w in words)
+        if len(iy_positions) >= 2 and not has_ta:
+            # Replace the second occurrence with та
+            idx = iy_positions[1]
+            old = words[idx]
+            words[idx] = "та" if old.islower() or old in ("і", "й") else "Та"
+            leading = line[: len(line) - len(line.lstrip())]
+            lines[i] = leading + " ".join(words)
+            fixes += 1
+    return "\n".join(lines), fixes
 
 
 # ---------------------------------------------------------------------------

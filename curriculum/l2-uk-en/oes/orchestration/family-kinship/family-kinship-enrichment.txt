@@ -1,0 +1,219 @@
+✅ Message sent to Gemini (ID: 12177) [auto-acked: self-addressed]
+✓ Message 12177 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12177...
+📨 Message #12177
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-family-kinship
+   Time: 2026-02-20T23:37:18.551023+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 22
+module: oes-022
+module_number: 18
+slug: family-kinship
+title_uk: Родина та спорідненість
+title_en: Family & Kinship
+phase: 1
+phase_id: vernacular-foundations
+phase_name: Vernacular Foundations
+focus: Небіж, мати, брат in graffiti contexts
+content_outline:
+- section: Вступ
+  description: Introduction to Family & Kinship
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Senior Paleographer
+  role: Clan Matriarch
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Family Kinship (Родина та спорідненість)
+
+## Використані джерела
+1.  **Літопис Руський (за Іпатським списком)** [litopys.org.ua](http://litopys.org.ua/ipatlet/ipat.htm) — Першоджерело для подій Любецького з'їзду та заповіту Ярослава.
+2.  **Руська Правда (Коротка та Розширена редакції)** [litopys.org.ua](http://litopys.org.ua/yushkov/yu.htm) — Джерело правових норм щодо кровної помсти та спадкування (ст. 1).
+3.  **Висоцький С. О. Давньоруські написи Софії Київської** [litopys.org.ua](http://litopys.org.ua/) — Епіграфічні пам'ятки, зокрема графіті №108 про Олісаву.
+4.  **Етимологічний словник української мови (ЕСУМ)** — Етимологія слів *небіж*, *стрий*, *вуй*, *мати*.
+5.  **Енциклопедія історії України (history.org.ua)** — Статті про повсякденне життя та соціальний устрій Русі.
+
+## Хронологія
+- **1019–1054**: Правління Ярослава Мудрого, активна династична політика ("тесть Європи").
+- **1037 (бл.)**: Початок будівництва Софії Київської, поява перших графіті (середина XI ст.).
+- **1054**: Смерть Ярослава Мудрого, заповіт про поділ земель між синами (початок переходу від родового до патронімічного володіння).
+- **1072**: Укладення "Правди Ярославичів" (скасування кровної помсти, заміна на віру).
+- **1097**: Любецький з'їзд князів, проголошення принципу "Кождо да держить отчину свою".
+- **XI–XII ст.**: Фіксація графіті №108 (Олісава) на стінах Софії.
+
+## Ключові факти та цитати
+- **Руська Правда (ст. 1)**: "Аже убиеть муж мужа, то мьстити брату брата, любо отцю, ли сыну, любо братучадо, ли братню сынови". (Свідчення обов'язку кровної помсти лише для найближчих родичів по чоловічій лінії).
+- **Графіті №108 (Софія Київська)**: "Господи помози рабі своєй Олісаві Святополчі матері русьскій княгині". (Унікальне свідчення титулатури та самоідентифікації жінки).
+- **Любецький з'їзд (1097)**: "Пощо ми губимо Руську землю, самі проти себе зваду маючи? ... Відтепер з'єднаймося в одне серце і бережімо Руську землю. Кожен хай держить отчину свою".
+- **Термінологія**:
+    - *Стрий* (брат батька) vs *Вуй* (брат матері). Чітке розрізнення ліній спорідненості, втрачене в російській мові (дядя), але збережене в українських діалектах та прізвищах (Стрий, Вуйко).
+    - *Небіж*: еволюція від *небогъ* (бідний, нещасний, той, хто не має частки спадку) до "племінник" (той, кого треба опікувати).
+    - *Мати, дочка*: архаїчний тип відмінювання (r-основи), сліди якого збереглися в сучасній мові (матері, матір'ю).
+
+## Engagement Hooks (mapped to sections)
+- Section "Основний матеріал: I — Термінологія: Батьки і діти": [!paleography] — Аналіз написання літери "Ѣ" (ять) у слові *дѣти* в графіті.
+- Section "Основний матеріал: II — Граматика: r-основи": [!history-bite] — Чому ми кажемо "матері", але "мами"? Сліди давньої *r-основи*.
+- Section "Основний матеріал: III — Брати і Руська Правда": [!context] — Кровна помста як обов'язок, а не злочин.
+- Section "Основний матеріал: IV — Дядьки: Стрий і Вуй": [!myth-buster] — Міф про "спільну колиску" розбивається об термінологію: українці зберегли розрізнення *стрий/вуй*, як і поляки (*stryj/wuj*), тоді як російська мова уніфікувала це під впливом тюркського/дитячого мовлення (*дядя*).
+- Section "Основний матеріал: V — Небіж": [!decolonization] — Етимологія "небога" як свідчення соціальної структури, де племінник без батька був соціально незахищеним.
+- Section "Основний матеріал: VI — Жінка (Олісава)": [!quote] — Графіті Олісави як доказ грамотності жінок еліти.
+
+## Деколонізаційний контекст
+- **Imperial/Soviet myth**: Уявлення про "давньоросійську народність" з єдиною мовою та побутом. Ігнорування діалектних відмінностей.
+- **Ukrainian reality**: Давньоукраїнська мова мала специфічну лексику спорідненості (*стрий, вуй, зовиця, ятрівка*), яка прямо перейшла в сучасну українську, оминаючи російську модель. Високий статус жінки в Русі (спадкові права, грамотність) на відміну від пізнішої московської традиції "терему".
+- **Термін "Рід"**: Радянська історіографія часто спрощувала структуру роду. В Русі це була складна система з горизонтальними (брат-брат) та вертикальними (батько-син) зв'язками, що конкурували (лествичне право vs отчина).
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian (decolonized) framing |
+|---------|-----------------|-------------------------------|
+| Kinship System | Єдина "давньоросійська" система, тотожна російській. | Специфічна система з розрізненням *стрий/вуй*, ближча до західнослов'янської (польської), ніж до російської. |
+| Inheritance | Акцент на "феодальній роздрібленості" як занепаді. | "Отчина" як природний розвиток права власності та стабілізації еліт. |
+| Women's Status | Ігнорування або применшення ролі жінок. | Жінки як активні суб'єкти права та культури (Олісава, Анна Ярославна). |
+
+## Section-Mapped Research Notes
+
+### Основний матеріал: I — Термінологія: Батьки і діти
+- Слова: *otьcь, mati, synъ, dъči*.
+- *Otьcь* — палаталізація (k -> c').
+- *Dъči* — давня форма, пізніше витіснена *dъčьka* (дочка).
+
+### Основний матеріал: II — Граматика: r-основи
+- Парадигма *mati, matere*. Порівняння з *dъči, dъčere*.
+- Збереження суфікса -er- у непрямих відмінках сучасної мови.
+
+### Основний матеріал: III — Брати і Руська Правда
+- Ст. 1 Руської Правди. Коло месників.
+- *Братучадо* — син брата (племінник по брату).
+
+### Основний матеріал: IV — Дядьки: Стрий і Вуй
+- *Стрий* — батьківська лінія (aghnatic), влада, спадок.
+- *Вуй* — материнська лінія (cognatic), опіка, наставництво (приклад: Добриня для Володимира).
+
+### Основний матеріал: V — Небіж
+- Етимологія *ne-bogъ* (не багатий, не має долі).
+- Соціальний статус сироти/напівсироти в роду.
+
+### Основний матеріал: VI — Жінка (Олісава)
+- Графіті №108.
+- Титулатура "матері руській княгині" — підкреслення статусу через сина (Святополка), але й власної ваги.
+
+### Основний матеріал: VII — Від роду до отчини
+- Любецький з'їзд. "Кождо да держить отчину свою".
+- Кристалізація малих сімей (nucleation) в межах роду.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/

@@ -1,0 +1,205 @@
+✅ Message sent to Gemini (ID: 12914) [auto-acked: self-addressed]
+✓ Message 12914 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12914...
+📨 Message #12914
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-slovo-bard-intro
+   Time: 2026-02-20T23:43:07.575517+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 76
+module: oes-076
+module_number: 62
+slug: slovo-bard-intro
+title_uk: 'Слово: Вступ барда'
+title_en: 'Slovo: The Bard''s Intro'
+phase: 3
+phase_id: legal-tradition
+phase_name: Legal Tradition
+focus: '"Ne lěpo li ny..." — Poetic vs Historical truth'
+content_outline:
+- section: Вступ
+  description: 'Introduction to Slovo: The Bard''s Intro'
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Senior Paleographer
+  role: Boyan's Successor
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Slovo Bard Intro
+
+## Використані джерела
+1. [Літопис руський (Іпатіївський список)](http://litopys.org.ua/ipatlet/ipat.htm) — Першоджерело історичних подій 1185 року.
+2. [Енциклопедія історії України: Слово о полку Ігоревім](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Slovo_o_polku_Ihorevim) — Академічний огляд історії тексту, авторства та досліджень.
+3. [Енциклопедія Сучасної України: Боян](https://esu.com.ua/article-37599) — Деталі про постать віщого співця.
+4. [А.А. Залізняк. «Слово о полку Ігоревім»: погляд лінгвіста](https://litopys.org.ua/zaliznyak/zal.htm) — Докази автентичності та мовний аналіз.
+
+## Хронологія
+- **1185, травень**: Невдалий похід новгород-сіверського князя Ігоря Святославича проти половців.
+- **~1187**: Ймовірна дата написання «Слова» (за історичними реаліями тексту).
+- **1790-ті**: Відкриття списку «Слова» графом О. Мусіним-Пушкіним у Спасо-Преображенському монастирі (Ярославль).
+- **1800**: Перше друковане видання «Слова» в Москві.
+- **1812**: Знищення оригінального рукопису та більшості примірників першого видання під час московської пожежі.
+- **1857**: Переклад М. Максимовича «Слова» українською мовою, що підкреслив його народно-поетичну основу.
+
+## Ключові факти та цитати
+- **Цитата (Вступ)**: «Не лѣпо ли ны бяшетъ, братие, начяти старыми словесы трудныхъ повѣстій о пълку Игоревѣ, Игоря Святъславлича?»
+- **Цитата (Боян)**: «Боянъ бо вѣщій, аще кому хотяше пѣснь творити, то растѣкашется мыслію по древу, сѣрымъ вълкомъ по земли, шизымъ орломъ под облакы.»
+- **Факт**: Автор протиставляє свою манеру («по былинамь сего времени») манері Бояна («по замышленію Бояню»), прагнучи історичної правди, а не панегіричної гіперболізації.
+- **Факт**: Мова «Слова» містить численні українізми (повноголосся, лексика: *кожух, парубок, вивірця, брехати*), що свідчить про південноруське (українське) походження автора.
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ": [!quote] — «Не лѣпо ли ны бяшетъ...» як камертон твору.
+- Section "Основний матеріал: I": [!culture] — Боян як архетип дружинного співця («гомеричний» стиль Русі).
+- Section "Основний матеріал: II": [!history-bite] — Затьмарення сонця 1 травня 1185 року як зловісний знак, згаданий у тексті.
+- Section "Основний матеріал: III": [!paleography] — Трагічна доля Мусін-Пушкінського рукопису: чому ми віримо копії?
+- Section "Основний матеріал: IV": [!decolonization] — Імперське привласнення «Слова»: чому в Росії його вважають «своім», ігноруючи київський/чернігівський контекст.
+- Section "Основний матеріал: V": [!myth-buster] — Міф про підробку XVIII ст. (спростування Залізняка через лінгвістику енклітик).
+
+## Деколонізаційний контекст
+- **Міф**: «Слово» — пам'ятка «общєруской» або російської літератури.
+- **Реальність**: Твір написаний на території сучасної України (Київщина/Чернігівщина), відображає світогляд та мову русинів-українців XII ст.
+- **Міф**: Скептицизм щодо автентичності як інструмент знецінення давньої української культури (мовляв, у XII ст. не могли написати такий шедевр).
+- **Реальність**: «Слово» органічно вписується в контекст літератури Русі, маючи паралелі з літописами та візантійською риторикою.
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| Мова твору | Давньоросійська (Old Russian) | Давньоруська / Давньоукраїнська (Old Rus / Old Ukrainian) |
+| Боян | «Русский сказитель» | Давньоруський співець, попередник українських кобзарів |
+| Ігор Святославич | Герой «русской земли» | Князь Чернігівської землі, учасник феодальних усобиць Русі |
+
+## Section-Mapped Research Notes
+
+### Вступ
+Аналіз першої фрази. Риторичне запитання автора. Вибір стилю: традиція проти новаторства.
+
+### Основний матеріал
+- **Боян**: Хто він? Згадки в інших джерелах (графіті Софії Київської). Його метафоричний стиль («мислію по древу»).
+- **Сюжет 1185**: Історична основа. Князь Ігор, Всеволод, половці (Кончак, Гзак). Поразка на Каялі.
+- **Автентичність**: Історія знахідки 1790-х. Видання 1800. Пожежа 1812. Аргументи скептиків (Мазон, Зімін) та їх спростування (Залізняк).
+- **Мова**: Лексичні та граматичні особливості, що пов'язують текст з українською мовою.
+
+### Практика
+Читання уривка в оригіналі. Переклад сучасною мовою. Пошук метафор Бояна.
+
+### Підсумок
+«Слово» як літературний пам'ятник, що пережив століття. Вплив на українську літературу (Шевченко, Тичина).
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12945)
+✓ Message 12914 acknowledged
+✓ Message 12945 acknowledged

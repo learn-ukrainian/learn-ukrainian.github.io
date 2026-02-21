@@ -5,9 +5,9 @@
   "phases": {
     "v3-A": {
       "status": "complete",
-      "ts": "2026-02-19T18:09:00Z",
+      "ts": "2026-02-21T00:05:55Z",
       "task_id": "v3-valentyna-radzymovska-pA",
-      "mode": "full"
+      "mode": "meta-only"
     }
   }
 }

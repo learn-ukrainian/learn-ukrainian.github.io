@@ -12,12 +12,12 @@ We begin with the foundation: the human body. In Ukrainian, the word for "body" 
 The most common complaints start here.
 
 **Голова** [ɦɔlɔˈʋa] (head) — feminine. It is the center of our thoughts and pain.
-*   **Обличчя** [ɔbˈlɪtʃʲːa] (face) — neuter.
-*   **Око** [ˈɔkɔ] (eye) — neuter. Plural: **очі** [ˈɔtʃʲi] (eyes).
+*   **Обличчя** [ɔbˈlɪt͡ʃʲːa] (face) — neuter.
+*   **Око** [ˈɔkɔ] (eye) — neuter. Plural: **очі** [ˈɔt͡ʃʲi] (eyes).
 *   **Вухо** [ˈʋuxɔ] (ear) — neuter. Plural: **вуха** [ˈʋuxa] (ears).
 *   **Ніс** [nʲis] (nose) — masculine.
 *   **Рот** [rɔt] (mouth) — masculine.
-*   **Горло** [ˈɦɔrlɔ] (throat) — neuter. This is a very common word in winter.
+*   **Горло** [ˈɦɔrlɔ] (throat) — neuter. This is a very common word in winter. _Collocation:_ **полоскати горло** (to gargle).
 
 _Usage Note:_ When we talk about eyes or ears, we almost always use the plural: **очі** and **вуха**. The singular form is rare.
 
@@ -29,9 +29,9 @@ _Usage Note:_ When we talk about eyes or ears, we almost always use the plural: 
 ### Тулуб і кінцівки (Torso and Limbs)
 Let's look at the rest of the body.
 
-**Спина** [ˈspɪna] (back) — feminine. Back pain is familiar to everyone.
+**Спина** [spɪˈna] (back) — feminine. Back pain is familiar to everyone.
 **Живіт** [ʒɪˈʋit] (stomach) — masculine.
-**Серце** [ˈsɛrtsɛ] (heart) — neuter.
+**Серце** [ˈsɛrt͡sɛ] (heart) — neuter.
 
 **Кінцівки** (Limbs):
 *   **Рука** [ruˈka] (arm/hand). In Ukrainian, **рука** is the entire limb. There is a word **кисть** [kɪstʲ] (hand/wrist), but we rarely use it.
@@ -104,7 +104,7 @@ If multiple things hurt (eyes, legs, arms), the verb changes to plural: **бол
 *   **У мене болять руки.** (My arms hurt.)
 *   **У мене болять вуха.** (My ears hurt.)
 
-_Usage Note:_ Listen to the ending. Singular is **-ить**, plural is **-лять**.
+_Usage Note:_ Compare the endings: **болить** (singular) vs **болять** (plural). When the subject is plural, the verb ending changes from **-ить** to **-ять**.
 
 ### Симптоми (Symptoms)
 To give details, we need symptom words. These often follow "У мене..." (I have...).
@@ -151,7 +151,7 @@ This describes the process.
 > *   _Ukrainian:_ **Ти хворієш?** (Are you ailing/sick?)
 
 ### Як ви себе почуваєте?
-To ask "How do you feel?", we use the reflexive verb **почувати** [pɔtʃuˈʋatɪ] (to feel) + **себе** (oneself).
+To ask "How do you feel?", we use the reflexive verb **почувати** [pɔt͡ʃuˈʋatɪ] (to feel) + **себе** (oneself).
 
 *   **Як ви себе почуваєте?** (How do you feel? - Formal)
 *   **Як ти себе почуваєш?** (How do you feel? - Informal)
@@ -162,10 +162,27 @@ _Відповіді (Answers):_
 *   **Я почуваю себе краще.** (I feel better.)
 *   **Я почуваю себе чудово.** (I feel great.)
 
+There is also a shorter, very common way to express your state:
+
+**Мені** + **погано/добре/краще**
+
+*   **Мені погано.** (I feel bad.) — literally "To me [it is] bad."
+*   **Мені добре.** (I feel good.)
+*   **Мені краще.** (I feel better.)
+*   **Мені холодно.** (I am cold.)
+
+> [!warning]
+> **Типова помилка**
+>
+> Do not say "Я погано" — this is incorrect. Use **Мені погано** (Dative pronoun + adverb).
+> *   ✅ **Мені** погано.
+> *   ❌ **Я** погано.
+
 ### Необхідність: «Треба до лікаря»
 When you need help or must do something, use the word **треба** [ˈtrɛba] (it is necessary).
 
 *   **Треба до лікаря.** (It is necessary [to go] to the doctor.)
+*   **Мені потрібно до лікаря.** (I need [to go] to the doctor.) — same meaning, personal form.
 *   **Треба в аптеку.** (It is necessary to go to the pharmacy.)
 *   **Треба в лікарню.** (It is necessary to go to the hospital.)
 *   **Ми їдемо в лікарню.** (We are going to the hospital.)
@@ -223,7 +240,7 @@ When buying medicine, we use the preposition **від** (from/against) + Genitiv
 *   **Це хороша мазь.** (This is a good ointment.)
 
 ### Рецепт (The Prescription)
-Some medicines need a document. This is a **рецепт** [rɛˈtsɛpt].
+Some medicines need a document. This is a **рецепт** [rɛˈt͡sɛpt].
 *   **Тут треба рецепт.** (A prescription is needed here.)
 *   **Можна без рецепту?** (Is it possible without a prescription?)
 *   **У мене є рецепт.** (I have a prescription.)
@@ -232,13 +249,13 @@ Some medicines need a document. This is a **рецепт** [rɛˈtsɛpt].
 > [!culture]
 > **Природна аптека**
 >
-> Ukrainians love natural remedies. Many people drink **чай і малину** (tea and raspberry) or **чай і калину** (tea and viburnum). **Малина** [maˈlɪna] reduces fever, and **калина** [kaˈlɪna] boosts immunity. If a Ukrainian friend offers you tea when you are sick, accept it. It is their way of caring for you.
+> Ukrainians love natural remedies. Many people drink **малиновий чай** (raspberry tea) or **калиновий чай** (viburnum tea) with **мед** [mɛd] (honey). **Малина** [maˈlɪna] reduces fever, **калина** [kaˈlɪna] boosts immunity, and **мед** soothes a sore throat. If a Ukrainian friend offers you tea when you are sick, accept it. It is their way of caring for you.
 
 ### Корисні фрази (Key Phrases)
 *   **Дайте, будь ласка...** (Give [me], please...)
 *   **Скільки це коштує?** (How much does it cost?)
 *   **Як це приймати?** (How to take this?)
-*   **Аптекар питає: «Що ви хочете?»** (The pharmacist asks: "What do you want?")
+*   **Аптекар питає: «Що ви шукаєте?»** (The pharmacist asks: "What are you looking for?")
 *   **Я відповідаю: «Треба вітаміни».** (I answer: "I need vitamins".)
 *   **У вас є щось від грипу?** (Do you have something for the flu?)
 *   **Це допоможе?** (Will this help?)
@@ -281,8 +298,7 @@ The doctor gives simple commands (Imperative mood).
 *   **Вставайте.** (Stand up.)
 *   **Зніміть сорочку.** (Take off [your] shirt.)
 
-*   **Лікар каже: «Відкрийте рот».**
-*   **Пацієнт каже: «А-а-а».**
+*   **Лікар каже: «Відкрийте рот».** Пацієнт відкриває.
 *   **Лікар каже: «У вас червоне горло».** (You have a red throat.)
 *   **Лікар слухає серце.** (The doctor listens to the heart.)
 *   **Лікар слухає легені.** (The doctor listens to the lungs.)
@@ -300,13 +316,16 @@ The doctor gives advice.
 *   **Приймайте ці ліки.** (Take this medicine.)
 *   **Купіть вітаміни.** (Buy vitamins.)
 
-### Причини (Reasons)
-Explaining why you are here.
+### Наслідки (Results)
+Explaining what happens next. In Ukrainian, we use the word **тому** for "so" or "therefore" to connect a reason with a result.
 
-*   **Я хворий. Я не на роботі.** (I am sick. I am not at work.)
-*   **У мене температура. Тому я тут.** (I have a fever. Therefore I am here.)
-*   **Треба лікарняний.** (A sick leave note is needed.)
-*   **Я почуваю себе дуже погано.** (I feel very bad.)
+*   **Я хворий, тому я вдома.** (I am sick, so I am at home.)
+*   **Я хворий, тому я не на роботі.** (I am sick, so I am not at work.)
+*   **У мене температура, тому я тут.** (I have a fever, so I am here.)
+*   **Мені дуже погано.** (I feel very bad.)
+*   **Мені треба лікарняний.** (I need a sick leave note.)
+
+_Usage Note:_ Use **тому** to show a consequence. It is very common and useful for simple sentences.
 
 ## Практикум: Діалоги про здоров'я
 
@@ -316,8 +335,8 @@ Explaining why you are here.
 **Олег:** Привіт, Ірино! Як ти? (Hi, Iryna! How are you?)
 **Ірина:** Привіт. Я почуваю себе погано. (Hi. I feel bad.)
 **Олег:** Що сталося? (What happened?)
-**Ірина:** У мене болить голова і є температура. (I have a headache and a fever.)
-**Олег:** Треба відпочивати. Пий чай і їж малину. (You need to rest. Drink tea and eat raspberry.)
+**Ірина:** У мене болить голова й є температура. Я не пішла на роботу. Мені погано. (I have a headache and a fever. I didn't go to work. I feel bad.)
+**Олег:** Треба відпочивати. Пий малиновий чай. (You need to rest. Drink raspberry tea.)
 **Ірина:** Дякую, так і зроблю. (Thank you, I will do so.)
 
 ### Сценарій 2: У лікаря (Formal)

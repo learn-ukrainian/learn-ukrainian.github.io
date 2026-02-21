@@ -21,7 +21,7 @@
   notes: Substance → Genitive ending -ю (чаю)
   pos: noun (masc.)
   translation: tea
-- ipa: '[kʋeˈtɔk]'
+- ipa: '[kʋɪˈtɔk]'
   lemma: квиток
   notes: Concrete object → Genitive ending -а (квитка)
   pos: noun (masc.)
@@ -31,9 +31,9 @@
   notes: Concrete object → Genitive ending -а (паспорта)
   pos: noun (masc.)
   translation: passport
-- ipa: '[teleˈfɔn]'
+- ipa: '[tɛlɛˈfɔn]'
   lemma: телефон
-  notes: Concrete object → Genitive ending -а (телефона)
+  notes: Device/technology → Genitive ending -у (телефону)
   pos: noun (masc.)
   translation: phone
 - ipa: '[ʋoˈdɑ]'

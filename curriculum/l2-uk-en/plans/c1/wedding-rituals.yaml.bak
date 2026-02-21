@@ -1,0 +1,46 @@
+module: c1-072
+level: C1
+sequence: 72
+slug: wedding-rituals
+version: '2.0'
+title: Родинні обряди - весілля
+subtitle: Family Rituals - Wedding
+content_outline:
+- section: Розминка — Весілля як перехід
+  points:
+  - Весілля — найважливіший обряд переходу
+  - Багатоденне дійство з чіткою структурою
+  - Символіка шлюбу в українській культурі
+- section: Передвесільні обряди
+  points:
+  - 'Сватання: старости, рушники, гарбуз'
+  - 'Заручини: обручки, благословення батьків'
+  - Дівич-вечір та парубоцький вечір
+  - Випікання коровая
+- section: Весільні обряди
+  points:
+  - 'Посад: розплітання коси, вінок'
+  - Вінчання та викуп
+  - 'Коровай: розподіл, символіка'
+  - 'Перезва: післявесільні гості'
+- section: Практика — весільна обрядовість
+  points:
+  - Описати етапи традиційного весілля
+  - Пояснити символіку рушника та коровая
+  - Порівняти українське та європейське весілля
+  - Написати весільний тост у традиційному стилі
+focus: cultural
+pedagogy: CBI
+objectives:
+- Learner can describe the stages of a traditional Ukrainian wedding
+- Learner can explain the symbolism of the korovai and rushnyk
+- Learner can distinguish between matchmaking (svatannia) and engagement (zaruchyny)
+- Learner can recite a traditional wedding toast
+grammar:
+- ritual actions description
+- conditional mood in toasts
+phase: C1.5 Folk Culture & Arts
+persona:
+  voice: Senior Specialist
+  role: Фольклорист-обрядовець
+word_target: 4000

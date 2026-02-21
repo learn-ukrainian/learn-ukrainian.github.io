@@ -163,6 +163,16 @@ All items in a category: SAME format, SAME depth (±20%), SAME example count (±
 
 This is the #1 generation error from previous rebuilds. Scan EVERY sentence before submitting.
 
+### Colonial Framing: Ukrainian Stands on Its Own (HARD FAIL if found)
+
+**NEVER define Ukrainian by contrast with Russian.** Ukrainian is an independent language — it does not need Russian as a reference point.
+
+**BANNED patterns:** "Unlike Russian...", "Different from Russian...", "Russian does not have/use...", "Looks/sounds like Russian...", "To a Western eye...", references to "Russian script/alphabet/letters" as comparison.
+
+**Instead:** Present Ukrainian positively ("Ukrainian has...", "In Ukrainian, ..."). Use non-Russian languages for typological comparisons when helpful. Anchor in Ukrainian identity and history.
+
+**Exceptions:** `[!myth-buster]` or `[!decolonization]` blocks, resistance/Russification context, Kyiv/Kiev transliteration.
+
 ### Russianisms (Pre-Output Scan — HARD FAIL if found)
 
 Before submitting, scan your ENTIRE output for these. They cause automatic audit failure:
@@ -245,9 +255,41 @@ Use tables for comparing patterns/paradigms/categories. Use mermaid flowcharts f
 - Do NOT generate activities, exercises, or vocabulary tables (Phase 3 handles these)
 - Do NOT add vocabulary outside the plan's vocabulary_hints
 - Do NOT skip any concepts from this section's outline
-- Do NOT fabricate quotes, dates, or historical facts
+- Do NOT fabricate quotes, dates, or historical facts — if the research file doesn't confirm it, don't claim it
+- Do NOT make absolute claims ("unique", "only", "first", "never") without verification — soften if uncertain
 - Do NOT use straight quotes "..." — always «...»
 - Do NOT request skills or delegate to Claude
+
+---
+
+## Pre-Submission Verification (MANDATORY — do this BEFORE writing your final output)
+
+After drafting your section, run these checks. Fix any issues found before outputting.
+
+### Check 1: Outline Point Coverage
+
+Look at the `points:` for this section in `{META_PATH}`. For EVERY point:
+- Does your content address it with dedicated prose (not just a passing mention)?
+- If a point is missing, **add it now** — write a paragraph or H3 subsection for it.
+
+### Check 2: Fact-Check Absolute Claims
+
+Search your draft for: **«унікальний»**, **«єдиний»**, **«перший»**, **«ніколи»**, **«жодний»**, **«тільки»**, **«лише»**, **unique**, **only**, **first**, **never**, **no other**, **the oldest**, **the most**
+
+For EACH: **Is this literally true?** If uncertain, soften:
+- «єдиний» → «один із небагатьох» or «характерний для»
+- «unique to Ukrainian» → «distinctive in Ukrainian»
+- «the first» → «one of the earliest» (unless research confirms)
+- Historical dates/facts: verify against the research file. If not confirmed, **remove**.
+
+### Check 3: Language Scan
+
+Re-read your section for:
+- Russianisms (кушати, получати, etc.)
+- Russian characters (ы, э, ё, ъ)
+- English words outside parenthetical translations
+- Colonial framing ("Unlike Russian...")
+- Fix any found.
 
 ---
 
@@ -277,6 +319,16 @@ After the content block, report word count:
 ===WORD_COUNTS===
 Section "{SECTION_TITLE}": {count} words (budget: {HARD_MINIMUM_WORD_COUNT}-{HARD_MINIMUM_WORD_COUNT}×2)
 ===WORD_COUNTS===
+```
+
+Then report verification results:
+
+```
+===VERIFICATION_START===
+Outline points: {X}/{Y} addressed (list any added during verification)
+Absolute claims: {number checked} — {list softened/removed, or "all verified"}
+Language scan: {CLEAN or list of fixes}
+===VERIFICATION_END===
 ```
 
 ## Friction Report (MANDATORY)

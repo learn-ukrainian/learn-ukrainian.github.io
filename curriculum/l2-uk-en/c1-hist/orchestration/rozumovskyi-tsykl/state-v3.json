@@ -2,12 +2,5 @@
   "track": "c1-hist",
   "slug": "rozumovskyi-tsykl",
   "mode": "v3",
-  "phases": {
-    "v3-A": {
-      "status": "complete",
-      "ts": "2026-02-19T18:16:03Z",
-      "task_id": "v3-rozumovskyi-tsykl-pA",
-      "mode": "full"
-    }
-  }
+  "phases": {}
 }

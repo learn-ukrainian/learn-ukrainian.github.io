@@ -2,12 +2,5 @@
   "track": "c2",
   "slug": "syntactic-stylistics",
   "mode": "v3",
-  "phases": {
-    "v3-A": {
-      "status": "complete",
-      "ts": "2026-02-20T00:29:56Z",
-      "task_id": "v3-syntactic-stylistics-pA",
-      "mode": "full"
-    }
-  }
+  "phases": {}
 }

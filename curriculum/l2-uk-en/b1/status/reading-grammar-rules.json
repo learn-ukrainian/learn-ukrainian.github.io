@@ -2,10 +2,10 @@
   "module": "reading-grammar-rules",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-20T01:51:48.151965Z",
+  "last_audit": "2026-02-20T14:48:13.395561Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-20T01:44:33.084344Z",
+    "md": "2026-02-20T01:58:24.791998Z",
     "meta": "2026-02-20T01:10:55.296267Z",
     "activities": "2026-02-20T01:44:33.085899Z",
     "vocabulary": "2026-02-20T01:15:48.755429Z",
@@ -19,9 +19,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "4607/4000 (raw: 4962) | pedagogy: 13 violations"
+      "status": "pass",
+      "violations": 0,
+      "message": "4606/4000 (raw: 4961)"
     },
     "activities": {
       "status": "pass",
@@ -49,16 +49,16 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "skipped",
+      "status": "pass",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "fail",
+    "status": "pass",
     "blocking_issues": [],
-    "pass_count": 5,
-    "fail_count": 1,
+    "pass_count": 7,
+    "fail_count": 0,
     "deferred_count": 0
   }
 }

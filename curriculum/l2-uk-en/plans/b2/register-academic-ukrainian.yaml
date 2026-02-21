@@ -5,83 +5,87 @@ slug: register-academic-ukrainian
 version: '2.0'
 title: Науковий стиль української мови
 content_outline:
-- section: Вступ — Науковий стиль
+- section: 'Вступ: Науковий стиль та його історія (Introduction: Scientific Style
+    and its History)'
+  words: 600
   points:
-  - 'Характерні риси наукового стилю — cultural hook: The ''Executed Renaissance''
-    of Terminology (1920s-30s) created pure Ukrainian terms (e.g., тяжіння for gravity)
-    before Soviet russification'
-  - Підстилі (власне науковий, навчально-науковий, науково-популярний)
-  - 'Де зустрічаємо науковий стиль — State Standard Reference §1.2.1.1: transitioning
-    from general understanding to active analysis'
-- section: Лексичні особливості
+  - 'Характерні риси наукового стилю: об''єктивність, точність, логічність та доказовість
+    як фундамент академічного тексту.'
+  - 'Cultural hook: The ''Executed Renaissance'' (1920s-30s) and the VUAN Institute
+    of Scientific Language. Contrast pure Ukrainian terms like ''тяжіння'' (gravity)
+    with forced Soviet russification and ''гравітація''.'
+  - 'State Standard §1.2.1.1: Transitioning from understanding popular science to
+    active analysis and production of academic texts at the B2 level.'
+- section: Лексичні особливості та термінологія (Lexical Features and Terminology)
+  words: 900
   points:
-  - 'Загальнонаукова лексика — collocation: актуальність теми (relevance of the topic)
-    as a key indicator'
-  - 'Термінологія — cultural hook: Ivan Puliui as a creator of Ukrainian physical
-    terminology (pre-dating Röntgen)'
-  - Абстрактні іменники
-  - 'Уникання емоційності — content note: Explicitly contrast a ''Kitchen Table Explanation''
-    vs ''Academic Definition'' of the same concept (e.g., ''Water'')'
-- section: Граматичні особливості
+  - 'Загальнонаукова лексика vs вузькоспеціальна термінологія. High-frequency collocations:
+    ''обґрунтувати актуальність теми'' та ''визначити об''єкт дослідження''.'
+  - 'Cultural hook: Ivan Puliui as a creator of Ukrainian physical terminology (pre-dating
+    Röntgen) and translator of the Bible, showcasing the linguistic agency of scientists.'
+  - Role of Agathangel Krymsky in shaping the early 20th-century academic style through
+    polyglot influence.
+  - 'Stylistic contrast: Explicitly contrast a ''Kitchen Table Explanation'' vs ''Academic
+    Definition'' of the same concept (e.g., Water as ''wet stuff'' vs ''chemical compound
+    H2O'').'
+- section: Граматика та типові помилки (Grammar and Common Errors)
+  words: 1000
   points:
-  - 'Безособові конструкції (досліджено, виявлено) — learner error: ''Passive'' Voice
-    Abuse (e.g., ''Робота була зроблена'' instead of ''Роботу виконано'')'
-  - 'Пасивні конструкції — learner error: Active Participle Calques from Russian (e.g.,
-    ''домінуючий фактор'' instead of ''панівний фактор'')'
-  - 'Складні речення — content note: Introduce the ''chain of genitives'' (ланцюжок
-    родових відмінків) as a feature to be understood but controlled'
-  - Дієприслівникові звороти
-- section: Мовне хеджування
+  - 'Learner error: ''Passive'' Voice Abuse. Contrast clunky Russian-influenced ''Робота
+    була зроблена студентом'' with active ''Студент виконав роботу'' or impersonal
+    ''Роботу виконано''.'
+  - 'Learner error: Active Participle Calques from Russian. Replace non-normative
+    ''домінуючий фактор'' or ''слідуючий приклад'' with ''панівний фактор'' and ''наступний
+    приклад''.'
+  - 'Syntactic complexity: Managing the ''chain of genitives'' (ланцюжок родових відмінків),
+    e.g., ''аналіз методів розв''язання проблем розвитку'', as a hallmark of the scientific
+    register.'
+  - 'Common collocation errors: Correcting ''приймати участь'' to ''брати участь''
+    and ''підводити підсумки'' to ''підбивати підсумки''.'
+- section: Мовне хеджування та етика (Language Hedging and Ethics)
+  words: 800
   points:
-  - 'Вираження невпевненості (можливо, ймовірно) — content note: Emphasize that categorical
-    statements look ''unscientific'' in Ukrainian'
-  - Обережні твердження
-  - 'Посилання на джерела — collocation: робити посилання (to make a reference)'
-  - Уникання категоричності
-- section: Цитування та посилання
+  - 'The concept of hedging (мовне хеджування): avoiding categorical statements to
+    appear more scientific and objective.'
+  - 'Markers of uncertainty: strategic use of ''можливо'', ''ймовірно'', ''припускаємо'',
+    ''на наш погляд'' to soften claims.'
+  - 'Content note: Emphasize that categorical statements without hedging look ''unscientific''
+    or unprofessional in a Ukrainian academic context.'
+- section: Структура наукового тексту та цитування (Text Structure and Citation)
+  words: 700
   points:
-  - Пряме цитування
-  - Непряме цитування
-  - 'Формули посилань — collocation: згідно з (according to)'
-  - Бібліографічні записи
-- section: Структура наукового тексту
-  points:
-  - Анотація
-  - 'Вступ — collocation: обґрунтувати актуальність (substantiate relevance)'
-  - 'Основна частина — collocation: об''єкт/предмет дослідження (object/subject of
-    research)'
-  - 'Висновки — collocation: дійти висновку (to come to a conclusion), робити висновки
-    (to draw conclusions)'
-- section: Практика і підсумок
-  points:
-  - Аналіз наукових текстів
-  - 'Написання академічних текстів — learner error: Collocation errors like ''приймати
-    участь'' instead of ''брати участь'''
-  - Підготовка до модуля 19
+  - 'Standard components of a research paper: Abstract (анотація), Introduction (вступ),
+    Body (основна частина), Conclusions (висновки).'
+  - 'Formulas for citation and referencing: ''згідно з'', ''на підставі'', ''як зазначає
+    автор''. Collocation: ''робити посилання'' (to make a reference).'
+  - 'Practice: Analysis of real academic abstracts and converting informal text into
+    the formal scientific register.'
 vocabulary_hints:
   required:
-  - науковий стиль (scientific style)
-  - 'термін (term) — cultural hook: 1920s ''Executed Renaissance'' of pure Ukrainian
-    terminology'
-  - 'дослідження (research) — collocations: проводити ~, ґрунтовне ~, результати ~'
+  - науковий стиль (scientific style) — specific register for academic work; non-emotional
+  - термін (term) — note on 1920s 'Executed Renaissance' and pure terms like 'тяжіння'
+  - 'дослідження (research) — collocations: проводити ~, ґрунтовне ~, результати ~;
+    high frequency'
+  - 'висновок (conclusion) — collocations: дійти ~у, робити ~, на підставі ~ів; high
+    frequency'
+  - 'аналіз (analysis) — collocations: здійснювати ~, глибокий ~, порівняльний ~;
+    high frequency'
   - 'гіпотеза (hypothesis) — collocations: висувати ~у, підтвердити ~у, спростувати
     ~у'
-  - 'висновок (conclusion) — collocations: дійти ~у, робити ~, на підставі ~ів'
-  - 'аналіз (analysis) — collocations: здійснювати ~, глибокий ~, порівняльний ~'
   - 'методологія (methodology) — collocations: наукова ~, застосування ~ї, ~ дослідження'
-  - цитування (citation)
-  - 'посилання (reference) — collocations: робити ~, згідно з ~м, навести ~'
-  - анотація (abstract)
+  - 'посилання (reference) — collocations: робити ~, згідно з ~м, навести ~; high
+    frequency'
   recommended:
-  - 'хеджування (hedging) — key concept: avoiding categorical statements (можливо,
-    ймовірно)'
-  - об'єктивність (objectivity)
-  - аргументація (argumentation)
-  - інтерпретація (interpretation)
-  - синтез (synthesis)
-  - 'актуальність (relevance) — collocations: ~ теми, втрачати ~, обґрунтувати ~'
-  - 'об''єкт (object) — collocations: ~ дослідження, визначити ~'
-  - 'предмет (subject) — collocations: ~ дослідження'
+  - 'актуальність (relevance) — collocations: ~ теми, втрачати ~, обґрунтувати ~;
+    high frequency'
+  - 'об''єкт (object) — collocations: ~ дослідження, визначити ~; high frequency'
+  - 'предмет (subject) — collocations: ~ дослідження; distinct from object'
+  - 'хеджування (hedging) — markers: можливо, ймовірно, припускаємо; avoiding categorical
+    claims'
+  - анотація (abstract) — summary of scientific work for B2 competence
+  - брати участь (to participate) — correct form; avoids learner error 'приймати участь'
+  - підбивати підсумки (to summarize/conclude) — correct form; avoids learner error
+    'підводити підсумки'
 activity_hints:
 - type: fill-in
   focus: Convert colloquial text to academic style

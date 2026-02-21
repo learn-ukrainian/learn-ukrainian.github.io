@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Track Health - ukraine-ops</title>
+<style>
+:root {
+  --bg: #0d1117; --bg2: #161b22; --bg3: #21262d; --border: #30363d;
+  --text: #e6edf3; --text2: #8b949e; --text3: #6e7681;
+  --green: #3fb950; --blue: #58a6ff; --red: #f85149; --yellow: #d29922;
+  --gray: #484f58; --purple: #bc8cff; --orange: #f0883e; --cyan: #39d2c0;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; background: var(--bg); color: var(--text); }
+a { color: var(--blue); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+.topbar { display: flex; align-items: center; gap: 16px; padding: 12px 24px; background: var(--bg2); border-bottom: 1px solid var(--border); }
+.topbar h1 { font-size: 18px; font-weight: 600; }
+.topbar .nav { margin-left: auto; display: flex; gap: 12px; font-size: 13px; }
+.topbar .nav a { color: var(--text2); }
+.topbar .nav a:hover { color: var(--text); }
+
+.container { padding: 16px 24px; max-width: 1400px; }
+
+/* Track selector */
+.track-selector { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 20px; }
+.track-btn { padding: 6px 14px; border: 1px solid var(--border); border-radius: 6px; background: var(--bg2); color: var(--text2); font-size: 12px; cursor: pointer; transition: all 0.15s; }
+.track-btn:hover { border-color: var(--blue); color: var(--text); }
+.track-btn.active { background: var(--blue); color: #000; border-color: var(--blue); font-weight: 600; }
+.track-btn .dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; margin-right: 4px; }
+
+/* Health cards grid */
+.health-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 24px; }
+.health-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 16px; }
+.health-card .label { font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
+.health-card .value { font-size: 32px; font-weight: 700; line-height: 1; }
+.health-card .sub { font-size: 12px; color: var(--text2); margin-top: 4px; }
+.health-card .bar { height: 4px; background: var(--bg3); border-radius: 2px; margin-top: 10px; overflow: hidden; }
+.health-card .bar-fill { height: 100%; border-radius: 2px; transition: width 0.5s ease; }
+
+/* ETA card special */
+.eta-card .value { font-size: 24px; }
+
+/* All-tracks overview table */
+.overview-table { width: 100%; border-collapse: collapse; margin-bottom: 24px; }
+.overview-table th { text-align: left; padding: 8px 12px; font-size: 11px; color: var(--text3); text-transform: uppercase; border-bottom: 1px solid var(--border); font-weight: 500; }
+.overview-table td { padding: 8px 12px; font-size: 13px; border-bottom: 1px solid var(--border); }
+.overview-table tr:hover { background: var(--bg3); cursor: pointer; }
+.overview-table .bar-cell { width: 120px; }
+.mini-bar { height: 6px; background: var(--bg3); border-radius: 3px; overflow: hidden; }
+.mini-bar-fill { height: 100%; border-radius: 3px; }
+
+/* Attention list */
+.attention-list { list-style: none; }
+.attention-item { display: flex; align-items: center; gap: 10px; padding: 8px 12px; border-bottom: 1px solid var(--border); font-size: 13px; }
+.attention-item:last-child { border-bottom: none; }
+.attention-badge { padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; }
+.badge-fail { background: rgba(248,81,73,0.15); color: var(--red); }
+.badge-review { background: rgba(210,153,34,0.15); color: var(--yellow); }
+.attention-slug { font-weight: 600; color: var(--text); }
+.attention-detail { color: var(--text2); }
+
+/* Recent completions */
+.completions { display: flex; flex-direction: column; gap: 4px; }
+.completion-row { display: flex; align-items: center; gap: 12px; padding: 6px 12px; font-size: 12px; border-radius: 4px; }
+.completion-row:hover { background: var(--bg3); }
+.completion-num { color: var(--text3); min-width: 30px; }
+.completion-slug { font-weight: 500; min-width: 200px; }
+.completion-audit { padding: 1px 6px; border-radius: 3px; font-size: 11px; font-weight: 600; }
+.audit-pass { background: rgba(63,185,80,0.15); color: var(--green); }
+.audit-fail { background: rgba(248,81,73,0.15); color: var(--red); }
+.completion-words { color: var(--text2); }
+
+.section-title { font-size: 13px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.05em; margin: 20px 0 10px; }
+.section-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 16px; margin-bottom: 16px; }
+
+.loading { color: var(--text3); font-size: 14px; padding: 40px; text-align: center; }
+.refresh-btn { padding: 4px 10px; border: 1px solid var(--border); border-radius: 4px; background: var(--bg2); color: var(--text2); font-size: 11px; cursor: pointer; }
+.refresh-btn:hover { border-color: var(--blue); color: var(--text); }
+.timestamp { font-size: 11px; color: var(--text3); }
+
+/* Clickable rows */
+.completion-row.clickable, .attention-item.clickable { cursor: pointer; }
+.completion-row.clickable:hover { background: var(--bg3); }
+.attention-item.clickable:hover { background: var(--bg3); }
+
+/* Module inspector panel */
+.inspector-overlay { position: fixed; top: 0; right: 0; width: 520px; height: 100vh; background: var(--bg2); border-left: 1px solid var(--border); z-index: 1000; transform: translateX(100%); transition: transform 0.25s ease; overflow-y: auto; box-shadow: -4px 0 20px rgba(0,0,0,0.5); }
+.inspector-overlay.open { transform: translateX(0); }
+.inspector-header { display: flex; align-items: center; gap: 12px; padding: 16px 20px; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: var(--bg2); z-index: 1; }
+.inspector-header h2 { font-size: 15px; font-weight: 600; flex: 1; }
+.inspector-close { background: none; border: 1px solid var(--border); border-radius: 4px; color: var(--text2); font-size: 16px; cursor: pointer; padding: 2px 8px; }
+.inspector-close:hover { color: var(--text); border-color: var(--text3); }
+.inspector-body { padding: 16px 20px; }
+
+/* Phase timeline */
+.phase-timeline { display: flex; gap: 4px; margin-bottom: 20px; }
+.phase-step { flex: 1; text-align: center; padding: 8px 4px; border-radius: 6px; font-size: 10px; font-weight: 600; text-transform: uppercase; }
+.phase-step.done { background: rgba(63,185,80,0.15); color: var(--green); }
+.phase-step.active { background: rgba(88,166,255,0.15); color: var(--blue); border: 1px solid var(--blue); }
+.phase-step.pending { background: var(--bg3); color: var(--text3); }
+.phase-step.failed { background: rgba(248,81,73,0.15); color: var(--red); }
+.phase-step .phase-name { display: block; }
+
+/* Inspector sections */
+.insp-section { margin-bottom: 16px; }
+.insp-section-title { font-size: 11px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; padding-bottom: 4px; border-bottom: 1px solid var(--border); }
+.insp-row { display: flex; justify-content: space-between; padding: 4px 0; font-size: 12px; }
+.insp-row .k { color: var(--text2); }
+.insp-row .v { font-weight: 500; }
+
+/* Comms trail */
+.comms-trail { max-height: 400px; overflow-y: auto; }
+.comms-msg { padding: 10px 12px; border-bottom: 1px solid var(--border); font-size: 12px; }
+.comms-msg:last-child { border-bottom: none; }
+.comms-meta { display: flex; gap: 8px; align-items: center; margin-bottom: 4px; }
+.comms-from { font-weight: 600; font-size: 11px; }
+.comms-from.claude { color: var(--blue); }
+.comms-from.gemini { color: var(--orange); }
+.comms-time { font-size: 10px; color: var(--text3); }
+.comms-type { font-size: 10px; padding: 1px 5px; border-radius: 3px; background: var(--bg3); color: var(--text2); }
+.comms-content { color: var(--text2); line-height: 1.5; word-break: break-word; }
+.comms-empty { color: var(--text3); font-size: 12px; padding: 12px; text-align: center; }
+</style>
+</head>
+<body>
+
+<!-- Module inspector slide-in panel -->
+<div class="inspector-overlay" id="inspector">
+  <div class="inspector-header">
+    <h2 id="inspector-title">Module Inspector</h2>
+    <button class="inspector-close" onclick="closeInspector()">&times;</button>
+  </div>
+  <div class="inspector-body" id="inspector-body">
+    <div class="loading">Select a module...</div>
+  </div>
+</div>
+
+<div class="topbar">
+  <h1>&#x1F3E5; Track Health</h1>
+  <div style="font-size:12px;color:var(--text3);">Build progress, quality, enrichment — one view per track</div>
+  <div class="nav">
+    <a href="/">Home</a>
+    <a href="/progress.html">Progress</a>
+    <a href="/audit-dashboard.html">Audit</a>
+    <a href="/quality.html">Quality</a>
+    <a href="/comms.html">Comms</a>
+    <a href="/curriculum-dashboard.html">Curriculum</a>
+    <a href="/docs">API</a>
+  </div>
+</div>
+
+<div class="container">
+  <!-- All-tracks overview -->
+  <div class="section-title" style="margin-top:16px">All Tracks Overview <button class="refresh-btn" onclick="loadOverview()">Refresh</button></div>
+  <div id="overview-container"><div class="loading">Loading...</div></div>
+
+  <!-- Track selector -->
+  <div class="section-title">Track Detail</div>
+  <div class="track-selector" id="track-selector"></div>
+
+  <!-- Health dashboard for selected track -->
+  <div id="health-container"></div>
+</div>
+
+<script>
+const TRACKS = ['a1','a2','b1','b2','b2-pro','c1','c1-pro','c2','b2-hist','c1-hist','c1-bio','lit','oes','ruth'];
+let currentTrack = null;
+let overviewData = null;
+
+function pct(v, t) { return t > 0 ? Math.round(v / t * 100) : 0; }
+
+function barColor(pct) {
+  if (pct >= 90) return 'var(--green)';
+  if (pct >= 60) return 'var(--blue)';
+  if (pct >= 30) return 'var(--yellow)';
+  return 'var(--red)';
+}
+
+function healthCard(label, value, sub, pctVal, color) {
+  const col = color || barColor(pctVal || 0);
+  return `<div class="health-card">
+    <div class="label">${label}</div>
+    <div class="value" style="color:${col}">${value}</div>
+    ${sub ? `<div class="sub">${sub}</div>` : ''}
+    ${pctVal !== undefined ? `<div class="bar"><div class="bar-fill" style="width:${pctVal}%;background:${col}"></div></div>` : ''}
+  </div>`;
+}
+
+async function loadOverview() {
+  const el = document.getElementById('overview-container');
+  el.innerHTML = '<div class="loading">Loading all tracks...</div>';
+  try {
+    const [buildRes, enrichRes] = await Promise.all([
+      fetch('/api/state/build-status').then(r => r.json()),
+      fetch('/api/state/enrichment-status').then(r => r.json()),
+    ]);
+    overviewData = { build: buildRes.tracks, enrich: enrichRes.tracks };
+
+    let rows = '';
+    for (const tid of TRACKS) {
+      const b = buildRes.tracks[tid];
+      const e = enrichRes.tracks[tid];
+      if (!b && !e) continue;
+      const total = b ? b.total : (e ? e.total : 0);
+      const done = b ? b.done : 0;
+      const building = b ? b.building : 0;
+      const failed = b ? b.failed : 0;
+      const eDone = e ? e.enriched : 0;
+      const bPct = pct(done, total);
+      const ePct = pct(eDone, total);
+
+      rows += `<tr onclick="selectTrack('${tid}')">
+        <td style="font-weight:600">${tid}</td>
+        <td>${total}</td>
+        <td class="bar-cell">
+          <div style="display:flex;align-items:center;gap:8px">
+            <div class="mini-bar" style="flex:1"><div class="mini-bar-fill" style="width:${bPct}%;background:${barColor(bPct)}"></div></div>
+            <span style="font-size:11px;color:var(--text2);min-width:40px">${done}/${total}</span>
+          </div>
+        </td>
+        <td>${building > 0 ? `<span style="color:var(--blue)">${building} active</span>` : '<span style="color:var(--text3)">—</span>'}</td>
+        <td>${failed > 0 ? `<span style="color:var(--red)">${failed}</span>` : '<span style="color:var(--text3)">0</span>'}</td>
+        <td class="bar-cell">
+          <div style="display:flex;align-items:center;gap:8px">
+            <div class="mini-bar" style="flex:1"><div class="mini-bar-fill" style="width:${ePct}%;background:${barColor(ePct)}"></div></div>
+            <span style="font-size:11px;color:var(--text2);min-width:40px">${ePct}%</span>
+          </div>
+        </td>
+      </tr>`;
+    }
+
+    el.innerHTML = `<table class="overview-table">
+      <tr><th>Track</th><th>Total</th><th>Build Progress</th><th>Building</th><th>Failed</th><th>Enriched</th></tr>
+      ${rows}
+    </table>`;
+  } catch(e) {
+    el.innerHTML = `<div style="color:var(--red)">Failed: ${e.message}</div>`;
+  }
+}
+
+function renderTrackSelector() {
+  const el = document.getElementById('track-selector');
+  el.innerHTML = TRACKS.map(t => {
+    const active = t === currentTrack ? ' active' : '';
+    return `<button class="track-btn${active}" onclick="selectTrack('${t}')">${t}</button>`;
+  }).join('');
+}
+
+async function selectTrack(trackId) {
+  currentTrack = trackId;
+  renderTrackSelector();
+  const el = document.getElementById('health-container');
+  el.innerHTML = '<div class="loading">Loading track health...</div>';
+
+  try {
+    const [health, buildStatus] = await Promise.all([
+      fetch(`/api/state/track-health/${trackId}`).then(r => r.json()),
+      fetch(`/api/state/build-status/${trackId}`).then(r => r.json()),
+    ]);
+
+    const h = health;
+    const bs = buildStatus;
+
+    // Health cards
+    let cards = '';
+    cards += healthCard('Build Progress', `${h.build.pct}%`, `${h.build.done}/${h.total} modules`, h.build.pct);
+    cards += healthCard('Audit Passing', `${h.audit.pct}%`, `${h.audit.passing} pass, ${h.audit.failing} fail`, h.audit.pct);
+    cards += healthCard('Enrichment', `${h.enrichment.pct}%`, `${h.enrichment.done}/${h.total} plans enriched`, h.enrichment.pct, 'var(--orange)');
+    cards += healthCard('Final Review', h.final_review.approval_rate, `${h.final_review.approved}/${h.final_review.reviewed} approved`, h.final_review.reviewed > 0 ? Math.round(h.final_review.approved/h.final_review.reviewed*100) : 0, 'var(--purple)');
+    cards += healthCard('Word Quality', h.words.avg_ratio, 'avg words vs target', null, 'var(--cyan)');
+    cards += `<div class="health-card eta-card">
+      <div class="label">ETA (remaining)</div>
+      <div class="value" style="color:var(--yellow)">${h.eta.display}</div>
+      <div class="sub">${h.eta.remaining} modules left</div>
+    </div>`;
+
+    // Recent completions
+    let completions = '';
+    if (bs.recent_completions && bs.recent_completions.length) {
+      completions = bs.recent_completions.map(c => {
+        const auditCls = c.audit === 'pass' ? 'audit-pass' : 'audit-fail';
+        return `<div class="completion-row clickable" onclick="inspectModule('${trackId}', ${c.num})">
+          <span class="completion-num">#${c.num}</span>
+          <span class="completion-slug">${c.slug}</span>
+          <span class="completion-audit ${auditCls}">${c.audit}</span>
+          <span class="completion-words">${c.words}w</span>
+          <span class="completion-words">phase ${c.phase}</span>
+        </div>`;
+      }).join('');
+    } else {
+      completions = '<div style="color:var(--text3);font-size:13px;padding:8px">No recent completions</div>';
+    }
+
+    // Currently building
+    let building = '';
+    if (bs.currently_building && bs.currently_building.length) {
+      building = bs.currently_building.map(b => {
+        return `<div class="completion-row clickable" onclick="inspectModule('${trackId}', ${b.num})">
+          <span class="completion-num">#${b.num}</span>
+          <span class="completion-slug">${b.slug}</span>
+          <span style="color:var(--blue);font-size:12px">Phase ${b.phase}</span>
+          ${b.prev ? `<span style="color:var(--text3);font-size:11px">prev: ${b.prev}</span>` : ''}
+        </div>`;
+      }).join('');
+    } else {
+      building = '<div style="color:var(--text3);font-size:13px;padding:8px">Nothing building right now</div>';
+    }
+
+    // Attention list
+    let attention = '';
+    if (h.attention && h.attention.length) {
+      attention = h.attention.map(a => {
+        const badgeCls = a.reason.includes('fail') ? 'badge-fail' : 'badge-review';
+        const label = a.reason.replace('final_review_', '').replace('audit_', '');
+        return `<div class="attention-item clickable" onclick="inspectModule('${trackId}', ${a.num})">
+          <span class="attention-badge ${badgeCls}">${label}</span>
+          <span class="attention-slug">#${a.num} ${a.slug}</span>
+          <span class="attention-detail">${a.detail}</span>
+        </div>`;
+      }).join('');
+    } else {
+      attention = '<div style="color:var(--green);font-size:13px;padding:8px">No issues — track is healthy</div>';
+    }
+
+    el.innerHTML = `
+      <div class="health-grid">${cards}</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+        <div class="section-card">
+          <div class="section-title" style="margin-top:0">Currently Building</div>
+          <div class="completions">${building}</div>
+        </div>
+        <div class="section-card">
+          <div class="section-title" style="margin-top:0">Recent Completions</div>
+          <div class="completions">${completions}</div>
+        </div>
+      </div>
+      <div class="section-card">
+        <div class="section-title" style="margin-top:0">Needs Attention</div>
+        <ul class="attention-list">${attention}</ul>
+      </div>
+      <div class="timestamp">Updated: ${h.generated_at}</div>
+    `;
+  } catch(e) {
+    el.innerHTML = `<div style="color:var(--red)">Failed to load track health: ${e.message}</div>`;
+  }
+}
+
+// Auto-refresh every 30s
+let refreshInterval = null;
+function startAutoRefresh() {
+  if (refreshInterval) clearInterval(refreshInterval);
+  refreshInterval = setInterval(() => {
+    loadOverview();
+    if (currentTrack) selectTrack(currentTrack);
+  }, 30000);
+}
+
+// Init
+renderTrackSelector();
+loadOverview();
+startAutoRefresh();
+
+// Auto-select first track with activity
+setTimeout(async () => {
+  if (!overviewData) return;
+  const active = TRACKS.find(t => {
+    const b = overviewData.build[t];
+    return b && (b.done > 0 || b.building > 0);
+  });
+  if (active) selectTrack(active);
+}, 1500);
+
+// ---- Module Inspector ----
+const inspector = document.getElementById('inspector');
+const inspectorTitle = document.getElementById('inspector-title');
+const inspectorBody = document.getElementById('inspector-body');
+
+function closeInspector() {
+  inspector.classList.remove('open');
+}
+
+// Close on Escape
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeInspector(); });
+
+async function inspectModule(trackId, num) {
+  inspector.classList.add('open');
+  inspectorTitle.textContent = `#${num} — Loading...`;
+  inspectorBody.innerHTML = '<div class="loading">Fetching module data...</div>';
+
+  try {
+    // Step 1: fetch module detail (we need the slug for comms)
+    const modRes = await fetch(`/api/state/module/${trackId}/${num}`);
+    const mod = await modRes.json();
+    inspectorTitle.textContent = `#${num} — ${mod.slug || 'unknown'}`;
+
+    // Step 2: fetch comms using slug
+    let commsData = { groups: [] };
+    if (mod.slug) {
+      try {
+        const commsRes = await fetch(`/api/comms/by-module/${trackId}/${mod.slug}`);
+        if (commsRes.ok) commsData = await commsRes.json();
+      } catch(e) { /* comms endpoint may not exist or have no data */ }
+    }
+
+    renderInspector(mod, commsData);
+  } catch(e) {
+    inspectorBody.innerHTML = `<div style="color:var(--red);padding:16px">Failed: ${e.message}</div>`;
+  }
+}
+
+function renderInspector(mod, extraComms) {
+  const PHASES = ['A', 'B', 'C', 'audit', 'D', 'E', 'F'];
+  const phaseLabels = { A: 'Research', B: 'Content', C: 'Activities', audit: 'Audit', D: 'Review', E: 'Repair', F: 'Final' };
+  const phases = mod.phases || {};
+
+  // Phase timeline
+  const timeline = PHASES.map(p => {
+    const ph = phases[p];
+    let cls = 'pending';
+    if (ph) {
+      if (ph.status === 'complete') cls = 'done';
+      else if (ph.status === 'in_progress' || ph.status === 'running') cls = 'active';
+      else if (ph.status === 'failed' || ph.status === 'error') cls = 'failed';
+    }
+    return `<div class="phase-step ${cls}"><span class="phase-name">${phaseLabels[p] || p}</span></div>`;
+  }).join('');
+
+  // Module info — uses the nested response shape from /api/state/module/
+  const audit = mod.audit || {};
+  const wordCount = audit.word_count || 0;
+  const wordTarget = audit.word_target || 0;
+  const auditStatus = audit.status || '—';
+
+  const info = [
+    ['Track', mod.track || '—'],
+    ['Module #', mod.num || '—'],
+    ['Slug', mod.slug || '—'],
+    ['Words', wordCount ? `${wordCount}` : '—'],
+    ['Word Target', wordTarget ? `${wordTarget}` : '—'],
+    ['Audit', auditStatus],
+  ];
+  const infoHtml = info.map(([k, v]) => {
+    let style = '';
+    if (k === 'Audit') style = v === 'pass' ? 'color:var(--green)' : v === 'fail' ? 'color:var(--red)' : '';
+    if (k === 'Words' && wordTarget > 0) {
+      const ratio = wordCount / wordTarget;
+      style = ratio >= 1.0 ? 'color:var(--green)' : ratio >= 0.85 ? 'color:var(--yellow)' : 'color:var(--red)';
+    }
+    return `<div class="insp-row"><span class="k">${k}</span><span class="v" style="${style}">${v}</span></div>`;
+  }).join('');
+
+  // Blocking issues from audit
+  let blockingHtml = '';
+  if (audit.blocking_issues && audit.blocking_issues.length) {
+    blockingHtml = `<div style="margin-top:8px;font-size:11px;color:var(--red)">` +
+      audit.blocking_issues.map(i => `<div style="padding:1px 0">- ${escHtml(i)}</div>`).join('') +
+      `</div>`;
+  }
+
+  // Research / enrichment status
+  const researchInfo = mod.research || {};
+  const research = researchInfo.exists ? '<span style="color:var(--green)">exists</span>' : '<span style="color:var(--text3)">missing</span>';
+  const researchScore = researchInfo.score ? ` (score: ${researchInfo.score})` : '';
+  const enrichment = mod.enriched ? '<span style="color:var(--orange)">enriched</span>' : '<span style="color:var(--text3)">original</span>';
+
+  // Final review
+  let reviewHtml = '<span style="color:var(--text3)">Not reviewed yet</span>';
+  if (mod.final_review && mod.final_review.verdict) {
+    const fr = mod.final_review;
+    const verdictColor = fr.verdict === 'APPROVED' ? 'var(--green)' : fr.verdict === 'REJECTED' ? 'var(--red)' : 'var(--yellow)';
+    reviewHtml = `<div style="margin-bottom:6px"><span style="color:${verdictColor};font-weight:600">${fr.verdict}</span></div>`;
+    if (fr.issues && fr.issues.length) {
+      reviewHtml += fr.issues.map(i => `<div style="font-size:11px;color:var(--text2);padding:2px 0">- ${escHtml(i)}</div>`).join('');
+    }
+  }
+
+  // Comms trail — combine inline comms from module endpoint + extra comms endpoint
+  const allMsgs = [];
+  // Inline comms from /api/state/module/ response (uses preview not content)
+  if (mod.comms && mod.comms.length) {
+    for (const msg of mod.comms) {
+      allMsgs.push({
+        id: msg.id,
+        from_llm: msg.from_llm,
+        message_type: msg.message_type,
+        content: msg.preview || msg.content,
+        task_id: msg.task_id,
+        timestamp: msg.timestamp,
+      });
+    }
+  }
+  // Extra comms from /api/comms/by-module/ response (task_groups: { task_id: [msgs] })
+  if (extraComms.task_groups) {
+    for (const [taskId, msgs] of Object.entries(extraComms.task_groups)) {
+      for (const msg of msgs) {
+        // Normalize field names: by-module uses 'from'/'type', inline uses 'from_llm'/'message_type'
+        allMsgs.push({
+          id: msg.id,
+          from_llm: msg.from || msg.from_llm,
+          message_type: msg.type || msg.message_type,
+          content: msg.preview || msg.content,
+          task_id: msg.task_id || taskId,
+          timestamp: msg.timestamp,
+        });
+      }
+    }
+  }
+
+  // Deduplicate by message id
+  const seen = new Set();
+  const uniqueMsgs = allMsgs.filter(m => {
+    const key = m.id || `${m.timestamp}-${m.content}`;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+
+  let commsHtml = '';
+  if (uniqueMsgs.length > 0) {
+    // Sort by timestamp descending (newest first)
+    uniqueMsgs.sort((a, b) => (b.timestamp || '').localeCompare(a.timestamp || ''));
+    commsHtml = uniqueMsgs.map(m => {
+      const fromCls = (m.from_llm || '').toLowerCase();
+      const time = m.timestamp ? new Date(m.timestamp).toLocaleString() : '';
+      return `<div class="comms-msg">
+        <div class="comms-meta">
+          <span class="comms-from ${fromCls}">${m.from_llm || '?'}</span>
+          <span class="comms-type">${m.message_type || 'msg'}</span>
+          ${m.task_id ? `<span style="font-size:10px;color:var(--text3)">${m.task_id}</span>` : ''}
+          <span class="comms-time">${time}</span>
+        </div>
+        <div class="comms-content">${escHtml(m.content || '')}</div>
+      </div>`;
+    }).join('');
+  } else {
+    commsHtml = '<div class="comms-empty">No broker messages for this module</div>';
+  }
+
+  inspectorBody.innerHTML = `
+    <div class="insp-section">
+      <div class="insp-section-title">Pipeline Phases</div>
+      <div class="phase-timeline">${timeline}</div>
+    </div>
+    <div class="insp-section">
+      <div class="insp-section-title">Module Info</div>
+      ${infoHtml}
+      ${blockingHtml}
+      <div class="insp-row"><span class="k">Research</span><span class="v">${research}${researchScore}</span></div>
+      <div class="insp-row"><span class="k">Plan</span><span class="v">${enrichment}</span></div>
+    </div>
+    <div class="insp-section">
+      <div class="insp-section-title">Final Review (Phase F)</div>
+      ${reviewHtml}
+    </div>
+    <div class="insp-section">
+      <div class="insp-section-title">Communication Trail (${uniqueMsgs.length} messages)</div>
+      <div class="comms-trail">${commsHtml}</div>
+    </div>
+  `;
+}
+
+function escHtml(s) {
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+</script>
+</body>
+</html>

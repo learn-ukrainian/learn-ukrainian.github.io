@@ -1,0 +1,291 @@
+✅ Message sent to Gemini (ID: 10409) [auto-acked: self-addressed]
+✓ Message 10409 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10409...
+📨 Message #10409
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-relationships
+   Time: 2026-02-20T20:31:29.246804+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b1-65
+level: B1
+sequence: 65
+slug: relationships
+version: '2.0'
+title: Стосунки та зв'язки
+subtitle: Relationships and Connections
+content_outline:
+- section: Вступ
+  points:
+  - Types of relationships — distinguish between «стосунки» (personal), «відносини»
+    (formal), «взаємини» (reciprocal), and «ставлення» (attitude)
+  - 'Cultural context — introduce the strict distinction between «любити» (family/general)
+    and «кохати» (romantic); cultural hook: «куми» (godparents) as lifelong spiritual
+    kin'
+  - 'Vocabulary overview — focus on high-frequency collocations: «з’ясовувати стосунки»
+    (to have it out), «налагодити стосунки» (to fix relationships)'
+- section: Читання
+  points:
+  - Relationship texts — narrative about a misunderstanding caused by «любити/кохати»
+    or a story illustrating the depth of the «куми» bond
+  - Ukrainian traditions — explain the proverb «Рідня до півдня, а куми — довіку»
+- section: Діалоги
+  points:
+  - 'Discuss relationships — learner error: avoid Russian calque «женився на ній»,
+    use «одружився з нею»'
+  - Use cultural vocabulary — incorporate B1+ collocations like «розірвати стосунки»
+    (to break up) and «втратити зв'язок» (to lose touch)
+vocabulary_hints:
+  required:
+  - 'стосунки (relationships) — personal, emotional interactions; collocations: з’ясовувати
+    стосунки, стосунки в сім''ї'
+  - дружба (friendship) — close personal bond
+  - кохання (love) — romantic passion only (not for family)
+  - родина (family) — close kin group
+  - партнер (partner) — romantic or business context (context matters)
+  - знайомство (acquaintance) — process of meeting or person known slightly
+  - спілкуватися (to communicate) — to maintain contact/connection
+  - підтримувати (to support) — emotional or practical backing
+  recommended:
+  - закоханість (being in love) — temporary state vs deep love
+  - шлюб (marriage) — official union; note usage «шлюб з»
+  - 'зв''язок (connection) — general term; collocations: родинний зв''язок, бути на
+    зв''язку'
+  - приятелювати (to be friends) — to be on friendly terms (less deep than druzhba)
+  - взаємини (mutual relations) — deep, reciprocal warmth; e.g., теплі взаємини
+  - ставлення (attitude) — one-way feeling towards something/someone; e.g., ставлення
+    до роботи
+  - куми (godparents) — spiritual parents, lifelong kin
+activity_hints:
+- type: match-up
+  focus: Relationship noun phrases
+  items: 25
+- type: fill-in
+  focus: Describe relationships
+  items: 20
+- type: match-up
+  focus: Match relationship types
+  items: 15
+- type: quiz
+  focus: Discuss relationship topics
+  items: 10
+focus: vocabulary
+pedagogy: PPP
+prerequisites:
+- b1-64 (Emotions Deep Dive)
+connects_to:
+- b1-66 (Business Basics)
+objectives:
+- Learner can use 25 relationship vocabulary words in context
+- Learner can distinguish between стосунки/відносини/зв'язок
+- Learner can form natural collocations with relationship nouns
+- Learner can discuss Ukrainian cultural traditions related to relationships
+grammar:
+- Noun collocations with relationship vocabulary
+- Verb patterns with emotional states
+- Preposition usage in relationship contexts
+register: розмовний
+phase: B1.6 [Vocabulary Expansion II]
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Family Psychologist
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Стосунки та зв'язки
+
+## State Standard Reference
+§3.1: "Людина: ... сім’я, члени сім’ї, родичі; родинні стосунки; взаємини з іншими людьми; контакти з іншими людьми (зустріч, листування)."
+Alignment: Module covers the core vocabulary for family and social relationships, specifically distinguishing between personal and formal connections as required by the "взаємини з іншими людьми" topic.
+
+## Vocabulary Frequency
+| Word | Nuance / Usage | Key Collocations |
+|------|----------------|------------------|
+| **стосунки** | Personal, emotional, intimate interactions. | з’ясовувати стосунки (to have it out), дружні стосунки, стосунки в сім'ї |
+| **відносини** | Formal, official, regulated interactions. | міжнародні відносини, ринкові відносини, дипломатичні відносини |
+| **взаємини** | Reciprocal, deep personal connection (warmest term). | теплі взаємини, взаємини батьків і дітей |
+| **ставлення** | Attitude towards someone/something (one-way). | ставлення до роботи, упереджене ставлення |
+| **зв'язок** | Connection (general), communication. | родинний зв'язок, бути на зв'язку, зворотний зв'язок |
+
+## Cultural Hooks
+1. **Інститут кумівства (Godparenthood)**: In Ukraine, godparents (*куми*) are not just ceremonial figures but "spiritual parents" with a lifelong duty to help raise the child. The relationship between parents and godparents is often as close as blood kinship. There is a saying: «Рідня до півдня, а куми — довіку» (Relatives are until noon, but godparents are forever).
+2. **Любити vs Кохати**: Ukrainian strictly separates "to love". *Кохати* is reserved exclusively for romantic, passionate love (partner/spouse). *Любити* is used for family, friends, food, hobbies, or country. Saying «Я кохаю борщ» sounds comical and unnatural; «Я люблю борщ» is correct.
+
+## Common Learner Errors
+1. **Russian Calque**: *«Він женився на ній»* → **Correct**: *«Він одружився з нею»* (or *«Він оженився з нею»*).
+   *Why*: Influence of Russian preposition usage. In Ukrainian, the verb *одружуватися* (to marry) is used with the preposition *з* (with).
+2. **Wrong "Love"**: *«Я кохаю свою маму»* → **Correct**: *«Я люблю свою маму»*.
+   *Why*: Overgeneralization of *кохати*. Using *кохати* for family implies an inappropriate romantic context.
+3. **Formal vs Personal**: Using *відносини* for a girlfriend/boyfriend (*«У нас гарні відносини»* sounds like a business contract). → **Correct**: *«У нас гарні стосунки»*.
+
+## Cross-References
+- **Builds on**: b1-64 (Emotions Deep Dive) — uses emotion vocabulary to describe relationship dynamics.
+- **Prepares for**: b1-66 (Business Basics) — sets the contrast between *стосунки* (taught here) and *відносини* (business context in next module).
+
+## Notes for Content Writing
+- **Core B Requirement**: Use specific B1+ collocations like *«розірвати стосунки»* (to break up), *«налагодити стосунки»* (to fix relationships), *«втратити зв'язок»* (to lose touch).
+- **Register**: Emphasize the distinct register difference between *стосунки* (conversation/personal) and *відносини* (news/official).
+- **Narrative**: The module follows the Narrative structure (Intro → Narrative → Analysis). Use a story about a misunderstanding caused by *любити/кохати* or a heartwarming story about *куми* to illustrate the cultural depth.
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Термінологія стосунків (Introduction: Relationship Terminology)"
+  words: 600
+  points:
+  - "State Standard §3.1 alignment: introduction to social and family relationships (родинні стосунки, взаємини з іншими людьми); distinguishing between personal and formal interactions."
+  - "Deep dive into the hierarchy of relationship terms: «стосунки» (personal/emotional), «відносини» (formal/official), «взаємини» (reciprocal/warm), and «ставлення» (one-way attitude)."
+  - "Register distinction: explain why using «відносини» for a romantic partner sounds like a legal contract, whereas «стосунки» is the standard conversational choice."
+- section: "Читання та Культура: Інститут кумівства (Reading and Culture: The Institution of Godparenthood)"
+  words: 900
+  points:
+  - "Cultural hook: «куми» (godparents) as 'spiritual parents' with a lifelong duty; explain the depth of this bond which often parallels blood kinship."
+  - "Linguistic analysis of the proverb «Рідня до півдня, а куми — довіку» (Relatives are until noon, but godparents are forever) to illustrate social priorities."
+  - "Narrative text: a story about a family event where godparents play a central role, highlighting the transition from acquaintance to spiritual kin."
+- section: "Мовна тонкість: Любити чи Кохати? (Linguistic Nuance: To Love or To Love?)"
+  words: 800
+  points:
+  - "The strict semantic boundary between «любити» (family, friends, food, hobbies) and «кохати» (exclusive romantic passion for a partner)."
+  - "Learner error clinic: correcting the overgeneralization of «кохати» (e.g., «Я кохаю маму» or «Я кохаю борщ») with 5 natural substitution drills."
+  - "Narrative illustration: a comical misunderstanding caused by a foreigner using the wrong 'love' verb in a romantic versus a social setting."
+- section: "Граматика та типові помилки (Grammar and Common Errors)"
+  words: 900
+  points:
+  - "Correction of Russian calque: replacing the incorrect «женився на ній» with the Ukrainian «одружився з нею» (verb + preposition «з» + Instrumental case)."
+  - "Drills for high-frequency B1+ collocations: «з’ясовувати стосунки» (to have it out), «налагодити стосунки» (to fix relationships), and «розірвати стосунки» (to break up)."
+  - "Usage of «зв'язок» (connection): collocations like «родинний зв'язок», «бути на зв'язку», and the modern term «зворотний зв'язок» (feedback)."
+- section: "Практика: Розмови про життя (Practice: Conversations About Life)"
+  words: 800
+  points:
+  - "Dialogue practice: two friends discussing their «взаємини» (reciprocal warmth) with parents versus their current «стосунки» with significant others."
+  - "Vocabulary expansion: using «спілкуватися» (to communicate), «приятелювати» (to be on friendly terms), and «втратити зв'язок» (to lose touch) in a narrative about relocating."
+  - "Interactive summary: discussing one's «ставлення» (attitude) towards godparenthood and family traditions using the covered terminology."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "стосунки (relationships) — personal, emotional interactions; collocations: з’ясовувати стосунки, налагодити стосунки"
+  - "відносини (formal relations) — official, regulated interactions; collocations: міжнародні відносини, дипломатичні відносини"
+  - "взаємини (mutual relations) — deep, reciprocal connection (warmest term); e.g., взаємини батьків і дітей"
+  - "ставлення (attitude) — one-way feeling towards something/someone; collocations: ставлення до роботи, упереджене ставлення"
+  - "кохати (to love) — reserved exclusively for romantic passion; never for family or food"
+  - "любити (to love) — used for family, friends, food, hobbies, or country"
+  - "куми (godparents) — spiritual parents, lifelong kin; culturally vital relationship"
+  - "одружитися з (to marry someone) — used with preposition 'з' and Instrumental case; avoid Russian calque 'на ній'"
+  recommended:
+  - "зв'язок (connection) — general term; collocations: родинний зв'язок, бути на зв'язку, зворотний зв'язок"
+  - "розірвати стосунки (to break up) — to formally sever a romantic or personal connection"
+  - "приятелювати (to be friends) — to be on friendly terms (lighter than 'дружба')"
+  - "спілкуватися (to communicate) — to maintain contact or social interaction"
+  - "знайомство (acquaintance) — the process of meeting or a person known slightly"
+  - "втратити зв'язок (to lose touch) — to cease communication over time"
+  - "підтримувати (to support) — emotional or practical backing in a relationship"
+  - "шлюб (marriage) — official union; usage: 'брати шлюб з'"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4672 chars)
+✅ Message sent to Claude (ID: 10414)
+✓ Message 10414 acknowledged
+   Auto-acknowledged reply #10414 (stdout delivery — no inbox accumulation)
+✓ Message 10409 acknowledged

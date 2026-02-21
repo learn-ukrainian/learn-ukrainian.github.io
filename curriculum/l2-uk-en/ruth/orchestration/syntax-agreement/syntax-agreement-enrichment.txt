@@ -1,0 +1,221 @@
+✅ Message sent to Gemini (ID: 12594) [auto-acked: self-addressed]
+✓ Message 12594 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12594...
+📨 Message #12594
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-syntax-agreement
+   Time: 2026-02-20T23:40:57.146165+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 55
+module: ruth-055
+module_number: 45
+slug: syntax-agreement
+title_uk: 'Синтаксис I: Узгодження'
+title_en: Syntax I
+phase: 2
+phase_id: sacred-word
+phase_name: Sacred Word
+focus: Agreement and government rules
+content_outline:
+- section: Вступ
+  description: Introduction to Syntax I
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Baroque Scholar
+  role: Grammar Prefect
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Syntax Agreement (Рутенька мова)
+
+## Використані джерела
+1. [litopys.org.ua](http://litopys.org.ua/) — Енциклопедія "Українська мова", розділи про історичний синтаксис та пам'ятки XVI-XVII ст.
+2. [esu.com.ua](https://esu.com.ua/) — Статті "Давальний самостійний", "Староукраїнська мова".
+3. [history.org.ua](http://history.org.ua/) — Дослідження про мову Литовських статутів та ділової документації.
+
+## Хронологія
+- **1556-1561**: Пересопницьке Євангеліє — фіксація живих народних синтаксичних конструкцій поряд з церковнослов'янськими (активне вживання давального самостійного).
+- **1588**: Третій Литовський Статут — кодифікація "руської" юридичної термінології та канцелярського синтаксису (чіткі формули узгодження).
+- **1619**: "Грамматіка" Мелетія Смотрицького — спроба внормувати синтаксис, вплив латинських взірців на розуміння граматичних категорій.
+- **Середина XVII ст.** (Військо Запорозьке): Поява специфічних "козацьких" канцеляризмів та спрощення синтаксичних конструкцій у листуванні старшини.
+- **1698**: Виведення польської мови як офіційної з діловодства (на Гетьманщині ще зберігається руська), але польський синтаксичний вплив залишається сильним у бароковій літературі.
+
+## Ключові факти та цитати
+- **Давальний самостійний**: Конструкція на кшталт "сідши нам" (коли ми сіли), успадкована від старослов'янської, але в XVI ст. вже конкурує з підрядними реченнями часу ("коли...", "гди...").
+- **Двоїна (Dualis)**: Руська мова зберігала живі форми двоїни, що впливало на узгодження (напр., "дві рибі", "очі мої" — форми, відмінні від множини).
+- **Числівники**: Чітке розрізнення роду для числівників 3 і 4: "триє сини" (чол.), але "три дочки" (жін.).
+- **Польський вплив**: Запозичення сполучників підрядності (*іж*, *же*, *аби*) та порядку слів (дієслово в кінці речення у високому стилі).
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ": [!context] — Руська мова як "field of battle" між архаїчною кириличною традицією та модерним західним синтаксисом.
+- Section "Узгодження підмета і присудка": [!history-bite] — "Ми, Король..." — чому монархи говорили про себе в множині (pluralis majestatis) і як це впливало на граматику.
+- Section "Таємниці числівників": [!decolonization] — Міф про "спільну колиску" розбивається об граматику: українська зберегла двоїну та кличний відмінок, які зникли в російській.
+- Section "Давальний самостійний": [!culture] — Це не помилка, а ознака "високого штилю", аналог латинського Ablativus Absolutus.
+- Section "Керування": [!myth-buster] — Думка, що "полонізми" зіпсували мову. Насправді вони дали інструментарій для складнопідрядних речень (гіпотаксису), якого бракувало простій народній мові.
+- Section "Підсумок": [!quote] — Цитата з Івана Вишенського про "просту мову", яка має бути зрозумілою, проти "хитросплетінь" латини.
+
+## Деколонізаційний контекст
+- **Imperial Myth**: Руська мова (Ruthenian) — це просто "зіпсована польською російська" або діалект без правил.
+- **Ukrainian Reality**: Це була високорозвинена літературна мова з власною нормою, яка синтезувала давньоруську спадщину та європейські (латинські/польські) синтаксичні моделі, випереджаючи російську мову в розвитку складного синтаксису на століття.
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| "Західноруська мова" | Термін імперської лінгвістики для заперечення окремішності української мови. | Староукраїнська мова (Руська мова) — самостійна мовна система. |
+| Полонізми | Розглядаються як "сміття" або ознака ополячення. | Розглядаються як шлях європеїзації та розвитку абстрактного мислення/синтаксису. |
+| Вплив церковнослов'янської | Вважається єдиним "високим" джерелом (спільним з Росією). | Українська редакція церковнослов'янської мала унікальні риси (вимова, синтаксис). |
+
+## Section-Mapped Research Notes
+
+### Вступ: Синтаксичний ландшафт руської мови
+Синтаксис руської мови XVI-XVII ст. — це сплав. Основа — народна розмовна стихія (паратаксис, прості речення), на яку накладається книжна традиція (складні періоди, дієприкметникові звороти) та вплив латини через польську (порядок слів, керування). Це час народження модерного українського синтаксису.
+
+### Узгодження підмета і присудка: Жива двоїна
+Головна особливість — категорія двоїни. Іменники, що позначають парні предмети (очі, вуха, рукави), або вжиті з числівником "два/дві", вимагали специфічного узгодження.
+Приклад: "Очі мої видіста" (двоїна) vs "Очі мої виділи" (множина — пізніше спрощення).
+Узгодження з колективними іменниками (*громада*, *шляхта*) могло бути як граматичним (однина), так і смисловим (множина) — "громада постановили".
+
+### Таємниці числівників: Рід і число
+Числівники поводилися інакше, ніж зараз.
+*Один* — повне узгодження як прикметник.
+*Два* — вимагало двоїни (*дві літі* — два роки).
+*Три, Чотири* — зберігали розрізнення роду. Для чоловічого роду: *триє, чотириє* (триє брати). Для жіночого/середнього: *три, чотири* (три сестри). Це архаїчна риса, яка зараз втрачена, але була нормою.
+
+### Давальний самостійний: Релікт чи стиль?
+Конструкція: Іменник/Займенник у Давальному + Дієприкметник у Давальному.
+Значення: Часова обставина ("Коли...").
+Приклад з Євангелія: "Ідучи йому..." (Коли він йшов...).
+У XVI ст. це вже книжний архаїзм, маркер урочистого стилю. У живій мові витіснявся підрядними реченнями з сполучниками *гди*, *коли*.
+
+### Керування та прийменникові конструкції
+Зміни в керуванні: перехід від безприйменникових конструкцій до прийменникових.
+Приклад: *Дякувати кому* (Дав.) vs пол. *dziękować komu*.
+Вплив польської: конструкції типу *через* + Зн. в., *для* + Род. в. (замість давніх *діля*).
+Специфічне керування прийменника *о*: *о тім* (про те).
+
+### Вплив польського та латинського синтаксису
+Розвиток гіпотаксису (складнопідрядних речень). Давня мова надавала перевагу сурядності (і... і... та...). Нова ділова і полемічна мова потребувала логічної підрядності.
+Звідси експансія сполучників: *іж, же, аби, поневаж, якби*.
+Порядок слів: Інверсія, винесення присудка в кінець (латинізм).
+Пасивні конструкції: *Вчинено єсть* (безособова) vs *Мною учинено* (пасивна з орудним діяча — вплив заходу).
+
+### Підсумок: Від руської до сучасної
+Руська мова виробила каркас сучасного українського синтаксису. Втрата двоїни та давального самостійного наблизила мову до сучасного стану, але багатство сполучників та гнучкість порядку слів — це спадок барокової доби.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12631)
+✓ Message 12594 acknowledged
+✓ Message 12631 acknowledged

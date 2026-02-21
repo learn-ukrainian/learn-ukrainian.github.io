@@ -6,56 +6,69 @@ version: '2.0'
 title: Buying Tickets
 subtitle: Travel Arrangements
 content_outline:
-- section: Warm-up
+- section: Вступ та підготовка (Warm-up & Preparation)
+  words: 450
   points:
-  - Види транспорту між містами (поїзд, автобус, маршрутка) — distinction between
-    `вокзал` (major hub) and `станція/зупинка` (local stop)
-  - Залізничні вокзали України — focus on `вокзал` context; use collocations 'центральний
-    вокзал', 'залізничний вокзал'
-- section: Presentation
+  - 'Визначення видів транспорту для міжміських подорожей: `поїзд`, `автобус`, `маршрутка`.
+    Введення розрізнення між `вокзал` (major hub), `автовокзал` (large bus terminal)
+    та `автостанція/зупинка` (smaller local stops), що є критичним для навігації в
+    Україні.'
+  - 'Введення конструкції `до` + Genitive для позначення напрямку руху до міст. Згідно
+    з Державним стандартом А1, це подається як «лексикалізована граматика» (фіксовані
+    формули: `до Києва`, `до Львова`, `до Одеси`) без глибокого вивчення відмінків.'
+- section: Каса та замовлення (Ticket Office & Ordering)
+  words: 650
   points:
-  - 'Запит квитка (Один квиток до..., будь ласка) — learner error: using `в` instead
-    of `до` + Genitive for cities; learner error: gender agreement `одна квиток` instead
-    of `один квиток` (masculine); State Standard: introduces high-frequency `до` +
-    Genitive structure'
-  - Уточнення (Туди й назад / В один бік) — teach as fixed vocabulary chunks
-  - 'Клас та місце (Купе / Плацкарт / Сидячий) — cultural hook: Platzkart culture
-    (sharing food like roast chicken/eggs, social space)'
-  - Розклад (О котрій відправлення? / Коли прибуття?) — use `о котрій?` for schedule
-    questions as per A1 standard
-  - 'Платформа (На якій платформі? / В якому вагоні?) — cultural hook: tea served
-    by conductors (`провідники`) in traditional silver-colored glass holders (`підстаканники`)'
-- section: Practice
+  - 'Формулювання запиту на купівлю квитка з використанням комунікативної інтенції
+    «Дайте, будь ласка» або «Мені, будь ласка...». Акцент на типовій помилці: узгодженні
+    роду `одна квиток` (неправильно) замість `один квиток` (правильно, чоловічий рід).'
+  - 'Вибір типу поїздки: `Туди й назад` (round trip) або `В один бік` (one way). Вивчення
+    різниці між `квитковою касою` та `електронним квитком` (QR-код), що є стандартом
+    сучасної Укрзалізниці.'
+  - 'Вибір класу вагона та місця: `Купе` (privacy) проти `Плацкарт` (social). Культурний
+    гачок: «культура плацкарту» як відкритого соціального простору, де прийнято ділитися
+    їжею (курка, яйця) та спілкуватися.'
+- section: Поїздка та комфорт (Train Life & Comfort)
+  words: 550
   points:
-  - 'Діалог 1: Купівля квитка на поїзд до Львова — focus on polite request format
-    `Мені, будь ласка...`; use correct `до Львова` (Genitive)'
-  - 'Діалог 2: Запитання про розклад автобусів — reinforce usage of `автовокзал` vs
-    `автостанція`'
-  - 'Діалог 3: Зміна квитка'
-- section: Warm-up 2
+  - 'Орієнтація на вокзалі: `На якій платформі?` та `В якому вагоні?`. Використання
+    числівників (з модуля а1-17) для номерів колій та місць. Уточнення щодо `нижнього`
+    та `верхнього` місця (lower/upper berth).'
+  - 'Питання про розклад: `О котрій відправлення?` та `Коли прибуття?`. Культурний
+    символ: традиція пиття чаю в легендарних склянках із металевими `підстаканниками`,
+    які приносить `провідник` (conductor).'
+- section: Практика та підсумок (Practice & Summary)
+  words: 350
   points:
-  - Наратив про подорож у Карпати — integrate mention of tea in glass holders and
-    conductor interaction
-  - Практична лексика в контексті
+  - 'Діалог-симуляція: Купівля квитка до Львова в касі. Контроль за вживанням прийменника
+    `до` замість помилкового `в` для міст (напр. `їхати до Львова` замість `їхати
+    в Львів`).'
+  - 'Наратив про подорож у Карпати: інтеграція лексики вокзалу, вибору місця в купе
+    та взаємодії з провідником. Закріплення ввічливих форм запиту.'
 vocabulary_hints:
   required:
   - 'квиток (ticket) — collocations: купити квиток, один квиток (masculine agreement),
-    електронний квиток'
-  - 'поїзд (train) — collocations: сісти на поїзд, швидкий поїзд, поїзд №...'
-  - автобус (bus) — contrast with `маршрутка` (minibus)
-  - 'вокзал (station) — collocations: центральний вокзал, залізничний вокзал; distinct
-    from `зупинка`'
-  - 'платформа (platform) — usage: на першій платформі, яка платформа?'
-  - 'місце (seat) — context: нижнє/верхнє місце (lower/upper berth)'
-  - 'відправлення (departure) — usage: о котрій відправлення?'
-  - 'прибуття (arrival) — usage: коли прибуття?'
+    електронний квиток. High frequency (Top 500).'
+  - 'поїзд (train) — collocations: сісти на поїзд, розклад поїздів, швидкий поїзд.
+    High frequency.'
+  - 'вокзал (station) — collocations: залізничний вокзал, центральний вокзал, на вокзалі.
+    High frequency.'
+  - 'місце (seat/place) — context: нижнє/верхнє місце, вільне місце, ваше місце. Very
+    high frequency.'
+  - до (to/until) — preposition for direction with cities (до Львова, до Києва). Treated
+    as lexical chunk pattern for A1.
   recommended:
   - 'каса (ticket office) — collocations: квиткова каса, де каса?'
-  - 'розклад (schedule) — collocations: розклад поїздів, за розкладом'
+  - 'розклад (schedule) — collocations: розклад поїздів, за розкладом.'
   - 'вагон (carriage) — usage: в якому вагоні?'
-  - 'пересадка (transfer) — context: з пересадкою / без пересадки'
-  - туди й назад (round trip) — fixed phrase chunk
-  - 'купе (compartment) — cultural context: sleeping car types'
+  - 'провідник (conductor) — cultural hook: train staff member who serves tea.'
+  - 'підстаканник (glass holder) — cultural hook: iconic silver-colored glass holder
+    for tea.'
+  - 'плацкарт (platzkart) — cultural context: open dormitory-style sleeping carriage.'
+  - 'купе (compartment) — cultural context: 4-berth closed compartment.'
+  - автостанція (bus station) — contrast with `автовокзал` (major hub) for smaller
+    regional locations.
+  - туди й назад (round trip) — fixed phrase chunk for ticket requests.
 activity_hints:
 - type: fill-in
   focus: Ticket purchase conversation

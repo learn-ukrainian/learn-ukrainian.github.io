@@ -1,0 +1,211 @@
+✅ Message sent to Gemini (ID: 12533) [auto-acked: self-addressed]
+✓ Message 12533 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12533...
+📨 Message #12533
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-comparative-lab-parallel
+   Time: 2026-02-20T23:40:34.037413+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 49
+module: ruth-049
+module_number: 49
+slug: comparative-lab-parallel
+title_uk: Порівняльна лабораторія
+title_en: Comparative Lab
+phase: 2
+phase_id: sacred-word
+phase_name: Sacred Word
+focus: Analyzing one verse across 4 versions
+content_outline:
+- section: Вступ
+  description: Introduction to Comparative Lab
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+- grammar-lab
+- parallel-text
+persona:
+  voice: Baroque Scholar
+  role: Textual Critic
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Comparative Lab Parallel (Сакральне Слово)
+
+## Використані джерела
+1. [Ізборник: Пересопницьке Євангеліє](http://litopys.org.ua/ukrmova/um45.htm) — текст, мовні особливості, історичний контекст створення.
+2. [Біблія Куліша (1871)](http://bible.net.ua) — перший повний переклад Біблії сучасною українською літературною мовою.
+3. [Енциклопедія Сучасної України: Острозька Біблія](https://esu.com.ua/article-87589) — фундаментальне видання церковнослов'янською мовою, контекст полеміки.
+4. [Іван Огієнко: Історія української літературної мови](http://litopys.org.ua/ohukr/ohukr.htm) — аналіз сакрального стилю та його впливу на народну мову.
+5. [Василь Німчук: Хрестоматія перекладів "Отче наш"](http://litopys.org.ua) — джерело текстів для порівняльного аналізу.
+
+## Хронологія
+- 1556-1561: Створення Пересопницького Євангелія (архімандрит Григорій, писар Михайло Василевич).
+- 1581: Видання Острозької Біблії Іваном Федоровим (церковнослов'янський канон).
+- 1619: Граматика Мелетія Смотрицького (кодифікація церковнослов'янської мови).
+- 1646: Требник Петра Могили (синтез київської та західної традицій).
+- 1871: Видання повного перекладу Біблії Пантелеймона Куліша та Івана Пулюя.
+- 1962: Завершення перекладу Біблії Іваном Огієнком (сучасний канонічний текст).
+
+## Ключові факти та цитати
+- **Матвій 5:3 (Острозька Біблія, 1581)**: "Блаженни нищии духом, яко техъ есть Царствїе Небесное".
+- **Матвій 5:3 (Пересопницьке Євангеліє, 1561)**: "Блаженї оубогіи доухом, яко тѣх ест царство небесное".
+- **Матвій 5:3 (Куліш, 1871)**: "Блаженні вбогі духом, бо їхнєє Царство Небесне".
+- **Матвій 5:3 (Огієнко, 1962)**: "Блаженні вбогі духом, бо їхнє Царство Небесне".
+- **Важлива відмінність**: "Нищии" (церк.-слов.) -> "Убогі" (староукр.) -> "Вбогі" (суч.). Це демонструє перехід від абстрактного поняття "жебрацтва" до більш широкого соціального та духовного стану.
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ": [!context] — Поняття диглосії в Русі-Україні: співіснування "високої" церковнослов'янської та "простої" руської мови.
+- Section "Основний матеріал: I": [!history-bite] — Пересопницьке Євангеліє важить 9.3 кг, і на ньому присягають президенти України як на духовному символі спадкоємності влади.
+- Section "Основний матеріал: II": [!myth-buster] — Міф про те, що українська мова "виникла з нічого" у XIX ст. (Котляревський). Реальність: Пересопницьке Євангеліє (XVI ст.) фіксує живу фонетику (ікавізм, тверді шиплячі) за 250 років до "Енеїди".
+- Section "Основний матеріал: III": [!decolonization] — Російська імперська наука називала староукраїнську мову "западнорусским наречием". Ми повертаємо їй власну назву — "проста мова" або староукраїнська літературна мова.
+- Section "Основний матеріал: IV": [!culture] — Барокова естетика тексту: як переклад ставав не просто передачею змісту, а мистецьким актом прикрашання слова ("плетіння словес").
+
+## Деколонізаційний контекст
+- **Imperial Myth**: Церковнослов'янська мова була "спільною" для всіх східних слов'ян, а українська — це "зіпсована полонізмами" говірка.
+- **Ukrainian Reality**: Церковнослов'янська мова української редакції (з українською вимовою) була мовою високої культури, а "проста мова" (руська) розвивалася паралельно як мова права та адміністрації, маючи самодостатню систему. Пересопницьке Євангеліє — це свідомий акт перекладу на *рідну* мову для розуміння народу.
+
+## Contested Terms (if applicable)
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| Руська мова (XVI ст.) | Западнорусский язык / Юго-западный диалект | Староукраїнська літературна мова / Проста мова |
+| Церковнослов'янська | Единый язык православия (Russian redaction implied) | Церковнослов'янська мова української редакції |
+| Острозька Біблія | Памятник общерусской культуры | Пам'ятка українського друкарства та богословської думки |
+
+## Section-Mapped Research Notes
+
+### Основний матеріал: I — Текстові джерела
+Острозька Біблія (1581) — канонічний текст, орієнтований на грецький оригінал, але з сильним впливом південнослов'янської традиції.
+Пересопницьке Євангеліє (1556-1561) — переклад "із язика болгарського на мову руську", здійснений архімандритом Григорієм. Мета — зробити Слово Боже зрозумілим ("для ліпшого вирозумлення").
+Кулішів переклад (XIX ст.) — перший повний переклад живою народною мовою, що легітимізував українську як мову Святого Письма в модерну добу.
+
+### Основний матеріал: II — Фонетичний рівень
+Явище ікавізму: "ѣ" -> "і" (віра, світ). У Пересопницькому Євангелії це вже фіксується ("дід", "віра"), хоча графіка часто зберігає "ѣ" за традицією.
+Тверді шиплячі: "що", "чоловік" (не "чловѣк").
+Втрата редукованих: "сон", "день" (замість "сънъ", "дьнь").
+
+### Основний матеріал: III — Морфологічний рівень
+Дієслівні форми: "знаємо", "ходимо" (замість церковнослов'янського "знаємъ", "ходимъ").
+Кличний відмінок: "Отче", "Сину", "Боже" — збереження праслов'янської форми, яка жива в українській (і втрачена в російській).
+Майбутній час: синтетичні форми ("буду писати", "писатиму") проти описових.
+
+### Основний матеріал: IV — Лексичний рівень
+Лексика "простої мови": "палець" (замість "перст"), "жінка" (замість "жена"), "хлопець" (замість "отрок").
+Острозька Біблія зберігає архаїчну лексику ("благодать", "істина"), тоді як Пересопницьке вводить народні відповідники ("ласка", "правда").
+Вплив польської мови: лексичні запозичення як інструмент модернізації ("барва", "ґрунт").
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12574)
+✓ Message 12533 acknowledged
+✓ Message 12574 acknowledged

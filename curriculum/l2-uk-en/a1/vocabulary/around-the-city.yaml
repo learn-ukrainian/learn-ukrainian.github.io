@@ -1,4 +1,4 @@
-- ipa: '[ˈvulɪt͡sʲɑ]'
+- ipa: '[ˈʋulɪt͡sʲɑ]'
   lemma: вулиця
   pos: noun
   translation: street
@@ -38,19 +38,19 @@
   lemma: прямо
   pos: adverb
   translation: straight
-- ipa: '[nɑˈlʲivɔ]'
+- ipa: '[nɑˈlʲiʋɔ]'
   lemma: наліво
   pos: adverb
   translation: to the left
-- ipa: '[nɑˈprɑvɔ]'
+- ipa: '[nɑˈprɑʋɔ]'
   lemma: направо
   pos: adverb
   translation: to the right
-- ipa: '[lʲiˈvɔrʊt͡ʃ]'
+- ipa: '[lʲiˈʋɔrʊt͡ʃ]'
   lemma: ліворуч
   pos: adverb
   translation: on the left
-- ipa: '[prɑˈvɔrʊt͡ʃ]'
+- ipa: '[prɑˈʋɔrʊt͡ʃ]'
   lemma: праворуч
   pos: adverb
   translation: on the right
@@ -78,4 +78,16 @@
   lemma: потім
   pos: adverb
   translation: then, later
+- ipa: '[nɑˈzɑd]'
+  lemma: назад
+  pos: adverb
+  translation: back, backwards
+- ipa: '[sʲʋitlɔˈfɔr]'
+  lemma: світлофор
+  pos: noun
+  translation: traffic light
+- ipa: '[mɑrˈʃrutkɑ]'
+  lemma: маршрутка
+  pos: noun
+  translation: minibus
 

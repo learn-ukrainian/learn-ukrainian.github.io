@@ -1,0 +1,224 @@
+✅ Message sent to Gemini (ID: 11891) [auto-acked: self-addressed]
+✓ Message 11891 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #11891...
+📨 Message #11891
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-wills-testaments
+   Time: 2026-02-20T23:34:18.409634+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 13
+module: ruth-013
+module_number: 11
+slug: wills-testaments
+title_uk: Заповіти
+title_en: Wills & Testaments
+phase: 1
+phase_id: chancery-legal
+phase_name: Chancery & Legal
+focus: Тестамент, Духовниця
+content_outline:
+- section: Вступ
+  description: Introduction to Wills & Testaments
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Baroque Scholar
+  role: City Notary
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Wills Testaments (Заповіти)
+
+## Використані джерела
+1. [Ізборник: Українська мова в XVI-XVII ст.](http://litopys.org.ua/ukrmova/um17.htm) — Аналіз мовних особливостей ділового стилю та заповітів.
+2. [Наталія Білоус. Тестаменти киян середини XVI – першої половини XVII ст.](http://history.org.ua/JournALL/journal/2009/1/5.pdf) — Дослідження структури та змісту міщанських заповітів.
+3. [Наталія Білоус. За крок до Вічності](http://www.istvolyn.info/index.php?option=com_content&view=article&id=3251:2013-01-22-13-16-16&catid=16) — Аналіз тестаментів волинських міщан.
+4. [Архівна спадщина Києво-Печерської лаври](https://cdiak.archives.gov.ua/spysok_fondiv/0128/0002/) — Згадки про тестаменти духовенства, зокрема Петра Могили.
+5. [Енциклопедія історії України: Петро Могила](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Moyla_P) — Біографічні дані та контекст заповіту 1646 року.
+
+## Хронологія
+- 1566: Другий Литовський Статут, що закріпив права шляхти розпоряджатися майном через тестаменти.
+- 1588: Третій Литовський Статут, подальша кодифікація спадкового права.
+- 1615: Дарча (фундушевий запис) Галшки Гулевичівни на Київське братство (часто розглядається в контексті духовної волі).
+- 1621, 1643, 1653: Тестаменти Адама Киселя, воєводи київського.
+- 1641: Духовний заповіт Галшки Гулевичівни.
+- 1646, 22 грудня: Складання тестаменту Петра Могили за 9 днів до смерті.
+- 1647: Смерть Петра Могили та виконання його волі щодо Колегії.
+
+## Ключові факти та цитати
+- **Структура заповіту**: Інвокація (Invocatio) -> Інтитуляція (Intitulatio) -> Нарація (Narratio - сповідь віри, memento mori) -> Диспозиція (Dispositio - розподіл майна) -> Санкція (Sanctio - прокльони порушникам) -> Корроборація (Corroboratio - підписи/печатки).
+- **Цитата (Стандартний початок)**: «В имя Отца и Сына и Святого Духа. Аминь. Я, [Ім'я], будучи на ciele chory, ale na umyśle zdrowy...» (характерна макаронічна мова).
+- **Цитата (Петро Могила)**: «Бачачи, що нічого немає певнішого за смерть, а година її невідома... не хотів я лишати дім, мені від Бога доручений, у безладді».
+- **Мовні риси**: Вживання «Ђ» замість «е»/«и», повноголосся (город, золото), полонізми в юридичній термінології (екзекутор, квит, сукцесія).
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ": [!context] — Юридична культура Русі-України була невід'ємною частиною європейського правового простору.
+- Section "Основний матеріал: I": [!history-bite] — Чому заповіти починалися зі слів про здоров'я розуму, навіть якщо тіло хворе? (Вимога дієздатності).
+- Section "Основний матеріал: II": [!myth-buster] — Міф про тотальну полонізацію: аналіз мови показує стійкість руської юридичної термінології.
+- Section "Основний матеріал: III": [!quote] — Фрагменти тестаменту Петра Могили про освіту як наріжний камінь віри.
+- Section "Основний матеріал: IV": [!culture] — Заповіт як дзеркало барокової душі: страх перед пеклом і надія на вічне життя.
+- Section "Практика": [!biography] — Адам Кисіль: політик, що намагався поєднати непоєднуване, у своїх трьох заповітах.
+
+## Деколонізаційний контекст
+- **Imperial Myth**: Ствердження, що українська (руська) культура XVII ст. була "зіпсована" польським впливом або була просто діалектом "общерусского" языка.
+- **Ukrainian Reality**: Заповіти демонструють розвинену правову культуру та функціонування руської мови (Prostaya Mova) як повноцінної державної та юридичної мови, інтегрованої в західну традицію (римське право), на відміну від московської правової системи того часу.
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| Prostaya Mova (Проста мова) | "Западнорусский письменный язык", діалект російської | Староукраїнська літературно-писемна мова, мова канцелярії та права |
+| Шляхта | "Ополячена еліта", зрадники народу | Політична нація Русі, носії правової культури та меценати |
+| Тестамент | Просто "завещание" | Юридичний акт європейського зразка, символ приватної власності та суб'єктності |
+
+## Section-Mapped Research Notes
+
+### Вступ
+- Визначення понять: тестамент (лат. testamentum) та духовниця.
+- Роль Литовських Статутів у унормуванні спадкового права.
+- Заповіт як его-документ: джерело з історії ментальності, а не лише права.
+
+### Основний матеріал: I — Анатомія заповіту
+- Детальний розбір формуляра:
+  - **Invocatio**: Релігійний вступ.
+  - **Narratio/Arenga**: Роздуми про тлінність буття (типові барокові топоси).
+  - **Dispositio**: Матеріальна (майно) та духовна (поховання, милостиня) частини.
+  - **Sanctio/Corroboratio**: Захист волі заповідача.
+
+### Основний матеріал: II — Мовний ландшафт
+- Характеристика "простої мови" в правничих актах.
+- Вплив польської термінології: *доживоттє*, *віно*, *сукцесор*.
+- Збереження церковнослов'янських елементів у релігійних формулах.
+- Фонетичні особливості на письмі: *є*/*о*, *и*/*ы*/*і*.
+
+### Основний матеріал: III — Тестамент Петра Могили
+- 1646 рік: заповіт як програма розвитку освіти.
+- Передача бібліотеки та майна Києво-Братській колегії.
+- Турбота про відновлення святинь (Софія, Лавра).
+- Значення заповіту для тяглості української освітньої традиції.
+
+### Основний матеріал: IV — Світ шляхти та міщан
+- Порівняння заповітів магнатів (Острозькі, Заславські) та середньої шляхти/міщан.
+- Роль жінки: тестаменти Галшки Гулевичівни та інших шляхтянок (право розпоряджатися майном).
+- "Духовні" заповіти (donatio inter vivos) як форма меценатства.
+
+### Практика: Аналіз автентичного тексту
+- Робота з уривком тестаменту Адама Киселя.
+- Палеографічний коментар: як читати скоропис XVII ст.
+- Завдання на пошук формульних елементів у тексті.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 11930)
+✓ Message 11891 acknowledged
+✓ Message 11930 acknowledged

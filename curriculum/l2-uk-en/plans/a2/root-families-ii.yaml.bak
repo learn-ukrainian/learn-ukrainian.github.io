@@ -1,0 +1,76 @@
+module: a2-42
+level: A2
+sequence: 42
+slug: root-families-ii
+version: '2.0'
+title: Root Families II
+subtitle: Communication and Thought
+content_outline:
+- section: Introduction / Вступ
+  points:
+  - 'The Language of the Mind: Roots of thought and speech — alignment with State
+    Standard §2 (Expressing thoughts/beliefs) and §4.5.1 (Synonyms)'
+  - 'The 4 Mind-Roots: дум-, говор-, мов-, слух- — foundational cognitive verbs for
+    A2 communication'
+- section: Presentation / Презентація
+  points:
+  - 'The дум- Family: Thoughts, diaries, and logic — collocations: «на мою думку»,
+    «я думаю, що...»'
+  - 'The говор-/мов- Family: The art of speech and conversation — cultural hook: «мова»
+    (language) vs «язик» (tongue/organ); learner error: confusing «говорити» (process)
+    vs «казати» (content)'
+  - 'The слух- Family: Listening, hearing, and obeying — cultural hook: etymological
+    link between «слухати» (to listen) and «слухняний» (obedient); learner error:
+    «слухати» (active) vs «чути» (passive)'
+  - 'Semantic Shifts: How "мова" becomes "розмова" — visual connection between roots
+    (гово-ри-ти vs роз-мов-ля-ти); «роз-» prefix as exchange (conversation)'
+  - 'Prefix Power: How "від-" changes "мов-" to "відмова" — etymology: «від-» (away/back)
+    + «мова» (speech) = refusal (speaking back)'
+- section: Practice / Практика
+  points:
+  - Root family sorting — focus on distinguishing synonyms like «говорити»/«розмовляти»
+    and avoid confusion with «казати»
+  - '''Build the Thought'' derivative challenge — deriving nouns from verbs (e.g.,
+    дум- → думка)'
+- section: Dialogues / Діалоги
+  points:
+  - 'A deep conversation: Discussing thoughts and opinions — use of cognitive verbs
+    «я думаю», «я вважаю» and reaction phrases «цікава думка»'
+focus: grammar
+pedagogy: PPP
+objectives:
+- Learner can identify communication and thought root families
+- Learner can derive verbs and nouns from abstract roots
+- Learner can understand the difference between 'мова' and 'розмова' roots
+- Learner can build a network of communication vocabulary
+grammar:
+- common roots (дум-, говор-, мов-, слух-)
+- secondary prefix + root combinations
+- identifying semantic clusters
+module_type: word-formation
+sources:
+- name: Ukrainian Word Formation - Communication
+  url: https://uk.wikipedia.org/wiki/Словотворення_в_українській_мові
+  type: reference
+  notes: Focus on communicative root expansion
+immersion: 60-75% Ukrainian
+phase: A2.4
+persona:
+  voice: Encouraging Cultural Guide
+  role: Genealogist
+vocabulary_hints:
+  required:
+  - 'думати (to think) — collocations: думати про (+ Acc), я думаю, що...'
+  - 'думка (thought/opinion) — collocations: цікава думка, на мою думку'
+  - 'говорити (to speak) — usage: говорити українською (no prep), говорити про (+
+    Acc)'
+  - 'розмовляти (to converse) — collocations: розмовляти телефоном, ми розмовляли
+    про...'
+  - 'мова (language) — cultural note: never use «язик» for language'
+  - 'слухати (to listen) — collocations: слухати музику, уважно слухати'
+  - 'слухняний (obedient) — mnemonic: he who listens'
+  - 'відмова (refusal) — etymology: speaking back/away'
+  recommended:
+  - 'мовчання (silence) — proverb: «Слово – срібло, мовчання – золото»'
+  - вважати (to consider/believe) — synonym for «думати» in opinions
+word_target: 3000

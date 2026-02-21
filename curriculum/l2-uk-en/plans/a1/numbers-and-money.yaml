@@ -6,48 +6,72 @@ version: '2.0'
 title: Numbers & Money
 subtitle: Counting and Shopping in Ukraine
 content_outline:
-- section: Warm-up
+- section: Вступ (Introduction)
+  words: 400
   points:
-  - Числа в повсякденному житті — focus on practical utility (prices, bus numbers)
-  - Де ми використовуємо числа
-- section: Presentation
+  - 'Державний стандарт (§3.8) та роль чисел у повсякденному житті: фокус на тематиці
+    купівлі основних продуктів, одягу та засобів гігієни.'
+  - 'Де ми використовуємо числа: приклади з реальним контекстом 2024 року (наприклад,
+    кава за 50 грн, квиток на автобус) та розкладом руху.'
+  - Мотиваційний вступ через діалог про покупки, що активує знання з модуля a1-16
+    (Генітив I) у контексті запиту ціни.
+- section: Презентація (Presentation)
+  words: 600
   points:
-  - 'Числа 1-20 (один, два, три... двадцять) — Phonetics focus: ''п''ять'' [pjat'']
-    and stress shift in teens (одина́дцять)'
-  - 'Десятки (двадцять, тридцять... сто) — learner error warning: no soft sign in
-    middle of 50-80 (п''ятдесят)'
-  - 'Узгодження з іменниками (1 гривня, 2 гривні, 5 гривень) — Visual Agreement Tables
-    crucial (1/2-4/5+); learner error: 1-2-5 Rule case agreement'
-  - Запитання про ціну (Скільки коштує?) — Standard §4.2.1.3 alignment
-  - Українська валюта (гривня, копійка) — Symbol ₴ based on cursive 'г', stability
-    symbol like €/¥
-- section: Practice
+  - 'Числа 1-20: фокус на правильну вимову «п''ять» [pjat''] (пауза апострофа) та
+    правильний наголос у числівниках 11-19 (одинАдцять, дванАдцять).'
+  - 'Десятки (20-100) та застереження щодо помилок: відсутність м''якого знака в середині
+    числівників 50-80 (п''ятдесят, шістдесят).'
+  - 'Правило «1-2-5»: узгодження чисел з іменниками (1 гривня - Nom Sg, 2 гривні -
+    Nom Pl, 5 гривень - Gen Pl) з використанням візуальних таблиць.'
+  - 'Запитання про ціну та базові конструкції: «Скільки коштує?», «Скільки з мене?»,
+    «Яка ціна?».'
+- section: Практика (Practice)
+  words: 600
   points:
-  - Лічба та арифметика
-  - Діалоги про ціни — Use realistic 2024 prices (e.g., Coffee ~ 40-60 UAH)
-  - 'Рольова гра — покупки — Key phrase: «Скільки з мене?»'
-- section: Cultural Insight
+  - 'Лічба та арифметика: інтерактивні вправи на додавання цін у кошику з використанням
+    актуальних цін (хліб ~25 грн, молоко ~40 грн).'
+  - 'Робота над помилкою «два» vs «дві»: акцент на жіночому роді слова «гривня» («дві
+    гривні») на відміну від чоловічого («два долари»).'
+  - 'Діалоги в магазині: моделювання ситуацій купівлі з використанням фразеології
+    «Це дуже дорого!» та «У вас є здача?».'
+  - 'Дрилі на закріплення правила 1-2-5: перетворення форм іменника залежно від випадкового
+    числа (3 гривні -> 10 гривень -> 1 гривня).'
+- section: Культурний контекст (Cultural Context)
+  words: 400
   points:
-  - 'Історія гривні — Origin: ''hryvna'' (neck ornament/ingot)'
-  - 'Типові ціни в Україні — Proverb: "Копійка береже гривню" (penny saved is penny
-    earned)'
+  - 'Історія гривні: походження назви від «гриви» (шийна прикраса або злиток із золота
+    чи срібла часів Київської Русі).'
+  - 'Символ гривні ₴: аналіз графіки (курсивна літера «г» з двома рисками) як символу
+    стабільності за аналогією до € та ¥.'
+  - 'Народна мудрість: вивчення прислів''я «Копійка береже гривню» для ілюстрації
+    традиційного ставлення до грошей та ощадливості.'
 vocabulary_hints:
   required:
-  - один (one) — gender agreement error warning (один vs одна)
-  - два (two) — gender agreement error warning (два vs дві)
-  - три (three)
-  - п'ять (five) — pronunciation focus [pjat']
-  - десять (ten)
-  - гривня (hryvnia) — origin from 'neck' (hryva)
-  - 'скільки (how much) — collocation: «Скільки з мене?»'
-  - 'коштувати (to cost) — collocation: «Скільки коштує квиток?»'
+  - 'один (one) — High frequency (Top 100); collocations: «один раз», «одна гривня»;
+    warning: gender agreement error (один vs одна)'
+  - 'два (two) — High frequency (Top 100); collocations: «два дні», «дві гривні» (feminine!);
+    warning: gender agreement error (два vs дві)'
+  - три (three) — High frequency; usage in basic counting and price negotiation
+  - 'п''ять (five) — High frequency; pronunciation focus [pjat''] with distinct apostrophe;
+    collocations: «п''ять хвилин», «п''ять гривень»'
+  - десять (ten) — High frequency; essential base for teen numbers and currency denominations
+  - 'гривня (hryvnia) — High frequency (contextual); historical origin from ''neck''
+    (hryva); collocations: «одна гривня», «скільки гривень?»'
+  - 'скільки (how much) — High frequency; key collocations: «Скільки з мене?», «Скільки
+    коштує?»'
+  - 'коштувати (to cost) — Medium frequency; essential for shopping; collocation:
+    «Скільки це коштує?»'
   recommended:
-  - сто (hundred)
-  - 'копійка (kopeck) — Proverb: «Копійка береже гривню»'
-  - 'ціна (price) — collocation: «Яка ціна?»'
-  - 'дорого (expensive) — context: «Це дуже дорого!»'
-  - дешево (cheap)
-  - здача (change)
+  - сто (hundred) — Usage in large numbers and round prices like «сто гривень»
+  - 'копійка (kopeck) — Cultural proverb: «Копійка береже гривню»; historical subunit
+    of the hryvnia'
+  - 'ціна (price) — Medium frequency; collocations: «яка ціна?», «висока ціна», «низька
+    ціна»'
+  - 'дорого (expensive) — Context: «Це дуже дорого!»; used for expressing budget constraints'
+  - 'дешево (cheap) — Context: «Це дешево»; evaluation of value for money'
+  - 'здача (change) — Essential for completing transactions; collocation: «Чи є у
+    вас здача?»'
 activity_hints:
 - type: fill-in
   focus: Counting practice

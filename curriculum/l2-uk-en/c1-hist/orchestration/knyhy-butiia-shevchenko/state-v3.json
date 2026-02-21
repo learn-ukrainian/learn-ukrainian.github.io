@@ -2,12 +2,5 @@
   "track": "c1-hist",
   "slug": "knyhy-butiia-shevchenko",
   "mode": "v3",
-  "phases": {
-    "v3-A": {
-      "status": "complete",
-      "ts": "2026-02-19T13:01:21Z",
-      "task_id": "v3-knyhy-butiia-shevchenko-pA",
-      "mode": "full"
-    }
-  }
+  "phases": {}
 }

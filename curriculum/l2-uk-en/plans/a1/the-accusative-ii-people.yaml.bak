@@ -1,0 +1,88 @@
+module: a1-12
+level: A1
+sequence: 12
+slug: the-accusative-ii-people
+version: '2.0'
+title: 'The Accusative II: People'
+subtitle: Animate Nouns and the Genitive Connection
+content_outline:
+- section: Warm-up
+  points:
+  - Контраст з неістотами (книгу vs брата) — use 'Heart Words' (Animate) vs 'Stone
+    Words' (Inanimate) visual metaphor
+  - Введення поняття "істота" — aligns with State Standard §4.2.1.1 (animate masculine
+    nouns)
+- section: Presentation
+  points:
+  - Чому істоти особливі (знахідний = родовий) — masculine animate nouns are 'greedy'
+    and take the Genitive ending to distinguish themselves from objects
+  - 'Чоловічий рід: брат → брата, тато → тата — learner error: Masculine Animate Trap
+    (leaving it as ''брат'' instead of ''брата'')'
+  - 'Жіночий рід: як неістоти (сестра → сестру) — learner error: Feminine Overthinking
+    (wrongly applying Genitive rule ''сестри'' instead of standard Accusative ''сестру'')'
+  - 'Тварини як істоти (кіт → кота, пес → пса) — learner error: Animal Animacy Confusion
+    (forgetting pets are grammatically ''alive'')'
+- section: Practice
+  points:
+  - Розрізнення істот і неістот
+  - Трансформація речень з людьми
+  - Дієслова з людьми (бачити, знати, любити, чекати)
+- section: Production
+  points:
+  - Опис сім'ї (Я люблю маму, тата, брата...) — mention affectionate forms (матусю,
+    татуся) frequently used by adults
+  - 'Діалог про друзів (Ти знаєш Андрія?) — cultural hook: ''Друг'' implies deep trust/soulmate
+    vs ''знайомий'' (acquaintance)'
+- section: Cultural Insight
+  points:
+  - Українські імена та їх відмінювання
+  - Як питати про людей ввічливо
+vocabulary_hints:
+  required:
+  - 'брат (brother) — рідний брат, старший/молодший брат; diminutive: братик'
+  - 'сестра (sister) — рідна сестра, старша/молодша сестра; diminutive: сестричка'
+  - друг (friend m.) — вірний друг, давній друг; implies deep trust
+  - подруга (friend f.)
+  - 'мама (mother) — люба мама, моя мама; diminutive: матуся'
+  - 'тато (father) — любий тато, мій тато; diminutive: татусь'
+  - лікар (doctor)
+  - вчитель (teacher)
+  recommended:
+  - кіт (cat) — grammatically animate (кота)
+  - пес (dog) — grammatically animate (пса)
+  - студент (student)
+  - колега (colleague)
+  - сусід (neighbor)
+  - дитина (child)
+activity_hints:
+- type: fill-in
+  focus: Change animate nouns to accusative
+  items: 25
+- type: match-up
+  focus: Animate vs inanimate
+  items: 20
+- type: fill-in
+  focus: Complete with correct accusative
+  items: 20
+focus: grammar
+pedagogy: PPP
+prerequisites:
+- a1-11 (The Accusative I - Things)
+connects_to:
+- a1-13 (The Locative)
+- a1-32 (My Family)
+objectives:
+- Learner can use accusative case for animate nouns (people/animals)
+- Learner can distinguish between animate and inanimate accusative
+- Learner understands when accusative = genitive
+- Learner can talk about people as direct objects
+grammar:
+- Accusative for animate nouns
+- 'Masculine animate: accusative = genitive'
+- 'Feminine animate: same as inanimate'
+register: розмовний
+phase: A1.2 [Navigation]
+persona:
+  voice: Patient Supportive Tutor
+  role: HR Recruiter
+word_target: 2000

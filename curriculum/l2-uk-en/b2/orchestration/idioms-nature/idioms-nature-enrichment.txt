@@ -1,0 +1,281 @@
+✅ Message sent to Gemini (ID: 10575) [auto-acked: self-addressed]
+✓ Message 10575 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10575...
+📨 Message #10575
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-idioms-nature
+   Time: 2026-02-20T20:42:58.787896+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b2-54
+level: B2
+sequence: 54
+slug: idioms-nature
+version: '2.0'
+title: 'Фразеологізми: Природа (Вода, Вогонь, Земля, Вітер)'
+content_outline:
+- section: Розминка — Чотири стихії
+  points:
+  - Вода — очищення, сила, життя, небезпека
+  - Вогонь — пристрасть, випробування, знищення
+  - Земля — основа, стабільність, походження
+  - Вітер — непостійність, свобода, зміни
+- section: Фразеологізми з водою та вогнем
+  points:
+  - Вода камінь точить (терпіння перемагає)
+  - Не знаючи броду, не лізь у воду (будь обережний)
+  - Носити воду решетом (робити марну справу)
+  - Пройти вогонь і воду (мати великий досвід)
+  - Гратися з вогнем (ризикувати)
+  - Підливати масла у вогонь (погіршувати конфлікт)
+- section: Фразеологізми з землею та вітром
+  points:
+  - Земля тримає (ще живий, ще має сили)
+  - Провалитися крізь землю (зникнути від сорому)
+  - Сидіти на своїй землі (мати власність, бути незалежним)
+  - Вітер у голові (легковажність)
+  - Кидати слова на вітер (говорити без відповідальності)
+  - Звідки вітер віє (з'ясувати джерело впливу)
+- section: Практика — природні образи
+  points:
+  - Класифікувати вирази за стихією
+  - Обрати вираз для опису ситуації
+  - Порівняти з прислів'ями M45-46
+  - Написати опис подорожі з використанням природних ідіом
+focus: phraseology
+pedagogy: CBI
+objectives:
+- Вивчити 8 фундаментальних фразеологізмів про чотири стихії
+- Розуміти значення метафор випробування, ризику та правди
+- Вміти використовувати природні образи для опису складних життєвих ситуацій
+grammar:
+- Fixed expressions
+- Idiom structure and variation
+register: varies
+phase: B2.2 [Phraseology & Synonymy]
+vocabulary_hints:
+  required:
+  - фразеологізм (idiom)
+  - вираз (expression)
+  - значення (meaning)
+  - контекст (context)
+  recommended:
+  - переносне значення (figurative meaning)
+  - стилістичне забарвлення (stylistic coloring)
+activity_hints:
+- type: reading
+  focus: Контекстне використання
+  items: 4
+- type: fill-in-the-blank
+  focus: Практичне застосування
+  items: 10
+- type: true-false
+  focus: Розуміння значень
+  items: 8
+persona:
+  voice: Professional Language Coach
+  role: Carpathian Guide (Карпатський провідник)
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Фразеологізми: Природа (Вода, Вогонь, Земля, Вітер)
+
+## State Standard Reference
+§2.2 (Speech Interaction): "...доречно використовувати відомі фразеологізми та ідіоми, удаватися до офіційного або неофіційного регістру мовлення залежно від ситуації..."
+§4.4.1.2 (Stylistics): "Стилістичні засоби лексикології та фразеології: ...метафори (ідуть дощі, сонце сідає)..."
+Alignment: Цей модуль безпосередньо реалізує вимогу стандарту щодо використання ідіоматичної мови для збагачення комунікації на рівні B2, фокусуючись на метафоричному переосмисленні природних явищ.
+
+## Vocabulary Frequency
+| Word/Phrase | Frequency / Source | Key collocations |
+|-------------|-------------------|------------------|
+| **Вода камінь точить** | High (Common proverb) | крапля камінь точить; терпіння і труд |
+| **Не знаючи броду...** | High (Warning) | не лізь у воду; спершу думай |
+| **Носити воду решетом** | Medium (Literary) | даремна праця; сізіфова праця |
+| **Пройти вогонь і воду** | High (Description of experience) | і мідні труби (often added); бувалий; досвідчений |
+| **Гратися з вогнем** | High (Warning) | небезпечно; ризикувати життям; жарти з вогнем |
+| **Підливати масла...** | High (Conflict) | у вогонь; у багаття; розпалювати ворожнечу |
+| **Провалитися крізь землю** | High (Emotion) | від сорому; хотіти зникнути; як крізь землю провалився |
+| **Вітер у голові** | High (Character trait) | свище/гуляє; легковажний; молодість |
+| **Кидати слова на вітер** | High (Responsibility) | не кидати; пусті обіцянки; відповідальність |
+
+**Note**: "Сидіти на своїй землі" та "Земля тримає" are less fixed as purely figurative idioms compared to the others. "Земля тримає" is often found in the context "поки земля носить" (while still alive/tolerated). "Сидіти на своїй землі" often retains literal meaning of historical ownership/roots.
+
+## Cultural Hooks
+1. **Four Elements**: In Ukrainian folklore, the elements are not just physical matter but spiritual entities. **Water** cleanses but can be dangerous ("Don't spit in the well"). **Fire** is living ("Живий вогонь") and protects the home but requires respect. **Earth** is the "Mother" ("Земля-годувальниця") — swearing at the earth is considered a grave sin in traditional culture.
+2. **Wind Symbolism**: Wind represents the spirit/soul but also unpredictability and impermanence. In demonology, strong winds could carry evil spirits, hence the caution in idioms like "Звідки вітер віє" (determining the source of trouble/influence).
+
+## Common Learner Errors
+1. **Literal Translation**: Translating "To play with fire" is safe (direct equivalent), but "To beat the air" (Eng) vs "Носити воду решетом" (Ukr) requires learning the specific image.
+   *   *Error*: "Бити повітря" -> *Correct*: "Носити воду решетом" / "Товкти воду в ступі".
+2. **Case Usage**: "Гратися з вогнем" (Instrumental) vs "Підливати масла у вогонь" (Accusative with preposition). Learners often confuse cases after different verbs sharing the same noun.
+3. **Aspect**: Confusing "Провалитися" (Perfective - result, "I wish I disappeared") with "Провалюватися" (Imperfective - process). The idiom usually uses the perfective form for the wish/feeling "хотілося провалитися".
+
+## Cross-References
+- **Builds on**: A1/A2 nature vocabulary (вода, вогонь, вітер, земля), B1 grammar (cases).
+- **Prepares for**: B2-HIST (historical metaphors), C1 Literature (symbolism of elements in poetry).
+- **Connects to**: M45-46 (Proverbs) — reinforces the connection between idioms and folk wisdom.
+
+## Notes for Content Writing
+- **Stylistic Register**: Most of these idioms are conversational or publicistic. Avoid using them in strictly official-business documents (except maybe "кидати слова на вітер" in political critique).
+- **Images**: Focus on the *action* in the idiom. "Carrying water in a sieve" is a vivid image of futility. "Water wearing away stone" is a tactile image of patience. Use these visuals in the "Storyteller" persona explanations.
+- **Alternative**: Consider mentioning "Як земля носить" alongside "Земля тримає" as it's a very common emotional expression for indignation.
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Чотири стихії в українському світогляді (Introduction: Four elements in the Ukrainian worldview)"
+  words: 600
+  points:
+  - "Standard §4.4.1.2: Introduction to the metaphorical reimagining of nature (rains go, sun sets) as a base for idiomatic thinking."
+  - "Cultural Hook: Elements as spiritual entities; the sacredness of Earth ('Земля-годувальниця') and the cleansing vs destructive power of Water."
+  - "Myth-buster: Discussing 'Не плюй у криницю' (Don't spit in the well) as a cultural anchor for respect towards natural elements."
+- section: "Вода та вогонь: Випробування та терпіння (Water and Fire: Trials and patience)"
+  words: 900
+  points:
+  - "Analyzing 'Пройти вогонь і воду' (and 'і мідні труби'): The tactile image of complete initiation and life experience."
+  - "Visual imagery of 'Вода камінь точить' (Standard §2.2): Practical use of idioms to express persistence and long-term effort."
+  - "Learner error drill: Instrumental case in 'Гратися з вогнем' vs Accusative in 'Підливати масла у вогонь' to prevent case confusion after nature verbs."
+  - "Tactile comparison: 'Носити воду решетом' (carrying water in a sieve) vs 'Товкти воду в ступі' as visual metaphors for futility."
+- section: "Земля та вітер: Сором, дух та відповідальність (Earth and Wind: Shame, spirit, and responsibility)"
+  words: 900
+  points:
+  - "Learner error: Distinguishing between Perfective 'провалитися крізь землю' (the resultative wish to disappear) and Imperfective 'провалюватися' (process)."
+  - "Register shift: Introducing 'Як земля носить' as a high-frequency emotional expression for indignation (alternative to the literal 'Земля тримає')."
+  - "Moral metaphors: 'Вітер у голові' (character trait) vs 'Кидати слова на вітер' (lack of responsibility in communication)."
+  - "Cultural Hook: Wind as the carrier of spirits; explaining 'Звідки вітер віє' as a tool for identifying the source of hidden trouble or influence."
+- section: "Лінгвістичний аналіз та типові пастки (Linguistic analysis and typical traps)"
+  words: 800
+  points:
+  - "Translation trap: Comparison of 'To beat the air' (Eng) vs 'Носити воду решетом' (Ukr) to highlight specific cultural imagery."
+  - "Stylistic analysis (Standard §4.4.1.2): Identifying why these idioms fit conversational and publicistic styles but are avoided in official-business register."
+  - "Structural variations: Discussing how 'Підливати масла у вогонь' can vary (у багаття) while maintaining its core semantic impact."
+- section: "Практика: Карпатський провідник та публіцистика (Practice: Carpathian Guide and publicism)"
+  words: 800
+  points:
+  - "Production task (Persona): Writing a narrative as a 'Carpathian Guide' using elements to describe a difficult journey through life."
+  - "Standard §2.2: Simulating a social or political critique using 'кидати слова на вітер' to demonstrate idiomatic competence in public speaking."
+  - "Cross-reference: Connecting element-based idioms to M45-46 (Proverbs) to see how folk wisdom shapes modern figurative language."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "фразеологізм (idiom) — вживати фразеологізм, влучний фразеологізм; core term for B2"
+  - "вираз (expression) — стійкий вираз, розмовний вираз; used for both literal and figurative phrases"
+  - "значення (meaning) — переносне значення (figurative), буквальне значення (literal); crucial for idiom analysis"
+  - "контекст (context) — залежно від контексту, вирвати з контексту; Standard §2.2 requirement"
+  - "Пройти вогонь і воду (to go through fire and water) — description of a very experienced person; high frequency"
+  recommended:
+  - "переносне значення (figurative meaning) — key for understanding the transition from nature to human traits"
+  - "стилістичне забарвлення (stylistic coloring) — identifying the conversational vs. publicistic register of idioms"
+  - "вода камінь точить (patience wears away a stone) — proverb/idiom denoting patience; visual imagery"
+  - "провалитися крізь землю (to sink into the ground) — expressing extreme shame; use in perfective aspect"
+  - "кидати слова на вітер (to throw words to the wind) — denoting lack of responsibility; publicistic use"
+  - "звідки вітер віє (which way the wind blows) — discovering the source of influence or trouble"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4393 chars)
+✅ Message sent to Claude (ID: 10586)
+✓ Message 10586 acknowledged
+   Auto-acknowledged reply #10586 (stdout delivery — no inbox accumulation)
+✓ Message 10575 acknowledged

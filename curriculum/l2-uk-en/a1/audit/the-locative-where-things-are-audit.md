@@ -1,7 +1,7 @@
 # Audit Report: M13 — the-locative-where-things-are.md
 **Level:** A1 | **Module:** M13 | **Phase:** A1.2 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-19 23:01:40
+**Generated:** 2026-02-21 00:46:35
 
 ## Configuration
 **Type:** A1-grammar
@@ -38,7 +38,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2683/2000 (raw: 2876)
+- **Words:** ✅ 2775/2000 (raw: 2968)
 - **Activities:** ✅ 10/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -51,7 +51,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 25.7% (target 25-40% (M13))
+- **Immersion:** 🇺🇦 25.3% (target 25-40% (M13))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -61,8 +61,8 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **The Locative: Where Things Are** | ✅ | 63 | Included in Core |
-| **Вступ: Питання «Де?»** | ✅ | 430 | Included in Core |
-| **Граматика: Місцевий відмінок** | ✅ | 1029 | Included in Core |
+| **Вступ: Питання «Де?»** | ✅ | 475 | Included in Core |
+| **Граматика: Місцевий відмінок** | ✅ | 1073 | Included in Core |
 | **Практика: Де це знаходиться?** | ✅ | 552 | Included in Core |
-| **Застосування: Моя кімната і місто** | ✅ | 419 | Included in Core |
+| **Застосування: Моя кімната і місто** | ✅ | 422 | Included in Core |
 | **Підсумок** | ✅ | 190 | Included in Core |

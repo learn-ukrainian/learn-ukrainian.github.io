@@ -1,0 +1,297 @@
+✅ Message sent to Gemini (ID: 10431) [auto-acked: self-addressed]
+✓ Message 10431 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10431...
+📨 Message #10431
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-ukrainian-music-today
+   Time: 2026-02-20T20:32:33.257328+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b1-76
+level: B1
+sequence: 76
+slug: ukrainian-music-today
+version: '2.0'
+title: Українська музика сьогодні
+subtitle: Contemporary Ukrainian Music Scene
+content_outline:
+- section: Вступ — Музика як ідентичність
+  points:
+  - Українська музика від народних пісень до сьогодення
+  - Чому музика важлива для нації
+- section: Від Квітки до Євробачення
+  points:
+  - Історія української естради
+  - Руслана і перемога 2004 року
+  - Kalush Orchestra і "Stefania" (2022)
+- section: Сучасна сцена — Хто на топі?
+  points:
+  - Поп і реп (Монатік, Alyona Alyona, Kalush)
+  - Рок і альтернатива (Океан Ельзи, Бумбокс, Антитіла)
+  - Електронна музика (ONUKA, Запорожець)
+- section: Пісні про війну
+  points:
+  - Як музика підтримує армію
+  - '"Ой у лузі червона калина" — хіт 2022 року'
+  - Благодійні концерти
+- section: Слухаємо українською
+  points:
+  - Як говорити про музику
+  - Жанри і стилі українською
+- section: Підсумок — Україна співає
+  points:
+  - Музика як м'яка сила
+- section: Потрібно більше практики?
+vocabulary_hints:
+  required:
+  - музика (music)
+  - співак/співачка (singer m/f)
+  - гурт (band)
+  - пісня (song)
+  - альбом (album)
+  - концерт (concert)
+  - жанр (genre)
+  - виконавець (performer)
+  recommended:
+  - реп (rap)
+  - рок (rock)
+  - поп (pop)
+  - електронна музика (electronic music)
+activity_hints:
+- type: reading
+  focus: Texts about Ukrainian artists
+  items: 15
+- type: quiz
+  focus: Understand song themes
+  items: 15
+- type: match-up
+  focus: Match artists to genres
+  items: 20
+- type: quiz
+  focus: Share music preferences
+  items: 10
+focus: culture
+pedagogy: CBI
+prerequisites:
+- b1-75 (Regions Center)
+connects_to:
+- b1-77 (Ukrainian Cinema and TV)
+objectives:
+- Learner can discuss Ukrainian music genres and artists in context
+- Learner can understand authentic texts about Ukrainian music scene
+- Learner can use music-related vocabulary to express preferences
+- Learner can compare Ukrainian music with their own musical culture
+grammar:
+- Music and arts vocabulary
+- Cultural commentary patterns
+- Expressing preferences
+register: розмовний
+phase: B1.7 [Contemporary Ukraine]
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Radio DJ
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Українська музика сьогодні
+
+## State Standard Reference
+§3.4. Дозвілля, відпочинок: "способи проведення вільного часу; ... театр, кінотеатр, філармонія; фестиваль."
+§4.3.3. Утворення назв осіб за видом діяльності: "співати – співак".
+Alignment: Модуль розвиває тему дозвілля через музику та закріплює словотвір іменників-діячів (співак, виконавець).
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| **Гурт** | High (News/Media) | рок-гурт, легендарний гурт, лідер гурту, склад гурту |
+| **Співак / Співачка** | High (Everyday) | відомий співак, оперна співачка, талант співака |
+| **Виконавець** | Medium (Formal/Media) | українські виконавці, молодий виконавець, топ виконавців |
+| **Пісня** | Very High | народна пісня, авторська пісня, слова пісні, хітова пісня |
+| **Хіт** | High (Slang/Media) | світовий хіт, очолити хіт-парад |
+
+## Cultural Hooks
+1. **"Ой у лузі червона калина"**: Гімн Січових Стрільців (1914), який став символом незламності у 2022 році після виконання Андрієм Хливнюком (Бумбокс) на Софійській площі.
+2. **Квітка Ціси** (Kvitka Cisyk): Американська співачка українського походження, чиї альбоми "Квітка" та "Два кольори" (1980-ті) зберегли українську пісню для поколінь і стали еталоном виконання ("білий голос").
+3. **Kalush Orchestra**: Переможці Євробачення-2022 з піснею "Stefania", що поєднала реп із фольклорними мотивами (сопілка) та стала присвятою всім українським матерям.
+
+## Common Learner Errors
+1. **Інструменти vs Ігри**: *Грати гітару* (Wrong) → **Грати на гітарі** (Correct, Locative). Але: *Грати в футбол* (Accusative).
+2. **Слухати vs Чути**: *Я люблю чути музику* (Wrong context) → **Я люблю слухати музику** (Active listening).
+3. **Рід іменників**: *Мій улюблений пісня* (Wrong) → **Моя улюблена пісня** (Feminine). *Ця альбом* (Wrong) → **Цей альбом** (Masculine).
+
+## Cross-References
+- Builds on: B1-75 (Regions Center — cultural context of Lviv/Kyiv/Carpathians)
+- Prepares for: B1-77 (Ukrainian Cinema and TV — arts vocabulary continuity)
+
+## Notes for Content Writing
+- Використовувати "гурт" замість "група" (росіянізм у контексті музики).
+- Підкреслити роль музики як "м'якої сили" (культурна дипломатія).
+- Згадати про різноманіття жанрів: від етно-хаосу (ДахаБраха) до електро-фолку (ONUKA).
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Музика як м'яка сила (Introduction: Music as Soft Power)"
+  words: 500
+  points:
+  - "Обговорення ролі музики як інструменту культурної дипломатії та ідентичності (identifying 'soft power')."
+  - "Вживання терміна «гурт» замість росіянізму «група» в контексті музичних колективів."
+  - "Діалог про музичні вподобання: використання активного дієслова «слухати» (Active listening) замість «чути»."
+- section: "Від Квітки до Євробачення (From Kvitka to Eurovision)"
+  words: 800
+  points:
+  - "Постать Квітки Цісик (Kvitka Cisyk): її роль у збереженні української пісні, техніка «білого голосу» та альбоми «Квітка», «Два кольори»."
+  - "Історія тріумфів на Євробаченні: Руслана (2004) та Kalush Orchestra (2022) з піснею «Stefania»."
+  - "Синтез репу та фольклорних мотивів (сопілка) як сучасний тренд української естради."
+- section: "Сучасна сцена та жанрове різноманіття (Contemporary Scene and Genre Diversity)"
+  words: 1000
+  points:
+  - "Огляд топ-виконавців: Поп (Монатік), Реп (Alyona Alyona), Рок (Океан Ельзи, Бумбокс, Антитіла)."
+  - "Електронна та альтернативна музика: Електро-фолк (ONUKA) та етно-хаос (ДахаБраха)."
+  - "Утворення назв осіб за діяльністю (Держстандарт): від дієслова «співати» до іменника «співак/співачка»."
+- section: "Символи незламності: Пісні про війну (Symbols of Resilience: Songs of War)"
+  words: 800
+  points:
+  - "Історія гімну Січових Стрільців (1914) «Ой у лузі червона калина» та її нове життя після виконання Андрієм Хливнюком у 2022 році."
+  - "Роль музики у підтримці духу армії та благодійні концерти як засіб збору коштів."
+  - "Аналіз тексту пісень, що стали символами опору, та їхнього впливу на світову спільноту."
+- section: "Граматична майстерня: Граємо та слухаємо (Grammar Workshop: Playing and Listening)"
+  words: 700
+  points:
+  - "Керування дієслів: розрізнення конструкцій «грати на гітарі» (Locative case для інструментів) та «грати в футбол» (Accusative case для ігор)."
+  - "Узгодження роду іменників: типові помилки «мій пісня» → «моя пісня» (Feminine) та «ця альбом» → «цей альбом» (Masculine)."
+  - "Лексичні колоквіації: очолити хіт-парад, лідер гурту, видатний виконавець."
+- section: "Підсумок: Культурне дозвілля (Summary: Cultural Leisure)"
+  words: 200
+  points:
+  - "Обговорення способів проведення вільного часу (філармонія, фестивалі) згідно з Держстандартом §3.4."
+  - "Рефлексія: порівняння української музичної сцени з культурою країни студента."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "гурт (band) — лідер гурту, легендарний гурт; prefer over 'група' (Russianism)"
+  - "співак / співачка (singer) — відомий співак, оперна співачка; derived from 'співати'"
+  - "виконавець / виконавиця (performer) — молодий виконавець, топ виконавців"
+  - "пісня (song) — народна пісня, хітова пісня; feminine (моя улюблена пісня)"
+  - "альбом (album) — сольний альбом, цей альбом; masculine (цей альбом)"
+  - "концерт (concert) — благодійний концерт, квиток на концерт"
+  - "жанр (genre) — музичний жанр, змішування жанрів"
+  - "музика (music) — слухати музику (active process) vs чути музику (passive)"
+  recommended:
+  - "хіт (hit) — очолити хіт-парад, світовий хіт"
+  - "грати на (to play an instrument) — грати на гітарі, грати на піаніно (+ Locative)"
+  - "сопілка (sopilka) — народний інструмент, фольклорні мотиви"
+  - "фольклор (folklore) — сучасний фольклор, етно-хаос"
+  - "реп (rap)"
+  - "рок (rock)"
+  - "поп (pop)"
+  - "електронна музика (electronic music)"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (3573 chars)
+✅ Message sent to Claude (ID: 10436)
+✓ Message 10436 acknowledged
+   Auto-acknowledged reply #10436 (stdout delivery — no inbox accumulation)
+✓ Message 10431 acknowledged

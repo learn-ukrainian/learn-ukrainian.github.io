@@ -6,46 +6,89 @@ version: '2.0'
 title: Довкілля та екологія
 subtitle: Environment & Ecology
 content_outline:
-- section: Вступ
+- section: Вступ (Introduction)
+  words: 500
   points:
-  - 'Why ecology matters in Ukraine — cultural hook: modern «еко-свідомість» and innovation
-    like Rekava (coffee grounds cups)'
-  - 'Core environmental concepts — learner error: distinguishing «довкілля» (general)
-    vs «навколишнє середовище» (official/bureaucratic)'
-  - Vocabulary overview — focus on collocations like «захист довкілля» and «стан довкілля»
-- section: Читання
+  - The concept of modern Ukrainian «еко-свідомість» (eco-consciousness) — introduce
+    the cultural hook of 'Rekava', the Lviv-based startup making biodegradable cups
+    from coffee grounds.
+  - 'Setting the scene: Why ecology is a critical topic in Ukraine, framing the Carpathians
+    as the «легені Європи» (lungs of Europe) and their role in the continental ecosystem.'
+  - 'Statistical shock: Introduce the ''7% Problem'' — landfills in Ukraine occupy
+    territory the size of Denmark (~7%), while recycling rates remain at only ~3%.'
+- section: Словник та поняття (Vocabulary & Concepts)
+  words: 900
   points:
-  - 'Environmental texts — cultural hook: Carpathians as «lungs of Europe» and the
-    threat of «вирубка лісів»'
-  - 'Ecological challenges in Ukraine — specific stat: landfills occupy ~7% of territory
-    (size of Denmark), recycling only ~3%'
-- section: Діалоги
+  - 'Terminology distinction — addressing the common learner error: when to use the
+    natural «довкілля» vs. the bureaucratic/official «навколишнє середовище» (e.g.,
+    in ministry titles).'
+  - Natural objects from State Standard §3.14 — categorical vocabulary for forest
+    (ліс), lake (озеро), river (річка), and mountains (гори) using the Carpathians
+    as a recurring example.
+  - 'Grammar-Vocabulary lock: The word «забруднення» (pollution) and the mandatory
+    Genitive case — drill collocations like «забруднення повітря», «забруднення води»,
+    and «забруднення ґрунту».'
+  - 'Recycling terminology: Explicitly teaching «переробка» or «вторинна переробка»
+    over the anglicism «ресайклінг», emphasizing the importance of «сортування сміття».'
+- section: 'Природа України: Карпати (Nature of Ukraine: The Carpathians)'
+  words: 1000
   points:
-  - 'Discuss ecological issues — grammar integration: explaining causes with «тому
-    що», «через те що», «бо»'
-  - 'Propose solutions — focus on practical actions: «сортування сміття» and «вторинна
-    переробка» (not «ресайклінг»)'
+  - 'Reading focus on the Carpathian ecosystem: Describe Lake Synevyr (the largest)
+    and Lake Brebeneskul (the highest), including the fact that Synevyr stays cold
+    even in summer.'
+  - 'The threat of «вирубка лісів» (deforestation): Discussing the ecological consequences
+    of logging in the mountains and how it affects the regional climate.'
+  - 'Biodiversity: Mentions of wild animals (дикі тварини) and flora per State Standard
+    §3.14, using the Carpathian Biosphere Reserve as the setting.'
+- section: Причина і наслідок (Cause and Effect)
+  words: 800
+  points:
+  - 'Grammar integration (§4.4.3): Explaining environmental issues using causal conjunctions
+    «тому що», «через те що», and «бо».'
+  - 'Syntactic patterns: ''The lake is polluted because of waste'' (озеро забруднене
+    через те, що...), ''We must sort trash because it saves nature'' (ми повинні сортувати
+    сміття, бо це рятує природу).'
+  - 'Problem-solution mapping: Analyzing how industrial emissions (викиди) lead to
+    global warming (глобальне потепління) and proposing renewable energy (відновлювана
+    енергія) as a fix.'
+- section: Практика та підсумок (Practice & Summary)
+  words: 800
+  points:
+  - 'Production task: Creating ''eco-tips'' posters modeled on real Ukrainian awareness
+    campaigns, focusing on practical actions like saving water and reducing plastic
+    use.'
+  - 'Dialogue: A conversation between a ''Carpathian Ecologist'' and a tourist about
+    preserving the «крихка екосистема» (fragile ecosystem) of the mountains.'
+  - 'Summary: Final review of the довкілля vs. природа distinction and a wrap-up on
+    the importance of individual contribution to «захист довкілля».'
 vocabulary_hints:
   required:
-  - 'довкілля (environment) — collocations: захист довкілля, стан довкілля, шкода
-    довкіллю'
-  - 'природа (nature) — context: wild nature vs. human environment'
-  - 'забруднення (pollution) — grammar: + Genitive (забруднення повітря, води, ґрунту)'
-  - 'клімат (climate) — collocations: зміна клімату, м''який клімат'
-  - 'екологія (ecology) — cultural context: popular science vs. academic discipline'
-  - 'захист (protection) — collocations: захист довкілля, захист тварин'
-  - 'переробка (recycling) — usage: preferred over anglicism «ресайклінг» (or «вторинна
-    переробка»)'
-  - 'відходи (waste) — collocations: переробка відходів, сортування відходів, побутові
-    відходи'
+  - 'довкілля (environment) — high frequency; prefer over bureaucratic ''навколишнє
+    середовище''; collocations: захист довкілля, стан довкілля'
+  - забруднення (pollution) — high frequency; MUST use Genitive case for the object
+    (повітря, води, ґрунту)
+  - 'відходи (waste) — collocations: побутові відходи (household waste), сортування
+    відходів, переробка відходів'
+  - 'переробка (recycling) — usage: «вторинна переробка» is the standard term; avoid
+    ''ресайклінг'' in formal/educational contexts'
+  - 'викиди (emissions) — context: industrial and automotive exhaust (викиди газів)'
+  - 'сміття (trash/garbage) — collocations: сортування сміття, вивезення сміття, накопичення
+    сміття'
+  - 'природа (nature) — context: State Standard §3.14 core term; refers to the natural
+    world vs. human-built environment'
+  - 'захист (protection) — collocations: захист довкілля, Міністерство захисту довкілля
+    та природних ресурсів'
   recommended:
-  - 'глобальне потепління (global warming) — collocations: боротьба з глобальним потеплінням,
-    наслідки потепління'
-  - 'викиди (emissions) — context: industrial pollution, car exhaust'
-  - 'відновлювана енергія (renewable energy) — context: solar, wind power trends in
-    Ukraine'
-  - 'екосистема (ecosystem) — collocations: крихка екосистема, збереження екосистеми;
+  - 'еко-свідомість (eco-consciousness) — modern buzzword; context: Rekava startup,
+    youth movements'
+  - вирубка лісів (deforestation) — critical environmental issue in the Carpathians
+  - 'глобальне потепління (global warming) — collocation: боротьба з глобальним потеплінням;
+    context: media and science'
+  - 'відновлювана енергія (renewable energy) — context: solar and wind energy trends
+    in Ukraine'
+  - 'екосистема (ecosystem) — collocation: крихка екосистема (fragile ecosystem);
     example: Lake Synevyr'
+  - легені Європи (lungs of Europe) — cultural idiom referring to the Ukrainian Carpathians
 activity_hints:
 - type: match-up
   focus: Environmental noun phrases

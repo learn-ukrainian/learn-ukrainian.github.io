@@ -2,14 +2,14 @@
   "module": "numbers-and-money",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-19T23:25:48.256352Z",
+  "last_audit": "2026-02-21T00:46:38.631002Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-19T23:25:43.081597Z",
+    "md": "2026-02-20T23:23:38.971791Z",
     "meta": "2026-02-19T23:22:19.250925Z",
-    "activities": "2026-02-19T23:25:43.082452Z",
-    "vocabulary": "2026-02-18T22:22:08.613799Z",
-    "plan": "2026-02-18T19:03:32.133152Z",
+    "activities": "2026-02-20T14:32:48.643198Z",
+    "vocabulary": "2026-02-20T23:23:38.972821Z",
+    "plan": "2026-02-20T20:40:41.433409Z",
     "research": "2026-02-19T23:22:19.242581Z"
   },
   "gates": {
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "2632/2000 (raw: 2947)"
+      "message": "2641/2000 (raw: 2964)"
     },
     "activities": {
       "status": "pass",

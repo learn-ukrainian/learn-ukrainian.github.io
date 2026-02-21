@@ -1,0 +1,45 @@
+module: c1-053
+level: C1
+sequence: 53
+slug: pysanky
+version: '2.0'
+title: 'Писанки: Космос на долоні'
+subtitle: 'Pysankas: Cosmos in the Palm of Your Hand'
+content_outline:
+- section: Розминка — Яйце як символ життя
+  points:
+  - Дохристиянське походження писанкарства
+  - Яйце як космічний символ (небо, земля, вода, вогонь)
+  - Синкретизм язичництва та християнства
+- section: Символіка писанок
+  points:
+  - 'Геометричні орнаменти: зірки, хрести, спіралі, меандри'
+  - 'Рослинні мотиви: калина, дуб, пшениця'
+  - 'Зооморфні символи: кінь, олень, птахи'
+  - Кольорова символіка (червоний — життя, чорний — вічність)
+- section: Техніка та регіони
+  points:
+  - Техніка батику (воскова резервація)
+  - 'Регіональні стилі: Гуцульщина, Полтавщина, Буковина'
+  - Інструменти писанкарства (писачок, воск, фарби)
+  - Сучасне писанкарство та його популяризація
+- section: Практика — опис та аналіз
+  points:
+  - Описати писанку, використовуючи термінологію
+  - Інтерпретувати символіку конкретної писанки
+  - Порівняти регіональні стилі писанкарства
+  - Написати есе про писанку як UNESCO-спадщину
+focus: history
+pedagogy: CBI
+objectives:
+- Analyze the archaic symbology of Ukrainian Pysanka patterns
+- Identify regional differences in pysanka design and color palettes
+- Understand the ritual technology of wax-resist egg decorating
+grammar:
+- Symbolic narrative registers
+- Terminology of craftsmanship
+phase: C1.5 Folk Culture & Fine Arts
+persona:
+  voice: Senior Specialist
+  role: Писанкарка
+word_target: 4000

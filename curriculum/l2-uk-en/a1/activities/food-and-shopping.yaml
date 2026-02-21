@@ -38,8 +38,8 @@
     right: coffee
   - left: вода
     right: water
-  - left: цукор
-    right: sugar
+  - left: сік
+    right: juice
   - left: сир
     right: cheese
   - left: яйце
@@ -245,9 +245,7 @@
     right: хліба
   - left: пачка
     right: масла
-  - left: кілограм
-    right: картоплі
-  - left: пакет
+  - left: літр
     right: соку
   title: Кількості та продукти
   type: match-up

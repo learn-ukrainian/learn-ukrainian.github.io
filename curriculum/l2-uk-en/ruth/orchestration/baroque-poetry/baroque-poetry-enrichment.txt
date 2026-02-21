@@ -1,0 +1,209 @@
+✅ Message sent to Gemini (ID: 12806) [auto-acked: self-addressed]
+✓ Message 12806 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12806...
+📨 Message #12806
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-baroque-poetry
+   Time: 2026-02-20T23:42:25.468644+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 74
+module: ruth-074
+module_number: 60
+slug: baroque-poetry
+title_uk: Барокова поезія
+title_en: Baroque Poetry
+phase: 3
+phase_id: baroque-fight
+phase_name: Baroque Fight
+focus: Curiosity verse, visual poetry
+content_outline:
+- section: Вступ
+  description: Introduction to Baroque Poetry
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Baroque Scholar
+  role: Master of Concetti
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Baroque Poetry (Курйозна поезія)
+
+## Використані джерела
+1. [Іван Величковський. Твори](http://litopys.org.ua/velych/vel.htm) — повні тексти збірок «Млеко» та «Зегар».
+2. [Енциклопедія Сучасної України: Величковський Іван](https://esu.com.ua/article-33389) — біографічні дані та аналіз творчості.
+3. [Ізборник: Українська література XVII ст.](http://litopys.org.ua/old17/old17.htm) — контекст епохи бароко.
+4. [Чижевський Д. Історія української літератури](http://litopys.org.ua/chyzh/chyzh.htm) — розділ про бароко, аналіз стилістики.
+
+## Хронологія
+- **1631** (прибл.): Заснування Києво-Могилянської колегії, початок викладання піїтики (poetica).
+- **1680-ті**: Іван Величковський служить пресвітером у Чернігові (коло Лазаря Барановича).
+- **1690**: Прибуття Величковського до Полтави.
+- **1691**: Укладання збірки **«Млеко, од овці пастиру належноє»** (Млеко) — маніфесту українського барокового курйозу.
+- **1693**: Укладання збірки **«Зегар з полузегарком»** (Годинник).
+- **1701**: Смерть Івана Величковського.
+
+## Ключові факти та цитати
+- **Концепт (Concetto):** Барокова поезія прагнула здивувати читача дотепністю, поєднанням непоєднуваного, пошуком прихованих зв'язків.
+- **Цитата (Величковський, передмова до «Млека»):** «Не для чого іншого, лише аби показати, що і наша руська мова, [хоч і] не має теж [у собі] усіх, як інші мови, мистецьких засобів, [але] на подібні цим [іншомовним] штучки і віршові труднощі [цілком] достатня і здатна».
+- **Види курйозів:**
+  - *Рак літеральний* (паліндром): «Анна ми мати и та ми манна».
+  - *Фігурні вірші*: Текст у формі хреста, чаші, яйця, де форма доповнює зміст.
+  - *Лабіринт*: Вірш, який можна читати багатьма шляхами (як кросворд).
+  - *Хроновірш*: У тексті зашифровано дату (римськими цифрами).
+  - *Акровірш*: Початкові літери утворюють ім'я автора (ІОАНН ВЕЛИЧКОВСКИЙ).
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ": [!context] — Світ як книга (Liber Mundi), де кожна річ є символом. Бог як Верховний Митець.
+- Section "Основний матеріал: I — Київська школа поетики": [!history-bite] — Курси поетики в Києво-Могилянській академії були обов'язковими. Студенти мали написати тисячі рядків віршів, щоб закінчити курс.
+- Section "Основний матеріал: II — Іван Величковський і «Млеко»": [!quote] — Цитата з передмови про самодостатність «руської мови».
+- Section "Основний матеріал: III — Візуальні та курйозні форми": [!myth-buster] — «Курйозний» не означає «смішний» чи «безглуздий». Це означає «дбайливо зроблений» (від lat. *cura* — турбота).
+- Section "Практика": [!culture] — Сучасні українські поети (напр., Микола Мірошниченко, Віктор Женченко) продовжують традиції зорової поезії (школа паліндромії).
+- Section "Підсумок": [!decolonization] — Вплив українського бароко на московську культуру (через Симеона Полоцького та ін.) був визначальним, а не навпаки.
+
+## Деколонізаційний контекст
+- **Imperial Myth:** Російська імперія часто привласнює барокову спадщину (Симеон Полоцький, Феофан Прокопович), називаючи це «русское барокко».
+- **Ukrainian Reality:** Бароко прийшло в Московію з Києва. До середини XVII ст. московська література була середньовічною. Іван Величковський свідомо творив «руською» (староукраїнською) мовою, щоб довести її рівність з латиною та польською, утверджуючи культурну суб'єктність України.
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| Руська мова (XVII ст.) | «Западнорусский язык», діалект російської | **Староукраїнська книжна мова**, мова українського бароко, окрема від церковнослов'янської та московської «приказної» мови. |
+| Бароко в Росії | Органічний етап розвитку російської культури | **Імпорт з України** (т.зв. «Наришкінське бароко» в архітектурі та київська школа в літературі). |
+
+## Section-Mapped Research Notes
+
+### Вступ
+- Бароко як «гра розуму». Естетика здивування.
+- Світ як лабіринт знаків, які треба розшифрувати.
+
+### Основний матеріал: I — Київська школа поетики
+- Роль Києво-Могилянської академії. Латина як мова освіти, але руська мова як мова творчості.
+- Підручники поетики (Poetica). Вміння писати вірші як ознака освіченої людини (homo doctus).
+
+### Основний матеріал: II — Іван Величковський і «Млеко»
+- Біографія (Полтава, Чернігів).
+- Збірка «Млеко» (1691) — програмний твір. Назва символізує «духовну поживу».
+- Патріотичний мотив передмови: довести рівність української мови.
+
+### Основний матеріал: III — Візуальні та курйозні форми
+- **Рак (паліндром):** Найвідоміший приклад «Анна ми мати и та ми манна». Пояснення механіки.
+- **Фігурний вірш:** Візуалізація змісту. Приклад вірша у формі хреста (страждання) або чаші.
+- **Акровірш та лабіринт:** Інтелектуальні ігри. Читач як співавтор, який мусить «пройти» вірш.
+
+### Практика
+- Аналіз конкретного вірша-рака.
+- Спроба знайти «ключ» до акровірша.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit -9): 
+✅ Message sent to Claude (ID: 12815)
+✓ Message 12806 acknowledged
+✓ Message 12815 acknowledged

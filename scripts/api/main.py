@@ -33,6 +33,7 @@ from .blue_router import router as blue_router
 from .gold_router import router as gold_router
 from .dashboard_router import router as dashboard_router
 from .state_router import router as state_router
+from .comms_router import router as comms_router
 
 app = FastAPI(
     title="Playground API",
@@ -52,6 +53,7 @@ app.include_router(blue_router, prefix="/api/blue")
 app.include_router(gold_router, prefix="/api/gold")
 app.include_router(dashboard_router, prefix="/api/dashboard")
 app.include_router(state_router, prefix="/api/state")
+app.include_router(comms_router, prefix="/api/comms")
 
 
 # ==================== SHARED ENDPOINTS ====================

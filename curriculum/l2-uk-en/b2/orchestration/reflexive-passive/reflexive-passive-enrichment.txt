@@ -1,0 +1,328 @@
+✅ Message sent to Gemini (ID: 10474) [auto-acked: self-addressed]
+✓ Message 10474 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10474...
+📨 Message #10474
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-reflexive-passive
+   Time: 2026-02-20T20:37:01.386179+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b2-04
+level: B2
+sequence: 4
+slug: reflexive-passive
+version: '2.0'
+title: Зворотний пасив із -ся
+content_outline:
+- section: Вступ — Зворотний пасив
+  points:
+  - Концепція зворотності в українських дієсловах
+  - -ся як маркер пасиву
+  - Відмінність від інших зворотних значень
+- section: Утворення зворотного пасиву
+  points:
+  - Дієслово третьої особи + -ся/-сь
+  - Правила чергування -ся і -сь
+  - Видові пари (будується — побудується)
+- section: Акцент на процесі
+  points:
+  - Зворотний пасив наголошує на процесі, не на результаті
+  - Порівняння з -но/-то (результат)
+  - Приклади в контексті (Будинок будується)
+- section: Вираження агента
+  points:
+  - Агент в орудному відмінку (Проблема вивчається науковцями)
+  - Коли агент необхідний
+  - Коли агент опускається
+- section: Контексти вживання
+  points:
+  - Науковий стиль (Експеримент проводиться)
+  - Технічна документація (Програма встановлюється)
+  - Юридичні тексти (Закон застосовується)
+  - Журналістика (Ситуація аналізується)
+- section: Порівняння форм пасиву
+  points:
+  - -ся vs -но/-то — коли що використовувати
+  - Стилістичні відмінності
+  - Типові помилки
+- section: Практика і підсумок
+  points:
+  - Ключові правила
+  - Перехід до модуля 05
+  - Підготовка до модуля 06
+vocabulary_hints:
+  required:
+  - зворотний (reflexive)
+  - процес (process)
+  - проводиться (is being conducted)
+  - вивчається (is being studied)
+  - застосовується (is applied)
+  - будується (is being built)
+  - аналізується (is being analyzed)
+  - досліджується (is being researched)
+  - науковець (scientist)
+  - експеримент (experiment)
+  recommended:
+  - лабораторія (laboratory)
+  - методика (methodology)
+  - результат (result)
+  - дослідження (research)
+  - технологія (technology)
+activity_hints:
+- type: fill-in
+  focus: Active → -ся passive
+  items: 12+
+- type: fill-in
+  focus: Complete scientific sentences with -ся verbs
+  items: 14+
+- type: quiz
+  focus: Process description identification
+  items: 12+
+- type: group-sort
+  focus: -ся vs -но/-то — choose appropriate form
+  items: 10+
+- type: match-up
+  focus: Context → appropriate -ся verb
+  items: 12+
+- type: error-correction
+  focus: Fix agent expression errors
+  items: 8+
+- type: essay-response
+  focus: Write scientific process description
+  output: Model answer provided
+focus: grammar
+prerequisites:
+- b2-01 (Passive Voice System)
+- b2-02 (Past Passive Participles)
+- b2-03 (Impersonal -но/-то)
+- Instrumental case mastery
+connects_to:
+- b2-05 (3rd Person Plural Passive)
+- b2-06 (Passive in Context)
+- 'b2-21 (Register: Technical/Scientific)'
+- b2-10 (B2.1a Checkpoint)
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Reflexive Verbs
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Official requirements for -ся passive usage
+- name: Науковий стиль української мови
+  url: https://uk.wikipedia.org/wiki/Науковий_стиль
+  type: secondary
+  notes: Scientific writing conventions
+- name: Технічна документація українською
+  url: https://uk.wikipedia.org/wiki/Технічна_документація
+  type: secondary
+  notes: Technical writing patterns
+immersion: 100% Ukrainian
+phase: B2.1a [Passive Voice]
+objectives:
+- Identify and correctly use зворотний пасив із -ся
+- Form and apply зворотний пасив
+persona:
+  voice: Professional Language Coach
+  role: Nature Documentary Narrator (Оповідач документального фільму)
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Зворотний пасив із -ся
+
+## State Standard Reference
+§4.1.3.1: "Дійсний спосіб: дієвідмінювання дієслів недоконаного виду... зоставатися (зостаюся, зостаєшся...)"
+Alignment: The State Standard covers reflexive verbs (which form the morphological basis of the reflexive passive) within the Indicative Mood (§4.1.3.1). The specific usage of these forms for passive voice (process focus) is a key B2 competency, distinguishing it from the result-focused -но/-то forms covered in §4.3.3 (One-member sentences).
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| проводиться (is conducted) | High (Academic/Official) | експеримент проводиться, дослідження проводиться, зустріч проводиться |
+| вивчається (is studied) | High (Academic) | проблема вивчається, мова вивчається, питання вивчається науковцями |
+| застосовується (is applied) | High (Tech/Legal) | закон застосовується, метод застосовується, технологія застосовується |
+| будується (is built) | Medium (General/News) | будинок будується, держава будується, система будується |
+| аналізується (is analyzed) | High (Academic) | ситуація аналізується, текст аналізується, дані аналізуються |
+| досліджується (is researched) | High (Academic) | явище досліджується, тема досліджується вченими |
+
+## Cultural Hooks
+1. **Іван Пулюй (Ivan Puliui)**: While Röntgen is famous, the "X-rays" were deeply researched by Puliui (*промені досліджуються Пулюєм*). He made the first X-ray of a human skeleton. Perfect for "scientific discovery" context.
+2. **Катерина Ющенко (Kateryna Yushchenko)**: Created the first address programming language in 1955. Context: "Перша мова програмування створюється жінкою" (The first programming language is created by a woman).
+3. **Ігор Сікорський (Ihor Sikorsky)**: The helicopter (*гелікоптер*) was developed (*розробляється*) by a kyivan inventor.
+
+## Common Learner Errors
+1. **Instrumental Case Omission**: Learners often omit the agent or use "від" instead of the Instrumental case.
+   *Error*: *Книга читається студентів.* → *Correct*: *Книга читається студентами.* (The book is read by students).
+2. **Passive Overuse**: Using passive in casual speech where active is natural.
+   *Error*: *Піца їсться мною.* (The pizza is being eaten by me). → *Correct*: *Я їм піцу.* (I am eating pizza).
+3. **-ся vs -но/-то Confusion**: Confusing process (imperfective -ся) with result (perfective -но/-то).
+   *Error*: *Будинок будується вже рік.* (Correct - process) vs *Будинок збудується.* (Incorrect - mixture). → *Correct*: *Будинок збудовано.* (Result).
+
+## Cross-References
+- **Builds on**: `b2-01` (Passive Voice System), `b2-03` (Impersonal -но/-то), Instrumental case.
+- **Prepares for**: `b2-05` (3rd Person Plural Passive), `b2-21` (Technical/Scientific Register).
+
+## Notes for Content Writing
+- **Stylistic Restriction**: Explicitly teach that this structure is NOT for casual conversation ("I am dressing" is reflexive `я одягаюся`, but "The pizza is eaten" `піца їсться` is unnatural). Restrict examples to science, tech, law, and news.
+- **Agent Rule**: Emphasize that the agent (Instrumental) is optional but common in scientific texts ("досліджується вченими").
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Поняття зворотності та пасиву (Introduction: Concept of Reflexivity and Passive)"
+  words: 500
+  points:
+  - "Аналіз §4.1.3.1 Державного стандарту: вживання зворотних дієслів недоконаного виду як морфологічної бази для пасивних конструкцій."
+  - "Роль частки -ся як маркера пасивного стану, що вказує на об'єкт, який стає граматичним підметом."
+  - "Стилістичне обмеження: вивчення вживання конструкції виключно в науковому, офіційно-діловому та публіцистичному стилях."
+- section: "Морфологія та правила утворення (Morphology and Formation Rules)"
+  words: 800
+  points:
+  - "Чергування часток -ся та -сь: вживання -ся після приголосних та -сь після голосних у формах третьої особи («будується», «досліджуються»)."
+  - "Видові пари в пасиві: акцент на недоконаному виді для позначення тривалої дії, що перебуває в процесі виконання."
+  - "Трансформація активних речень у пасивні: перехід прямого додатка в позицію підмета («Науковці вивчають проблему» → «Проблема вивчається науковцями»)."
+- section: "Семантика процесу та роль Агента (Process Semantics and the Role of the Agent)"
+  words: 900
+  points:
+  - "Відмінність між процесом (-ся) та результатом (-но/-то): опис дії, що триває в часі («Будинок будується вже рік»)."
+  - "Правила вираження агента в орудному відмінку без прийменників: мастеринг Instrumental Case для наукового контексту."
+  - "Діагностика контексту: коли агент є обов'язковим для розуміння змісту, а коли його можна опустити в технічних інструкціях."
+- section: "Культура: Українські винаходи крізь призму пасиву (Culture: Ukrainian Inventions through the Passive Lens)"
+  words: 1000
+  points:
+  - "Іван Пулюй та X-промені: опис наукового пріоритету через конструкцію «промені досліджуються Пулюєм»."
+  - "Катерина Ющенко та перша мова програмування: використання пасиву для опису технологічних досягнень («мова програмування створюється жінкою»)."
+  - "Ігор Сікорський та київська авіаконструкторська школа: опис розробки гелікоптера («гелікоптер розробляється винахідником»)."
+  - "Практичне застосування в технічній документації: «Програма встановлюється», «Технологія застосовується»."
+- section: "Стилістика та запобігання помилкам (Stylistics and Error Prevention)"
+  words: 800
+  points:
+  - "Learner Error: використання прийменника «від» для позначення агента («Книга читається від студентів» → корекція на «Книга читається студентами»)."
+  - "Passive Overuse: запобігання вживанню пасиву в розмовній мові («Піца їсться мною»); заміна на активні конструкції («Я їм піцу»)."
+  - "Корекція змішування видів: чому конструкція «Будинок збудується» є граматично некоректною у порівнянні з «Будинок збудовано»."
+  - "Підсумковий огляд та підготовка до наступного етапу: перехід до пасиву третьої особи множини (модуль 05)."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "проводиться (is being conducted) — High frequency in Academic/Official styles; collocations: експеримент проводиться, зустріч проводиться."
+  - "вивчається (is being studied) — Academic register; collocations: проблема вивчається науковцями, мова вивчається."
+  - "застосовується (is applied) — Tech/Legal register; collocations: закон застосовується, метод застосовується."
+  - "будується (is being built) — General/News register; collocations: будинок будується, система будується."
+  - "аналізується (is being analyzed) — Academic focus; collocations: ситуація аналізується, дані аналізуються."
+  - "досліджується (is being researched) — Academic/Scientific register; collocations: явище досліджується, тема досліджується вченими."
+  - "зворотний (reflexive) — grammatical term for -ся verbs."
+  - "процес (process) — key semantic concept for this passive type."
+  - "науковець (scientist) — common agent in passive constructions."
+  - "експеримент (experiment) — frequent subject in scientific passive."
+  recommended:
+  - "розробляється (is being developed) — technical/inventive context; collocations: проєкт розробляється, гелікоптер розробляється."
+  - "створюється (is being created) — creative/scientific context; collocations: мова створюється, система створюється."
+  - "встановлюється (is being installed/established) — tech/legal; collocations: програма встановлюється, зв'язок встановлюється."
+  - "винахідник (inventor) — cultural context agent (Sikorsky, Puliui)."
+  - "проміння (rays/radiation) — scientific vocabulary related to Puliui's research."
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4501 chars)
+✅ Message sent to Claude (ID: 10482)
+✓ Message 10482 acknowledged
+   Auto-acknowledged reply #10482 (stdout delivery — no inbox accumulation)
+✓ Message 10474 acknowledged

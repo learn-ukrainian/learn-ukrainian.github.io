@@ -6,59 +6,79 @@ version: '2.0'
 title: Медіа та новини
 subtitle: Media and News
 content_outline:
-- section: Вступ
+- section: Вступ (Introduction)
+  words: 600
   points:
-  - 'Ukrainian media overview — cultural hook: Suspilne (2017) as independent public
-    broadcaster'
-  - 'Types of media — standard alignment: §3.4 covers press, radio, TV, internet'
-  - News vocabulary basics
-- section: Вживання
+  - 'Overview of the Ukrainian media landscape aligned with State Standard §3.4: press,
+    radio, television, and internet as informational leisure.'
+  - 'Historical cultural hook: The 1924 Kharkiv radio launch with the iconic phrase
+    «Алло, алло, алло! Говорить Харків!» marking the start of broadcasting.'
+  - 'Modern context: The 2017 creation of Suspilne (Public Broadcasting) as a reform
+    toward independent, non-oligarchic media in Ukraine.'
+- section: 'Презентація: Джерела та Формати (Presentation: Sources and Formats)'
+  words: 1000
   points:
-  - 'Collocations patterns — learner error: confusion between «транслювати» (broadcast)
-    and «перекладати» (translate)'
-  - Register considerations — distinct formal reporting lexis vs. informal discussion
-  - 'Application domains, key expressions — avoid Russianisms: «брати участь» not
-    «приймати участь», «порушувати питання» not «піднімати питання»'
-- section: Читання
+  - 'Categorization of media: traditional (газети, ТБ) vs. digital (Telegram-канали,
+    подкасти) reflecting modern Ukrainian reality.'
+  - 'Professional vocabulary: roles in the editorial office (редакція), including
+    specialized journalists (військовий/спортивний журналіст) and investigative reporting.'
+  - 'Concept introduction: «медіаграмотність» (media literacy) and the importance
+    of identifying reliable sources (джерела інформації).'
+- section: Лексика та Культура мовлення (Vocabulary and Speech Culture)
+  words: 1100
   points:
-  - News article
-  - 'Ukrainian media overview — cultural hook: «Алло, алло, алло! Говорить Харків!»
-    (1924) as start of broadcasting history'
-  - 'Blog (informal) — modernity note: include Telegram channels and podcasts as key
-    modern sources'
-- section: Діалоги
+  - 'Collocation mastery: forming natural pairs with «новини» (свіжі, термінові) and
+    «стаття» (аналітична, автор статті).'
+  - 'Learner error correction: drill to distinguish between «транслювати» (to broadcast)
+    and «перекладати» (to translate) to avoid semantic confusion.'
+  - 'Language purity drill: identifying and replacing Russianisms like «приймати участь»
+    (use «брати участь») and «піднімати питання» (use «порушувати питання»).'
+  - 'Grammar focus: mastering the case government of «повідомляти» — Accusative for
+    the fact (повідомити новину) vs. Dative for the person (повідомити друзям).'
+- section: 'Практика: Аналіз та Дискусія (Practice: Analysis and Discussion)'
+  words: 800
   points:
-  - News discussion (informal) — focus on discussing content as leisure/rest activity
-  - 'In the editorial office (formal) — case usage note: «повідомляти» + Accusative
-    (fact) vs. Dative (person)'
-  - Fact-checking, media expert interview — introduce concept of «медіаграмотність»
-    (media literacy)
-- section: Лексика
+  - 'Register differentiation: analyzing formal news reports (passive constructions,
+    formal lexis) vs. informal blog/podcast discussion styles.'
+  - 'Reading activity: scanning a news feed (стрічка новин) for key events and practicing
+    fact-checking terminology.'
+  - 'Discussion: media consumption habits as part of leisure (дозвілля) and the role
+    of ZMI (ЗМІ) in modern society.'
+- section: Підсумок (Summary)
+  words: 500
   points:
-  - Seven vocabulary groups
-  - Content types, professionals
-  - Media types, structure, sources
-- section: Підсумок
-  points:
-  - Key vocabulary recap
-  - Practice recommendations
+  - Review of high-frequency media terminology (ЗМІ, редакція, висвітлювати, оприлюднювати)
+    and their typical collocations.
+  - 'Final synthesis: forming opinions on news items using B1-level reporting verbs
+    and corrected phrases.'
 vocabulary_hints:
   required:
-  - новини (news) — свіжі/останні/термінові новини, дивитися/читати новини, стрічка
-    новин
-  - стаття (article) — писати/публікувати статтю, аналітична/наукова стаття
-  - журналіст (journalist) — військовий/спортивний журналіст, журналістське розслідування
-  - телебачення (television)
-  - газета (newspaper)
-  - репортаж (report)
-  - 'повідомляти (to report) — grammar: + Accusative (news/fact), + Dative (person)'
-  - висвітлювати (to cover/highlight)
+  - новини (news) — свіжі/останні/термінові новини, стрічка новин, випуск новин; high
+    frequency media term
+  - стаття (article) — аналітична/наукова стаття, автор статті, публікувати статтю;
+    essential for press analysis
+  - журналіст (journalist) — військовий/спортивний журналіст, журналістське розслідування,
+    працювати журналістом
+  - ЗМІ (media) — засоби масової інформації; high frequency formal term for mass media
+  - 'повідомляти (to report) — grammar: + Accusative (fact/news), + Dative (person/audience);
+    also «повідомляти про» + Acc'
+  - висвітлювати (to cover/highlight) — висвітлювати події, висвітлювати проблему;
+    key journalistic verb
+  - телебачення (television) — дивитися телебачення, працювати на телебаченні
+  - газета (newspaper) — читати газету, свіжий номер газети
+  - репортаж (report) — вести репортаж з місця подій, цікавий репортаж
   recommended:
-  - редакція (editorial office) — працювати в редакції, редакційна політика
-  - трансляція (broadcast) — пряма трансляція, вести трансляцію
-  - ЗМІ (media) — засоби масової інформації, роль ЗМІ, сучасні ЗМІ
-  - 'подкаст (podcast) — modernity: digital news source'
-  - оприлюднювати (to publish/release)
+  - редакція (editorial office) — працювати в редакції, редакційна політика; professional
+    setting
+  - 'трансляція (broadcast) — пряма трансляція, вести трансляцію; note: do not confuse
+    with translation'
+  - подкаст (podcast) — слухати подкаст, автор подкасту; modern digital news source
+  - медіаграмотність (media literacy) — навички медіаграмотності; critical B1 concept
+  - оприлюднювати (to publish/release) — оприлюднювати інформацію, оприлюднювати результати;
+    formal register
+  - 'брати участь (to participate) — drill: use instead of Russianism «приймати участь»'
+  - 'порушувати питання (to raise an issue) — drill: use instead of Russianism «піднімати
+    питання»'
 activity_hints:
 - type: match-up
   focus: Media noun phrases

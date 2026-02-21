@@ -1,88 +1,114 @@
 # Рецензія: Reflexive Verbs (-ся)
 
 **Level:** A1 | **Module:** 9
-**Overall Score:** 9.6/10
+**Overall Score:** 9.1/10
 **Status:** PASS
-**Reviewed:** 2026-02-19
+**Reviewed:** 2026-02-20
 
 ## Plan Verification
 
-- **Plan-Content Alignment**: PASS. All sections (Rozmynka, Theory, Practice, Culture) and points are covered.
-- **Vocabulary**: PASS. Covers required list (*вмиватися, одягатися, дивитися* etc.).
-- **Grammar scope**: PASS. Focuses strictly on present tense and the concept of reflexivity.
-- **Objectives**: PASS. All learning objectives addressed.
+```
+Plan-Content Alignment: PASS
+- Sections: Matches plan (Warm-up, Theory, Practice, Culture).
+- Vocabulary: Matches required list.
+- Grammar scope: Appropriate for A1 (Present tense only).
+- Objectives: Met.
+```
 
 ## Scores
 
 | # | Dimension | Score | Auto-fail | Evidence |
 |---|-----------|-------|-----------|----------|
-| 1 | Experience Quality | 10/10 | <7 | Excellent "Mirror" and "Laser Beam" analogies make the concept intuitive. |
-| 2 | Coherence | 10/10 | <7 | Logical progression from concept → form → usage → culture. |
-| 3 | Relevance | 10/10 | <7 | Focuses on high-frequency daily routine verbs immediately useful for A1. |
-| 4 | Educational | 10/10 | <7 | Clear, scaffolded explanations. "The Myself Redundancy" warning is crucial. |
-| 5 | Language | 9/10 | <8 | Natural Ukrainian. Minor note: *підніматися* (to rise) is used for "getting out of bed" to fit the reflexive theme, where *вставати* might be more common, but it's acceptable. |
-| 6 | Pedagogy | 9/10 | <7 | Strong scaffolding. One error in activity explanation regarding phonetics rules. |
-| 7 | Immersion | 10/10 | <6 | Perfect balance for A1. Heavy English support for complex concepts. |
-| 8 | Activities | 9/10 | <7 | Good variety (Sort, Match, Quiz, Fill-in). One factual error in the "Select Suffix" drill explanation. |
-| 9 | Richness | 9/10 | <6 | "Maxim's Morning" story and "Gym Dialogue" provide excellent context. Could use more IPA for key verbs. |
-| 10 | Beginner Safety | 10/10 | <7 | Very encouraging tone. "Would I Continue?" test: 5/5. |
-| 11 | LLM Fingerprint | 10/10 | <7 | Voice is distinct ("Patient Tutor"), avoids generic AI patterns. |
-| 12 | Linguistic Accuracy | 9/10 | <9 | Generally accurate. One explanation about *надіються* is linguistically confused. |
+| 1 | Experience Quality | 8/10 | <7 | Missing warm welcome and celebration beats required for A1. |
+| 2 | Coherence | 10/10 | <7 | Logical flow from concept to mechanics to usage. |
+| 3 | Relevance | 10/10 | <7 | High-frequency daily routine vocabulary. |
+| 4 | Educational | 9/10 | <7 | "Mirror" and "Laser beam" analogies are excellent for this concept. |
+| 5 | Language | 10/10 | <8 | Natural Ukrainian examples; accurate grammar. |
+| 6 | Pedagogy | 9/10 | <7 | Strong English scaffolding; clear contrast of Transitive/Reflexive. |
+| 7 | Immersion | 9/10 | <6 | Appropriate for A1 (English used for complex theory). |
+| 8 | Activities | 10/10 | <7 | Varied types (sort, fill-in, quiz) covering all nuances. |
+| 9 | Richness | 9/10 | <6 | "Maxim's Morning" story provides good context. |
+| 10 | Beginner Safety | 8/10 | <7 | Good explanations, but lacking "You got this!" encouragement beats. |
+| 11 | LLM Fingerprint | 8/10 | <7 | Some formulaic transitions ("Now that you understand...", "Let's start with..."). |
+| 12 | Linguistic Accuracy | 10/10 | <9 | No Russianisms or grammatical errors found. |
 
-**Weighted Overall:** 9.6/10
+**Weighted Overall:** (12 + 10 + 10 + 10.8 + 11 + 10.8 + 9 + 13 + 8.1 + 10.4 + 8 + 15) / 14.0 = **128.1 / 14.0 = 9.15/10**
 
 ## Auto-Fail Checklist Results
 
-- Russianisms: CLEAN. "Вибачаюсь" is handled correctly as a cultural teaching point.
-- Calques: CLEAN.
-- Grammar scope: CLEAN.
-- Activity errors: 1 error found in explanation.
-- Beginner Safety: 5/5.
+- Russianisms: CLEAN
+- Calques: CLEAN
+- Grammar scope: CLEAN
+- Activity errors: CLEAN
+- Beginner Safety: 4/5 (Safe, but could be warmer)
 
 ## Critical Issues Found
 
-### Issue 1: False Linguistic Explanation in Activity
-- **Location**: `activities/reflexive-verbs.yaml`, Item 6 in "Оберіть правильний суфікс".
-- **Original**: `explanation: Після голосної 'ю' у слові 'надіються' (вони) ми вживаємо -ся...`
-- **Problem**: This is linguistically incorrect. The form *надіють-ся* attaches *-ся* to the consonant *ть* (part of the ending *-ють*), not to the vowel *ю*. The "Golden Rule" (consonant + ся) applies perfectly here.
-- **Fix**: Correct the explanation to state that the word ends in a consonant *ть*.
+### Issue 1: Missing Welcome (Experience)
+- **Location**: Start of file
+- **Original**: «> **Чому це важливо?**»
+- **Problem**: A1 learners need a warm human greeting ("Привіт! Welcome back!") before diving into "Why is this important?". The current start is functional but cold.
+- **Fix**: Add a warm welcome paragraph.
 
-### Issue 2: Missing IPA for Key Verbs
-- **Location**: Content body.
-- **Problem**: While `vocabulary.yaml` has IPA, the prompt requires IPA on the "first occurrence" in the text for A1. Key verbs like *вмиватися*, *одягатися*, *зустрічатися* are introduced without inline IPA.
-- **Fix**: Add IPA to the main Theory section where these verbs are first defined.
+### Issue 2: Abrupt Ending (Experience)
+- **Location**: End of file
+- **Original**: «5. Why is "Вибачте" considered more polite than "Вибачаюсь"?»
+- **Problem**: The module ends on a quiz question. A1 learners need a "Victory Lap" — a short paragraph celebrating what they can now do (e.g., "Now you can talk about your morning routine!").
+- **Fix**: Add a celebratory conclusion.
+
+### Issue 3: Misleading "Drill" Header (Structure)
+- **Location**: Section "Drill: Choosing the Suffix"
+- **Original**: «### Drill: Choosing the Suffix»
+- **Problem**: This section isn't a drill; it's two worked examples. Calling it a "Drill" implies the user should do it, but the answers are given immediately.
+- **Fix**: Rename to "Examples: Applying the Rule".
+
+### Issue 4: Potentially Confusing "Incorrect" Label (Linguistic Accuracy)
+- **Location**: Section "Common Error: The 'Myself' Redundancy"
+- **Original**: «❌ **Incorrect:** Я мию себе.»
+- **Problem**: "Я мию себе" is not grammatically incorrect (it's valid if contrasting "I wash myself, not the dog"), but it is unnatural in neutral context. Marking it "Incorrect" might confuse learners who see it in other contexts.
+- **Fix**: Change label to "Unnatural / Emphatic only".
+
+## Ukrainian Language Issues
+
+| Line | Current | Corrected | Type |
+|------|---------|-----------|------|
+| N/A | N/A | N/A | CLEAN |
 
 ## Beginner Safety Audit
 
-"Would I Continue?" Test: 5/5
-- Overwhelmed? No, the pacing is excellent.
-- Instructions clear? Yes, English explanations are very clear.
-- Quick wins? Yes, the "Mirror" analogy gives an instant "Aha!" moment.
-- Ukrainian scary? No, well-scaffolded.
-- Come back tomorrow? Yes.
+"Would I Continue?" Test: 4/5
+- Overwhelmed? No
+- Instructions clear? Yes
+- Quick wins? Yes
+- Ukrainian scary? No
+- Come back tomorrow? Yes (but would like more encouragement)
 
 ## Strengths
-- The **"Laser Beam" and "Mirror" analogies** are fantastic for visualizing the grammar.
-- **Cultural insight** on pronunciation (the "Bee" sound) is practical and engaging.
-- **"The Myself Redundancy"** is a great proactive correction of a common learner mistake.
+- The "Mirror Analogy" is a fantastic pedagogical tool for explaining reflexivity.
+- The "Maxim's Morning" story effectively integrates the grammar into a relatable narrative.
+- Clear distinction between "Type 1" (Routine) and "Type 2" (Reciprocal) verbs.
 
-## Fix Plan to Reach 10/10
+## Fix Plan to Reach 9.5/10
 
-### Pedagogy / Activities
+### Experience Quality: 8/10 → 10/10
 **What to fix:**
-1.  `activities/reflexive-verbs.yaml`: Correct the explanation for *надіються*.
-2.  `reflexive-verbs.md`: Add inline IPA for the first introduction of key reflexive verbs types.
+1. Add a warm "Привіт!" intro.
+2. Add a "You can now..." celebration at the end.
+3. Add a reassuring comment in the "Pronunciation" section about the difficulty of [ц':а].
+
+### Projected Overall After Fixes
+9.3/10
 
 ## Verification Summary
 
-- Content lines read: ~220
+- Content lines read: ~180
 - Activity items checked: ~50
-- Ukrainian sentences verified: Yes
-- IPA transcriptions checked: Yes
-- Issues found: 2 (1 Error, 1 Enhancement)
+- Ukrainian sentences verified: All
+- IPA transcriptions checked: All
+- Issues found: 4
 
 ## Verdict
 
 **PASS**
 
-Excellent module that perfectly fits the "Patient Tutor" persona. The content is safe, supportive, and linguistically interesting. One technical error in an activity explanation needs fixing.
+Excellent content that just needs a "warmth pass" (Intro/Outro) to be perfect for A1.

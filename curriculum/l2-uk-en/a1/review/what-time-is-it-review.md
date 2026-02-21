@@ -1,36 +1,36 @@
 # Рецензія: What Time Is It?
 
 **Level:** A1 | **Module:** 23
-**Overall Score:** 9.0/10
+**Overall Score:** 9.4/10
 **Status:** PASS
-**Reviewed:** 2026-02-19
+**Reviewed:** 2026-02-20
 
 ## Plan Verification
 
 Plan-Content Alignment: PASS
-- Sections: All present (Warm-up, Presentation, Days, Months, Prepositions, Practice).
-- Vocabulary: Key terms (година, хвилина, дні, місяці) present.
-- Grammar scope: Accusative for days, Locative for months covered correctly.
-- Objectives: Met.
+- Sections: All 7 required sections are present and follow the outline.
+- Vocabulary: Covers all required hints (година, хвилина, день, etc.) and recommended ones.
+- Grammar scope: Correctly covers time prepositions and cases (Accusative for days, Locative for months/time). Limits scope appropriately (avoids "quarter past/to").
+- Objectives: All objectives regarding asking time, naming days/months, and prepositions are met.
 
 ## Scores
 
 | # | Dimension | Score | Auto-fail | Evidence |
 |---|-----------|-------|-----------|----------|
-| 1 | Experience Quality | 9/10 | <7 | Strong "Safe Harbor" feel, telegraphic style is a great A1 choice. |
-| 2 | Coherence | 9/10 | <7 | Logical flow from simple time to schedules. |
-| 3 | Relevance | 10/10 | <7 | Highly relevant content (trains, meetings). |
-| 4 | Educational | 9/10 | <7 | Clear explanations, mostly accurate. |
-| 5 | Language | 8/10 | <8 | Dialogue 3 is unnatural ("поїзд буде"); Vowel harmony box is confusing. |
-| 6 | Pedagogy | 8/10 | <7 | Vowel harmony explanation contradicts its own examples. |
-| 7 | Immersion | 9/10 | <6 | Good balance of English scaffolding and Ukrainian examples. |
-| 8 | Activities | 10/10 | <7 | Excellent variety, accurate distractors, alignment with content. |
-| 9 | Richness | 9/10 | <6 | Good cultural hooks (Ukrzaliznytsia). |
-| 10 | Beginner Safety | 9/10 | <7 | "Would I Continue?" 5/5. Very encouraging. |
-| 11 | LLM Fingerprint | 9/10 | <7 | Generally natural, some minor clichés ("heartbeat of daily life"). |
-| 12 | Linguistic Accuracy | 9/10 | <9 | Mostly correct, one stylistic improvement needed. |
+| 1 | Experience Quality | 10/10 | <7 | Tone is warm, inviting ("Вітаємо...", "Уявіть..."), and supportive throughout. |
+| 2 | Coherence | 10/10 | <7 | Logical progression from Hours -> Minutes -> Days -> Months -> Schedules. |
+| 3 | Relevance | 10/10 | <7 | Ukrzaliznytsia context is culturally perfect and highly practical. |
+| 4 | Educational | 9/10 | <7 | Excellent distinction between "Котра година?" and "О котрій?". Good choice of "telegraphic style". |
+| 5 | Language | 9/10 | <8 | High quality, but one euphony awkwardness found. |
+| 6 | Pedagogy | 10/10 | <7 | Scaffolding is strong; complex concepts (half/quarter) are rightly deferred. |
+| 7 | Immersion | 9/10 | <6 | English explanations are clear, Ukrainian examples are plentiful. |
+| 8 | Activities | 10/10 | <7 | Excellent volume (112 items) and variety. Covers all skills. |
+| 9 | Richness | 9/10 | <6 | Cultural notes on punctuality and working hours add depth. |
+| 10 | Beginner Safety | 9/10 | <7 | "Would I Continue?" 5/5. Safe, predictable structure. Minor IPA omissions. |
+| 11 | LLM Fingerprint | 9/10 | <7 | Voice is specific and instructional, not generic. |
+| 12 | Linguistic Accuracy | 9/10 | <9 | Generally perfect, except one phonetic clash. |
 
-**Weighted Overall:** 8.96/10 → **9.0/10**
+**Weighted Overall:** 9.4/10
 
 ## Auto-Fail Checklist Results
 
@@ -42,59 +42,42 @@ Plan-Content Alignment: PASS
 
 ## Critical Issues Found
 
-### Issue 1: Confusing Grammar Rule (Vowel Harmony)
-- **Location**: Section "Days of the Week", Callout "Vowel Harmony"
-- **Original**: «If the next word starts with a consonant, use **у**. If it starts with a vowel, use **в**.»
-- **Problem**: This contradicts the examples given immediately before (e.g., «в понеділок» — *понеділок* starts with a consonant). Also, no day of the week starts with a vowel, making the "use в" rule confusing in this specific context without clarification about the *previous* word's ending.
-- **Fix**: Clarify that for days (starting with consonants), **у** is standard at the start of sentences, while **в** is used after vowels in continuous speech.
+### Issue 1: Euphony Violation
+- **Location**: Section "Practice", Subsection "Читання: Мій ідеальний день"
+- **Original**: «Я п'ю каву **й їм** круасан.»
+- **Problem**: The combination `й їм` creates a phonetic clash (j-ji), which is difficult to pronounce and violates euphony rules. After a vowel and before `ї`, `та` or `і` is preferred.
+- **Fix**: Change to «Я п'ю каву **та їм** круасан.»
 
-### Issue 2: Unnatural Dialogue (Static Verbs)
-- **Location**: Section "Practice", Dialogue 3
-- **Original**: «Коли буде поїзд до Львова? ... Поїзд буде о п'ятій...»
-- **Problem**: Using *бути* (to be) for transport schedules is very basic and slightly unnatural when the specific vocabulary (*відправлення/прибуття*) was just introduced in the previous section.
-- **Fix**: Replace with *відправляється* (departs) and *прибуває* (arrives) to reinforce the new vocabulary and sound more authentic.
-
-## Ukrainian Language Issues
-
-| Line | Current | Corrected | Type |
-|------|---------|-----------|------|
-| 358 | «Коли буде поїзд» | «Коли відправляється поїзд» | Style/Naturalness |
-| 360 | «Він буде об» | «Він прибуває об» | Style/Naturalness |
-
-## Beginner Safety Audit
-
-"Would I Continue?" Test: 5/5
-- Overwhelmed? No, the "telegraphic style" for minutes is a great stress-reducer.
-- Instructions clear? Yes.
-- Quick wins? Yes, reading the clock immediately.
-- Ukrainian scary? No, well scaffolded.
-- Come back tomorrow? Yes.
+### Issue 2: Missing IPA
+- **Location**: Section "The Minutes (Telegraphic Style)"
+- **Original**:
+  *   11:10 — **Одинадцята десять**
+  *   12:50 — **Дванадцята п'ятдесят**
+- **Problem**: Inconsistent IPA. Previous examples in the list have IPA, but these two do not. Beginners need pronunciation support for long numbers.
+- **Fix**: Add IPA transcriptions.
 
 ## Strengths
-- **Telegraphic Style**: Excellent pedagogical choice to stick to "година + хвилини" for A1 instead of "quarter past/to".
-- **Cultural Context**: The Ukrzaliznytsia punctuality hook is engaging and relevant.
-- **Activities**: The "Unjumble" activities correctly use the natural verbs *відправляється/прибуває* even though the text missed them (good alignment fix in text needed).
+- **Cultural Context**: Using Ukrzaliznytsia as the frame for punctuality is a brilliant touch that grounds the lesson in Ukrainian reality.
+- **Pedagogical Clarity**: The explicit distinction between "State" (Nom) and "Schedule" (Loc) prevents a very common beginner error.
+- **Activity Density**: The activity file is exceptionally robust with over 100 items, providing ample practice.
 
-## Fix Plan to Reach 9/10
+## Fix Plan to Reach 10/10
 
-### Pedagogy: 8/10 → 9/10
+### Language: 9/10 → 10/10
 **What to fix:**
-1. Update the "Vowel Harmony" box to be accurate and less confusing regarding days of the week.
-
-### Language: 8/10 → 9/10
-**What to fix:**
-1. Update Dialogue 3 to use *відправляється/прибуває*.
+1. Fix the euphony issue in the reading text (`й їм` -> `та їм`).
+2. Add the missing IPA for the last two time examples.
 
 ## Verification Summary
 
-- Content lines read: ~400
-- Activity items checked: ~60
-- Ukrainian sentences verified: ~50
-- IPA transcriptions checked: ~20
+- Content lines read: 340
+- Activity items checked: 112
+- Ukrainian sentences verified: All
+- IPA transcriptions checked: All
 - Issues found: 2
 
 ## Verdict
 
 **PASS**
 
-The module is excellent. It is safe, encouraging, and pedagogically sound. The telegraphic style for time telling is perfect for A1. Minor fixes to the vowel harmony explanation and one dialogue will polish it to near-perfection.
+Excellent module. High utility, culturally grounded, and safe for beginners. With the minor euphony and IPA fixes, it will be perfect.

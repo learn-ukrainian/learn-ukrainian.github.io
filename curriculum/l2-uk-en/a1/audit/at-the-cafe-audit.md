@@ -1,7 +1,7 @@
 # Audit Report: M19 — at-the-cafe.md
 **Level:** A1 | **Module:** M19 | **Phase:** A1.2 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-19 23:01:48
+**Generated:** 2026-02-21 00:46:39
 
 ## Configuration
 **Type:** A1
@@ -37,7 +37,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2656/2000 (raw: 3068)
+- **Words:** ✅ 2655/2000 (raw: 3067)
 - **Activities:** ✅ 9/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -62,7 +62,7 @@
 | **At the Café** | ✅ | 63 | Included in Core |
 | **Розминка: Кава — це культура** | ✅ | 356 | Included in Core |
 | **Презентація: Привітання та ввічливість** | ✅ | 366 | Included in Core |
-| **Замовлення: Знахідний відмінок** | ✅ | 463 | Included in Core |
+| **Замовлення: Знахідний відмінок** | ✅ | 462 | Included in Core |
 | **Уточнення: Яку каву ви бажаєте?** | ✅ | 446 | Included in Core |
 | **Рахунок та оплата** | ✅ | 278 | Included in Core |
 | **Практика: У кав'ярні** | ✅ | 279 | Included in Core |

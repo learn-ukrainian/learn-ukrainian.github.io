@@ -33,9 +33,9 @@
           correct: false
     - question: Can you identify the correct sound for the letter 'Г'?
       options:
-        - text: '[ɦ] (soft)'
+        - text: '[ɦ] (fricative)'
           correct: true
-        - text: '[g] (hard)'
+        - text: '[ɡ] (plosive)'
           correct: false
         - text: '[r]'
           correct: false
@@ -43,9 +43,9 @@
           correct: false
     - question: Can you identify the correct sound for the letter 'Ґ'?
       options:
-        - text: '[g] (hard)'
+        - text: '[ɡ] (plosive)'
           correct: true
-        - text: '[ɦ] (soft)'
+        - text: '[ɦ] (fricative)'
           correct: false
         - text: '[k]'
           correct: false
@@ -87,7 +87,7 @@
           correct: true
         - text: 'Парк'
           correct: false
-        - text: 'Папа'
+        - text: 'Паспорт'
           correct: false
         - text: 'Мама'
           correct: false
@@ -213,7 +213,7 @@
       options: ['говорять', 'говорить', 'говоримо', 'говорю']
     - sentence: 'Я ____ (робити).'
       answer: 'роблю'
-      options: ['роблю', 'робиш', 'роббить', 'робимо']
+      options: ['роблю', 'робиш', 'робить', 'робимо']
     - sentence: 'Ти ____ (говорити).'
       answer: 'говориш'
       options: ['говориш', 'говорю', 'говорить', 'говоримо']

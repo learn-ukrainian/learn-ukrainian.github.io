@@ -6,41 +6,61 @@ version: '2.0'
 title: Adjective Suffixes — Types
 subtitle: Materials and Origins
 content_outline:
-- section: Introduction / Вступ
+- section: Вступ (Introduction)
+  words: 450
   points:
   - 'From Nouns to Identity: The magic of the material bridge — introduce core suffixes
-    -ськ- and -н- aligned with State Standard §4.2.1.2'
-  - 'Why ''wooden'' is more than a word in Ukrainian — use high-frequency example
-    «дерев''яний» to illustrate the concept; collocations: дерев''яний стіл, дерев''яний
-    будинок'
-- section: Presentation / Презентація
+    -ськ- and -н- aligned with State Standard §4.2.1.2 requirements for A2 communicative
+    intentions (describing objects and origins)'
+  - 'Why ''wooden'' is more than a word: Use the high-frequency example «дерев''яний»
+    to illustrate the concept; connect to the theme of traditional craftsmanship and
+    collocations like «дерев''яний стіл», «дерев''яний будинок», and «дерев''яна ложка»'
+- section: 'Презентація: Матеріали та походження (Presentation: Materials and Origins)'
+  words: 850
   points:
-  - '''The Materialist Logic: -Ов- (Standard) vs -Ян- (Natural/Traditional)'' — explicit
-    heuristic: -ян- for natural/traditional materials (вовняний, дерев''яний) vs -ов-
-    for standard/processed (металевий, пластиковий); learner error: stress-dependent
-    confusion between -ов- and -ев- (дубовий vs польовий)'
-  - '''The Geography of Suffixes: -Ськ- and its many faces'' — key geographic adjectives:
-    київський, львівський, український; cultural context: Київська Русь, львівська
+  - 'The Materialist Logic: Heuristic for choosing suffixes — use -ян- for natural
+    or traditional materials (вовняний, дерев''яний, скляний) vs -ов- for standard/processed
+    materials (металевий, пластиковий, дубовий)'
+  - 'The Geography of Suffixes: -Ськ- and its many faces — focus on high-frequency
+    city adjectives: київський (київський торт, київський князь), львівський (львівська
+    кава, львівський сирник); introduce cultural context of Київська Русь and львівська
     ґвара'
-  - '''Consonant Mutations: Crossing the bridge from Prague to Odesa'' — focus on
-    the ''Big Three'' mutations (к/ч/ц -> цьк, г/ж/з -> зьк, х/ш/с -> ськ); mnemonic
-    anchor: Прага -> Празький; learner error: mutation failure (e.g., *Прагський*
-    instead of Празький)'
-  - '''Abstract Logic: -Ічн- vs -Н-'' — highlight «домашній» (very high frequency)
-    as prime example for -н-; collocations: домашнє завдання, домашній затишок'
-  - '''Prefix-Suffix Combinations (Intro): Настільний, Підземний'' — brief introduction
-    to simultaneous derivation'
-- section: Practice / Практика
+  - 'The ''Big Three'' Consonant Mutations: Crossing the bridge from Prague to Odesa
+    — focus on A2-appropriate mutations: к/ч/ц -> цьк, г/ж/з -> зьк, х/ш/с -> ськ;
+    use the mnemonic anchor: Прага -> Празький to prevent common mutation failures'
+  - 'Suffix Selection Heuristics: Managing -ов- vs -ев- — explain dependency on hard/soft
+    stems and stress (e.g., hard stem ''дуб'' -> дубовий vs soft stem ''поле'' ->
+    польовий); highlight «домашній» as a very high-frequency soft-suffix example'
+- section: 'Культурний контекст: Традиційні вироби (Cultural Context: Traditional
+    Crafts)'
+  words: 600
   points:
-  - 'Material conversion drills — focus on converting nouns to adjectives: скло ->
-    скляний (скляна пляшка), залізо -> залізний (залізні двері)'
-  - City-to-Adjective mutation challenge — targeted drills on the k->ts, h->z, kh->s
-    patterns; emphasize the г/ж/з -> зьк mutation using Prague example
-- section: Dialogues / Діалоги
+  - 'Яворівська забавка (Yavoriv Toy): A wooden hook — explain the use of «осика»
+    (aspen) in traditional wooden toys from the Lviv region, believed to drive away
+    evil and decorated with «вербівка» patterns'
+  - 'Гуцульський ліжник (Hutsul Lizhnyk): The warmth of wool — describe the heavy
+    woolen blanket made of «овеча вовна» (sheep''s wool), famous for its therapeutic
+    ''biting'' texture and role in weddings and ceremonies'
+- section: Практика та аналіз помилок (Practice and Error Analysis)
+  words: 700
   points:
-  - 'At the handicraft fair: Discussing wooden toys and woolen shawls — cultural hook:
-    context of «яворівська забавка» (wooden toy made of aspen/осика) and «гуцульський
-    ліжник» (woolen blanket with ''biting'' texture)'
+  - 'Material conversion drills: Focus on converting nouns to adjectives with correct
+    suffix choices — скло -> скляний (скляна пляшка), залізо -> залізний (залізні
+    двері), вовна -> вовняний'
+  - 'City-to-Adjective mutation challenge: Targeted drills on the ''Big Three'' patterns;
+    focus on preventing the common error of simply adding -ськ- without mutation (e.g.,
+    correct *Празький* vs error *Прагський*)'
+  - 'Stress and Stem Sensitivity: Drills contrasting hard and soft stems for -ов-/-ев-
+    selection (дубовий vs польовий) to minimize stress-dependent confusion'
+- section: Діалог та продукція (Dialogue and Production)
+  words: 400
+  points:
+  - 'At the handicraft fair: Discussing wooden toys and woolen shawls — production
+    task using materials vocabulary to describe artisanal items (яворівська забавка,
+    гуцульський ліжник)'
+  - 'Identity and Origins: Describing one''s home and city using -ськ- and -н- adjectives
+    — describing ''домашній затишок'' (home comfort) and local landmarks with origin
+    suffixes'
 focus: grammar
 pedagogy: PPP
 objectives:
@@ -66,15 +86,23 @@ persona:
   role: Art Gallery Curator
 vocabulary_hints:
   required:
-  - дерев'яний (wooden) — дерев'яний стіл, дерев'яний будинок, дерев'яна ложка
-  - скляний (glass adj.) — скляна пляшка, скляний посуд, скляні двері
-  - залізний (iron adj.) — залізні двері, залізний характер (idiom), залізниця
-  - київський (Kyiv adj.) — київський торт, київський князь, Київська Русь
-  - львівський (Lviv adj.) — львівська кава, львівський сирник, львівська ґвара
-  - домашній (home/domestic) — домашнє завдання, домашня тварина, домашній затишок
-  - вовняний (woolen) — вовняний светр, вовняна ковдра, вовняні шкарпетки
+  - дерев'яний (wooden) — дерев'яний стіл, дерев'яний будинок, дерев'яна ложка; High
+    frequency
+  - скляний (glass adj.) — скляна пляшка, скляний посуд, скляні двері; Medium frequency
+  - залізний (iron adj.) — залізні двері, залізний характер (idiom), залізниця (noun);
+    High frequency
+  - київський (Kyiv adj.) — київський торт, київський князь, Київська Русь; High frequency
+  - львівський (Lviv adj.) — львівська кава, львівський сирник, львівська ґвара; High
+    frequency
+  - домашній (home/domestic) — домашнє завдання, домашня тварина, домашній затишок;
+    Very High frequency
+  - вовняний (woolen) — вовняний светр, вовняна ковдра, вовняні шкарпетки; Medium
+    frequency
   recommended:
   - осика (aspen) — traditional wood for Yavoriv toys, believed to drive away evil
   - ліжник (lizhnyk) — Hutsul woven blanket made of sheep's wool, famous for therapeutic
     'biting' texture
+  - овеча вовна (sheep's wool) — the raw material for traditional Ukrainian textiles
+  - яворівська забавка (Yavoriv toy) — traditional wooden toy decorated with willow
+    branch patterns
 word_target: 3000

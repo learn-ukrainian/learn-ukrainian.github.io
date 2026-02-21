@@ -3,30 +3,30 @@
   "slug": "describing-things-adjectives",
   "mode": "v3",
   "phases": {
-    "v3-A": {
-      "status": "complete",
-      "ts": "2026-02-19T20:45:11Z",
-      "task_id": "v3-describing-things-adjectives-pA",
-      "mode": "full"
-    },
     "v3-B": {
       "status": "complete",
-      "ts": "2026-02-19T20:46:30Z"
+      "ts": "2026-02-20T23:13:33Z",
+      "note": "migrated-from-v2"
     },
     "v3-C": {
       "status": "complete",
-      "ts": "2026-02-19T20:47:47Z",
-      "task_id": "v3-describing-things-adjectives-pC"
+      "ts": "2026-02-20T23:13:33Z",
+      "note": "migrated-from-v2"
     },
     "v3-audit": {
       "status": "complete",
-      "ts": "2026-02-19T21:01:35Z",
-      "attempts": 3
+      "ts": "2026-02-20T23:13:33Z",
+      "note": "migrated-from-v2"
     },
     "v3-D": {
       "status": "complete",
-      "ts": "2026-02-19T21:03:01Z",
-      "attempts": 1
+      "ts": "2026-02-20T23:13:33Z",
+      "note": "migrated-from-v2"
+    },
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-20T23:13:34Z",
+      "note": "adopted-existing-meta"
     }
   }
 }

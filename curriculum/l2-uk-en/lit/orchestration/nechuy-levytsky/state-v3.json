@@ -1,0 +1,13 @@
+{
+  "track": "lit",
+  "slug": "nechuy-levytsky",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-20T23:14:20Z",
+      "task_id": "v3-nechuy-levytsky-pA",
+      "mode": "full"
+    }
+  }
+}

@@ -1,7 +1,7 @@
 # Audit Report: M12 — the-accusative-ii-people.md
 **Level:** A1 | **Module:** M12 | **Phase:** A1.2 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-19 23:01:39
+**Generated:** 2026-02-21 00:46:35
 
 ## Configuration
 **Type:** A1-grammar
@@ -38,7 +38,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2344/2000 (raw: 2989)
+- **Words:** ✅ 2341/2000 (raw: 2986)
 - **Activities:** ✅ 10/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 5/4 types
@@ -51,7 +51,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 27.2% (target 25-40% (M12))
+- **Immersion:** 🇺🇦 27.3% (target 25-40% (M12))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -61,8 +61,8 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 60 | Included in Core |
 | **Розминка: Живе чи неживе?** | ✅ | 354 | Included in Core |
-| **Теорія: Як змінюються слова** | ✅ | 413 | Included in Core |
+| **Теорія: Як змінюються слова** | ✅ | 416 | Included in Core |
 | **Практика: Тренуємо форми** | ✅ | 521 | Included in Core |
 | **Використання: Моя сім'я та друзі** | ✅ | 436 | Included in Core |
-| **Культурний контекст: Друзі та імена** | ✅ | 436 | Included in Core |
+| **Культурний контекст: Друзі та імена** | ✅ | 430 | Included in Core |
 | **Підсумок** | ✅ | 124 | Included in Core |

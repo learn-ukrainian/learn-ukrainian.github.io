@@ -1,0 +1,280 @@
+✅ Message sent to Gemini (ID: 10430) [auto-acked: self-addressed]
+✓ Message 10430 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10430...
+📨 Message #10430
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-regions-center
+   Time: 2026-02-20T20:32:33.253068+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b1-75
+level: B1
+sequence: 75
+slug: regions-center
+version: '2.0'
+title: 'Українські регіони: Центр'
+subtitle: Central Ukraine - Kyiv, Poltava, and Cossack Heritage
+content_outline:
+- section: 'Вступ — Центр: Серце України'
+  points:
+  - Київ як столиця і символ
+  - Центральна Україна як колиска нації
+- section: Сучасність
+  points:
+  - Київ — місто тисячі років
+  - Від Київської Русі до сьогодення
+  - Майдан і революційна традиція
+  - Київ як європейська столиця
+- section: Історія та культура
+  points:
+  - Полтавщина — козацька слава
+  - Котляревський і українська література
+  - Черкащина — Шевченків край
+  - Козацька спадщина Центру
+- section: Практика
+  points:
+  - Ключові концепції для повторення
+  - Порівняльні таблиці
+- section: Підсумок — Звідси все починалось
+  points:
+  - Центр як джерело української ідентичності
+vocabulary_hints:
+  required:
+  - Київ (Kyiv)
+  - Полтава (Poltava)
+  - Черкаси (Cherkasy)
+  - козацтво (Cossacks)
+  - спадщина (heritage)
+  - столиця (capital)
+  - історичний (historical)
+  - традиція (tradition)
+  recommended:
+  - полтавщина (Poltava region)
+  - гетьман (hetman)
+  - Дніпро (Dnipro)
+  - літературний (literary)
+activity_hints:
+- type: reading
+  focus: Authentic texts about Central Ukraine
+  items: 15
+- type: match-up
+  focus: Match regions to heritage
+  items: 20
+- type: fill-in
+  focus: Complete historical descriptions
+  items: 15
+- type: quiz
+  focus: Discuss Cossack heritage
+  items: 10
+focus: culture
+pedagogy: CBI
+prerequisites:
+- b1-74 (Regions South)
+connects_to:
+- b1-76 (Ukrainian Music Today)
+objectives:
+- Learner can discuss Central Ukraine's regions and historical significance
+- Learner can understand authentic texts about Kyiv, Poltava, and Cherkasy
+- Learner can use regional vocabulary to describe Central Ukrainian culture
+- Learner can explain the connection between Central Ukraine and Cossack heritage
+grammar:
+- Reading comprehension strategies
+- Cultural vocabulary in context
+- Historical vocabulary patterns
+register: розмовний
+phase: B1.7 [Contemporary Ukraine]
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Cherkasy Historian
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Українські регіони: Центр
+
+## State Standard Reference
+§3.13, §3.15: "Місця: тип і розташування місцевості; пам’ятки культури і пам’ятники; туристичні принади. Традиції, звичаї, свята: українські звичаї і традиції."
+Alignment: This module directly addresses the B1 requirement to describe locations, cultural monuments, and traditions, specifically focusing on the Central region as a historical and cultural hub.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| **Гетьман** | High / National Symbol | гетьман Війська Запорозького, гетьманська столиця, гетьманська булава |
+| **Козацтво** | High / Cultural Core | доба козацтва, історія козацтва, українське козацтво |
+| **Спадщина** | Medium-High / Academic | історична спадщина, культурна спадщина, збереження спадщини |
+| **Полтавщина** | Regional Toponym | духовна столиця, літературна Полтавщина, серце України |
+| **Черкащина** | Regional Toponym | козацький край, земля Богдана і Тараса, серце України |
+
+## Cultural Hooks
+1. **Poltava as the Cradle of Language**: Poltava is considered the birthplace of the modern Ukrainian literary language because Ivan Kotlyarevsky, author of *Eneida* (the first work in vernacular Ukrainian), was born and lived there. The local dialect became the standard.
+2. **Cherkasy as the Cossack Heart**: The Cherkasy region was the center of the Cossack state (Hetmanate). Chyhyryn served as the capital under Bohdan Khmelnytsky, and Kaniv is the spiritual resting place of Taras Shevchenko (Tarasova Hora).
+
+## Common Learner Errors
+1. **Russianisms in Names**: Using "Черкасси" (Russian pronunciation) instead of **Черкаси**, or "ПолтавщІна" instead of **ПолтавщИна**.
+2. **Preposition/Case Mismatch**: Saying "Я їду в Черкас" (accusative/wrong form) instead of **"Я їду до Черкас"** (genitive) or **"Я в Черкасах"** (locative).
+3. **Suffix Confusion**: Confusing **-щина** (region suffix like *Полтавщина*) with simple city names. Learners often struggle to form regional names from city roots.
+
+## Cross-References
+- **Builds on**: `b1-74` (Regions South) — continues the regional exploration series.
+- **Prepares for**: `b1-76` (Ukrainian Music Today) — sets the cultural context for traditional influences in modern music.
+
+## Notes for Content Writing
+- **Tone**: Proud but educational. Avoid purely encyclopedic listing; focus on the *significance* (Soul of Ukraine).
+- **Narrative Arc**: Connect the "Cossack past" (Cherkasy) with the "Literary birth" (Poltava) to show how Central Ukraine formed the modern national identity.
+- **Geography**: Clarify that "Central Ukraine" is not just a location on a map but a historical concept (Hetmanate lands).
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Центр — Серце та Колиска України (Introduction: The Center as the Heart and Cradle of Ukraine)"
+  words: 400
+  points:
+  - "Central Ukraine as a historical and cultural concept: exploring the lands of the former Hetmanate and their role in national formation."
+  - "Overview of the three pillars of identity: Kyiv (the capital), Poltava (the language), and Cherkasy (the Cossack spirit)."
+- section: "Полтавщина: Колиска літературної мови (Poltava Region: Cradle of the Literary Language)"
+  words: 1000
+  points:
+  - "Poltava as the 'spiritual capital' and birthplace of modern Ukrainian: the legacy of Ivan Kotlyarevsky and the vernacular impact of 'Eneida' (State Standard §3.15)."
+  - "The role of the Poltava dialect as the foundational standard for the national language; connecting the region's literary tradition to modern identity."
+- section: "Черкащина: Козацьке серце та гетьманська слава (Cherkasy Region: Cossack Heart and Hetman Glory)"
+  words: 1100
+  points:
+  - "Cherkasy as the center of the Cossack state: exploring Chyhyryn as the strategic capital under Bohdan Khmelnytsky and the 'Hetmanate' concept."
+  - "The spiritual resting place of Taras Shevchenko in Kaniv (Tarasova Hora); defining the region as the 'Land of Bohdan and Taras' and its historical significance."
+- section: "Київ: Від княжої столиці до європейського центру (Kyiv: From Princely Capital to European Center)"
+  words: 900
+  points:
+  - "Kyiv's monuments and cultural heritage according to State Standard §3.13: the continuity from Kyivan Rus through Saint Sophia and the Golden Gate."
+  - "Modern Kyiv: the symbol of resistance and democratic tradition (Maidan) and its evolution into a leading European metropolis."
+- section: "Практика: Робота над типовими помилками (Practice: Working on Common Learner Errors)"
+  words: 400
+  points:
+  - "Correcting Russianisms in toponyms: drill the pronunciation and spelling of 'Черкаси' (not Черкасси) and the suffix '-щина' in 'Полтавщина' (not Полтавщіна)."
+  - "Mastering prepositional patterns: drill 'їхати до Черкас' (Genitive) versus 'бути в Черкасах' (Locative) to prevent case-mismatch errors."
+- section: "Підсумок: Джерело української ідентичності (Summary: The Source of Ukrainian Identity)"
+  words: 200
+  points:
+  - "Synthesis of how Central Ukraine connects the Cossack past with the linguistic and political present of the nation."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "Київ (Kyiv) — столиця України, місто тисячі років; висока частотність, символ державності."
+  - "Полтава (Poltava) — духовна столиця, літературна Полтавщина; центр лінгвістичної традиції."
+  - "Черкаси (Cherkasy) — козацький край; зверніть увагу на вживання прийменника 'до Черкас'."
+  - "козацтво (Cossacks) — доба козацтва, українське козацтво; фундаментальне історичне поняття."
+  - "спадщина (heritage) — культурна спадщина, історична спадщина; вживання у контексті збереження пам'яток."
+  - "гетьман (hetman) — гетьманська столиця, гетьманська булава; символ влади у козацькій державі."
+  - "столиця (capital) — духовна столиця, європейська столиця; State Standard §3.13."
+  recommended:
+  - "полтавщина (Poltava region) — суфікс -щина вказує на регіон; поширений топонім."
+  - "черкащина (Cherkasy region) — земля Богдана і Тараса, козацьке серце."
+  - "літературний (literary) — літературна мова, літературна спадщина; пов'язано з Іваном Котляревським."
+  - "Дніпро (Dnipro) — головна річка, символ єдності Центральної України."
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (3600 chars)
+✅ Message sent to Claude (ID: 10438)
+✓ Message 10438 acknowledged
+   Auto-acknowledged reply #10438 (stdout delivery — no inbox accumulation)
+✓ Message 10430 acknowledged

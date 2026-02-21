@@ -6,53 +6,73 @@ version: '2.0'
 title: Інтеграція складних речень
 subtitle: Complex Sentence Integration
 content_outline:
-- section: Тест
+- section: Діагностика та вступ (Diagnostic Test & Introduction)
+  words: 600
   points:
-  - Diagnostic quiz on complex sentences — trap students into using simple sentences
-    where a complex one is better/needed
-  - Self-assessment questions
-- section: Пояснення
+  - 'Діагностичне тестування: використання простих речень там, де доцільніші складні
+    речення; самооцінка навичок поєднання частин речення.'
+  - 'Вправа на розрізнення регістрів: вживання сполучників «бо» (розмовний) та «тому
+    що» (офіційний/нейтральний) у діалогах.'
+- section: Граматичні основи та типи зв'язку (Grammatical Foundations & Types of Connection)
+  words: 1000
   points:
-  - 'Two-Clause Combinations — focus on «і» vs «а» contrast errors; learner error:
-    mixing up additive and contrastive conjunctions'
-  - Three+ Clause Sentences — use the 'Rule of Three' from folk tales as a structural
-    model
-  - 'Coordination + Subordination — State Standard §4.4.3: mastering mixed types (cause,
-    condition, purpose) in one sentence'
-  - 'Punctuation and Style — The Comma Rule is structural (hard), not breath-based;
-    learner error: omitting commas before «що», «який», «коли»; Melodic syntax: rhythm
-    in long sentences'
-- section: Практика
+  - 'Державний стандарт §4.4.3: типи складносурядних речень (єднальні, протиставні,
+    розділові) та складнопідрядних речень.'
+  - 'Аналіз типової помилки: плутанина між сполучниками «і» (додавання) та «а» (протиставлення),
+    спричинена впливом англійського «and».'
+  - 'Класифікація підрядних частин: причини (тому що, бо), умови (якщо), мети (щоб)
+    та допустові (хоча/хоч).'
+- section: Культура, ритм та пунктуація (Culture, Rhythm & Punctuation)
+  words: 800
   points:
-  - Build multi-clause sentences — practice sequential and parallel structures
-  - Edit for clarity — focus on correcting «що» vs «який» confusion
-- section: Діалоги
+  - 'Культурний гачок: «Правило трьох» в українських народних казках як модель для
+    побудови багатокомпонентних речень (послідовний та паралельний зв''язок).'
+  - 'Мелодійний синтаксис: ритміка та музикальність довгих речень; використання сполучників
+    для створення плинності тексту («співоча мова»).'
+  - 'Правила пунктуації: структурний характер коми перед «що», «який», «коли»; розбір
+    помилок, пов''язаних із пропуском розділових знаків.'
+- section: Практичне застосування та стилістика (Practical Application & Stylistics)
+  words: 900
   points:
-  - 'Complex sentences in conversation — distinguish register: «бо» (casual) vs «тому
-    що» (formal)'
-  - Multi-clause scenarios
+  - 'Побудова складних структур: поєднання сурядності та підрядності в одному реченні;
+    керування структурою багатокомпонентних речень.'
+  - 'Усунення помилок: правильне вживання відносного займенника «який» замість незмінного
+    сполучника «що» у відповідних відмінках та родах.'
+  - 'Стилістичні правки: вибір між короткими та довгими реченнями для досягнення бажаного
+    ефекту в тексті.'
+- section: Творча майстерня редактора (Creative Editor's Workshop)
+  words: 700
+  points:
+  - 'Рольова гра «Редактор роману»: редагування тексту для покращення стилю та чіткості
+    викладу думок через складні речення.'
+  - 'Сценарії багаторівневого діалогу: вибір відповідних конекторів залежно від контексту
+    (регістр) та мети висловлювання.'
+  - 'Підсумковий огляд: закріплення навичок інтеграції складних речень у мовлення.'
 vocabulary_hints:
   required:
-  - інтеграція (integration)
-  - складний (complex)
-  - сурядний (coordinating)
-  - підрядний (subordinating)
-  - багатокомпонентний (multi-component)
-  - структура (structure)
-  - кома (comma)
-  - розділовий знак (punctuation mark)
-  - а (and/but) — не ..., а ... (not ..., but ...); а також (and also)
-  - але (but) — гарний, але дорогий; хотів, але не зміг
-  - щоб (in order to/that) — для того, щоб (in order to); хочу, щоб... (want that...)
-  - бо (because) — не прийшов, бо захворів — casual register
-  - тому що (because) — тому що це закон — neutral/formal register
+  - інтеграція (integration) — інтеграція в текст; процес поєднання
+  - складний (complex) — складне речення; складна структура
+  - сурядний (coordinating) — сурядний зв'язок; рівноправні частини
+  - підрядний (subordinating) — підрядний зв'язок; головна та залежна частини
+  - багатокомпонентний (multi-component) — речення з трьома і більше частинами
+  - структура (structure) — структура речення; ритмічна структура
+  - кома (comma) — обов'язкова перед «що», «який», «коли»; структурна пунктуація
+  - розділовий знак (punctuation mark) — знаки для чіткості стилю
+  - а (and/but) — протиставлення (не ..., а ...); а також (and also); висока частотність
+  - але (but) — протиставлення; часто вживається у парі з «хоча»; high frequency
+  - щоб (in order to/that) — мета; для того, щоб; хочу, щоб...; high frequency
+  - бо (because) — причина; розмовний стиль; не прийшов, бо захворів
+  - тому що (because) — причина; нейтральний або офіційний стиль; тому що це важливо
   recommended:
-  - вкладений (nested)
-  - паралельний (parallel)
-  - зрозумілість (clarity)
-  - стиль (style)
-  - хоча (although) — хоча було пізно; хоча він знав
-  - якщо (if) — якщо буде час; якщо ти не проти
+  - вкладений (nested) — вкладені підрядні частини
+  - паралельний (parallel) — паралельна підрядність
+  - зрозумілість (clarity) — зрозумілість викладу думок
+  - стиль (style) — художній стиль; розмовний стиль
+  - хоча (although) — допустове значення; хоча було пізно; хоча він знав
+  - якщо (if) — умова; якщо буде час; якщо ти не проти; висока частотність
+  - який (which/who) — відносний займенник; книга, яку я читаю; узгодження у роді
+    та відмінку
+  - що (that) — сполучник; незмінна форма; він каже, що...
 activity_hints:
 - type: error-correction
   focus: Build multi-clause sentences

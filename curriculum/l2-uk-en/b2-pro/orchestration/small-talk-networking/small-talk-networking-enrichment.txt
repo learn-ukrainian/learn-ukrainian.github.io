@@ -1,0 +1,274 @@
+✅ Message sent to Gemini (ID: 11864) [auto-acked: self-addressed]
+✓ Message 11864 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #11864...
+📨 Message #11864
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-small-talk-networking
+   Time: 2026-02-20T23:34:08.978606+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b2-pro-12
+level: B2-PRO
+sequence: 12
+slug: small-talk-networking
+version: '2.0'
+title: 'Нетворкінг: Налагодження контактів'
+subtitle: Small Talk and Networking
+content_outline:
+- section: Розминка — Small talk по-українськи
+  points:
+  - Українська специфіка — більше особистого, менше "погоди"
+  - Безпечні теми (робота, місто, подорожі) vs небезпечні (політика, зарплата)
+  - Чому українці питають "Звідки ви?" і "Як давно працюєте?"
+- section: Знайомство на професійних заходах
+  points:
+  - 'Представлення: Дозвольте представитися — я... / Мене звати..., я працюю в...'
+  - 'Обмін візитками: Ось моя візитка / Чи можу я взяти вашу візитку?'
+  - 'Початок розмови: Вперше на цій конференції? / Як вам захід? / Звідки ви приїхали?'
+  - Як долучитися до групової розмови
+- section: Підтримання розмови
+  points:
+  - 'Запитання: Чим ви займаєтеся? / Як давно в цій сфері? / Що привело вас сюди?'
+  - 'Вираження інтересу: Цікаво! / Справді? / Ніколи не чув про це.'
+  - 'Перехід теми: До речі... / Це нагадує мені... / А щодо...'
+  - Як уникати незручного мовчання
+- section: Завершення розмови та обмін контактами
+  points:
+  - 'Завершення: Було приємно поспілкуватися / Радий(-а) знайомству'
+  - 'Обмін контактами: Давайте обміняємось контактами / Ви є в LinkedIn?'
+  - 'Пропозиція зустрічі: Давайте зустрінемося на каву / Можемо обговорити детальніше'
+  - 'Прощання: До зустрічі! / Успіхів! / Ще побачимось!'
+- section: Зразок діалогу з нетворкінгу
+  points:
+  - Реалістичний діалог на конференції
+  - Від першого привітання до обміну контактами
+  - Аналіз тактик та фраз
+- section: Практика — рольова гра нетворкінгу
+  points:
+  - 'Сценарій: Конференція з 3-4 учасниками'
+  - Завдання — познайомитися та обмінятися контактами
+  - Зворотній зв'язок та типові помилки
+vocabulary_hints:
+  required:
+  - дозвольте представитися (allow me to introduce myself)
+  - чим ви займаєтеся (what do you do)
+  - радий/рада знайомству (pleased to meet you)
+  - давайте обміняємось контактами (let's exchange contacts)
+  - було приємно поспілкуватися (it was nice talking to you)
+  - візитка (business card)
+  - як давно ви в цій сфері (how long have you been in this field)
+  - що привело вас сюди (what brought you here)
+  recommended:
+  - до речі (by the way)
+  - це нагадує мені (this reminds me of)
+  - ви є в LinkedIn (are you on LinkedIn)
+  - давайте зустрінемося на каву (let's meet for coffee)
+  - ще побачимось (see you later)
+  - професійний захід (professional event)
+activity_hints:
+- type: document-analysis
+  focus: Проаналізувати діалог нетворкінгу — визначити етапи розмови
+  items: 1
+- type: role-play
+  focus: Провести нетворкінг на імітованій конференції
+  items: 1
+- type: fill-in
+  focus: Вставити правильні фрази для знайомства та підтримання розмови
+  items: 10
+- type: matching
+  focus: З'єднати ситуацію з відповідною фразою (знайомство, інтерес, завершення)
+  items: 10
+- type: register-transform
+  focus: Перетворити занадто формальні фрази на природні для small talk
+  items: 6
+- type: writing-task
+  focus: Написати follow-up лист після знайомства на конференції
+  items: 1
+focus: professional
+pedagogy: ESP
+prerequisites:
+- 'b2-pro-11 (Переговори: Тактика)'
+connects_to:
+- 'b2-pro-13 (Контрольна точка: Бізнес)'
+objectives:
+- Учень може представитися на професійному заході та почати розмову
+- Учень може підтримувати small talk на безпечні теми
+- Учень може професійно завершити розмову та обмінятися контактами
+- Учень розуміє українську специфіку small talk (більше особистого)
+grammar:
+- Питальні конструкції для знайомства (Чим займаєтеся? / Звідки ви?)
+- Вигуки та фрази реагування (Цікаво! / Справді? / От як!)
+- Спонукальні конструкції для пропозицій (Давайте... / Може...)
+register: напівформальний
+phase: B2-PRO.1
+persona:
+  voice: Senior Specialist
+  role: Учасник бізнес-сніданку
+word_target: 2000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Нетворкінг: Налагодження контактів
+
+## Використані джерела
+1. [Дія.Бізнес — Нетворкінг для бізнесу](https://business.diia.gov.ua/handbook/netvorking/netvorking-dla-biznesu) — Офіційний портал з рекомендаціями щодо побудови ділових зв'язків.
+2. [Robota.ua — Етикет та нетворкінг на конференції](https://blog.robota.ua/yak-povoditisya-na-konferentsiyi-etiket-ta-netvorking/) — Практичні поради з ділового спілкування в українському середовищі.
+3. [Open4Business — Фрази для нетворкінгу](https://open4business.com.ua/фрази-для-нетворкінгу-англійською-та-українською/) — Списки професійних виразів для знайомства та підтримки розмови.
+4. [ДСТУ 4163:2020](https://zakon.rada.gov.ua/rada/show/v0144731-20) — Державний стандарт щодо оформлення реквізитів (імена, посади), що впливає на етикет представлення.
+
+## Термінологічна база
+
+| Українська (норма) | Русизм/ненорма | English | Контекст вживання |
+|--------------------|---------------|---------|-------------------|
+| Візитівка          | Візитка       | Business card | Обмін контактами (офіційно) |
+| Відрекомендуватися | Представитися | To introduce oneself | Початок розмови (формально) |
+| Захід              | Міроприємство | Event | Опис конференції/форуму |
+| Спільнота / Коло   | Сєтка         | Network | Опис мережі контактів |
+| Навички            | Навики        | Skills | Обговорення компетенцій |
+| Супровідний лист   | Фоллоу-ап     | Follow-up email | Листування після зустрічі |
+| Доречний           | Умісний       | Appropriate | Оцінка тем для small talk |
+| Посада             | Должность     | Position / Job title | Професійна ідентифікація |
+
+## Мовні норми та стандарти
+- **ДСТУ 4163:2020**: Визначає правильний порядок написання імені та прізвища (Ім'я ПРІЗВИЩЕ), що важливо під час усного представлення: «Я — Андрій КОВАЛЕНКО».
+- **Звертання у кличному відмінку**: Обов'язкова норма для професійного спілкування («Пане Андрію», «Пані Оксано»).
+- **Формула вітання**: Традиційне «Добрий день» є більш нормативним для професійного середовища, ніж «Доброго дня».
+
+## Аутентичні приклади
+1. [Знайомство]: «Дозвольте відрекомендуватися: я Максим, займаюся логістикою в компанії "Нова Пошта". А ви яку компанію представляєте?»
+2. [Обмін контактами]: «Чи можу я попросити вашу візитівку? Було б цікаво обговорити можливу співпрацю детальніше».
+3. [Follow-up]: «Був радий поспілкуватися на вчорашній конференції. Як і обіцяли, надсилаю посилання на наше дослідження».
+
+## Типові помилки
+1. ❌ **Представляти** проект → ✅ **Презентувати** проект / **Знайомити** з проектом.
+2. ❌ **Яка ваша посада?** → ✅ **Чим ви займаєтеся в компанії?** (менш бюрократично, краще для small talk).
+3. ❌ **Вибачаюсь** → ✅ **Перепрошую** (нормативна форма для привернення уваги).
+4. ❌ **Приємно познайомитись** → ✅ **Радий знайомству / Дуже приємно** (більш природні форми).
+5. ❌ **В якому місті ви живете?** → ✅ **Ви звідки приїхали? / Ви місцевий чи в гостях?** (традиційні українські запитання-криголами).
+
+## Engagement Hooks (mapped to sections)
+- Section "Розминка": [!pro-tip] — В Україні не прийнято довго говорити про погоду; краще перейти до теми «спільних знайомих» або «вражень від локації».
+- Section "Знайомство": [!language-note] — Слово «візитівка» вважається більш вишуканим і питомим, ніж поширене «візитка».
+- Section "Підтримання розмови": [!example] — Використовуйте фразу «До речі, це нагадує мені про...» для плавного переходу від особистої теми до професійної.
+- Section "Завершення": [!context] — «Елевейтор пітч» українською має бути максимально лаконічним (до 30 секунд), з акцентом на результатах, а не процесах.
+
+## Section-Mapped Research Notes
+
+### Розминка — Small talk по-українськи
+Український small talk відрізняється від західного більшою емоційністю та швидким переходом до "людських" тем. Замість обговорення клімату, українці часто фокусуються на логістиці ("Як доїхали?"), каві ("Як вам тутешня кава?") або спільних контактах.
+
+### Знайомство на професійних заходах
+Етикет вимагає чіткого представлення: Ім'я + Роль + Компанія. Важливим є ритуал обміну візитівками: в Україні прийнято на мить затримати погляд на отриманій картці, перш ніж сховати її, демонструючи повагу.
+
+### Підтримання розмови
+Ключова техніка — відкриті запитання. Використання вигуків реагування («Справді?», «Ого!», «Цікаво») демонструє активне слухання, що є критичним для побудови довіри.
+
+### Завершення розмови та обмін контактами
+Техніка "позитивного мосту": перед тим як піти, варто наголосити на цінності розмови («Було надзвичайно цікаво дізнатися про ваш підхід») та запропонувати конкретний наступний крок (LinkedIn або кава).
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 11903)
+✓ Message 11864 acknowledged
+✓ Message 11903 acknowledged

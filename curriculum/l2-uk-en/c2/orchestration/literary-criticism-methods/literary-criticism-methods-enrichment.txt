@@ -1,0 +1,325 @@
+✅ Message sent to Gemini (ID: 11178) [auto-acked: self-addressed]
+✓ Message 11178 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #11178...
+📨 Message #11178
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-literary-criticism-methods
+   Time: 2026-02-20T22:28:38.381784+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c2-031
+level: c2
+sequence: 31
+version: '2.0'
+title: Методи літературної критики
+focus: literature
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Літературна критика — Вікіпедія
+  url: https://uk.wikipedia.org/wiki/Літературна_критика
+  type: reference
+  notes: Overview of critical approaches
+- name: Українська літературна критика
+  url: https://ukrlib.com.ua/
+  type: primary
+  notes: Examples of Ukrainian literary criticism
+- name: Сучасні критичні підходи
+  url: https://uk.wikipedia.org/wiki/Літературознавство
+  type: reference
+  notes: Contemporary critical methodologies
+content_outline:
+- section: Вступ — Критика як професія
+  points:
+  - Роль критика в літературному процесі
+  - Критика vs. літературознавство
+  - Типи критичних текстів
+- section: Імпресіоністична критика
+  points:
+  - Суб'єктивний відгук на твір
+  - Естетичне переживання
+  - Приклади з української традиції
+  - Обмеження підходу
+- section: Формалістична і структуралістська критика
+  points:
+  - Аналіз форми і структури
+  - Прийом як об'єкт аналізу
+  - Наративні структури
+  - Close reading (пильне читання)
+- section: Контекстуальна критика
+  points:
+  - Соціологічна критика
+  - Психоаналітична критика
+  - Феміністична критика
+  - Постколоніальна критика
+- section: Сучасні підходи
+  points:
+  - Рецептивна естетика (читацький відгук)
+  - Деконструктивна критика
+  - Культурні студії
+  - Екокритика
+- section: Практикум — написання рецензії
+  points:
+  - Структура рецензії
+  - Вибір критичного підходу
+  - Аргументація оцінки
+  - Етика критика
+- section: Підсумок
+  points:
+  - Вибір методу для конкретного тексту
+  - Поєднання підходів
+  - Від критики до есею
+vocabulary:
+  required:
+  - критика (criticism)
+  - рецензія (review)
+  - аналіз (analysis)
+  - інтерпретація (interpretation)
+  - оцінка (evaluation)
+  - формалізм (formalism)
+  - психоаналіз (psychoanalysis)
+  - деконструкція (deconstruction)
+  - рецепція (reception)
+  - методологія (methodology)
+  recommended:
+  - імпресіонізм (impressionism)
+  - герменевтика (hermeneutics)
+  - екокритика (ecocriticism)
+  - гендер (gender)
+  - канон (canon)
+  forbidden: '[]'
+activities:
+  types_required:
+  - quiz
+  - critical-analysis
+  - comparative-study
+  - authorial-intent
+  - essay-response
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c2-32 (Writing Literary Essays)
+- c2-40 (Literary Prizes & Canon)
+- c2-41 (Literary Community)
+vocabulary_hints:
+  required:
+  - концепція (concept)
+  - аналіз (analysis)
+  - дискурс (discourse)
+  - методологія (methodology)
+  recommended:
+  - інтерпретація (interpretation)
+  - контекстуалізація (contextualization)
+  - синтез (synthesis)
+activity_hints:
+- type: reading
+  focus: Поглиблений аналіз тексту
+  items: 4
+- type: essay-response
+  focus: Критичне осмислення
+- type: discussion
+  focus: Дискусія та аргументація
+  items: 1
+persona:
+  voice: Senior Specialist
+  role: Literary Critic
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Методи літературної критики
+
+## State Standard Reference
+§4.3.8: "Уміння утворювати вторинні тексти, зокрема реферати, повідомлення, довідково-інформаційні тексти."
+Alignment: This module develops the ability to create high-level secondary texts (reviews, critical essays) based on literary works, which is a key competence for C2 mastery involving the synthesis of analysis and evaluation.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| критика | High (Academic/General) | літературна критика, об'єктивна критика, нищівна критика |
+| рецензія | High (Academic/Media) | написати рецензію, схвальна рецензія, критична рецензія |
+| аналіз | Very High (Academic) | глибокий аналіз, структурний аналіз, порівняльний аналіз |
+| дискурс | High (Academic) | літературний дискурс, культурний дискурс, владний дискурс |
+| інтерпретація | High (Academic) | авторська інтерпретація, хибна інтерпретація, множинність інтерпретацій |
+| наратив | Medium (Academic) | наративна стратегія, зміна наративу, історичний наратив |
+
+## Cultural Hooks
+1. **The Shevchenko Canon Wars**: The evolution of Shevchenko criticism from Soviet "revolutionary democrat" framing to George Grabowicz's "The Poet as Mythmaker", which revolutionized Ukrainian literary studies and sparked heated debates.
+2. **The "Visnykivtsi" vs. "Sixtiers"**: Contrast between Dmytro Dontsov's "voluntaristic nationalism" (active, aggressive criticism) and the "Sixtiers" (Ivan Dziuba, Yevhen Sverstiuk) who focused on ethical resistance and humanism through literary analysis.
+
+## Common Learner Errors
+1. **Criticism vs. Fault-finding**: Confusing *літературна критика* (analytic evaluation) with *критиканство* (petty fault-finding).
+   * *Correction*: Criticism is about understanding mechanics and meaning, not just listing flaws.
+2. **Subjectivity Overload**: Overusing "Мені не сподобалося..." without objective argumentation.
+   * *Correction*: Use "Твір характеризується...", "Автор вдається до..." (focus on the text, not the self).
+3. **Terminological Imprecision**: Using *сюжет* (plot) and *фабула* (story/chronology) interchangeably.
+   * *Correction*: Distinguish between the chronological events (*fabula*) and their artistic arrangement (*syuzhet*).
+
+## Cross-References
+- Builds on: **C1 Literary Modules**, **C2-20 (Stylistics Checkpoint)**
+- Prepares for: **C2-32 (Writing Literary Essays)**, **C2-40 (Literary Prizes & Canon)**
+
+## Notes for Content Writing
+- Ensure the distinction between *літературознавство* (academic science) and *літературна критика* (operative, often media-based response) is clear but nuanced.
+- Use excerpts from Dziuba or Grabowicz as high-level reading examples (complex syntax).
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Критика як професія (Introduction: Criticism as a Profession)"
+  words: 500
+  points:
+  - "Розмежування понять літературознавство (академічна наука) та літературна критика (оперативна, публіцистична реакція на твір)"
+  - "Типологія критичних текстів: від анотації та відгуку до розлогої рецензії та критичного есею"
+  - "Подолання помилки: розрізнення понять «літературна критика» (аналітичне оцінювання) та «критиканство» (дріб'язкове пошукування хиб)"
+- section: "Традиції та полеміка: Канони і міфи (Traditions and Polemics: Canons and Myths)"
+  words: 800
+  points:
+  - "Еволюція шевченкознавства: перехід від радянського фрейму «революціонера-демократа» до концепції Григорія Грабовича «Поет як міфотворець»"
+  - "Аналіз дискурсів: як наукова полеміка змінює сприйняття національного канону (приклад «канонічних воєн» в українській літературі)"
+  - "Опрацювання складних текстів: аналіз уривків з праць Грабовича або Дзюби з фокусом на складний синтаксис та термінологічну щільність"
+- section: "Методологічний інструментарій (Methodological Toolkit)"
+  words: 1000
+  points:
+  - "Формалістична та структуралістська критика: аналіз прийому та «пильне читання» (close reading) тексту"
+  - "Термінологічна точність: розрізнення понять «сюжет» (художнє впорядкування подій) та «фабула» (хронологічна послідовність)"
+  - "Імпресіоністична критика vs. об'єктивний аналіз: перехід від суб'єктивного естетичного переживання до аргументованої оцінки"
+- section: "Контекстуальна та ідеологічна критика (Contextual and Ideological Criticism)"
+  words: 800
+  points:
+  - "Волюнтаристичний націоналізм Дмитра Донцова («Вісниківці») проти етичного гуманізму «Шістдесятників» (Дзюба, Сверстюк)"
+  - "Сучасні підходи: феміністична оптика та постколоніальні студії в аналізі української класики"
+  - "Екокритика та рецептивна естетика: роль читацького відгуку у творенні сенсів літературного наративу"
+- section: "Практикум: Написання рецензії (Workshop: Writing a Review)"
+  words: 600
+  points:
+  - "Стандарт §4.3.8: Вироблення вміння створювати вторинні тексти (рецензії, реферати) на основі критичного аналізу"
+  - "Мовленнєві стратегії об'єктивності: заміна суб'єктивного «Мені не сподобалося...» на конструкції «Твір характеризується...», «Автор вдається до...»"
+  - "Етика критика та аргументація: структура переконливої оцінки без переходу на особистості автора"
+- section: "Підсумок: Від критики до есею (Summary: From Criticism to Essay)"
+  words: 300
+  points:
+  - "Синтез аналітичного та творчого підходів: як літературна критика стає частиною культурного дискурсу"
+  - "Вибір оптимальної методології залежно від жанру та завдань аналізованого тексту"
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "літературна критика (literary criticism) — висока частотність; вживається у словосполученнях 'об'єктивна критика', 'нищівна критика'"
+  - "рецензія (review) — академічний та медійний регістр; 'писати рецензію', 'схвальна рецензія', 'критична рецензія'"
+  - "аналіз (analysis) — дуже висока частотність; 'глибокий аналіз', 'структурний аналіз', 'порiвняльний аналіз'"
+  - "інтерпретація (interpretation) — 'авторська інтерпретація', 'множинність інтерпретацій'; уникати 'хибної інтерпретації'"
+  - "дискурс (discourse) — академічний термін; 'літературний дискурс', 'культурний дискурс', 'владний дискурс'"
+  recommended:
+  - "наратив (narrative) — середньо-висока частотність; 'наративна стратегія', 'зміна наративу'"
+  - "концепція (concept) — вживається у контексті теоретичних засад аналізу"
+  - "контекстуалізація (contextualization) — навичка С2 для пояснення твору через історичне тло"
+  - "синтез (synthesis) — поєднання різних аналітичних підходів"
+  - "сюжет vs. фабула (plot vs. story) — критичне розрізнення для аналізу структури твору"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (3879 chars)
+✅ Message sent to Claude (ID: 11186)
+✓ Message 11186 acknowledged
+   Auto-acknowledged reply #11186 (stdout delivery — no inbox accumulation)
+✓ Message 11178 acknowledged

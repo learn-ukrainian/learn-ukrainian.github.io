@@ -1,0 +1,81 @@
+module: a2-36
+level: A2
+sequence: 36
+slug: basic-motion-prefixes
+version: '2.0'
+title: Basic Motion Prefixes
+subtitle: In and Out
+content_outline:
+- section: Introduction / Вступ
+  points:
+  - Prefixes as the GPS of Slavic verbs — direction is 'built-in' in Ukrainian verbs,
+    unlike English phrasal verbs
+  - Why direction is 'built-in' in Ukrainian — emphasizes vector of movement (into
+    vs out of)
+- section: Presentation / Презентація
+  points:
+  - 'The Binary: В- (Into) vs Ви- (Out) — use the ''Box Analogy'': В- is an arrow
+    INTO the box, Ви- is an arrow OUT OF the box'
+  - 'Prepositional Hooks: В/На (Acc) vs З/Із (Gen) — learner error: using ''в/у''
+    with ''виходити'' instead of ''з'' (e.g., ''виходжу з офісу'', not ''в офісу'');
+    aligned with State Standard §4.2.2.4.2'
+  - 'Perfective Shift: How a prefix creates a ''result'' state — learner error: confusing
+    ''входити'' (process/habit) with ''увійти'' (result)'
+  - 'The Apostrophe Rule: В’їхати vs Виїхати — euphony note: explicitly teach ''увійти''
+    vs ''ввійти'' rules as these trigger euphony rules constantly'
+  - 'The Space Rule: Enclosed (В) vs Surface (На) — distinguish ''входити в кімнату''
+    vs ''виходити на вулицю'''
+  - 'Urban Navigation: Entering the Metro (Увійти) — cultural hook: ubiquitous ''Вхід''
+    (Entrance) and ''Вихід'' (Exit) signs in Kyiv Metro'
+- section: Practice / Практика
+  points:
+  - 'Directional transformation drills — focus on distinguishing ''входити'' (people)
+    vs ''в''їжджати'' (vehicles); learner error: ''Машина входить у гараж'''
+  - City commute narrative construction — use high-frequency transport verbs 'в'їжджати/виїжджати'
+- section: Dialogues / Діалоги
+  points:
+  - 'A morning in Kyiv: Navigating from house to metro to office — cultural hook:
+    The Threshold (Поріг) superstition; strictly forbidden to shake hands or pass
+    money across it (''через поріг''), illustrating the in/out binary'
+focus: grammar
+pedagogy: PPP
+objectives:
+- Learner can describe entering and exiting places
+- Learner can use prefixes в-/у- and ви- correctly
+- Learner can choose the correct preposition for motion verbs
+- Learner can describe daily commute actions
+grammar:
+- prefix в-/у- (entering)
+- prefix ви- (exiting)
+- prepositions with motion verbs
+- motion verb pairs
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Verbs of Motion
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Standards for prefixed verbs of motion and spatial orientation at A2
+- name: Morphology of Ukrainian Verb - Prefixes
+  url: https://uk.wikipedia.org/wiki/Префікси_в_українській_мові
+  type: reference
+  notes: Structural rules for V- and VY- prefixes with motion stems
+immersion: 60-75% Ukrainian
+phase: A2.3
+persona:
+  voice: Encouraging Cultural Guide
+  role: Taxi Driver
+vocabulary_hints:
+  required:
+  - входити (to enter [on foot]) — входити в кімнату, входити в історію, входити в
+    моду (idiom)
+  - виходити (to exit [on foot]) — виходити з дому, виходити на вулицю, виходити заміж
+    (idiom), виходити з себе (idiom)
+  - в'їжджати (to drive in/enter [by vehicle]) — в'їжджати до міста, в'їжджати в гараж,
+    в'їжджати в нову квартиру (move in)
+  - виїжджати (to drive out/exit [by vehicle]) — виїжджати за кордон, виїжджати з
+    парковки, виїжджати на природу
+  recommended:
+  - вхід (entrance) — напис на дверях метро
+  - вихід (exit) — напис на дверях метро
+  - поріг (threshold) — не вітатися через поріг
+word_target: 3000

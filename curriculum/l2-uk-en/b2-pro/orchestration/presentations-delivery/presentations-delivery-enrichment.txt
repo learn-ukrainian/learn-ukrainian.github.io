@@ -1,0 +1,275 @@
+✅ Message sent to Gemini (ID: 11816) [auto-acked: self-addressed]
+✓ Message 11816 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #11816...
+📨 Message #11816
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-presentations-delivery
+   Time: 2026-02-20T23:33:25.862081+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b2-pro-09
+level: B2-PRO
+sequence: 9
+slug: presentations-delivery
+version: '2.0'
+title: 'Презентації: Виступ'
+subtitle: Presentation Delivery
+content_outline:
+- section: Розминка — Виступ як комунікація з аудиторією
+  points:
+  - Чому читання зі слайдів — найгірша стратегія
+  - Контакт з аудиторією — погляд, голос, мова тіла
+  - Українська специфіка — повага до статусу, формальність
+- section: Робота з аудиторією під час виступу
+  points:
+  - 'Залучення: Чи знаєте ви, що...? / Уявіть ситуацію... / Хто з вас стикався з...?'
+  - 'Перевірка розуміння: Чи все зрозуміло? / Чи потрібно пояснити детальніше?'
+  - 'Реакція на сигнали аудиторії: Бачу, що це питання викликає інтерес...'
+  - Як тримати увагу — паузи, інтонація, акценти
+- section: Робота зі слайдами
+  points:
+  - 'Посилання на слайд: Як ви бачите на слайді... / Зверніть увагу на графік...'
+  - 'Пояснення візуалізації: Цей графік показує... / На діаграмі видно...'
+  - Коли показувати слайд, а коли говорити без нього
+  - Технічні проблеми — як реагувати професійно
+- section: Відповіді на запитання
+  points:
+  - 'Запрошення до запитань: Тепер час для запитань / Із задоволенням відповім...'
+  - 'Уточнення: Чи правильно я зрозумів(-ла) ваше запитання? / Ви маєте на увазі...?'
+  - 'Якщо не знаєте відповіді: Хороше запитання, я уточню і повернуся до вас...'
+  - 'Складні запитання: Дякую за цікаве запитання... / Це справді важливий аспект...'
+  - Як переадресувати або відкласти запитання
+- section: Зразок діалогу Q&A
+  points:
+  - Реалістичний діалог — різні типи запитань
+  - Аналіз стратегій відповідей
+  - Типові помилки та як їх уникнути
+- section: Практика — виступ та Q&A
+  points:
+  - 'Завдання: Підготувати та провести 5-хвилинну презентацію'
+  - Симуляція Q&A з різними типами запитань
+  - Зворотній зв'язок та самооцінка
+vocabulary_hints:
+  required:
+  - як ви бачите на слайді (as you can see on the slide)
+  - зверніть увагу на (pay attention to)
+  - чи все зрозуміло (is everything clear)
+  - із задоволенням відповім (I will be happy to answer)
+  - хороше запитання (good question)
+  - дозвольте уточнити (allow me to clarify)
+  - я повернуся до цього питання (I will return to this question)
+  - чи правильно я зрозумів (did I understand correctly)
+  recommended:
+  - цей графік показує (this graph shows)
+  - як показує діаграма (as the diagram shows)
+  - уявіть ситуацію (imagine a situation)
+  - бачу зацікавленість (I see interest)
+  - на жаль, не маю точних даних (unfortunately, I don't have exact data)
+  - пропоную обговорити це окремо (I suggest discussing this separately)
+activity_hints:
+- type: document-analysis
+  focus: Проаналізувати відеозапис презентації — оцінити роботу з аудиторією
+  items: 1
+- type: role-play
+  focus: Провести міні-презентацію та відповісти на запитання
+  items: 1
+- type: register-transform
+  focus: Перетворити невдалі відповіді на професійні
+  items: 6
+- type: fill-in
+  focus: Вставити правильні фрази для роботи зі слайдами
+  items: 8
+- type: matching
+  focus: З'єднати тип запитання зі стратегією відповіді
+  items: 8
+- type: error-correction
+  focus: Знайти непрофесійні формулювання у відповідях на запитання
+  items: 6
+focus: professional
+pedagogy: ESP
+prerequisites:
+- 'b2-pro-08 (Презентації: Структура)'
+connects_to:
+- 'b2-pro-10 (Переговори: Основи)'
+objectives:
+- Учень може залучати аудиторію під час виступу
+- Учень може професійно посилатися на слайди та візуалізації
+- Учень може відповідати на різні типи запитань — прості, уточнювальні, складні
+- Учень може реагувати на ситуації, коли не знає відповіді
+grammar:
+- Питальні конструкції для залучення (Чи знаєте ви...? / Хто з вас...?)
+- Умовний спосіб для гіпотетичних ситуацій (Якби ви були на моєму місці...)
+- Вставні слова для пом'якшення (на жаль, власне, загалом)
+register: офіційно-діловий
+phase: B2-PRO.1
+persona:
+  voice: Senior Specialist
+  role: Спікер на iForum
+word_target: 2000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Презентації: Виступ
+
+## Використані джерела
+1. [Happy Monday](https://happymonday.ua/yak-pidgotuvaty-vlasnyj-vystup) — Поради щодо публічних виступів та залучення аудиторії.
+2. [Бізнес-етикет в Україні](https://tema2000.com.ua/business-etiquette-ukraine) — Правила ділового спілкування та професійного представлення.
+3. [Дія.Бізнес](https://business.diia.gov.ua) — Рекомендації для підприємців щодо комунікації.
+4. [ДСТУ 4163:2020](https://zakon.rada.gov.ua) — Вимоги до оформлення документів (шрифти, структура), що застосовуються до слайдів.
+
+## Термінологічна база
+
+| Українська (норма) | Русизм/ненорма | English | Контекст вживання |
+|--------------------|---------------|---------|-------------------|
+| Зверніть увагу на  | Оберіть увагу на | Pay attention to | Формальна презентація |
+| Насамперед / Передусім | В першу чергу | First of all | Структурування виступу |
+| Полягає в тому | Заключається в тому | Consists in / Lies in | Пояснення суті |
+| Наступний слайд | Слідуючий слайд | Next slide | Навігація презентацією |
+| Відповідно до | Згідно... | According to | Посилання на дані/норми |
+| Брати участь | Приймати участь | To participate | Обговорення залученості |
+| Ставити запитання | Задавати питання | To ask questions | Q&A сесія |
+| Уточнити дані | Справитися з даними | To clarify data | Робота з інформацією |
+
+## Мовні норми та стандарти
+- **ДСТУ 4163:2020**: Використання шрифтів без зарубок (Arial, Helvetica) для кращого зчитування зі слайдів. Кегль не менше 24 для основного тексту.
+- **Етикет звертання**: Використання форми «Ви» та звертання «Пане/Пані» + прізвище або посада у формальних Q&A сесіях.
+- **Активний стан (Agency Pass)**: Надання переваги конструкціям «Ми пропонуємо...» замість «Пропонується...» для підкреслення професійної відповідальності.
+
+## Аутентичні приклади
+1. [Залучення]: «Чи знаєте ви, що 70% успіху презентації залежить від перших трьох хвилин?»
+2. [Робота зі слайдами]: «Як ви бачите на графіку, динаміка продажів у третьому кварталі демонструє стабільне зростання.»
+3. [Q&A сесія]: «Дякую за це справді важливе запитання. Дозвольте мені уточнити технічні деталі та повернутися до вас із відповіддю наприкінці зустрічі.»
+
+## Типові помилки
+1. ❌ «Я рахую, що...» → ✅ «Я вважаю, що...» — «Рахувати» стосується лише цифр.
+2. ❌ «Вибачаюсь за технічні затримки» → ✅ «Прошу вибачення / Перепрошую за незручності» — «Вибачаюсь» є формою «вибачаю себе».
+3. ❌ «На українській мові» → ✅ «Українською мовою / Українською» — Прийменникова помилка.
+4. ❌ «Дякую вас» → ✅ «Дякую вам» — Дієслово потребує давального відмінка.
+5. ❌ «Приймати міри» → ✅ «Вживати заходів» — Калька з російської.
+
+## Engagement Hooks (mapped to sections)
+- Section "Розминка — Виступ як комунікація з аудиторією": [!pro-tip] — Використовуйте правило 93/7: лише 7% інформації сприймається через слова, решта — через голос та мову тіла.
+- Section "Робота з аудиторією під час виступу": [!language-note] — Різниця між "правильно" (відповідно до правил) та "вірно" (віддано). У презентаціях використовуйте "правильно".
+- Section "Робота зі слайдами": [!example] — Фраза-міст: «Це підводить нас до наступного важливого аспекту, який ви бачите на слайді...»
+- Section "Відповіді на запитання": [!common-error] — Ніколи не кажіть «Немає питань?» (звучить агресивно). Кажіть: «Буду радий відповісти на ваші запитання».
+
+## Section-Mapped Research Notes
+
+### Розминка — Виступ як комунікація з аудиторією
+Важливо наголосити на візуальному контакті. В українській бізнес-культурі повага до статусу проявляється через формальну мову тіла. Читання зі слайдів сприймається як неповага до часу аудиторії.
+
+### Робота з аудиторією під час виступу
+Використання риторичних запитань: «Хто з вас стикався з проблемою...?». Важливо розрізняти звертання до групи (колеги, шановна аудиторія) та індивідуальні звертання.
+
+### Робота зі слайдами
+Норми оформлення: заголовок слайда має бути твердженням, а не просто назвою. Фрази для посилання на візуалізацію: «Зверніть увагу на горизонтальну вісь...», «Ця діаграма ілюструє...».
+
+### Відповіді на запитання
+Алгоритм: Слухати -> Повторити/Перефразувати -> Відповісти -> Перевірити задоволення відповіддю. Використання вставних слів для пом'якшення: «власне», «безумовно», «на жаль».
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 11868)
+✓ Message 11816 acknowledged
+✓ Message 11868 acknowledged

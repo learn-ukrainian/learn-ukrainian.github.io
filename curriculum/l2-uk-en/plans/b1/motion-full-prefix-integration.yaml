@@ -6,61 +6,78 @@ version: '2.0'
 title: 'Рух: інтеграція префіксів'
 subtitle: 'Motion: Full Prefix Integration'
 content_outline:
-- section: Тест
-  points: '[]'
-- section: Пояснення
+- section: Діагностичний тест (Diagnostic Test)
+  words: 400
   points:
-  - '1. Система просторових префіксів — cultural hook: Kyiv Metro (Arsenalna) navigation
-    (сходити, виходити, переходити)'
-  - '2. Аспект: Як префікси змінюють вид — learner error: по- (multidirectional base
-    = walk a bit) vs. пі- (unidirectional base = set off)'
-  - '3. Переносні (фігуральні) значення — collocations: перейти межу, руки не доходять,
-    вийти сухим із води'
-  - 'Реальні приклади використання — collocations: вийти заміж, прийти до висновку,
-    дійти згоди'
-- section: Практика
+  - 'TTT (Test-Teach-Test) approach: Initial assessment of prefix choice (при- vs.
+    до-, в- vs. за-) to identify individual friction points before formal explanation.'
+  - 'Identification of aspectual shifts: diagnostic items to check if learners distinguish
+    between ''походити'' (walk for a bit) and ''піти'' (set off/start going).'
+- section: Система просторових префіксів (System of Spatial Prefixes)
+  words: 1000
   points:
-  - 'Як обрати правильне слово? Алгоритм. — learner error: при- (arrival/presence)
-    vs. до- (reaching a limit/edge)'
-  - 'Типові помилки студентів — learner error: в- (neutral entry) vs. за- (short visit/drop
-    by)'
-- section: Діалоги
+  - 'Formal systematization based on §4.3.8 of the State Standard: the formation and
+    usage of prefixed verbs from ''іти'' and ''їхати''.'
+  - 'Spatial logic contrast: ''при-'' (arrival/presence) vs. ''до-'' (reaching a specific
+    limit or edge), addressing a primary learner friction point identified in research.'
+  - 'The nuances of entry: neutral entry ''в-/у-'' vs. ''за-'' (short visit, drop-by,
+    or deviation from a path), emphasizing the ''brief visit'' semantics of ''за-''.'
+  - 'Aspectual transformation: how prefixes change the lexical aspect and meaning
+    of unidirectional and multidirectional bases.'
+- section: Переносні значення та сталі вирази (Figurative Meanings and Collocations)
+  words: 800
   points:
-  - 'Діалог 1: Зустріч біля метро — context: Arsenalna station (deepest in world,
-    5 min descent)'
-  - 'Діалог 2: Екскурсія замком — cultural hook: Kamianets-Podilskyi, Legend of Sultan
-    Osman II (відійти - retreat)'
-  - 'Діалог 3: Загублений гаманець'
-- section: Підсумок
-  points: '[]'
-- section: Потрібно більше практики?
+  - 'High-frequency abstract uses: ''перейти на українську'' (language switch), ''перейти
+    межу'' (crossing the line), and ''вийти заміж'' (marriage).'
+  - 'Collocations of result and failure: ''нічого не вийшло'' (nothing worked out)
+    vs. ''дійти згоди'' (reach an agreement) and ''прийти до висновку'' (conclude).'
+  - 'Idiomatic expressions and register: ''вийти сухим із води'' (get away with it)
+    and the cultural concept of ''руки не доходять'' (never getting around to something).'
+- section: Урбаністика та легенди (Urban Studies and Legends)
+  words: 1200
   points:
-  - Інтеграція знань
-  - Реальне застосування
-  - Онлайн-ресурси
+  - 'Cultural Hook — Kyiv Metro: Navigating Arsenalna (the deepest station in the
+    world) using ''сходити'' (descend), ''виходити'' (exit), and ''переходити'' (transfer).'
+  - 'Historical Narrative: The legend of Sultan Osman II at Kamianets-Podilskyi Castle,
+    focusing on the tactical and metaphorical meaning of ''відійти'' (to retreat).'
+  - The 'wet spot' of Khotyn and verbs of passing/shedding, integrating 'пройти' (pass
+    through) as both a physical movement and a historical process.
+- section: Практичне застосування та підсумок (Practical Application and Summary)
+  words: 600
+  points:
+  - 'Algorithm for prefix selection: a decision tree for learners based on Goal (при-)
+    vs. Limit (до-) vs. Entry type (в- vs. за-).'
+  - 'Production task: Creative storytelling or travel itinerary using at least 10
+    different prefixed motion verbs to describe a complex historical route.'
+  - 'Final review of the ''по-'' vs. ''пі-'' logic: ensuring learners avoid using
+    multidirectional bases for ''setting off'' (піти vs. походити).'
 vocabulary_hints:
   required:
-  - при- (arrival) — прийти вчасно (arrive on time), прийти до тями (regain consciousness)
-  - ви- (exit) — вийти з дому (leave home), вийти заміж (marry), нічого не вийшло
-    (nothing worked out)
-  - в-/у- (entry) — ввійшов у кімнату (entered neutral)
-  - пере- (across) — перейти вулицю (cross street), перейти на українську (switch
-    language), перейти межу (cross the line)
-  - про- (through/past) — пройти повз (walk past), біль пройшов (pain passed), пройти
-    курс (complete a course)
-  - об- (around) — об'їхати (drive around/bypass)
-  - по- (start) — піти (set off), походити (walk a bit)
-  - за- (drop by) — зайти в магазин (enter shop), зайти в гості (drop by), сонце зайшло
-    (sun set)
-  - від- (away from) — відійти (move away/retreat)
-  - до- (reaching) — дійти до центру (reach center), дійти згоди (reach agreement),
-    руки не доходять (never get around to it)
+  - перейти (cross/switch) — перейти вулицю (cross street), перейти на українську
+    (switch to Ukrainian), перейти межу (cross the line); High frequency
+  - вийти (exit/result) — вийти з дому (leave home), вийти заміж (marry), нічого не
+    вийшло (nothing worked out), вийти сухим із води (get away with it); High frequency
+  - прийти (arrive) — прийти вчасно (arrive on time), прийти до тями (regain consciousness),
+    прийти до висновку (conclude); High frequency
+  - зайти (enter/drop by) — зайти в магазин (enter shop), зайти в гості (drop by),
+    сонце зайшло (sun set), зайти далеко (go far - fig.); Med-High frequency
+  - дійти (reach/arrive at limit) — дійти до центру (reach center), дійти згоди (reach
+    agreement), руки не доходять (never get around to it); Med frequency
+  - пройти (pass through/past) — пройти повз (walk past), біль пройшов (pain passed),
+    пройти курс (complete a course); High frequency
+  - відійти (move away/retreat) — відійти від теми (stray from topic), відійти (retreat/move
+    back — used in legends/military context); Med frequency
+  - ввійти/увійти (enter neutral) — ввійти в роль (enter a role), ввійти в історію
+    (make history); neutral entry
   recommended:
-  - під- (approach) — підійти до (approach someone)
-  - роз- (disperse) — розійтися (disperse)
-  - з-/с- (down/together) — сходити вниз (go down)
-  - над- (over - rare) — надійти (arrive - letters/news)
-  - комбінація (combination) — повідходити (move away - plural)
+  - піти (set off) — unidirectional base + по-; specifically for starting movement
+  - походити (walk a bit) — multidirectional base + по-; denotes duration of movement
+  - підійти (approach) — підійти до парку (approach the edge/entrance); implies approaching
+    a person or object
+  - об'їхати (drive around/bypass) — об'їхати затор (drive around a traffic jam)
+  - розійтися (disperse) — люди розійшлися (people dispersed); often used for meetings/crowds
+  - надійти (arrive — of news) — надійшов лист (a letter arrived); specifically for
+    abstract arrivals or mail
 activity_hints:
 - type: quiz
   focus: Prefix meaning identification

@@ -1,0 +1,315 @@
+✅ Message sent to Gemini (ID: 10671) [auto-acked: self-addressed]
+✓ Message 10671 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10671...
+📨 Message #10671
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-hedging-modality
+   Time: 2026-02-20T21:22:36.330132+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-006
+level: C1
+sequence: 6
+slug: hedging-modality
+version: '2.0'
+title: Хеджінг та модальність
+content_outline:
+- section: Вступ — Навіщо пом'якшувати?
+  points:
+  - Роль хеджінгу в академічному дискурсі
+  - Баланс між упевненістю та обережністю
+  - Наукова етика та невизначеність
+- section: Модальні дієслова
+  points:
+  - Може, міг би, повинен, мусить
+  - Здається, видається, виявляється
+  - Ступені модальності
+- section: Прислівники невизначеності
+  points:
+  - Можливо, ймовірно, очевидно
+  - Напевно, безперечно, певною мірою
+  - Частково, почасти, певним чином
+- section: Фразові конструкції хеджінгу
+  points:
+  - Є підстави вважати, можна припустити
+  - Не виключено що, цілком імовірно що
+  - На думку дослідників, за нашими спостереженнями
+- section: Шкала впевненості
+  points:
+  - 100% — безперечно, безсумнівно
+  - 75% — ймовірно, скоріш за все
+  - 50% — можливо, мабуть
+  - 25% — навряд чи, сумнівно
+- section: Контексти використання
+  points:
+  - В гіпотезах та припущеннях
+  - При інтерпретації даних
+  - У висновках і рекомендаціях
+- section: Практика модуляції тону
+  points:
+  - Додавання хеджінгу до категоричних тверджень
+  - Варіювання ступеня впевненості
+  - Контекстна доречність
+vocabulary_hints:
+  required:
+  - модальність (modality)
+  - хеджінг (hedging)
+  - ймовірно (probably)
+  - можливо (possibly)
+  - безперечно (undoubtedly)
+  - сумнівно (doubtfully)
+  - припускати (to assume)
+  - вважати (to consider)
+  - виключено (excluded)
+  - очевидно (obviously)
+  recommended:
+  - позаяк (since)
+  - навряд чи (hardly)
+  - певною мірою (to some extent)
+  - почасти (partly)
+  - скоріш за все (most likely)
+activity_hints:
+- type: quiz
+  focus: Certainty scale (0-100%) ranking
+  items: 15+
+- type: fill-in
+  focus: Add hedging to categorical statements
+  items: 12+
+- type: match-up
+  focus: Hedging device to certainty level
+  items: 15+
+- type: cloze
+  focus: Academic text with hedging gaps
+  items: 12+
+- type: essay-response
+  focus: Rewrite confident claims with appropriate hedging
+- type: group-sort
+  focus: Hedging expressions by strength
+  items: 15+
+focus: grammar
+prerequisites:
+- c1-05 (Logical Connectors)
+- Academic style awareness
+connects_to:
+- c1-07 (Citation & Reference)
+- c1-09 (Thesis Development)
+- c1-41 (Degrees of Certainty)
+module_type: grammar
+sources:
+- name: Academic Hedging in Ukrainian
+  url: https://mova.info/
+  type: reference
+  notes: Research on hedging devices in Ukrainian academic writing
+- name: Модальність у сучасній українській мові
+  url: https://r2u.org.ua/
+  type: secondary
+  notes: Comprehensive modality analysis
+immersion: 100% Ukrainian
+phase: C1.1 Academic Ukrainian
+objectives:
+- Identify and correctly use хеджінг та модальність
+- Form and apply навіщо пом'якшувати?
+- Distinguish between практика модуляції тону
+persona:
+  voice: Senior Specialist
+  role: Дипломат
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Хеджінг та модальність
+
+## State Standard Reference
+§4.4.1.1: "Стилі української мови: науковий; офіційний..."
+§4.3.2: "Просте ускладнене речення... зі вставними словами: Завтра в мене, знаєш, важливі справи."
+Alignment: Модуль розкриває засоби наукового стилю (§4.4.1.1) та використання вставних слів (§4.3.2) для вираження ступеня впевненості (хеджінгу), що є ключовою компетенцією рівня C1.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| ймовірно | High (Academic) | цілком ймовірно, найбільш ймовірно, ймовірно що |
+| припускати | Med (Academic) | можна припустити, є підстави припускати, автори припускають |
+| очевидно | High (General/Acad) | цілком очевидно, стає очевидним, очевидно що |
+| безперечно | Med (Emphatic) | безперечно важливий, це безперечно свідчить |
+| навряд чи | Med (Discourse) | навряд чи можливо, навряд чи варто |
+
+## Cultural Hooks
+1. **Plurālis Auctōris (Ми-авторське)**: В українській науковій традиції (сформованій значною мірою НТШ) прийнято використовувати "ми" замість "я" для скромності та об'єктивності ("Ми вважаємо", "На нашу думку"), навіть якщо автор один.
+2. **Дипломатичність епістолярію**: Листування українських інтелектуалів (Леся Українка, Михайло Грушевський) демонструє високу культуру хеджінгу ("Чи не могли б Ви...", "Дозволю собі зауважити"), що контрастує з імперативним стилем радянського канцеляриту.
+
+## Common Learner Errors
+1. **Calquing "I feel/think"**: "Я відчуваю, що це неправильно" (в науковому тексті) → "Видається, що це помилкове твердження" (суб'єктивні відчуття недоречні).
+2. **Misuse of "Може бути"**: Використання "Може бути, це правда" (калька з "Maybe") → "Можливо, це правда" або "Мабуть, це правда".
+3. **Overconfidence**: Категоричність тверджень ("Це точно так") там, де потрібна обережність ("Дані свідчать на користь того, що...").
+
+## Cross-References
+- Builds on: c1-05 (Logical Connectors), Academic style awareness
+- Prepares for: c1-07 (Citation & Reference), c1-09 (Thesis Development), c1-41 (Degrees of Certainty)
+
+## Notes for Content Writing
+- Акцентувати увагу на тому, що хеджінг — це не невпевненість автора у собі, а професійна етика та точність.
+- Використовувати приклади з реальних наукових статей для демонстрації "м'якої" аргументації.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Етика та науковий стиль (Introduction: Ethics and Academic Style)"
+  words: 600
+  points:
+  - "Роль хеджінгу в академічному дискурсі згідно з Державним стандартом (§4.4.1.1): баланс між упевненістю та науковою обережністю"
+  - "Професійна етика дослідника: чому пом'якшення тверджень є ознакою точності, а не слабкості позиції"
+  - "Дихотомія 'авторська суб'єктивність vs об'єктивність даних': перехід від особистих переконань до аргументованих припущень"
+- section: "Граматика обережності: Вставні слова (Grammar of Caution: Parenthetical Words)"
+  words: 800
+  points:
+  - "Використання вставних слів для вираження ступеня впевненості (§4.3.2): 'мабуть', 'очевидно', 'ймовірно', 'безперечно'"
+  - "Частотний аналіз прислівників: 'цілком ймовірно', 'найбільш ймовірно', 'стає очевидним' як ключові маркери наукового стилю"
+  - "Функціональна різниця між 'безперечно' (для акцентування доведених фактів) та 'напевно' (для гіпотетичних зв'язків)"
+- section: "Модальні дієслова та припущення (Modal Verbs and Assumptions)"
+  words: 800
+  points:
+  - "Дієслівні конструкції хеджінгу: 'можна припустити', 'є підстави вважати', 'видається', 'виявляється'"
+  - "Аналіз дієслова 'припускати': типові академічні структури ('автори припускають', 'це дає змогу припустити')"
+  - "Ступені модальності: вибір між 'може', 'міг би' та 'мусить' залежно від ваги наведених доказів"
+- section: "Культурні коди: Ми-авторське та епістолярій (Cultural Codes: We-author and Epistolary)"
+  words: 700
+  points:
+  - "Традиція Plurālis Auctōris в українській науці: використання 'Ми' замість 'Я' для досягнення об'єктивності (спадок НТШ)"
+  - "Дипломатичність української інтелігенції: аналіз хеджінгу в епістолярії Лесі Українки та Михайла Грушевського ('Чи не могли б Ви', 'Дозволю собі зауважити')"
+  - "Контраст між 'м'яким' стилем класичної еліти та імперативним, безапеляційним тоном радянського канцеляриту"
+- section: "Аналіз помилок: Від кальки до норми (Error Analysis: From Calque to Norm)"
+  words: 700
+  points:
+  - "Помилка калькування суб'єктивності: заміна 'Я відчуваю, що...' на нормативне 'Видається, що...' або 'Дані свідчать на користь того, що...'"
+  - "Корекція структури 'Може бути': відмова від кальки 'Maybe' на користь вставних слів 'Можливо' або 'Мабуть'"
+  - "Боротьба з надмірною категоричністю: трансформація тверджень 'Це точно так' у гнучкі конструкції ('не виключено що', 'цілком імовірно що')"
+- section: "Підсумок: Стратегії наукової аргументації (Summary: Strategies for Academic Argumentation)"
+  words: 400
+  points:
+  - "Шкала впевненості: систематизація засобів хеджінгу від 25% (навряд чи) до 100% (безсумнівно)"
+  - "Практичні рекомендації щодо модуляції тону у висновках та рекомендаціях наукових робіт"
+  - "Фінальна рефлексія: хеджінг як інструмент деколонізації наукового мислення через відмову від радянської авторитарності"
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "ймовірно (probably) — цілком ймовірно, найбільш ймовірно; висока частотність в академічних текстах"
+  - "припускати (to assume) — є підстави припускати, автори припускають; ключове слово для гіпотез"
+  - "очевидно (obviously) — стає очевидним; висока частотність, маркер логічного висновку"
+  - "безперечно (undoubtedly) — безперечно важливий; використовується для емфази, але потребує обережності"
+  - "навряд чи (hardly) — навряд чи можливо, навряд чи варто; маркер дистанціювання або скепсису"
+  - "видається (it seems) — видається помилковим; стилістично правильний замінник суб'єктивного 'я думаю'"
+  - "мабуть (perhaps) — вставне слово для вираження невпевненості або припущення"
+  - "виключено (excluded) — не виключено що; конструкція для позначення високого ступеня ймовірності"
+  recommended:
+  - "певною мірою (to some extent) — для обмеження обсягу твердження"
+  - "почасти (partly) — замінник 'частково' для урізноманітнення тексту"
+  - "скоріш за все (most likely) — розмовна та публіцистична конструкція високої ймовірності"
+  - "позаяк (since) — книжний сполучник для пояснення причини"
+  - "на нашу думку (in our opinion) — вияв Plurālis Auctōris для скромності та об'єктивності"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4224 chars)
+✅ Message sent to Claude (ID: 10678)
+✓ Message 10678 acknowledged
+   Auto-acknowledged reply #10678 (stdout delivery — no inbox accumulation)
+✓ Message 10671 acknowledged

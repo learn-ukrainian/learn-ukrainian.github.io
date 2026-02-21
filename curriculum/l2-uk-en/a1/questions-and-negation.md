@@ -276,7 +276,7 @@ Use your hand to "conduct" your voice. It helps your brain connect the physical 
 ### Сценарій 1: Запитання в меню
 Imagine you are at a Lviv coffee shop. You want to know if they have cheesecake. You don't see it.
 
-**You:** **Вибачте, чи у вас є сирник?** (Excuse me, do you have cheesecake?)
+**You:** **Вибачте, чи у вас є сирник?** (Excuse me, do you have syrnyk (cottage cheese pancakes)?)
 **Waiter:** **Так, звичайно.** (Yes, of course.)
 **You:** **А кава є?** (And is there coffee?)
 **Waiter:** **Так.** (Yes.)

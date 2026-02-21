@@ -2,12 +2,5 @@
   "track": "b2-hist",
   "slug": "syntez-lytva-polska",
   "mode": "v3",
-  "phases": {
-    "v3-A": {
-      "status": "complete",
-      "ts": "2026-02-19T15:06:23Z",
-      "task_id": "v3-syntez-lytva-polska-pA",
-      "mode": "meta-only"
-    }
-  }
+  "phases": {}
 }

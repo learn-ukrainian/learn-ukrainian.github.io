@@ -2,12 +2,5 @@
   "track": "c1",
   "slug": "honcharstvo-ta-rizbyarstvo",
   "mode": "v3",
-  "phases": {
-    "v3-A": {
-      "status": "complete",
-      "ts": "2026-02-19T18:12:18Z",
-      "task_id": "v3-honcharstvo-ta-rizbyarstvo-pA",
-      "mode": "full"
-    }
-  }
+  "phases": {}
 }

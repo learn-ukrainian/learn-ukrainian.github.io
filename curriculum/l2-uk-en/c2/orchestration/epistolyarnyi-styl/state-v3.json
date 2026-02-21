@@ -2,12 +2,5 @@
   "track": "c2",
   "slug": "epistolyarnyi-styl",
   "mode": "v3",
-  "phases": {
-    "v3-A": {
-      "status": "complete",
-      "ts": "2026-02-20T00:20:59Z",
-      "task_id": "v3-epistolyarnyi-styl-pA",
-      "mode": "full"
-    }
-  }
+  "phases": {}
 }

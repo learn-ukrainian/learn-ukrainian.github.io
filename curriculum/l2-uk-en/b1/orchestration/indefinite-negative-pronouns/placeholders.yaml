@@ -1,24 +1,15 @@
-TRACK: b1
-LEVEL: B1
-SLUG: indefinite-negative-pronouns
-TOPIC_TITLE: Невизначені та заперечні займенники
-MODULE_NUM: '92'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/b1/indefinite-negative-pronouns.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/meta/indefinite-negative-pronouns.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/indefinite-negative-pronouns.md
 ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/activities/indefinite-negative-pronouns.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/vocabulary/indefinite-negative-pronouns.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/research/indefinite-negative-pronouns-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/review/indefinite-negative-pronouns-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/B1.md
-SCHEMA_PATH: schemas/activities-b1.schema.json
-WORD_TARGET: '4000'
-SKILL_IDENTITY: Senior Ukrainian Language & Culture Specialist
-PERSONA_FLAVOR: Ethnographer
-PERSONA_VOICE: Senior Language & Culture Specialist
-PERSONA_ROLE: Logic Puzzle Host
+ACTIVITY_COUNT_TARGET: '10'
+ACTIVITY_MIN: '8'
+ALLOWED_ACTIVITY_TYPES: quiz, fill-in, match-up, unjumble, mark-the-words, cloze,
+  error-correction
+CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/indefinite-negative-pronouns.md
+FORBIDDEN_ACTIVITY_TYPES: anagram, essay-response, critical-analysis, comparative-study,
+  authorial-intent
 IMMERSION_RULE: Full Ukrainian immersion. Grammar explained IN Ukrainian. English
   only for disambiguation of false friends. Sentences max 30 words.
+ITEMS_MIN: '12'
+LEVEL: B1
 LEVEL_CONSTRAINTS: 'GRAMMAR RULES:
 
   - Max 30 words per Ukrainian sentence
@@ -30,6 +21,20 @@ LEVEL_CONSTRAINTS: 'GRAMMAR RULES:
   - Participles allowed
 
   - Complex subordinate clauses allowed'
+META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/meta/indefinite-negative-pronouns.yaml
+MODULE_NUM: '92'
+PERSONA_FLAVOR: Ethnographer
+PERSONA_ROLE: Logic Puzzle Host
+PERSONA_VOICE: Senior Language & Culture Specialist
+PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/b1/indefinite-negative-pronouns.yaml
+PRIORITY_TYPES: fill-in, unjumble, error-correction
+QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/B1.md
+REQUIRED_TYPES: ''
+RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/research/indefinite-negative-pronouns-research.md
+REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/review/indefinite-negative-pronouns-review.md
+SCHEMA_PATH: schemas/activities-b1.schema.json
+SKILL_IDENTITY: Senior Ukrainian Language & Culture Specialist
+SLUG: indefinite-negative-pronouns
 TIER_GUIDANCE: '# Tier 2: Core Levels (B1/B2 Core/B2-PRO)
 
 
@@ -509,13 +514,9 @@ TIER_GUIDANCE: '# Tier 2: Core Levels (B1/B2 Core/B2-PRO)
   Factual errors in grammar modules are AUTO-FAIL regardless of other scores.
 
   '
-ACTIVITY_COUNT_TARGET: '10'
-ACTIVITY_MIN: '8'
-ITEMS_MIN: '12'
+TOPIC_TITLE: Невизначені та заперечні займенники
+TRACK: b1
+TRACK_CONTEXT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/orchestration/indefinite-negative-pronouns/track-context.md
 VOCAB_COUNT_TARGET: '30'
-FORBIDDEN_ACTIVITY_TYPES: anagram, essay-response, critical-analysis, comparative-study,
-  authorial-intent
-ALLOWED_ACTIVITY_TYPES: quiz, fill-in, match-up, unjumble, mark-the-words, cloze,
-  error-correction
-REQUIRED_TYPES: ''
-PRIORITY_TYPES: fill-in, unjumble, error-correction
+VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/vocabulary/indefinite-negative-pronouns.yaml
+WORD_TARGET: '4000'

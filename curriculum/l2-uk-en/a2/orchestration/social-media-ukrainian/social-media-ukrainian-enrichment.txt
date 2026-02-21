@@ -1,0 +1,299 @@
+✅ Message sent to Gemini (ID: 10269) [auto-acked: self-addressed]
+✓ Message 10269 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10269...
+📨 Message #10269
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-social-media-ukrainian
+   Time: 2026-02-20T20:06:02.785752+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: a2-67
+level: A2
+sequence: 67
+slug: social-media-ukrainian
+version: '2.0'
+title: Social Media Ukrainian
+subtitle: Digital Life
+content_outline:
+- section: Introduction / Вступ
+  points:
+  - Popular platforms — Telegram as primary news/comms source (75% for news, 90% daily
+    usage, official updates), Instagram for business (often replacing websites)
+  - 'Digital culture — State Standard §3.4 alignment; cultural hook: ''Пишіть у дірект''
+    (Write to DM) as standard business phrase'
+- section: Presentation / Презентація
+  points:
+  - 'Social media vocabulary — ''сторінка'' vs ''сайт'' (false friend); UI terms:
+    кнопка ''Стежити'', іконка серця'
+  - 'Posts, likes, comments — ''лайк'' vs ''вподобайка'' (purist alternative), ''світлина''
+    (photo); learner error: confusing case for ''підписатися на...'' (Accusative:
+    на канал, на сторінку)'
+- section: Practice / Практика
+  points:
+  - Write posts and comments — 'поширити допис' (share post), 'знімати сторіз' (film
+    stories), 'кидати в сторіз' (post to stories)
+- section: Dialogues / Діалоги
+  points:
+  - Online conversations — casual register, focus on Telegram (news/messaging) and
+    Instagram (visuals) context
+  - 'Commenting exchanges — interacting with ''підписники'' (followers); collocation:
+    ''кількість підписників'', ''мої підписники'''
+- section: Narrative / Розповідь
+  points:
+  - Social media story — focus on navigating UI ('кнопка', 'іконка') and digital interactions
+    ('поширити', 'лайкнути')
+- section: Need More Practice?
+  points:
+  - Summary and links
+vocabulary_hints:
+  required:
+  - 'профіль (profile) — learner error: confuse with ''сторінка'' (page)'
+  - пост (post) — писати пост, опублікувати пост, новий пост
+  - 'лайк (like) — ставити лайк, збирати лайки; alt: вподобайка (purist)'
+  - коментар (comment) — common UI term
+  - підписник (follower) — мої підписники, кількість підписників, накрутка підписників
+  - підписатися (to subscribe) — підписатися на канал (Accusative case warning), підписатися
+    на сторінку
+  - 'поділитися (to share) — поділитися з друзями; synonym: поширити допис'
+  - сторіз (stories) — знімати сторіз, кидати в сторіз, дивитися сторіз
+  recommended:
+  - стрічка (feed)
+  - хештег (hashtag)
+  - репост (repost)
+  - приватність (privacy)
+  - блокувати (to block)
+  - сповіщення (notification)
+  - світлина (photo)
+activity_hints:
+- type: match-up
+  focus: Social media vocabulary
+  items: 25
+- type: fill-in
+  focus: Complete social media texts
+  items: 15
+- type: cloze
+  focus: Write posts and comments
+  items: 10
+- type: match-up
+  focus: Match actions to icons
+  items: 15
+focus: practical
+pedagogy: PPP
+prerequisites:
+- a2-66 (Asking for Directions)
+- a2-50 (Technology and Media)
+connects_to:
+- a2-68 (Texting and Messaging)
+objectives:
+- Learner can navigate Ukrainian social media interfaces
+- Learner can write comments and posts
+- Learner can understand digital slang
+- Learner can manage profile settings
+grammar:
+- Internet slang (лайк, пост, сторіз)
+- Verbs for digital actions (постити, лайкати)
+- Commenting and messaging etiquette
+register: розмовний
+immersion: 75-90% Ukrainian
+phase: A2.6 [Practical]
+persona:
+  voice: Encouraging Cultural Guide
+  role: Community Manager
+word_target: 3000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Social Media Ukrainian
+
+## State Standard Reference
+§3.4: "Дозвілля, відпочинок: ... преса, радіо, телебачення, інтернет, соціальні мережі."
+Alignment: This module directly addresses the "social networks" (соціальні мережі) component of the Leisure topic, teaching learners to navigate interfaces and interact online.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| лайк | High (General Internet) | ставити лайк, збирати лайки, вподобайка (purist alternative) |
+| пост | High (Social Media) | писати пост, опублікувати пост, новий пост |
+| сторіз | High (Instagram/Facebook) | знімати сторіз, кидати в сторіз, дивитися сторіз |
+| підписник | High (Influencer culture) | мої підписники, кількість підписників, накрутка підписників |
+| підписатися | High (Action) | підписатися на канал, підписатися на сторінку |
+| поширити | Medium (UI Action) | поширити допис, поділитися з друзями |
+
+## Cultural Hooks
+1. **Telegram Phenomenon**: Unlike in the West where it's niche, Telegram is the primary news source for 75% of Ukrainians and the main tool for daily communication (90% usage). It's where air raid alerts and official government updates appear first.
+2. **Instagram & Micro-businesses**: Instagram in Ukraine is a massive platform for small businesses (shops, bakeries, services) often replacing traditional websites. "Пишіть у дірект" (Write to DM) is a standard business phrase.
+
+## Common Learner Errors
+1. **Case Mismatch**: *Підписатися на канал* (Nominative) → *Підписатися на канал* (Accusative). *Error*: Learners often use the wrong case or preposition for "subscribe to". Note: For masculine inanimate objects like "канал", Nominative and Accusative look the same, but for feminine "сторінка" → "сторінку" (Accusative) the difference is crucial.
+2. **False Friends**: Confusion between *сторінка* (profile/page) and *сайт* (website). Learners might say "твоя сайт" instead of "твоя сторінка" regarding an Instagram profile.
+3. **Transliteration vs Translation**: Using *лайк* is common, but ignoring Ukrainian alternatives like *вподобайка* (like) or *світлина* (photo) misses cultural nuance, though *лайк* is standard internet slang.
+
+## Cross-References
+- Builds on: a2-66 (Asking for Directions - navigation), a2-50 (Technology and Media)
+- Prepares for: a2-68 (Texting and Messaging)
+
+## Notes for Content Writing
+- **Platform Specifics**: Focus examples on Instagram (visuals/lifestyle) and Telegram (news/channels) as they dominate the Ukrainian landscape.
+- **Visuals**: Describe UI elements clearly (e.g., "кнопка 'Стежити'", "іконка серця").
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 450
+  points:
+  - "Alignment with State Standard §3.4: Navigating social networks (соціальні мережі) as a core leisure and information competency."
+  - "The Telegram Phenomenon: Explaining why Telegram is the primary news source for 75% of Ukrainians and used daily by 90%; mention its role for air raid alerts and official government updates."
+  - "Instagram as a Business Ecosystem: How Instagram often replaces traditional websites for Ukrainian micro-businesses; introduce the essential business phrase 'Пишіть у дірект' (Write to DM)."
+- section: "Презентація (Presentation)"
+  words: 800
+  points:
+  - "Core UI Vocabulary and False Friends: Distinguishing between 'сторінка' (profile/page) and 'сайт' (website); warn against the common error of calling a social media profile a 'сайт'."
+  - "Navigating the Interface: Key UI elements like 'кнопка «Стежити»' (Follow button), 'іконка серця' (heart icon), and 'стрічка' (feed)."
+  - "Grammar of Subscription: Drill the use of 'підписатися на...' + Accusative case; contrast masculine inanimate 'на канал' (no change) with feminine 'на сторінку' (ending change to -у) to address common learner errors."
+  - "Slang vs. Purism: Presenting standard slang like 'лайк' alongside cultural/purist alternatives like 'вподобайка' (like) and 'світлина' (photo) for stylistic depth."
+- section: "Практика (Practice)"
+  words: 600
+  points:
+  - "Digital Action Verbs: Drilling the conjugation and usage of 'постити', 'лайкати', and 'репостити' in casual registers."
+  - "Sharing and Posting: Practical application of 'поширити допис' (share a post) versus 'поділитися з друзями' (share with friends); practice phrases like 'знімати сторіз' and 'кидати в сторіз'."
+  - "Correcting Case Errors: Exercises focused on correctly using the Accusative case for subscription targets and the Prepositional case for platform locations ('в інстаграмі', 'в телеграмі')."
+- section: "Діалоги та Взаємодія (Dialogues & Interaction)"
+  words: 600
+  points:
+  - "Telegram Register: Contextual dialogues for messaging friends versus interacting with official news channels and alerts."
+  - "The Instagram Shopping Experience: A dialogue between a customer and a shop owner using 'Яка ціна?', 'Пишіть у дірект', and 'скиньте посилання'."
+  - "Managing Engagement: Interacting with 'підписники' (followers) in comments; discussing 'кількість підписників' and 'накрутка'."
+- section: "Розповідь та Підсумок (Narrative & Summary)"
+  words: 550
+  points:
+  - "Narrative: A 'Day in Digital Ukraine' — checking Telegram for news/alerts in the morning, posting a 'світлина' to Instagram, and interacting with the community."
+  - "Refining Digital Style: Summary of when to use casual slang ('лайк') versus more formal or poetic terms ('вподобайка', 'світлина') to sound more natural."
+  - "State Standard Check: Final review of competencies for managing profile settings and understanding digital notifications ('сповіщення')."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "лайк (like) — ставити лайк, збирати лайки; very high frequency internet slang; alt: вподобайка"
+  - "пост (post) — писати пост, новий пост, опублікувати пост; refers to any feed content"
+  - "сторіз (stories) — знімати сторіз, кидати в сторіз, дивитися сторіз; dominates daily social media usage"
+  - "підписник (follower) — мої підписники, кількість підписників; key term for influencer/business culture"
+  - "підписатися (to subscribe/follow) — підписатися на канал, підписатися на сторінку; MUST use Accusative case"
+  - "сторінка (page/profile) — твоя сторінка в інстаграмі; contrast with 'сайт' (false friend)"
+  - "поширити (to share) — поширити допис; standard UI term for 'Share' action"
+  - "дірект (direct/DM) — пишіть у дірект; essential for Ukrainian Instagram business communication"
+  recommended:
+  - "вподобайка (like) — purist alternative to 'лайк' increasingly seen in localized interfaces"
+  - "світлина (photo) — poetic and elegant alternative to 'фото' or 'пост'"
+  - "стрічка (feed) — гортати стрічку; the main social media feed"
+  - "сповіщення (notification) — вмикати сповіщення; essential for app settings and Telegram alerts"
+  - "посилання (link) — скинути посилання; standard for sharing web content"
+  - "накрутка (boosting/faking) — накрутка підписників; buying fake engagement"
+  - "профіль (profile) — learner error: often confused with 'сторінка'"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4529 chars)
+✅ Message sent to Claude (ID: 10279)
+✓ Message 10279 acknowledged
+   Auto-acknowledged reply #10279 (stdout delivery — no inbox accumulation)
+✓ Message 10269 acknowledged

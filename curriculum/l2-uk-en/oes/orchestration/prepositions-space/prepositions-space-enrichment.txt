@@ -1,0 +1,222 @@
+✅ Message sent to Gemini (ID: 12092) [auto-acked: self-addressed]
+✓ Message 12092 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12092...
+📨 Message #12092
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-prepositions-space
+   Time: 2026-02-20T23:36:04.204329+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 15
+module: oes-015
+module_number: 13
+slug: prepositions-space
+title_uk: Прийменники та простір
+title_en: Prepositions & Space
+phase: 1
+phase_id: vernacular-foundations
+phase_name: Vernacular Foundations
+focus: Въ, на, къ — Direction vs Location
+content_outline:
+- section: Вступ
+  description: Introduction to Prepositions & Space
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Senior Paleographer
+  role: Pathfinder
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Prepositions Space (OES)
+
+## Використані джерела
+1. [Літопис Руський (за Іпатським списком)](http://litopys.org.ua/ipatlet/ipat01.htm) — основне джерело для аналізу вживання прийменників у контексті оповідей XI-XII ст.
+2. [Енциклопедія Сучасної України: Прийменник](https://esu.com.ua/article-87971) — теоретична база щодо функцій та класифікації прийменників в українській мові, включно з історичним аспектом.
+3. [Ізборник Святослава 1073 року](http://litopys.org.ua/izbornik/izborn01.htm) — пам'ятка давньоруської мови, що фіксує ранні норми вживання прийменникових конструкцій.
+4. [Історична граматика української мови (підручники)](http://litopys.org.ua/ukrmova/um.htm) — дані про еволюцію прийменникової системи та занепад редукованих.
+
+## Хронологія
+- **863 р.**: Місія Кирила і Мефодія; початок фіксації слов'янських прийменникових конструкцій у перекладах, вплив грецького синтаксису.
+- **1073 р.**: Створення «Ізборника Святослава»; фіксація прийменників `въ`, `на`, `къ` у церковнослов'янському контексті з руськими рисами.
+- **Початок XII ст. (1113 р.)**: Укладання «Повісті временних літ» (ПВЛ); багатий матеріал щодо вживання прийменників місця (`въ`, `на`, `до`, `по`) у живій мові.
+- **Середина XII ст.**: Занепад редукованих голосних (єрів); фонетична трансформація прийменників (`въ` > `в/у`, `съ` > `з`, `къ` > `к`).
+- **XIII-XIV ст.**: Зростання ролі прийменника `до` (+ родовий відмінок) замість архаїчного `къ` (+ давальний відмінок) у значенні напрямку руху.
+
+## Ключові факти та цитати
+- **Опозиція ВЪ/НА**: У давньоруській мові чітко розрізнялися значення місця (Locativus) та напрямку (Accusativus).
+  - Цитата (ПВЛ): *"А Дніпро впадає в Понтійське море трьома гирлами..."* (напрямок, знахідний відмінок).
+  - Цитата (ПВЛ): *"І сів Олег, князюючи, в Києві..."* (локалізація, місцевий відмінок).
+- **Еволюція КЪ > ДО**: Прийменник `къ` поступово витісняється конструкцією з `до`, особливо в живій мові, що є характерною рисою українських говірок.
+  - Цитата (ПВЛ): *"І послав Олег до радимичів, питаючи..."*
+- **Варіативність СЪ/ИЗЪ**: Для позначення вихідної точки руху використовувалися як `съ` (з поверхні), так і `изъ` (зсередини).
+- **Давньоруський "локатив"**: Вживання прийменника `по` з місцевим відмінком для позначення місця пересування (*"по поляхъ"*).
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ": [!context] — Пояснення концепції простору в середньовічної людини (центр vs периферія, свій vs чужий простір).
+- Section "Основний матеріал: I — Локативність та Напрямок (Въ/На)": [!myth-buster] — Спростування міфу про "хаотичне" вживання прийменників; насправді існувала сувора система відмінкового керування (куди? vs де?).
+- Section "Основний матеріал: II — Рух до мети (Къ/До)": [!history-bite] — Як занепад єрів змінив звучання прийменників (`къ мнѣ` > `до мене`), і чому українська мова зберегла `до` як основний засіб вираження напрямку.
+- Section "Основний матеріал: III — Походження та Віддалення (Отъ/Изъ/С)": [!paleography] — Особливості написання прийменників у рукописах (злиття з наступним словом, виносні літери).
+- Section "Практика": [!culture] — Як географічні назви в літописах (на Русі, в Києві) відображають давнє сприйняття територій (відкритий простір vs замкнений).
+- Section "Підсумок": [!decolonization] — Підкреслення тяглості української прийменникової системи від давньоруської мови до сучасної, на противагу російським інноваціям або архаїзмам.
+
+## Деколонізаційний контекст
+- **Imperial/Soviet myth**: Ствердження про єдність східнослов'янського синтаксису в період Київської Русі та ігнорування діалектних відмінностей.
+- **Ukrainian reality**: Вже в ранніх пам'ятках (XI-XII ст.) простежуються протоукраїнські риси, зокрема чергування `у/в` (внаслідок вокалізації `въ`), специфічне керування прийменників, перевага конструкцій з `до` над `къ`. Термін "давньоруська мова" слід розуміти як сукупність діалектів, де київський діалект був базою літературної мови.
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| Давньоруська мова | Єдина монолітна мова-предок трьох народів ("общерусский язык"). | Сукупність діалектів, де києво-поліський діалект був основою писемної традиції Русі; безпосередній предок української мови. |
+| Прийменник "въ" | Розглядався виключно як попередник російського "в". | Джерело українського варіантивного "у/в", що забезпечує милозвучність (чергування). |
+| "На Україні" | Використовується для підкреслення "регіональності" або відсутності державності (аналогія з "на Кавказі"). | Історична форма, що позначала територію/землю (пор. "на Русі"), але в сучасному контексті нормативним є "в Україні" для позначення держави. |
+
+## Section-Mapped Research Notes
+
+### Вступ
+- Роль просторових відношень у архаїчній свідомості.
+- Прийменник як службова частина мови, що виражає залежність іменника.
+- Огляд основних просторових прийменників: `въ`, `на`, `къ`, `отъ`, `изъ`, `съ`, `у`, `по`.
+
+### Основний матеріал: I — Локативність та Напрямок (Въ/На)
+- Найчастотніші прийменники.
+- **Въ**: Значення "всередині" (in, into).
+  - + Знахідний (Acc): напрямок ("іти въ городъ").
+  - + Місцевий (Loc): місцеперебування ("бути въ городѣ").
+- **На**: Значення "на поверхні" (on, onto).
+  - + Знахідний (Acc): напрямок ("зійти на гору").
+  - + Місцевий (Loc): місцеперебування ("сидіти на столі").
+- Фонетичні зміни: `въ` > `в/у`.
+
+### Основний матеріал: II — Рух до мети (Къ/До)
+- **Къ**: Давній прийменник напрямку (+ Давальний). Архаїчний для сучасної мови, але поширений у текстах ("придѣ къ цѣсарю").
+- **До**: Прийменник межі та досягнення мети (+ Родовий).
+- Конкуренція `къ` і `до`. Перемога `до` в українській мові для позначення руху до особи/об'єкта.
+
+### Основний матеріал: III — Походження та Віддалення (Отъ/Изъ/С)
+- **Отъ**: Віддалення від об'єкта, походження (+ Родовий). Еволюція в `від`.
+- **Изъ**: Вихід зсередини (+ Родовий). Еволюція в `з/із`.
+- **Съ**: Рух з поверхні (+ Родовий). Збіг у звучанні з `із` > `з` у сучасній українській.
+
+### Практика
+- Аналіз уривків з ПВЛ.
+- Вправи на розрізнення значень (куди? vs де?).
+- Реконструкція прийменникових конструкцій.
+
+### Підсумок
+- Узагальнення системи просторових прийменників.
+- Зв'язок давньоруських форм із сучасною українською мовою.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12165)

@@ -1,4 +1,4 @@
-Now I have everything I need for a thorough adversarial review. Let me compile the findings.
+Now I have everything I need. Let me compile the full adversarial review.
 
 ---
 
@@ -6,216 +6,315 @@ Now I have everything I need for a thorough adversarial review. Let me compile t
 
 ### Issues Found
 
-#### CRITICAL: IPA — [e] systematically used for Ukrainian и (should be [ɪ])
+**Issue 1: Vocabulary YAML — Wrong Root Structure**
+- **File**: `vocabulary/tomorrow-future-tense.yaml`, line 1
+- **Current**: File uses `items:` dictionary wrapper
+- **Problem**: All other A1 vocabulary files (`the-living-verb-i.yaml`, `the-gender-code.yaml`, etc.) use a bare list at root. This file is structurally inconsistent. Scripts that expect bare-list format will break or need special-casing.
+- **Fix**: Convert to bare list format matching project standard.
 
-Ukrainian и = [ɪ] (near-close near-front vowel). Ukrainian е = [e]. Using [e] for и would make a learner pronounce "четати" instead of "читати".
+**Issue 2: IPA — вихідні wrong stress placement**
+- **File**: `tomorrow-future-tense.md`, line 204
+- **Current**: `[ʋɪˈxidnʲi]` (stress on second syllable)
+- **Problem**: Standard stress is вихідні́ — final syllable. Correct IPA: `[ʋɪxidˈnʲi]`.
 
-1. **Line 17**: `[ja t͡ʃeˈtɑlɑ]` for "читала" — should be `[ja t͡ʃɪˈtɑlɑ]`
-2. **Line 44**: `[t͡ʃeˈtɑtɪ]` for "читати" — should be `[t͡ʃɪˈtɑtɪ]`
-3. **Line 71**: `[ʋidpɔt͡ʃeˈʋɑtɪ]` for "відпочивати" — should be `[ʋidpɔt͡ʃɪˈʋɑtɪ]`
+**Issue 3: IPA — збирається inconsistent affricate notation**
+- **File**: `tomorrow-future-tense.md`, line 100
+- **Current**: `[zbɪˈrɑjetʲsʲa]` — breaks `-ться` into separate `[tʲsʲ]`
+- **Problem**: Module uses tie bars for all other affricates (t͡ʃ, t͡s). Ukrainian `-ться` is phonetically an affricate [t͡sʲː]. The transcription is internally inconsistent.
+- **Fix**: `[zbɪˈrɑjet͡sʲːa]`
 
-#### CRITICAL: Synthetic perfective future forms used in content that explicitly excludes them
+**Issue 4: IPA — спати missing stress marker**
+- **File**: `tomorrow-future-tense.md`, line 275
+- **Current**: `[spɑtɪ]`
+- **Problem**: All other IPA transcriptions in the module include stress markers. This one is missing. Stress: спа́ти → `[ˈspɑtɪ]`.
 
-The SCOPE comment says "Not covered: Synthetic future forms (-му, -меш) → A2 / Perfective future (прочитаю) → A2". Yet four sentences use exactly these forms without explanation:
+**Issue 5: IPA — снідати missing stress marker**
+- **File**: `tomorrow-future-tense.md`, line 275
+- **Current**: `[sʲnʲidɑtɪ]`
+- **Problem**: Missing stress marker. Stress: сніда́ти → `[sʲnʲiˈdɑtɪ]`.
 
-1. **Line 169**: `побачимося` — perfective synthetic future of побачитися
-2. **Line 180**: `зателефоную` — perfective synthetic future of зателефонувати
-3. **Line 181**: `поговоримо` — perfective synthetic future of поговорити
-4. **Line 275**: `замовлю` — perfective synthetic future of замовити
+**Issue 6: Pedagogical — Dialogue 2 uses untaught grammar (present-for-future)**
+- **File**: `tomorrow-future-tense.md`, line 251
+- **Current**: `«Так! **Наступного тижня** я їду додому, до батьків.»`
+- **Problem**: Module teaches exclusively `буду + infinitive` as the future tense formula. Using `їду` (present tense with future meaning) is natural Ukrainian but untaught at this point. Breaks "Safe Harbor" — learners who just memorized the formula will be confused by an alternative they haven't been taught.
+- **Fix**: Restructure to use compound future.
 
-A learner who just learned "only use буду + infinitive" will be confused by forms that violate the rule they just memorized.
+**Issue 7: Untranslated Ukrainian sentence at A1 level**
+- **File**: `tomorrow-future-tense.md`, line 27
+- **Current**: `Українська мова — це музика. Слухайте і говоріть.`
+- **Problem**: An A1 learner at module 22 has not been taught imperative forms (слухайте, говоріть). This sentence appears without any English translation, violating the module's own scaffolding pattern.
 
-#### MODERATE: Reflexive verb conjugation — bolding error (line 104)
+**Issue 8: Truncated proverb — plan compliance gap**
+- **File**: `tomorrow-future-tense.md`, line 110
+- **Current**: `"Don't say 'hop'!" («Не кажи 'гоп'!»)`
+- **Problem**: The plan requires the full proverb: «Не кажи 'гоп', поки не перескочиш». Truncating it loses the meaning. The cultural hook is weaker without the punchline.
 
-Current: `(збираю**ся**, збирає**шся**, збираєть**ся**)`
+**Issue 9: Naturalness — "друзі будуть дзвонити"**
+- **File**: `tomorrow-future-tense.md`, line 279
+- **Current**: `Увечері мої друзі **будуть дзвонити**.`
+- **Problem**: "Будуть дзвонити" emphasizes the ongoing process of ringing/calling, which reads oddly as a lead-in to "ми будемо вечеряти разом". The narrative flow (friends calling → dinner together) is disjointed.
+- **Fix**: `Увечері я **буду** з друзями.` — cleaner, stays within taught grammar.
 
-Problems:
-- 2nd form "збирає**шся**" — bolding "шся" wrongly includes the personal ending "ш" as part of the reflexive marker
-- 3rd form "збираєть**ся**" — misleading morpheme boundary (should show -ться as the 3rd person reflexive suffix)
+**Issue 10: Activity — "листа" uses untaught Genitive case**
+- **File**: `activities/tomorrow-future-tense.yaml`, line 42
+- **Current**: `'Ви ___ писати листа?'`
+- **Problem**: "Лист" (letter) is masculine inanimate — Accusative = Nominative = "лист". "Листа" is Genitive form. While "писати листа" (Genitive object) exists in Ukrainian, this module teaches Genitive only for time expressions (наступного тижня). Using Genitive for direct objects introduces an untaught pattern. Safer: "лист" (Accusative).
 
-Correct: `(збираю**ся**, збираєш**ся**, збирає**ться**)` — consistently showing -ся for 1st/2nd person, -ться for 3rd person.
-
-#### MODERATE: LLM artifacts
-
-1. **Line 27**: "Voila!" — French exclamation in a Ukrainian textbook
-2. **Line 38**: "Here is your golden key to the future" — grandiose
-3. **Line 134**: "### Magic of the word 'Next'" — AI pattern header
-4. **Line 293**: "Now you are masters of time" — purple prose
-5. **Line 299**: "Magic time words" — repeats "magic" pattern
-
-#### MODERATE: Excessive metalanguage for A1 (lines 135–140)
-
-Using grammar terms "Genitive of Time", "Nominative", "Genitive" with labels is too abstract for A1. The same concept can be taught as a pattern ("when saying *when*, change the ending to -ого") without the linguistic terminology.
-
-#### MODERATE: IPA stress on вихідні (line 204)
-
-`[ʋɪxidˈnʲi]` places stress on the final syllable. Вихідні has stress on the second syllable: [ʋɪˈxidnʲi].
-
-#### MINOR: Activity uses out-of-scope synthetic future (activities line 287)
-
-`'Це станеться ___ тижня.'` — "станеться" is perfective synthetic future, out of scope. Learner fills in "наступного" but encounters an unexplained verb form.
-
-#### MINOR: Plan compliance gap — missing collocations
-
-Plan requires "завтра вранці, завтра ввечері" collocations. Neither appears in the content. Noting for awareness; not fixing in QA gate.
-
-#### MINOR: Plan compliance gap — missing synthetic future FYI
-
-Plan says "Синтетичний майбутній (-му, -меш, -ме) — згадка — limit to brief FYI". Neither meta nor content includes this. Plan→meta gap.
-
-#### CLEAN: No Russianisms, no Russian characters, no calques, cultural claims accurate, unjumble words/answers aligned, fill-in answers grammatical.
+**Informational (no fix needed):**
+- Plan calls for a synthetic future FYI mention (працюватиму) which is absent. The meta explicitly defers this to A2. Module follows meta correctly — this is a plan/meta discrepancy, not a content deficiency.
+- Three items in the "Наступного" fill-in activity use present-for-future verbs (їдемо, працюємо, їду). These are vocabulary drills testing case form only, not tense. Acceptable simplification at A1.
+- "Потім" in group-sort classified as "Future" — it can also appear in past sequences, but this simplification is pedagogically justified for the lesson context.
 
 ---
 
-Now applying fixes:
+### Fixes
 
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/tomorrow-future-tense.md
 ---OLD---
-**я читала** [ja t͡ʃeˈtɑlɑ] (I read)
+You need only one small helper word — **буду** [ˈbudʊ] (I will be). You simply add it to the word you already know — and just like that, you are speaking about the future. Українська мова — це музика. Слухайте і говоріть.
 ---NEW---
-**я читала** [ja t͡ʃɪˈtɑlɑ] (I read)
+You need only one small helper word — **буду** [ˈbudʊ] (I will be). You simply add it to the word you already know — and just like that, you are speaking about the future. Українська мова — це музика. Слухайте і говоріть. (The Ukrainian language is music. Listen and speak.)
 ===FIX_END===
 
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/tomorrow-future-tense.md
 ---OLD---
-the verb **читати** [t͡ʃeˈtɑtɪ] (to read):
+*   Він **збирається** [zbɪˈrɑjetʲsʲa] працювати. (He is going to work.)
 ---NEW---
-the verb **читати** [t͡ʃɪˈtɑtɪ] (to read):
+*   Він **збирається** [zbɪˈrɑjet͡sʲːa] працювати. (He is going to work.)
 ===FIX_END===
 
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/tomorrow-future-tense.md
 ---OLD---
-**Вони будуть відпочивати** [ʋidpɔt͡ʃeˈʋɑtɪ].
+> In Ukrainian culture, people often speak carefully about big plans. There is a famous proverb about not boasting about success until the job is done. Ukrainians say: "Don't say 'hop'!" («Не кажи 'гоп'!»). So Ukrainians might say "I plan..." or "I hope..." instead of a firm "I will do!".
 ---NEW---
-**Вони будуть відпочивати** [ʋidpɔt͡ʃɪˈʋɑtɪ].
+> In Ukrainian culture, people often speak carefully about big plans. There is a famous proverb about not boasting about success until the job is done. Ukrainians say: «Не кажи 'гоп', поки не перескочиш!» — "Don't say 'hop' until you've jumped over!" In other words, do not celebrate before you finish. So Ukrainians might say "I plan..." or "I hope..." instead of a firm "I will do!".
 ===FIX_END===
 
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/tomorrow-future-tense.md
 ---OLD---
-You simply add it to the word you already know. Voila! You are speaking about the future.
+*   **вихідні** [ʋɪˈxidnʲi] — weekend (literally: exit days)
 ---NEW---
-You simply add it to the word you already know — and just like that, you are speaking about the future.
+*   **вихідні** [ʋɪxidˈnʲi] — weekend (literally: exit days)
 ===FIX_END===
 
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/tomorrow-future-tense.md
 ---OLD---
-Here is your golden key to the future:
+**Ірина:** Так! **Наступного тижня** я їду додому, до батьків.
 ---NEW---
-Here is the formula:
+**Ірина:** Так! **Наступного тижня** я **буду** вдома, у батьків.
 ===FIX_END===
 
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/tomorrow-future-tense.md
 ---OLD---
-(збираю**ся**, збирає**шся**, збираєть**ся**)
+*Зауважте (Note):* Maksym uses "буду працювати" because it is a long process. Iryna uses "будемо гуляти" to describe how they will spend time.
 ---NEW---
-(збираю**ся**, збираєш**ся**, збирає**ться**)
+*Зауважте (Note):* Maksym uses "буду працювати" because it is a long process. Iryna uses "буду вдома" to describe where she will be, and "будемо гуляти" to describe how they will spend time.
 ===FIX_END===
 
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/tomorrow-future-tense.md
 ---OLD---
-### Magic of the word "Next"
+Завтра буде чудовий день. Вранці я **буду спати** [spɑtɪ] довго. Потім я **буду снідати** [sʲnʲidɑtɪ] в кафе.
 ---NEW---
-### The Word "Next" (Наступний)
+Завтра буде чудовий день. Вранці я **буду спати** [ˈspɑtɪ] довго. Потім я **буду снідати** [sʲnʲiˈdɑtɪ] в кафе.
 ===FIX_END===
 
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/tomorrow-future-tense.md
 ---OLD---
-How do we say "next week" or "next year"? We use the word **наступний** [nɑˈstupnɪi̯] (next). But here is a small secret. When we say *when exactly* something happens, we change the ending. This is called **Genitive of Time**.
-
-Look at this change:
-
-*   Наступн**ий** тиждень (Nominative: Next week is coming) → **НаступнОГО тижня** (Genitive: **On** next week / Next week something happens).
-*   Наступн**ий** рік (Nominative: Next year is good) → **НаступнОГО року** (Genitive: **In** the next year).
+Увечері мої друзі **будуть дзвонити**. Ми **будемо вечеряти** разом у ресторані.
 ---NEW---
-How do we say "next week" or "next year"? We use the word **наступний** [nɑˈstupnɪi̯] (next). But here is an important trick. When we say *when exactly* something happens, we change the ending to **-ого**.
-
-Look at this pattern:
-
-*   Наступн**ий** тиждень (Next week — as a thing) → **НаступнОГО тижня** (Next week — as a *time*, when something happens).
-*   Наступн**ий** рік (Next year — as a thing) → **НаступнОГО року** (Next year — as a *time*).
-===FIX_END===
-
-===FIX_START===
-FILE: curriculum/l2-uk-en/a1/tomorrow-future-tense.md
----OLD---
-*   Ми **незабаром** побачимося. (We will see each other soon.)
----NEW---
-*   Ми **незабаром** будемо разом. (We will be together soon.)
-===FIX_END===
-
-===FIX_START===
-FILE: curriculum/l2-uk-en/a1/tomorrow-future-tense.md
----OLD---
-*   Я зателефоную **пізніше**. (I will call later.)
-*   Ми поговоримо **потім**. (We will talk then.)
----NEW---
-*   Я буду телефонувати **пізніше**. (I will call later.)
-*   Ми будемо говорити **потім**. (We will talk then.)
-===FIX_END===
-
-===FIX_START===
-FILE: curriculum/l2-uk-en/a1/tomorrow-future-tense.md
----OLD---
-**вихідні** [ʋɪxidˈnʲi]
----NEW---
-**вихідні** [ʋɪˈxidnʲi]
-===FIX_END===
-
-===FIX_START===
-FILE: curriculum/l2-uk-en/a1/tomorrow-future-tense.md
----OLD---
-Потім я **буду снідати** [sʲnʲidɑtɪ] в кафе. Я замовлю каву і круасан.
----NEW---
-Потім я **буду снідати** [sʲnʲidɑtɪ] в кафе. Я буду пити каву і їсти круасан.
-===FIX_END===
-
-===FIX_START===
-FILE: curriculum/l2-uk-en/a1/tomorrow-future-tense.md
----OLD---
-Вітаємо! Congratulations! Now you are masters of time. You can not only tell about what was, but also create a picture of what will be. The future is in your hands (and on your tongue!).
----NEW---
-Вітаємо! Congratulations! Now you can speak about the past *and* the future. You are building sentences in three tenses — and that is a real achievement.
-===FIX_END===
-
-===FIX_START===
-FILE: curriculum/l2-uk-en/a1/tomorrow-future-tense.md
----OLD---
-4.  Magic time words: **завтра**, **скоро**, **наступного тижня**.
----NEW---
-4.  Time words: **завтра**, **скоро**, **наступного тижня**.
+Увечері я **буду** з друзями. Ми **будемо вечеряти** разом у ресторані.
 ===FIX_END===
 
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/activities/tomorrow-future-tense.yaml
 ---OLD---
-    - sentence: 'Це станеться ___ тижня.'
-      answer: 'наступного'
-      options: ['наступного', 'наступний', 'наступна', 'наступні']
+    - sentence: 'Ви ___ писати листа?'
 ---NEW---
-    - sentence: 'Це буде ___ тижня.'
-      answer: 'наступного'
-      options: ['наступного', 'наступний', 'наступна', 'наступні']
+    - sentence: 'Ви ___ писати лист?'
+===FIX_END===
+
+===FIX_START===
+FILE: curriculum/l2-uk-en/a1/vocabulary/tomorrow-future-tense.yaml
+---OLD---
+items:
+  - lemma: 'завтра'
+    translation: 'tomorrow'
+    pos: 'adverb'
+    example: 'Завтра я буду вдома.'
+  - lemma: 'післязавтра'
+    translation: 'the day after tomorrow'
+    pos: 'adverb'
+  - lemma: 'буду'
+    translation: 'I will'
+    pos: 'verb'
+    notes: 'Future form of "бути" for "I" (Я)'
+  - lemma: 'бути'
+    translation: 'to be'
+    pos: 'verb'
+  - lemma: 'наступний'
+    translation: 'next'
+    pos: 'adjective'
+    example: 'Наступного тижня.'
+  - lemma: 'план'
+    translation: 'plan'
+    pos: 'noun'
+    gender: 'm'
+  - lemma: 'хотіти'
+    translation: 'to want'
+    pos: 'verb'
+    usage: 'Я хочу + infinitive'
+  - lemma: 'збиратися'
+    translation: 'to be going to / to intend'
+    pos: 'verb'
+    notes: 'Reflexive verb'
+  - lemma: 'незабаром'
+    translation: 'soon / before long'
+    pos: 'adverb'
+  - lemma: 'скоро'
+    translation: 'soon'
+    pos: 'adverb'
+  - lemma: 'потім'
+    translation: 'then / afterwards'
+    pos: 'adverb'
+  - lemma: 'пізніше'
+    translation: 'later'
+    pos: 'adverb'
+  - lemma: 'тиждень'
+    translation: 'week'
+    pos: 'noun'
+    gender: 'm'
+  - lemma: 'рік'
+    translation: 'year'
+    pos: 'noun'
+    gender: 'm'
+  - lemma: 'сподіватися'
+    translation: 'to hope'
+    pos: 'verb'
+  - lemma: 'мріяти'
+    translation: 'to dream'
+    pos: 'verb'
+  - lemma: 'планувати'
+    translation: 'to plan'
+    pos: 'verb'
+  - lemma: 'обіцяти'
+    translation: 'to promise'
+    pos: 'verb'
+  - lemma: 'вихідні'
+    translation: 'weekend'
+    pos: 'noun'
+    notes: 'Plural only'
+  - lemma: 'відпустка'
+    translation: 'vacation / leave'
+    pos: 'noun'
+    gender: 'f'
+  - lemma: 'канікули'
+    translation: 'holidays / break'
+    pos: 'noun'
+    notes: 'Plural only (school/university)'
+---NEW---
+- lemma: 'завтра'
+  translation: 'tomorrow'
+  pos: 'adverb'
+  example: 'Завтра я буду вдома.'
+- lemma: 'післязавтра'
+  translation: 'the day after tomorrow'
+  pos: 'adverb'
+- lemma: 'буду'
+  translation: 'I will'
+  pos: 'verb'
+  notes: 'Future form of "бути" for "I" (Я)'
+- lemma: 'бути'
+  translation: 'to be'
+  pos: 'verb'
+- lemma: 'наступний'
+  translation: 'next'
+  pos: 'adjective'
+  example: 'Наступного тижня.'
+- lemma: 'план'
+  translation: 'plan'
+  pos: 'noun'
+  gender: 'm'
+- lemma: 'хотіти'
+  translation: 'to want'
+  pos: 'verb'
+  usage: 'Я хочу + infinitive'
+- lemma: 'збиратися'
+  translation: 'to be going to / to intend'
+  pos: 'verb'
+  notes: 'Reflexive verb'
+- lemma: 'незабаром'
+  translation: 'soon / before long'
+  pos: 'adverb'
+- lemma: 'скоро'
+  translation: 'soon'
+  pos: 'adverb'
+- lemma: 'потім'
+  translation: 'then / afterwards'
+  pos: 'adverb'
+- lemma: 'пізніше'
+  translation: 'later'
+  pos: 'adverb'
+- lemma: 'тиждень'
+  translation: 'week'
+  pos: 'noun'
+  gender: 'm'
+- lemma: 'рік'
+  translation: 'year'
+  pos: 'noun'
+  gender: 'm'
+- lemma: 'сподіватися'
+  translation: 'to hope'
+  pos: 'verb'
+- lemma: 'мріяти'
+  translation: 'to dream'
+  pos: 'verb'
+- lemma: 'планувати'
+  translation: 'to plan'
+  pos: 'verb'
+- lemma: 'обіцяти'
+  translation: 'to promise'
+  pos: 'verb'
+- lemma: 'вихідні'
+  translation: 'weekend'
+  pos: 'noun'
+  notes: 'Plural only'
+- lemma: 'відпустка'
+  translation: 'vacation / leave'
+  pos: 'noun'
+  gender: 'f'
+- lemma: 'канікули'
+  translation: 'holidays / break'
+  pos: 'noun'
+  notes: 'Plural only (school/university)'
 ===FIX_END===
 
 ---
 
-### Remaining Issues (not fixed, noted for awareness)
+### Review Summary
 
-1. **Plan compliance**: Missing "завтра вранці, завтра ввечері" collocations and "у понеділок, у січні" time expressions from plan. These are plan→meta gaps — the meta doesn't request them either, so the builder followed meta correctly.
+| Category | Issues | Fixed |
+|----------|--------|-------|
+| IPA accuracy | 4 (wrong stress, missing markers, inconsistent affricate) | 4 |
+| Pedagogical safety | 2 (present-for-future in dialogue, untaught Genitive in activity) | 2 |
+| Naturalness | 1 ("друзі будуть дзвонити") | 1 |
+| Plan compliance | 1 (truncated proverb) | 1 |
+| A1 scaffolding | 1 (untranslated Ukrainian) | 1 |
+| File structure | 1 (vocab YAML wrapper) | 1 |
+| **Total** | **10** | **10** |
 
-2. **Plan compliance**: Missing synthetic future (-му, -меш) brief FYI mention. Plan requests it, meta omits it. Requires meta fix, not content fix.
-
-3. **Perfective verbs with хочу/збиратися**: Lines 89, 212, 241, 256, 265 use perfective infinitives (поїхати, купити, піти) with хочу/збиратися. This is grammatically correct Ukrainian — perfective after хочу is natural. However, since the learner hasn't been taught aspect at all, encountering both verb types without explanation adds cognitive load. Not fixing because: (a) it's natural Ukrainian, (b) the warning is specifically about буду + perfective, (c) replacing all perfective verbs would make dialogue examples unnatural.
-
-4. **Vocabulary YAML format**: Uses `items:` dictionary wrapper instead of bare list (compare with this-is-i-am.yaml which uses bare list). Audit passes, so parser handles both formats. Not fixing to avoid breaking parsing.
+**Russianisms**: CLEAN
+**Russian characters (ы, э, ё, ъ)**: CLEAN
+**Gender/case agreement**: CLEAN
+**Activity mechanics**: All unjumble word arrays verified complete. All fill-in answers produce grammatical sentences.
+**Factual claims**: Carpathians geography accurate. Proverb authentic (now complete).
 
 ===VERDICT===
 APPROVE

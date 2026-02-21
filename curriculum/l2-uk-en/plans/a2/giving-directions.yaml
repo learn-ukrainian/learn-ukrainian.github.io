@@ -6,57 +6,82 @@ version: '2.0'
 title: Giving Directions
 subtitle: Navigating the City
 content_outline:
-- section: Introduction / Вступ
+- section: Вступ (Introduction)
+  words: 500
   points:
-  - City layout basics — focus on standard urban vocabulary (street, square, intersection)
-    aligned with State Standard §3.5
-  - 'Navigation culture — cultural hook: meeting at iconic spots like the Arsenalna
-    Metro Station (deepest in the world, famous for its 5-minute escalator ride) or
-    Lviv Rynok Square Fountains («біля Нептуна»)'
-- section: Presentation / Презентація
+  - City layout basics — focusing on standard urban vocabulary (street, square, intersection)
+    as mandated by State Standard §3.5 for the A2 thematic catalogue.
+  - 'Cultural hook: Arsenalna Metro Station — meeting at the deepest station in the
+    world (105.5m), emphasizing the idiom «зустрінемось на Арсенальній» and describing
+    the 5-minute escalator ride as a navigation milestone.'
+  - 'Cultural hook: Lviv Rynok Square Fountains — navigating via the four mythological
+    fountains (Neptune, Diana, Amphitrite, Adonis) at the corners of the square («біля
+    Нептуна», «біля Діани»).'
+- section: Презентація (Presentation)
+  words: 800
   points:
-  - Вибачте, як пройти до...? — standard polite formulas for initiating navigation
-    inquiries
-  - 'прямо, направо, наліво — learner error: confusing adjective «лівий/правий» with
-    adverb «ліворуч/наліво» (Correct: «Ідіть наліво»)'
-  - 'Directions vocabulary — distinction between motion verbs «іти» (on foot) and
-    «їхати» (by vehicle); learner error: using «йти» for transport'
-- section: Practice / Практика
+  - Polite inquiries — teaching «Вибачте, як пройти до...?» with a focus on the high-frequency
+    verb «пройти» (to pass/go through) as the standard for navigation requests.
+  - Directional adverbs — presenting «прямо», «направо/праворуч», and «наліво/ліворуч»;
+    explicitly addressing the common learner error of using the adjective «лівий/правий»
+    instead of the adverb.
+  - Motion verb distinction — presenting the strict contrast between «іти» (on foot)
+    and «їхати» (by vehicle) as per Standard requirements, highlighting that English
+    'go' is split into two distinct concepts.
+  - Imperative grammar — introducing the imperative mood for instructions («ідіть»,
+    «поверніть», «пройдіть») as specified in Standard §4.4.1.3 for giving directions/advice.
+- section: Практика (Practice)
+  words: 700
   points:
-  - Ask and give directions — focus on Imperative mood («ідіть», «поверніть») as per
-    Standard §4.4.1.3
-- section: Dialogues / Діалоги
+  - 'Error Correction Drill 1: Adjective vs. Adverb — practicing the distinction between
+    «лівий» and «наліво/ліворуч»; correcting the error «Ідіть лівий» to «Ідіть наліво».'
+  - 'Error Correction Drill 2: Motion Verbs — drilling the choice between foot vs.
+    vehicle travel; correcting «Я йду на метро» to «Я їду на метро» using 5 situational
+    prompts.'
+  - Step-by-step navigation — practicing sequences like «пройдіть два квартали», «поверніть
+    за ріг», and «перейдіть вулицю».
+- section: Діалоги (Dialogues)
+  words: 600
   points:
-  - Direction conversations — modeling usage of prepositions «в/на» + Accusative for
-    destination versus «біля» + Genitive for static location; aligned with Standard
-    §4.2.2.4
-  - 'Step-by-step instructions — sequencing words (then, after that) to structure
-    complex routes; learner error: using Nominative after «до» (Correct: «до парку»)'
-- section: Narrative / Розповідь
+  - Destination Case Control — modeling the usage of prepositions «в/на» + Accusative
+    for movement (Standard §4.2.2.4) vs. «біля/навпроти» + Genitive for static location.
+  - Prepositional Government — explicitly drilling the Genitive case after «до»; addressing
+    the learner error of using Nominative (e.g., «до парку» vs. wrong «до парк»).
+  - Iconic Route Dialogues — simulating a route from a metro station to a museum using
+    real landmarks (Arsenalna, Maidan) and sequencing markers (спочатку, потім, після
+    цього).
+- section: Розповідь (Narrative)
+  words: 400
   points:
-  - Navigation story — a route description involving specific landmarks (e.g., from
-    a metro station to a museum), integrating «повернути за ріг» and «пройти два квартали»
-- section: Need More Practice?
-  points:
-  - Summary and links — reinforce key motion verbs and spatial prepositions
+  - Navigation story — a narrative arc involving a character navigating from a train
+    station to a specific landmark in Lviv or Kyiv, integrating «через міст», «на
+    світлофорі», and «наступна зупинка».
+  - Summary — reinforcing the distinction between «куди?» (motion + Accusative) and
+    «де?» (static location + Locative/Genitive) to wrap up the module's grammar goals.
 vocabulary_hints:
   required:
-  - напрямок (direction) — general term for navigation
-  - 'прямо (straight) — collocation: йти прямо'
-  - 'направо (to the right) — collocation: повернути направо'
-  - 'наліво (to the left) — collocation: повернути наліво; distinguish from adjective
-    лівий'
-  - 'повернути (to turn) — collocation: повернути за ріг (turn around the corner)'
-  - 'вулиця (street) — collocation: на вулиці, через вулицю, по вулиці'
+  - йти / їхати (to go on foot / by vehicle) — high frequency core; strictly separate
+    based on transport mode
+  - 'пройти (to go through/to get to) — collocation: «як пройти до...?»; high frequency
+    A2 verb'
+  - напрямок (direction) — general term for navigation and movement
+  - 'прямо (straight) — collocation: «йти прямо», «пройдіть прямо два квартали»'
+  - 'направо / праворуч (to the right) — frequency: high; use adverbs for movement
+    instructions'
+  - 'наліво / ліворуч (to the left) — frequency: high; distinguish from adjective
+    «лівий»'
+  - 'повернути (to turn) — collocation: «повернути за ріг», «поверніть на світлофорі»'
+  - 'вулиця (street) — collocations: «на вулиці», «через вулицю», «по вулиці»'
   - 'площа (square) — cultural context: Площа Ринок (Lviv), Майдан Незалежності (Kyiv)'
-  - 'перехрестя (intersection) — collocation: на перехресті, до перехрестя'
+  - 'перехрестя (intersection) — collocations: «на перехресті», «до перехрестя»'
   recommended:
-  - 'міст (bridge) — collocation: через міст (across the bridge)'
-  - 'світлофор (traffic light) — collocation: на світлофорі (at the traffic light)'
-  - 'зупинка (stop) — collocation: автобусна зупинка, наступна зупинка'
-  - орієнтир (landmark) — useful for giving directions relative to visible objects
-  - 'поруч (nearby) — synonym for близько; usage: тут поруч (it''s nearby)'
-  - 'навпроти (opposite) — usage: навпроти банку (opposite the bank)'
+  - 'квартал (block) — collocation: «пройти два квартали»'
+  - 'містка (bridge) — collocation: «через міст» (across the bridge)'
+  - 'світлофор (traffic light) — collocation: «на світлофорі»'
+  - 'зупинка (stop) — collocations: «автобусна зупинка», «наступна зупинка»'
+  - орієнтир (landmark) — used for navigation relative to visible objects
+  - 'навпроти (opposite) — usage: «навпроти банку» (+ Genitive)'
+  - 'поруч (nearby) — synonym for близько; usage: «тут поруч»'
 activity_hints:
 - type: match-up
   focus: Directions vocabulary

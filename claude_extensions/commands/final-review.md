@@ -106,6 +106,13 @@ Read `curriculum/l2-uk-en/{track}/{slug}.md` in full. You are looking for:
 - Unexplained phonetic changes (soft consonants, vowel reduction)
 - Case forms not yet introduced
 
+**Colonial framing (Ukrainian defined by contrast with Russian):**
+- "Unlike Russian..." / "Different from Russian..." — Russian as baseline
+- "Russian does not have/use..." — defining Ukrainian via Russian's absence
+- "Looks/sounds like Russian..." — treating Ukrainian as derivative
+- References to "Russian script/alphabet/letters" as comparison point
+- Exception: `[!myth-buster]` or `[!decolonization]` blocks, resistance history context
+
 **LLM artifacts:**
 - English words leaked into Ukrainian sentences (not in parenthetical translations)
 - Russianisms (кушати, получати, приймати участь, слідуючий)

@@ -6,54 +6,75 @@ version: '2.0'
 title: Taking Transport
 subtitle: Navigating the City
 content_outline:
-- section: Warm-up
+- section: Вступ (Introduction)
+  words: 400
   points:
-  - 'Види транспорту в українських містах — State Standard: focus on ''місто'' (city)
-    and ''подорожі'' (travel)'
-  - 'Як ви їздите на роботу/навчання? — learner error: forgetting Instrumental case
-    or ''на'' + Locative (e.g., ''їду автобус'' instead of ''автобусом'')'
-- section: Presentation
+  - Вступ до теми громадського транспорту згідно зі Стандартом (§3.3) — focus on 'громадський
+    транспорт' and 'місто' (city) context.
+  - 'Warm-up: ''Як ви їздите на роботу/навчання?'' — introduction of the ''Marshrutka
+    Veteran'' persona and the blend of modern Kyiv Digital systems with traditional
+    social customs.'
+  - 'Learner error: confusion between ''іти'' (to walk) and ''їхати'' (to go by vehicle)
+    — explicitly establishing ''Я їду на метро'' as the correct form over the English-influenced
+    ''Я йду на метро''.'
+- section: Презентація (Presentation)
+  words: 600
   points:
-  - 'Види транспорту (метро, трамвай, тролейбус, автобус, маршрутка) — distinguish
-    ''зупинка'' (bus/tram) vs ''станція'' (metro); cultural hook: Arsenalna is the
-    deepest metro station in the world'
-  - 'Ключові фрази (Наступна зупинка..., Обережно, двері зачиняються) — must include
-    ''Ви виходите?'' (Are you getting off?) for moving through crowds; cultural hook:
-    Mykola Petrenko as the iconic ''Voice of the Metro'''
-  - 'Оплата проїзду (квиток, проїзний, валідатор) — note: ensure IPA for multi-syllable
-    terms like ''прокомпостувати'''
-  - 'Пересадка (Де можна пересісти на...?) — collocations: ''робити пересадку'', ''станція
-    з пересадкою'''
-- section: Practice
+  - Види транспорту (метро, трамвай, тролейбус, автобус, маршрутка) — distinguishing
+    between 'зупинка' (bus/tram stop) and 'станція' (metro/train station) with frequency
+    notes.
+  - 'Cultural Hook: The depth of the Kyiv Metro — Arsenalna station (deepest in the
+    world, 105.5m) and the experience of long escalators where people read or listen
+    to music.'
+  - 'Grammar in context: Direction vs. Location (§4.2.3.2/3) — drilling the difference
+    between ''Куди ви їдете?'' (Accusative/Destination) and ''Де ви?'' (Locative/Location).'
+  - 'Case selection for transit: Instrumental (''їхати автобусом'') vs. Locative (''їхати
+    на автобусі'') — correcting the common omission error ''їду автобус''.'
+- section: Практика (Practice)
+  words: 600
   points:
-  - 'Запитати дорогу (Як доїхати до...?) — learner error: confusing Direction (Accusative)
-    vs. Location (Locative), e.g., ''Де ти йдеш?'' vs ''Куди ти йдеш?'''
-  - Купити квиток (Один квиток, будь ласка)
-  - 'На зупинці (Цей автобус їде до...?) — collocations: ''вийти на зупинці'', ''наступна
-    зупинка'''
-- section: Warm-up 2
+  - 'Cultural Hook: ''Передайте за проїзд!'' — the social protocol of passing cash
+    by hand in a marshrutka, requiring phrases like ''За одного, будь ласка'' and
+    ''Зупиніть на зупинці''.'
+  - 'Modern Urban Reality: The shift from ''жетони'' (tokens) to ''Київ Цифровий''
+    (Kyiv Digital) — vocabulary for ''валідатор'', ''QR-код'', and ''прикласти картку''.'
+  - 'Essential transport phrases: ''Наступна зупинка...'', ''Обережно, двері зачиняються'',
+    and the vital social phrase ''Ви виходите?'' (Are you getting off?) used to move
+    through crowds.'
+  - 'Asking for help: ''Як доїхати до...?'' and understanding transit announcements,
+    with a focus on ''станція пересадки'' (transfer station).'
+- section: Підсумок (Summary)
+  words: 400
   points:
-  - 'Наратив про подорож метром — context: deep stations, long escalators (Kyiv Metro
-    style)'
-  - Ключова лексика в контексті
-  - Оголошення в метро
+  - Summary of motion verbs and case patterns for public transport, consolidating
+    the 'Де' vs. 'Куди' distinction.
+  - Final review of the 'Marshrutka Veteran' persona's street-smart tips for navigating
+    Ukrainian cities efficiently.
+  - 'Cross-reference: Preparing for a1-41 (Phone Basics) and a1-42 (Emergencies) by
+    ensuring the learner can identify their location while traveling.'
 vocabulary_hints:
   required:
-  - зупинка (stop) — наступна зупинка, автобусна зупинка, вийти на зупинці
-  - метро (metro) — їхати на метро, станція метро, вхід у метро
-  - трамвай (tram)
-  - 'тролейбус (trolleybus) — note: provide careful IPA'
-  - маршрут (route)
-  - станція (station) — кінцева станція, станція пересадки
-  - пересадка (transfer) — робити пересадку, станція з пересадкою
-  - 'виходити (to exit) — phrase: Ви виходите? (Are you getting off?)'
+  - 'метро (metro) — їхати на метро, станція метро, глибока станція; cultural hook:
+    Arsenalna'
+  - зупинка (stop) — наступна зупинка, вийти на зупинці, автобусна зупинка; High frequency
+  - маршрутка (marshrutka) — зупиніть на зупинці, передайте за проїзд, повна маршрутка;
+    High spoken frequency
+  - пересадка (transfer) — робити пересадку, станція пересадки, без пересадок; Medium
+    frequency
+  - їхати (to go by vehicle) — їхати автобусом (Instrumental), їхати на метро (Locative);
+    State Standard §3.7
+  - виходити (to exit) — Ви виходите? (Are you getting off?); essential phrase for
+    crowds
   recommended:
-  - прокомпостувати (to validate) — IPA required; challenging pronunciation
-  - проїзний (transit pass) — проїзний квиток
-  - кондуктор (conductor)
-  - водій (driver) — водій маршрутки
-  - квиток (ticket) — купити квиток, один квиток
-  - маршрутка (marshrutka) — сісти в маршрутку, номер маршрутки
+  - валідатор (validator) — прикласти картку до валідатора, не працює валідатор; modern
+    urban reality
+  - квиток (ticket) — купити квиток, електронний квиток, один квиток
+  - станція (station) — кінцева станція, станція пересадки, станція метро
+  - проїзд (fare/passage) — оплата проїзду, передайте за проїзд; core social collocation
+  - прокомпостувати (to validate) — IPA required [prokompostʊˈvɑte]; challenging phonetic
+    target
+  - проїзний (transit pass) — проїзний квиток, студентський проїзний
+  - водій (driver) — водій маршрутки, водій автобуса
 activity_hints:
 - type: fill-in
   focus: Asking for transport help

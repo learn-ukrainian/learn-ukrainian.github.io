@@ -1,0 +1,262 @@
+✅ Message sent to Gemini (ID: 10797) [auto-acked: self-addressed]
+✓ Message 10797 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10797...
+📨 Message #10797
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-ukrainian-cuisine-traditions
+   Time: 2026-02-20T21:29:16.857885+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-067
+level: C1
+sequence: 67
+slug: ukrainian-cuisine-traditions
+version: '2.0'
+title: Українська кухня - традиції та символи
+subtitle: Ukrainian Cuisine - Traditions and Symbols
+content_outline:
+- section: Розминка — Їжа як культура
+  points:
+  - Українська кухня — відображення історії та географії
+  - Ритуальна їжа vs буденна
+  - Символіка хліба в українській культурі
+- section: Традиційні страви
+  points:
+  - 'Хліб та випічка: паляниця, калач, пампушки, коровай'
+  - 'Перші страви: борщ, юшка, капусняк'
+  - 'Другі страви: вареники, голубці, деруни'
+  - 'Солодощі: пампушки з маком, вергуни, медівник'
+- section: Ритуальна їжа
+  points:
+  - 'Святвечір: кутя, узвар, 12 пісних страв'
+  - 'Великдень: паска, писанки, ковбаса, хрін'
+  - 'Весілля: коровай, калачі, медовуха'
+  - 'Поминки: коливо, канун, борщ'
+- section: Практика — гастрономічна культура
+  points:
+  - Описати приготування традиційної страви
+  - Пояснити символіку кожної страви Святвечора
+  - Порівняти українську та польську кухні
+  - Написати есе про сучасну українську гастрономію
+focus: cultural
+pedagogy: CBI
+objectives:
+- Learner can explain the symbolic meaning of ritual foods (kutia, korovai)
+- Learner can describe traditional cooking methods (stove, clay pot)
+- Learner can distinguish regional cuisines (Poltava dumplings vs. Hutsul banosh)
+- Learner can discuss the role of bread in Ukrainian culture
+grammar:
+- culinary terminology
+- process descriptions
+phase: C1.5 Folk Culture & Arts
+persona:
+  voice: Senior Specialist
+  role: Шеф-кухар
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Українська кухня - традиції та символи
+
+## State Standard Reference
+§3.15: "Харчування: рецепти й кулінарні традиції; дієти та види харчування; смакові вподобання."
+§3.21: "Традиції, звичаї, свята: українські звичаї і традиції; релігійні звичаї і традиції."
+Alignment: This module directly addresses the C1 requirement to discuss culinary traditions, recipes, and their symbolic meaning within Ukrainian culture, connecting §3.15 (Food) with §3.21 (Traditions).
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| Паляниця | High (Cultural Shibboleth) | свіжа паляниця, пекти паляницю, "скажи паляниця" |
+| Кутя | Seasonal (Christmas) | багата кутя, щедра кутя, голодна кутя, варити кутю |
+| Узвар | Seasonal/Traditional | варити узвар, узвар із сухофруктів, солодкий узвар |
+| Коровай | Ritual (Wedding) | весільний коровай, зустрічати з короваєм, піч коровай |
+| Борщ | Very High (Staple) | червоний борщ, пісний борщ, український борщ, наваристий борщ |
+| Вареники | Very High (Staple) | ліпити вареники, вареники з вишнями/сиром/картоплею, мастити вареники |
+| Шаткувати | Specific (Cooking) | шаткувати капусту, дрібно шаткувати |
+| Тушкувати | Medium (Cooking) | тушкувати м'ясо, тушкувати овочі, тушкувати до готовності |
+| Замішувати | Specific (Baking) | замішувати тісто, замішувати на дріжджах |
+
+## Cultural Hooks
+1. **UNESCO Status**: Culture of Ukrainian borscht cooking was inscribed on the UNESCO List of Intangible Cultural Heritage in Need of Urgent Safeguarding in 2022.
+2. **Kutia Ritual**: The tradition of throwing a spoonful of kutia to the ceiling on Christmas Eve; if it sticks, it predicts a bountiful harvest and good luck for the year.
+3. **Bread Sanctity**: Bread is considered sacred ("Хліб — усьому голова"). It is never thrown away; if a piece falls, it must be picked up and kissed or apologized to.
+4. **Didukh**: The sheaf of wheat (Didukh) placed in the corner (pokuia) during Christmas, symbolizing the ancestors' spirits.
+
+## Common Learner Errors
+1. **Instrumental Case with Tools**: Learners often use "з" (with) for tools instead of the bare Instrumental case.
+   *   *Error*: Я ріжу хліб з ножем.
+   *   *Correct*: Я ріжу хліб ножем.
+2. **Cooking Verbs Confusion**: Using "варити" (to boil) for all cooking methods.
+   *   *Error*: Я варю торт.
+   *   *Correct*: Я печу торт.
+3. **Phonetic Rules with Prepositions**: Incorrect use of "з" vs "зі/із".
+   *   *Error*: Борщ з сметаною.
+   *   *Correct*: Борщ зі сметаною.
+
+## Cross-References
+- Builds on: A2 Food & Cooking, B1 Cultural Modules (general vocabulary).
+- Prepares for: C1 Folk Culture (M56+), C1 Literature (descriptions of feasts in classic literature).
+
+## Notes for Content Writing
+- Ensure the distinction between "daily" (buden') and "ritual" (sviato) food is clear.
+- Use the "Chef" persona to give authoritative advice on recipes and techniques.
+- Focus on the *symbolism* of ingredients (e.g., poppy seeds = stars/many, honey = health/sweet life) rather than just listing them.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Кухня як гастрономічний код нації (Introduction: Cuisine as a Nation's Gastronomic Code)"
+  words: 500
+  points:
+  - "Українська кухня як відображення історії, клімату та географії: взаємозв'язок продуктів та ландшафту"
+  - "Статус ЮНЕСКО: культура приготування українського борщу як об'єкт нематеріальної культурної спадщини (2022)"
+  - "Роль шеф-кухаря як хранителя традицій: вступне слово про автентичність та деколонізацію кулінарних міфів"
+- section: "Хлібна культура: Сакральність та символізм (Bread Culture: Sacredness and Symbolism)"
+  words: 900
+  points:
+  - "Філософія «Хліб — усьому голова»: святість хліба в побуті, заборона викидати залишки та ритуал цілування шматка, що впав"
+  - "Паляниця як культурний шиболет: фонетична складність та символічне значення свіжовипеченого хліба"
+  - "Ритуальна випічка: весільний коровай (зустріч молодят), калач та пампушки — символіка форми та інгредієнтів"
+  - "Мистецтво замішування тіста на дріжджах: лексика процесу та поради від шефа щодо 'відпочинку' тіста"
+- section: "Повсякденна трапеза: Борщ, вареники та голубці (Daily Feast: Borscht, Varenyky, and Holubtsi)"
+  words: 900
+  points:
+  - "Енциклопедія борщу: червоний, зелений, пісний; регіональні особливості (Полтавщина vs Західна Україна)"
+  - "Технологія смаку: специфічні дієслова приготування — шаткувати капусту, тушкувати овочі до готовності"
+  - "Вареники як символ достатку: різноманіття начинок (вишні, сир, картопля) та традиція 'мастити' вареники маслом чи сметаною"
+  - "Традиційне начиння та методи: використання печі, глиняних горщиків та чавунних казанів для тушкування"
+- section: "Духовність через їжу: Обрядові традиції (Spirituality through Food: Ritual Traditions)"
+  words: 900
+  points:
+  - "Святвечір: магія 12 пісних страв; символіка куті (зерно як життя, мак як зорі, мед як солодке життя)"
+  - "Ритуал із кутею: підкидання ложки каші до стелі для прогнозування врожаю та удачі"
+  - "Дідух як символ духів предків (покуття) та узвар із сухофруктів як обов'язковий напій Різдва"
+  - "Великодній кошик: символіка паски, писанок та гострого хрону як нагадування про міцність віри"
+- section: "Кулінарний практикум та мовна точність (Culinary Practicum and Linguistic Accuracy)"
+  words: 800
+  points:
+  - "Типова помилка: використання прийменника 'з' з інструментами — відпрацювання Орудного відмінка (різати ножем, а не 'з ножем')"
+  - "Лексична диференціація: розрізнення дієслів 'варити' (суп, узвар) та 'пекти' (торт, паску, паляницю)"
+  - "Фонетична адаптація прийменників: правила вживання 'з', 'зі', 'із' (наприклад, 'Борщ зі сметаною' через збіг приголосних)"
+  - "Творче завдання: написання есе-порівняння української та польської кухонь або опис приготування фамільної страви"
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "паляниця (palianytsia/round bread) — свіжа паляниця, пекти паляницю; культурний шиболет"
+  - "кутя (kutia/ritual grain dish) — багата, щедра, голодна кутя; варити кутю на Святвечір"
+  - "узвар (uzvar/dried fruit compote) — узвар із сухофруктів; солодкий та наваристий узвар"
+  - "коровай (korovai/wedding bread) — весільний коровай; зустрічати гостей із короваєм"
+  - "борщ (borscht) — український червоний борщ; пісний борщ; об'єкт спадщини ЮНЕСКО"
+  - "вареники (dumplings) — ліпити вареники; вареники з вишнями/сиром; мастити вареники маслом"
+  recommended:
+  - "шаткувати (to shred/grate) — шаткувати капусту для борщу; дрібно шаткувати"
+  - "тушкувати (to stew/braise) — тушкувати м'ясо в горщику; тушкувати овочі до м'якості"
+  - "замішувати (to knead/mix dough) — замішувати тісто на дріжджах; довго замішувати"
+  - "покуття (honorary corner) — ставити Дідуха на покутті; сакральне місце в хаті"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (3806 chars)
+✅ Message sent to Claude (ID: 10802)
+✓ Message 10802 acknowledged
+   Auto-acknowledged reply #10802 (stdout delivery — no inbox accumulation)
+✓ Message 10797 acknowledged

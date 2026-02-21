@@ -1,0 +1,306 @@
+✅ Message sent to Gemini (ID: 10387) [auto-acked: self-addressed]
+✓ Message 10387 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10387...
+📨 Message #10387
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-expressing-opinions
+   Time: 2026-02-20T20:30:11.504687+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b1-54
+level: B1
+sequence: 54
+slug: expressing-opinions
+version: '2.0'
+title: Вираження думок та поглядів
+subtitle: Expressing Opinions — Vocabulary & Phrases
+content_outline:
+- section: Вступ
+  points:
+  - 'Why opinion language matters — cultural hook: «Де два українці, там три гетьмани»
+    implies cultural value of debate'
+  - Strength of opinion spectrum — gradation from weak (мабуть/здається) to strong
+    (безсумнівно/переконаний)
+  - 'Register considerations — politeness strategies: hedging in formal contexts vs
+    directness in informal ones'
+- section: Вивчення слів
+  points:
+  - Six vocabulary groups
+  - 'Verbs of thinking, certainty words — learner error: using «я рахую» (counting)
+    instead of «я вважаю» (opining)'
+  - 'Evaluation verbs, opinion phrases — punctuation note: mandatory commas with introductory
+    phrases like «На мою думку»'
+- section: Вживання
+  points:
+  - 'Collocations patterns — high frequency combinations: «глибоко переконаний», «цілком
+    впевнений»'
+  - Register considerations — contrasting «kitchen talk» (emotional/direct) vs «work
+    meeting» (diplomatic/hedged)
+  - 'Certainty scale, cultural aspects — cultural nuance: using «я розумію, але» as
+    a politeness marker'
+- section: Читання
+  points:
+  - Technology discussion
+  - Editorial article
+  - Conversational blog
+- section: Діалоги
+  points:
+  - Work meeting (formal) — focus on polite disagreement and argumentation
+  - News discussion (informal) — focus on expressing strong personal convictions
+  - Academic seminar, family discussion
+- section: Підсумок
+  points:
+  - Key vocabulary recap
+  - Practice recommendations
+vocabulary_hints:
+  required:
+  - 'думка (opinion/thought) — collocations: на мою думку, висловити думку, поділяти
+    думку, громадська думка'
+  - 'погляд (view) — collocations: на мій погляд, з точки зору, обмінятися поглядами;
+    distinguish from visual ''gaze'''
+  - 'вважати (to consider) — collocations: я вважаю що, вважати за потрібне; error
+    warning: avoid Russism ''рахувати'''
+  - гадати (to think/suppose) — softer synonym for thinking/guessing
+  - 'переконаний (convinced) — collocations: глибоко переконаний, твердо переконаний'
+  - 'впевнений (sure/certain) — collocations: цілком впевнений, впевнений у собі'
+  - можливо (possibly) — key hedging word for polite disagreement
+  - безсумнівно (undoubtedly) — strong assertion, formal/academic register
+  recommended:
+  - мабуть (probably) — weak assumption/probability
+  - очевидно (obviously) — implies clear evidence
+  - здаватися (to seem) — subjective impression constructions (мені здається)
+  - стверджувати (to claim) — formal statement of position
+activity_hints:
+- type: fill-in
+  focus: Adjust opinion strength
+  items: 25
+- type: fill-in
+  focus: Complete opinion sentences
+  items: 20
+- type: fill-in
+  focus: Express opinions in scenarios
+  items: 15
+- type: fill-in
+  focus: Write opinion paragraphs
+  items: 10
+focus: vocabulary
+pedagogy: PPP
+prerequisites:
+- b1-53 (Abstract Concepts Processes)
+connects_to:
+- b1-55 (Agreement Disagreement)
+objectives:
+- Learner can express personal opinions using various constructions
+- Learner can distinguish between strong and weak opinion expressions
+- Learner can use appropriate opinion phrases in formal and informal contexts
+- Learner can hedge and soften opinions appropriately
+grammar:
+- Opinion verb constructions
+- Opinion phrase patterns
+- Hedging and intensifying expressions
+register: розмовний
+phase: B1.5 [Vocabulary Expansion I]
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Talk Show Guest
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Вираження думок та поглядів
+
+## State Standard Reference
+§Каталог А: "виражати свої думки й переконання: Я думаю / вважаю / переконаний, що...; обґрунтовувати твердження, аргументувати свою думку; висловлювати згоду / незгоду; виражати припущення / гіпотезу"
+Alignment: Цей модуль безпосередньо реалізує вимоги Каталогу А щодо вираження особистої позиції, аргументації та ведення дискусії, фокусуючись на лексичних засобах для різних регістрів.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| думка | High (General) | на мою думку, громадська думка, спільна думка, висловити думку, поділяти думку |
+| погляд | High (General) | на мій погляд, з точки зору, погляд на життя, широкий погляд, обмінятися поглядами |
+| вважати | High (General) | я вважаю що, вважатися найкращим, помилково вважати, вважати за потрібне |
+| переконаний | Medium (Opinion) | глибоко переконаний, твердо переконаний, я переконаний у тому що |
+| впевнений | High (General) | впевнений у собі, цілком впевнений, бути впевненим, впевнений погляд |
+| безсумнівно | Medium (Academic/Formal) | це безсумнівно, безсумнівно важливо, успіх безсумнівний |
+
+## Cultural Hooks
+1. **"Де два українці, там три гетьмани"**: Це відоме прислів'я ідеально ілюструє українську культуру дискусії та плюралізму думок. Українці цінують власну позицію і часто мають відмінні погляди навіть у малих групах. Це можна використати для пояснення того, чому вміння аргументувати є таким важливим.
+2. **Прямота vs Ввічливість**: Хоча українці можуть бути досить емоційними та прямими у суперечках (особливо з друзями), у формальному спілкуванні існує чітка тенденція до "пом'якшення" незгоди (hedging). Використання фраз типу "Я розумію вашу позицію, але..." або "Можливо, ви маєте рацію, проте..." є маркером вихованості, на відміну від категоричного "Ні".
+
+## Common Learner Errors
+1. **"Я рахую, що..."** → **"Я вважаю, що..."** або **"Я думаю, що..."** — Калька з російської ("я считаю"). "Рахувати" в українській мові означає лише лічити (1, 2, 3) або проводити математичні обчислення.
+2. **Пунктуація з "На мою думку"** → **"На мою думку, ..."** — Студенти часто забувають виділяти вставні конструкції комами на письмі, що є обов'язковим в українській мові.
+3. **Плутанина "думка" vs "погляд"** → **"На мій погляд"** (а не "на мою думку" у значенні visual view, хоча як синоніми opinion вони близькі) — Варто розмежувати: "думка" (thought/opinion) та "погляд" (view/gaze/opinion).
+
+## Cross-References
+- Builds on: b1-53 (Abstract Concepts Processes) — використання абстрактної лексики для формування думок.
+- Prepares for: b1-55 (Agreement Disagreement) — цей модуль дає базу (висловлення позиції), необхідну для наступного етапу (взаємодія з позицією іншого).
+
+## Notes for Content Writing
+- Варто включити градацію впевненості: від слабкого припущення (мабуть, здається) до твердого переконання (безсумнівно, я переконаний).
+- У секції діалогів важливо контрастувати "кухонну політичну розмову" (емоційну, пряму) та "робочу нараду" (стриману, з використанням пом'якшувальних конструкцій).
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Культура дискусії та стандарти (Introduction: Culture of Debate & Standards)"
+  words: 500
+  points:
+  - "Cultural hook: «Де два українці, там три гетьмани» — exploring the value of pluralism and personal opinion in Ukrainian history and society."
+  - "State Standard Alignment: Implementation of Catalog A competencies — expressing convictions, justifying statements, and formulating hypotheses."
+  - "The concept of opinion strength: Overview of the spectrum from weak assumptions (мабуть) to categorical assertions (безсумнівно)."
+  - "Politeness strategies: Contrast between informal emotional directness and formal hedging markers to maintain professional etiquette."
+- section: "Ключова лексика та подолання кальок (Core Vocabulary & Overcoming Calques)"
+  words: 950
+  points:
+  - "Learner error focus: The categorical distinction between «рахувати» (to count/calculate) and «вважати» (to opine/consider) — correcting the common Russism «я рахую»."
+  - "High-frequency opinion markers: Detailed usage of «думка» vs. «погляд» — when they are interchangeable as 'opinion' and when 'погляд' refers to a life-view or literal gaze."
+  - "Punctuation mastery: Drill on mandatory commas for parenthetical constructions like «На мою думку», «На мій погляд», and «Як на мене»."
+  - "Collocation expansion: Formal vs. informal clusters: «громадська думка», «поділяти думку», «з точки зору»."
+- section: "Градація впевненості та ввічлива незгода (Gradation of Certainty & Polite Disagreement)"
+  words: 900
+  points:
+  - "Certainty scale: Categorizing adverbs and verbs into weak (здається, мабуть, очевидно), medium (думаю, гадаю, певно), and strong (переконаний, впевнений, безсумнівно)."
+  - "Hedging techniques: Using phrases like «Я розумію вашу позицію, але...» or «Можливо, ви маєте рацію, проте...» to soften disagreement as a marker of Ukrainian politeness."
+  - "Register contrast: Analyzing 'Kitchen Politics' (direct, emotional, evaluative verbs) vs. 'Work Meeting' (diplomatic, structured, objective evaluation verbs)."
+  - "Intensifiers in opinions: Using «цілком», «твердо», and «глибоко» to strengthen personal stances without losing professional tone."
+- section: "Робота з текстами та аргументація (Text Analysis & Argumentation)"
+  words: 750
+  points:
+  - "Editorial analysis: Identifying formal markers of position in high-level Ukrainian media (e.g., editorial articles or columns)."
+  - "Blog and conversational register: Examining how personal blogs use more direct, idiomatic, and sometimes emotional markers of opinion."
+  - "Justification competency: Practicing the 'Point-Reason-Example' structure in Ukrainian using causal connectors (тому що, через те що, оскільки)."
+  - "Fact vs. Opinion: Drills on distinguishing objective statements from subjective evaluations in technology and news discussions."
+- section: "Практичне застосування та підсумок (Practical Application & Summary)"
+  words: 900
+  points:
+  - "Scenario 1: Professional Seminar — focusing on formal argumentation, citing sources, and using academic markers like «можна стверджувати»."
+  - "Scenario 2: Informal News Discussion — roleplay based on «Де два українці...», practicing active listening and expressing strong personal convictions."
+  - "Synthesis activity: Formulating a multi-layered response to a complex social topic using the full spectrum of certainty markers learned."
+  - "Review and error-check: Final diagnostic on «вважати» vs «рахувати» and punctuation of introductory phrases."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "думка (opinion/thought) — collocations: на мою думку (comma required!), громадська думка, спільна думка, висловити думку, поділяти думку"
+  - "погляд (view) — collocations: на мій погляд, з точки зору, погляд на життя, широкий погляд, обмінятися поглядами"
+  - "вважати (to consider) — collocations: я вважаю що, вважати за потрібне; error warning: avoid Russism 'рахувати' for opinions"
+  - "впевнений (sure/certain) — collocations: цілком впевнений, впевнений у собі, бути впевненим; high frequency"
+  - "переконаний (convinced) — collocations: глибоко переконаний, твердо переконаний, я переконаний у тому що"
+  - "безсумнівно (undoubtedly) — high register, formal/academic assertion"
+  - "можливо (possibly) — key hedging word for polite disagreement and hypotheses"
+  - "гадати (to think/suppose) — softer, more intuitive synonym for 'вважати'"
+  recommended:
+  - "мабуть (probably) — weak assumption/probability marker"
+  - "очевидно (obviously) — implies evidence-based certainty"
+  - "здаватися (to seem) — subjective impression constructions (мені здається)"
+  - "стверджувати (to claim/assert) — formal statement of a specific position"
+  - "припускати (to assume/hypothesize) — essential for Catalog A 'hypothesis' competency"
+  - "навряд чи (hardly/unlikely) — expressing doubt or negative probability"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4987 chars)
+✅ Message sent to Claude (ID: 10392)
+✓ Message 10392 acknowledged
+   Auto-acknowledged reply #10392 (stdout delivery — no inbox accumulation)
+✓ Message 10387 acknowledged

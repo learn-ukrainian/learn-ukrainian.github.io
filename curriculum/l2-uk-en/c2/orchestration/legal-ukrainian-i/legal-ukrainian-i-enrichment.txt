@@ -1,0 +1,328 @@
+✅ Message sent to Gemini (ID: 11252) [auto-acked: self-addressed]
+✓ Message 11252 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #11252...
+📨 Message #11252
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-legal-ukrainian-i
+   Time: 2026-02-20T22:33:12.013489+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c2-061
+level: c2
+sequence: 61
+version: '2.0'
+title: Юридична українська I — Основи правничої термінології
+focus: vocabulary
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Верховна Рада України — законодавство
+  url: https://zakon.rada.gov.ua/
+  type: primary
+  notes: Official Ukrainian legislation database — primary source for legal texts
+- name: Конституція України
+  url: https://zakon.rada.gov.ua/laws/show/254%D0%BA/96-%D0%B2%D1%80
+  type: primary
+  notes: Constitution of Ukraine — foundational legal document
+- name: Юридична енциклопедія
+  url: https://cyclop.com.ua/content/view/1284/
+  type: reference
+  notes: Ukrainian legal encyclopedia for terminology
+content_outline:
+- section: Вступ — Правнича мова як система
+  points:
+  - Особливості юридичної української
+  - Історія розвитку правничої термінології
+  - Вплив латини та інших мов
+- section: Структура правової системи України
+  points:
+  - Конституційне право
+  - Галузі права (цивільне, кримінальне, адміністративне)
+  - Судова система
+  - Правові акти та їх ієрархія
+- section: Базова правнича термінологія
+  points:
+  - Суб'єкти права (фізичні та юридичні особи)
+  - Правові відносини
+  - Права та обов'язки
+  - Відповідальність та санкції
+- section: Читання правових текстів
+  points:
+  - Структура закону
+  - Розуміння статей та пунктів
+  - Юридичні конструкції та формулювання
+  - Посилання на законодавство
+- section: Юридична лексика в повсякденному житті
+  points:
+  - Поширені правові терміни
+  - Юридичний жаргон vs. офіційна термінологія
+  - Правові документи громадян (паспорт, свідоцтво, договір)
+- section: Практичні вправи
+  points:
+  - Читання статей Конституції
+  - Аналіз простого договору
+  - Побудова юридичного глосарію
+vocabulary:
+  required:
+  - право (law/right)
+  - закон (law/statute)
+  - юридична особа (legal entity)
+  - фізична особа (natural person)
+  - договір (contract)
+  - позов (lawsuit/claim)
+  - суд (court)
+  - суддя (judge)
+  - адвокат (lawyer/advocate)
+  - відповідальність (responsibility/liability)
+  recommended:
+  - правовідносини (legal relations)
+  - законодавство (legislation)
+  - нормативний акт (normative act)
+  - підсудність (jurisdiction)
+  - правоздатність (legal capacity)
+  forbidden: '[]'
+activities:
+  types_required:
+  - group-sort
+  - quiz
+  - fill-in
+  - match-up
+  - critical-analysis
+  - essay-response
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c2-62 (Legal Ukrainian II — Contracts and agreements)
+- c2-63 (Legal Ukrainian III — Court procedures)
+- c2-64 (Legal Ukrainian IV — Legal writing)
+- c2-65 (Legal Ukrainian V — Case analysis)
+vocabulary_hints:
+  required:
+  - концепція (concept)
+  - аналіз (analysis)
+  - дискурс (discourse)
+  - методологія (methodology)
+  recommended:
+  - інтерпретація (interpretation)
+  - контекстуалізація (contextualization)
+  - синтез (synthesis)
+activity_hints:
+- type: reading
+  focus: Поглиблений аналіз тексту
+  items: 4
+- type: essay-response
+  focus: Критичне осмислення
+- type: discussion
+  focus: Дискусія та аргументація
+  items: 1
+persona:
+  voice: Senior Specialist
+  role: Legal Clerk
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Юридична українська I — Основи правничої термінології
+
+## State Standard Reference
+§3.7 (Суспільні відносини): "права й обов’язки; правоохоронні органи; злочинність; корупція і безчинство."
+§3.8 (Внутрішня політика): "державний устрій країни, законодавча, виконавча й судова гілки влади; виборча система."
+§4.3.1.1 (Стилі української мови): "офіційний".
+Alignment: This module directly addresses the C2 requirement for mastery of the official-business style and specific thematic competence in public relations and internal politics, specifically the legal system and branches of power.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| право | High (General & Official) | мати право, порушувати право, цивільне право, верховенство права |
+| закон | High (General & Official) | згідно із законом, ухвалити закон, порушити закон, чинне законодавство |
+| суд | High | звертатися до суду, рішення суду, Верховний Суд, судове засідання |
+| позов | Medium (Official) | подати позов, позовна заява, задовольнити позов |
+| відповідальність | High | нести відповідальність, кримінальна відповідальність, притягнути до відповідальності |
+| особа (юридична/фізична) | High (Official) | права особи, встановлення особи, юридична особа, фізична особа-підприємець |
+
+## Cultural Hooks
+1. **Constitution of Pylyp Orlyk (1710)**: Often cited as one of the world's first democratic constitutions, establishing a separation of powers long before Montesquieu. A point of national pride in legal history.
+2. **Ruska Pravda**: The ancient legal code of Kyivan Rus under Yaroslav the Wise, laying the foundation for Slavic legal tradition.
+3. **The Constitutional Court's Role**: The modern significance of the Constitutional Court (Конституційний Суд України) as the sole body of constitutional jurisdiction, often at the center of political checks and balances.
+
+## Common Learner Errors
+1. **Prepositional Governance**: Using *згідно* with Genitive instead of Instrumental (*згідно закону* ❌ → *згідно із законом* ✅).
+2. **Lexical Confusion**: Confusing *закон* (a specific statute) with *право* (law as a system or a right). "Study law" is *вивчати право*, not *вивчати закон*.
+3. **False Friends/Anglicisms**: Using *адвокат* for all lawyers (it specifically means a litigator/bar member), whereas *юрист* is the general term.
+4. **Bureaucratic Clutter**: Overusing passive voice constructions (*було вирішено*) where active official style prefers impersonal or direct forms (*суд ухвалив*).
+
+## Cross-References
+- Builds on: C1 Political modules (vocab overlap).
+- Prepares for: c2-62 (Contracts), c2-63 (Court procedures).
+
+## Notes for Content Writing
+- Maintain a strict **Official-Business Style (Офіційно-діловий стиль)** throughout examples to demonstrate the specific register.
+- Clearly distinguish between *юрист* (general) and *адвокат* (bar exam qualified).
+- Emphasize the hierarchy of normative acts: Конституція > Закони > Підзаконні акти.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Історія та природа правничої мови (Introduction: History and Nature of Legal Language)"
+  words: 700
+  points:
+  - "Historical foundations of Ukrainian law: Analysis of 'Ruska Pravda' and the Constitution of Pylyp Orlyk (1710) as early European models of the separation of powers concept."
+  - "Characteristics of the Official-Business Style (§4.3.1.1): The balance between informative precision and prescriptive authority in legal discourse."
+- section: "Державний устрій та ієрархія нормативних актів (State Structure and Hierarchy of Normative Acts)"
+  words: 900
+  points:
+  - "Branches of power in Ukraine (§3.8): The roles of the legislative (Verkhovna Rada), executive, and judicial branches in maintaining the legal order."
+  - "The hierarchy of normative acts: Exploring the supremacy of the Constitution over statutes (закони) and bylaws (підзаконні акти), and the Constitutional Court's oversight."
+- section: "Суб'єкти права та правовідносини (Subjects of Law and Legal Relations)"
+  words: 900
+  points:
+  - "Defining legal subjects (§3.7): Rights and obligations of natural persons (фізичні особи), legal entities (юридичні особи), and the status of FOP (фізична особа-підприємець)."
+  - "Legal capacity and participation: Mapping the scope of civil rights and the nature of legal relations (правовідносини) in the modern Ukrainian context."
+- section: "Правнича термінологія та культура мовлення (Legal Terminology and Speech Culture)"
+  words: 900
+  points:
+  - "Learner error focus: Correcting prepositional governance — «згідно із законом» (Instrumental) vs. common mistake «згідно закону»; distinguishing «вивчати право» (system) from «вивчати закон» (statute)."
+  - "Lexical precision for C2: Differentiating 'юрист' from 'адвокат'; refining the register by preferring active official voice ('суд ухвалив') over passive bureaucratic forms ('було вирішено')."
+- section: "Робота з першоджерелами: Закони та договори (Working with Primary Sources: Laws and Contracts)"
+  words: 900
+  points:
+  - "Anatomy of a Ukrainian legal act: Mastering the interpretation of articles (статті), parts (частини), and clauses (пункти) in legislative codes."
+  - "Contractual analysis: Identifying essential clauses, liabilities (відповідальність), and dispute resolution mechanisms in standard civil agreements."
+- section: "Правопорядок та підсумковий аналіз (Law Order and Final Analysis)"
+  words: 700
+  points:
+  - "State Standard focus (§3.7): Discussing law enforcement agencies, corruption, and the transition toward a transparent justice system in post-decolonized Ukraine."
+  - "Professional synthesis: Creating a bilingual legal glossary and analyzing the linguistic differences between high-level legislative texts and practical documents."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "право (law/right) — collocations: верховенство права (rule of law), суб'єкт права, мати право; denotes the system or an entitlement."
+  - "закон (statute/law) — collocations: згідно із законом (Instrumental case), ухвалити закон, чинне законодавство; denotes a specific legislative act."
+  - "юридична особа (legal entity) — official term for organizations/corporations; Frequency: High."
+  - "фізична особа (natural person) — official term for individuals; note 'фізична особа-підприємець' (FOP)."
+  - "договір (contract) — collocations: укласти договір (to enter into), розірвати договір (to terminate); legal term of art."
+  - "позов (lawsuit/claim) — collocations: подати позов, позовна заява, задовольнити позов; Frequency: High (Official)."
+  - "суд (court) — collocations: Конституційний Суд України, Верховний Суд, судове засідання (court hearing)."
+  - "відповідальність (liability/responsibility) — collocations: нести відповідальність, притягнути до відповідальності, кримінальна відповідальність."
+  - "концепція (concept) — abstract register for legal theory."
+  - "аналіз (analysis) — key action for C2 legal discourse."
+  - "дискурс (discourse) — academic/professional register marker."
+  - "методологія (methodology) — used in discussing legal research/theory."
+  recommended:
+  - "згідно із (according to) — Mandatory Instrumental governance; major learner error focus."
+  - "адвокат (lawyer/advocate) — specific to bar-qualified members; contrast with general 'юрист'."
+  - "законодавство (legislation) — the body of law as a whole; 'чинне законодавство'."
+  - "правовідносини (legal relations) — formal interactions regulated by legal norms."
+  - "правоохоронні органи (law enforcement agencies) — State Standard (§3.7) terminology."
+  - "державний устрій (state structure) — State Standard (§3.8) terminology."
+  - "інтерпретація (interpretation) — specifically 'юридична інтерпретація'."
+  - "контекстуалізація (contextualization) — analyzing law within historical/social frameworks."
+  - "синтез (synthesis) — summarizing legal arguments."
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4996 chars)
+✅ Message sent to Claude (ID: 11269)
+✓ Message 11269 acknowledged
+   Auto-acknowledged reply #11269 (stdout delivery — no inbox accumulation)
+✓ Message 11252 acknowledged

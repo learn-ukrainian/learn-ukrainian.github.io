@@ -1,7 +1,7 @@
 # Audit Report: M18 — food-and-shopping.md
 **Level:** A1 | **Module:** M18 | **Phase:** A1.2 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-19 23:44:48
+**Generated:** 2026-02-21 00:46:39
 
 ## Configuration
 **Type:** A1-vocab
@@ -23,7 +23,7 @@
 | 2 | match-up | Словниковий запас | 10 | 8 | ✅ |
 | 3 | quiz | Дієслова: їсти, пити, купувати | 8 | 8 | ✅ |
 | 4 | fill-in | Я люблю... (Знахідний відмінок) | 12 | 8 | ✅ |
-| 5 | match-up | Кількості та продукти | 9 | 8 | ✅ |
+| 5 | match-up | Кількості та продукти | 8 | 8 | ✅ |
 | 6 | unjumble | Складіть речення | 12 | 6 | ✅ |
 | 7 | quiz | У магазині | 8 | 8 | ✅ |
 | 8 | group-sort | Рід іменників | 21 | 12 | ✅ |
@@ -37,12 +37,12 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2521/2000 (raw: 2654)
+- **Words:** ✅ 2677/2000 (raw: 2810)
 - **Activities:** ✅ 9/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 5/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 6/3
+- **Engagement:** ✅ 7/3
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 34/1
 - **Structure:** ✅ Valid Structure
@@ -50,7 +50,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 25.4% (target 25-40% (M18))
+- **Immersion:** 🇺🇦 25.1% (target 25-40% (M18))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -59,8 +59,8 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 63 | Included in Core |
-| **Вступ: Улюблена їжа та напої** | ✅ | 556 | Included in Core |
-| **Основні продукти та напої** | ✅ | 960 | Included in Core |
+| **Вступ: Улюблена їжа та напої** | ✅ | 641 | Included in Core |
+| **Основні продукти та напої** | ✅ | 1015 | Included in Core |
 | **У магазині: діалоги та покупки** | ✅ | 515 | Included in Core |
-| **Українські традиції: хліб і гостинність** | ✅ | 274 | Included in Core |
+| **Українські традиції: хліб і гостинність** | ✅ | 290 | Included in Core |
 | **Підсумок** | ✅ | 153 | Included in Core |

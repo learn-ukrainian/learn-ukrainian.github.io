@@ -1,0 +1,67 @@
+module: b2-69
+level: B2
+sequence: 69
+slug: integration-practice
+version: '2.0'
+title: Практика інтеграції B2.2
+subtitle: B2.2 Integration Practice
+content_outline:
+- section: Огляд — Чого ми навчилися в B2.2
+  points:
+  - Прислів'я та приказки (M45-46)
+  - Сталі вирази та ідіоми (M47-54)
+  - Синонімічні ряди (M55-66)
+  - Складні сполучники (M67-68)
+- section: Інтеграція фразеології
+  points:
+  - Вживання прислів'їв у аргументації
+  - Ідіоми в художньому та публіцистичному текстах
+  - Вибір між синонімами залежно від регістру
+  - Зв'язок фразеології зі складним синтаксисом
+- section: Комплексні завдання
+  points:
+  - Написати есе з 3+ прислів'ями та 5+ ідіомами
+  - Проаналізувати газетну статтю — знайти фразеологізми та синоніми
+  - Переписати текст з нейтрального в експресивний стиль
+  - Усний виступ з використанням B2.2 матеріалу
+- section: Підготовка до контрольної точки
+  points:
+  - Самооцінка засвоєння M41-68
+  - Слабкі місця та рекомендації для повторення
+  - Формат контрольної точки M70
+  - Підготовка до фази B2.3 (доменна лексика)
+focus: integration
+pedagogy: Practice
+objectives:
+- Учень може вільно інтеграції прислів'я та приказки у власну аргументацію
+- Учень вміє створювати зв'язні тексти, використовуючи ідіоми та складні сполучники
+- Учень демонструє майстерність у виборі синонімів залежно від контексту
+grammar:
+- Review of complex syntax
+- Phraseological integration
+immersion: 100
+register: змішаний
+phase: B2.2 [Phraseology & Synonymy]
+vocabulary_hints:
+  required:
+  - термін (term)
+  - поняття (concept)
+  - процес (process)
+  - метод (method)
+  recommended:
+  - аналіз (analysis)
+  - синтез (synthesis)
+  - дослідження (research)
+activity_hints:
+- type: reading
+  focus: Аналіз тексту
+  items: 4
+- type: essay-response
+  focus: Практичне застосування
+- type: true-false
+  focus: Перевірка розуміння
+  items: 8
+persona:
+  voice: Professional Language Coach
+  role: Systems Analyst (Системний аналітик)
+word_target: 4000

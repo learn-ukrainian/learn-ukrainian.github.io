@@ -1,0 +1,87 @@
+module: a2-47
+level: A2
+sequence: 47
+slug: nature-and-weather
+version: '2.0'
+title: Nature and Weather
+subtitle: The World Around Us
+content_outline:
+- section: Вступ
+  points:
+  - Ukraine's diverse landscapes — згадати Карпати та степ як приклади (§3.13)
+  - Nature vocabulary introduction
+- section: Граматика
+  points:
+  - 'Weather conditions (погода, дощ, сніг) — collocations: гарна/погана погода, йде
+    дощ, падає сніг; learner error: «Це є дощ» instead of «Йде дощ» or «Дощить»; visual:
+    table for Impersonal Constructions'
+  - 'Landscapes (гора, річка, ліс) — collocations: висока гора, густий ліс, швидка
+    річка; cultural hook: Lake Nesamovyte legends (storms)'
+  - 'Flora and fauna (дерева, тварини) — context: деякі види рослин та свійських тварин
+    (§3.13)'
+  - Environment vocabulary
+- section: Практика
+  points:
+  - 'Dialogues about weather — focus on Dative case for states: «Мені холодно» (learner
+    error: «Я холодний»); Standard §4.2.2.3'
+  - Nature descriptions — explicit contrast of Adjective (Який день? Холодний) vs
+    Adverb (Як надворі? Холодно)
+- section: Корисні вирази
+  points:
+  - 'Useful weather phrases — idiom: «Сім погод надворі» (unpredictable weather)'
+- section: Підсумок
+  points:
+  - Summary of vocabulary
+vocabulary_hints:
+  required:
+  - погода (weather) — гарна/погана погода, прогноз погоди, сонячна погода
+  - клімат (climate)
+  - гора (mountain) — висока гора, вершина гори, Карпатські гори
+  - ліс (forest) — густий ліс, у лісі, лісова стежка
+  - річка (river) — швидка річка, на березі річки, купатися в річці
+  - дощ (rain) — йде дощ, сильний дощ, мокнути під дощем
+  - сніг (snow) — падає сніг, білий сніг, багато снігу
+  - природа (nature)
+  recommended:
+  - туман (fog)
+  - 'град (hail) — cultural hook: Lake Nesamovyte storms'
+  - 'озеро (lake) — cultural hook: Озеро Несамовите'
+  - степ (steppe)
+  - довкілля (environment)
+  - тварина (animal)
+activity_hints:
+- type: match-up
+  focus: Nature and weather words
+  items: 35
+- type: match-up
+  focus: Match weather to descriptions
+  items: 20
+- type: fill-in
+  focus: Complete nature descriptions
+  items: 15
+- type: quiz
+  focus: Describe weather and landscapes
+  items: 8
+focus: vocabulary
+pedagogy: PPP
+prerequisites:
+- a1-29 (Weather and Nature)
+- a2-46 (Home and Furniture)
+connects_to:
+- a2-48 (Emotions and Personality)
+objectives:
+- Learner can describe weather conditions in detail
+- Learner can talk about seasons and climate
+- Learner can describe landscapes
+- Learner can discuss nature and environment
+grammar:
+- Weather expressions (холодно, тепло, вітряно)
+- Nature vocabulary
+- Seasons and describing landscapes
+register: розмовний
+immersion: 60-75% Ukrainian
+phase: A2.5 [Vocabulary Expansion]
+persona:
+  voice: Encouraging Cultural Guide
+  role: Carpathian Forester
+word_target: 3000

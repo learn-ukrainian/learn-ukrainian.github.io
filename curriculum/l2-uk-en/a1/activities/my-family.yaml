@@ -176,7 +176,7 @@
     - left: "Сестра"
       right: "Сестро!"
     - left: "Донька"
-      right: "Доню!"
+      right: "Донько!"
 
 - type: fill-in
   title: "Звертання до рідних"
@@ -206,14 +206,14 @@
       answer: "Мамо"
       options: ["Мамо", "Мама", "Мами", "Маму"]
       explanation: "Expressing love to mom -> Vocative «Мамо»."
-    - sentence: "{{answer}}, допоможи мені!"
-      answer: "Брате"
-      options: ["Брате", "Брат", "Брата", "Братом"]
-      explanation: "Calling brother -> Vocative «Брате»."
-    - sentence: "{{answer}}, ти найкраща!"
-      answer: "Сестро"
-      options: ["Сестро", "Сестра", "Сестри", "Сестру"]
-      explanation: "Calling sister -> Vocative «Сестро»."
+    - sentence: "{{answer}}, де ти?"
+      answer: "Тату"
+      options: ["Тату", "Тато", "Тата", "Татові"]
+      explanation: "Calling dad -> Vocative «Тату»."
+    - sentence: "{{answer}}, розкажи казку!"
+      answer: "Бабусю"
+      options: ["Бабусю", "Бабуся", "Бабусі", "Бабусею"]
+      explanation: "Asking grandma to tell a story -> Vocative «Бабусю»."
 
 - type: quiz
   title: "Перевірка знань"

@@ -2,12 +2,5 @@
   "track": "c1",
   "slug": "narodna-medytsyna",
   "mode": "v3",
-  "phases": {
-    "v3-A": {
-      "status": "complete",
-      "ts": "2026-02-19T18:14:15Z",
-      "task_id": "v3-narodna-medytsyna-pA",
-      "mode": "full"
-    }
-  }
+  "phases": {}
 }

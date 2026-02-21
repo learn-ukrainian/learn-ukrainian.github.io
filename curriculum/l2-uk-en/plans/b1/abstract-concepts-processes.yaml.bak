@@ -1,0 +1,89 @@
+module: b1-53
+level: B1
+sequence: 53
+slug: abstract-concepts-processes
+version: '2.0'
+title: 'Абстрактні концепції: процеси та зміни'
+subtitle: 'Abstract Concepts: Processes and Changes'
+content_outline:
+- section: Вступ
+  points:
+  - Describing how things change
+  - Temporal dimension
+  - Causation and result
+- section: Вивчення слів
+  points:
+  - Six vocabulary groups
+  - Base processes, positive/negative trends
+  - Speed of change, systemic changes
+- section: Вживання
+  points:
+  - Collocations patterns
+  - Register considerations
+  - Cultural aspects
+  - 'Deverbal nouns with -ння/-ення: forming abstract process nouns from verbs (читати→читання,
+    навчати→навчання, зростати→зростання) — productive B1 word formation tool for
+    abstract concepts (State Standard §4.3.4)'
+- section: Читання
+  points:
+  - Economic review
+  - Historical perspective
+  - Personal development blog
+- section: Діалоги
+  points:
+  - Business meeting (formal)
+  - News discussion (informal)
+  - Personal development, academic seminar
+- section: Підсумок
+  points:
+  - Key vocabulary recap
+  - Practice recommendations
+vocabulary_hints:
+  required:
+  - розвиток (development)
+  - прогрес (progress)
+  - зміна (change)
+  - перетворення (transformation)
+  - зростання (growth)
+  - занепад (decline)
+  - тенденція (tendency/trend)
+  - еволюція (evolution)
+  recommended:
+  - трансформація (transformation)
+  - спад (decline/recession)
+  - закономірність (pattern/regularity)
+  - темп (rate/pace)
+activity_hints:
+- type: match-up
+  focus: Process noun phrases
+  items: 25
+- type: fill-in
+  focus: Describe trends and changes
+  items: 20
+- type: match-up
+  focus: Match process word to context
+  items: 15
+- type: fill-in
+  focus: Write about changes
+  items: 10
+focus: vocabulary
+pedagogy: PPP
+prerequisites:
+- b1-52 (Abstract Concepts Ideas)
+connects_to:
+- b1-54 (Expressing Opinions)
+objectives:
+- Learner can use 35 process and change vocabulary words in context
+- Learner can distinguish between similar process words
+- Learner can describe trends and changes using appropriate collocations
+- Learner can narrate developments over time
+grammar:
+- Noun collocations with process vocabulary
+- Verb-noun pairs for change descriptions
+- Temporal markers with process words
+register: розмовний
+phase: B1.5 [Vocabulary Expansion I]
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Business Consultant
+word_target: 4000

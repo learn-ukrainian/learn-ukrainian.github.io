@@ -1,0 +1,46 @@
+module: c1-063
+level: C1
+sequence: 63
+slug: pomynalni-obriady
+version: '2.0'
+title: Поминальні обряди
+subtitle: Memorial Traditions
+content_outline:
+- section: Розминка — Культ предків
+  points:
+  - Ставлення до смерті в українській культурі
+  - Вірування в життя після смерті
+  - Зв'язок живих та мертвих через ритуали
+- section: Похоронні обряди
+  points:
+  - Підготовка до смерті (сповідь, причастя, прощання)
+  - 'Похорон: голосіння, обряди прощання'
+  - Поховальна процесія та кладовище
+  - Поминки (третини, дев'ятини, сороковини, роковини)
+- section: Поминальні свята
+  points:
+  - 'Проводи (Гробки): відвідування могил'
+  - 'Діди: запрошення предків до столу'
+  - Зв'язок з Великоднем та Трійцею
+  - Поминальні страви (коливо, канун)
+- section: Практика — аналіз традицій
+  points:
+  - Проаналізувати текст голосіння — структура, образи
+  - Порівняти українські та європейські поминальні традиції
+  - Написати есе про трансформацію похоронних обрядів
+  - Обговорити сучасне ставлення до смерті
+focus: culture
+pedagogy: Immersion & Analysis
+objectives:
+- Learner can describe the cycle of memorial rituals in Ukraine
+- Learner understands the concept of ancestral spirits in folk belief
+- Learner can analyze the blend of grief and hope in traditional laments and memorial
+  meals
+grammar:
+- Eschatological terminology
+- Sacred and commemorative registers
+phase: C1.5 Folk Culture & Fine Arts
+persona:
+  voice: Senior Specialist
+  role: Хранитель роду
+word_target: 4000

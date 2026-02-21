@@ -6,53 +6,74 @@ version: '2.0'
 title: Причинові та наслідкові речення
 subtitle: Causal and Result Clauses
 content_outline:
-- section: Тест
+- section: Вступ (Introduction)
+  words: 500
   points:
   - Diagnostic quiz on causal/result clauses — focus on distinguishing 'бо' (casual)
     vs 'оскільки' (formal)
-  - 'Self-assessment questions — check for common errors: punctuation before ''тому
-    що'', spelling ''тому що'' as two words'
-- section: Пояснення
+  - 'Common spelling errors: drill the rule that ''тому що'' is always two words,
+    never ''томущо'' or ''тому-що'''
+  - 'Punctuation alert: emphasize the mandatory comma before ''тому що'' when it connects
+    clauses in the middle of a sentence'
+- section: Причинові речення (Causal Clauses)
+  words: 1000
   points:
-  - 'Expressing reasons — emphasize agency: ''We rebuilt it because we needed it''
-    vs passive forms'
-  - 'Causal Connectors (тому що, бо, через те що) — learner error: using ''тому як''
-    (Russism); distinguish registers: ''бо'' (spoken, end of sentence) vs ''тому що''
-    (neutral)'
-  - 'Result Connectors (тому, отже, внаслідок) — collocations: ''Внаслідок аварії...'',
-    ''Внаслідок того, що...'''
-  - Cause → Result Transformation — use Mermaid diagrams to show reversible logic
-    (A implies B, therefore B is because of A)
-  - 'Advanced Patterns (завдяки тому що, оскільки) — ''Оскільки'' for formal sentence
-    starts; cultural hook: ''Хто полю годить, тому жито родить'' (agrarian ethos)'
-- section: Практика
+  - 'State Standard §4.4.3 implementation: detailed usage of ''тому що'', ''бо'',
+    and ''через те що'' as mandated for B1 proficiency'
+  - 'Causal Connectors Registers: differentiate ''бо'' (High frequency, spoken, often
+    end of sentence) from ''тому що'' (High frequency, neutral/universal)'
+  - 'Formal logic with ''оскільки'': usage at the start of sentences in official contexts;
+    drill to replace the Russism ''тому як'' (calque from ''так как'')'
+  - 'The logic of ''через те що'': medium frequency neutral connector often used to
+    denote external circumstances or reasons beyond control'
+- section: Наслідкові речення (Result Clauses)
+  words: 900
   points:
-  - 'Express cause and effect — cultural hook: ''Диму без вогню не буває'' (causality
-    belief)'
-  - Transform statements — focus on shifting focus from Fate ('Доля') to personal
-    agency (Franko's 'Lupayte syu skalu')
-- section: Діалоги
+  - 'Result Connectors: ''тому'' (High frequency connector), ''отже'' (Medium frequency
+    logical thus), and ''внаслідок'' (Low frequency formal/official)'
+  - 'Formal collocations: ''Внаслідок аварії...'', ''Внаслідок того, що...''; usage
+    in news and official reporting'
+  - 'Reversible logic: Use Mermaid diagrams to illustrate the Cause ↔ Result relationship
+    (A implies B, therefore B is because of A)'
+  - 'Advanced patterns: ''Завдяки тому що'' for positive causal relationships vs ''у
+    зв''язку з'' for neutral administrative links'
+- section: Логіка та Регістри (Logic & Registers)
+  words: 800
   points:
-  - Causal/result clauses in conversation — differentiate 'бо' (casual reply) from
-    full sentence explanations
-  - Everyday reasoning scenarios — use real-world contexts illustrating personal responsibility
-    and action
+  - 'Stylistic variations: why we avoid starting sentences with ''Тому що...'' and
+    prefer ''Оскільки...'' or ''Через те що...'' in professional writing'
+  - 'The ''Agrarian Ethos'' in logic: explaining the cultural hook ''Хто полю годить,
+    тому жито родить'' (He who tends the field, for him the rye grows)'
+  - 'Causal beliefs: ''Диму без вогню не буває'' (There is no smoke without fire)
+    as a reflection of the deep-seated Ukrainian belief in causality'
+- section: Агентність та Практика (Agency & Practice)
+  words: 800
+  points:
+  - 'Historical Context of Agency: The shift from ''Доля'' (Fate) to personal responsibility
+    in 19th-20th century Ukrainian literature'
+  - 'Franko''s ''Lupayte syu skalu'': using causal structures to express the necessity
+    of action causing freedom (''Ми робимо це, бо...'')'
+  - 'Active voice vs passive forms: Emphasize personal responsibility (''We rebuilt
+    it because we needed it'') to reflect modern Ukrainian values of agency'
+  - 'Transforming statements: converting passive fatalistic reasons into active result-oriented
+    consequences'
 vocabulary_hints:
   required:
-  - причина (cause/reason) — fundamental concept
+  - тому що (because) — High frequency, neutral/universal; 'Це сталося тому, що...'
+  - бо (because) — High frequency, spoken; 'Не прийду, бо зайнятий'
+  - через те що (due to) — Medium frequency, neutral; 'Через те що йшов дощ...'
+  - тому (therefore) — High frequency connector; 'Був дощ, тому ми не пішли'
+  - отже (thus) — Medium frequency, logical; 'Ти тут, отже ми можемо починати'
+  - причина (cause/reason) — fundamental concept for logical linking
   - наслідок (consequence) — logical pair to 'причина'
-  - тому що (because) — 'Це сталося тому, що...'; 'Я запізнився, тому що...' (Neutral)
-  - бо (because) — 'Не прийду, бо зайнятий'; 'Люблю, бо гарна' (Spoken)
-  - тому (therefore) — 'Був дощ, тому ми не пішли' (Connector)
-  - отже (thus) — 'Ти тут, отже ми можемо починати' (Logical)
-  - через те що (due to) — 'Через те що йшов дощ...'; 'Захворів через те, що...' (Neutral)
-  - внаслідок (as a result) — 'Внаслідок аварії...'; 'Внаслідок того, що...' (Formal)
+  - внаслідок (as a result) — Low frequency, formal; 'Внаслідок аварії...'
   recommended:
-  - оскільки (since) — 'Оскільки ви не відповіли...'; 'Оскільки закон вимагає...'
-    (Formal, often starts sentence)
-  - завдяки (thanks to) — positive cause
-  - у зв'язку з (in connection with) — formal/official
-  - відтак (hence) — logical consequence
+  - оскільки (since) — Medium frequency, formal; 'Оскільки ви не відповіли...'; prefer
+    over 'тому що' at start of sentence
+  - завдяки (thanks to) — positive cause/reason
+  - у зв'язку з (in connection with) — formal/official administrative register
+  - відтак (hence) — logical consequence in professional/journalistic style
+  - доля (fate/destiny) — contrast with agency in causal explanations
 activity_hints:
 - type: fill-in
   focus: Complete causal/result sentences

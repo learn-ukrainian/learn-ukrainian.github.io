@@ -1,0 +1,89 @@
+module: a2-51
+level: A2
+sequence: 51
+slug: hobbies-leisure
+version: '2.0'
+title: Hobbies and Leisure
+subtitle: What We Do for Fun
+content_outline:
+- section: Вступ
+  points:
+  - 'How Ukrainians spend free time — cultural hook: Mushroom Picking («Тихе полювання»,
+    often in forests) and Embroidery (Вишивання, creating *vyshyvanka* or *rushnyky*);
+    aligned with State Standard §3.4'
+  - 'Hobbies vocabulary overview — collocations: «моє хобі», «цікаве хобі», «вільний
+    час», «мати вільний час»'
+- section: Граматика
+  points:
+  - 'Indoor hobbies (читати, малювати, грати на гітарі) — learner error: confusion
+    of cases with «грати»; correct: «грати на гітарі» (Locative for instruments)'
+  - 'Outdoor activities (грати у футбол, займатися спортом) — learner error: «Я граю
+    спорт» (calque); correct: «займатися спортом» (Instrumental); distinguish: «грати
+    у футбол» (Accusative for games)'
+  - 'Social activities (зустрічатися з друзями) — collocations: «проводити дозвілля»,
+    «культурне дозвілля»'
+  - Frequency expressions (часто, рідко, іноді)
+- section: Практика
+  points:
+  - Dialogues about weekend plans — use phrase «у вільний час»
+  - Describe hobbies and interests — focus on correct case usage (Instrumental for
+    activities, Locative for instruments)
+- section: Підсумок
+  points:
+  - Summary of vocabulary
+vocabulary_hints:
+  required:
+  - 'хобі (hobby) — collocations: «моє хобі», «цікаве хобі»'
+  - 'вільний час (free time) — phrase: «у вільний час», «мати вільний час»'
+  - 'дозвілля (leisure) — collocations: «проводити дозвілля», «культурне дозвілля»'
+  - 'грати (to play) — collocations: «грати у футбол» (games), «грати на гітарі» (instruments),
+    «грати в шахи»'
+  - 'займатися (to do/practice) — collocations: «займатися спортом», «займатися йогою»,
+    «займатися танцями»; requires Instrumental case'
+  - музика (music)
+  - 'спорт (sport) — usage: «займатися спортом» (not «грати спорт»)'
+  - читати (to read)
+  - малювати (to draw)
+  recommended:
+  - 'гітара (guitar) — usage: «грати на гітарі»'
+  - 'шахи (chess) — usage: «грати в шахи»'
+  - фотографія (photography)
+  - подорож (travel)
+  - концерт (concert)
+  - виставка (exhibition)
+activity_hints:
+- type: match-up
+  focus: Hobbies and activities
+  items: 30
+- type: match-up
+  focus: Match verbs to activities
+  items: 20
+- type: cloze
+  focus: Weekend plans conversation
+  items: 10
+- type: quiz
+  focus: Describe your hobbies
+  items: 8
+focus: vocabulary
+pedagogy: PPP
+prerequisites:
+- a2-50 (Technology and Media)
+connects_to:
+- a2-52 (Education and Learning)
+- a2-54 (Sports and Fitness)
+objectives:
+- Learner can talk about hobbies and interests
+- Learner can use 'грати' and 'займатися' correctly
+- Learner can describe weekend plans
+- Learner can ask others about their free time
+grammar:
+- Verbs for hobbies (грати на, займатися)
+- Accusative vs instrumental (футбол vs тенісом)
+- Expressing frequency and interests
+register: розмовний
+immersion: 75-90% Ukrainian
+phase: A2.5 [Vocabulary Expansion]
+persona:
+  voice: Encouraging Cultural Guide
+  role: Event Organizer
+word_target: 3000

@@ -1,0 +1,207 @@
+✅ Message sent to Gemini (ID: 12091) [auto-acked: self-addressed]
+✓ Message 12091 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12091...
+📨 Message #12091
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-numbers-currency
+   Time: 2026-02-20T23:36:04.109980+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 14
+module: oes-014
+module_number: 12
+slug: numbers-currency
+title_uk: Числа та валюта
+title_en: Numbers & Currency
+phase: 1
+phase_id: vernacular-foundations
+phase_name: Vernacular Foundations
+focus: 'Куни, ногати, гривні (Zvenyhorod #1)'
+content_outline:
+- section: Вступ
+  description: Introduction to Numbers & Currency
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Senior Paleographer
+  role: Royal Treasurer
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Numbers Currency (OES)
+
+## Використані джерела
+1. [Енциклопедія історії України: Грошовий обіг](http://resource.history.org.ua/) — Фундаментальний огляд грошових систем на українських землях.
+2. [Звенигородська берестяна грамота №1](https://uk.wikipedia.org/wiki/Звенигородська_берестяна_грамота) — Деталі знахідки та інтерпретації тексту.
+3. [Руська Правда (Текст)](http://litopys.org.ua/oldukr2/oldukr01.htm) — Першоджерело для співвідношення валют та штрафів.
+4. [Ізборник: Історія української мови](http://litopys.org.ua/) — Граматика числівників та двоїни.
+5. [Н. Ф. Котляр. Грошовий обіг на території України доби феодалізму](http://history.org.ua/) — Академічна праця про гривні, куни та ногати.
+
+## Хронологія
+- X ст. — Початок карбування власних монет (срібників і златників) Володимиром Великим.
+- XI ст. — Укладання «Руської Правди» Ярослава Мудрого, фіксація штрафів у гривнях та кунах.
+- 1110–1137 рр. — Орієнтовне датування Звенигородської берестяної грамоти №1 (Звенигород Галицький).
+- XII-XIII ст. — «Безмонетний період», перехід до гривень-злитків (київських, новгородських, чернігівських).
+- 1988 р. — Відкриття І.К. Свєшніковим берестяної грамоти у Звенигороді, що підтвердило поширення писемності на заході Русі.
+
+## Ключові факти та цитати
+- **Гривня**: Не лише монета, а й вагова одиниця. Київська гривня (шестикутна) ~160г, Новгородська (брусок) ~204г.
+- **Співвідношення (XI ст.)**: 1 гривня = 20 ногат = 25 кун = 50 різан.
+- **Векша (білка)**: Найменша одиниця, 1/6 куни.
+- **Двоїна**: Числівник "два" вимагав специфічної форми іменника (називний двоїни), що збереглося в сучасній українській (дві руки, три гривні — де "гривні" історично є формою двоїни, а не множини).
+- **Цитата (Руська Правда)**: «Аже убиють огнищанина у клети, то 80 гривен за нь, а людием не надобе» (Якщо вб'ють огнищанина біля кліті, то 80 гривень штрафу, а людям платити не треба).
+- **Звенигородська грамота**: Фрагмент «...мънє не надобє...» (мені не треба) або реконструкція Свєшнікова про «гривънъ» — свідчення побутового листування.
+
+## Engagement Hooks (mapped to sections)
+- Section "Основний матеріал: II — Грошова система Русі": [!myth-buster] — Спростування міфу про "примітивний бартер". Русь мала складну мультивалютну систему, інтегровану в світову торгівлю (дирхеми, денарії).
+- Section "Основний матеріал: III — Економіка «Руської Правди»": [!history-bite] — "Вартість життя". За вбивство княжого мужа — 80 гривень, за смерда — 5 гривень. Палець коштував 3 гривні (як хороший кінь).
+- Section "Основний матеріал: IV — Кирилична цифір": [!context] — Числа записували літерами під титлом. Арабські цифри прийшли значно пізніше.
+- Section "Основний матеріал: V — Граматика: Двоїна та числівники": [!paleography] — "Слід двоїни". Чому ми кажемо "дві гривні" (Н.в. мн. "гривні" мав би бути іншим)? Це закам'яніла двоїна.
+- Section "Вступ": [!decolonization] — Наголос на терміні "гривня" як питомо руській/українській валюті, на відміну від "рубля", який з'явився пізніше як "обрубок" гривні (в новгородському контексті).
+- Section "Основний матеріал: I — Берестяна грамота: Звенигород №1": [!culture] — Знахідка у Звенигороді руйнує російський міф про те, що берестяні грамоти — це виключно новгородський (російський) феномен.
+
+## Деколонізаційний контекст
+- **Міф**: Берестяні грамоти — унікальне надбання Новгорода ("русского мира").
+- **Реальність**: Грамоти знайдені в Звенигороді (Львівщина), що доводить поширення грамотності й берестяного письма на українських землях Русі.
+- **Міф**: "Рубль" — давня валюта Русі.
+- **Реальність**: Основною одиницею була гривня. Рубль виникає пізніше (XIII ст.) як частинка гривні, переважно в північних (майбутніх російських) землях. Українська традиція тяжіє до гривні.
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| Мова грамот | "Древнерусский язык" (спільний предок) | Давньоукраїнська мова (з діалектними рисами) |
+| Берестяні грамоти | "Новгородский феномен" | Загальноруське явище, притаманне і українським землям |
+| Гривня | Попередниця рубля | Самостійна валюта, символ тяглості української державности |
+
+## Section-Mapped Research Notes
+
+### Вступ
+Огляд економічного світу Русі. Відсутність паперових грошей, роль срібла та хутра.
+
+### Основний матеріал: I — Берестяна грамота: Звенигород №1
+1988 рік, розкопки І.К. Свєшнікова. Звенигород (Львівська обл.). Текст (фрагментарний, але важливий). Доказ грамотності населення Галичини в XII ст.
+
+### Основний матеріал: II — Грошова система Русі
+Куна (хутро куниці -> монета). Ногата (арабський дирхем). Різана (обрізок). Векша (найдрібніша). Еволюція від хутра до срібла. "Безмонетний період" (злитки).
+
+### Основний матеріал: III — Економіка «Руської Правди»
+Штрафи (віра). Соціальна стратифікація через ціну життя. Вартість товарів (коня, корови, полотна).
+
+### Основний матеріал: IV — Кирилична цифір
+Система запису чисел літерами (Аз=1, Веді=2, Глаголь=3). Титло. "Тьма" (10,000) і великі числа.
+
+### Основний матеріал: V — Граматика: Двоїна та числівники
+Форми двоїни для числівників "два", "оба". Відмінювання 1-4. Вплив на сучасну українську (залишки двоїни у лічбі).
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/

@@ -1,0 +1,299 @@
+✅ Message sent to Gemini (ID: 12809) [auto-acked: self-addressed]
+✓ Message 12809 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12809...
+📨 Message #12809
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-halychyna-natsionalnyi-rukh
+   Time: 2026-02-20T23:42:25.922990+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-hist-071
+level: c1-hist
+sequence: 71
+version: '1.0'
+title: Галицький національний рух
+focus: history
+pedagogy: seminar
+objectives:
+- Analyze the causes and consequences of галицький національний рух
+- Evaluate the historical significance of боротьба за душу галичини
+content_outline:
+- section: Вступ — Боротьба за душу Галичини
+  subsections:
+  - Три варіанти ідентичності
+  - Народовці vs. москвофіли
+  - Ставки — яким буде народ
+  - Структура модуля
+- section: Москвофіли — хибний шлях
+  subsections:
+  - Хто вони — соціальний склад
+  - Ідеологія — «єдиний руський народ»
+  - Русификація як модернізація?
+  - Чому програли
+- section: Народовці — український вибір
+  subsections:
+  - Молоде покоління
+  - Ідеологія — окремий народ
+  - Зв'язки з Наддніпрянщиною
+  - Перемога до 1914
+- section: «Просвіта» — культурний рух
+  subsections:
+  - Заснування — 1868
+  - Читальні — мережа
+  - Освітня діяльність
+  - Вплив на селянство
+- section: Січовий рух
+  subsections:
+  - Гімнастичні товариства
+  - Військове виховання
+  - Січові стрільці
+  - Підготовка до 1914
+- section: Політичні партії
+  subsections:
+  - Радикальна партія — Франко
+  - Національно-демократична
+  - Соціал-демократи
+  - Галицька багатопартійність
+- section: Підсумок
+  subsections:
+  - Перемога українофілів
+  - Галичина — центр руху
+  - Підготовка до Буковини
+vocabulary:
+- народовці
+- москвофіли
+- національний рух
+- «Просвіта»
+- читальня
+- Січ
+- радикальний
+- партія
+- ідентичність
+- селянство
+- русофільство
+- українофільство
+- національне відродження
+- політична мобілізація
+- масовий рух
+activities:
+- type: comparative-study
+  focus: Narodovtsi vs. Russophiles — key differences
+- type: critical-analysis
+  focus: Prosvita network — how it worked
+- type: critical-analysis
+  focus: Who supported each movement — social map
+- type: essay-response
+  focus: Чому москвофіли програли в Галичині?
+sources:
+- name: Українофіли (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Українофіли
+  type: reference
+  notes: Ukrainophile movement
+- name: Москвофіли (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Москвофіли
+  type: reference
+  notes: Russophile movement
+- name: Товариство «Просвіта» (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Просвіта_(товариство)
+  type: reference
+  notes: Prosvita society
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
+persona:
+  voice: Academic Historiographer
+  role: National Awakening Scholar
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Галицький національний рух
+
+## Використані джерела
+1. [Енциклопедія сучасної України: Народовці](https://esu.com.ua/article-71325) — аналіз руху народовців, їх ідеології та діяльності.
+2. [Енциклопедія історії України: Москвофільство](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Moskvofilstvo) — детальний огляд москвофільської течії, її фінансування та занепаду.
+3. [Енциклопедія історії України: Просвіта](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Prosvita) — історія створення та діяльності товариства «Просвіта».
+4. [Енциклопедія історії України: Січ](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Sich_tovarystvo) — про зародження січового руху та Кирила Трильовського.
+5. [Енциклопедія історії України: Русько-українська радикальна партія](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Rusko_Ukrainska_radykalna_partiia) — політична діяльність Івана Франка та Михайла Павлика.
+6. [Збруч: Галицькі народовці](https://zbruc.eu/node/40348) — контекст боротьби між течіями.
+
+## Хронологія
+- 1860-ті — виникнення народовської течії («молоді русини») на противагу старорусинам.
+- 1868, 8 грудня — заснування товариства «Просвіта» у Львові (голова Анатоль Вахнянин).
+- 1882 — судовий процес проти москвофілів (О. Добрянський, І. Наумович) за державну зраду (обернення в православ'я села Гнилички).
+- 1885 — створення політичної організації народовців «Народна Рада».
+- 1890, 4 жовтня — заснування Русько-української радикальної партії (РУРП) — першої політичної партії європейського типу (І. Франко, М. Павлик).
+- 1895 — Юліан Бачинський (РУРП) видає «Україна irredenta» з ідеєю політичної самостійності.
+- 1899 — заснування Української національно-демократичної партії (УНДП) та Української соціал-демократичної партії (УСДП).
+- 1900, 5 травня — заснування першої пожежно-гімнастичної організації «Січ» у с. Завалля Кирилом Трильовським.
+- 1902 — перше крайове січове свято в Коломиї.
+- 1914, 28 червня — Шевченківський здвиг у Львові (12 тисяч січовиків і соколів), демонстрація сили українського руху.
+
+## Ключові факти та цитати
+- **Ідентичність**: Народовці ввели фонетичний правопис («кулішівку») замість етимологічного, що вживали москвофіли, щоб наблизити мову до живої народної.
+- **Москвофільство**: Фінансувалося російським урядом через слов'янські комітети. Ідеологія «язичія» — штучної суміші церковнослов'янської, російської та місцевих говірок.
+- **Вплив**: «Просвіта» мала 77 філій та майже 3000 читалень станом на 1914 рік. Це була держава в державі.
+- **Цитата Івана Франка**: «Ми мусимо навчитися чути себе українцями — не галицькими, не буковинськими українцями, а українцями без офіційних кордонів».
+- **Цитата про «Січ»**: «В огні перетоплюється залізо у сталь, у боротьбі перетворюється народ у націю» (Євген Коновалець про січовий рух).
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ — Боротьба за душу Галичини": [!context] — Пояснення терміну "Gente Ruthenus, natione Polonus" та як він трансформувався.
+- Section "Москвофіли — хибний шлях": [!myth-buster] — Спростування міфу про те, що москвофіли були "зрадниками" від початку; багато хто щиро вірив у єдність Русі як захист від полонізації, поки Росія не використала це політично.
+- Section "Народовці — український вибір": [!culture] — "Кулішівка" як політичний інструмент: чому правопис став маркером нації.
+- Section "«Просвіта» — культурний рух": [!history-bite] — Перший бюджет "Просвіти" складав 60 ринських, а читальні часто розміщувалися у хатах самих селян, де боролися з пияцтвом.
+- Section "Січовий рух": [!military] — Як під прикриттям пожежних дружин Кирило Трильовський створив парамілітарну армію, що стала основою УСС.
+- Section "Політичні партії": [!decolonization] — Радикальна партія першою в Європі поставила вимогу політичної незалежності України (1895), випередивши багато інших національних рухів.
+- Section "Підсумок": [!analysis] — Талергоф як перший концтабір в Європі, створений саме для українців, що відмовилися бути "росіянами".
+
+## Деколонізаційний контекст
+- **Imperial/Soviet myth**: Радянська історіографія зображувала москвофілів як "борців за возз'єднання", а народовців — як "буржуазних націоналістів". Польська історіографія часто ігнорувала українську суб'єктність, розглядаючи Галичину виключно як польську "Східну Малопольщу".
+- **Ukrainian reality**: Галицький рух був модернізаційним проєктом, що перетворив "етнографічну масу" на політичну націю. Це був свідомий вибір європейського вектора розвитку через самоорганізацію ("Просвіта", кооперативи) на противагу російському самодержавству.
+
+## Contested Terms (if applicable)
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| **Русини** | Частина "триєдиного російського народу" (в очах Росії) або етнічна група поляків (в очах Польщі). | Історична самоназва українців Галичини, що еволюціонувала в модерну націю "українці". |
+| **Язичіє** | "Літературна мова" галичан, зрозуміла "вченому світу" Росії. | Штучний, мертвий суржик, що гальмував просвіту народу. |
+| **Малопольща** | Офіційна назва Галичини в польському дискурсі (Małopolska Wschodnia). | Західна Україна, Галицька Русь — питомо українська земля. |
+| **Талергоф** | Австрійська в'язниця для "шпигунів". | Трагедія українського народу, етноцид свідомої інтелігенції та селянства. |
+
+## Section-Mapped Research Notes
+
+### Вступ — Боротьба за душу Галичини
+Три ідентичності в середині XIX ст.: австрійська (лояльність династії), польська (політична нація), та зародження української. Старорусини (консерватори) проти молодих народовців. Ключове питання: "Хто ми?".
+
+### Москвофіли — хибний шлях
+Соціальна база: консервативне духовенство (собор св. Юра), частина інтелігенції. Ідеологія панславізму, фінансована Росією. 1882 рік (справа Ольги Грабар, перехід села Гнилички у православ'я) — суд над москвофілами за зраду. Відрив від народу через мову "язичіє".
+
+### Народовці — український вибір
+Покоління 1860-х ("Млода Русь"). Орієнтація на Шевченка, Куліша, Костомарова. Заснування журналу "Правда". Співпраця з наддніпрянцями (Кониський, Антонович). Створення НТШ (1873) як неофіційної академії наук. Перехід до політичної боротьби ("Народна Рада", 1885).
+
+### «Просвіта» — культурний рух
+1868 рік, Львів. Мета: "Знання — то сила". Мережа читалень як альтернатива корчмі. Видання дешевих книжок ("метеликів"). Економічний аспект: кооперація ("Народна торгівля", "Маслосоюз"), навчання селян господарюванню.
+
+### Січовий рух
+1900 рік, с. Завалля — Кирило Трильовський ("Січовий Батько"). "Січ" як пожежно-гімнастичне товариство (легальний дах). Виховання дисципліни, патріотизму, фізичної гарту. Масові здвиги (паради) як демонстрація сили. Підготовка кадрів для майбутньої армії (УСС).
+
+### Політичні партії
+1890: РУРП (Франко, Павлик) — соціалізм + націоналізм. Програма "Україна irredenta" (1895). 1899: Розкол РУРП. Створення УНДП (Грушевський, Франко) — центристська масова партія ("національна демократія"). УСДП (Ганкевич) — соціал-демократи. Політизація мас, боротьба за виборчу реформу та український університет.
+
+### Підсумок
+Перемога народовців: на 1914 рік більшість населення ідентифікувала себе українцями. Галичина стала "П'ємонтом" — базою для національного відродження всієї України. Трагічний фінал епохи: Перша світова, Талергоф, репресії проти українців як з боку Австрії (страх зради), так і Росії (заборона українства).
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit -9): 
+✅ Message sent to Claude (ID: 12830)
+✓ Message 12809 acknowledged
+✓ Message 12830 acknowledged

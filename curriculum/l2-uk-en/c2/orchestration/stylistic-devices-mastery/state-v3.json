@@ -2,12 +2,5 @@
   "track": "c2",
   "slug": "stylistic-devices-mastery",
   "mode": "v3",
-  "phases": {
-    "v3-A": {
-      "status": "complete",
-      "ts": "2026-02-20T00:41:51Z",
-      "task_id": "v3-stylistic-devices-mastery-pA",
-      "mode": "full"
-    }
-  }
+  "phases": {}
 }

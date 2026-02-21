@@ -6,55 +6,85 @@ version: '2.0'
 title: Checkpoint — Cases
 subtitle: Review and Mastery
 content_outline:
-- section: Overview
+- section: Огляд та самооцінка (Overview and Self-assessment)
+  words: 400
   points:
-  - 'Checkpoint overview and goals — Alignment with State Standard §4.2.2 (Linguistic
-    competence: morphology, Catalogue C)'
-  - Self-assessment checklist — Ensure inclusion of a 'Preposition + Case' matching
-    section (research friction point)
-- section: Skills Review / Повторення навичок
+  - 'Checkpoint goals and alignment with Ukrainian State Standard §4.2.2 (Linguistic
+    competence: morphology, Catalogue C); emphasis on systematic review of all 7 cases.'
+  - Comprehensive self-assessment checklist based on CEFR A2 descriptors; must include
+    a 'Preposition + Case' matching section as identified in research as a primary
+    friction point.
+- section: 'Відмінки в дії: Давальний та Орудний (Cases in Action: Dative and Instrumental)'
+  words: 700
   points:
-  - Dative (Skill 1) - Recipients & Experiencers — Emphasize age and expressions of
-    feeling (мені холодно/цікаво) and recipients (Подарувати книжку студентові); Standard
-    §4.2.2.3
-  - 'Instrumental (Skill 2) - Tools & Companions — learner error: Nom. for Instruments
-    (omitting ending) and Profession/status (бути програмувальником); Standard §4.2.2.5'
-  - 'Prepositions (Skill 3) - Motion vs Location — learner error: Nom. after Negation/Prepositions;
-    Standard §4.2.2.2/§4.2.2.6; include Locative (в/у, на) and Path (по)'
-  - 'Services (Skill 4) - Post & Bank integration — focus on practical ''Mixed Case''
-    dialogues; cultural hook: Digital Banking Leadership (Monobank/Diia)'
-- section: Integration Challenge
+  - 'Dative case review (Standard §4.2.2.3): Emphasize recipients (Подарувати книжку
+    студентові), age (Дідусеві вісімдесят років), and expressions of feeling (мені
+    холодно/цікаво).'
+  - 'Instrumental case review (Standard §4.2.2.5): Focus on profession/status (бути
+    програмувальником) and instruments (пише ручкою).'
+  - 'Targeted drill for learner error: Nom. for Instruments (e.g., correcting ''Я
+    пишу ручка'' to ''Я пишу ручкою'') to ensure mastery of case endings for tools.'
+- section: 'Граматичні тонкощі: Родовий, Знахідний та Кличний (Grammar Nuances: Genitive,
+    Accusative, and Vocative)'
+  words: 700
   points:
-  - 'Mixed case narrative analysis — cultural hook: Stamps as Currency (1918) historical
-    note; UNR stamps circulated as coins'
-  - Final summary and next steps — Prepares for a2-12 (Aspect Introduction) where
-    case usage remains constant
+  - 'Genitive case functions (Standard §4.2.2.2): Practice with time/date (десятого
+    березня), prepositions (з, до, для, біля), and mandatory case change under negation.'
+  - 'Correction of learner error ''Nom. after Negation'': Drill minimal pairs (e.g.,
+    correcting ''У мене немає гроші'' to ''У мене немає грошей'').'
+  - 'Accusative vs. Locative for Motion and Location (Standard §4.2.2.4/§4.2.2.6):
+    Mastering prepositions в/у, на and the path-oriented ''по''.'
+  - 'Vocative case mastery: Addressing learner error ''Nom. instead of Voc.'' (e.g.,
+    correcting ''Сергій, привіт!'' to ''Сергію, привіт!'') to build natural conversational
+    habits.'
+- section: Сервіси та цифрова Україна (Services and Digital Ukraine)
+  words: 700
+  points:
+  - 'Practical mixed-case dialogues in service environments: Post office and Banking
+    (Standard Catalogue B).'
+  - 'Vocabulary integration: ''відправити поштою'', ''рахунок у банку'', ''допомагати
+    з роботою'' using high-frequency verbs ''допомагати'' and ''відправляти''.'
+  - 'Cultural Hook — Digital Banking Leadership: Exploring Ukraine''s role as a global
+    leader via Monobank and the ''Diia'' app; practicing case usage while discussing
+    modern tech ecosystems.'
+- section: Історичний виклик та підсумок (Historical Challenge and Summary)
+  words: 500
+  points:
+  - 'Integration Challenge: Mixed case narrative analysis based on the cultural hook
+    ''Stamps as Currency (1918)''; how the UNR issued stamps that circulated equally
+    with coins.'
+  - Final summary of case governance and prepositional matching; preparing the learner
+    for a2-12 (Aspect Introduction) where case endings remain constant regardless
+    of verb aspect.
 vocabulary_hints:
   required:
-  - відмінок (case) — Nominative to Vocative (7 cases)
-  - давальний (dative) — Recipients & Experiencers
-  - орудний (instrumental) — Tools & Companions
-  - прийменник (preposition) — Critical for case governance
-  - допомагати (to help) — High (Dative); допомагати мамі/другові, допомагати з роботою
-  - подобатися (to like) — High (Dative); мені подобається це місто, подобатися вчителю
-  - з (with) — Very High (Inst/Gen); кава з молоком, розмовляти з другом, приїхати
-    з Києва
-  - для (for) — Genitive preposition
-  - без (without) — Genitive preposition
-  - через (because of) — High (Acc); через дорогу, через дощ (because of), через тиждень
-  - після (after) — Genitive preposition
-  - пошта (post office) — Medium (Services); на пошті, відправити поштою, відділення
-    пошти
-  - рахунок (account) — Medium (Bank); відкрити рахунок, гроші на рахунку, номер рахунку;
-    Digital Banking Leadership context
-  - відправляти (to send) — Post context
-  - обмінювати (to exchange) — Bank context
+  - відмінок (case) — Nominative to Vocative (7 cases); review of the full system.
+  - давальний (dative) — Recipients & Experiencers; focus on age and feelings.
+  - орудний (instrumental) — Tools & Companions; focus on profession/status.
+  - прийменник (preposition) — Critical for case governance; major focus on matching.
+  - 'допомагати (to help) — High frequency (Dative); collocations: допомагати мамі/другові,
+    допомагати з роботою.'
+  - 'подобатися (to like) — High frequency (Dative); collocations: мені подобається
+    це місто, подобатися вчителю.'
+  - 'з (із/зі) (with/from) — Very High frequency (Inst/Gen); collocations: кава з
+    молоком, розмовляти з другом, приїхати з Києва.'
+  - для (for) — Genitive preposition; high frequency in service contexts.
+  - без (without) — Genitive preposition; essential for negation and exclusion.
+  - 'через (because of/through) — High frequency (Acc); collocations: через дорогу
+    (motion), через дощ (reason), через тиждень (time).'
+  - після (after) — Genitive preposition; frequency in scheduling and dates.
+  - 'пошта (post office) — Medium (Services); collocations: на пошті, відправити поштою,
+    відділення пошти.'
+  - 'рахунок (account) — Medium (Bank); collocations: відкрити рахунок, гроші на рахунку,
+    номер рахунку.'
+  - відправляти (to send) — Post context; typically takes Accusative direct object.
+  - обмінювати (to exchange) — Bank context; essential for currency exchange tasks.
   recommended:
-  - правильно (correctly) — Self-correction context
-  - помилка (mistake) — learner error identification
-  - виправити (to correct) — Error correction tasks
-  - перевірити (to check) — Self-assessment context
-  - оцінка (assessment) — Progress check
+  - правильно (correctly) — Self-correction and assessment context.
+  - помилка (mistake) — Focus on identifying and correcting learner errors.
+  - виправити (to correct) — Action-oriented verb for error correction tasks.
+  - перевірити (to check) — Self-assessment and verification context.
+  - оцінка (assessment) — Progress tracking and goal setting.
 activity_hints:
 - type: quiz
   focus: Comprehensive case quiz - all 7 cases

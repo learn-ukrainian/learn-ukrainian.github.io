@@ -1,7 +1,7 @@
 # Audit Report: M30 — prepositions-direction-origin.md
 **Level:** A1 | **Module:** M30 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 2000
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-20 00:25:51
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-21 01:01:44
 
 ## Configuration
 **Type:** A1-grammar
@@ -16,30 +16,42 @@
 **Vocab Target:** ≥1 words
 **Transliteration:** Allowed
 
-## PEDAGOGICAL VIOLATIONS
-- **[GRAMMAR]** Instrumental case used at A1: 'з музею'
-  - FIX: Instrumental case not allowed until A2 (M36+). Restructure sentence.
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | group-sort | Де, Куди чи Звідки? | 12 | 12 | ✅ |
+| 2 | match-up | Питання та відповіді | 8 | 8 | ✅ |
+| 3 | quiz | Оберіть правильний прийменник | 8 | 8 | ✅ |
+| 4 | fill-in | Вставте пропущене слово | 8 | 8 | ✅ |
+| 5 | unjumble | Складіть речення | 6 | 6 | ✅ |
+| 6 | group-sort | В чи На? | 12 | 12 | ✅ |
+| 7 | true-false | Логіка руху | 8 | 8 | ✅ |
+| 8 | match-up | Антоніми руху | 8 | 8 | ✅ |
+| 9 | quiz | Йти чи Їхати? | 8 | 8 | ✅ |
+| 10 | fill-in | Закінчіть речення | 8 | 8 | ✅ |
 
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
+**Summary:**
+- Total activities: 10 (target: 8-12) ✅
+- Unique types: 6 (minimum: 4) ✅
+- Priority types used: 4/5 (fill-in, match-up, quiz, unjumble) ✅
+- Required types used: 2/2 (fill-in, quiz) ✅
+- Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2075/2000 (raw: 2771)
-- **Activities:** ⏳ Deferred (content-only audit)
-- **Density:** ⏳ Deferred (content-only audit)
-- **Unique_types:** ⏳ Deferred (content-only audit)
-- **Priority:** ⏳ Deferred (content-only audit)
+- **Words:** ✅ 2218/2000 (raw: 2907)
+- **Activities:** ✅ 10/8
+- **Density:** ✅ All > 12
+- **Unique_types:** ✅ 6/4 types
+- **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⏳ Deferred (content-only audit)
+- **Vocab:** ✅ 20/1
 - **Structure:** ✅ Valid Structure
 - **Ipa:** ⚠️ 1 IPA issues (run lint_ipa.py --fix)
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
-- **Content_heavy:** ⏳ Deferred (content-only audit)
-- **Immersion:** ❌ 34.5% LOW (target 35-55% (M30))
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
+- **Immersion:** 🇺🇦 44.3% (target 35-55% (M30))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -49,11 +61,11 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Prepositions: Direction & Origin** | ✅ | 87 | Included in Core |
-| **Розминка: Де, Куди, Звідки** | ✅ | 336 | Included in Core |
-| **Презентація: Три питання — три відмінки** | ✅ | 241 | Included in Core |
-| **Місце: Де? (Локатив)** | ✅ | 255 | Included in Core |
-| **Напрямок: Куди? (Знахідний)** | ✅ | 304 | Included in Core |
-| **Походження: Звідки? (Родовий)** | ✅ | 211 | Included in Core |
-| **Систематизація: Школа і Робота** | ✅ | 132 | Included in Core |
+| **Розминка: Де, Куди, Звідки** | ✅ | 333 | Included in Core |
+| **Презентація: Три питання — три відмінки** | ✅ | 240 | Included in Core |
+| **Місце: Де? (Локатив)** | ✅ | 257 | Included in Core |
+| **Напрямок: Куди? (Знахідний)** | ✅ | 302 | Included in Core |
+| **Походження: Звідки? (Родовий)** | ✅ | 286 | Included in Core |
+| **Систематизація: Школа і Робота** | ✅ | 209 | Included in Core |
 | **Практика: Маршрут по місту** | ✅ | 402 | Included in Core |
-| **Підсумок** | ✅ | 107 | Included in Core |
+| **Підсумок** | ✅ | 102 | Included in Core |

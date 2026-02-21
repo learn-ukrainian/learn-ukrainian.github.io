@@ -6,36 +6,50 @@ version: '2.0'
 title: 'Підрядні означальні: який'
 subtitle: Relative Clauses with який
 content_outline:
-- section: Тест
-  points: []
-- section: Теорія
+- section: Тест (Diagnostic Test)
+  words: 800
   points:
-  - 'Принцип узгодження — teach the Agreement Algorithm: 1) Look BACK for Gender/Number
-    (Antecedent), 2) Look FORWARD for Case (Function in sub-clause); covers State
-    Standard §4.4.3'
-  - 'Повна парадигма який у всіх відмінках — clarify stylistic nuance: ''який'' (descriptive
-    quality) vs ''котрий'' (selection from a set)'
-- section: Поглиблення
+  - Вступний тест для перевірки початкових знань про складні речення — виявлення інтуїтивного
+    розуміння зв'язку між головним та підрядним реченнями (TTT-підхід)
+  - Завдання на поєднання двох простих речень в одне складне — тестування здатності
+    учня самостійно обрати форму 'який' без попередніх інструкцій
+- section: Презентація та теорія (Presentation & Theory)
+  words: 1000
   points:
-  - 'Який у кожному відмінку з прикладами — cultural hook: Folklore ''Hero Definition''
-    pattern (e.g., ''Козак, який мав шаблю...'')'
-  - 'Типові помилки та як їх уникнути — learner error: Case Logic Failure (agreeing
-    with antecedent case instead of role), Gender/Number Discord, Ambiguous Antecedent,
-    Overuse of invariant ''що'''
-- section: Практика
-  points: []
-- section: Діалоги
+  - 'Пояснення ''Алгоритму узгодження'' (The Agreement Algorithm): 1) Погляд НАЗАД
+    для визначення роду/числа антецедента; 2) Погляд ВПЕРЕД для визначення відмінка
+    за функцією у підрядному реченні'
+  - Парадигма відмінювання 'який' у всіх семи відмінках згідно з Держстандартом §4.4.3
+    — аналіз прикладів з 'Пані, яку зустріли' та 'Будинки, які належать до ЮНЕСКО'
+  - 'Стилістичне розмежування: якісний аспект ''який'' проти вибіркового ''котрий''
+    — пояснення тенденції до домінування ''який'' у сучасній стандартній українській
+    мові'
+- section: 'Поглиблення: Культурний код (Deepening: Cultural Code)'
+  words: 800
   points:
-  - 'Діалог 1: Про нового колегу — use collocation ''людина, яка...'''
-  - 'Діалог 2: Про подорож — use collocation ''місто, в якому...'''
-  - 'Діалог 3: Про книгу — use collocation ''той, який...'''
-  - 'Діалог 4: Про навчання'
-  - 'Діалог 5: Про ресторан'
-- section: Потрібно більше практики?
+  - 'Культурний гачок: Фольклорна модель ''Визначення героя'' у думах та баладах —
+    використання відносних речень для створення епічного образу (наприклад: ''Козак,
+    який мав шаблю...'')'
+  - Поняття 'Антецедента' (слово, яке ми описуємо) — розширене пояснення важливості
+    близького розташування підрядного речення до іменника для уникнення двозначності
+    (Ambiguous Antecedent)
+- section: Практика та аналіз помилок (Practice & Error Analysis)
+  words: 800
   points:
-  - Інтеграція знань
-  - Реальне застосування
-  - Онлайн-ресурси
+  - 'Аналіз ''Пастки ролі'' (Case Logic Failure): розбір помилок, де учень копіює
+    відмінок антецедента (наприклад: ''Я бачу дівчину, яку стоїть...'' замість правильного
+    ''яка'')'
+  - Дрилі на виправлення 'Гендерного дисонансу' (Gender/Number Discord) та розпізнавання
+    помилок у складних ланцюжках іменників у родовому відмінку
+  - Критика надмірного вживання 'що' — вправи на заміну інваріантного 'що' на точний
+    та стилістично вишуканий займенник 'який' у формальному контексті
+- section: Діалоги та синтез (Dialogues & Synthesis)
+  words: 600
+  points:
+  - 'П''ять ситуативних діалогів (Колега, Подорож, Книга, Навчання, Ресторан) з використанням
+    сталих конструкцій: ''людина, яка...'', ''місто, в якому...'', ''той, який...'''
+  - Підсумкове творче завдання на побудову складних дескрипцій — використання 'який'
+    для опису професійних якостей, ідеального міста чи культурних пам'яток
 vocabulary_hints:
   required:
   - 'який (which/that/who) — Top 50; collocations: людина, яка...; місто, в якому...;
@@ -43,15 +57,18 @@ vocabulary_hints:
   - яка (which - feminine) — agreement with feminine antecedent
   - яке (which - neuter) — agreement with neuter antecedent
   - які (which - plural) — agreement with plural antecedent
-  - 'підрядний (subordinate) — grammar term: підрядне речення'
-  - 'означальний (attributive) — grammar term: означальне речення'
-  - 'речення (sentence) — High freq: головне речення, складне речення'
-  - 'антецедент (antecedent) — academic: узгодження з антецедентом'
+  - 'підрядний (subordinate) — grammar term: підрядне речення, підрядна частина; low
+    frequency'
+  - 'означальний (attributive) — grammar term: означальне речення; targets descriptive
+    function'
+  - 'речення (sentence) — High frequency: головне речення, складне речення'
+  - 'антецедент (antecedent) — academic: ''слово, яке ми описуємо''; crucial for agreement
+    logic'
   recommended:
-  - 'узгодження (agreement) — Medium freq: принцип узгодження'
-  - 'відмінок (case) — Medium freq: у називному відмінку, непрямі відмінки'
-  - сполучник (conjunction) — grammar context
-  - головне речення (main clause) — context of complex sentences
+  - 'узгодження (agreement) — Medium frequency: принцип узгодження, повне узгодження'
+  - 'відмінок (case) — Medium frequency: у називному відмінку, непрямі відмінки'
+  - сполучник (conjunction) — grammar context; identifies the link between clauses
+  - головне речення (main clause) — the base sentence that the relative clause modifies
 activity_hints:
 - type: fill-in
   focus: який case selection

@@ -1,0 +1,297 @@
+✅ Message sent to Gemini (ID: 11939) [auto-acked: self-addressed]
+✓ Message 11939 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #11939...
+📨 Message #11939
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-kyievo-pecherskyi-pateryk
+   Time: 2026-02-20T23:34:41.321886+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-hist-013
+level: c1-hist
+sequence: 13
+version: '1.0'
+title: Києво-Печерський патерик
+focus: history
+pedagogy: seminar
+objectives:
+- Analyze the causes and consequences of києво-печерський патерик
+- Evaluate the historical significance of агіографія як джерело
+content_outline:
+- section: Вступ — Агіографія як джерело
+  subsections:
+  - Що таке патерик?
+  - Києво-Печерський патерик — унікальність
+  - Житія святих — історія чи пропаганда?
+  - Як читати агіографію критично
+- section: Історія тексту
+  subsections:
+  - Коли написано? XIII ст.
+  - Автори — Симон і Полікарп
+  - Листування як форма
+  - Редакції — Касіянівські та інші
+- section: Структура патерика
+  subsections:
+  - Житія засновників — Антоній, Феодосій
+  - Оповіді про ченців
+  - Чудеса та видіння
+  - Бесоборство та аскеза
+- section: Фрагмент — Житіє Феодосія Печерського
+  subsections:
+  - Текст (з глосами)
+  - Біографічні факти vs. агіографічні топоси
+  - Відносини з князями
+  - Що нам каже про XI ст.?
+- section: Патерик як історичне джерело
+  subsections:
+  - Побутові деталі — цінна інформація
+  - Соціальна історія — хто йшов у монастир?
+  - Політична історія — зв'язки з князями
+  - Економіка монастиря
+  - Що замовчано?
+- section: Критика джерела
+  subsections:
+  - Чудеса — як інтерпретувати?
+  - Агіографічні топоси — що запозичено
+  - Мета тексту — виховання ченців
+  - Що достовірно, що сумнівно
+- section: Підсумок
+  subsections:
+  - Патерик — вікно в Київську Русь
+  - Методи роботи з агіографією
+  - Зв'язок із релігійною ідентичністю
+vocabulary:
+- патерик
+- агіографія
+- житіє
+- чернець
+- аскеза
+- топос
+- чудо
+- видіння
+- подвижник
+- преподобний
+- бесоборство
+- печера
+- лавра
+- ігумен
+- мощі
+activities:
+- type: reading
+  focus: Excerpt from Life of Theodosius — childhood narrative
+- type: critical-analysis
+  focus: Identify hagiographic topoi vs. historical facts
+- type: comparative-study
+  focus: Compare with Byzantine paterica — what's borrowed?
+- type: reading
+  focus: What does Patericon tell us about 11th century economics?
+- type: essay-response
+  focus: Чи можна використовувати агіографію як історичне джерело?
+sources:
+- name: Києво-Печерський патерик (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Києво-Печерський_патерик
+  type: reference
+  notes: Overview
+- name: Патерик (повний текст)
+  url: https://litopys.org.ua/paterikon/pat.htm
+  type: primary
+  notes: Full text
+- name: Києво-Печерська лавра
+  url: https://uk.wikipedia.org/wiki/Києво-Печерська_лавра
+  type: reference
+  notes: Monastery history
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
+persona:
+  voice: Academic Historiographer
+  role: Hagiography Specialist
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Києво-Печерський патерик
+
+## Використані джерела
+1. [Історія української літератури. Том 1. Давня українська література (XI–XVIII ст.)](http://litopys.org.ua/istukr/istukr09.htm) — Аналіз структури, авторства та жанрової специфіки Патерика як пам'ятки агіографії.
+2. [Енциклопедія історії України: Києво-Печерський патерик](http://history.org.ua/LiberUA/978-966-00-0734-5/978-966-00-0734-5.pdf) — Академічна стаття про джерелознавчу цінність, редакції та рукописну традицію.
+3. [Велика українська енциклопедія: Києво-Печерський патерик](https://vue.gov.ua/Києво-Печерський_патерик) — Огляд змісту, основних редакцій (Касіянівські, Йосифа Тризни) та значення для української культури.
+
+## Хронологія
+- **1214–1226**: Листування єпископа Симона з ченцем Полікарпом — створення основи Патерика.
+- **1226**: Смерть єпископа Симона, одного з авторів.
+- **1406**: Арсеніївська редакція — найдавніша збережена рукописна збірка, створена з ініціативи тверського єпископа Арсенія (вихідця з Києва).
+- **1460, 1462**: Перша та Друга Касіянівські редакції, укладені крилошанином Касіяном у Києво-Печерському монастирі (найпоширеніші версії).
+- **1635**: Сильвестрівська редакція (Польща), підготовка до друку Петром Могилою.
+- **1661**: Перше друковане видання церковнослов'янською мовою в друкарні Києво-Печерської лаври.
+
+## Ключові факти та цитати
+- **Цитата Симона (про любов до Лаври)**: «Одного прошу я у Господа, того тільки шукаю, щоб перебувати мені в домі Господньому всі дні життя мого, відвідувати святий храм Його». (Свідчення духовної вищості Києва над Владимиро-Суздальським князівством).
+- **Цитата про Полікарпа**: «Сидиш у келії, а думками літаєш по світу», — докір Симона марнославному ченцю, що прагнув єпископства.
+- **Факт**: Патерик не є хронікою; це збірка новел з повчальною метою, де історичні факти підпорядковані агіографічному канону.
+- **Факт**: Симон, будучи єпископом у Владимирі-на-Клязьмі, писав, що готовий проміняти свій високий сан на можливість бути «мітлою» (прибиральником) у Печерському монастирі.
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ — Агіографія як джерело": [!context] — Пояснення, що середньовічна людина сприймала дива як реальність, а не алегорію.
+- Section "Історія тексту: I — Листування Симона і Полікарпа": [!myth-buster] — Спростування тези про "єдиний руський світ": єпископ з півночі (Симон) визнає духовну першість Києва, а не свого міста.
+- Section "Історія тексту: II — Редакції та друк": [!history-bite] — Про те, як Патерик став бестселером XVII століття, випередивши світські книги за тиражами.
+- Section "Структура патерика: I — Житія засновників": [!quote] — Цитата з "Житія Феодосія" про спільну працю з братією (пече хліб, носить воду).
+- Section "Патерик як історичне джерело: I — Соціально-політичний вимір": [!decolonization] — Аналіз того, як монастир виступав опозицією до князівської влади (конфлікт Феодосія з Святославом).
+- Section "Критика джерела: I — Агіографічні топоси": [!historiography] — Порівняння візантійських шаблонів чудес з оригінальними київськими реаліями.
+
+## Деколонізаційний контекст
+- **Imperial/Soviet myth**: Патерик — частина "загальноросійської" літератури, що доводить єдність "Святої Русі" з центром, який згодом "переїхав" до Москви.
+- **Ukrainian reality**: Патерик фіксує унікальну київську ідентичність. Симон, хоч і служить на півночі (Залісся), вважає ту землю чужою, а Київ — єдиним духовним домом. Це свідчення *відмінності* двох культурних центрів ще у XIII ст.
+- **Soviet historiography**: Трактування Патерика виключно як "церковного мракобісся" або фольклорної казки, ігнорування його як джерела з історії ментальності.
+
+## Contested Terms (if applicable)
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| "Руські святі" | Всі святі Києва автоматично зараховуються до "російських" (РПЦ). | Святі Русі-України; носії київської духовної традиції, відмінної від московського чернецтва. |
+| "Перенесення" святості | Святість Києва перейшла до Владимира, потім до Москви. | Київ залишається "Другим Єрусалимом", святість прив'язана до місця (locus sanctus), її не можна вивезти. |
+| Єпископ Симон | "Російський" церковний діяч. | Київський інтелектуал на службі в Заліссі, носій києвоцентричного світогляду. |
+
+## Section-Mapped Research Notes
+
+### Вступ — Агіографія як джерело
+Жанр "Patericon" (отцівник) — збірка повчальних оповідань. Особливість КПП: це не просто переклад грецьких взірців, а оригінальні київські сюжети. Важливо: агіографія не має на меті фактичну точність, її мета — показати шлях до спасіння.
+
+### Історія тексту
+Унікальна форма виникнення: приватне листування. Симон намагався втішити та напоумити Полікарпа, наводячи приклади з історії монастиря. Пізніші редакції (Касіянівські) впорядкували ці листи у хронологічну збірку. Роль Петра Могили у популяризації (підготовка друкованого видання).
+
+### Структура патерика
+Дві частини: Симонові послання (9 оповідей) і Полікарпові (11 оповідей). Симон пише про чудотворців минулого, Полікарп — про сучасніші йому події та спокуси ченців (сребролюбство, владолюбство). Житія Антонія (аскеза) і Феодосія (спільножитний устав) як фундамент.
+
+### Фрагмент — Житіє Феодосія Печерського
+Твір Нестора Літописця (включений до пізніх редакцій Патерика). Мати Феодосія як цікавий психологічний тип (протидія покликанню сина). Топос "святого дитяти" vs реальні деталі побуту Курська та Києва XI ст.
+
+### Патерик як історичне джерело
+Соціальний зріз: ченці з бояр, князів (Микола Святоша) та простолюдинів. Політична роль: монастир як моральний арбітр у князівських усобицях. Економіка: пожертви, земельні володіння, торгівля сіллю (сюжет про Прохора Лободника).
+
+### Критика джерела
+Проблема "топосів": чи справді святий боровся з бісами, чи це метафора внутрішньої боротьби? Чи справді він міг жити без їжі 40 днів? Розрізнення запозичених сюжетів (з єгипетських патериків) та унікальних київських реалій (лазня, одяг, їжа).
+
+### Підсумок
+Патерик як "золота книга" українського письменства (М. Грушевський). Формування національного пантеону святих. Вплив на барокову літературу та малярство.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 11978)
+✓ Message 11939 acknowledged
+✓ Message 11978 acknowledged

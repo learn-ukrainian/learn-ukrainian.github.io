@@ -1,0 +1,321 @@
+✅ Message sent to Gemini (ID: 11295) [auto-acked: self-addressed]
+✓ Message 11295 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #11295...
+📨 Message #11295
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-c2-3-review
+   Time: 2026-02-20T22:36:49.670170+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c2-074
+level: c2
+sequence: 74
+version: '2.0'
+title: Повторення C2.3 — Консолідація професійної спеціалізації
+focus: integration
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: C2-CURRICULUM-PLAN.md — Phase C2.3
+  url: internal
+  type: reference
+  notes: Огляд усіх модулів фази C2.3
+- name: Ukrainian State Standard 2024 — Professional Language
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Вимоги до професійного володіння мовою
+- name: MODULE-RICHNESS-GUIDELINES-v2.md
+  url: internal
+  type: reference
+  notes: Стандарти якості та глибини модулів
+content_outline:
+- section: Вступ — Огляд фази C2.3
+  points:
+  - Структура фази (30 модулів)
+  - Ключові навички кожного блоку
+  - Критерії успішного завершення
+  - Підготовка до checkpoint
+- section: Блок I — Основи професійної мови (M46-55)
+  points:
+  - Огляд термінологічного набуття
+  - Читання та аналіз професійних текстів
+  - Типи професійних документів
+  - Усна професійна комунікація
+  - Самооцінка компетенцій
+- section: Блок II — Правнича українська (M61-65)
+  points:
+  - Правнича термінологія
+  - Договори та угоди
+  - Судові процедури
+  - Юридичне письмо
+  - Аналіз справ
+- section: Блок III — Медична українська (M66-70)
+  points:
+  - Медична термінологія
+  - Спілкування з пацієнтами
+  - Медична документація
+  - Клінічні сценарії
+  - Медичні дослідження
+- section: Блок IV — Професійне портфоліо (M71-73)
+  points:
+  - Демонстрація компетентності
+  - Багатоформатна презентація
+  - Професійна ідентичність
+  - Особистий бренд
+- section: Інтегрована самооцінка
+  points:
+  - Чекліст компетенцій C2.3
+  - Виявлення прогалин
+  - План додаткової роботи
+  - Підготовка до checkpoint
+- section: Практикум — Комплексна підготовка
+  points:
+  - Інтегрований тест
+  - Симуляція професійної ситуації
+  - Підготовка портфоліо для checkpoint
+vocabulary:
+  required:
+  - консолідація (consolidation)
+  - інтеграція (integration)
+  - компетенція (competency)
+  - прогалина (gap)
+  - самооцінка (self-assessment)
+  - чекліст (checklist)
+  - критерій (criterion)
+  - професійний рівень (professional level)
+  - спеціалізація (specialization)
+  - підготовка (preparation)
+  recommended:
+  - блок (block/unit)
+  - огляд (review/overview)
+  - систематизація (systematization)
+  - закріплення (reinforcement)
+  - checkpoint (checkpoint)
+  forbidden: '[]'
+activities:
+  types_required:
+  - group-sort
+  - quiz
+  - fill-in
+  - match-up
+  - critical-analysis
+  - essay-response
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c2-75 (C2.3 Checkpoint)
+- c2-76 (Complete Grammar Review)
+- 'c2-89 (Capstone: Topic Selection)'
+vocabulary_hints:
+  required:
+  - концепція (concept)
+  - аналіз (analysis)
+  - дискурс (discourse)
+  - методологія (methodology)
+  recommended:
+  - інтерпретація (interpretation)
+  - контекстуалізація (contextualization)
+  - синтез (synthesis)
+activity_hints:
+- type: reading
+  focus: Поглиблений аналіз тексту
+  items: 4
+- type: essay-response
+  focus: Критичне осмислення
+- type: discussion
+  focus: Дискусія та аргументація
+  items: 1
+persona:
+  voice: Senior Specialist
+  role: Thesis Advisor
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Повторення C2.3 — Консолідація професійної спеціалізації
+
+## State Standard Reference
+§4.3.3: "професіоналізми (у межах обраного фаху)... канцеляризми: згідно з…; відповідно до…; у зв’язку з…"
+§4.3.8: "Уміння утворювати вторинні тексти, зокрема реферати, повідомлення, довідково-інформаційні тексти."
+Alignment: Цей модуль консолідує навички використання професійної лексики та створення вторинних професійних текстів (резюме, портфоліо), що є ключовою вимогою стандарту для рівня С2.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| консолідація | Середня (Academic/Pro) | консолідація активів, консолідація зусиль, фінансова консолідація |
+| компетенція | Висока (Official) | у межах компетенції, розширити компетенцію, виключна компетенція |
+| компетентність | Висока (HR/Edu) | професійна компетентність, цифрова компетентність, набути компетентності |
+| прогалина | Низька (General) | прогалина в знаннях, заповнити прогалину, правова прогалина |
+| самооцінка | Середня (Psych/HR) | адекватна самооцінка, завищена самооцінка, лист самооцінки |
+
+## Cultural Hooks
+1. **Інститут української наукової мови (1921-1930)**: Створений у часи "Розстріляного відродження", заклав фундамент сучасної української термінології. Григорій Холодний та інші термінологи створили словники, якими ми користуємося досі.
+2. **Українська правнича традиція**: Посилання на "Руську Правду" та Литовські статути як свідчення давньої традиції кодифікації права українською (староукраїнською) мовою.
+
+## Common Learner Errors
+1. **Компетенція vs Компетентність**: Плутають повноваження органу (`компетенція`) з навичками особи (`компетентність`).
+   *Помилка:* "Моя компетенція в IT висока." → *Правильно:* "Моя компетентність..."
+2. **Кальки з англійської**: Вживання слів у невластивих значеннях.
+   *Помилка:* "Аплікуватися на позицію" (apply) → *Правильно:* "Подаватися на посаду / претендувати на вакансію".
+3. **Канцелярит у невідповідному контексті**: Надмірне вживання пасивних конструкцій (`нами було зроблено`) замість активних (`ми зробили`) у сучасному професійному спілкуванні, яке тяжіє до динамічності.
+
+## Cross-References
+- Builds on: M46-55 (General Pro), M61-65 (Legal), M66-70 (Medical), M71-73 (Portfolio)
+- Prepares for: M75 (Checkpoint C2.3), M76-100 (Capstone Project)
+
+## Notes for Content Writing
+- Модуль має бути "містом-хабом", який з'єднує різні професійні сфери.
+- Важливо підкреслити, що навіть якщо студент не медик і не юрист, знання базової термінології цих сфер є ознакою освіченої людини рівня С2.
+- Використовувати стиль "Senior Specialist" — колегіальний, шанобливий, але вимогливий.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Аналіз структури фази C2.3 та вимог Державного стандарту 2024 щодо професійного володіння мовою (§4.3.3, §4.3.8)."
+  - "Культурний контекст: роль Інституту української наукової мови (1921-1930) у створенні словників та закладенні фундаменту сучасної терміносистеми."
+- section: "Професійна термінологія та культура письма (Professional Terminology and Writing Culture)"
+  words: 600
+  points:
+  - "Типові лексичні помилки: розрізнення понять «компетенція» (сфера повноважень органу) та «компетентність» (навички особи) — практичні вправи на диференціацію."
+  - "Подолання кальок у діловому спілкуванні: заміна помилкового «аплікуватися» на нормативне «претендувати на вакансію» або «подаватися на посаду»."
+  - "Стилістична корекція: перехід від застарілого канцеляриту з пасивними конструкціями («нами було зроблено») до динамічного професійного стилю («ми зробили»)."
+- section: "Спеціалізований дискурс — Право та Медицина (Specialized Discourse — Law and Medicine)"
+  words: 750
+  points:
+  - "Правнича українська: історична тяглість від «Руської Правди» та Литовських статутів до сучасної кодифікації правової термінології."
+  - "Медична термінологія: консолідація знань (M66-70) та етика професійного спілкування як елемент загальної ерудиції фахівця рівня C2."
+  - "Правопис та вживання канцеляризмів згідно зі Стандартом: нормативне використання конструкцій «згідно з», «відповідно до», «у зв’язку з»."
+- section: "Академічне та професійне письмо (Academic and Professional Writing)"
+  words: 650
+  points:
+  - "Методологія створення вторинних текстів: алгоритми написання рефератів, аналітичних довідок та інформаційних повідомлень (Стандарт §4.3.8)."
+  - "Синтез матеріалів професійного портфоліо (M71-73): демонстрація багатоформатної компетентності та стратегії розбудови особистого бренду."
+- section: "Консолідація та самооцінка (Consolidation and Self-Assessment)"
+  words: 600
+  points:
+  - "Методика самооцінки: використання професійних чеклістів для виявлення прогалин (правових, мовних, фахових) та планування подальшої роботи."
+  - "Комплексний практикум: симуляція професійної ситуації (дискурс, презентація, аргументація) як підготовка до Checkpoint C2.3."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "консолідація (consolidation) — консолідація активів, консолідація зусиль; висока частотність в академічному та фінансовому дискурсі"
+  - "компетентність (competence) — професійна компетентність, цифрова компетентність; набути компетентності (на відміну від компетенції як повноважень)"
+  - "прогалина (gap) — прогалина в знаннях, правова прогалина; заповнити прогалину; низька частотність у розмовному мовленні, типова для професійного контексту"
+  - "претендувати (to apply/claim) — претендувати на вакансію; вживати замість кальки «аплікуватися»"
+  - "відповідно до (according to) — нормативний канцеляризм згідно зі Стандартом §4.3.3; вимагає родового відмінка"
+  recommended:
+  - "самооцінка (self-assessment) — адекватна самооцінка, лист самооцінки; ключовий термін HR та психології"
+  - "систематизація (systematization) — систематизація термінології, знань; процес упорядкування складних систем"
+  - "вторинний текст (secondary text) — реферат, анотація, огляд; термін Стандарту §4.3.8"
+  - "дискурс (discourse) — професійний дискурс, аналіз дискурсу; термін для опису специфічного мовного середовища"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (3510 chars)
+✅ Message sent to Claude (ID: 11308)
+✓ Message 11308 acknowledged
+   Auto-acknowledged reply #11308 (stdout delivery — no inbox accumulation)
+✓ Message 11295 acknowledged

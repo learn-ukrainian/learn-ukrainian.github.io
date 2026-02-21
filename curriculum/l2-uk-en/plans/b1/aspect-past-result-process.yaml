@@ -6,58 +6,88 @@ version: '2.0'
 title: 'Вид у минулому: результат і процес'
 subtitle: 'Aspect in Past: Result vs Process'
 content_outline:
-- section: Тест
+- section: Діагностичний тест (Diagnostic Test)
+  words: 600
   points:
-  - 'Narrative comparison — visual metaphor: Process = wavy line (no end), Result
-    = checkmark on timeline'
-  - Result vs Process focus — builds on concept from b1-06 (Aspect system)
-- section: Пояснення
+  - 'Diagnostic narrative: Distinguishing between ''Ми будували хату'' (process) and
+    ''Ми збудували хату'' (result) within the context of the Ukrainian Toloka tradition.'
+  - 'Visual metaphor introduction: Representing the Imperfective (Process) as a wavy
+    line with no visible end and the Perfective (Result) as a checkmark or point on
+    a timeline.'
+  - 'Baseline check for common learner error: Identifying if students use Imperfective
+    (''Я писав тест'') instead of Perfective achievement markers when reporting outcomes.'
+- section: Презентація та теорія (Presentation and Theory)
+  words: 1000
   points:
-  - 'Perfective (Result) — cultural hook: proverb «Зробив діло — гуляй сміло» (result
-    justifies leisure)'
-  - 'Imperfective (Process) — cultural hook: proverb «Тихіше їдеш — далі будеш» (manner
-    of action focus)'
-  - 'Markers — contrast specific markers: duration (весь день, годину) vs result (вже,
-    нарешті)'
-- section: Контраст
+  - 'Perfective Aspect (Result): Introducing the cultural hook ''Зробив діло — гуляй
+    сміло'' to explain that leisure is culturally justified only after the completion
+    of an action.'
+  - 'Imperfective Aspect (Process): Introducing the cultural hook ''Тихіше їдеш —
+    далі будеш'' to highlight the emphasis on the manner, duration, and ongoing nature
+    of an action.'
+  - 'State Standard §4.2.3.1 implementation: Detailed formation of past tense verbs
+    (хотів/хотіла/хотіли vs побачив/побачила/побачили) with strict focus on gender
+    and number agreement.'
+  - 'Linguistic Markers contrast: Categorizing duration markers (''весь день'', ''тривалий
+    час'', ''довго'') vs result markers (''вже'', ''нарешті'', ''успішно'').'
+- section: Порівняльний аналіз (Comparative Analysis)
+  words: 800
   points:
-  - 'Same fact, different focus — cultural hook: Toloka tradition (building together
-    all day vs built the house by sunset)'
-  - 'Communication intent — context note: Boss asks for Perfective (accomplishment),
-    Friend asks for Imperfective (activity)'
-- section: Практика
+  - 'The Toloka Paradigm: Analyzing how the same historical event shifts meaning —
+    focusing on the social shared process (''будували весь день'') vs the physical
+    result (''збудували до заходу сонця'').'
+  - 'Communication Intent in context: Professional reporting (Boss asking for Perfective
+    accomplishments) vs Social sharing (Friend asking for Imperfective descriptions
+    of activities).'
+  - 'Identifying subtle shifts: How adding markers like ''нарешті'' or ''до кінця''
+    necessitates a change from process to result focus in a sentence.'
+- section: Практика та виправлення помилок (Practice and Error Correction)
+  words: 900
   points:
-  - Algorithm
-  - 'Common mistakes — learner error: Process for Result («Я писав тест» for achievement)
-    and Overuse of «був»'
-  - Daily life scenarios
-- section: Діалоги
+  - 'Correction drill: ''Process for Result'' — fixing the transfer error where learners
+    use Imperfective for completed achievements (e.g., replacing ''Я писав статтю''
+    with ''Я написав статтю'').'
+  - 'Eliminating auxiliary ''був'': Direct correction of the error ''Я був ходив''
+    to reinforce the synthetic Ukrainian past tense structure without English-style
+    auxiliaries.'
+  - 'Gender Mismatch Clinic: Exercises specifically targeting the phonetic and grammatical
+    oversight where students use the wrong gender form (e.g., ''Я зробив'' used by
+    female speakers).'
+  - 'Daily life simulation: Choosing the correct aspect for scenarios involving moving
+    houses, completing studies, and reporting work tasks.'
+- section: Діалоги та підсумок (Dialogues and Summary)
+  words: 700
   points:
-  - Work report — emphasize result-oriented questions from supervisor
-  - Study experience
-  - Moving houses
-- section: Підсумок
-  points:
-  - Key rules — alignment with State Standard §4.2.3.1 (indicative mood past tense)
-  - Self-check
+  - 'Work Report Dialogue: Roleplay between a result-oriented supervisor and an employee,
+    emphasizing achievement-based questions and answers.'
+  - 'Narrative Construction: Describing a ''Study Experience'' where the learner must
+    describe the long process of learning leading to the successful result of passing
+    an exam.'
+  - 'Final Self-Check: Review of indicative mood past tense rules and alignment with
+    the competencies defined in the State Standard.'
 vocabulary_hints:
   required:
-  - результат (result) — досягти результату, головний результат, чекати на результат
-  - процес (process) — у процесі, навчальний процес, тривалий процес
-  - завершення (completion) — успішне завершення, після завершення, етап завершення
-  - тривалість (duration) — середня тривалість, тривалість життя, тривалість дії
-  - весь день (all day)
-  - годину (for an hour)
-  - вже (already) — вже зробив, вже готово, я вже знаю
-  - нарешті (finally) — нарешті прийшов, нарешті зробив, ну нарешті
-  - до кінця (to the end)
-  - довго (for a long time)
+  - результат (result) — досягти результату, головний результат, результат роботи,
+    чекати на результат; High frequency/General Corpus.
+  - процес (process) — у процесі, навчальний процес, тривалий процес, контролювати
+    процес; High frequency.
+  - завершення (completion) — успішне завершення, після завершення, етап завершення;
+    Medium frequency/Academic & Formal.
+  - тривалість (duration) — середня тривалість, тривалість життя, тривалість дії;
+    Medium frequency/Formal.
+  - вже (already) — вже зробив, вже готово, я вже знаю; Very high frequency/Spoken
+    & Written.
+  - нарешті (finally) — нарешті прийшов, нарешті зробив, ну нарешті; High frequency/Spoken.
+  - весь день (all day) — primary marker for Imperfective duration.
+  - годину (for an hour) — marker used to emphasize the length of a process.
+  - до кінця (to the end) — marker indicating the boundary of a completed action.
+  - довго (for a long time) — common marker for ongoing imperfective states.
   recommended:
-  - ще (still/yet)
-  - зараз (now)
-  - поступово (gradually)
-  - раптом (suddenly)
-  - миттєво (instantly)
+  - ще (still/yet) — used to indicate ongoing process or lack of result.
+  - зараз (now) — to contrast past process with current state.
+  - поступово (gradually) — indicates the manner of a process over time.
+  - раптом (suddenly) — often signals the interruption of a process by a result/event.
+  - миттєво (instantly) — emphasizes the speed of a result.
 activity_hints:
 - type: quiz
   focus: Result or process aspect?

@@ -1,0 +1,94 @@
+module: b1-82
+level: B1
+sequence: 82
+slug: mountains-trail
+version: '2.0'
+title: Гори та трейлраннінг
+subtitle: Hiking and Trail Running in the Carpathians
+content_outline:
+- section: Огляд
+  points:
+  - Цілі модуля
+- section: Вступ
+  points:
+  - 'Українські гори як місце відпочинку — alignment: §3.14 (Природне середовище)
+    & §3.4 (Дозвілля)'
+  - 'Від туристів до трейлраннерів — context: evolution from hiking to niche sport'
+- section: Інтеграція
+  points:
+  - 'Говерла та інші вершини — collocations: підкорити вершину, найвища вершина'
+  - Найвища точка України (2061 м)
+  - 'Піп Іван, Петрос, Хом''як — cultural hook: ''White Elephant'' observatory on
+    Pip Ivan'
+  - 'Трейлраннінг в Україні — context: growing community, niche sport vocabulary'
+  - Популярні траси і змагання
+  - 'Chornohora Sky Marathon — cultural hook: legendary 60km race traversing all 2000ers'
+  - 'Карпатські полонини — collocations: вийти на полонину, вівці на полонині'
+  - 'Маршрути для початківців — content note: distinguish between Chornohora (high
+    ridges) and Gorgany (rocky fields)'
+  - Де зупинитися в горах
+  - 'Спорядження і безпека — content note: emphasize registration with rescuers; learner
+    error: намет (not палатка), пляшка (not бутилка)'
+- section: Практика
+  points:
+  - 'Ключові концепції — learner error: distinction between йти (one-way) and ходити
+    (round-trip/habitual)'
+- section: Продукція
+  points:
+  - 'Діалоги про гори та трейлраннінг — learner error: euphony rules ''похід у гори''
+    (not ''в'' after consonant)'
+- section: Підсумок — Побачимось на вершині!
+  points:
+  - Гори як терапія і натхнення
+- section: Потрібно більше практики?
+  points: []
+vocabulary_hints:
+  required:
+  - гора (mountain)
+  - стежка (trail)
+  - 'похід (hike) — learner error: похід у гори (euphony)'
+  - 'вершина (summit) — collocations: підкорити вершину, снігова вершина'
+  - Карпати (Carpathians)
+  - 'спорядження (equipment) — collocations: туристичне спорядження, орендувати спорядження'
+  - 'рюкзак (backpack) — synonym: наплічник (medium freq, purist alternative)'
+  - взуття (footwear)
+  recommended:
+  - Говерла (Hoverla)
+  - 'трейлраннінг (trail running) — collocations: займатися трейлраннінгом, гірський
+    біг'
+  - 'маршрут (route) — collocations: прокладати маршрут, маркований маршрут'
+  - 'полонина (alpine meadow) — collocations: вийти на полонину, вівці на полонині'
+activity_hints:
+- type: reading
+  focus: Trail descriptions and guides
+  items: 15
+- type: match-up
+  focus: Match equipment to activities
+  items: 20
+- type: fill-in
+  focus: Complete hiking plans
+  items: 15
+- type: quiz
+  focus: Plan mountain trips
+  items: 10
+focus: culture
+pedagogy: CBI
+prerequisites:
+- b1-81 (Running in Ukraine)
+connects_to:
+- b1-83 (Cycling and Water Sports)
+objectives:
+- Learner can discuss hiking and mountain activities in Ukrainian
+- Learner can understand trail descriptions and mountain weather reports
+- Learner can use vocabulary for equipment and nature
+- Learner can plan a hiking trip to the Carpathians
+grammar:
+- Mountain and trail vocabulary
+- Weather and nature descriptions
+- Planning and directions
+register: розмовний
+phase: B1.7 [Contemporary Ukraine]
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Carpathian Trail Guide
+word_target: 4000

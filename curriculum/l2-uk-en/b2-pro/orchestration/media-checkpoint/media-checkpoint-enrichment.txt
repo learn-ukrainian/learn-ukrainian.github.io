@@ -1,0 +1,270 @@
+✅ Message sent to Gemini (ID: 12325) [auto-acked: self-addressed]
+✓ Message 12325 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12325...
+📨 Message #12325
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-media-checkpoint
+   Time: 2026-02-20T23:38:50.723397+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b2-pro-38
+level: B2-PRO
+sequence: 38
+slug: media-checkpoint
+version: '2.0'
+title: 'Контрольна точка: Медіа'
+subtitle: Media Checkpoint
+content_outline:
+- section: Огляд фази B2-PRO.3
+  points:
+  - Ключові навички фази (аналіз новин, журналістика, ораторство, дебати, інтерв'ю)
+  - Як медіанавички допомагають у професійній діяльності
+  - Критерії оцінювання медіакомпетентності
+- section: Завдання 1 — Критичний аналіз
+  points:
+  - 'Сценарій: Проаналізувати новинну статтю'
+  - 'Критерії: визначення джерел, виявлення упередженості, оцінка достовірності'
+  - Оцінювання медіаграмотності
+- section: Завдання 2 — Журналістське письмо
+  points:
+  - 'Сценарій: Написати новину за наданими фактами'
+  - 'Критерії: структура (перевернута піраміда), стислість, нейтральність'
+  - Оцінювання журналістської техніки
+- section: Завдання 3 — Публічний виступ
+  points:
+  - 'Сценарій: Підготувати 3-хвилинний виступ на професійну тему'
+  - 'Критерії: структура, переконливість, мовні засоби'
+  - Оцінювання ораторських навичок
+- section: Завдання 4 — Комплексний сценарій
+  points:
+  - 'Ситуація: Криза в компанії — підготувати комунікацію для медіа'
+  - 'Завдання: Написати прес-реліз, підготувати ключові повідомлення, відповісти на
+    можливі запитання'
+  - Інтеграція медіанавичок
+- section: Підсумок та рекомендації
+  points:
+  - Чек-лист медіакомпетентності B2-PRO.3
+  - Визначення сильних сторін та зон для покращення
+  - Підготовка до завершальної інтеграції B2-PRO
+vocabulary_hints:
+  required:
+  - медіаграмотність (media literacy)
+  - критичний аналіз (critical analysis)
+  - прес-реліз (press release)
+  - ключові повідомлення (key messages)
+  - кризова комунікація (crisis communication)
+  - публічний виступ (public speech)
+  - медіакомпетентність (media competence)
+  - цільова аудиторія (target audience)
+  recommended:
+  - речник компанії (company spokesperson)
+  - офіційна позиція (official position)
+  - медіастратегія (media strategy)
+  - репутаційні ризики (reputational risks)
+activity_hints:
+- type: document-analysis
+  focus: Проаналізувати новинну статтю на достовірність та упередженість
+  items: 1
+- type: writing-task
+  focus: Написати новину за наданими фактами
+  items: 1
+- type: writing-task
+  focus: Підготувати текст 3-хвилинного виступу
+  items: 1
+- type: case-study
+  focus: Виконати комплексне завдання — кризова комунікація
+  items: 1
+- type: self-assessment
+  focus: Заповнити чек-лист медіакомпетентності
+  items: 1
+focus: checkpoint
+pedagogy: TTT
+prerequisites:
+- 'b2-pro-37 (Інтерв''ю: Мистецтво розмови)'
+connects_to:
+- 'b2-pro-39 (Інтеграція: Професійна практика)'
+objectives:
+- Учень демонструє навички критичного аналізу медіа
+- Учень може писати в журналістському стилі
+- Учень може підготувати та виголосити публічний виступ
+- Учень може інтегрувати медіанавички в кризовій комунікації
+grammar:
+- Пасивні конструкції для нейтральності (було оголошено, повідомляється)
+- Риторичні засоби для переконання (повтор, контраст, питання)
+- Конструкції для bridging (Це важливо, але головне...)
+register: публіцистичний
+phase: B2-PRO.3
+persona:
+  voice: Senior Specialist
+  role: Випусковий редактор
+word_target: 2000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Контрольна точка: Медіа
+
+## Використані джерела
+1. [Закон України «Про медіа»](https://zakon.rada.gov.ua/laws/show/2849-20#Text) — Основний нормативно-правовий акт, що визначає термінологію та правові засади діяльності медіа в Україні.
+2. [Детектор медіа: Індекс медіаграмотності](https://detector.media/) — Аналітичні матеріали щодо рівня медіакомпетентності та критичного аналізу новин.
+3. [Інститут масової інформації (ІМІ)](https://imi.org.ua/) — Рекомендації щодо журналістських стандартів, написання новин та перевернутої піраміди.
+4. [Дія.Бізнес: Кризові комунікації](https://business.diia.gov.ua/) — Офіційні поради для бізнесу щодо алгоритмів дій у кризових ситуаціях та взаємодії з медіа.
+
+## Термінологічна база
+
+| Українська (норма) | Русизм/ненорма | English | Контекст вживання |
+|--------------------|---------------|---------|-------------------|
+| Медіаграмотність | Медіаграмотність (калька) | Media literacy | Здатність критично аналізувати контент |
+| Упередженість | Предвзятість | Bias / Partiality | Наявність суб'єктивного ставлення у тексті |
+| Речник | Спікер (в контексті орг.) | Spokesperson | Офіційна особа, що надає коментарі |
+| Кризова комунікація | Кризисна комунікація | Crisis communication | Стратегія під час надзвичайних подій |
+| Перевернута піраміда | Перевернута піраміда | Inverted pyramid | Структура новинного повідомлення |
+| Офіційна позиція | Офіціальна позиція | Official position | Формулювання точки зору компанії |
+| Цільова аудиторія | Цельова аудиторія | Target audience | Група людей, на яку спрямовано медіапродукт |
+| Достовірність | Достовірність | Credibility / Veracity | Перевіреність та правдивість інформації |
+
+## Мовні норми та стандарти
+- **Закон України «Про медіа» (2022)**: Встановлює чіткі визначення для суб'єктів у сфері медіа, редакційного контролю та поширення інформації.
+- **Журналістські стандарти (ІМІ)**: Баланс думок, достовірність, відокремлення фактів від коментарів, точність, повнота та відсутність мови ворожнечі.
+- **ДСТУ 4163:2020**: Хоча це стандарт для діловодства, він застосовується при оформленні офіційних заяв та прес-релізів (реквізити, підписи).
+
+## Аутентичні приклади
+1. [Прес-реліз]: «Компанія [Назва] офіційно заявляє про запуск ініціативи... Для отримання додаткової інформації звертайтеся до прес-служби».
+2. [Лід новин]: «Сьогодні у Києві відбулося відкриття... Про це повідомив голова правління під час брифінгу».
+3. [Кризовий меседж]: «Ми усвідомлюємо серйозність ситуації та вживаємо всіх необхідних заходів для мінімізації наслідків. Нашим пріоритетом є безпека клієнтів».
+
+## Типові помилки
+1. ❌ «Згідно даних...» → ✅ «Згідно з даними...» або «За даними...» — правильне керування в українській мові.
+2. ❌ «Приймати міри» → ✅ «Вживати заходів» — лексична помилка, калька з російської.
+3. ❌ «Представник прес-служби відмітив...» → ✅ «Зауважив / наголосив / підкреслив» — уникнення русизму «відмітив».
+4. ❌ «На сьогоднішній день» → ✅ «На сьогодні / нині / зараз» — усунення канцеляризму.
+5. ❌ «Дана інформація» → ✅ «Ця інформація / зазначена інформація» — уникнення вказівного займенника «дана» у невластивому значенні.
+
+## Engagement Hooks (mapped to sections)
+- Section "Завдання 1 — Критичний аналіз": [!pro-tip] — Використовуйте метод "SMELL" для перевірки фактів: Source (Джерело), Motivation (Мотивація), Evidence (Докази), Logic (Логіка), Left out (Що пропущено).
+- Section "Завдання 2 — Журналістське письмо": [!language-note] — В українських новинах уникайте пасивного стану ("Було відкрито виставку"), натомість вживайте безособові форми на -но, -то ("Відкрито виставку") для динамічності.
+- Section "Завдання 3 — Публічний виступ": [!context] — У публічних виступах українською мовою важливо використовувати звертання у кличному відмінку: "Шановні колеги!", "Пане директоре!".
+- Section "Завдання 4 — Комплексний сценарій": [!common-error] — Найбільша помилка у кризових комунікаціях — мовчання. Реакція має бути в межах першої "золотої години".
+
+## Section-Mapped Research Notes
+
+### Огляд фази B2-PRO.3
+Фаза зосереджена на переході від споживання медіа до активного створення та управління комунікацією. Важливо підкреслити роль медіагігієни як професійної навички.
+
+### Завдання 1 — Критичний аналіз
+Аналіз базується на розрізненні фактів та суджень. Використовуються терміни: джинса (прихована реклама), клікбейт, маніпуляція, верифікація інформації.
+
+### Завдання 2 — Журналістське письмо
+Застосування правила "5W+H" (Who, What, When, Where, Why, How). Структура: Title -> Lead -> Body -> Background. Нейтральність досягається через уникнення прикметників-оцінок.
+
+### Завдання 3 — Публічний виступ
+Фокус на структурі: вступ (гачок), основна частина (три тези), висновок (заклик до дії). Використання риторичних запитань та пауз.
+
+### Завдання 4 — Комплексний сценарій
+Сценарій "Holding Statement" — перша реакція компанії. Структура прес-релізу: дата, заголовок, лід, основний текст, boilerplate (про компанію), контакти.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12392)
+✓ Message 12325 acknowledged
+✓ Message 12392 acknowledged

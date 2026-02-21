@@ -1,0 +1,13 @@
+{
+  "track": "lit",
+  "slug": "khiba-revut-voly-1",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-20T23:22:19Z",
+      "task_id": "v3-khiba-revut-voly-1-pA",
+      "mode": "full"
+    }
+  }
+}

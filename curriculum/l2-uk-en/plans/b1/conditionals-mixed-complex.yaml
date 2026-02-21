@@ -6,50 +6,73 @@ version: '2.0'
 title: 'Умовні речення: змішані та складні умови'
 subtitle: Mixed and Complex Conditionals
 content_outline:
-- section: 'Тест: Перевірте себе'
+- section: 'Тест: Перевірте себе (Diagnostic Quiz)'
+  words: 400
   points:
-  - Diagnostic quiz on mixed conditionals — focus on distinguishing real vs. unreal
-    contexts
-  - Self-assessment questions — check if student confuses 'якщо' (real) and 'якби'
-    (unreal)
-- section: Пояснення
+  - 'Diagnostic quiz on mixed conditionals focusing on §4.4.3 competencies: distinguishing
+    real vs. unreal contexts'
+  - Self-assessment checklist to identify learner confusion between 'якщо' (real)
+    and 'якби' (unreal)
+  - Error-spotting exercise for Russian interference (єслі -> якщо) and punctuation
+    neglect (omitting commas)
+- section: 'Пояснення: Змішані типи та складні умови (Explanation: Mixed and Complex
+    Conditionals)'
+  words: 1300
   points:
-  - Beyond simple conditionals — introduce mixed types where time frames differ in
-    condition and result
-  - 'Past Condition, Present Result — cultural hook: proverb «Якби знав, де впадеш,
-    соломки підстелив би»'
-  - 'Present Condition, Past Result — example: «Якби я був розумнішим (generally),
-    я б не зробив цього (then)»'
-  - 'Chained Conditionals — logic chains: If A happens -> B happens -> If B happens
-    -> C happens'
-  - 'Complex Condition Patterns (якщо не, навіть якщо/якби) — include ''за умови''
-    for formal agreements; learner error: omitting comma before ''якщо'''
-- section: Практика
+  - 'In-depth analysis of §4.2.3.3: formation of the conditional mood with the particle
+    ''би/б'' across mixed timeframes'
+  - 'Type 1: Past Condition, Present Result — analysis of the proverb «Якби знав,
+    де впадеш, соломки підстелив би» as a model for unreal past conditions with timeless
+    results'
+  - 'Type 2: Present Condition (General State), Past Result — example: «Якби я був
+    розумнішим (generally), я б не зробив цього (then)»'
+  - 'Formal register focus: using ''за умови'' (provided that) and collocations like
+    ''за умови дотримання'' and ''за умови згоди'' in agreements'
+  - 'Syntax and Punctuation: Mandatory comma rule before ''якщо'', ''якби'', and ''навіть
+    якщо'' to prevent common learner neglect'
+- section: 'Практика: Побудова логічних ланцюжків (Practice: Building Logical Chains)'
+  words: 1000
   points:
-  - 'Form mixed conditionals — learner error: using ''якщо'' for unreal conditions
-    (Russian interference ''єслі'' -> ''якщо'')'
-  - Create conditional chains — practice linking cause and effect across multiple
-    steps
-- section: Діалоги
+  - 'Drills on forming mixed conditionals, correcting the common error: «Якщо я був
+    би...» (Incorrect) to «Якби я був...» (Correct)'
+  - 'Transformation exercises: Expanding simple real conditions into complex ones
+    using ''навіть якщо'' and ''якщо не'''
+  - 'Logic chain creation: linking multiple steps (If A happens -> B happens -> If
+    B happens -> C happens) using varied conjunctions'
+- section: 'Діалоги: Від макогона до історії (Dialogues: From Pestles to History)'
+  words: 900
   points:
-  - Mixed conditionals in conversation — use 'Якби не + Noun' pattern (e.g., historical
-    irony «Якби не макогін і качалка...»)
-  - Complex scenarios — use 'за умови' in formal/semi-formal contexts (rules, agreements)
+  - Conversational practice using the 'Якби не + Noun' pattern, integrating the historical
+    irony proverb «Якби не макогін і качалка, не була б у хаті господарем Наталка»
+  - 'Role-play scenarios: Negotiating agreements in semi-formal registers using ''за
+    умови, що...'''
+  - 'Hypothetical historical debates: Expressing historical irony and ''what if''
+    scenarios using complex conditional logic'
+- section: Підсумок та рефлексія (Summary and Reflection)
+  words: 400
+  points:
+  - Recap of the pedagogical distinction between real (якщо) and unreal (якби) logic
+    in mixed sentences
+  - Final checklist of de-Russification goals (якщо vs єслі) and punctuation accuracy
 vocabulary_hints:
   required:
+  - 'якщо не (if not / unless) — High frequency; collocations: ''якщо не помиляюся'',
+    ''якщо не секрет'''
+  - 'навіть якщо (even if - real) — Emphatic; usage: ''навіть якщо припустити'', ''навіть
+    якщо це так'''
+  - 'за умови (on the condition of) — Formal register; collocations: ''за умови дотримання'',
+    ''за умови згоди'''
+  - якби (if - unreal) — High frequency in proverbs; used for §4.2.3.3 unreal conditions
   - змішаний (mixed) — змішаний тип умовних речень
   - складний (complex) — складне речення, складні умови
-  - ланцюговий (chained) — ланцюгова реакція
-  - якщо не (unless) — якщо не помиляюся, якщо не секрет
-  - навіть якщо (even if) — навіть якщо це..., навіть якщо ми...
-  - навіть якби (even if - unreal) — навіть якби я хотів...
-  - доки (as long as) — доки не...
-  - за умови (provided that) — за умови, що... (formal), за умови згоди
+  - ланцюговий (chained) — ланцюгова реакція, ланцюгова умова
+  - навіть якби (even if - unreal) — used for hypothetical scenarios with 'би/б'
+  - доки (as long as / until) — доки не..., доки ми тут
   recommended:
-  - в іншому випадку (otherwise) — інакше
-  - крім того (besides) — до того ж
-  - тим часом (meanwhile) — у той час
-  - проте (however) — однак
+  - 'в іншому випадку (otherwise) — synonym: інакше'
+  - крім того (besides / furthermore) — до того ж
+  - тим часом (meanwhile) — у той час як
+  - 'проте (however) — synonym: однак, втім'
 activity_hints:
 - type: fill-in
   focus: Complete mixed conditionals

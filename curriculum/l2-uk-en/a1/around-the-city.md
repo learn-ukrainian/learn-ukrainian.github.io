@@ -31,6 +31,9 @@ There are two fundamental questions you will ask in a new city. They look simila
 2.  **Куди?** [kuˈdɪ] (Where to?) — This asks about **direction** or **motion**. It implies movement from point A to point B.
     *   Example: «Куди ми йдемо?» (Where are we going?)
 
+> [!warning]
+> **Common Mistake**: Do not say «Де ти йдеш?» — this is wrong! If someone is walking somewhere, the correct question is «**Куди** ти йдеш?» because they are in motion. Reserve **Де** for static location: «Де ти?» (Where are you?).
+
 > [!note]
 > **Helpful Tip**: Think of **Де** as a dot on a map (📍). Think of **Куди** as an arrow pointing to a destination (➡️).
 
@@ -44,7 +47,7 @@ To understand them, you need to recognize key buildings and infrastructure. We d
 ## Лексика: Напрямки та місця
 
 ### Основні напрямки (Basic Directions)
-Для впевненого руху містом вивчіть чотири головні команди.
+Для впевненого орієнтування в місті вивчіть чотири головні команди.
 
 To move through the city, you need a few core adverbs. These are your controls—forward, left, right, and back.
 
@@ -72,7 +75,7 @@ You will often see these words on street signs, GPS systems, or hear them in mor
 > **Synonym Alert**: You can use **наліво** and **ліворуч** interchangeably for directions. *Ліворуч* sounds slightly more elegant and precise. Try using *ліворуч* when describing where a building is located ("The bank is on the left"), and *наліво* for the action of turning ("Turn left").
 
 ### Інфраструктура міста (City Infrastructure)
-Створімо ментальну карту міста. Знайдімо найважливіші місця: аптеку, вокзал, зупинку. Це база для кожного туриста.
+Створімо ментальну карту міста. Знайдімо найважливіші місця: аптеку, вокзал, зупинку. Це основа для кожного туриста.
 
 Let's build your mental map of a city. These are the places you will search for most often.
 
@@ -98,7 +101,7 @@ Notice the preposition **на**. Even though buildings are *on* the street, we t
 *   «Це станція "Університет".» (This is "University" station.)
 *   «Ми на станції.» (We are at the station.)
 
-### Locative Case Usage (Where?)
+### Вживання Місцевого відмінка (Locative Case Usage)
 We learned the **Locative Case** (Місцевий відмінок) in Module 13. Remember, it answers the question **Де?** (Where?). Here is how it applies to our new city vocabulary.
 
 Most nouns ending in **-а/-я** change to **-і/-ї**.
@@ -222,7 +225,7 @@ Key phrases for giving directions:
     (Go straight. Then turn right. The pharmacy is there.)
 
 ### Як запитати дорогу (Asking for Directions)
-Ви турист. Ви загубились. Ви шукаєте допомогу. Ви повинні бути ввічливими. Використовуйте слова "Вибачте" або "Перепрошую".
+Ви турист. Ви загубились. Ви шукаєте дорогу. Будьте ввічливі. Використовуйте слова «Вибачте» або «Перепрошую».
 
 You have two polite ways to ask for help.
 

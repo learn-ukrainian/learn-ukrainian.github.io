@@ -1,13 +1,13 @@
-✅ Message sent to Gemini (ID: 8627)
-✓ Message 8627 acknowledged
+✅ Message sent to Gemini (ID: 9308)
+✓ Message 9308 acknowledged
    Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
 
-🚀 Invoking Gemini to process message #8627...
-📨 Message #8627
+🚀 Invoking Gemini to process message #9308...
+📨 Message #9308
    From: gemini → To: gemini
    Type: query
    Task: v3-the-cyrillic-code-i-pA
-   Time: 2026-02-19T20:27:46.300112+00:00
+   Time: 2026-02-20T07:46:27.121558+00:00
 
 ============================================================
 
@@ -24,38 +24,36 @@ Activate skill full-rebuild-core-a. Read and execute the instructions at /Users/
 
 ## State Standard Reference
 §4.1.1: "Український алфавіт. Друковані та писані літери. Великі і малі літери: Київ, київський, Олена, олівець, Україна, українець."
-Alignment: This module directly addresses the foundational requirement of recognizing and using the Ukrainian alphabet, distinguishing between printed/written and uppercase/lowercase letters as prescribed.
+Alignment: Цей модуль знайомить з 19 літерами українського алфавіту, розрізняючи їх за графічною подібністю до латиниці ("Літери-друзі") та відмінністю звучання ("Літери-пастки").
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
 | так | High (Top 100) | так, будь ласка; так, звісно |
-| мама | High (Top 500) | моя мама, люблю маму |
-| тато | High (Top 500) | мій тато |
-| банк | Med-High | національний банк, у банку |
-| метро | Med-High | станція метро, у метро |
-| кафе | Med-High | у кафе, ідемо в кафе |
-| кіт | Medium | чорний кіт, мій кіт |
-| факт | Medium | це факт, цікавий факт |
+| банк | High (Urban) | у банку, національний банк |
+| метро | High (Transport) | станція метро, у метро |
+| кафе | High (Daily) | у кафе, ідемо в кафе |
+| мама | Core (Family) | моя мама, люблю маму |
+| кіт | Core (Animals) | мій кіт, чорний кіт |
 
 ## Cultural Hooks
-1. **St. Cyril & Glagolitic**: The alphabet is named after St. Cyril (9th c.), but he actually created the Glagolitic script. The Cyrillic script we use today was developed by his students in the First Bulgarian Empire as a tribute.
-2. **The "I" Identity**: Ukrainian is unique among East Slavic languages for retaining the Latin-looking "I" (dotted i) alongside "И", aligning it visually closer to European scripts and distinguishing it from Russian.
+1. **Saint Cyril**: The alphabet is named after him, but he likely created the Glagolitic script. The Cyrillic script was developed by his students (e.g., Clement of Ohrid) in the First Bulgarian Empire.
+2. **The Letter «І»**: A symbol of Ukrainian identity. Unlike Russian, which relies on «И», Ukrainian uses the "dotted I" (as in Latin/European scripts), visually linking it to Europe.
+3. **The Letter «Ґ»**: Mentioning it as a "repressed letter" (removed in 1933, restored in 1990) adds depth, though it's not a focus letter for this specific module (focus is on common letters first).
 
 ## Common Learner Errors
-1. **The "P" Trap**: Reading "Р" as English /p/ instead of /r/ (trill). *Correction*: Visualize a purring cat ("R-r-r").
-2. **The "H" Trap**: Reading "Н" as English /h/ instead of /n/. *Correction*: "Hen" starts with H but ends with N (looks like H).
-3. **The "B" Trap**: Reading "В" as English /b/ instead of /v/. *Correction*: It's a vehicle (V).
-4. **The "C" Trap**: Reading "С" as English /k/ or /s/ confusion. *Correction*: It always makes the /s/ sound, like in "City".
+1. **The "P" Trap**: Reading Cyrillic «Р» as English /p/ instead of rolled /r/. (Mnemonic: A roaring engine or purring cat).
+2. **The "H" Trap**: Reading Cyrillic «Н» as English /h/ instead of /n/. (Mnemonic: N for Hen).
+3. **The "B" Trap**: Reading Cyrillic «В» as English /b/ instead of /v/. (Mnemonic: V for Vehicle).
+4. **The "C" Trap**: Reading Cyrillic «С» as /k/ instead of /s/. (Mnemonic: S for Snake/Sound).
 
 ## Cross-References
-- **Builds on**: None (First module).
-- **Prepares for**: `the-cyrillic-code-ii` (completing the alphabet), `meeting-people` (basic greetings).
+- Builds on: None (First module).
+- Prepares for: a1-02 (The Cyrillic Code II) which covers the remaining letters (Ж, Ш, Щ, Ц, Ч, Ю, Я, Ї, Є, Г, Ґ).
 
 ## Notes for Content Writing
-- **Scaffolding**: Critical to use English for all explanations.
-- **Visuals**: Emphasize visual mnemonics for False Friends.
-- **Audio**: Essential for distinguishing "И" vs "І".
+- **Immersion Policy**: A1.1 requires heavy English scaffolding. Explanations must be in English. Only examples and specific terms in Ukrainian.
+- **Visuals**: Strong need for visual mnemonics (House for Д, Legs for Л).
 
 ===RESEARCH_END===
 
@@ -110,8 +108,8 @@ content_outline:
 
 
 ────────────────────────────────────────
-✅ Gemini finished (5137 chars)
-✅ Message sent to Claude (ID: 8631)
-✓ Message 8631 acknowledged
-   Auto-acknowledged reply #8631 (stdout delivery — no inbox accumulation)
-✓ Message 8627 acknowledged
+✅ Gemini finished (5179 chars)
+✅ Message sent to Claude (ID: 9309)
+✓ Message 9309 acknowledged
+   Auto-acknowledged reply #9309 (stdout delivery — no inbox accumulation)
+✓ Message 9308 acknowledged

@@ -1,7 +1,7 @@
 # Audit Report: M20 — checkpoint-navigation.md
 **Level:** A1 | **Module:** M20 | **Phase:** A1.2 | **Pedagogy:** TTT | **Target:** 1500
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-19 23:01:49
+**Generated:** 2026-02-21 00:46:40
 
 ## Configuration
 **Type:** A1-checkpoint
@@ -38,7 +38,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2529/1500 (raw: 2724)
+- **Words:** ✅ 2572/1500 (raw: 2773)
 - **Activities:** ✅ 10/8
 - **Density:** ✅ All > 10
 - **Unique_types:** ✅ 5/4 types
@@ -65,7 +65,7 @@
 | **Навичка 1: Знахідний відмінок** | ✅ | 303 | Included in Core |
 | **Навичка 2: Місцевий відмінок** | ✅ | 314 | Included in Core |
 | **Навичка 3: Родовий відмінок** | ✅ | 431 | Included in Core |
-| **Навичка 4: Присвійні займенники** | ✅ | 316 | Included in Core |
+| **Навичка 4: Присвійні займенники** | ✅ | 359 | Included in Core |
 | **Навичка 5: Орієнтування в місті** | ✅ | 367 | Included in Core |
 | **Інтеграція: Практика в місті** | ✅ | 361 | Included in Core |
 | **Summary** | ✅ | 154 | Included in Core |

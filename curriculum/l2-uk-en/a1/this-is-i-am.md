@@ -10,7 +10,8 @@
 
 In English, you can barely speak a sentence without the verb "to be". You say "I am happy," "This is a table," "They are here." It is the glue that holds the language together.
 
-In Ukrainian, however, this verb (am, is, are) almost completely disappears in the present tense. We call this phenomenon the **Zero Copula**. It means the link between the subject (who we are talking about) and the predicate (what we say about them) is implied, not spoken. The connection is so strong it doesn't need a word to verify it.
+In Ukrainian, however, this verb (am, is, are) almost completely disappears in the present tense. We call this phenomenon the **Zero Copula**. It means the link between the subject (who we are talking about) and the predicate (what we say about them) is implied, not spoken. The connection is so strong it doesn't need a word to express it.
+---END---
 
 Look at this comparison:
 
@@ -125,7 +126,11 @@ Here are some examples of how to identify people and things.
 **1. Identifying People:**
 *   **Я — студент.** (I [am] a student.)
 *   **Він — вчитель.** [ˈut͡ʃɪtɛlʲ] (He [is] a teacher.)
+*   **Він — українець.** [ukrɑˈjinɛt͡sʲ] (He [is] a Ukrainian.)
 *   **Вона — українка.** [ukrɑˈjinkɑ] (She [is] a Ukrainian.)
+
+Notice the pair: **українець** (male) / **українка** (female). Ukrainian uses different word endings for men and women. You will see this pattern again with professions: **студент** / **студентка**, **вчитель** / **вчителька**.
+---END---
 
 **2. Identifying Locations (Simple):**
 *   **Я тут.** [tut] (I [am] here.)
@@ -224,7 +229,7 @@ A key skill for a beginner is quickly swapping names for pronouns in your head. 
 *   Transformation: **Вони** — студенти. (They are students.)
 
 **Scenario 4:**
-*   Original: **Ти і я** — тут. (You and I are here.)
+*   Original: **Ти й я** — тут. (You and I are here.)
 *   Transformation: **Ми** — тут. (We are here.)
 
 ### Scenario Practice: Register Choice
@@ -245,7 +250,8 @@ Imagine you are talking to different people. Which pronoun do you choose: **Ти
 
 ---
 
-## Ваш вихід: Розкажіть про себе
+## Ваша черга: Розкажіть про себе
+---END---
 
 ### Building Your Intro
 
@@ -254,12 +260,18 @@ It is time to put everything together. You are now ready to introduce yourself t
 Here is a template for a perfect A1 introduction:
 
 1.  **Greeting:** Привіт. (Hi.)
-2.  **Name:** Я — [Name]. (I am...)
+2.  **Name:** Я — [Name]. (I am...) OR **Мене звати [Name].** (My name is...)
 3.  **Identity:** Я — студент / турист / бізнесмен. (I am a student / tourist / businessman.)
 4.  **Location:** Я тут. (I am here.)
 
+> [!tip]
+> **Two ways to say your name:**
+> *   **Я — Том.** (I [am] Tom.) — Direct and simple.
+> *   **Мене звати Том.** [mɛˈnɛ ˈzʋɑtɪ] (My name is Tom.) — The standard Ukrainian introduction. Learn this as a fixed phrase for now; the grammar behind it comes later.
+
 **Example:**
-*   **Привіт. Я — Том. Я — студент. Я тут.**
+*   **Привіт. Мене звати Том. Я — студент. Я тут.**
+---END---
 
 ### Describing Others
 
@@ -295,7 +307,8 @@ Let's look at a typical conversation you might hear at a party or a networking e
 Imagine you are checking into a hotel. The receptionist asks you questions.
 
 **Receptionist:** Добрий день. Хто ви? (Good day. Who are you?)
-**Ви:** Добрий день. Я — Алекс. (Good day. I am Alex.)
+**Ви:** Добрий день. Мене звати Алекс. (Good day. My name is Alex.)
+---END---
 **Receptionist:** Ви турист? (Are you a tourist?)
 **Ви:** Так, я — турист. (Yes, I am a tourist.)
 **Receptionist:** Добре. Ви — тут. Це — готель "Київ". (Good. You are here. This is Hotel "Kyiv".)
@@ -341,9 +354,13 @@ In this module, you learned how to identify people and things in Ukrainian. You 
 **Let's recap:**
 1.  **Zero Copula:** No "am/is/are" in simple present tense sentences. "I am Ivan" = "Я — Іван."
 2.  **Pronouns:** Matches for gender (він/вона/воно) and number (ми/ви/вони).
-3.  **Objects have Gender:** A table is a "he", a lamp is a "she".
-4.  **Це:** The pointer word for "this is".
-5.  **Safety Net:** Always start with **Ви** with strangers.
+3.  **Nationality Pairs:** українець (m.) / українка (f.) — different endings for men and women.
+4.  **Objects have Gender:** A table is a "he", a lamp is a "she".
+---END---
+5.  **Це:** The pointer word for "this is".
+6.  **Мене звати:** The standard way to say your name.
+7.  **Safety Net:** Always start with **Ви** with strangers.
+---END---
 
 **Перевірте себе:**
 

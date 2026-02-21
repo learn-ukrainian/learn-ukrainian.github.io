@@ -1,33 +1,32 @@
 # Дослідження: Dative Verbs
 
 ## State Standard Reference
-§4.2.2.3: "Давальний відмінок: особа або предмет, для яких (на користь чи на шкоду) відбувається дія: Подарувати книжку студентові. Повідомити групі про зміни в розкладі"
-Alignment: This module directly addresses the core function of the Dative case as the recipient/beneficiary of an action, focusing on specific verbs that govern this case (verb government).
+§4.2.2.3: "особа або предмет, для яких (на користь чи на шкоду) відбувається дія: Подарувати книжку студентові. Повідомити групі про зміни в розкладі"
+Alignment: Цей модуль безпосередньо розкриває поняття "адресата дії" через ключові дієслова (давати, повідомляти, допомагати), що є вимогою стандарту для рівня А2.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| дякувати (to thank) | High / Web Corpus | дякувати (комусь) за (щось); дуже/щиро/красно дякувати; наперед дякую |
-| допомагати (to help) | High / Web Corpus | допомагати (комусь) з (чимось); допомагати по господарству; допоможіть! (SOS) |
-| подобатися (to like) | High / Web Corpus | (мені) подобається; (їм) сподобалося; дуже подобатися |
-| заважати (to bother) | Med / Contextual | не заважай (мені); вибачте, що заважаю; нікому не заважати |
-| довіряти (to trust) | Med / Contextual | довіряти людям; довіряти собі; сліпо довіряти |
-| вибачати (to forgive) | Med / Contextual | вибачати (комусь) (щось); вибачте (мені) |
+| допомагати | High (Top 500) | допомагати по господарству, допомагати армії, взаємно допомагати |
+| дякувати | Very High (Top 100) | щиро дякувати, красно дякувати, дякувати Богу |
+| подобатися | Very High (Top 200) | мені дуже подобається, страшенно подобатися |
+| довіряти | Medium | сліпо довіряти, довіряти людям, не довіряти нікому |
+| заважати | Medium | вибачте, що заважаю; не заважай мені |
 
 ## Cultural Hooks
-1. **Reciprocal Help (To-loka)**: While "toloka" is a specific historic term for communal work, the concept of mutual aid remains strong. helping neighbors or community members creates a debt of gratitude ("Ти допоміг мені? Я допоможу тобі.").
-2. **Levels of Gratitude**: Ukrainian distinguishes between casual "Дякую" and more heartfelt "Щиро дякую" or "Красно дякую" (beautifully thank). Gratitude is often accompanied by gestures like a hand on the heart.
-3. **Volunteering**: Modern Ukrainian culture has a massive emphasis on volunteering (волонтерство), especially aiding the army or displaced persons, making "допомагати" a daily vocabulary staple.
+1. **Волонтерство (Volunteering):** The defining social phenomenon of modern Ukraine. "Допомагати" is not just polite; it's a civic duty (army, displaced persons).
+2. **Толока (Toloka):** Ancient custom of communal labor (building a house together). Perfect historical anchor for "допомагати" and "дякувати" (reciprocity).
+3. **Hand on Heart:** The gesture of sincerity often accompanying "Дякую" or "Вірю".
 
 ## Common Learner Errors
-1. **Case Confusion (Acc vs Dat)**: `Дякую тебе` (Incorrect) → `Дякую тобі` (Correct). *Cause*: Influence of English ("thank you" - direct object) or Russian ("благодарить кого").
-2. **Missing Dative Endings**: `Допомагаю брат` (Incorrect) → `Допомагаю брату/братові` (Correct). *Cause*: Forgetting that the recipient noun must change form, especially masculine -ові/-еві.
-3. **Impersonal Construction Mismatch**: `Я подобаю це` (Incorrect) → `Мені подобається це` (Correct). *Cause*: English "I like it" structure vs Ukrainian "To me it pleases".
+1. **The "Thank You" Trap:** *Дякую тебе* (Accusative, calque from English) → Correct: *Дякую тобі* (Dative). Explain: "I give thanks TO you".
+2. **The "I Like" Trap:** *Я подобаю це* (Direct subject) → Correct: *Мені подобається це* (Indirect object). Explain: "It pleases me".
+3. **Wrong Masculine Endings:** *Допомагаю брат* (Nominative/Accusative error) → Correct: *Допомагаю братові* (Dative -ові/-еві preference for persons).
 
 ## Cross-References
-- Builds on: a2-01 (Dative pronouns), a2-02 (Dative nouns), A1 verb conjugation
-- Prepares for: a2-04 (Instrumental I - often used with help "допомагати з..."), a2-09 (All Cases Practice), a2-11 (Checkpoint)
+- Builds on: a2-01 (Dative pronouns), a2-02 (Dative nouns), A1 verb conjugation.
+- Prepares for: a2-04 (Instrumental I), a2-09 (All Cases Practice).
 
 ## Notes for Content Writing
-- **Scaffolding**: Explicitly contrast English "I thank YOU" (Direct Object) with Ukrainian "I give thanks TO YOU" (Indirect Object) to fix the case error before it happens.
-- **Impersonal Verbs**: `Подобатися` needs a dedicated spotlight because the subject/object roles flip compared to English.
+- **Immersion Band 1 (50-60%):** Use English for the heavy lifting on "Verb Government" theory and the "Like" inversion logic. Keep examples pure Ukrainian.
+- **Tone:** Encouraging. The "Dative" concept can be abstract; ground it in "giving" relations.

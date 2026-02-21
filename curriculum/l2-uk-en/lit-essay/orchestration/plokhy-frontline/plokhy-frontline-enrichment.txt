@@ -1,0 +1,236 @@
+✅ Message sent to Gemini (ID: 12394) [auto-acked: self-addressed]
+✓ Message 12394 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12394...
+📨 Message #12394
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-plokhy-frontline
+   Time: 2026-02-20T23:39:30.200750+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 36
+module: lit-essay-36
+level: LIT.ESSAY
+slug: plokhy-frontline
+version: '2.0'
+title: Plokhy Frontline
+subtitle: Plokhy Frontline
+content_outline:
+- section: Вступ та контекст
+  points: []
+- section: Аналіз ключових творів
+  points: []
+- section: Стилістика та мова автора
+  points: []
+- section: Деколонізаційна перспектива
+  points:
+  - Як цей автор руйнує імперські міфи
+  - Українська суб'єктність у тексті
+- section: Підсумок та спадщина
+  points: []
+vocabulary_hints:
+  required:
+  - історіографія
+  - наратив
+  - суб'єктність
+  recommended:
+  - деколонізація
+activity_hints:
+- type: reading
+  focus: Аналіз першоджерела
+- type: essay-response
+  focus: Критичне есе
+- type: critical-analysis
+  focus: Деконструкція тексту
+focus: literature
+pedagogy: literature
+immersion: 100% Ukrainian
+phase: LIT Expansion
+objectives:
+- Проаналізувати творчість Plokhy Frontline у контексті української літератури
+- Дослідити вплив автора на формування національної ідентичності
+persona:
+  voice: Senior Specialist
+  role: Geopolitical Strategist
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Plokhy Frontline (Сергій Плохій, "Фронтлайн: Есеї про українське минуле і сьогодення")
+
+## Використані джерела
+1. [Інститут історії України НАН України](http://history.org.ua/) — Академічні рецензії на праці Сергія Плохія, аналіз його історіографічних підходів.
+2. [Енциклопедія Сучасної України (ЕСУ)](https://esu.com.ua/) — Біографічні та наукові довідки щодо професійної діяльності Сергія Плохія як директора Гарвардського українського наукового інституту.
+3. [Читомо](https://chytomo.com/) — Літературно-критичні огляди збірки есеїв Плохія, рецепція його творчості в сучасному українському суспільстві.
+4. [Harvard Ukrainian Research Institute (HURI)](https://huri.harvard.edu/) — Оригінальні публікації та лекції автора, на яких базуються есеї зі збірки "Frontline".
+
+## Хронологія
+- 1957: Народження Сергія Плохія (виріс у Запоріжжі, що суттєво вплинуло на його інтерес до козацької доби).
+- 2013: Призначення директором Гарвардського українського наукового інституту (HURI), що посилило його роль як "амбасадора" української історії на Заході.
+- 2014: Початок російської агресії, що стимулювало перехід Плохія до жанру публічної історії ("Брама Європи").
+- 2021: Видання збірки "The Frontline: Essays on Ukraine's Past and Present" (Гарвардський університет), де зібрані ключові есеї про українську ідентичність.
+- 2022: Повномасштабне вторгнення Росії, під час якого есеї Плохія стають ключовою інтелектуальною зброєю проти історичних маніпуляцій Путіна.
+
+## Ключові факти та цитати
+- Сергій Плохій концептуалізує Україну не як "околицю" імперії, а як ключовий європейський фронтир — культурну, релігійну та політичну межу.
+- У збірці "Frontline" Плохій системно деконструює ключові імперські міфи: від міфу про спільну колиску до міфу про "добровільне возз'єднання".
+- Цитата 1: «Історія України — це історія фронтиру, межі між Сходом і Заходом, яка не розділяла, а поєднувала різні цивілізації, релігії та політичні культури».
+- Цитата 2: «Російський імперський наратив систематично відмовляв Україні у праві на власну історію, привласнюючи її минуле для конструювання міфу про велику російську націю».
+- Цитата 3: «Без незалежної України Росія перестає бути імперією. Саме тому боротьба за історію є такою ж важливою, як і боротьба на реальному фронті».
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ: Інтелектуальний фронтир Плохія": [!context] — Пояснення ролі публічного інтелектуала в умовах гібридної війни, коли історія стає зброєю.
+- Section "Аналіз: Деконструкція міфу Київської Русі": [!myth-buster] — Спростування радянського концепту "давньоруської народності" як "спільної колиски".
+- Section "Аналіз: Козацтво та імперський наратив": [!history-bite] — Як Переяславська рада була переписана російською історіографією з мілітарного союзу на "вічне возз'єднання".
+- Section "Стилістика: Риторика для західного читача": [!culture] — Аналіз того, як Плохій перекладає складні українські культурні концепти на зрозумілу Заходу мову (англомовна історіографія).
+- Section "Деколонізаційна перспектива: Повернення суб'єктності": [!decolonization] — Зміщення фокуса з Москви як єдиного центру прийняття рішень на Київ, що діє як самостійний політичний гравець.
+- Section "Підсумок: Значення праць Плохія": [!quote] — Використання цитати про те, що минуле України є ключем до розуміння майбутнього Європи.
+
+## Деколонізаційний контекст
+- Імперський міф: Україна — це штучне утворення, "Малоросія", чия історія є лише локальним додатком до російської; усі державні проекти України були "інспіровані Заходом".
+- Українська реальність: Україна має власну тяглість політичної традиції від Русі через козацьку державу до сучасності. Плохій доводить, що українська нація сформувалася через постійну взаємодію з різними імперіями, зберігаючи свою унікальну політичну культуру (зокрема, демократичний елемент козацтва), яка докорінно відрізняється від російської автократії.
+
+## Contested Terms
+
+| Concept | Imperial framing | Ukrainian (decolonized) framing |
+|---------|-----------------|-------------------------------|
+| Kievan Rus | Киевская Русь — "спільна колиска", початок російської держави | Київська Русь — політичне утворення, чия політична та культурна спадщина належить насамперед Україні |
+| Pereyaslav Agreement | "Возз'єднання" братніх народів (1654) | Тимчасовий мілітарний і протекторатний союз, порушений Московією |
+| Ukrainian identity | Штучний конструкт, вигаданий австрійцями/поляками | Органічний результат розвитку на європейському фронтирі, синтез східної та західної традицій |
+
+## Section-Mapped Research Notes
+
+### Вступ: Інтелектуальний фронтир Плохія
+Огляд постаті Плохія як директора HURI. Трансформація його ролі від класичного академічного історика до публічного інтелектуала після 2014 року. Книга "The Frontline" як збірка есеїв-рефлексій на актуальні виклики.
+
+### Історичний контекст написання есеїв
+Як Революція Гідності та війна на Донбасі змінили запит західного світу на розуміння України. Есеїстика як швидкий і глибокий спосіб реагування на історичні маніпуляції Кремля.
+
+### Аналіз: Деконструкція міфу Київської Русі
+Аналіз есеїв, присвячених Русі. Плохій розбиває концепт "Давньоруської народності" та доводить, що привласнення київської спадщини Москвою було свідомим ідеологічним проектом імперії, а не історичною даністю.
+
+### Аналіз: Козацтво та імперський наратив
+Розгляд Переяславської ради та міфу про Мазепу ("Зрада"). Плохій аналізує, як російська історіографія маргіналізувала козацьку державу, перетворюючи її на бунтівну провінцію.
+
+### Аналіз: ХХ століття та радянський досвід
+Есеї про Голодомор, Другу світову війну та Чорнобиль. Розгляд України як головного поля битви тоталітарних режимів. Суб'єктність українського опору.
+
+### Стилістика: Науково-популярний наратив
+Як Плохій поєднує строгу академічну базу з захопливим сторітелінгом. Використання мікроісторій (доль окремих людей) для пояснення макроісторичних процесів.
+
+### Стилістика: Риторика для західного читача
+Адаптація термінології та контексту. Використання західних історичних паралелей для пояснення українських реалій. Боротьба з "росієцентричною" (russocentric) оптикою в західній академії.
+
+### Деколонізаційна перспектива: Деконструкція імперії
+Плохій як руйнівник "великого російського наративу". Доказ того, що Росія не може бути демократичною національною державою, поки намагається утримати імперський контроль над Україною.
+
+### Деколонізаційна перспектива: Українська суб'єктність
+Повернення агентності. Україна не як жертва обставин чи пасивний об'єкт між великими державами, а як активний творець власної історії та ключовий фактор розпаду СРСР.
+
+### Підсумок: Значення збірки "Frontline"
+Інтелектуальна зброя в умовах гібридної війни. Як есеїстика Плохія формує новий глобальний канон розуміння Східної Європи.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12452)
+✓ Message 12394 acknowledged
+✓ Message 12452 acknowledged

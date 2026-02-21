@@ -85,6 +85,124 @@ Phase statuses: `"pending"` | `"complete"` | `"failed"` | `"in_progress"`
 
 ---
 
+### `GET /api/state/build-status/{track}`
+
+Compact live build progress for one track. **One call tells you: what's building, how many done, recent completions.**
+
+```bash
+curl -s http://localhost:8765/api/state/build-status/a1 | python3 -m json.tool
+```
+
+Returns:
+```json
+{
+  "track": "a1", "total": 44,
+  "done": 11, "building": 1, "queued": 32, "failed": 0,
+  "progress": "11/44 (25%)",
+  "currently_building": [{"num": 12, "slug": "the-accusative-ii-people", "phase": "B"}],
+  "recent_completions": [
+    {"num": 11, "slug": "the-accusative-i-things", "phase": "D", "audit": "pass", "words": "2789/2000"}
+  ]
+}
+```
+
+Cache TTL: 15 seconds (designed for live monitoring).
+
+---
+
+### `GET /api/state/build-status`
+
+All-tracks build progress in one call. Shows done/total/building/failed per track.
+
+```bash
+curl -s http://localhost:8765/api/state/build-status | python3 -m json.tool
+```
+
+Returns only tracks that have activity. Use during overnight builds for a single-glance overview.
+
+---
+
+### `GET /api/state/module/{track}/{num}`
+
+Single module deep-dive — **everything about one module in one call**, including related broker messages.
+
+```bash
+curl -s http://localhost:8765/api/state/module/a1/9 | python3 -m json.tool
+```
+
+Returns:
+- `phases` — A through F with status/timestamps
+- `audit` — status, word_count, word_target, blocking_issues
+- `research` — exists, quality score (0-10)
+- `review` — exists
+- `final_review` — verdict (APPROVE/NEEDS_WORK), issue count, issue summaries
+- `enriched` — whether plan was enriched (`.yaml.bak` exists)
+- `comms` — last 15 broker messages related to this module's slug
+
+---
+
+### `GET /api/state/final-reviews/{track}`
+
+Phase F results aggregated per track. Shows approval rate, issue patterns, rejected modules.
+
+```bash
+curl -s http://localhost:8765/api/state/final-reviews/a1 | python3 -m json.tool
+```
+
+Returns:
+```json
+{
+  "track": "a1",
+  "total_reviewed": 40, "approved": 37, "rejected": 3,
+  "pending_review": 0, "approval_rate": "92%",
+  "issue_patterns": {"FACTUAL": 2, "MISSING": 1},
+  "rejected_modules": [{"num": 27, "slug": "colors-and-clothing", "verdict": "NEEDS_WORK", "issue_count": 10}]
+}
+```
+
+`issue_patterns` counts keywords (FACTUAL, PLAN COMPLIANCE, ACTIVITY, ANTI-SURZHYK, etc.) across all issues.
+
+---
+
+### `GET /api/state/track-health/{track}`
+
+**One call to know everything about a track.** Build progress, audit, enrichment, final review, word quality, ETA, and attention list — all in one response.
+
+```bash
+curl -s http://localhost:8765/api/state/track-health/a1 | python3 -m json.tool
+```
+
+Returns:
+```json
+{
+  "track": "a1", "total": 44,
+  "build": {"done": 15, "pct": 34},
+  "audit": {"passing": 40, "failing": 0, "pct": 91},
+  "enrichment": {"done": 44, "pct": 100},
+  "final_review": {"reviewed": 40, "approved": 37, "approval_rate": "92%"},
+  "words": {"avg_ratio": "1.31x"},
+  "eta": {"remaining": 29, "minutes": 142, "display": "~142min (2h22m)"},
+  "attention": [{"num": 27, "slug": "colors-and-clothing", "reason": "final_review_NEEDS_WORK", "detail": "10 issues"}]
+}
+```
+
+ETA is calculated from the rate of recent Phase B completions. Cache TTL: 30 seconds.
+
+---
+
+### `GET /api/state/enrichment-status[?track=x]`
+
+Which plans are enriched per track. Checks for `.yaml.bak` files in `plans/`.
+
+```bash
+curl -s http://localhost:8765/api/state/enrichment-status | python3 -m json.tool
+curl -s "http://localhost:8765/api/state/enrichment-status?track=a1" | python3 -m json.tool
+```
+
+Returns per-track: `total`, `enriched`, `pending`, `pct`, `not_enriched` (first 10 slugs).
+
+---
+
 ### `GET /api/state/ready-to-build[?track=x]`
 
 Modules where Phase A is complete but Phase B hasn't started. **The build queue.**
@@ -213,11 +331,121 @@ curl -s http://localhost:8765/api/gold/inspect/b2-hist/trypillian-civilization
 curl -s http://localhost:8765/api/dashboard/research
 ```
 
-### Communications
+### Communications (old)
 ```bash
-# Message broker status + recent messages
+# Message broker status + recent messages (legacy)
 curl -s http://localhost:8765/api/dashboard/comms
 ```
+
+---
+
+## Agent Comms Endpoints — `/api/comms/`
+
+Full agent communication monitoring, batch progress tracking, zombie detection, and cleanup.
+
+### `GET /api/comms/live-activity[?minutes=15]`
+
+**What's being built RIGHT NOW** — module-level live feed. The primary endpoint for real-time monitoring.
+
+```bash
+curl -s http://localhost:8765/api/comms/live-activity | python3 -m json.tool
+```
+
+Returns three feeds:
+- `in_progress` — modules with recently updated `state-v3.json` (track, slug, phase, status, age)
+- `recent_completions` — research files created in last hour (track, slug, size_kb)
+- `recent_dispatches` — last 30 broker messages (from, to, task_id, preview)
+
+### `GET /api/comms/batch-progress`
+
+Track-level batch progress for overnight/background builds. Shows health status per track.
+
+```bash
+curl -s http://localhost:8765/api/comms/batch-progress | python3 -m json.tool
+```
+
+Returns per-track:
+- `health` — `"healthy"` | `"stalled"` | `"dead"` | `"complete"` | `"unknown"`
+- `research_done` / `total_expected` / `remaining`
+- `throughput_per_hour` — files created in last 30 min, annualized
+- `log` — preseed log info (passed/failed counts, last line, age)
+- `process` — running PID info (if active)
+
+Health logic: `complete` (log says BATCH COMPLETE) > `healthy` (process running + recent files) > `stalled` (process running but no recent files) > `dead` (no process, stale log).
+
+### `GET /api/comms/batch-progress/{track}`
+
+Detailed progress for one track. Includes a timeline of the 20 most recent research files.
+
+### `GET /api/comms/messages[?agent=x&task_id=x&msg_type=x&unacked_only=true&limit=100]`
+
+All messages with optional filters. Returns `preview` (300 chars), not full content.
+
+### `GET /api/comms/conversations[?limit=50]`
+
+Messages grouped by `task_id` with summary stats (msg_count, unacked, errors, agents involved).
+
+### `GET /api/comms/conversation/{task_id}`
+
+Full thread for one task. Returns all messages in order.
+
+### `GET /api/comms/zombies[?stale_hours=2&pingpong_threshold=5]`
+
+Auto-detect stuck patterns:
+- `stale_message` — unacked messages older than `stale_hours`
+- `pingpong` — rapid back-and-forth on same task (>threshold msgs in 1h)
+- `error_loop` — 3+ consecutive errors on same task
+- `orphan_pid` — PID files for dead processes
+
+### `GET /api/comms/stats`
+
+Message rate, error %, per-agent breakdown, queue depth.
+
+### `GET /api/comms/health`
+
+Broker DB health: exists, writable, size, queue depth, alive PID count.
+
+### `GET /api/comms/active-processes`
+
+Live bridge PID files with health status (alive/dead, age, agent, task_id).
+
+### `POST /api/comms/cleanup[?max_age_hours=24]`
+
+Force-ack stale messages and clean orphan PID files. Safe to call anytime.
+
+### `GET /api/comms/by-module/{track}/{slug}`
+
+Full communication trail for a module. All broker messages where `task_id` contains the slug.
+
+```bash
+curl -s http://localhost:8765/api/comms/by-module/a1/reflexive-verbs | python3 -m json.tool
+```
+
+Returns messages grouped by `task_id` (e.g., `v3-reflexive-verbs-pA`, `enrich-reflexive-verbs`) plus a flat list. Shows dispatch history, enrichment calls, repair loops — everything communicated about this module.
+
+### `POST /api/comms/acknowledge/{id}`
+
+Acknowledge a single message by ID.
+
+---
+
+## Watchdog Script
+
+Self-healing cleanup that runs alongside batch builds:
+
+```bash
+# Single pass: check health, clean zombies, log alerts
+.venv/bin/python scripts/watchdog.py
+
+# Loop mode: every 5 min (run alongside preseed builds)
+.venv/bin/python scripts/watchdog.py --loop
+
+# Dry run: show what would be cleaned
+.venv/bin/python scripts/watchdog.py --dry-run
+```
+
+Does NOT auto-restart tracks. Cleans stale messages + orphan PIDs, alerts on stalled/dead tracks.
+Log: `logs/watchdog.log`.
 
 ---
 
@@ -252,9 +480,11 @@ for m in d['recent_messages'][:5]:
 
 | Page | URL | Data source |
 |------|-----|-------------|
-| Home | `/` | `/api/dashboard/overview`, `/api/state/summary` |
+| Home | `/` | `/api/dashboard/overview`, `/api/state/summary`, `/api/comms/batch-progress` |
 | Audit Dashboard | `/audit-dashboard.html` | `/api/blue/live-status`, `/api/dashboard/track/{id}` |
 | Progress | `/progress.html` | `/api/state/summary`, `/api/state/pipeline/{track}` |
+| Agent Comms | `/comms.html` | `/api/comms/live-activity`, `/api/comms/batch-progress`, `/api/comms/zombies`, `/api/comms/messages`, `/api/comms/stats` |
 | Quality | `/quality.html` | `/api/state/research-coverage`, `/api/state/review-coverage`, `/api/state/issues`, `/api/state/weak-points` |
+| Track Health | `/track-health.html` | `/api/state/track-health/{track}`, `/api/state/build-status`, `/api/state/enrichment-status` |
 | Curriculum | `/curriculum-dashboard.html` | `/api/dashboard/overview` |
 | API Docs | `/docs` | FastAPI auto-generated |

@@ -5,83 +5,101 @@ slug: past-passive-participles
 version: '2.0'
 title: Дієприкметники минулого часу на -ний/-тий
 content_outline:
-- section: Вступ — Що таке дієприкметник?
+- section: 'Вступ: Світ реставрації та роль дієприкметника (Introduction: The World
+    of Restoration and the Role of the Participle)'
+  words: 500
   points:
-  - Дієприкметник як прикметникова форма дієслова — основа для «дієприкметникового
-    звороту» (State Standard §4.3.2)
-  - Місце в системі пасивного стану — стан об'єкта після дії (напр., відкрите вікно)
-  - Зв'язок із попереднім модулем
-- section: Утворення дієприкметників на -ний
+  - Introduction to the participle as a verbal adjective that serves as the morphological
+    base for the 'дієприкметниковий зворот' (participle phrase) mandated by State
+    Standard §4.3.2.
+  - 'Professional persona: The Museum Restorer''s focus on the ''state'' or ''result''
+    of an object after an action, distinguishing between the process (verb) and the
+    outcome (participle).'
+  - Linking the module to the broader Passive Voice System (B2-01) and defining the
+    participle's role as the core of passive-state descriptions (e.g., відкрите вікно).
+- section: 'Морфологія: Творення дієприкметників на -ний (Morphology: Forming Participles
+    with -ний)'
+  words: 1000
   points:
-  - Від основи інфінітива + -ний — vowel stems + consonant often take -ний (писати
-    -> писаний)
-  - 'Приклади (написати → написаний, зробити → зроблений) — cultural hook: Золота
-    пектораль, «зроблена» грецькими майстрами, «знайдена» Мозолевським'
-  - 'Чергування приголосних (д → дж, т → ч) — learner error: missing alternation (посадити
-    -> посаджений, not посадений)'
-  - Типові помилки в утворенні
-- section: Утворення дієприкметників на -тий
+  - 'Formation mechanics: Adding -ний to the infinitive stem, typically for vowel-ending
+    stems or stems ending in certain consonants (e.g., писати → писаний).'
+  - 'Critical consonant alternations: Mapping д → дж and т → ч to prevent common learner
+    errors like *посадений* (correct: посаджений) or *плачений* (correct: оплачений
+    from оплатити).'
+  - 'Cultural hook: The Golden Pectoral (Золота пектораль), a Scythian masterpiece
+    ''знайдена'' (found) by Borys Mozolevskyi in 1971 and ''зроблена'' (made) by ancient
+    Greek masters.'
+  - 'Drilling high-frequency participles in professional contexts: ''написаний'' (written),
+    ''зроблений'' (made/done), and ''пофарбований'' (painted).'
+- section: 'Специфіка: Односкладові основи та суфікс -тий (Specificity: Monosyllabic
+    Stems and the -тий Suffix)'
+  words: 800
   points:
-  - 'Від односкладових основ + -тий — mnemonic: monosyllabic stems often take -тий
-    (мити -> митий, бити -> битий)'
-  - 'Приклади (закрити → закритий, забути → забутий) — collocations: закритий клуб,
-    забута історія'
-  - 'Правила вибору між -ний і -тий — learner error: confusion like «миний» instead
-    of «митий»'
-- section: Узгодження дієприкметників
+  - 'The mnemonic rule for -тий: Identifying monosyllabic stems that prefer this suffix
+    (e.g., мити → митий, бити → битий, закрити → закритий).'
+  - 'Addressing ''Suffix Confusion'' learner errors: Systematic correction of forms
+    like *миний* instead of ''митий'' or *забуний* instead of ''забутий''.'
+  - 'Analysis of collocations for medium and high-frequency terms: ''забута історія''
+    (forgotten history), ''закрита територія'' (closed territory), and ''відкрите
+    питання'' (open question).'
+  - 'The semantics of completion: How the -тий suffix emphasizes a final physical
+    state in museum work (e.g., ''закритий фонд'', ''відкритий експонат'').'
+- section: 'Синтаксис та узгодження: Правила «Класу 1» (Syntax and Agreement: Class
+    1 Rules)'
+  words: 800
   points:
-  - 'Узгодження в роді (написана книга, написаний лист, написане слово) — learner
-    error: failing to agree participle with noun (*написаний книга*)'
-  - Узгодження в числі (написані листи)
-  - Узгодження у відмінку (написаної книги, написаному листу) — behaves exactly like
-    Adjective Class 1 hard group
-  - Повна парадигма відмінювання
-- section: Пасив із допоміжним дієсловом бути
+  - 'Participles as adjectives: Following the declension paradigm of Adjective Class
+    1 (hard group) for all genders, numbers, and cases.'
+  - 'Addressing agreement errors: Systematic drills to fix gender and number mismatches
+    (e.g., correcting *написаний книга* to ''написана книга'' or *відкрите двері*
+    to ''відкриті двері'').'
+  - 'Implementing State Standard §4.3.2: Constructing simple sentences with participle
+    phrases (e.g., ''Експонат, відреставрований фахівцями, був готовий до виставки'').'
+  - 'Full declension practice using professional museum terminology: ''відреставрованої
+    пам''ятки'', ''збереженого експоната'', ''знайденого артефакту''.'
+- section: Стилістика та «Правило Агентності» (Stylistics and the 'Agency Rule')
+  words: 900
   points:
-  - Конструкція бути + дієприкметник
-  - Теперішній час (Книга написана)
-  - 'Минулий час (Книга була написана) — cultural hook: Софія Київська «була перебудована»
-    та «відреставрована» в часи Мазепи'
-  - Майбутній час (Книга буде написана)
-- section: Регістрова специфіка
-  points:
-  - Дієприкметники в літературному стилі
-  - 'Дієприкметники в академічному письмі — collocations: збережений пам''ятник, збережена
-    спадщина'
-  - 'Уникання надмірного вживання в розмовному стилі — Agency Rule: prefer active
-    voice «Я прочитав» over «Книга була прочитана мною»'
-- section: Практика і підсумок
-  points:
-  - Ключові правила утворення
-  - Типові помилки
-  - Підготовка до наступних модулів
+  - 'Mastering the ''Agency Rule'' for B2: Training learners to avoid ''Passive Abuse''
+    (e.g., ''Книга була прочитана мною'') and prioritize natural active voice (''Я
+    прочитав книгу'').'
+  - 'Usage of ''бути'' + participle for temporal states: Expressing past, present,
+    and future outcomes (e.g., ''Собор був збудований'', ''Пам''ятка буде збережена'').'
+  - 'Cultural hook: Saint Sophia Cathedral (Софія Київська), which ''була перебудована''
+    (was rebuilt) in the Ukrainian Baroque style during the era of Hetman Ivan Mazepa.'
+  - 'Register and frequency analysis: Deep dive into academic and professional terms
+    like ''збережений'' (preserved) and ''відреставрований'' (restored) versus common
+    general usage.'
 vocabulary_hints:
   required:
-  - дієприкметник (participle)
-  - утворення (formation)
-  - основа (stem)
-  - суфікс (suffix)
-  - узгодження (agreement)
-  - відмінювання (declension)
-  - допоміжне дієслово (auxiliary verb)
-  - чергування (alternation)
-  - парадигма (paradigm)
-  - морфологія (morphology)
-  - написаний (written) — написаний лист, власноруч написаний
-  - зроблений (done/made) — добре зроблений, зроблений з любов'ю
-  - відкритий (open/opened) — відкритий простір, відкрите питання
-  - закритий (closed) — закрита тема, закриті двері
+  - дієприкметник (participle) — core grammar term for B2; focus on result-oriented
+    forms
+  - утворення (formation) — the process of creating grammatical forms; morphological
+    focus
+  - чергування (alternation) — key phonetic shifts (д/дж, т/ч) required for correct
+    formation
+  - узгодження (agreement) — matching participle with noun in gender/number/case like
+    an adjective
+  - 'написаний (written) — high frequency; collocations: написаний власноруч, написаний
+    зрозумілою мовою'
+  - 'зроблений (done/made) — high frequency; collocations: зроблений з любов''ю, зроблений
+    в Україні'
+  - 'відкритий (open/opened) — high frequency; collocations: відкрите питання, відкритий
+    простір'
+  - 'закритий (closed) — high frequency; collocations: закритий клуб, закрита територія'
   recommended:
-  - односкладовий (monosyllabic)
-  - складний (complex)
-  - правило (rule)
-  - виняток (exception)
-  - приклад (example)
-  - забутий (forgotten) — забутий герой, давно забутий
-  - пофарбований (painted) — свіжопофарбований стіл
-  - відреставрований (restored) — відреставрований храм, відреставрована ікона
-  - збережений (preserved) — збережений пам'ятник, збережена спадщина
-  - знайдений (found) — знайдений скарб
+  - 'відреставрований (restored) — low frequency but essential for persona; collocations:
+    відреставрований храм, відреставрована пам''ятка'
+  - 'збережений (preserved) — medium frequency (academic); collocations: збережена
+    спадщина, добре збережений екземпляр'
+  - 'забутий (forgotten) — medium frequency (literary); collocations: забута історія,
+    несправедливо забутий'
+  - 'знайдений (found) — high frequency in history/archaeology; collocations: знайдений
+    скарб, знайдений артефакт'
+  - експонат (exhibit) — contextual vocabulary for the museum restorer persona
+  - реставрація (restoration) — contextual vocabulary for the museum restorer persona
+  - основа (stem) — linguistic term for identifying where to attach suffixes
+  - суфікс (suffix) — linguistic term for the -ний/-тий classification
 activity_hints:
 - type: quiz
   focus: Form participles from verbs (choose -ний or -тий)

@@ -6,55 +6,56 @@ version: '2.0'
 title: 'Checkpoint: Aspect, Comparison & Modality'
 subtitle: Review of Modules 11-24
 content_outline:
-- section: Огляд / Overview
+- section: 'Огляд та вступ: Карта навичок (Overview and Introduction: Skill Map)'
+  words: 400
   points:
-  - Consolidating the 'Quality and Time' block — uniting Aspect, Comparison, Modality,
-    and Numerals into a cohesive system
-  - The map of skills from M11 to M24 — visualization of how isolated topics (process
-    vs result, degrees, mood) interconnect
-- section: 'Skill 1: Verbal Aspect (Вид дієслова: Процес та результат)'
+  - 'Consolidating the ''Quality and Time'' block: uniting Aspect, Comparison, Modality,
+    and Numerals into a cohesive system based on M11-M24'
+  - 'Visual map of skills: how process vs result, degrees of quality, and hypothetical
+    moods interconnect to form complex A2 level communication'
+  - 'Goal setting: bridging foundational A2 grammar to the complex narratives and
+    integration required for the upcoming M26'
+- section: 'Вид дієслова: Процес та результат (Verbal Aspect: Process and Result)'
+  words: 550
   points:
-  - 'Process vs Result distinction — reinforcing that Present tense is exclusively
-    Imperfective (learner error: *Я зроблю зараз*)'
-  - Aspect pair review — focus on common pairs like робити/зробити, писати/написати
-    — aligned with State Standard §4.3.2
-  - 'Cultural hook: Hospitality — using Imperfective for warm invitations (*Приходьте
-    до нас!* vs *Прийдіть*)'
-- section: 'Skill 2: Degrees of Comparison (Ступені порівняння)'
+  - 'Reinforcing the ''Present Tense Rule'' (State Standard §4.2.3.1): present is
+    exclusively Imperfective. Learner error: using perfective for the immediate present
+    (*Я зроблю зараз* instead of *Я роблю*)'
+  - 'Aspect pair mastery (State Standard §4.3.2): deep review of robi/zrobiti and
+    pisati/napisati with focus on completion vs duration'
+  - 'Cultural Hook: Hospitality and Aspect. Using Imperfective for warm, open invitations
+    (*Приходьте до нас!*) vs the bluntness of Perfective (*Прийдіть*) in social contexts'
+- section: 'Ступені порівняння: Від якості до досконалості (Degrees of Comparison:
+    From Quality to Perfection)'
+  words: 550
   points:
-  - Comparative and superlative forms — Simple (-іш/-ійш) vs Compound (більш/менш)
-    — aligned with State Standard §4.3.1
-  - Irregular comparatives — visual table for великий/більший, малий/менший, добрий/кращий,
-    поганий/гірший
-  - 'Learner error: The ''Double Comparative'' Trap — avoiding *більш кращий* (redundancy)'
-  - 'Proverb: «Краще пізно, ніж ніколи» — everyday usage of comparatives to soften
-    situations'
-- section: 'Skill 3: Modality (Умовний та наказовий способи)'
+  - 'Simple vs Compound Comparison (State Standard §4.3.1): drills on suffix forms
+    (-іш/-ійш) vs analytical forms (більш/менш)'
+  - 'The ''Double Comparative'' Trap: explicit correction of learner error *більш
+    кращий*—you must choose either simple or compound, never both'
+  - 'Irregular comparisons: master table for великий/більший, малий/менший, добрий/кращий,
+    поганий/гірший'
+  - 'Proverb integration: «Краще пізно, ніж ніколи» — analyzing why the comparative
+    is used to soften apologies and social friction'
+- section: Модальність та узгодження числівників (Modality and Numeral Agreement)
+  words: 700
   points:
-  - Conditional and imperative moods — distinct forms for requests vs hypothetical
-    situations — aligned with State Standard §4.2.3.1
-  - Real vs unreal conditions — bridging A2 'if' clauses to B1 standards (State Standard
-    §4.4.3 preview)
-- section: 'Skill 4: Numeral Agreement (Узгодження числівників)'
+  - 'Conditional and Imperative review (State Standard §4.2.3.1): forming polite requests
+    and hypothetical dreams'
+  - 'The 1-2-5 Rule (State Standard §4.2.1.3): addressing the Numeral Collision error
+    where learners use Genitive Plural for everything. Drill: 2-4 Nominative Plural
+    (*два столи*) vs 5+ Genitive Plural (*п''ять столів*)'
+  - 'Synthesizing modality and numbers: counting money and time in hypothetical scenarios
+    (e.g., ''If I had 100 hryvnias...'')'
+- section: Синтез та практичне завдання (Synthesis and Integration Challenge)
+  words: 800
   points:
-  - Zone 1-2-3 agreement rules — reviewing Nominative Plural (2, 3, 4) vs Genitive
-    Plural (5+) — aligned with State Standard §4.2.1.3
-  - 'Counting with nouns — learner error: using Genitive Plural for 2-4 because ''it
-    is plural'' in English'
-- section: Practice / Практика (The Mega-Review)
-  points:
-  - Aspect transformation — switching sentences from process to result
-  - Comparison marathon — rapid-fire adjective graduation
-  - Modality check — converting statements to polite requests or hypotheticals
-  - Counting money — practical application of 1-2-5 rule with currency
-- section: 'Dialogue / Діалог: Synthesis (Синтез навичок)'
-  points:
-  - 'Synthesizing all four skills in dialogue with analysis — TTT pedagogy: analyze
-    choices made in a complex conversation'
-- section: Integration Challenge / Інтеграційне завдання
-  points:
-  - Combined task using all skills — e.g., planning an event (dates, numbers, preferences,
-    hypothetical backup plans)
+  - 'TTT Pedagogy: The Synthesis Dialogue. Learners analyze a complex conversation
+    where a speaker chooses aspects, comparisons, and moods to negotiate a plan'
+  - 'Aspect Transformation Marathon: rapid-fire switching of sentences from process-oriented
+    to result-oriented contexts'
+  - 'The Event Planning Challenge: combined task using all skills to plan a cultural
+    event (dates, participant numbers, preferences, and hypothetical backup plans)'
 focus: checkpoint
 pedagogy: TTT
 objectives:
@@ -81,17 +82,20 @@ persona:
   role: Language Exam Proctor
 vocabulary_hints:
   required:
-  - 'робити / зробити (to do/make) — collocations: робити вибір (make a choice), зробити
-    роботу (get work done)'
-  - 'добрий / кращий (good / better) — collocations: доброго ранку (good morning),
-    кращий друг (best friend)'
-  - 'один / одна / одне (one) — collocations: один раз (once), одна хвилина (one minute)'
-  - 'писати / написати (to write) — collocations: писати лист (writing a letter),
-    написати книгу (write a book)'
-  - 'великий / більший (big / bigger) — collocation: більший за розміром (bigger in
-    size)'
+  - 'робити / зробити (to do/make) — Top 10 Verb; collocations: робити вибір (to make
+    a choice), зробити роботу (to get work done)'
+  - 'добрий / кращий (good / better) — Top 5 Adjective; collocations: кращий друг
+    (best friend), доброго ранку (good morning)'
+  - 'один / одна / одне (one) — High frequency (State Standard §4.2.1.3); collocations:
+    один раз (once), одна хвилина (one minute)'
+  - 'писати / написати (to write) — High frequency aspect pair; collocations: писати
+    лист (writing a letter), написати книгу (to write/finish a book)'
+  - 'великий / більший (big / bigger) — Core suppletive comparative; collocation:
+    більший за розміром (bigger in size)'
   recommended:
-  - 'вчасно (on time) — context: aspect nuances'
-  - 'пізно (late) — context: «Краще пізно, ніж ніколи»'
-  - 'вибір (choice) — context: making comparisons'
+  - вчасно (on time) — critical marker for perfective aspect (result/completion)
+  - пізно (late) — essential for the proverb «Краще пізно, ніж ніколи»
+  - вибір (choice) — key noun for making comparisons and decisions
+  - більш (more) — used for compound comparison; note the double comparative trap
+    (never say *більш кращий*)
 word_target: 3000

@@ -21,8 +21,8 @@
   audit script returned non-zero exit code
   overall status is 'fail' (must be 'pass')
   failing gates:
-    lesson: 3317/2000 (raw: 3649) | pedagogy: 4 violations
-    activities: 10/8 | density: 3 < 12
+    lesson: 3317/2000 (raw: 3649) | pedagogy: 2 violations
+    activities: 10/8 | density: 1 < 12
 
   Hetman has NOT completed this module.
   Fix the issues above and re-run this script.
@@ -32,8 +32,8 @@
        → FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 
-  📝 RECOMMENDATION: UPDATE (patch fixes) (severity 25/100)
-     → 4 violations (moderate)
+  📝 RECOMMENDATION: UPDATE (patch fixes) (severity 15/100)
+     → 2 violations (minor)
      → Activity density below minimum
 
 

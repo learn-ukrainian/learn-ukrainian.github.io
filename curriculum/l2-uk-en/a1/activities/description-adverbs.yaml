@@ -227,7 +227,7 @@
   title: 'Інтенсивність: Дуже чи Трохи?'
   instruction: 'Оберіть найбільш логічний варіант.'
   items:
-    - question: "Я люблю це _____. (Strong feeling)"
+    - question: "Я _____ люблю це. (Strong feeling)"
       options:
         - text: "дуже"
           correct: true

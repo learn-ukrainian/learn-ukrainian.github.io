@@ -6,54 +6,77 @@ version: '2.0'
 title: Reflexive Verbs (-ся)
 subtitle: Actions Directed at Oneself
 content_outline:
-- section: Warm-up
+- section: 'Вступ: Дзеркало дії (Introduction: Mirroring Action)'
+  words: 400
   points:
-  - 'Suffix -ся turns action back onto subject (мити → митися) — visual aid: use a
-    "mirror" analogy to explain -ся (action reflecting back)'
-  - -ся is short for себе (self) — historically a separate word
-  - 'Used for daily routine and social interactions — learner error: The "Myself"
-    Redundancy (saying "Я мию себе" instead of "Я миюся")'
-- section: Presentation
+  - Suffix -ся turns action back onto subject (мити → митися) — use the 'mirror' analogy
+    to explain -ся (action reflecting back) per research notes.
+  - -ся is short for 'себе' (self) — historically a separate word, now a bound morpheme
+    that signals the action stays with the agent.
+  - 'Cultural Hook: The ''Apology'' Logic — contrast ''Вибачаюсь'' (I excuse myself,
+    implying self-forgiveness) vs correct ''Вибачте'' (Excuse me, asking another)
+    to show the semantic logic of -ся.'
+  - 'Learner error: The ''Myself'' Redundancy — address the common mistake of saying
+    ''Я мию себе'' instead of the natural ''Я миюся''.'
+- section: 'Презентація: Форми та відмінювання (Presentation: Forms and Conjugation)'
+  words: 600
   points:
-  - 'Two forms: -ся (after consonants), -сь (after vowels)'
-  - 'Conjugation follows same pattern + -ся/-сь at end — State Standard alignment:
-    focus on present tense conjugation (дивлюся, дивишся...)'
-  - 'Type 1 — True Reflexive: вмиватися, одягатися — collocations: вмиватися холодною
-    водою, одягатися тепло'
-  - 'Type 2 — Reciprocal: зустрічатися, вітатися, цілуватися'
-  - 'Type 3 — Lexicalized: сміятися, дивитися, подобатися — learner error: Wrong Preposition
-    with "Laugh" (using *сміятися над* instead of *сміятися з*); collocations: дивитися
-    телевізор'
-- section: Practice
+  - 'Phonetic Rule: Two forms based on the preceding sound — -ся (after consonants
+    like ''миється'') and -сь (after vowels like ''миюсь'').'
+  - 'State Standard §4.2.4.1 alignment: Focus on present tense conjugation patterns
+    using ''дивитися'' (дивлюся, дивишся, дивиться, дивимося, дивитеся, дивляться).'
+  - 'Morphological Note: Mention past tense forms per Standard examples (сміявся,
+    сміялася, сміялося, сміялися) to show the suffix persists across tenses.'
+  - 'Shibboleth Pronunciation: Mastering the long soft [ц'':а] for ''-ться'' is a
+    critical phonetic marker of Ukrainian identity, distinct from the hard Russian
+    [ца].'
+- section: Семантичні групи (Semantic Groups)
+  words: 500
   points:
-  - Conjugating reflexive verbs
-  - Choosing -ся vs -сь based on ending
-  - Matching transitive ↔ reflexive pairs — explicitly contrast transitive *мити*
-    (washing a plate) vs reflexive *митися* (washing face)
-- section: Cultural Insight
+  - 'Type 1 — True Reflexive: Focus on daily routine (вмиватися, одягатися) — collocations:
+    вмиватися холодною водою, одягатися стильно.'
+  - 'Type 2 — Reciprocal: Actions between two people (зустрічатися, вітатися, цілуватися)
+    — emphasize that -ся here means ''each other''.'
+  - 'Type 3 — Lexicalized: Verbs that are always reflexive (сміятися, подобатися)
+    — Learner error: Wrong Preposition with ''Laugh'' (using *сміятися над* instead
+    of correct *сміятися з*).'
+  - 'Agent Confusion: Explicitly contrast ''називати'' (to name something) with high-frequency
+    ''називатися'' (to be called/identified).'
+- section: Практика та застосування (Practice and Application)
+  words: 500
   points:
-  - 'Pronunciation of -ться (long soft buzzing sound) — cultural hook: mastering the
-    soft [ц'':а] is a "shibboleth" for sounding natural and differs from Russian hard
-    pronunciation'
-  - 'Daily routine vocabulary central to Ukrainian life — cultural hook: the "Вибачаюсь"
-    vs "Вибачте" debate highlights the logic of -ся returning action to self (you
-    cannot forgive yourself)'
+  - 'Transitive ↔ Reflexive Contrast: Drill pairs like ''мити тарілку'' (washing a
+    plate) vs ''митися'' (washing oneself) to reinforce the ''mirror'' concept.'
+  - 'Daily Routine Integration: Heavy application in routine contexts (вчитися в школі,
+    повертатися додому, займатися спортом) preparing for module a1-25.'
+  - 'Conjugation Drills: Focus on the High-frequency verbs ''дивитися'' and ''вчитися''
+    to ensure automaticity in the present tense.'
+  - 'Social Interaction: Using ''знайомитися'' and ''вітатися'' in short dialogues
+    to build confidence in reciprocal forms.'
 vocabulary_hints:
   required:
-  - вмиватися (to wash oneself) — вмиватися холодною водою, вмиватися вранці
-  - одягатися (to dress oneself) — одягатися тепло, одягатися стильно, швидко одягатися
-  - дивитися (to watch/look) — дивитися телевізор, дивитися у вікно, дивитися на мене
-  - сміятися (to laugh) — сміятися голосно, сміятися з жарту (laugh at a joke), сміятися
-    до сліз
-  - називатися (to be called) — як це називається?, вулиця називається...
-  - вчитися (to study) — вчитися в школі, вчитися добре, вчитися грати на гітарі
-  - займатися (to do/engage in) — займатися спортом, займатися йогою, займатися бізнесом
-  - повертатися (to return) — повертатися додому, повертатися з роботи
+  - дивитися (to watch/look) — дивитися телевізор, дивитися на мене, дивитися у вікно;
+    High Frequency (Top 100)
+  - сміятися (to laugh) — сміятися голосно, сміятися з жарту (Standard Ukrainian),
+    сміятися до сліз; Medium-High frequency
+  - вмиватися (to wash oneself) — вмиватися холодною водою, вмиватися вранці; Medium
+    frequency (Routine)
+  - одягатися (to dress oneself) — одягатися тепло, одягатися стильно, швидко одягатися;
+    Medium frequency (Routine)
+  - називатися (to be called) — як це називається?, вулиця називається...; High Frequency
+    (Identification)
+  - вчитися (to study) — вчитися в школі, вчитися добре, вчитися грати на гітарі;
+    High Frequency (Academic)
+  - займатися (to do/engage in) — займатися спортом, займатися йогою, займатися бізнесом;
+    Medium-High frequency
+  - повертатися (to return) — повертатися додому, повертатися з роботи пізно; High
+    Frequency (Motion)
   recommended:
-  - голитися (to shave)
-  - зупинятися (to stop)
-  - знайомитися (to get acquainted)
-  - цікавитися (to be interested)
+  - голитися (to shave) — routine context
+  - зупинятися (to stop) — physical motion
+  - знайомитися (to get acquainted) — reciprocal interaction
+  - цікавитися (to be interested) — psychological state; usually takes Instrumental
+    case
 activity_hints:
 - type: fill-in
   focus: Conjugate reflexive verbs

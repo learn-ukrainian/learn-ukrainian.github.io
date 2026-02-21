@@ -1,0 +1,296 @@
+✅ Message sent to Gemini (ID: 10455) [auto-acked: self-addressed]
+✓ Message 10455 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10455...
+📨 Message #10455
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-interviu-ta-podkasty
+   Time: 2026-02-20T20:34:07.239849+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b1-88
+level: B1
+sequence: 88
+slug: interviu-ta-podkasty
+version: '2.0'
+title: Інтерв'ю та подкасти
+subtitle: Interviews & Podcasts — Introduction to Listening
+content_outline:
+- section: Вступ
+  points:
+  - 'Подкасти як інструмент вивчення мови — cultural hook: феномен українських подкастів
+    після 2022 року (наприклад, «The Ukrainians», «Культ: Подкаст») як інструмент
+    культурного опору та рефлексії'
+  - Переваги аудіо над текстом — розвиток навички глобального розуміння усного мовлення,
+    що є вимогою Держстандарту (публіцистичні тексти, інтерв'ю)
+- section: Огляд
+  points:
+  - 'Стратегія 1: Активне слухання — цикл: передбачення (prediction) → слухання →
+    нотатки → підсумок (summarization)'
+  - 'Стратегія 2: Виділення головної думки — learner error: спроба перекладати кожне
+    слово (translating word-for-word) замість фокусу на ключових словах і загальному
+    змісті'
+  - 'Стратегія 3: Робота з незнайомими словами — learner error: сприйняття суржику
+    як норми; стратегія розпізнавання регістру мовлення (ведучий як еталон)'
+  - 'Автентичний текст з анотаціями — фокус на дискурсивних маркерах («власне», «до
+    речі», «отже») як «дорожніх знаках» у розмові; learner error: ігнорування маркерів
+    як «шуму»'
+- section: Практика
+  points:
+  - 'Практичні тексти різної складності — відповідність стандарту §1.1.2.1.3: короткі
+    уривки програм про суспільні події, факти, опитування'
+- section: Продукція
+  points:
+  - 'Завдання на резюме подкасту — використання формату «мета-подкасту» про навчання;
+    practical tip: де шукати контент (YouTube, Spotify, Apple Podcasts)'
+  - Самооцінка
+- section: Підсумок — Слухай щодня
+  points:
+  - Три стратегії та як продовжувати практику — рекомендація регулярного прослуховування
+    автентичних ресурсів (The Ukrainians, Громадське тощо)
+- section: Потрібно більше практики?
+  points: []
+vocabulary_hints:
+  required:
+  - інтерв'ю (interview) — брати інтерв'ю, давати інтерв'ю, ексклюзивне інтерв'ю
+  - подкаст (podcast) — слухати подкаст, записувати подкаст, підписатися на подкаст
+  - слухати (to listen) — активне слухання (active listening strategy)
+  - ведучий (host) — ведучий програми, телеведучий, радіоведучий
+  - гість (guest) — гість студії, запрошений гість, спеціальний гість
+  - питання (question) — питання від ведучого, поставити питання
+  - відповідь (answer) — розгорнута відповідь, коротка відповідь
+  - запис (recording) — запис ефіру, архівний запис
+  recommended:
+  - нотатки (notes) — робити нотатки під час слухання
+  - тема (topic) — тема випуску, обговорення теми
+  - обговорення (discussion) — живе обговорення, дискусія в студії
+  - випуск (episode) — новий випуск, свіжий випуск, спецвипуск
+  - посилання (link) — посилання в описі, активне посилання
+activity_hints:
+- type: quiz
+  focus: Authentic interview excerpts
+  items: 15
+- type: fill-in
+  focus: Practice note-taking
+  items: 15
+- type: match-up
+  focus: Match speakers to opinions
+  items: 20
+- type: quiz
+  focus: Discuss podcast topics
+  items: 10
+focus: skills
+pedagogy: CBI
+prerequisites:
+- b1-87 (News Reading)
+connects_to:
+- b1-89 (Checkpoint Grammar Synthesis)
+objectives:
+- Learner can apply listening strategies to authentic Ukrainian interviews and podcasts
+- Learner can identify main points and key information in spoken discourse
+- Learner can take effective notes while listening to Ukrainian audio content
+- Learner is prepared for autonomous listening practice at B2
+grammar:
+- Listening comprehension strategies
+- Note-taking techniques
+- Spoken discourse markers
+register: розмовний
+phase: B1.8 [Skills & Integration]
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Podcast Host
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Інтерв'ю та подкасти
+
+## State Standard Reference
+§1.1.2.1.3: "Публіцистичні тексти: ... короткі уривки теле- і радіопрограм, пов’язаних із повсякденним життям і зацікавленнями мовців (програми про суспільні події, факти, опитування...); інтерв’ю про відомі теми чи поодинокі випадки."
+Alignment: Цей модуль безпосередньо реалізує вимогу стандарту щодо розуміння публіцистичних текстів, зокрема інтерв'ю та програм про суспільні події, розвиваючи навички глобального та детального розуміння усного мовлення.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| **інтерв'ю** | High (Media/General) | брати інтерв'ю (to interview), давати інтерв'ю (to give an interview), ексклюзивне інтерв'ю |
+| **подкаст** | High (Modern Media) | слухати подкаст, записувати подкаст, випуск подкасту, підписатися на подкаст |
+| **ведучий / ведуча** | Medium (Media context) | ведучий програми, телеведучий, радіоведучий, питання від ведучого |
+| **гість / гостя** | High (General/Media) | запрошений гість, спеціальний гість, гість студії |
+| **випуск** | High (Media context) | новий випуск, свіжий випуск, спецвипуск |
+| **посилання** | High (Internet context) | посилання в описі (link in description), активне посилання |
+
+## Cultural Hooks
+1. **The Ukrainians**: Один із найвідоміших мультимедійних проектів та подкастів, що фокусується на історіях успішних українців, соціальних змінах та відповідальності. Це приклад якісної україномовної журналістики.
+2. **Феномен українських подкастів після 2022**: Різке зростання кількості україномовних подкастів як інструменту культурного опору та самоідентифікації (наприклад, "Подкаст Підкаст", "Культ: Подкаст"). Це не просто розвага, а спосіб рефлексії над подіями.
+
+## Common Learner Errors
+1. **Translating word-for-word** → Trying to understand global meaning — Learners panic when they miss one word. *Correction strategy*: Focus on keywords and the "big picture" (глобальне розуміння).
+2. **Confusing "surzhyk" with standard language** → Accepting mixed forms as correct — Authentic interviews often contain non-standard language. *Correction strategy*: Identify the speaker's register; focus on the interviewer's standard language as the model.
+3. **Ignoring discourse markers** → Missing transitions — Words like "власне", "до речі", "отже" are often treated as noise, but they structure the thought. *Correction strategy*: Explicitly teaching these as "signposts".
+
+## Cross-References
+- **Builds on**: b1-87 (News Reading — transition from short/structured to longer/flow dialogue).
+- **Prepares for**: B2 autonomous listening (handling diverse accents, faster tempo, abstract topics).
+
+## Notes for Content Writing
+- Use the "Podcast Host" persona effectively: the module itself can be framed as a "meta-podcast" about learning how to listen to podcasts.
+- Include practical tips on *where* to listen (Spotify, YouTube, Apple Podcasts) to make it actionable.
+- Emphasize the "Active Listening" strategy: prediction → listening → note-taking → summarization.
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Феномен українського аудіопростору (Introduction: The Ukrainian Audio Phenomenon)"
+  words: 600
+  points:
+  - "Українські подкасти після 2022 року як інструмент культурного опору та рефлексії: огляд проектів «The Ukrainians» (історії успіху та соціальні зміни) та «Культ: Подкаст» (інтелектуальна деколонізація)."
+  - "Роль подкастів у самоідентифікації: перехід від розваг до глибокого обговорення суспільно-політичних та культурних тем як засіб формування сучасної української агентності."
+  - "Вимоги Держстандарту (§1.1.2.1.3): здатність розуміти публіцистичні аудіотексти про повсякденне життя, суспільні події та результати опитувань."
+- section: "Стратегії активного слухання (Active Listening Strategies)"
+  words: 1000
+  points:
+  - "Чотири етапи циклу активного слухання: передбачення (prediction на основі назви випуску) → слухання (первинне сприйняття) → нотатки (фіксація фактів) → підсумок (summarization головної ідеї)."
+  - "Стратегія 'Глобального розуміння' (Global Understanding) проти дослівного перекладу: як не панікувати через пропущене слово та фокусуватися на 'великій картині' (big picture) і ключових концептах."
+  - "Робота з дискурсивними маркерами як «дорожніми знаками»: аналіз функцій слів «власне» (clarification), «до речі» (digression), «отже» (conclusion); learner error: ігнорування маркерів як «інформаційного шуму»."
+  - "Аналіз регістрів у подкастах: розрізнення літературної мови ведучого (як еталона для наслідування) та часто спонтанної, іноді маркованої суржиком мови гостей; стратегія розпізнавання мовної норми в автентичному потоці."
+- section: "Практичний аналіз інтерв'ю (Practical Interview Analysis)"
+  words: 1200
+  points:
+  - "Аналіз структури інтерв'ю: вступ (представлення гостя), основна частина (тематичні блоки), бліц-опитування та підсумки; вивчення кліше для переходу між темами."
+  - "Робота з автентичними уривками про суспільні події: розпізнавання думок, фактів та емоційного забарвлення мовлення співрозмовників; фокус на темпі та інтонаційних акцентах."
+  - "Типові помилки учнів при сприйнятті на слух: спроба перекласти кожне слово (word-for-word translation) замість виділення опорних слів (keywords); вправи на подолання мовного бар'єру через контекстуальне вгадування."
+- section: "Продукція: Створення власного резюме (Production: Creating a Summary)"
+  words: 800
+  points:
+  - "Мета-завдання: Складання плану-конспекту або стислого резюме (summary) прослуханого подкасту з використанням вивчених стратегій та маркерів зв'язності."
+  - "Практичні поради (Practical Tips): де шукати якісний український контент залежно від зацікавлень (Spotify, YouTube, Apple Podcasts) та як перетворити пасивне слухання на активне навчання."
+  - "Самооцінка прогресу: чек-лист навичок слухання від розуміння загальної теми до вихоплення специфічних деталей та ідентифікації ставлення мовця до проблеми."
+- section: "Підсумок: Слухай щодня (Conclusion: Listen Daily)"
+  words: 400
+  points:
+  - "Рефлексія над розвитком навички від B1 (структуровані тексти) до B2 (готовність до швидкого темпу, різних акцентів та абстрактних тем)."
+  - "Фінальна порада: регулярність як ключ до успіху — рекомендація підписатися на свіжі випуски «Громадського» або «Подкаст Підкаст» для постійного занурення в живе мовне середовище."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "інтерв'ю (interview) — брати інтерв'ю (to interview), давати інтерв'ю (to give an interview), ексклюзивне інтерв'ю; High frequency media term"
+  - "подкаст (podcast) — слухати подкаст, записувати подкаст, випуск подкасту, підписатися на подкаст; Modern media staple"
+  - "ведучий / ведуча (host) — ведучий програми, телеведучий, радіоведучий, питання від ведучого; Refers to the standard language model"
+  - "гість / гостя (guest) — запрошений гість, спеціальний гість, гість студії; Often represents more colloquial register"
+  - "випуск (episode) — новий випуск, свіжий випуск, спецвипуск; Common collocation: 'новий випуск подкасту'"
+  - "посилання (link) — посилання в описі (link in description), активне посилання; Essential for digital content consumption"
+  - "слухати (to listen) — активне слухання (active listening strategy); Distinguish from 'чути' (to hear)"
+  recommended:
+  - "нотатки (notes) — робити нотатки під час слухання; Crucial for B1-B2 listening strategies"
+  - "власне (actually/properly speaking) — discourse marker for clarification or emphasis"
+  - "до речі (by the way) — discourse marker used to introduce a related but tangential point"
+  - "отже (so/therefore) — discourse marker used for summarizing or concluding a thought"
+  - "обговорення (discussion) — живе обговорення, дискусія в студії; High frequency in media contexts"
+  - "тема (topic) — тема випуску, обговорення теми; Central point of a podcast or interview"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4908 chars)
+✅ Message sent to Claude (ID: 10462)
+✓ Message 10462 acknowledged
+   Auto-acknowledged reply #10462 (stdout delivery — no inbox accumulation)
+✓ Message 10455 acknowledged

@@ -6,57 +6,74 @@ version: '2.0'
 title: Phone Basics
 subtitle: Making Calls and Texting
 content_outline:
-- section: Warm-up
+- section: Вступ та етикет (Introduction and Etiquette)
+  words: 450
   points:
-  - 'Як українці відповідають на телефон (Алло! / Слухаю!) — cultural hook: «Слухаю!»
-    signals professional readiness/politeness distinct from neutral «Алло!»; State
-    Standard §2 «установити контакт»'
-  - 'Формальні vs неформальні дзвінки — learner error: using «ти» with strangers (couriers/receptionists),
-    must default to «Ви» until established otherwise'
-- section: Presentation
+  - 'Introduction to phone greetings: Comparing the universal «Алло!» with the professional/polite
+    «Слухаю!» (State Standard §2); explain how «Слухаю!» signals professional readiness
+    and politeness.'
+  - 'The ''Formal vs. Informal'' address: Guidance on defaulting to «Ви» for strangers
+    (couriers, receptionists) vs. «ти» for friends; addressing the learner error of
+    being overly informal too early.'
+  - 'Pronunciation workshop: Mastering the single affricate sound «дз» in «дзвонити»
+    and «дзвінок»; correcting the learner error of pronouncing it as two separate
+    sounds or just «z».'
+- section: 'Презентація: Основні структури (Presentation: Core Structures)'
+  words: 650
   points:
-  - 'Початок розмови (Алло! / Добрий день, це...) — learner error: saying «Я є Олена»
-    instead of natural «Це Олена» or «Олена слухає»'
-  - 'Запитання про людину (Чи можу я поговорити з...?) — pronunciation note: «дз»
-    in «дзвонити» is a single affricate sound, not two separate letters'
-  - 'Уточнення (Повторіть, будь ласка / Хвилинку) — collocation: «Зачекайте, будь
-    ласка»; State Standard phrase «Скажіть, будь ласка»'
-  - 'Завершення (Дякую за дзвінок / До зв''язку!) — cultural hook: «До зв''язку!»
-    is the modern standard for closing calls/messages, bridging formal/informal'
-  - Помилкові номери (Вибачте, я помилився номером) — teach «я помилився номером»
-    as a fixed formula/chunk even if grammar is advanced
-  - 'Повідомлення та смс — collocations: «написати повідомлення», «залишити повідомлення»'
-- section: Practice
+  - 'Identifying yourself: Correcting the English-influenced error «Я є Олена» to
+    the natural «Це Олена» or «Олена слухає» as per modern Ukrainian speech etiquette.'
+  - 'Asking for contact: Using simple phrases like «Чи можу я поговорити з...?» and
+    the State Standard phrase «Скажіть, будь ласка» to establish polite contact.'
+  - 'Managing the conversation: Utilizing polite imperatives (§4.2.4.2) like «Зачекайте,
+    будь ласка» and «Повторіть, будь ласка» to handle clarifications or delays.'
+  - 'Modern closings: Introducing «До зв''язку!» (Talk soon) as the modern standard
+    for ending calls and messages, bridging the gap between formal «До побачення»
+    and informal «Бувай».'
+- section: 'Практика: Життєві ситуації (Practice: Real-life Situations)'
+  words: 550
   points:
-  - 'Діалог 1: Дзвінок другу — reinforce collocations: «дзвонити другу», «дзвонити
-    мамі», «передзвоню за хвилину»'
-  - 'Діалог 2: Дзвінок на рецепцію готелю — reinforce use of «Слухаю вас» and formal
-    «Ви» address'
-  - 'Діалог 3: Помилковий номер — practice fixed phrase «Вибачте, я помилився номером»
-    with polite closing'
-- section: Warm-up 2
+  - 'Wrong number scenario: Teaching «Вибачте, я помилився номером» as a fixed formulaic
+    chunk; practicing polite apologies and quick closures.'
+  - 'The Courier call: Specific focus on delivery scenarios (State Standard Catalog
+    B); practicing phrases for contact instructions like «Я буду через 5 хвилин» or
+    «Залиште біля дверей».'
+  - 'Digital messaging: Introduction to SMS/messenger collocations like «написати
+    повідомлення» and «залишити повідомлення» as alternatives to calling.'
+- section: Продукція та підсумок (Production and Summary)
+  words: 350
   points:
-  - Наратив про телефонну розмову з кур'єром — key real-world scenario for foreigners
-    in Ukraine; focus on simple contact instructions
-  - Практичні фрази для доставки їжі — e.g., «Я буду через 5 хвилин», «Ваше замовлення
-    прибуло»
+  - 'Dialogue Simulation: Formal call to a hotel/office using «Слухаю вас» and «Ви»
+    vs. informal call to a friend using «Алло» and «До зв''язку».'
+  - 'Review of high-frequency collocations: Consolidating «дзвонити мамі», «номер
+    телефону», and «лінія зайнята» to ensure learners use the most natural speech
+    patterns found in research.'
 vocabulary_hints:
   required:
-  - телефон (phone) — номер телефону, мій телефон
-  - 'дзвонити (to call) — дзвонити другу/мамі; pronunciation note: single «дз» sound'
-  - відповідати (to answer) — відповідати на дзвінок
-  - номер (number) — номер телефону, помилитися номером
-  - повідомлення (message) — написати повідомлення, залишити повідомлення
-  - зайнятий (busy) — лінія зайнята, я зайнятий
-  - передзвонити (to call back) — Я передзвоню за хвилину, передзвоніть пізніше
-  - алло (hello - phone) — Алло! Хто це?
+  - телефон (phone) — номер телефону, мій телефон; very high frequency
+  - 'дзвонити (to call) — дзвонити другу/мамі; very high frequency; pronunciation
+    note: single «дз» sound'
+  - відповідати (to answer) — відповідати на дзвінок; State Standard §2 contact formula
+  - номер (number) — номер телефону, помилитися номером; high frequency
+  - повідомлення (message) — написати повідомлення, залишити повідомлення; high frequency
+    in digital contact
+  - зайнятий (busy) — лінія зайнята, я зайнятий; common status marker
+  - передзвонити (to call back) — Я передзвоню за хвилину, передзвоніть пізніше; high
+    frequency in verbal interaction
+  - алло (hello - phone) — Алло! Хто це?; informal/neutral opening
   recommended:
-  - слухаю (I'm listening) — Так, слухаю вас (polite/professional answer)
-  - хвилинка (a moment) — Зачекайте хвилинку, одну хвилинку
-  - помилитися (to make a mistake) — помилитися номером (fixed phrase)
+  - слухаю (I'm listening) — Так, слухаю вас; polite/professional answer; signals
+    readiness to listen
+  - хвилинка (a moment) — Зачекайте хвилинку, одну хвилинку; common softener in speech
+  - помилитися (to make a mistake) — помилитися номером; taught as a fixed formula
+    chunk
   - передати (to pass on) — передати повідомлення, що передати?
-  - телефонувати (to phone) — телефонувати в офіс (more formal than дзвонити)
-  - зачекайте (wait - imperative) — Зачекайте, будь ласка (polite request)
+  - телефонувати (to phone) — телефонувати в офіс; more neutral/formal alternative
+    to «дзвонити»
+  - зачекайте (wait - imperative) — Зачекайте, будь ласка; polite request; State Standard
+    §2
+  - до зв'язку (talk soon) — modern standard sign-off for calls and messengers; high
+    frequency
 activity_hints:
 - type: fill-in
   focus: Phone conversations

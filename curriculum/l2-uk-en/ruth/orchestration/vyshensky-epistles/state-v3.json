@@ -1,0 +1,13 @@
+{
+  "track": "ruth",
+  "slug": "vyshensky-epistles",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-20T10:22:32Z",
+      "task_id": "v3-vyshensky-epistles-pA",
+      "mode": "full"
+    }
+  }
+}

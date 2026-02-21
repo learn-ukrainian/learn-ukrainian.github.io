@@ -1,0 +1,276 @@
+✅ Message sent to Gemini (ID: 10573) [auto-acked: self-addressed]
+✓ Message 10573 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10573...
+📨 Message #10573
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-idioms-animals-ii
+   Time: 2026-02-20T20:42:42.575053+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b2-53
+level: B2
+sequence: 53
+slug: idioms-animals-ii
+version: '2.0'
+title: 'Фразеологізми: Тварини II (Птахи, Риби, Комахи)'
+content_outline:
+- section: Розминка — Птахи, риби та комахи
+  points:
+  - Птахи — свобода, мрії, легкість
+  - Риби — мовчання, холодність, невловимість
+  - Комахи — дрібниці, настирливість, працьовитість
+- section: Фразеологізми з птахами
+  points:
+  - Гарна пташка своїм пір'ям (зовнішність прикрашає)
+  - Синиця в руках краще, ніж журавель у небі (краще мале, але певне)
+  - Стріляний горобець (досвідчена людина)
+  - Ворона в павичевому пір'ї (прикидатися ким не є)
+  - Білий ворон (винятковий, не як усі)
+- section: Фразеологізми з рибами та комахами
+  points:
+  - Мовчати як риба (нічого не казати)
+  - Ні риба ні м'ясо (невиразний, непомітний)
+  - Робити з мухи слона (перебільшувати)
+  - Працювати як бджола (дуже старанно)
+  - Мурашка б'є ногами (про дрібну людину з великими амбіціями)
+- section: Практика — різні тварини
+  points:
+  - Класифікувати вирази за темою (свобода, праця, мовчання)
+  - Підібрати вираз для ситуації
+  - Порівняти з M52 (вовк, собака, кінь) — систематизація
+  - Написати есе з використанням тваринних образів
+focus: phraseology
+pedagogy: CBI
+objectives:
+- Вивчити 8 ключових фразеологізмів про птахів, риб та комах
+- Розуміти значення метафор перебільшення та неуважності
+- Вміти вживати ідіоми про стихії (вода, повітря) у переносному значенні
+grammar:
+- Fixed expressions
+- Idiom structure and variation
+register: varies
+phase: B2.2 [Phraseology & Synonymy]
+vocabulary_hints:
+  required:
+  - фразеологізм (idiom)
+  - вираз (expression)
+  - значення (meaning)
+  - контекст (context)
+  recommended:
+  - переносне значення (figurative meaning)
+  - стилістичне забарвлення (stylistic coloring)
+activity_hints:
+- type: reading
+  focus: Контекстне використання
+  items: 4
+- type: fill-in-the-blank
+  focus: Практичне застосування
+  items: 10
+- type: true-false
+  focus: Розуміння значень
+  items: 8
+persona:
+  voice: Professional Language Coach
+  role: Ornithologist (Орнітолог)
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Фразеологізми: Тварини II (Птахи, Риби, Комахи)
+
+## State Standard Reference
+§4.4.1.2: "Стилістичні засоби лексики: ... метафори: ідуть дощі, сонце сідає..."
+Alignment: Module focuses on phraseology (metaphorical fixed expressions) which is a key component of lexical stylistics at B2 level, particularly for enriching expressiveness.
+
+## Vocabulary Frequency
+| Word/Idiom | Frequency / Source | Key collocations |
+|------------|--------------------|------------------|
+| **Гарна пташка пір'ям, а людина знанням** | High (Proverb) | Гарна пташка; судити по пір'ю |
+| **Синиця в руках (краще, ніж журавель у небі)** | Very High | Тримати синицю; вибрати синицю |
+| **Стріляний горобець** | High | Старий стріляний горобець; він — стріляний горобець |
+| **Ворона в павичевому пір'ї** | Medium (Literary) | Прикидатися; бути вороною в павичевому пір'ї |
+| **Біла ворона** | High (Common) | Бути білою вороною; почуватися білою вороною; виглядати як біла ворона |
+| **Мовчати як риба** | Very High | Німий як риба; мовчати; води в рот набрати |
+| **Ні риба ні м'ясо** | High | Ні те ні се; ні риба ні м'ясо |
+| **Робити з мухи слона** | Very High | Не роби з мухи слона; перебільшувати |
+| **Працювати як бджола** | High | Трудитися як бджола; бджілка |
+| **Мурашки по спині бігають** | Very High | Від страху; від холоду; пробігли мурашки |
+
+*Note: "Мурашка б'є ногами" (from plan) appears to be a hallucination or extremely rare dialectism. Recommended replacement: "Лізти (пхатися) межи очі як муха" (annoying) or "Як бджола в колесі" (busy/dizzy).*
+
+## Cultural Hooks
+1. **Stork (Лелека)**: A sacred bird in Ukraine, symbol of family happiness and loyalty. Nests on houses bring good luck. (Source: Ethnography of Ukraine)
+2. **Beekeeping (Бджільництво)**: Ukraine is a top global honey producer. Petro Prokopovych invented the first movable-frame beehive in 1814. Ukrainians often describe themselves as "pracʹovyti yak bdzholy" (hardworking as bees).
+
+## Common Learner Errors
+1. **Gender Mismatch**: Using "Білий ворон" (masc.) instead of "Біла ворона" (fem.). *Correction*: "Вона — справжня біла ворона."
+2. **Calques/Mixing**: "Грати значення" instead of "Мати значення" or "Відігравати роль" (often confused in idioms).
+3. **Literal Translation**: Translating "Cold turkey" or "Early bird" literally. Ukrainian equivalent for "Early bird" is "Рання пташка" (valid) or "Хто рано встає, тому Бог дає".
+
+## Cross-References
+- Builds on: B2.1 Register System
+- Prepares for: B2.2 Synonymy (M54), C1 Stylistics
+
+## Notes for Content Writing
+- **Correction Required**: The plan lists "Мурашка б'є ногами" as "small person with big ambition". Research could NOT verify this. **Action**: Replace with **"Дрібний, а завзятий"** or focus on **"Мурашки по спині"** (physical sensation) to keep the insect theme authentic.
+- **Form Usage**: "Біла ворона" is the standard form, not "Білий ворон". Use the feminine form in examples.
+- **Stylistics**: Emphasize that these are metaphors. B2 students must understand *why* the metaphor exists (e.g., crow vs peacock).
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Метафоричний світ природи (Introduction: The Metaphorical World of Nature)"
+  words: 600
+  points:
+  - "Introduction to animal metaphors in Ukrainian lexical stylistics (§4.4.1.2), focusing on expressive enrichment at the B2 level."
+  - "General associations: Birds (freedom/dreams), Fish (silence/coldness), and Insects (diligence/annoyance)."
+  - "Cultural Hook: The Stork (Лелека) as a sacred bird in Ukraine, symbol of family happiness and loyalty, nesting on houses as a sign of luck."
+- section: "Птахи: Від досвіду до винятковості (Birds: From Experience to Uniqueness)"
+  words: 1000
+  points:
+  - "Analysis of the high-frequency proverb 'Гарна пташка своїм пір'ям, а людина знанням' — shifting focus from appearance to substance."
+  - "The dichotomy of certainty: 'Синиця в руках краще, ніж журавель у небі' — usage patterns and collocations like 'тримати синицю'."
+  - "Experienced personas: 'Стріляний горобець' vs 'Рання пташка' (contrasting literal translations of English 'Early bird')."
+  - "Social dynamics: 'Біла ворона' (outcast/unique) and 'Ворона в павичевому пір'ї' (pretense) — highlighting the fem. gender requirement for 'Біла ворона'."
+- section: "Риби та комахи: Символи мовчання та праці (Fish and Insects: Symbols of Silence and Labor)"
+  words: 950
+  points:
+  - "Communication metaphors: 'Мовчати як риба' (and the variation 'німий як риба') vs the indecisive 'ні риба ні м’ясо'."
+  - "The virtue of labor: 'Працювати як бджола' and its cultural link to Ukrainian beekeeping history (Petro Prokopovych and the 1814 beehive invention)."
+  - "Hyperbole and annoyance: 'Робити з мухи слона' (very high frequency) and 'Лізти межи очі як муха' (replacement for rarer dialectisms)."
+  - "Physical idioms: 'Мурашки по спині бігають' — describing sensations of fear, cold, or excitement to ensure authentic insect-related vocabulary."
+- section: "Практикум: Стилістичні відтінки (Practice: Stylistic Shades)"
+  words: 750
+  points:
+  - "Categorization exercise: Sorting idioms by register (colloquial vs literary) and semantic theme (Diligence, Silence, Ambition)."
+  - "Error Correction: Identifying and fixing gender mismatches (e.g., 'Він був білим вороном') and avoiding Russian calques like 'грати значення'."
+  - "Translation workshop: Comparing Ukrainian bird metaphors with English counterparts (e.g., 'Early bird' vs 'Рання пташка' vs 'Хто рано встає...')."
+- section: "Творче застосування та підсумок (Creative Application and Summary)"
+  words: 700
+  points:
+  - "Guided production: Writing a descriptive character profile of a 'white crow' or a 'busy bee' in a professional or social context."
+  - "Reflection on metaphorical motivation: Why does Ukrainian culture link silence to fish and ambition to insects?"
+  - "Final summary: Integrating animal idioms into broader B2.2 goals of synonymy and stylistic flexibility."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "синиця в руках (tomtit in hand) — high frequency; meaning: better a small certainty than a big hope"
+  - "стріляний горобець (experienced sparrow) — collocation: 'старий стріляний горобець'; experienced person"
+  - "біла ворона (white crow) — note: always feminine gender regardless of subject; means an outcast or exception"
+  - "мовчати як риба (silent as a fish) — high frequency; collocation: 'німий як риба' (mute as a fish)"
+  - "робити з мухи слона (make an elephant out of a fly) — very high frequency; means to exaggerate"
+  - "працювати як бджола (work like a bee) — usage: extreme diligence/hardworking"
+  recommended:
+  - "лелека (stork) — sacred bird; symbol of family and luck"
+  - "мурашки по спині (shivers down the back) — physical sensation from fear or cold"
+  - "лізе межи очі як муха (gets into the eyes like a fly) — annoying/persistent person"
+  - "ворона в павичевому пір’ї (crow in peacock feathers) — literary; someone pretending to be who they aren't"
+  - "переносне значення (figurative meaning) — essential metalanguage for discussing idioms"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4107 chars)
+✅ Message sent to Claude (ID: 10578)
+✓ Message 10578 acknowledged
+   Auto-acknowledged reply #10578 (stdout delivery — no inbox accumulation)
+✓ Message 10573 acknowledged

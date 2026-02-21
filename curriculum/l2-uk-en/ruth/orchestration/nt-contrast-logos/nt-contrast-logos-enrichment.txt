@@ -1,0 +1,220 @@
+✅ Message sent to Gemini (ID: 12407) [auto-acked: self-addressed]
+✓ Message 12407 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12407...
+📨 Message #12407
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-nt-contrast-logos
+   Time: 2026-02-20T23:39:31.985389+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 40
+module: ruth-040
+module_number: 32
+slug: nt-contrast-logos
+title_uk: 'Контраст: Логос'
+title_en: New Testament Contrast
+phase: 2
+phase_id: sacred-word
+phase_name: Sacred Word
+focus: Ostrih vs Peresopnytsia (John 1)
+content_outline:
+- section: Вступ
+  description: Introduction to New Testament Contrast
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+- parallel-text
+persona:
+  voice: Baroque Scholar
+  role: Greek-Slavonic Translator
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Nt Contrast Logos (Пересопницьке Євангеліє vs Острозька Біблія)
+
+## Використані джерела
+1. [Litopys.org.ua: Пересопницьке Євангеліє](http://litopys.org.ua/ukrmova/um27.htm) — Аналіз мовних особливостей та історії створення.
+2. [Litopys.org.ua: Острозька Біблія](http://litopys.org.ua/old16_17/old16_06.htm) — Детальний опис видання та його культурного значення.
+3. [ESU.com.ua: Пересопницьке Євангеліє](https://esu.com.ua/article-877793) — Енциклопедична стаття про пам'ятку.
+4. [History.org.ua: Острозька Біблія](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Ostrozka_Bibliya) — Історичний контекст та вплив.
+
+## Хронологія
+- 1556: Початок роботи над Пересопницьким Євангелієм у Дворецькому монастирі (княгиня Анастасія Заславська).
+- 1561: Завершення роботи над Пересопницьким Євангелієм у Пересопницькому монастирі.
+- 1576: Заснування Острозької академії князем Василем-Костянтином Острозьким.
+- 1580: Пробне видання Нового Заповіту та Псалтиря в Острозі.
+- 1581: Вихід у світ повної Острозької Біблії (Іван Федоров).
+
+## Ключові факти та цитати
+- **Пересопницьке Євангеліє**: "Перлина української мови". Переклад "із язика болгарського на мову руську".
+- **Глоси**: Унікальна риса Пересопниці. "Чресла" -> "стегна", "бдѣти" -> "не спати", "стрѣху" -> "дах".
+- **Острозька Біблія**: "Канонічна твердиня". Перше повне друковане видання Біблії церковнослов'янською мовою.
+- **Цитата (Острозька Біблія, післямова Федорова)**: "Сия книгы, Ветхаго і Новаго завѣта, по языку словенску...".
+- **Символізм**: На Пересопницькому Євангелії складають присягу президенти України (символ спадкоємності державності).
+
+## Engagement Hooks (mapped to sections)
+- Section "Основний матеріал: I — Історичний контекст...": [!context] — Паралель з Європейською Реформацією (Лютер, 1534) та релігійними війнами.
+- Section "Основний матеріал: II — Пересопницьке Євангеліє...": [!culture] — Традиція президентської присяги на Пересопницькому Євангелії як символ легітимності.
+- Section "Основний матеріал: III — Острозька Біблія...": [!history-bite] — Тираж Острозької Біблії (~1500 прим.) був колосальним для свого часу; збереглося близько 350.
+- Section "Основний матеріал: IV — Порівняльний аналіз...": [!quote] — Цитати з Івана 1:1 (ЦС vs Руська мова) для демонстрації різниці звучання.
+- Section "Основний матеріал: V — Глоси...": [!myth-buster] — Міф про "нерозвиненість" української мови у XVI ст. Глоси доводять існування розвиненої лексичної системи.
+- Section "Підсумок": [!legacy] — Вплив обох пам'яток на сучасну українську ідентичність.
+
+## Деколонізаційний контекст
+- **Imperial Myth**: Острозька Біблія часто привласнюється російською історіографією як "общерусское достояние", ігноруючи її суто волинське походження та контекст українського (руського) відродження.
+- **Ukrainian Reality**: Острозька Біблія була відповіддю на польсько-католицьку експансію саме на українських землях. Пересопницьке Євангеліє фіксує живу українську мову, яку імперія пізніше намагатиметься заборонити (Емський указ, Валуєвський циркуляр).
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| Мова видань | "Западнорусский язык" або діалект | Староукраїнська мова (руська мова) |
+| Іван Федоров | "Русский первопечатник" (московський емігрант) | Діяч українського (та білоруського) Відродження, який реалізувався саме в Острозі та Львові |
+| Острозька академія | Провінційний осередок | Перший вищий навчальний заклад у Східній Європі, "Волинські Афіни" |
+
+## Section-Mapped Research Notes
+
+### Вступ
+- Концепція "Логосу" (Слова) як центральна в християнстві.
+- Дві стратегії: сакралізація (Острог) vs розуміння (Пересопниця).
+
+### Основний матеріал: I — Історичний контекст та виклики XVI століття
+- Криза православ'я після падіння Константинополя (1453) та Люблінської унії (1569).
+- Реформаційний вплив: ідея перекладу Біблії народною мовою.
+- Змагання "Русі" з "Латиною" та "Польщею".
+
+### Основний матеріал: II — Пересопницьке Євангеліє: Живе слово
+- 1556-1561 рр., Дворецький та Пересопницький монастирі.
+- Меценатка Анастасія Заславська (Гольшанська).
+- Перекладачі: Григорій та Михайло Василевич.
+- Мова: насичена народними елементами, полонізмами, чехізмами, але основа — руська.
+
+### Основний матеріал: III — Острозька Біблія: Канонічна твердиня
+- 1581 р., Острог. Князь Василь-Костянтин Острозький.
+- Мета: створення "Слов'янської Вульгати" для захисту догматів.
+- Текстологічна робота: звірка з грецькою Септуагінтою (на відміну від Вульгати).
+- Мова: нормалізована церковнослов'янська (високий стиль).
+
+### Основний матеріал: IV — Порівняльний аналіз тексту (Іван 1)
+- "Споконвіку було Слово..." — порівняння синтаксису.
+- Церковнослов'янська: давальний самостійний, аорист.
+- Староукраїнська: прийменникові конструкції, аналітичні форми минулого часу ("був пішов").
+
+### Основний матеріал: V — Глоси та лексична революція
+- Глоси як "вікна" в живу мову.
+- Прямокутні рамки для глос у Пересопниці.
+- Приклади: "спъ" -> "сон", "вєнєц" -> "корона".
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12474)
+✓ Message 12407 acknowledged
+✓ Message 12474 acknowledged

@@ -1,0 +1,250 @@
+✅ Message sent to Gemini (ID: 10805) [auto-acked: self-addressed]
+✓ Message 10805 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10805...
+📨 Message #10805
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-summer-holidays
+   Time: 2026-02-20T21:29:45.235161+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-071
+level: C1
+sequence: 71
+slug: summer-holidays
+version: '2.0'
+title: Українські свята - літній цикл
+subtitle: Ukrainian Holidays - Summer Cycle
+content_outline:
+- section: Розминка — Літо та врожай
+  points:
+  - Літо — кульмінація сонячного культу
+  - Купала — найважливіше літнє свято
+  - Жнива та свята врожаю
+- section: Купальський цикл
+  points:
+  - 'Івана Купала: вогонь, вода, цвіт папороті'
+  - Купальські пісні та ігри
+  - 'Русальний тиждень: небезпечний час'
+  - 'Петра і Павла: кінець весняного циклу'
+- section: Свята врожаю
+  points:
+  - 'Три Спаси: Медовий, Яблучний, Горіховий'
+  - 'Обжинки: завершення жнив, останній сніп'
+  - 'Покрова: перехід до осені, весілля'
+  - Дожинкові пісні та обряди
+- section: Практика — літня обрядовість
+  points:
+  - Проаналізувати купальську пісню — символіка
+  - Пояснити ритуал стрибання через вогонь
+  - Порівняти Купала з європейським Іваном
+  - Написати есе про аграрну магію жнив
+focus: cultural
+pedagogy: CBI
+objectives:
+- Learner can describe the rituals of Ivan Kupala (fire, water, fern flower)
+- Learner can explain the symbolism of Green Week (Troitsia)
+- Learner can distinguish between the three Spas holidays (Honey, Apple, Nut)
+- Learner can discuss the pre-Christian roots of summer traditions
+grammar:
+- nature vocabulary
+- mythical descriptions
+phase: C1.5 Folk Culture & Arts
+persona:
+  voice: Senior Specialist
+  role: Етнограф
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Українські свята - літній цикл
+
+## State Standard Reference
+§3.21: "Традиції, звичаї, свята: ...релігійні й державні свята; ...українські звичаї і традиції; релігійні звичаї і традиції; забобони."
+Alignment: This module directly addresses the C1 requirement to discuss specific Ukrainian traditions, religious customs, and superstitions (забобони), specifically within the summer cycle (Kupala, Spas, Harvest).
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| **Купала** | High (Cultural/Seasonal) | святкувати Купала, купальська ніч, купальське вогнище |
+| **Папороть** | Medium (Botanical/Folklore) | цвіт папороті, шукати папороть, легенда про папороть |
+| **Вінок** | High (General) | плести вінок, пускати вінок на воду, дівочий вінок |
+| **Жнива** | Medium (Agricultural) | початок жнив, обжинки, жниварські пісні, багатий врожай |
+| **Спас** | High (Religious/Folk) | Яблучний Спас, Медовий Спас, святити яблука |
+| **Забобон** | Medium (Abstract) | народні забобони, вірити в забобони, давні забобони |
+| **Обряд** | High (Cultural) | весільний обряд, календарно-обрядовий цикл, язичницький обряд |
+
+## Cultural Hooks
+1. **The Fern Flower (Цвіт папороті)**: A key legend for Kupala Night. It is believed that the fern blooms only for a moment at midnight. Whoever finds it gains the ability to understand animal language and see hidden treasures. This represents the quest for ultimate knowledge/happiness.
+2. **Jump over the Fire (Стрибання через вогнище)**: A purification ritual. Couples jump together holding hands—if their hands don't part, they will marry and live happily. It's a test of fate and a cleansing of sins/illness by fire.
+3. **The Three Spas (Три Спаси)**: A progression of harvest blessings. Honey (Makoviy) involves water and herbs (macocome); Apple represents the fruit harvest and transfiguration; Nut (Bread) marks the end of grain harvest and preparation for autumn.
+
+## Common Learner Errors
+1. **Confusing Seasons**: Learners often mix up *Koliada* (Winter) rituals with *Kupala* (Summer) due to similar pre-Christian roots. *Correction*: Focus on elemental associations (Winter = stars/ancestors/indoor; Summer = fire/water/nature/outdoor).
+2. **Lexical confusion**: *Багаття* (general bonfire) vs *Ватра* (Shepherd's/Carpathian fire) vs *Купальське вогнище* (Ritual fire). *Correction*: Use *купальське вогнище* for this specific context.
+3. **Grammar (Prepositions)**: *На свято* (for the holiday/during the holiday celebration) vs *У свято* (on the day of). *Correction*: "Ми йдемо до лісу на свято Івана Купала."
+
+## Cross-References
+- **Builds on**: B2-076 (Folk Beliefs), B2-014 (Seasons/Nature), B1-073 (Ukrainian Traditions).
+- **Prepares for**: C1-094 (Lesya Ukrainka - *Forest Song*), C1-096 (Kotsiubynsky - *Shadows of Forgotten Ancestors*), C1-081 (Mythology).
+
+## Notes for Content Writing
+- **Persona**: Ethnographer. Tone should be observant, descriptive, and respectful of the depth of these traditions. Use phrases like «За народними віруваннями...», «Етнографи фіксують...».
+- **Syncretism**: Highlight how Christian holidays (St. John the Baptist, Transfiguration) merged with pagan agricultural festivals (Kupalo, Spas).
+- **Immersion**: 100% Ukrainian. Explain archaic terms (Марена, Купало, обжинки) in Ukrainian.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Календарно-обрядовий цикл (Introduction: Calendar Ritual Cycle)"
+  words: 600
+  points:
+  - "Огляд літнього циклу як кульмінації сонячного культу та найактивнішої фази аграрного року за Державним стандартом (§3.21)"
+  - "Релігійний синкретизм: аналіз того, як дохристиянські свята (Купало, Спас) інтегрувалися з церковним календарем (Різдво Івана Хрестителя, Преображення)"
+  - "Граматична помилка учня: розрізнення прийменників 'на свято' (для святкування/подія) та 'у свято' (конкретний день) на прикладі 'Ми йдемо до лісу на свято Івана Купала'"
+- section: "Купальська ніч: Магія вогню та води (Kupala Night: Magic of Fire and Water)"
+  words: 1000
+  points:
+  - "Купальське вогнище як ритуал очищення: стрибання через вогонь парами як тест на майбутнє весілля (якщо руки не розійдуться)"
+  - "Лексична точність: розмежування термінів 'купальське вогнище' (ритуальне), 'багаття' (загальне) та 'ватра' (пастуше або західноукраїнське)"
+  - "Водна стихія: обряд плетіння вінків та їх пускання на воду як спосіб гадання на дівочу долю"
+  - "Культурний гачок: Легенда про цвіт папороті як символ пошуку абсолютного знання, здатності розуміти мову тварин та бачити скарби"
+- section: "Міфологія та народні забобони (Mythology and Folk Superstitions)"
+  words: 800
+  points:
+  - "Русальний тиждень: народні забобони про 'небезпечний час' та міфічних істот лісу й води (Марена, русалки)"
+  - "Помилка учня: змішування символіки Коляди (зима) та Купала (літо) через схожі дохристиянські корені — фокус на елементах вогню та природи"
+  - "Аналіз ролі народних вірувань у формуванні національної ідентичності та їх відображення в етнографічних записах"
+- section: "Цикл Спаса та обряди врожаю (Spas Cycle and Harvest Rituals)"
+  words: 900
+  points:
+  - "Три Спаси: Медовий (Маковій — освячення води та маковейчиків), Яблучний (освячення плодів) та Горіховий/Хлібний (завершення жнив)"
+  - "Свято врожаю: обряд обжинок, роль останнього снопа та традиційні жниварські пісні як подяка природі"
+  - "Перехідні точки: свято Петра і Павла як кінець весняно-літнього циклу та підготовка до осінньої Покрови"
+- section: "Етнографічний аналіз та синтез (Ethnographic Analysis and Synthesis)"
+  words: 700
+  points:
+  - "Практичний аналіз символіки купальської пісні: інтерпретація образів вогню, води та рослинності з позиції етнографа"
+  - "Творче завдання: написання есе про аграрну магію літнього циклу та її зв'язок із сучасними культурними практиками"
+  - "Міжпредметні зв'язки: підготовка до вивчення творів Лесі Українки ('Лісова пісня') та М. Коцюбинського через міфологічний контекст"
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "Купала (Kupala) — святкувати Купала, купальська ніч, купальське вогнище; висока частотність"
+  - "Папороть (Fern) — цвіт папороті, шукати папороть; ключовий міфологічний символ"
+  - "Вінок (Wreath) — плести вінок, пускати вінок на воду, дівочий вінок; центральний обрядовий предмет"
+  - "Жнива (Harvest) — початок жнив, обжинки, жниварські пісні; сільськогосподарський цикл"
+  - "Спас (Spas/Savior) — Яблучний Спас, Медовий Спас, святити яблука; релігійно-народне свято"
+  - "Забобон (Superstition) — народні забобони, вірити в забобони; за Держстандартом C1"
+  - "Обряд (Ritual) — календарно-обрядовий цикл, язичницький обряд; високий регістр"
+  recommended:
+  - "Вогнище (Bonfire/Hearth) — ритуальний вогонь; не плутати з 'ватра'"
+  - "Синкретизм (Syncretism) — поєднання релігійних та язичницьких традицій"
+  - "Очищення (Purification) — духовне та фізичне очищення через вогонь/воду"
+  - "Покрова (Pokrova/Protection) — свято переходу до осені та весільного сезону"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (3727 chars)
+✅ Message sent to Claude (ID: 10810)
+✓ Message 10810 acknowledged
+   Auto-acknowledged reply #10810 (stdout delivery — no inbox accumulation)
+✓ Message 10805 acknowledged

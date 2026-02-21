@@ -1,0 +1,293 @@
+✅ Message sent to Gemini (ID: 12558) [auto-acked: self-addressed]
+✓ Message 12558 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12558...
+📨 Message #12558
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-holodomor-heohrafiia
+   Time: 2026-02-20T23:40:41.658713+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-hist-048
+level: c1-hist
+sequence: 48
+version: '1.0'
+title: 'Географія Голодомору: Регіональні відмінності'
+focus: history
+pedagogy: seminar
+objectives:
+- 'Analyze the causes and consequences of географія голодомору: регіональні відмінності'
+- Evaluate the historical significance of голодомор на карті
+content_outline:
+- section: Вступ — Голодомор на карті
+  subsections:
+  - Не всі регіони постраждали однаково
+  - Чому географія важлива
+  - Що нам говорять карти
+  - Структура модуля
+- section: Найбільш постраждалі регіони
+  subsections:
+  - Київщина — епіцентр
+  - Харківщина — другий центр
+  - Полтавщина, Черкащина
+  - Степова Україна
+  - Карта з даними
+- section: Менш постраждалі регіони
+  subsections:
+  - Західна Україна — під Польщею
+  - Донбас — промисловий регіон
+  - Міста vs. села
+  - Чому різниця?
+- section: Кубань і етнічні українці
+  subsections:
+  - Українці за межами УРСР
+  - Кубань — особливий випадок
+  - Знищення українськості
+  - Паралелі з Україною
+- section: Чому саме ці регіони
+  subsections:
+  - Зернові райони — більший тиск
+  - Опір колективізації
+  - Національний фактор
+  - «Покарання» vs. «політика»
+- section: Демографічні наслідки
+  subsections:
+  - Скільки загинуло — дискусія
+  - 3.9 мільйона — консервативна оцінка
+  - Вплив на населення — до сьогодні
+  - Втрачені покоління
+- section: Підсумок
+  subsections:
+  - Географія як доказ
+  - Від карт до свідчень
+  - Підготовка до усної історії
+vocabulary:
+- географія
+- регіон
+- розподіл
+- епіцентр
+- втрати
+- демографія
+- карта
+- село
+- місто
+- Кубань
+- зерновий район
+- щільність населення
+- смертність
+- народжуваність
+- депопуляція
+activities:
+- type: critical-analysis
+  focus: Analyze Holodomor mortality map — what patterns?
+- type: comparative-study
+  focus: Compare mortality rates in different oblasts
+- type: critical-analysis
+  focus: Explain why specific regions suffered most
+- type: critical-analysis
+  focus: Work with demographic data
+- type: essay-response
+  focus: Що географія Голодомору говорить нам про його характер?
+sources:
+- name: Втрати населення в Голодомор
+  url: https://uk.wikipedia.org/wiki/Втрати_України_в_Голодоморі
+  type: reference
+  notes: Casualty estimates
+- name: Регіональний розподіл Голодомору
+  url: https://uk.wikipedia.org/wiki/Голодомор#Географія
+  type: reference
+  notes: Regional breakdown
+- name: Карти Голодомору
+  url: https://ucrdc.org/
+  type: reference
+  notes: UCRDC mapping projects
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
+persona:
+  voice: Academic Historiographer
+  role: Historical Cartographer
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Географія Голодомору: Регіональні відмінності
+
+## Використані джерела
+1. [Інститут історії України НАНУ](http://history.org.ua) — Енциклопедія історії України: Голодомор 1932–1933 років в УСРР.
+2. [Інститут демографії та соціальних досліджень ім. М.В. Птухи](https://idss.org.ua) — Оцінка демографічних втрат України.
+3. [Національний музей Голодомору-геноциду](https://holodomormuseum.org.ua) — Свідчення очевидців та інтерактивні карти.
+4. [Український інститут національної пам'яті](https://uinp.gov.ua) — Матеріали про геноцидний характер Голодомору.
+
+## Хронологія
+- **1929 рік**: Початок примусової колективізації, що запустила механізм знищення села.
+- **Липень 1932**: Прийняття нереальних планів хлібозаготівель для основних зернових районів.
+- **Листопад 1932**: Запровадження режиму «чорних дощок» (блокада сіл і районів), особливо на Кубані та в Центральній Україні.
+- **Січень 1933**: Директива ЦК ВКП(б) і РНК СРСР про закриття кордонів УСРР та Кубані для селян, що тікали від голоду.
+- **Червень 1933**: Пік смертності — щодня помирало близько 28 тисяч осіб.
+
+## Ключові факти та цитати
+- **Статистика втрат**: Найбільші втрати (надсмертність) — Київська (включно з нинішньою Черкаською і Житомирською) та Харківська області (190–200 померлих на 1000 осіб).
+- **Цитата (свідок)**: «Ми голодовку пережили, мама лежала — пухли ноги, лежать і воно з них таки тече...» (зі спогадів 96-річної очевидиці).
+- **Цитата (наукова)**: «Втрати України внаслідок надсмертності у 1932–1934 роках становлять 3,9 млн осіб, а з урахуванням ненароджених — 4,5 млн» (Інститут демографії ім. Птухи).
+
+## Engagement Hooks (mapped to sections)
+- Section "Найбільш постраждалі регіони": [!myth-buster] — Міф про те, що голод був наслідком «неврожаю» спростовується тим, що найбільше постраждали саме найродючіші зернові райони (Київщина, Полтавщина), а не промислові центри.
+- Section "Кубань і етнічні українці": [!history-bite] — До Голодомору українці становили близько 75% населення Кубані. Голодомор там був інструментом етнічної чистки та тотальної русифікації.
+- Section "Менш постраждалі регіони": [!context] — Індустріальні райони Донбасу отримували продовольчі пайки для забезпечення видобутку вугілля, що створювало разючий контраст із вимираючим селом за кілька кілометрів.
+- Section "Чому саме ці регіони": [!decolonization] — Голодомор був спрямований проти українського селянства як носія національної ідентичності. Карта смертності накладається на карту селянських повстань 1930–1932 років.
+- Section "Демографічні наслідки": [!analysis] — Порівняння втрат України з іншими регіонами СРСР показує аномальну смертність саме в районах компактного проживання українців.
+- Section "Вступ — Голодомор на карті": [!quote] — Рафаель Лемкін: «Це не просто масове вбивство... це геноцид, знищення не лише окремих людей, а й культури і нації».
+
+## Деколонізаційний контекст
+- **Imperial/Soviet myth**: Голод був «загальносоюзним лихом», викликаним посухою та перегинами на місцях.
+- **Ukrainian reality**: Голод був штучно організованим геноцидом, географічно сфокусованим на українських етнічних землях (УСРР + Кубань). Закриття кордонів УСРР та Кубані (але не інших республік) доводить цілеспрямованість удару.
+
+## Contested Terms
+| Concept | Imperial/Russian framing | Ukrainian (decolonized) framing |
+|---------|--------------------------|---------------------------------|
+| Голод | «Продовольчі труднощі», «неврожай» | Голодомор, геноцид, етноцид |
+| Втрати | «Загальносоюзні втрати» (без виділення націй) | Цілеспрямоване винищення українців як етносу |
+| Кубань | «Исконно русская земля» | Історично український регіон, підданий етнічній чистці |
+| Причина | Посуха, куркульський саботаж | Державна політика хлібозаготівель та репресій |
+
+## Section-Mapped Research Notes
+
+### Вступ — Голодомор на карті
+Географія смертності не є рівномірною. Вона чітко корелює з зонами активного селянського опору та етнічного розселення українців.
+
+### Найбільш постраждалі регіони
+Київська та Харківська області (в тогочасних межах) стали епіцентром. Полтавщина (частина Харківської обл.) втратила до 20-25% населення. Це серце української культури та сільського господарства.
+
+### Менш постраждалі регіони
+Донецька область (промисловий Донбас) та прикордонні райони (Чернігівщина) мали менші показники смертності (54–90 на 1000). Індустріалізація потребувала робочих рук, тому робітників годували, хоча й погано. Західна Україна (під Польщею) уникла Голодомору, але знала про нього.
+
+### Кубань і етнічні українці
+Кубань розглядалася Сталіним як «українська Вандея». Занесення цілих станиць на «чорні дошки» (блокада), депортація українців у Сибір і завезення росіян на їхні місця. Зникнення українських шкіл і преси на Кубані після 1933 року.
+
+### Чому саме ці регіони
+Кореляція між повстаннями 1930 року (павлоградське повстання та ін.) і зонами смертності. Зернові райони мали найвищі плани заготівель.
+
+### Демографічні наслідки
+Втрата 3.9 млн прямих жертв. «Яма» в статево-віковій піраміді. Травма виживання і страх передачі пам'яті.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12603)
+✓ Message 12558 acknowledged
+✓ Message 12603 acknowledged

@@ -1,0 +1,97 @@
+module: a2-57
+level: A2
+sequence: 57
+slug: practical-intro
+version: '2.0'
+title: Practical Intro
+subtitle: Real World Ukrainian
+content_outline:
+- section: Огляд
+  points:
+  - From theory to practice — State Standard §4.2.2 alignment (applying grammatical
+    norms in speech)
+  - 'Real-world communication — cultural hook: Surzhyk as a transitional stage, ''mistakes''
+    as stepping stones to standard Ukrainian'
+- section: 'Skill 1: The 7 Cases (Сім відмінків)'
+  points:
+  - All cases overview — focus on functional usage over rote memorization (State Standard
+    §4.2.2)
+  - 'When to use each case — cultural hook: The Vocative case (Кличний) as a critical
+    marker of respect (Пане Юрію vs. Юра)'
+- section: 'Skill 2: Verb Aspect (Вид дієслова)'
+  points:
+  - Perfective vs imperfective — State Standard §4.2.3.1 (differentiation of aspect
+    pairs)
+  - 'Aspect in context — learner error: using Perfective for Present tense (я напишу
+    = future, not present)'
+- section: 'Skill 3: Complex Sentences (Складні речення)'
+  points:
+  - Conjunctions and connectors — State Standard §4.4.2 (complex sentences with тому
+    що, бо, щоб, якщо)
+  - Building complex sentences — moving beyond simple subject-verb-object structures
+- section: 'Skill 4: Common Mistakes (Типові помилки)'
+  points:
+  - 'Case confusion — learner error: Accusative instead of Genitive for negation (я
+    не бачу книгу vs. книги)'
+  - 'Aspect errors — learner error: Motion verb confusion (йти vs. їхати)'
+- section: Інтеграційне завдання
+  points:
+  - 'Integration challenge — scenario: writing a message to a friend or boss (requires
+    cases + aspect)'
+  - Apply all skills — synthesizing grammar rules into coherent communication
+- section: Підсумок
+  points:
+  - Summary and next steps — preparing for B1.1 metalanguage transition
+vocabulary_hints:
+  required:
+  - 'речення (sentence) — collocations: скласти речення, просте/складне речення, член
+    речення'
+  - 'слово (word) — collocations: нове слово, значення слова, іншомовне слово, чесне
+    слово'
+  - 'граматика (grammar) — collocations: вивчати граматику, правила граматики'
+  - 'правило (rule) — collocations: запам''ятати правило, за правилом, виняток з правила'
+  - 'помилка (mistake) — collocations: зробити помилку, виправити помилку, груба/типова
+    помилка'
+  - 'правильно (correctly) — usage: як правильно сказати?'
+  - 'неправильно (incorrectly) — context: це граматично неправильно'
+  - 'контекст (context) — collocations: у контексті, зрозуміти з контексту'
+  recommended:
+  - 'відмінок (case) — context: визначити відмінок'
+  - 'вид (aspect) — context: доконаний/недоконаний вид'
+  - 'сполучник (conjunction) — context: поєднати частини речення'
+  - 'порядок (order) — collocations: порядок слів'
+activity_hints:
+- type: fill-in
+  focus: Case selection in context
+  items: 20
+- type: error-correction
+  focus: Fix grammar mistakes
+  items: 20
+- type: unjumble
+  focus: Build complex sentences
+  items: 15
+- type: quiz
+  focus: Grammar rules review
+  items: 15
+focus: practical
+pedagogy: PPP
+prerequisites:
+- a2-56 (Checkpoint Full Grammar)
+connects_to:
+- a2-58 (Practical Warm-up)
+objectives:
+- Learner can identify all 7 cases in context
+- Learner can choose correct verb aspect
+- Learner can fix common grammar mistakes
+- Learner can build complex sentences
+grammar:
+- Case system review in practical contexts
+- Verb aspect review for real situations
+- Sentence structure and common errors
+register: розмовний
+immersion: 75-90% Ukrainian
+phase: A2.6 [Practical]
+persona:
+  voice: Encouraging Cultural Guide
+  role: Camp Counselor
+word_target: 3000

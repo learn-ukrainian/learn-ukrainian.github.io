@@ -1,0 +1,296 @@
+✅ Message sent to Gemini (ID: 11822) [auto-acked: self-addressed]
+✓ Message 11822 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #11822...
+📨 Message #11822
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-haidamaky
+   Time: 2026-02-20T23:33:26.030225+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 13
+module: lit-13
+level: LIT
+slug: haidamaky
+version: '2.0'
+title: 'Гайдамаки: Кривава Свобода'
+subtitle: 'LIT-013: Епос Гніву і Спокути'
+content_outline:
+- section: Вступ — Коліївщина 1768 року
+  points:
+  - Історичне підґрунтя повстання
+  - Гайдамаки, конфедерати, уніати
+  - Чому Шевченко звернувся до цієї теми
+- section: Структура поеми
+  points:
+  - Жанрова специфіка (епос + лірика)
+  - Три сюжетні лінії
+  - Авторські відступи
+- section: Ярема і Оксана — любовний роман
+  points:
+  - Образ Яреми як "нового козака"
+  - Кохання посеред хаосу
+  - Художня вигадка vs історія
+- section: Гонта і сини — античний фатум
+  points:
+  - Іван Гонта як трагічний герой
+  - Синовбивство — кульмінація поеми
+  - Конфлікт обов'язку і почуття
+- section: Етика бунту
+  points:
+  - Чи виправдовує мета засоби?
+  - Насильство і спокута
+  - Шевченко як суддя історії
+- section: Підсумок — Пам'ять і травма
+  points:
+  - Як пам'ятати страшне минуле
+  - Українсько-польські відносини
+  - Сучасне прочитання поеми
+vocabulary_hints:
+  required:
+  - гайдамаки (haidamaks)
+  - коліївщина (Koliivshchyna uprising)
+  - конфедерати (confederates)
+  - уніати (Greek Catholics)
+  - синовбивство (filicide)
+  - фатум (fate)
+  - епос (epic)
+  - бунт (rebellion)
+  - спокута (atonement)
+  - травма (trauma)
+  recommended:
+  - ксьондз (Catholic priest)
+  - повстання (uprising)
+  - помста (revenge)
+  - катарсис (catharsis)
+  - пам'ять (memory)
+activity_hints:
+- type: reading
+  focus: Ключові епізоди поеми
+  source: UkrLib tid=10
+  items: 5+
+- type: essay-response
+  focus: Етика бунту — чи виправдовує мета засоби?
+  output: Філософське есе
+focus: literature
+pedagogy: literature
+prerequisites:
+- lit-11 (Young Shevchenko)
+- lit-12 (The Ballads)
+connects_to:
+- lit-14 (Son — політична сатира)
+- lit-04 (Eneida War — порівняння воєнної тематики)
+- c1-hist (Historical modules — Руїна)
+objectives:
+- Analyze the historical context of Koliivshchyna
+- evaluate the ethical conflict of Gonta
+- Discuss the concept of "Holy Knife"
+grammar:
+- Epic poetry stylistics
+- Historical terminology
+- Rhetorical questions and exclamations
+module_type: literature
+sources:
+- name: Гайдамаки — повний текст
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=10
+  type: primary
+  notes: Поема для детального аналізу
+- name: Аналіз "Гайдамаків"
+  url: https://www.ukrlib.com.ua/analiz/printit.php?tid=10
+  type: secondary
+  notes: Літературознавчий аналіз
+- name: Коліївщина — історія
+  url: https://uk.wikipedia.org/wiki/Коліївщина
+  type: reference
+  notes: Історичний контекст
+immersion: 100% Ukrainian
+phase: LIT.3 The Prophet (Taras Shevchenko)
+persona:
+  voice: Senior Philologist & Critic
+  role: Haidamaka
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Гайдамаки: Кривава Свобода
+
+## Використані джерела
+1. [Енциклопедія історії України (ІІУ НАНУ)](http://www.history.org.ua/) — Статті «Коліївщина», «Гонта Іван» для аналізу історичного тла повстання 1768 року.
+2. [Енциклопедія Сучасної України](https://esu.com.ua/) — Стаття «Гайдамацький рух» для розуміння соціально-політичних передумов.
+3. [Ізборник (litopys.org.ua)](http://litopys.org.ua/) — Коментарі до зібрання творів Тараса Шевченка (т. 1), аналіз першодруків та авторських відступів поеми «Гайдамаки».
+
+## Хронологія
+- 1768: Спалах Коліївщини, наймасштабнішого гайдамацького повстання на Правобережній Україні.
+- червень 1768: Взяття Умані військами Максима Залізняка та Івана Гонти.
+- 1841: Тарас Шевченко завершує написання епічної поеми «Гайдамаки» в Санкт-Петербурзі.
+- 1842: Перше видання поеми (з цензурними вилученнями), яке стало маніфестом українського романтизму.
+- 1886: Поява більш повних видань, що сприяло глибшому розумінню національно-визвольного пафосу твору.
+
+## Ключові факти та цитати
+- Шевченко використовував як історичні праці (Бантиш-Каменського, Рубана), так і усні народні перекази (від свого діда Івана).
+- Історичний Гонта не мав синів-католиків і не вбивав їх; цей епізод — художня гіпербола для створення античної трагедії.
+- **Цитата 1**: «Гомоніла Україна, / Довго гомоніла, / Довго, довго кров степами / Текла-червоніла.»
+- **Цитата 2**: «Сини мої, сини мої! / Чом ви не великі? / Чом ви ляха не ріжете? — / І заридав гірко.»
+- **Цитата 3**: «Не за світ, не за добро, / Не за царство боже — / За ту правду безталанну, / За волю убогу.»
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ — Коліївщина 1768 року: I — Історичне підґрунтя": [!context] — Пояснення релігійного тиску (уніати проти православних) та дій Барської конфедерації як каталізаторів вибуху.
+- Section "Структура поеми: I — Жанрова специфіка": [!myth-buster] — Спростування імперського міфу про "розбійників"; Шевченко підносить українських селян до статусу епічних античних героїв.
+- Section "Гонта і сини — античний фатум: II — Мотив синовбивства": [!history-bite] — Той факт, що Гонта не вбивав власних синів у реальності, і пояснення, навіщо Шевченку знадобився цей гостро трагічний мотив (паралель з Тарасом Бульбою).
+- Section "Етика бунту: I — Філософія помсти": [!quote] — Цитата про освячення ножів («Святий ніж») як символ вищої справедливості та сакралізації гніву.
+- Section "Етика бунту: II — Катарсис і спокута": [!decolonization] — Погляд на право поневоленої нації на збройний опір як акт відновлення власної гідності, а не просто "безглуздий бунт".
+- Section "Підсумок — Пам'ять і травма: I — Українсько-польський дискурс": [!culture] — Як література стає простором для пропрацювання глибоких національних травм і пошуку складного примирення ("сиділи б та й браталися").
+
+## Деколонізаційний контекст
+- **Imperial/Soviet myth**: Російська імперська історіографія трактувала Коліївщину як розбійництво, радянська — зводила виключно до класової боротьби (селяни проти феодалів), ігноруючи національно-релігійний характер.
+- **Ukrainian reality**: Це була масштабна національно-визвольна війна за відновлення козацької державності (Залізняк проголошувався гетьманом). Шевченкова поема стала актом культурної деколонізації, давши українцям власний героїчний епос.
+
+## Contested Terms (if applicable)
+| Concept | Imperial/Polish framing | Ukrainian (decolonized) framing |
+|---------|-----------------|-------------------------------|
+| Гайдамаки | Розбійники, бандити (разбойники) | Повстанці, борці за національну і релігійну волю |
+| Коліївщина | "Бунт черні", селянські заворушення | Національно-визвольне повстання, рух за державність |
+| Іван Гонта | Зрадник, клятвопорушник | Трагічний герой, лідер нації, мученик за віру |
+
+## Section-Mapped Research Notes
+
+### Вступ — Коліївщина 1768 року: I — Історичне підґрунтя
+Повстання виникло як реакція на жорстокий національний та релігійний гніт на Правобережжі. Дії конфедератів і примусове покатоличення спровокували вибух. Шевченко досліджує ці передумови через народну пам'ять.
+
+### Вступ — Коліївщина 1768 року: II — Мотивація автора
+Шевченко звертається до цієї теми, щоб розбудити національну свідомість сучасників. Для нього це не просто історія, а спосіб легітимізувати право українців на суб'єктність.
+
+### Структура поеми: I — Жанрова специфіка
+Синтез епосу (широка панорама подій, героїка) та лірики (емоційні відступи автора, романтичні лінії). Твір руйнує класичні канони імперської поеми.
+
+### Структура поеми: II — Сюжетні лінії та відступи
+Переплетення трьох ліній: історична (Залізняк, Гонта), романтична (Ярема і Оксана), та лірико-філософська (роздуми автора над долею України).
+
+### Ярема і Оксана — любовний роман: I — Еволюція Яреми
+Перетворення покірного наймита-попихача Яреми Галайди на грізного месника. Це метафора пробудження всієї нації.
+
+### Ярема і Оксана — любовний роман: II — Романтичний міф
+Кохання слугує контрастом до кривавого хаосу повстання. Художня вигадка тут діє як необхідний баланс між жорстокістю історії та людяністю.
+
+### Гонта і сини — античний фатум: I — Образ трагічного героя
+Іван Гонта постає як постать шекспірівського масштабу. Його внутрішній конфлікт між батьківською любов'ю та національним/релігійним обов'язком є ядром поеми.
+
+### Гонта і сини — античний фатум: II — Мотив синовбивства
+Кульмінаційна сцена (вбивство синів-католиків) є художньою вигадкою. Шевченко використовує її як метафору абсолютної самопожертви в ім'я вищої ідеї.
+
+### Етика бунту: I — Філософія помсти
+Аналіз кривавості повстання: автор не ідеалізує насильство, але показує його як неминучий, страшний наслідок вікового гноблення (сцена освячення ножів).
+
+### Етика бунту: II — Катарсис і спокута
+Чи виправдовує мета засоби? Шевченко виступає як суворий суддя історії, співчуваючи героям, але оплакуючи ціну, заплачену за їхній гнів.
+
+### Підсумок — Пам'ять і травма: I — Українсько-польський дискурс
+Епілог "Гайдамаків" містить ключові рядки про слов'янське братерство і попередження про наслідки ворожнечі, що є спробою осмислити історичну травму обох народів.
+
+### Підсумок — Пам'ять і травма: II — Сучасна рецепція
+Як сучасне суспільство читає "Гайдамаків" в контексті новітньої боротьби за незалежність: травма, пам'ять і право на захист власної землі.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 11850)
+✓ Message 11822 acknowledged
+✓ Message 11850 acknowledged

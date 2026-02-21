@@ -1,0 +1,13 @@
+{
+  "track": "ruth",
+  "slug": "nativity-luke",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-20T08:34:09Z",
+      "task_id": "v3-nativity-luke-pA",
+      "mode": "full"
+    }
+  }
+}

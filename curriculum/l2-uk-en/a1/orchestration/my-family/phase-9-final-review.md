@@ -1,141 +1,96 @@
-Good, all files match the prompt. Let me now do the deep adversarial review systematically.
+Good — the unjumble convention across the project omits punctuation, so the missing commas/question marks in unjumble answers are project-consistent, not bugs. Now I have everything I need for the review.
 
 ---
 
-## Adversarial QA Review: my-family (a1-32)
+## Adversarial QA Review: my-family (A1 #32)
 
-### Issue 1: IPA Error — дочка stress placement
-**File:** my-family.md, line 71
-**Current:** `**дочка** [dot͡ʃˈkɑ]`
-**Problem:** Stress is on the wrong syllable. Ukrainian "дочка" has stress on the first syllable: [ˈdot͡ʃkɑ], not the second. This is a phonological error that would teach incorrect pronunciation.
+### Ukrainian Language Quality
 
-### Issue 2: Gender mismatch — "вона друг"
-**File:** my-family.md, line 347
-**Current:** `**Сестра — це подруга?** (Is sister a friend?) — **Так, вона друг.**`
-**Problem:** The question uses the feminine "подруга" but the answer uses the masculine "друг" with the feminine pronoun "вона". This directly contradicts the gender agreement lesson being taught. The opener at line 17 even says "Моя сестра — моя **подруга**", making this self-contradictory.
+**IPA transcriptions**: All checked — correct. Affricates have tie bars (t͡ʃ, t͡s), В is consistently [ʋ], stress placement accurate across all 30+ transcriptions.
 
-### Issue 3: Awkward English — "important definition"
-**File:** my-family.md, line 197
-**Current:** `their age relative to you is important definition.`
-**Problem:** "Important definition" is garbled English. Should be "an important distinction".
+**Russianisms**: None detected. No кушати, получати, приймати участь, слідуючий. No Russian characters (ы, э, ё, ъ).
 
-### Issue 4: Untaught vocabulary in activity — Племінник/Племінниця
-**File:** activities/my-family.yaml, lines 34-35, 40-41
-**Current:** Match-up includes "Син брата" → "Племінник" and "Донька сестри" → "Племінниця"
-**Problem:** Neither "племінник" nor "племінниця" appear anywhere in the content or the plan's vocabulary_hints. The learner has zero exposure to these words. Testing untaught vocabulary violates the "Teach then Test" principle.
+**Gender/case agreement**: Correct throughout. "Мій тато" (masc despite -о ending) is explicitly taught and consistently applied.
 
-### Issue 5: Untaught Vocative forms in match-up activity
-**File:** activities/my-family.yaml, lines 172-179
-**Current:** Match-up includes Брат→Брате, Сестра→Сестро, Андрій→Андрію, Олена→Олено
-**Problem:** The content explicitly states (line 435): "You don't need to learn the whole grammar table yet, but you MUST know these four forms." Those four are Мамо, Тату, Бабусю, Дідусю. The Vocative forms for Брат, Сестра, Андрій, Олена are never taught. Additionally, "сину" IS modeled in the dialogue at line 413 ("Привіт, сину!"), so it's fair game but the others are not.
+**Minor IPA note** (not blocking): Line 51 uses **матір** [ˈmɑtʲir] while the activities file line 20 uses **Мати** — these are variant nominative forms of the same word. "Мати" is the standard modern literary form; "матір" is older. Since the content says "stick to мама" and barely mentions this word, the practical impact is zero. Not fixing.
 
-### Issue 6: Untaught Vocative forms in fill-in activity
-**File:** activities/my-family.yaml, lines 201-216
-**Current:** Fill-in tests Брате, Сестро, Андрію, Олено
-**Problem:** Same as Issue 5 — these forms were never introduced. The explanation even admits it: "generic rule preview" (line 204). A "preview" is not teaching. Testing it is unfair.
+### Pedagogical Correctness
 
-### Issue 7: Off-topic pair in first match-up
-**File:** activities/my-family.yaml, lines 19-20
-**Current:** `"Хлопець" / "Дівчина"` pair in a family members match-up
-**Problem:** Хлопець (guy/boyfriend) and Дівчина (girl/girlfriend) are not family terms. They're never formally introduced in the lesson. This pair is noise in a family vocabulary activity.
+**ISSUE 1 (CRITICAL): Match-up tests untaught vocative forms**
 
-### Plan Deviations (noted, not blocking):
-- **Зовнішність missing:** Plan calls for "Моя мама має темне волосся" (appearance descriptions). Content covers character traits only — no physical descriptions.
-- **Age number phrases skipped:** Plan calls for "simple number phrases (25 років)". Content explicitly defers to A2. Defensible for A1 safety but IS a deviation.
-- **No family holiday dialogue:** Plan Practice 2 calls for "Діалог про родинне свято". Not present.
+The content explicitly limits vocative teaching to 4 forms: "You don't need to learn the whole grammar table yet, but you MUST know these four forms for your family." (line 435). The phone dialogue (line 413) also models **сину**.
 
-These are scope/coverage gaps, not errors. Content is 3648 words (well above 2000 target), so they're not caused by laziness.
+But the match-up "Кличний відмінок" (activities lines 160-179) includes 3 pairs the learner has no way to derive:
+- `Брат → Брате!` — NEVER taught or modeled
+- `Сестра → Сестро!` — NEVER taught or modeled
+- `Донька → Доню!` — NEVER taught or modeled (and "Доню" has a non-obvious stem change)
+
+This is a direct teach-then-test violation. The learner cannot reason from the 4 taught forms to these 3 untaught ones because each follows a different declension pattern.
+
+**ISSUE 2 (CRITICAL): Fill-in tests untaught vocative forms**
+
+Fill-in "Звертання до рідних" (activities lines 209-216) includes:
+- Item 7: answer "Брате" — NOT taught in content
+- Item 8: answer "Сестро" — NOT taught in content
+
+Same violation: the learner has no basis to select the correct answer.
+
+**ISSUE 3 (MINOR): Missing comma before vocative in phone dialogue**
+
+Line 412: `— Алло, привіт мамо!` — Ukrainian punctuation requires a comma before vocative address. Should be `— Алло, привіт, мамо!`
+
+This is ironic because the module is teaching vocative forms — the punctuation around vocatives should be exemplary.
+
+**Unjumble activities**: All words arrays contain exactly the tokens in the answer. Punctuation omission is consistent with project convention (verified against other A1 unjumble activities). No issues.
+
+**Fill-in grammar**: All other fill-in items produce grammatically correct sentences when the answer is inserted. Verified all 24 non-vocative items.
+
+### Factual Accuracy
+
+- "Ненька Україна" — accurate cultural reference
+- Distinction between сім'я (nuclear) and родина (extended) — accurate
+- "баба can sound rough or disrespectful" — accurate sociolinguistic note
+- Dative case for age expressions — correctly identified as A2 material
+- All translations correct
+
+### LLM Artifacts
+
+- "Here is a special superpower" (line 433) — mild cliché but acceptable for A1's supportive tone
+- No "Це не просто X, а Y" pattern
+- No false statistics or invented percentages
+- No folk etymology presented as fact
+- Tone is warm and appropriate throughout
+
+### Plan Compliance
+
+- **Sections**: All 6 meta outline sections present and substantive ✅
+- **Required vocabulary** (8 items): All present in prose ✅
+- **Recommended vocabulary** (8 items): All present ✅
+- **Objectives**: All 5 mapped to content and self-check questions ✅
+- **Grammar**: Possessives ✅, "У мене є..." ✅, Vocative ✅
+- **Minor deviation**: Meta requests "simple number phrases (25 років)" for age. Content defers to A2. This is pedagogically sound — the age construction requires Dative case + numeral agreement, which is genuinely beyond A1. The adjective-based approach (молодий/старий/дорослий/маленький) is appropriate.
+- **Minor deviation**: Plan grammar includes "Genitive for relationships (батько + name)" but content uses "Його звати..." pattern instead. The genitive pattern does appear in the activity "Хто це?" (e.g., "Сестра мами → Тітка") so it's tested receptively even if not explicitly drilled.
+
+### Content note
+
+Line 169 uses **двоюрідний брат** (cousin) in the family tree text without explicit explanation. It's in a reading comprehension context where the preceding sentence ("Моя тітка має чоловіка... У них є син") makes the meaning inferrable. Acceptable for A1.3 Consolidation phase but worth flagging — a parenthetical "(cousin)" would help.
 
 ---
 
 ## Fixes
 
 ===FIX_START===
-FILE: curriculum/l2-uk-en/a1/my-family.md
----OLD---
-A daughter is **донька** [ˈdonʲkɑ] or sometimes **дочка** [dot͡ʃˈkɑ].
----NEW---
-A daughter is **донька** [ˈdonʲkɑ] or sometimes **дочка** [ˈdot͡ʃkɑ].
-===FIX_END===
-
-===FIX_START===
-FILE: curriculum/l2-uk-en/a1/my-family.md
----OLD---
-3.  **Сестра — це подруга?** (Is sister a friend?) — **Так, вона друг.**
----NEW---
-3.  **Сестра — це подруга?** (Is sister a friend?) — **Так, вона подруга.**
-===FIX_END===
-
-===FIX_START===
-FILE: curriculum/l2-uk-en/a1/my-family.md
----OLD---
-When you have siblings, their age relative to you is important definition.
----NEW---
-When you have siblings, their age relative to you is an important distinction.
-===FIX_END===
-
-===FIX_START===
 FILE: curriculum/l2-uk-en/a1/activities/my-family.yaml
 ---OLD---
-    - left: "Син брата"
-      right: "Племінник"
-    - left: "Тато і мама"
-      right: "Батьки"
-    - left: "Чоловік мами"
-      right: "Тато"
-    - left: "Донька сестри"
-      right: "Племінниця"
----NEW---
-    - left: "Син сина"
-      right: "Онук"
-    - left: "Тато і мама"
-      right: "Батьки"
-    - left: "Чоловік мами"
-      right: "Тато"
-    - left: "Донька доньки"
-      right: "Онука"
-===FIX_END===
-
-===FIX_START===
-FILE: curriculum/l2-uk-en/a1/activities/my-family.yaml
----OLD---
-    - left: "Чоловік"
-      right: "Дружина"
-    - left: "Хлопець"
-      right: "Дівчина"
----NEW---
-    - left: "Чоловік"
-      right: "Дружина"
-===FIX_END===
-
-===FIX_START===
-FILE: curriculum/l2-uk-en/a1/activities/my-family.yaml
----OLD---
-    - left: "Мама"
-      right: "Мамо!"
-    - left: "Тато"
-      right: "Тату!"
-    - left: "Бабуся"
-      right: "Бабусю!"
-    - left: "Дідусь"
-      right: "Дідусю!"
+    - left: "Син"
+      right: "Сину!"
     - left: "Брат"
       right: "Брате!"
     - left: "Сестра"
       right: "Сестро!"
-    - left: "Андрій"
-      right: "Андрію!"
-    - left: "Олена"
-      right: "Олено!"
+    - left: "Донька"
+      right: "Доню!"
 ---NEW---
-    - left: "Мама"
-      right: "Мамо!"
-    - left: "Тато"
-      right: "Тату!"
-    - left: "Бабуся"
-      right: "Бабусю!"
-    - left: "Дідусь"
-      right: "Дідусю!"
     - left: "Син"
       right: "Сину!"
 ===FIX_END===
@@ -143,53 +98,35 @@ FILE: curriculum/l2-uk-en/a1/activities/my-family.yaml
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/activities/my-family.yaml
 ---OLD---
-    - sentence: "{{answer}}, ти мій найкращий друг."
+    - sentence: "{{answer}}, допоможи мені!"
       answer: "Брате"
-      options: ["Брате", "Брат", "Брата", "Брату"]
-      explanation: "Addressing brother -> Vocative «Брате» (generic rule preview)."
-    - sentence: "{{answer}}, яка ти гарна!"
+      options: ["Брате", "Брат", "Брата", "Братом"]
+      explanation: "Calling brother -> Vocative «Брате»."
+    - sentence: "{{answer}}, ти найкраща!"
       answer: "Сестро"
       options: ["Сестро", "Сестра", "Сестри", "Сестру"]
-      explanation: "Addressing sister -> Vocative «Сестро»."
-    - sentence: "{{answer}}, де ти?"
-      answer: "Андрію"
-      options: ["Андрію", "Андрій", "Андрія", "Андрієм"]
-      explanation: "Addressing Andrew -> Vocative «Андрію»."
-    - sentence: "{{answer}}, привіт!"
-      answer: "Олено"
-      options: ["Олено", "Олена", "Олени", "Олені"]
-      explanation: "Addressing Olena -> Vocative «Олено»."
+      explanation: "Calling sister -> Vocative «Сестро»."
 ---NEW---
-    - sentence: "Привіт, {{answer}}! Як ти?"
-      answer: "сину"
-      options: ["сину", "син", "сина", "сином"]
-      explanation: "Greeting your son -> Vocative «сину» (modeled in the phone dialogue)."
-    - sentence: "{{answer}}, я тебе люблю!"
-      answer: "Мамо"
-      options: ["Мамо", "Мама", "Мами", "Маму"]
-      explanation: "Expressing love to mom -> Vocative «Мамо»."
+    - sentence: "{{answer}}, де ти?"
+      answer: "Тату"
+      options: ["Тату", "Тато", "Тата", "Татові"]
+      explanation: "Calling dad -> Vocative «Тату»."
+    - sentence: "{{answer}}, розкажи казку!"
+      answer: "Бабусю"
+      options: ["Бабусю", "Бабуся", "Бабусі", "Бабусею"]
+      explanation: "Asking grandma to tell a story -> Vocative «Бабусю»."
 ===FIX_END===
 
----
-
-## Review Summary
-
-| Check | Result |
-|-------|--------|
-| IPA accuracy | 1 error fixed (дочка stress) |
-| Russianisms | CLEAN |
-| Russian characters | CLEAN |
-| Gender/case agreement | 1 error fixed (вона друг → подруга) |
-| Activities test only taught material | 3 violations fixed (Vocative match-up, Vocative fill-in, Племінник/Племінниця) |
-| Unjumble word arrays | All 12 items verified correct |
-| Fill-in grammaticality | All items produce grammatical sentences |
-| Factual accuracy | CLEAN |
-| LLM artifacts | Minimal ("superpower" is mildly cliché, acceptable) |
-| Plan compliance | Content covers 5/6 plan sections; Зовнішність and age number phrases missing |
-| Word count | 3648 words (183% of 2000 target) — PASS |
-
-**After fixes:** All activities test only taught/modeled forms. IPA is correct. Gender agreement is consistent. The content itself is warm, well-structured, and pedagogically sound. The plan deviations (appearance, exact age) are defensible scope choices at A1 level and don't warrant rejection given the content's overall quality and length.
+===FIX_START===
+FILE: curriculum/l2-uk-en/a1/my-family.md
+---OLD---
+— Алло, привіт мамо!
+---NEW---
+— Алло, привіт, мамо!
+===FIX_END===
 
 ===VERDICT===
 APPROVE
 ===END_VERDICT===
+
+**Summary**: The content is warm, well-structured, and linguistically clean. The single blocking issue — vocative activities testing untaught forms (Брате, Сестро, Доню) — is fully resolved by the 3 fixes above. The match-up is trimmed to 5 taught/modeled forms, the fill-in replaces untaught items with taught vocative forms in new contexts, and the phone dialogue punctuation is corrected. After these fixes, all activities test only what was taught. No Russianisms, no factual errors, no broken grammar. Module passes.

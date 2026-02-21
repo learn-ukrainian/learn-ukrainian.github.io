@@ -1,0 +1,110 @@
+module: b1-09
+level: B1
+sequence: 9
+slug: aspect-future
+version: '2.0'
+title: Вид у майбутньому часі
+subtitle: 'Aspect in Future: Three Ways to Express Future Actions'
+content_outline:
+- section: Тест
+  points:
+  - Three ways to express future — діагностика розуміння різниці між доконаним і недоконаним
+    видом
+  - 'Intuition check — common learner error: confusing ''буду'' + perfective infinitive
+    (e.g., ''я буду прочитати'')'
+- section: Пояснення
+  points:
+  - 'Compound future (will be doing) — ''буду'' + інфінітив недоконаного виду; learner
+    error warning: avoid mixing aspects'
+  - Synthetic future (-tymu) — стилістично рівноправна форма, стандартна для сучасної
+    мови, а не лише літературна
+  - 'Perfective future (simple) — зміна концепції для англомовних: ''Perfective Future
+    = Simple Future'' (форма теперішнього часу має значення майбутнього)'
+- section: Практика
+  points:
+  - 'Selection rules — State Standard alignment: розрізнення складеної, синтетичної
+    та простої форм (§4.2.3.1)'
+  - Common mistakes — overuse of analytic 'буду робити' vs synthetic 'робитиму'; using
+    perfective present for future
+  - 'Scenarios (plans, formal, academic) — cultural hook: ''Не кажи гоп, поки не перескочиш''
+    (superstition about announcing plans)'
+- section: Діалоги
+  points:
+  - 'Plans (conversational) — use high-frequency verbs: ''збиратися'', ''сподіватися'';
+    cultural hook: ''Сплюнь і постучи по дереву'' to avoid jinxing'
+  - Formal discussion — use 'мати намір', 'планувати' (medium/formal register)
+  - Resolutions — use 'обіцяти' with perfective future (committing to a result)
+- section: Підсумок
+  points:
+  - Comparison table — чітке протиставлення трьох форм (compound vs synthetic vs perfective)
+  - Self-check — verify understanding of aspectual nuance in future context
+vocabulary_hints:
+  required:
+  - майбутній час (future tense) — у майбутньому, світле майбутнє
+  - складна форма (compound form) — буду писати
+  - синтетична форма (synthetic form) — писатиму
+  - простий майбутній (simple future) — напишу
+  - буду (I will - auxiliary) — буду робити (imperfective only)
+  - завтра (tomorrow) — завтра вранці
+  - через тиждень (in a week) — через рік/місяць
+  - потім (then/later) — а потім...
+  - скоро (soon) — зовсім скоро
+  - планувати (to plan) — планувати відпустку, планувати зустріч
+  recommended:
+  - обіцяти (to promise) — обіцяти виконати, обіцяти підтримку
+  - мати намір (to intend) — мати серйозний намір, мати намір вступити (formal)
+  - збиратися (to be going to) — збиратися зробити, збиратися в дорогу (high freq
+    spoken)
+  - сподіватися (to hope) — сподіватися на краще, сподіватися, що...
+  - гадати (to think/suppose) — гадати, що... (spoken context)
+activity_hints:
+- type: fill-in
+  focus: Compound → synthetic future
+  items: 12+
+- type: quiz
+  focus: Which future form for planned vs completed action?
+  items: 15+
+- type: fill-in
+  focus: Future aspect selection
+  items: 12+
+- type: fill-in
+  focus: Synthetic future paradigm practice
+  items: 10+
+- type: match-up
+  focus: Context → future form
+  items: 12+
+focus: grammar
+pedagogy: TTT
+prerequisites:
+- b1-06 (Aspect complete system)
+- b1-07 (Aspect past - single vs repeated)
+- b1-08 (Aspect past - result vs process)
+connects_to:
+- b1-10 (Aspect in negation)
+- b1-11 (Aspect in imperatives)
+objectives:
+- Learner can form all three types of future constructions
+- Learner understands when to use compound vs synthetic imperfective future
+- Learner can select appropriate aspect for future actions
+- Learner recognizes stylistic differences between future forms
+grammar:
+- 'Compound future: буду + infinitive'
+- Synthetic future forms (-тиму/-тимеш/-тиме)
+- Perfective future (simple future)
+- Future aspect selection patterns
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Future Tense
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Official future tense forms and usage
+- name: Ukrainian Future Tense (Wikipedia)
+  url: https://uk.wikipedia.org/wiki/Майбутній_час
+  type: reference
+  notes: Three future forms with examples
+immersion: 100% Ukrainian
+phase: B1.1 Aspect
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Strategic Planner
+word_target: 4000

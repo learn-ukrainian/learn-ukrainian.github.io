@@ -1,0 +1,284 @@
+✅ Message sent to Gemini (ID: 11902) [auto-acked: self-addressed]
+✓ Message 11902 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #11902...
+📨 Message #11902
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-women-in-kobzar
+   Time: 2026-02-20T23:34:31.922659+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 18
+module: lit-18
+level: LIT
+slug: women-in-kobzar
+version: '2.0'
+title: Жіноча доля в "Кобзарі"
+subtitle: 'Women in Kobzar: The Tragic Archetype'
+content_outline:
+- section: Вступ
+  points:
+  - Чому жінки — центральні персонажі
+  - Біографічний контекст (сирітство)
+  - Емпатія як творчий метод
+- section: Катерина
+  points:
+  - Сюжет поеми
+  - Образ покритки в суспільстві
+  - Критика подвійних стандартів
+- section: Наймичка
+  points:
+  - Сюжет поеми
+  - Образ матері-страдниці
+  - Порівняння з "Катериною"
+- section: Архетип Трагічної Матері
+  points:
+  - Покритка, наймичка, удова
+  - Самотність і жертовність
+  - Україна як мати
+- section: Димінутиви та емоційний пафос
+  points:
+  - Пестлива лексика у жіночих образах
+  - Функція димінутивів
+  - Катарсис через мову
+- section: Підсумок
+  points:
+  - Унікальність Шевченкової емпатії
+  - Порівняння з іншими авторами
+  - Сучасне прочитання
+vocabulary_hints:
+  required:
+  - покритка (unwed mother)
+  - наймичка (hired servant woman)
+  - архетип (archetype)
+  - жертовність (self-sacrifice)
+  - емпатія (empathy)
+  - пафос (pathos)
+  - димінутив (diminutive)
+  - катарсис (catharsis)
+  - удова (widow)
+  - сирота (orphan)
+  recommended:
+  - подвійні стандарти (double standards)
+  - страдниця (sufferer)
+  - ганьба (shame)
+  - матір (mother)
+  - доля (fate)
+activity_hints:
+- type: reading
+  focus: Катерина і Наймичка (уривки)
+  source: UkrLib
+  items: 6+
+- type: essay-response
+  focus: Архетип Трагічної Матері у Шевченка
+  output: Літературознавче есе
+focus: literature
+pedagogy: Seminar
+prerequisites:
+- lit-12 (The Ballads — жіночі образи)
+- lit-07 (Marusya — порівняння)
+connects_to:
+- lit-19 (Diary — внутрішній світ)
+- lit-20 (Cult of Shevchenko — рецепція)
+objectives:
+- Analyze the archetype of the Tragic Mother (Pokrytka) in Shevchenko's works
+- Compare the characters of Kateryna and Hanna (Naimychka)
+- Discuss Shevchenko's ethical evolution from romanticism to realism
+- Identify the function of diminutives in creating emotional pathos
+grammar:
+- Emotional pathos
+- Diminutives usage
+module_type: literature
+sources:
+- name: Катерина — поема
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=6
+  type: primary
+  notes: Рання поема про покритку
+- name: Наймичка — поема
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=30
+  type: primary
+  notes: Зріла поема про матір
+- name: Жіночі образи у Шевченка
+  url: https://www.ukrlib.com.ua/analiz/printit.php?tid=6
+  type: secondary
+  notes: Літературознавчий аналіз
+immersion: 100% Ukrainian
+phase: LIT.3 The Prophet (Taras Shevchenko)
+persona:
+  voice: Senior Philologist & Critic
+  role: Women's Advocate
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Жіноча доля в "Кобзарі"
+
+## Використані джерела
+1. [Енциклопедія Сучасної України: Шевченко Тарас Григорович](https://esu.com.ua/) — базовий академічний контекст щодо жіночої теми у творчості.
+2. [Ізборник (litopys.org.ua): Твори Т. Шевченка](http://litopys.org.ua/) — тексти поем "Катерина", "Наймичка", "Марія" та їх текстологічний аналіз.
+3. [Інститут історії України НАНУ (history.org.ua)](http://history.org.ua/) — соціально-історичний контекст становища жінки-покритки в українському селі ХІХ століття.
+
+## Хронологія
+- 1814: Народження Т. Шевченка (досвід кріпацтва та спостереження за долею жінок у родині).
+- 1823: Смерть матері поета (травматичний досвід сирітства, що сформував емпатію).
+- 1838: Написання поеми "Катерина" (ранній романтичний період, перша гостра критика соціальних норм).
+- 1845: Написання поеми "Наймичка" (зрілий період, перехід від романтичного бунту до глибинної психології жертовності).
+- 1859: Написання поеми "Марія" (апогей теми материнства, сакралізація жіночого страждання).
+
+## Ключові факти та цитати
+- "Катерина" — поема, що стала маніфестом захисту зганьбленої жінки. Шевченко фокусується не на "гріху", а на соціальній несправедливості: *"Кохайтеся, чорнобриві, / Та не з москалями, / Бо москалі — чужі люде, / Роблять лихо з вами"*.
+- "Наймичка" — психологічно складніший твір, де матір жертвує власним правом на материнство заради щастя дитини: *"Вранці Марко до наймички / Ручки простягає / І мамою невсипущу / Ганну величає… / І наймичка / Тяжко заридала"*.
+- Становище "покритки": в українському традиційному селі ХІХ століття це означало соціальну смерть, обрізання кіс ("накриття" голови), вигнання з родини.
+- Шевченко першим в українській літературі підніс образ звичайної селянки-страдниці до рівня загальнонаціонального та загальнолюдського архетипу.
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ": [!context] — Особистий біографічний біль Шевченка (втрата матері у 9 років) як корінь його безпрецедентної емпатії до жінок.
+- Section "Катерина": [!history-bite] — Що насправді означав статус "покритки" у ХІХ столітті (обряд обрізання кіс, соціальний остракізм).
+- Section "Катерина": [!quote] — Цитата-застереження ("Кохайтеся, чорнобриві...").
+- Section "Наймичка": [!quote] — Внутрішній монолог Ганни.
+- Section "Архетип Трагічної Матері": [!myth-buster] — Спростування радянського міфу про Шевченка виключно як "борця з царизмом" (його найглибші твори присвячені саме етичним та психологічним вимірам жіночої долі).
+- Section "Димінутиви та емоційний пафос": [!culture] — Унікальність української системи димінутивів (пестливих слів), які Шевченко використовує не для розчулення, а для створення емоційного катарсису на контрасті з трагедією.
+
+## Деколонізаційний контекст
+- **Imperial/Soviet myth**: Радянська критика трактувала "Катерину" та "Наймичку" вузько класово — як ілюстрацію "експлуатації бідних селянок багатими панами/офіцерами".
+- **Ukrainian reality**: Шевченко досліджує універсальний архетип Матері, критикує лицемірство подвійних моральних стандартів самого патріархального суспільства, а також кодує національну трагедію України в образі збезчещеної дівчини.
+
+## Contested Terms
+| Concept | Imperial/Soviet framing | Ukrainian framing |
+|---------|-------------------------|-------------------|
+| Тематика "покриток" | Ілюстрація класової нерівності та гноблення. | Етичний бунт проти патріархальних норм, емпатія, архетип стражденної Матері-України. |
+| "Катерина" (поема) | Твір про бідну обдурену дівчину. | Трагедія втрати національного коріння (метафора стосунків з імперією). |
+
+## Section-Mapped Research Notes
+
+### Вступ
+- Аналіз коренів жіночої теми: сирітство поета, спостереження за долею сестер.
+- Шевченкова емпатія як революційний для ХІХ ст. творчий метод (відхід від байронічного героя до звичайної селянки).
+
+### Катерина
+- Сюжет як виклик суспільству.
+- Аналіз образу "москаля" не лише як військового, а як представника імперської (чужої) влади та безвідповідальності.
+- Критика подвійних стандартів традиційного села (батьки виганяють доньку, підкоряючись жорстокому неписаному закону).
+
+### Наймичка
+- Еволюція від "Катерини": Ганна обирає не самогубство, а довічну самопожертву.
+- Аналіз німої трагедії: фізична присутність поруч із сином і неможливість зізнатися у материнстві.
+- Психологізм найвищого ґатунку: Ганна карає себе сама, стаючи добровільною служницею своєму синові.
+
+### Архетип Трагічної Матері
+- Синтез образів покритки, вдови, сироти.
+- Вихід на метафоричний рівень: покинута жінка як персоніфікація розграбованої та збезчещеної України.
+- Сакралізація образу матері (що пізніше кульмінує в поемі "Марія").
+
+### Димінутиви та емоційний пафос
+- Лінгвістичний аналіз: як "слізоньки", "серденько", "ручки" посилюють трагізм ситуації.
+- Функція пестливої лексики: викликати не просто жалість, а катарсис через контраст між ніжним словом і жорстокою реальністю.
+
+### Підсумок
+- Місце жіночої теми у спадщині Шевченка та світовій літературі.
+- Сучасне, феміністичне та постколоніальне прочитання цих поем.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 11953)
+✓ Message 11902 acknowledged
+✓ Message 11953 acknowledged

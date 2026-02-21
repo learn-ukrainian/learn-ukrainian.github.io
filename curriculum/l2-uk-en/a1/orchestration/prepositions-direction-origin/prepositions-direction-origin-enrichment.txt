@@ -1,0 +1,305 @@
+✅ Message sent to Gemini (ID: 10106) [auto-acked: self-addressed]
+✓ Message 10106 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10106...
+📨 Message #10106
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-prepositions-direction-origin
+   Time: 2026-02-20T19:41:40.852284+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: a1-30
+level: A1
+sequence: 30
+slug: prepositions-direction-origin
+version: '2.0'
+title: 'Prepositions: Direction & Origin'
+subtitle: Direction, Location & Origin
+content_outline:
+- section: Warm-up
+  points:
+  - Де ти живеш? (місце)
+  - Куди ти йдеш? (напрямок)
+  - 'Звідки ти? (походження) — cultural hook: Ukrzaliznytsia icebreaker ''Звідки ти
+    приїхав?'''
+- section: Presentation
+  points:
+  - 'Три типи запитань про місце — visual aid: Decision Table for Question/Case/Preposition'
+  - 'Прийменники для кожного типу — learner error: Static vs. Dynamic confusion (Де
+    vs Куди); writing note: frame case change as a ''signpost'''
+- section: 'Місце: Де?'
+  points:
+  - 'Прийменники у/в + місцевий відмінок — euphony rule: reinforce у/в usage; cultural
+    hook: ''Slipper Culture'' and static location (вдома)'
+  - 'Прийменник на + місцевий відмінок — learner error: в vs на for functional places
+    (на роботі)'
+  - Коли в, коли на (у школі vs на роботі)
+- section: 'Напрямок: Куди?'
+  points:
+  - Прийменники у/в + знахідний відмінок
+  - 'Прийменник на + знахідний відмінок — standard ref: §4.2.3.2.2 distinguishing
+    location/direction'
+  - 'Прийменник до + родовий відмінок — learner error: Case Mismatch after ''до''
+    (requires Genitive)'
+- section: 'Походження: Звідки?'
+  points:
+  - 'Прийменник з + родовий відмінок — standard ref: §4.1.7 usage of з/із/зі'
+  - Прийменник від + родовий відмінок
+  - Різниця між з та від
+- section: Presentation 2
+  points:
+  - у школі → до школи / в школу
+  - на роботі → на роботу
+- section: Presentation 3
+  points:
+  - Маршрут по місту (з дому в метро)
+  - Опис повсякденних переміщень
+- section: Practice
+  points:
+  - Як дістатися до...?
+  - Звідки ви приїхали?
+  - Де знаходиться...?
+- section: Practice 2
+  points:
+  - Інтеграційні вправи
+vocabulary_hints:
+  required:
+  - де (where) — Де ти? Де це?
+  - куди (where to) — Куди ти йдеш?
+  - звідки (where from) — Звідки ти?
+  - в/у (in, into) — вдома, у школі, в центр
+  - на (on, onto) — на роботі, на стіл
+  - до (to, toward) — додому, до школи, до Києва
+  - з (from) — з України, зі школи
+  - від (from)
+  recommended:
+  - йти (to go) — йти пішки, йти додому
+  - їхати (to go by transport) — їхати на метро, їхати в центр
+  - приходити (to arrive)
+  - повертатися (to return)
+activity_hints:
+- type: fill-in
+  focus: Choose correct preposition
+  items: 25
+- type: fill-in
+  focus: Change location to direction
+  items: 20
+- type: quiz
+  focus: Which question? Де/Куди/Звідки
+  items: 15
+- type: fill-in
+  focus: Asking directions
+  items: 6
+focus: grammar
+pedagogy: PPP
+prerequisites:
+- a1-13 (The Locative)
+- a1-29 (Weather and Nature)
+connects_to:
+- a1-31 (Body and Health)
+- a1-34 (Checkpoint Core Grammar)
+objectives:
+- Learner can distinguish location from direction questions
+- Learner can use в/на for location (Locative)
+- Learner can use в/на/до for direction (Accusative/Genitive)
+- Learner can use з/від for origin
+grammar:
+- Location (Де?) vs Direction (Куди?) vs Origin (Звідки?)
+- Prepositions with correct cases
+- Movement verbs with prepositions
+register: розмовний
+phase: A1.3 [Consolidation]
+persona:
+  voice: Patient Supportive Tutor
+  role: Set Designer
+word_target: 2000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Prepositions: Direction & Origin
+
+## State Standard Reference
+§4.2.3.2.2: "Із прийменниками: в, у, на (указівка на кінцевий пункт руху або переміщення): Степан заходить у кімнату. Я кладу книжку на твій стіл" (Direction/Accusative).
+§4.2.3.3: "у, в, на (позначення місця): Спортивний костюм у великій сумці... Гроші лежать на столі" (Location/Locative).
+§4.1.7: "уживання прийменника з і його варіантів із, зі: з Алжиру, він із Сирії, зі школи" (Origin/Genitive basics via euphony).
+Alignment: This module directly addresses the Standard's requirement to distinguish location (Locative) from direction (Accusative), and introduces origin (Genitive) as lexically/phonetically required by §4.1.7.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| де | High (Top 100) | Де ти? Де це? Де туалет? |
+| куди | High (Top 200) | Куди ти йдеш? Куди нам треба? |
+| звідки | Medium | Звідки ви? Звідки ти родом? |
+| йти/їхати | High | йти додому, їхати на роботу |
+| вдома | High | Я вдома. Сидіти вдома. |
+
+## Cultural Hooks
+1. **Slipper Culture**: The strict distinction between "outside" (shoes on) and "inside" (`вдома` - shoes off). Entering a home changes your state/location fundamentally.
+2. **Ukrzaliznytsia**: The question «Звідки ви?» is iconic on long train journeys, acting as a social icebreaker.
+
+## Common Learner Errors
+1. **Static vs. Dynamic**: Using "Де" for direction (*Де ти йдеш?* instead of *Куди ти йдеш?*).
+2. **Case Mismatch**: Using Accusative instead of Genitive after "до" (*Я йду до магазин* instead of *до магазину*).
+3. **Preposition Confusion**: "в" vs "на" for institutions (*на школі* instead of *у школі* vs *на роботі*).
+
+## Cross-References
+- Builds on: a1-13 (The Locative), a1-29 (Weather/Nature)
+- Prepares for: a1-31 (Body/Health), a1-34 (Checkpoint)
+
+## Notes for Content Writing
+- **Genitive Anomaly**: The Standard A1 Morphology section doesn't explicitly list Genitive case rules, yet §4.1.7 requires `з/із/зі` + Genitive. Teach "Origin" as a lexical chunk/pattern rather than deep declension theory at this stage.
+- **Visuals**: Use strict visual separation for the three columns (Location/Direction/Origin) to prevent confusion.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ та культурний контекст (Introduction & Culture)"
+  words: 400
+  points:
+  - "Cultural hook: The Ukrzaliznytsia icebreaker — using «Звідки ти приїхав?» as a fundamental social connector on long-distance trains."
+  - "Slipper Culture: Exploring the linguistic and physical boundary between the outside world (shoes on) and the home «вдома» (shoes off)."
+  - "Introduction to the Three Questions: Presenting 'Де', 'Куди', and 'Звідки' as the primary coordinates for navigation and personal history."
+- section: "Місце: Де? (Location: Where?)"
+  words: 550
+  points:
+  - "Standard ref §4.2.3.3: Defining location with Locative case using prepositions 'в/у' and 'на' (e.g., у великій сумці, на столі)."
+  - "Learner error: Institutional confusion — drilling the functional use of 'на роботі' versus the physical container 'у школі'."
+  - "The concept of 'вдома': Framing static location as a state of being, contrasting with the 'outside' environment."
+  - "Euphony rules: Reinforcing the 'у/в' alternation based on the preceding and following sounds to ensure natural flow."
+- section: "Напрямок: Куди? (Direction: Where to?)"
+  words: 550
+  points:
+  - "Standard ref §4.2.3.2.2: Marking the destination of movement using 'в/у' and 'на' with the Accusative case (e.g., заходить у кімнату, кладу на стіл)."
+  - "Learner error: Static vs. Dynamic confusion — correcting the common mistake of using «Де ти йдеш?» instead of the correct «Куди ти йдеш?»."
+  - "Direction with 'до': Introducing 'до' + Genitive as a specific target-oriented direction, prepping for lexical patterns."
+  - "Learner error: Case Mismatch after 'до' — preventing errors like «до магазин» by teaching «до магазину» as a fixed pattern/chunk."
+- section: "Походження та маршрути (Origin & Routes)"
+  words: 500
+  points:
+  - "Standard ref §4.1.7: Using 'з/із/зі' + Genitive for origin; focus on phonetic variants (з Алжиру, із Сирії, зі школи)."
+  - "Distinguishing 'з' vs. 'від': Clarifying that 'з' usually denotes 'out of a place' while 'від' denotes 'from a person/source'."
+  - "Practical Synthesis: Describing a city route (e.g., з дому в метро, з метро на роботу) to integrate all three coordinates."
+  - "Summary Decision Table: A visual aid mapping Question -> Case -> Preposition to help learners choose the correct signpost."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "де (where) — High frequency (Top 100); used for static location; «Де це?», «Де ви?»"
+  - "куди (where to) — High frequency (Top 200); used for direction/destination; «Куди нам треба?»"
+  - "звідки (where from) — Medium frequency; social icebreaker; «Звідки ви родом?»"
+  - "в/у (in, into) — Alternates based on euphony; usage with Locative (state) vs Accusative (motion)"
+  - "на (on, onto) — Used for surfaces and functional places; «на роботі», «на стіл»"
+  - "до (to, toward) — Always triggers Genitive; «додому», «до школи», «до Києва»"
+  - "з/із/зі (from, out of) — Euphony variants §4.1.7; triggers Genitive; «зі школи», «з України»"
+  - "від (from a person/source) — Used for origin relative to a point; «від брата», «від центру»"
+  recommended:
+  - "йти (to go) — High frequency; specifically by foot; «йти пішки», «йти додому»"
+  - "їхати (to go by transport) — High frequency; «їхати на метро», «їхати в центр»"
+  - "вдома (at home) — High frequency; static adverb; «Я зараз вдома»"
+  - "центр (center) — Common destination; «у центр» (motion) vs «у центрі» (location)"
+  - "робота (work) — Functional location; «на роботу» (motion) vs «на роботі» (location)"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (3651 chars)
+✅ Message sent to Claude (ID: 10109)
+✓ Message 10109 acknowledged
+   Auto-acknowledged reply #10109 (stdout delivery — no inbox accumulation)
+✓ Message 10106 acknowledged

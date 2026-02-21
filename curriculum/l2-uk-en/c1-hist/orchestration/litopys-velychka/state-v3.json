@@ -5,9 +5,9 @@
   "phases": {
     "v3-A": {
       "status": "complete",
-      "ts": "2026-02-19T21:09:16Z",
+      "ts": "2026-02-21T00:04:23Z",
       "task_id": "v3-litopys-velychka-pA",
-      "mode": "full"
+      "mode": "meta-only"
     }
   }
 }

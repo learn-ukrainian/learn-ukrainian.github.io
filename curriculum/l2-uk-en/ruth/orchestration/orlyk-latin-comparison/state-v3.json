@@ -1,0 +1,13 @@
+{
+  "track": "ruth",
+  "slug": "orlyk-latin-comparison",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-20T13:31:19Z",
+      "task_id": "v3-orlyk-latin-comparison-pA",
+      "mode": "full"
+    }
+  }
+}

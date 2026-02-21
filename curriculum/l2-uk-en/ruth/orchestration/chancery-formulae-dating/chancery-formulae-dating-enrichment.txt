@@ -1,0 +1,208 @@
+✅ Message sent to Gemini (ID: 11942) [auto-acked: self-addressed]
+✓ Message 11942 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #11942...
+📨 Message #11942
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-chancery-formulae-dating
+   Time: 2026-02-20T23:34:41.492345+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 16
+module: ruth-016
+module_number: 14
+slug: chancery-formulae-dating
+title_uk: 'Канцелярські формули: Датування'
+title_en: Chancery Formulae II
+phase: 1
+phase_id: chancery-legal
+phase_name: Chancery & Legal
+focus: Dating clauses — "Pisan u Vilni..."
+content_outline:
+- section: Вступ
+  description: Introduction to Chancery Formulae II
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Baroque Scholar
+  role: Chronicler of Acts
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Chancery Formulae Dating
+
+## Використані джерела
+1. [Енциклопедія історії України: Дипломатика](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Dyplomatyka) — фундаментальний огляд структури документів.
+2. [Ізборник: Грамоти XIV-XV ст.](http://litopys.org.ua/ukrmova/um45.htm) — тексти автентичних грамот.
+3. [Яковенко Н. "Нарис історії середньовічної та ранньомодерної України"](https://yakovenko.org/) — контекст функціонування канцелярії ВКЛ.
+
+## Хронологія
+- **1387**: Привілей Ягайла — утвердження руської мови в діловодстві ВКЛ.
+- **1449**: Приклад датування за індиктом у грамоті Казимира IV (знайдений у джерелах).
+- **1529**: Перший Литовський Статут — кодифікація руської мови як державної.
+- **1582**: Реформа григоріанського календаря папою Григорієм XIII — початок календарної полеміки ("новий" vs "старий" стиль).
+- **1588**: Третій Литовський Статут — підтвердження статусу руської мови попри полонізацію.
+- **1596**: Берестейська унія — загострення питання календаря як маркеру конфесійної ідентичності.
+
+## Ключові факти та цитати
+- **Формула датування**: Типова структура включала "Року Божого...", місяць, день та індикт.
+- **Цитата 1 (Автентична)**: «...И писан у Вовручомъ февраля девятогонадцят дня индикъта третегонадцять» (Грамота Казимира IV).
+- **Цитата 2 (Реконструкція типової формули)**: «Писан у Вільні, року Божого тисяча п’ятсот шістдесят шостого, місяця марца день другий».
+- **Індикт**: 15-річний цикл, візантійський спадок, що використовувався паралельно з "роком Божим".
+- **Місце видання**: Формула "Писан у..." (Datum/Actum) вказувала на місцезнаходження канцелярії (Вільнюс, Троки, Гродно, Київ).
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ: Час і простір документа": [!context] — Канцелярія ВКЛ як "машина часу", що фіксувала реальність.
+- Section "Анатомія дати": [!history-bite] — Чому рік починався 1 вересня (візантійська традиція) або 1 січня (цивільна)?
+- Section "Візантійський спадок": [!myth-buster] — "Індикт" — це не рік, а номер року в 15-річному циклі. Поширена помилка новачків.
+- Section "Географія влади": [!decolonization] — Вільнюс як центр *руської* культури і політики, а не лише литовської чи польської.
+- Section "Палеографічний практикум": [!culture] — Використання паперу vs пергаменту: як матеріал впливав на збереженість дат.
+- Section "Підсумок": [!reflection] — Календарна реформа 1582 року як перший крок до культурного розколу.
+
+## Деколонізаційний контекст
+- **Imperial Myth**: "Західноросійська письмова мова" (West Russian written language) — термін російської імперської науки для позначення руської мови.
+- **Ukrainian Reality**: Староукраїнська (руська) мова була державною, кодифікованою мовою ВКЛ, з власною термінологією і традицією, відмінною від московської "приказної мови".
+- **Myth**: Культурна відсталість православних.
+- **Reality**: Використання складних систем датування (індикти, кола Сонця) свідчить про високий рівень освіченості писарів та інтеграцію у візантійсько-європейський інтелектуальний простір.
+
+## Contested Terms
+| Concept | Imperial/Russian framing | Ukrainian (decolonized) framing |
+|---------|--------------------------|---------------------------------|
+| Мова документів ВКЛ | Західноросійська мова | Руська мова (староукраїнська) |
+| Входження земель до ВКЛ | "Литовское завоевание" | "Оксамитове проникнення" / Інкорпорація |
+| Київ 14-16 ст. | Провінційне місто | Духовний центр, "Другий Єрусалим" |
+
+## Section-Mapped Research Notes
+
+### Вступ: Час і простір документа
+Введення в дипломатику. Документ як юридичний акт, що потребує чіткої фіксації у часі та просторі. Роль писаря (дяка) як гаранта законності.
+
+### Анатомія дати: Рік, місяць, день
+Детальний розбір структури. "Року Божого нарождення" vs "Від створення світу". Назви місяців: латинські (марца, апріля) vs слов'янські (березня, квітня) — у руських документах переважали слов'янські, але латинізми проникали. Числа записувалися кириличною цифіррю (букви з титлами).
+
+### Візантійський спадок: Індикт і коло Сонця
+Пояснення складної хронології. Індикт (15 років) — фіскальний цикл Римської імперії, що перейшов у Візантію і Русь. Як вирахувати дату за індиктом (формула: (Рік - 312) / 15 -> залишок = індикт). Коло Сонця (28 років) і Коло Місяця (19 років) — для визначення Пасхи. Це показує "високу математику" канцелярії.
+
+### Географія влади: Формула місця
+"Писан у..." (Datum). Найчастіші локації: Вільна (Вільнюс), Троки, Гродно, Берестя, Київ, Луцьк. Мобільність двору великого князя — документи видавалися там, де перебував монарх. Зв'язок формули місця з юридичною силою документа.
+
+### Палеографічний практикум
+Читання реальних дат з факсиміле (опис). Різниця почерків (устав, півустав, скоропис). Як розпізнати число під титлом. Проблема зношеності країв документа, де часто стояла дата.
+
+### Підсумок
+Значення точності. Перехід до нових викликів (календарна реформа 1582 р.). Документ як "машина часу".
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 11975)
+✓ Message 11942 acknowledged
+✓ Message 11975 acknowledged

@@ -5,77 +5,95 @@ slug: register-official-legal
 version: '2.0'
 title: 'Офіційно-діловий стиль: документи, закони, заяви'
 content_outline:
-- section: Вступ — Офіційно-діловий стиль
+- section: 'Вступ: Офіційно-діловий стиль (Introduction: Official-Business Style)'
+  words: 500
   points:
-  - 'Визначення та сфера застосування — focus on functional domain of official documentation;
-    tone: strict neutrality, no emotions'
-  - Підстилі (законодавчий, адміністративний, дипломатичний)
-  - Основні ознаки — alignment with State Standard §4.4.1.1 (functional styles)
-- section: Мовні засоби офіційного стилю
+  - Визначення та сфера застосування — focus on the functional domain of official
+    documentation; maintain strict neutrality and objective tone per State Standard
+    §4.4.1.1
+  - Підстилі офіційного мовлення — distinguishing between legislative (laws), administrative
+    (internal docs), and diplomatic (treaties) sub-styles
+  - Основні ознаки стилю — emphasis on precision, lack of emotional coloring, and
+    standardized terminology
+- section: Граматичні та лексичні засоби стилю (Grammatical and Lexical Means of Style)
+  words: 800
   points:
-  - Безособові конструкції -но/-то — State Standard §4.3.3.1 (One-Member Sentences);
-    foundation for impersonal style ('Там усе правильно записано')
-  - Стандартизовані звороти — drill 'Instrumental vs Genitive' distinction (згідно
-    з vs відповідно до)
-  - Канцеляризми та кліше — use 'Bad vs Good' comparison tables
-  - 'Складні номінальні групи — State Standard §4.2.6 (Verbal Nouns: читання, навантаження,
-    додаток)'
-- section: Типи документів
+  - Номіналізація та віддієслівні іменники — operationalizing State Standard §4.2.6
+    (читання, навантаження, додаток) for creating complex nominal groups
+  - Безособові конструкції на -но/-то — building on State Standard §4.3.3.1 (One-Member
+    Sentences) to ensure impersonal distance ('Там усе правильно записано')
+  - Стандартизовані звороти та прийменникове керування — drill the distinction between
+    'згідно з' (+ Instrumental) and 'відповідно до' (+ Genitive) as found in §4.1.2.2
+  - Канцеляризми та кліше — using 'Bad vs Good' comparison tables to replace informal
+    speech with professional equivalents
+- section: Типи та структура документів (Types and Structure of Documents)
+  words: 900
   points:
-  - 'Заява — collocations: написати/подати заяву, про звільнення; learner error: ''від''
-    in header (Заява від Петренка -> Заява Петренка)'
-  - 'Наказ — collocations: видати наказ, наказ набирає чинності, скасувати наказ'
-  - 'Протокол — collocations: вести протокол, порядок денний, слухали/виступили/ухвалили'
-  - Акт
-- section: Структура офіційних документів
+  - 'Заява (Application) — focus on visual layout: header right-aligned, title centered;
+    learner error fix: use Genitive only (''Заява Петренка'') instead of incorrect
+    ''Заява від Петренка'''
+  - 'Наказ (Order) — essential collocations: ''видати наказ'', ''наказ набирає чинності'',
+    ''скасувати наказ'''
+  - 'Протокол (Minutes/Protocol) — mastering the narrative structure: ''порядок денний'',
+    ''слухали/виступили/ухвалили''; understanding ''витяг з протоколу'''
+  - Акт та Розпорядження — vocabulary for documenting facts and issuing administrative
+    directives
+- section: Історичний контекст та мова законів (Historical Context and Language of
+    Laws)
+  words: 800
   points:
-  - 'Реквізити документа — visual layout emphasis: Header right-aligned, Title centered'
-  - Адресат та адресант — Genitive usage for sender (no preposition 'від')
-  - Основна частина
-  - Підпис та дата
-- section: Законодавчі тексти
+  - 'Козацька канцелярія та Універсали — cultural hook: the General Military Chancellery
+    (Генеральна військова канцелярія) and its baroque legal acts'
+  - 'Українська як мова судочинства — historical context: Ruthenian as the protected
+    legal language in 16th-17th c. courts (Volyn, Kyiv, Bratslav)'
+  - Мова сучасних законодавчих текстів — analyzing the structure of articles, references,
+    and legislative terminology
+  - Юридична сила та чинність — understanding phrases like 'набрати чинності' and
+    'чинне законодавство'
+- section: Культура ділового мовлення та помилки (Business Speech Culture and Typical
+    Errors)
+  words: 600
   points:
-  - 'Мова законів — cultural hook: Cossack Bureaucracy and ''Universals'' (Універсали)
-    of the General Military Chancellery'
-  - 'Типові конструкції — historical context: Ruthenian as legal language in 16th-17th
-    c. courts (Volyn, Kyiv)'
-  - Посилання на статті
-  - Читання та розуміння законів
-- section: Типові помилки
+  - 'Усунення русизмів та калькованих кліше — learner error fix: replace ''приймати
+    міри/участь'' with correct ''вживати заходів / брати участь'''
+  - 'Часові вирази в документах — learner error fix: ''на протязі'' (draft) vs ''протягом/упродовж''
+    (duration) for accurate timelines'
+  - Редагування офіційних текстів — identifying and removing excessive bureaucracy
+    while maintaining professional standards
+- section: Практика та підсумок модуля (Practice and Module Summary)
+  words: 400
   points:
-  - Надмірна канцелярщина
-  - 'Русизми в офіційних документах — learner error: ''згідно наказу'' (Dative) ->
-    ''згідно з наказом'' (Instrumental)'
-  - 'Неправильне вживання кліше — learner error: ''приймати міри/участь'' -> ''вживати
-    заходів / брати участь'''
-  - 'Сучасні норми — learner error: ''на протязі'' (draft) -> ''протягом/упродовж''
-    (duration)'
-- section: Практика і підсумок
-  points:
-  - Написання заяв
-  - Аналіз офіційних документів
-  - Підготовка до модуля 20
+  - Написання та оформлення заяви — applying structural rules (Genitive header, formal
+    body)
+  - Аналіз автентичних документів — evaluating official texts for stylistic consistency
+  - Підготовка до наступного модуля — overview of Professional Communication and Medical
+    registers
 vocabulary_hints:
   required:
-  - офіційно-діловий стиль (official-business style)
-  - заява (application/statement) — написати/подати заяву, заява про звільнення, додаток
-    до заяви
-  - наказ (order/decree) — видати наказ, наказ набирає чинності, згідно з наказом
-  - протокол (minutes/protocol) — вести протокол, порядок денний, витяг з протоколу
-  - акт (act/document)
-  - реквізит (requisite/detail)
-  - канцеляризм (bureaucratese)
-  - кліше (cliché/set phrase) — брати участь (NOT приймати), відповідно до (+Gen),
-    протягом
-  - постанова (resolution)
-  - розпорядження (directive)
+  - офіційно-діловий стиль (official-business style) — strict neutrality, absence
+    of emotion
+  - 'заява (application/statement) — collocations: написати/подати заяву, заява про
+    звільнення, додаток до заяви (Genitive only in header)'
+  - 'наказ (order/decree) — collocations: видати наказ, наказ набирає чинності, згідно
+    з наказом (Instrumental)'
+  - 'протокол (minutes/protocol) — collocations: вести протокол, порядок денний, витяг
+    з протоколу, слухали/виступили/ухвалили'
+  - 'згідно з (according to) — requires Instrumental case; learner error: CONFUSE
+    with Dative'
+  - відповідно до (in accordance with) — requires Genitive case; common in legal references
+  - брати участь (to participate) — High frequency; MUST avoid 'приймати участь'
+  - вживати заходів (to take measures) — High frequency; MUST avoid 'приймати міри'
+  - протягом (during/throughout) — used for duration; MUST avoid 'на протязі' in temporal
+    sense
+  - чинний (valid/effective) — чинне законодавство, набрати чинності (to enter into
+    force)
   recommended:
-  - юридичний (legal)
-  - адміністративний (administrative)
-  - законодавство (legislation)
-  - нормативний акт (normative act)
-  - стаття (article - of law)
-  - чинний (valid/effective) — чинне законодавство, набрати чинності
+  - універсал (universal) — historical legal act of the Hetmanate era
+  - канцеляризм (bureaucratese) — terminology specific to official style
+  - реквізит (requisite/detail) — mandatory part of a document (date, signature, etc.)
+  - постанова (resolution) — official decision by a committee or government
+  - віддієслівний іменник (verbal noun) — e.g., читання, навантаження; essential for
+    nominalization
 activity_hints:
 - type: quiz
   focus: Identify official style features in documents

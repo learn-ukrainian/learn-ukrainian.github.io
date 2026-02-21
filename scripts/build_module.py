@@ -670,6 +670,37 @@ def fill_template(
     return True
 
 
+def _run_with_heartbeat(
+    cmd: list[str], label: str, timeout: int = 1800,
+    heartbeat_interval: int = 30, **kwargs,
+) -> subprocess.CompletedProcess:
+    """Run a subprocess with periodic heartbeat logging.
+
+    Prints elapsed time every `heartbeat_interval` seconds so the user
+    knows the process is still alive (not stuck).
+    """
+    import threading
+    import time
+
+    stop_event = threading.Event()
+    t0 = time.time()
+
+    def _heartbeat():
+        while not stop_event.wait(heartbeat_interval):
+            elapsed = int(time.time() - t0)
+            m, s = divmod(elapsed, 60)
+            print(f"    ⏳ {label} — {m}m {s:02d}s elapsed...", flush=True)
+
+    thread = threading.Thread(target=_heartbeat, daemon=True)
+    thread.start()
+    try:
+        result = subprocess.run(cmd, timeout=timeout, **kwargs)
+        return result
+    finally:
+        stop_event.set()
+        thread.join(timeout=2)
+
+
 def dispatch_gemini(
     prompt: str, task_id: str, model: str = PRO_MODEL,
     stdout_only: bool = False, allow_write: bool = False,
@@ -691,10 +722,11 @@ def dispatch_gemini(
         args.append("--allow-write")
 
     try:
-        result = subprocess.run(
+        result = _run_with_heartbeat(
             [VENV_PYTHON] + args,
-            cwd=str(PROJECT_ROOT), capture_output=True, text=True,
+            label=f"Gemini {task_id}",
             timeout=timeout,
+            cwd=str(PROJECT_ROOT), capture_output=True, text=True,
         )
         output_text = result.stdout or ""
         if output_file:

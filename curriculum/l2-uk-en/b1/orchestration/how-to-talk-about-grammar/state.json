@@ -2,7 +2,7 @@
   "slug": "how-to-talk-about-grammar",
   "track": "b1",
   "module_num": 1,
-  "mode": "e2e",
+  "mode": "v3",
   "phases": {
     "0": {
       "status": "complete",
@@ -64,13 +64,13 @@
     },
     "9-final-review": {
       "status": "complete",
-      "timestamp": "2026-02-18T20:34:43Z",
+      "timestamp": "2026-02-21T00:02:10Z",
       "verdict": "APPROVE"
     },
     "8": {
       "status": "complete",
-      "timestamp": "2026-02-18T20:34:44Z"
+      "timestamp": "2026-02-21T00:02:11Z"
     }
   },
-  "last_updated": "2026-02-18T20:34:44Z"
+  "last_updated": "2026-02-21T00:02:11Z"
 }

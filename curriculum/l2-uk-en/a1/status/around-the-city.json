@@ -2,14 +2,14 @@
   "module": "around-the-city",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-19T23:06:47.429673Z",
+  "last_audit": "2026-02-21T00:46:37.293665Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-19T23:06:42.004003Z",
+    "md": "2026-02-20T23:10:52.544856Z",
     "meta": "2026-02-19T23:05:13.518233Z",
-    "activities": "2026-02-19T23:06:42.004592Z",
-    "vocabulary": "2026-02-18T21:06:33.433528Z",
-    "plan": "2026-02-18T19:03:31.928474Z",
+    "activities": "2026-02-20T23:09:46.250061Z",
+    "vocabulary": "2026-02-20T23:09:46.251920Z",
+    "plan": "2026-02-20T20:40:36.034344Z",
     "research": "2026-02-19T23:03:30.256032Z"
   },
   "gates": {
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "2594/2000 (raw: 2973)"
+      "message": "2635/2000 (raw: 3016)"
     },
     "activities": {
       "status": "pass",
@@ -31,7 +31,7 @@
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "20/1"
+      "message": "23/1"
     },
     "naturalness": {
       "status": "info",
@@ -41,7 +41,7 @@
     "ipa": {
       "status": "warn",
       "violations": 0,
-      "message": "9 IPA issues (run lint_ipa.py --fix)"
+      "message": "4 IPA issues (run lint_ipa.py --fix)"
     },
     "research": {
       "status": "pass",

@@ -1,0 +1,348 @@
+✅ Message sent to Gemini (ID: 11203) [auto-acked: self-addressed]
+✓ Message 11203 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #11203...
+📨 Message #11203
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-c2-2-practice-i
+   Time: 2026-02-20T22:30:10.990520+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c2-042
+level: c2
+sequence: 42
+version: '2.0'
+title: Практика C2.2 I — Літературне портфоліо
+focus: practice
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Літературна Україна — творчі конкурси
+  url: https://litukraina.org.ua/
+  type: reference
+  notes: Guidelines for literary portfolio compilation and evaluation criteria
+- name: Київський національний університет — творче письмо
+  url: https://www.univ.kiev.ua/
+  type: reference
+  notes: Academic standards for literary portfolio assessment
+- name: Часопис "Кур'єр Кривбасу"
+  url: https://kr-elib.com.ua/
+  type: reference
+  notes: Examples of contemporary Ukrainian literary works for portfolio models
+content_outline:
+- section: Вступ — Мета літературного портфоліо
+  points:
+  - Визначення літературного портфоліо як інструменту самооцінки
+  - Критерії відбору текстів для портфоліо
+  - Баланс між жанрами та стилями
+- section: Аналітичне есе — Літературознавчий аналіз
+  points:
+  - Структура літературознавчого есе
+  - Інтеграція теоретичних концепцій (М26-31)
+  - Цитування та посилання в академічному стилі
+- section: Поетичний розділ
+  points:
+  - Оригінальні вірші з різними формами (верлібр, сонет, рима)
+  - Коментар автора до власних творів
+  - Демонстрація володіння просодією (М22, М28)
+- section: Прозовий розділ
+  points:
+  - Оповідання або уривок з більшого твору
+  - Нарратологічний самоаналіз (М27, М29)
+  - Робота з індивідуальним голосом (М14-15)
+- section: Перекладацький розділ
+  points:
+  - Зразок літературного перекладу (поезія або проза)
+  - Коментар до перекладацьких рішень
+  - Порівняльний аналіз оригіналу та перекладу
+- section: Рефлексія та висновки
+  points:
+  - Самооцінка розвитку літературних навичок
+  - Ідентифікація сильних сторін та зон росту
+  - План подальшого вдосконалення
+vocabulary:
+  required:
+  - портфоліо (portfolio)
+  - збірка (collection)
+  - самооцінка (self-assessment)
+  - рефлексія (reflection)
+  - демонстрація (demonstration)
+  - компетентність (competency)
+  - жанрова різноманітність (genre diversity)
+  - авторський коментар (author's commentary)
+  - майстерність (mastery/craftsmanship)
+  - критерій оцінювання (evaluation criterion)
+  recommended:
+  - еклектика (eclecticism)
+  - когерентність (coherence)
+  - репрезентативність (representativeness)
+  - стилістична цілісність (stylistic integrity)
+  - творча еволюція (creative evolution)
+  forbidden: '[]'
+activities:
+  types_required:
+  - quiz
+  - critical-analysis
+  - comparative-study
+  - authorial-intent
+  - essay-response
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c2-43 (C2.2 Practice II — Creative portfolio)
+- c2-44 (C2.2 Review)
+- c2-45 (C2.2 Checkpoint)
+vocabulary_hints:
+  required:
+  - концепція (concept)
+  - аналіз (analysis)
+  - дискурс (discourse)
+  - методологія (methodology)
+  recommended:
+  - інтерпретація (interpretation)
+  - контекстуалізація (contextualization)
+  - синтез (synthesis)
+activity_hints:
+- type: reading
+  focus: Поглиблений аналіз тексту
+  items: 4
+- type: essay-response
+  focus: Критичне осмислення
+- type: discussion
+  focus: Дискусія та аргументація
+  items: 1
+persona:
+  voice: Senior Specialist
+  role: Literary Agent
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Практика C2.2 I — Літературне портфоліо
+
+## State Standard Reference
+
+**Primary alignment: §4.3.6, §4.3.7, §4.3.8** (C2 Stylistics)
+
+- **§4.3.6**: *"Уміння створити текст певного стилю за планом."*
+  Alignment: Поетичний, прозовий та есеїстичний розділи портфоліо — це пряма реалізація цього вміння: учень створює оригінальні тексти в різних стилях (художньому, науковому, публіцистичному).
+
+- **§4.3.7**: *"Уміння трансформувати текст з одного стилю в інший, зокрема науковий у науково-популярний, офіційний у публіцистичний тощо."*
+  Alignment: Перекладацький розділ і авторський коментар вимагають трансформації між художнім і метакритичним (науковим) стилями.
+
+- **§4.3.8**: *"Уміння утворювати вторинні тексти, зокрема реферати, повідомлення, довідково-інформаційні тексти."*
+  Alignment: Аналітичне есе і рефлексивні коментарі — це вторинні тексти у відповідь на власні первинні твори.
+
+- **§4.3.1.1**: Стилі української мови (художній, науковий, публіцистичний, офіційний, розмовний, релігійний, епістолярний) — портфоліо охоплює щонайменше три.
+
+- **§4.3.3**: *"Індивідуально-авторські неологізми... епітети, метафори, уособлення, перифраз, метонімія, синекдоха, гіпербола..."* — вся система тропів, яку потрібно демонструвати в поетичному та прозовому розділах.
+
+---
+
+## Vocabulary Frequency
+
+| Слово | Частота / Джерело | Ключові колокації |
+|-------|-------------------|-------------------|
+| портфоліо | Сер.-висока; академічний/освітній реєстр (запозичення стабільне з 2000-х) | *скласти/укласти портфоліо; літературне портфоліо; розділ портфоліо* |
+| збірка | Висока; літературна критика, видавнича сфера | *збірка поезій/оповідань; видати збірку; укласти збірку* |
+| самооцінка | Сер.; психолого-педагогічний реєстр | *адекватна самооцінка; навичка самооцінки; критерії самооцінки* |
+| рефлексія | Сер.-висока; академічний, філософський | *критична рефлексія; рефлексія над текстом; художня рефлексія* |
+| майстерність | Висока; літературна критика | *художня майстерність; майстерність перекладача; технічна майстерність* |
+| когерентність | Низька-сер.; академічний (запозичення) | *когерентність тексту; тематична когерентність* |
+| репрезентативність | Низька-сер.; науковий реєстр | *репрезентативність вибірки; репрезентативність текстів* |
+| стилістична цілісність | Низька; літературна критика | *зберігати/порушувати стилістичну цілісність* |
+| творча еволюція | Сер.; публіцистика, літературна критика | *простежити творчу еволюцію; демонстрація творчої еволюції* |
+| авторський коментар | Висока у видавничому контексті | *написати авторський коментар; авторський коментар до тексту* |
+| еклектика | Сер.; мистецтвознавчий, стилістичний | *стильова еклектика; свідома еклектика* |
+
+---
+
+## Cultural Hooks
+
+1. **«Кур'єр Кривбасу»** — літературний журнал, заснований 1994 р. у Кривому Розі головним редактором Григорієм Гусейновим. Публікує прозу, поезію, переклади, літературну критику, мемуаристику та публіцистику. Один із небагатьох регіональних журналів, що пережив пострадянський колапс і здобув загальноукраїнський авторитет — реальна модель для розуміння того, яка різножанрова «збірка» складає повноцінне літературне видання. Джерело: [Кур'єр Кривбасу — Вікіпедія](https://uk.wikipedia.org/wiki/%D0%9A%D1%83%D1%80'%D1%94%D1%80_%D0%9A%D1%80%D0%B8%D0%B2%D0%B1%D0%B0%D1%81%D1%83)
+
+2. **Традиція майстрів літературного перекладу** — школа Миколи Лукаша, Григорія Кочура та Бориса Тена (1950–80-і рр.) заклала стандарти перекладацького коментаря в Україні: перекладач не просто передає текст, а пояснює культурні, просодичні та лексичні рішення. Ця традиція безпосередньо визначає формат «перекладацького розділу» у сучасних літературних портфоліо. (Загальновідомий факт, верифікований через академічну традицію.)
+
+---
+
+## Common Learner Errors
+
+1. **Описовий замість аналітичного**  →  *"Вірш написаний чотиристопним ямбом і розповідає про осінь"* → ПОМИЛКА. Треба: *"Вибір чотиристопного ямба посилює монотонність очікування, що є центральним образом вірша."* — Причина: учні плутають анотацію (*що написано*) з авторським коментарем (*чому саме так*).
+
+2. **Гіперпасивізація в аналітичному есе** → надмірне вживання пасивних конструкцій (*"було зображено," "є визначеним"*) замість активного аналітичного голосу (*"автор зображує," "текст визначає"*) — характерна помилка при перенесенні шаблонів шкільного твору в академічне есе.
+
+3. **Стильова непослідовність між розділами** → різкий перехід від наукового метамови в есеї до розмовного реєстру в рефлексії — порушення стилістичної цілісності портфоліо як єдиного документа; причина: учні не розглядають портфоліо як цілісний текст.
+
+---
+
+## Cross-References
+
+- **Будується на:** M22 (просодія), M26–M31 (літературознавчі теоретичні концепції — наратологія, структуралізм), M27 та M29 (наратологія), M14–M15 (індивідуальний голос у прозі)
+- **Готує до:** c2-43 (C2.2 Practice II — творче портфоліо), c2-44 (C2.2 Review), c2-45 (C2.2 Checkpoint)
+- **Зв'язок з vocab**: Технічна лексика з M26-31 (теоретичні поняття) є пресупозицією — учень має нею вільно оперувати.
+
+---
+
+## Notes for Content Writing
+
+- Модуль — **practice** (TTT), не grammar-focused: контент повинен зосередитися на виконанні та рефлексії, а не поясненні теорії.
+- Кожен розділ портфоліо має мати **зразковий міні-текст** (приклад вірша, уривок есе) — без цього учень не розуміє, якого рівня очікується.
+- **100% імерсія** (C2): жодного англійського тексту, крім перекладного стовпця словника.
+- Рекомендовано структуру TTT (Діагностика → Аналіз → Поглиблення → Практика → Вільна практика → Підсумок), адаптовану до практичного модуля.
+- Перекладацький розділ — хороше місце для коротких порівнянь (оригінал/переклад у колонках) — табличний формат доречний.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Мета та структура літературного портфоліо (Introduction: Purpose and Structure)"
+  words: 400
+  points:
+  - "Визначення літературного портфоліо як інструменту самооцінки та реалізації вимог Стандарту §4.3.6 щодо створення текстів за планом."
+  - "Аналіз часопису «Кур'єр Кривбасу» як моделі професійної багатожанрової збірки (проза, поезія, критика)."
+  - "Критерії відбору репрезентативних текстів для демонстрації творчої еволюції автора."
+- section: "Аналітичне есе: Від опису до літературознавчого аналізу (Analytical Essay: From Description to Analysis)"
+  words: 600
+  points:
+  - "Подолання помилки описовості: трансформація анотацій (що написано) в авторський аналіз (чому обрано саме такі засоби)."
+  - "Практикум з усунення гіперпасивізації: заміна конструкцій «було зображено» на активний аналітичний голос «текст репрезентує»."
+  - "Інтеграція теоретичних концепцій (наратологія, структуралізм) з посиланням на попередні модулі M26-31."
+- section: "Творча лабораторія: Поезія та проза (Creative Lab: Poetry and Prose)"
+  words: 700
+  points:
+  - "Демонстрація системи тропів за Стандартом §4.3.3: свідоме використання метафор, метонімій та перифраз для створення індивідуального голосу."
+  - "Робота з просодією (M22, M28): коментар до вибору метричних форм (ямб, верлібр) як засіб посилення художнього образу."
+  - "Нарратологічний самоаналіз прозового уривка: обґрунтування вибору точки зору та типу наратора (M27, M29)."
+- section: "Перекладацький розділ: Традиція та коментар (Translation Section: Tradition and Commentary)"
+  words: 700
+  points:
+  - "Трансформація стилів за Стандартом §4.3.7: перехід від художнього тексту оригіналу до науково-критичного коментаря перекладача."
+  - "Школа Миколи Лукаша та Григорія Кочура: застосування стандартів академічного перекладацького коментаря до власних рішень."
+  - "Порівняльний аналіз оригіналу та перекладу: обґрунтування відтворення культурних та лексичних особливостей."
+- section: "Підсумок: Рефлексія та стилістична цілісність (Summary: Reflection and Stylistic Integrity)"
+  words: 600
+  points:
+  - "Створення вторинного тексту за Стандартом §4.3.8: рефлексивний звіт як фінальний акорд самооцінки компетентностей."
+  - "Корекція стильової непослідовності: забезпечення єдиного академічного регістру в метатекстах портфоліо (есе, коментарі, рефлексія)."
+  - "Формулювання плану подальшого вдосконалення на основі ідентифікованих зон росту."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "портфоліо (portfolio) — укласти літературне портфоліо; стабільний термін академічного реєстру"
+  - "збірка (collection) — укласти збірку поезій; ключовий термін видавничої сфери"
+  - "самооцінка (self-assessment) — критерії адекватної самооцінки; психолого-педагогічний контекст"
+  - "рефлексія (reflection) — критична рефлексія над текстом; високий академічний стиль"
+  - "майстерність (mastery) — художня майстерність автора; стандарт літературної критики"
+  - "авторський коментар (author's commentary) — написати розгорнутий коментар; видавничий стандарт"
+  recommended:
+  - "когерентність (coherence) — тематична когерентність тексту; термін лінгвістики тексту"
+  - "репрезентативність (representativeness) — репрезентативність творчої вибірки; науковий реєстр"
+  - "стилістична цілісність (stylistic integrity) — зберігати цілісність документа; критерій оцінювання C2"
+  - "творча еволюція (creative evolution) — простежити еволюцію митця; публіцистичний штамп"
+  - "еклектика (eclecticism) — свідома стильова еклектика; мистецтвознавчий термін"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (3645 chars)
+✅ Message sent to Claude (ID: 11206)
+✓ Message 11206 acknowledged
+   Auto-acknowledged reply #11206 (stdout delivery — no inbox accumulation)
+✓ Message 11203 acknowledged

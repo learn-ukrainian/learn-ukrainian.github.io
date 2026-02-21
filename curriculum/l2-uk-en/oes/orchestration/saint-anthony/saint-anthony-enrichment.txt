@@ -1,0 +1,211 @@
+✅ Message sent to Gemini (ID: 13084) [auto-acked: self-addressed]
+✓ Message 13084 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #13084...
+📨 Message #13084
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-saint-anthony
+   Time: 2026-02-20T23:44:15.262828+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 93
+module: oes-093
+module_number: 93
+slug: saint-anthony
+title_uk: Святий Антоній
+title_en: Saint Anthony
+phase: 4
+phase_id: literary-art
+phase_name: Literary Art
+focus: Asceticism terminology
+content_outline:
+- section: Вступ
+  description: Introduction to Saint Anthony
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Senior Paleographer
+  role: Cave Hermit
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Saint Anthony (Антоній Печерський)
+
+## Використані джерела
+1. [Енциклопедія Сучасної України: Антоній Печерський](https://esu.com.ua/article-43013) — ґрунтовна біографічна стаття, деталі про походження з Любеча та афонський період.
+2. [Ізборник: Києво-Печерський патерик](http://litopys.org.ua/paterik/paterik.htm) — першоджерело, Слово 7 "Про преподобного Антонія".
+3. [Енциклопедія історії України: Антоній Печерський](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Antonij_Pecherskyj) — академічний огляд життя та діяльності, хронологія.
+
+## Хронологія
+- **~983**: Народження в місті Любеч (Чернігівщина). Мирське ім'я — Антип.
+- **~1013**: Перша подорож на Афон (Свята Гора), постриг під ім'ям Антоній. Повернення до Києва (за часів Володимира), але через міжусобиці після смерті Володимира (1015) повертається на Афон.
+- **1051**: Друге (остаточне) повернення до Києва за часів Ярослава Мудрого. Оселяється у печері, яку викопав пресвітер Іларіон (що став митрополитом). Початок чернечого життя на Берестові.
+- **1051–1060-ті**: Згуртування навколо Антонія 12 учнів (серед них Феодосій, Никон). Викопання Великої печери.
+- **~1062**: Перехід братії з печер на поверхню, побудова першої дерев'яної церкви Успіння Богородиці. Антоній усамітнюється в новій печері (Ближні печери).
+- **1069**: Конфлікт з князем Ізяславом Ярославичем (через симпатію Антонія до Всеслава Полоцького). Втеча до Чернігова під захист Святослава Ярославича. Заснування печерного монастиря на Болдиних горах.
+- **10 липня 1073**: Смерть у Києві. Похований у Ближніх печерах (мощі під спудом).
+
+## Ключові факти та цитати
+- **Аскетизм**: Антоній був прихильником суворого аскетизму (ісихазму) — затворництво, мовчання, сухий піст. На відміну від Феодосія, який запровадив Студійський статут (спільножительний), Антоній уособлював пустельницьку традицію.
+- **Цитата (благословення Афону)**: «Іди в Русь знову, і хай буде благословення Святої Гори, бо від тебе піде багато ченців». (Оригінал реконструкція: *«Иди в Русь, и буди благословленіе отъ Святыя Горы, яко отъ тебе мнози чернци быти имуть»*).
+- **Цитата (молитва за Лавру)**: «Господи! Дай місцю сьому благословення святої Афонської гори і молитву отця мого, що постриг мене».
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ": [!history-bite] — Антоній не заснував Лавру "одразу". Спочатку це була просто печера Іларіона, яку він покинув, ставши митрополитом.
+- Section "Основний матеріал: I — Подорож на Афон": [!context] — Пояснити, що таке Афон у XI ст. — центр православного світу, "чернеча республіка".
+- Section "Основний матеріал: II — Печерне життя": [!paleography] — Опис графіті на стінах печер (якщо такі є з того періоду) або структури печерних келій.
+- Section "Основний матеріал: III — Заснування Лаври": [!myth-buster] — Лавра — це не "російська" святиня. Її коріння — прямий трансфер візантійської (афонської) традиції в Київ, оминаючи будь-які північні впливи.
+- Section "Основний матеріал: IV — Чернігівський період": [!culture] — Болдині гори в Чернігові як другий центр "антонієвої" традиції. Зв'язок Чернігова і Києва.
+- Section "Підсумок": [!decolonization] — Антоній — "начальник усіх руських ченців" (де "руських" = українських/києво-руських, а не російських).
+
+## Деколонізаційний контекст
+- **Imperial Myth**: Російська церква (РПЦ) намагається привласнити спадщину Антонія, називаючи його "русским святым" і ігноруючи той факт, що його діяльність була обмежена теренами сучасної України (Київ, Чернігів). Москва як місто на той час навіть не згадується як значущий центр.
+- **Ukrainian Reality**: Традиція Антонія — це києвоцентрична духовна школа. Його зв'язки були з Візантією (Афон) та українськими князівствами (Київським, Чернігівським). Це частина української національної ідентичності.
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian (decolonized) framing |
+|---------|-----------------|-------------------------------|
+| Руський (у контексті XI ст.) | Русскій (Russian) | Руський (Ruthenian/Kyivan) |
+| Києво-Печерська Лавра | Колиска "трьох братніх народів" | Перший і найважливіший монастир України-Руси |
+| Православ'я на Русі | "Русское православие" | Київське християнство (відкрите до Візантії) |
+
+## Section-Mapped Research Notes
+
+### Вступ
+Святий Антоній (мирське ім'я Антип) — уродженець Любеча. Його постать є ключовою для розуміння духовного ландшафту XI ст. Він не просто монах, а "законодавець" аскетичної традиції.
+
+### Основний матеріал: I — Подорож на Афон і постриг
+Потяг до духовного життя з юності. Подорож "у Греки". Перебування на Афоні (ймовірно, монастир Есфігмен). Отримання благословення від ігумена на повернення в Русь для поширення чернецтва. Це акт духовної трансплантації: Афон → Київ.
+
+### Основний матеріал: II — Печерне життя і перші учні
+1051 рік — ключова дата (згадка в "Повісті минулих літ"). Печера Іларіона (майбутнього митрополита) на Берестові. Аскеза: сухий хліб, вода, копання печери. Прихід учнів: Никон (літописець), Феодосій (організатор). Число 12 як символ апостольства.
+
+### Основний матеріал: III — Заснування Лаври
+Коли братії стало багато, Антоній благословляє будівництво церкви на горі (над печерами). Перехід від "печерного" (ермітного) до "монастирського" (кіновійного) життя, хоча сам Антоній залишається самітником (затворником). Призначення ігуменів: Варлаама, потім Феодосія.
+
+### Основний матеріал: IV — Чернігівський період і конфлікти
+Складні стосунки з княжою владою. Гнів Ізяслава. Втеча в Чернігів до Святослава. Заснування Богородичного монастиря на Болдиних горах (Антонієві печери в Чернігові). Повернення до Києва після примирення (або смерть у Києві — джерела різняться, але мощі в Києві).
+
+### Основний матеріал: V — Спадщина і канонізація
+Смерть 1073 р. Мощі "під спудом" (ніколи не були відкриті). Шанування як "начальника всіх ченців". Патерик як основне джерело відомостей (літературний пам'ятник).
+
+### Практика
+Робота з текстом Патерика. Аналіз лексики: *печера, постъ, молитва, бдѣніе (бдіння), затворъ*. Вправи на розпізнавання форм аористу та імперфекту в житійних текстах.
+
+### Підсумок
+Антоній як символ київської духовної автономії. Його спадщина жива в Лаврі та Чернігові.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 13114)
+✓ Message 13084 acknowledged
+✓ Message 13114 acknowledged

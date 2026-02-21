@@ -1,0 +1,309 @@
+✅ Message sent to Gemini (ID: 10245) [auto-acked: self-addressed]
+✓ Message 10245 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10245...
+📨 Message #10245
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-health-wellness
+   Time: 2026-02-20T20:04:50.798571+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: a2-55
+level: A2
+sequence: 55
+slug: health-wellness
+version: '2.0'
+title: Health & Wellness
+subtitle: Wellness, Traditional Medicine & Healthy Lifestyle
+content_outline:
+- section: Introduction / Вступ
+  points:
+  - 'From illness to wellness — transition from a2-34 (body/symptoms) to broader health
+    concepts; cultural hook: «Здоров''я — найбільше багатство»'
+  - 'Ukrainian wellness culture — holistic approach: physical, mental, spiritual health
+    as interconnected; contrast with Western "gym culture"'
+- section: Здоровий спосіб життя
+  points:
+  - 'Daily wellness vocabulary — правильне харчування, фізичні вправи, здоровий сон;
+    collocations: вести здоровий спосіб життя, дотримуватися режиму'
+  - 'Mental health basics — стрес, відпочинок, настрій; cultural note: growing awareness
+    of mental health in Ukraine, especially post-2022'
+  - 'Fitness and exercise — зарядка, пробіжка, йога; cultural hook: outdoor fitness
+    equipment in Ukrainian parks (вуличні тренажери)'
+- section: Народна медицина
+  points:
+  - 'Herbal remedies — чай з малиною (raspberry tea for colds), калина (viburnum),
+    липа (linden); cultural hook: every Ukrainian grandmother''s pharmacy'
+  - 'Traditional practices — гірчичники (mustard plasters), банки (cupping), мед з
+    молоком; learner error: these are actual current practices, not just folklore'
+  - 'Баня/сауна culture — cultural hook: steam baths as wellness tradition; collocations:
+    паритися в бані, березовий віник'
+- section: Система охорони здоров''я
+  points:
+  - 'Healthcare system overview — поліклініка vs лікарня; cultural hook: medical reform
+    and декларація з сімейним лікарем'
+  - 'Types of medical facilities — аптека, стоматологія, приватна клініка; collocations:
+    цілодобова аптека, чергова аптека'
+  - 'Health insurance and costs — медичне страхування, безкоштовна медицина; cultural
+    note: evolution of Ukrainian healthcare from Soviet free model'
+- section: Practice / Практика
+  points:
+  - Wellness advice dialogues — giving health tips using треба/варто + infinitive
+  - Comparing wellness practices — traditional vs modern approaches
+- section: Dialogues / Діалоги
+  points:
+  - At the wellness center — discussion about healthy lifestyle choices
+  - Grandma's remedies vs modern medicine — generational dialogue about health practices
+focus: vocabulary
+pedagogy: PPP
+objectives:
+- Learner can discuss healthy lifestyle in Ukrainian
+- Learner can describe traditional Ukrainian remedies
+- Learner can navigate the healthcare system vocabulary
+- Learner can give and understand wellness advice
+grammar:
+- wellness vocabulary and collocations
+- advice structures (треба, варто, потрібно + infinitive)
+- comparison of practices (більш/менш корисний)
+- healthcare system terminology
+module_type: vocabulary
+sources:
+- name: Ukrainian State Standard 2024 - Health and Hygiene
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Standards for health vocabulary and wellness at A2
+immersion: 75-90% Ukrainian
+phase: A2.5
+persona:
+  voice: Encouraging Cultural Guide
+  role: Yoga Instructor
+vocabulary_hints:
+  required:
+  - 'здоров''я (health) — collocations: міцне здоров''я, піклуватися про здоров''я'
+  - здоровий (healthy) — здоровий спосіб життя, здорове харчування
+  - ліки (medicine) — пити ліки, ліки від грипу, народні ліки
+  - малина (raspberry) — чай з малиною (universal cold remedy)
+  - аптека (pharmacy) — цілодобова аптека, чергова аптека
+  - харчування (nutrition) — правильне харчування, здорове харчування
+  - відпочинок (rest/relaxation) — активний відпочинок, повноцінний відпочинок
+  recommended:
+  - калина (viburnum) — traditional remedy, cultural symbol
+  - гірчичники (mustard plasters) — traditional remedy still in use
+  - зарядка (morning exercises) — робити зарядку
+  - стрес (stress) — знімати стрес, боротися зі стресом
+  - страхування (insurance) — медичне страхування
+  - поліклініка (outpatient clinic) — районна поліклініка
+activity_hints:
+- type: match-up
+  focus: Wellness vocabulary
+  items: 25
+- type: fill-in
+  focus: Health advice with треба/варто
+  items: 15
+- type: quiz
+  focus: Traditional vs modern remedies
+  items: 15
+- type: fill-in
+  focus: Healthcare system navigation
+  items: 10
+word_target: 3000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Health and Body
+
+## State Standard Reference
+§3.12: "Здоров’я й особиста гігієна: частини тіла; особиста гігієна; самопочуття; хвороби й нездужання; візит до лікаря; аптека."
+Alignment: This module directly addresses the "Health and personal hygiene" theme by introducing body parts, symptoms, and medical interactions.
+
+§4.2.2.3 (Давальний відмінок): "особа або предмет, для яких (на користь чи на шкоду) відбувається дія... суб’єкт кількісної вікової ознаки".
+Alignment: Supports the grammar of "medical advice" and "symptoms" (often expressed with Dative or Genitive + preposition structures like "Мені погано" or "У мене болить").
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| **голова** (head) | High / General Corpus | болить голова, крутиться голова |
+| **рука/нога** (arm/leg) | High / General Corpus | права/ліва рука, зламати ногу |
+| **боліти** (to hurt) | High / Medical & General | сильно болить, болить горло/живіт/зуб |
+| **температура** (fever) | High / Medical | висока температура, міряти температуру |
+| **лікар** (doctor) | High / General | йти до лікаря, викликати лікаря |
+| **ліки** (medicine) | Medium / Medical | пити ліки, ліки від грипу |
+| **горло** (throat) | High / Seasonal | червоне горло, болить горло |
+
+## Cultural Hooks
+1. **Tea as Medicine**: Ukrainians often treat colds primarily with hot tea containing raspberry jam ("чай з малиною"), viburnum ("калина"), or honey and lemon, rather than immediately using pharmaceuticals.
+2. **"Hirchychnyky" (Mustard Plasters)**: A traditional remedy often mentioned by older generations (and still used) for coughing/bronchitis, though less common in modern evidence-based medicine. Mentioning "чай з малиною" is a safer, universally recognized cultural touchpoint.
+3. **Proverb**: "Здоров'я — найбільше багатство" (Health is the greatest wealth) or "У здоровому тілі — здоровий дух" (A healthy mind in a healthy body).
+
+## Common Learner Errors
+1. **"Я болить..."** → **"У мене болить..."** (or **"Мені болить..."**) — Learners often try to translate "I hurt" directly with Nominative "I", but Ukrainian uses an impersonal construction where the body part is the subject.
+2. **Subject-Verb Agreement**: **"У мене болить ноги"** → **"У мене болять ноги"** — Learners forget to change the verb to plural when the body part is plural.
+3. **Confusing "лікар" vs "лікарня"**: Using "лікарня" (hospital) when they mean "лікар" (doctor), e.g., "Я йду в лікарню" instead of "Я йду до лікаря" for a simple check-up.
+
+## Cross-References
+- Builds on: `a1-05-body` (Basic body parts), `a1-30-imperative` (Basic commands).
+- Prepares for: `b1-health-system` (More complex medical interactions), `b1-imperative-advanced`.
+
+## Notes for Content Writing
+- Focus heavily on the **"У мене болить [X]"** construction as it is the core grammatical hurdle.
+- Keep medical advice simple: "Треба пити чай", "Не можна ходити на роботу".
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Здоров'я — найбільше багатство (Introduction: Health is the Greatest Wealth)"
+  words: 400
+  points:
+  - "Transition from a2-34 (symptoms/body) to holistic wellness; introducing the proverb «Здоров'я — найбільше багатство» as a cultural motivator for self-care."
+  - "Overview of the Ukrainian wellness concept: physical, mental, and spiritual health as an interconnected trinity; comparison with Western fitness concepts."
+- section: "Презентація: Моє тіло та самопочуття (Presentation: My Body and Well-being)"
+  words: 700
+  points:
+  - "Core grammatical construction: «У мене болить [частина тіла]» vs learner error «Я болить»; mandatory drill on plural agreement: «болить зуб» vs «болять зуби»."
+  - "Describing state and symptoms per §3.12: «міряти температуру», «червоне горло», «крутиться голова»; using Dative case (§4.2.2.3) for impersonal states: «мені погано», «мені краще»."
+  - "Body part review (голова, рука, нога, живіт) integrated with symptoms; distinguishing between acute pain and general 'unwellness' (нездужання)."
+- section: "Здоровий спосіб життя та ментальне здоров'я (Healthy Lifestyle and Mental Health)"
+  words: 600
+  points:
+  - "Daily routine vocabulary: «правильне харчування» (nutrition), «здоровий сон», «робити зарядку»; focus on collocations like «вести здоровий спосіб життя»."
+  - "Mental health awareness: «стрес», «настрій», «відпочинок»; cultural note on the growing importance of mental health in Ukraine post-2022; using «треба/варто» to give advice: «варто більше відпочивати»."
+  - "Fitness culture: «пробіжка», «йога», and the cultural phenomenon of «вуличні тренажери» (outdoor gym equipment) found in Ukrainian public parks."
+- section: "Народна медицина та традиційні практики (Traditional Medicine and Traditional Practices)"
+  words: 600
+  points:
+  - "Herbal tea culture as primary medicine: «чай з малиною» (universal cold remedy), «калина» (viburnum), and «липа» (linden); cultural hook: why every Ukrainian has raspberry jam in the fridge."
+  - "Traditional remedies: «гірчичники» (mustard plasters) and «банки» (cupping); addressing learner surprise that these are contemporary practices, not just historical folklore."
+  - "Wellness traditions: «баня» (steam bath) and «сауна» culture; essential vocabulary for the ritual: «паритися в бані», «березовий віник» (birch whisk)."
+- section: "Система охорони здоров'я та аптека (Healthcare System and Pharmacy)"
+  words: 700
+  points:
+  - "Navigating the system: distinguishing «лікар» (the person) from «лікарня» (the hospital) to fix common learner errors like «я йду в лікарню» for a check-up."
+  - "Modern healthcare context: «сімейний лікар», «декларація», and «приватна клініка»; comparing the Soviet 'free' model with current medical insurance («медичне страхування»)."
+  - "Pharmacy (аптека) interactions: asking for «ліки від грипу/кашлю»; identifying «цілодобова аптека» (24/7) and the concept of «чергова аптека»."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "здоров'я (health) — collocations: міцне здоров'я, піклуватися про здоров'я"
+  - "здоровий (healthy) — здоровий спосіб життя (lifestyle), здорове харчування (nutrition)"
+  - "боліти (to hurt) — high frequency; construction: у мене болить + Nom.; plural: болять"
+  - "голова (head) — collocations: болить голова, крутиться голова (dizzy)"
+  - "лікар (doctor) — vs лікарня (hospital); йти до лікаря, викликати лікаря"
+  - "ліки (medicine) — пити ліки, ліки від грипу (cold), народні ліки"
+  - "аптека (pharmacy) — цілодобова аптека, чергова аптека"
+  - "температура (fever/temperature) — міряти температуру, висока температура"
+  recommended:
+  - "малина (raspberry) — чай з малиною (universal cold remedy)"
+  - "калина (viburnum) — traditional remedy and cultural symbol"
+  - "гірчичники (mustard plasters) — traditional remedy for coughs"
+  - "харчування (nutrition) — правильне харчування, здорове харчування"
+  - "зарядка (morning exercise) — робити зарядку"
+  - "відпочинок (rest/relaxation) — повноцінний відпочинок, активний відпочинок"
+  - "стрес (stress) — знімати стрес, боротися зі стресом"
+  - "страхування (insurance) — медичне страхування (health insurance)"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4278 chars)
+✅ Message sent to Claude (ID: 10254)
+✓ Message 10254 acknowledged
+   Auto-acknowledged reply #10254 (stdout delivery — no inbox accumulation)
+✓ Message 10245 acknowledged

@@ -17,12 +17,11 @@
 > - **View status**: `/module-status {level} {num}` or `/level-status {level}`
 > - **Update cache**: `.venv/bin/python scripts/audit_module.py {path}`
 
-> **Cross-session Memory (MCP):**
-> - Memory server: `@modelcontextprotocol/server-memory` — active after Claude Code restart
-> - Storage: `tasks/memory.json` (local knowledge graph)
-> - At session start: query memory + Gemini inbox before starting work
-> - At session end: save progress summary to memory
-> - Tools: `mcp__memory__search_nodes`, `mcp__memory__add_observations`, `mcp__memory__create_entities`
+> **Cross-session Memory (MCP — `memory` server):**
+> - **What**: Local knowledge graph for persisting context across sessions
+> - **Storage**: `tasks/memory.json`
+> - **Tools**: `mcp__memory__search_nodes`, `mcp__memory__create_entities`, `mcp__memory__add_observations`, `mcp__memory__open_nodes`, `mcp__memory__read_graph`
+> - **NOT the same as** the message broker (`mcp__message-broker__*`) — that's for Gemini comms
 
 ---
 
@@ -252,29 +251,35 @@ See `docs/SCRIPTS.md` for complete reference.
 
 ---
 
-## Session Start Checklist
+## Session Start/End Checklist
 
 > **AT SESSION START:**
-> 1. **Load memory** — query what was in progress last session:
+> 1. **Project state** — run `scripts/session_start.sh` or:
+>    ```bash
+>    curl -s http://localhost:8765/api/state/summary | python3 -m json.tool
+>    ```
+> 2. **Load memory** (knowledge graph — `mcp__memory__*`):
 >    ```python
->    mcp__memory__search_nodes(query="in progress current session")
+>    mcp__memory__search_nodes(query="current session progress")
 >    mcp__memory__search_nodes(query="next session todo")
 >    ```
-> 2. Check inbox for notifications from Gemini:
+> 3. **Check Gemini inbox** (message broker — `mcp__message-broker__*`):
 >    ```python
 >    mcp__message-broker__check_inbox(for_llm="claude")
 >    ```
-> 3. If unread messages, read them and respond on GitHub
-> 4. Begin work based on memory + inbox context
+> 4. If unread messages, read and respond on GitHub
+> 5. Begin work based on state + memory + inbox
 
-> **AT SESSION END** (or when switching context):
-> Update memory with what was done and what's next:
-> ```python
-> mcp__memory__add_observations(observations=[{
->     "entityName": "current-session",
->     "contents": ["Did: X. In progress: Y. Next session: Z."]
-> }])
-> ```
+> **AT SESSION END:**
+> 1. Save what you did and what's next to the **memory** knowledge graph:
+>    ```python
+>    mcp__memory__create_entities(entities=[{
+>        "name": "session-YYYY-MM-DD",
+>        "entityType": "session",
+>        "observations": ["Did: X. In progress: Y. Next: Z."]
+>    }])
+>    ```
+> 2. Optionally run `scripts/session_end.sh` to see git changes + project state
 
 ---
 
@@ -311,14 +316,21 @@ Full reference: [`docs/MONITOR-API.md`](docs/MONITOR-API.md)
 # Session start — one call to know project state
 curl -s http://localhost:8765/api/state/summary | python3 -m json.tool
 
+# Live build progress — one track or all tracks
+curl -s http://localhost:8765/api/state/build-status/a1 | python3 -m json.tool
+curl -s http://localhost:8765/api/state/build-status | python3 -m json.tool
+
+# Single module deep-dive (phases + audit + research + review + comms)
+curl -s http://localhost:8765/api/state/module/a1/9 | python3 -m json.tool
+
+# Phase F final review results per track
+curl -s http://localhost:8765/api/state/final-reviews/a1 | python3 -m json.tool
+
+# Communication trail for a module
+curl -s http://localhost:8765/api/comms/by-module/a1/reflexive-verbs | python3 -m json.tool
+
 # What's building right now
 curl -s http://localhost:8765/api/batch/active
-
-# v3 pipeline state for a specific track
-curl -s http://localhost:8765/api/state/pipeline/c1-hist | python3 -m json.tool
-
-# What's ready to build next (Phase A done, Phase B not started)
-curl -s http://localhost:8765/api/state/ready-to-build | python3 -m json.tool
 
 # Failing/weak modules in a track
 curl -s "http://localhost:8765/api/state/weak-points?track=c1-bio" | python3 -m json.tool

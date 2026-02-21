@@ -24,7 +24,7 @@ Imagine a timeline:
 ### Ukrainian Future is Simple
 I have great news for you. In English, the future tense can be complex: "I will", "I am going to", "I shall", "I am doing (tomorrow)". In Ukrainian for beginners, everything is much simpler. You do not need to memorize many different constructions.
 
-You need only one small helper word — **буду** [ˈbudʊ] (I will be). You simply add it to the word you already know — and just like that, you are speaking about the future. Українська мова — це музика. Слухайте і говоріть.
+You need only one small helper word — **буду** [ˈbudʊ] (I will be). You simply add it to the word you already know — and just like that, you are speaking about the future. Українська мова — це музика. Слухайте і говоріть. (The Ukrainian language is music. Listen and speak.)
 
 > [!tip]
 > **Teacher's Tip**
@@ -97,7 +97,7 @@ If your plans are more concrete, use the verb **збиратися** [zbɪˈrɑt
 
 *   Я **збираюся** читати книгу. (I am going to read a book.)
 *   Ми **збираємося** в кіно. (We are going to the cinema.)
-*   Він **збирається** [zbɪˈrɑjetʲsʲa] працювати. (He is going to work.)
+*   Він **збирається** [zbɪˈrɑjet͡sʲːa] працювати. (He is going to work.)
 *   Ти **збираєшся** спати? (Are you going to sleep?)
 *   Вони **збираються** гуляти. (They are going to walk.)
 
@@ -107,7 +107,7 @@ Note the ending **-ся**. This is a reflexive verb. We conjugate it a bit diffe
 
 > [!cultural]
 > **"Do not say hop"**
-> In Ukrainian culture, people often speak carefully about big plans. There is a famous proverb about not boasting about success until the job is done. Ukrainians say: "Don't say 'hop'!" («Не кажи 'гоп'!»). So Ukrainians might say "I plan..." or "I hope..." instead of a firm "I will do!".
+> In Ukrainian culture, people often speak carefully about big plans. There is a famous proverb about not boasting about success early. Ukrainians say: «Не кажи 'гоп'!» — "Don't say 'hop'!" In other words, do not celebrate before you finish. So Ukrainians might say "I plan..." or "I hope..." instead of a firm "I will do!".
 
 ### Comparison: Want, Intend, Will
 
@@ -201,7 +201,7 @@ Both options are correct. Choose the one that is more comfortable for you!
 Now that we have grammar and vocabulary, let's talk about the most pleasant thing — rest!
 
 ### Словник: Відпочинок (Vocabulary of Rest)
-*   **вихідні** [ʋɪˈxidnʲi] — weekend (literally: exit days)
+*   **вихідні** [ʋɪxidˈnʲi] — weekend (literally: exit days)
 *   **відпустка** [ʋidˈpustkɑ] — vacation / leave (from work)
 *   **канікули** [kɑˈnʲikulɪ] — holidays / break (school/university)
 
@@ -248,7 +248,7 @@ Here is how we can describe our dreams about rest:
 Студенти Максим та Ірина розмовляють в університеті.
 
 **Максим:** Скоро **канікули**. У тебе вже є **плани**?
-**Ірина:** Так! **Наступного тижня** я їду додому, до батьків.
+**Ірина:** Так! **Наступного тижня** я **буду** вдома, у батьків.
 **Максим:** Класно. Ти **будеш** там довго?
 **Ірина:** Два тижні. Ми **будемо гуляти**, їсти смачну їжу і просто говорити.
 **Максим:** Звучить ідеально.
@@ -256,7 +256,7 @@ Here is how we can describe our dreams about rest:
 **Максим:** Я **буду працювати**. Я хочу купити новий телефон.
 **Ірина:** Успіхів!
 
-*Зауважте (Note):* Maksym uses "буду працювати" because it is a long process. Iryna uses "будемо гуляти" to describe how they will spend time.
+*Зауважте (Note):* Maksym uses "буду працювати" because it is a long process. Iryna uses "буду вдома" to describe where she will be, and "будемо гуляти" to describe how they will spend time.
 
 ### Діалог 3: Вихідні (Weekend)
 Мама і син говорять.
@@ -272,11 +272,11 @@ Here is how we can describe our dreams about rest:
 Уявіть ваш ідеальний день. Прочитайте текст і знайдіть всі дієслова у майбутньому часі.
 
 ### Text: Tomorrow
-Завтра буде чудовий день. Вранці я **буду спати** [spɑtɪ] довго. Потім я **буду снідати** [sʲnʲidɑtɪ] в кафе. Я буду пити каву і їсти круасан.
+Завтра буде чудовий день. Вранці я **буду спати** [ˈspɑtɪ] довго. Потім я **буду снідати** [sʲnʲiˈdɑtɪ] в кафе. Я буду пити каву й їсти круасан.
 
 Вдень я **буду читати** цікаву книгу в парку. Сонце **буде світити**. Я **не буду думати** про роботу.
 
-Увечері мої друзі **будуть дзвонити**. Ми **будемо вечеряти** разом у ресторані. Ми **будемо сміятися** і говорити про життя. Це буде ідеальний день! Я буду дуже щасливий. Ми будемо планувати нашу відпустку. Скоро буде літо!
+Увечері я **буду** з друзями. Ми **будемо вечеряти** разом у ресторані. Ми **будемо сміятися** і говорити про життя. Це буде ідеальний день! Я буду дуже щасливий. Ми будемо планувати нашу відпустку. Скоро буде літо!
 
 ### Text: My Plans (Мої плани)
 Привіт! Мене звати Оля. У мене є великі плани. Завтра я буду працювати. Я буду писати статтю. Потім я буду обідати. Я хочу їсти салат. Увечері я буду відпочивати. Я буду слухати музику. Наступного тижня я буду у Львові. Я буду гуляти містом. Я буду пити каву. Я буду дуже щаслива. А які у тебе плани?

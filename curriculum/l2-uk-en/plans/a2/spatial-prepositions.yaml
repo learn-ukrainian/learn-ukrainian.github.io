@@ -6,60 +6,88 @@ version: '2.0'
 title: Spatial Prepositions
 subtitle: Location and Motion
 content_outline:
-- section: Introduction / Вступ
+- section: Вступ (Introduction)
+  words: 450
   points:
-  - Key distinction in Ukrainian (куди? vs де?) — emphasize using a decision table
-    or flowchart per research notes — aligns with State Standard §4.2.2.4.2 (Motion)
-    and §4.2.2.5.2 (Location)
-  - Pattern recognition strategies — aligns with State Standard §4.2.2.5.2 for expanded
-    spatial relations
-- section: Presentation / Презентація
+  - 'Introduce the ''Interior Designer'' persona: the mission is to organize a traditional
+    Ukrainian ''khata'' (house) using precise spatial logic.'
+  - Establish the core distinction between 'куди?' (whither/motion) and 'де?' (where/location)
+    as the fundamental decision point in Ukrainian spatial grammar.
+  - 'Reference Ukrainian State Standard §4.2.2.4.2 and §4.2.2.6 to frame the learning
+    goals: mastering Accusative for destinations and Locative/Instrumental for static
+    positions.'
+- section: 'Презентація: В, На та Орудний відмінок (Presentation: V, Na and Instrumental)'
+  words: 900
   points:
-  - 'в/у and на + Acc/Loc patterns — learner error: Static vs. Motion Confusion (e.g.,
-    *Я йду в школі* vs. *Я йду в школу*); learner error: Misuse of *В* vs. *На* (*В
-    вулиці* vs. *На вулиці*)'
-  - 'Instrumental prepositions (під, за, над, перед, між) — cultural hook: The Stove
-    (*Піч*) as the heart of the home (sleeping *на печі*, hiding *за піччю*) — note:
-    *над* and *під* govern Instrumental for location'
-  - 'Genitive prepositions (до, з, біля) — cultural hook: The Sacred Corner (*Покуття*)
-    located opposite (*напроти*) the stove; learner error: Incorrect Case usage (e.g.,
-    *Біля магазин* vs. *Біля магазину*)'
-- section: Practice / Практика
+  - 'Contrast ''в/у'' vs ''на'' + Locative for static location. Explicitly address
+    the ''В vs. На'' learner error: explain usage for surface/open spaces (на вулиці,
+    на концерті) vs. enclosed spaces (в хаті).'
+  - Present Instrumental prepositions (над, під, перед, за, між) using the 'Піч' (stove)
+    as the cultural anchor. Items are stored 'за піччю', children sleep 'на печі'
+    (Locative contrast).
+  - Introduce Genitive prepositions (біля, навпроти, до). Highlight 'Покуття' (sacred
+    corner) as being 'навпроти' the stove and describe 'до' as the primary preposition
+    for 'to/towards' motion (State Standard §4.2.2.4.2).
+  - 'Highlight the hospitality hook: guests are seated ''на покутті'' (at the sacred
+    corner) or ''за столом'' (at the table), illustrating the most honorable places
+    in the home.'
+- section: 'Практика: Відмінки та Рух (Practice: Cases and Motion)'
+  words: 650
   points:
-  - Diagram labeling — e.g., 'Where is the cat?' logic for static positions — reinforce
-    'де?' question word
-  - 'Motion sequences — distinguishing destination vs. location — address learner
-    error: using Locative for motion (e.g., *Я йду в школі*)'
-- section: Dialogues / Діалоги
+  - 'Targeted drill: Locative for static position vs. Accusative for destination with
+    ''в/у'' and ''на''. Focus on correcting the common learner error ''Я йду в школі''
+    (Incorrect) vs ''Я йду в школу'' (Correct).'
+  - 'Command drills for the ''Designer'': ''Поставте лампу над столом'' (Instr) vs
+    ''Покладіть книгу на стіл'' (Acc). Reinforce the path vs. place distinction found
+    in State Standard §4.2.2.5.2.'
+  - 'Case governance exercise for Genitive prepositions: fixing the common error ''біля
+    магазин'' into the correct ''біля магазину'' through pattern recognition.'
+- section: 'Діалоги: Облаштування хати (Dialogues: Arranging the House)'
+  words: 650
   points:
-  - 'Asking for directions — using *до*, *напроти*, *біля* — context: identifying
-    landmarks'
-  - Describing a room — leveraging cultural context of a traditional *khata* layout
-    — use *Піч* and *Покуття* as anchors
+  - 'Persona Dialogue: ''Designing the Room''. Use prepositions to describe a traditional
+    layout: ''Покуття знаходиться навпроти печі'', ''Ми ставимо ікони над столом''.'
+  - 'Interactive Directions Scenario: Asking ''як дійти до...'' using ''навпроти'',
+    ''біля'', ''вздовж'', and landmarks. Incorporate the Interior Designer''s eye
+    for identifying landmarks like the university or theatre.'
+- section: Підсумок (Summary)
+  words: 350
+  points:
+  - 'Final decision table recap: Preposition + Intention (static vs. motion) = Case
+    selection. Consolidate Locative, Instrumental, and Genitive rules.'
+  - 'Cultural closing: Review how the Ukrainian world-view organizes space around
+    the stove and the sacred corner, reinforcing vocabulary like ''піч'', ''покуття'',
+    and ''гостинність''.'
 vocabulary_hints:
   required:
-  - 'в/у (in/into) — Very High Freq; collocations: в Україні, в хаті, в кімнату'
-  - 'на (on/onto) — Very High Freq; collocations: на столі, на вулиці, на гору'
-  - 'під (under) — Medium Freq; collocations: під столом, під гору, під порогом'
-  - 'над (above) — Medium Freq; collocations: над столом, над головою, над іконами'
-  - 'перед (in front of) — Medium Freq; collocations: перед будинком, перед входом'
-  - 'за (behind) — High Freq; collocations: за піччю (location), за річку (motion)'
-  - 'між (between) — Medium Freq; collocations: між горами, між друзями'
-  - 'до (to) — High Freq; collocations: до готелю, додому, до школи'
-  - 'з/із (from) — High Freq; collocations: з Києва, зі столу, із хати'
-  - 'напроти (opposite) — Low-Medium Freq; collocations: напроти університету, напроти
-    входу'
-  - 'біля (near) — Medium Freq; collocations: біля театру, біля вікна, біля хати'
-  - коло (near)
-  - поруч (nearby)
-  - 'навколо (around) — note: ensure IPA for stressed vowels [наˈўкɔлɔ]'
-  - вздовж (along)
+  - в/у (in/into) — Very High Freq; Locative for location (в хаті), Accusative for
+    motion (в хату)
+  - на (on/onto) — Very High Freq; used for surfaces and open spaces (на вулиці, на
+    концерті)
+  - під (under) — High Freq; Instrumental for location (під столом), Accusative for
+    motion (під стіл)
+  - за (behind/at) — High Freq; Instrumental for location (за піччю), Accusative for
+    motion (за дерево); also 'at the table' (за столом)
+  - 'між (between) — Medium Freq; Instrumental case; collocations: між вікнами, між
+    людьми'
+  - 'біля (near) — High Freq; always Genitive; collocations: біля театру, біля вікна,
+    біля хати'
+  - 'до (to/towards) — Very High Freq; motion to destination; Genitive case; collocations:
+    додому, до школи'
+  - 'навпроти (opposite) — Medium Freq; Genitive; stressed [наўˈпрɔти]; collocations:
+    навпроти ікон, навпроти входу'
+  - 'перед (in front of) — Medium Freq; Instrumental; collocations: перед будинком,
+    перед входом'
+  - 'над (above) — Medium Freq; Instrumental; collocations: над столом, над головою'
+  - навколо (around) — stressed [наўˈкɔлɔ]; requires Genitive case
+  - вздовж (along) — used for paths/roads; requires Genitive case
+  - поруч (nearby) — often used as an adverb or with 'з' + Instrumental
   recommended:
-  - всередині (inside)
-  - ззовні (outside)
-  - посеред (in the middle)
-  - збоку (on the side)
-  - поміж (among)
+  - всередині (inside) — Genitive; contrast with 'ззовні'
+  - ззовні (outside) — Genitive
+  - 'посеред (in the middle) — Genitive; collocations: посеред кімнати'
+  - 'збоку (on the side) — Genitive; collocations: збоку від дверей'
+  - поміж (among) — Medium Freq; variant of 'між'
 activity_hints:
 - type: fill-in
   focus: Motion vs location cases

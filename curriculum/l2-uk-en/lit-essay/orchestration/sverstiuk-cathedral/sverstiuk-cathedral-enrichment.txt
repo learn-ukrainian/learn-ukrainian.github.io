@@ -1,0 +1,234 @@
+✅ Message sent to Gemini (ID: 12071) [auto-acked: self-addressed]
+✓ Message 12071 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12071...
+📨 Message #12071
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-sverstiuk-cathedral
+   Time: 2026-02-20T23:35:51.409819+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 22
+module: lit-essay-22
+level: LIT.ESSAY
+slug: sverstiuk-cathedral
+version: '2.0'
+title: Sverstiuk Cathedral
+subtitle: Sverstiuk Cathedral
+content_outline:
+- section: Вступ та контекст
+  points: []
+- section: Аналіз ключових творів
+  points: []
+- section: Стилістика та мова автора
+  points: []
+- section: Деколонізаційна перспектива
+  points:
+  - Як цей автор руйнує імперські міфи
+  - Українська суб'єктність у тексті
+- section: Підсумок та спадщина
+  points: []
+vocabulary_hints:
+  required:
+  - історіографія
+  - наратив
+  - суб'єктність
+  recommended:
+  - деколонізація
+activity_hints:
+- type: reading
+  focus: Аналіз першоджерела
+- type: essay-response
+  focus: Критичне есе
+- type: critical-analysis
+  focus: Деконструкція тексту
+focus: literature
+pedagogy: literature
+immersion: 100% Ukrainian
+phase: LIT Expansion
+objectives:
+- Проаналізувати творчість Sverstiuk Cathedral у контексті української літератури
+- Дослідити вплив автора на формування національної ідентичності
+persona:
+  voice: Senior Specialist
+  role: Moral Dissident
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Євген Сверстюк, «Собор у риштованні»
+
+## Використані джерела
+1. [Енциклопедія Сучасної України (ЕСУ)](https://esu.com.ua/) — Стаття про Євгена Сверстюка: життєпис, філософсько-етичні погляди, дисидентська діяльність.
+2. [Енциклопедія історії України (Історичний портал)](http://resource.history.org.ua/) — Матеріали про рух шістдесятників, самвидав та кампанію проти роману Олеся Гончара «Собор».
+3. [Ізборник (Історія української літератури)](http://litopys.org.ua/) — Аналіз української есеїстики другої половини ХХ століття та літературно-критичної спадщини Сверстюка.
+
+## Хронологія
+- **1928**: Народження Євгена Сверстюка в селі Сільце на Волині (формування в середовищі глибоких християнських і національних традицій).
+- **1968**: Публікація роману Олеся Гончара «Собор» та початок агресивної ідеологічної кампанії проти твору та його автора з боку партійної номенклатури.
+- **1970**: Написання есею «Собор у риштованні», який стає одним із найважливіших текстів українського самвидаву, маніфестом захисту духовності.
+- **1972**: Масові арешти української інтелігенції. Арешт Є. Сверстюка за «антирадянську агітацію та пропаганду», засудження до 7 років таборів суворого режиму і 5 років заслання.
+- **1993**: Видання в незалежній Україні книги есеїв «Блудні сини України» (куди увійшов і «Собор у риштованні»), за яку автор у 1995 році отримав Національну премію ім. Т. Шевченка.
+- **2014**: Смерть Євгена Сверстюка (1 грудня), який до останніх днів залишався моральним авторитетом нації.
+
+## Ключові факти та цитати
+- **Факт 1**: Есей «Собор у риштованні» виник як реакція на брутальне цькування Олеся Гончара після виходу його роману «Собор». Партійна критика сприйняла захист старовинного козацького собору як прояв "буржуазного націоналізму".
+- **Факт 2**: Сверстюк використовує форму літературної критики для постановки глобальних філософських питань: збереження історичної пам'яті, екології душі, протистояння споживацтву та бездуховності системи.
+- **Цитата**: «Нація, яка не поважає своїх святинь, приречена на духовне виродження» [needs verification — парафраз центральної ідеї есею].
+- **Цитата**: «...руйнування пам’яток культури є лише видимим наслідком руйнування соборів у душах людей» [needs verification — концепт духовного собору].
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ: Постать Євгена Сверстюка": **[!context]** — Рух шістдесятників як феномен інтелектуального спротиву та повернення до європейських цінностей в умовах тоталітаризму.
+- Section "Контекст: Ідеологічна кампанія": **[!history-bite]** — Ініціатором цькування «Собору» став Олексій Ватченко, перший секретар Дніпропетровського обкому КПУ, який впізнав себе в негативному образі пристосуванця Володьки Лободи (батькопродавця).
+- Section "Аналіз есею: Проблема історичної пам'яті": **[!quote]** — Цитати з тексту Сверстюка або Гончара про те, що собори будувалися не лише як архітектурні споруди, а як вираз козацького духу та прагнення до свободи.
+- Section "Аналіз есею: Духовність проти матеріалізму": **[!culture]** — Козацьке бароко як маркер європейської ідентичності України, знищення якого радянська влада прикривала гаслами "індустріального прогресу".
+- Section "Деколонізаційна перспектива: Руйнація імперського наративу": **[!myth-buster]** — Розвінчання радянського міфу про те, що історичні пам'ятки — це "опіум для народу", "віджила патріархальщина". Сверстюк доводить, що це фундамент національного самоусвідомлення.
+- Section "Деколонізаційна перспектива: Захист української суб'єктності": **[!decolonization]** — Перенесення фокусу з "класової боротьби" на етичний імператив: право нації мати власну історію, святині та гідність, всупереч імперській асиміляції.
+
+## Деколонізаційний контекст
+- **Imperial/Soviet myth**: Українська історія — це лише селянські повстання проти гнобителів і прагнення до возз'єднання з Росією. Захист національних пам'яток (козацьких соборів) є проявом реакційного націоналізму, що заважає індустріальному прогресу і побудові комунізму.
+- **Ukrainian reality**: Собор — це метафора української душі та ідентичності. Його збереження є актом екзистенційного опору імперській політиці стирання пам'яті (манкуртизації). Сверстюк деколонізує мислення, повертаючи етичний вимір і самоцінність української культури.
+
+## Contested Terms 
+| Concept | Imperial/Soviet framing | Ukrainian (decolonized) framing |
+|---------|-----------------|-------------------|
+| **Шістдесятники** | Відщепенці, буржуазні націоналісти, вороги народу | Інтелектуальна еліта, дисиденти, голос сумління нації |
+| **Захист пам'яток** | Клерикалізм, ідеалізація віджилої патріархальщини | Екологія душі, збереження історичної пам'яті та ідентичності |
+| **Самвидав** | Антирадянська агітація і наклепництво, злочин | Форма вільного обміну ідеями, інтелектуальний і духовний спротив |
+
+## Section-Mapped Research Notes
+
+### Вступ: Постать Євгена Сверстюка та рух шістдесятників
+Євген Сверстюк як філософ, критик, есеїст. Формування світогляду, волинське коріння, християнська етика. Роль Сверстюка в русі шістдесятників — не лише як літератора, а як морального авторитета.
+
+### Контекст: Ідеологічна кампанія проти роману Олеся Гончара
+Вихід роману «Собор» (1968) у журналі «Вітчизна». Реакція партійної номенклатури (Ватченко та інші). Кампанія цькування: заборона роману, звільнення тих, хто його підтримував. Атмосфера суспільного страху та конформізму кінця 1960-х.
+
+### Аналіз есею: «Собор у риштованні» як філософський маніфест
+Написання тексту у 1970 році. Поширення через самвидав. Жанрова специфіка: це не просто рецензія, а філософський трактат, маніфест захисту людської гідності. Перехід від літературної площини до екзистенційної.
+
+### Аналіз есею: Проблема історичної пам'яті та тяглості поколінь
+Ключовий мотив есею — безперервність культури. Собор як символ історичної пам'яті Козацької доби. Критика явища «безбатченків» — людей без коріння, готових зруйнувати святині заради кар'єри (образ Володьки Лободи). 
+
+### Аналіз есею: Духовність проти радянського матеріалізму
+Протиставлення вічних цінностей (краса, віра, мораль) та радянського прагматичного утилітаризму і духовного зужіння. «Екологія природи» і «екологія душі» як взаємопов'язані поняття. Соборність людської душі.
+
+### Стилістика: Інтелектуальна есеїстика як форма спротиву
+Есеїстичний стиль Сверстюка: глибокий психологізм, публіцистична пристрасність, полемічність. Текст як інтелектуальний виклик тоталітарній системі. Майстерність аргументації.
+
+### Стилістика: Риторика, іронія та біблійні мотиви тексту
+Використання біблійних метафор, алюзій (блудні сини, фарисеї, продаж за тридцять срібняків). Тонка іронія щодо радянської ідеології "прогресу". Естетика як зброя проти бюрократичного "новоязу".
+
+### Деколонізаційна перспектива: Руйнація імперського наративу
+Як Сверстюк викриває імперську політику знищення національних святинь під виглядом "атеїстичного виховання" та "боротьби з пережитками". Право українців на власну сакральну географію.
+
+### Деколонізаційна перспектива: Захист української суб'єктності
+Утвердження повноцінності української культури. Протидія провінціалізації літератури. Есей як акт ствердження української суб'єктності в умовах колоніального тиску.
+
+### Підсумок та спадщина: Вплив на дисидентський рух та сучасність
+Доля тексту: арешт автора, 12 років таборів і заслання. Вплив есею на покоління дисидентів 70-80-х років. Актуальність «Собору у риштованні» в XXI столітті: збереження ідентичності під час нових загроз.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12154)
+✓ Message 12071 acknowledged
+✓ Message 12154 acknowledged

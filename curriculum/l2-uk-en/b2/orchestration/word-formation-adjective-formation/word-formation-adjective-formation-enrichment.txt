@@ -1,0 +1,277 @@
+✅ Message sent to Gemini (ID: 10539) [auto-acked: self-addressed]
+✓ Message 10539 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10539...
+📨 Message #10539
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-word-formation-adjective-formation
+   Time: 2026-02-20T20:40:59.855062+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b2-36
+level: B2
+sequence: 36
+slug: word-formation-adjective-formation
+version: '2.0'
+title: 'Словотворення: прикметники'
+subtitle: Творення прикметників від іменників та складні прикметники
+content_outline:
+- section: Розминка — Словотвір прикметників
+  points:
+  - Прикметники від географічних назв (Україна → український)
+  - Прикметники від іменників якості (нація → національний)
+  - Складні прикметники — два кореня в одному слові
+- section: Suffix -ський/-цький (belonging/origin)
+  points:
+  - Україна → український (Ukrainian)
+  - Німеччина → німецький (German)
+  - місто → міський (urban)
+  - село → сільський (rural)
+- section: Suffix -ний/-альний (quality/relation)
+  points:
+  - нація → національний (national)
+  - музика → музикальний / музичний (musical)
+  - центр → центральний (central)
+  - професія → професійний (professional)
+- section: Compound Adjectives
+  points:
+  - синьо-жовтий (blue-yellow)
+  - білолиций (white-faced)
+  - науково-публіцистичний (scientific-journalistic)
+  - головнокомандувач → who is head commander
+- section: Практика — утворення прикметників
+  points:
+  - Утворити прикметники від назв країн та міст
+  - Обрати правильний суфікс (-ський/-цький чи -ний/-альний)
+  - Утворити складні прикметники за зразком (сіро-зелений, давньоукраїнський)
+  - Аналіз газетного тексту — виписати всі похідні прикметники
+focus: grammar
+pedagogy: TTT
+objectives:
+- Learner can form adjectives from nouns using Ukrainian suffixes
+- Learner can distinguish between -ський/-цький and -ний/-альний patterns
+- Learner can form and use compound adjectives correctly
+- Learner can recognize word formation patterns in authentic texts
+grammar:
+- Суфікс -ський/-цький (належність, походження)
+- Суфікс -ний/-альний (якість, відношення)
+- Складні прикметники (колір, зовнішність, сфера)
+register: науковий
+phase: B2.1b [Grammar Completion]
+vocabulary_hints:
+  required:
+  - термін (term)
+  - поняття (concept)
+  - процес (process)
+  - метод (method)
+  recommended:
+  - аналіз (analysis)
+  - синтез (synthesis)
+  - дослідження (research)
+activity_hints:
+- type: reading
+  focus: Аналіз тексту
+  items: 4
+- type: essay-response
+  focus: Практичне застосування
+- type: true-false
+  focus: Перевірка розуміння
+  items: 8
+persona:
+  voice: Professional Language Coach
+  role: Fashion Designer (Дизайнер одягу)
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Словотворення: прикметники
+
+## State Standard Reference
+§4.2.9: "Утворення прикметників від іменників: осінь – осінній, вечір – вечірній, Київ – київський."
+§4.1.1.2: "відмінювання складних прикметників із компонентом -лиций: білолиций, круглолиций; ... відмінювання складних прикметників із першим компонентом кількісним числівником: двоярусний, трикутний..."
+Alignment: This module directly addresses the B2 requirement for complex word formation, specifically deriving adjectives from nouns and forming compound adjectives, which are essential for the B2 "Scientific/Professional" register.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| **-ський / -цький** | High (Top 3 suffixes) | київський (торт/князь), студентський (квиток/гуртожиток), батьківський (дім/комітет) |
+| **-ний / -альний** | Very High (Most common) | національний (університет/одяг), музичний (інструмент/школа), центральний (вхід/вокзал) |
+| **Compound (-о-)** | Medium (B2+ typical) | синьо-жовтий (прапор), науково-популярний (фільм/журнал), східноєвропейський (час/простір) |
+| **Compound (Noun)** | Medium | білолиций (місяць/дівчина), чорноземний (ґрунт), лісостеповий (ландшафт) |
+
+## Cultural Hooks
+1. **The "Kyivan" Adjective**: The word `київський` is iconic not just geographically but historically (`Київська Русь` vs. imperial narratives) and culturally (`Київський торт` - a symbol of the capital).
+2. **Folklore Epithets**: Compound adjectives like `білолиций` (white-faced), `ясний-красний` (bright-beautiful), and `сизокрилий` (grey-winged) are staples of Ukrainian folklore and songs, showing the poetic root of this grammatical feature.
+3. **The Flag's Grammar**: The spelling of `синьо-жовтий` (blue-yellow) with a hyphen is a strict orthographic rule for color combinations, directly linking grammar to national symbols.
+
+## Common Learner Errors
+1. **Suffix Confusion (-ний vs -ський)**: Learners often say `студентний` instead of `студентський` or `містовий` instead of `міський`. *Fix: Emphasis on "belonging/origin" = -ськ-.*
+2. **Compound Spelling (Hyphen vs Together)**: Confusion between `жовто-блакитний` (hyphen) and `жовтогарячий` (together). *Fix: Rule "colors/shades = hyphen", "concept = together".*
+3. **Noun-as-Adjective (English interference)**: Using `бізнес центр` (noun+noun) instead of `бізнес-центр` or `діловий центр`. *Fix: Ukrainian strictly requires morphological adaptation or hyphens for appositions.*
+
+## Cross-References
+- **Builds on**: A2/B1 Adjective Declension, Noun Gender.
+- **Prepares for**: C1 Academic Writing (complex terminological adjectives), B2-PRO (professional terminology like `машинобудівний`).
+
+## Notes for Content Writing
+- **Orthography focus**: The 2019 spelling rules are stable for compound adjectives, but learners find them hard. Use clear visual decision trees (Color? -> Hyphen. Subordinate? -> Together).
+- **Phonetic mutation**: Don't skip the `-к-` -> `-цьк-` rule (`козак` -> `козацький`), as it's a frequent point of failure.
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Культурний код прикметника «київський» (Introduction: The Cultural Code of the 'Kyiv' Adjective)"
+  words: 700
+  points:
+  - "Роль слова київський як маркера ідентичності: від історичного контексту (Київська Русь) до гастрономічних символів (Київський торт)"
+  - "Дизайнерський підхід до словотворення: як назви тканин та регіонів формують професійний словник (львівський льон, волинська вишивка)"
+  - "Обговорення ролі прикметників у створенні образів: використання епітетів для опису колекції одягу"
+- section: "Суфікси -ський та -цький: приналежність та походження (Suffixes -skyi and -tskyi: Belonging and Origin)"
+  words: 900
+  points:
+  - "Правила творення від географічних назв та іменників: Україна → український, місто → міський, село → сільський"
+  - "Фонетичні мутації: детальне пояснення переходу к → цьк на прикладі козак → козацький та студент → студентський"
+  - "Типова помилка: аналіз та виправлення вживання неправильних суфіксів (чому не можна казати «студентний» замість студентський)"
+  - "Стійкі колокації у повсякденному та офіційному вжитку: студентський квиток, батьківський комітет, міська рада"
+- section: "Суфікси -ний та -альний: якість та професійне відношення (Suffixes -nyi and -alnyi: Quality and Professional Relation)"
+  words: 800
+  points:
+  - "Творення прикметників від іменників якості згідно з Держстандартом (§4.2.9): осінь → осінній, нація → національний"
+  - "Семантична диференціація: розмежування значень музичний (інструмент) та музикальний (слух), професійний та фаховий"
+  - "Використання суфікса -альн- у термінології: центральний вхід, національний університет, персональний стиль"
+  - "Практика адаптації іншомовних основ: процес → процесуальний, структура → структурний"
+- section: "Складні прикметники: кольори, числівники та фольклор (Compound Adjectives: Colors, Numerals, and Folklore)"
+  words: 1000
+  points:
+  - "Орфографія кольорів та відтінків: правило дефіса для синьо-жовтий (прапор) як зв'язок граматики з національною символікою"
+  - "Розмежування складних слів: дефіс у відтінках кольорів проти разом написаних понять (жовто-блакитний vs. жовтогарячий)"
+  - "Морфологія фольклорних епітетів: відмінювання прикметників на -лиций (білолиций, круглолиций) та їх поетичне значення"
+  - "Кількісні компоненти у складних словах (§4.1.1.2): творення та вживання структур на кшталт двоярусний, трикутний, п'ятиповерховий"
+- section: "Практикум: аналіз текстів та запобігання інтерференції (Workshop: Text Analysis and Interference Prevention)"
+  words: 600
+  points:
+  - "Аналіз англійської інтерференції (Noun-as-Adjective): чому «бізнес центр» є помилковим і як правильно вживати дефіс або прикметникову форму (бізнес-центр, діловий центр)"
+  - "Вправа на візуалізацію: побудова «дерева рішень» для вибору правопису складних прикметників (Колір? Підрядний зв'язок?)"
+  - "Творче завдання: опис модної колекції з використанням усіх вивчених типів прикметників (географічні, складні кольори, епітети)"
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "київський (Kyivan) — Київська Русь, Київський торт; символ столиці та ідентичності"
+  - "студентський (student's) — студентський квиток, студентський гуртожиток; висока частотність"
+  - "національний (national) — національний університет, національний одяг; офіційний регістр"
+  - "синьо-жовтий (blue-yellow) — синьо-жовтий прапор; приклад написання кольорів через дефіс"
+  - "білолиций (white-faced) — фольклорний епітет; особлива парадигма відмінювання"
+  - "термін (term) — наукове поняття; професійний реєстр"
+  recommended:
+  - "батьківський (parental/father's) — батьківський дім, батьківський комітет"
+  - "жовтогарячий (bright orange) — виняток; складне слово, що пишеться разом (суцільне поняття)"
+  - "двоярусний (two-tiered) — складний прикметник з числівником"
+  - "музичний (musical - related to music) — музичний інструмент, музична школа"
+  - "музикальний (musical - talented/melodic) — музикальний слух, музикальна дитина"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4079 chars)
+✅ Message sent to Claude (ID: 10550)
+✓ Message 10550 acknowledged
+   Auto-acknowledged reply #10550 (stdout delivery — no inbox accumulation)
+✓ Message 10539 acknowledged

@@ -1,0 +1,46 @@
+module: c1-067
+level: C1
+sequence: 67
+slug: ukrainian-cuisine-traditions
+version: '2.0'
+title: Українська кухня - традиції та символи
+subtitle: Ukrainian Cuisine - Traditions and Symbols
+content_outline:
+- section: Розминка — Їжа як культура
+  points:
+  - Українська кухня — відображення історії та географії
+  - Ритуальна їжа vs буденна
+  - Символіка хліба в українській культурі
+- section: Традиційні страви
+  points:
+  - 'Хліб та випічка: паляниця, калач, пампушки, коровай'
+  - 'Перші страви: борщ, юшка, капусняк'
+  - 'Другі страви: вареники, голубці, деруни'
+  - 'Солодощі: пампушки з маком, вергуни, медівник'
+- section: Ритуальна їжа
+  points:
+  - 'Святвечір: кутя, узвар, 12 пісних страв'
+  - 'Великдень: паска, писанки, ковбаса, хрін'
+  - 'Весілля: коровай, калачі, медовуха'
+  - 'Поминки: коливо, канун, борщ'
+- section: Практика — гастрономічна культура
+  points:
+  - Описати приготування традиційної страви
+  - Пояснити символіку кожної страви Святвечора
+  - Порівняти українську та польську кухні
+  - Написати есе про сучасну українську гастрономію
+focus: cultural
+pedagogy: CBI
+objectives:
+- Learner can explain the symbolic meaning of ritual foods (kutia, korovai)
+- Learner can describe traditional cooking methods (stove, clay pot)
+- Learner can distinguish regional cuisines (Poltava dumplings vs. Hutsul banosh)
+- Learner can discuss the role of bread in Ukrainian culture
+grammar:
+- culinary terminology
+- process descriptions
+phase: C1.5 Folk Culture & Arts
+persona:
+  voice: Senior Specialist
+  role: Шеф-кухар
+word_target: 4000

@@ -1,0 +1,216 @@
+✅ Message sent to Gemini (ID: 12999) [auto-acked: self-addressed]
+✓ Message 12999 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12999...
+📨 Message #12999
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-slovo-escape
+   Time: 2026-02-20T23:43:43.244608+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 84
+module: oes-084
+module_number: 84
+slug: slovo-escape
+title_uk: 'Слово: Втеча'
+title_en: 'Slovo: The Escape'
+phase: 4
+phase_id: literary-art
+phase_name: Literary Art
+focus: Action verbs — Transformation motif
+content_outline:
+- section: Вступ
+  description: 'Introduction to Slovo: The Escape'
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Senior Paleographer
+  role: Guide of the Steppe
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Slovo Escape (Втеча Ігоря)
+
+## Використані джерела
+1. [Енциклопедія історії України (history.org.ua)](http://resource.history.org.ua/) — Академічний аналіз подій 1185 року та історичного контексту "Слова".
+2. [Ізборник (litopys.org.ua)](http://litopys.org.ua/slovo67/slovo.htm) — Оригінальний текст "Слова о полку Ігоревім" (реконструкції та переклади).
+3. [Енциклопедія Сучасної України (esu.com.ua)](https://esu.com.ua/article-13876) — Стаття про "Слово о полку Ігоревім", аналіз образної системи та персонажів.
+4. [Білоус П. В. Історія української літератури XI–XVIII ст.](http://litopys.org.ua/) — Аналіз поетики "Слова", зокрема мотиву перетворень.
+
+## Хронологія
+- **Травень 1185**: Битва на річці Каялі, поразка руського війська, полон князя Ігоря Святославича.
+- **Літо 1185**: Перебування Ігоря в полоні у хана Кончака. Відносно почесний полон (свобода пересування в межах табору, полювання).
+- **Серпень 1185**: Лавр (Овлур) пропонує Ігорю план втечі. Ігор вагається, але погоджується через загрозу повернення Гзака з полоненими.
+- **П'ятниця (вечір)**: Ігор посилає конюшого до Овлура з наказом готувати коней.
+- **Ніч з п'ятниці на суботу**: Втеча Ігоря. Сигнал Овлура (свист), переправа через річку.
+- **Осінь 1185 (+11 днів)**: Прибуття Ігоря до Новгорода-Сіверського (або Путивля), згодом поїздка до Києва.
+
+## Ключові факти та цитати (Primary Sources)
+- **Сигнал до втечі**: «Прысну море полунощи; идутъ сморци мьглами; Игореви Князю Богъ путь кажетъ изъ земли Половецкой на землю Рускую, къ отню злату столу».
+- **Стан Ігоря**: «Игорь спитъ, Игорь бдитъ, Игорь мыслію поля мѣритъ отъ великаго Дону до малаго Донца».
+- **Метаморфози (зооморфна символіка)**:
+  - «А Игорь князь поскочи горностаемъ къ тростию...»
+  - «...и бѣлымъ гоголемъ на воду».
+  - «Въвръжеся на борзъ комонь, и скочи съ него бусымъ влъкомъ».
+  - «...и полетѣ соколомъ подъ мьглами».
+- **Погоня (Гзак і Кончак)**:
+  - Гзак: «Аже соколъ къ гнѣзду летитъ, соколича рострѣляевѣ своими злачеными стрѣлами».
+  - Кончак: «Аже соколъ къ гнѣзду летитъ, а вѣ соколца опутаевѣ красною дивицею».
+- **Розмова з Дінцем**: «О, Донче! Не мало ти величія, лелѣявшу князя на влънахъ...»
+
+## Engagement Hooks (mapped to sections)
+- **Вступ**: `[!context]` — Історична ситуація літа 1185 року: чому втеча стала необхідною саме в цей момент (повернення Гзака з розгромом Путивльщини).
+- **Основний матеріал: I**: `[!myth-buster]` — Постать Овлура (Лавра). У радянській/імперській історіографії його роль применшувалася або він зображувався зрадником своїх. Насправді — це ключовий союзник, можливо хрещений половець, що підкреслює складність степової дипломатії.
+- **Основний матеріал: II**: `[!culture]` — Тотемізм і перевертництво. Ігор не просто "ховається", він набуває рис тотемних тварин (вовк, горностай, гоголь, сокіл). Це відгомін давніх шаманських практик у князівській культурі.
+- **Основний матеріал: II**: `[!paleography]` — Термін «сморци» (smorts'i). Палеографічна загадка: смерчі, тумани чи, можливо, затемнення?
+- **Основний матеріал: III**: `[!decolonization]` — Географія втечі. Шлях від Дону до Дінця — це шлях повернення в «Руську землю» (територія сучасної України). Дінець виступає як союзник і захисник, на відміну від річки Стугни.
+- **Основний матеріал: IV**: `[!history-bite]` — Династична стратегія Кончака. Замість вбивства сина Ігоря (Володимира), він одружує його зі своєю дочкою. Половці — не "дикі варвари", а прагматичні політики.
+
+## Деколонізаційний контекст
+- **Imperial framing**: Трактування «Слова» як пам'ятки «спільної історії» або «російської літератури». Акцент на «єдності руської землі» як прототипу Російської імперії.
+- **Ukrainian reality**: «Слово» — органічна частина українського культурного коду. Мова пам'ятки відображає фонетичні особливості протоукраїнських діалектів (повноголосся, закінчення -ові/-еві, лексика). Втеча Ігоря — це повернення додому, в Україну-Русь, а не в абстрактну «Росію».
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian (decolonized) framing |
+|---------|-----------------|-------------------------------|
+| **Земля Руська** | Russian land (assumed Russia) | Руська земля (територія сучасної Київщини, Чернігівщини, Переяславщини) |
+| **Половці** | Дикі кочівники, вороги цивілізації | Степові сусіди, партнери, родичі руських князів (через шлюби) |
+| **Овлур** | Зрадник, другорядний персонаж | Лавр (можливе християнське ім'я), ключовий помічник, символ українсько-половецького симбіозу |
+
+## Section-Mapped Research Notes
+
+### Вступ
+Опис становища Ігоря в полоні. «Почесний полон»: Ігор мав 20 слуг, їздив на полювання, мав свого священника. Психологічний стан князя: відчай від поразки, тривога за долю князівства. Мотивація втечі: чутки про намір половців убити всіх полонених після успішного набігу Гзака.
+
+### Основний матеріал: I — Підготовка та сигнал
+Роль Овлура. Хто він? Гіпотези: хрещений половець, представник іншого роду. Нічна сцена: п'ятниця, вечір. Ігор не спить («Игорь спитъ, Игорь бдитъ...»). Символіка «міряння полів думкою» — стратегічне мислення князя навіть у відчаї. Сигнал: свист за рікою. Реакція природи («Прысну море полунощи»).
+
+### Основний матеріал: II — Метаморфози втечі
+Шлях Ігоря. Текст насичений дієсловами руху (поскочи, ввръжеся, полетѣ). Зооморфні порівняння: горностай (швидкість, непомітність), гоголь (вода), вовк (витривалість, нічний спосіб життя), сокіл (політ). Це не просто метафори, а міфопоетичне ототожнення героя з природою. Згадка про розбиття коней — реалістична деталь виснажливої погоні.
+
+### Основний матеріал: III — Діалог з Донцем
+Персоніфікація річки. Дінець — добрий помічник («лелѣявшу князя», «одѣвавшу», «стлавшу»). Контраст зі Стугною (річка, в якій потонув Ростислав). Глибокий зв'язок людини і природи в світогляді русичів. Панегірик річці як символ вдячності рідній землі за порятунок.
+
+### Основний матеріал: IV — Погоня
+Діалог Гзака і Кончака. Це не просто погоня, а політична дискусія. Гзак — прихильник жорстких заходів («розстріляти соколича»). Кончак — прихильник династичних союзів («опутати дівицею»). Перемога "м'якої сили" Кончака: Володимир Ігорович одружився з дочкою Кончака і повернувся додому пізніше з дружиною і дитиною.
+
+### Практика: Мовний аналіз
+Аналіз граматичних форм. Аористи та імперфекти (давньоруські минулі часи) у розповіді про втечу. Лексика руху: «поскочи», «полетѣ», «течаше». Символіка кольорів: «сѣрымъ влъкомъ», «бѣлымъ гоголемъ», «злачеными стрѣлами».
+
+### Підсумок
+Значення втечі. Повернення князя — це відновлення порядку. Радість землі («Страны ради, гради весели»). Але також і моральний урок: єдність понад особисті амбіції. Ігор повертається не як переможець, а як той, хто "прозрів".
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 13023)
+✓ Message 12999 acknowledged
+✓ Message 13023 acknowledged

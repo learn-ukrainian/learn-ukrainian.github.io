@@ -4,28 +4,29 @@
   "mode": "v3",
   "phases": {
     "v3-A": {
-      "status": "pending",
-      "ts": "2026-02-20T00:47:34Z",
-      "note": "health-check-reset"
+      "status": "complete",
+      "ts": "2026-02-20T23:55:02Z",
+      "note": "migrated-from-v2"
     },
     "v3-B": {
       "status": "complete",
-      "ts": "2026-02-19T11:53:02Z"
+      "ts": "2026-02-20T23:55:02Z",
+      "note": "migrated-from-v2"
     },
     "v3-C": {
       "status": "complete",
-      "ts": "2026-02-19T11:53:02Z",
-      "note": "adopted-existing"
+      "ts": "2026-02-20T23:55:02Z",
+      "note": "migrated-from-v2"
     },
     "v3-audit": {
       "status": "complete",
-      "ts": "2026-02-19T11:53:03Z",
-      "attempts": 1
+      "ts": "2026-02-20T23:55:02Z",
+      "note": "migrated-from-v2"
     },
     "v3-D": {
       "status": "complete",
-      "ts": "2026-02-19T11:56:31Z",
-      "attempts": 1
+      "ts": "2026-02-20T23:55:02Z",
+      "note": "migrated-from-v2"
     }
   }
 }

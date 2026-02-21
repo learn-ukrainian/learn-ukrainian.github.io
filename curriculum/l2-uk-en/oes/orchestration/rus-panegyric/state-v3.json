@@ -1,0 +1,13 @@
+{
+  "track": "oes",
+  "slug": "rus-panegyric",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-20T13:55:21Z",
+      "task_id": "v3-rus-panegyric-pA",
+      "mode": "full"
+    }
+  }
+}

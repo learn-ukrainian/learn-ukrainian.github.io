@@ -1,7 +1,7 @@
 # Audit Report: M10 — checkpoint-first-contact.md
 **Level:** A1 | **Module:** M10 | **Phase:** A1.1 | **Pedagogy:** TTT | **Target:** 1500
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-19 23:01:36
+**Generated:** 2026-02-21 00:46:33
 
 ## Configuration
 **Type:** A1-checkpoint
@@ -36,7 +36,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2436/1500 (raw: 2706)
+- **Words:** ✅ 2459/1500 (raw: 2729)
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 10
 - **Unique_types:** ✅ 5/4 types
@@ -49,7 +49,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 20.4% (checkpoint - no gate)
+- **Immersion:** 🇺🇦 20.5% (checkpoint - no gate)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -62,8 +62,8 @@
 | **Огляд та мета** | ✅ | 200 | Included in Core |
 | **Skill 1: Читання кирилиці** | ✅ | 279 | Included in Core |
 | **Skill 2: Визначення роду** | ✅ | 373 | Included in Core |
-| **Skill 3: Дієвідміна** | ✅ | 333 | Included in Core |
-| **Skill 4: Питальні речення** | ✅ | 418 | Included in Core |
-| **Skill 5: Замовлення їжі** | ✅ | 341 | Included in Core |
+| **Skill 3: Дієвідміна** | ✅ | 346 | Included in Core |
+| **Skill 4: Питальні речення** | ✅ | 426 | Included in Core |
+| **Skill 5: Замовлення їжі** | ✅ | 343 | Included in Core |
 | **Інтеграційне завдання** | ✅ | 265 | Included in Core |
 | **Підсумок** | ✅ | 175 | Included in Core |

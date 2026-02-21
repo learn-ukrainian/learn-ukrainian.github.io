@@ -6,50 +6,72 @@ version: '2.0'
 title: 'Офіційно-діловий стиль: Мова документів'
 subtitle: 'High Formal Register: Language of Documents'
 content_outline:
-- section: Вступ — Світ офіційних документів
+- section: 'Вступ — Світ офіційних документів (Introduction: The World of Official
+    Documents)'
+  words: 500
   points:
-  - State Standard §4.4.1.1 alignment — official style and its substyles
-  - 'Why officialese exists: precision, unambiguity, legal force'
-  - 'Cultural hook: Ukrainian bureaucratic tradition — from Cossack universals to
-    modern legislation'
-- section: Підстилі офіційно-ділового стилю (Substyles)
+  - Alignment with State Standard §4.4.1.1 — definition of the official-business style
+    and its communicative functions in society.
+  - 'The socio-linguistic necessity of ''officialese'': legal force, precision, and
+    the elimination of ambiguity in state-citizen relations.'
+  - 'The ''Mova'' vs ''Yazychiye'' struggle: the historical context of establishing
+    Ukrainian as the exclusive language of legislation and administration as a pillar
+    of statehood.'
+- section: Традиції українського діловодства (Traditions of Ukrainian Documentation)
+  words: 600
   points:
-  - 'Законодавчий (legislative): закони, постанови, укази'
-  - 'Дипломатичний (diplomatic): ноти, меморандуми, конвенції'
-  - 'Адміністративно-канцелярський (administrative): накази, інструкції, протоколи'
-  - 'Діловий (business): договори, акти, довідки, заяви'
-- section: Синтаксис канцеляриту (Bureaucratic Syntax)
+  - 'Cultural Hook: Cossack Universals (Універсали) — exploring the formal structure
+    and Baroque stylistic elements of Hetmanate-era decrees.'
+  - 'Evolution of legal terminology: moving away from Soviet-era imperial ''bureaucratese''
+    (канцелярит) towards standardized, decolonized Ukrainian legal vocabulary.'
+  - 'The role of the ''Senior Specialist'' persona: maintaining professional distance
+    through specific linguistic markers and standardized templates.'
+- section: Лінгвістичні маркери та підстилі (Linguistic Markers and Substyles)
+  words: 900
   points:
-  - 'Passive chains: було прийнято рішення, має бути забезпечено'
-  - 'Nominalization: з метою покращення, у зв''язку з необхідністю'
-  - 'Impersonal constructions: слід зазначити, необхідно підкреслити'
-  - 'Standardized word order: subject → predicate → object with minimal inversion'
-  - 'Learner error: mixing officialese with conversational style in formal documents'
-- section: Кліше та стандартні формули (Clichés & Standard Formulas)
+  - 'Legislative and Diplomatic substyles: the use of internationalisms (преамбула,
+    конвенція, меморандум) and strict hierarchical terminology.'
+  - 'Administrative and Business substyles: linguistic features of protocols, orders
+    (накази), and certificates (довідки).'
+  - 'Bureaucratic Syntax: mastering passive chains (було прийнято рішення, має бути
+    забезпечено) and heavy nominalization (з метою покращення, у зв''язку з необхідністю).'
+  - 'Impersonal constructions: the ''depersonalization'' of the state through phrases
+    like ''слід зазначити'' and ''необхідно підкреслити''.'
+- section: Типологія документів та їхня структура (Document Typology and Structure)
+  words: 800
   points:
-  - 'Opening formulas: Відповідно до..., На підставі..., Згідно з..., З огляду на...'
-  - 'Body formulas: Вважати за доцільне..., Покласти відповідальність на..., Довести
-    до відома...'
-  - 'Closing formulas: У разі невиконання..., Контроль покласти на...'
-  - 'Learner error: confusing згідно з (+ Instrumental) vs відповідно до (+ Genitive)'
-- section: Типи документів (Document Types)
+  - 'The anatomy of a Law (Закон): identifying the preamble, articles (статті), clauses
+    (пункти), and final provisions (прикінцеві положення).'
+  - 'The Protocol (Протокол) vs The Order (Наказ): differences in purpose (recording
+    vs directing) and the specific verbs used in each (слухали, ухвалили vs наказую).'
+  - 'Standardized Application (Заява) structure: strict adherence to the layout (header,
+    body text, date on the left, signature on the right) and formal register.'
+  - 'The ''Certificate'' (Довідка): identifying the mandatory informational fields
+    and register consistency.'
+- section: 'Аналіз типових помилок: Канцелярит vs Мова (Error Analysis: Bureaucratese
+    vs Language)'
+  words: 800
   points:
-  - 'Закон (Law): структура — преамбула, статті, пункти, прикінцеві положення'
-  - 'Постанова (Decree/Resolution): рішення колегіального органу'
-  - 'Протокол (Minutes/Protocol): фіксація засідання'
-  - 'Наказ (Order): розпорядчий документ керівника'
-  - 'Заява (Application): особисте звернення — structure and register'
-  - 'Довідка (Certificate): інформаційний документ'
-- section: Практика — Від канцеляриту до людської мови
+  - 'Learner Error: Mastering case government with prepositional formulas — correcting
+    ''згідно наказу'' (Gen) to ''згідно з наказом'' (Instr) and ''відповідно наказу''
+    to ''відповідно до наказу'' (Gen).'
+  - 'De-Russification of official style: identifying and eliminating calques like
+    ''приймати участь'' (correct: ''брати участь'') and ''рахувати, що'' (correct:
+    ''вважати, що'').'
+  - 'Register Mixing: diagnosing and fixing ''humanized'' language in formal requests
+    (e.g., replacing emotional ''Я дуже прошу дати відпустку'' with formal ''Прошу
+    надати мені відпустку'').'
+  - 'The ''De-officialization'' challenge: transforming bureaucratic text into neutral
+    style for public communication without losing semantic precision.'
+- section: Підсумок та практичні рекомендації (Summary and Practical Recommendations)
+  words: 400
   points:
-  - Read and analyze authentic Ukrainian legislative text
-  - Write a formal заява (application) following standard template
-  - Transform bureaucratic text into neutral style (deoffficialize)
-  - Transform neutral text into official style (officialize)
-- section: Підсумок
-  points:
-  - Summary of key formulas by document type
-  - When to use officialese vs when it becomes канцелярит (bureaucratese abuse)
+  - Summary of key clichés and standard formulas by document type (opening, body,
+    and closing formulas).
+  - Final guidance on when to use formal register vs when it devolves into 'канцелярит'
+    (style abuse).
+  - The importance of 'чинне законодавство' (valid legislation) as the linguistic
+    and legal baseline for document drafting.
 focus: style
 pedagogy: Academic
 objectives:
@@ -65,19 +87,33 @@ grammar:
 - Standard formulas with correct case government
 vocabulary_hints:
   required:
-  - закон (law) — приймати закон, набути чинності
-  - постанова (decree/resolution) — постанова уряду, винести постанову
-  - протокол (minutes/protocol) — вести протокол, підписати протокол
-  - наказ (order) — видати наказ, на виконання наказу
-  - заява (application) — подати заяву, написати заяву
-  - відповідно до (in accordance with) — відповідно до закону (+ Gen)
-  - згідно з (according to) — згідно з наказом (+ Instr)
-  - на підставі (on the basis of) — на підставі рішення (+ Gen)
+  - закон (law) — прийняти закон, набути чинності, чинне законодавство; High frequency
+    in legal contexts.
+  - постанова (decree/resolution) — постанова Кабінету Міністрів, винести постанову;
+    used for collegiate body decisions.
+  - протокол (minutes/protocol) — скласти протокол, підписати протокол, протокол засідання;
+    essential for administrative tracking.
+  - наказ (order) — видати наказ, на виконання наказу, згідно з наказом; directive
+    language from a leader.
+  - заява (application) — подати заяву, написати заяву, заява про звільнення; high-frequency
+    personal formal document.
+  - відповідно до (in accordance with) — відповідно до наказу (+ Genitive case); mandatory
+    formal preposition.
+  - згідно з (according to) — згідно з угодою (+ Instrumental case); mandatory formal
+    preposition; common error point (avoid Genitive).
+  - на підставі (on the basis of) — діяти на підставі рішення (+ Genitive case); used
+    for justifying administrative actions.
   recommended:
-  - довідка (certificate) — видати довідку
-  - преамбула (preamble) — преамбула закону
-  - канцелярит (bureaucratese) — уникати канцеляриту
-  - чинний (valid/in force) — чинне законодавство
+  - довідка (certificate) — видати довідку; informational document for official verification.
+  - преамбула (preamble) — преамбула закону; introductory part of a formal document.
+  - канцелярит (bureaucratese) — уникати канцеляриту; pejorative term for overcomplicated
+    or calcified formal language.
+  - чинний (valid/in force) — чинне законодавство, чинний договір; crucial adjective
+    for legal status.
+  - брати участь (to participate) — брати участь у засіданні; crucial correction for
+    the Russian calque 'приймати участь'.
+  - вважати (to consider/deem) — вважати за доцільне; formal replacement for 'думати'
+    or 'рахувати'.
 activity_hints:
 - type: reading
   focus: Analyze authentic legislative text

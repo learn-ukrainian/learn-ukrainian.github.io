@@ -2,7 +2,7 @@
   "slug": "indefinite-negative-pronouns",
   "track": "b1",
   "module_num": 92,
-  "mode": "e2e",
+  "mode": "v3",
   "phases": {
     "0": {
       "status": "complete",
@@ -10,5 +10,5 @@
       "task_id": "yw-indefinite-negative-pronouns-p0"
     }
   },
-  "last_updated": "2026-02-19T11:05:57Z"
+  "last_updated": "2026-02-20T11:26:51Z"
 }

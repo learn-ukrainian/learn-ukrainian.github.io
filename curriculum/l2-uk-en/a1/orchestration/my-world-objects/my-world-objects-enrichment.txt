@@ -1,0 +1,298 @@
+✅ Message sent to Gemini (ID: 10037) [auto-acked: self-addressed]
+✓ Message 10037 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10037...
+📨 Message #10037
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-my-world-objects
+   Time: 2026-02-20T19:35:32.076310+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: a1-05
+level: A1
+sequence: 5
+slug: my-world-objects
+version: '2.0'
+title: 'My World: Objects'
+subtitle: Pointing to Things with Demonstratives
+content_outline:
+- section: Warm-up
+  points:
+  - Demonstratives point to things — "this one" or "that one" — visual scaffolding
+    essential (finger touching vs pointing)
+  - In Ukrainian, demonstratives change by gender (m/f/n/pl) — aligns with State Standard
+    §4.2.2 (demonstrative pronouns)
+  - Using gender knowledge from Module 03 — reinforcing endings without explicit reteaching
+- section: Presentation
+  points:
+  - 'Near demonstratives: цей (m), ця (f), це (n), ці (pl)'
+  - 'Far demonstratives: той (m), та (f), те (n), ті (pl) — proximity confusion is
+    a common learner error'
+  - 'Match demonstrative to noun gender — learner error: mismatching gender (e.g.,
+    Цей книга)'
+  - 'Dual meaning of це: neuter "this" AND general "this is" — critical distinction:
+    Це + Noun (Identification) vs Цей + Noun (Specification)'
+- section: Practice
+  points:
+  - 'Kitchen objects: ніж (m), ложка (f), блюдо (n)'
+  - 'Furniture: диван (m), шафа (f), крісло (n)'
+  - 'Room vocabulary with gender agreement — cultural hook: "В гостях добре, а вдома
+    краще" (East or West, home is best)'
+- section: Cultural Insight
+  points:
+  - Why телефон is masculine but лампа is feminine
+  - Ukrainian home vocabulary across all three genders — distinction between traditional
+    хата (rural house) and modern квартира (apartment)
+  - The "Pokuttia" (Red Corner) concept — traditional special place for icons/rushnyky,
+    relevant even in modern layouts
+- section: Production
+  points:
+  - Navigate a living space naming objects — differentiate between objects near (цей)
+    and far (той)
+  - Point and identify using correct demonstratives
+vocabulary_hints:
+  required:
+  - цей (this m.) — цей стіл, цей будинок
+  - ця (this f.) — ця книга, ця кімната
+  - той (that m.) — той чоловік, той парк
+  - та (that f.) — та жінка
+  - стіл (table) — на столі, письмовий стіл
+  - книга (book) — цікава книга, читати книгу
+  - телефон (phone) — мобільний телефон, мій телефон
+  - кімната (room) — моя кімната, велика кімната
+  recommended:
+  - стілець (chair) — зручний стілець
+  - ліжко (bed) — велике ліжко
+  - лампа (lamp) — настільна лампа
+  - вікно (window) — біля вікна, це вікно
+  - шафа (wardrobe) — у шафі
+  - двері (door) — вхідні двері (plural only in Ukr)
+activity_hints:
+- type: match-up
+  focus: Label room objects
+  items: 20
+- type: quiz
+  focus: Match demonstrative to gender
+  items: 20
+- type: fill-in
+  focus: Complete with цей/ця/це
+  items: 15
+- type: fill-in
+  focus: Що це? conversations
+  items: 6
+focus: grammar
+pedagogy: PPP
+prerequisites:
+- a1-04 (This Is, I Am)
+connects_to:
+- a1-06 (The Living Verb I)
+- a1-15 (Around the City)
+objectives:
+- Learner can use цей/ця/це/ці to point to objects near them
+- Learner can use той/та/те/ті to point to objects far from them
+- Learner can match demonstrative gender with noun gender
+- Learner can name 40 common household and everyday objects
+grammar:
+- Demonstratives цей/ця/це/ці (this)
+- Demonstratives той/та/те/ті (that)
+- Gender agreement with demonstratives
+register: розмовний
+phase: A1.1 [First Contact]
+persona:
+  voice: Patient Supportive Tutor
+  role: Interior Designer
+word_target: 2000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: My World: Objects
+
+## State Standard Reference
+§4.2.2: "Утворення та вживання родових і числових форм деяких займенників... утворення родових форм вказівних займенників: той, та, те; цей, ця, це... утворення форм множини присвійних і вказівних займенників: мої, твої, наші, ваші, їхні, ті, ці."
+Alignment: This module directly addresses the formation and usage of gendered demonstrative pronouns (цей/той) and their plural forms as explicitly required by the standard.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| цей / ця / це / ці | High (Top 100) | цей стіл, ця кімната, це вікно, ці речі |
+| той / та / те / ті | High (Top 200) | той будинок, та жінка, те місце, ті люди |
+| стіл | High (Household) | на столі, за столом, письмовий стіл, обідній стіл |
+| шафа | High (Household) | у шафі, книжкова шафа, шафа для одягу |
+| ліжко | Medium (Household) | у ліжку, лягати в ліжко, двоспальне ліжко |
+| вікно | High (General) | біля вікна, дивитися у вікно, відчинити вікно |
+
+## Cultural Hooks
+1. **"В гостях добре, а вдома краще"**: A quintessential Ukrainian proverb equivalent to "East or West, home is best," reflecting the deep cultural value placed on the home (дім/хата) as a sanctuary.
+2. **Pokuttia (Покуття)**: The traditional "Red Corner" in a Ukrainian home, placed diagonally from the stove (піч), where icons and rushnyky were kept. While modern apartments lack the stove, the concept of a spiritual focal point remains relevant in design and tradition.
+
+## Common Learner Errors
+1. **Identificational vs. Demonstrative "Це"**: Confusing "Це стіл" (This is a table - Identification) with "Цей стіл" (This specific table - Specification).
+   *   *Correction*: Teach that "Це" acts as a subject placeholder ("It/This is"), while "Цей/Ця/Це" acts as an adjective modifying a noun.
+2. **Gender Mismatch**: Using "цей" for all genders (e.g., "Цей книга").
+   *   *Correction*: Reinforce the rhyme/sound association (Ця -> КнигА).
+3. **Proximity Confusion**: Using "цей" for distant objects instead of "той".
+   *   *Correction*: Use clear physical gestures (touching vs. pointing) and the mnemonic "T" for "There/That".
+
+## Cross-References
+- **Builds on**: a1-03 (Genders), a1-04 (This Is / I Am)
+- **Prepares for**: a1-06 (The Living Verb I), a1-15 (Around the City)
+
+## Notes for Content Writing
+- **Visual Scaffolding**: Essential to clearly distinguish near/far. Use icons of a hand touching (near) vs. a finger pointing (far).
+- **Immersion Control**: A1 level requires heavy English scaffolding for the grammar explanation of the two different "This" concepts (Identification vs. Demonstration).
+- **Nuance**: Briefly mention that "двері" is always plural, avoiding confusion when a learner tries to say "ця двері".
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 2000`
+- **Minimum 4 sections** for modules with `word_target < 2000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 350
+  points:
+  - "Recap of a1-03 (Gender) and a1-04 (Identification) as the grammatical foundation for demonstrative specification."
+  - "Introduction of the proverb «В гостях добре, а вдома краще» (East or West, home is best) to anchor the home-centric vocabulary and cultural value of 'дім'."
+  - "Overview of State Standard §4.2.2 regarding the formation and usage of gendered and plural forms of the demonstrative pronouns 'цей' and 'той'."
+- section: "Презентація (Presentation)"
+  words: 650
+  points:
+  - "Visual scaffolding: Distinguishing 'Near' (цей/ця/це/ці) via hand-touching icons vs. 'Far' (той/та/те/ті) via finger-pointing icons."
+  - "The 'Identification vs. Specification' hurdle: Differentiate 'Це стіл' (This is a table - Identification) from 'Цей стіл' (This table - Specification) with English metalanguage."
+  - "Formation of plural forms: Introducing 'ці' and 'ті' with emphasis on inherently plural nouns like 'двері' (ці двері) as mentioned in research."
+  - "Gender agreement patterns: Demonstrating the rhyming sound association between demonstrative endings and noun endings (e.g., цЯ книгА, цЕ вікнО) to prevent mismatch."
+- section: "Практика (Practice)"
+  words: 450
+  points:
+  - "Drill: Gender Matching. Correcting the common learner error 'цей книга' using minimal pairs and phonological reinforcement of the feminine '-а' ending."
+  - "Household categorization: Grouping kitchen objects (ніж, ложка, блюдо) and furniture (диван, шафа, крісло) by their grammatical gender."
+  - "Proximity mnemonic: Using the 'T' for 'There/That' association (той/та) to resolve proximity confusion between near and far objects during identification tasks."
+- section: "Культурний контекст (Cultural Insight)"
+  words: 300
+  points:
+  - "The Traditional Ukrainian Home: Explaining the 'Покуття' (Pokuttia/Red Corner) concept as a spiritual focal point for icons and rushnyky, even in modern layouts."
+  - "Lexical distinctions in dwelling: Comparing the traditional rural 'хата' with the modern urban 'квартира' and the general concept of 'дім'."
+- section: "Продукція та підсумок (Production and Summary)"
+  words: 250
+  points:
+  - "Persona Task: 'Interior Designer'. Navigating a living space, pointing to distant and near objects, and correctly specifying them with gender-matched demonstratives."
+  - "Review of Standard §4.2.2 competencies: Self-assessment on matching demonstrative gender and number with 40 household and everyday objects."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "цей / ця / це / ці (this) — High frequency (Top 100); цей стіл, ця кімната, це вікно, ці речі"
+  - "той / та / те / ті (that) — High frequency (Top 200); той будинок, та жінка, те місце, ті люди"
+  - "стіл (table) — Household high frequency; на столі, за столом, письмовий стіл, обідній стіл"
+  - "книга (book) — цікава книга, читати книгу; note the rhyme with 'ця'"
+  - "телефон (phone) — мобільний телефон, мій телефон"
+  - "кімната (room) — моя кімната, велика кімната"
+  recommended:
+  - "стілець (chair) — зручний стілець"
+  - "ліжко (bed) — Medium household frequency; у ліжку, лягати в ліжко, велике ліжко"
+  - "лампа (lamp) — настільна лампа"
+  - "вікно (window) — High frequency general; біля вікна, дивитися у вікно, відчинити вікно"
+  - "шафа (wardrobe) — High frequency household; у шафі, книжкова шафа, шафа для одягу"
+  - "двері (door) — Plural only in Ukrainian (ці двері); вхідні двері"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (3573 chars)
+✅ Message sent to Claude (ID: 10038)
+✓ Message 10038 acknowledged
+   Auto-acknowledged reply #10038 (stdout delivery — no inbox accumulation)
+✓ Message 10037 acknowledged

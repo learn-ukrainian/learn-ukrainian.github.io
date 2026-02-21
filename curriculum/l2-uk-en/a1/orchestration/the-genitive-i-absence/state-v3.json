@@ -5,28 +5,28 @@
   "phases": {
     "v3-A": {
       "status": "complete",
-      "ts": "2026-02-19T22:22:03Z",
-      "task_id": "v3-the-genitive-i-absence-pA",
-      "mode": "full"
+      "ts": "2026-02-20T22:11:13Z",
+      "note": "migrated-from-v2"
     },
     "v3-B": {
       "status": "complete",
-      "ts": "2026-02-19T22:22:03Z"
+      "ts": "2026-02-20T22:11:13Z",
+      "note": "migrated-from-v2"
     },
     "v3-C": {
       "status": "complete",
-      "ts": "2026-02-19T22:22:03Z",
-      "note": "adopted-existing"
+      "ts": "2026-02-20T22:11:13Z",
+      "note": "migrated-from-v2"
     },
     "v3-audit": {
       "status": "complete",
-      "ts": "2026-02-19T22:22:05Z",
-      "attempts": 1
+      "ts": "2026-02-20T22:11:13Z",
+      "note": "migrated-from-v2"
     },
     "v3-D": {
       "status": "complete",
-      "ts": "2026-02-19T22:23:20Z",
-      "attempts": 1
+      "ts": "2026-02-20T22:11:13Z",
+      "note": "migrated-from-v2"
     }
   }
 }

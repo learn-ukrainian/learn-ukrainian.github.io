@@ -1,0 +1,13 @@
+{
+  "track": "oes",
+  "slug": "princely-administration",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-20T10:46:11Z",
+      "task_id": "v3-princely-administration-pA",
+      "mode": "full"
+    }
+  }
+}

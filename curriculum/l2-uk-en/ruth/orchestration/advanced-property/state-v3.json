@@ -1,0 +1,13 @@
+{
+  "track": "ruth",
+  "slug": "advanced-property",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-20T08:00:53Z",
+      "task_id": "v3-advanced-property-pA",
+      "mode": "full"
+    }
+  }
+}

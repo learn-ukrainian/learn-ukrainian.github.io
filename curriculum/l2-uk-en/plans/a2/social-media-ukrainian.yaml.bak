@@ -1,0 +1,93 @@
+module: a2-67
+level: A2
+sequence: 67
+slug: social-media-ukrainian
+version: '2.0'
+title: Social Media Ukrainian
+subtitle: Digital Life
+content_outline:
+- section: Introduction / Вступ
+  points:
+  - Popular platforms — Telegram as primary news/comms source (75% for news, 90% daily
+    usage, official updates), Instagram for business (often replacing websites)
+  - 'Digital culture — State Standard §3.4 alignment; cultural hook: ''Пишіть у дірект''
+    (Write to DM) as standard business phrase'
+- section: Presentation / Презентація
+  points:
+  - 'Social media vocabulary — ''сторінка'' vs ''сайт'' (false friend); UI terms:
+    кнопка ''Стежити'', іконка серця'
+  - 'Posts, likes, comments — ''лайк'' vs ''вподобайка'' (purist alternative), ''світлина''
+    (photo); learner error: confusing case for ''підписатися на...'' (Accusative:
+    на канал, на сторінку)'
+- section: Practice / Практика
+  points:
+  - Write posts and comments — 'поширити допис' (share post), 'знімати сторіз' (film
+    stories), 'кидати в сторіз' (post to stories)
+- section: Dialogues / Діалоги
+  points:
+  - Online conversations — casual register, focus on Telegram (news/messaging) and
+    Instagram (visuals) context
+  - 'Commenting exchanges — interacting with ''підписники'' (followers); collocation:
+    ''кількість підписників'', ''мої підписники'''
+- section: Narrative / Розповідь
+  points:
+  - Social media story — focus on navigating UI ('кнопка', 'іконка') and digital interactions
+    ('поширити', 'лайкнути')
+- section: Need More Practice?
+  points:
+  - Summary and links
+vocabulary_hints:
+  required:
+  - 'профіль (profile) — learner error: confuse with ''сторінка'' (page)'
+  - пост (post) — писати пост, опублікувати пост, новий пост
+  - 'лайк (like) — ставити лайк, збирати лайки; alt: вподобайка (purist)'
+  - коментар (comment) — common UI term
+  - підписник (follower) — мої підписники, кількість підписників, накрутка підписників
+  - підписатися (to subscribe) — підписатися на канал (Accusative case warning), підписатися
+    на сторінку
+  - 'поділитися (to share) — поділитися з друзями; synonym: поширити допис'
+  - сторіз (stories) — знімати сторіз, кидати в сторіз, дивитися сторіз
+  recommended:
+  - стрічка (feed)
+  - хештег (hashtag)
+  - репост (repost)
+  - приватність (privacy)
+  - блокувати (to block)
+  - сповіщення (notification)
+  - світлина (photo)
+activity_hints:
+- type: match-up
+  focus: Social media vocabulary
+  items: 25
+- type: fill-in
+  focus: Complete social media texts
+  items: 15
+- type: cloze
+  focus: Write posts and comments
+  items: 10
+- type: match-up
+  focus: Match actions to icons
+  items: 15
+focus: practical
+pedagogy: PPP
+prerequisites:
+- a2-66 (Asking for Directions)
+- a2-50 (Technology and Media)
+connects_to:
+- a2-68 (Texting and Messaging)
+objectives:
+- Learner can navigate Ukrainian social media interfaces
+- Learner can write comments and posts
+- Learner can understand digital slang
+- Learner can manage profile settings
+grammar:
+- Internet slang (лайк, пост, сторіз)
+- Verbs for digital actions (постити, лайкати)
+- Commenting and messaging etiquette
+register: розмовний
+immersion: 75-90% Ukrainian
+phase: A2.6 [Practical]
+persona:
+  voice: Encouraging Cultural Guide
+  role: Community Manager
+word_target: 3000

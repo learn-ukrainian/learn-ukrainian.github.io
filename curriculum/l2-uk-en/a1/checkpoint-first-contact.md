@@ -43,7 +43,7 @@ Some letters are tricky. They look like English letters but sound different. The
 Let's check your attentiveness.
 
 1.  **Р vs П**: The letter **Р** (er) is the sound [r]. The letter **П** (pe) is the sound [p].
-    *   *Приклад:* **Ресторан** [restɔˈrɑn] — Restaurant, **Парк** [pɑrk] — Park.
+    *   *Приклад:* **Ресторан** [rɛstɔˈrɑn] — Restaurant, **Парк** [pɑrk] — Park.
 2.  **Н vs H**: Ukrainian **Н** (en) is "N". It is not "H"!
     *   *Приклад:* **Новий** [nɔˈʋɪi̯] — New, **Ні** [nʲi] — No.
 3.  **С vs C**: Ukrainian **С** (es) is [s].
@@ -211,10 +211,11 @@ You see a new verb. How do you know its group?
 
 ### Practice
 *   **Писати** [pɪˈsɑtɪ] — to write. Ending -ати. But attention! There is a sound change.
-    *   Я **пишу** (s → sh)
+    *   Я **пишу** (с → ш)
     *   Ти **пишеш**
+    *   Він/Вона **пише**
     *   Вони **пишуть**
-    This is a first group verb. Endings are standard: **-еш**, **-уть**.
+    This is a first group verb. Endings are standard: **-еш**, **-уть**. The stem change (с → ш) persists in all forms.
 
 ### Самоперевірка
 *   Which group is the word "знати" (-ати)?
@@ -251,7 +252,7 @@ These questions start with a special word. Intonation falls at the end.
     *   **Коли ми їмо?** — When are we eating?
 6.  **Чому?** (Why?) — reason.
     *   **Чому ти тут?** — Why are you here?
-    *   **Тому що...** — Because...
+    *   **Я тут, я турист.** — I am here, I am a tourist.
 
 > [!context]
 > **Де vs Куди**
@@ -301,7 +302,7 @@ Politeness opens all doors. Here is your set:
     *   *Можна каву?*
     *   *Можна меню?*
     *   *Можна рахунок?*
-2.  **Я буду...** — I will have... (Literally: I will be...)
+2.  **Я буду...** [jɑ ˈbudu] — I will have... (Literally: I will be...)
     *   *Я буду салат.*
     *   *Я буду чай.*
 3.  **Будь ласка** [budʲ ˈlɑskɑ] — Please / You are welcome.
@@ -356,7 +357,7 @@ You want coffee and dessert. You see something called "syrnyk" on the menu but d
 
 **Офіціант:** Добрий день! Ось меню, будь ласка.
 **Ви:** Дякую. (Читаєте меню). Скажіть, будь ласка, **що це** — "сирник"?
-**Офіціант:** Сирник — це традиційний український десерт. Це як "cheesecake", але смачніше. Він з сиру.
+**Офіціант:** Сирник — це традиційний український десерт. Це як "cheesecake", але смачніше. Він із сиру.
 **Ви:** О, чудово. Я люблю десерти. **Я буду** сирник і каву.
 **Офіціант:** Ви **хочете** каву з молоком?
 **Ви:** Ні, чорну каву, будь ласка. Без цукру і без молока.

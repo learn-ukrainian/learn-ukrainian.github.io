@@ -2,12 +2,5 @@
   "track": "c2",
   "slug": "style-transformation-i",
   "mode": "v3",
-  "phases": {
-    "v3-A": {
-      "status": "complete",
-      "ts": "2026-02-20T00:22:08Z",
-      "task_id": "v3-style-transformation-i-pA",
-      "mode": "full"
-    }
-  }
+  "phases": {}
 }

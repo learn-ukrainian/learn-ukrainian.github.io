@@ -1,0 +1,79 @@
+module: b1-63
+level: B1
+sequence: 63
+slug: health-wellness
+version: '2.0'
+title: Здоров'я та самопочуття
+subtitle: Health and Wellness
+content_outline:
+- section: Вступ
+  points:
+  - Beyond basic illness words — focus on 'хворіти на...' (Prep/Acc) vs Russism 'хворіти грипом' (Instr); learner error: confusing
+      'почуватися' (state) vs 'відчувати' (sense)
+  - Wellness concept — introduction of 'самопочуття' (well-being) vs 'стан здоров'я'
+    (health condition)
+  - Ukrainian health context — cultural hook: fear of 'протяг' (drafts) as a cause
+      of illness; herbal wisdom (kalyna, romashka) and the ubiquity of pharmacies
+- section: Читання
+  points:
+  - Health texts — identifying symptoms using 'У мене болить [part]' vs 'Я хворий
+    на [disease]'
+  - Wellness advice — focus on 'профілактика' (prevention) and 'зміцнення імунітету'
+    (strengthening immunity)
+- section: Діалоги
+  points:
+  - Discuss wellness topics — register differentiation: formal (doctor interaction)
+      vs informal (friends describing symptoms)
+  - Give health advice — active patient role; asking 'Як ваше самопочуття?' and responding
+    with 'одужувати' context
+vocabulary_hints:
+  required:
+  - здоров'я (health) — міцне здоров'я, берегти здоров'я, на здоров'я (toast)
+  - самопочуття (well-being) — як ваше самопочуття?, скаржитися на самопочуття (common
+    phrase)
+  - симптом (symptom) — описувати симптоми, явні симптоми
+  - лікування (treatment) — проходити курс лікування, ефективне лікування, лікуватися
+    вдома
+  - харчування (nutrition) — здорове харчування, режим харчування
+  - стрес (stress) — боротися зі стресом, вплив стресу на здоров'я
+  - фітнес (fitness) — займатися фітнесом, підтримувати форму
+  - одужувати (to recover) — швидко одужувати, бажаю одужання (common wish)
+  recommended:
+  - діагноз (diagnosis) — поставити діагноз, попередній діагноз
+  - профілактика (prevention) — профілактика захворювань, краще ніж лікування
+  - імунітет (immunity) — зміцнювати імунітет, слабкий імунітет
+  - релаксація (relaxation) — методи релаксації, для покращення самопочуття
+activity_hints:
+- type: match-up
+  focus: Health noun phrases
+  items: 25
+- type: fill-in
+  focus: Complete health sentences
+  items: 20
+- type: fill-in
+  focus: Health consultation scenarios
+  items: 15
+- type: quiz
+  focus: Discuss wellness topics
+  items: 10
+focus: vocabulary
+pedagogy: PPP
+prerequisites:
+- b1-62 (Environment Ecology)
+connects_to:
+- b1-64 (Emotions Deep Dive)
+objectives:
+- Learner can use 30 health and wellness words in context
+- Learner can distinguish between здоров'я/самопочуття/стан
+- Learner can form natural collocations with health-related nouns
+- Learner can discuss health topics fluently
+grammar:
+- Noun collocations with health vocabulary
+- Adjective-noun agreement in health contexts
+- Expressing physical states
+register: розмовний
+phase: B1.6 [Vocabulary Expansion II]
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Family Doctor
+word_target: 4000

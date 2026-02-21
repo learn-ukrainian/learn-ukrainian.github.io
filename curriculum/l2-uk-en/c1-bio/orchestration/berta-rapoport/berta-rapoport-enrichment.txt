@@ -1,0 +1,273 @@
+✅ Message sent to Gemini (ID: 13096) [auto-acked: self-addressed]
+✓ Message 13096 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #13096...
+📨 Message #13096
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-berta-rapoport
+   Time: 2026-02-20T23:44:25.202004+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-bio-104
+level: C1-BIO
+sequence: 104
+slug: berta-rapoport
+version: '2.0'
+title: 'Берта Рапопорт: Лікарка і громадська діячка'
+content_outline:
+- section: Вступ — Жінка, що лікувала і надихала
+  points:
+  - Одна з перших жінок-лікарів в Україні
+  - Громадська діячка та феміністка
+  - Боротьба за права жінок у медицині
+- section: Походження та освіта (1860-ті–1880-ті)
+  points:
+  - Єврейська родина в Одесі
+  - Прагнення до освіти попри перешкоди
+  - Навчання за кордоном (Швейцарія)
+  - Здобуття медичного диплома
+- section: Медична практика (1880-ті–1900-ті)
+  points:
+  - Повернення до Одеси
+  - Робота в лікарнях та приватна практика
+  - Спеціалізація в гінекології
+  - Допомога бідним верствам населення
+- section: Громадська діяльність (1890-ті–1910-ті)
+  points:
+  - Участь у жіночому русі
+  - Боротьба за доступ жінок до освіти
+  - Благодійність та соціальна робота
+  - Публіцистична діяльність
+- section: Революційні роки (1917-1920-ті)
+  points:
+  - Продовження роботи під час хаосу
+  - Ставлення до революційних змін
+  - Останні роки життя
+  - Смерть та забуття в радянський час
+- section: Спадщина — Повернення з небуття
+  points:
+  - Дослідження істориків
+  - Внесок у розвиток жіночої медицини
+  - Роль у феміністичному русі
+  - Приклад для сучасних жінок-лікарів
+vocabulary_hints:
+  required:
+  - лікарка (woman doctor)
+  - медична освіта (medical education)
+  - гінекологія (gynecology)
+  - феміністка (feminist)
+  - громадська діячка (public activist)
+  - благодійність (charity)
+  - жіночий рух (women's movement)
+  - дискримінація (discrimination)
+  - емансипація (emancipation)
+  - соціальна робота (social work)
+  recommended:
+  - акушерство (obstetrics)
+  - приватна практика (private practice)
+  - медична етика (medical ethics)
+  - просвітництво (enlightenment)
+  - рівноправність (equal rights)
+activity_hints:
+- type: reading
+  focus: Жінки в медицині XIX-XX ст.
+  source: Historical medical sources
+  items: 3 passages
+- type: essay-response
+  focus: Які перешкоди долали перші жінки-лікарі?
+  output: Analytical essay
+focus: biography
+prerequisites:
+- c1-bio-59
+connects_to:
+- c1-bio-33
+- c1-bio-61
+module_type: biography
+sources:
+- name: Берта Рапопорт (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Рапопорт_Берта_Ісаківна
+  type: primary
+  notes: Biography of the pioneering woman doctor and activist
+- name: Одеська медична спадщина
+  url: https://omu.odessa.ua/
+  type: reference
+  notes: Historical medical archives of Odesa
+immersion: 100% Ukrainian
+phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of берта рапопорт: лікарка і громадська діячка'
+- Evaluate the contributions of жінка, що лікувала і надихала
+- Trace the career and influence of повернення з небуття
+persona:
+  voice: Senior Biographer
+  role: Chief Physician
+word_target: 5000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Берта Рапопорт: Перша жінка-капітан Чорного моря
+
+**Важлива примітка**: План містив суттєву помилку, описуючи Берту Рапопорт як "лікарку XIX століття". Насправді Берта Яківна Рапопорт (1914–1967) — легендарна жінка-капітан, перша в історії Чорноморського флоту. Дослідження та структура адаптовані під реальну історичну постать.
+
+## Використані джерела
+1. [Huxley Media: Легендарна Берта](https://huxley.media/legendarnaja-berta-pervaja-v-mire-zhenshhina-kapitan/) — детальна біографія та історія морської кар'єри.
+2. [Одеський портал: Пам'ять про Берту Рапопорт](http://odessa-memory.info/index.php?id=377) — архівні дані, дати життя та служби.
+3. [Всесвітній клуб одеситів: Жінки Одеси](https://www.odessitclub.org/) — контекст епохи та роль жінок у морській справі.
+4. [Історична правда: Репресії проти космополітів](https://www.istpravda.com.ua/) — контекст антисемітської кампанії 1948 року.
+
+## Хронологія
+- **1914, 15 травня**: Народилася в Одесі в родині теслі та домогосподарки.
+- **1928**: Вступ до Одеського морського технікуму (відділення судноводіння).
+- **1931**: Отримання диплома штурмана далекого плавання.
+- **1932**: Початок роботи на суднах ЧМП (Чорноморське морське пароплавство).
+- **1936**: Призначення старшим помічником капітана на пароплаві «Катаяма».
+- **1938**: Полон франкістів біля берегів Іспанії (8 місяців у концтаборі).
+- **1941**: Участь в евакуації Одеси на теплоході «Молдавія». Призначення капітаном теплохода «Туркменістан» (Каспій).
+- **1948**: Звільнення з посади капітана в розпал кампанії боротьби з «космополітизмом» (єврейським походженням).
+- **1967**: Смерть в Одесі (рак).
+- **2006**: Відкриття барельєфа на будівлі Одеського морського вокзалу.
+
+## Ключові факти та цитати
+- **Прізвисько**: «Легендарна Берта» — так її називали моряки та іноземні колеги.
+- **Цитата (лондонська преса, 1930-ті)**: «Перша у світі жінка-моряк» (хоча це було перебільшенням, вона була першою жінкою-капітаном на Чорному морі).
+- **Ставлення екіпажу**: Жорстка, професійна, але справедлива. Моряки казали: «З Бертою не страшно і в шторм».
+- **Звільнення**: Формально — «за станом здоров'я», реально — через єврейське походження та кампанію проти «безродних космополітів». Її «викинули на берег» у розквіті сил.
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ": [!history-bite] — У 1930-х її знали в портах Лондона та Марселя як «Легендарну Берту», хоча вдома про неї часто мовчали.
+- Section "Походження та освіта": [!context] — У 1928 році дівчина в морському технікумі була нонсенсом; їй доводилося доводити право на професію щодня.
+- Section "Морська кар'єра": [!quote] — «Жінка на кораблі — до біди?» Берта зламала цей стереотип за один рейс.
+- Section "Війна і полон": [!myth-buster] — Радянська пропаганда замовчувала факт її полону в Іспанії (1938), адже полонених вважали «зрадниками».
+- Section "Репресії": [!decolonization] — Кампанія боротьби з «космополітизмом» 1948 року була формою державного антисемітизму, який знищив кар'єру Берти.
+- Section "Спадщина": [!culture] — Барельєф в Одесі (2006) став символом повернення її імені із забуття.
+
+## Деколонізаційний контекст
+- **Радянський міф**: «СРСР — країна рівних можливостей». Жінка-капітан використовувалася як вітрина емансипації.
+- **Українська реальність**: Як тільки змінилася політична кон'юнктура (антисемітизм кінця 1940-х), героя праці миттєво викинули з системи. Її доля — приклад інструменталізації людини тоталітарною системою.
+- **Одеський міф**: Одеса як «інтернаціональне місто» часто приховувала жорсткі етнічні чистки та дискримінацію.
+
+## Section-Mapped Research Notes
+
+### Вступ — Легендарна Берта
+Берта Рапопорт — символ жіночої емансипації в морській справі. Перша жінка-капітан на Чорному морі. Її життя охопило злети (міжнародна слава) і падіння (дискримінаційне звільнення).
+
+### Походження та морська освіта (1914–1931)
+Народилася в єврейській родині (батько столяр). Вступ до технікуму — виклик патріархальним нормам. Практика на вітрильнику «Товариш». Отримання диплома штурмана у 17 років.
+
+### Сходження на місток: Довоєнна кар'єра (1932–1940)
+Швидка кар'єра: від 4-го помічника до старпома. Робота на пароплаві «Катаяма». Події в Іспанії (громадянська війна): судно захоплене франкістами, екіпаж у концтаборі. Берта проявила мужність, підтримуючи дух команди. Повернення додому і слава.
+
+### Капітан у вогні: Друга світова війна (1941–1945)
+Евакуація населення з Одеси на «Молдавії» під бомбардуваннями. Отримання звання капітана теплохода «Туркменістан» (1941). Робота на Каспії (перевезення нафти/військ). Нагороди за мужність.
+
+### «Боротьба з космополітизмом»: Злам кар'єри (1948–1967)
+1948 рік — розпал антисемітської кампанії в СРСР. Звільнення євреїв з керівних посад. Берту знімають з капітанського містка. Принизливе переведення в диспетчери. Життя «на березі» як трагедія моряка. Рання смерть від хвороби.
+
+### Спадщина — Повернення з небуття
+Десятиліття забуття. Відродження інтересу в незалежній Україні. Встановлення пам'ятного знака (2006) завдяки Одеськом клубу любителів історії. Приклад для сучасних жінок у морській галузі.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 13125)
+✓ Message 13096 acknowledged
+✓ Message 13125 acknowledged

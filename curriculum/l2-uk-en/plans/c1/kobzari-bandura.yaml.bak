@@ -1,0 +1,24 @@
+module: c1-048
+level: c1
+sequence: 48
+version: '1.0'
+title: 'Кобзарі та бандура: Душа України'
+subtitle: 'Kobzari and Bandura: The Soul of Ukraine'
+focus: cultural
+pedagogy: Cultural Immersion
+objectives:
+- Learner can describe the history and significance of kobzari tradition
+- Learner can identify parts of the bandura and playing techniques
+- Learner can discuss the tragic history of kobzari persecution
+content_outline:
+- section: Introduction
+  subsections:
+  - TBD
+vocabulary:
+  required: '[]'
+  recommended: '[]'
+  forbidden: '[]'
+persona:
+  voice: Senior Specialist
+  role: Цехмайстер
+word_target: 4000

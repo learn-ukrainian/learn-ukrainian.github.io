@@ -1,0 +1,213 @@
+✅ Message sent to Gemini (ID: 12496) [auto-acked: self-addressed]
+✓ Message 12496 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12496...
+📨 Message #12496
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-monomakh-instruction
+   Time: 2026-02-20T23:40:09.982429+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 39
+module: oes-039
+module_number: 39
+slug: monomakh-instruction
+title_uk: Повчання Мономаха
+title_en: Monomakh's Instruction
+phase: 2
+phase_id: literary-tradition
+phase_name: Literary Tradition
+focus: Didactic genre — Imperative mood
+content_outline:
+- section: Вступ
+  description: Introduction to Monomakh's Instruction
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Senior Paleographer
+  role: Wise Ruler
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Повчання Володимира Мономаха (Monomakh Instruction)
+
+## Використані джерела
+1. [Ізборник (Litopys.org.ua)](http://litopys.org.ua/oldukr/monomakh.htm) — Повний текст "Повчання" (давньоруською та переклад Л. Махновця).
+2. [Енциклопедія Сучасної України (ESU)](https://esu.com.ua/article-1025) — Стаття про Володимира Мономаха, історичний контекст та літературну спадщину.
+3. [Ізборник (Izbornyk.org.ua)](http://izbornyk.org.ua/lavrlet/lavr13.htm) — Оригінал тексту за Лаврентіївським списком 1377 року.
+4. [History.org.ua](http://resource.history.org.ua/) — Матеріали про політичну діяльність Мономаха та Любецький з'їзд.
+
+## Хронологія
+- **1053**: Народження Володимира Всеволодовича (Мономаха).
+- **1097**: Любецький з'їзд князів (спроба припинити усобиці, ідеологія "кожен хай держить отчину свою").
+- **1099**: Ймовірна дата написання першої частини "Повчання" (за однією з гіпотез).
+- **1113**: Володимир стає Великим князем Київським після повстання киян.
+- **1117**: Створення остаточної редакції "Повчання" (додавання автобіографії та листа).
+- **1125**: Смерть Володимира Мономаха.
+- **1377**: Переписування Лаврентіївського літопису, у складі якого зберігся єдиний список твору.
+
+## Ключові факти та цитати
+- **Структура**: Твір складається з трьох частин: 1) Власне повчання (релігійно-моральні настанови); 2) Автобіографія (опис походів і ловів); 3) Лист до Олега Святославича (приклад дипломатії та прощення).
+- **Цитата 1 (Давньоруська)**: «ЛЂность бо всему мати: еже умЂеть, то забудеть, а егоже не умЂеть, а тому ся не учить.» (Лінь бо всьому мати: що людина вміє, те забуде, а чого не вміє, того не вчиться).
+- **Цитата 2 (Давньоруська)**: «Всего же паче убогых не забывайте, но елико могуще по силЂ кормите...» (А над усе не забувайте убогих, але скільки можете, по силі годуйте...).
+- **Цитата 3 (Давньоруська)**: «Аще вы послЂдняя не люба, а передняя приимайте.» (Якщо вам останні [слова] не до вподоби, то попередні прийміть).
+- **Унікальність**: Це перший зразок світської автобіографії та педагогічної думки в літературі Русі.
+
+## Engagement Hooks
+- Section "Вступ": [!history-bite] — Дружина Мономаха, Гіта Уессекська, була донькою останнього англосаксонського короля Гарольда II, що пов'язує Київську Русь з англійською історією тісніше, ніж заведено вважати.
+- Section "Основний матеріал: II — Моральний кодекс": [!context] — Порівняння "лицарського ідеалу" Мономаха із західноєвропейськими кодексами честі того часу.
+- Section "Основний матеріал: III — Автобіографія": [!paleography] — Аналіз того, як фізичний стан рукопису (Лаврентіївського списку) впливає на наше прочитання (втрачені аркуші, помилки переписувача).
+- Section "Лінгвістичний аналіз: Граматика": [!linguistics] — Імперативні форми як основа дидактичного жанру (пор. *дайте*, *не забувайте*).
+- Section "Підсумок та Спадщина": [!myth-buster] — "Шапка Мономаха" — це золоординська тюбетейка 14 ст., яка не має жодного відношення до київського князя Володимира. Це московський імперський фейк для легітимізації влади.
+- Section "Вступ": [!culture] — Зв'язок "Повчання" з бібліотекою Ярослава Мудрого та загальним рівнем освіченості київської еліти.
+
+## Деколонізаційний контекст
+- **Міф**: Російська історіографія присвоює Мономаха як "російського" князя, а його твір — як початок "російської" літератури.
+- **Реальність**: Володимир Мономах — київський князь, який діяв у контексті українських етнічних земель (Київ, Переяслав, Чернігів). Його мова відображає живі риси протоукраїнської мови (повноголосся, закінчення -ть у дієсловах 3 ос., кличний відмінок).
+- **Державницька традиція**: Ідея єдності земель навколо Києва є центральною, на противагу пізнішим московським інтерпретаціям про "збирання земель" під деспотичною владою. Мономах проповідує договірні відносини та моральну відповідальність правителя, а не самодержавство.
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| Мова твору | Давньоросійська (Old Russian) | Давньоруська / Давньоукраїнська (Old Rus / Old Ukrainian dialect) |
+| Володимир Мономах | "Русский князь", предок царів | Київський князь, європейський монарх |
+| Шапка Мономаха | Символ самодержавства, спадок Візантії | Ординський артефакт, московська містифікація |
+| "Руська земля" | Росія у зародку | Держава з центром у Києві (територія сучасної України) |
+
+## Section-Mapped Research Notes
+
+### Вступ
+Контекст початку XII ст. Криза київського престолонаслідування. Жанр "повчання" (xenikon) у візантійській традиції та його київська адаптація. Лаврентіївський літопис 1377 року як єдине джерело тексту (вставлений у літопис під 1096 роком, що є анахронізмом).
+
+### Основний матеріал: I — Структура та зміст
+Трикомпонентна структура. Дидактична частина: релігійні цитати (Псалтир, Василій Великий). Автобіографічна частина: "шляхи" (походи) і "лови" (полювання). Лист до Олега: унікальний документ прощення вбивці власного сина заради миру в державі.
+
+### Основний матеріал: II — Моральний кодекс
+Етика правителя: захист слабких ("вдовицю і смерда"), контроль над адміністрацією ("тіунами"), особиста відповідальність на війні. Гуманізм Мономаха: заперечення смертної кари ("ні правого, ні винного не вбивайте"). Гостинність як політичний інструмент.
+
+### Основний матеріал: III — Автобіографія
+"Шляхів" (походів) — 83 великих. Географія: від Дону до Угорщини, від Новгорода до Половців. Опис полювання як підготовки до війни (тури, вепри, лосі). Риси "живого" життя князя, не приховані агіографічним каноном.
+
+### Основний матеріал: IV — Лист до Олега
+Лист до Олега Святославича (Гориславича) після битви під Муромом (1096), де загинув син Мономаха Ізяслав. Заклик до примирення. Висока політична культура: вміння ставити інтереси держави вище особистої помсти.
+
+### Лінгвістичний аналіз: Граматика
+Імператив (наказовий спосіб): *пишите*, *не ленуйтеся*, *почитайте*. Давньоруські форми vs сучасні українські рефлекси (єрова голосних, повноголосся). Лексика: *смерд*, *тіун*, *отрок* — соціальна стратифікація. Синтаксис: нанизування простих речень, характерне для усного мовлення.
+
+### Підсумок та Спадщина
+Вплив на пізнішу літературу. "Повчання" як заповіт ідеального правителя. Спростування московських міфів про "регалії Мономаха". Значення для сучасної української ідентичності: європейськість, відповідальність, верховенство права (хоча б у зародку).
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12539)
+✓ Message 12496 acknowledged
+✓ Message 12539 acknowledged

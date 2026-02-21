@@ -1,0 +1,302 @@
+✅ Message sent to Gemini (ID: 10237) [auto-acked: self-addressed]
+✓ Message 10237 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10237...
+📨 Message #10237
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-hobbies-leisure
+   Time: 2026-02-20T20:04:25.655177+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: a2-51
+level: A2
+sequence: 51
+slug: hobbies-leisure
+version: '2.0'
+title: Hobbies and Leisure
+subtitle: What We Do for Fun
+content_outline:
+- section: Вступ
+  points:
+  - 'How Ukrainians spend free time — cultural hook: Mushroom Picking («Тихе полювання»,
+    often in forests) and Embroidery (Вишивання, creating *vyshyvanka* or *rushnyky*);
+    aligned with State Standard §3.4'
+  - 'Hobbies vocabulary overview — collocations: «моє хобі», «цікаве хобі», «вільний
+    час», «мати вільний час»'
+- section: Граматика
+  points:
+  - 'Indoor hobbies (читати, малювати, грати на гітарі) — learner error: confusion
+    of cases with «грати»; correct: «грати на гітарі» (Locative for instruments)'
+  - 'Outdoor activities (грати у футбол, займатися спортом) — learner error: «Я граю
+    спорт» (calque); correct: «займатися спортом» (Instrumental); distinguish: «грати
+    у футбол» (Accusative for games)'
+  - 'Social activities (зустрічатися з друзями) — collocations: «проводити дозвілля»,
+    «культурне дозвілля»'
+  - Frequency expressions (часто, рідко, іноді)
+- section: Практика
+  points:
+  - Dialogues about weekend plans — use phrase «у вільний час»
+  - Describe hobbies and interests — focus on correct case usage (Instrumental for
+    activities, Locative for instruments)
+- section: Підсумок
+  points:
+  - Summary of vocabulary
+vocabulary_hints:
+  required:
+  - 'хобі (hobby) — collocations: «моє хобі», «цікаве хобі»'
+  - 'вільний час (free time) — phrase: «у вільний час», «мати вільний час»'
+  - 'дозвілля (leisure) — collocations: «проводити дозвілля», «культурне дозвілля»'
+  - 'грати (to play) — collocations: «грати у футбол» (games), «грати на гітарі» (instruments),
+    «грати в шахи»'
+  - 'займатися (to do/practice) — collocations: «займатися спортом», «займатися йогою»,
+    «займатися танцями»; requires Instrumental case'
+  - музика (music)
+  - 'спорт (sport) — usage: «займатися спортом» (not «грати спорт»)'
+  - читати (to read)
+  - малювати (to draw)
+  recommended:
+  - 'гітара (guitar) — usage: «грати на гітарі»'
+  - 'шахи (chess) — usage: «грати в шахи»'
+  - фотографія (photography)
+  - подорож (travel)
+  - концерт (concert)
+  - виставка (exhibition)
+activity_hints:
+- type: match-up
+  focus: Hobbies and activities
+  items: 30
+- type: match-up
+  focus: Match verbs to activities
+  items: 20
+- type: cloze
+  focus: Weekend plans conversation
+  items: 10
+- type: quiz
+  focus: Describe your hobbies
+  items: 8
+focus: vocabulary
+pedagogy: PPP
+prerequisites:
+- a2-50 (Technology and Media)
+connects_to:
+- a2-52 (Education and Learning)
+- a2-54 (Sports and Fitness)
+objectives:
+- Learner can talk about hobbies and interests
+- Learner can use 'грати' and 'займатися' correctly
+- Learner can describe weekend plans
+- Learner can ask others about their free time
+grammar:
+- Verbs for hobbies (грати на, займатися)
+- Accusative vs instrumental (футбол vs тенісом)
+- Expressing frequency and interests
+register: розмовний
+immersion: 75-90% Ukrainian
+phase: A2.5 [Vocabulary Expansion]
+persona:
+  voice: Encouraging Cultural Guide
+  role: Event Organizer
+word_target: 3000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Hobbies and Leisure
+
+## State Standard Reference
+§3.4: "Дозвілля, відпочинок: способи проведення вільного часу; хобі та зацікавлення; види спорту, спортивних споруд і спортивне спорядження; преса, радіо, телебачення, інтернет, соціальні мережі."
+Alignment: This module directly addresses the "ways of spending free time" and "hobbies and interests" requirements of the standard, providing the vocabulary and grammatical structures to discuss these topics.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| хобі | High / A1-A2 Core | моє хобі, цікаве хобі |
+| дозвілля | Med-High / Core | проводити дозвілля, культурне дозвілля |
+| грати | High / Top 500 verbs | грати у футбол, грати на гітарі, грати в шахи |
+| займатися | High / Top 500 verbs | займатися спортом, займатися йогою, займатися танцями |
+| вільний час | High / Phrase | у вільний час, мати вільний час |
+
+## Cultural Hooks
+1. **Mushroom Picking ("Тихе полювання")**: Gathering mushrooms is a massively popular national pastime in Ukraine, often referred to as "silent hunting." It's not just for rural residents; city dwellers frequently travel to forests in autumn.
+2. **Embroidery (Вишивання)**: Far more than a craft, embroidery is a cultural act. Many Ukrainians embroider their own shirts (vyshyvanka) or household items (rushnyky), preserving specific regional patterns.
+
+## Common Learner Errors
+1. **Verb Choice (Play vs. Do)**: Learners often say "Я граю спорт" (calque from English "I play sport").
+   → **Correct**: "Я займаюся спортом" (I engage in sport).
+   → *Why*: "Грати" is strictly for games (with rules) or instruments. General physical activity uses "займатися".
+2. **Preposition & Case with "Грати"**: Learners confuse the structures for sports vs. instruments.
+   → **Error**: "Я граю гітару" (Accusative without preposition) or "Я граю на футбол" (Locative).
+   → **Correct**: "Я граю **на** гітарі" (Locative for instruments) vs. "Я граю **у** футбол" (Accusative + 'у' for games).
+3. **Case with "Займатися"**: Forgetting the Instrumental case.
+   → **Error**: "Я займаюся футбол" (Nominative/Accusative).
+   → **Correct**: "Я займаюся футбол**ом**" (Instrumental).
+
+## Cross-References
+- **Builds on**: `a2-50` (Technology and Media) - usage of media verbs often overlaps with leisure.
+- **Prepares for**: `a2-54` (Sports and Fitness) - specifically the "займатися + Instrumental" structure which is critical for that module.
+
+## Notes for Content Writing
+- **Grammar Focus**: Strictly enforce the distinction: *грати у + Acc* (games), *грати на + Loc* (music), *займатися + Instr* (activities).
+- **Immersion**: This is A2.5 (High Immersion). Use Ukrainian for all examples and dialogues. English is allowed only for the specific grammar explanation of the *грати/займатися* distinction to ensure clarity.
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Cultural Hook: Mushroom Picking («Тихе полювання») — explain the national tradition of 'silent hunting' in Ukrainian forests and its popularity among city dwellers."
+  - "Cultural Hook: Embroidery (Вишивання) — explore how embroidery is a vital cultural act used to preserve regional patterns in 'vyshyvanka' and 'rushnyky'."
+  - "State Standard §3.4 Alignment: Introduction to ways of spending free time and standard terminology for leisure activities."
+- section: "Лексика: Світ хобі (Vocabulary: World of Hobbies)"
+  words: 600
+  points:
+  - "High-frequency collocations for leisure: «вільний час», «мати вільний час», «проводити дозвілля», «культурне дозвілля»."
+  - "Categorizing hobbies: Indoor activities (читати, малювати, грати на гітарі) vs. Outdoor activities (займатися спортом, подорожувати)."
+  - "Vocabulary expansion: Cultural events like «концерт», «виставка», and «театр» as part of leisure planning."
+- section: "Граматика: Грати чи займатися? (Grammar: To Play or to Do?)"
+  words: 900
+  points:
+  - "Learner error correction: The calque 'Я граю спорт' vs. the correct 'Я займаюся спортом' — explain that 'грати' is only for games with rules or instruments."
+  - "Grammar Rule: «грати у + Accusative» for games (футбол, шахи, теніс) vs. «грати на + Locative» for musical instruments (гітара, піаніно)."
+  - "Grammar Rule: «займатися + Instrumental» for general sports, hobbies, and activities (спортом, йогою, танцями, фотографією) — drill endings."
+  - "Frequency expressions: Using «часто», «рідко», «іноді» to describe habits and intensity of involvement in hobbies."
+- section: "Практика та діалоги (Practice and Dialogues)"
+  words: 800
+  points:
+  - "Dialogue: Asking 'Як ти проводиш вільний час?' and answering using 'у вільний час' with frequency adverbs."
+  - "Case application drill: Mixing instruments and sports to force learners to choose between 'грати у', 'грати на', and 'займатися'."
+  - "Describing weekend plans: Role-play planning a 'культурне дозвілля' trip to a forest or an exhibition."
+- section: "Підсумок (Summary)"
+  words: 300
+  points:
+  - "Summary of key collocations and the грати/займатися distinction."
+  - "Self-reflection: Learners describe their own 'тихе полювання' or other interests using the correct grammatical structures."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "хобі (hobby) — high frequency; collocations: «моє хобі», «цікаве хобі»"
+  - "дозвілля (leisure) — med-high frequency; collocations: «проводити дозвілля», «культурне дозвілля»"
+  - "вільний час (free time) — high frequency; phrase: «у вільний час», «мати вільний час»"
+  - "грати (to play) — high frequency; «грати у футбол» (games + Acc), «грати на гітарі» (instruments + Loc)"
+  - "займатися (to do/practice) — high frequency; requires Instrumental: «займатися спортом», «займатися йогою»"
+  - "тихе полювання (mushroom picking) — cultural hook: literal 'silent hunting', the tradition of gathering mushrooms"
+  - "вишивання (embroidery) — cultural hook: preservation of identity through patterns; verb: «вишивати»"
+  - "музика (music) — collocation: «слухати музику», «цікавитися музикою»"
+  - "спорт (sport) — usage note: «займатися спортом» (not «грати спорт»)"
+  - "читати (to read)"
+  - "малювати (to draw)"
+  recommended:
+  - "вишиванка (embroidered shirt) — cultural item produced via «вишивання»"
+  - "гітара (guitar) — usage: «грати на гітарі»"
+  - "шахи (chess) — usage: «грати в шахи»"
+  - "фотографія (photography) — usage: «займатися фотографією»"
+  - "подорож (travel) — verb: «подорожувати»"
+  - "концерт (concert)"
+  - "виставка (exhibition)"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (3767 chars)
+✅ Message sent to Claude (ID: 10244)
+✓ Message 10244 acknowledged
+   Auto-acknowledged reply #10244 (stdout delivery — no inbox accumulation)
+✓ Message 10237 acknowledged

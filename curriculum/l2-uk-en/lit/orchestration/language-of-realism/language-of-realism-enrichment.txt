@@ -1,0 +1,292 @@
+✅ Message sent to Gemini (ID: 12116) [auto-acked: self-addressed]
+✓ Message 12116 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12116...
+📨 Message #12116
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-language-of-realism
+   Time: 2026-02-20T23:36:15.162564+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 29
+module: lit-29
+level: LIT
+slug: language-of-realism
+version: '2.0'
+title: 'Мова Реалізму: Стиль Нечуя-Левицького'
+subtitle: 'The Language of Realism: Nechuy-Levytsky''s Style'
+content_outline:
+- section: Вступ — Від поезії до прози
+  points:
+  - Еволюція літературної мови (Котляревський → Нечуй)
+  - Специфіка реалістичної прози
+  - Мова як інструмент достовірності
+- section: Етнографічна точність
+  points:
+  - Діалектизми і регіоналізми
+  - Побутова лексика
+  - Точність описів
+- section: Мова персонажів
+  points:
+  - Індивідуалізація мовлення
+  - Соціолект села
+  - Гумор через мову
+- section: Дискусія про норму
+  points:
+  - '"Галицька" vs "наддніпрянська" мова'
+  - Позиція Нечуя
+  - Кривава пляма на сонці (полеміка)
+- section: Порівняльний аналіз
+  points:
+  - Нечуй vs Котляревський (бурлеск)
+  - Нечуй vs Квітка (сентименталізм)
+  - Нечуй vs Шевченко (поезія)
+- section: Підсумок — Спадщина для ХХ століття
+  points:
+  - Вплив на пізніших прозаїків
+  - Актуальність дискусії про мову
+  - Перехід до "Миколи Джері"
+vocabulary_hints:
+  required:
+  - діалектизм (dialectism)
+  - регіоналізм (regionalism)
+  - соціолект (sociolect)
+  - індивідуалізація (individualization)
+  - етнографія (ethnography)
+  - побутова лексика (everyday vocabulary)
+  - полеміка (polemics)
+  - норма (norm/standard)
+  - достовірність (authenticity)
+  - стиль (style)
+  recommended:
+  - архаїзм (archaism)
+  - неологізм (neologism)
+  - синтаксис (syntax)
+  - наратив (narrative)
+  - оповідач (narrator)
+activity_hints:
+- type: reading
+  focus: Порівняння уривків різних авторів
+  source: UkrLib texts
+  items: 5+
+- type: essay-response
+  focus: Мова як засіб характеризації
+  output: Лінгвостилістичне есе
+focus: literature
+pedagogy: Seminar
+prerequisites:
+- lit-28 (Кайдашева сім'я — конфлікти)
+connects_to:
+- lit-30 (Микола Джеря)
+- lit-10 (Мова Квітки)
+- lit-24 (Мовне питання)
+objectives:
+- Проаналізувати мовні особливості реалістичної прози
+- Порівняти мову Нечуя з попередніми авторами курсу
+- Зрозуміти дискусію про "галицьку" vs "наддніпрянську" норму
+- Оцінити внесок Нечуя в розвиток літературної мови
+grammar:
+- Dialectal features
+- Linguistic terminology
+- Stylistic analysis
+module_type: literature
+sources:
+- name: Кайдашева сім'я — повний текст
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=907
+  type: primary
+  notes: Зразки діалектної та розмовної мови
+- name: Микола Джеря — повний текст
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=908
+  type: primary
+  notes: Порівняння стилю
+- name: Мовознавчі погляди Нечуя
+  url: https://uk.wikipedia.org/wiki/Нечуй-Левицький_Іван_Семенович
+  type: reference
+  notes: Контекст дискусії
+immersion: 100% Ukrainian
+phase: LIT.5 Realism
+persona:
+  voice: Senior Philologist & Critic
+  role: Realist Linguist
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Мова Реалізму: Стиль Нечуя-Левицького
+
+## Використані джерела
+1. [Енциклопедія Сучасної України: Нечуй-Левицький Іван Семенович](https://esu.com.ua/search_articles.php?id=73943) — Огляд життя та творчості письменника, його внесок у розвиток літературної мови.
+2. [Інститут історії України НАНУ: НЕЧУЙ-ЛЕВИЦЬКИЙ Іван Семенович](http://history.org.ua/?termin=Nechuy_Levytsky_I) — Аналіз полеміки щодо мовної норми наприкінці XIX — на початку XX століття.
+3. [Ізборник (litopys.org.ua): Історія української літературної мови](http://litopys.org.ua/) — Історичний контекст формування наддніпрянського стандарту та роль творів Нечуя-Левицького.
+
+## Хронологія
+- 1868: Публікація перших творів Нечуя-Левицького («Дві московки»), що засвідчили перехід до нового етапу літературної мови.
+- 1878: Вихід друком повісті «Микола Джеря», що утвердила багатство народнорозмовної лексики в літературі.
+- 1879: Публікація «Кайдашевої сім'ї» — вершини майстерності індивідуалізації мови персонажів.
+- 1907: Стаття «Сьогочасна часописна мова на Україні», у якій письменник розкритикував засилля галицизмів та полонізмів.
+- 1912: Вихід гострополемічної праці «Криве дзеркало української мови», що стала кульмінацією дискусії про шляхи розвитку літературної норми.
+
+## Ключові факти та цитати
+- Іван Франко про стиль письменника: «Нечуй-Левицький — це колосальне, всеосяжне око України». 
+- Мовне кредо: Нечуй-Левицький вважав, що основою загальнонаціональної літературної норми має стати народна мова Наддніпрянщини, зокрема говірки Київщини, Черкащини та Полтавщини («мова баби, що продає на базарі насіння»).
+- Він жорстко критикував мову галицьких часописів за «книжність», відрив від живого мовлення та штучне словотворення.
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ — Від поезії до прози: Еволюція мови": `[!context]` — Перехід від поетичного домінування (Шевченко) до епічних прозових форм вимагав нового лексичного інструментарію.
+- Section "Етнографічна точність: Діалекти та регіоналізми": `[!quote]` — Цитати Франка про "колосальне око", що фіксувало найменші мовні нюанси.
+- Section "Мова персонажів: Соціолект і гумор": `[!history-bite]` — Нечуй був неймовірним педантом у житті (щоденні прогулянки по хвилинах), і ця педантичність переносилася на точність запису живого мовлення.
+- Section "Дискусія про норму: Контекст мовного питання": `[!decolonization]` — Мовна полеміка була актом націотворення: створення єдиного стандарту всупереч розділеності України між двома імперіями.
+- Section "Дискусія про норму: Полеміка Нечуя-Левицького": `[!myth-buster]` — Радянська критика часто зводила Нечуя до образу "селянського письменника-етнографа", ігноруючи його роль як потужного інтелектуала та мовного ідеолога.
+
+## Деколонізаційний контекст
+- Imperial/Soviet myth: Творчість Нечуя-Левицького — це просто побутоописання, етнографічна замальовка "темного села" (звуження масштабу до фольклоризму).
+- Ukrainian reality: Письменник був свідомим творцем модерної української мови. Його проза була деколонізаційним інструментом, що перетворював "мужицьку говірку" на мову повноцінної літератури, здатну передавати психологічні глибини та соціальні конфлікти без огляду на російські імперські моделі.
+
+## Contested Terms (if applicable)
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| "Етнографізм" | Примітивне описування сільського побуту | Наукова та художня фіксація автентичної культури |
+| Мовна полеміка | Дрібні сварки провінційних письменників | Ключовий етап формування національного стандарту |
+
+## Section-Mapped Research Notes
+
+### Вступ — Від поезії до прози: Еволюція мови
+Перехід від традиції Котляревського та Шевченка до розлогого епічного наративу. Проза вимагала іншого синтаксису: менш емоційного, більш аналітичного.
+
+### Вступ — Від поезії до прози: Інструмент достовірності
+Мова в реалізмі стає головним маркером достовірності. Нечуй-Левицький створює ілюзію повної невтручальності автора — "життя як воно є".
+
+### Етнографічна точність: Діалекти та регіоналізми
+Свідоме використання говірок Наддніпрянщини. Багатство словника, що фіксує матеріальну культуру.
+
+### Етнографічна точність: Побутова лексика та описи
+Деталізація інтер'єрів, одягу, звичаїв ("Кайдашева сім'я"). Мова як засіб фотографічної точності (пейзажі, портрети).
+
+### Мова персонажів: Індивідуалізація мовлення
+Кожен герой говорить відповідно до свого статусу та характеру (наприклад, сварлива Кайдашиха, богомільна Палажка).
+
+### Мова персонажів: Соціолект і гумор
+Сільський соціолект як джерело комічного. Відсутність штучного шаржування — гумор виникає із самого способу мислення героїв та їхньої фразеології.
+
+### Дискусія про норму: Контекст мовного питання
+Пошук компромісу між Сходом і Заходом. Роль галицьких видань в умовах Емського указу, що забороняв друк на Наддніпрянщині.
+
+### Дискусія про норму: Полеміка Нечуя-Левицького
+Статті «Сьогочасна часописна мова на Україні» та «Криве дзеркало української мови». Відторгнення Нечуєм штучного "кування" слів і захист чистоти наддніпрянської основи.
+
+### Порівняльний аналіз: Нечуй та ранні прозаїки
+Відмова від бурлеску Котляревського та сентиментальної дидактики Квітки-Основ'яненка на користь об'єктивного реалізму.
+
+### Порівняльний аналіз: Проза Нечуя та поезія Шевченка
+Продовження демократичних традицій Шевченка, але в іншій стилістичній парадигмі (від міфологізації до соціології).
+
+### Підсумок — Спадщина для ХХ століття: Літературний вплив
+Наддніпрянська норма стала базисом для української літературної мови ХХ століття. Вплив на Коцюбинського, Мирного, Панаса Тесленка.
+
+### Підсумок — Спадщина для ХХ століття: Перехід до Миколи Джері
+Місток до наступного модуля. Еволюція мови Нечуя від родинно-побутових конфліктів до широких соціальних узагальнень.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12167)
+✓ Message 12116 acknowledged
+✓ Message 12167 acknowledged

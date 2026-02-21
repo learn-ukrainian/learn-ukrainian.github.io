@@ -1,36 +1,32 @@
 # Дослідження: Phone Basics
 
 ## State Standard Reference
-§1.4.2: "простий діалог (4 – 6 реплік) у межах мінімального переліку мовленнєвих ситуацій (див. Каталог А, Каталог Б)"
-§2: "привернути чиюсь увагу, установити контакт: Вибачте. Можна запитати? Скажіть, будь ласка;"
-Alignment: This module provides the specific linguistic formulas for phone contact (opening, questioning, closing) required for A1 interpersonal communication. It utilizes the simple sentence structures and basic imperatives (2nd person) defined in §4.3.1 and §4.2.4.2.
+§4.2.4.2: "Форми 2-ї особи однини і множини наказового способу деяких дієслів: читати (читай, читайте)... сказати (скажи, скажіть)... дати (дай, дайте)..."
+Alignment: This module utilizes 2nd person imperative forms (both singular and plural) to manage phone conversations and make polite requests (e.g., Зачекайте, будь ласка; Повторіть, будь ласка; Скажіть, будь ласка).
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| **Алло** | Very High / Speech | Алло! Хто це? |
-| **Слухаю** | High / Speech | Так, слухаю вас. |
-| **Дзвонити** | Very High / Speech | дзвонити другу, дзвонити мамі |
-| **Телефонувати** | High / Neutral | телефонувати в офіс, телефонувати пізніше |
-| **Номер** | High / General | номер телефону, помилитися номером |
-| **Повідомлення** | High / Digital | написати повідомлення, залишити повідомлення |
-| **Передзвонити** | Medium-High / Speech | Я передзвоню за хвилину. |
-| **Зачекайте** | High / Imperative | Зачекайте, будь ласка. |
+| телефон | Very High | номер телефону, мій телефон |
+| дзвонити | Very High | дзвонити другу/мамі, дзвонити в офіс |
+| повідомлення | High (Digital) | написати повідомлення, залишити повідомлення |
+| зайнятий | High | лінія зайнята, я зайнятий |
+| передзвонити | High | передзвонити пізніше, я передзвоню |
 
 ## Cultural Hooks
-1. **Phone Greetings**: While "Алло!" is universal, "Слухаю!" (I'm listening) is a distinctly polite and professional way to answer in Ukraine, signaling readiness to help or listen. (Source: Ukrainian Language Etiquette guides).
-2. **Modern Sign-off**: The phrase "До зв'язку!" (Until next contact / Talk soon) has become a staple of modern Ukrainian phone and messenger culture, bridging the gap between formal "До побачення" and informal "Бувай". (Source: Modern Ukrainian sociolinguistic observations).
+1. While "Алло!" is universally understood and used for informal calls, the standard polite/professional greeting when answering a call in Ukraine is "Слухаю!" (I'm listening) or "Слухаю вас!". It signals readiness and professional attention.
+2. The modern sign-off for calls and messengers in Ukraine is "До зв'язку!" (Talk soon / Until the next connection). It effectively bridges the gap between the highly formal "До побачення" and the overly casual "Бувай".
 
 ## Common Learner Errors
-1. **Intro Error**: "Я є Олена" → **"Це Олена"** or **"Олена слухає"** — English speakers often use the verb "to be" directly instead of the demonstrative "Це" or the "listening" formula.
-2. **Pronunciation**: Mispronouncing **"дз"** in "дзвонити" as two separate sounds or just "z". It must be a single affricate (like "ds" in "beds").
-3. **Formal/Informal**: Using **"ти"** with a stranger (e.g., a courier or receptionist). Learners should be taught to default to **"Ви"** until an informal relationship is established.
+1. "Я є Олена" → "Це Олена" або "Олена слухає" — English literal translation of the copula 'to be' when identifying oneself on the phone.
+2. Mispronunciation of "дз" → single affricate /dz/ — Learners often pronounce it as two distinct sounds /d/ and /z/ in the high-frequency word "дзвонити".
+3. Overusing informal "ти" on the phone → default to "Ви" — Learners often use "ти" with couriers or receptionists due to the lack of T-V distinction in English.
 
 ## Cross-References
-- Builds on: **a1-07** (Questions and Negation), **a1-11** (Accusative Case for direct objects), **a1-13** (Locative Case for "where").
-- Prepares for: **a1-42** (Emergencies - calling for help), **a1-43** (Combined Practice - real-world simulations).
+- Builds on: a1-07 (Questions and Negation), a1-40 (Taking Transport)
+- Prepares for: a1-42 (Emergencies), a1-43 (Combined Practice)
 
 ## Notes for Content Writing
-- Focus on the distinction between **"Алло"** (informal/neutral) and **"Слухаю"** (professional/polite).
-- Ensure the "Wrong Number" dialogue uses the reflexive verb **"помилитися"** (я помилився номером) as a fixed formula, even if the grammar is slightly ahead of A1 (it's taught as a chunk).
-- Include a specific sub-section for **Delivery/Courier** calls, as this is the most common real-world phone interaction for foreigners in Ukraine today.
+- Since this is an A1 module (immersion target 10-40%), English scaffolding is absolutely required for explaining the T-V distinction ("Ви" vs. "ти"), the cultural nuances of greetings ("Алло" vs. "Слухаю"), and the phonetic breakdown of the "дз" sound.
+- Ensure all new grammar (polite imperatives) is explained in English before presenting the Ukrainian examples.
+- Ukrainian grammar should be framed positively without comparing it to Russian.

@@ -187,6 +187,8 @@ These verbs involve interaction. The "mirror" reflects between two people. "I do
 Sometimes, adding **-ся** completely changes the meaning of the word. You just have to memorize these as new vocabulary.
 *   **Називатися** (to be called) — literally "call itself."
     *   *Як це називається?* (What is this called?)
+*   **Подобатися** (to be liked / to please) — there is no standalone "подобати."
+    *   *Мені подобається ця книжка.* (I like this book. — Literally: "This book pleases me.")
 *   **Сміятися** (to laugh) — there is no "to laugh someone."
     *   *Ми голосно сміємось.* (We laugh loudly.)
 *   **Навчатися** (to study/learn) — focused on the process of learning.
@@ -322,7 +324,7 @@ Two very common verbs for A1 learners are **вчитися** and **займат�
 
 **Вчитися** (to learn/study):
 This is general schooling.
-*   **Я вчуся в школі.** (I study at school.)
+*   **Я вчуся у школі.** (I study at school.)
 *   **Вона вчиться добре.** (She studies well.)
 
 **Займатися** (to do/practice/occupy oneself):
@@ -377,8 +379,6 @@ Listen to this conversation between Igor and Olena. They use many reflexive verb
 | I'm preparing | Я готую | **Я готуюсь** | *Готувати* usually means "to cook." *Готуватися* means "to get ready." |
 | I'm afraid of dogs | Я бою собак | **Я боюсь собак** | Fear is an internal state, so it must be reflexive. |
 
----
-
 ## Культура: Секрети вимови
 
 ### Pronunciation Hook: The "Bee" Sound
@@ -392,12 +392,12 @@ It fuses together into a special sound: a **long, soft [ts']**.
 It sounds like water hitting a hot pan: *tsss*. Or like a bee buzzing softly.
 
 *   Written: **дивиться**
-*   Pronounced: [ˈdɪʋɪ**t͡sʲːa**] (dee-vy-tsss-ya)
+*   Pronounced: [dɪˈʋɪ**t͡sʲːɐ**] (dee-VY-tssya)
 
 ### Accent Reduction: The Shibboleth
 This sound instantly distinguishes a native Ukrainian speaker. In Russian, the reflexive ending is hard and short. In Ukrainian, it is **soft** and **long**.
 To practice, smile when you say it. The smile raises your tongue and makes the sound soft.
-*   **Він сміється.** [ʋin smi-je-**t͡sʲːa**]
+*   **Він сміється.** [ʋin smɪˈjɛ-**t͡sʲːɐ**]
 
 Try saying it five times: *Сміється, сміється, сміється...* Make that *ts* sound long and gentle.
 

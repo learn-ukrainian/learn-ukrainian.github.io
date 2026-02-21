@@ -1,0 +1,301 @@
+- type: match-up
+  title: "Essential Phrases"
+  instruction: "Match the Ukrainian phrase to its English meaning."
+  pairs:
+    - left: "Дайте, будь ласка..."
+      right: "Give me, please..."
+    - left: "Я буду..."
+      right: "I will have..."
+    - left: "Можна рахунок?"
+      right: "Can I have the bill?"
+    - left: "Що ви порадите?"
+      right: "What do you recommend?"
+    - left: "Я візьму..."
+      right: "I will take..."
+    - left: "Окремий рахунок"
+      right: "Separate bill"
+    - left: "Готівкою чи карткою?"
+      right: "Cash or card?"
+    - left: "Чек, будь ласка"
+      right: "Receipt, please"
+
+- type: group-sort
+  title: "Ordering Grammar: Accusative Case"
+  instruction: "Sort the items based on how they change in the Accusative case (when you order them)."
+  groups:
+    - name: "Change to -у (Feminine)"
+      items: ["кава", "вода", "арабіка", "філіжанка", "робуста", "м'ята"]
+    - name: "No Change (Masculine)"
+      items: ["чай", "сік", "круасан", "рахунок", "цукор", "десерт"]
+
+- type: unjumble
+  title: "Make an Order"
+  instruction: "Arrange the words to form correct sentences."
+  items:
+    - words: ["Дайте", "ласка", "каву", "будь"]
+      answer: "Дайте каву будь ласка"
+    - words: ["Я", "буду", "зелений", "чай"]
+      answer: "Я буду зелений чай"
+    - words: ["Можна", "будь", "рахунок", "ласка"]
+      answer: "Можна рахунок будь ласка"
+    - words: ["Ви", "карткою", "платите", "чи", "готівкою"]
+      answer: "Ви платите карткою чи готівкою"
+    - words: ["кава", "дуже", "Ваша", "смачна"]
+      answer: "Ваша кава дуже смачна"
+    - words: ["меню", "Можна", "ласка", "будь"]
+      answer: "Можна меню будь ласка"
+
+- type: quiz
+  title: "Café Culture & Etiquette"
+  instruction: "Choose the correct answer based on Ukrainian traditions."
+  items:
+    - question: "What is the polite way to start your order?"
+      explanation: "Always greet the staff before ordering."
+      options:
+        - text: "Добрий день"
+          correct: true
+        - text: "Я хочу каву"
+          correct: false
+        - text: "Дайте меню"
+          correct: false
+        - text: "Швидше"
+          correct: false
+    - question: "Which city is considered the coffee capital of Ukraine?"
+      explanation: "Lviv is famous for its coffee culture and history."
+      options:
+        - text: "Львів"
+          correct: true
+        - text: "Київ"
+          correct: false
+        - text: "Одеса"
+          correct: false
+        - text: "Харків"
+          correct: false
+    - question: "What is the Lviv dialect word for 'coffee cup'?"
+      explanation: "Філіжанка is a specific Galician word for a cup."
+      options:
+        - text: "філіжанка"
+          correct: true
+        - text: "склянка"
+          correct: false
+        - text: "банка"
+          correct: false
+        - text: "відро"
+          correct: false
+    - question: "Who opened one of the first coffee houses in Vienna?"
+      explanation: "Yuriy Kulchytsky is a Ukrainian hero of coffee history."
+      options:
+        - text: "Юрій Кульчицький"
+          correct: true
+        - text: "Тарас Шевченко"
+          correct: false
+        - text: "Богдан Хмельницький"
+          correct: false
+        - text: "Іван Франко"
+          correct: false
+    - question: "What does 'кав'ярня' specialize in?"
+      explanation: "A кав'ярня focuses on coffee, tea, and desserts, not full meals."
+      options:
+        - text: "coffee and desserts"
+          correct: true
+        - text: "borshch and varenyky"
+          correct: false
+        - text: "pizza and sushi"
+          correct: false
+        - text: "beer and chips"
+          correct: false
+    - question: "How do you say 'I want coffee' correctly?"
+      explanation: "You must use the Accusative case: каву."
+      options:
+        - text: "Я хочу каву"
+          correct: true
+        - text: "Я хочу кава"
+          correct: false
+        - text: "Я хочу кави"
+          correct: false
+        - text: "Я хочу каві"
+          correct: false
+    - question: "What is the meaning of the word 'пляцок'?"
+      explanation: "It is a Galician cake."
+      options:
+        - text: "a cake"
+          correct: true
+        - text: "a coffee"
+          correct: false
+        - text: "a spoon"
+          correct: false
+        - text: "a table"
+          correct: false
+    - question: "What do you say when leaving a café?"
+      explanation: "Politeness dictates saying goodbye."
+      options:
+        - text: "До побачення"
+          correct: true
+        - text: "Добрий день"
+          correct: false
+        - text: "Смачного"
+          correct: false
+        - text: "Будь ласка"
+          correct: false
+
+- type: fill-in
+  title: "Dialogue with the Barista"
+  instruction: "Complete the dialogue with the missing words."
+  items:
+    - sentence: "— Добрий ___! Що будете замовляти?"
+      answer: "день"
+      options: ["день", "ранок", "вечір", "час"]
+      explanation: "A standard polite greeting."
+    - sentence: "— Дайте, будь ___, велику каву."
+      answer: "ласка"
+      options: ["ласка", "добре", "прошу", "дякую"]
+      explanation: "Part of the fixed phrase 'будь ласка' (please)."
+    - sentence: "— Вам з ___ чи без?"
+      answer: "молоком"
+      options: ["молоком", "молоко", "молока", "молоку"]
+      explanation: "Using 'z' (with) requires the Instrumental case (ending -ом)."
+    - sentence: "— З молоком, але без ___."
+      answer: "цукру"
+      options: ["цукру", "цукор", "цукром", "цукрі"]
+      explanation: "Using 'bez' (without) requires the Genitive case (ending -у)."
+    - sentence: "— Ви платите ___ чи карткою?"
+      answer: "готівкою"
+      options: ["готівкою", "готівка", "готівку", "готівки"]
+      explanation: "Instrumental case for 'by cash'."
+    - sentence: "— ___, будь ласка. Ось моя картка."
+      answer: "Карткою"
+      options: ["Карткою", "Картка", "Картку", "Картки"]
+      explanation: "Instrumental case for 'by card'."
+    - sentence: "— Я буду ___ кави."
+      answer: "філіжанку"
+      options: ["філіжанку", "філіжанка", "філіжанки", "філіжанкою"]
+      explanation: "Accusative case: філіжанка → філіжанку (a cup of coffee)."
+    - sentence: "— Я люблю ___."
+      answer: "еспресо"
+      options: ["еспресо", "еспреса", "еспресу", "еспресі"]
+      explanation: "Espresso is indeclinable."
+
+- type: match-up
+  title: "Café Vocabulary"
+  instruction: "Match the word to its translation."
+  pairs:
+    - left: "меню"
+      right: "menu"
+    - left: "цукор"
+      right: "sugar"
+    - left: "рахунок"
+      right: "bill"
+    - left: "бариста"
+      right: "barista"
+    - left: "готівка"
+      right: "cash"
+    - left: "кава"
+      right: "coffee"
+    - left: "картка"
+      right: "card"
+    - left: "десерт"
+      right: "dessert"
+
+- type: match-up
+  title: "Complete the Phrases"
+  instruction: "Match the first part of the phrase with the correct ending."
+  pairs:
+    - left: "Кава з"
+      right: "молоком"
+    - left: "Чай з"
+      right: "лимоном"
+    - left: "Кава без"
+      right: "кофеїну"
+    - left: "Можна"
+      right: "рахунок?"
+    - left: "Я"
+      right: "візьму..."
+    - left: "Плачу"
+      right: "карткою"
+    - left: "З"
+      right: "цукром"
+    - left: "Без"
+      right: "молока"
+
+- type: true-false
+  title: "True or False?"
+  instruction: "Read the statements about Ukrainian café culture and mark them true or false."
+  items:
+    - statement: "In Lviv, the word 'філіжанка' is often used for a coffee cup."
+      correct: true
+      explanation: "This is a characteristic word of the Galician dialect."
+    - statement: "You should say 'Я хочу кава' to order."
+      correct: false
+      explanation: "Incorrect grammar. You must say 'Я хочу каву' (Accusative)."
+    - statement: "Paying by card (PayPass) is very common in Ukraine."
+      correct: true
+      explanation: "Even small kiosks usually accept cards."
+    - statement: "A 'кав'ярня' is exactly the same as a restaurant."
+      correct: false
+      explanation: "A кав'ярня focuses on coffee and pastries, not full meals."
+    - statement: "If you want milk, you say 'без молока'."
+      correct: false
+      explanation: "'Без' means without. For 'with', use 'з'."
+    - statement: "You usually ask for the bill at the table."
+      correct: true
+      explanation: "It is polite to ask 'Можна рахунок?' rather than walking to the counter immediately."
+    - statement: "You can stay in a café for a long time."
+      correct: true
+      explanation: "Cafés are designed for lingering and socializing."
+    - statement: "You must order a full meal in a café."
+      correct: false
+      explanation: "You can just have a coffee or dessert."
+
+- type: fill-in
+  title: "Grammar Check: Correct Forms"
+  instruction: "Select the correct form of the word for the sentence."
+  items:
+    - sentence: "Я буду ___."
+      answer: "каву"
+      options: ["каву", "кава", "кави", "каві"]
+      explanation: "Accusative case for the object you are ordering."
+    - sentence: "Можна ___, будь ласка?"
+      answer: "меню"
+      options: ["меню", "мене", "менше", "мен"]
+      explanation: "Menu is indeclinable (does not change)."
+    - sentence: "Я візьму ___."
+      answer: "круасан"
+      options: ["круасан", "круасана", "круасану", "круасани"]
+      explanation: "Masculine inanimate nouns do not change in the Accusative."
+    - sentence: "Це ваша ___."
+      answer: "кава"
+      options: ["кава", "каву", "кави", "каві"]
+      explanation: "Nominative case because it is the subject here ('This is coffee')."
+    - sentence: "Дайте, будь ласка, ___."
+      answer: "воду"
+      options: ["воду", "вода", "води", "воді"]
+      explanation: "Feminine nouns ending in -a change to -u in Accusative."
+    - sentence: "Я плачу ___."
+      answer: "карткою"
+      options: ["карткою", "картка", "картку", "картки"]
+      explanation: "Instrumental case answers 'how?' or 'with what?'."
+    - sentence: "Я буду ___."
+      answer: "чай"
+      options: ["чай", "чаю", "чаєм", "чаї"]
+      explanation: "Masculine inanimate noun (Accusative = Nominative)."
+    - sentence: "Можна ___?"
+      answer: "сік"
+      options: ["сік", "соку", "соком", "соки"]
+      explanation: "Masculine inanimate noun (Accusative = Nominative)."
+
+- type: unjumble
+  title: "Polite Requests"
+  instruction: "Form polite requests and responses."
+  items:
+    - words: ["Я", "візьму", "лате", "велике"]
+      answer: "Я візьму велике лате"
+    - words: ["кава", "найсмачніша", "Яка"]
+      answer: "Яка кава найсмачніша"
+    - words: ["порадите", "Що", "ви", "нам"]
+      answer: "Що ви нам порадите"
+    - words: ["рахунок", "окремий", "Можна", "будь", "ласка"]
+      answer: "Можна окремий рахунок будь ласка"
+    - words: ["Дякую", "каву", "за", "смачну"]
+      answer: "Дякую за смачну каву"
+    - words: ["тут", "зарядити", "Можна", "телефон"]
+      answer: "Можна тут зарядити телефон"

@@ -1,0 +1,141 @@
+module: interpretation-advanced
+level: c2
+sequence: 88
+version: '2.0'
+title: Поглиблений усний переклад
+focus: practice
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: AIIC — Training for Conference Interpreters
+  url: https://aiic.org/
+  type: reference
+  notes: International standards for interpreter training
+- name: Чернов — Теорія і практика синхронного перекладу
+  url: https://uk.wikipedia.org/wiki/Синхронний_переклад
+  type: primary
+  notes: Classic Soviet/Ukrainian interpretation methodology
+- name: Gile — Basic Concepts and Models for Interpreter Training
+  url: https://benjamins.com/
+  type: secondary
+  notes: Cognitive load model for interpretation
+content_outline:
+- section: Вступ — Усний переклад як професія (Introduction — Interpretation as a
+    Profession)
+  words: 600
+  points:
+  - 'Професійний ландшафт: Зростання попиту на українських перекладачів у міжнародних
+    організаціях (НАТО, ЄС, ООН) після 2022 року та роль прискорених програм AIIC.'
+  - 'Термінологічна точність: Чітке розмежування понять «усний переклад» та «інтерпретація»
+    (тлумачення); усунення кальки з англійської мови у фаховому контексті.'
+  - 'Відповідність Стандарту §1.4.1.1.1: Формування вміння невимушено виступати в
+    офіційних ситуаціях, адаптуючи регістр мовлення до різних аудиторій.'
+- section: Методологія та когнітивні моделі (Methodology and Cognitive Models)
+  words: 850
+  points:
+  - 'Когнітивне навантаження: Аналіз Моделі зусиль Даніеля Жіля (Gile''s Effort Model)
+    — розподіл уваги між слуханням, пам''яттю та відтворенням.'
+  - 'Сучасна методологія: Перехід від радянських підходів (Г. Чернов) до провідних
+    європейських стандартів підготовки конференц-перекладачів.'
+  - 'Техніка відставання (décalage): Відпрацювання оптимального часового проміжку
+    в синхронному перекладі для мінімізації смислових помилок (Learner Error 3).'
+- section: Техніка послідовного перекладу та нотація (Consecutive Interpretation and
+    Note-taking)
+  words: 900
+  points:
+  - 'Система нотації: Застосування принципів Жана-Франсуа Розана; розробка індивідуальних
+    символів та стратегій скорочення для фіксації ключових змістових блоків.'
+  - 'Робота з текстом: Використання елементів риторики в композиції перекладу згідно
+    зі Стандартом §4.3.5 для забезпечення логічності та переконливості.'
+  - 'Розвиток робочої пам''яті: Вправи на розширення ємності пам''яті для точного
+    відтворення складних наукових та офіційних текстів (§3.13).'
+- section: Синхронний переклад та професійне середовище (Simultaneous Interpretation
+    and Professional Environment)
+  words: 800
+  points:
+  - 'Професійне середовище: Технічні вимоги до кабіни перекладача (ISO 2603) та етика
+    взаємодії з напарником під час зміни.'
+  - 'Спеціалізовані режими: Особливості релейного перекладу (relay), роботи на мову
+    Б (retour) та специфіка перекладу шепотінням (chuchotage).'
+  - 'Shadowing та парафразування: Використання технік тіньового повторення та швидкого
+    перефразування для подолання екстремального темпу мовлення.'
+- section: Етика, корекція та практична адаптація (Ethics, Correction, and Practical
+    Adaptation)
+  words: 850
+  points:
+  - 'Стратегії корекції: Використання прихованих методів виправлення помилок та полегшення
+    вислову, щоб співрозмовники їх не зауважили (§1.4.1.1.1).'
+  - 'Подолання інтерференції: Робота з «активаційними блоками» для заміни лексичних
+    кальок на питомі українські конструкції та фразеологічне багатство.'
+  - 'Професійна етика та переговори: Дотримання конфіденційності та нейтральності
+    під час укладання ділових угод і контрактів (§3.13).'
+vocabulary:
+  required:
+  - усний переклад (interpretation)
+  - послідовний переклад (consecutive interpretation)
+  - синхронний переклад (simultaneous interpretation)
+  - нотація (note-taking)
+  - відставання (décalage/time lag)
+  - робоча пам'ять (working memory)
+  - когнітивне навантаження (cognitive load)
+  - shadowing (shadow interpreting)
+  - парафразування (paraphrasing)
+  - конфіденційність (confidentiality)
+  recommended:
+  - кабіна перекладача (interpreter booth)
+  - переклад шепотінням (whispered interpretation)
+  - релейний переклад (relay interpretation)
+  - ретур (retour/B language)
+  - модель зусиль (effort model)
+  forbidden: '[]'
+activities:
+  types_required:
+  - match-up
+  - essay-response
+  - quiz
+  - critical-analysis
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c2-89 (Capstone Topic Selection)
+- c2-94 (Capstone Defense — oral skills)
+vocabulary_hints:
+  required:
+  - усний переклад (interpretation) — усний переклад з аркуша, послідовний/синхронний
+    переклад; фаховий термін, уникати вживання «інтерпретація»
+  - послідовний переклад (consecutive interpretation) — виконувати послідовний переклад
+    виступу; основний режим для офіційних зустрічей
+  - синхронний переклад (simultaneous interpretation) — кабінний синхронний переклад;
+    вимагає спеціального обладнання
+  - нотація (note-taking/notation) — система нотації, символи нотації, нотаційні скорочення;
+    за Розаном
+  - відставання (décalage) — часове відставання, оптимальне відставання; ключовий
+    показник у синхронному перекладі
+  - когнітивне навантаження (cognitive load) — розподіл когнітивного навантаження;
+    центральне поняття моделі Жіля
+  recommended:
+  - робоча пам'ять (working memory) — ємність робочої пам'яті, розширення пам'яті;
+    психолінгвістичний контекст
+  - парафразування (paraphrasing) — техніка парафразування; стратегія спрощення складних
+    структур
+  - кабіна перекладача (interpreter booth) — ізольована кабіна, вимоги стандарту ISO
+    2603
+  - релейний переклад (relay interpretation) — перекладати через ретрансляцію; коли
+    немає прямої пари мов
+  - ретур (retour/B language) — перекладач з ретуром, працювати на ретур; переклад
+    на іноземну мову
+  - модель зусиль (effort model) — три зусилля за моделлю Жіля; методологічна база
+activity_hints:
+- type: reading
+  focus: Поглиблений аналіз тексту
+  items: 4
+- type: essay-response
+  focus: Критичне осмислення
+- type: discussion
+  focus: Дискусія та аргументація
+  items: 1
+persona:
+  voice: Senior Specialist
+  role: Interpreter

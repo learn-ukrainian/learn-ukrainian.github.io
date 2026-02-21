@@ -1,0 +1,121 @@
+- ipa: '[ˈrɪnɔk]'
+  lemma: ринок
+  pos: noun
+  gender: m
+  translation: market
+  example: "Я йду на ринок."
+- ipa: '[kʲiloˈɦrɑm]'
+  lemma: кілограм
+  pos: noun
+  gender: m
+  translation: kilogram
+  example: "Один кілограм картоплі."
+- ipa: '[ɦrɑm]'
+  lemma: грам
+  pos: noun
+  gender: m
+  translation: gram
+  example: "Двісті грам сиру."
+- ipa: '[ˈʃtʊkɑ]'
+  lemma: штука
+  pos: noun
+  gender: f
+  translation: piece / item
+  example: "Одна штука."
+- ipa: '[pʊˈt͡ʃɔk]'
+  lemma: пучок
+  pos: noun
+  gender: m
+  translation: bunch (of greens)
+  example: "Пучок петрушки."
+- ipa: '[ˈsʋʲiʒɪj]'
+  lemma: свіжий
+  pos: adj
+  translation: fresh
+  example: "Свіжий хліб."
+- ipa: '[ˈɔʋɔt͡ʃʲi]'
+  lemma: овочі
+  pos: noun
+  translation: vegetables
+  notes: always plural
+- ipa: '[ˈfrʊktɪ]'
+  lemma: фрукти
+  pos: noun
+  translation: fruits
+  notes: usually plural
+- ipa: '[ˈskʲilʲkɪ]'
+  lemma: скільки
+  pos: adv
+  translation: how much / how many
+  usage: "Скільки коштує?"
+- ipa: '[ˈdɑjte]'
+  lemma: дайте
+  pos: verb
+  translation: give (imperative, polite)
+  usage: "Дайте, будь ласка..."
+- ipa: '[ˈzdɑt͡ʃɑ]'
+  lemma: здача
+  pos: noun
+  gender: f
+  translation: change (money)
+  example: "Ваша здача."
+- ipa: '[prodɑˈʋɛt͡sʲ]'
+  lemma: продавець
+  pos: noun
+  gender: m
+  translation: vendor / seller
+- ipa: '[ˈjɑblʊkɔ]'
+  lemma: яблуко
+  pos: noun
+  gender: n
+  translation: apple
+- ipa: '[kɑrˈtɔplʲɑ]'
+  lemma: картопля
+  pos: noun
+  gender: f
+  translation: potato
+  notes: usually singular in Ukrainian (collective)
+- ipa: '[pomʲiˈdɔr]'
+  lemma: помідор
+  pos: noun
+  gender: m
+  translation: tomato
+- ipa: '[oˈɦʲirɔk]'
+  lemma: огірок
+  pos: noun
+  gender: m
+  translation: cucumber
+- ipa: '[ˈmɔrkvɑ]'
+  lemma: морква
+  pos: noun
+  gender: f
+  translation: carrot
+  notes: usually singular (collective)
+- ipa: '[t͡sɪˈbʊlʲɑ]'
+  lemma: цибуля
+  pos: noun
+  gender: f
+  translation: onion
+  notes: usually singular (collective)
+- ipa: '[smɑˈt͡ʃnɪj]'
+  lemma: смачний
+  pos: adj
+  translation: tasty / delicious
+- ipa: '[soˈlɔdkɪj]'
+  lemma: солодкий
+  pos: adj
+  translation: sweet
+- ipa: '[ˈstɪɦlɪj]'
+  lemma: стиглий
+  pos: adj
+  translation: ripe
+- ipa: '[ɦoˈtʲiu̯kɑ]'
+  lemma: готівка
+  pos: noun
+  gender: f
+  translation: cash
+- ipa: '[ˈzʋɑʒte]'
+  lemma: зважте
+  pos: verb
+  translation: weigh (imperative, polite)
+  usage: "Зважте, будь ласка..."

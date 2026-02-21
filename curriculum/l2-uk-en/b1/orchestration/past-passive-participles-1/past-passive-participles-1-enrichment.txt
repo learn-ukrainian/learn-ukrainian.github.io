@@ -1,0 +1,314 @@
+✅ Message sent to Gemini (ID: 10369) [auto-acked: self-addressed]
+✓ Message 10369 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10369...
+📨 Message #10369
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-past-passive-participles-1
+   Time: 2026-02-20T20:29:07.389734+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b1-45
+level: B1
+sequence: 45
+slug: past-passive-participles-1
+version: '2.0'
+title: Пасивні дієприкметники минулого часу I
+subtitle: Past Passive Participles I (-ний/-тий)
+content_outline:
+- section: Вступний тест
+  points:
+  - 'What passive means — intro aligned with State Standard §4.2.3.1 (Дійсний спосіб:
+    дієприкметник)'
+  - Participle vs verb form
+- section: Теоретичне пояснення
+  points:
+  - 'Formation -ний/-тий suffixes — emphasize logic: -ний (most common), -ений (consonant
+    stems), -тий (monosyllabic + vowels: мити -> митий)'
+  - 'Agreement patterns — Euphony & Alternation: садити → саджений [д//дж], носити
+    → ношений [с//ш]'
+- section: Практика
+  points:
+  - Form participles from verbs
+  - 'Agree with nouns — learner error: Agreement Failures (Лист [чол.] написана [жін.])'
+- section: Приклади використання
+  points:
+  - 'Attributive vs predicative use — Agency Rule: active voice (''Я написав'') often
+    more natural than passive (''Книга написана мною'') in spoken Ukrainian'
+  - Word order effects
+- section: Пасивні дієприкметники у формальному листуванні
+  points:
+  - Formal register usage — focus on 'виконаний' (виконане завдання, виконаний план)
+- section: Пасивні дієприкметники в українській культурі та літературі
+  points:
+  - 'Cultural and literary examples — The ''-но/-то'' Phenomenon: impersonal forms
+    emphasizing result without agent'
+  - 'learner error: The ''-мий'' Trap (Russian Interference) — avoid ''любимий'',
+    use ''улюблений'''
+- section: Порівняння з активними конструкціями
+  points:
+  - 'Active vs passive comparison — learner error: Active vs Passive Confusion (avoid
+    reflexive participles like ''читаючася'', use ''прочитана'')'
+- section: Практичні поради для запам'ятовування
+  points:
+  - Memorization tips
+- section: Потрібно більше практики?
+  points:
+  - Additional exercises
+vocabulary_hints:
+  required:
+  - пасивний (passive)
+  - дієприкметник (participle)
+  - написаний (written) — написана книга, написаний лист, написана картина
+  - прочитаний (read) — прочитана стаття, прочитане повідомлення
+  - зроблений (done/made) — зроблена робота, зроблений вибір, зроблено в Україні
+  - відкритий (opened) — відкриті двері, відкрите питання, відкритий урок
+  - закритий (closed) — закрите вікно, закрита тема, закритий клуб
+  - узгодження (agreement)
+  recommended:
+  - перехідне дієслово (transitive verb)
+  - атрибутивний (attributive)
+  - предикативний (predicative)
+  - основа дієслова (verb stem)
+  - виконаний (executed/fulfilled) — виконане завдання, виконаний план, виконана обіцянка
+activity_hints:
+- type: fill-in
+  focus: Verb to passive participle
+  items: 25
+- type: fill-in
+  focus: Complete with correct form
+  items: 20
+- type: fill-in
+  focus: Match participle to noun
+  items: 15
+- type: error-correction
+  focus: Fix agreement errors
+  items: 10
+focus: grammar
+pedagogy: TTT
+prerequisites:
+- b1-44 (Active Participles Phrases)
+connects_to:
+- b1-46 (Past Passive Participles 2)
+objectives:
+- Learner can form past passive participles using -ний/-тий suffixes
+- Learner can agree participles with nouns in gender, number, and case
+- Learner can use passive participles attributively and predicatively
+- Learner understands suffix selection rules
+grammar:
+- Пасивні дієприкметники минулого часу
+- Суфікси -ний/-тий selection
+- Узгодження з іменником
+register: розмовний
+phase: B1.4a [Participles]
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Museum Archivist
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Пасивні дієприкметники минулого часу I
+
+## State Standard Reference
+§4.2.3.1: "Дійсний спосіб: ... дієприкметник..."
+§4.4.2: "Просте ускладнене речення... просте речення з дієприкметниковим зворотом: Три години тому ми повернулися з екскурсії, організованої для учасників конференції."
+Alignment: Модуль вводить утворення та вживання пасивних дієприкметників, що є обов'язковим елементом морфології (дієслово) та синтаксису (дієприкметниковий зворот) для рівня B1.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| написаний | High (Common) | написана книга, написаний лист, написана картина |
+| прочитаний | High (Common) | прочитана стаття, прочитане повідомлення |
+| зроблений | Very High | зроблена робота, зроблений вибір, зроблено в Україні |
+| відкритий | Very High | відкриті двері, відкрите питання, відкритий урок |
+| закритий | Very High | закрите вікно, закрита тема, закритий клуб |
+| виконаний | High (Formal) | виконане завдання, виконаний план, виконана обіцянка |
+
+## Cultural Hooks
+1. **The "-но/-то" Phenomenon**: Українська мова має унікальну безособову форму на **-но/-то** (написано, зроблено), яка походить від пасивних дієприкметників, але підкреслює *результат* без вказівки на особу. Це відрізняє українську від багатьох слов'янських мов і є ознакою "Agency Pass" — ми не кажемо "Ким це було зроблено?", ми кажемо "Це зроблено" (стан) або "Ми це зробили" (активна дія).
+2. **Euphony & Alternation**: Творення пасивних дієприкметників демонструє багатство української милозвучності через чергування приголосних (садити → саджений [д//дж], носити → ношений [с//ш]). Це не просто граматика, це музика мови.
+
+## Common Learner Errors
+1. **The "-мий" Trap (Russian Interference)**: Студенти часто кажуть *любимий*, *відомий* (як пасивні), *невідомий*.
+   - *Error*: "Це мій любимий фільм."
+   - *Correction*: "Це мій **улюблений** фільм." (Ukrainian avoids present passive *-мий* forms, preferring *-ний* or adjectives).
+2. **Active vs Passive Confusion**: Вживання активних кальок замість пасивних конструкцій.
+   - *Error*: "Книга, читаючася мною."
+   - *Correction*: "Книга, **прочитана** мною." (Reflexive participles do not exist in Ukrainian).
+3. **Agreement Failures**: Неузгодження роду/числа з іменником.
+   - *Error*: "Лист (чол.) написана (жін.)."
+   - *Correction*: "Лист **написаний**."
+
+## Cross-References
+- Builds on: **b1-44** (Active Participles Phrases) — students already know the concept of a "verbal adjective".
+- Prepares for: **b1-46** (Past Passive Participles 2) — irregular forms and deeper syntax.
+
+## Notes for Content Writing
+- **Focus on Suffix Logic**: Make the choice between **-ний** (most common), **-ений** (stems ending in consonant), and **-тий** (monosyllabic stems + vowels: мити -> митий) crystal clear with a decision tree/flowchart.
+- **Agency Rule**: Emphasize that while passive exists, active voice ("Я написав") is often more natural than passive ("Книга написана мною") in spoken Ukrainian. Use passive for *states* or *results* (adjectival function).
+- **Register**: Explicitly mention that participles are more frequent in written/formal contexts, whereas spoken language prefers active verbs.
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ та вступний тест (Introduction and Entry Test)"
+  words: 500
+  points:
+  - "Introduction to passive participles aligned with State Standard §4.2.3.1, defining them as verbal forms with adjectival properties (verbal adjectives)."
+  - "Concept of 'passive' meaning: focusing on the object being acted upon rather than the actor (Agent)."
+  - "Assessment of prior knowledge from b1-44 (Active Participles) to establish the transition from active to passive voice."
+- section: "Творення: Логіка суфіксів та Чергування (Formation: Suffix Logic and Alternations)"
+  words: 950
+  points:
+  - "Suffix selection logic: -ний (most common), -ений (stems ending in consonants), and -ти (monosyllabic stems + vowels like 'мити' -> 'митий')."
+  - "The Music of Language: Detailed focus on Euphony and Alternation patterns including [д//дж] (садити -> саджений) and [с//ш] (носити -> ношений)."
+  - "A decision tree approach for learners to choose the correct suffix based on the verb stem structure."
+- section: "Граматичне узгодження та типові помилки (Grammatical Agreement and Common Errors)"
+  words: 850
+  points:
+  - "Agreement patterns in gender, number, and case with the noun; addressing the 'Agreement Failure' error (e.g., correcting 'Лист написана' to 'Лист написаний')."
+  - "The '-мий' Trap (Russian Interference): Explicitly debunking forms like 'любимий' or 'відомий' as passive participles, replacing them with 'улюблений' or specific adjectives."
+  - "Drills for identifying transitive verbs suitable for passive formation, avoiding reflexive participle errors like 'читаючася'."
+- section: "Синтаксис: Дієприкметниковий зворот та Агентність (Syntax: Participle Phrases and Agency)"
+  words: 850
+  points:
+  - "Introduction to the Participle Phrase (дієприкметниковий зворот) per State Standard §4.4.2 using examples like 'екскурсія, організована для учасників'."
+  - "The 'Agency Rule' in spoken Ukrainian: Why 'Я написав' is more natural than 'Книга написана мною' and when to use passive for describing states."
+  - "Word order effects in sentences with participles to shift focus toward the result or the object."
+- section: "Культурний контекст: Феномен «-но/-то» (Cultural Context: The '-no/-to' Phenomenon)"
+  words: 550
+  points:
+  - "The unique Ukrainian impersonal forms on -но/-то (зроблено, написано) as a derivative of passive participles that emphasize result without an agent."
+  - "Formal register focus: Utilizing 'виконаний' in official contexts (виконане завдання, виконаний план, виконана обіцянка)."
+  - "Contrast between written/formal frequency of participles and their reduced usage in conversational 'immersion' Ukrainian."
+- section: "Підсумок та практичні поради (Summary and Practical Tips)"
+  words: 300
+  points:
+  - "Practical memorization hacks for verb stems and the most high-frequency participles (зроблений, відкритий, закритий)."
+  - "Final self-check checklist: Suffix check, Alternation check, Agreement check."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "написаний (written) — написана книга, написаний лист, написана картина; High frequency"
+  - "прочитаний (read) — прочитана стаття, прочитане повідомлення; High frequency"
+  - "зроблений (done/made) — зроблена робота, зроблений вибір, зроблено в Україні; Very High frequency"
+  - "відкритий (opened) — відкриті двері, відкрите питання, відкритий урок; Very High frequency"
+  - "закритий (closed) — закрите вікно, закрита тема, закритий клуб; Very High frequency"
+  - "пасивний (passive) — граматичний термін"
+  - "дієприкметник (participle) — граматичний термін"
+  - "узгодження (agreement) — граматичний термін"
+  recommended:
+  - "виконаний (executed/fulfilled) — виконане завдання, виконаний план, виконана обіцянка; Formal register"
+  - "улюблений (favorite) — often confused with 'любимий' (error); use for preference"
+  - "саджений (planted) — example of [д//дж] alternation"
+  - "ношений (worn) — example of [с//ш] alternation"
+  - "перехідне дієслово (transitive verb) — context for formation"
+  - "дієприкметниковий зворот (participle phrase) — syntactic construction"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4210 chars)
+✅ Message sent to Claude (ID: 10374)
+✓ Message 10374 acknowledged
+   Auto-acknowledged reply #10374 (stdout delivery — no inbox accumulation)
+✓ Message 10369 acknowledged

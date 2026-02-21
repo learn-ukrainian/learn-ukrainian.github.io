@@ -1,139 +1,130 @@
-===RESEARCH_START===
+# Phase A: Meta Outline Only (Research Already Exists)
 
-# Дослідження: Синтез: Голоси козацької доби
+> **You are Gemini, executing Phase A (meta-only mode) of an optimised rebuild (build_module_v3).**
+> **Research is already complete. Your ONLY task: Rebuild the meta outline from the existing research.**
 
-## Використані джерела
-1. [Енциклопедія історії України: Козацькі літописи](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Kozatski_litopysy) — Огляд жанру та ключових творів.
-2. [Ізборник: Самійло Величко](http://litopys.org.ua/velichko/vel.htm) — Первинні тексти літопису.
-3. [Ізборник: Літопис Самовидця](http://litopys.org.ua/samovyd/sam.htm) — Текст та аналіз.
-4. [Діаріуш Якова Марковича](http://litopys.org.ua/old18/old18_06.htm) — Приклад мемуаристики старшини.
-5. [Енциклопедія Сучасної України: Жінка в історії України](https://esu.com.ua/article-10000) — Контекст про правовий статус жінок.
+---
 
-## Хронологія
-- 1648–1657: Події Національно-визвольної війни (основа сюжетів).
-- 1672: Початок написання "Літопису Самовидця" (орієнтовно).
-- 1710: "Пакти і Конституції" Пилипа Орлика — вершина правової думки.
-- 1717–1728: Робота Самійла Величка над літописом.
-- 1760: Завершення "Діаріуша" Миколи Ханенка (фінал епохи).
-- 1764: Скасування гетьманства — кінець доби, яку фіксували хроністи.
+## Your Input
 
-## Ключові факти та цитати
-- Самійло Величко про мету праці: "...бачив я, що славу нашу схованих у собі, як у безодні, літ, нікчема якась, всепагубна, в забуття пустила".
-- Цитата з передмови Граб'янки: Про необхідність фіксації історії для нащадків, щоб не "загинула слава козацька".
-- Факт про жінок: У літописах жінки майже відсутні як суб'єкти, але в актових документах фіксується поняття "материзна" (власність жінки, незалежна від чоловіка).
-- Факт про мову: "Книжна українська мова" барокової доби — суміш церковнослов'янської, польської та живої народної мови.
+Read the **existing research notes** (already complete — do NOT re-research):
 
-## Engagement Hooks (mapped to sections)
-- Section "Типологія козацьких джерел: I — Козацькі літописи": [!context] — Бароковий стиль: це не просто сухий звіт, а художній твір з пишними метафорами та провіденціалізмом (усе від Бога).
-- Section "Типологія козацьких джерел: II — Его-документи та право": [!history-bite] — "Діаріуш" Якова Марковича містить не лише політику, а й ціни на горілку, погоду та рецепти ліків.
-- Section "Голоси епохи: Хто говорить?": [!myth-buster] — Міф про "неосвічених козаків". Реальність: Автори літописів були випускниками Києво-Могилянської академії, знали латину та польську.
-- Section "Що джерела кажуть vs. що замовчують": [!decolonization] — Імперська історіографія часто ігнорувала ці джерела як "недостовірні", бо вони суперечили тезі про "возз'єднання".
-- Section "Методологічні уроки": [!quote] — "Історія — це політика, перекинута в минуле" (адаптація для пояснення упередженості джерел).
-- Section "Практикум: Комплексний аналіз": [!source] — Порівняння опису битви під Конотопом у Величка та в російських джерелах.
+```
+/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/c1-hist/research/syntez-kozatski-dzherela-research.md
+```
 
-## Деколонізаційний контекст
-- **Imperial Myth**: "Малоросія" — це принизлива назва, ознака меншовартості та провінційності.
-- **Ukrainian Reality**: У XVII-XVIII ст. термін "Мала Росія" (за аналогією з Малою Грецією) означав "Первинна/Корінна Русь", тобто метрополію православ'я та культури, на противагу "Великій" (колонізованій/зовнішній) Росії. Козацька старшина вживала цей термін з гордістю.
-- **Imperial Myth**: Козацькі літописи — це "вигадки".
-- **Ukrainian Reality**: Це фундамент національної ідентичності, де вперше сформульовано концепцію України як окремого політичного тіла.
+Read the plan file (SOURCE OF TRUTH for structure):
 
-## Contested Terms
-| Concept | Imperial framing | Ukrainian framing |
-|---------|-----------------|-------------------|
-| Малоросія | Провінція Російської імперії, частина "общерусского" народу. | Політична назва Гетьманщини; "Мала" як "Центральна/Корінна" (грецька традиція). |
-| "Воссоєдінєніє" | Добровільне повернення під руку царя. | Військовий союз, протекторат, який згодом був порушений Москвою (статті Б. Хмельницького). |
-| Козацька старшина | Експлуататори, зрадники (радянський погляд). | Політична еліта, творці державності та культури. |
+```
+/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/c1-hist/syntez-kozatski-dzherela.yaml
+```
 
-## Section-Mapped Research Notes
+Read the current meta file (for reference — you will replace the content_outline):
 
-### Вступ: Що ми вивчили
-Огляд попередніх модулів (Хмельниччина, Руїна, Мазепа). Акцент на тому, що ми знаємо про ці події саме завдяки джерелам, які розглядаємо сьогодні. Синтез — це спроба побачити "кухню" історика.
+```
+/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/c1-hist/meta/syntez-kozatski-dzherela.yaml
+```
 
-### Типологія козацьких джерел: I — Козацькі літописи
-"Велика трійка": Самовидець (найбільш об'єктивний, очевидець), Граб'янка (панегірик Хмельницькому, концепція "від хозар"), Величко (монументальний твір, включення документів, бароковий стиль).
+---
 
-### Типологія козацьких джерел: II — Его-документи та право
-Мемуаристика (діаріуші): Яків Маркович (побут, мікроісторія), Микола Ханенко (дипломатія). Правові пам'ятки: "Березневі статті" (оригінал втрачено, реконструкція), Конституція Пилипа Орлика (політична філософія, договірна теорія держави).
+## Your Task
 
-### Голоси епохи: Хто говорить?
-Домінантний голос — козацька старшина. Це елітарна історія. Духовенство (через проповіді та полеміку). "Мовчазна більшість": селяни, міщани — згадуються лише в контексті податків або бунтів.
+**Rebuild** the `content_outline` from scratch using:
+- The **plan's section structure** as the skeleton (match section names exactly)
+- The **research notes** to inform depth, word allocation, and specific bullet points
 
-### Що джерела кажуть vs. що замовчують
-Героїзація гетьманів. Ігнорування "чорної ради" як легітимного волевиявлення. Замовчування ролі жінок (окрім винятків, як-от Ганна Золотаренко чи Мотря Кочубей). Відсутність голосу "низів".
+The existing meta `content_outline` is likely outdated (wrong section sizes, stale points). Do NOT copy it. Start fresh from the plan + research.
 
-### Методологічні уроки
-Як читати упереджені джерела? Метод перехресного аналізу. "Читання між рядків". Розуміння мети автора (apologia, justification). Важливість порівняння з іноземними джерелами (польськими, турецькими, шведськими).
+### Rules
 
-### Практикум: Комплексний аналіз
-Кейс-стаді: Полтавська битва. Як її описує Величко (трагедія, але стримано), як Петро I (тріумф), як Мазепа (у листах — як вимушений крок). Завдання: знайти спільне і відмінне.
+- **Do NOT copy the old meta's outline** — rebuild from the plan's section structure
+- Allocations must sum to approximately **5000** words (±10% acceptable)
+- Minimum section allocation: 200 words (merge smaller sections)
+- For modules with target ≥ 4000w, aim for **8-12 sections minimum** — this prevents any one section from consuming a disproportionate share of the module.
+- **No single section may consume more than 25% of the total word target.** A 5000w module → max 1250w per section. If a plan section would exceed this, you MUST split it.
+- Each section must have `section`, `words`, and `points` fields
+- Section names must be in Ukrainian (these become H2 headings in the lesson)
+- **Section names must match plan exactly** — if the plan has a `content_outline` with section names,
+  use those EXACT names (or very close Ukrainian equivalents). When splitting a large plan section,
+  add a subtitle (e.g. "Читання: I — Походження").
+- Points reflect research findings — cite specific facts, dates, quotes where relevant
+- Check the subject's vital status: living person → "Значення" / "Вплив"; deceased → "Спадщина" / "Наслідки"
 
-### Підсумок
-Значення козацького літописання для формування модерної української нації. "Історія Русів" як завершальний акорд цієї традиції (хоча і пізніший/суперечливий твір).
+### How to split a plan section (CRITICAL)
 
-===RESEARCH_END===
+**The plan's bullet points are section topics, not sub-bullets.** A plan section with 10 bullet points should become 3-5 meta sections, not one giant section.
 
+**Process:**
+1. Count the bullet points in each plan section
+2. If a section has 5+ bullets: group them into thematic clusters of 2-4 bullets
+3. Each cluster becomes its own meta section with the parent name as prefix:
+   - `"Читання: I — Розселення та племінна мозаїка"` (bullets 1-4)
+   - `"Читання: II — Суспільний устрій і права"` (bullets 5-7)
+   - `"Читання: III — Духовний світ та побут"` (bullets 8-11)
+   - etc.
+4. Allocate words based on research depth for each cluster
+
+**Example:** A plan section `Читання` with 14 bullet points should NOT become one 3200w meta section. It should become 4-5 sub-sections of 600-800w each. The bullets tell you what the sub-sections should cover.
+
+---
+
+## Output Format
+
+> **DELIMITER ENFORCEMENT**: Content outside delimiters is automatically discarded by the extraction pipeline.
+
+### Output Block: Meta Outline
+
+```
 ===META_OUTLINE_START===
 content_outline:
-  - section: "Вступ: Що ми вивчили"
-    words: 400
+  - section: "{Section 1 name in Ukrainian}"
+    words: {allocation}
     points:
-      - "Синтез модулів 19-27: від Хмельницького до Розумовського через призму джерел."
-      - "Чому ми знаємо те, що знаємо: роль збережених текстів."
-      - "Мета уроку: навчитися критично аналізувати 'голоси' минулого."
-  - section: "Типологія козацьких джерел: I — Козацькі літописи"
-    words: 700
+      - "{key point 1 — informed by research}"
+      - "{key point 2}"
+  - section: "{Section 2 name}"
+    words: {allocation}
     points:
-      - "Феномен козацького літописання: поєднання історії, літератури та політики."
-      - "Літопис Самовидця: хроніка очевидця, 'сухий' стиль, фактаж Руїни."
-      - "Літопис Граб'янки: 'Сказаніє...', пошук шляхетського коріння (хозарський міф), панегірик Хмельницькому."
-      - "Літопис Самійла Величка: монументальність, барокова пишність, використання документів (іноді сфальшованих для краси)."
-  - section: "Типологія козацьких джерел: II — Его-документи та право"
-    words: 700
-    points:
-      - "Діаріуші (щоденники) як джерело мікроісторії та побуту (Яків Маркович, Микола Ханенко)."
-      - "Приватне життя старшини: що їли, як лікувалися, з ким судилися."
-      - "Правова думка: від 'Березневих статей' до Конституції Пилипа Орлика."
-      - "Універсали гетьманів як інструмент влади та джерело права."
-  - section: "Голоси епохи: Хто говорить?"
-    words: 900
-    points:
-      - "Старшинський центризм: історія очима еліти (освічені, заможні, політично активні)."
-      - "Духовенство: голос церкви в полемічній літературі та проповідях (Лазар Баранович, Іоанікіy Ґалятовський)."
-      - "Інтелектуали Києво-Могилянської академії: творці ідеології."
-      - "Проблема репрезентації: чому ми майже не чуємо рядового козака та міщанина?"
-  - section: "Що джерела кажуть vs. що замовчують"
-    words: 800
-    points:
-      - "Стратегія замовчування: чому 'незручні' факти зникають зі сторінок."
-      - "Жінка в козацьку добу: присутня в майнових угодах ('материзна'), але відсутня в політичних хроніках."
-      - "Соціальні конфлікти: бунти 'черні' як 'стихійне лихо', а не соціальний протест."
-      - "Реконструкція замовчаного: як історики відновлюють прогалини."
-  - section: "Методологічні уроки"
-    words: 800
-    points:
-      - "Джерелознавчий аналіз: автор — замовник — аудиторія."
-      - "Критика джерела: розрізнення факту та інтерпретації."
-      - "Порівняльний метод: зіставлення українських, польських та російських наративів."
-      - "Поняття 'наративної стратегії': навіщо автор це написав?"
-  - section: "Практикум: Комплексний аналіз"
-    words: 500
-    points:
-      - "Кейс-стаді: одна подія (наприклад, Чорна рада 1663) в різних джерелах."
-      - "Погляд Самовидця (старшинський) vs. погляд Брюховецького (популістський/проросійський)."
-      - "Виявлення упереджень та пошук історичної правди."
-  - section: "Підсумок"
-    words: 400
-    points:
-      - "Козацькі літописи як фундамент української політичної культури."
-      - "Значення збереження пам'яті в умовах бездержавності."
-      - "Підготовка до наступного етапу: імперська доба та нові виклики."
+      - "..."
+  # ... all sections
+  # Total: ~5000 words
 ===META_OUTLINE_END===
+```
 
+### Validation checklist (complete before outputting):
+
+- [ ] All section names are Ukrainian
+- [ ] Section names match plan structure
+- [ ] Each section has `words` and `points`
+- [ ] Sum of all `words` ≈ 5000
+- [ ] No section has fewer than 200 words
+- [ ] Points reflect research findings
+- [ ] 8-12 sections for ≥ 4000w targets
+
+---
+
+## Friction Report (MANDATORY)
+
+After the meta outline output, include:
+
+```
 ===FRICTION_START===
-**Phase**: Phase A: Research + Meta (Seminar)
-**Step**: Full Phase A
-**Friction Type**: NONE
-**Raw Error**: None
-**Self-Correction**: N/A
-**Proposed Tooling Fix**: N/A
+**Phase**: Phase A: Meta Outline Only (research-exists mode)
+**Step**: {what you were doing when friction occurred, or "Full meta outline"}
+**Friction Type**: NONE | TOKEN_LIMIT_TRUNCATION | TOOL_REDUNDANCY | SOURCE_NOT_FOUND | ...
+**Raw Error**: {actual error or "None"}
+**Self-Correction**: {what you changed, or "N/A"}
+**Proposed Tooling Fix**: {if a script/design issue, or "N/A"}
 ===FRICTION_END===
+```
+
+---
+
+## Boundaries
+
+- Do NOT re-research — use only the provided research file
+- Do NOT write lesson content — only the meta outline
+- Do NOT generate activities or vocabulary
+- Do NOT skip any section from the plan's content_outline
+- Do NOT reference persona names or voice instructions
+- Do NOT request skills, delegate to Claude, or skip this phase

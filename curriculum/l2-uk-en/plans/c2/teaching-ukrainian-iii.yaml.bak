@@ -1,0 +1,110 @@
+module: c2-084
+level: c2
+sequence: 84
+version: '2.0'
+title: Викладання української мови III — Розробка матеріалів
+focus: practice
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Принципи створення навчальних матеріалів з мови
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Guidelines for language teaching materials development
+- name: Authentic Materials in Language Teaching
+  url: https://www.coe.int/en/web/common-european-framework-reference-languages
+  type: secondary
+  notes: Use of authentic texts and media
+- name: Tomlinson — Materials Development in Language Teaching
+  url: https://www.cambridge.org/
+  type: reference
+  notes: Academic framework for materials development
+content_outline:
+- section: Вступ — Роль матеріалів у навчанні мови
+  points:
+  - Підручник як основа і як доповнення
+  - Автентичні vs. адаптовані матеріали
+  - Критерії якісних навчальних матеріалів
+- section: Адаптація автентичних текстів
+  points:
+  - Відбір текстів для різних рівнів
+  - Техніки спрощення без втрати автентичності
+  - Градуювання завдань до одного тексту
+  - Збереження культурного контексту
+- section: Створення вправ і завдань
+  points:
+  - Типологія вправ (механічні, напівкомунікативні, комунікативні)
+  - Інструкції до завдань
+  - Критерії ефективних вправ
+  - Послідовність і логіка завдань
+- section: Візуальні та мультимедійні матеріали
+  points:
+  - Роль зображень у навчанні мови
+  - Аудіо- та відеоматеріали
+  - Інтерактивні цифрові ресурси
+  - Авторське право і ліцензування
+- section: Оцінювання та вдосконалення матеріалів
+  points:
+  - Пілотування матеріалів
+  - Збір зворотного зв'язку від учнів
+  - Критерії оцінки ефективності
+  - Ітеративне вдосконалення
+- section: Практика — Розробка навчального модуля
+  points:
+  - Створення комплекту матеріалів для уроку
+  - Текст, вправи, візуали, інструкції
+  - Рецензування і доопрацювання
+vocabulary:
+  required:
+  - навчальні матеріали (teaching materials)
+  - автентичний текст (authentic text)
+  - адаптація тексту (text adaptation)
+  - градуювання (grading/scaffolding)
+  - інструкція до завдання (task instructions)
+  - пілотування (piloting)
+  - ітеративний процес (iterative process)
+  - мультимедіа (multimedia)
+  - візуальна підтримка (visual support)
+  - авторське право (copyright)
+  recommended:
+  - рубрика оцінювання (assessment rubric)
+  - банк завдань (task bank)
+  - диференціація завдань (task differentiation)
+  - культурна релевантність (cultural relevance)
+  - залучення учнів (student engagement)
+  forbidden: '[]'
+activities:
+  types_required:
+  - match-up
+  - essay-response
+  - quiz
+  - critical-analysis
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c2-85 (Translation Theory II)
+- c2-89 (Capstone Topic Selection)
+vocabulary_hints:
+  required:
+  - концепція (concept)
+  - аналіз (analysis)
+  - дискурс (discourse)
+  - методологія (methodology)
+  recommended:
+  - інтерпретація (interpretation)
+  - контекстуалізація (contextualization)
+  - синтез (synthesis)
+activity_hints:
+- type: reading
+  focus: Поглиблений аналіз тексту
+  items: 4
+- type: essay-response
+  focus: Критичне осмислення
+- type: discussion
+  focus: Дискусія та аргументація
+  items: 1
+persona:
+  voice: Senior Specialist
+  role: Curriculum Architect

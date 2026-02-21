@@ -1,0 +1,271 @@
+✅ Message sent to Gemini (ID: 12034) [auto-acked: self-addressed]
+✓ Message 12034 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12034...
+📨 Message #12034
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-results-presentation
+   Time: 2026-02-20T23:35:30.330421+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-pro-19
+level: C1-PRO
+sequence: 19
+slug: results-presentation
+version: '2.0'
+title: Презентація результатів
+subtitle: Results Presentation
+content_outline:
+- section: Розминка — Роль розділу результатів
+  points:
+  - Результати vs дискусія — чітке розмежування
+  - Принцип об'єктивності — факти без інтерпретації
+  - Як організувати велику кількість даних
+- section: Текстове представлення даних
+  points:
+  - Опис кількісних результатів — статистика, відсотки, кореляції
+  - Опис якісних результатів — теми, категорії, цитати
+  - Логічна послідовність представлення даних
+  - Типові фрази для опису результатів
+- section: Таблиці та рисунки
+  points:
+  - Коли використовувати таблицю, коли рисунок
+  - 'Вимоги до оформлення: назви, підписи, джерела'
+  - Як описувати візуальні елементи в тексті
+  - Типові помилки в оформленні таблиць та графіків
+- section: Статистичний опис
+  points:
+  - Описова статистика — середнє, медіана, стандартне відхилення
+  - Інференційна статистика — p-value, довірчий інтервал
+  - Як представляти результати статистичних тестів
+  - Типові формулювання для статистичних висновків
+- section: Зразок розділу результатів
+  points:
+  - Структура результатів для кількісного дослідження
+  - Інтеграція тексту, таблиць та рисунків
+  - Приклади коректного опису статистики
+- section: Практика — Презентація даних
+  points:
+  - 'Завдання: Написати розділ результатів за наданими даними'
+  - 'Вимоги: текст, таблиця або рисунок, статистичний опис'
+  - Критерії оцінювання
+vocabulary_hints:
+  required:
+  - результати дослідження (research results)
+  - таблиця (table)
+  - рисунок/графік (figure/graph)
+  - описова статистика (descriptive statistics)
+  - середнє значення (mean)
+  - стандартне відхилення (standard deviation)
+  - статистична значущість (statistical significance)
+  - p-value (рівень значущості)
+  recommended:
+  - медіана (median)
+  - кореляція (correlation)
+  - довірчий інтервал (confidence interval)
+  - гістограма (histogram)
+  - діаграма розсіювання (scatter plot)
+  - частотний розподіл (frequency distribution)
+activity_hints:
+- type: document-analysis
+  focus: Проаналізувати розділ результатів — оцінити чіткість та повноту
+  items: 2
+- type: writing-task
+  focus: Написати розділ результатів за наданими даними
+  items: 1
+- type: fill-in
+  focus: Вставити правильні статистичні терміни та формулювання
+  items: 10
+- type: data-to-text
+  focus: Описати дані з таблиці або графіка словами
+  items: 4
+- type: error-correction
+  focus: Виправити помилки в описі результатів
+  items: 6
+focus: professional
+pedagogy: ESP
+prerequisites:
+- c1-pro-18 (Опис методології)
+connects_to:
+- c1-pro-20 (Написання дискусії)
+objectives:
+- Учень може представляти кількісні та якісні результати об'єктивно
+- Учень може створювати та описувати таблиці та рисунки
+- Учень може коректно описувати статистичні результати
+- Учень може організовувати результати в логічній послідовності
+grammar:
+- Минулий час для опису результатів (Було виявлено... / Дані показали...)
+- Конструкції для статистики (Середнє значення становило... / Різниця була статистично
+  значущою (p < 0.05))
+- Конструкції для посилання на візуальні елементи (Як показано в Таблиці 1... / Рисунок
+  2 демонструє...)
+register: науковий
+phase: C1-PRO.2
+persona:
+  voice: Senior Specialist
+  role: Засновник інноваційного стартапу
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Презентація результатів
+
+## Використані джерела
+1. [ДСТУ 3008:2015 "Звіти у сфері науки і техніки. Структура та правила оформлювання"](https://kname.edu.ua) — основний національний стандарт для оформлення наукових та технічних звітів.
+2. [ДСТУ 4163:2020 "Уніфікована система організаційно-розпорядчої документації"](https://smartfin.ua) — базовий стандарт для оформлення ділових документів в Україні.
+3. [Методичні рекомендації з підготовки наукових публікацій](https://meduniv.lviv.ua) — правила представлення результатів, таблиць та ілюстрацій.
+
+## Термінологічна база
+
+| Українська (норма) | Русизм/ненорма | English | Контекст вживання |
+|--------------------|---------------|---------|-------------------|
+| Рисунок            | Рисунок (як картина), Картинка | Figure | Будь-яка ілюстрація (графік, діаграма, фото) |
+| Значущість         | Значимість     | Significance | Статистична значущість результатів |
+| Рівень значущості  | Рівень значимості | Significance level | Значення p-value |
+| Середнє значення   | Середньоарифметичне | Mean | Результати дескриптивної статистики |
+| Відхилення         | Відхил         | Deviation | Стандартне відхилення (SD) |
+| Довірчий інтервал  | Довірчий інтервал | Confidence interval | Інтервальна оцінка параметрів |
+| Вибірка            | Виборка        | Sample | Сукупність об'єктів дослідження |
+| Кореляція          | Взаємозв'язок  | Correlation | Статистичний зв'язок між змінними |
+
+## Мовні норми та стандарти
+- **ДСТУ 3008:2015**: Вимагає наскрізної нумерації таблиць та рисунків (або в межах розділу, наприклад: Таблиця 2.1). Назва таблиці розташовується зверху, назва рисунка — знизу. Посилання в тексті на об'єкти є обов'язковими.
+- **Одиниці SI**: Усі кількісні результати повинні подаватися в одиницях системи SI. Якщо використовуються інші одиниці, значення SI вказуються в дужках.
+- **ДСТУ 4163:2020**: Регулює загальний стиль документів: шрифт 12-14 pt, ліве поле 30 мм, нумерація сторінок зверху посередині.
+
+## Аутентичні приклади
+1. [Посилання на таблицю]: «Результати анкетування співробітників компанії наведено в табл. 3.2.»
+2. [Опис статистики]: «Середнє значення показника ефективності становило 84,5% (SD = 4,2), що свідчить про високу стабільність процесів.»
+3. [Формулювання гіпотези]: «Виявлено статистично значущу кореляцію (r = 0,72, p < 0,05) між рівнем автоматизації та швидкістю обробки замовлень.»
+
+## Типові помилки
+1. ❌ "Згідно малюнку 1..." → ✅ "Як показано на рисунку 1..." — "Рисунок" є стандартом для науково-технічної документації.
+2. ❌ "Достовірні результати" → ✅ "Статистично значущі результати" — В науці "достовірність" (reliability) та "значущість" (significance) мають різні значення.
+3. ❌ "p-value складає 0.04" → ✅ "Значення p становить 0,04" — В українській мові в десяткових дробах використовується кома, а не крапка.
+4. ❌ "Таблиця 1: Результати" → ✅ "Таблиця 1 — Результати" — Згідно з ДСТУ, після номера ставиться тире, а не двокрапка.
+5. ❌ "Приведено дані..." → ✅ "Наведено дані..." — Калька з російської "приведены данные".
+
+## Engagement Hooks (mapped to sections)
+- Section "Розминка — Роль розділу результатів": [!pro-tip] — Результати — це серце вашого звіту. Тут ви — об'єктивний спостерігач. Залиште емоції та інтерпретації для розділу "Дискусія".
+- Section "Текстове представлення даних": [!language-note] — Використовуйте дієслова минулого часу («було встановлено», «дані показали»), оскільки дослідження вже завершене.
+- Section "Таблиці та рисунки": [!common-error] — Не дублюйте в тексті всі цифри з таблиці. Текст має підкреслювати головні тренди, а не переказувати кожну клітинку.
+- Section "Статистичний опис": [!context] — Міжнародний стандарт вимагає вказувати p-value з точністю до трьох знаків після коми (наприклад, p = 0,041), якщо тільки p не менше 0,001.
+
+## Section-Mapped Research Notes
+
+### Розминка — Роль розділу результатів
+Основна мета — надати фактичне підтвердження гіпотез. Ключовий принцип — об'єктивність (факти без коментарів). Важливо розрізняти "результати" (що ми знайшли) та "дискусію" (що це означає).
+
+### Текстове представлення даних
+Логіка викладу: від загального до конкретного. Використання сталих конструкцій: «Аналіз даних показав...», «Встановлено залежність між...», «Більшість респондентів (65%) зазначили...». Використання пасивних конструкцій («було проведено», «виявлено») додає об'єктивності.
+
+### Таблиці та рисунки
+Вимоги ДСТУ 3008:2015: назва таблиці зверху, рисунка — знизу. Обов'язкові посилання в тексті: «(див. рис. 2.1)», «згідно з даними табл. 1.3». Правило доцільності: якщо дані можна описати одним реченням — таблиця не потрібна.
+
+### Статистичний опис
+Дескриптивна статистика (описова) — база: середнє (M), медіана (Me), мода (Mo), стандартне відхилення (SD). Інференційна статистика (висновкова) — p-value (рівень значущості), довірчий інтервал (ДІ). Використання символів: r — кореляція, t — критерій Стьюдента, χ² — хі-квадрат.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12110)
+✓ Message 12034 acknowledged
+✓ Message 12110 acknowledged

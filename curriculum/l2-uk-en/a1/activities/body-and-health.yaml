@@ -80,7 +80,7 @@
       explanation: '«Болять» is plural.'
     - sentence: 'У мене болить праве {{1}}.'
       answer: 'вухо'
-      options: ['вухо', 'вуха', 'вухом', 'вусі']
+      options: ['вухо', 'вуха', 'вухом', 'вух']
       explanation: '«Праве» is singular neuter.'
 
 - type: quiz
@@ -88,7 +88,7 @@
   instruction: 'Оберіть правильну відповідь на запитання.'
   items:
     - question: 'Як правильно сказати, що ви почуваєтеся недобре?'
-      explanation: 'Ми використовуємо конструкцію з давальним відмінком (Мені...).'
+      explanation: 'Use the dative pronoun: Мені + adverb (погано, добре, краще).'
       options:
         - text: 'Мені погано.'
           correct: true
@@ -153,16 +153,16 @@
           correct: false
         - text: 'health'
           correct: false
-    - question: 'Як правильно перекласти англійське слово "Shoulder" українською?'
-      explanation: 'Shoulder is "плече".'
+    - question: 'Як правильно попросити ліки в аптеці?'
+      explanation: 'We use "Дайте, будь ласка..." to politely ask for medicine.'
       options:
-        - text: 'плече'
+        - text: 'Дайте, будь ласка, ліки від кашлю.'
           correct: true
-        - text: 'коліно'
+        - text: 'Я хочу грати.'
           correct: false
-        - text: 'лікоть'
+        - text: 'Де автобус?'
           correct: false
-        - text: 'шия'
+        - text: 'Скільки людей?'
           correct: false
     - question: 'Якого граматичного роду слово "серце" в українській мові?'
       explanation: 'Серце (heart) is neuter (воно).'
@@ -217,8 +217,8 @@
       answer: 'Мені потрібно до лікаря'
     - words: ['здоровому', 'У', 'дух', 'тілі', 'здоровий']
       answer: 'У здоровому тілі здоровий дух'
-    - words: ['чай', 'з', 'Пийте', 'малиною']
-      answer: 'Пийте чай з малиною'
+    - words: ['чай', 'малиновий', 'Пийте']
+      answer: 'Пийте малиновий чай'
     - words: ['ліки', 'в', 'Купіть', 'аптеці']
       answer: 'Купіть ліки в аптеці'
     - words: ['мене', 'У', 'температура', 'висока']

@@ -1,7 +1,7 @@
 # Audit Report: M25 — my-daily-routine.md
 **Level:** A1 | **Module:** M25 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-19 23:01:56
+**Generated:** 2026-02-21 00:46:44
 
 ## Configuration
 **Type:** A1
@@ -37,12 +37,12 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2771/2000 (raw: 3005)
+- **Words:** ✅ 2846/2000 (raw: 3080)
 - **Activities:** ✅ 9/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 5/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 4/3
+- **Engagement:** ✅ 5/3
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 21/1
 - **Structure:** ✅ Valid Structure
@@ -50,7 +50,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 39.9% (target 35-55% (M25))
+- **Immersion:** 🇺🇦 40.3% (target 35-55% (M25))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -60,7 +60,7 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **My Daily Routine** | ✅ | 72 | Included in Core |
-| **Вступ: Ваш розпорядок дня** | ✅ | 432 | Included in Core |
-| **Ранок, день та вечір** | ✅ | 1467 | Included in Core |
+| **Вступ: Ваш розпорядок дня** | ✅ | 445 | Included in Core |
+| **Ранок, день та вечір** | ✅ | 1572 | Included in Core |
 | **Практика: Робочий день і вихідні** | ✅ | 499 | Included in Core |
-| **Підсумок: Мій ідеальний день** | ✅ | 301 | Included in Core |
+| **Підсумок: Мій ідеальний день** | ✅ | 258 | Included in Core |

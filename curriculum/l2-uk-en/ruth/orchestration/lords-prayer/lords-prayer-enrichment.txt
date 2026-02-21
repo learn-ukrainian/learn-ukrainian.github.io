@@ -1,0 +1,203 @@
+✅ Message sent to Gemini (ID: 12215) [auto-acked: self-addressed]
+✓ Message 12215 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12215...
+📨 Message #12215
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-lords-prayer
+   Time: 2026-02-20T23:37:33.957246+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 30
+module: ruth-030
+module_number: 24
+slug: lords-prayer
+title_uk: Отче наш
+title_en: The Lord's Prayer
+phase: 1
+phase_id: chancery-legal
+phase_name: Chancery & Legal
+focus: Liturgical vs Vernacular forms
+content_outline:
+- section: Вступ
+  description: Introduction to The Lord's Prayer
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Baroque Scholar
+  role: Catechist
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Lords Prayer (Отче наш)
+
+## Використані джерела
+1. [Острозька Біблія (1581) — Скановане факсиміле](https://litopys.org.ua) — Оригінальний церковнослов'янський текст молитви.
+2. [Памво Беринда «Лексіконъ славенноросскій» (1627)](http://litopys.org.ua/berinda/ber.htm) — Тлумачення лексики (спокуса, провина) та фонетичні особливості київського ізводу.
+3. [Німчук В. В. Історія української мови. Хрестоматія X-XIII ст.](http://litopys.org.ua) — Порівняльний аналіз давніх текстів.
+4. [Огієнко І. Історія української літературної мови](http://litopys.org.ua/ohienko/oh09.htm) — Аналіз перекладів XVI-XVII ст. (Негалевський, Ставровецький).
+
+## Хронологія
+- 1556–1561: Створення Пересопницького Євангелія (вплив народної мови на сакральні тексти).
+- 1581: Вихід Острозької Біблії (канонізація церковнослов'янського тексту).
+- 1581: Переклад Нового Завіту Валентина Негалевського (використання полонізмів у народній мові).
+- 1619: Публікація «Учительного Євангелія» Кирила Транквіліона-Ставровецького.
+- 1627: Вихід «Лексікону» Памви Беринди (фіксація української редакції церковнослов'янської мови).
+- 1646: Видання Требника Петра Могили (уніфікація богослужбових текстів).
+
+## Ключові факти та цитати
+- **Острозька Біблія (1581)**: «Ѿче на́шъ, и҆́же є҆си́ на нб҃сѣ́хъ... Хлѣ́бъ на́шъ насꙋ́щный да́ждь на́мъ дне́сь...». Це був стандарт "високого стилю".
+- **Валентин Негалевський (1581)**: Використовував слово «винуватець» (боржник) під впливом польської мови, що відображало пошук народної термінології.
+- **Памво Беринда (1627)**: Тлумачив «іскушеніє» як «спроба, досвідчення», але в молитві це слово набувало значення «спокуса» (як випробування віри).
+- **Київський ізвод**: Українська вимова церковнослов'янської мови (г [h], ѣ [i], и [y]) чітко відрізнялася від московської (г [g], ѣ [je], и [i]).
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ": [!context] — Молитва «Отче наш» як головний текст християнства та «розеттський камінь» для розуміння еволюції мови.
+- Section "Основний матеріал: I — Острозький канон": [!history-bite] — Острозька Біблія була відповіддю на католицьку та протестантську експансію, спробою створити православний канон.
+- Section "Основний матеріал: II — Виклики простої мови": [!quote] — Цитата з передмови Негалевського про те, чому він перекладав «простою мовою» для розуміння люду.
+- Section "Основний матеріал: III — Лексичні паралелі": [!myth-buster] — Міф про те, що «хліб насущний» означає лише їжу. Грецьке *epiousios* — це «надсутнісний» або «той, що для існування».
+- Section "Основний матеріал: IV — Київська вимова": [!decolonization] — Російська церква монополізувала право на «правильне» читання церковнослов'янських текстів, оголосивши київську вимову «зіпсованою», хоча вона є автохтонною для України.
+- Section "Підсумок": [!culture] — Як молитва «Отче наш» звучить у сучасних українських літургіях (ПЦУ vs УГКЦ).
+
+## Деколонізаційний контекст
+- **Імперський міф**: Церковнослов'янська мова є спільною «російською» спадщиною, а українська вимова — це пізні полонізовані викривлення.
+- **Українська реальність**: Київський ізвод (українська редакція) сформувався природним шляхом на основі давньокиївської фонетики. Наші предки читали «Богородице Дїво», а не «Богородице Дєво». Петро Могила та київські вчені XVII ст. вважали саме цю вимову правильною та канонічною.
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| Церковнослов'янська мова | "Староросійська" або спільна мова з російським центром | Староболгарська в основі, яка мала різні редакції (ізводи). Київський ізвод — повноправна українська сакральна мова. |
+| Проста мова | "Наріччя" або зіпсована російська/польська | Повноцінна літературна мова раннього модерну (Ruthenian), мова адміністрації та суду. |
+| Вимова (ѣ -> і) | "Уніатський вплив" | Давня фонетична риса (ікавізм), зафіксована ще в графіті Софії Київської (XI ст.). |
+
+## Section-Mapped Research Notes
+
+### Вступ
+Значення молитви як тексту, що знав кожен грамотний і неграмотний українець. Це був перший текст для навчання грамоти (Буквар Івана Федорова 1574 починається з азбуки та молитов).
+
+### Основний матеріал: I — Острозький канон
+Аналіз тексту Острозької Біблії. "Іже єси на небесѣхъ". Граматичні форми: кличний відмінок "Отче", імперативи "даждь", "остави". Це "високий стиль", який зберігав архаїку.
+
+### Основний матеріал: II — Виклики "простої мови"
+Спроби перекладу. Чому "хліб насущний" було важко перекласти? Проблема "боргів" (офєлонімата) vs "гріхів". Негалевський і його "винуватці". Вплив Реформації (Лютер перекладав народною мовою, українці теж хотіли розуміти зміст).
+
+### Основний матеріал: III — Лексичні паралелі (Беринда)
+Роль словників. Як Беринда пояснював слова "іскушеніє" (спокуса) та "лукавий". "Лукавий" як "злий" або як персоніфікація Диявола. Еволюція семантики.
+
+### Основний матеріал: IV — Київська вимова
+Фонетика. Читання літери "ять" (ѣ) як [і] (хліб, віра), "и" як [и] (тверде), "г" як [h] (фрикативне). Це маркер ідентичності. Вплив київської школи на Москву (до реформ Нікона московська церква запозичувала київські книги, але виправляла вимову).
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12288)
+✓ Message 12215 acknowledged
+✓ Message 12288 acknowledged

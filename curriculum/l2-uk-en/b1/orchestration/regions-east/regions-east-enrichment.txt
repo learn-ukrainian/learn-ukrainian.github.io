@@ -1,0 +1,291 @@
+✅ Message sent to Gemini (ID: 10425) [auto-acked: self-addressed]
+✓ Message 10425 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10425...
+📨 Message #10425
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-regions-east
+   Time: 2026-02-20T20:32:20.466689+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b1-73
+level: B1
+sequence: 73
+slug: regions-east
+version: '2.0'
+title: 'Українські регіони: Схід'
+subtitle: Eastern Ukraine - Industrial Heritage and Academic Excellence
+content_outline:
+- section: 'Вступ — Схід: Промислове серце'
+  points:
+  - Географія Східної України
+  - Від степу до мегаполісів
+- section: Сучасність
+  points:
+  - Харків — перша столиця
+  - Університетське місто з 1805 року
+  - Харків як столиця УРСР (1919-1934)
+  - Сучасний Харків під обстрілами
+- section: Історія та культура
+  points:
+  - Слобожанщина — земля вільних
+  - Історія заселення козаками
+  - Донбас — шахтарський край
+  - Робітнича культура та ідентичність
+  - Стійкість Сходу
+- section: Практика
+  points:
+  - Ключові концепції
+  - Порівняльні таблиці
+- section: Підсумок — Схід це Україна
+  points:
+  - Єдність попри випробування
+vocabulary_hints:
+  required:
+  - Харків (Kharkiv)
+  - Слобожанщина (Slobozhanshchyna)
+  - Донбас (Donbas)
+  - промисловість (industry)
+  - спадщина (heritage)
+  - університет (university)
+  - ідентичність (identity)
+  - регіон (region)
+  recommended:
+  - академічний (academic)
+  - робітничий (working-class)
+  - переселенці (displaced persons)
+  - стійкість (resilience)
+activity_hints:
+- type: reading
+  focus: Authentic texts about Eastern Ukraine
+  items: 15
+- type: match-up
+  focus: Match regions to characteristics
+  items: 20
+- type: fill-in
+  focus: Complete regional descriptions
+  items: 15
+- type: quiz
+  focus: Discuss Eastern Ukrainian identity
+  items: 10
+focus: culture
+pedagogy: CBI
+prerequisites:
+- b1-72 (Regions West)
+connects_to:
+- b1-74 (Regions South)
+objectives:
+- Learner can discuss Eastern Ukraine's industrial heritage and academic centers
+- Learner can understand authentic texts about Kharkiv, Slobozhanshchyna, and Donbas
+- Learner can use regional vocabulary to describe Eastern Ukrainian culture and identity
+- Learner can compare Eastern Ukrainian traditions with other regions
+grammar:
+- Reading comprehension strategies
+- Cultural vocabulary in context
+- Industrial and academic vocabulary
+register: розмовний
+phase: B1.7 [Contemporary Ukraine]
+persona:
+  voice: Senior Language & Culture Specialist
+  role: Kharkiv Industrial Engineer
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Українські регіони: Схід
+
+## State Standard Reference
+§3.13: "Місця: тип і розташування місцевості; інституції та громадські місця; пам’ятки культури і пам’ятники; туристичні принади."
+§3.15: "Традиції, звичаї, свята: українські звичаї і традиції."
+Alignment: Модуль розкриває тему "Місця" через опис східних регіонів (Харків, Донбас) та тему "Традиції" через історію слобідського козацтва та робітничу культуру.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| **промисловість** | Висока (Web) | важка/легка промисловість, провідна галузь, розвиток промисловості, індустріальний центр |
+| **спадщина** | Середня (Web) | культурна спадщина, збереження спадщини, нематеріальна спадщина, історична спадщина |
+| **ідентичність** | Середня (Web) | національна ідентичність, формування ідентичності, українська ідентичність, мовна ідентичність |
+| **стійкість** | Висока (Media) | символ стійкості, незламна стійкість, проявляти стійкість |
+| **регіон** | Висока (Web) | східний регіон, промисловий регіон, особливості регіону |
+
+## Cultural Hooks
+1. **Харків — перша столиця УРСР (1919–1934)**. Важливо: це була столиця радянської України, тоді як Київ залишався духовним та історичним центром. Цей період залишив у спадок величну архітектуру (Держпром) та статус наукового центру.
+2. **Харківський університет імені В. Н. Каразіна** засновано у 1804 році (відкрито 1805). Це один із найстаріших університетів Східної Європи, що зробило Харків студентським містом задовго до індустріалізації.
+3. **Юзівка (Донецьк)** заснована британським підприємцем Джоном Юзом у 1869 році. Це підкреслює європейське коріння промисловості Донбасу, всупереч радянським міфам про ізольований розвиток.
+4. **Слобожанщина — земля вільних людей**. Назва походить від "слобода" (свобода), оскільки поселенці (козаки) звільнялися від податків. Це регіон козацьких полків (Харківський, Сумський, Ізюмський та ін.), а не просто "промислова зона".
+
+## Common Learner Errors
+1. **Вживання прийменників**: *в Донбасі* (помилка) → *на Донбасі* (правильно). "Донбас" — це регіон (як "на Полтавщині"), а не місто чи країна. Вживання "в" часто є кальклю з російської або політично забарвленою помилкою.
+2. **Плутанина понять**: *східна Україна* (географічний термін) vs *Схід України* (політизований термін). Краще вживати "східні області" або "східний регіон".
+3. **Родовий відмінок**: *Харківа* (помилка) → *Харкова* (правильно). У назвах міст на -ів суфікс часто випадає або змінюється (Львів — Львова, Київ — Києва, Харків — Харкова).
+
+## Cross-References
+- **Builds on**: `b1-72` (Regions West) — контраст і доповнення до західних регіонів.
+- **Prepares for**: `b1-74` (Regions South) — продовження подорожі Україною.
+
+## Notes for Content Writing
+- **Avoid Stereotypes**: Не зводити Схід лише до війни чи заводів. Підкреслити інтелектуальний потенціал Харкова (студенти, IT, література — будинок "Слово") та європейське коріння промисловості Донбасу.
+- **Tone**: Патріотичний, але об'єктивний. Акцент на українській суті Слобожанщини (козацьке коріння), яку намагалися стерти радянською русифікацією.
+- **Immersion**: Усі власні назви (John Hughes) писати кирилицею (Джон Юз).
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction: The Industrial and Intellectual Core)"
+  words: 600
+  points:
+  - "Географія та ландшафт східних областей України (Харківська, Донецька, Луганська) відповідно до Державного стандарту §3.13."
+  - "Трансформація від дикого степу до потужних індустріальних мегаполісів: баланс природи та індустрії."
+  - "Визначення понять 'східний регіон' та 'східні області' як нейтральних географічних термінів."
+- section: "Харків: Місто студентів, науки та архітектури (Kharkiv: City of Students, Science, and Architecture)"
+  words: 900
+  points:
+  - "Харків як радянська столиця (1919–1934): історичний контекст, архітектурний ансамбль Держпрому та розвиток конструктивізму."
+  - "Харківський національний університет імені В. Н. Каразіна (заснований 1804): статус найстарішого освітнього центру та 'студентської столиці'."
+  - "Інтелектуальний та культурний осередок: будинок 'Слово', сучасний IT-сектор та літературні традиції міста."
+  - "Сучасний Харків як символ незламності та стійкості під постійними обстрілами."
+- section: "Історія Слобожанщини та Донбасу (History of Slobozhanshchyna and Donbas)"
+  words: 1000
+  points:
+  - "Слобожанщина: етимологія слова 'слобода' (свобода від податків) та історія заселення козацькими полками (Харківський, Сумський, Ізюмський)."
+  - "Європейське коріння Донбасу: роль британського підприємця Джона Юза (Юзівка/Донецьк) у заснуванні промислового центру в 1869 році."
+  - "Робітнича культура та ідентичність: формування особливого характеру регіону через важку працю та індустріальну спадщину."
+  - "Спростування радянських міфів про ізольований розвиток Сходу; наголос на його органічному зв'язку з рештою України."
+- section: "Мовна практика та типові помилки (Language Practice and Common Errors)"
+  words: 800
+  points:
+  - "Прийменникове керування: виправлення помилки 'в Донбасі' (калька) на нормативне 'на Донбасі' (відповідно до назв регіонів)."
+  - "Граматика власних назв: родовий відмінок назви міста — 'Харкова' (не 'Харківа') через чергування голосних і/о."
+  - "Словникова робота: вживання термінів 'промисловість' (важка/легка), 'галузь' та 'спадщина' у професійному та культурному контекстах."
+  - "Дискусія про національну та мовну ідентичність мешканців Сходу в умовах деколонізації."
+- section: "Підсумок: Стійкість та єдність Сходу (Summary: Resilience and Unity of the East)"
+  words: 700
+  points:
+  - "Схід — це невід'ємна частина України: спільні традиції, звичаї та свята відповідно до стандарту §3.15."
+  - "Концепція стійкості (resilience) як ключова характеристика сучасного українського Сходу."
+  - "Майбутнє регіону: відновлення, деокупація та збереження культурної спадщини."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "Харків (Kharkiv) — родовий відмінок: Харкова; перша столиця УРСР, студентське місто"
+  - "Слобожанщина (Slobozhanshchyna) — походить від 'слобода' (пільга); земля вільних козаків"
+  - "Донбас (Donbas) — прийменник: на Донбасі; індустріальне серце країни"
+  - "промисловість (industry) — колок.: важка/легка промисловість, провідна галузь; висока частотність"
+  - "спадщина (heritage) — колок.: культурна, історична, нематеріальна спадщина; збереження спадщини"
+  - "університет (university) — академічне середовище, вища освіта; приклад: університет Каразіна"
+  - "ідентичність (identity) — колок.: національна, мовна ідентичність; формування ідентичності"
+  - "регіон (region) — колок.: східний регіон, індустріальний регіон; географічне поняття"
+  recommended:
+  - "академічний (academic) — академічний центр, академічна спільнота; стосується вищої освіти"
+  - "робітничий (working-class) — робітнича династія, робітнича культура; коріння Донбасу"
+  - "переселенці (displaced persons) — люди, що змушені були змінити місце проживання через війну"
+  - "стійкість (resilience) — символ стійкості, проявляти стійкість; ключове слово сучасних медіа"
+  - "слобода (sloboda) — історичне поселення з пільгами; етимологічний зв'язок зі словом 'свобода'"
+  - "Держпром (Derzhprom) — скорочення: Будинок державної промисловості; пам'ятка конструктивізму"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4180 chars)
+✅ Message sent to Claude (ID: 10434)
+✓ Message 10434 acknowledged
+   Auto-acknowledged reply #10434 (stdout delivery — no inbox accumulation)
+✓ Message 10425 acknowledged

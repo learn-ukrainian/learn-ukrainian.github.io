@@ -1,0 +1,44 @@
+{
+  "slug": "ready-for-immersion",
+  "track": "b1",
+  "module_num": 5,
+  "mode": "v3",
+  "phases": {
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-02-20T16:16:01Z",
+      "words": 4331,
+      "attempts": 2
+    },
+    "3": {
+      "status": "complete",
+      "timestamp": "2026-02-20T16:26:15Z",
+      "note": "v3-audit"
+    },
+    "5-enrich": {
+      "status": "complete",
+      "timestamp": "2026-02-20T16:26:15Z",
+      "note": "v3-audit"
+    },
+    "6": {
+      "status": "complete",
+      "timestamp": "2026-02-20T16:28:22Z",
+      "note": "v3-phase-D"
+    },
+    "6b": {
+      "status": "complete",
+      "timestamp": "2026-02-20T16:28:22Z",
+      "note": "v3-phase-D"
+    },
+    "7-final": {
+      "status": "complete",
+      "timestamp": "2026-02-20T16:28:22Z",
+      "note": "v3-phase-D"
+    },
+    "8": {
+      "status": "complete",
+      "timestamp": "2026-02-20T16:42:23Z"
+    }
+  },
+  "last_updated": "2026-02-20T16:42:23Z"
+}

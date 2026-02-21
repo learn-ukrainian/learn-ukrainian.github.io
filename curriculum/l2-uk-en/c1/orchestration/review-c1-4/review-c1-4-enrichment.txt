@@ -1,0 +1,223 @@
+✅ Message sent to Gemini (ID: 10755) [auto-acked: self-addressed]
+✓ Message 10755 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10755...
+📨 Message #10755
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-review-c1-4
+   Time: 2026-02-20T21:27:07.690316+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-046
+level: c1
+sequence: 46
+version: '1.0'
+title: 'Огляд етапу C1.4: Стилістика та регістри'
+subtitle: 'Stage C1.4 Review: Stylistics and Registers'
+focus: style
+pedagogy: Review
+objectives:
+- Learner can flexibly switch between formal, intimate, and slang registers
+- Learner can express degrees of certainty and politeness appropriate to the context
+- Learner can identify and correct stylistic errors
+content_outline:
+- section: Introduction
+  subsections:
+  - TBD
+vocabulary:
+  required: '[]'
+  recommended: '[]'
+  forbidden: '[]'
+persona:
+  voice: Senior Specialist
+  role: Мовний інспектор
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Огляд етапу C1.4: Стилістика та регістри
+
+## State Standard Reference
+§4.4.1.1: "Стилі української мови: розмовний; офіційний; науковий; публіцистичний; художній; релігійний; епістолярний."
+Alignment: This module systematizes knowledge of functional styles, focusing on the practical ability to switch between registers (official vs. conversational) and maintain stylistic purity, addressing the C1 requirement for "appropriate use of stylistic means" (§4.4.2-4.4.4).
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| доцільність | High (Academic) | стилістична доцільність, доцільність використання |
+| канцелярит | Medium (Publicistic) | уникати канцеляриту, бюрократичний канцелярит |
+| просторіччя | Medium (Linguistics) | вживати просторіччя, елементи просторіччя |
+| панібратство | Low (Literary) | неприпустиме панібратство, переходити на панібратство |
+| суржик | High (General) | побутовий суржик, викорінювати суржик |
+
+## Cultural Hooks
+1. **The "Kanselyaryt" Phenomenon**: Identifying and mocking bureaucratic language ("зробити прибирання" замість "прибрати") is a staple of Ukrainian stylistic education, famously criticized by Maksym Rylskyi ("Як парость виноградної лози...").
+2. **Address Forms**: The nuance of "Ви" vs "ти" and the use of "Пан/Пані" vs "Шановний/Шановна" in modern correspondence reflects Ukraine's shift from Soviet to European etiquette norms.
+
+## Common Learner Errors
+1. **Register Clashing**: Using "привіт" or "давай" in formal correspondence instead of "вітаю" or "прошу".
+2. **Passive Overuse**: Mimicking English/bureaucratic passive ("питання було вирішене") instead of active structures ("ми вирішили питання").
+3. **Calques in Etiquette**: Using "вибачаюсь" (reflexive = I excuse myself) instead of "перепрошую" or "вибачте".
+
+## Cross-References
+- Builds on: B2-PRO modules (business comms), C1.3 Stylistics.
+- Prepares for: C1 Literature (author styles), C2 Rhetoric.
+
+## Notes for Content Writing
+- Focus on *appropriateness* (доречність). Slang is not "bad", it's just wrong for a job interview.
+- Use the "Moral Inspector" persona to jokingly "fine" stylistic violations like tautologies or pleonasms.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Доцільність як найвищий критерій (Introduction: Appropriateness as the Highest Criterion)"
+  words: 400
+  points:
+  - "Вступне слово від Мовного інспектора: пояснення концепції «стилістичної доцільності» як ключової компетенції рівня C1 згідно з державним стандартом (§4.4.1.1)."
+  - "Огляд основних цілей етапу C1.4: від розрізнення функціональних стилів до майстерного володіння регістрами спілкування."
+- section: "Класифікація стилів та реєстрів (Classification of Styles and Registers)"
+  words: 800
+  points:
+  - "Детальний огляд семи стилів української мови за стандартом: розмовний, офіційний, науковий, публіцистичний, художній, релігійний та епістолярний."
+  - "Регістри спілкування: від офіційної дистанції до неприпустимого в певних контекстах «панібратства»."
+  - "Аналіз типової помилки «Register Clashing»: чому використання «привіт» або «давай» у діловому листуванні замість «вітаю» чи «прошу» є стилістичним злочином."
+- section: "Боротьба з канцеляритом та суржиком (Combating Kanselyaryt and Surzhyk)"
+  words: 1000
+  points:
+  - "Культурний контекст: Максим Рильський та метафора мови як виноградної лози («Як парость виноградної лози...») у боротьбі за чистоту слова."
+  - "Феномен канцеляриту: ідентифікація бюрократичних штампів, як-от «зробити прибирання» замість природного «прибрати»."
+  - "Диференціація мовних явищ: розрізнення «побутового суржику», який підлягає викоріненню, та художнього використання «просторіччя»."
+  - "Практикум: виправлення надмірного вживання пасиву (наприклад, «питання було вирішене») на питомі активні конструкції («ми вирішили питання»)."
+- section: "Етикет та культури звертання (Etiquette and Cultures of Address)"
+  words: 900
+  points:
+  - "Трансформація етикетних норм: нюанси вживання «Ви» vs «ти» та перехід від радянських до сучасних європейських стандартів спілкування."
+  - "Форми звертання в офіційному листуванні: вибір між «Пан/Пані» та «Шановний/Шановна» залежно від контексту."
+  - "Клініка помилок: аналіз етикетних кальок, зокрема заміна помилкового «вибачаюсь» на нормативні «перепрошую» або «вибачте»."
+- section: "Стилістичне редагування та фінальний контроль (Stylistic Editing and Final Control)"
+  words: 900
+  points:
+  - "Рольова гра «Інспекція тексту»: пошук та виправлення тавтологій, плеоназмів та стилістичних дисонансів у змішаних текстах."
+  - "Гнучкість у висловленні ступеня впевненості та ввічливості: добір мовних засобів для співбесіди, наукової дискусії та дружньої бесіди."
+  - "Підсумок етапу: оцінка готовності до переходу до риторики рівня C2 та вивчення індивідуальних авторських стилів у літературі."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "доцільність (expediency/appropriateness) — стилістична доцільність, доцільність використання; висока частотність в академічному контексті"
+  - "канцелярит (officialese/bureaucratese) — уникати канцеляриту, бюрократичний канцелярит; публіцистичний термін для штампів"
+  - "просторіччя (vernacular/colloquialism) — вживати просторіччя, елементи просторіччя; лінгвістичний термін"
+  - "панібратство (inappropriate familiarity) — неприпустиме панібратство, переходити на панібратство; літературне слово"
+  - "суржик (surzhyk/macaronic language) — побутовий суржик, викорінювати суржик; загальновживаний термін"
+  - "доречність (appropriacy) — ключове поняття для вибору регістра залежно від ситуації"
+  recommended:
+  - "перепрошую (I beg your pardon) — правильна форма замість кальки «вибачаюсь»"
+  - "вітаю (greetings/I welcome) — офіційне вітання замість «привіт»"
+  - "епістолярний (epistolary) — епістолярний стиль, епістолярна спадщина"
+  - "публіцистичний (publicistic) — стиль медіа та суспільного життя"
+  - "плеоназм (pleonasm) — мовна надмірність, яку слід виправляти"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (3856 chars)
+✅ Message sent to Claude (ID: 10762)
+✓ Message 10762 acknowledged
+   Auto-acknowledged reply #10762 (stdout delivery — no inbox accumulation)
+✓ Message 10755 acknowledged

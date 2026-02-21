@@ -2,17 +2,5 @@
   "track": "c1",
   "slug": "b2-review-bridge",
   "mode": "v3",
-  "phases": {
-    "v3-C": {
-      "status": "complete",
-      "ts": "2026-02-19T12:51:07Z",
-      "note": "adopted-existing"
-    },
-    "v3-A": {
-      "status": "complete",
-      "ts": "2026-02-19T12:52:52Z",
-      "task_id": "v3-b2-review-bridge-pA",
-      "mode": "full"
-    }
-  }
+  "phases": {}
 }

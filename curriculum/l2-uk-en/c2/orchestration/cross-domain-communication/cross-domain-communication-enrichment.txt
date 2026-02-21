@@ -1,0 +1,310 @@
+✅ Message sent to Gemini (ID: 11244) [auto-acked: self-addressed]
+✓ Message 11244 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #11244...
+📨 Message #11244
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-cross-domain-communication
+   Time: 2026-02-20T22:32:47.297196+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c2-058
+level: c2
+sequence: 58
+version: '2.0'
+title: Міжгалузева комунікація
+focus: grammar
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Науково-популярний журнал "Світогляд"
+  url: https://svitohlyad.org.ua/
+  type: reference
+  notes: Examples of cross-domain scientific communication
+- name: Українське науково-популярне видання
+  url: https://kunsht.com.ua/
+  type: reference
+  notes: Examples of explaining complex topics to general audience
+- name: TED-Ed українською
+  url: https://ed.ted.com/
+  type: reference
+  notes: Educational content explaining specialized topics accessibly
+content_outline:
+- section: Вступ — Чому міжгалузева комунікація важлива
+  points:
+  - Виклики спілкування між різними галузями
+  - Роль "перекладача" між спеціалістами
+  - Науково-популярна комунікація як модель
+- section: Пояснення складного простими словами
+  points:
+  - Техніки спрощення без втрати точності
+  - Аналогії та метафори
+  - Візуалізація складних концепцій
+  - Уникнення жаргону та технічних термінів
+- section: Адаптація до авдиторії
+  points:
+  - Аналіз потреб та рівня знань авдиторії
+  - Градація складності пояснення
+  - Зворотний зв'язок та корекція
+- section: Міждисциплінарні проєкти
+  points:
+  - Комунікація в міждисциплінарних командах
+  - Спільна мова та термінологічні конвенції
+  - Вирішення комунікаційних непорозумінь
+- section: Науковий журналізм
+  points:
+  - Принципи науково-популярного письма
+  - Баланс між доступністю та точністю
+  - Етика популяризації науки
+- section: Практичні вправи
+  points:
+  - Переклад фахового тексту для широкої авдиторії
+  - Пояснення концепції з власної галузі
+  - Критичний аналіз науково-популярних текстів
+vocabulary:
+  required:
+  - міжгалузевий (cross-domain)
+  - популяризація (popularization)
+  - спрощення (simplification)
+  - аналогія (analogy)
+  - метафора (metaphor)
+  - авдиторія (audience)
+  - адаптація (adaptation)
+  - доступність (accessibility)
+  - точність (accuracy)
+  - жаргон (jargon)
+  recommended:
+  - міждисциплінарний (interdisciplinary)
+  - візуалізація (visualization)
+  - градація (gradation)
+  - когнітивне навантаження (cognitive load)
+  - інфографіка (infographic)
+  forbidden: '[]'
+activities:
+  types_required:
+  - quiz
+  - fill-in
+  - critical-analysis
+  - essay-response
+  - comparative-study
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c2-59 (Professional Research Skills)
+- c2-60 (Building Domain Expertise)
+- c2-05 (Публіцистичний стиль — Journalism)
+vocabulary_hints:
+  required:
+  - концепція (concept)
+  - аналіз (analysis)
+  - дискурс (discourse)
+  - методологія (methodology)
+  recommended:
+  - інтерпретація (interpretation)
+  - контекстуалізація (contextualization)
+  - синтез (synthesis)
+activity_hints:
+- type: reading
+  focus: Поглиблений аналіз тексту
+  items: 4
+- type: essay-response
+  focus: Критичне осмислення
+- type: discussion
+  focus: Дискусія та аргументація
+  items: 1
+persona:
+  voice: Senior Specialist
+  role: Conflict Mediator
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Міжгалузева комунікація
+
+## State Standard Reference
+§4.3.7: "Уміння трансформувати текст з одного стилю в інший, зокрема науковий у науково-популярний, офіційний у публіцистичний тощо."
+§4.3.8: "Уміння утворювати вторинні тексти, зокрема реферати, повідомлення, довідково-інформаційні тексти."
+Alignment: Цей модуль безпосередньо реалізує вимогу стандарту щодо трансформації наукового стилю в науково-популярний та розвитку навичок створення вторинних текстів для широкої авдиторії.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| міжгалузевий | Середня (академ/публіц) | міжгалузеві зв'язки, міжгалузевий проєкт, міжгалузева співпраця, міжгалузевий підхід |
+| популяризація | Висока (публіцистика) | популяризація науки, популяризація знань, доступна популяризація |
+| авдиторія | Висока (загальне) | цільова авдиторія, широка авдиторія, залучення авдиторії, аналіз авдиторії |
+| спрощення | Середня | виправдане спрощення, надмірне спрощення, спрощення без втрати змісту |
+| адаптація | Висока | адаптація тексту, адаптація матеріалу, мовна адаптація |
+
+## Cultural Hooks
+1. **Куншт (Kunsht)**: Провідне українське науково-популярне медіа, що позиціонує науку як мистецтво. Відмінний приклад якісної візуалізації та доступної мови.
+2. **INSCIENCE**: Організація, що проводить найбільші науково-популярні конференції в Україні (INSCIENCE Conference) та проєкти для дітей (Science Kids), об'єднуючи науку та бізнес.
+
+## Common Learner Errors
+1. **Калькування термінів**: Прямий переклад англійських ідіом замість українських відповідників (напр. "знаходити спільну мову" замість "порозумітися" у фаховому контексті).
+2. **Канцеляризми та пасивні конструкції**: Зловживання "було зроблено", "являється" (замість "є"), "здійснювати аналіз" (замість "аналізувати"), що обтяжує популярний текст.
+3. **Невідповідність регістру**: Використання суто академічної лексики (напр. "детермінувати", "імплементація") у комунікації з нефахівцями без пояснення.
+
+## Cross-References
+- Builds on: c2-05 (Публіцистичний стиль) — база для наукового журналізму.
+- Prepares for: c2-59 (Professional Research Skills), c2-60 (Building Domain Expertise) — інструментарій для майбутньої фахової роботи.
+
+## Notes for Content Writing
+- Акцентувати на тому, що "спрощення" не означає "примітивізація".
+- Використовувати приклади з реальних українських кейсів (напр. як українські медики пояснювали необхідність вакцинації).
+- Звернути увагу на етику: як не викривити науковий факт заради "хайпу" (клікбейту).
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ — Важливість міжгалузевої комунікації (Introduction — Importance of Cross-Industry Communication)"
+  words: 500
+  points:
+  - "Виклики спілкування між різними галузями: аналіз когнітивного навантаження та термінологічних бар'єрів у сучасному професійному середовищі."
+  - "Роль фахівця як 'перекладача' смислів: як медіатор допомагає синхронізувати понятійний апарат різних команд та уникати непорозумінь."
+  - "Реалізація вимог Держстандарту (§4.3.7): науково-популярна комунікація як стратегічний інструмент трансформації наукового стилю в доступний формат."
+- section: "Методи спрощення та візуалізації (Methods of Simplification and Visualization)"
+  words: 750
+  points:
+  - "Техніки спрощення без втрати точності: деконструкція складних ідей та встановлення межі між доступністю та ризиком примітивізації контенту."
+  - "Використання аналогій та метафор: створення когнітивних містків між вузькоспеціалізованими знаннями та повсякденним досвідом авдиторії."
+  - "Візуалізація концепцій на прикладі досвіду медіа «Куншт»: поєднання естетики та наукової достовірності для популяризації складних тем."
+  - "Подолання професійної деформації: методи контролю реєстру та уникнення недоречного жаргону (напр. 'детермінувати', 'імплементація') у публічному дискурсі."
+- section: "Стратегії адаптації до авдиторії (Strategies for Audience Adaptation)"
+  words: 600
+  points:
+  - "Аналіз потреб цільової авдиторії: порівняння підходів для дітей (кейси проєкту Science Kids від INSCIENCE) та фахового бізнес-сектору."
+  - "Градація складності пояснення: структурування інформаційного повідомлення від базових принципів до складних міжгалузевих взаємозв'язків."
+  - "Механізми зворотного зв'язку: методи перевірки адекватності сприйняття інформації та корекція стратегії залежно від реакції слухачів."
+- section: "Міждисциплінарна взаємодія та мовна культура (Interdisciplinary Interaction and Language Culture)"
+  words: 600
+  points:
+  - "Комунікація в мультигалузевих командах: встановлення термінологічних конвенцій та етика професійного спілкування між фахівцями."
+  - "Корекція типових помилок: заміна калькованих висловів (напр. 'знаходити спільну мову') питомими українськими відповідниками ('порозумітися')."
+  - "Стилістичне редагування: усунення канцеляризмів (напр. заміна 'здійснювати аналіз' на динамічне 'аналізувати') для підвищення прозорості викладу."
+- section: "Практика наукової популяризації (Practice of Science Popularization)"
+  words: 550
+  points:
+  - "Принципи наукового журналізму: баланс між достовірністю та розважальним елементом на основі досвіду конференцій INSCIENCE."
+  - "Етичні аспекти популяризації: боротьба з клікбейтом та викривленням фактів; аналіз кейсів комунікації щодо вакцинації в Україні."
+  - "Створення вторинних текстів (§4.3.8): трансформація наукових звітів у доступні реферати, повідомлення та довідково-інформаційні матеріали."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "міжгалузевий (cross-domain) — міжгалузеві зв'язки, міжгалузевий проєкт, міжгалузевий підхід; середня частота в академічному дискурсі"
+  - "популяризація (popularization) — популяризація науки, популяризація знань; висока частота в публіцистиці"
+  - "авдиторія (audience) — цільова авдиторія, широка авдиторія, залучення авдиторії; висока частота"
+  - "спрощення (simplification) — виправдане спрощення, спрощення без втрати змісту; середня частота"
+  - "адаптація (adaptation) — адаптація тексту, адаптація матеріалу, мовна адаптація; висока частота"
+  recommended:
+  - "порозумітися (to reach an understanding) — вживається замість поширеної кальки 'знаходити спільну мову'"
+  - "аналізувати (to analyze) — динамічна заміна обтяженого канцеляризму 'здійснювати аналіз'"
+  - "примітивізація (primitivization) — термін для опису негативного наслідку надмірного або невдалого спрощення"
+  - "когнітивне навантаження (cognitive load) — професійний термін для оцінки труднощів сприйняття інформації авдиторією"
+  - "вторинний текст (secondary text) — термін Держстандарту для рефератів та анотацій, створених на основі першоджерел"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4184 chars)
+✅ Message sent to Claude (ID: 11259)
+✓ Message 11259 acknowledged
+   Auto-acknowledged reply #11259 (stdout delivery — no inbox accumulation)
+✓ Message 11244 acknowledged

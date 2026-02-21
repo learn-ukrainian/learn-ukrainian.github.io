@@ -1,0 +1,299 @@
+✅ Message sent to Gemini (ID: 10261) [auto-acked: self-addressed]
+✓ Message 10261 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10261...
+📨 Message #10261
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-scheduling-appointments
+   Time: 2026-02-20T20:05:41.056739+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: a2-63
+level: A2
+sequence: 63
+slug: scheduling-appointments
+version: '2.0'
+title: Scheduling Appointments
+subtitle: Making and Changing Plans
+content_outline:
+- section: Introduction / Вступ
+  points:
+  - 'Appointment culture — cultural hook: The ''Academic Quarter'' (social lateness
+    OK) vs Strict Business Punctuality; use of 24-hour clock in official schedules;
+    aligned with State Standard §1.1.2.1.1'
+  - 'Phone vs online booking — cultural hook: The Messenger Revolution (Viber/Telegram
+    dominance over voice calls)'
+- section: Presentation / Презентація
+  points:
+  - 'Я хочу записатися на... — distinguish ''записатися'' (service appointment) vs
+    ''домовитися про зустріч'' (hangout); collocations: записатися на прийом/стрижку'
+  - 'Choosing date and time — learner error: confusing ''о котрій?'' (at what time?
+    - Locative) with ''на котру?'' (for what time? - Accusative); warning on ''half
+    past'' logic (3:30 is ''half on fourth'')'
+  - Phone etiquette — polite phrases for scheduling and checking availability
+- section: Practice / Практика
+  points:
+  - 'Make appointment calls — immersion note: use Ukrainian interface terms (calendars,
+    booking apps) for realism'
+  - 'Reschedule meetings — collocations: перенести на завтра, перенести на іншу годину'
+- section: Dialogues (Діалоги)
+  points:
+  - Scheduling dialogues — mix of formal (doctor/business) and informal scenarios
+  - 'Confirming details — cultural hook: ''Check your Viber'' for confirmation details'
+- section: Narrative (Розповідь)
+  points:
+  - Scheduling story — realistic scenario involving booking via app or messenger
+- section: Need More Practice?
+  points:
+  - Summary and links
+vocabulary_hints:
+  required:
+  - записатися (to make an appointment) — записатися на прийом (book appointment),
+    записатися до лікаря
+  - 'зустріч (meeting) — призначити зустріч (schedule), перенести (reschedule), скасувати
+    (cancel); learner error: зустріти vs зустрітися з'
+  - час (time) — вільний час (free time)
+  - дата (date)
+  - перенести (to reschedule) — перенести на завтра, перенести на іншу годину
+  - скасувати (to cancel) — скасувати зустріч
+  - підтвердити (to confirm)
+  - вільний (available) — ви вільні? (are you free?), вільне місце (free spot)
+  recommended:
+  - нагадування (reminder)
+  - прийом (appointment)
+  - секретар (secretary)
+  - зайнятий (busy) — я зайнятий, лінія зайнята
+  - раніше (earlier)
+  - пізніше (later)
+activity_hints:
+- type: match-up
+  focus: Phone appointment calls
+  items: 25
+- type: quiz
+  focus: Schedule and reschedule
+  items: 10
+focus: practical
+pedagogy: PPP
+prerequisites:
+- a2-62 (Rental Accommodation)
+connects_to:
+- a2-64 (Scheduling Interviews)
+- a2-59 (Medical Care)
+objectives:
+- Learner can make an appointment by phone
+- Learner can reschedule or cancel a meeting
+- Learner can understand appointment details
+- Learner can use polite phrases for scheduling
+grammar:
+- Making appointments (записатися на)
+- Rescheduling and canceling
+- Polite phone etiquette
+register: розмовний
+immersion: 75-90% Ukrainian
+phase: A2.6 [Practical]
+persona:
+  voice: Encouraging Cultural Guide
+  role: Administrative Assistant
+word_target: 3000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Scheduling Appointments
+
+## State Standard Reference
+§1.1.2.1.1: "особисті повідомлення та повідомлення на автовідповідачі, зокрема про запрошення, про місце зустрічі, зміну часу зустрічі чи її скасування"
+Alignment: This module directly addresses the A2 requirement for understanding and producing messages about setting, changing, or canceling meeting times and places.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| зустріч (meeting) | High (Common core) | призначити зустріч (schedule), перенести зустріч (reschedule), скасувати зустріч (cancel) |
+| записатися (to sign up/book) | Med-High (Service context) | записатися на прийом (book appointment), записатися до лікаря (book doctor), записатися на стрижку (book haircut) |
+| вільний (free/available) | High | ви вільні? (are you free?), вільний час (free time), вільне місце (free spot) |
+| зайнятий (busy) | High | я зайнятий (I am busy), лінія зайнята (line is busy) |
+| перенести (to move/reschedule) | Medium | перенести на завтра (move to tomorrow), перенести на іншу годину (move to another time) |
+
+## Cultural Hooks
+1. **The "Academic Quarter" vs. Business Time**: In Ukraine, being 5-10 minutes late for a *social* meeting is often socially acceptable ("fashionably late"), but business and medical appointments expect strict punctuality.
+2. **The Messenger Revolution**: Most appointments (beauty, medical, business) in Ukraine are now confirmed or even booked via Viber, Telegram, or WhatsApp rather than just voice calls. "Check your Viber" is a standard phrase.
+3. **24-Hour Clock**: Official schedules (trains, cinemas, doctors) exclusively use the 24-hour clock (15:00, not 3 PM), while spoken colloquial language often uses the 12-hour system (третя година дня).
+
+## Common Learner Errors
+1. **Time Prepositions**: Confusing *о котрій?* (at what time? - Locative) with *на котру?* (for what time? - Accusative).
+   *   *Error*: Я прийду *на* п'яту годину. (I will come *for* 5:00 - implies deadline/duration).
+   *   *Correct*: Я прийду *о* п'ятій годині. (I will come *at* 5:00).
+2. **"Half Past" Logic**: Misunderstanding that *пів на четверту* (half on fourth) means 3:30, not 4:30. Learners often hear "fourth" and assume it's 4:something.
+3. **Meeting Verbs**: Confusing *зустріти* (to meet/greet someone arriving) with *зустрітися з* (to meet with someone for an appointment).
+
+## Cross-References
+- Builds on: `a2-14-ordinal-numerals` (dates), `a2-25-time-expressions` (telling time basics)
+- Prepares for: `a2-59-medical-care` (specific medical booking), `a2-64-scheduling-interviews` (formal scheduling)
+
+## Notes for Content Writing
+- **Pedagogy**: Explicitly distinguish between "booking an appointment" (*записатися*) vs "arranging a hangout" (*домовитися про зустріч*).
+- **Immersion**: Use Ukrainian interface terms (calendars, booking apps) in examples to boost realism.
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 450
+  points:
+  - "The 'Academic Quarter' hook: Cultural norms of social lateness (5-10 minutes) vs. strict business and medical punctuality in Ukraine."
+  - "The Messenger Revolution: Explaining the dominance of Viber, Telegram, and WhatsApp for booking appointments over traditional voice calls; 'Check your Viber' as a standard confirmation phrase."
+  - "Clock Systems: Distinguishing the 24-hour clock for official schedules (15:00) vs. the 12-hour clock for colloquial speech (третя година дня)."
+- section: "Презентація (Presentation)"
+  words: 800
+  points:
+  - "Service vs. Social: Distinguish «записатися на...» (booking a service/appointment) from «домовитися про зустріч» (arranging a hangout/meeting)."
+  - "Collocations for booking: записатися на прийом (doctor), записатися на стрижку (haircut), записатися на манікюр."
+  - "The 'Half Past' Logic: Explaining the linguistic structure of 'half on the next hour' (e.g., «пів на четверту» is 3:30, not 4:30) to prevent common chronological errors."
+  - "Polite Phone Etiquette: Standard phrases for opening and closing a scheduling call or message."
+- section: "Практика (Practice)"
+  words: 650
+  points:
+  - "Time Prepositions Drill: Distinguishing «о котрій?» (at what time? - Locative) vs. «на котру?» (for what time/deadline? - Accusative) with specific correction for common errors like 'Я прийду на п'яту' when meaning 'at 5:00'."
+  - "App Interface Immersion: Using realistic Ukrainian terms found in booking apps (календар, вільне місце, підтвердити, деталі запису)."
+  - "Verb Contrast: Drill distinguishing «зустріти» (to meet/greet someone arriving) from «зустрітися з» (to meet with someone for an appointment)."
+- section: "Діалоги (Dialogues)"
+  words: 600
+  points:
+  - "Formal Scenario: Scheduling a doctor's appointment (записатися до лікаря) using strict 24-hour time and checking availability («вільні місця»)."
+  - "Informal Scenario: Rescheduling a coffee meetup via messenger, using «перенести» and discussing the 'academic quarter' for arrival time."
+  - "State Standard §1.1.2.1.1 practice: Producing and understanding messages for changing or canceling meeting times."
+- section: "Розповідь (Narrative)"
+  words: 350
+  points:
+  - "Narrative arc involving a character navigating multiple appointments: booking a haircut, confirming via Viber, and having to reschedule a business meeting («перенести на іншу годину»)."
+  - "Integrating 'half past' logic within the story to test comprehension of 3:30 vs 4:30."
+- section: "Підсумок (Summary)"
+  words: 150
+  points:
+  - "Review of key collocations and the locative vs. accusative time distinction."
+  - "Self-assessment checklist for State Standard §1.1.2.1.1 competencies (inviting, changing, canceling)."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "записатися (to book/sign up) — записатися на прийом (appointment), записатися до лікаря (to the doctor); implies a formal service context"
+  - "зустріч (meeting) — призначити зустріч (schedule), перенести зустріч (reschedule), скасувати зустріч (cancel); note learner error: зустріти vs зустрітися з"
+  - "вільний (free/available) — ви вільні? (are you free?), вільне місце (free spot/slot), вільний час (free time)"
+  - "зайнятий (busy) — я зайнятий, лінія зайнята; used for both people and phone lines"
+  - "перенести (to move/reschedule) — перенести на завтра, перенести на іншу годину; high frequency in administrative contexts"
+  - "скасувати (to cancel) — скасувати запис, скасувати зустріч"
+  - "підтвердити (to confirm) — підтвердити запис, повідомлення для підтвердження"
+  - "о котрій? (at what time?) — uses Locative case (о п'ятій); used for specific point in time"
+  - "на котру? (for what time?) — uses Accusative case (на п'яту); used for booking slots or deadlines"
+  recommended:
+  - "прийом (appointment/reception) — бути на прийомі, години прийому"
+  - "пів на... (half past...) — e.g., пів на четверту (3:30); requires Genitive of the next hour's ordinal"
+  - "нагадування (reminder) — отримати нагадування в Телеграмі"
+  - "запізнення (lateness) — без запізнень (without delay), невелике запізнення"
+  - "раніше / пізніше (earlier / later)"
+  - "домовитися (to arrange/agree) — домовитися про зустріч, домовитися про час"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4389 chars)
+✅ Message sent to Claude (ID: 10268)
+✓ Message 10268 acknowledged
+   Auto-acknowledged reply #10268 (stdout delivery — no inbox accumulation)
+✓ Message 10261 acknowledged

@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agent Comms - ukraine-ops</title>
+<style>
+:root {
+  --bg: #0d1117; --bg2: #161b22; --bg3: #21262d; --border: #30363d;
+  --text: #e6edf3; --text2: #8b949e; --text3: #6e7681;
+  --green: #3fb950; --blue: #58a6ff; --red: #f85149; --yellow: #d29922;
+  --gray: #484f58; --purple: #bc8cff; --orange: #f0883e;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding: 24px; }
+
+.top-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
+.top-bar h1 { font-size: 24px; font-weight: 700; }
+.top-bar a { color: var(--text2); text-decoration: none; font-size: 13px; }
+.top-bar a:hover { color: var(--text); }
+.top-bar .refresh-info { font-size: 12px; color: var(--text3); }
+
+/* Health summary bar */
+.health-bar { display: flex; gap: 16px; margin-bottom: 24px; flex-wrap: wrap; }
+.health-pill { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 12px 20px; text-align: center; min-width: 100px; }
+.health-pill .val { font-size: 28px; font-weight: 700; }
+.health-pill .lbl { font-size: 11px; color: var(--text2); text-transform: uppercase; margin-top: 2px; }
+
+/* Track progress grid — 3 columns */
+.track-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 32px; }
+@media (max-width: 1100px) { .track-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 700px) { .track-grid { grid-template-columns: 1fr; } }
+
+.track-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; padding: 16px; position: relative; overflow: hidden; }
+.track-card.healthy { border-left: 3px solid var(--green); }
+.track-card.stalled { border-left: 3px solid var(--yellow); }
+.track-card.dead { border-left: 3px solid var(--red); }
+.track-card.complete { border-left: 3px solid var(--blue); }
+.track-card.unknown { border-left: 3px solid var(--gray); }
+
+.track-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.track-name { font-size: 16px; font-weight: 600; }
+.track-badge { font-size: 11px; padding: 2px 8px; border-radius: 12px; font-weight: 600; text-transform: uppercase; }
+.badge-healthy { background: rgba(63,185,80,0.15); color: var(--green); }
+.badge-stalled { background: rgba(210,153,34,0.15); color: var(--yellow); }
+.badge-dead { background: rgba(248,81,73,0.15); color: var(--red); }
+.badge-complete { background: rgba(88,166,255,0.15); color: var(--blue); }
+.badge-unknown { background: rgba(72,79,88,0.15); color: var(--gray); }
+
+.track-progress { margin: 8px 0; }
+.progress-bar { height: 8px; background: var(--bg3); border-radius: 4px; overflow: hidden; }
+.progress-fill { height: 100%; border-radius: 4px; transition: width 0.3s; }
+
+.track-stats { display: flex; gap: 12px; font-size: 12px; color: var(--text2); margin-top: 8px; flex-wrap: wrap; }
+.track-stats span { display: flex; align-items: center; gap: 4px; }
+
+.track-detail { font-size: 11px; color: var(--text3); margin-top: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* Live activity feed */
+.live-layout { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 32px; }
+@media (max-width: 1100px) { .live-layout { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 700px) { .live-layout { grid-template-columns: 1fr; } }
+
+.feed-col { min-width: 0; }
+.feed-title { font-size: 14px; font-weight: 600; margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; }
+.feed-title .count { font-size: 11px; color: var(--text3); font-weight: 400; }
+
+.feed-item { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; margin-bottom: 6px; font-size: 12px; }
+.feed-item:hover { border-color: var(--blue); }
+.feed-item .fi-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+.feed-item .fi-track { font-size: 10px; padding: 1px 6px; border-radius: 4px; background: var(--bg3); color: var(--text2); }
+.feed-item .fi-age { font-size: 10px; color: var(--text3); }
+.feed-item .fi-slug { font-weight: 600; margin-bottom: 2px; }
+.feed-item .fi-detail { color: var(--text2); font-size: 11px; }
+.feed-item .fi-phase { display: inline-block; font-size: 10px; padding: 1px 6px; border-radius: 4px; font-weight: 600; }
+.phase-A { background: rgba(188,140,255,0.15); color: var(--purple); }
+.phase-B { background: rgba(88,166,255,0.15); color: var(--blue); }
+.phase-C { background: rgba(63,185,80,0.15); color: var(--green); }
+.phase-D { background: rgba(240,136,62,0.15); color: var(--orange); }
+.phase-F { background: rgba(210,153,34,0.15); color: var(--yellow); }
+
+.feed-item.dispatch { border-left: 2px solid var(--purple); }
+.feed-item.completion { border-left: 2px solid var(--green); }
+.feed-item.building { border-left: 2px solid var(--orange); }
+
+.empty-feed { color: var(--text3); font-size: 12px; padding: 16px; text-align: center; }
+
+/* Zombie alerts */
+.zombies { margin-bottom: 32px; }
+.zombie-alert { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 12px 16px; margin-bottom: 8px; display: flex; align-items: center; gap: 12px; }
+.zombie-alert.critical { border-left: 3px solid var(--red); }
+.zombie-alert.warning { border-left: 3px solid var(--yellow); }
+.zombie-type { font-size: 12px; font-weight: 600; min-width: 120px; }
+.zombie-detail { font-size: 12px; color: var(--text2); flex: 1; }
+.zombie-action { font-size: 11px; color: var(--blue); cursor: pointer; white-space: nowrap; }
+.zombie-action:hover { text-decoration: underline; }
+.no-zombies { font-size: 13px; color: var(--text3); padding: 12px; }
+
+/* Messages table */
+.msg-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-bottom: 32px; }
+.msg-table th { text-align: left; padding: 8px 12px; border-bottom: 2px solid var(--border); color: var(--text2); font-weight: 600; text-transform: uppercase; font-size: 11px; }
+.msg-table td { padding: 8px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+.msg-table tr:hover { background: var(--bg3); }
+.msg-from { font-weight: 600; }
+.msg-preview { color: var(--text2); max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.msg-type { font-size: 10px; padding: 2px 6px; border-radius: 4px; background: var(--bg3); }
+.msg-age { color: var(--text3); white-space: nowrap; }
+
+/* Stats panel */
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin-bottom: 32px; }
+.stat-box { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 16px; }
+.stat-box .stat-val { font-size: 24px; font-weight: 700; }
+.stat-box .stat-lbl { font-size: 11px; color: var(--text2); text-transform: uppercase; }
+
+/* Tabs */
+.tabs { display: flex; gap: 4px; margin-bottom: 16px; border-bottom: 1px solid var(--border); }
+.tab { padding: 8px 16px; font-size: 13px; color: var(--text2); cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.15s; }
+.tab:hover { color: var(--text); }
+.tab.active { color: var(--text); border-bottom-color: var(--blue); font-weight: 600; }
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* Pulse animation for active items */
+@keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
+.pulse { animation: pulse 2s ease-in-out infinite; }
+.dot-live { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--green); margin-right: 4px; animation: pulse 1.5s ease-in-out infinite; }
+
+/* Clickable items */
+.feed-item { cursor: pointer; }
+.msg-table tr { cursor: pointer; }
+
+/* Detail panel (slide-out) */
+.detail-overlay { display: none; position: fixed; top: 0; right: 0; bottom: 0; left: 0; background: rgba(0,0,0,0.5); z-index: 100; }
+.detail-overlay.open { display: block; }
+.detail-panel { position: fixed; top: 0; right: 0; bottom: 0; width: 520px; max-width: 90vw; background: var(--bg); border-left: 1px solid var(--border); z-index: 101; overflow-y: auto; padding: 24px; transform: translateX(100%); transition: transform 0.2s ease; }
+.detail-panel.open { transform: translateX(0); }
+
+.detail-close { position: absolute; top: 16px; right: 16px; background: none; border: none; color: var(--text2); font-size: 20px; cursor: pointer; padding: 4px 8px; }
+.detail-close:hover { color: var(--text); }
+
+.detail-header { margin-bottom: 16px; }
+.detail-header h2 { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+.detail-header .detail-sub { font-size: 12px; color: var(--text2); }
+
+.detail-section { margin-bottom: 20px; }
+.detail-section h3 { font-size: 13px; font-weight: 600; color: var(--text2); text-transform: uppercase; margin-bottom: 8px; border-bottom: 1px solid var(--border); padding-bottom: 4px; }
+
+.detail-kv { display: grid; grid-template-columns: 100px 1fr; gap: 4px 12px; font-size: 12px; margin-bottom: 8px; }
+.detail-kv .k { color: var(--text3); }
+.detail-kv .v { color: var(--text); word-break: break-all; }
+
+.thread-msg { background: var(--bg2); border: 1px solid var(--border); border-radius: 6px; padding: 10px; margin-bottom: 6px; font-size: 12px; }
+.thread-msg .tm-header { display: flex; justify-content: space-between; margin-bottom: 4px; }
+.thread-msg .tm-from { font-weight: 600; }
+.thread-msg .tm-time { color: var(--text3); font-size: 10px; }
+.thread-msg .tm-body { color: var(--text2); white-space: pre-wrap; max-height: 200px; overflow-y: auto; font-family: monospace; font-size: 11px; }
+.thread-msg.error { border-left: 2px solid var(--red); }
+.thread-msg.response { border-left: 2px solid var(--green); }
+.thread-msg.query { border-left: 2px solid var(--purple); }
+
+.module-link { display: inline-flex; align-items: center; gap: 6px; background: var(--bg2); border: 1px solid var(--border); border-radius: 6px; padding: 8px 12px; font-size: 12px; margin-top: 4px; }
+.module-link .ml-track { font-size: 10px; padding: 1px 6px; border-radius: 4px; background: var(--bg3); color: var(--text2); }
+.module-link .ml-slug { font-weight: 600; }
+.module-link .ml-phase { font-size: 10px; color: var(--text3); }
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <h1>Agent Comms</h1>
+  <div style="display:flex;align-items:center;gap:16px;">
+    <span class="refresh-info" id="refresh-info">Loading...</span>
+    <div style="display:flex;gap:12px;font-size:13px;">
+      <a href="/">Home</a>
+      <a href="/audit-dashboard.html">Audit</a>
+      <a href="/progress.html">Progress</a>
+      <a href="/curriculum-dashboard.html">Curriculum</a>
+      <a href="/quality.html">Quality</a>
+      <a href="/track-health.html">Health</a>
+    </div>
+  </div>
+</div>
+
+<div class="health-bar" id="health-bar"></div>
+
+<div class="tabs">
+  <div class="tab active" data-tab="live">Live Activity</div>
+  <div class="tab" data-tab="batch">Batch Progress</div>
+  <div class="tab" data-tab="zombies">Zombies</div>
+  <div class="tab" data-tab="messages">Messages</div>
+  <div class="tab" data-tab="stats">Stats</div>
+</div>
+
+<!-- LIVE ACTIVITY -->
+<div class="tab-panel active" id="tab-live">
+  <div class="live-layout">
+    <div class="feed-col">
+      <div class="feed-title"><span class="dot-live"></span> Building Now <span class="count" id="building-count"></span></div>
+      <div id="feed-building"></div>
+    </div>
+    <div class="feed-col">
+      <div class="feed-title">Recent Completions <span class="count" id="completions-count"></span></div>
+      <div id="feed-completions"></div>
+    </div>
+    <div class="feed-col">
+      <div class="feed-title">Dispatch Feed <span class="count" id="dispatch-count"></span></div>
+      <div id="feed-dispatches"></div>
+    </div>
+  </div>
+</div>
+
+<!-- BATCH PROGRESS -->
+<div class="tab-panel" id="tab-batch">
+  <div class="track-grid" id="track-grid"></div>
+</div>
+
+<!-- ZOMBIES -->
+<div class="tab-panel" id="tab-zombies">
+  <div class="zombies" id="zombie-list"></div>
+</div>
+
+<!-- MESSAGES -->
+<div class="tab-panel" id="tab-messages">
+  <table class="msg-table">
+    <thead>
+      <tr><th>ID</th><th>From</th><th>To</th><th>Type</th><th>Task</th><th>Preview</th><th>Age</th></tr>
+    </thead>
+    <tbody id="msg-tbody"></tbody>
+  </table>
+</div>
+
+<!-- STATS -->
+<div class="tab-panel" id="tab-stats">
+  <div class="stats-grid" id="stats-grid"></div>
+</div>
+
+<!-- DETAIL PANEL -->
+<div class="detail-overlay" id="detail-overlay" onclick="closeDetail()"></div>
+<div class="detail-panel" id="detail-panel">
+  <button class="detail-close" onclick="closeDetail()">&times;</button>
+  <div id="detail-content"></div>
+</div>
+
+<script>
+// ========= DETAIL PANEL =========
+function openDetail(html) {
+  document.getElementById('detail-content').innerHTML = html;
+  document.getElementById('detail-overlay').classList.add('open');
+  document.getElementById('detail-panel').classList.add('open');
+}
+
+function closeDetail() {
+  document.getElementById('detail-overlay').classList.remove('open');
+  document.getElementById('detail-panel').classList.remove('open');
+}
+
+// Parse task_id to extract track, slug, phase
+function parseTaskId(taskId) {
+  if (!taskId) return null;
+  // v3-body-injury-dual-pA -> track from state, slug=body-injury-dual, phase=A
+  const m = taskId.match(/^v3-(.+?)-(p[A-Z].*)$/);
+  if (m) return { slug: m[1], phaseKey: m[2] };
+  // yw-some-slug-p0 -> old format
+  const m2 = taskId.match(/^yw-(.+?)-(p\d.*)$/);
+  if (m2) return { slug: m2[1], phaseKey: m2[2] };
+  return null;
+}
+
+async function showConversation(taskId) {
+  if (!taskId) return;
+  const res = await fetch(`/api/comms/conversation/${encodeURIComponent(taskId)}`);
+  const data = await res.json();
+  const parsed = parseTaskId(taskId);
+
+  let moduleHtml = '';
+  if (parsed) {
+    moduleHtml = `
+      <div class="detail-section">
+        <h3>Related Module</h3>
+        <div class="module-link">
+          <span class="ml-slug">${parsed.slug}</span>
+          <span class="ml-phase">${parsed.phaseKey}</span>
+        </div>
+      </div>
+    `;
+  }
+
+  const msgsHtml = (data.messages || []).map(m => {
+    const typeClass = m.message_type === 'error' ? 'error' : m.message_type === 'response' ? 'response' : 'query';
+    const ts = m.timestamp ? new Date(m.timestamp).toLocaleTimeString() : '';
+    const body = (m.preview || '').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    return `
+      <div class="thread-msg ${typeClass}">
+        <div class="tm-header">
+          <span class="tm-from">${m.from_llm || ''} &rarr; ${m.to_llm || ''}</span>
+          <span class="tm-time">#${m.id} &middot; ${ts} &middot; ${m.message_type || ''}</span>
+        </div>
+        <div class="tm-body">${body}</div>
+      </div>
+    `;
+  }).join('');
+
+  openDetail(`
+    <div class="detail-header">
+      <h2>${taskId}</h2>
+      <div class="detail-sub">${data.count || 0} messages in thread</div>
+    </div>
+    ${moduleHtml}
+    <div class="detail-section">
+      <h3>Conversation Thread</h3>
+      ${msgsHtml || '<div style="color:var(--text3)">No messages</div>'}
+    </div>
+  `);
+}
+
+async function showMessage(msgId) {
+  // Fetch the specific message's task_id first, then show the full conversation
+  const res = await fetch(`/api/comms/messages?limit=1&offset=0`);
+  // For now, find it from the messages we already have, or just fetch conversation
+  // We'll use the task_id from the row data attribute
+  const el = document.querySelector(`[data-msg-id="${msgId}"]`);
+  const taskId = el ? el.dataset.taskId : null;
+  if (taskId) {
+    showConversation(taskId);
+  } else {
+    openDetail(`<div class="detail-header"><h2>Message #${msgId}</h2><div class="detail-sub">No task_id — standalone message</div></div>`);
+  }
+}
+
+function showBuildDetail(track, slug, phase, status, taskId) {
+  let html = `
+    <div class="detail-header">
+      <h2>${slug}</h2>
+      <div class="detail-sub">${track} &middot; ${phase} &middot; ${status}</div>
+    </div>
+    <div class="detail-section">
+      <h3>Module Info</h3>
+      <div class="detail-kv">
+        <span class="k">Track</span><span class="v">${track}</span>
+        <span class="k">Slug</span><span class="v">${slug}</span>
+        <span class="k">Phase</span><span class="v">${phase}</span>
+        <span class="k">Status</span><span class="v">${status}</span>
+        <span class="k">Task ID</span><span class="v">${taskId || 'n/a'}</span>
+      </div>
+    </div>
+  `;
+  openDetail(html);
+  // If there's a task_id, also load the conversation thread
+  if (taskId) {
+    fetch(`/api/comms/conversation/${encodeURIComponent(taskId)}`)
+      .then(r => r.json())
+      .then(data => {
+        if (data.messages && data.messages.length > 0) {
+          const msgsHtml = data.messages.map(m => {
+            const typeClass = m.message_type === 'error' ? 'error' : m.message_type === 'response' ? 'response' : 'query';
+            const ts = m.timestamp ? new Date(m.timestamp).toLocaleTimeString() : '';
+            const body = (m.preview || '').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            return `<div class="thread-msg ${typeClass}"><div class="tm-header"><span class="tm-from">${m.from_llm||''} &rarr; ${m.to_llm||''}</span><span class="tm-time">#${m.id} &middot; ${ts} &middot; ${m.message_type||''}</span></div><div class="tm-body">${body}</div></div>`;
+          }).join('');
+          document.getElementById('detail-content').innerHTML += `<div class="detail-section"><h3>Conversation Thread (${data.count})</h3>${msgsHtml}</div>`;
+        }
+      });
+  }
+}
+
+// Tab switching
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
+  });
+});
+
+function timeAgo(seconds) {
+  if (seconds < 0) seconds = 0;
+  if (seconds < 60) return seconds + 's';
+  if (seconds < 3600) return Math.round(seconds / 60) + 'm';
+  if (seconds < 86400) return Math.round(seconds / 3600) + 'h';
+  return Math.round(seconds / 86400) + 'd';
+}
+
+function healthColor(h) {
+  return { healthy: 'var(--green)', stalled: 'var(--yellow)', dead: 'var(--red)', complete: 'var(--blue)', unknown: 'var(--gray)' }[h] || 'var(--gray)';
+}
+
+function phaseClass(phase) {
+  if (phase.includes('A')) return 'phase-A';
+  if (phase.includes('B')) return 'phase-B';
+  if (phase.includes('C')) return 'phase-C';
+  if (phase.includes('D')) return 'phase-D';
+  if (phase.includes('F')) return 'phase-F';
+  return '';
+}
+
+function phaseLabel(phase) {
+  return phase.replace('Phase ', '');
+}
+
+// ========= LIVE ACTIVITY =========
+async function loadLiveActivity() {
+  try {
+    const res = await fetch('/api/comms/live-activity?minutes=30');
+    const data = await res.json();
+
+    // Building Now — modules with recently updated state
+    const building = data.in_progress || [];
+    document.getElementById('building-count').textContent = `(${building.length})`;
+    const buildEl = document.getElementById('feed-building');
+    if (building.length === 0) {
+      buildEl.innerHTML = '<div class="empty-feed">No active builds detected</div>';
+    } else {
+      buildEl.innerHTML = building.map(b => `
+        <div class="feed-item building" onclick="showBuildDetail('${b.track}','${b.slug}','${b.phase}','${b.phase_status}','${b.task_id || ''}')">
+          <div class="fi-top">
+            <span class="fi-track">${b.track}</span>
+            <span class="fi-age">${timeAgo(b.seconds_ago)} ago</span>
+          </div>
+          <div class="fi-slug">${b.slug}</div>
+          <div class="fi-detail">
+            <span class="fi-phase ${phaseClass(b.phase)}">${phaseLabel(b.phase)}</span>
+            ${b.phase_status}
+            ${b.mode ? '(' + b.mode + ')' : ''}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Recent Completions — research files
+    const completions = data.recent_completions || [];
+    document.getElementById('completions-count').textContent = `(${completions.length})`;
+    const compEl = document.getElementById('feed-completions');
+    if (completions.length === 0) {
+      compEl.innerHTML = '<div class="empty-feed">No completions in last hour</div>';
+    } else {
+      compEl.innerHTML = completions.map(c => `
+        <div class="feed-item completion" onclick="showConversation('v3-${c.slug}-pA')">
+          <div class="fi-top">
+            <span class="fi-track">${c.track}</span>
+            <span class="fi-age">${timeAgo(c.seconds_ago)} ago</span>
+          </div>
+          <div class="fi-slug">${c.slug}</div>
+          <div class="fi-detail">${c.type} &middot; ${c.size_kb} KB</div>
+        </div>
+      `).join('');
+    }
+
+    // Dispatch Feed — recent broker messages
+    const dispatches = data.recent_dispatches || [];
+    document.getElementById('dispatch-count').textContent = `(${dispatches.length})`;
+    const dispEl = document.getElementById('feed-dispatches');
+    if (dispatches.length === 0) {
+      dispEl.innerHTML = '<div class="empty-feed">No recent messages</div>';
+    } else {
+      dispEl.innerHTML = dispatches.map(d => {
+        // Extract slug from task_id (v3-some-slug-pA -> some-slug)
+        const slug = (d.task_id || '').replace(/^v3-/, '').replace(/-p[A-Z].*$/, '') || d.task_id;
+        const phase = (d.task_id || '').match(/-p([A-Z][^-]*)/) ? (d.task_id.match(/-p([A-Z][^-]*)/)[1]) : '';
+        const isFinished = (d.preview || '').includes('finished');
+        const isError = d.type === 'error' || (d.preview || '').includes('Error');
+        const borderClass = isError ? 'style="border-left-color:var(--red)"' : isFinished ? 'style="border-left-color:var(--green)"' : '';
+        const tid = (d.task_id || '').replace(/'/g, "\\'");
+        return `
+          <div class="feed-item dispatch" ${borderClass} onclick="showConversation('${tid}')">
+            <div class="fi-top">
+              <span>${d.from} &rarr; ${d.to}</span>
+              <span class="fi-age">${timeAgo(d.seconds_ago)} ago</span>
+            </div>
+            <div class="fi-slug">${slug}${phase ? ' <span class="fi-phase ' + phaseClass('Phase ' + phase) + '">' + phase + '</span>' : ''}</div>
+            <div class="fi-detail">${(d.preview || '').substring(0, 100)}</div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Update the tab label
+    const activeCount = building.length;
+    document.querySelector('[data-tab="live"]').innerHTML =
+      activeCount > 0
+        ? `<span class="dot-live"></span> Live Activity (${activeCount})`
+        : 'Live Activity';
+
+  } catch(e) {
+    document.getElementById('feed-building').innerHTML =
+      `<div style="color:var(--red)">Failed: ${e.message}</div>`;
+  }
+}
+
+// ========= BATCH PROGRESS =========
+async function loadBatchProgress() {
+  try {
+    const res = await fetch('/api/comms/batch-progress');
+    const data = await res.json();
+    const tracks = data.tracks || {};
+    const keys = Object.keys(tracks);
+
+    // Health bar summary
+    const counts = { healthy: 0, stalled: 0, dead: 0, complete: 0, unknown: 0 };
+    let totalResearch = 0, totalExpected = 0;
+    keys.forEach(k => {
+      counts[tracks[k].health] = (counts[tracks[k].health] || 0) + 1;
+      totalResearch += tracks[k].research_done || 0;
+      totalExpected += tracks[k].total_expected || 0;
+    });
+
+    document.getElementById('health-bar').innerHTML = `
+      <div class="health-pill"><div class="val">${data.running_processes}</div><div class="lbl">Processes</div></div>
+      <div class="health-pill"><div class="val" style="color:var(--green)">${counts.healthy}</div><div class="lbl">Healthy</div></div>
+      <div class="health-pill"><div class="val" style="color:var(--yellow)">${counts.stalled}</div><div class="lbl">Stalled</div></div>
+      <div class="health-pill"><div class="val" style="color:var(--red)">${counts.dead}</div><div class="lbl">Dead</div></div>
+      <div class="health-pill"><div class="val" style="color:var(--blue)">${counts.complete}</div><div class="lbl">Complete</div></div>
+      <div class="health-pill"><div class="val">${totalResearch}/${totalExpected}</div><div class="lbl">Research</div></div>
+    `;
+
+    const grid = document.getElementById('track-grid');
+    if (keys.length === 0) {
+      grid.innerHTML = '<div style="color:var(--text3);padding:20px;">No batch runs detected.</div>';
+      return;
+    }
+
+    grid.innerHTML = keys.map(k => {
+      const t = tracks[k];
+      const pct = t.total_expected > 0 ? Math.round(t.research_done / t.total_expected * 100) : 0;
+      const lastAge = t.last_created ? timeAgo(t.last_created.seconds_ago) : 'n/a';
+      const logAge = t.log ? timeAgo(t.log.age_seconds) : '';
+      const passed = t.log ? t.log.passed : 0;
+      const failed = t.log ? t.log.failed : 0;
+      const pid = t.process ? `PID ${t.process.pid}` : 'no process';
+      const lastLine = t.log ? t.log.last_line : '';
+
+      return `
+        <div class="track-card ${t.health}">
+          <div class="track-header">
+            <span class="track-name">${k}</span>
+            <span class="track-badge badge-${t.health}">${t.health}</span>
+          </div>
+          <div class="track-progress">
+            <div class="progress-bar">
+              <div class="progress-fill" style="width:${pct}%;background:${healthColor(t.health)}"></div>
+            </div>
+          </div>
+          <div class="track-stats">
+            <span>${t.research_done}/${t.total_expected} (${pct}%)</span>
+            <span style="color:var(--green)">${passed} pass</span>
+            <span style="color:var(--red)">${failed} fail</span>
+          </div>
+          <div class="track-stats">
+            <span>${pid}</span>
+            <span>${t.throughput_per_hour}/hr</span>
+            <span>last: ${lastAge}</span>
+            ${logAge ? `<span>log: ${logAge}</span>` : ''}
+          </div>
+          ${lastLine ? `<div class="track-detail" title="${lastLine}">${lastLine}</div>` : ''}
+        </div>
+      `;
+    }).join('');
+
+  } catch(e) {
+    document.getElementById('track-grid').innerHTML =
+      `<div style="color:var(--red);padding:20px;">Failed: ${e.message}</div>`;
+  }
+}
+
+// ========= ZOMBIES =========
+async function loadZombies() {
+  try {
+    const res = await fetch('/api/comms/zombies');
+    const data = await res.json();
+    const list = document.getElementById('zombie-list');
+
+    if (data.count === 0) {
+      list.innerHTML = '<div class="no-zombies">No zombies detected. All clear.</div>';
+      document.querySelector('[data-tab="zombies"]').textContent = 'Zombies';
+      return;
+    }
+
+    document.querySelector('[data-tab="zombies"]').textContent = `Zombies (${data.count})`;
+
+    list.innerHTML = data.zombies.map(z => {
+      let detail = '';
+      if (z.type === 'stale_message') detail = `msg #${z.message_id} from ${z.from} to ${z.to} — ${z.age_hours}h old — "${z.preview || ''}"`;
+      else if (z.type === 'pingpong') detail = `task ${z.task_id} — ${z.message_count_1h} msgs in 1h`;
+      else if (z.type === 'error_loop') detail = `task ${z.task_id} — ${z.error_count} errors`;
+      else if (z.type === 'orphan_pid') detail = `PID ${z.pid} (${z.file}) — task: ${z.task_id || 'none'}`;
+      else detail = JSON.stringify(z);
+
+      const action = z.message_id
+        ? `<span class="zombie-action" onclick="event.stopPropagation(); ackMsg(${z.message_id})">Ack</span>`
+        : '';
+
+      const tid = (z.task_id || '').replace(/'/g, "\\'");
+      const clickHandler = tid ? `onclick="showConversation('${tid}')"` : '';
+
+      return `
+        <div class="zombie-alert ${z.severity}" ${clickHandler} style="${tid ? 'cursor:pointer' : ''}">
+          <span class="zombie-type">${z.type}</span>
+          <span class="zombie-detail">${detail}</span>
+          ${action}
+        </div>
+      `;
+    }).join('');
+  } catch(e) {
+    document.getElementById('zombie-list').innerHTML =
+      `<div style="color:var(--red)">Failed: ${e.message}</div>`;
+  }
+}
+
+async function ackMsg(id) {
+  await fetch(`/api/comms/acknowledge/${id}`, { method: 'POST' });
+  loadZombies();
+}
+
+// ========= MESSAGES =========
+async function loadMessages() {
+  try {
+    const res = await fetch('/api/comms/messages?limit=50');
+    const data = await res.json();
+
+    document.getElementById('msg-tbody').innerHTML = data.messages.map(m => {
+      const age = m.timestamp ? timeAgo(Math.round((Date.now() - new Date(m.timestamp).getTime()) / 1000)) : '';
+      const tid = (m.task_id || '').replace(/'/g, "\\'");
+      return `
+        <tr data-msg-id="${m.id}" data-task-id="${m.task_id || ''}" onclick="showConversation('${tid}')">
+          <td>${m.id}</td>
+          <td class="msg-from">${m.from_llm || ''}</td>
+          <td>${m.to_llm || ''}</td>
+          <td><span class="msg-type">${m.message_type || ''}</span></td>
+          <td>${m.task_id || ''}</td>
+          <td class="msg-preview" title="${(m.preview || '').replace(/"/g, '&quot;')}">${m.preview || ''}</td>
+          <td class="msg-age">${age}</td>
+        </tr>
+      `;
+    }).join('');
+  } catch(e) {
+    document.getElementById('msg-tbody').innerHTML =
+      `<tr><td colspan="7" style="color:var(--red)">Failed: ${e.message}</td></tr>`;
+  }
+}
+
+// ========= STATS =========
+async function loadStats() {
+  try {
+    const [statsRes, healthRes] = await Promise.all([
+      fetch('/api/comms/stats'),
+      fetch('/api/comms/health'),
+    ]);
+    const stats = await statsRes.json();
+    const health = await healthRes.json();
+
+    const grid = document.getElementById('stats-grid');
+    grid.innerHTML = `
+      <div class="stat-box"><div class="stat-val">${stats.total_messages || 0}</div><div class="stat-lbl">Total Messages</div></div>
+      <div class="stat-box"><div class="stat-val">${stats.unacked || 0}</div><div class="stat-lbl">Unacked</div></div>
+      <div class="stat-box"><div class="stat-val" style="color:var(--red)">${stats.errors || 0}</div><div class="stat-lbl">Errors (${stats.error_rate || 0}%)</div></div>
+      <div class="stat-box"><div class="stat-val">${stats.last_hour || 0}</div><div class="stat-lbl">Last Hour</div></div>
+      <div class="stat-box"><div class="stat-val">${stats.last_24h || 0}</div><div class="stat-lbl">Last 24h</div></div>
+      <div class="stat-box"><div class="stat-val">${stats.total_tasks || 0}</div><div class="stat-lbl">Task Threads</div></div>
+      <div class="stat-box"><div class="stat-val">${health.queue_depth || 0}</div><div class="stat-lbl">Queue Depth</div></div>
+      <div class="stat-box"><div class="stat-val">${health.alive_processes || 0}</div><div class="stat-lbl">Alive PIDs</div></div>
+      <div class="stat-box"><div class="stat-val">${health.db_size_kb || 0} KB</div><div class="stat-lbl">DB Size</div></div>
+    `;
+
+    if (stats.per_agent) {
+      const agents = Object.entries(stats.per_agent);
+      if (agents.length > 0) {
+        grid.innerHTML += agents.map(([agent, data]) => `
+          <div class="stat-box">
+            <div class="stat-val">${data.sent || 0} / ${data.received || 0}</div>
+            <div class="stat-lbl">${agent} (sent/recv)</div>
+          </div>
+        `).join('');
+      }
+    }
+  } catch(e) {
+    document.getElementById('stats-grid').innerHTML =
+      `<div style="color:var(--red)">Failed: ${e.message}</div>`;
+  }
+}
+
+// ========= AUTO-REFRESH =========
+let refreshCount = 0;
+async function refreshAll() {
+  refreshCount++;
+  const now = new Date().toLocaleTimeString();
+  document.getElementById('refresh-info').textContent = `Updated ${now} (#${refreshCount})`;
+
+  await Promise.all([
+    loadLiveActivity(),
+    loadBatchProgress(),
+    loadZombies(),
+    loadMessages(),
+    loadStats(),
+  ]);
+}
+
+refreshAll();
+setInterval(refreshAll, 15000); // refresh every 15s for live feel
+</script>
+</body>
+</html>

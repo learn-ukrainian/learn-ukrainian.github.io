@@ -1,0 +1,326 @@
+✅ Message sent to Gemini (ID: 11172) [auto-acked: self-addressed]
+✓ Message 11172 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #11172...
+📨 Message #11172
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-poetyka-verse-analysis
+   Time: 2026-02-20T22:28:06.117946+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c2-028
+level: c2
+sequence: 28
+version: '2.0'
+title: Поетика — аналіз віршів
+focus: literature
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Віршування — Вікіпедія
+  url: https://uk.wikipedia.org/wiki/Віршування
+  type: reference
+  notes: Ukrainian versification systems
+- name: Українська поезія — укрліб
+  url: https://ukrlib.com.ua/
+  type: primary
+  notes: Classic and contemporary Ukrainian poetry examples
+- name: Тарас Шевченко — Кобзар
+  url: https://uk.wikisource.org/wiki/Кобзар_(Шевченко)
+  type: primary
+  notes: Foundation of modern Ukrainian poetics
+content_outline:
+- section: Вступ — Системи віршування
+  points:
+  - Силабічне віршування
+  - Силабо-тонічне віршування
+  - Тонічне віршування
+  - Верлібр
+- section: Метрика та ритміка
+  points:
+  - Стопа і розмір (ямб, хорей, дактиль, амфібрахій, анапест)
+  - Піррихій і спондей
+  - Цезура і анжамбеман
+  - Ритмічні варіації
+- section: Строфіка
+  points:
+  - Катрен, терцет, дистих
+  - Сонет (італійський, шекспірівський)
+  - Октава, секстина
+  - Вільна строфіка
+- section: Рима і звукова організація
+  points:
+  - Типи рим (чоловіча, жіноча, дактилічна)
+  - Схеми римування (суміжна, перехресна, кільцева)
+  - Алітерація й асонанс
+  - Звуковий символізм
+- section: Тропи та фігури в поезії
+  points:
+  - Метафора і символ у поезії
+  - Порівняння і персоніфікація
+  - Оксиморон і антитеза
+  - Епітети та їх функції
+- section: Аналіз українських віршів
+  points:
+  - Аналіз вірша Шевченка
+  - Модерністська поезія (Тичина, Рильський)
+  - Сучасна поезія (Жадан, Герасим'юк)
+- section: Підсумок
+  points:
+  - Інтегрований аналіз вірша
+  - Зв'язок форми і змісту
+  - Підготовка до власної творчості
+vocabulary:
+  required:
+  - віршування (versification)
+  - метр (meter)
+  - стопа (foot)
+  - ямб (iamb)
+  - хорей (trochee)
+  - катрен (quatrain)
+  - рима (rhyme)
+  - строфа (stanza)
+  - верлібр (free verse)
+  - анжамбеман (enjambment)
+  recommended:
+  - дактиль (dactyl)
+  - амфібрахій (amphibrach)
+  - анапест (anapest)
+  - цезура (caesura)
+  - сонет (sonnet)
+  forbidden: '[]'
+activities:
+  types_required:
+  - quiz
+  - match-up
+  - critical-analysis
+  - essay-response
+  - comparative-study
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- 'c2-29 (Poetyka: Prose Analysis)'
+- c2-34 (Literary Translation I — Poetry)
+- 'c2-36 (Creative Writing: Poetry)'
+vocabulary_hints:
+  required:
+  - концепція (concept)
+  - аналіз (analysis)
+  - дискурс (discourse)
+  - методологія (methodology)
+  recommended:
+  - інтерпретація (interpretation)
+  - контекстуалізація (contextualization)
+  - синтез (synthesis)
+activity_hints:
+- type: reading
+  focus: Поглиблений аналіз тексту
+  items: 4
+- type: essay-response
+  focus: Критичне осмислення
+- type: discussion
+  focus: Дискусія та аргументація
+  items: 1
+persona:
+  voice: Senior Specialist
+  role: Prosody Scholar
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Поетика — аналіз віршів
+
+## State Standard Reference
+§4.3.2, §4.3.3: "Стилістичні засоби фонетики (засоби милозвучності)... Стилістичні засоби лексики: епітети, метафори, уособлення, перифраз, метонімія..."
+Alignment: Модуль розширює вимоги стандарту щодо стилістичних засобів (фонетичних та лексичних), інтегруючи їх у систему віршування та літературознавчого аналізу на рівні C2 (майстерність).
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| віршування | Середня (літературознавство) | силабо-тонічне віршування, система віршування |
+| стопа | Низька (спец.) | двоскладова стопа, трискладова стопа, віршова стопа |
+| ямб | Низька (спец.) | п'ятистопний ямб, ямб і хорей |
+| верлібр | Середня (сучасна поезія) | писати верлібром, сучасний верлібр |
+| рима | Висока | чоловіча рима, жіноча рима, точна рима, багата рима |
+| строфа | Середня | сонетна строфа, онегінська строфа |
+| алітерація | Низька (спец.) | звукова алітерація, ефект алітерації |
+
+## Cultural Hooks
+1. **Історичний злам**: Перехід від силабічного віршування (барокова література, Сковорода) до силабо-тонічного (Котляревський, Шевченко) як маркер становлення нової української літератури.
+2. **Розстріляне відродження**: Експерименти з формою у 1920-х (футуризм Семенка, неокласики) як доказ європейського контексту української поезії.
+
+## Common Learner Errors
+1. **Плутанина наголосів**: Нерозрізнення ямба (наголос на парних) і хорея (наголос на непарних) через відмінності в інтонації рідної мови.
+2. **Ототожнення поезії з римою**: Ігнорування верлібру та білого вірша як повноцінних поетичних форм; намагання шукати риму там, де її немає.
+3. **Механічний підрахунок**: Спроба визначити розмір лише за кількістю складів без урахування піррихіїв та спондеїв (ритмічних пауз/акцентів).
+
+## Cross-References
+- Builds on: Загальна стилістика (C2.1), Лексикологія.
+- Prepares for: c2-29 (Poetyka: Prose Analysis), c2-36 (Creative Writing: Poetry).
+
+## Notes for Content Writing
+- Використовувати класичні приклади (Шевченко, Франко, Леся Українка) для ілюстрації класичних розмірів.
+- Для верлібру та модерних форм залучати сучасних авторів (Жадан, Андрухович, Герасим'юк).
+- Акцентувати на "музиці слова" (евфонії) як характерній рисі української поезії (Тичина).
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction) — Системи віршування"
+  words: 500
+  points:
+  - "Історичний злам в українській поезії: перехід від силабічного віршування (Г. Сковорода) до силабо-тонічного (І. Котляревський, Т. Шевченко) як маркер нової літератури."
+  - "Зв'язок систем віршування зі стилістичними засобами фонетики (§4.3.2) та загальною концепцією милозвучності української мови."
+- section: "Метрика та ритміка (Metrics and Rhythm)"
+  words: 800
+  points:
+  - "Двоскладові та трискладові стопи: ямб, хорей, дактиль, амфібрахій, анапест; когнітивні стратегії розпізнавання розмірів у текстах."
+  - "Помилка учня: плутанина наголосів у ямбі та хореї через інтонаційні особливості рідної мови — вправи на правильне скандування."
+  - "Подолання механічного підрахунку складів: роль піррихіїв та спондеїв як ритмічних акцентів та пауз, що формують індивідуальний малюнок вірша."
+- section: "Строфіка та звукова організація (Stanza and Sound Organization)"
+  words: 700
+  points:
+  - "Поетична архітектура: катрен, терцет, дистих та складні форми (сонет, октава, онегінська строфа в контексті українського перекладу)."
+  - "Евфонія та звукопис: стилістичне використання алітерації й асонансу для створення звукового символізму (аналіз «музики слова» П. Тичини)."
+- section: "Тропи та фігури в поетичній мові (Tropes and Figures in Poetic Language)"
+  words: 800
+  points:
+  - "Лексичні засоби виразності (§4.3.3): поглиблений аналіз епітетів, метафор, уособлень, перифразу та метонімії як засобів творення художнього образу."
+  - "Філософська роль оксиморона та антитези у вираженні внутрішнього дуалізму; аналіз поетичних текстів Лесі Українки та І. Франка."
+- section: "Модернізм, Верлібр та Сучасність (Modernism, Vers Libre, and Contemporaneity)"
+  words: 800
+  points:
+  - "Експерименти Розстріляного відродження: футуризм М. Семенка та неокласицизм неокласиків як інтеграція в європейський модерністський дискурс."
+  - "Верлібр vs Рима: спростування помилки щодо ототожнення поезії лише з римуванням; аналіз сучасного верлібру (С. Жадан, О. Герасим'юк)."
+- section: "Підсумок (Summary) — Майстерність аналізу"
+  words: 400
+  points:
+  - "Інтегрований метод літературознавчого аналізу вірша: синтез форми (метрика, строфіка) та змісту (тропи, ідейне навантаження)."
+  - "Зв'язок класичної традиції з постмодерним дискурсом; підготовка до власної творчої інтерпретації текстів."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "віршування (versification) — силабо-тонічне віршування, система віршування; часто вживається в науковому стилі"
+  - "метр (meter) — віршовий метр; фундаментальна одиниця ритмічної організації"
+  - "стопа (foot) — двоскладова стопа, п'ятистопний ямб; основа метричного аналізу"
+  - "ямб (iamb) — наголос на парних складах; найпоширеніший розмір української класики"
+  - "хорей (trochee) — наголос на непарних складах; характерний для народнопісенної традиції"
+  - "катрен (quatrain) — сонетний катрен; базова одиниця строфіки"
+  - "рима (rhyme) — чоловіча, жіноча, точна, багата рима; висока частотність у дискурсі"
+  - "строфа (stanza) — сонетна строфа, вільна строфа; середня частотність"
+  - "верлібр (free verse) — сучасний верлібр; ключовий термін для модерної поезії"
+  - "анжамбеман (enjambment) — перенесення фрази; термін для аналізу ритміко-синтаксичного зв'язку"
+  recommended:
+  - "дактиль (dactyl) — трискладова стопа з наголосом на першому складі"
+  - "амфібрахій (amphibrach) — трискладова стопа з наголосом на другому складі"
+  - "анапест (anapest) — трискладова стопа з наголосом на третьому складі"
+  - "цезура (caesura) — ритмічна пауза всередині віршового рядка"
+  - "сонет (sonnet) — італійський сонет, шекспірівський сонет; класична «тверда» форма"
+  - "алітерація (alliteration) — звукова алітерація; засіб милозвучності (§4.3.2)"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (3894 chars)
+✅ Message sent to Claude (ID: 11179)
+✓ Message 11179 acknowledged
+   Auto-acknowledged reply #11179 (stdout delivery — no inbox accumulation)
+✓ Message 11172 acknowledged

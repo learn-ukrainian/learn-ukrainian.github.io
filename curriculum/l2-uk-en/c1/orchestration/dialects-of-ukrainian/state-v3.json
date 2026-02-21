@@ -2,12 +2,5 @@
   "track": "c1",
   "slug": "dialects-of-ukrainian",
   "mode": "v3",
-  "phases": {
-    "v3-A": {
-      "status": "complete",
-      "ts": "2026-02-19T15:04:26Z",
-      "task_id": "v3-dialects-of-ukrainian-pA",
-      "mode": "full"
-    }
-  }
+  "phases": {}
 }

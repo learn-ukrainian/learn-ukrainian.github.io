@@ -1,0 +1,266 @@
+✅ Message sent to Gemini (ID: 11878) [auto-acked: self-addressed]
+✓ Message 11878 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #11878...
+📨 Message #11878
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-business-checkpoint
+   Time: 2026-02-20T23:34:17.560878+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b2-pro-13
+level: B2-PRO
+sequence: 13
+slug: business-checkpoint
+version: '2.0'
+title: 'Контрольна точка: Ділова комунікація'
+subtitle: Business Communication Checkpoint
+content_outline:
+- section: Огляд фази B2-PRO.1
+  points:
+  - Ключові навички фази (листування, звітність, наради, презентації, переговори)
+  - Критерії успішного виконання
+  - Формат оцінювання
+- section: Завдання 1 — Ділове листування
+  points:
+  - 'Завдання: Написати лист-запит та лист-відповідь'
+  - 'Критерії: структура, ввічливість, формальний регістр'
+  - Зразок для самоперевірки
+- section: Завдання 2 — Протокол наради
+  points:
+  - 'Завдання: Скласти протокол на основі стенограми'
+  - 'Критерії: структура (СЛУХАЛИ-ВИСТУПИЛИ-УХВАЛИЛИ), формулювання доручень'
+  - Чек-лист для самоперевірки
+- section: Завдання 3 — Презентація
+  points:
+  - 'Завдання: Підготувати вступ, переходи та висновок презентації'
+  - 'Критерії: сигнальні фрази, структура, заклик до дії'
+  - Оцінка вступу та переходів
+- section: Завдання 4 — Інтегрований сценарій
+  points:
+  - 'Комплексний сценарій: Підготовка до переговорів з новим клієнтом'
+  - 'Завдання: Написати лист-знайомство, підготувати позицію, скласти порядок денний'
+  - Критерії інтеграції навичок
+- section: Підсумок та самооцінка
+  points:
+  - Чек-лист навичок B2-PRO.1
+  - Визначення зон для покращення
+  - Рекомендації для підготовки до наступної фази
+vocabulary_hints:
+  required:
+  - шановний/шановна (dear — for addressing)
+  - протокол наради (meeting minutes)
+  - порядок денний (agenda)
+  - моя презентація складається з (my presentation consists of)
+  - наша позиція полягає в (our position is)
+  - ми готові обговорити (we are ready to discuss)
+  recommended:
+  - ввічливі формули (polite formulas)
+  - регістр (register)
+  - сигнальні фрази (signposting phrases)
+activity_hints:
+- type: writing-task
+  focus: Написати лист-запит до потенційного партнера
+  items: 1
+- type: writing-task
+  focus: Скласти протокол наради за стенограмою
+  items: 1
+- type: writing-task
+  focus: Підготувати вступ та висновок презентації
+  items: 1
+- type: case-study
+  focus: Виконати інтегроване завдання — підготовка до переговорів
+  items: 1
+- type: self-assessment
+  focus: Заповнити чек-лист навичок B2-PRO.1
+  items: 1
+focus: checkpoint
+pedagogy: TTT
+prerequisites:
+- 'b2-pro-12 (Нетворкінг: Налагодження контактів)'
+connects_to:
+- 'b2-pro-14 (Інтеграція: Ділове письмо)'
+objectives:
+- Учень демонструє володіння навичками ділового листування
+- Учень може скласти протокол наради за стандартною структурою
+- Учень може підготувати структуровану презентацію
+- Учень може інтегрувати різні комунікативні навички в одному сценарії
+grammar:
+- Ви-форма та ввічливі конструкції
+- Пасивні та безособові конструкції
+- Сигнальні фрази для презентацій
+register: офіційно-діловий
+phase: B2-PRO.1
+persona:
+  voice: Senior Specialist
+  role: Генеральний директор
+word_target: 2000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Контрольна точка: Ділова комунікація (B2-PRO)
+
+## Використані джерела
+1. [ДСТУ 4163:2020](http://v7.ua/dstu-4163-2020/) — Державний стандарт щодо оформлення організаційно-розпорядчої документації.
+2. [Дія.Бізнес: Гід з ділового листування](https://business.diia.gov.ua/) — Офіційні рекомендації для українських підприємців.
+3. [Закон України «Про діловодство та архівне зберігання»](https://zakon.rada.gov.ua/) — Законодавча база для ведення документації.
+4. [Блог професора Олександра Пономаріва](https://www.bbc.com/ukrainian/topics/ponomariv_column) — Еталонні роз'яснення щодо ділового мовлення та виправлення росіянізмів.
+
+## Термінологічна база
+
+| Українська (норма) | Русизм/ненорма | English | Контекст вживання |
+|--------------------|---------------|---------|-------------------|
+| Порядок денний     | Повєстка дня  | Agenda  | Офіційні наради, протоколи |
+| Вжити заходів      | Прийняти міри | Take measures | Офіційні розпорядження, листи |
+| Лист-запит         | Письмо-запрос | Inquiry letter | Зовнішня комунікація |
+| Щодо співпраці     | На рахунок співпраці | Regarding cooperation | Тема листа (Subject) |
+| Стенограма         | Стенограмма   | Transcript | Фіксація ходу наради |
+| Ухвалили           | Постановили   | Resolved/Decided | Фінальна частина пункту протоколу |
+| Ви-форма           | Ви-форма (з малої) | "Vy" form (formal) | Ввічливе звернення до партнера |
+| Підсумовуючи       | Заключаючи    | In conclusion / Summarizing | Фінал презентації |
+
+## Мовні норми та стандарти
+- **ДСТУ 4163:2020**: Основний стандарт. Ключова зміна — написання прізвища великими літерами у підписі (напр., Олег ПЕТРЕНКО) та використання власного імені замість ініціалів.
+- **Пунктуація у звертаннях**: Після звертання (Шановний пане Директоре!) зазвичай ставиться знак оклику, що задає офіційний тон.
+- **Безособові конструкції**: Використання форм на -но, -то (було вирішено, розроблено план) для підкреслення об'єктивності в протоколах.
+
+## Аутентичні приклади
+1. **Header (Протокол)**: «ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ "ВЕКТОР" (ТОВ "ВЕКТОР") ... ПРОТОКОЛ НАРАДИ ... 20.02.2026 № 12 ... м. Київ»
+2. **Email formula**: «Просимо Вас розглянути можливість постачання обладнання згідно з доданою специфікацією. Будемо вдячні за відповідь до 25.02.2026.»
+3. **Presentation signal phrase**: «Переходячи до аналізу фінансових показників, варто звернути увагу на зростання рентабельності у другому кварталі.»
+
+## Типові помилки
+1. ❌ **згідно до наказу** → ✅ **згідно з наказом** — прийменник «згідно з» вимагає орудного відмінка.
+2. ❌ **дякую вас** → ✅ **дякую вам** — дієслово «дякувати» вимагає давального відмінка.
+3. ❌ **колеги по роботі** → ✅ **колеги з роботи** — «по» у значенні належності є калькою.
+4. ❌ **виключення** → ✅ **виняток** — «виключення» стосується лише процесів (виключення зі списку).
+5. ❌ **на протязі року** → ✅ **протягом року** — «на протязі» означає перебування на русі повітря.
+
+## Engagement Hooks (mapped to sections)
+- Section "Завдання 1 — Ділове листування": [!pro-tip] — Використання "Ви" з великої літери є обов'язковим у персоналізованому листуванні для вираження особливої поваги.
+- Section "Завдання 2 — Протокол наради": [!language-note] — Структура СЛУХАЛИ — ВИСТУПИЛИ — УХВАЛИЛИ є непорушним стандартом українського діловодства.
+- Section "Завдання 3 — Презентація": [!example] — Аутентична фраза для заклику до дії: «Запрошую вас до спільного обговорення наступних кроків».
+- Section "Завдання 4 — Інтегрований сценарій": [!context] — У переговорах з українськими партнерами чітко зафіксований порядок денний (agenda) вважається ознакою високої професійної культури.
+
+## Section-Mapped Research Notes
+
+### Огляд фази B2-PRO.1
+Фаза охоплює критичні навички: формальне листування (запити, пропозиції), фіксацію рішень (протоколювання), публічні виступи (презентації) та підготовку до переговорів. Основний фокус — перехід від загального володіння мовою до "офіційно-ділового стилю" з дотриманням ДСТУ.
+
+### Завдання 1 — Ділове листування
+Досліджено типи листів: лист-запит (inquiry) та лист-відповідь. Важливо дотримуватися тричастинної структури: вступ (мета), основна частина (суть запиту), заключна частина (очікування/вдячність). Використання кліше: «З повагою», «Сподіваємося на плідну співпрацю».
+
+### Завдання 2 — Протокол наради
+Згідно з ДСТУ 4163:2020, протокол має чітку форму. Ключове: оформлення вступу (Головуючий, Секретар, Присутні) та нумерація питань порядку денного. Кожен пункт має містити конкретні доручення з термінами.
+
+### Завдання 3 — Презентація
+Фокус на "сигнальних фразах" (Signposting). Вступ: «Тема моєї доповіді...». Переходи: «А тепер звернімося до...». Висновок: «Отже, підбиваючи підсумки...». Важливо використовувати активний стан: «Ми пропонуємо», а не «Нами пропонується».
+
+### Завдання 4 — Інтегрований сценарій
+Сценарій передбачає підготовку до переговорів (Negotiation Prep). Це включає: написання Intro Letter (листа-знайомства), складання Agenda (порядку денного) та формулювання Value Proposition (позиції компанії).
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 11923)
+✓ Message 11878 acknowledged
+✓ Message 11923 acknowledged

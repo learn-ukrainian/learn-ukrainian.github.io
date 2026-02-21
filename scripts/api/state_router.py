@@ -8,8 +8,13 @@ Endpoints:
   GET /api/state/pipeline/{track}     Per-module v3 phase state for one track
   GET /api/state/ready-to-build       Phase A done, Phase B not started
   GET /api/state/weak-points          Modules with quality issues
+  GET /api/state/build-status/{track}  Compact live build progress (one call)
+  GET /api/state/build-status          All-tracks build progress summary
+  GET /api/state/module/{track}/{num}  Single module deep-dive with comms
+  GET /api/state/final-reviews/{track} Phase F results aggregated per track
   GET /api/state/failing              Modules with audit/phase failures
   GET /api/state/research-coverage    Per-track research completeness
+  GET /api/state/research/{track}    Per-module research quality + dimensions + upgrade queue
   GET /api/state/review-coverage      Per-track review completeness + quality
   GET /api/state/issues               Aggregated outstanding issues
 
@@ -31,7 +36,9 @@ from typing import Optional
 from fastapi import APIRouter, Query
 from fastapi.responses import JSONResponse
 
-from .config import CURRICULUM_ROOT, LEVELS, PROJECT_ROOT, SEMINAR_TRACK_IDS
+import sqlite3
+
+from .config import CURRICULUM_ROOT, LEVELS, MESSAGE_DB, PROJECT_ROOT, SEMINAR_TRACK_IDS
 
 import sys
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
@@ -170,12 +177,42 @@ def _is_content_done(v3: dict, v2: dict) -> bool:
     return False
 
 
+def _find_content_file(track_dir: Path, slug: str) -> Path | None:
+    """Find the module content .md file."""
+    for pattern in [f"{slug}.md", f"*-{slug}.md"]:
+        matches = list(track_dir.glob(pattern))
+        if matches:
+            return matches[0]
+    return None
+
+
 def _get_audit_status(track_dir: Path, slug: str) -> dict:
-    """Read status/{slug}.json. Returns {status, word_count, word_target, blocking_issues}."""
+    """Read status/{slug}.json. Returns {status, word_count, word_target, blocking_issues}.
+
+    Staleness guard: if the content file is newer than the status cache,
+    the audit result is stale — return 'stale' instead of the cached pass/fail.
+    """
     status_file = track_dir / "status" / f"{slug}.json"
     if not status_file.exists():
         return {"status": "not_run", "word_count": 0, "word_target": 0, "blocking_issues": []}
     try:
+        # Staleness check: content rebuilt after last audit?
+        content_file = _find_content_file(track_dir, slug)
+        if content_file and content_file.exists():
+            content_mtime = content_file.stat().st_mtime
+            status_mtime = status_file.stat().st_mtime
+            if content_mtime > status_mtime:
+                # Content is newer than audit cache — result is stale
+                # Still read word count from content for display purposes
+                word_count = len(content_file.read_text().split())
+                return {
+                    "status": "stale",
+                    "word_count": word_count,
+                    "word_target": 0,
+                    "blocking_issues": [],
+                    "stale_reason": "content rebuilt after last audit",
+                }
+
         data = json.loads(status_file.read_text())
         overall_status = data.get("overall", {}).get("status", "unknown")
 
@@ -653,6 +690,129 @@ async def research_coverage():
     return result
 
 
+@router.get("/research/{track_id}")
+async def research_detail(track_id: str, min_score: int = 9):
+    """Per-module research quality with dimension scores, gaps, and upgrade queue.
+
+    Query params:
+      min_score: threshold for upgrade queue (default 9)
+    """
+    level_cfg = next((l for l in LEVELS if l["id"] == track_id), None)
+    if not level_cfg:
+        return JSONResponse(status_code=404, content={"error": f"Track '{track_id}' not found"})
+
+    cache_key = f"research_detail_{track_id}_{min_score}"
+    cached = _cache_get(cache_key, ttl=120.0)
+    if cached is not None:
+        return cached
+
+    def _compute():
+        from research_quality import (
+            assess_research_compat,
+            find_research_path,
+            get_rubric,
+            get_dimensions,
+            quality_label,
+            DIMENSION_SHORT_LABELS,
+        )
+
+        track_dir = CURRICULUM_ROOT / level_cfg["path"]
+        plan_slugs = _get_plan_slugs(track_id)
+        rubric_name = get_rubric(track_id)
+        dimensions = get_dimensions(rubric_name) if rubric_name else []
+
+        modules = []
+        upgrade_queue = []
+        quality_counts = {"exemplary": 0, "solid": 0, "adequate": 0, "thin": 0, "stub": 0, "missing": 0}
+        scores = []
+
+        for num, slug in plan_slugs:
+            rp = find_research_path(track_dir, slug)
+            if not rp:
+                modules.append({
+                    "num": num, "slug": slug, "exists": False,
+                    "score": None, "quality": None, "dimensions": None, "gaps": None,
+                })
+                quality_counts["missing"] += 1
+                upgrade_queue.append({"num": num, "slug": slug, "score": None, "gaps": ["missing"]})
+                continue
+
+            # Assess with content alignment
+            content_path = None
+            for pattern in [f"{slug}.md", f"*-{slug}.md"]:
+                matches = list(track_dir.glob(pattern))
+                if matches:
+                    content_path = matches[0]
+                    break
+
+            info = assess_research_compat(rp, track_id, content_path)
+            if not info or not info.get("exists"):
+                modules.append({
+                    "num": num, "slug": slug, "exists": False,
+                    "score": None, "quality": None, "dimensions": None, "gaps": None,
+                })
+                quality_counts["missing"] += 1
+                upgrade_queue.append({"num": num, "slug": slug, "score": None, "gaps": ["missing"]})
+                continue
+
+            score = info.get("score")
+            quality = info.get("quality")
+            dims = info.get("dimensions") or {}
+            gaps = info.get("gaps") or []
+            alignment = info.get("content_alignment")
+
+            mod_entry = {
+                "num": num,
+                "slug": slug,
+                "exists": True,
+                "words": info.get("words", 0),
+                "score": score,
+                "quality": quality,
+                "dimensions": {
+                    k: {"score": v["score"], "max": v["max"], "detail": v["detail"]}
+                    for k, v in dims.items()
+                } if dims else None,
+                "gaps": gaps,
+                "content_alignment": alignment,
+            }
+            modules.append(mod_entry)
+
+            if quality and quality in quality_counts:
+                quality_counts[quality] += 1
+            if score is not None:
+                scores.append(score)
+                if score < min_score:
+                    upgrade_queue.append({
+                        "num": num, "slug": slug, "score": score,
+                        "gaps": [g.split(":")[0] for g in gaps],
+                    })
+
+        # Sort upgrade queue by score ascending (weakest first)
+        upgrade_queue.sort(key=lambda x: (x["score"] if x["score"] is not None else -1))
+
+        avg_score = round(sum(scores) / len(scores), 1) if scores else None
+
+        return {
+            "track": track_id,
+            "rubric": rubric_name,
+            "dimensions": dimensions,
+            "dimension_labels": {d: DIMENSION_SHORT_LABELS.get(d, d[:3]) for d in dimensions} if dimensions else {},
+            "total": len(plan_slugs),
+            "researched": len(scores),
+            "avg_score": avg_score,
+            "quality_distribution": quality_counts,
+            "upgrade_queue": upgrade_queue,
+            "upgrade_count": len(upgrade_queue),
+            "min_score_threshold": min_score,
+            "modules": modules,
+            "generated_at": datetime.now(timezone.utc).isoformat(),
+        }
+
+    result = await asyncio.to_thread(_compute)
+    _cache_set(cache_key, result)
+    return result
+
+
 @router.get("/review-coverage")
 async def review_coverage():
     """Per-track review and final-review coverage + quality signal."""
@@ -661,6 +821,557 @@ async def review_coverage():
         return cached
     result = await asyncio.to_thread(_compute_review_coverage)
     _cache_set("review_coverage", result)
+    return result
+
+
+@router.get("/build-status/{track_id}")
+async def build_status(track_id: str):
+    """Compact build progress for a track. One call tells you everything.
+
+    Returns: currently building (module + phase), done/total counts,
+    last 5 completions with pass/fail, and ETA.
+    """
+    level_cfg = next((l for l in LEVELS if l["id"] == track_id), None)
+    if not level_cfg:
+        return JSONResponse(status_code=404, content={"error": f"Track '{track_id}' not found"})
+
+    def _compute():
+        plan_slugs = _get_plan_slugs(track_id)
+        track_dir = CURRICULUM_ROOT / level_cfg["path"]
+        total = len(plan_slugs)
+
+        building_now = []
+        done = 0
+        queued = 0
+        failed = 0
+        recent_completions = []
+
+        for num, slug in plan_slugs:
+            orch_dir = track_dir / "orchestration" / slug
+            v3 = _read_v3_state(orch_dir)
+            phases = v3.get("phases", {})
+
+            # Determine furthest completed phase and any running phase
+            furthest = None
+            running_phase = None
+            latest_ts = None
+            for pid in ["v3-A", "v3-B", "v3-C", "v3-audit", "v3-D", "v3-E", "v3-F"]:
+                p = phases.get(pid, {})
+                status = p.get("status")
+                if status == "complete":
+                    furthest = pid.replace("v3-", "")
+                    ts = p.get("ts")
+                    if ts:
+                        latest_ts = ts
+                elif status == "running":
+                    running_phase = pid.replace("v3-", "")
+                elif status == "failed":
+                    running_phase = pid.replace("v3-", "") + "(FAIL)"
+
+            # Check if fully built (at least through audit)
+            audit_phase = phases.get("v3-audit", {})
+            audit_status = audit_phase.get("status")
+
+            if audit_status == "complete":
+                done += 1
+                audit_result = _get_audit_status(track_dir, slug)
+                wc = audit_result.get("word_count", 0)
+                wt = audit_result.get("word_target", 0)
+                recent_completions.append({
+                    "num": num,
+                    "slug": slug,
+                    "phase": furthest or "audit",
+                    "audit": audit_result.get("status", "unknown"),
+                    "words": f"{wc}/{wt}",
+                    "ts": latest_ts,
+                })
+            elif running_phase:
+                building_now.append({
+                    "num": num,
+                    "slug": slug,
+                    "phase": running_phase,
+                    "prev": furthest,
+                })
+            elif audit_status == "failed":
+                failed += 1
+            elif furthest:
+                # Partially done but not running — stalled or queued for next phase
+                building_now.append({
+                    "num": num,
+                    "slug": slug,
+                    "phase": f"queued-after-{furthest}",
+                    "prev": furthest,
+                })
+            else:
+                queued += 1
+
+        # Sort completions by timestamp, take last 5
+        recent_completions.sort(key=lambda x: x.get("ts") or "", reverse=True)
+        last_5 = recent_completions[:5]
+
+        return {
+            "track": track_id,
+            "total": total,
+            "done": done,
+            "building": len(building_now),
+            "queued": queued,
+            "failed": failed,
+            "progress": f"{done}/{total} ({round(done/total*100) if total else 0}%)",
+            "currently_building": building_now[:5],  # Top 5 active
+            "recent_completions": last_5,
+            "generated_at": datetime.now(timezone.utc).isoformat(),
+        }
+
+    cache_key = f"build_status_{track_id}"
+    cached = _cache_get(cache_key, ttl=15.0)  # Short TTL — this is for live monitoring
+    if cached is not None:
+        return cached
+    result = await asyncio.to_thread(_compute)
+    _cache_set(cache_key, result)
+    return result
+
+
+@router.get("/build-status")
+async def build_status_all():
+    """All-tracks build progress in one call. Shows done/total per active track."""
+    def _compute():
+        tracks = {}
+        for level_cfg in LEVELS:
+            track_id = level_cfg["id"]
+            plan_slugs = _get_plan_slugs(track_id)
+            if not plan_slugs:
+                continue
+            track_dir = CURRICULUM_ROOT / level_cfg["path"]
+            total = len(plan_slugs)
+            done = 0
+            building = 0
+            failed = 0
+
+            for _num, slug in plan_slugs:
+                orch_dir = track_dir / "orchestration" / slug
+                v3 = _read_v3_state(orch_dir)
+                phases = v3.get("phases", {})
+                audit_status = phases.get("v3-audit", {}).get("status")
+                if audit_status == "complete":
+                    done += 1
+                elif audit_status == "failed":
+                    failed += 1
+                elif any(phases.get(p, {}).get("status") == "running"
+                         for p in ["v3-A", "v3-B", "v3-C", "v3-audit", "v3-D", "v3-E", "v3-F"]):
+                    building += 1
+
+            tracks[track_id] = {
+                "total": total,
+                "done": done,
+                "building": building,
+                "failed": failed,
+                "progress": f"{done}/{total} ({round(done/total*100) if total else 0}%)",
+            }
+
+        return {
+            "generated_at": datetime.now(timezone.utc).isoformat(),
+            "tracks": tracks,
+        }
+
+    cached = _cache_get("build_status_all", ttl=30.0)
+    if cached is not None:
+        return cached
+    result = await asyncio.to_thread(_compute)
+    _cache_set("build_status_all", result)
+    return result
+
+
+def _get_broker_messages_for_slug(slug: str, limit: int = 20) -> list[dict]:
+    """Query broker DB for messages related to a module slug."""
+    if not MESSAGE_DB.exists():
+        return []
+    try:
+        conn = sqlite3.connect(f"file:{MESSAGE_DB}?mode=ro", uri=True)
+        conn.row_factory = sqlite3.Row
+        rows = conn.execute(
+            "SELECT id, task_id, from_llm, to_llm, message_type, "
+            "substr(content, 1, 200) as preview, timestamp "
+            "FROM messages WHERE task_id LIKE ? "
+            "ORDER BY id DESC LIMIT ?",
+            (f"%{slug}%", limit),
+        ).fetchall()
+        conn.close()
+        return [dict(r) for r in rows]
+    except Exception:
+        return []
+
+
+def _get_final_review_info(track_dir: Path, slug: str) -> dict | None:
+    """Parse final review file for verdict and issue count."""
+    review_file = track_dir / "review" / f"{slug}-final-review.md"
+    if not review_file.exists():
+        return None
+    try:
+        text = review_file.read_text()
+        # Extract verdict
+        verdict = None
+        verdict_match = re.search(r"===VERDICT===\s*(\w+)\s*===END_VERDICT===", text)
+        if verdict_match:
+            verdict = verdict_match.group(1).strip()
+
+        # Count issues
+        issue_count = len(re.findall(
+            r"\*\*ISSUE\s+\d+", text, re.IGNORECASE
+        ))
+
+        # Extract issue summaries
+        issues = []
+        for m in re.finditer(
+            r"\*\*ISSUE\s+(\d+)\s*[—–-]\s*([^*]+)\*\*",
+            text, re.IGNORECASE
+        ):
+            issues.append({
+                "num": int(m.group(1)),
+                "summary": m.group(2).strip()[:120],
+            })
+
+        return {
+            "verdict": verdict,
+            "issue_count": issue_count,
+            "issues": issues,
+            "file": str(review_file.relative_to(CURRICULUM_ROOT)),
+        }
+    except Exception:
+        return None
+
+
+@router.get("/module/{track_id}/{num}")
+async def module_detail(track_id: str, num: int):
+    """Single module deep-dive: pipeline state, audit, research, review, comms."""
+    level_cfg = next((l for l in LEVELS if l["id"] == track_id), None)
+    if not level_cfg:
+        return JSONResponse(status_code=404, content={"error": f"Track '{track_id}' not found"})
+
+    def _compute():
+        plan_slugs = _get_plan_slugs(track_id)
+        match = next(((n, s) for n, s in plan_slugs if n == num), None)
+        if not match:
+            return {"error": f"Module #{num} not found in track '{track_id}'"}
+        _, slug = match
+        track_dir = CURRICULUM_ROOT / level_cfg["path"]
+        orch_dir = track_dir / "orchestration" / slug
+
+        v3 = _read_v3_state(orch_dir)
+        v2 = _read_v2_state(orch_dir)
+
+        # Pipeline phases
+        phases = {}
+        for pid in ["A", "B", "C", "audit", "D", "E", "F"]:
+            phases[pid] = _parse_phase_status(v3, f"v3-{pid}")
+
+        # Audit
+        audit = _get_audit_status(track_dir, slug)
+
+        # Research
+        research_score = _get_research_score(track_dir, slug, track_id)
+        has_research = _has_research_file(track_dir, slug)
+
+        # Review files
+        review_file = track_dir / "review" / f"{slug}-review.md"
+        has_review = review_file.exists()
+
+        # Final review
+        final_review = _get_final_review_info(track_dir, slug)
+
+        # Content file
+        word_count = audit.get("word_count", 0)
+        word_target = audit.get("word_target", 0)
+        if word_target == 0:
+            word_target = _get_word_target_from_plan(track_id, slug)
+
+        # Enrichment status (check for .yaml.bak)
+        plan_file = PLANS_ROOT / track_id / f"{slug}.yaml"
+        enriched = (plan_file.with_suffix(".yaml.bak")).exists()
+
+        # Related broker messages
+        comms = _get_broker_messages_for_slug(slug, limit=15)
+
+        return {
+            "track": track_id,
+            "num": num,
+            "slug": slug,
+            "phases": phases,
+            "audit": {
+                "status": audit["status"],
+                "word_count": word_count,
+                "word_target": word_target,
+                "blocking_issues": audit.get("blocking_issues", []),
+            },
+            "research": {
+                "exists": has_research,
+                "score": research_score,
+            },
+            "review": {
+                "exists": has_review,
+            },
+            "final_review": final_review,
+            "enriched": enriched,
+            "comms": comms,
+            "generated_at": datetime.now(timezone.utc).isoformat(),
+        }
+
+    result = await asyncio.to_thread(_compute)
+    if "error" in result:
+        return JSONResponse(status_code=404, content=result)
+    return result
+
+
+@router.get("/final-reviews/{track_id}")
+async def final_reviews_track(track_id: str):
+    """Phase F results aggregated per track: verdicts, issue counts, common patterns."""
+    level_cfg = next((l for l in LEVELS if l["id"] == track_id), None)
+    if not level_cfg:
+        return JSONResponse(status_code=404, content={"error": f"Track '{track_id}' not found"})
+
+    def _compute():
+        plan_slugs = _get_plan_slugs(track_id)
+        track_dir = CURRICULUM_ROOT / level_cfg["path"]
+
+        approved = []
+        rejected = []
+        pending = []
+        all_issues = []
+
+        for num, slug in plan_slugs:
+            info = _get_final_review_info(track_dir, slug)
+            if info is None:
+                # Check if module is built but lacks final review
+                orch_dir = track_dir / "orchestration" / slug
+                v3 = _read_v3_state(orch_dir)
+                if v3.get("phases", {}).get("v3-audit", {}).get("status") == "complete":
+                    pending.append({"num": num, "slug": slug})
+                continue
+
+            entry = {"num": num, "slug": slug, **info}
+            if info["verdict"] == "APPROVE":
+                approved.append(entry)
+            else:
+                rejected.append(entry)
+                for issue in info.get("issues", []):
+                    all_issues.append({
+                        "module": slug,
+                        "num": num,
+                        **issue,
+                    })
+
+        # Count issue patterns
+        pattern_counts = {}
+        for issue in all_issues:
+            summary = issue["summary"].upper()
+            for keyword in ["FACTUAL", "PLAN COMPLIANCE", "ACTIVITY", "ANTI-SURZHYK",
+                           "PRONUNCIATION", "MISLEADING", "COLONIAL", "WORD COUNT",
+                           "MISSING", "RUSSICISM"]:
+                if keyword in summary:
+                    pattern_counts[keyword] = pattern_counts.get(keyword, 0) + 1
+
+        return {
+            "track": track_id,
+            "total_reviewed": len(approved) + len(rejected),
+            "approved": len(approved),
+            "rejected": len(rejected),
+            "pending_review": len(pending),
+            "approval_rate": (
+                f"{round(len(approved) / (len(approved) + len(rejected)) * 100)}%"
+                if (len(approved) + len(rejected)) > 0 else "N/A"
+            ),
+            "issue_patterns": pattern_counts,
+            "rejected_modules": rejected,
+            "pending_modules": pending[:10],
+            "generated_at": datetime.now(timezone.utc).isoformat(),
+        }
+
+    cache_key = f"final_reviews_{track_id}"
+    cached = _cache_get(cache_key, ttl=60.0)
+    if cached is not None:
+        return cached
+    result = await asyncio.to_thread(_compute)
+    _cache_set(cache_key, result)
+    return result
+
+
+@router.get("/enrichment-status")
+async def enrichment_status(track: Optional[str] = Query(None)):
+    """Which plans are enriched per track. Checks for .yaml.bak files in plans/."""
+    def _compute():
+        tracks = {}
+        level_cfgs = [l for l in LEVELS if l["id"] == track] if track else LEVELS
+        for level_cfg in level_cfgs:
+            track_id = level_cfg["id"]
+            plan_slugs = _get_plan_slugs(track_id)
+            if not plan_slugs:
+                continue
+            plan_dir = PLANS_ROOT / track_id
+            enriched = 0
+            not_enriched = []
+            for _num, slug in plan_slugs:
+                bak = plan_dir / f"{slug}.yaml.bak"
+                if bak.exists():
+                    enriched += 1
+                else:
+                    not_enriched.append(slug)
+            total = len(plan_slugs)
+            tracks[track_id] = {
+                "total": total,
+                "enriched": enriched,
+                "pending": total - enriched,
+                "pct": round(enriched / total * 100) if total else 0,
+                "not_enriched": not_enriched[:10] if len(not_enriched) <= 10 else not_enriched[:5] + [f"...+{len(not_enriched)-5}"],
+            }
+        return {"generated_at": datetime.now(timezone.utc).isoformat(), "tracks": tracks}
+
+    cached = _cache_get("enrichment_status", ttl=120.0)
+    if cached is not None:
+        return cached
+    result = await asyncio.to_thread(_compute)
+    _cache_set("enrichment_status", result)
+    return result
+
+
+@router.get("/track-health/{track_id}")
+async def track_health(track_id: str):
+    """Single-call track health: build progress, audit, final review, enrichment, word quality, attention list."""
+    level_cfg = next((l for l in LEVELS if l["id"] == track_id), None)
+    if not level_cfg:
+        return JSONResponse(status_code=404, content={"error": f"Track '{track_id}' not found"})
+
+    def _compute():
+        plan_slugs = _get_plan_slugs(track_id)
+        track_dir = CURRICULUM_ROOT / level_cfg["path"]
+        plan_dir = PLANS_ROOT / track_id
+        total = len(plan_slugs)
+
+        # Counters
+        built = 0
+        audit_pass = 0
+        audit_fail = 0
+        enriched = 0
+        final_reviewed = 0
+        final_approved = 0
+        word_ratios = []
+        attention = []
+        completion_times = []  # For ETA
+
+        for num, slug in plan_slugs:
+            orch_dir = track_dir / "orchestration" / slug
+            v3 = _read_v3_state(orch_dir)
+            phases = v3.get("phases", {})
+
+            # Built = Phase B complete
+            b_phase = phases.get("v3-B", {})
+            if b_phase.get("status") == "complete":
+                built += 1
+                # Record completion timestamp for ETA calc
+                ts = b_phase.get("ts")
+                if ts:
+                    completion_times.append(ts)
+
+            # Audit
+            audit = _get_audit_status(track_dir, slug)
+            if audit["status"] == "pass":
+                audit_pass += 1
+            elif audit["status"] == "fail":
+                audit_fail += 1
+                attention.append({
+                    "num": num, "slug": slug,
+                    "reason": "audit_fail",
+                    "detail": (audit.get("blocking_issues", [{}])[0].get("gate", "")
+                              if audit.get("blocking_issues") else ""),
+                })
+
+            # Word ratio
+            wc = audit.get("word_count", 0)
+            wt = audit.get("word_target", 0)
+            if wt > 0 and wc > 0:
+                word_ratios.append(wc / wt)
+
+            # Enrichment
+            if (plan_dir / f"{slug}.yaml.bak").exists():
+                enriched += 1
+
+            # Final review
+            fr = _get_final_review_info(track_dir, slug)
+            if fr:
+                final_reviewed += 1
+                if fr["verdict"] == "APPROVE":
+                    final_approved += 1
+                else:
+                    attention.append({
+                        "num": num, "slug": slug,
+                        "reason": f"final_review_{fr['verdict']}",
+                        "detail": f"{fr['issue_count']} issues",
+                    })
+
+        # ETA calculation
+        eta_minutes = None
+        remaining = total - built
+        if len(completion_times) >= 3:
+            # Sort timestamps, compute rate from last 10
+            sorted_ts = sorted(completion_times)
+            recent = sorted_ts[-min(10, len(sorted_ts)):]
+            if len(recent) >= 2:
+                try:
+                    first = datetime.fromisoformat(recent[0].replace("Z", "+00:00"))
+                    last = datetime.fromisoformat(recent[-1].replace("Z", "+00:00"))
+                    elapsed = (last - first).total_seconds()
+                    if elapsed > 0:
+                        rate_per_min = (len(recent) - 1) / (elapsed / 60)
+                        if rate_per_min > 0:
+                            eta_minutes = round(remaining / rate_per_min)
+                except Exception:
+                    pass
+
+        avg_word_ratio = round(sum(word_ratios) / len(word_ratios), 2) if word_ratios else None
+
+        # Sort attention by severity
+        attention.sort(key=lambda x: 0 if "fail" in x["reason"] else 1)
+
+        return {
+            "track": track_id,
+            "total": total,
+            "build": {"done": built, "pct": round(built / total * 100) if total else 0},
+            "audit": {
+                "passing": audit_pass,
+                "failing": audit_fail,
+                "pct": round(audit_pass / total * 100) if total else 0,
+            },
+            "enrichment": {
+                "done": enriched,
+                "pct": round(enriched / total * 100) if total else 0,
+            },
+            "final_review": {
+                "reviewed": final_reviewed,
+                "approved": final_approved,
+                "approval_rate": (
+                    f"{round(final_approved / final_reviewed * 100)}%"
+                    if final_reviewed else "N/A"
+                ),
+            },
+            "words": {
+                "avg_ratio": f"{avg_word_ratio}x" if avg_word_ratio else "N/A",
+            },
+            "eta": {
+                "remaining": remaining,
+                "minutes": eta_minutes,
+                "display": (
+                    f"~{eta_minutes}min ({eta_minutes//60}h{eta_minutes%60:02d}m)"
+                    if eta_minutes else "N/A"
+                ),
+            },
+            "attention": attention[:10],
+            "generated_at": datetime.now(timezone.utc).isoformat(),
+        }
+
+    cache_key = f"track_health_{track_id}"
+    cached = _cache_get(cache_key, ttl=30.0)
+    if cached is not None:
+        return cached
+    result = await asyncio.to_thread(_compute)
+    _cache_set(cache_key, result)
     return result
 
 
@@ -688,9 +1399,22 @@ async def outstanding_issues(
 
             for num, slug in plan_slugs:
                 # --- Source 1: Review file issues ---
+                # Find content file to check staleness
+                content_file = None
+                for pattern in [f"{slug}.md", f"*-{slug}.md"]:
+                    matches = list(track_dir.glob(pattern))
+                    if matches:
+                        content_file = matches[0]
+                        break
+                content_mtime = content_file.stat().st_mtime if content_file and content_file.exists() else 0
+
                 for review_filename in [f"{slug}-review.md", f"{slug}-final-review.md"]:
                     review_file = review_dir / review_filename
                     if not review_file.exists():
+                        continue
+
+                    # Skip stale reviews: if content was rebuilt after the review, issues are outdated
+                    if content_mtime > 0 and review_file.stat().st_mtime < content_mtime:
                         continue
 
                     text = review_file.read_text()

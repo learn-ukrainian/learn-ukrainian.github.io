@@ -1,0 +1,270 @@
+✅ Message sent to Gemini (ID: 10545) [auto-acked: self-addressed]
+✓ Message 10545 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10545...
+📨 Message #10545
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-register-religious-epistolary
+   Time: 2026-02-20T20:41:12.981269+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b2-39
+level: B2
+sequence: 39
+slug: register-religious-epistolary
+version: '2.0'
+title: Регістр — Релігійний та епістолярний стилі
+subtitle: Мова духовності та листування
+content_outline:
+- section: Розминка — Два спеціальні регістри
+  points:
+  - Релігійний стиль — де зустрічається (церква, свята, література)
+  - Епістолярний стиль — мистецтво листування
+  - Спільне — висока культура мовлення, ввічливість
+- section: Religious Style (Релігійний стиль)
+  points:
+  - 'Liturgical: Господь, благословіння, молитва'
+  - 'Biblical: Слава Богу! Христос воскрес! – Воістину воскрес!'
+  - 'Elevated: воістину, благословенний, всемогутній'
+  - 'Church vocabulary: храм, церква, парафія, священник'
+- section: Сучасні правила листування
+  points:
+  - Доброго дня! (Good day! - modern greeting)
+  - У вкладенні надсилаю... (I'm attaching...)
+  - Заздалегідь вдячний/вдячна. (Thank you in advance.)
+- section: Практика — написання листів
+  points:
+  - Написати формальний лист (скарга, прохання, подяка)
+  - Написати неформальний лист другу з України
+  - Трансформувати текст між регістрами (офіційний ↔ особистий)
+  - Розпізнати регістр за ознаками (релігійний vs світський)
+focus: grammar
+pedagogy: TTT
+objectives:
+- Учень може розпізнавати характерні ознаки релігійного стилю
+- Учень може писати формальні та неформальні листи українською
+- Учень може трансформувати текст між формальним та неформальним регістрами
+grammar:
+- religious-register
+- epistolary-register
+- letter-writing
+- formal-correspondence
+phase: B2
+vocabulary_hints:
+  required:
+  - термін (term)
+  - поняття (concept)
+  - процес (process)
+  - метод (method)
+  recommended:
+  - аналіз (analysis)
+  - синтез (synthesis)
+  - дослідження (research)
+activity_hints:
+- type: reading
+  focus: Аналіз тексту
+  items: 4
+- type: essay-response
+  focus: Практичне застосування
+- type: true-false
+  focus: Перевірка розуміння
+  items: 8
+persona:
+  voice: Professional Language Coach
+  role: Archivist of the Lavra (Архіваріус Лаври)
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Регістр — Релігійний та епістолярний стилі
+
+## State Standard Reference
+§4.4.1.1: "Стилі української мови: ... релігійний; епістолярний."
+§4.1.2.7: "Кличний відмінок: адресат мовлення – потенційний суб’єкт дії... адресат ідентифікації".
+Alignment: Модуль безпосередньо реалізує вимогу стандарту щодо володіння функціональними стилями (релігійним та епістолярним) та правильного вживання кличного відмінка у звертаннях.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| **Господь** | High (Religious) | Господь Бог, слава Господу, Господня воля |
+| **Благословіння** | Med (Religious/Formal) | просити благословіння, давати благословіння, Боже благословіння |
+| **Воістину** | Med (Religious) | Воістину воскрес, воістину так, воістину великий |
+| **Шановний** | High (Epistolary) | Шановний пане, Шановна громадо, Шановні колеги |
+| **Вкладення** | High (Digital Epistolary) | у вкладенні, див. у вкладенні, файл у вкладенні |
+| **Щиро** | High (Epistolary) | щиро Ваш, щиро вдячний, щиро вітаю |
+
+## Cultural Hooks
+1. **Пересопницьке Євангеліє (1556–1561)**: Перший переклад Євангелія староукраїнською літературною мовою. Саме на цій книзі складають присягу Президенти України. Це символ поєднання релігійного слова і живої мови.
+2. **Листування Лесі Українки та Ольги Кобилянської**: Приклад високого інтимно-епістолярного стилю, де використовувалися унікальні звертання в третій особі («Хтось біленький», «Хтось чорненький»).
+3. **Василь Стефаник**: «Моя література в моїх листах» — приклад того, як епістолярний жанр стає фактом великої літератури.
+
+## Common Learner Errors
+1. **Ігнорування кличного відмінка**: *«Привіт, Андрій!»* → *«Привіт, Андрію!»* (В українській мові звертання завжди у кличному відмінку).
+2. **Неправильна форма кличного відмінка**: *«Ігоре»* → *«Ігорю»* (Іменники м'якої групи на -р мають закінчення -ю).
+3. **Відмінювання прізвища у звертанні**: *«Пане Шевчуку»* → *«Пане Шевчук»* (У звертаннях типу "пан + прізвище" прізвище зазвичай не відмінюється, якщо це чоловічий рід, хоча норма допускає варіанти, але в діловому стилі частіше називний для прізвища). *Correction: За новим правописом та стандартом: загальна назва у кличному (пане, друже), а прізвище — у називному (пане Коваль).*
+4. **Калькування етикетних формул**: *«Доброго дня!»* (як вітання) → *«Добрий день!»* (В українській мові вітання — це констатація факту (називний), а побажання — родовий: "Бажаю доброго дня").
+
+## Cross-References
+- **Builds on**: B1 General Communication (basic letters), B2.1a Passive Voice (formal structures).
+- **Prepares for**: C1 Stylistics (Functional Styles depth), C1 Rhetoric.
+
+## Notes for Content Writing
+- **Distinction**: Clearly distinguish between "church language" (archaism, solemnity) and "modern business email" (efficiency, politeness), but find the common ground in *Respect for the Addressee*.
+- **Vocative Focus**: This is the best place to deep-dive into the Vocative case nuances (Ігорю vs Ігоре mistake is critical for B2).
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ — Регістри високого стилю (Introduction — High Style Registers)"
+  words: 600
+  points:
+  - "Визначення релігійного та епістолярного стилів відповідно до Державного стандарту (§4.4.1.1), акцент на спільній базі: високій культурі мовлення та повазі до адресата."
+  - "Культурний контекст: Пересопницьке Євангеліє (1556–1561) як символ поєднання сакрального слова та народної мови, на якому присягають Президенти України."
+  - "Розрізнення архаїчної церковної урочистості та сучасної ділової етики: пошук точок дотику у вишуканості висловлювань."
+- section: "Релігійний стиль — Мова духовності (Religious Style — Language of Spirituality)"
+  words: 900
+  points:
+  - "Лексичний пласт: літургійна та біблійна термінологія (Господь, благословіння, молитва, храм, парафія, священник) та піднесена лексика (воістину, всемогутній)."
+  - "Формульні вислови та сталі конструкції: 'Слава Богу!', 'Христос воскрес! – Воістину воскрес!'; використання частотної лексики з релігійних джерел."
+  - "Аналіз сакрального тексту: розпізнавання ознак стилю (метафоричність, символізм, урочиста інтонація)."
+- section: "Епістолярний стиль — Від класики до цифрової доби (Epistolary Style — From Classics to Digital Age)"
+  words: 900
+  points:
+  - "Історія жанру: листування Лесі Українки та Ольги Кобилянської як взірець інтимно-епістолярного стилю з унікальними формами звертання ('Хтось')."
+  - "Василь Стефаник про роль листування у літературному процесі; епістолярій як самостійний вид мистецтва."
+  - "Сучасна ділова переписка: цифрові формули ('У вкладенні надсилаю...', 'Заздалегідь вдячний') та етикетні кліше ('Шановний пане', 'З повагою', 'Щиро Ваш')."
+- section: "Граматика — Мистецтво звертання (Grammar — The Art of Address)"
+  words: 800
+  points:
+  - "Глибоке занурення у кличний відмінок (§4.1.2.7): суб’єкт дії та адресат ідентифікації. Аналіз типової помилки 'Привіт, Андрій!' проти правильного 'Привіт, Андрію!'."
+  - "Складні випадки кличного відмінка: іменники м’якої групи на -р (Ігорю, не Ігоре) та правила відмінювання прізвищ у конструкціях 'пан + прізвище' (пан Коваль)."
+  - "Спростування кальки 'Доброго дня!' як вітання; розрізнення констатації факту ('Добрий день!') та побажання ('Доброго дня!' — у родовому відмінку)."
+- section: "Практика та трансформація (Practice and Transformation)"
+  words: 800
+  points:
+  - "Написання формального листа (скарга, запит) та неформального листа другові з дотриманням відповідного регістру та кличного відмінка."
+  - "Вправа на стилістичну трансформацію: переклад нейтрального повідомлення у релігійний/урочистий регістр та навпаки."
+  - "Виправлення помилок у звертаннях та етикетних формулах на основі реальних кейсів (learner errors), задокументованих у дослідженні."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "Господь (Lord) — Господь Бог, слава Господу, Господня воля; висока частотність у релігійному регістрі."
+  - "благословіння (blessing) — просити благословіння, Боже благословіння; вживається у релігійному та офіційно-урочистому контекстах."
+  - "воістину (truly/indeed) — 'Воістину воскрес!', 'воістину так'; маркер піднесеного, книжного стилю."
+  - "шановний (respected/dear) — 'Шановний пане', 'Шановна громадо'; ключове звертання в епістолярному стилі."
+  - "вкладення (attachment) — 'файл у вкладенні', 'у вкладенні надсилаю'; термін цифрової комунікації."
+  - "щиро (sincerely) — 'щиро Ваш', 'щиро вдячний'; стандартна формула завершення листа."
+  - "парафія (parish) — 'наша парафія', 'належати до парафії'; специфічна церковна лексика."
+  - "кличний відмінок (vocative case) — категорія адресата (§4.1.2.7); критично для правильного звертання."
+  recommended:
+  - "Пересопницьке Євангеліє (Peresopnytske Gospel) — культурний символ; перший переклад староукраїнською літературною мовою."
+  - "епістолярний (epistolary) — 'епістолярна спадщина', 'епістолярний жанр'."
+  - "звертання (address) — 'форма звертання', 'ввічливе звертання'."
+  - "калькування (calquing) — 'уникати калькування з російської'; стосується помилки 'Доброго дня!'."
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4141 chars)
+✅ Message sent to Claude (ID: 10556)
+✓ Message 10556 acknowledged
+   Auto-acknowledged reply #10556 (stdout delivery — no inbox accumulation)
+✓ Message 10545 acknowledged

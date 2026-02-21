@@ -6,69 +6,91 @@ version: '2.0'
 title: 'Абстрактні концепції: ідеї та думки'
 subtitle: 'Abstract Concepts: Ideas and Thoughts'
 content_outline:
-- section: Вступ
+- section: Вступ (Introduction)
+  words: 500
   points:
-  - Why abstract words matter — transition from concrete A1/A2 descriptions to B1
-    intellectual expression
-  - Beyond concrete nouns — ability to discuss concepts like 'justice', 'truth', 'theory'
-    rather than just objects
-  - 'Intellectual discourse — syntactic padding: «Я вважаю, що...», «На мою думку...»,
-    «Мені здається, що...»'
-- section: Вивчення слів
+  - Transition from concrete A1/A2 descriptions to B1 intellectual expression, moving
+    beyond physical objects to abstract entities as per State Standard §3.6 (social
+    issues) and §3.8 (education/fields of knowledge).
+  - 'The role of abstract vocabulary in expressing values like ''justice'', ''truth'',
+    and ''theory''. Introduction to syntactic padding for intellectual discourse:
+    «Я вважаю, що...», «На мою думку...», «Мені здається, що...».'
+- section: Лексичний блок (Vocabulary Block)
+  words: 900
   points:
-  - 'ідея, думка, аргумент, рішення — core distinction: ідея (creative concept) vs
-    думка (opinion/process); learner error: ідея used for opinion'
-  - 'Six vocabulary groups — grouping by function: mental products (ідея), beliefs
-    (переконання), frameworks (теорія), values (цінність)'
-  - 'Collocations and usage — learner error: аргумент (logical reason) vs суперечка
-    (quarrel/dispute); false friend alert'
-- section: Вживання
+  - 'Core distinction between ''ідея'' (creative concept/plan/spark) vs ''думка''
+    (opinion/thought process). Address learner error: using ''ідея'' for opinions
+    (e.g., correct ''У мене є думка про цей фільм'' vs incorrect ''У мене є ідея про
+    цей фільм'').'
+  - 'Functional grouping of concepts: mental products (ідея, думка), beliefs and perspectives
+    (переконання, погляд), frameworks (концепція, теорія), and core values (цінність,
+    принцип).'
+  - 'False friend alert: ''аргумент'' (strictly a logical reason/point) vs ''суперечка''
+    (quarrel/dispute). Drill correct usage: ''навести вагомий аргумент'' vs ''мати
+    запеклу суперечку''.'
+  - 'Register and meaning distinction: ''погляд'' (view/opinion/gaze) vs ''вигляд''
+    (appearance). Correcting the common error ''У нього гарний погляд'' (meaning appearance)
+    to ''У нього гарний вигляд''.'
+- section: Граматика та синтаксис (Grammar and Syntax)
+  words: 800
   points:
-  - 'Collocations patterns — high freq: «втілювати ідею в життя», «думки розбігаються»,
-    «на перший погляд», «дотримуватися принципів»'
-  - 'Register considerations — погляд vs вигляд: learner error confusing opinion (погляд)
-    with appearance (вигляд)'
-  - 'Cultural aspects — cultural hook: Hryhorii Skovoroda''s «сродна праця» (congenial
-    work) as a core value; Shevchenko''s personification of «Думи мої...»'
-- section: Читання
+  - 'Formation of abstract nouns from verbs as per State Standard §4.3.4: ''бачити
+    – бачення'' (vision/perspective), ''думати – думка'', ''переконувати – переконання''.'
+  - 'Syntactic structures for expressing abstract ideas using subordinate clauses
+    with ''що'' (State Standard §4.4.3): ''Викладач сказав, що...'', ''Я переконаний,
+    що...'', ''Люблю мріяти, що...''.'
+  - 'High-frequency collocation patterns: ''втілювати ідею в життя'', ''думки розбігаються'',
+    ''на перший погляд'', ''дотримуватися принципів'', ''діяти згідно з переконаннями''.'
+- section: Культурний контекст (Cultural Context)
+  words: 900
   points:
-  - 'News article, academic text, blog — contrast styles: opinion piece (blog) vs
-    objective analysis (news) vs theoretical framework (academic)'
-  - Three registers demonstrated — use «концепція/теорія» in academic context vs «думка/погляд»
-    in blog
-- section: Діалоги
+  - 'Hryhorii Skovoroda and ''Srodna Pratsia'' (congenial work) as a foundational
+    philosophical idea (ідея). Analyzing the value (цінність) of inner freedom through
+    the quote: «Світ ловив мене, та не скривав».'
+  - 'Taras Shevchenko''s ''Dumy'': elevating ''думка/дума'' from simple thought to
+    burdensome philosophical reflection. Personification of thoughts: «Думи мої, думи
+    мої, лихо мені з вами!».'
+  - 'Lesya Ukrainka''s personification of the Word as a weapon: ''Слово, чому ти не
+    твердая криця...''. Exploring the conviction (переконання) that abstract ideas
+    can become tools for national struggle.'
+- section: Практика та застосування (Practice and Application)
+  words: 900
   points:
-  - Work meeting (formal) — proposing a «нова концепція» or «стратегічне бачення»
-  - News discussion (informal) — expressing «власна думка» about social issues
-  - Friend advice, university seminar — contrasting «на мою думку» (advice) with «теоретично
-    обґрунтувати» (seminar)
-- section: Підсумок
-  points:
-  - Key vocabulary recap — summary of 8 core abstract terms and their primary collocations
-  - Practice recommendations — using «Я вважаю...» templates for daily journaling
+  - 'Register contrast: analyzing an academic text (теорія, концепція, теоретично
+    обґрунтувати) vs a personal blog post (власна думка, на перший погляд, поділяти
+    погляди).'
+  - 'Simulated discourse: formal work meeting proposing a ''нова концепція'' or ''стратегічне
+    бачення'' vs informal news discussion expressing ''громадська думка'' or ''власна
+    думка''.'
+  - 'Synthesis activity: drafting a 200-word reflection on a personal ''цінність''
+    (value) using established syntactic templates and core abstract vocabulary.'
 vocabulary_hints:
   required:
   - ідея (idea) — головна/основна ідея, блискуча ідея, висувати ідею, втілювати ідею
-    в життя, нав'язлива ідея
+    в життя; creative spark/plan vs opinion
   - думка (thought/opinion) — власна думка, на мою думку, висловлювати думку, думки
-    розбігаються, громадська думка
+    розбігаються, громадська думка; Shevchenko's 'Dumy'
   - концепція (concept) — нова концепція, розробити концепцію, концепція розвитку,
-    авторська концепція
+    авторська концепція; academic/formal
   - теорія (theory) — теорія ймовірності, теорія змови, підтвердити/спростувати теорію,
-    теоретично обґрунтувати
+    теоретично обґрунтувати; scientific/logical
   - погляд (view) — на перший погляд, поділяти погляди, власний погляд на (щось),
-    з точки зору
+    з точки зору; distinguish from 'вигляд'
   - переконання (belief/conviction) — глибоке переконання, власні переконання, діяти
-    згідно з переконаннями
+    згідно з переконаннями; Lesya Ukrainka context
   - цінність (value) — культурні цінності, сімейні цінності, матеріальні/духовні цінності,
-    система цінностей
+    система цінностей; Skovoroda's values
   - принцип (principle) — піти на принцип, принцип дії, з принципу, порушити принцип,
-    дотримуватися принципів
+    дотримуватися принципів; moral/functional rules
   recommended:
-  - гіпотеза (hypothesis) — висунути гіпотезу, підтвердити гіпотезу
-  - істина (truth) — шукати істину, гірка істина
-  - справедливість (justice) — відновлення справедливості, почуття справедливості
-  - ідеал (ideal) — прагнути ідеалу, високі ідеали
+  - гіпотеза (hypothesis) — висунути гіпотезу, підтвердити гіпотезу; academic discourse
+  - істина (truth) — шукати істину, гірка істина; philosophical depth
+  - справедливість (justice) — відновлення справедливості, почуття справедливості;
+    social context
+  - бачення (vision/perspective) — стратегічне бачення, власне бачення ситуації; State
+    Standard §4.3.4
+  - суперечка (quarrel/argument) — запекла суперечка, вступити в суперечку; use instead
+    of 'аргумент' for disputes
 activity_hints:
 - type: match-up
   focus: Build abstract noun phrases

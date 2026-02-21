@@ -1,0 +1,319 @@
+✅ Message sent to Gemini (ID: 10163) [auto-acked: self-addressed]
+✓ Message 10163 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10163...
+📨 Message #10163
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-future-plans-and-promises
+   Time: 2026-02-20T20:00:04.137223+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: a2-14
+level: A2
+sequence: 14
+slug: future-plans-and-promises
+version: '2.0'
+title: Future Plans and Promises
+subtitle: Simple Future vs. Compound Future
+content_outline:
+- section: Introduction / Вступ
+  points:
+  - 'Future tense overview — State Standard §4.2.3.1 alignment: mastery of both compound
+    (process) and simple (result) future forms'
+  - 'Importance of commitment signals (Plans vs Promises) — cultural hook: «Обіцянка
+    — цяцянка, а дурневі — радість» (A promise is a toy...); learner error: confusing
+    process (planning) with result (promising)'
+- section: Presentation / Презентація
+  points:
+  - 'Imperfective Future (Compound: буду + inf) — emphasizes process/duration; learner
+    error: overuse of «буду» + infinitive for everything'
+  - 'Perfective Future (Simple: conjugated) — emphasizes result/completion; learner
+    error: aspect mismatch like «Я буду зробити» instead of «Я зроблю»'
+  - 'Semantic differences and marker words — distinction: «Я буду читати» (I will
+    be reading - process) vs «Я прочитаю» (I will read/finish reading - result)'
+  - The power of results in future commitments — cultural value of «тримати слово»
+    (keeping one's word); use of «Обіцяного три роки ждуть» for delayed fulfillment
+- section: Practice / Практика
+  points:
+  - Plan vs Promise identification — contrast examples like «буду писати» (process)
+    vs «напишу» (result)
+  - Future formation drills — focus on correct conjugation of perfective verbs (e.g.,
+    піду, зроблю)
+- section: Dialogues / Діалоги
+  points:
+  - Weekend plans situational exchange — use high-frequency collocations like «піду
+    в кіно», «зроблю все можливе»
+vocabulary_hints:
+  required:
+  - зроблю (I will do/make) — зроблю все можливе, обов'язково зроблю
+  - напишу (I will write) — напишу листа, напишу повідомлення
+  - прочитаю (I will read) — прочитаю книгу до кінця (finish reading)
+  - скажу (I will say) — скажу правду, скажу завтра
+  - побачу (I will see) — побачу тебе завтра
+  - почую (I will hear) — почую новини
+  - візьму (I will take) — візьму участь, візьму трубку
+  - дам (I will give) — дам слово (I will give my word)
+  - піду (I will go) — піду в кіно, піду додому
+  - прийду (I will come) — прийду вчасно
+  - приїду (I will arrive) — приїду поїздом
+  - почну (I will begin) — почну нове життя
+  - закінчу (I will finish) — закінчу роботу
+  - зрозумію (I will understand) — зрозумію тебе
+  - буду (I will be/will + inf) — буду чекати, буду працювати, буду там
+  recommended:
+  - забуду (I will forget) — ніколи не забуду
+  - запам'ятаю (I will remember) — запам'ятаю цей день
+  - знайду (I will find) — знайду вихід
+  - вийду (I will exit) — вийду на вулицю
+  - увійду (I will enter) — увійду в історію
+activity_hints:
+- type: fill-in
+  focus: Transform imperfective to perfective future
+  items: 12+
+- type: fill-in
+  focus: Plans vs promises aspect selection
+  items: 12+
+- type: quiz
+  focus: '"I will do it" vs "I will be doing it"'
+  items: 12+
+- type: fill-in
+  focus: Conjugate perfective verbs in future
+  items: 10+
+- type: quiz
+  focus: Future tense formation quiz
+  items: 10+
+focus: grammar
+pedagogy: PPP
+prerequisites:
+- a2-12 (Aspect introduction)
+- a2-13 (Perfective past)
+- A1 future tense basics
+connects_to:
+- a2-15 (Aspect Morphology)
+- a2-16 (Aspect Mastery Pairs)
+- a2-22 (If I Were)
+objectives:
+- Learner can form the compound future tense (imperfective)
+- Learner can form the simple future tense (perfective)
+- Learner can distinguish between future process and future result
+- Learner can make promises and describe plans
+grammar:
+- imperfective future (буду + infinitive)
+- perfective future (conjugated)
+- promises vs plans
+- duration in future
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Future Tense
+  url: https://mon.gov.ua/
+  type: reference
+  notes: Future tense formation and aspect usage
+- name: Ukrainian Verb Conjugation - Future
+  url: https://uk.wikipedia.org/wiki/Дієслово
+  type: reference
+  notes: Future tense paradigms
+immersion: 50-60% Ukrainian
+phase: A2.2
+persona:
+  voice: Encouraging Cultural Guide
+  role: Ambitious Startup Founder
+word_target: 3000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Future Plans and Promises
+
+## State Standard Reference
+§4.2.3.1: "утворення складеної форми майбутнього часу дієслів недоконаного виду: буду боротися... майбутній час дієслів доконаного виду: скажу, закричите, поборють."
+Alignment: This module directly addresses the A2 requirement to master both the compound future (imperfective) and the simple future (perfective), focusing on the semantic distinction between process and result in future commitments.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| зроблю | High (Perfective) | зроблю все можливе, обов'язково зроблю |
+| напишу | High (Perfective) | напишу листа, напишу повідомлення |
+| скажу | High (Perfective) | скажу правду, скажу завтра |
+| буду | Very High (Auxiliary) | буду чекати, буду працювати, буду там |
+| піду | High (Motion) | піду в кіно, піду додому |
+
+## Cultural Hooks
+1. **"Обіцянка — цяцянка, а дурневі — радість"** (A promise is a toy, and a fool's joy). This classic Ukrainian proverb reflects a cultural caution against empty promises and the value placed on "keeping one's word" (тримати слово). Source: Ukrainian Folk Wisdom.
+2. **"Обіцяного три роки ждуть"** (One waits three years for what is promised). A humorous but realistic observation that promised things often take a long time to materialize. Source: Ukrainian Folklore.
+
+## Common Learner Errors
+1. **Aspect Mismatch** → *Я буду зробити* (Wrong) vs *Я зроблю* (Correct). Learners often try to use the auxiliary *буду* with perfective verbs because they haven't internalized that the perfective conjugation *is* the future tense.
+2. **Process vs. Result** → *Я прочитаю книгу ввечері* (meaning "I will finish reading it") vs *Я буду читати книгу ввечері* (meaning "I will be spending time reading it"). Learners often use the simple future when they want to describe an ongoing plan, or vice versa.
+3. **Overuse of "Буду"** → Using *буду + infinitive* for everything because it bypasses the need to remember perfective conjugations.
+
+## Cross-References
+- Builds on: a2-12 (Aspect introduction), a2-13 (Perfective past), A1 future tense basics.
+- Prepares for: a2-15 (Aspect Morphology), a2-16 (Aspect Mastery Pairs), a2-22 (If I Were).
+
+## Notes for Content Writing
+- Emphasize that in Ukrainian, "I will do" (result) is a single word (*зроблю*), while "I will be doing" (process) requires two (*буду робити*).
+- Integrate the proverb "Обіцянка — цяцянка" to add cultural depth to the "Promises" section.
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 500
+  points:
+  - "Future tense overview aligned with State Standard §4.2.3.1: distinguishing between the compound form for imperfective verbs (process) and the simple form for perfective verbs (result)."
+  - "Cultural hook: Introduction of the proverb «Обіцянка — цяцянка, а дурневі — радість» (A promise is a toy...) to frame the importance and weight of future commitments in Ukrainian culture."
+  - "The concept of «тримати слово» (keeping one's word) as a motivator for mastering aspectual precision: why choosing the right verb form is the key to being understood as reliable."
+- section: "Презентація: Доконаний вид (Presentation: Perfective Future)"
+  words: 700
+  points:
+  - "Formation of the Simple Future: conjugating perfective verbs (скажу, закричу, поборю) and explaining that the form itself signals future completion without auxiliary verbs."
+  - "Addressing the 'Aspect Mismatch' error: Detailed correction of the common mistake «Я буду зробити» — explaining why the auxiliary «буду» can never be paired with a perfective infinitive."
+  - "Semantic power of results: how the perfective future (e.g., «напишу», «прийду») functions as a firm promise or a guarantee of a finished action."
+- section: "Презентація: Недоконаний вид (Presentation: Imperfective Future)"
+  words: 600
+  points:
+  - "Formation of the Compound Future: Mastery of the «буду + infinitive» structure (буду боротися, буду читати) to emphasize duration and ongoing processes."
+  - "The 'Process vs. Result' distinction: Contrasting marker words like «буду читати» (spending time reading) versus «прочитаю» (finishing the book/result) to clarify intent."
+  - "Pedagogical warning against the 'Overuse of Буду': Encouraging learners to move beyond the auxiliary shortcut and embrace perfective conjugations for specific promises."
+- section: "Практика та діалоги (Practice and Dialogues)"
+  words: 700
+  points:
+  - "Situational exchange: Planning a weekend versus making a solemn promise, using high-frequency collocations like «піду в кіно» and «зроблю все можливе»."
+  - "Cultural nuance: Integrating the proverb «Обіцяного три роки ждуть» (One waits three years for what is promised) to discuss expectations and the reality of delayed fulfillment."
+  - "Drill on commitment signals: Transforming process-oriented plans (буду писати) into result-oriented promises (напишу) based on different conversational contexts."
+- section: "Висновок та застосування (Conclusion and Application)"
+  words: 500
+  points:
+  - "Summary of structural differences: 'I will do' (result = one word: зроблю) vs 'I will be doing' (process = two words: буду робити)."
+  - "Production task: Drafting a response to a friend's invitation, making at least three specific promises using perfective future verbs (прийду, принесу, допоможу)."
+  - "Final reflection on linguistic elegance: how the choice of aspect in the future tense reflects the speaker's agency and reliability."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "зроблю (I will do/make) — зроблю все можливе, обов'язково зроблю; High frequency result marker"
+  - "напишу (I will write) — напишу листа, напишу повідомлення; High frequency for commitments"
+  - "скажу (I will say) — скажу правду, скажу завтра; Essential for future speech reporting"
+  - "буду (I will be/auxiliary) — буду чекати, буду працювати, буду там; Very high frequency auxiliary for process"
+  - "піду (I will go) — піду в кіно, піду додому; High frequency motion verb in simple future"
+  - "прочитаю (I will read) — прочитаю книгу до кінця; Focus on completion/result"
+  - "побачу (I will see) — побачу тебе завтра; Standard future greeting/observation"
+  - "почую (I will hear) — почую новини; Perception of future events"
+  - "візьму (I will take) — візьму участь, візьму трубку; Common collocation for participation"
+  - "дам (I will give) — дам слово; Directly linked to the cultural value of keeping promises"
+  - "прийду (I will come) — прийду вчасно; Essential for punctuality and reliability"
+  - "приїду (I will arrive) — приїду поїздом; Standard for travel and arrival plans"
+  - "почну (I will begin) — почну нове життя; Marking the inception of a future state"
+  - "закінчу (I will finish) — закінчу роботу; Marking the completion of a future state"
+  - "зрозумію (I will understand) — зрозумію тебе; Cognitive result in the future"
+  recommended:
+  - "забуду (I will forget) — ніколи не забуду; Often used in emotional promises"
+  - "запам'ятаю (I will remember) — запам'ятаю цей день; Used for shared future plans"
+  - "знайду (I will find) — знайду вихід; High-frequency problem-solving verb"
+  - "вийду (I will exit) — вийду на вулицю; Short-term physical plan"
+  - "увійду (I will enter) — увійду в історію; Ambitious goal-setting"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4903 chars)
+✅ Message sent to Claude (ID: 10168)
+✓ Message 10168 acknowledged
+   Auto-acknowledged reply #10168 (stdout delivery — no inbox accumulation)
+✓ Message 10163 acknowledged

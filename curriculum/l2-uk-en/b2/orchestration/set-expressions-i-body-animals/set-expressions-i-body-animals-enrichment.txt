@@ -1,0 +1,281 @@
+✅ Message sent to Gemini (ID: 10561) [auto-acked: self-addressed]
+✓ Message 10561 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10561...
+📨 Message #10561
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-set-expressions-i-body-animals
+   Time: 2026-02-20T20:42:13.559513+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: b2-47
+level: B2
+sequence: 47
+slug: set-expressions-i-body-animals
+version: '2.0'
+title: 'Сталі вирази I: Частини тіла та тварини'
+subtitle: 'Set Expressions I: Body & Animals'
+content_outline:
+- section: Розминка — Тіло та тварини у фразеології
+  points:
+  - Соматичні фразеологізми — вирази з частинами тіла
+  - Зоофразеологізми — вирази з назвами тварин
+  - Переносне значення — чому "золоті руки" не з золота
+- section: Сталі вирази з частинами тіла
+  points:
+  - Морочити голову (плутати, обманювати)
+  - Тримати язик за зубами (мовчати)
+  - Брати ноги в руки (тікати)
+  - Махнути рукою (відмовитися)
+  - На чужий коштовий позирати, а свого не мати (заздрити)
+  - Не бачити далі свого носа (бути обмеженим)
+- section: Сталі вирази з тваринами
+  points:
+  - Робити з мухи слона (перебільшувати)
+  - Собаку з'їв (бути експертом)
+  - Вовка ноги годують (треба працювати)
+  - Як кіт наплакав (дуже мало)
+  - Купувати кота в мішку (брати невідоме)
+  - Сидіти як миша під віником (тихо, непомітно)
+- section: Практика — вирази в контексті
+  points:
+  - Вибрати правильний вираз для ситуації
+  - Пояснити значення та навести приклад вживання
+  - Знайти англійський еквівалент (якщо є)
+  - Написати короткий діалог з 3-4 виразами
+focus: phraseology
+pedagogy: CBI
+objectives:
+- Learner can recognize and interpret 16 core Ukrainian idioms with body parts and
+  animals
+- Learner can use somatic and zoomorphic idioms appropriately in context
+- Learner understands the cultural symbolism of body parts and animals in Ukrainian
+  phraseology
+grammar:
+- Fixed expressions (фразеологічні одиниці)
+- Somatic and zoomorphic idioms
+immersion: 100
+register: varies
+phase: B2.2 [Phraseology & Synonymy]
+vocabulary_hints:
+  required:
+  - термін (term)
+  - поняття (concept)
+  - процес (process)
+  - метод (method)
+  recommended:
+  - аналіз (analysis)
+  - синтез (synthesis)
+  - дослідження (research)
+activity_hints:
+- type: reading
+  focus: Аналіз тексту
+  items: 4
+- type: essay-response
+  focus: Практичне застосування
+- type: true-false
+  focus: Перевірка розуміння
+  items: 8
+persona:
+  voice: Professional Language Coach
+  role: Folk Tale Narrator (Казкар)
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Сталі вирази I: Частини тіла та тварини
+
+## State Standard Reference
+§1.4.1.2.1: "доречно використовувати відомі фразеологізми та ідіоми, удаватися до офіційного або неофіційного регістру мовлення залежно від ситуації"
+Alignment: Цей модуль безпосередньо реалізує вимогу стандарту, навчаючи розпізнавати та вживати 16 високочастотних ідіом (соматичних та зооморфних) у відповідному контексті.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| морочити голову | High (Conversational) | годі морочити голову, не мороч мені голову |
+| робити з мухи слона | High (General) | не роби з мухи слона, з нічого робити слона |
+| собаку з'їв | Medium (Expressive) | на цьому ділі собаку з'їв, він у цьому собаку з'їв |
+| тримати язик за зубами | High (Conversational) | краще тримати язик за зубами, вміти тримати язик за зубами |
+| як кіт наплакав | High (Colloquial) | грошей як кіт наплакав, користі як кіт наплакав |
+
+## Cultural Hooks
+1. **Коровай як символ щастя**: Вираз «На чужий коровай очей не поривай» (повна форма: «...а свій дбай») походить від весільного обряду, де коровай символізував долю, щастя та багатство молодої пари. Зазіхати на нього вважалося спробою відібрати чужу долю.
+2. **«Собаку з'їв»**: Одна з версій походження пов'язана з важкими часами або козацьким побутом, де виживання в екстремальних умовах (навіть поїдання неїстівного) давало унікальний, суворий життєвий досвід. Людина, що «з'їла собаку», пройшла через те, що іншим не під силу, і стала майстром виживання/справи.
+
+## Common Learner Errors
+1. **Калькування (Literal Translation)**: "It's raining cats and dogs" → *«Дощ падає котами і собаками»* (Correct: «Ллє як з відра»). Learners often try to translate body-part idioms literally (e.g., "pulling leg" ≠ «тягнути ногу», but «морочити голову» or «жартувати»).
+2. **Лексична підміна (Wrong Component)**: *«Продавати усмішки»* instead of «продавати витрішки» (to gape/stare idly).
+3. **Контамінація (Mixing Idioms)**: Поєднання частин двох різних виразів, наприклад *«грати значення»* (від «грати роль» + «мати значення»).
+
+## Cross-References
+- **Builds on**: B1 General Vocabulary (Body parts, Animals concepts).
+- **Prepares for**: B2-70 (Checkpoint: Phraseology), C1 Stylistics (Advanced Idioms).
+
+## Notes for Content Writing
+- **Register Alert**: Ensure clear distinction that idioms like «морчити голову» are conversational/informal, while others may be neutral.
+- **Tone**: The "Folk Tale Narrator" persona works perfectly for explaining origins (like the "Wolf" or "Korovai" stories).
+- **Visuals**: Suggest imagery that contrasts the literal vs. figurative meaning (e.g., a literal elephant-fly) to aid memorization.
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Роль фразеологізмів у мовній компетенції (Introduction: Role of Phraseology)"
+  words: 500
+  points:
+  - "Визначення фразеологічних одиниць згідно з Державним стандартом §1.4.1.2.1 — важливість доречного вживання ідіом для досягнення рівня B2."
+  - "Поняття внутрішньої форми фразеологізму: чому «золоті руки» сприймаються як метафора майстерності, а не матеріал."
+  - "Класифікація ідіом на соматичні (частини тіла) та зооморфні (назви тварин) як базовий шар української мовної картини світу."
+- section: "Соматизми: Коли тіло стає метафорою (Somatic Idioms: When the Body Becomes a Metaphor)"
+  words: 1000
+  points:
+  - "Аналіз високочастотного виразу «морочити голову» (плутати) — розгляд типових розмовних конструкцій «не мороч мені голову» та «годі морочити голову»."
+  - "Дослідження виразу «тримати язик за зубами» як приклад соматичного фразеологізму, що регулює комунікативну поведінку (мовчати/зберігати таємницю)."
+  - "Вивчення виразу «не бачити далі свого носа» для опису обмеженості світогляду — контраст між буквальним та переносним сприйняттям."
+  - "Фразеологізми руху: «брати ноги в руки» (поспішати/тікати) та «махнути рукою» (відмовитися/зневіритися) — семантичні нюанси."
+- section: "Зоофразеологія та культурні коди (Zoomorphic Idioms & Cultural Codes)"
+  words: 1000
+  points:
+  - "Культурний гачок: Походження виразу «собаку з'їв» — зв'язок із козацьким побутом та екстремальним досвідом, що перетворює людину на експерта."
+  - "Символіка хліба: Вираз «На чужий коровай очей не поривай» — коріння у весільних обрядах, де коровай символізував долю та багатство пари."
+  - "Метафора перебільшення: «робити з мухи слона» — порівняння частотності в українській мові та загальноєвропейського контексту."
+  - "Кількісні оцінки: «як кіт наплакав» (дуже мало) — типові колоквіальні сполучення: «грошей як кіт наплакав», «користі як кіт наплакав»."
+  - "Ризиковані дії: «купувати кота в мішку» та поведінкова стратегія «сидіти як миша під віником»."
+- section: "Аналіз типових помилок та інтерференції (Analysis of Typical Errors & Interference)"
+  words: 800
+  points:
+  - "Помилка калькування: Аналіз недоречного перекладу англійського 'it's raining cats and dogs' як *«дощ падає котами і собаками»* — заміна на український відповідник «ллє як з відра»."
+  - "Проблема лексичної підміни: Типова помилка «продавати усмішки» замість правильного «продавати витрішки» (gap idly) — акцент на унікальності компонентів."
+  - "Явище контамінації: Розбір помилкового виразу *«грати значення»* (змішування «грати роль» та «мати значення») — вправи на розмежування."
+  - "Міжмовна інтерференція: Чому англійське 'pulling one's leg' не перекладається як «тягнути за ногу», а вимагає вживання «морочити голову» або «жартувати»."
+- section: "Практичне застосування та синтез (Practical Application & Synthesis)"
+  words: 700
+  points:
+  - "Регістри мовлення: Розрізнення розмовних (informal) виразів типу «морочити голову» та більш нейтральних фразеологізмів."
+  - "Методика візуального контрасту: Створення образів, що протиставляють буквальне значення (слон із мухи) переносному для кращого запам'ятовування."
+  - "Творче завдання: Написання розповіді від імені «Казкаря» (persona) з використанням щонайменше 6 вивчених ідіом у правильному контексті."
+  - "Пошук еквівалентів: Співвіднесення українських соматизмів з англійськими аналогами без втрати стилістичного забарвлення."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "термін (term) — мовознавче поняття"
+  - "поняття (concept) — абстрактна ідея"
+  - "процес (process) — послідовність дій"
+  - "метод (method) — спосіб досягнення мети"
+  - "морочити голову (to confuse/bother) — розмовне; колок.: «не мороч мені голову»"
+  - "тримати язик за зубами (to keep a secret) — висока частотність; нейтральне"
+  - "робити з мухи слона (to exaggerate) — загальновживане; частотне"
+  recommended:
+  - "аналіз (analysis) — розклад на компоненти"
+  - "синтез (synthesis) — поєднання частин у ціле"
+  - "дослідження (research) — науковий пошук"
+  - "собаку з'їв (to be an expert) — експресивне; колок.: «він у цьому справжню собаку з'їв»"
+  - "як кіт наплакав (very little) — розмовне; колок.: «грошей як кіт наплакав»"
+  - "витрішки (gape) — вживається у фразеологізмі «продавати витрішки»"
+  - "коровай (wedding bread) — культурний символ долі та добробуту"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4442 chars)
+✅ Message sent to Claude (ID: 10568)
+✓ Message 10568 acknowledged
+   Auto-acknowledged reply #10568 (stdout delivery — no inbox accumulation)
+✓ Message 10561 acknowledged

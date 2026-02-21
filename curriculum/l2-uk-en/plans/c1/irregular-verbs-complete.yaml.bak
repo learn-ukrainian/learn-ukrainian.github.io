@@ -1,0 +1,107 @@
+module: c1-017
+level: C1
+sequence: 17
+slug: irregular-verbs-complete
+version: '2.0'
+title: Неправильні дієслова — повний огляд
+content_outline:
+- section: Вступ — Чому дієслова «неправильні»?
+  points:
+  - Історичні причини нерегулярностей
+  - Типи нерегулярних дієслів
+  - Частотність і важливість
+- section: Чергування приголосних
+  points:
+  - писати -> пишу, возити -> вожу
+  - ходити -> ходжу, сидіти -> сиджу
+  - любити -> люблю, ловити -> ловлю
+- section: Чергування голосних
+  points:
+  - брати -> беру, прати -> перу
+  - 'о/і чергування: носити -> ношу'
+  - 'Нульовий ступінь: слати -> шлю'
+- section: Суплетивні основи
+  points:
+  - іти -> йду -> ішов
+  - бути -> є -> був
+  - Особливості дієслова «бути»
+- section: Унікальні парадигми
+  points:
+  - дати -> дам, даси, дасть
+  - їсти -> їм, їси, їсть
+  - хотіти -> хочу, хочеш, хоче
+- section: Дієслова руху
+  points:
+  - Однонаправлені vs різноспрямовані
+  - йти/ходити, їхати/їздити
+  - нести/носити, вести/водити
+- section: Практика відмінювання
+  points:
+  - Вправи на всі типи
+  - Контекстне використання
+  - Типові помилки
+vocabulary_hints:
+  required:
+  - чергування (alternation)
+  - приголосний (consonant)
+  - голосний (vowel)
+  - основа (stem)
+  - суплетивний (suppletive)
+  - парадигма (paradigm)
+  - відмінювання (conjugation)
+  - неправильний (irregular)
+  - однонаправлений (unidirectional)
+  - різноспрямований (multidirectional)
+  recommended:
+  - морфонологія (morphonology)
+  - історичний (historical)
+  - аналогія (analogy)
+  - продуктивний (productive)
+  - непродуктивний (unproductive)
+activity_hints:
+- type: fill-in
+  focus: Conjugate irregular verbs
+  items: 20+
+- type: match-up
+  focus: Infinitive to conjugated form
+  items: 15+
+- type: quiz
+  focus: Identify correct form in context
+  items: 15+
+- type: group-sort
+  focus: Classify verbs by alternation type
+  items: 15+
+- type: cloze
+  focus: Complete text with verb forms
+  items: 12+
+- type: error-correction
+  focus: Fix incorrect verb forms
+  items: 10+
+focus: grammar
+prerequisites:
+- B2 verb conjugation basics
+- Aspect pairs understanding
+connects_to:
+- c1-18 (Essay Writing Practice)
+- c1-47 (Archaic Verb Forms)
+- c1-20 (C1.1 Checkpoint)
+module_type: grammar
+sources:
+- name: Морфологія української мови
+  url: https://r2u.org.ua/
+  type: reference
+  notes: Complete verb morphology reference
+- name: Ukrainian Verb Conjugation Patterns
+  url: https://mova.info/
+  type: secondary
+  notes: Irregular verb patterns and alternations
+immersion: 100% Ukrainian
+phase: C1.1 Academic Ukrainian
+objectives:
+- Identify and correctly use неправильні дієслова — повний огляд
+- Form and apply чому дієслова «неправильні»?
+- Distinguish between практика відмінювання
+persona:
+  voice: Senior Specialist
+  role: Лінгвіст-архіваріус
+word_target: 4000

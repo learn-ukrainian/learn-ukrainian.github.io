@@ -1,0 +1,325 @@
+✅ Message sent to Gemini (ID: 11193) [auto-acked: self-addressed]
+✓ Message 11193 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #11193...
+📨 Message #11193
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-creative-writing-prose
+   Time: 2026-02-20T22:29:30.417649+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c2-037
+level: c2
+sequence: 37
+version: '2.0'
+title: Творче письмо — проза
+focus: literature
+pedagogy: TTT
+objectives:
+- TBD
+sources:
+- name: Майстерність прозаїка
+  url: https://uk.wikipedia.org/wiki/Проза
+  type: reference
+  notes: Prose writing craft
+- name: Сучасна українська проза
+  url: https://ukrlib.com.ua/
+  type: primary
+  notes: Contemporary Ukrainian prose examples
+- name: Творчі майстерні
+  url: https://uk.wikipedia.org/wiki/Творче_письмо
+  type: reference
+  notes: Creative writing workshop tradition
+content_outline:
+- section: Вступ — Проза як мистецтво
+  points:
+  - Від споживача до творця прози
+  - Жанри малої прози
+  - Процес написання оповідання
+- section: Елементи оповідання
+  points:
+  - Ідея і тема
+  - Персонажі та їх створення
+  - Сюжет і структура
+  - Конфлікт і напруга
+- section: Побудова світу і атмосфери
+  points:
+  - Хронотоп у власній прозі
+  - Опис місця і часу
+  - Сенсорні деталі
+  - Атмосфера і настрій
+- section: Голос і точка зору
+  points:
+  - Вибір наратора
+  - Перша vs. третя особа
+  - Фокалізація на практиці
+  - Консистентність голосу
+  - 'Потік свідомості (stream of consciousness): техніка вільного асоціативного
+    наративу — Kotsiubynsky (Intermezzo), modernist syntax, fragmented perception
+    (State Standard §4.3.4 C2)'
+- section: Діалог і мовлення
+  points:
+  - Написання природних діалогів
+  - Підтекст у діалозі
+  - Характеризація через мовлення
+  - Баланс діалогу і наративу
+- section: Редагування прози
+  points:
+  - Структурне редагування
+  - Мовне шліфування
+  - Kill your darlings
+  - Підготовка до публікації
+- section: Підсумок
+  points:
+  - Регулярна практика
+  - Від короткої форми до більшої
+  - Письменницька спільнота
+vocabulary:
+  required:
+  - оповідання (short story)
+  - новела (novella)
+  - персонаж (character)
+  - сюжет (plot)
+  - конфлікт (conflict)
+  - діалог (dialogue)
+  - наратив (narrative)
+  - атмосфера (atmosphere)
+  - голос (voice)
+  - редагування (editing)
+  recommended:
+  - антагоніст (antagonist)
+  - протагоніст (protagonist)
+  - кульмінація (climax)
+  - зав'язка (exposition)
+  - флешбек (flashback)
+  forbidden: '[]'
+activities:
+  types_required:
+  - essay-response
+  - authorial-intent
+  - comparative-study
+  - critical-analysis
+  min_items_per_type: 6
+  total_min_items: 30
+  no_mirroring: true
+connects_to:
+- c2-38 (Contemporary Literature)
+- c2-43 (C2.2 Practice II — Creative Portfolio)
+- c2-45 (C2.2 Checkpoint)
+vocabulary_hints:
+  required:
+  - концепція (concept)
+  - аналіз (analysis)
+  - дискурс (discourse)
+  - методологія (methodology)
+  recommended:
+  - інтерпретація (interpretation)
+  - контекстуалізація (contextualization)
+  - синтез (synthesis)
+activity_hints:
+- type: reading
+  focus: Поглиблений аналіз тексту
+  items: 4
+- type: essay-response
+  focus: Критичне осмислення
+- type: discussion
+  focus: Дискусія та аргументація
+  items: 1
+persona:
+  voice: Senior Specialist
+  role: Novelist
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Творче письмо — проза
+
+## State Standard Reference
+§4.3.4: "Стилістичні засоби синтаксису: звертання... еліпсис... повтор... порівняння... уточнення... елементи структурування тексту (вставні слова)... риторичні запитання..."
+Alignment: Модуль фокусується на використанні цих синтаксичних засобів (еліпсис, повтор, риторичні запитання) для створення художнього ефекту в прозі, зокрема для техніки "потоку свідомості" (як комплексної реалізації стилістичного синтаксису).
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| **Оповідання** | High (General Lit) | писати оповідання, збірка оповідань, сюжет оповідання |
+| **Сюжет** | High (General Lit) | закручений сюжет, розвиток сюжету, сюжетна лінія |
+| **Персонаж** | High (General Lit) | головний персонаж, другорядний персонаж, розкриття персонажа |
+| **Наратив** | Med (Academic/Lit) | наративна стратегія, зміна наративу, лінійний наратив |
+| **Фокалізація** | Low (Academic) | внутрішня фокалізація, зміна фокалізації, точка зору |
+| **Хронотоп** | Low (Academic) | часопростір, хронотоп дороги, міський хронотоп |
+
+## Cultural Hooks
+1. **Михайло Коцюбинський "Intermezzo"**: Класичний приклад імпресіонізму та психологічної прози, де "потік свідомості" реалізовано через фрагментарний синтаксис та фокус на внутрішніх станах.
+2. **Оксана Забужко**: Сучасний приклад "густого" стилю (dense style) з довгими, складними реченнями, що імітують плин думки (на противагу "телеграфному" стилю гемінгвеївського типу).
+
+## Common Learner Errors
+1. **Калькування англійських діалогових тегів**: "He said... She said..." -> Часте повторення "сказав/сказала" замість багатства українських дієслів мовлення (зауважив, прошепотів, відгукнувся, кинув).
+2. **Надуживання займенником "Я"**: У першій особі англомовні студенти схильні зберігати займенник "я" у кожному реченні, тоді як українська дозволяє його опускати (pro-drop), покладаючись на дієслівні закінчення.
+3. **Статичні описи**: Використання ланцюжків прикметників (Це був гарний, великий, старий будинок) замість динамічних сенсорних деталей та дієслівного опису.
+
+## Cross-References
+- **Builds on**: C2-20 (Stylistics Checkpoint), C1 Literature modules.
+- **Prepares for**: C2-38 (Contemporary Literature), C2-43 (Creative Portfolio).
+
+## Notes for Content Writing
+- План вимагає висвітлення "потоку свідомості" через призму §4.3.4. Хоча стандарт прямо не називає цей термін, він базується на еліпсисі, парцеляції та асиндетоні (безсполучниковому зв'язку).
+- Важливо розмежувати "новелу" (психологізм, несподіваний фінал) та "оповідання" (ширший термін).
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ — Проза як мистецтво (Introduction — Prose as Art)"
+  words: 500
+  points:
+  - "Від споживача до творця: перехід до активної письменницької позиції у сучасному літературному процесі."
+  - "Термінологічна диференціація за матеріалами дослідження: розмежування 'оповідання' (ширший термін) та 'новели' (фокус на психологізмі та несподіваному фіналі)."
+- section: "Жанрова специфіка та наративні стратегії (Genre Specificity and Narrative Strategies)"
+  words: 900
+  points:
+  - "Наративні стратегії: вибір між лінійним та нелінійним наративом; роль наратора у формуванні довіри читача."
+  - "Сюжетна архітектура: розвиток 'закрученого сюжету' та вибудовування 'сюжетних ліній' без логічних провалів."
+  - "Фокалізація на практиці: використання внутрішньої фокалізації для глибшого розкриття психологічного стану персонажа."
+- section: "Техніка потоку свідомості та синтаксис (Stream of Consciousness and Syntax)"
+  words: 1000
+  points:
+  - "Потік свідомості (stream of consciousness) через призму Стандарту §4.3.4: використання еліпсису, парцеляції та асиндетону для імітації плину думок."
+  - "Художній ефект синтаксису: застосування повторів та риторичних запитань (§4.3.4) для створення ритму та емоційної напруги."
+  - "Культурний гачок: аналіз фрагментарного синтаксису в 'Intermezzo' Михайла Коцюбинського як еталону української психологічної прози."
+- section: "Побудова світу та сенсорна деталізація (World Building and Sensory Detailing)"
+  words: 800
+  points:
+  - "Хронотоп (часопростір) у власній прозі: концепція міського чи сільського хронотопу як активного учасника подій."
+  - "Подолання статичних описів: заміна ланцюжків прикметників (типова помилка) на динамічні сенсорні деталі та дієслівні конструкції."
+  - "Атмосфера і настрій: техніка створення 'густого' (dense) стилю за прикладом Оксани Забужко."
+- section: "Діалог та природність мовлення (Dialogue and Naturalness of Speech)"
+  words: 1000
+  points:
+  - "Корекція кальок: заміна повторюваних англіцизмів 'He said/She said' багатим спектром українських дієслів мовлення (зауважив, прошепотів, відгукнувся, кинув)."
+  - "Голос персонажа через просодію: використання підтексту та індивідуальних мовленнєвих маркерів."
+  - "Подолання надуживання займенником 'Я': відпрацювання техніки pro-drop (опускання підмета) для досягнення природного звучання першої особи."
+- section: "Редагування та письменницька майстерність (Editing and Writing Craft)"
+  words: 800
+  points:
+  - "Мовне шліфування: вибір між 'телеграфним' стилем та складним модерністським синтаксисом залежно від мети."
+  - "Kill your darlings: методи структурного редагування та видалення зайвих елементів для посилення ідеї."
+  - "Підготовка до публікації та участь у творчих майстернях як шлях інтеграції в професійну спільноту."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "оповідання (short story) — 'писати оповідання', 'збірка оповідань'; висока частотність, загальний термін"
+  - "сюжет (plot) — 'закручений сюжет', 'розвиток сюжету', 'сюжетна лінія'; ключовий термін структури"
+  - "персонаж (character) — 'головний персонаж', 'другорядний персонаж', 'розкриття персонажа'"
+  - "фокалізація (focalization) — 'внутрішня фокалізація', 'зміна фокалізації'; академічний реєстр для аналізу точки зору"
+  - "хронотоп (chronotope) — 'часопростір', 'міський хронотоп'; термін для C2 для аналізу часу і місця"
+  - "наратив (narrative) — 'наративна стратегія', 'зміна наративу', 'лінійний наратив'"
+  recommended:
+  - "новела (novella) — психологізм, несподіваний фінал; вужчий жанр, ніж оповідання"
+  - "потік свідомості (stream of consciousness) — техніка асоціативного письма; пов'язано з еліпсисом (§4.3.4)"
+  - "еліпсис (ellipsis) — пропуск елементів речення для динаміки; згідно зі Стандартом §4.3.4"
+  - "асиндетон (asyndeton) — безсполучниковість; засіб посилення експресії"
+  - "підтекст (subtext) — прихований зміст діалогу"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4002 chars)
+✅ Message sent to Claude (ID: 11202)
+✓ Message 11202 acknowledged
+   Auto-acknowledged reply #11202 (stdout delivery — no inbox accumulation)
+✓ Message 11193 acknowledged

@@ -1,0 +1,236 @@
+✅ Message sent to Gemini (ID: 12119) [auto-acked: self-addressed]
+✓ Message 12119 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12119...
+📨 Message #12119
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-lysiah-rudnytsky-history
+   Time: 2026-02-20T23:36:15.495602+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 23
+module: lit-essay-23
+level: LIT.ESSAY
+slug: lysiah-rudnytsky-history
+version: '2.0'
+title: Lysiah Rudnytsky History
+subtitle: Lysiah Rudnytsky History
+content_outline:
+- section: Вступ та контекст
+  points: []
+- section: Аналіз ключових творів
+  points: []
+- section: Стилістика та мова автора
+  points: []
+- section: Деколонізаційна перспектива
+  points:
+  - Як цей автор руйнує імперські міфи
+  - Українська суб'єктність у тексті
+- section: Підсумок та спадщина
+  points: []
+vocabulary_hints:
+  required:
+  - історіографія
+  - наратив
+  - суб'єктність
+  recommended:
+  - деколонізація
+activity_hints:
+- type: reading
+  focus: Аналіз першоджерела
+- type: essay-response
+  focus: Критичне есе
+- type: critical-analysis
+  focus: Деконструкція тексту
+focus: literature
+pedagogy: literature
+immersion: 100% Ukrainian
+phase: LIT Expansion
+objectives:
+- Проаналізувати творчість Lysiah Rudnytsky History у контексті української літератури
+- Дослідити вплив автора на формування національної ідентичності
+persona:
+  voice: Senior Specialist
+  role: Political Thinker
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Іван Лисяк-Рудницький та українська історична есеїстика
+
+## Використані джерела
+1. [Енциклопедія Сучасної України (ЕСУ) — Лисяк-Рудницький Іван Павлович](https://esu.com.ua/article-55071) — Біографічна довідка та огляд інтелектуальної спадщини.
+2. [Інститут історії України НАНУ — Лисяк-Рудницький Іван](http://history.org.ua/?termin=Lysiak_Rudnytskyj_I) — Аналіз його історіографічних концепцій та впливу на сучасну науку.
+3. [Ізборник (litopys.org.ua) — Іван Лисяк-Рудницький. Історичні есе](http://litopys.org.ua/rudnytsky/rud.htm) — Першоджерело текстів есеїв, концептуальний аналіз "історичних" та "неісторичних" націй.
+
+## Хронологія
+- 1919: Народження у Відні (Австрія) в родині відомих українських інтелігентів (батько — Павло Лисяк, мати — Мілена Рудницька).
+- 1937–1939: Навчання у Львівському університеті (право), яке перервала війна.
+- 1945: Здобуття ступеня доктора філософії у Берлінському університеті.
+- 1951: Переїзд до США, згодом до Канади (Едмонтон), де розпочався ключовий академічний етап.
+- 1971: Заснування Канадського інституту українських студій (КІУС), одним із співтворців якого він став.
+- 1984: Смерть в Едмонтоні, Канада. Посмертне видання збірки «Історичні есе» (Київ, 1994) стало інтелектуальним проривом у незалежній Україні.
+
+## Ключові факти та цитати
+- Лисяк-Рудницький здійснив революцію в українській історіографії, запропонувавши **політологічний** (державницький) підхід замість традиційного **народницького** (етнографічного).
+- Він спростував гегельянську тезу про українців як «неісторичну націю», довівши безперервність української політичної традиції.
+- *Цитата 1*: > «Слабкість української політичної думки протягом дев'ятнадцятого століття полягала у тому, що вона зводила національну проблему до мовно-культурного або соціально-економічного питання, залишаючи осторонь проблему держави». (З есею «Формування українського народу і нації»).
+- *Цитата 2*: > «Україна знаходиться між Сходом і Заходом. Але це не означає, що вона є лише полем битви двох чужих світів. Вона має свій власний, синтетичний характер».
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ та контекст: Формування інтелектуала": [!history-bite] — Про походження з впливової родини (Мілена Рудницька була лідеркою жіночого руху та депутаткою польського сейму), що сформувало його європейський габітус.
+- Section "Аналіз ключових творів: «Формування українського народу і нації»": [!quote] — Цитата про "політичну націю" як противагу суто етнографічному підходу народників.
+- Section "Аналіз ключових творів: Полеміка з народницькою школою": [!context] — Пояснення різниці між школою М. Грушевського (народ-маса) та школою В. Липинського / І. Лисяка-Рудницького (еліта і держава).
+- Section "Стилістика та мова автора: Західноєвропейський стандарт": [!culture] — Як англомовне академічне середовище США та Канади вплинуло на логіку та ясність його аргументації, позбавленої сентименталізму.
+- Section "Деколонізаційна перспектива: Деконструкція міфу": [!myth-buster] — Спростування імперського міфу про те, що українська історія — це лише "історія селянських бунтів", і доведення існування української еліти.
+- Section "Деколонізаційна перспектива: Українська суб'єктність": [!decolonization] — Перенесення фокусу з питання "Що сусіди робили з Україною?" на "Що Україна робила як політичний суб'єкт?".
+
+## Деколонізаційний контекст
+- **Imperial/Soviet myth**: Українці — це відгалуження «єдиного давньоруського народу», «неісторична», селянська нація, нездатна до власного державотворення, чия історія повністю поглинається історією Росії чи Польщі.
+- **Ukrainian reality**: За Лисяком-Рудницьким, українці мають тяглість власної політичної культури, еліти (козацька старшина, шляхта) та державницької традиції. Нація формується не лише фольклором, а усвідомленням політичних прав та прагненням суверенітету.
+
+## Contested Terms (if applicable)
+| Concept | Imperial framing | Ukrainian (decolonized) framing (за Лисяком-Рудницьким) |
+|---------|-----------------|-------------------------------|
+| Неісторична нація | Народи без власної держави є об'єктом історії великих імперій (Росії, Австро-Угорщини). | "Неісторичність" — це лише етап втрати еліти; нація зберігає потенціал і здатна відновити політичну суб'єктність. |
+| Народництво | Головний рушій — селянські маси, еліта — завжди "зрадна" або "чужа". | Державницька концепція: без еліти та інституцій нація залишається "етнографічним матеріалом". Відновлення прав еліти. |
+| Приєднання до Росії | "Возз'єднання" братніх народів у 1654 році. | Перерва в органічному європейському розвитку України, зіткнення західної (договірної) політичної культури та східної (деспотичної). |
+
+## Section-Mapped Research Notes
+
+### Вступ та контекст: Формування інтелектуала в еміграції
+- Аналіз середовища міжвоєнного Львова та Відня. Вплив родини (Мілена Рудницька, Павло Лисяк). 
+- Здобуття освіти в європейських університетах. Формування західного, раціонального підходу до історії, вільного від постколоніального травматичного сентименталізму.
+
+### Вступ та контекст: Концепція української історії
+- Перехід від традиційної оповідної історії до політологічного аналізу. Історія ідей.
+- Критика як романтичного народництва, так і догматичного націоналізму.
+
+### Аналіз ключових творів: «Формування українського народу і нації»
+- Огляд найвідомішого есею. Аналіз ключових тез: розмежування понять "етнос" (народ) і "політична нація".
+- Значення збереження історичної пам'яті та правових традицій часів Речі Посполитої та Гетьманщини.
+
+### Аналіз ключових творів: Полеміка з традиційною школою
+- Інтелектуальний діалог (часто заочний) з Михайлом Грушевським та В'ячеславом Липинським. 
+- Пошук синтезу між народницькою (демократичною) та державницькою (елітарною) школами.
+
+### Стилістика та мова автора: Західноєвропейський академічний стандарт
+- Жанр есе як форма викладу інтелектуальної історії. 
+- Ясність, логічність, відсутність надмірного пафосу. Риторика, орієнтована на переконання західного академічного світу.
+
+### Деколонізаційна перспектива: Деконструкція міфу про «неісторичну націю»
+- Використання термінології Гегеля для руйнування російських імперських наративів. 
+- Доведення того, що українська нація має багату політичну, а не лише етнографічну спадщину.
+
+### Деколонізаційна перспектива: Українська суб'єктність та проблема державності
+- Відкидання пасивного образу "народу-жертви". 
+- Аналіз козацької еліти та українського руху ХІХ століття як активних творців політичної реальності у Східній Європі.
+
+### Підсумок та спадщина: Рецепція ідей в незалежній Україні
+- Видання "Історичних есе" на початку 1990-х років як "бомба", що змінила методологію української історичної науки.
+- Актуальність його концепцій для сучасної (пост-2014) України у формуванні політичної нації громадян, а не лише за етнічною ознакою.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12191)
+✓ Message 12119 acknowledged
+✓ Message 12191 acknowledged

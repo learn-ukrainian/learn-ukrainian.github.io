@@ -1,0 +1,225 @@
+✅ Message sent to Gemini (ID: 12424) [auto-acked: self-addressed]
+✓ Message 12424 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12424...
+📨 Message #12424
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-mariia-berlinska-dignity
+   Time: 2026-02-20T23:39:34.695248+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 38
+module: lit-essay-38
+level: LIT.ESSAY
+slug: mariia-berlinska-dignity
+version: '2.0'
+title: Mariia Berlinska Dignity
+subtitle: Mariia Berlinska Dignity
+content_outline:
+- section: Вступ та контекст
+  points: []
+- section: Аналіз ключових творів
+  points: []
+- section: Стилістика та мова автора
+  points: []
+- section: Деколонізаційна перспектива
+  points:
+  - Як цей автор руйнує імперські міфи
+  - Українська суб'єктність у тексті
+- section: Підсумок та спадщина
+  points: []
+vocabulary_hints:
+  required:
+  - історіографія
+  - наратив
+  - суб'єктність
+  recommended:
+  - деколонізація
+activity_hints:
+- type: reading
+  focus: Аналіз першоджерела
+- type: essay-response
+  focus: Критичне есе
+- type: critical-analysis
+  focus: Деконструкція тексту
+focus: literature
+pedagogy: literature
+immersion: 100% Ukrainian
+phase: LIT Expansion
+objectives:
+- Проаналізувати творчість Mariia Berlinska Dignity у контексті української літератури
+- Дослідити вплив автора на формування національної ідентичності
+persona:
+  voice: Senior Specialist
+  role: Civil Society Leader
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Марія Берлінська та концепт гідності (Mariia Berlinska Dignity)
+
+## Використані джерела
+1. [Енциклопедія Сучасної України (ЕСУ)](https://esu.com.ua/) — контекст розвитку волонтерського руху, формування сучасної української громадянської ідентичності та мілітаризації суспільства.
+2. [Український інститут національної пам'яті (УІНП)](https://uinp.gov.ua/) — аналіз трансформації ролі жінки у Збройних Силах України та подолання радянських стереотипів.
+3. [Історична правда](https://www.istpravda.com.ua/) — статті про наслідки Революції Гідності, феномен добровольчих батальйонів та формування суб'єктної нації в умовах російсько-української війни.
+
+## Хронологія
+- **2013–2014**: Активна участь у Революції Гідності, де концепт «гідності» став визначальним для подальшої діяльності.
+- **2014**: Вступ до добровольчого батальйону «Айдар», початок роботи в аеророзвідці.
+- **2015**: Заснування «Центру підтримки аеророзвідки» — інституціоналізація технологічного спротиву.
+- **2015–2017**: Створення та координація адвокаційного правозахисного проєкту «Невидимий батальйон», який став потужним текстом-дослідженням, що призвів до змін у законодавстві щодо жінок-військових.
+- **2022–повномасштабне вторгнення**: Лідерство в проєкті «Victory Drones», активна публіцистична діяльність, спрямована на подолання бюрократії, мобілізацію суспільства та утвердження концепції «дорослої нації».
+
+## Ключові факти та цитати
+- Марія Берлінська є яскравою представницею нової української есеїстики та публіцистики дії, де текст безпосередньо впливає на державні процеси та обороноздатність.
+- Її тексти (статті, публічні виступи, інтерв'ю) деконструюють романтизацію війни, наголошуючи на прагматизмі: «Технології вбивають, технології рятують».
+- Концепт «гідності» у її творах трансформується від морально-етичної категорії (як на Майдані) до мілітарної та інституційної здатності захистити свою державу.
+- *Цитата/теза*: Суспільство має подолати інфантилізм і взяти на себе тотальну відповідальність за виживання, що є вищим проявом національної гідності.
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ та контекст: Від Революції Гідності до фронту": `[!context]` — Роль волонтерського та добровольчого руху як унікального явища горизонтальної самоорганізації, що врятувало Україну у 2014 році.
+- Section "Аналіз ключових творів: Проєкт «Невидимий батальйон»": `[!history-bite]` — До кампанії Берлінської жінки, які фактично були снайперками чи штурмовичками, за документами оформлювалися як швачки або кухарки.
+- Section "Аналіз ключових творів: Технологічна мілітаризація": `[!quote]` — Жорсткі цитати з публіцистики Берлінської щодо ціни бюрократичних помилок, які вимірюються життями військових.
+- Section "Стилістика та мова автора: Мілітарна прямолінійність": `[!culture]` — Перехід сучасної української есеїстики від поетичної метафоричності до мілітарної прагматики та документальної точності.
+- Section "Деколонізаційна перспектива: Українська суб'єктність": `[!myth-buster]` — Деконструкція радянського міфу про жінку виключно як «берегиню» домашнього вогнища, утвердження образу збройної захисники.
+- Section "Підсумок та вплив: Нова генерація дієвців": `[!decolonization]` — Утвердження думки, що справжня незалежність і гідність захищаються не лише культурою, а потужним військово-промисловим комплексом і дієвим суспільством.
+
+## Деколонізаційний контекст
+- **Імперський/радянський міф**: Українці — це «співуча, лірична», але не здатна до самоорганізації та державного будівництва нація. Жінки в радянській парадигмі після Другої світової війни були витіснені з бойових посад у сферу обслуговування (медсестри, зв'язкові) та ідеологічний конструкт «берегині».
+- **Українська реальність**: Тексти та дії Берлінської фіксують народження суб'єктної, мілітаризованої нації, здатної до високотехнологічної війни. Українка стає рівноправною збройною захисницею, а суспільство позбувається постколоніального інфантилізму.
+
+## Contested Terms (if applicable)
+
+| Concept | Imperial/Soviet framing | Ukrainian (decolonized) framing |
+|---------|-------------------------|---------------------------------|
+| Жінка на війні | «Берегиня», медсестра, кухарка (допоміжна функція) | Збройна захисниця, операторка БПЛА, штурмовичка (суб'єктна учасниця) |
+| Гідність | Покірність владі, пасивне терпіння | Здатність до активного опору, взяття відповідальності за державу |
+| Волонтерство | Хаотична аматорська допомога | Високоефективний горизонтальний інститут порятунку та технологізації армії |
+
+## Section-Mapped Research Notes
+
+### Вступ та контекст: Від Революції Гідності до фронту
+Аналіз трансформації українського суспільства у 2013–2014 роках. Марія Берлінська як уособлення покоління, чиє формування відбулося на перетині Майдану та війни. Перехід від вуличного протесту до інституційної розбудови оборони.
+
+### Аналіз ключових творів: Філософія дієвої гідності
+Дослідження есеїстики та публічних промов Берлінської. Гідність аналізується не як абстрактна філософська категорія, а як здатність нації до опору. Критика суспільного інфантилізму та заклик до дорослої відповідальності кожного громадянина.
+
+### Аналіз ключових творів: Проєкт «Невидимий батальйон»
+Розгляд соціологічного та правозахисного дослідження «Невидимий батальйон» як потужного тексту, що змінив реальність. Деконструкція патріархальних стереотипів в армії та успішна зміна законодавства через артикульований публічний дискурс.
+
+### Аналіз ключових творів: Технологічна мілітаризація
+Аналіз текстів, присвячених проєкту «Victory Drones» та технологічній війні. Публічна есеїстика Берлінської як інструмент боротьби з державною бюрократією та метод мобілізації інженерного й фінансового потенціалу нації.
+
+### Стилістика та мова автора: Мілітарна прямолінійність
+Дослідження авторського стилю: відмова від зайвого пафосу, сентиментальності та романтизації війни. Використання мілітарної термінології, різких риторичних питань та шокуючої правдивості для пробудження свідомості читача.
+
+### Деколонізаційна перспектива: Українська суб'єктність
+Аналіз того, як тексти Берлінської руйнують імперський міф про Україну як провінційну, нездатну до самозахисту територію. Формування наративу збройної суб'єктності, де нація сама вирішує свою долю за допомогою зброї та інтелекту.
+
+### Підсумок та вплив: Нова генерація дієвців
+Оцінка впливу Марії Берлінської на сучасний суспільно-політичний та літературний дискурс України. Значення її публіцистики для формування нової української громадянської ідентичності, заснованої на дієвій гідності.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12465)
+✓ Message 12424 acknowledged
+✓ Message 12465 acknowledged

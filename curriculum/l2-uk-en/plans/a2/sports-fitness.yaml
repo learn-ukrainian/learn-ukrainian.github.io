@@ -6,51 +6,76 @@ version: '2.0'
 title: Sports and Fitness
 subtitle: Active Lifestyle
 content_outline:
-- section: Вступ
+- section: Вступ (Introduction)
+  words: 450
   points:
-  - 'Popular sports in Ukraine — cultural hook: Football is King; mention «Вболівати
-    за Динамо» as a cultural staple; State Standard Reference: §3.4 leisure and sports'
-  - 'Ukrainian athletes — cultural hook: Andriy Shevchenko (football legend), Klitschko
-    brothers & Oleksandr Usyk (boxing champions); context for ''займатися боксом'''
-- section: Граматика
+  - 'Introduction to leisure and sports in Ukraine based on State Standard §3.4; Cultural
+    hook: ''Football is King'' and the legendary status of Andriy Shevchenko as a
+    national hero.'
+  - Discussion of the cultural staple phrase «Вболівати за Динамо» (to root for Dynamo)
+    to introduce the concept of sports fanship and national identity.
+- section: Спортивні споруди та види спорту (Sports Facilities and Types of Sports)
+  words: 700
   points:
-  - 'Team sports (футбол, баскетбол, волейбол) — focus: «грати в» + Accusative; learner
-    error: missing preposition (грати футбол vs грати у футбол); collocation: грати
-    в команді'
-  - 'Individual sports (плавання, біг, теніс) — focus: «займатися» + Instrumental;
-    learner error: wrong case (займатися спорт vs займатися спортом); State Standard
-    §4.2.2.5; collocation: займатися йогою'
-  - 'Fitness vocabulary (спортзал, тренування) — collocation: «ходити в спортзал»,
-    «тренування в спортзалі» (modern usage)'
-  - 'Sports events (матч, змагання, чемпіонат) — verb choice: «грати» (play a game)
-    vs «гратися» (play with toys - avoid for adults); collocation: футбольний матч'
-- section: Практика
+  - 'Vocabulary expansion following State Standard §3.4 requirements: learning names
+    of sports venues like стадіон (stadium), басейн (pool), корт (court), and ковзанка
+    (skating rink).'
+  - Cultural focus on boxing legends (Klitschko brothers, Oleksandr Usyk) to introduce
+    individual sports and provide context for the verb «займатися боксом».
+  - Distinction between team sports (football, basketball) and individual fitness
+    activities (running, swimming, yoga).
+- section: 'Граматика: Керування дієслів (Grammar: Verb Government)'
+  words: 950
   points:
-  - 'Dialogues about sports — writing note: use famous Ukrainian athletes (Usyk, Shevchenko)
-    in examples to make sentences memorable; context: вболівати за команду'
-  - 'Describe fitness routines — reinforcement: strictly enforce the binary Team Sports
-    = *грати в* vs Individual/Fitness = *займатися*; grammar focus: Instrumental case
-    government'
-- section: Підсумок
+  - 'Strict binary focus on verb government: Team/Ball Games = «грати в/у» + Accusative
+    case; Individual/Fitness = «займатися» + Instrumental case (State Standard §4.2.2.5).'
+  - 'Correction of common learner error: explain that unlike English ''play football'',
+    Ukrainian requires the preposition ''у/в'' (грати у футбол vs грати футбол).'
+  - 'Reflexive verb government drill: addressing the mismatch where learners use Nominative
+    after «займатися» instead of the required Instrumental (займатися спортом).'
+  - 'Semantic nuance check: Distinguishing between «грати» (to play a sport/instrument)
+    and «гратися» (to play with toys/child''s play) to ensure age-appropriate register.'
+- section: Практика та діалоги (Practice and Dialogues)
+  words: 600
   points:
-  - Summary of vocabulary
+  - Interactive dialogues about sports preferences and rooting for teams using the
+    phrase «вболівати за» + Accusative.
+  - Guided practice describing fitness routines and visits to the 'спортзал' (gym)
+    and 'тренування' (training), reinforcing the 'займатися' + Instrumental pattern.
+  - Sentence construction exercises using famous Ukrainian athletes (Usyk, Shevchenko)
+    as mnemonic anchors for grammar rules.
+- section: Здоровий спосіб життя та підсумок (Healthy Lifestyle and Summary)
+  words: 300
+  points:
+  - Discussion of healthy habits and physical activity as part of daily life.
+  - Summary of key collocations and a final check on the Accusative vs. Instrumental
+    distinction in sports contexts.
 vocabulary_hints:
   required:
-  - спорт (sport) — займатися спортом (to do sports)
-  - грати (to play) — грати у футбол (play football), грати в команді (play in a team)
-  - займатися (to practice) — займатися спортом, займатися йогою, займатися плаванням
-  - футбол (football) — грати у футбол, дивитися футбол
-  - тренування (training) — тренування в спортзалі
-  - спортзал (gym) — ходити в спортзал
-  - команда (team) — моя улюблена команда, грати в команді
-  - матч (match) — футбольний матч
+  - спорт (sport) — займатися спортом (to do sports); very high frequency A2 core
+  - грати (to play) — грати у футбол, грати в теніс; requires preposition 'в/у' +
+    Accusative
+  - займатися (to practice/do) — займатися плаванням, займатися боксом; requires Instrumental
+    case
+  - футбол (football) — грати у футбол, дивитися футбол, вболівати за футбольну команду
+  - команда (team) — грати в команді, улюблена команда; high frequency
+  - стадіон (stadium) — ходити на стадіон, тренуватися на стадіоні; State Standard
+    §3.4
+  - басейн (pool) — ходити в басейн, плавати в басейні; State Standard §3.4
+  - спортзал (gym) — тренування в спортзалі, ходити в спортзал; modern usage
+  - матч (match) — футбольний матч, дивитися матч
+  - вболівати (to root/cheer) — вболівати за команду, вболівальник (fan)
   recommended:
+  - баскетбол (basketball) — грати в баскетбол
+  - бокс (boxing) — займатися боксом; cultural link to Usyk/Klitschko
   - плавання (swimming) — займатися плаванням
   - біг (running) — займатися бігом
-  - тренер (coach)
-  - змагання (competition)
-  - вигравати (to win)
-  - програвати (to lose)
+  - йога (yoga) — займатися йогою
+  - ковзанка (skating rink) — кататися на ковзанці; State Standard §3.4
+  - змагання (competition) — брати участь у змаганнях
+  - тренер (coach) — слухати тренера
+  - вигравати (to win) — наша команда виграла
+  - програвати (to lose) — не хотіти програвати
 activity_hints:
 - type: match-up
   focus: Sports vocabulary

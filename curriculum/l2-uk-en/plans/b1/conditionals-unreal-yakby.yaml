@@ -6,50 +6,70 @@ version: '2.0'
 title: 'Умовні речення: нереальна умова (якби)'
 subtitle: Unreal Conditionals - Hypothetical Situations
 content_outline:
-- section: 'Тест: Перевірте себе'
+- section: Вступ (Introduction)
+  words: 600
   points:
-  - Diagnostic quiz on unreal conditionals — check for confusion between «якщо» (real)
-    and «якби» (unreal)
-  - Self-assessment questions
-- section: Пояснення
+  - 'Діагностичний квіз: перевірка навичок розрізнення реальної умови («якщо») та
+    нереальної («якби»)'
+  - Введення концепції «Reality Check» (Реальність vs Фантазія/Мрія) для маркування
+    модальності
+  - Визначення ірреальної умови згідно з Державним стандартом §4.4.3 (складнопідрядні
+    речення)
+- section: Граматика та правила (Grammar and Rules)
+  words: 1200
   points:
-  - What are unreal conditionals — definition per State Standard §4.4.3 (complex sentences
-    with «якби»)
-  - якби as unreal marker — note emphatic forms «якби тільки», «якби ж то»
-  - 'якби + Past Form structure — learner error: using Present/Future tense instead
-    of Past (e.g., «Якби я маю» vs «Якби я мав»)'
-  - Conditional Mood Formation (past + би) — per State Standard §4.2.3.3 (говорив
-    би, випила б)
-  - Present vs Past Hypotheticals
-  - 'Real vs Unreal Comparison (якщо vs якби) — pedagogy: use «Reality Check» table
-    (Реальність vs Фантазія); learner error: «Якщо б» calque instead of «Якби»'
-- section: Практика
+  - 'Утворення форм умовного способу: поєднання дієслова у формі минулого часу з часткою
+    «би/б» (§4.2.3.3)'
+  - Функціонування сполучника «якби» як основного маркера нереальності; аналіз емфатичних
+    форм «якби тільки», «якби ж то»
+  - 'Контрастивна таблиця: порівняння «якщо» (реальність) та «якби» (ірреальність)
+    — акцент на часових обмеженнях'
+  - 'Пояснення структури: обов''язковість минулого часу після «якби» (уникнення кальок
+    з англійської чи інших мов)'
+- section: Культурний контекст (Cultural Context)
+  words: 800
   points:
-  - 'Form hypothetical sentences — cultural hook: Taras Shevchenko quote «Якби ви
-    вчились так, як треба...»'
-  - Express wishes and dreams — use verbs «мріяти», «уявляти»
-- section: Діалоги
+  - 'Аналіз класичної цитати Тараса Шевченка: «Якби ви вчились так, як треба...» як
+    взірця вживання «якби»'
+  - 'Контекст послання «І мертвим, і живим...»: як граматична конструкція передає
+    глибокий жаль та докір'
+  - Роль умовного способу в українській афористиці та народній мудрості
+- section: Практика та типові помилки (Practice and Common Errors)
+  words: 900
   points:
-  - Unreal conditionals in conversation — use collocations «якби не», «шкодувати про»
-  - Hypothetical scenarios — discuss «гіпотетична ситуація»
+  - 'Виправлення кальки «якщо б»: обґрунтування вживання синтетичної форми «якби»'
+  - 'Вправи на подолання часової невідповідності: корекція помилкових структур типу
+    «якби я маю» або «якби я знатиму»'
+  - 'Трансформаційні дрилі: перетворення реальних планів на гіпотетичні сценарії та
+    мрії'
+  - Автоматизація вживання часток «би» та «б» залежно від фонетичного контексту (милозвучність)
+- section: Діалоги та застосування (Dialogues and Application)
+  words: 500
+  points:
+  - 'Сценарії «Якби не...»: обговорення альтернативної історії та особистих рішень
+    з використанням конструкції «якби не»'
+  - 'Мовленнєві моделі для висловлення мрій та сподівань: використання дієслів «мріяти»,
+    «уявляти», «шкодувати»'
+  - 'Колокації для повсякденного спілкування: «було б краще», «на жаль», «гіпотетична
+    ситуація»'
 vocabulary_hints:
   required:
-  - якби (if - unreal) — якби тільки, якби ж то, якби не
-  - би (would - particle) — marker of conditional mood
-  - нереальний (unreal) — нереальна умова
-  - гіпотетичний (hypothetical) — гіпотетична ситуація
-  - умовний спосіб (conditional mood) — grammar term
-  - бажання (wish) — загадувати бажання
-  - мрія (dream) — мріяти про (щось)
-  - уявлення (imagination) — уявляти собі
+  - 'якби (if - unreal) — сполучник нереальної умови; сталі форми: якби тільки, якби
+    ж то, якби не'
+  - би/б (would) — частка умовного способу; вибір форми би чи б залежить від попереднього
+    звука
+  - мріяти (to dream) — висока частотність; мріяти про (щось), давно мріяти
+  - уявляти (to imagine) — уявляти собі (to imagine to oneself), важко уявити (hard
+    to imagine)
+  - нереальний (unreal) — нереальна умова; ключовий термін для опису граматичної категорії
   recommended:
-  - якби тільки (if only) — emphatic wish
-  - хотілося б (would like) — polite wish
-  - було б краще (it would be better) — suggestion/regret
-  - на жаль (unfortunately) — often starts a regret clause
-  - шкодувати (to regret) — шкодувати про втрачене
-  - мріяти (to dream) — давно мріяти
-  - уявляти (to imagine) — важко уявити
+  - шкодувати (to regret) — шкодувати про втрачене (regret what is lost), не шкодувати
+    ні про що
+  - гіпотетичний (hypothetical) — гіпотетична ситуація, гіпотетичне питання; книжний
+    реєстр
+  - якби тільки (if only) — емфатичне висловлення бажання або жалю
+  - було б краще (it would be better) — конструкція для порад та гіпотетичних пропозицій
+  - на жаль (unfortunately) — часто вводиться перед висловленням нереалізованої умови
 activity_hints:
 - type: fill-in
   focus: Complete unreal conditionals

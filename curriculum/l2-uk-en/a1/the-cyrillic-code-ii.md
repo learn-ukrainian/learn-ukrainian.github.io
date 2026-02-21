@@ -104,7 +104,7 @@ This is perhaps the most culturally significant letter in the alphabet right now
 
 > [!culture]
 > **The Letter of Independence**
-> The letter **Ї** exists in Ukrainian but not in Russian. Because of this, it has become a symbol of Ukrainian identity and resistance. During the occupation of Mariupol, residents painted the letter **Ї** on sidewalks and fences to show that the city remained Ukrainian. It is a powerful reminder that language is more than just communication; it is belonging.
+> The letter **Ї** belongs exclusively to Ukrainian — no other language uses it. It has become a powerful symbol of identity and resistance. During the occupation of Mariupol, residents painted **Ї** on sidewalks and fences to declare that the city remained Ukrainian. Language is more than communication; it is belonging.
 
 ### М'який знак: Ь
 This letter has **no sound of its own**. It is a modifier. It tells you to pronounce the *previous* consonant softly.
@@ -112,7 +112,7 @@ This letter has **no sound of its own**. It is a modifier. It tells you to prono
 *   **Instruction**: When you see **Ь**, flatten your tongue against the roof of your mouth while saying the consonant before it.
 *   **Example**: **день** [dɛnʲ] (day).
     *   Without soft sign: *den* (hard n).
-    *   With soft sign: *dyen'* (soft n, sounds lighter and higher).
+    *   With soft sign: *den'* (soft n, sounds lighter and higher).
 *   **Example**: **шість** [ʃistʲ] (six). The final **Т** is softened — it ends with a light, gentle release.
 *   **Example**: **Львів** [lʲʋiu̯] (Lviv). The "L" is soft, almost like the "l" in "leaf," not the hard "l" in "ball."
 
@@ -181,7 +181,7 @@ Listen to the difference in your head (or say them aloud).
 *   **Ґ**: **ґанок** (porch). Hard, stopping. The rare sound. Imagine the stone hitting a wall.
 *   **Rule of Thumb**: If you are unsure, guess **Г**. It is 100 times more common than **Ґ**.
 
-### Distinguishing Sounds: И vs І
+### Розрізняємо звуки: И проти І
 This distinction changes meaning and is crucial for being understood.
 *   **жити** [ˈʒɪtɪ] (to live) — Uses **И**. The "Zh" and "t" are hard. The sound is deep in your chest.
 *   **діти** [ˈdʲitɪ] (children) — Uses **І**. The "d" becomes very soft [dʲ], sounding almost like "dy".
@@ -233,7 +233,7 @@ Can you read the capital of Ukraine correctly?
     *   **К** is hard because it is followed by **И**.
     *   **ї** adds the "yi" sound [ji].
     *   **в** at the end sounds like a soft [u̯] or "w".
-    *   Result: KYY-yee-w. It is not "Key-ev."
+    *   Result: KY-yiv. It is not "Key-ev."
 
 ### Позиція має значення
 Look at the letter **Я** in these two words:
@@ -246,9 +246,9 @@ The short rule: after a vowel or at the start of a word, **Я** sounds like "ya"
 
 ## Культурний контекст: Українська ідентичність
 
-### Київ проти Kiev: Чому це важливо
-You will often see the debate about "Kyiv" vs. "Kiev." This is not just spelling; it is about which language you are transliterating from.
-*   **Kiev** comes from the Russian transliteration of "Киев" (where **И** is read as **І**).
+### Правильна назва: Kyiv
+You will often see the debate about the spelling of Ukraine's capital. This is not just spelling; it is about which language you are transliterating from.
+*   The outdated spelling comes from the Russian transliteration of "Киев" (where **И** is read as **І**).
 *   **Kyiv** comes from the Ukrainian **Київ**.
     *   **К** + **И** (hard y) + **Ї** (yi) + **В**.
 Using the spelling **Kyiv** respects the Ukrainian pronunciation and the state language. The same logic applies to names: **Олена** (Olena) instead of Elena, and everyday objects like **олівець** (pencil).
@@ -259,10 +259,8 @@ Using the letter **Ґ** in words like **ґанок** (porch), **ґудзик** (
 
 > [!myth-buster]
 > **"Ukrainian is just a dialect of Russian"**
-> Looking at the alphabet alone disproves this.
-> *   Ukrainian has **Ґ**, **Є**, **Ї**, **І**.
-> *   Russian lacks these but has its own distinct letters that create a harder, less vocalic sound.
-> These distinct letters represent completely different phonetic systems. Ukrainian is melodious and vocalic, while Russian has more consonant clusters and vowel reduction. They are distinct languages, as different as Spanish and Italian.
+> Looking at the alphabet alone disproves this. Ukrainian is the only language whose alphabet contains all four of these letters: **Ґ**, **Є**, **Ї**, **І**. The letter **Ї** exists in no other alphabet on earth. These are not cosmetic variations — they represent sounds and phonetic principles unique to Ukrainian.
+> Ukrainian is a melodious, vocalic language with its own grammar, vocabulary, and literary tradition stretching back centuries. Calling it a "dialect" of anything is like calling Portuguese a dialect of Spanish — linguistically absurd and historically ignorant.
 
 ### Примітка про почерк
 In printed text, **т** looks like a small "T". But in italics or cursive (which is often used in logos and menus), the lowercase **_т_** looks like an English "_m_".

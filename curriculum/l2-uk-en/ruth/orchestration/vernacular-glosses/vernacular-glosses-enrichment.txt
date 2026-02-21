@@ -1,0 +1,213 @@
+✅ Message sent to Gemini (ID: 12139) [auto-acked: self-addressed]
+✓ Message 12139 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12139...
+📨 Message #12139
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-vernacular-glosses
+   Time: 2026-02-20T23:36:26.251299+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 27
+module: ruth-027
+module_number: 23
+slug: vernacular-glosses
+title_uk: Народні глоси
+title_en: Vernacular Glosses
+phase: 1
+phase_id: chancery-legal
+phase_name: Chancery & Legal
+focus: 'Synonyms: чыто -> або — "Translating for the people"'
+content_outline:
+- section: Вступ
+  description: Introduction to Vernacular Glosses
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+persona:
+  voice: Baroque Scholar
+  role: Marginalia Commentator
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Народні глоси (Vernacular Glosses)
+
+## Використані джерела
+1. [litopys.org.ua](http://litopys.org.ua/ukrmova/um.htm) — Енциклопедія «Українська мова»: статті про глоси, Пересопницьке Євангеліє та староукраїнську лексикографію.
+2. [esu.com.ua](https://esu.com.ua/article-19823) — Енциклопедія Сучасної України: стаття про Пересопницьке Євангеліє та його мовні особливості.
+3. [history.org.ua](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Peresopnytske_Yevangeliye) — Інститут історії України НАНУ: історичний контекст створення рукописних пам'яток XVI ст.
+
+## Хронологія
+- **1556–1561**: Створення Пересопницького Євангелія архімандритом Григорієм та писарем Михайлом Василевичем; масове використання народних глос.
+- **1581**: Вихід Острозької Біблії (церковнослов'янською), що актуалізувало потребу в тлумаченні незрозумілих слів для «простих людей».
+- **1596**: Публікація «Лексиса» Лаврентія Зизанія — першого друкованого церковнослов'янсько-українського словника, що виріс із традиції глосування.
+- **1627**: Видання «Лексикона словенороського» Памва Беринди — кульмінація лексикографічної праці, що увібрала практику глос.
+- **XVII ст.**: Поширення «учительних євангелій» з розлогими тлумаченнями та синонімічними рядами живою мовою.
+
+## Ключові факти та цитати (Глоси)
+Основна функція глос — переклад або пояснення незрозумілого книжного (церковнослов'янського) слова живою розмовною (руською/староукраїнською) мовою.
+
+**Типові пари (Церковнослов'янізм -> Народна глоса):**
+- *перст* -> **палець** (Пересопницьке Євангеліє)
+- *рама* -> **плечі**
+- *клуня* -> **стодола, гумно**
+- *студня* -> **колодязь, криниця**
+- *відро* -> **глек, збан**
+- *кров* -> **дах, стріха**
+- *абіє* -> **зараз, негайно**
+- *бѣнтетовати* -> **карати**
+- *чето* (що) -> **або** (як сполучник-глоса, наприклад: «чето, або...»)
+
+**Цитата для аналізу:**
+> «Для ліпшого вирозуміння люду християнського посполитого» (з післямови до Пересопницького Євангелія).
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ": [!context] — Глоси як «гіперпосилання» XVI століття. Це не просто переклад, а навігація текстом для читача.
+- Section "Основний матеріал: I — Природа та типи глос": [!history-bite] — Писарі часто писали глоси дрібним шрифтом між рядками (інтерлінеарні) або на полях (маргінальні), іноді створюючи справжні лабіринти тексту.
+- Section "Основний матеріал: II — Пересопницький феномен": [!culture] — Пересопницьке Євангеліє — це книга, на якій присягають президенти України, саме через її мовну значущість як символу української ідентичності.
+- Section "Основний матеріал: III — Від маргіналій до словників": [!myth-buster] — Міф про «спільну давньоруську мову» розбивається об глоси: якби мова була спільною, навіщо було б перекладати «общепонятные» слова як *студня* на українські *криниця*?
+- Section "Практика": [!quote] — «Абіє — то єсть зараз».
+- Section "Підсумок": [!decolonization] — Глоси — це доказ існування окремої української мовної свідомості ще в XVI ст., яка вимагала свого місця в сакральних текстах.
+
+## Деколонізаційний контекст
+- **Імперський міф:** Українська мова — це «зіпсований діалект» російської або полонізована говірка, що виникла пізно (XIX ст.). Старі тексти написані «спільною мовою».
+- **Українська реальність:** Глоси XVI ст. фіксують чітку дихотомію: *мова книжна* (чужа, незрозуміла) vs *мова руська/проста* (своя, зрозуміла). Переклад слів на кшталт *чрево* -> *живіт* або *брашно* -> *потрава* свідчить про те, що церковнослов'янська вже тоді сприймалася як іноземна, а жива українська мова мала сталу лексичну систему.
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| Мова XVI ст. | «Западнорусский язык» (діалект російської) | **Староукраїнська мова** (руська мова) |
+| Глоси | «Діалектизми» або «полонізми» | **Народна лексика**, жива мова |
+| Лексикографія | Спільна східнослов'янська традиція | Самобутня **українська лексикографічна школа** (Зизаній, Беринда) |
+
+## Section-Mapped Research Notes
+
+### Вступ
+Визначення глоси (від грец. glossa — мова, слово). Розрізнення маргінальних (на полях) та інтерлінеарних (міжрядкових) глос. Роль глос як інструменту демократизації знання.
+
+### Основний матеріал: I — Природа та типи глос
+Механізм глосування: слово-оригінал -> сполучник (*чето*, *то єсть*, *рекоме*, *або*) -> слово-глоса.
+Синонімічні ряди: намагання знайти найточніший відповідник (*відро* -> *глек*, *збан*). Це свідчить про багатство народної мови.
+
+### Основний матеріал: II — Пересопницький феномен
+Пересопницьке Євангеліє (1556-1561) як енциклопедія глос. Аналіз конкретних прикладів: побутова лексика (*клуня*), анатомічна (*палець*), абстрактна. Чому саме в цей час? Реформація, вплив протестантизму, бажання зрозумілості.
+
+### Основний матеріал: III — Від маргіналій до словників
+Еволюція: спочатку глоси на полях -> потім виписування їх у окремі списки («глосарії») -> алфавітне впорядкування -> друковані словники («Лексис» 1596). Глоси як будівельний матеріал для перших українських словників.
+
+### Підсумок
+Значення глос для історії мови. Вони зафіксували живу мову XVI ст., яку не пускали в офіційні тексти. Це місток між давниною і сучасністю.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12203)
+✓ Message 12139 acknowledged
+✓ Message 12203 acknowledged

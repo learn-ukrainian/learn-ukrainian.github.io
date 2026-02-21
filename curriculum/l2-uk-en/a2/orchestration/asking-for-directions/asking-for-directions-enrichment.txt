@@ -1,0 +1,303 @@
+✅ Message sent to Gemini (ID: 10267) [auto-acked: self-addressed]
+✓ Message 10267 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10267...
+📨 Message #10267
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-asking-for-directions
+   Time: 2026-02-20T20:05:59.599052+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: a2-66
+level: A2
+sequence: 66
+slug: asking-for-directions
+version: '2.0'
+title: Asking for Directions
+subtitle: Getting Around Town
+content_outline:
+- section: Introduction / Вступ
+  points:
+  - 'Getting around cities — §3.5: Середовище перебування (місто чи село) AND §3.6:
+    Подорожі (основні дії на позначення руху); focus on essential direction adverbs:
+    прямо, ліворуч, праворуч'
+  - 'Motion verbs review — learner error: confusing unidirectional vs habitual forms
+    (йти vs ходити); emphasize context-dependent usage'
+- section: Presentation / Презентація
+  points:
+  - 'йти vs їхати — §4.2.3.1: дієвідмінювання дієслів руху; focus on foot vs vehicle
+    distinction; learner error: «Я йду в Київ» (I''m walking to Kyiv) vs «Я їду в
+    Київ» (I''m going by vehicle); learner error: prefix confusion *по-* (start) vs
+    *при-* (arrival) e.g. *поїхав* vs *приїхав*'
+  - 'Transport vocabulary — cultural hook: introduce specific transport (tram, marshrutka)
+    in Odesa context; use «їхати автобусом», «їхати на роботу»'
+  - 'Direction phrases — cultural hook: relative directions (landmarks like «біля
+    аптеки», «перед пам''ятником») vs strict distances; introduce «повертати за ріг»
+    (turn around the corner)'
+- section: Practice / Практика
+  points:
+  - Plan a route — using specific landmarks («біля аптеки», «перед пам'ятником») instead
+    of strict distances
+- section: Dialogues / Діалоги
+  points:
+  - 'Direction conversations — cultural hook: Odesa style — answering a question with
+    a question («А вам це точно треба?») or long winding stories'
+  - Multi-step directions — ensure correct use of «повертати», «іти», «їхати» in sequence
+- section: Narrative / Розповідь
+  points:
+  - Navigation story — humorous Odesa narrative (e.g., the Deribasivska 'buy a goose'
+    joke or similar trope about relative directions)
+- section: Need More Practice?
+  points:
+  - Summary and links — reinforce distinction between foot/vehicle movement
+vocabulary_hints:
+  required:
+  - 'йти (to go on foot) — High Freq; collocations: йти пішки, йти прямо, йти до...'
+  - 'їхати (to go by transport) — Very High Freq; collocations: їхати автобусом, їхати
+    на роботу, їхати в центр'
+  - 'повертати (to turn) — Medium-High Freq; collocations: повертати праворуч/ліворуч,
+    повертати за ріг'
+  - метро (metro) — use with їхати (їхати на метро)
+  - автобус (bus) — use with їхати (їхати автобусом)
+  - трамвай (tram) — popular in Odesa context
+  - 'зупинка (stop) — collocations: автобусна зупинка, кінцева зупинка'
+  - станція (station) — refer to metro or train stations
+  - маршрут (route) — context of planning a trip
+  recommended:
+  - пересадка (transfer) — useful for public transport directions
+  - вихід (exit) — essential for metro navigation
+  - платформа (platform) — train/metro context
+  - квиток (ticket) — buying tickets for transport
+  - проїзд (fare) — paying for the trip
+  - розклад (schedule) — checking transport times
+activity_hints:
+- type: match-up
+  focus: Transport vocabulary
+  items: 25
+- type: fill-in
+  focus: Ask about transport
+  items: 20
+- type: quiz
+  focus: Describe your location
+  items: 10
+focus: practical
+pedagogy: PPP
+prerequisites:
+- a2-65 (Giving Directions)
+connects_to:
+- a2-67 (Social Media Ukrainian)
+objectives:
+- Learner can ask for directions to landmarks
+- Learner can understand complex route descriptions
+- Learner can use public transport vocabulary
+- Learner can describe their location
+grammar:
+- Verbs of motion (йти, їхати, ходити, їздити)
+- Prepositions of movement (до, повз, через)
+- Imperative for directions
+register: розмовний
+immersion: 75-90% Ukrainian
+phase: A2.6 [Practical]
+persona:
+  voice: Encouraging Cultural Guide
+  role: Lost Tourist in Odesa
+word_target: 3000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Asking for Directions
+
+## State Standard Reference
+§3.5: "Середовище перебування (місто чи село): ...напрямок руху (прямо, ліворуч, праворуч)."
+§3.6: "Подорожі: ...основні дії на позначення руху: іти – ходити, їхати – їздити..."
+§4.2.3.1: "дієвідмінювання дієслів у теперішньому часі: ...іти (іду, ідеш...), їхати (їду, їдеш...), ходити (ходжу, ходиш...), їздити (їжджу, їздиш...)"
+
+Alignment: This module directly addresses the required competence in expressing movement, direction, and using public transport vocabulary, specifically focusing on the motion verbs *йти/їхати* and direction adverbs as mandated by the A2 standard.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| йти (іти) | High (Code 4 0011) / Словник-мінімум | йти пішки, йти прямо, йти до... |
+| їхати | Very High (Code 6 1111) / Словник-мінімум | їхати автобусом, їхати на роботу, їхати в центр |
+| повертати | Medium-High (Code 3 0001) / Словник-мінімум | повертати праворуч/ліворуч, повертати за ріг |
+| зупинка | High / General Usage | автобусна зупинка, кінцева зупинка |
+
+## Cultural Hooks
+1. **Odesa Style Directions:** In Odesa, asking for directions often leads to a conversation rather than a simple answer. A classic trope is answering a question with a question ("А вам це точно треба?" — "Do you really need to go there?") or giving a long, winding story before revealing you are already standing on the street you are looking for (e.g., the Deribasivska "buy a goose" joke).
+2. **"Go Straight":** In Ukrainian culture, "йти прямо" (go straight) can be a relative term. Directions are often given using landmarks ("біля аптеки", "перед пам'ятником") rather than strict distances or cardinal directions, reflecting a more context-dependent navigation style.
+
+## Common Learner Errors
+1. **Transport vs. Foot:** Confusion between *йти* (foot) and *їхати* (vehicle). Error: "Я йду в Київ" (meaning "I'm walking to Kyiv" when they mean taking a train/bus). → Correction: "Я їду в Київ".
+2. **Unidirectional vs. Habitual:** Using *йти* (one-way, specific) instead of *ходити* (habitual, round-trip). Error: "Я йду в школу кожен день." → Correction: "Я ходжу в школу кожен день."
+3. **Prefix Confusion:** Misusing prefixes like *по-* (start of motion) vs *при-* (arrival). Error: "Він приїхав у магазин" (when he just left for it). → Correction: "Він поїхав у магазин."
+
+## Cross-References
+- Builds on: a2-65 (Giving Directions)
+- Prepares for: a2-67 (Social Media Ukrainian)
+
+## Notes for Content Writing
+- Ensure the distinction between *йти* and *їхати* is crystal clear, as this is a primary A2 stumbling block.
+- Use the Odesa setting to introduce specific transport vocabulary naturally (tram, marshrutka).
+
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Introduction to the urban environment and basic navigation — §3.5: Середовище перебування (місто чи село). Focus on essential direction adverbs: прямо, ліворуч, праворуч."
+  - "The Persona Hook: A lost tourist in Odesa. Set the scene where navigating the city requires not just a map, but a sense of humor and local communication styles."
+- section: "Презентація (Presentation)"
+  words: 950
+  points:
+  - "The Core Motion Distinction — §3.6: йти (foot) vs. їхати (vehicle). Focus on the primary A2 stumbling block: learner error 'Я йду в Київ' (meaning walking) vs. correct 'Я їду в Київ' (taking transport)."
+  - "Conjugation of Motion Verbs — §4.2.3.1: дієвідмінювання дієслів у теперішньому часі (іду, ідеш vs. їду, їдеш). Highlight the phonetic similarity between 'іду' and 'їду' and how to distinguish them in speech."
+  - "Unidirectional vs. Habitual Motion — addressing the learner error of using unidirectional forms for repeated actions. Error: 'Я йду в школу кожен день' vs. correction: 'Я хожу в школу кожен день'."
+  - "Prefix Nuances: по- (start) vs. при- (arrival). Drill the distinction to avoid errors like 'Він приїхав у магазин' when the subject has only just departed. Correction: 'Він поїхав у магазин'."
+- section: "Культурний контекст (Cultural Context)"
+  words: 650
+  points:
+  - "Odesa Style Navigation: Discuss the classic trope of answering a question with a question ('А вам це точно треба?') and the tendency for simple directions to turn into long, winding stories."
+  - "Landmarks over Distances: In Ukrainian culture, directions are relative. Drill the use of landmarks ('біля аптеки', 'перед пам'ятником') instead of strict meters or cardinal directions. Note that 'йти прямо' is often a relative suggestion."
+- section: "Практика та діалоги (Practice and Dialogues)"
+  words: 600
+  points:
+  - "Navigating to Odesa Icons: Creating dialogues centered on finding the Opera House, Pryvoz market, or Deribasivska street. Practice the sequence: Excuse me -> How to get to... -> Landmark confirmation."
+  - "Transport Vocabulary in Action: Using specific local transport terms (трамвай, маршрутка). Practice phrases like 'їхати автобусом' or 'сісти на трамвай' and identifying the correct 'зупинка' (stop)."
+- section: "Підсумок та розповідь (Summary and Narrative)"
+  words: 400
+  points:
+  - "The Navigation Story: A humorous Odesa narrative based on a classic anecdote (e.g., a tourist asking for directions to a street they are already standing on). Focus on the distinction between foot and vehicle movement."
+  - "Final Synthesis: Review of §3.5 and §3.6 competencies. Reinforce the distinction between 'йти' and 'їхати' as the module's primary grammar takeaway."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "йти (to go on foot) — High Freq (Code 4 0011); collocations: йти пішки, йти прямо, йти до..."
+  - "їхати (to go by transport) — Very High Freq (Code 6 1111); collocations: їхати автобусом, їхати на роботу, їхати в центр"
+  - "повертати (to turn) — Medium-High Freq (Code 3 0001); collocations: повертати праворуч/ліворуч, повертати за ріг"
+  - "зупинка (stop) — High Freq; collocations: автобусна зупинка, кінцева зупинка"
+  - "прямо (straight) — Basic direction; note its relative usage in Odesa/Ukrainian context"
+  - "ліворуч (to the left) — Basic direction adverb"
+  - "праворуч (to the right) — Basic direction adverb"
+  - "маршрутка (minibus) — Essential Ukrainian transport context"
+  - "трамвай (tram) — Culturally significant in Odesa navigation"
+  - "автобус (bus) — High Freq; collocations: автобусна зупинка"
+  - "метро (metro) — use with їхати (їхати на метро)"
+  recommended:
+  - "пересадка (transfer) — useful for complex public transport directions"
+  - "вихід (exit) — essential for transport/metro navigation"
+  - "платформа (platform) — train/metro context"
+  - "квиток (ticket) — buying tickets for transport"
+  - "розклад (schedule) — checking transport times"
+  - "біля (near) — essential for landmark navigation (e.g., біля аптеки)"
+  - "перед (in front of) — landmark navigation (e.g., перед пам'ятником)"
+  - "повз (past) — preposition of movement (e.g., йти повз театр)"
+  - "через (through/across) — preposition of movement (e.g., їхати через міст)"
+  - "маршрут (route) — context of planning a trip or following directions"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (4473 chars)
+✅ Message sent to Claude (ID: 10274)
+✓ Message 10274 acknowledged
+   Auto-acknowledged reply #10274 (stdout delivery — no inbox accumulation)
+✓ Message 10267 acknowledged

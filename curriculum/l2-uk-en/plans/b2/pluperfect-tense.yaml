@@ -6,53 +6,74 @@ version: '2.0'
 title: Давноминулий час
 subtitle: The Pluperfect Tense
 content_outline:
-- section: Розминка — Час до минулого
+- section: Вступ та культурний контекст (Introduction & Cultural Context)
+  words: 600
   points:
-  - State Standard §4.1.3.1 alignment — pluperfect (давноминулий) as B2 indicative
-    mood requirement
-  - 'Why Ukrainian has a "long ago past": expressing actions completed before another
-    past action'
-  - 'Cultural hook: the pluperfect in literature — Шевченко, Франко, and folk tales
-    use this form naturally'
-  - 'Register note: rare in everyday speech, common in literary/formal/historical
-    writing'
-- section: Утворення (Formation)
+  - Alignment with State Standard §4.1.3.1 — mastering the indicative mood (дійсний
+    спосіб) through stylistic depth and anteriority (передування).
+  - 'The ''Once Upon a Time'' hook: Analyzing the classic opening «Жив-був...» as
+    a portal into mythic time, signaling events before the current reality.'
+  - 'Pop culture anchor: The legendary 1982 animation «Жив-був пес» — why the title
+    uses this specific form to establish a legendary, timeless register.'
+  - 'Historical perspective: From archaic roots in folk tales to the modern ''intellectual''
+    revival in contemporary literature (e.g., Oksana Zabuzhko) for precise narrative
+    mapping.'
+- section: Граматичне утворення та узгодження (Grammatical Formation & Agreement)
+  words: 800
   points:
-  - 'Formula: past tense of main verb + був/була/було/були'
-  - Він ходив був до школи, коли почався дощ. (He had been going to school when the
-    rain started.)
-  - Вона написала була листа, перш ніж він зателефонував. (She had written the letter
-    before he called.)
-  - 'Gender/number agreement: був/була/було/були agrees with subject, NOT with verb'
-  - 'Word order: був typically follows the main verb (ходив був), but can precede
-    in emphatic position'
-- section: Значення (Meaning & Usage)
+  - 'The Pluperfect Formula: Past tense of the main verb + the auxiliary «бути» in
+    its past form (був, була, було, були).'
+  - 'The Agreement Trap: Detailed drill on gender and number agreement. Unlike the
+    conditional particle «би», the auxiliary «був» MUST agree with the subject (Вона
+    ходила була, NOT *Вона ходила був).'
+  - 'Word order dynamics: Typically following the main verb («бачив був»), but shifting
+    to the emphatic position («був бачив») for narrative stress.'
+  - 'Refining the sound: How agreement in the pluperfect adds a rhythmic, poetic quality
+    to literary prose compared to the simple past.'
+- section: 'Значення та вживання: часова лінія (Meaning & Usage: The Timeline)'
+  words: 900
   points:
-  - 'Primary function: action completed BEFORE another past action (anterior past)'
-  - 'Contrast with simple past: Я прочитав книжку (I read the book) vs Я прочитав
-    був книжку, коли ти прийшов (I had read the book when you arrived)'
-  - 'In folk narratives: Жив-був один чоловік... (There once lived a man...)'
-  - 'In historical writing: Козаки відступили були до Чигирина... (The Cossacks had
-    retreated to Chyhyryn...)'
-  - 'Temporal markers: перш ніж (before), до того як (before), вже (already), ще (still/yet)'
-- section: Давноминулий vs минулий (Pluperfect vs Simple Past)
+  - 'The Concept of Anteriority: Visualizing the timeline with T1 (Previous Action),
+    T2 (Recent Past Action), and T0 (The Present Moment).'
+  - 'Stylistic Superpower: Using the pluperfect to create ''narrative flashbacks''
+    and layers of depth in storytelling without using complex clausal structures.'
+  - 'The ''Annulled Result'' nuance: Situations where the pluperfect implies the action
+    happened but its effect is no longer valid (e.g., «Я приходив був до тебе» — I
+    had come, but I''m not there now).'
+  - 'Temporal markers and conjunctions: Deep dive into High-Frequency connectors like
+    «перш ніж», «до того як», and «вже» as triggers for the pluperfect.'
+- section: Типові помилки та контрастивний аналіз (Common Errors & Contrastive Analysis)
+  words: 800
   points:
-  - 'When pluperfect is required: two sequential past events, emphasizing the earlier
-    one'
-  - 'When simple past suffices: single past event or chronological narration'
-  - 'Learner error: overusing pluperfect (English speakers transfer "had" too liberally)'
-  - 'Learner error: wrong gender agreement (*Вона ходив був → Вона ходила була)'
-- section: Практика — Літературний час
+  - 'The English Transfer Error: Debunking the myth that every English ''had done''
+    requires a Ukrainian pluperfect. Most sequential actions in Ukrainian use the
+    simple past with adverbs.'
+  - 'The ''Buvaie'' Confusion: Distinguishing between the pluperfect («ходив був»
+    — anteriority) and the habitual particle «було» («ходив було» — used to go, repetitive
+    past action).'
+  - 'Auxiliary Disagreement Drills: Correcting the common error of treating «був»
+    as invariable. Practice set: «Ми написали були», «Дитина спала була».'
+  - 'Translation exercise: Translating precise English/French timelines (Past Perfect
+    / Plus-que-parfait) into Ukrainian using both lexical and grammatical means.'
+- section: Практика та стилістичне моделювання (Practice & Stylistic Modeling)
+  words: 600
   points:
-  - Transform simple past sentences into pluperfect with temporal context
-  - Analyze folk tale openings for pluperfect forms
-  - Write a short historical narrative using pluperfect for backgrounding
-  - 'Text analysis: find pluperfect in authentic literary excerpt'
-- section: Підсумок
+  - 'Ethnographer Workshop: Re-writing standard past-tense folk legends using the
+    pluperfect to enhance ''archaic'' authenticity.'
+  - 'Urbanist Challenge: Applying the pluperfect to modern professional contexts,
+    such as IT or Business reports («Ми вже протестували були код, коли виявили баг»).'
+  - 'Literary Analysis: Finding and interpreting the pluperfect in excerpts from Shevchenko,
+    Franko, and Zabuzhko to understand register shifts.'
+  - 'Creative Writing: Developing a short historical narrative using the pluperfect
+    for backgrounding events (anterior actions) versus the foregrounded simple past.'
+- section: Підсумок та вибір стилю (Summary & Register Guidance)
+  words: 300
   points:
-  - Formation summary table (all gender/number forms)
-  - Usage decision tree (when to use pluperfect vs simple past)
-  - Register guidance (literary/formal/folk vs conversational)
+  - 'Decision Tree: When to use pluperfect (marked, emphatic, anterior) versus simple
+    past (chronological, neutral).'
+  - 'Formation Quick-Reference: Final table of all gender/number auxiliary forms.'
+  - 'Final Polish: Encouraging the use of pluperfect as a tool for intellectual precision
+    and narrative elegance in B2-level communication.'
 focus: grammar
 pedagogy: PPP
 objectives:
@@ -67,17 +88,23 @@ grammar:
 - Pluperfect in literary and folk register
 vocabulary_hints:
   required:
-  - давноминулий (pluperfect) — давноминулий час
-  - був/була/було/були (auxiliary was/were) — допоміжне дієслово
-  - перш ніж (before) — перш ніж він прийшов
-  - до того як (before) — до того як ми зустрілися
-  - вже (already) — я вже прочитав був
-  - оповідання (narrative/story) — народне оповідання
+  - давноминулий час (pluperfect tense) — основний граматичний термін
+  - був / була / було / були (auxiliary verb) — допоміжне дієслово; висока частотність
+    у давноминулому часі
+  - перш ніж (before / prior to) — сполучник; часто вживається з давноминулим часом
+    для позначення черговості
+  - до того як (before / by the time) — сполучник; вказує на часову межу перед іншою
+    подією
+  - вже (already) — прислівник; підсилює значення завершеності дії перед іншою подією
+  - передування (precedence / anteriority) — ключове поняття для пояснення значення
+    часу
   recommended:
-  - передування (precedence) — хронологічне передування
-  - послідовність (sequence) — послідовність подій
-  - народна казка (folk tale) — жив-був
-  - літературний (literary) — літературний стиль
+  - аннульований результат (annulled result) — ситуація, коли дія відбулася, але її
+    наслідок уже не триває
+  - послідовність подій (sequence of events) — хронологічний порядок дій
+  - народна казка (folk tale) — основний жанр, де зберігся давноминулий час (жив-був)
+  - літературний стиль (literary style) — книжний регістр вживання
+  - черговість (order / succession) — порядок виконання дій у минулому
 activity_hints:
 - type: quiz
   focus: Choose pluperfect vs simple past in context

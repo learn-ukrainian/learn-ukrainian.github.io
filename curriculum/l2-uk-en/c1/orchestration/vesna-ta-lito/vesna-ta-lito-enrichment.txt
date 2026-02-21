@@ -1,0 +1,250 @@
+✅ Message sent to Gemini (ID: 10785) [auto-acked: self-addressed]
+✓ Message 10785 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #10785...
+📨 Message #10785
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-vesna-ta-lito
+   Time: 2026-02-20T21:28:36.894541+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-061
+level: C1
+sequence: 61
+slug: vesna-ta-lito
+version: '2.0'
+title: Весна та літо
+subtitle: Spring and Summer Calendar Rituals
+content_outline:
+- section: Розминка — Весняно-літній цикл
+  points:
+  - Весна — пробудження природи, аграрна магія
+  - Літо — кульмінація сонячного культу
+  - Зв'язок свят з сільськогосподарським календарем
+- section: Весняні свята
+  points:
+  - 'Веснянки та гаївки: закликання весни, хороводи'
+  - 'Великдень: писанки, кошик, обмін яйцями'
+  - 'Зелені свята (Трійця): русальний тиждень, клечання'
+  - Поминальні дні (Проводи, Гробки)
+- section: Літні свята
+  points:
+  - 'Купала: вогонь, вода, папороть'
+  - 'Петра і Павла: кінець весняного циклу'
+  - 'Жнива: обжинки, дожинки, перший сніп'
+  - Спас (Маковія, Яблучний, Горіховий)
+- section: Практика — аналіз свят
+  points:
+  - Проаналізувати купальські пісні — символіка
+  - Порівняти українську Трійцю з європейськими аналогами
+  - Написати есе про аграрну магію в обрядах
+  - Обговорити сучасне відродження народних свят
+focus: culture
+pedagogy: Immersion & Analysis
+objectives:
+- Learner can describe the cycle of spring and summer holidays in Ukraine
+- Learner understands the symbolism of fire, water, and vegetation in rituals
+- Learner can analyze the agrarian and solar motifs in Ukrainian folklore
+grammar:
+- Ethnographic terminology
+- Narrative and ritual registers
+phase: C1.5 Folk Culture & Fine Arts
+persona:
+  voice: Senior Specialist
+  role: Календарник
+word_target: 4000
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Весна та літо
+
+## State Standard Reference
+§3.21 (Традиції, звичаї, свята): "українські звичаї і традиції; релігійні звичаї і традиції; вихідні дні, релігійні й державні свята; забобони."
+Alignment: Модуль детально розглядає календарно-обрядовий цикл весни та літа, аналізуючи синкретизм язичницьких та християнських традицій (веснянки, купальські обряди, жнива), що відповідає вимогам стандарту щодо знання українських та релігійних звичаїв на рівні C1.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| **Обрядовість** | High (Academic/Cultural) | календарна обрядовість, родинна обрядовість, язичницька обрядовість |
+| **Синкретизм** | Medium (Scientific) | релігійний синкретизм, поєднання вірувань, нашарування традицій |
+| **Веснянка** | High (Cultural) | водити веснянки, співати веснянки, закликати весну |
+| **Клечання** | Medium (Ethnographic) | прикрашати клечанням, зелене клечання, на Зелені свята |
+| **Купальський** | High (Cultural) | купальське вогнище, купальська ніч, пускати вінок |
+| **Обжинки** | Medium (Ethnographic) | святкувати обжинки, обжинковий вінок, завершення жнив |
+| **Спаса** | High (Religious/Folk) | Яблучний Спас, святити мак, Маковія |
+
+## Cultural Hooks
+1. **Вербобиття**: Звичай "бити" вербовими гілками у Вербну неділю ("Не я б'ю — верба б'є") має дохристиянське коріння, пов'язане з магією плодючості та передачею життєвої сили від дерева до людини, а не лише нагадуванням про в'їзд Христа в Єрусалим.
+2. **Квітка папороті**: Легенда про цвіт папороті, який з'являється лише в купальську ніч і дарує здатність бачити скарби та розуміти мову тварин, є ключовим міфологічним образом літнього сонцестояння, що символізує пік природної енергії.
+
+## Common Learner Errors
+1. **Плутанина назв**: Вживання *Pentecost* як прямого відповідника *Трійці* (Зелених свят) без урахування специфічних українських традицій (клечання, поминання померлих), які відрізняють українське свято від західного.
+2. **Граматичні помилки з множинними іменниками**: Неправильне узгодження прикметників та дієслів з назвами свят, що мають форму лише множини (*Зелені свята прийшли*, *Гробки почалися*, *Обжинки завершилися* — помилково: *свято прийшло*).
+3. **Лексична калька**: Вживання слова *празник* (діалектне/ро розмовне) замість літературного *свято* у формальному контексті, або плутанина між *обряд* (ritual) та *звичка* (habit).
+
+## Cross-References
+- Builds on: **B2-Folk-Culture** (general knowledge of traditions), **C1-056** (Mythology foundations).
+- Prepares for: **C1-062** (Autumn/Winter cycle), **C1-Literature** (analyzing folk motifs in texts like "Lisova Pisnya" or Kotsiubynsky).
+
+## Notes for Content Writing
+- Важливо чітко розмежовувати *аграрну магію* (дія на врожай) та *християнський зміст* свята, показуючи їхнє співіснування.
+- У розділі про Купала акцентувати на стихіях вогню та води як засобах очищення (purification).
+- Для C1 рівня використовувати термінологію: *солярний культ*, *антропоморфізм*, *ініціація*.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ: Календарно-обрядовий цикл (Introduction: Calendar-Ritual Cycle)"
+  words: 600
+  points:
+  - "Аналіз поняття 'календарна обрядовість' відповідно до Державного стандарту §3.21 (релігійні та народні звичаї)"
+  - "Релігійний синкретизм: дослідження нашарування християнських традицій на давній солярний культ та аграрну магію"
+  - "Роль антропоморфізму в уособленні сил природи (Весна як жива істота, яку закликають)"
+- section: "Весняний цикл: Пробудження та вербобиття (Spring Cycle: Awakening and Willow Rituals)"
+  words: 1000
+  points:
+  - "Веснянки та гаївки: обрядові пісні та хороводи як засіб закликання весни та соціальної ініціації молоді"
+  - "Культурний хук: обряд 'Вербобиття' — магічне значення фрази 'Не я б'ю — верба б'є' як передачі життєвої сили дерева людині"
+  - "Великдень: писанкарство як сакральне мистецтво та символіка аграрної плодючості в обрядовому хлібі"
+  - "Поминальні дні (Проводи/Гробки): культ предків та етикет спілкування з померлими в українській традиції"
+- section: "Зелені свята та Трійця (Green Holidays and Pentecost)"
+  words: 800
+  points:
+  - "Традиція 'клечання': прикрашання осель зеленню як захист від злих сил та символ торжества життя"
+  - "Русальний тиждень: міфологічні уявлення про водних духів та обряди їхнього 'проводу'"
+  - "Типова помилка: розрізнення понять Pentecost та Трійця (Зелені свята) через специфічний фольклорний контекст"
+- section: "Купала: Кульмінація сонячного циклу (Kupala: Culmination of the Solar Cycle)"
+  words: 900
+  points:
+  - "Стихії вогню та води в купальську ніч: магічні засоби очищення (purification) та ініціації"
+  - "Культурний хук: легенда про квітку папороті як символ піку природної енергії та здатності розуміти мову природи"
+  - "Символіка купальського вінка: плетіння, пускання на воду та ворожіння на долю"
+- section: "Літній фінал: Жнива та Спаса (Summer Finale: Harvest and Spas)"
+  words: 700
+  points:
+  - "Обжинки: ритуальне завершення жнив, шанування 'останнього снопа' та обжинкового вінка"
+  - "Спас (Маковія, Яблучний): благословення дарів природи як синтез праці людини та божественної сили"
+  - "Типова помилка: узгодження прикметників з назвами свят, що мають форму лише множини (pluralia tantum: 'Зелені свята прийшли')"
+  - "Лексичний нюанс: доречність вживання 'свято' замість розмовного 'празник' у формальних описах традицій"
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "Обрядовість (ritualism) — календарна обрядовість, язичницька обрядовість; ключовий академічний термін"
+  - "Синкретизм (syncretism) — релігійний синкретизм, поєднання вірувань; для опису злиття язичництва з християнством"
+  - "Веснянка (spring ritual song) — водити веснянки, закликати весну; фольклорний жанр"
+  - "Клечання (ritual greenery) — зелене клечання, прикрашати клечанням; специфічний термін для Трійці"
+  - "Купальський (Kupala-related) — купальське вогнище, купальська ніч, купальська пісня"
+  - "Обжинки (harvest-end festival) — святкувати обжинки, обжинковий вінок; завершення польових робіт"
+  - "Спас (Feast of the Savior) — Яблучний Спас, на Спаса; релігійно-народне свято"
+  recommended:
+  - "Солярний (solar) — солярний культ, солярна символіка; науковий реєстр"
+  - "Антропоморфізм (anthropomorphism) — надання природним явищам людських рис"
+  - "Вербобиття (willow beating) — обряд Вербної неділі"
+  - "Квітка папороті (fern flower) — міфологічний образ піку літа"
+  - "Празник (holiday/feast) — діалектне/розмовне, уникати в наукових есе"
+===ENRICHED_VOCAB_END===
+
+
+────────────────────────────────────────
+✅ Gemini finished (3578 chars)
+✅ Message sent to Claude (ID: 10792)
+✓ Message 10792 acknowledged
+   Auto-acknowledged reply #10792 (stdout delivery — no inbox accumulation)
+✓ Message 10785 acknowledged

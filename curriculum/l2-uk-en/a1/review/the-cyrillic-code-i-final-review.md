@@ -1,105 +1,120 @@
-Now I have all source materials. Let me do the deep adversarial review.
+Good. Now I have everything I need. Let me conduct the full adversarial review.
 
 ---
 
-## Phase 9: Final QA Review — the-cyrillic-code-i
+## Final QA Review: the-cyrillic-code-i (A1 #1)
 
 ### Issues Found
 
-**Issue 1: Non-standard IPA `[pɑrrrk]`** (content line 274)
-- **Location**: Section "Pronunciation Lab: The 'P' and 'B' Check"
-- **Text**: `*Correct*: [pɑrrrk]`
-- **Problem**: Triple "r" is not valid IPA notation. IPA uses `[r]` for a trill; duration/repetition is indicated with `ː` or diacritics, never by repeating the symbol. This confuses notation with an attempt to visually show trilling. The Green Team review flagged this but it remains unfixed.
-- **Fix**: Use standard `[pɑrk]` with a descriptive nudge.
+**ISSUE 1 — FACTUAL ERROR (Critical): "Uniquely Ukrainian" claim is false**
+- **File**: `the-cyrillic-code-i.md`, line 234
+- **Text**: `Together with **Ґ**, these four letters are uniquely Ukrainian — they appear in no other language's alphabet.`
+- **Problem**: This is linguistically incorrect. **І** appears in Belarusian and Kazakh Cyrillic. **Ї** and **Є** appear in Rusyn. The absolute claim "they appear in no other language's alphabet" is false. Only the full set of four together is distinctive.
+- **Fix**: Reframe around the combination being the Ukrainian fingerprint, not individual letters being exclusive.
 
-**Issue 2: Low-frequency vocabulary "Вар"** (content lines 276-278)
-- **Location**: Section "Pronunciation Lab: The 'P' and 'B' Check"
-- **Text**: `Say "**Бар**" vs "**Вар**". ... **Вар** (boiling water)`
-- **Problem**: "Вар" (pitch/boiling water) is archaic/specialized vocabulary with near-zero utility for an A1 learner. It's used solely for a minimal pair, prioritizing textbook logic over learner utility. Green Team also flagged this.
-- **Fix**: Replace with **База** (base) vs **Ваза** (vase) — both cognates, high-utility, perfect Б/В contrast.
+**ISSUE 2 — PLAN COMPLIANCE GAP (Significant): Missing "Story of Ґ"**
+- **File**: `the-cyrillic-code-i.md`, Cultural Context section
+- **Plan requires** (line 48-49 of plan): `The Story of Ґ: Brief mention of the 'repressed letter' (removed in 1933, restored in 1990) as a hook for Ukrainian linguistic resilience.`
+- **Content**: Ґ is mentioned on line 234 but only as part of the "uniquely Ukrainian" claim. The dramatic historical arc (1933 ban, 1990 restoration) is completely absent.
+- **Fix**: Add the Ґ story to the Cultural Context section alongside the factual fix.
 
-**Issue 3: Hen mnemonic — excessive cognitive chain** (content line 89)
-- **Location**: Section "The 'H' Trap: Н"
-- **Text**: `The letter H stands for **H**en, which ends in N.`
-- **Problem**: The chain requires 3 cognitive hops: see H shape → think "Hen" → realize Hen ends in "N" → remember Н = [n]. The first hop reinforces H = [h] before the correction arrives. The plan specifies "Hen" as the keyword, so I preserve it but shorten the chain.
-- **Fix**: Rephrase to one hop: hear N at the end of "Hen" directly.
+**ISSUE 3 — ACTIVITY CATEGORY ERROR (Significant): Б in "True Friends" activity**
+- **File**: `activities/the-cyrillic-code-i.yaml`, lines 17-18
+- **Text**: Activity 1 "Справжні друзі: Літери та звуки" includes `Б б → b (bank)`.
+- **Problem**: Б is categorized as a **New Letter** (Group 3) in the content, NOT a True Friend (Group 1). Including it in the True Friends match-up contradicts the three-group pedagogy. Б already correctly appears in Activity 2.
+- **Fix**: Remove Б from Activity 1.
 
-**Issue 4: Activity 1 — Ф incorrectly categorized as "True Friend"** (activities lines 17-18)
-- **Location**: First match-up activity "Справжні друзі: Літери та звуки"
-- **Text**: Activity includes `Ф ф → f (photo)` among True Friends
-- **Problem**: In the content (line 158-162), Ф is explicitly in **Group 3: New Letters** (unique shapes), NOT Group 1: True Friends (look AND sound like English). Ф's shape is unfamiliar to English speakers — it's a "new letter" that happens to have a familiar sound. Including it in a "True Friends" activity contradicts the content's own categorization and confuses the three-category system.
-- **Fix**: Remove Ф from Activity 1, add it to Activity 2 (which covers New Letters + False Friends).
+**ISSUE 4 — ANTI-SURZHYK INCOMPLETE (Moderate): Missing ы**
+- **File**: `the-cyrillic-code-i.md`, lines 166
+- **Plan/Meta require**: "Explicitly state that 'ё', 'ы', 'э' do not exist in Ukrainian." (meta line 25)
+- **Content**: Only addresses ё ("e with two dots") and э ("backwards e"). The letter **ы** is not mentioned.
+- **Fix**: Add ы to the Anti-Surzhyk Alert.
 
-**Issue 5: Activity 2 — Missing П and Ф from New Letters** (activities lines 40-43)
-- **Location**: Second match-up "Нові літери та хибні друзі: Звуки"
-- **Text**: Lists Б, Д, З, Л but omits П and Ф from the New Letters group
-- **Problem**: Content teaches 6 New Letters (Б, Д, З, Л, П, Ф) but Activity 2 only covers 4 of them. П and Ф are missing, meaning students never do a sound-matching exercise for these two letters.
-- **Fix**: Add П and Ф to Activity 2.
+**ISSUE 5 — MISLEADING ACTIVITY TITLE (Minor): Quiz includes non-False-Friends**
+- **File**: `activities/the-cyrillic-code-i.yaml`, line 168
+- **Text**: Activity 4 titled "Фальшиві друзі: Перевірка" (False Friends: Check)
+- **Problem**: The quiz includes questions about **П** (New Letter, line 156) and **І** (True Friend, line 167) — neither is a False Friend. The title is misleading.
+- **Fix**: Rename to "Літери та звуки: Перевірка" (Letters and Sounds: Check).
 
-**Issue 6: Activity true-false — Л "ladder" contradicts content "legs"** (activities lines 298-300)
-- **Location**: True-false activity, item 8
-- **Text**: `The letter «Л» looks like a ladder and makes the sound [l].`
-- **Problem**: Content (line 156) teaches Л as "a pair of **L**egs walking" — not a ladder. The student was taught "legs" but is tested on "ladder." This mismatch undermines trust in the material and could cause a correct student to mark it "false."
-- **Fix**: Change "ladder" to "a pair of legs" in both statement and explanation.
+**ISSUE 6 — DIALECT-SPECIFIC PRONUNCIATION ADVICE (Minor)**
+- **File**: `the-cyrillic-code-i.md`, line 275
+- **Text**: `*Incorrect*: [pɑhk] (Don't drop the R!)`
+- **Problem**: "Don't drop the R" targets non-rhotic speakers (British/Australian). American/Canadian speakers don't drop R — they use the wrong *kind* of R (approximant instead of trill). The advice should be about vibration, not dropping.
+- **Fix**: Reframe around trill vs flat R.
 
-**Issue 7: Activity quiz #9 — Л explanation says "ladder or legs"** (activities line 338)
-- **Location**: Quiz "Нові знайомі", Л question explanation
-- **Text**: `Літера Л looks like a ladder or legs.`
-- **Problem**: Same inconsistency as Issue 6 — "ladder" was never taught. Content only uses "legs."
-- **Fix**: Change to "a pair of legs" only.
-
-**Issue 8: Meta word_target: 300 is incorrect** (meta line 3)
-- **Location**: `curriculum/l2-uk-en/a1/meta/the-cyrillic-code-i.yaml`
-- **Text**: `word_target: 300`
-- **Problem**: The plan specifies `word_target: 2000`. The meta's section word sums (350+650+400+300+300) also equal 2000. The top-level `word_target: 300` contradicts both the plan and the meta's own section totals. Content is 2492 words. The audit tool appears to use the plan's 2000 (status shows "2492/2000"), so this doesn't cause a failure, but it's wrong data that could confuse future tooling or human readers.
-- **Fix**: Change to 2000.
-
-### Non-issues Verified (No Fix Needed)
-
-- **IPA [ʋ] for В**: Content correctly uses [ʋ] (labiodental approximant). Activities simplify to [v] — acceptable at A1.
-- **IPA [t͡sɛ] for Це**: Tie bar on affricate is correct. ✅
-- **Letter count "19 letters"**: 7+6+6 = 19. ✅
-- **Historical claims**: Glagolitic/Cyrillic/First Bulgarian Empire — mainstream scholarly view. ✅
-- **"Alphabet Wars" / 19th century**: References Ems Decree (1876) / Valuev Circular (1863). Accurate. ✅
-- **No Russianisms detected**: All Ukrainian text is standard. ✅
-- **No Russian characters**: No ы, э, ё, ъ in Ukrainian text. ✅
-- **Fill-in activities**: All 8 produce grammatical Ukrainian sentences when answers are inserted. ✅
-- **Plan vocabulary compliance**: All required words (так, банк, метро, кафе, такт, кіт, мама, тато) present in prose. ✅
-- **Objectives → self-check mapping**: All 4 objectives have corresponding self-check questions (#1-5). ✅
-- **LLM artifacts**: No purple prose, no "Це не просто X, а Y" pattern, no fake statistics. ✅
-- **Forward references**: Ч mentioned as a teaser for next module — appropriate, not taught. ✅
-- **У as False Friend**: Correctly categorized (looks like Y, sounds like [u]). Plan confirms. ✅
+**ISSUE 7 — UNTAUGHT LETTER IN DECODING CHALLENGE (Minor)**
+- **File**: `the-cyrillic-code-i.md`, line 259
+- **Text**: `**Це** [t͡sɛ] (This) — *Standard starter word.*`
+- **Problem**: The letter Ц is not among the 19 letters taught in this module. The decoding challenge is the culminating exercise where students apply their skills, yet it begins with an untaught letter. While the IPA is correctly provided, there's no acknowledgment that Ц is a preview.
+- **Fix**: Add a brief note flagging this as a preview letter.
 
 ---
 
-## Fixes
+### Verification Summary
+
+| Check | Result |
+|-------|--------|
+| IPA accuracy (В = [ʋ], affricates with tie bars) | PASS — [ʋ] on line 79, [t͡sɛ] on line 259 |
+| Russianisms (кушати, получати, etc.) | CLEAN |
+| Russian characters (ы, э, ё, ъ) | CLEAN in content |
+| Gender/case agreement | PASS — мій/кіт (m), моя/мама (f), каву (acc) |
+| All plan sections present | PASS (5/5) |
+| Required vocabulary in prose | PASS (all 8 required + 4 recommended) |
+| Objectives → self-check mapping | PASS |
+| Fill-in activities produce grammatical sentences | PASS (all 8 checked) |
+| Anagram scrambled arrays match answers | PASS (all 8 checked) |
+| Letters in drill words use only taught 19 | PASS (cognate table verified) |
+| LLM artifacts (purple prose, grandiose openers) | CLEAN — tone is genuinely warm, not syrupy |
+| "Це не просто X, а Y" overuse | NONE found |
+| False statistics / invented percentages | NONE found |
+
+---
+
+### Fixes
 
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/the-cyrillic-code-i.md
 ---OLD---
--   **Mnemonic**: It looks like an "H", but think of a **H**en. The letter H stands for **H**en, which ends in N.
+### Visual Character
+Ukrainian has letters you will not find in any other Cyrillic alphabet: **І** (with its familiar vertical stroke), **Ї** (crowned with two dots), and **Є** (a graceful curve). Together with **Ґ**, these four letters are uniquely Ukrainian — they appear in no other language's alphabet. When you see them on a page, you know instantly: this is Ukrainian.
+
+When you write **Україна** (Ukraine), the letter **ї** appears right in the heart of the word — carrying two dots like a quiet signature of the language.
 ---NEW---
--   **Mnemonic**: It looks like an "H", but think of a He**N** — what do you hear at the end? **N**! That's the sound this letter makes.
+### Visual Character
+Ukrainian has a distinctive set of four letters that, taken together, set it apart from its East Slavic neighbors: **І** (with its familiar vertical stroke), **Ї** (crowned with two dots), **Є** (a graceful curve), and **Ґ** (a Г with an upturn). While individual letters like І also appear in Belarusian, the combination of all four is the fingerprint of Ukrainian. When you spot them together on a page, you know instantly: this is Ukrainian.
+
+When you write **Україна** (Ukraine), the letter **ї** appears right in the heart of the word — carrying two dots like a quiet signature of the language.
+
+### The Letter That Came Back
+The letter **Ґ** has a dramatic story. In 1933, Soviet authorities removed it from the Ukrainian alphabet, replacing it with **Г**. For almost 60 years, **Ґ** was a "ghost letter" — used only by Ukrainians in the diaspora. When Ukraine moved toward independence, **Ґ** was officially restored in 1990. Today, it lives in words like **ґанок** (porch) and **ґудзик** (button). It is small but mighty — a symbol of linguistic survival.
 ===FIX_END===
 
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/the-cyrillic-code-i.md
 ---OLD---
-    *   *Correct*: [pɑrrrk]
+> You might see characters in some apps or textbooks that look like an "e" with two dots or a backwards "e". These letters **do not exist** in Ukrainian.
+>
+> If you spot them in a "Ukrainian" resource, that resource is wrong. Ukrainian has its own elegant system — **Є** for the "ye" sound and **І** for the "ee" sound. Trust the real Ukrainian alphabet.
 ---NEW---
-    *   *Correct*: [pɑrk] (make that Р roll!)
+> You might see characters in some apps or textbooks that look like an "e" with two dots (**ё**), a backwards "e" (**э**), or a "bl" combination (**ы**). These three letters **do not exist** in Ukrainian.
+>
+> If you spot them in a "Ukrainian" resource, that resource is mixing in Russian. Ukrainian has its own elegant system — **Є** for the "ye" sound, **І** for the "ee" sound, and **И** for the deep vowel. Trust the real Ukrainian alphabet.
 ===FIX_END===
 
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/the-cyrillic-code-i.md
 ---OLD---
-2.  **The "B" vs "V" Check**: Say "**Бар**" vs "**Вар**".
-    *   **Бар** starts with a B-boy sound. Explosive.
-    *   **Вар** (boiling water) starts with a V-vehicle sound. Buzzing.
+    *   *Incorrect*: [pɑhk] (Don't drop the R!)
 ---NEW---
-2.  **The "B" vs "V" Check**: Say "**База**" vs "**Ваза**".
-    *   **База** (base) starts with a B-boy sound. Explosive.
-    *   **Ваза** (vase) starts with a V-vehicle sound. Buzzing.
+    *   *Incorrect*: [pɑɹk] (Don't use the flat English R — make it vibrate!)
+===FIX_END===
+
+===FIX_START===
+FILE: curriculum/l2-uk-en/a1/the-cyrillic-code-i.md
+---OLD---
+1.  **Це** [t͡sɛ] (This) — *Standard starter word.*
+---NEW---
+1.  **Це** [t͡sɛ] (This) — *A high-frequency starter word. The letter Ц is a sneak preview — you will learn it properly in Module 2.*
 ===FIX_END===
 
 ===FIX_START===
@@ -107,8 +122,8 @@ FILE: curriculum/l2-uk-en/a1/activities/the-cyrillic-code-i.yaml
 ---OLD---
   - left: Т т
     right: t (stop)
-  - left: Ф ф
-    right: f (photo)
+  - left: Б б
+    right: b (bank)
   title: 'Справжні друзі: Літери та звуки'
 ---NEW---
   - left: Т т
@@ -119,46 +134,22 @@ FILE: curriculum/l2-uk-en/a1/activities/the-cyrillic-code-i.yaml
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/activities/the-cyrillic-code-i.yaml
 ---OLD---
-  - left: Л л
-    right: l (look)
-  title: 'Нові літери та хибні друзі: Звуки'
+  title: 'Фальшиві друзі: Перевірка'
+  type: quiz
+- instruction: Rearrange the letters to form the correct Ukrainian word.
 ---NEW---
-  - left: Л л
-    right: l (look)
-  - left: П п
-    right: p (park)
-  - left: Ф ф
-    right: f (photo)
-  title: 'Нові літери та хибні друзі: Звуки'
+  title: 'Літери та звуки: Перевірка'
+  type: quiz
+- instruction: Rearrange the letters to form the correct Ukrainian word.
 ===FIX_END===
 
-===FIX_START===
-FILE: curriculum/l2-uk-en/a1/activities/the-cyrillic-code-i.yaml
----OLD---
-  - correct: true
-    explanation: True! Літера Л looks like a ladder and makes the sound [l].
-    statement: The letter «Л» looks like a ladder and makes the sound [l].
----NEW---
-  - correct: true
-    explanation: True! Літера Л looks like a pair of legs and makes the sound [l].
-    statement: The letter «Л» looks like a pair of legs and makes the sound [l].
-===FIX_END===
+---
 
-===FIX_START===
-FILE: curriculum/l2-uk-en/a1/activities/the-cyrillic-code-i.yaml
----OLD---
-  - explanation: Літера Л looks like a ladder or legs.
----NEW---
-  - explanation: Літера Л looks like a pair of legs.
-===FIX_END===
+### Notes (not blocking)
 
-===FIX_START===
-FILE: curriculum/l2-uk-en/a1/meta/the-cyrillic-code-i.yaml
----OLD---
-word_target: 300
----NEW---
-word_target: 2000
-===FIX_END===
+- **Word count**: The Green Team estimated ~1300 words against a 2000 target. The Ґ story addition (~80 words) and Anti-Surzhyk expansion (~20 words) help but don't close the gap. However, for A1 Module 1 (the literal first lesson), conciseness prevents overwhelm. The content is pedagogically dense and every paragraph earns its place. I do not recommend padding.
+- **"Це" in decoding challenge**: Uses Ц (not in the 19 letters). Fixed with a preview note above. Pedagogically acceptable as a high-frequency chunk.
+- **Activity О vowel**: Content describes О as "dog/off" while Activity 1 says "o (more)". Both are reasonable approximations of [ɔ] for English speakers. Not fixing.
 
 ---
 
@@ -166,4 +157,4 @@ word_target: 2000
 APPROVE
 ===END_VERDICT===
 
-**Rationale**: 8 issues found — all fixable with the patches above. No Russianisms, no factual errors in core claims, no broken activities, no grammar scope violations. Content is 2492 words against a 2000-word target (124% — healthy). All 5 plan sections present and compliant. Activities are well-structured with good variety (9 activities, 8 types). The fixes address: 1 IPA notation error, 1 low-utility vocabulary choice, 1 mnemonic phrasing improvement, 2 activity category mismatches, 2 mnemonic consistency errors across activities, and 1 meta data error. After these fixes, the module is solid A1 introductory material.
+All seven issues are addressed by the six fix blocks above. After fixes: the factual error is corrected, the plan compliance gap is filled (Ґ story added), the activity category error is resolved, Anti-Surzhyk covers all three Russian-only letters, the misleading title is fixed, pronunciation advice is dialect-neutral, and the untaught letter gets a preview note. No remaining blockers.

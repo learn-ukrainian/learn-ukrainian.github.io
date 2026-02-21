@@ -1,0 +1,286 @@
+✅ Message sent to Gemini (ID: 13047) [auto-acked: self-addressed]
+✓ Message 13047 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #13047...
+📨 Message #13047
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-vira-kholodna
+   Time: 2026-02-20T23:43:59.778769+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+module: c1-bio-98
+level: C1-BIO
+sequence: 98
+slug: vira-kholodna
+version: '2.0'
+title: 'Віра Холодна: Королева німого кіно'
+content_outline:
+- section: Вступ — Зірка, яка згасла зарано
+  points:
+  - Холодна як перша справжня кінозірка
+  - Феномен популярності в епоху німого кіно
+  - Загадкова смерть у 25 років
+- section: Дитинство та юність
+  points:
+  - Народження в Полтаві (1893)
+  - Переїзд до Москви
+  - Ранній інтерес до театру та балету
+- section: Шлях до екрану
+  points:
+  - Перші ролі в кіно
+  - Співпраця з режисерами
+  - Формування екранного образу
+- section: Королева екрану
+  points:
+  - Найпопулярніші фільми
+  - Феномен Віри Холодної
+  - Масова любов публіки
+- section: Мистецтво німого кіно
+  points:
+  - Особливості акторської гри
+  - Вираження емоцій без слів
+  - Вплив на розвиток кінематографу
+- section: Трагічний фінал
+  points:
+  - Революція та громадянська війна
+  - Перебування в Одесі
+  - Загадкова смерть (1919)
+- section: Дискусія — Легенда та реальність
+  points:
+  - Версії про причини смерті
+  - Холодна в українській культурній памяті
+vocabulary_hints:
+  required:
+  - німе кіно (silent cinema)
+  - кінозірка (film star)
+  - екран (screen)
+  - роль (role)
+  - режисер (director)
+  - акторська гра (acting)
+  - популярність (popularity)
+  - феномен (phenomenon)
+  - легенда (legend)
+  - трагедія (tragedy)
+  recommended:
+  - мелодрама (melodrama)
+  - кінематограф (cinematography)
+  - кадр (frame)
+  - титри (intertitles)
+  - прем'єра (premiere)
+activity_hints:
+- type: reading
+  focus: Описи фільмів та рецензії епохи
+  source: Архівні матеріали
+  items: 3 passages
+- type: essay-response
+  focus: Чому німе кіно створювало такі сильні емоції?
+  output: Культурологічний есей
+focus: biography
+prerequisites:
+- b2-hist-early-20th-century
+connects_to:
+- c1-bio-57-les-kurbas
+- c1-bio-67-serge-lifar
+- c1-bio-26-mariya-zankovetska
+module_type: biography
+sources:
+- name: Віра Холодна (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Холодна_Віра_Василівна
+  type: primary
+  notes: Основна біографічна інформація
+- name: Історія українського кіно
+  url: https://kinokolo.ua/
+  type: reference
+  notes: Контекст раннього кінематографу
+- name: Фільмографія
+  url: https://www.imdb.com/
+  type: reference
+  notes: Список фільмів
+immersion: 100% Ukrainian
+phase: C1-BIO
+objectives:
+- 'Analyze the life and legacy of віра холодна: королева німого кіно'
+- Evaluate the contributions of зірка, яка згасла зарано
+- Trace the career and influence of легенда та реальність
+persona:
+  voice: Senior Biographer
+  role: Silent Film Star
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Віра Холодна: Королева німого кіно
+
+## Використані джерела
+1. [Віра Холодна (ESU)](https://esu.com.ua/article-87742) — Енциклопедія Сучасної України, стаття про життя та творчість.
+2. [Віра Холодна. 125 років від дня народження (UINP)](https://uinp.gov.ua/istorychnyy-kalendar/serpen/5/1893-narodylasya-vira-holodna-kinoaktorka) — Український інститут національної пам'яті.
+3. [Королева німого кіно: 130 років від дня народження Віри Холодної (Suspilne)](https://suspilne.media/culture/544347-koroleva-nimogo-kino-130-rokiv-vid-dna-narodzenna-viri-holodnoi/) — Суспільне Культура.
+4. [Історія українського кіно (Kinokolo)](http://www.kinokolo.ua/) — Матеріали про розвиток раннього кінематографу.
+
+## Хронологія
+- **5 серпня 1893**: Народилася в Полтаві в родині Василя Левченка та Катерини Слєпцової.
+- **1895**: Переїзд родини до Москви, але збереження зв'язків з українською культурою.
+- **1903**: Вступ до балетного училища Великого театру (залишила через рік на вимогу родини).
+- **1910**: Одруження з Володимиром Холодним, українським правником.
+- **1914**: Початок кінокар'єри (епізодична роль у "Анні Кареніній").
+- **1915**: Тріумф у фільмі "Пісня торжествуючого кохання" Євгена Бауера.
+- **1915-1918**: Зйомки у понад 50 (за деякими даними до 80) фільмах; статус "Королеви екрану".
+- **Літо 1918**: Переїзд до Одеси з кіноекспедицією "Кіно-Русь".
+- **8 лютого 1919**: Останній публічний виступ на благодійному концерті в Одесі.
+- **16 лютого 1919**: Смерть в Одесі від іспанського грипу (офіційна версія).
+- **1931**: Знищення могили на Першому Християнському кладовищі в Одесі.
+
+## Ключові факти та цитати
+- **Походження**: Батько Василь Левченко походив з козацько-старшинського роду XVII ст. У дитинстві Віру називали "полтавською галушкою" за добрий апетит.
+- **Український контекст**: Чоловік Володимир Холодний та його брат Григорій Холодний були активними діячами українського відродження. Григорій очолював Інститут української наукової мови (згодом репресований у справі СВУ).
+- **Феномен**: Знімалася лише 5 років, але стала найвідомішою акторкою імперії. Її похорон в Одесі зібрав десятки тисяч людей і був зафільмований (стрічка "Похорон Віри Холодної").
+- **Цитата (сестра Софія)**: «Вона мала дивовижну здатність передавати почуття одними очима. Її погляд говорив більше, ніж титри».
+- **Цитата (Олександр Вертинський)**: «Якась контролерка в кінотеатрі... перетворилася на богиню, на ідола публіки».
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ — Зірка, яка згасла зарано": `[!history-bite]` — Про прізвисько "полтавська галушка" та міф про "російську акторку".
+- Section "Дитинство та юність": `[!context]` — Полтавське коріння родини Левченків та козацький рід.
+- Section "Шлях до екрану": `[!quote]` — Спогади режисера Гардіна про її перші, невпевнені кроки ("вміла лише повертати голівку").
+- Section "Королева екрану": `[!culture]` — Феномен "холодноманії": черги за квитками, листівки, мода на її стиль.
+- Section "Мистецтво німого кіно": `[!myth-buster]` — Міф про "примітивність" німого кіно; аналіз її гри як передвісника системи Станіславського в кіно.
+- Section "Трагічний фінал": `[!context]` — Одеса 1919 року: інтервенція Антанти, більшовицьке підпілля, хаос.
+- Section "Дискусія — Легенда та реальність": `[!decolonization]` — Як радянська влада знищила її могилу та репресувала родину (чоловіка і його брата).
+
+## Деколонізаційний контекст
+- **Imperial/Soviet myth**: Віра Холодна — виключно "російська" актриса, "раба кохання", аполітична фігура.
+- **Ukrainian reality**: Народжена в Полтаві, з козацького роду. Інтегрована в українське середовище через родину чоловіка (Григорій Холодний). Її смерть в Одесі стала символом кінця епохи перед радянською окупацією. Знищення її могили — акт стирання пам'яті.
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian framing |
+|---------|-----------------|-------------------|
+| Походження | Російська актриса, народилася в "Малоросії" | Українська актриса, народилася в Полтаві, козацький рід Левченків |
+| Смерть | Випадкова смерть від "іспанки" (або романтизовані версії про отруєння ліліями) | Смерть у контексті більшовицького терору та боротьби за Одесу; можлива ліквідація спецслужбами |
+| Родина | Чоловік — "офіцер", "білогвардієць" | Родина Холодних — українські інтелектуали, жертви сталінських репресій (справа СВУ) |
+
+## Section-Mapped Research Notes
+
+### Вступ — Зірка, яка згасла зарано
+Віра Холодна як феномен першої масової культури. Коротка, але яскрава кар'єра (1914-1919). Народження в Полтаві 5 серпня 1893 року. Смерть у 25 років, яка шокувала суспільство.
+
+### Дитинство та юність
+Батько Василь Левченко — педагог, козацького роду. Мати Катерина Слєпцова. Переїзд до Москви, смерть батька, коли Вірі було 10 років. Навчання в гімназії Перепьолкіної. Захоплення балетом, вступ до училища Великого театру та вимушене повернення додому. Знайомство з Володимиром Холодним на випускному балу 1910 року.
+
+### Шлях до екрану
+1914 рік — мобілізація чоловіка на фронт Першої світової. Матеріальна скрута. Перший візит до кіноательє "Тіман і Рейнгардт". Режисер Володимир Гардін дає епізодичну роль у "Анні Кареніній". Скепсис професіоналів ("Тільки зовнішність"). Прорив завдяки Євгену Бауеру ("Пісня торжествуючого кохання", 1915).
+
+### Королева екрану
+Співпраця з Ханжонковим. Фільми "Життя за життя", "Забудь про камін...", "Мовчи, сум, мовчи". Неймовірна працездатність (фільм знімався за 3-4 дні, іноді паралельно в кількох стрічках). Листівки з її фотографіями розходилися мільйонними накладами. Вплив на моду (капелюшки, макіяж).
+
+### Мистецтво німого кіно
+Унікальний стиль гри: стриманість жестів, акцент на міміку та очі ("очі біблійної страждальниці"). Відмова від театрального пафосу на користь психологізму. Амплуа: жінка-жертва, фатальна жінка, яка страждає від кохання. Робота без дублерів та каскадерів.
+
+### Трагічний фінал
+Літо 1918 року — переїзд кіноательє Харитонова до Одеси ("через більшовицький переворот"). Життя в готелі "Брістоль". Успіх концертів в Одесі. Участь у благодійних вечорах на користь Добровольчої армії. Захворювання на "іспанку" після виступу на холоді. Швидкий перебіг хвороби. Смерть 16 лютого 1919 року.
+
+### Дискусія — Легенда та реальність
+Версії смерті: офіційна (іспанка), отруєння білими ліліями (де Лафар), отруєння більшовиками (через вплив на французького генерала Фрейденберга). Похорон як грандіозна маніфестація. Знищення кладовища та могили радянською владою у 1931 році. Доля родини: арешт і розстріл чоловіка Володимира чекістами, репресії проти його брата Григорія.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 13076)
+✓ Message 13047 acknowledged
+✓ Message 13076 acknowledged

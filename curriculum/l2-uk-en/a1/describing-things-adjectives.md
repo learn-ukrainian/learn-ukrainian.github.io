@@ -10,7 +10,7 @@ Related: a1-03 (Gender), a1-27 (Colors), a1-25 (Routine)
 
 > **Чому це важливо?**
 >
-> Adjectives bring your world to life. Without them, you can only name things ("This is a house"). With them, you can express opinion, color, emotion, and detail ("This is a **beautiful, old** house"). Understanding how adjectives change to match nouns is the key to unlocking the beauty of the Ukrainian language.
+> Without adjectives, you can only name things: "This is a house." With them, you can add opinion, color, and detail: "This is a **beautiful, old** house." In this module, you will learn how Ukrainian adjectives change their endings to match the noun they describe — a pattern called **agreement**.
 
 ## Розминка: Що навколо?
 
@@ -61,7 +61,7 @@ We use **Які?** [jɑˈki] for plural nouns of *any* gender. This is used when
 
 ## Тверда група прикметників
 
-Most adjectives in Ukrainian belong to the "Hard Group". This means their stem (the part of the word before the ending) ends in a "hard" consonant. These represent the standard pattern you will see 90% of the time.
+Most adjectives in Ukrainian belong to the "Hard Group". This means their stem (the part of the word before the ending) ends in a "hard" consonant. These represent the standard pattern and cover the vast majority of adjectives you will encounter.
 
 ### Чоловічий рід (Masculine)
 For masculine nouns, hard group adjectives end in **-ий**.
@@ -302,7 +302,7 @@ Imagine a bright, welcoming space:
 
 If the room is not good:
 *   **Це стара кімната.** (This is an old room.)
-*   **Вона мала і темна.** (It is small and dark.)
+*   **Вона мала й темна.** (It is small and dark.)
 *   **Вікно брудне.** (The window is dirty.)
 
 ### Describing People (Люди)
@@ -320,9 +320,9 @@ Let's describe a character:
 **Текст: Фото з відпустки (Vacation Photo)**
 
 Подивіться на це фото. Це старе європейське місто.
-Небо (sky) синє і світле. День гарний і теплий (warm).
+Небо (sky) синє й світле. День гарний та теплий (warm).
 Вулиця (street) вузька (narrow), але дуже гарна.
-Тут є старий будинок. Він світлий. Вікна великі і чисті.
+Тут є старий будинок. Він світлий. Вікна великі й чисті.
 Люди на вулиці добрі.
 Це гарне місце.
 
@@ -332,6 +332,7 @@ Let's describe a character:
 Стіни (walls) **білі** і **чисті**.
 Тут є **чорний стіл** і **нове крісло**.
 На столі стоїть комп'ютер. Він **старий**, але **швидкий**.
+На столі також є кава (coffee). Вона дуже **смачна** (tasty).
 Тут також є шафа (wardrobe). Вона **велика**.
 У шафі є книги. Вони **цікаві** і **старі**.
 У мене є квітка (flower). Вона **гарна**.
@@ -363,7 +364,7 @@ Let's see how these words work in real conversation.
 **Олена**: Це добре. А камера **добра**?
 **Андрій**: Так, фото дуже **якісні** (high quality).
 
-*   **телефон** (phone) is Masculine → новий, чорний [ˈt͡ʃɔrnɪj] (black), швидкий [ʃʋɪdˈkɪj] (fast), дорогий, дешевий.
+*   **телефон** (phone) is Masculine → новий, чорний [ˈt͡ʃɔrnɪj] (black), швидкий [ˈʃʋɪdkɪj] (fast), дорогий, дешевий.
 
 ### Dialogue 2: The Apartment Hunt
 *Situation: Discussing a rental option.*
@@ -378,7 +379,7 @@ Let's see how these words work in real conversation.
 **Клієнт**: Добре. Ціна **нормальна**?
 **Рієлтор**: Так, ціна дуже **гарна**.
 
-*   **квартира** (apartment), **кухня** (kitchen), **ціна** (price) are all Feminine → нова, велика, світла, мала, зручна [zrut͡ʃˈnɑ] (comfortable), нормальна [norˈmɑlʲnɑ] (normal), гарна.
+*   **квартира** (apartment), **кухня** (kitchen), **ціна** (price) are all Feminine → нова, велика, світла, мала, зручна [ˈzrut͡ʃnɑ] (comfortable), нормальна [norˈmɑlʲnɑ] (normal), гарна.
 *   **вікно** (window) is Neuter → велике.
 
 ### Dialogue 3: У магазині
@@ -404,9 +405,9 @@ Now, let's put it all together. Read this text describing a home. Notice how the
 (Text: My Native Home)
 
 Це мій **старий дім**. Він не **великий**, але він дуже **гарний**.
-Тут є **велика кімната**. Вона **світла** і **чиста**. Там стоїть **старий стіл** і **нове крісло**.
+Тут є **велика кімната**. Вона **світла** і **чиста**. Там стоїть **старий стіл** та **нове крісло**.
 На столі лежить **цікава книга**. Вона **синя**.
-Мій кіт тут. Він **малий** і **чорний**. Він дуже **добрий**, але іноді **нудний**, коли спить весь день.
+Мій кіт тут. Він **малий** і **чорний**. Він дуже **добрий**, але дуже **спокійний**, коли спить весь день.
 Я люблю свій дім. Він **найкращий** (the best)!
 
 **Текст: Наша вулиця**
@@ -431,7 +432,7 @@ Now, let's put it all together. Read this text describing a home. Notice how the
 *   **стіл** (M) → старий.
 *   **крісло** (N) → нове.
 *   **книга** (F) → цікава, синя.
-*   **кіт** (M) → малий, чорний, добрий, нудний, білий.
+*   **кіт** (M) → малий, чорний, добрий, спокійний, білий.
 *   **вулиця** (F) → давня, широка, вузька, гарна, чиста.
 *   **магазин** (M) → новий, маленький, дешевий.
 *   **місце** (N) → прекрасне.
@@ -441,7 +442,7 @@ Now, let's put it all together. Read this text describing a home. Notice how the
 
 # Підсумок
 
-Congratulations! You have unlocked the ability to describe the world. You are no longer pointing and saying names; you are painting pictures with words.
+Well done! You can now describe objects, rooms, and people in Ukrainian using adjectives that match in gender and number.
 
 You learned that adjectives are like mirrors—they reflect the gender of the noun they describe.
 *   **Він** (Masculine) → **-ий** (or **-ій** for soft stems like *синій*)

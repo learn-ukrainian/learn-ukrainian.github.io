@@ -1,0 +1,219 @@
+✅ Message sent to Gemini (ID: 12364) [auto-acked: self-addressed]
+✓ Message 12364 acknowledged
+   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
+
+🚀 Invoking Gemini to process message #12364...
+📨 Message #12364
+   From: gemini → To: gemini
+   Type: query
+   Task: enrich-yermolenko-fluid-ideologies
+   Time: 2026-02-20T23:38:54.496327+00:00
+
+============================================================
+
+# Plan Enrichment: Integrate Research into Content Outline
+
+> **You are Gemini, enriching a module plan with research findings.**
+> **Your ONLY output: an enriched `content_outline` and `vocabulary_hints` in YAML, wrapped in delimiters.**
+> **Do NOT output anything else — no explanations, no commentary, no preamble.**
+
+---
+
+## Input: Current Plan
+
+```yaml
+sequence: 34
+module: lit-essay-34
+level: LIT.ESSAY
+slug: yermolenko-fluid-ideologies
+version: '2.0'
+title: Yermolenko Fluid Ideologies
+subtitle: Yermolenko Fluid Ideologies
+content_outline:
+- section: Вступ та контекст
+  points: []
+- section: Аналіз ключових творів
+  points: []
+- section: Стилістика та мова автора
+  points: []
+- section: Деколонізаційна перспектива
+  points:
+  - Як цей автор руйнує імперські міфи
+  - Українська суб'єктність у тексті
+- section: Підсумок та спадщина
+  points: []
+vocabulary_hints:
+  required:
+  - історіографія
+  - наратив
+  - суб'єктність
+  recommended:
+  - деколонізація
+activity_hints:
+- type: reading
+  focus: Аналіз першоджерела
+- type: essay-response
+  focus: Критичне есе
+- type: critical-analysis
+  focus: Деконструкція тексту
+focus: literature
+pedagogy: literature
+immersion: 100% Ukrainian
+phase: LIT Expansion
+objectives:
+- Проаналізувати творчість Yermolenko Fluid Ideologies у контексті української літератури
+- Дослідити вплив автора на формування національної ідентичності
+persona:
+  voice: Senior Specialist
+  role: Fluidity Philosopher
+
+```
+
+## Input: Research Findings
+
+```markdown
+# Дослідження: Володимир Єрмоленко «Плинні ідеології»
+
+## Використані джерела
+1. [Енциклопедія Сучасної України (ЕСУ)](https://esu.com.ua/) — Біографічна довідка та філософський бекграунд Володимира Єрмоленка.
+2. [Читомо: Рецензії та огляди](https://chytomo.com/) — Аналіз структури та впливу книги «Плинні ідеології» на сучасний український інтелектуальний ландшафт.
+3. [ЛітАкцент: Сучасна есеїстика](http://litakcent.com/) — Огляд стилістичних особливостей та філософської есеїстики Єрмоленка.
+
+## Хронологія
+- 1980: Народження Володимира Єрмоленка в Києві.
+- 2011: Захист дисертації у Франції (Вища школа соціальних досліджень, EHESS).
+- 2018: Видання збірки філософської есеїстики «Плинні ідеології. Ідеї та тексти в Європі ХІХ–ХХ століть».
+- 2018: Книга здобуває престижну Премію імені Юрія Шевельова за найкращу українську есеїстику року.
+- 2022-2024: Активна роль Єрмоленка як президента Українського ПЕН-клубу та публічного інтелектуала, що пояснює український спротив світові.
+
+## Ключові факти та цитати
+- **Факт**: «Плинні ідеології» — це спроба переосмислити європейську інтелектуальну історію ХІХ-ХХ століть через метафору рідини (плинності), де ідеології не є жорсткими конструкціями, а здатні до мутацій, перетікань і заражень.
+- **Цитата**: «Ідеології рідко бувають жорсткими конструкціями. Вони радше нагадують рідини, які перетікають одна в одну, змінюють форму, але зберігають свою руйнівну або творчу силу.» (Володимир Єрмоленко).
+- **Цитата**: «Європа — це не лише простір правил, це передусім простір ідей, які постійно змагаються між собою.» (з текстів автора).
+
+## Engagement Hooks (mapped to sections)
+- Section "Вступ та контекст": `[!context]` — Розвиток української філософської есеїстики після Революції Гідності як інструменту самоусвідомлення.
+- Section "Аналіз: I — Метафора «плинності»": `[!quote]` — Ключова цитата Єрмоленка про текучу природу ідеологій.
+- Section "Аналіз: II — Деконструкція імперських міфів": `[!history-bite]` — Зв'язок між європейськими утопіями та зародженням російського тоталітарного мислення.
+- Section "Стилістика та мова автора": `[!culture]` — Вплив французької філософської традиції (зокрема деконструктивізму) на формування індивідуального стилю Єрмоленка.
+- Section "Деколонізаційна перспектива": `[!myth-buster]` — Спростування імперського міфу про "провінційність" та "вторинність" української філософської думки.
+- Section "Сучасний вплив та значення": `[!decolonization]` — Роль українського інтелектуала як повноцінного суб'єкта європейського дискурсу, що аналізує Захід з позиції українського досвіду.
+
+## Деколонізаційний контекст
+- **Імперський/радянський міф**: Українська література та філософія здатні осмислювати лише локальні, "хуторянські" проблеми, тоді як глобальні ідеї є прерогативою російської або західноєвропейської думки.
+- **Українська реальність**: Текст Єрмоленка доводить, що український інтелектуал є повноцінним, суб'єктним аналітиком європейської історії ідей. Автор дивиться на західні (і російські) ідеології з української перспективи, деконструюючи їхні небезпеки, що є актом найвищої інтелектуальної емансипації.
+
+## Contested Terms
+| Concept | Imperial framing | Ukrainian (decolonized) framing |
+|---------|-----------------|-------------------------------|
+| Європейська історія | Монополія великих імперій (Росії, Німеччини, Франції) на творення сенсів. | Поліфонічний простір, де український досвід (зокрема досвід опору тоталітаризмам) є критично важливим для розуміння самої Європи. |
+| Ідеологія | Монолітна, незмінна доктрина (марксизм-ленінізм як єдино правильне вчення). | Плинна, мутуюча структура (fluidity), яка здатна адаптуватися, перетворюючи утопії на антиутопії. |
+
+## Section-Mapped Research Notes
+
+### Вступ та контекст
+Дослідження місця книги «Плинні ідеології» в сучасній українській літературі. Відродження жанру есеїстики (традиції Ю. Шевельова, І. Лисяка-Рудницького). Біографічний контекст Єрмоленка: французька освіта, викладання в Києво-Могилянській академії, робота в медіа.
+
+### Аналіз: I — Метафора «плинності» та критика догматизму
+Розкриття центральної метафори книги. Чому ідеології "плинні"? Як автор аналізує перетікання ідей від французької революції до фашизму та комунізму. Аналіз есеїв, присвячених метаморфозам європейської думки ХІХ століття.
+
+### Аналіз: II — Деконструкція імперських та тоталітарних міфів
+Фокус на критиці російського месіанства та імперської ідеології, яка також аналізується через призму "плинності". Як Єрмоленко препарує тексти російських філософів та письменників, показуючи коріння сучасного російського фашизму (рашизму).
+
+### Стилістика та мова автора
+Есеїстичний стиль: поєднання глибокої філософської ерудиції з прозорістю публіцистики. Метафоричність мислення. Вплив французької традиції есею (від Монтеня до Барта і Дерріди). Специфіка інтелектуального наративу.
+
+### Деколонізаційна перспектива
+Українська суб'єктність: текст Єрмоленка як приклад того, як Україна перестає бути об'єктом вивчення і стає суб'єктом, що вивчає інших. Деконструкція ієрархії "центр-провінція".
+
+### Сучасний вплив та значення (Замість "Підсумок та спадщина", оскільки автор живий)
+Роль Єрмоленка в культурній дипломатії. Актуальність книги під час повномасштабної війни: розуміння плинних ідеологій ворога допомагає у військовому та інформаційному спротиві.
+```
+
+---
+
+## Rules
+
+### Section Structure
+
+- **Minimum 5 sections** for modules with `word_target >= 3000`
+- **Minimum 4 sections** for modules with `word_target < 3000`
+- Section names MUST be in Ukrainian (with English subtitle in parentheses): `"Вступ (Introduction)"`
+- Each section gets a `words:` allocation that sums to `word_target` (within ±5%)
+- **No single section should exceed 35% of `word_target`**
+- Sections should follow a natural pedagogical flow: introduction → presentation → practice → production/summary
+
+### What to Enrich from Research
+
+1. **Cultural hooks** found in research → become dedicated subsection points or section motivators. Add specific cultural references, not generic ones.
+2. **Learner errors** documented in research → become explicit drill/practice points with correction patterns. Include the wrong form AND the correct form.
+3. **Vocabulary frequency data** from research → inform `vocabulary_hints` (add collocations, frequency notes, register markers).
+4. **Cross-references** mentioned in research → ensure `prerequisites` / `connects_to` in plan match what research discovered. Note these in section points where relevant.
+5. **State Standard references** from research → add as explicit points where the Standard mandates specific competencies.
+
+### What NOT to Change
+
+Do NOT modify ANY of these fields — they are immutable:
+- `slug`, `title`, `subtitle`, `module`, `level`, `sequence`, `version`
+- `focus`, `pedagogy`, `prerequisites`, `connects_to`, `objectives`, `grammar`
+- `module_type`, `sources`, `immersion`, `phase`, `persona`, `register`
+- `word_target` (this is the MINIMUM — enrichment helps MEET it, not alter it)
+
+PRESERVE all existing `activity_hints` (you may add more if research suggests gaps, but never remove existing ones).
+
+### Section Point Quality
+
+Each section point should be specific and actionable, not vague:
+- BAD: "Common errors with dative case"
+- GOOD: "Learner error: confusing «Дякую тебе» (Acc) with correct «Дякую тобі» (Dat) — drill with 3 minimal pairs"
+
+Each point should give enough detail that a content writer can expand it into 100-200 words without guessing.
+
+### Output Format
+
+Output EXACTLY this structure, with no text before or after the delimiters:
+
+===ENRICHED_OUTLINE_START===
+content_outline:
+- section: "Вступ (Introduction)"
+  words: 400
+  points:
+  - "Point 1 with specific detail from research"
+  - "Point 2 referencing cultural hook or learner error"
+- section: "Презентація (Presentation)"
+  words: 600
+  points:
+  - "..."
+===ENRICHED_OUTLINE_END===
+
+===ENRICHED_VOCAB_START===
+vocabulary_hints:
+  required:
+  - "word (translation) — collocations; frequency/usage notes"
+  recommended:
+  - "word (translation) — usage notes"
+===ENRICHED_VOCAB_END===
+
+### Critical Reminders
+
+- The `words:` values across all sections MUST sum to approximately `word_target` (within ±5%)
+- Every section MUST have at least 2 `points`
+- Points MUST be strings (quoted YAML), not nested structures
+- If the research adds nothing new beyond what the plan already has, output the existing outline with proper Ukrainian section names and word allocations — do NOT fabricate content
+- Use YAML block scalars or quoted strings for long points containing special characters
+
+
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3-flash-preview"}
+
+🤖 Processing with Gemini (gemini-3-flash-preview) [sync, 15 min timeout]...
+
+❌ Gemini CLI error (exit 41): YOLO mode is enabled. All tool calls will be automatically approved.
+Failed to load API key from storage: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)
+    at Module.userInfo (node:os:306:11)
+    at FileTokenStorage.deriveEncryptionKey (file:///opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/mcp/token-storage/file-token-storage.js:22:45)
+    at new FileTokenStorage (file:///opt/
+✅ Message sent to Claude (ID: 12417)
+✓ Message 12364 acknowledged
+✓ Message 12417 acknowledged
