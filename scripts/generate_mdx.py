@@ -1216,6 +1216,88 @@ def resolve_slug_links(content: str) -> str:
 
 
 # =============================================================================
+# MDX NORMALIZATION
+# =============================================================================
+
+def normalize_mdx(text: str) -> str:
+    """Normalize MDX output to fix common markdownlint violations.
+
+    Fixes: MD009 (trailing spaces), MD004 (list marker *->-), MD049 (_->*),
+    MD050 (__->**), MD012 (multiple blanks), MD022 (heading blanks),
+    MD047 (trailing newline).
+
+    Skips JSX blocks and fenced code blocks to avoid breaking MDX components.
+    """
+    lines = text.split('\n')
+    result = []
+    in_code_fence = False
+
+    for line in lines:
+        stripped = line.strip()
+
+        # Track fenced code blocks
+        if stripped.startswith('```'):
+            in_code_fence = not in_code_fence
+            result.append(line.rstrip())
+            continue
+
+        if in_code_fence:
+            result.append(line.rstrip())
+            continue
+
+        # Skip JSX / import lines (only strip trailing whitespace)
+        if (stripped.startswith(('<', '{', '/>', '</', 'import ')) or
+                'className=' in line):
+            result.append(line.rstrip())
+            continue
+
+        # Skip table rows (pipes would cause false positives)
+        if stripped.startswith('|'):
+            result.append(line.rstrip())
+            continue
+
+        # MD009: strip trailing whitespace
+        line = line.rstrip()
+
+        # MD004: * list marker -> - (including inside blockquotes)
+        line = re.sub(r'^(\s*(?:>\s*)*)\*(?= )', r'\1-', line)
+
+        # MD030: normalize spaces after list markers to exactly 1
+        line = re.sub(r'^(\s*(?:>\s*)*(?:[-*+]|\d+\.))\s{2,}', r'\1 ', line)
+
+        # MD049/MD050: normalize emphasis markers (skip inline code spans)
+        if '_' in line:
+            parts = re.split(r'(`[^`]+`)', line)
+            new_parts = []
+            for j, part in enumerate(parts):
+                if j % 2 == 1:  # inside backticks — preserve
+                    new_parts.append(part)
+                else:
+                    # MD050: __text__ -> **text**
+                    part = re.sub(r'(?<!\w)__(?!\s)(.+?)(?<!\s)__(?!\w)', r'**\1**', part)
+                    # MD049: _text_ -> *text*
+                    part = re.sub(r'(?<!\w)_(?!\s)([^_]+?)(?<!\s)_(?!\w)', r'*\1*', part)
+                    new_parts.append(part)
+            line = ''.join(new_parts)
+
+        result.append(line)
+
+    text = '\n'.join(result)
+
+    # MD022: blank lines around headings (skip frontmatter/JSX context)
+    text = re.sub(r'(\S[^\n]*)\n(#{1,6} )', r'\1\n\n\2', text)
+    text = re.sub(r'(#{1,6} [^\n]+)\n(\S)', r'\1\n\n\2', text)
+
+    # MD012: collapse 3+ consecutive newlines to 2 (max 1 blank line)
+    text = re.sub(r'\n{3,}', '\n\n', text)
+
+    # MD047: ensure single trailing newline
+    text = text.rstrip('\n') + '\n'
+
+    return text
+
+
+# =============================================================================
 # MDX GENERATOR
 # =============================================================================
 
@@ -1234,9 +1316,19 @@ def generate_mdx(md_content: str, module_num: int, yaml_activities: list[Activit
     if meta_data:
         fm = meta_data
         body = md_content # MD file is already stripped if meta exists (usually)
-        # But if we are transitioning, MD might still have FM. 
+        # But if we are transitioning, MD might still have FM.
         # parse_frontmatter splits it regardless.
         _, body = parse_frontmatter(md_content)
+        # Strip inline YAML preamble when frontmatter delimiters (---) were missing.
+        # Some .md files have raw YAML meta at the top without --- delimiters,
+        # which parse_frontmatter can't detect. Strip up to first # heading.
+        if body and not md_content.lstrip().startswith('---'):
+            heading_match = re.search(r'^# ', body, flags=re.MULTILINE)
+            if heading_match and heading_match.start() > 0:
+                preamble = body[:heading_match.start()]
+                if re.match(r'[a-z_]+:', preamble):
+                    print(f"  ⚠️  Stripping inline YAML preamble (missing --- delimiters)")
+                    body = body[heading_match.start():]
     else:
         fm, body = parse_frontmatter(md_content)
 
@@ -1390,7 +1482,7 @@ description: "{escape_jsx(fm.get('subtitle', ''))}"
     # Build MDX
     parts = [frontmatter, imports, '', processed]
 
-    return '\n'.join(parts)
+    return normalize_mdx('\n'.join(parts))
 
 # =============================================================================
 # EXTERNAL RESOURCES
