@@ -1,19 +1,22 @@
 #!/usr/bin/env python3
 """Deterministic E2E Module Builder v3 — Optimised 4-Call Pipeline.
 
-v3 collapses multiple v2 phases into single Gemini calls, reducing round-trips
-from 8-9 calls to 4 baseline (worst case 9 with fix iterations).
+v3 collapses multiple v2 phases into optimised calls, reducing round-trips
+from 8-9 calls to 4 baseline (worst case 8 with fix iterations).
+
+Cross-agent pipeline: Gemini builds (A/B/C), Claude reviews (D).
+This prevents self-review gaming detected by anti-gaming audit checks.
 
 Pipeline:
-    Phase A:  Research + Meta         (1 call) ← v2 phases 0, 0.5, 1
-    Phase B:  Content                 (1 call) ← v2 phase 2 + track context
-    Phase C:  Activities + Vocab      (1 call) ← v2 phases 4a+4b + track context
-    Audit:    Prose+Enrichment audit  (0-3 fix calls)
-    Phase D:  Review + Fix            (1-2 calls) ← v2 phases 6, 6b, 7
-    Phase F:  Claude Final Review     (opt.) ← v2 phase 9
+    Phase A:  Research + Meta         (1 Gemini call) ← v2 phases 0, 0.5, 1
+    Phase B:  Content                 (1 Gemini call) ← v2 phase 2 + track context
+    Phase C:  Activities + Vocab      (1 Gemini call) ← v2 phases 4a+4b + track context
+    Audit:    Prose+Enrichment audit  (0-3 Gemini fix calls)
+    Phase D:  Review + Fix            (1-2 Claude calls) ← cross-agent review
+    Phase F:  Final Review            (opt., agent-selectable) ← v2 phase 9
     Phase E:  MDX                     (0 LLM calls) ← ALWAYS LAST
 
-Baseline: 4 Gemini calls. Worst case: 4 + 3 audit fixes + 2 Phase D retries = 9.
+Baseline: 3 Gemini + 1 Claude. Worst case: 3G + 3G audit + 2C Phase D = 8.
 Typical: 4-6 calls. v2: 8-9+.
 
 Usage:
@@ -101,13 +104,13 @@ PHASE_LABELS_V3: dict[str, str] = {
     "B":     "Content (with track context)",
     "C":     "Activities + Vocab (with track context)",
     "audit": "Prose + Enrichment Audit+Fix Loop",
-    "D":     "Adversarial Review + Fix",
+    "D":     "Cross-Agent Review + Fix (Claude)",
     "E":     "MDX Generation (deterministic)",
-    "F":     "Claude Final Review (QA Gate)",
+    "F":     "Final Review (agent-selectable)",
 }
 
 MAX_AUDIT_FIX_ITERS = 3
-MAX_D_ITERS = 2
+MAX_D_ITERS = 3
 ESCALATION_MODEL_CLAUDE = "claude-opus-4-6"       # Escalation: Claude fixes what Gemini can't
 ESCALATION_MODEL_GEMINI = PRO_MODEL                # Escalation: Gemini fixes what Claude can't
 
@@ -345,6 +348,7 @@ def _validate_audit_state(ctx: ModuleContext, state: dict) -> None:
 
 CLAUDE_MODEL_ACTIVITIES = "claude-sonnet-4-6"   # Phase C default
 CLAUDE_MODEL_RESEARCH   = "claude-sonnet-4-6"   # Phase A default
+CLAUDE_MODEL_REVIEW     = "claude-opus-4-6"     # Phase D default (cross-agent review needs best model)
 
 
 def _dispatch_claude_phase(
@@ -422,6 +426,156 @@ def _extract_delimiter(text: str, start_tag: str, end_tag: str) -> str | None:
     s = text.index(start_tag) + len(start_tag)
     e = text.index(end_tag)
     return text[s:e].strip()
+
+
+# ---------------------------------------------------------------------------
+# Phase D helpers: pre-compute audit metrics + extract H2 sections
+# ---------------------------------------------------------------------------
+
+def _compute_audit_metrics(ctx: ModuleContext) -> dict[str, str]:
+    """Pre-compute audit metrics by running the audit programmatically.
+
+    Returns a dict of string values ready for template injection. This replaces
+    the old {AUDIT_WORD_COUNT} etc. placeholders that were never substituted.
+    """
+    import yaml
+    from audit.cleaners import clean_for_stats, clean_for_immersion, extract_core_content, calculate_immersion
+
+    metrics: dict[str, str] = {}
+    content_path = ctx.paths.get("md")
+
+    # Word count
+    if content_path and content_path.exists():
+        content = content_path.read_text("utf-8")
+        # Strip frontmatter
+        body = content
+        if content.startswith("---"):
+            parts = content.split("---", 2)
+            if len(parts) >= 3:
+                body = parts[2]
+
+        core = extract_core_content(body)
+        core_lines = [ln for ln in core.split("\n") if not ln.strip().startswith("|")]
+        core_cleaned = clean_for_stats("\n".join(core_lines))
+        word_count = len(core_cleaned.split())
+    else:
+        word_count = 0
+        body = ""
+        content = ""
+
+    word_target = ctx.word_target or 0
+    word_pct = (word_count / word_target * 100) if word_target else 0
+    metrics["COMPUTED_WORD_COUNT"] = str(word_count)
+    metrics["COMPUTED_WORD_TARGET"] = str(word_target)
+    metrics["COMPUTED_WORD_PERCENT"] = f"{word_pct:.1f}"
+
+    # Activity count (from YAML sidecar)
+    act_path = ctx.paths.get("activities")
+    act_count = 0
+    if act_path and act_path.exists():
+        try:
+            act_data = yaml.safe_load(act_path.read_text("utf-8"))
+            if isinstance(act_data, list):
+                act_count = len(act_data)
+        except Exception:
+            pass
+    metrics["COMPUTED_ACTIVITY_COUNT"] = str(act_count)
+
+    # Vocabulary count (from YAML sidecar — key may be "vocab" or "vocabulary")
+    vocab_path = ctx.paths.get("vocab") or ctx.paths.get("vocabulary")
+    vocab_count = 0
+    if vocab_path and vocab_path.exists():
+        try:
+            vocab_data = yaml.safe_load(vocab_path.read_text("utf-8"))
+            if isinstance(vocab_data, list):
+                vocab_count = len(vocab_data)
+            elif isinstance(vocab_data, dict):
+                # Some vocab files have a 'vocabulary' key
+                vlist = vocab_data.get("vocabulary", vocab_data.get("items", []))
+                if isinstance(vlist, list):
+                    vocab_count = len(vlist)
+        except Exception:
+            pass
+    metrics["COMPUTED_VOCAB_COUNT"] = str(vocab_count)
+
+    # Engagement box count
+    engagement_pattern = re.compile(
+        r'(>\s*[💡⚡🎬🎭📜⚔️🔗🌍🎁🗣️🏠🧭🚌🚇🎟️📱🕵️🌤️🌦️🎱🔮🇺🇦🕰️❓🛠️💂🥪🍺🛍️🏫🏥💊👵🔬🎨🔄📅🍃❄️🚂⏳📚🍲🥣🥗🥙🥚🥛🧩⚠️🛑🎯🎮🎓🔍])|'
+        r'(>\s*\[!(note|tip|warning|caution|important|cultural|history-bite|myth-buster|quote|context|analysis|source|legacy|reflection|fact|culture|military|perspective|biography)\])'
+    )
+    engagement_count = len(engagement_pattern.findall(content))
+    metrics["COMPUTED_ENGAGEMENT_COUNT"] = str(engagement_count)
+
+    # Immersion percentage (calculate_immersion already returns 0-100)
+    if body:
+        imm_text = clean_for_immersion(body)
+        immersion_pct = calculate_immersion(imm_text)
+    else:
+        immersion_pct = 0.0
+    metrics["COMPUTED_IMMERSION_PERCENT"] = f"{immersion_pct:.1f}"
+
+    # Immersion target (level-dependent)
+    from audit.config import get_a1_immersion_range, get_a2_immersion_range, get_b1_immersion_range
+    level = ctx.track.split("-")[0].upper() if "-" not in ctx.track else ctx.track.upper()
+    # Normalize: a1 -> A1, b2-hist -> B2-HIST
+    level_code = level[:2] if len(level) >= 2 else level
+    module_num = ctx.module_num if hasattr(ctx, "module_num") else 1
+    try:
+        if level_code == "A1":
+            min_imm, max_imm = get_a1_immersion_range(module_num)
+        elif level_code == "A2":
+            min_imm, max_imm = get_a2_immersion_range(module_num)
+        elif level_code == "B1":
+            min_imm, max_imm = get_b1_immersion_range(module_num)
+        else:
+            min_imm, max_imm = 85, 95  # B2+ default
+    except Exception:
+        min_imm, max_imm = 80, 95
+    metrics["COMPUTED_IMMERSION_TARGET"] = f"{min_imm}-{max_imm}%"
+
+    # Audit status (quick run)
+    if content_path and content_path.exists():
+        passed, _ = run_verify(content_path, content_only=False)
+        metrics["COMPUTED_AUDIT_STATUS"] = "PASS" if passed else "FAIL"
+    else:
+        metrics["COMPUTED_AUDIT_STATUS"] = "NO_CONTENT"
+
+    return metrics
+
+
+def _extract_h2_sections(content_path: Path) -> str:
+    """Extract all H2 headers from a content .md file as a numbered list."""
+    if not content_path.exists():
+        return "(content file not found)"
+    text = content_path.read_text("utf-8")
+    h2s = re.findall(r"^## (.+)$", text, re.MULTILINE)
+    if not h2s:
+        return "(no H2 sections found)"
+    return "\n".join(f"{i}. {h}" for i, h in enumerate(h2s, 1))
+
+
+def _inject_metrics_into_prompt(prompt_text: str, metrics: dict[str, str]) -> str:
+    """Replace {COMPUTED_*} placeholders in a prompt with computed values."""
+    for key, val in metrics.items():
+        prompt_text = prompt_text.replace("{" + key + "}", val)
+    return prompt_text
+
+
+def _extract_audit_failures(audit_output: str) -> str:
+    """Extract the actionable failure lines from audit output for the repair prompt."""
+    lines = audit_output.strip().split("\n")
+    # Keep FAIL lines, error lines, and gate descriptions
+    failure_lines = []
+    for line in lines:
+        stripped = line.strip()
+        if any(kw in stripped.upper() for kw in ["FAIL", "ERROR", "VIOLATION", "MISSING", "GATE"]):
+            failure_lines.append(stripped)
+        elif stripped.startswith("❌") or stripped.startswith("🔴"):
+            failure_lines.append(stripped)
+    if not failure_lines:
+        # Fallback: return last 40 lines
+        return "\n".join(lines[-40:])
+    return "\n".join(failure_lines)
 
 
 # ---------------------------------------------------------------------------
@@ -881,11 +1035,12 @@ def phase_C_v3(ctx: ModuleContext, state: dict, use_track_context: bool = True) 
 # ---------------------------------------------------------------------------
 
 def _escalate_fix(ctx: ModuleContext, audit_output: str, phase_label: str,
-                  content_only: bool = True) -> bool:
-    """Escalate a failed fix to Claude Opus when Gemini exhausts (or vice versa).
+                  content_only: bool = True, primary_agent: str = "gemini") -> bool:
+    """Escalate a failed fix to the opposite agent when primary exhausts.
 
-    Builds a targeted fix prompt, dispatches to Claude Opus via CLI (-p mode),
-    applies section fixes from delimiter output, then re-audits.
+    When primary_agent is 'gemini' (audit fix loops), escalates to Claude Opus.
+    When primary_agent is 'claude' (Phase D), escalates to Gemini.
+    Builds a targeted fix prompt, dispatches, applies section fixes, re-audits.
     Returns True if audit passes after fix.
     """
     # Pre-flight: retry audit once — borderline cases can flip between runs.
@@ -968,30 +1123,44 @@ def _escalate_fix(ctx: ModuleContext, audit_output: str, phase_label: str,
     fix_file = ctx.orch_dir / f"{phase_label}-escalation-prompt.md"
     fix_file.write_text(prompt_text, "utf-8")
 
-    log(f"  {phase_label}: Escalating to Claude Opus...")
-    ok, output = _dispatch_claude_phase(
-        fix_file,
-        phase_label=f"{phase_label}-escalation",
-        model=ESCALATION_MODEL_CLAUDE,
-        timeout=900,  # 15 min — Opus needs more time for large audit+content
-    )
+    if primary_agent == "claude":
+        # Primary was Claude → escalate to Gemini
+        log(f"  {phase_label}: Escalating to Gemini (primary was Claude)...")
+        output_file = _gemini_output_path(ctx.slug, f"{phase_label}-escalation")
+        ok, output = dispatch_gemini(
+            _dispatch_prompt(ctx, fix_file),
+            task_id=f"v3-{ctx.slug}-escalation",
+            model=ctx.model, stdout_only=True, output_file=output_file,
+            timeout=TIMEOUT_FIX,
+        )
+    else:
+        # Primary was Gemini → escalate to Claude Opus
+        log(f"  {phase_label}: Escalating to Claude Opus...")
+        ok, output = _dispatch_claude_phase(
+            fix_file,
+            phase_label=f"{phase_label}-escalation",
+            model=ESCALATION_MODEL_CLAUDE,
+            timeout=900,  # 15 min — Opus needs more time for large audit+content
+        )
     if not ok:
-        log(f"  {phase_label}: Claude escalation dispatch failed")
+        log(f"  {phase_label}: Escalation dispatch failed")
         return False
 
     # Apply section fixes from Claude's output
     if output and "===SECTION_FIX_START===" in output:
         _apply_section_fixes(ctx.paths["md"], output)
-        log(f"  {phase_label}: Claude escalation fixes applied")
+        escalation_agent = "Gemini" if primary_agent == "claude" else "Claude"
+        log(f"  {phase_label}: {escalation_agent} escalation fixes applied")
     elif output:
-        log(f"  {phase_label}: Claude output missing SECTION_FIX delimiters — cannot apply")
+        log(f"  {phase_label}: Escalation output missing SECTION_FIX delimiters — cannot apply")
         # Save raw output for debugging
         (ctx.orch_dir / f"{phase_label}-escalation-raw.md").write_text(output, "utf-8")
 
     # Re-audit
     passed, _ = run_verify(ctx.paths["md"], content_only=content_only)
     if passed:
-        log(f"  {phase_label}: Escalation PASS — Claude Opus fixed the issues")
+        escalation_agent = "Gemini" if primary_agent == "claude" else "Claude Opus"
+        log(f"  {phase_label}: Escalation PASS — {escalation_agent} fixed the issues")
     else:
         log(f"  {phase_label}: Escalation FAIL — both agents exhausted")
     return passed
@@ -1134,103 +1303,162 @@ def phase_audit_v3(ctx: ModuleContext, state: dict) -> bool:
 
 
 # ---------------------------------------------------------------------------
-# Phase D: Adversarial Review + Fix (combined)
+# Phase D: Cross-Agent Review + Fix (Claude reviews Gemini's work)
+# Two-step: D.1 Evidence+Review → D.2 Targeted Repair (if needed)
 # ---------------------------------------------------------------------------
 
 def phase_D_v3(ctx: ModuleContext, state: dict) -> bool:
-    """Phase D: Adversarial review + inline fixes in one call, then re-audit.
+    """Phase D: Two-step cross-agent adversarial review via Claude.
 
-    Max 2 iterations. Each iteration:
-    1. Dispatch phase-D-review-fix.md
-    2. Extract REVIEW → save to review file
-    3. Apply SECTION_FIX if present
-    4. Re-audit
-    5. If passed → done; else retry (max 2 total)
+    Step 1 (D.1): Evidence collection + review — Claude reads files with tool
+        access, produces a structured review with verified citations.
+    Step 2 (D.2): Targeted repair — only if Step 1's review + re-audit show
+        failures. Claude gets the review + specific audit failures, produces
+        FIND/REPLACE fix pairs.
+
+    No blind retry loop — Step 2 gets targeted feedback from Step 1 + audit.
     """
     phase = "D"
     if _is_phase_v3_complete(ctx, phase, state):
         log("  Phase D: SKIP (already complete)")
         return True
 
-    template = PHASES_DIR / "phase-D-review-fix.md"
-    if not template.exists():
-        log(f"  Phase D: ERROR — template not found: {template}")
+    d1_template = PHASES_DIR / "phase-D1-evidence-review.md"
+    d2_template = PHASES_DIR / "phase-D2-repair.md"
+    if not d1_template.exists():
+        log(f"  Phase D: ERROR — D1 template not found: {d1_template}")
+        return False
+    if not d2_template.exists():
+        log(f"  Phase D: ERROR — D2 template not found: {d2_template}")
         return False
 
     if ctx.dry_run:
-        log("  Phase D: DRY-RUN — would dispatch phase-D-review-fix.md")
+        log("  Phase D: DRY-RUN — would dispatch D1 (evidence+review) + D2 (repair)")
         return True
 
-    for attempt in range(1, MAX_D_ITERS + 1):
-        log(f"  Phase D: Dispatching review+fix (attempt {attempt}/{MAX_D_ITERS})...")
+    claude_model_D = getattr(ctx, "claude_model_D", CLAUDE_MODEL_REVIEW)
 
-        prompt_file = ctx.orch_dir / f"phase-D-prompt-{attempt}.md"
-        if not fill_template(template, ctx.orch_dir / "placeholders.yaml", prompt_file):
-            return False
+    # -----------------------------------------------------------------------
+    # Step 1: Evidence Collection + Review
+    # -----------------------------------------------------------------------
+    log(f"  Phase D.1: Computing audit metrics...")
+    metrics = _compute_audit_metrics(ctx)
+    sections = _extract_h2_sections(ctx.paths["md"])
 
-        output_file = _gemini_output_path(ctx.slug, f"pD-{attempt}")
-        ok, raw_output = dispatch_gemini(
-            _dispatch_prompt(ctx, prompt_file),
-            task_id=f"v3-{ctx.slug}-pD-{attempt}",
-            model=ctx.model, stdout_only=True, output_file=output_file,
-            timeout=TIMEOUT_REVIEW,
-        )
-        if not ok:
-            log(f"  Phase D: Dispatch failed (attempt {attempt})")
-            if attempt == MAX_D_ITERS:
-                _mark_phase_v3(ctx, state, phase, "failed", attempts=attempt)
-                return False
-            continue
+    prompt_file = ctx.orch_dir / "phase-D-prompt-1.md"
+    if not fill_template(d1_template, ctx.orch_dir / "placeholders.yaml", prompt_file):
+        return False
 
-        # Extract review → save
-        review_text = _extract_delimiter(raw_output, "===REVIEW_START===", "===REVIEW_END===")
-        if review_text:
-            ctx.paths["review"].parent.mkdir(parents=True, exist_ok=True)
-            ctx.paths["review"].write_text(review_text, "utf-8")
-            (ctx.orch_dir / f"phase-D-review-{attempt}.md").write_text(review_text, "utf-8")
-            log(f"  Phase D: Review saved → {ctx.paths['review'].name}")
-        else:
-            log(f"  Phase D: WARNING — no REVIEW delimiters (attempt {attempt})")
+    # Inject computed metrics and H2 sections into the prompt
+    prompt_text = prompt_file.read_text("utf-8")
+    prompt_text = _inject_metrics_into_prompt(prompt_text, metrics)
+    prompt_text = prompt_text.replace("{COMPUTED_H2_SECTIONS}", sections)
+    prompt_file.write_text(prompt_text, "utf-8")
 
-        # Apply fixes if present
-        if "===SECTION_FIX_START===" in raw_output:
-            _apply_section_fixes(ctx.paths["md"], raw_output)
-            # Also apply to activities file (phase-D-review-fix.md can fix both)
-            if ctx.paths.get("activities"):
-                _apply_section_fixes(ctx.paths["activities"], raw_output)
-            log(f"  Phase D: Section fixes applied")
+    log(f"  Phase D.1: Dispatching evidence+review via Claude ({claude_model_D})...")
+    log(f"    Metrics: {metrics.get('COMPUTED_WORD_COUNT', '?')}w / "
+        f"{metrics.get('COMPUTED_WORD_TARGET', '?')}w, "
+        f"{metrics.get('COMPUTED_ACTIVITY_COUNT', '?')} activities, "
+        f"immersion {metrics.get('COMPUTED_IMMERSION_PERCENT', '?')}%")
 
-        # Re-audit
-        log(f"  Phase D: Re-auditing after attempt {attempt}...")
-        passed, audit_out = run_verify(ctx.paths["md"], content_only=False)
-        audit_log = ctx.orch_dir / f"pD-audit-{attempt}.log"
-        audit_log.write_text(audit_out, "utf-8")
+    ok, raw_output = _dispatch_claude_phase(
+        prompt_file, "Phase D.1",
+        model=claude_model_D, timeout=TIMEOUT_REVIEW,
+        allow_tools=["Read", "Grep", "Glob"],
+    )
+    if not ok:
+        log("  Phase D.1: Dispatch FAILED")
+        _mark_phase_v3(ctx, state, phase, "failed", attempts=1, note="d1-dispatch-failed")
+        return False
 
-        if passed:
-            log(f"  Phase D: PASS (attempt {attempt})")
-            _mark_phase_v3(ctx, state, phase, "complete", attempts=attempt)
-            # Mark v2 review + final audit phases as done too
-            mark_phase_locked(ctx, "6", "complete", note="v3-phase-D")
-            mark_phase_locked(ctx, "6b", "complete", note="v3-phase-D")
-            mark_phase_locked(ctx, "7-final", "complete", note="v3-phase-D")
-            return True
+    # Extract review
+    review_text = _extract_delimiter(raw_output, "===REVIEW_START===", "===REVIEW_END===")
+    if not review_text:
+        log("  Phase D.1: WARNING — no REVIEW delimiters in output")
+        # Save raw output for debugging
+        (ctx.orch_dir / "phase-D1-raw-output.md").write_text(raw_output, "utf-8")
+        _mark_phase_v3(ctx, state, phase, "failed", attempts=1, note="d1-no-review")
+        return False
 
-        if attempt == MAX_D_ITERS:
-            log(f"  Phase D: EXHAUSTED — {MAX_D_ITERS} Gemini attempts, audit still failing")
-            # Escalate to Claude Opus before giving up
-            if _escalate_fix(ctx, audit_out, "Phase D", content_only=False):
-                _mark_phase_v3(ctx, state, phase, "complete",
-                               attempts=attempt, note="escalation-claude")
-                mark_phase_locked(ctx, "6", "complete", note="v3-phase-D-escalation")
-                mark_phase_locked(ctx, "6b", "complete", note="v3-phase-D-escalation")
-                mark_phase_locked(ctx, "7-final", "complete", note="v3-phase-D-escalation")
-                return True
-            _mark_phase_v3(ctx, state, phase, "failed",
-                           attempts=attempt, note="escalation-failed")
-            return False
+    # Inject Reviewed-By metadata if Claude forgot it
+    if "Reviewed-By:" not in review_text:
+        review_text = f"**Reviewed-By:** {claude_model_D}\n\n{review_text}"
 
-        log(f"  Phase D: Audit failed after attempt {attempt} — retrying review+fix")
+    # Save review
+    ctx.paths["review"].parent.mkdir(parents=True, exist_ok=True)
+    ctx.paths["review"].write_text(review_text, "utf-8")
+    (ctx.orch_dir / "phase-D-review-1.md").write_text(review_text, "utf-8")
+    log(f"  Phase D.1: Review saved → {ctx.paths['review'].name}")
 
+    # Run full audit to check review quality + content
+    log("  Phase D.1: Running audit after review...")
+    passed, audit_out = run_verify(ctx.paths["md"], content_only=False)
+    audit_log = ctx.orch_dir / "pD-audit-1.log"
+    audit_log.write_text(audit_out, "utf-8")
+
+    if passed:
+        log("  Phase D: PASS (D.1 review sufficient — no repair needed)")
+        _mark_phase_v3(ctx, state, phase, "complete", attempts=1, note="d1-only")
+        mark_phase_locked(ctx, "6", "complete", note="v3-phase-D")
+        mark_phase_locked(ctx, "6b", "complete", note="v3-phase-D")
+        mark_phase_locked(ctx, "7-final", "complete", note="v3-phase-D")
+        return True
+
+    # -----------------------------------------------------------------------
+    # Step 2: Targeted Repair (only if Step 1 didn't pass audit)
+    # -----------------------------------------------------------------------
+    log("  Phase D.2: Audit failed after review — dispatching targeted repair...")
+
+    # Extract specific audit failures for the repair prompt
+    failures = _extract_audit_failures(audit_out)
+
+    prompt_file2 = ctx.orch_dir / "phase-D-prompt-2.md"
+    if not fill_template(d2_template, ctx.orch_dir / "placeholders.yaml", prompt_file2):
+        return False
+
+    # Inject review text and audit failures into D2 prompt
+    prompt2_text = prompt_file2.read_text("utf-8")
+    prompt2_text = prompt2_text.replace("{INJECTED_REVIEW_TEXT}", review_text)
+    prompt2_text = prompt2_text.replace("{INJECTED_AUDIT_FAILURES}", failures)
+    prompt_file2.write_text(prompt2_text, "utf-8")
+
+    ok2, raw_output2 = _dispatch_claude_phase(
+        prompt_file2, "Phase D.2",
+        model=claude_model_D, timeout=TIMEOUT_FIX,
+        allow_tools=["Read", "Grep", "Glob"],
+    )
+    if not ok2:
+        log("  Phase D.2: Dispatch FAILED")
+        _mark_phase_v3(ctx, state, phase, "failed", attempts=2, note="d2-dispatch-failed")
+        return False
+
+    # Apply fixes if present
+    if "===SECTION_FIX_START===" in raw_output2:
+        _apply_section_fixes(ctx.paths["md"], raw_output2)
+        if ctx.paths.get("activities"):
+            _apply_section_fixes(ctx.paths["activities"], raw_output2)
+        log("  Phase D.2: Section fixes applied")
+    else:
+        log("  Phase D.2: WARNING — no SECTION_FIX delimiters in output")
+        (ctx.orch_dir / "phase-D2-raw-output.md").write_text(raw_output2, "utf-8")
+
+    # Final re-audit
+    log("  Phase D.2: Running final audit...")
+    passed, audit_out2 = run_verify(ctx.paths["md"], content_only=False)
+    audit_log2 = ctx.orch_dir / "pD-audit-2.log"
+    audit_log2.write_text(audit_out2, "utf-8")
+
+    if passed:
+        log("  Phase D: PASS (after D.1 review + D.2 repair)")
+        _mark_phase_v3(ctx, state, phase, "complete", attempts=2)
+        mark_phase_locked(ctx, "6", "complete", note="v3-phase-D")
+        mark_phase_locked(ctx, "6b", "complete", note="v3-phase-D")
+        mark_phase_locked(ctx, "7-final", "complete", note="v3-phase-D")
+        return True
+
+    log("  Phase D: EXHAUSTED — D.1 review + D.2 repair both insufficient")
+    log("  Phase D: Module marked as NEEDS-REBUILD (use --rebuild to regenerate)")
+    _mark_phase_v3(ctx, state, phase, "failed", attempts=2, note="needs-rebuild")
     return False
 
 
@@ -1244,12 +1472,91 @@ def phase_E_v3(ctx: ModuleContext) -> bool:
 
 
 # ---------------------------------------------------------------------------
-# Phase F: Claude Final Review (optional — delegates to v2)
+# Phase F: Final Review (optional, agent-selectable)
 # ---------------------------------------------------------------------------
 
 def phase_F_v3(ctx: ModuleContext) -> bool:
-    """Phase F: Claude final QA gate. Delegates to v2's phase_9_final_review."""
+    """Phase F: Final QA gate. Agent-selectable via --final-review-agent.
+
+    Default: Claude (delegates to v2 phase_9_final_review).
+    With --final-review-agent gemini: dispatches same prompt via Gemini.
+    """
+    agent = getattr(ctx, "final_review_agent", "claude")
+    if agent == "gemini":
+        return _phase_F_gemini(ctx)
     return phase_F_v3_delegate(ctx)
+
+
+def _phase_F_gemini(ctx: ModuleContext) -> bool:
+    """Phase F via Gemini: build the final QA prompt and dispatch to Gemini.
+
+    Uses the same Phase D review-fix template but in read-only review mode.
+    This enables true cross-agent Phase F: if Phase D is Claude, Phase F can be Gemini.
+    """
+    if not getattr(ctx, "final_review", False):
+        return True
+
+    phase = "9-final-review"
+    if is_phase_complete(ctx, phase):
+        log("  Phase F (Gemini): SKIP (already complete)")
+        return True
+
+    if ctx.dry_run:
+        log("  Phase F: DRY-RUN — would call Gemini for final review")
+        return True
+
+    # Use the Phase D review template (same review format)
+    template = PHASES_DIR / "phase-D-review-fix.md"
+    if not template.exists():
+        log(f"  Phase F (Gemini): ERROR — template not found: {template}")
+        return False
+
+    prompt_file = ctx.orch_dir / "phase-F-gemini-prompt.md"
+    if not fill_template(template, ctx.orch_dir / "placeholders.yaml", prompt_file):
+        return False
+
+    log(f"  Phase F (Gemini): Dispatching final review via Gemini...")
+    output_file = _gemini_output_path(ctx.slug, "pF")
+    ok, raw_output = dispatch_gemini(
+        _dispatch_prompt(ctx, prompt_file),
+        task_id=f"v3-{ctx.slug}-pF",
+        model=ctx.model, stdout_only=True, output_file=output_file,
+        timeout=TIMEOUT_REVIEW,
+    )
+    if not ok:
+        log("  Phase F (Gemini): Dispatch failed")
+        return False
+
+    # Extract and save review
+    review_text = _extract_delimiter(raw_output, "===REVIEW_START===", "===REVIEW_END===")
+    if review_text:
+        final_review_path = ctx.paths["review"].parent / f"{ctx.slug}-final-review.md"
+        final_review_path.parent.mkdir(parents=True, exist_ok=True)
+        final_review_path.write_text(review_text, "utf-8")
+        (ctx.orch_dir / "phase-9-final-review.md").write_text(review_text, "utf-8")
+        log(f"  Phase F (Gemini): Review saved → {final_review_path.name}")
+
+    # Apply fixes if present
+    if "===SECTION_FIX_START===" in raw_output:
+        _apply_section_fixes(ctx.paths["md"], raw_output)
+        if ctx.paths.get("activities"):
+            _apply_section_fixes(ctx.paths["activities"], raw_output)
+        log("  Phase F (Gemini): Section fixes applied")
+
+    # Extract verdict — Phase D template uses **PASS**/**FAIL** under "## Verdict"
+    verdict = "NEEDS_WORK"
+    if re.search(r"\*\*PASS\*\*", raw_output):
+        verdict = "APPROVE"
+    elif re.search(r"\*\*FAIL\*\*", raw_output):
+        verdict = "REJECT"
+    log(f"  Phase F (Gemini): Verdict → {verdict}")
+
+    if verdict == "REJECT":
+        mark_phase_locked(ctx, phase, "failed", verdict=verdict)
+        return False
+
+    mark_phase_locked(ctx, phase, "complete", verdict=verdict)
+    return True
 
 
 # ---------------------------------------------------------------------------
@@ -1358,7 +1665,7 @@ def run_pipeline_v3(ctx: ModuleContext, research_only: bool = False,
 
 def _run_final_phases(ctx: ModuleContext, state: dict) -> bool:
     """Run Phase F (optional) then Phase E (always). Returns overall success."""
-    # Phase F: Claude Final Review (optional)
+    # Phase F: Final Review (optional, agent-selectable)
     if getattr(ctx, "final_review", False):
         # Check if Phase F already completed (skip → no post-F repair needed)
         phase_f_already_done = _is_phase_v3_complete(ctx, "F", state) or is_phase_complete(ctx, "9-final-review")
@@ -1455,7 +1762,9 @@ def preflight_v3(args: argparse.Namespace) -> ModuleContext:
     _default_gen_model = "claude-opus-4-6" if _is_seminar else CLAUDE_MODEL_ACTIVITIES
     ctx.claude_model_A = getattr(args, "claude_model_A", None) or _default_gen_model   # type: ignore[attr-defined]
     ctx.claude_model_C = getattr(args, "claude_model_C", None) or _default_gen_model   # type: ignore[attr-defined]
+    ctx.claude_model_D = getattr(args, "claude_model_D", None) or CLAUDE_MODEL_REVIEW  # type: ignore[attr-defined]
     ctx.claude_model_F = getattr(args, "claude_model_F", None) or "claude-opus-4-6"    # type: ignore[attr-defined]
+    ctx.final_review_agent = getattr(args, "final_review_agent", "claude")             # type: ignore[attr-defined]
 
     # --rebuild forces Phase B to regenerate even if content file exists
     if getattr(args, "rebuild", False):
@@ -1561,17 +1870,20 @@ def main() -> int:
                         help="Skip track context injection in Phases B and C")
     parser.add_argument("--research-only", action="store_true", dest="research_only",
                         help="Run Phase A only (pre-seed research for all modules)")
-    parser.add_argument("--claude-review", action="store_true", dest="claude_review",
-                        help="Use Claude API for Phase D review instead of Gemini")
     parser.add_argument("--final-review", action="store_true", dest="final_review",
-                        help="Run Phase F: Claude final QA gate after Phase D")
+                        help="Run Phase F: final QA gate after Phase D")
+    parser.add_argument("--final-review-agent", type=str, default="claude",
+                        choices=["claude", "gemini"], dest="final_review_agent",
+                        help="Agent for Phase F final review (default: claude)")
     parser.add_argument("--use-claude", type=str, default="", dest="use_claude",
                         help="Phases to run via Claude instead of Gemini (e.g. 'A', 'C', 'A C'). "
-                             "A=research, C=activities. --final-review (Phase F) always uses Claude.")
+                             "A=research, C=activities. Phase D always uses Claude (cross-agent).")
     parser.add_argument("--claude-model-A", type=str, default=None, dest="claude_model_A",
                         help=f"Claude model for Phase A/research (default: sonnet for core, opus for seminar)")
     parser.add_argument("--claude-model-C", type=str, default=None, dest="claude_model_C",
                         help=f"Claude model for Phase C/activities (default: sonnet for core, opus for seminar)")
+    parser.add_argument("--claude-model-D", type=str, default=None, dest="claude_model_D",
+                        help="Claude model for Phase D/review (default: claude-opus-4-6)")
     parser.add_argument("--claude-model-F", type=str, default=None, dest="claude_model_F",
                         help="Claude model for Phase F/final-review (default: claude-opus-4-6)")
 
@@ -1654,11 +1966,12 @@ def main() -> int:
                 refresh=getattr(args, "refresh", False), verify=False,
                 no_track_context=args.no_track_context,
                 research_only=args.research_only,
-                claude_review=getattr(args, "claude_review", False),
                 final_review=getattr(args, "final_review", False),
+                final_review_agent=getattr(args, "final_review_agent", "claude"),
                 use_claude=getattr(args, "use_claude", ""),
                 claude_model_A=getattr(args, "claude_model_A", None),
                 claude_model_C=getattr(args, "claude_model_C", None),
+                claude_model_D=getattr(args, "claude_model_D", None),
                 claude_model_F=getattr(args, "claude_model_F", None),
             )
             rc = _run_single_module(single_args)
