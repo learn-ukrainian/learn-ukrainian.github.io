@@ -1222,11 +1222,11 @@ def resolve_slug_links(content: str) -> str:
 def normalize_mdx(text: str) -> str:
     """Normalize MDX output to fix common markdownlint violations.
 
-    Fixes: MD009 (trailing spaces), MD004 (list marker *->-), MD049 (_->*),
-    MD050 (__->**), MD012 (multiple blanks), MD022 (heading blanks),
+    Fixes: MD009 (trailing spaces), MD004 (list marker *->-), MD030 (list spacing),
+    MD049 (_->*), MD050 (__->**), MD012 (multiple blanks), MD022 (heading blanks),
     MD047 (trailing newline).
 
-    Skips JSX blocks and fenced code blocks to avoid breaking MDX components.
+    Skips JSX blocks, fenced code blocks, URLs, and inline code to avoid corruption.
     """
     lines = text.split('\n')
     result = []
@@ -1265,12 +1265,13 @@ def normalize_mdx(text: str) -> str:
         # MD030: normalize spaces after list markers to exactly 1
         line = re.sub(r'^(\s*(?:>\s*)*(?:[-*+]|\d+\.))\s{2,}', r'\1 ', line)
 
-        # MD049/MD050: normalize emphasis markers (skip inline code spans)
+        # MD049/MD050: normalize emphasis markers
+        # Split on code spans AND markdown link targets to preserve URLs and code
         if '_' in line:
-            parts = re.split(r'(`[^`]+`)', line)
+            parts = re.split(r'(\[[^\]]*\]\([^)]*\)|`[^`]+`)', line)
             new_parts = []
             for j, part in enumerate(parts):
-                if j % 2 == 1:  # inside backticks — preserve
+                if j % 2 == 1:  # inside link target or backticks — preserve
                     new_parts.append(part)
                 else:
                     # MD050: __text__ -> **text**
@@ -1284,9 +1285,20 @@ def normalize_mdx(text: str) -> str:
 
     text = '\n'.join(result)
 
-    # MD022: blank lines around headings (skip frontmatter/JSX context)
+    # MD022: blank lines around headings
+    # Protect fenced code blocks from heading regex by temporarily replacing them
+    code_blocks = []
+    def _stash_code_block(match):
+        code_blocks.append(match.group(0))
+        return f'\x00CODEBLOCK{len(code_blocks) - 1}\x00'
+    text = re.sub(r'```[^\n]*\n.*?```', _stash_code_block, text, flags=re.DOTALL)
+
     text = re.sub(r'(\S[^\n]*)\n(#{1,6} )', r'\1\n\n\2', text)
     text = re.sub(r'(#{1,6} [^\n]+)\n(\S)', r'\1\n\n\2', text)
+
+    # Restore code blocks
+    for i, block in enumerate(code_blocks):
+        text = text.replace(f'\x00CODEBLOCK{i}\x00', block)
 
     # MD012: collapse 3+ consecutive newlines to 2 (max 1 blank line)
     text = re.sub(r'\n{3,}', '\n\n', text)
@@ -1321,12 +1333,20 @@ def generate_mdx(md_content: str, module_num: int, yaml_activities: list[Activit
         _, body = parse_frontmatter(md_content)
         # Strip inline YAML preamble when frontmatter delimiters (---) were missing.
         # Some .md files have raw YAML meta at the top without --- delimiters,
-        # which parse_frontmatter can't detect. Strip up to first # heading.
+        # which parse_frontmatter can't detect. Strip up to first heading.
+        # Uses strict key matching to avoid false positives on prose like "Note:".
+        _YAML_META_KEYS = {
+            'module', 'level', 'sequence', 'slug', 'version', 'title', 'subtitle',
+            'content_outline', 'vocabulary_hints', 'activity_hints', 'focus',
+            'pedagogy', 'prerequisites', 'connects_to', 'objectives', 'grammar',
+            'register', 'phase', 'persona', 'word_target',
+        }
         if body and not md_content.lstrip().startswith('---'):
-            heading_match = re.search(r'^# ', body, flags=re.MULTILINE)
-            if heading_match and heading_match.start() > 0:
-                preamble = body[:heading_match.start()]
-                if re.match(r'[a-z_]+:', preamble):
+            first_line = body.lstrip().split('\n')[0]
+            first_key = first_line.split(':')[0].strip()
+            if first_key in _YAML_META_KEYS:
+                heading_match = re.search(r'^#{1,2} ', body, flags=re.MULTILINE)
+                if heading_match and heading_match.start() > 0:
                     print(f"  ⚠️  Stripping inline YAML preamble (missing --- delimiters)")
                     body = body[heading_match.start():]
     else:
