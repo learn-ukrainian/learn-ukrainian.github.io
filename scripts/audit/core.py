@@ -56,6 +56,7 @@ from .checks.content_purity import check_content_purity
 from .checks.prose_quality import check_prose_quality
 from .checks.imperial_terminology import check_imperial_terminology
 from .checks.colonial_framing import check_colonial_framing
+from .checks.russicism_detection import check_russicisms
 from .checks.euphony import check_euphony_violations
 from .checks.content_quality import (
     ACADEMIC_LATIN_ALLOWLIST,
@@ -1749,6 +1750,14 @@ def audit_module(file_path: str, skip_activities: bool = False,
             print(f"     {icon} [{v['type']}] {v['issue']}")
         content_quality_violations.extend(imperial_violations)
 
+    # Run Russicism detection (lexical calques from Russian)
+    russicism_violations = check_russicisms(content, file_path)
+    if russicism_violations:
+        for v in russicism_violations:
+            sev_icon = "❌" if v['severity'] == 'critical' else "⚠️"
+            print(f"     {sev_icon} [{v['type']}] {v['issue']}")
+        content_quality_violations.extend(russicism_violations)
+
     # Run colonial framing checks (Russian-as-baseline)
     colonial_violations = check_colonial_framing(content, file_path)
     if colonial_violations:
@@ -1787,10 +1796,12 @@ def audit_module(file_path: str, skip_activities: bool = False,
         content_quality_violations.extend(gaming_violations)
 
     # Convert purity violations to standard pedagogical violations for reporting
+    # Only critical-severity violations block the audit; warnings are informational
     for v in content_quality_violations:
         pedagogical_violations.append({
             'type': v['type'],
             'severity': v['severity'],
+            'blocking': v['severity'] == 'critical',
             'issue': v['issue'],
             'fix': v['fix']
         })
@@ -1920,7 +1931,10 @@ def audit_module(file_path: str, skip_activities: bool = False,
         })
 
     # 12. Check for missing advanced activities in C1/C2
-    advanced_presence_violations = check_advanced_activities_presence(found_activity_types, level_code, module_focus)
+    if not skip_activities:
+        advanced_presence_violations = check_advanced_activities_presence(found_activity_types, level_code, module_focus)
+    else:
+        advanced_presence_violations = []
     for v in advanced_presence_violations:
         pedagogical_violations.append({
             'type': v['type'],

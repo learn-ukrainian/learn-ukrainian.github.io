@@ -1,0 +1,64 @@
+{
+  "module": "zasnuvannia-kyieva",
+  "level": "B2",
+  "plan_version": "1.0",
+  "last_audit": "2026-02-21T21:57:09.106927Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-02-21T20:34:36.676286Z",
+    "meta": "2026-02-21T20:32:57.493631Z",
+    "activities": "2026-02-21T20:31:02.344079Z",
+    "vocabulary": "2026-02-21T20:31:02.344311Z",
+    "plan": "2026-02-18T19:03:37.789032Z",
+    "research": "2026-02-18T00:18:37.006023Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "5319/5000 (raw: 5696)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "5/3"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "25/20"
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "ipa": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Clean IPA"
+    },
+    "research": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Content aligned with research"
+    },
+    "review": {
+      "status": "pass",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 7,
+    "fail_count": 0,
+    "deferred_count": 0
+  }
+}

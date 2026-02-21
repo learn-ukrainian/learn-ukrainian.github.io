@@ -2,7 +2,47 @@
 
 Base URL: `http://localhost:8765`
 
-FastAPI auto-docs: `http://localhost:8765/docs`
+FastAPI auto-docs: `http://localhost:8765/docs` (Swagger UI)
+
+---
+
+## Health & Config — `/api/`
+
+### `GET /api/health`
+
+Server health check — returns status, version, uptime. Use for monitoring scripts and load balancers.
+
+```bash
+curl -s http://localhost:8765/api/health | python3 -m json.tool
+```
+
+Response:
+```json
+{
+  "status": "ok",
+  "version": "2.0.0",
+  "uptime_seconds": 3600,
+  "started_at": "2026-02-21T10:00:00+00:00",
+  "checked_at": "2026-02-21T11:00:00+00:00"
+}
+```
+
+### `GET /api/config`
+
+Returns level configuration and API version.
+
+### Error Responses
+
+All endpoints return errors in consistent JSON format:
+
+```json
+{
+  "error": "internal_server_error",
+  "detail": "Description of what went wrong"
+}
+```
+
+Standard HTTP status codes: `404` for missing resources, `500` for server errors.
 
 ---
 

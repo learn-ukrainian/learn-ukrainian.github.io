@@ -14,17 +14,19 @@ Do not assume you wrote this content. Do not be generous.**
 
 **You have file system access.** Use Read, Grep, and Glob tools to read every file listed below BEFORE writing any review text.
 
-**BEFORE writing any review sentence that quotes Ukrainian text:**
+**CRITICAL — VERBATIM CITATION RULE:**
+
+Every Ukrainian sentence you put inside «» quotes MUST be **copy-pasted verbatim** from the Read tool output. Do NOT paraphrase, do NOT reconstruct from memory, do NOT change a single word.
 
 1. Use the Read tool to read the actual content file
-2. For EVERY Ukrainian sentence you plan to cite, use Grep to verify it exists:
+2. When you find a sentence to cite, **copy the exact text** from the Read output into your review
+3. After writing a citation, verify it with Grep:
    ```
-   Grep pattern="first 5-6 words" path="/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2-hist/scythians-sarmatians.md"
+   Grep pattern="first 5-6 words of your citation" path="/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2-hist/scythians-sarmatians.md"
    ```
-3. If Grep returns no matches — **the sentence does not exist**. Do NOT cite it.
-4. Only include sentences that Grep confirms are present.
+4. If Grep returns no matches — you paraphrased instead of copying. **Delete the citation and re-copy from Read output.**
 
-**Why this matters**: Quoting from memory produces citations that fail automated verification, causing your review to be flagged as UNVERIFIED_CITATIONS and regenerated from scratch. This is the #1 cause of Phase D failures.
+**Why this matters**: An automated verifier checks that your «»-quoted text appears verbatim in the source. Even minor rewording (e.g., "була не миттєвим" vs "становила не миттєвий") fails verification. 47%+ match rate = your review gets rejected and regenerated. Copy-paste, don't reconstruct.
 
 ---
 
@@ -50,12 +52,12 @@ Read ALL of these files before writing anything:
 ```
 Skill identity:   Professor of Ukrainian Arts (history)
 Module persona:   Senior Professor of History, acting as Royal Goldsmith
-Word count:       5046 / 5000 (100.9%)
+Word count:       5047 / 5000 (100.9%)
 Activities:       5
 Vocabulary items: 10
 Engagement boxes: 5
 Immersion:        99.6% (target: 85-95%)
-Audit status:     FAIL
+Audit status:     PASS
 ```
 
 ## Content Sections (H2 headers in the content file)
@@ -416,9 +418,27 @@ Follow the full review protocol. In summary:
 - Activity errors
 - Beginner safety ("Would I Continue?" test)
 
-### STEP 3a: Factual Accuracy Check (MANDATORY — Seminar Tracks)
+### STEP 3a: Factual Accuracy Check (MANDATORY — ALL TRACKS)
 
-**For seminar tracks (b2-hist, c1-bio, c1-hist, lit, oes, ruth), verify factual claims against the research notes.**
+#### Part 1: Callout Box Verification (ALL tracks, ALL levels)
+
+**Scrutinize EVERY `[!did-you-know]`, `[!myth-buster]`, `[!culture-note]`, `[!fun-fact]` block.** These are the #1 source of LLM fabrication across all tracks.
+
+1. **Superlative claims**: Flag "first in Europe", "the only language that...", "unique to Ukrainian" — these are often exaggerations. Verify or flag.
+2. **Named individuals and works**: If the prose names a historical figure, book, or institution, verify the attribution is correct. Flag fabricated titles (e.g., works that don't exist).
+3. **Statistics and dates**: Any number presented as fact ("80% of...", "founded in 1576") must be plausible. Flag unsourced statistics and unverifiable dates.
+4. **Real-world examples**: If the text presents something as a real announcement, sign, or cultural practice, verify plausibility. Flag fabricated "authentic" examples (e.g., fake metro announcements, invented store slogans).
+5. **Etymologies**: If the text explains a word origin, verify it's correct. Flag folk etymologies presented as fact.
+
+**If factual errors are found in callout boxes:** Score Factual Accuracy ≤ 8, flag as Critical Issue. Fabricated claims presented as fact are auto-fail regardless of track.
+
+#### Part 2: Grammar Rule Verification (core grammar tracks — A1 through C2 core)
+
+1. **Grammar explanations**: Verify every rule statement is accurate. Flag overgeneralizations (e.g., claiming a rule applies universally when it has exceptions).
+
+#### Part 3: Research Cross-Reference (seminar tracks only — b2-hist, c1-bio, c1-hist, lit, oes, ruth)
+
+**Additionally verify factual claims against the research notes.**
 
 1. **Dates**: Cross-reference every date in the prose against the Key Facts Ledger or research chronology. Flag any discrepancy.
 2. **Named attributions**: Verify who said/did what. Misattributed quotes or actions are critical errors.
@@ -426,9 +446,7 @@ Follow the full review protocol. In summary:
 4. **Primary quotes**: If the prose quotes a historical figure, verify the quote exists in the research notes. Fabricated quotes are auto-fail.
 5. **Claims not in research**: Flag any historical claim in the prose that has no grounding in the research notes.
 
-**If factual errors are found:** Score Factual Accuracy ≤ 7, flag as Critical Issue.
-
-**For core tracks (A1-B1):** Verify linguistic rules and grammar explanations are accurate (lighter check).
+**If factual errors are found against research notes:** Score Factual Accuracy ≤ 7, flag as Critical Issue.
 
 ### STEP 3b: Colonial Framing Check (MANDATORY)
 
@@ -491,7 +509,7 @@ Overall = (Experience x 1.5 + Coherence x 1.0 + Relevance x 1.0 + Educational x 
           Factual_Accuracy x 1.5) / 15.5
 ```
 
-**Factual Accuracy note:** Seminar tracks — verify against research notes/Key Facts Ledger. Core tracks — verify grammar explanations are correct. Score 9 if no errors found.
+**Factual Accuracy note:** ALL tracks — verify callout boxes (`[!did-you-know]`, `[!myth-buster]`, `[!culture-note]`, `[!fun-fact]`) for fabricated claims. Seminar tracks — additionally verify against research notes/Key Facts Ledger. Do NOT auto-score 9 for any track.
 
 ---
 
@@ -700,3 +718,9 @@ Plan-Content Alignment: [PASS/FAIL]
 - Do NOT cite Ukrainian text without first verifying it with Grep
 - Do NOT give vague feedback — say exactly what and where
 - Do NOT reference orchestration artifacts or prior build phases
+
+---
+
+## CRITICAL: Output Format Reminder
+
+Your output MUST start with `===REVIEW_START===` and end with `===REVIEW_END===`. The extraction pipeline uses these exact delimiters. Any output without these delimiters is **automatically discarded** and the entire phase fails. Do not write a summary or conversational response — output the structured review inside the delimiters.

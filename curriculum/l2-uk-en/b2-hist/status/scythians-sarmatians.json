@@ -2,12 +2,12 @@
   "module": "scythians-sarmatians",
   "level": "B2",
   "plan_version": "1.0.0",
-  "last_audit": "2026-02-21T15:19:33.864687Z",
+  "last_audit": "2026-02-21T21:45:09.905028Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-19T11:46:42.435314Z",
+    "md": "2026-02-21T21:45:07.371461Z",
     "meta": "2026-02-19T11:34:45.930536Z",
-    "activities": "2026-02-19T11:46:42.435577Z",
+    "activities": "2026-02-21T21:45:07.372522Z",
     "vocabulary": "2026-02-18T18:03:45.455668Z",
     "plan": "2026-02-18T19:03:37.165489Z",
     "research": "2026-02-19T12:14:07.466009Z"
@@ -19,9 +19,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "5046/5000 (raw: 5268) | pedagogy: 27 violations"
+      "status": "pass",
+      "violations": 0,
+      "message": "5047/5000 (raw: 5269)"
     },
     "activities": {
       "status": "pass",
@@ -44,21 +44,21 @@
       "message": "Clean IPA"
     },
     "research": {
-      "status": "warn",
+      "status": "pass",
       "violations": 0,
-      "message": "Refresh recommended: Content predates research (research file is newer)"
+      "message": "Content aligned with research"
     },
     "review": {
-      "status": "skipped",
+      "status": "pass",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "fail",
+    "status": "pass",
     "blocking_issues": [],
-    "pass_count": 3,
-    "fail_count": 1,
+    "pass_count": 6,
+    "fail_count": 0,
     "deferred_count": 0
   }
 }

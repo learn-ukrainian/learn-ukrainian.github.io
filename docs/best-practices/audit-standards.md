@@ -97,22 +97,44 @@ Detects AI slop patterns that make content feel machine-generated.
 
 ---
 
-## Anti-Gaming Detection (Review Gate)
+## Anti-Gaming Detection
 
-The review gate checks for inflated self-review. These patterns trigger **GAMING_LANGUAGE_DETECTED** (critical):
+Two check suites detect LLM content-generation and review-gaming patterns. All checks are deterministic (no LLM calls). Source: `scripts/audit/checks/`.
+
+### Content Gaming (`content_gaming.py` + `content_purity.py`)
+
+| Check | Type | Severity | Trigger |
+|-------|------|----------|---------|
+| Cross-module plagiarism | `CROSS_MODULE_PLAGIARISM` | warn >3 / crit >8 | Sentences duplicated across modules in same track |
+| Content-vocabulary alignment | `VOCAB_NOT_IN_CONTENT` | warn <70% / crit <50% | Vocab YAML words missing from prose+activities |
+| Example diversity | `TEMPLATE_EXAMPLE_RUN` | warn ≥3 / crit ≥5 | Consecutive examples with >70% word overlap (B1+) |
+| Filler phrase density | `FILLER_PHRASE_OVERUSE` | warn >5 / crit >10 | LLM hedging phrases (level-aware: higher for C1/C2) |
+| Section depth (min words) | `SECTION_HEADER_PADDING` | warn any / crit ≥3 | H2 sections below 50w (A1-A2) or 100w (B1+) |
+| Section balance (max %) | `SECTION_BALANCE_BLOATED` | warn >40% / crit >60% | Any H2 section exceeding 40% of total word count |
+| IPA density cap | `IPA_DENSITY_EXCESSIVE` | warn >5% / crit >10% | Inline IPA tokens as fraction of total words |
+| Duplicate sentences | `DUPLICATE_SENTENCES` | warn >3 / crit >6 | Sentences with ≥70% fuzzy overlap within module |
+| Robotic sentence starters | `ROBOTIC_SENTENCE_STARTERS` | warn >30% / crit >50% | Same first word starting too many sentences |
+
+### Review Gaming (`review_gaming.py`)
+
+| Check | Type | Severity | Trigger |
+|-------|------|----------|---------|
+| Score uniformity | `SCORE_UNIFORMITY` | warn <0.5 SD / crit all 10 | Dimension scores too similar (rubber-stamp) |
+| Citation density | `LOW_CITATION_DENSITY` | warn <1/300w / crit <1/500w | Review doesn't cite enough specific content |
+| Section coverage | `LOW_SECTION_COVERAGE` | warn <60% / crit <40% | Review skips too many H2 sections |
+| Score drift | `REVIEW_SCORE_DRIFT` | warn avg>8.5 / crit avg>9.0 | Track-wide inflation across multiple modules |
+| Review boilerplate | `REVIEW_BOILERPLATE` | warn >50% / crit >70% | Recycled critique language across reviews |
+| Phantom section refs | `PHANTOM_SECTION_REFERENCE` | warn any | Review references non-existent section headers |
+| Cross-agent enforcement | `SELF_REVIEW_DETECTED` | critical | Same agent wrote content and review |
+
+### Legacy patterns (still active in review gate)
+
+These patterns trigger **GAMING_LANGUAGE_DETECTED** (critical):
 
 - `"ensuring a high score"`
 - `"reflecting the fixes made"`
 - `"designed to pass"`
 - `"as I improved"`
-
-These patterns trigger **SUSPICIOUSLY_HIGH_SCORES** (warning):
-- All dimensions ≥ 9/10 with no substantive issues
-
-These trigger **RUBBER_STAMP_REVIEW** (critical):
-- All dimensions 10/10
-- Empty issues section
-- No specific problems cited
 
 A flagged review is **invalid**. Request a new review via cross-agent review (Claude reviews Gemini's content, not Gemini reviewing its own).
 

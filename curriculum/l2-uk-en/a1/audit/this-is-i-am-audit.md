@@ -1,7 +1,7 @@
 # Audit Report: M04 — this-is-i-am.md
 **Level:** A1 | **Module:** M04 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 2000
-**Overall Status:** ✅ PASS
-**Generated:** 2026-02-21 00:46:29
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-02-21 21:07:33
 
 ## Configuration
 **Type:** A1-grammar
@@ -36,6 +36,15 @@
 - Required types used: 1/1 (fill-in) ✅
 - Low density activities: 0
 
+## PEDAGOGICAL VIOLATIONS
+- **[VOCAB_NOT_IN_CONTENT]** Only 9/21 (43%) vocabulary words appear in content+activities. Missing: вона, вони, воно, він, ні, так, там, тут, хто, це (+2 more)
+  - FIX: Vocabulary words MUST appear in the module content or activities. Either use these words in the prose/examples, add activities that practice them, or remove them from the vocabulary YAML if they don't belong in this module.
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
+
 ## Gates
 - **Words:** ✅ 2507/2000 (raw: 2770)
 - **Activities:** ✅ 9/8
@@ -48,7 +57,7 @@
 - **Structure:** ✅ Valid Structure
 - **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 10.9% (target 10-25% (M04))
 - **Grammar:** ℹ️ N/A (covered by naturalness)

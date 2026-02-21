@@ -187,6 +187,47 @@ def check_llm_fingerprints(content: str) -> List[Dict]:
     return violations
 
 
+def check_llm_persona_leaks(content: str) -> List[Dict]:
+    """Detect LLM persona / teacher voice leaking into content.
+
+    Catches patterns like "I am your teacher", "I am so glad you are here",
+    "Let me guide you" — where the model role-plays as a character instead
+    of writing neutral educational prose.
+    """
+    violations = []
+    zones = _split_narrative_zones(content)
+    zone_text = '\n'.join(zones)
+
+    persona_patterns = [
+        (r'I am your\b', 'I am your [teacher/guide/...]'),
+        (r'I am so glad', 'I am so glad'),
+        (r"I['']m so glad", "I'm so glad"),
+        (r'I am here to\b', 'I am here to [teach/help/...]'),
+        (r"Let me (?:teach|guide|show|help) you", 'Let me teach/guide you'),
+        (r'As your (?:teacher|instructor|guide)', 'As your teacher/guide'),
+        (r"I['']m your\b", "I'm your [teacher/...]"),
+        (r'(?:my|your) dear (?:student|learner)', 'my/your dear student'),
+        (r"(?:I|we)['']?(?:ll| will) (?:explore|discover|learn) together", 'we will explore together'),
+    ]
+
+    hits = []
+    for pattern, label in persona_patterns:
+        for m in re.finditer(pattern, zone_text, re.IGNORECASE):
+            line_num = _find_line_in_original(content, m.group(0))
+            hits.append((label, m.group(0), line_num))
+
+    for label, matched, line_num in hits:
+        violations.append({
+            'type': 'LLM_PERSONA_LEAK',
+            'severity': 'critical',
+            'issue': f"LLM persona leak: '{matched}' — content should not role-play as a teacher/character",
+            'fix': "Rewrite in neutral educational voice. Remove first-person teacher persona.",
+            'line': line_num,
+        })
+
+    return violations
+
+
 def check_inline_english(content: str, level: Optional[str] = None) -> List[Dict]:
     """Detect inline English translations in B1+ content.
 
@@ -259,6 +300,7 @@ def check_prose_quality(content: str, yaml_content: dict | None = None) -> List[
     violations.extend(check_drill_blocks(content))
     violations.extend(check_glossary_lists(content))
     violations.extend(check_llm_fingerprints(content))
+    violations.extend(check_llm_persona_leaks(content))
     violations.extend(check_inline_english(content, level))
 
     return violations

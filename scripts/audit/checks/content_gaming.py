@@ -2,11 +2,13 @@
 Content Gaming Detection
 
 Deterministic checks that catch LLM content-generation gaming patterns:
-- Cross-module plagiarism (recycled sentences across modules)
-- Content-vocabulary alignment (vocab words missing from prose+activities)
-- Example pattern detection (template-identical example runs)
-- Filler phrase density (LLM hedging/padding phrases)
-- Section depth check (header padding with no real content)
+1. Cross-module plagiarism (recycled sentences across modules)
+2. Content-vocabulary alignment (vocab words missing from prose+activities)
+3. Example pattern detection (template-identical example runs)
+4. Filler phrase density (LLM hedging/padding phrases)
+5. Section depth check (header padding with no real content)
+6. Section balance (no single H2 section >40% of word count)
+7. IPA density cap (inline IPA tokens <5% of word count)
 
 All checks return list[dict] with 'type', 'severity', 'issue', 'fix' keys.
 No LLM calls — pure regex/hashing.
@@ -232,6 +234,180 @@ def check_section_depth(content: str, file_path: str = '') -> List[Dict]:
             'severity': 'warning',
             'issue': f"{len(shallow_sections)} shallow section(s) (< {min_words} words): {section_list}",
             'fix': f"Expand shallow sections to at least {min_words} words with substantive content.",
+        })
+
+    return violations
+
+
+# =============================================================================
+# CHECK 6: SECTION BALANCE (MAX %)
+# =============================================================================
+
+def check_section_balance(content: str, file_path: str = '') -> List[Dict]:
+    """
+    Flag H2 sections that exceed 40% of total module word count.
+
+    A bloated section means other sections are shallow by comparison.
+    Skips modules with <3 H2 sections (too few to judge balance).
+
+    Threshold: >40% = warning; >60% = critical.
+    """
+    violations = []
+
+    # Get narrative zones only
+    narrative_zones = _split_narrative_zones(content)
+    narrative_text = '\n'.join(narrative_zones)
+
+    # Split into H2 sections
+    sections = re.split(r'^## ', narrative_text, flags=re.MULTILINE)
+    section_data = []
+
+    for section in sections[1:]:  # Skip content before first H2
+        lines = section.strip().split('\n')
+        if not lines:
+            continue
+        header = lines[0].strip()
+        body = '\n'.join(lines[1:])
+        word_count = len(body.split())
+        section_data.append((header, word_count))
+
+    # Skip if <3 H2 sections
+    if len(section_data) < 3:
+        return []
+
+    total_words = sum(wc for _, wc in section_data)
+    if total_words == 0:
+        return []
+
+    bloated = []
+    for header, wc in section_data:
+        proportion = wc / total_words
+        if proportion > 0.40:
+            bloated.append((header, wc, proportion))
+
+    if not bloated:
+        return []
+
+    worst_header, worst_wc, worst_pct = max(bloated, key=lambda x: x[2])
+
+    if worst_pct > 0.60:
+        section_list = '; '.join(
+            f"'{h}' ({p:.0%})" for h, _, p in bloated
+        )
+        violations.append({
+            'type': 'SECTION_BALANCE_BLOATED',
+            'severity': 'critical',
+            'issue': (
+                f"Section '{worst_header}' has {worst_wc} words ({worst_pct:.0%} of total). "
+                f"Bloated sections: {section_list}"
+            ),
+            'fix': (
+                "Redistribute content more evenly across sections. "
+                "Move subtopics from the bloated section into their own H2 sections, "
+                "or expand the thinner sections with more examples and context."
+            ),
+        })
+    else:
+        section_list = '; '.join(
+            f"'{h}' ({p:.0%})" for h, _, p in bloated
+        )
+        violations.append({
+            'type': 'SECTION_BALANCE_BLOATED',
+            'severity': 'warning',
+            'issue': (
+                f"Section '{worst_header}' has {worst_wc} words ({worst_pct:.0%} of total). "
+                f"Bloated sections: {section_list}"
+            ),
+            'fix': (
+                "Consider splitting the large section or expanding smaller sections "
+                "to improve balance."
+            ),
+        })
+
+    return violations
+
+
+# =============================================================================
+# CHECK 7: IPA DENSITY CAP
+# =============================================================================
+
+# IPA transcription patterns:
+# /slashes/ — broad transcription. Must contain IPA-characteristic characters
+#   (ˈˌːɛɔɪʲ etc.) to avoid matching prose slashes like "він/вона".
+#   Also restricted to single-line and max 80 chars to prevent runaway matches.
+# [brackets with IPA markers] — narrow transcription (must contain ˈˌː)
+_IPA_CHARS = r'ˈˌːɛɔɪʲʋɑɾʃʒɲɟɡŋǀǁǃ'
+_IPA_SLASH_PATTERN = re.compile(
+    r'/[^/\n]{1,80}[' + _IPA_CHARS + r'][^/\n]{0,80}/'
+)
+_IPA_BRACKET_PATTERN = re.compile(r'\[[^\]\n]{0,80}[ˈˌː][^\]\n]{0,80}\]')
+
+
+def check_ipa_density(content: str, file_path: str = '') -> List[Dict]:
+    """
+    Flag excessive inline IPA transcriptions that pad word count.
+
+    Counts IPA tokens (space-delimited words within IPA brackets/slashes)
+    in narrative zones. Vocabulary tables are already stripped by
+    _split_narrative_zones.
+
+    Threshold: >5% of word count = warning; >10% = critical.
+    """
+    violations = []
+
+    # Get narrative zones only
+    narrative_zones = _split_narrative_zones(content)
+    narrative_text = '\n'.join(narrative_zones)
+
+    # Find all IPA spans
+    ipa_spans = []
+    for pattern in (_IPA_SLASH_PATTERN, _IPA_BRACKET_PATTERN):
+        ipa_spans.extend(m.group() for m in pattern.finditer(narrative_text))
+
+    if not ipa_spans:
+        return []
+
+    # Count IPA "words" (space-delimited tokens inside the brackets)
+    ipa_word_count = 0
+    for span in ipa_spans:
+        # Strip delimiters (/ or [])
+        inner = span.strip('/').strip('[]')
+        ipa_word_count += len(inner.split())
+
+    # Total word count from narrative text
+    total_words = len(narrative_text.split())
+    if total_words == 0:
+        return []
+
+    ipa_ratio = ipa_word_count / total_words
+
+    if ipa_ratio > 0.10:
+        violations.append({
+            'type': 'IPA_DENSITY_EXCESSIVE',
+            'severity': 'critical',
+            'issue': (
+                f"IPA transcriptions contain ~{ipa_word_count} tokens "
+                f"({ipa_ratio:.1%} of {total_words} words). "
+                f"Found {len(ipa_spans)} IPA spans in prose."
+            ),
+            'fix': (
+                "Reduce inline IPA. Move detailed transcriptions to a pronunciation "
+                "sidebar or vocabulary table. Keep only key pronunciation notes inline."
+            ),
+        })
+    elif ipa_ratio > 0.05:
+        violations.append({
+            'type': 'IPA_DENSITY_EXCESSIVE',
+            'severity': 'warning',
+            'issue': (
+                f"IPA transcriptions contain ~{ipa_word_count} tokens "
+                f"({ipa_ratio:.1%} of {total_words} words). "
+                f"Found {len(ipa_spans)} IPA spans in prose."
+            ),
+            'fix': (
+                "Consider reducing inline IPA. Use vocabulary tables for "
+                "systematic pronunciation data instead of inline transcriptions."
+            ),
         })
 
     return violations
@@ -678,6 +854,12 @@ def check_content_gaming(content: str, file_path: str) -> List[Dict]:
 
     # Check 5: Section depth (fast — word counting)
     violations.extend(check_section_depth(content, file_path))
+
+    # Check 6: Section balance — max % (fast — word counting)
+    violations.extend(check_section_balance(content, file_path))
+
+    # Check 7: IPA density cap (fast — regex counting)
+    violations.extend(check_ipa_density(content, file_path))
 
     # Check 2: Content-vocabulary alignment
     violations.extend(check_content_vocab_alignment(content, file_path))

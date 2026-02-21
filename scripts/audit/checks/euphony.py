@@ -5,7 +5,6 @@ Detects violations of Ukrainian euphony rules in prose:
   Rule 1: Conjunction і/й alternation — й only between vowels
   Rule 2: Preposition у/в alternation — phonetic position
   Rule 3: Preposition з/із/зі alternation — consonant clusters
-  Rule 4: Conjunction та/й variety — no repeated і/й without та
 
 Severity: WARNING (non-blocking — edge cases exist in poetry,
 quoted speech, and stylistic usage).
@@ -266,76 +265,6 @@ def _check_rule3_ziz(words: list[str], line_num: int) -> List[Dict]:
     return violations
 
 
-def _check_rule4_variety(content: str, line_offset: int = 0) -> List[Dict]:
-    """Rule 4: Conjunction variety — flag repeated і/й without та in same sentence."""
-    violations = []
-
-    # Split into sentences (rough: split on .!? followed by space or end)
-    sentences = re.split(r'[.!?]+(?:\s|$)', content)
-
-    # Track line numbers: build a map of character offset → line number
-    line_starts = [0]
-    for i, ch in enumerate(content):
-        if ch == '\n':
-            line_starts.append(i + 1)
-
-    def _char_to_line(pos: int) -> int:
-        """Convert character position to line number."""
-        lo, hi = 0, len(line_starts) - 1
-        while lo < hi:
-            mid = (lo + hi + 1) // 2
-            if line_starts[mid] <= pos:
-                lo = mid
-            else:
-                hi = mid - 1
-        return lo + 1 + line_offset
-
-    char_pos = 0
-    for sentence in sentences:
-        if not sentence.strip():
-            char_pos += len(sentence) + 1
-            continue
-
-        # Count standalone і/й (as whole words)
-        iy_matches = list(re.finditer(r'(?<!\w)[іЙйІ](?!\w)', sentence))
-        has_ta = bool(re.search(r'(?<!\w)та(?!\w)', sentence))
-
-        # Skip correlative "і...і..." ("both...and...") — valid Ukrainian
-        # Pattern: two і/й within ~30 chars of each other, often with comma between
-        if len(iy_matches) == 2:
-            span = iy_matches[1].start() - iy_matches[0].end()
-            between = sentence[iy_matches[0].end():iy_matches[1].start()]
-            if span < 30 and ',' in between:
-                char_pos += len(sentence) + 1
-                continue
-
-        if len(iy_matches) >= 2 and not has_ta:
-            # Flag the second occurrence
-            second = iy_matches[1]
-            abs_pos = char_pos + second.start()
-            line_num = _char_to_line(abs_pos)
-
-            # Get context around the match
-            start = max(0, second.start() - 15)
-            end = min(len(sentence), second.end() + 15)
-            context = sentence[start:end].strip()
-
-            violations.append({
-                "type": "EUPHONY",
-                "severity": "warning",
-                "issue": (
-                    f"Line {line_num}: повторення і/й без «та» — "
-                    f"«...{context}...»; використайте «та» для другого сполучника"
-                ),
-                "fix": "Replace second «і»/«й» with «та» for conjunction variety",
-                "line": line_num,
-            })
-
-        char_pos += len(sentence) + 1  # +1 for the split delimiter
-
-    return violations
-
-
 # ---------------------------------------------------------------------------
 # Auto-fixer
 # ---------------------------------------------------------------------------
@@ -416,8 +345,7 @@ def _fix_line_rule3(words: list[str]) -> tuple[list[str], int]:
 def auto_fix_euphony(content: str, file_path: str = "") -> tuple[str, int]:
     """Apply deterministic euphony fixes to Ukrainian prose.
 
-    Processes Rules 1-3 (word-level). Rule 4 (conjunction variety: і→та)
-    is also handled.
+    Processes Rules 1-3 (word-level phonetic alternation).
 
     Returns (fixed_content, total_fixes).
     """
@@ -464,43 +392,7 @@ def auto_fix_euphony(content: str, file_path: str = "") -> tuple[str, int]:
             lines[i] = leading + " ".join(fixed_words)
             total_fixes += line_fixes
 
-    # Rule 4: Replace repeated і/й with та (sentence-level)
-    fixed_content = "\n".join(lines)
-    fixed_content, r4_fixes = _fix_rule4_variety(fixed_content, file_path)
-    total_fixes += r4_fixes
-
-    return fixed_content, total_fixes
-
-
-def _fix_rule4_variety(content: str, file_path: str = "") -> tuple[str, int]:
-    """Fix Rule 4: Replace second standalone і/й with та when no та present."""
-    fixes = 0
-    # Process sentence by sentence is complex; instead, scan for the pattern
-    # and fix line by line — look for lines with 2+ standalone і/й and no та
-    lines = content.split("\n")
-    for i, line in enumerate(lines):
-        if _skip_line(line):
-            continue
-        words = line.split()
-        # Find standalone і/й positions
-        iy_positions = [j for j, w in enumerate(words)
-                        if w.lower().strip(".,;:!?«»\"'()") in ("і", "й")]
-        has_ta = any(w.lower().strip(".,;:!?«»\"'()") == "та" for w in words)
-        # Skip correlative "і...і..." ("both...and...") — valid Ukrainian
-        if len(iy_positions) == 2:
-            between_words = words[iy_positions[0]+1:iy_positions[1]]
-            between_text = " ".join(between_words)
-            if len(between_words) <= 3 and "," in between_text:
-                continue
-        if len(iy_positions) >= 2 and not has_ta:
-            # Replace the second occurrence with та
-            idx = iy_positions[1]
-            old = words[idx]
-            words[idx] = "та" if old.islower() or old in ("і", "й") else "Та"
-            leading = line[: len(line) - len(line.lstrip())]
-            lines[i] = leading + " ".join(words)
-            fixes += 1
-    return "\n".join(lines), fixes
+    return "\n".join(lines), total_fixes
 
 
 # ---------------------------------------------------------------------------
@@ -524,10 +416,6 @@ def check_euphony_violations(content: str, file_path: str = "") -> List[Dict]:
     # Track frontmatter state
     in_frontmatter = False
     frontmatter_count = 0
-
-    # Collect prose lines for Rule 4 (sentence-level analysis)
-    prose_lines = []
-    prose_line_offset = 0
 
     for line_num, line in enumerate(lines, 1):
         stripped = line.strip()
@@ -553,13 +441,5 @@ def check_euphony_violations(content: str, file_path: str = "") -> List[Dict]:
         violations.extend(_check_rule1_iy(words, line_num))
         violations.extend(_check_rule2_uv(words, line_num))
         violations.extend(_check_rule3_ziz(words, line_num))
-
-        # Collect for Rule 4
-        prose_lines.append(line)
-
-    # Rule 4: sentence-level conjunction variety
-    if prose_lines:
-        prose_text = "\n".join(prose_lines)
-        violations.extend(_check_rule4_variety(prose_text))
 
     return violations

@@ -19,9 +19,10 @@
       "note": "migrated-from-v2"
     },
     "v3-D": {
-      "status": "complete",
-      "ts": "2026-02-20T21:43:23Z",
-      "note": "migrated-from-v2"
+      "status": "pending",
+      "ts": "",
+      "attempts": 0,
+      "note": "reset-review-score-below-threshold"
     },
     "v3-A": {
       "status": "complete",

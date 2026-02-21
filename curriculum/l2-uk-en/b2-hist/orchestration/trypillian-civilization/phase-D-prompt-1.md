@@ -52,8 +52,8 @@ Read ALL of these files before writing anything:
 ```
 Skill identity:   Professor of Ukrainian Arts (history)
 Module persona:   Senior Professor of History, acting as Archaeological Curator
-Word count:       5240 / 5000 (104.8%)
-Activities:       8
+Word count:       5231 / 5000 (104.6%)
+Activities:       9
 Vocabulary items: 25
 Engagement boxes: 7
 Immersion:        99.7% (target: 85-95%)

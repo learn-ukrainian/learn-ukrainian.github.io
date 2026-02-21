@@ -2,7 +2,7 @@
 **Level:** B2-HIST | **Module:** M04 | **Phase:** B2 | **Pedagogy:** seminar | **Target:** 5000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-21 15:10:38
+**Generated:** 2026-02-21 19:19:24
 
 ## Configuration
 **Type:** B2-history
@@ -34,46 +34,15 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[EUPHONY]** Line 37: «з часом» — з перед з/с/ш/ч; має бути «із часом»
-  - FIX: Replace «з» with «із» (before sibilant)
-- **[EUPHONY]** Line 43: «у їхніх» — у перед голосним; має бути «в їхніх»
-  - FIX: Replace «у» with «в» (before vowel)
-- **[EUPHONY]** Line 79: «в глибокій» — в перед збігом приголосних; має бути «у глибокій»
-  - FIX: Replace «в» with «у» (before consonant cluster)
-- **[EUPHONY]** Line 79: «з собою» — з перед з/с/ш/ч; має бути «із собою»
-  - FIX: Replace «з» with «із» (before sibilant)
-- **[EUPHONY]** Line 99: «у якому» — у перед голосним; має бути «в якому»
-  - FIX: Replace «у» with «в» (before vowel)
-- **[EUPHONY]** Line 107: «жорстокими і ефективними» — і між голосними; має бути «й ефективними»
-  - FIX: Replace «і» with «й» (between vowels)
-- **[EUPHONY]** Line 109: «в вози» — в перед в/ф; має бути «у вози»
-  - FIX: Replace «в» with «у» (before в or ф)
-- **[EUPHONY]** Line 133: «в броні» — в перед збігом приголосних; має бути «у броні»
-  - FIX: Replace «в» with «у» (before consonant cluster)
-- **[EUPHONY]** Line 133: «з сумішшю» — з перед з/с/ш/ч; має бути «із сумішшю»
-  - FIX: Replace «з» with «із» (before sibilant)
-- **[EUPHONY]** Line 137: «зникала і атакували» — і між голосними; має бути «й атакували»
-  - FIX: Replace «і» with «й» (between vowels)
-- **[EUPHONY]** Line 155: «в складні» — в перед збігом приголосних; має бути «у складні»
-  - FIX: Replace «в» with «у» (before consonant cluster)
-- **[EUPHONY]** Line 157: «з собою» — з перед з/с/ш/ч; має бути «із собою»
-  - FIX: Replace «з» with «із» (before sibilant)
-- **[EUPHONY]** Line 175: «романтизації і є» — і між голосними; має бути «й є»
-  - FIX: Replace «і» with «й» (between vowels)
 - **[EUPHONY]** Line 20: повторення і/й без «та» — «...ла її зупинити і змушена була з...»; використайте «та» для другого сполучника
   - FIX: Replace second «і»/«й» with «та» for conjunction variety
 - **[EUPHONY]** Line 38: повторення і/й без «та» — «...ю незалежність і землю...»; використайте «та» для другого сполучника
   - FIX: Replace second «і»/«й» with «та» for conjunction variety
-- **[EUPHONY]** Line 51: повторення і/й без «та» — «...тського опору, і структуру їхнь...»; використайте «та» для другого сполучника
-  - FIX: Replace second «і»/«й» with «та» for conjunction variety
-- **[EUPHONY]** Line 61: повторення і/й без «та» — «...легіони готів і орди аварів, д...»; використайте «та» для другого сполучника
-  - FIX: Replace second «і»/«й» with «та» for conjunction variety
 
 ## Recommendation
-**📝 UPDATE** (severity 50/100)
+**📝 UPDATE** (severity 5/100)
 
-- Revision recommended (severity 50/100)
-- 17 violations (severe - consider revision)
+- 2 violations (minor)
 
 ## Gates
 - **Words:** ✅ 5120/5000 (raw: 5368)
@@ -87,7 +56,7 @@
 - **Structure:** ✅ Valid Structure
 - **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 17 violations
+- **Pedagogy:** ❌ 2 violations
 - **Content_heavy:** ✅ Content-heavy OK (5 activities)
 - **Immersion:** 🇺🇦 99.5% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)

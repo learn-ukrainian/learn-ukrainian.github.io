@@ -24,9 +24,10 @@
       "attempts": 2
     },
     "v3-D": {
-      "status": "complete",
-      "ts": "2026-02-21T00:14:25Z",
-      "attempts": 1
+      "status": "pending",
+      "ts": "",
+      "attempts": 0,
+      "note": "reset-review-score-below-threshold"
     }
   }
 }

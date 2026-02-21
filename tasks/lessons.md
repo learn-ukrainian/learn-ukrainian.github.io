@@ -506,16 +506,19 @@
 **Correction**: "THERE ARE SEVERAL AGENTS WORKING IN THIS DIR AND YOU CHANGE THE BRANCH" / "why did you create a feature branch?" / "its strictly told to not work in feature branches" / "even you told me to work in the main branch"
 
 **Rule**:
-- **NEVER create feature branches** — all work happens on `main`
+- **NEVER switch branches in the main working directory** — all work happens on `main`
 - **Multiple agents share this working directory** — branch changes affect everyone
+- **If you need a branch, use a git worktree** — `git worktree add /tmp/worktree-name branch-name` isolates the branch without touching the shared directory. The Task tool also supports `isolation: "worktree"` for subagents.
 - **Before ANY git operation**: check for unstaged changes from other agents
 - **When `git status` shows hundreds of ` M` files**: those belong to other agents — DO NOT stage or commit them
 - **Use `git add` only on files YOU created or modified** — never `git add` directories wholesale
-- **If a plan says "create a branch"**: override it — the plan is wrong, main-only is the rule
+- **If a plan says "create a branch"**: use a worktree, or override it — main-only in the shared directory
 - **When committing cross-ref fixes**: use `git add -p` to stage only your specific line changes, not the entire file
 - **Self-check before git operations**: "Will this affect other agents' work?"
 
 **Applied**: 2026-02-17 (merged back to main, deleted branch)
+
+**VIOLATED AGAIN**: 2026-02-21 — Created `fix/621-mdx-lint-violations` branch for issue #621 despite this lesson existing. Had to merge PR #622 back to main. This is a repeat offense — the lesson was recorded but not internalized. The rule is absolute: ALL work on `main`, no exceptions.
 
 ---
 

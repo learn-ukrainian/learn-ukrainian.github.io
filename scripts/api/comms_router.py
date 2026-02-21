@@ -25,8 +25,9 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Optional
 
-from fastapi import APIRouter, Query
+from fastapi import APIRouter, Body, Query
 from fastapi.responses import JSONResponse
+from pydantic import BaseModel
 
 from .config import CURRICULUM_ROOT, MESSAGE_DB, PROJECT_ROOT
 
@@ -833,6 +834,33 @@ async def acknowledge_message(message_id: int):
     conn.commit()
     conn.close()
     return {"acknowledged": message_id}
+
+
+class SendMessageRequest(BaseModel):
+    from_llm: str
+    to_llm: str
+    content: str
+    task_id: str = ""
+    message_type: str = "message"
+
+
+@router.post("/send")
+async def send_message(msg: SendMessageRequest):
+    """Send a test message between agents. For debugging/testing from the UI."""
+    conn = _get_rw_db()
+    if not conn:
+        return JSONResponse(status_code=500, content={"error": "DB not available"})
+
+    now = datetime.now(timezone.utc).isoformat()
+    cursor = conn.execute(
+        "INSERT INTO messages (task_id, from_llm, to_llm, message_type, content, timestamp, acknowledged) "
+        "VALUES (?, ?, ?, ?, ?, ?, 0)",
+        (msg.task_id or None, msg.from_llm, msg.to_llm, msg.message_type, msg.content, now),
+    )
+    conn.commit()
+    msg_id = cursor.lastrowid
+    conn.close()
+    return {"id": msg_id, "sent": True}
 
 
 @router.get("/by-module/{track}/{slug}")

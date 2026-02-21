@@ -1,7 +1,7 @@
 # Audit Report: M04 — kniaz-yaroslav-mudryi.md
 **Level:** C1-BIO | **Module:** M04 | **Phase:** C1 | **Pedagogy:** seminar | **Target:** 5000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-21 15:10:43
+**Generated:** 2026-02-21 19:25:51
 
 ## Configuration
 **Type:** C1-biography
@@ -34,70 +34,13 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[EUPHONY]** Line 17: «з чіткою» — з перед з/с/ш/ч; має бути «із чіткою»
-  - FIX: Replace «з» with «із» (before sibilant)
-- **[EUPHONY]** Line 20: «у історіографії» — у перед голосним; має бути «в історіографії»
-  - FIX: Replace «у» with «в» (before vowel)
-- **[EUPHONY]** Line 31: «з Чорним» — з перед з/с/ш/ч; має бути «із Чорним»
-  - FIX: Replace «з» with «із» (before sibilant)
-- **[EUPHONY]** Line 60: «Святополка і ув'язнення» — і між голосними; має бути «й ув'язнення»
-  - FIX: Replace «і» with «й» (between vowels)
-- **[EUPHONY]** Line 80: «в 1019» — в перед збігом приголосних; має бути «у 1019»
-  - FIX: Replace «в» with «у» (before consonant cluster)
-- **[EUPHONY]** Line 91: «з Чернігова» — з перед з/с/ш/ч; має бути «із Чернігова»
-  - FIX: Replace «з» with «із» (before sibilant)
-- **[EUPHONY]** Line 115: «в 16» — в перед збігом приголосних; має бути «у 16»
-  - FIX: Replace «в» with «у» (before consonant cluster)
-- **[EUPHONY]** Line 117: «в княжу» — в перед збігом приголосних; має бути «у княжу»
-  - FIX: Replace «в» with «у» (before consonant cluster)
-- **[EUPHONY]** Line 141: «в Східній» — в перед збігом приголосних; має бути «у Східній»
-  - FIX: Replace «в» with «у» (before consonant cluster)
-- **[EUPHONY]** Line 148: «в віках» — в перед в/ф; має бути «у віках»
-  - FIX: Replace «в» with «у» (before в or ф)
-- **[EUPHONY]** Line 152: «у історії» — у перед голосним; має бути «в історії»
-  - FIX: Replace «у» with «в» (before vowel)
-- **[EUPHONY]** Line 153: «Володимира і Ярослава» — і між голосними; має бути «й Ярослава»
-  - FIX: Replace «і» with «й» (between vowels)
-- **[EUPHONY]** Line 156: «землю і її» — і між голосними; має бути «й її»
-  - FIX: Replace «і» with «й» (between vowels)
-- **[EUPHONY]** Line 161: «союзниками і інтеграції» — і між голосними; має бути «й інтеграції»
-  - FIX: Replace «і» with «й» (between vowels)
-- **[EUPHONY]** Line 168: «в княжну» — в перед збігом приголосних; має бути «у княжну»
-  - FIX: Replace «в» with «у» (before consonant cluster)
-- **[EUPHONY]** Line 196: «з своїх» — з перед з/с/ш/ч; має бути «із своїх»
-  - FIX: Replace «з» with «із» (before sibilant)
-- **[EUPHONY]** Line 209: «у якому» — у перед голосним; має бути «в якому»
-  - FIX: Replace «у» with «в» (before vowel)
-- **[EUPHONY]** Line 216: «в храмі» — в перед збігом приголосних; має бути «у храмі»
-  - FIX: Replace «в» with «у» (before consonant cluster)
-- **[EUPHONY]** Line 216: «в Брукліні» — в перед збігом приголосних; має бути «у Брукліні»
-  - FIX: Replace «в» with «у» (before consonant cluster)
-- **[EUPHONY]** Line 220: «в крові» — в перед збігом приголосних; має бути «у крові»
-  - FIX: Replace «в» with «у» (before consonant cluster)
 - **[EUPHONY]** Line 4: повторення і/й без «та» — «...ник, що вогнем і мечем збирав р...»; використайте «та» для другого сполучника
-  - FIX: Replace second «і»/«й» with «та» for conjunction variety
-- **[EUPHONY]** Line 9: повторення і/й без «та» — «...збитий штормом і грецьким вогне...»; використайте «та» для другого сполучника
-  - FIX: Replace second «і»/«й» with «та» for conjunction variety
-- **[EUPHONY]** Line 29: повторення і/й без «та» — «...лів від страху і згинув у безві...»; використайте «та» для другого сполучника
-  - FIX: Replace second «і»/«й» with «та» for conjunction variety
-- **[EUPHONY]** Line 34: повторення і/й без «та» — «...пер і в Києві, і в Новгороді, і...»; використайте «та» для другого сполучника
-  - FIX: Replace second «і»/«й» with «та» for conjunction variety
-- **[EUPHONY]** Line 51: повторення і/й без «та» — «...исане між 1037 і 1050 роками)...»; використайте «та» для другого сполучника
-  - FIX: Replace second «і»/«й» with «та» for conjunction variety
-- **[EUPHONY]** Line 59: повторення і/й без «та» — «...здобуде слави і золота...»; використайте «та» для другого сполучника
-  - FIX: Replace second «і»/«й» with «та» for conjunction variety
-- **[EUPHONY]** Line 77: повторення і/й без «та» — «...» (з Галичини) і «залозний шлях...»; використайте «та» для другого сполучника
-  - FIX: Replace second «і»/«й» with «та» for conjunction variety
-- **[EUPHONY]** Line 81: повторення і/й без «та» — «...енні суперечки і зрештою призве...»; використайте «та» для другого сполучника
-  - FIX: Replace second «і»/«й» with «та» for conjunction variety
-- **[EUPHONY]** Line 86: повторення і/й без «та» — «...збудував Храм і Державу...»; використайте «та» для другого сполучника
   - FIX: Replace second «і»/«й» with «та» for conjunction variety
 
 ## Recommendation
-**📝 UPDATE** (severity 50/100)
+**📝 UPDATE** (severity 5/100)
 
-- Revision recommended (severity 50/100)
-- 29 violations (severe - consider revision)
+- 1 violations (minor)
 
 ## Gates
 - **Words:** ✅ 5316/5000 (raw: 5561)
@@ -111,7 +54,7 @@
 - **Structure:** ✅ Valid Structure
 - **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 29 violations
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ✅ Content-heavy OK (6 activities)
 - **Immersion:** 🇺🇦 99.7% (target 95-100% (biography))
 - **Richness:** ✅ 95% (biography)

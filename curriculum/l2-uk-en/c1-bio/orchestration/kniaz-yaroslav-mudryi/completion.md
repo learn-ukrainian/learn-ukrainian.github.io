@@ -1,4 +1,4 @@
-PASS: build_module_v2.py c1-bio 4 — E2E
+FAIL: build_module_v2.py c1-bio 4 — E2E
 
   Module:   kniaz-yaroslav-mudryi
   Track:    c1-bio
@@ -6,5 +6,5 @@ PASS: build_module_v2.py c1-bio 4 — E2E
   Words:    5561 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  PASS
-  Date:     2026-02-19T10:38:20Z
+  Verdict:  FAIL
+  Date:     2026-02-21T18:25:51Z

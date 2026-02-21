@@ -2,10 +2,10 @@
   "module": "slavic-tribes",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-21T15:10:39.329271Z",
+  "last_audit": "2026-02-21T19:19:26.121233Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-19T10:32:58.976531Z",
+    "md": "2026-02-21T19:19:25.226740Z",
     "meta": "2026-02-19T10:43:10.754516Z",
     "activities": "2026-02-19T10:32:58.977202Z",
     "vocabulary": "2026-02-18T23:27:44.325254Z",
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "fail",
       "violations": 1,
-      "message": "5027/5000 (raw: 5291) | pedagogy: 10 violations"
+      "message": "5027/5000 (raw: 5291) | pedagogy: 2 violations"
     },
     "activities": {
       "status": "pass",
@@ -46,10 +46,10 @@
     "research": {
       "status": "warn",
       "violations": 0,
-      "message": "Refresh recommended: Content predates research (research file is newer)"
+      "message": "Refresh recommended: Research has 5+ sources but content cites 0"
     },
     "review": {
-      "status": "skipped",
+      "status": "deferred",
       "violations": 0,
       "message": ""
     }
@@ -59,6 +59,6 @@
     "blocking_issues": [],
     "pass_count": 4,
     "fail_count": 1,
-    "deferred_count": 0
+    "deferred_count": 1
   }
 }

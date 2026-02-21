@@ -402,7 +402,7 @@ def _dispatch_claude_phase(
     # Adapt persona — templates say "You are Gemini"
     prompt = prompt.replace("You are Gemini", "You are Claude")
 
-    cmd = [claude_bin, "--model", model, "-p", prompt, "--output-format", "text"]
+    cmd = [claude_bin, "--model", model, "-p", "--output-format", "text"]
     if allow_tools:
         cmd.extend(["--allowedTools", ",".join(allow_tools)])
     # Reinforce output format — Claude sometimes ignores delimiters in long prompts
@@ -419,6 +419,7 @@ def _dispatch_claude_phase(
             label=f"Claude {phase_label}",
             timeout=timeout,
             capture_output=True, text=True,
+            input=prompt,
             cwd=str(PROJECT_ROOT), env=env,
         )
         if result.returncode != 0:
@@ -1393,6 +1394,14 @@ def phase_D_v3(ctx: ModuleContext, state: dict) -> bool:
         return False
 
     if not ctx.dry_run:
+        # Auto-fix euphony before pre-D validation — deterministic, zero API cost
+        from audit.checks.euphony import auto_fix_euphony
+        text = ctx.paths["md"].read_text("utf-8")
+        fixed_text, n_euphony = auto_fix_euphony(text, str(ctx.paths["md"]))
+        if n_euphony > 0:
+            ctx.paths["md"].write_text(fixed_text, "utf-8")
+            log(f"  Phase D: Auto-fixed {n_euphony} euphony violation(s) (pre-validation)")
+
         log("  Phase D: Pre-D activity validation (--skip-review)...")
         pre_d_passed, pre_d_output = run_verify(ctx.paths["md"], skip_review=True)
         if not pre_d_passed:
@@ -1455,11 +1464,36 @@ def phase_D_v3(ctx: ModuleContext, state: dict) -> bool:
     # Extract review
     review_text = _extract_delimiter(raw_output, "===REVIEW_START===", "===REVIEW_END===")
     if not review_text:
-        log("  Phase D.1: WARNING — no REVIEW delimiters in output")
+        log("  Phase D.1: WARNING — no REVIEW delimiters in output (retrying once)")
         # Save raw output for debugging
         (ctx.orch_dir / "phase-D1-raw-output.md").write_text(raw_output, "utf-8")
-        _mark_phase_v3(ctx, state, phase, "failed", attempts=1, note="d1-no-review")
-        return False
+
+        # Retry once: feed the raw output back and ask Claude to reformat
+        reformat_prompt = (
+            "You produced a review but forgot the required delimiters. "
+            "Reformat your review below inside ===REVIEW_START=== and ===REVIEW_END=== delimiters. "
+            "Use the FULL structured format: all 13 dimension scores in a markdown table, "
+            "all required H2 sections (Plan Verification, Scores, Auto-Fail Checklist, "
+            "Critical Issues, Strengths, Fix Plan, Factual Verification, Verification Summary, Verdict). "
+            "If information is missing from your original review, infer reasonable values.\n\n"
+            "YOUR ORIGINAL REVIEW:\n\n" + raw_output
+        )
+        reformat_file = ctx.orch_dir / "phase-D1-reformat-prompt.md"
+        reformat_file.write_text(reformat_prompt, "utf-8")
+
+        ok2, raw2 = _dispatch_claude_phase(
+            reformat_file, "Phase D.1 (reformat)",
+            model=claude_model_D, timeout=300,
+        )
+        if ok2:
+            review_text = _extract_delimiter(raw2, "===REVIEW_START===", "===REVIEW_END===")
+
+        if not review_text:
+            log("  Phase D.1: Reformat retry also failed — no delimiters")
+            _mark_phase_v3(ctx, state, phase, "failed", attempts=1, note="d1-no-review")
+            return False
+
+        log("  Phase D.1: Reformat retry succeeded — delimiters found")
 
     # Inject Reviewed-By metadata if Claude forgot it
     if "Reviewed-By:" not in review_text:
@@ -1484,13 +1518,30 @@ def phase_D_v3(ctx: ModuleContext, state: dict) -> bool:
     audit_log = ctx.orch_dir / "pD-audit-1.log"
     audit_log.write_text(audit_out, "utf-8")
 
-    if passed:
+    # Check review verdict: even if audit passes, the review may flag issues
+    # that require D.2 repair (calques, LLM fingerprints, activity errors, etc.)
+    review_says_fail = False
+    if review_text:
+        import re as _re
+        _status_m = _re.search(r'\*\*Status:\*\*\s*(FAIL|PASS)', review_text)
+        _score_m = _re.search(r'\*\*Overall Score:\*\*\s*([\d.]+)/10', review_text)
+        if _status_m and _status_m.group(1) == "FAIL":
+            review_says_fail = True
+            log(f"  Phase D.1: Review verdict: FAIL")
+        elif _score_m and float(_score_m.group(1)) < 9.0:
+            review_says_fail = True
+            log(f"  Phase D.1: Review score {_score_m.group(1)}/10 < 9.0 — needs repair")
+
+    if passed and not review_says_fail:
         log("  Phase D: PASS (D.1 review sufficient — no repair needed)")
         _mark_phase_v3(ctx, state, phase, "complete", attempts=1, note="d1-only")
         mark_phase_locked(ctx, "6", "complete", note="v3-phase-D")
         mark_phase_locked(ctx, "6b", "complete", note="v3-phase-D")
         mark_phase_locked(ctx, "7-final", "complete", note="v3-phase-D")
         return True
+
+    if passed and review_says_fail:
+        log("  Phase D.1: Audit PASSED but review flags issues — proceeding to D.2 for repair")
 
     # Citation failure detection (#615): if the review itself is bad (fabricated
     # citations), don't proceed to D.2 content repair — that can't fix a bad review.

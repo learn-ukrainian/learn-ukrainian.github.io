@@ -136,6 +136,15 @@ Connect 2-3 grammar or vocabulary points to Ukrainian cultural context:
 - Use storytelling and real-world scenarios, not dry textbook listing
 - Each section should have its own narrative arc, not repeat the same skeleton
 
+### Rule 9: Prefer Active Voice
+
+Ukrainian strongly prefers active constructions. Use passive only when:
+- The agent is truly unknown: «Книгу було знайдено» (who found it is irrelevant)
+- Emphasis is intentionally on the object, not the actor
+
+Avoid: «Це може бути використано...», «Правило застосовується...»
+Prefer: «Ви можете використати...», «Ми застосовуємо правило...»
+
 ---
 
 ## How to Hit {OVERSHOOT_TARGET} Words (Expansion Method)

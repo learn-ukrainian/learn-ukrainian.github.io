@@ -2,7 +2,7 @@
 **Level:** C1-BIO | **Module:** M03 | **Phase:** C1 | **Pedagogy:** CBI | **Target:** 5000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-21 15:10:42
+**Generated:** 2026-02-21 19:25:50
 
 ## Configuration
 **Type:** C1-biography
@@ -35,39 +35,9 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[EUPHONY]** Line 21: «в джерелах» — в перед збігом приголосних; має бути «у джерелах»
-  - FIX: Replace «в» with «у» (before consonant cluster)
-- **[EUPHONY]** Line 21: «в блуді» — в перед збігом приголосних; має бути «у блуді»
-  - FIX: Replace «в» with «у» (before consonant cluster)
-- **[EUPHONY]** Line 21: «з серйозною» — з перед з/с/ш/ч; має бути «із серйозною»
-  - FIX: Replace «з» with «із» (before sibilant)
-- **[EUPHONY]** Line 42: «образу і амбіції» — і між голосними; має бути «й амбіції»
-  - FIX: Replace «і» with «й» (between vowels)
-- **[EUPHONY]** Line 50: «в глибокий» — в перед збігом приголосних; має бути «у глибокий»
-  - FIX: Replace «в» with «у» (before consonant cluster)
-- **[EUPHONY]** Line 69: «модернізувати і уніфікувати» — і між голосними; має бути «й уніфікувати»
-  - FIX: Replace «і» with «й» (between vowels)
-- **[EUPHONY]** Line 100: «в спеціальній» — в перед збігом приголосних; має бути «у спеціальній»
-  - FIX: Replace «в» with «у» (before consonant cluster)
-- **[EUPHONY]** Line 103: «з запискою» — з перед з/с/ш/ч; має бути «із запискою»
-  - FIX: Replace «з» with «із» (before sibilant)
-- **[EUPHONY]** Line 118: «в степах» — в перед збігом приголосних; має бути «у степах»
-  - FIX: Replace «в» with «у» (before consonant cluster)
-- **[EUPHONY]** Line 126: «в цьому» — в перед збігом приголосних; має бути «у цьому»
-  - FIX: Replace «в» with «у» (before consonant cluster)
-- **[EUPHONY]** Line 126: «з суто» — з перед з/с/ш/ч; має бути «із суто»
-  - FIX: Replace «з» with «із» (before sibilant)
-- **[EUPHONY]** Line 147: «в школах» — в перед збігом приголосних; має бути «у школах»
-  - FIX: Replace «в» with «у» (before consonant cluster)
-- **[EUPHONY]** Line 174: «в святості» — в перед збігом приголосних; має бути «у святості»
-  - FIX: Replace «в» with «у» (before consonant cluster)
-- **[EUPHONY]** Line 174: «з сильним» — з перед з/с/ш/ч; має бути «із сильним»
-  - FIX: Replace «з» with «із» (before sibilant)
 - **[EUPHONY]** Line 4: повторення і/й без «та» — «...аконних шлюбів і мали беззапере...»; використайте «та» для другого сполучника
   - FIX: Replace second «і»/«й» with «та» for conjunction variety
-- **[EUPHONY]** Line 5: повторення і/й без «та» — «...ю лють, образу і амбіції...»; використайте «та» для другого сполучника
-  - FIX: Replace second «і»/«й» with «та» for conjunction variety
-- **[EUPHONY]** Line 7: повторення і/й без «та» — «...Древлянським, і приводом стала...»; використайте «та» для другого сполучника
+- **[EUPHONY]** Line 5: повторення і/й без «та» — «...ю лють, образу й амбіції...»; використайте «та» для другого сполучника
   - FIX: Replace second «і»/«й» with «та» for conjunction variety
 - **[EUPHONY]** Line 8: повторення і/й без «та» — «...до брата мого і скажіть йому:...»; використайте «та» для другого сполучника
   - FIX: Replace second «і»/«й» with «та» for conjunction variety
@@ -75,20 +45,11 @@
   - FIX: Replace second «і»/«й» with «та» for conjunction variety
 - **[EUPHONY]** Line 13: повторення і/й без «та» — «...н створив небо і землю...»; використайте «та» для другого сполучника
   - FIX: Replace second «і»/«й» with «та» for conjunction variety
-- **[EUPHONY]** Line 22: повторення і/й без «та» — «...чними статуями і квадригою коне...»; використайте «та» для другого сполучника
-  - FIX: Replace second «і»/«й» with «та» for conjunction variety
-- **[EUPHONY]** Line 25: повторення і/й без «та» — «...вбивали людей і викрадали худо...»; використайте «та» для другого сполучника
-  - FIX: Replace second «і»/«й» with «та» for conjunction variety
-- **[EUPHONY]** Line 29: повторення і/й без «та» — «...чи образ князя і його герб у на...»; використайте «та» для другого сполучника
-  - FIX: Replace second «і»/«й» with «та» for conjunction variety
-- **[EUPHONY]** Line 39: повторення і/й без «та» — «...це не вдалося, і Русь знову пор...»; використайте «та» для другого сполучника
-  - FIX: Replace second «і»/«й» with «та» for conjunction variety
 
 ## Recommendation
-**📝 UPDATE** (severity 50/100)
+**📝 UPDATE** (severity 15/100)
 
-- Revision recommended (severity 50/100)
-- 24 violations (severe - consider revision)
+- 5 violations (moderate)
 
 ## Gates
 - **Words:** ✅ 5528/5000 (raw: 5773)
@@ -102,7 +63,7 @@
 - **Structure:** ✅ Valid Structure
 - **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 24 violations
+- **Pedagogy:** ❌ 5 violations
 - **Content_heavy:** ✅ Content-heavy OK (6 activities)
 - **Immersion:** 🇺🇦 99.2% (target 95-100% (biography))
 - **Richness:** ✅ 97% (biography)

@@ -103,6 +103,9 @@ from .content_gaming import (
 from .review_gaming import (
     check_review_gaming,
 )
+from .russicism_detection import (
+    check_russicisms,
+)
 
 __all__ = [
     # Grammar
@@ -184,4 +187,6 @@ __all__ = [
     'check_content_gaming',
     # Review Gaming Detection
     'check_review_gaming',
+    # Russicism Detection
+    'check_russicisms',
 ]

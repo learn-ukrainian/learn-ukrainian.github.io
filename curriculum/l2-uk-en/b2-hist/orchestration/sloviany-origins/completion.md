@@ -1,4 +1,4 @@
-PASS: build_module_v2.py b2-hist 4 — E2E
+FAIL: build_module_v2.py b2-hist 4 — E2E
 
   Module:   sloviany-origins
   Track:    b2-hist
@@ -6,5 +6,5 @@ PASS: build_module_v2.py b2-hist 4 — E2E
   Words:    5368 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  PASS
-  Date:     2026-02-19T10:58:08Z
+  Verdict:  FAIL
+  Date:     2026-02-21T18:19:24Z

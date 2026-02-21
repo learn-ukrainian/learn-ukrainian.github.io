@@ -396,3 +396,9 @@ Plan-Content Alignment: [PASS/FAIL]
 - Do NOT cite Ukrainian text without first verifying it with Grep
 - Do NOT give vague feedback — say exactly what and where
 - Do NOT reference orchestration artifacts or prior build phases
+
+---
+
+## CRITICAL: Output Format Reminder
+
+Your output MUST start with `===REVIEW_START===` and end with `===REVIEW_END===`. The extraction pipeline uses these exact delimiters. Any output without these delimiters is **automatically discarded** and the entire phase fails. Do not write a summary or conversational response — output the structured review inside the delimiters.

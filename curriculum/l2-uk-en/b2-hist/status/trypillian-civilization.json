@@ -2,13 +2,13 @@
   "module": "trypillian-civilization",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-21T16:45:14.447956Z",
+  "last_audit": "2026-02-21T21:13:41.468972Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-21T16:26:08.848406Z",
+    "md": "2026-02-21T20:20:30.997610Z",
     "meta": "2026-02-19T11:16:32.387801Z",
-    "activities": "2026-02-21T16:26:08.849364Z",
-    "vocabulary": "2026-02-19T11:19:28.785242Z",
+    "activities": "2026-02-21T20:20:30.998141Z",
+    "vocabulary": "2026-02-21T18:06:33.702140Z",
     "plan": "2026-02-18T19:03:37.551241Z",
     "research": "2026-02-18T00:18:37.003993Z"
   },
@@ -21,12 +21,12 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "5240/5000 (raw: 5482)"
+      "message": "5231/5000 (raw: 5473)"
     },
     "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "8/3"
+      "message": "9/3"
     },
     "vocabulary": {
       "status": "pass",
@@ -39,9 +39,9 @@
       "message": "PENDING \u2014 awaiting review"
     },
     "ipa": {
-      "status": "warn",
+      "status": "pass",
       "violations": 0,
-      "message": "5 IPA issues (run lint_ipa.py --fix)"
+      "message": "Clean IPA"
     },
     "research": {
       "status": "pass",
@@ -57,7 +57,7 @@
   "overall": {
     "status": "pass",
     "blocking_issues": [],
-    "pass_count": 6,
+    "pass_count": 7,
     "fail_count": 0,
     "deferred_count": 0
   }

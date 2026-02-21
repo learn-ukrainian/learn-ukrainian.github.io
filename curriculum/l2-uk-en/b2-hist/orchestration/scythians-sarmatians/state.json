@@ -2,7 +2,7 @@
   "slug": "scythians-sarmatians",
   "track": "b2-hist",
   "module_num": 2,
-  "mode": "e2e",
+  "mode": "v3",
   "phases": {
     "1": {
       "status": "complete",
@@ -17,7 +17,7 @@
     },
     "3": {
       "status": "complete",
-      "timestamp": "2026-02-19T10:34:47Z",
+      "timestamp": "2026-02-21T20:00:30Z",
       "note": "v3-audit"
     },
     "3a": {
@@ -32,22 +32,22 @@
     },
     "6": {
       "status": "complete",
-      "timestamp": "2026-02-19T10:39:00Z",
+      "timestamp": "2026-02-21T20:45:08Z",
       "note": "v3-phase-D"
     },
     "6b": {
       "status": "complete",
-      "timestamp": "2026-02-19T10:39:00Z",
+      "timestamp": "2026-02-21T20:45:08Z",
       "note": "v3-phase-D"
     },
     "5-enrich": {
       "status": "complete",
-      "timestamp": "2026-02-19T10:34:47Z",
+      "timestamp": "2026-02-21T20:00:30Z",
       "note": "v3-audit"
     },
     "7-final": {
       "status": "complete",
-      "timestamp": "2026-02-19T10:39:00Z",
+      "timestamp": "2026-02-21T20:45:08Z",
       "note": "v3-phase-D"
     },
     "9-final-review": {
@@ -55,15 +55,15 @@
       "timestamp": "2026-02-19T10:46:44Z",
       "verdict": "APPROVE"
     },
-    "8": {
-      "status": "complete",
-      "timestamp": "2026-02-19T10:51:10Z"
-    },
     "0": {
       "status": "complete",
       "timestamp": "2026-02-19T11:14:07Z",
       "task_id": "yw-scythians-sarmatians-p0"
+    },
+    "8": {
+      "status": "complete",
+      "timestamp": "2026-02-21T20:45:09Z"
     }
   },
-  "last_updated": "2026-02-19T11:14:07Z"
+  "last_updated": "2026-02-21T20:45:09Z"
 }

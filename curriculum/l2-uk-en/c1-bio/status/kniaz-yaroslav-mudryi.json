@@ -2,10 +2,10 @@
   "module": "kniaz-yaroslav-mudryi",
   "level": "C1",
   "plan_version": "1.0",
-  "last_audit": "2026-02-21T15:10:43.269422Z",
+  "last_audit": "2026-02-21T19:25:51.241921Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-19T11:35:54.278566Z",
+    "md": "2026-02-21T19:25:50.425139Z",
     "meta": "2026-02-19T11:24:48.095251Z",
     "activities": "2026-02-19T11:35:54.271496Z",
     "vocabulary": "2026-02-18T18:39:32.355371Z",
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "fail",
       "violations": 1,
-      "message": "5316/5000 (raw: 5561) | pedagogy: 29 violations"
+      "message": "5316/5000 (raw: 5561) | pedagogy: 1 violations"
     },
     "activities": {
       "status": "pass",
@@ -49,7 +49,7 @@
       "message": "Refresh recommended: Research has decolonization section but content lacks it"
     },
     "review": {
-      "status": "skipped",
+      "status": "deferred",
       "violations": 0,
       "message": ""
     }
@@ -59,6 +59,6 @@
     "blocking_issues": [],
     "pass_count": 3,
     "fail_count": 1,
-    "deferred_count": 0
+    "deferred_count": 1
   }
 }

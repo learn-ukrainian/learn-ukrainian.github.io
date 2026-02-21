@@ -1,0 +1,35 @@
+{
+  "slug": "zasnuvannia-kyieva",
+  "track": "b2-hist",
+  "module_num": 6,
+  "mode": "v3",
+  "phases": {
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-02-21T19:28:50Z",
+      "words": 4542,
+      "attempts": 1
+    },
+    "3a": {
+      "status": "complete",
+      "timestamp": "2026-02-21T19:31:02Z",
+      "note": "v3-phase-C"
+    },
+    "3b": {
+      "status": "complete",
+      "timestamp": "2026-02-21T19:31:02Z",
+      "note": "v3-phase-C"
+    },
+    "3": {
+      "status": "complete",
+      "timestamp": "2026-02-21T20:50:33Z",
+      "note": "v3-audit"
+    },
+    "5-enrich": {
+      "status": "complete",
+      "timestamp": "2026-02-21T20:50:33Z",
+      "note": "v3-audit"
+    }
+  },
+  "last_updated": "2026-02-21T20:50:33Z"
+}

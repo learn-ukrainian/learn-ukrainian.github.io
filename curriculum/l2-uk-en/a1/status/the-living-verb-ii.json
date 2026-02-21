@@ -2,7 +2,7 @@
   "module": "the-living-verb-ii",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-21T00:46:32.622182Z",
+  "last_audit": "2026-02-21T21:09:04.933495Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-20T22:12:04.375489Z",
@@ -49,16 +49,18 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "pass",
-      "violations": 0,
-      "message": ""
+      "status": "fail",
+      "violations": 1,
+      "message": "Review only covers 0/5 (0%) content sections. Missed: \u0412\u0441\u0442\u0443\u043f: \u0420\u043e\u0434\u0438\u043d\u0430 -\u0438\u0442\u0438, \u041f\u0440\u0435\u0437\u0435\u043d\u0442\u0430\u0446\u0456\u044f: \u0414\u0440\u0443\u0433\u0430 \u0434\u0456\u0454\u0432\u0456\u0434\u043c\u0456\u043d\u0430, \u041f\u0440\u0430\u043a\u0442\u0438\u043a\u0430: \u0422\u0440\u0435\u043d\u0443\u0432\u0430\u043d\u043d\u044f \u0444\u043e\u0440\u043c, \u0412\u0438\u043a\u043e\u0440\u0438\u0441\u0442\u0430\u043d\u043d\u044f: \u0420\u043e\u0437\u043f\u043e\u0432\u0456\u0434\u0456 \u043f\u0440\u043e \u0434\u0456\u0457, \u041a\u0443\u043b\u044c\u0442\u0443\u0440\u043d\u0438\u0439 \u043a\u043e\u043d\u0442\u0435\u043a\u0441\u0442: \u0413\u043b\u0438\u0431\u0438\u043d\u0430 \u0441\u043b\u043e\u0432\u0430. A thorough review must address each major section of the content."
     }
   },
   "overall": {
-    "status": "pass",
-    "blocking_issues": [],
-    "pass_count": 7,
-    "fail_count": 0,
+    "status": "fail",
+    "blocking_issues": [
+      "Review only covers 0/5 (0%) content sections. Missed: \u0412\u0441\u0442\u0443\u043f: \u0420\u043e\u0434\u0438\u043d\u0430 -\u0438\u0442\u0438, \u041f\u0440\u0435\u0437\u0435\u043d\u0442\u0430\u0446\u0456\u044f: \u0414\u0440\u0443\u0433\u0430 \u0434\u0456\u0454\u0432\u0456\u0434\u043c\u0456\u043d\u0430, \u041f\u0440\u0430\u043a\u0442\u0438\u043a\u0430: \u0422\u0440\u0435\u043d\u0443\u0432\u0430\u043d\u043d\u044f \u0444\u043e\u0440\u043c, \u0412\u0438\u043a\u043e\u0440\u0438\u0441\u0442\u0430\u043d\u043d\u044f: \u0420\u043e\u0437\u043f\u043e\u0432\u0456\u0434\u0456 \u043f\u0440\u043e \u0434\u0456\u0457, \u041a\u0443\u043b\u044c\u0442\u0443\u0440\u043d\u0438\u0439 \u043a\u043e\u043d\u0442\u0435\u043a\u0441\u0442: \u0413\u043b\u0438\u0431\u0438\u043d\u0430 \u0441\u043b\u043e\u0432\u0430. A thorough review must address each major section of the content."
+    ],
+    "pass_count": 6,
+    "fail_count": 1,
     "deferred_count": 0
   }
 }

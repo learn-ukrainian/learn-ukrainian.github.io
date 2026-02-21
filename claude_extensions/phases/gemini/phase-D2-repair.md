@@ -76,8 +76,9 @@ corrected activity text
 
 - **FIND text must be verbatim** from the file — use Grep to verify before including
 - Only fix issues documented in the review or audit failures above
-- Do NOT add new sections, activities, or vocabulary items — only fix existing content
-- Maximum **15 FIND/REPLACE pairs** total (prioritize the most impactful fixes)
+- You MAY add new activities or modify existing ones if the review's Fix Plan explicitly requests it
+- Do NOT add new prose sections or vocabulary items unless the review's Fix Plan explicitly requests it
+- Maximum **20 FIND/REPLACE pairs** total (prioritize the most impactful fixes)
 - Each FILE: line starts a new sub-block for that file
 - If nothing needs fixing, output:
   ```
@@ -109,5 +110,5 @@ After the fix block, include:
 - Do NOT write a review — that was already done in Phase D.1
 - Do NOT output ===REVIEW_START=== blocks
 - Do NOT modify files directly — only output fix blocks
-- Do NOT add features, new sections, or new activities
+- You MAY add/modify activities if the review's Fix Plan requests it (use FIND/REPLACE on the YAML file)
 - Do NOT make cosmetic changes beyond what the review flagged

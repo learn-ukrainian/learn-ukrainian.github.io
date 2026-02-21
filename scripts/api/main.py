@@ -16,9 +16,9 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
-from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect
+from fastapi import FastAPI, HTTPException, Request, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, JSONResponse
 
 from .config import (
     BATCH_STATE_DIR,
@@ -48,6 +48,16 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
+@app.exception_handler(Exception)
+async def global_exception_handler(request: Request, exc: Exception):
+    """Consistent JSON error format for unhandled exceptions."""
+    return JSONResponse(
+        status_code=500,
+        content={"error": "internal_server_error", "detail": str(exc)},
+    )
+
+
 # Mount team routers — each team owns their own file
 app.include_router(blue_router, prefix="/api/blue")
 app.include_router(gold_router, prefix="/api/gold")
@@ -56,11 +66,29 @@ app.include_router(state_router, prefix="/api/state")
 app.include_router(comms_router, prefix="/api/comms")
 
 
+# Server start time for uptime calculation
+_SERVER_START = datetime.now(timezone.utc)
+
+
 # ==================== SHARED ENDPOINTS ====================
+
+@app.get("/api/health")
+async def health_check():
+    """Root health check — returns server status, version, uptime."""
+    now = datetime.now(timezone.utc)
+    uptime = now - _SERVER_START
+    return {
+        "status": "ok",
+        "version": app.version,
+        "uptime_seconds": int(uptime.total_seconds()),
+        "started_at": _SERVER_START.isoformat(),
+        "checked_at": now.isoformat(),
+    }
+
 
 @app.get("/api/config")
 async def get_config():
-    return {"levels": LEVELS, "api_version": "2.0.0"}
+    return {"levels": LEVELS, "api_version": app.version}
 
 
 @app.get("/api/batch/dispatcher")

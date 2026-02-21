@@ -24,10 +24,9 @@
       "attempts": 2
     },
     "v3-D": {
-      "status": "failed",
-      "ts": "2026-02-21T15:53:05Z",
-      "attempts": 1,
-      "note": "d1-no-review"
+      "status": "complete",
+      "ts": "2026-02-21T19:20:31Z",
+      "attempts": 2
     }
   }
 }
