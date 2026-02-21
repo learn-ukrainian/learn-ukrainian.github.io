@@ -465,6 +465,22 @@ def _extract_delimiter(text: str, start_tag: str, end_tag: str) -> str | None:
     return text[s:e].strip()
 
 
+def _count_diff_lines(before: str, after: str) -> int:
+    """Count the number of changed lines between two texts.
+
+    Uses difflib for accurate line-level diff — counts additions, deletions,
+    and modifications. Unlike set-based diff, this correctly handles duplicate
+    lines and doesn't miss bulk insertions (#623).
+    """
+    import difflib
+    before_lines = before.splitlines(keepends=True)
+    after_lines = after.splitlines(keepends=True)
+    diff = list(difflib.unified_diff(before_lines, after_lines, n=0))
+    # Count lines starting with + or - (excluding the +++ and --- headers)
+    return sum(1 for line in diff if line.startswith(('+', '-'))
+               and not line.startswith(('+++', '---')))
+
+
 # ---------------------------------------------------------------------------
 # Phase D helpers: pre-compute audit metrics + extract H2 sections
 # ---------------------------------------------------------------------------
@@ -613,6 +629,63 @@ def _extract_audit_failures(audit_output: str) -> str:
         # Fallback: return last 40 lines
         return "\n".join(lines[-40:])
     return "\n".join(failure_lines)
+
+
+# Audit failure codes that indicate diffuse issues (not FIND/REPLACE fixable).
+# These require structural rewrite, not targeted repair.
+_DIFFUSE_FAILURE_CODES = {
+    "ROBOTIC_STRUCTURE",        # Sentence pattern repetition throughout
+    "CONTENT_REDUNDANCY",       # Duplicate sentences across sections
+    "EXCESSIVE_METAPHOR",       # Too many metaphors (prose style issue)
+    "THEORY_FRONTLOADING",      # Structure issue: too much theory before practice
+    "LOW_IMMERSION",            # Fundamental language balance problem
+}
+
+# Review keywords that indicate diffuse issues (from D.1 review text).
+# These are specific phrases unlikely to appear in unrelated contexts.
+_DIFFUSE_REVIEW_KEYWORDS = [
+    "structural rewrite needed",
+    "needs rebuild",
+    "fundamental restructuring",
+    "wholesale rewrite",
+]
+
+
+def _all_issues_diffuse(audit_output: str, review_text: str) -> bool:
+    """Determine if ALL issues are diffuse (not fixable by FIND/REPLACE).
+
+    Returns True only if there are failure signals AND every one is diffuse.
+    If there are ANY targeted failures (grammar, missing content, wrong facts),
+    returns False so D.2 can attempt a repair.
+
+    Classification is deterministic — based on audit failure codes and
+    review keywords, not LLM judgment (#623).
+    """
+    import re as _re
+
+    # Extract failing codes: look for lines containing ❌ or FAIL followed by [CODE]
+    # Uses a reliable regex that checks the full line context, not fragile split logic.
+    failing_codes: set[str] = set()
+    for line in audit_output.split("\n"):
+        if "❌" in line or "FAIL" in line.upper():
+            codes_in_line = _re.findall(r'\[([A-Z_]{3,})\]', line)
+            failing_codes.update(codes_in_line)
+
+    if not failing_codes and not review_text:
+        return False  # No signal at all — don't skip D.2
+
+    # Check if ALL failing codes are diffuse
+    has_targeted = bool(failing_codes - _DIFFUSE_FAILURE_CODES)
+    if has_targeted:
+        return False  # At least one targeted issue exists
+
+    # Also check review text for diffuse keywords (exact phrase match)
+    review_lower = review_text.lower() if review_text else ""
+    has_diffuse_review = any(kw in review_lower for kw in _DIFFUSE_REVIEW_KEYWORDS)
+
+    # Only return True if we found diffuse signals and NO targeted signals
+    has_diffuse_audit = bool(failing_codes & _DIFFUSE_FAILURE_CODES)
+    return has_diffuse_audit or has_diffuse_review
 
 
 # ---------------------------------------------------------------------------
@@ -906,13 +979,40 @@ def phase_B_v3(ctx: ModuleContext, state: dict, use_track_context: bool = True) 
 
     ok = v2.phase_2_v2(ctx)
 
-    if ok:
-        _mark_phase_v3(ctx, state, phase, "complete")
-        # Invalidate downstream artifacts — status cache and review files are now stale
-        _invalidate_stale_artifacts(ctx)
-    else:
+    if not ok:
         _mark_phase_v3(ctx, state, phase, "failed")
-    return ok
+        return False
+
+    # Post-B gates (#623): fail fast on structurally doomed content.
+    content_path = ctx.paths.get("md")
+    if content_path and content_path.exists():
+        from audit.cleaners import clean_for_stats
+        raw = content_path.read_text("utf-8")
+
+        # Gate 1: Word count — content must be ≥80% of target
+        if ctx.word_target:
+            wc = len(clean_for_stats(raw).split())
+            threshold = ctx.word_target * 0.8
+            if wc < threshold:
+                log(f"  Phase B: FAILED — word count {wc} < 80% target ({int(threshold)}w)")
+                _mark_phase_v3(ctx, state, phase, "failed",
+                               note=f"word-count-{wc}-below-80pct-{ctx.word_target}")
+                return False
+
+        # Gate 2: Content purity pre-screen — catch worst AI artifacts
+        # (robotic starters, duplicate sentences) before they reach Phase D.
+        from audit.checks.content_purity import check_content_purity
+        purity_violations = check_content_purity(raw)
+        critical = [v for v in purity_violations if v.get("severity") == "error"]
+        if critical:
+            log(f"  Phase B: WARNING — {len(critical)} content purity issue(s) detected")
+            for v in critical[:3]:
+                log(f"    {v['type']}: {v['issue'][:100]}")
+
+    _mark_phase_v3(ctx, state, phase, "complete")
+    # Invalidate downstream artifacts — status cache and review files are now stale
+    _invalidate_stale_artifacts(ctx)
+    return True
 
 
 def _invalidate_stale_artifacts(ctx: ModuleContext) -> None:
@@ -1057,7 +1157,18 @@ def phase_C_v3(ctx: ModuleContext, state: dict, use_track_context: bool = True) 
             log(f"  Phase C: Vocabulary extracted → {voc_path.name}")
 
     if not wrote_activities or not wrote_vocab:
-        log(f"  Phase C: WARNING — activities={wrote_activities}, vocab={wrote_vocab}")
+        log(f"  Phase C: FAILED — missing files: activities={wrote_activities}, vocab={wrote_vocab}")
+        _mark_phase_v3(ctx, state, phase, "failed",
+                       note=f"missing-files-act={wrote_activities}-voc={wrote_vocab}")
+        return False
+
+    # Post-C schema validation gate (#623): verify generated YAML is valid
+    # before marking complete — prevents 15-20 modules from wasting audit+D cycles
+    from build_module_v2 import _validate_activities_yaml
+    if act_path and act_path.exists() and not _validate_activities_yaml(act_path):
+        log(f"  Phase C: FAILED — activities YAML failed schema validation")
+        _mark_phase_v3(ctx, state, phase, "failed", note="activities-schema-invalid")
+        return False
 
     # Also mark v1 state IDs so downstream phases don't regenerate
     mark_phase_locked(ctx, "3a", "complete", note="v3-phase-C")
@@ -1358,6 +1469,66 @@ def phase_audit_v3(ctx: ModuleContext, state: dict) -> bool:
 
 
 # ---------------------------------------------------------------------------
+# Phase D helpers
+# ---------------------------------------------------------------------------
+
+def _quick_review_quality_gate(review_text: str, content_path: Path) -> tuple[bool, str]:
+    """Fast pre-save check: reject obviously shallow/fake reviews.
+
+    Catches reviews that have proper delimiters but are trivially thin
+    (e.g. from a reformat retry that wrapped a 3-line summary in delimiters).
+
+    Returns (ok, reason).  ok=True means the review is plausibly real.
+    """
+    from audit.checks.review_validation import _extract_ukrainian_citations
+    from audit.checks.review_gaming import _extract_h2_headers
+
+    # --- Citation density ---
+    citations = _extract_ukrainian_citations(review_text)
+    content_text = content_path.read_text("utf-8") if content_path.exists() else ""
+    word_count = len(content_text.split())
+
+    # For content > 1000 words, expect at least 4 citations.
+    # For shorter content, scale down (min 2).
+    min_citations = max(2, word_count // 600) if word_count > 500 else 2
+    if len(citations) < min_citations:
+        return False, (
+            f"Shallow review: {len(citations)} citation(s), need ≥{min_citations} "
+            f"for {word_count}-word content"
+        )
+
+    # --- Section coverage ---
+    if content_text:
+        h2s = _extract_h2_headers(content_text)
+        # Filter standard non-content headers
+        skip = {'словник', 'vocabulary', 'лексика', 'бібліографія', 'джерела',
+                'література', 'використані джерела', 'самооцінювання',
+                'self-assessment', 'самоперевірка'}
+        h2s = [h for h in h2s if h.strip().lower() not in skip]
+
+        if len(h2s) >= 3:
+            review_lower = review_text.lower()
+            mentioned = sum(
+                1 for h in h2s
+                if h.strip().lower() in review_lower
+                or (len(h.split(':')[0].strip()) > 3
+                    and h.split(':')[0].strip().lower() in review_lower)
+            )
+            coverage = mentioned / len(h2s)
+            if coverage < 0.15:  # Nearly zero coverage = clearly fake
+                return False, (
+                    f"Shallow review: covers {mentioned}/{len(h2s)} "
+                    f"({coverage:.0%}) content sections"
+                )
+
+    # --- Minimum length ---
+    if len(review_text.split()) < 150:
+        return False, f"Shallow review: only {len(review_text.split())} words"
+
+    return True, "OK"
+
+
+# ---------------------------------------------------------------------------
 # Phase D: Cross-Agent Review + Fix (Claude reviews Gemini's work)
 # Two-step: D.1 Evidence+Review → D.2 Targeted Repair (if needed)
 # ---------------------------------------------------------------------------
@@ -1464,36 +1635,34 @@ def phase_D_v3(ctx: ModuleContext, state: dict) -> bool:
     # Extract review
     review_text = _extract_delimiter(raw_output, "===REVIEW_START===", "===REVIEW_END===")
     if not review_text:
-        log("  Phase D.1: WARNING — no REVIEW delimiters in output (retrying once)")
+        log("  Phase D.1: WARNING — no REVIEW delimiters in output (retrying full D.1)")
         # Save raw output for debugging
         (ctx.orch_dir / "phase-D1-raw-output.md").write_text(raw_output, "utf-8")
 
-        # Retry once: feed the raw output back and ask Claude to reformat
-        reformat_prompt = (
-            "You produced a review but forgot the required delimiters. "
-            "Reformat your review below inside ===REVIEW_START=== and ===REVIEW_END=== delimiters. "
-            "Use the FULL structured format: all 13 dimension scores in a markdown table, "
-            "all required H2 sections (Plan Verification, Scores, Auto-Fail Checklist, "
-            "Critical Issues, Strengths, Fix Plan, Factual Verification, Verification Summary, Verdict). "
-            "If information is missing from your original review, infer reasonable values.\n\n"
-            "YOUR ORIGINAL REVIEW:\n\n" + raw_output
-        )
-        reformat_file = ctx.orch_dir / "phase-D1-reformat-prompt.md"
-        reformat_file.write_text(reformat_prompt, "utf-8")
-
+        # Retry once: re-run the full D.1 prompt (not just reformat)
         ok2, raw2 = _dispatch_claude_phase(
-            reformat_file, "Phase D.1 (reformat)",
-            model=claude_model_D, timeout=300,
+            prompt_file, "Phase D.1 (retry)",
+            model=claude_model_D, timeout=TIMEOUT_REVIEW,
+            allow_tools=["Read", "Grep", "Glob"],
         )
         if ok2:
             review_text = _extract_delimiter(raw2, "===REVIEW_START===", "===REVIEW_END===")
 
         if not review_text:
-            log("  Phase D.1: Reformat retry also failed — no delimiters")
+            log("  Phase D.1: Full retry also failed — no delimiters")
             _mark_phase_v3(ctx, state, phase, "failed", attempts=1, note="d1-no-review")
             return False
 
-        log("  Phase D.1: Reformat retry succeeded — delimiters found")
+        log("  Phase D.1: Full retry succeeded — delimiters found")
+
+    # Pre-save quality gate: reject obviously shallow/fake reviews
+    qg_ok, qg_reason = _quick_review_quality_gate(review_text, ctx.paths["md"])
+    if not qg_ok:
+        log(f"  Phase D.1: REJECTED — {qg_reason}")
+        (ctx.orch_dir / "phase-D1-rejected-review.md").write_text(review_text, "utf-8")
+        _mark_phase_v3(ctx, state, phase, "failed", attempts=1,
+                       note=f"d1-shallow-review")
+        return False
 
     # Inject Reviewed-By metadata if Claude forgot it
     if "Reviewed-By:" not in review_text:
@@ -1558,6 +1727,17 @@ def phase_D_v3(ctx: ModuleContext, state: dict) -> bool:
         return False
 
     # -----------------------------------------------------------------------
+    # Pre-D.2 triage (#623): skip D.2 if all issues are diffuse (not fixable
+    # by FIND/REPLACE). Deterministic classification based on audit failure
+    # codes — no LLM involved.
+    # -----------------------------------------------------------------------
+    if _all_issues_diffuse(audit_out, review_text):
+        log("  Phase D.2: SKIPPED — all issues are diffuse (needs rebuild, not repair)")
+        _mark_phase_v3(ctx, state, phase, "failed", attempts=1,
+                       note="needs-rebuild-diffuse-issues")
+        return False
+
+    # -----------------------------------------------------------------------
     # Step 2: Targeted Repair (only if Step 1 didn't pass audit)
     # -----------------------------------------------------------------------
     log("  Phase D.2: Audit failed after review — dispatching targeted repair...")
@@ -1585,12 +1765,46 @@ def phase_D_v3(ctx: ModuleContext, state: dict) -> bool:
         _mark_phase_v3(ctx, state, phase, "failed", attempts=2, note="d2-dispatch-failed")
         return False
 
-    # Apply fixes if present
+    # Apply fixes if present, with diff-size blocker (#623)
     if "===SECTION_FIX_START===" in raw_output2:
+        # Snapshot content before fixes for diff-size check
+        content_before = ctx.paths["md"].read_text("utf-8")
+        act_before: str | None = None
+        if ctx.paths.get("activities") and ctx.paths["activities"].exists():
+            act_before = ctx.paths["activities"].read_text("utf-8")
+
         _apply_section_fixes(ctx.paths["md"], raw_output2)
         if ctx.paths.get("activities"):
             _apply_section_fixes(ctx.paths["activities"], raw_output2)
-        log("  Phase D.2: Section fixes applied")
+
+        # Diff-size blocker: count FIND/REPLACE pairs vs actual changed lines.
+        # If changes exceed 2× the fix pair count, the repair went beyond scope.
+        fix_pair_count = raw_output2.count("FIND:") if "FIND:" in raw_output2 else 1
+        content_after = ctx.paths["md"].read_text("utf-8")
+        act_after: str | None = None
+        if ctx.paths.get("activities") and ctx.paths["activities"].exists():
+            act_after = ctx.paths["activities"].read_text("utf-8")
+
+        changed_lines = _count_diff_lines(content_before, content_after)
+        if act_before is not None and act_after is not None:
+            changed_lines += _count_diff_lines(act_before, act_after)
+        # Each FIND/REPLACE pair can legitimately change a multi-line paragraph.
+        # Allow ~15 lines per pair (6-line find + 6-line replace + context).
+        max_allowed = max(fix_pair_count * 15, 30)  # At least 30 lines always OK
+
+        if changed_lines > max_allowed:
+            log(f"  Phase D.2: REJECTED — repair changed {changed_lines} lines "
+                f"(max {max_allowed} for {fix_pair_count} fix pairs)")
+            log(f"  Phase D.2: Reverting content to pre-fix state")
+            ctx.paths["md"].write_text(content_before, "utf-8")
+            if act_before is not None and ctx.paths.get("activities"):
+                ctx.paths["activities"].write_text(act_before, "utf-8")
+            _mark_phase_v3(ctx, state, phase, "failed", attempts=2,
+                           note="d2-diff-too-large")
+            return False
+
+        log(f"  Phase D.2: Section fixes applied ({changed_lines} lines changed, "
+            f"{fix_pair_count} fix pairs)")
     else:
         log("  Phase D.2: WARNING — no SECTION_FIX delimiters in output")
         (ctx.orch_dir / "phase-D2-raw-output.md").write_text(raw_output2, "utf-8")
@@ -1925,6 +2139,11 @@ def preflight_v3(args: argparse.Namespace) -> ModuleContext:
     ctx.claude_model_F = getattr(args, "claude_model_F", None) or "claude-opus-4-6"    # type: ignore[attr-defined]
     ctx.final_review_agent = getattr(args, "final_review_agent", "claude")             # type: ignore[attr-defined]
 
+    # --gemini-model: override Gemini model for all phases
+    gemini_model_override = getattr(args, "gemini_model", None)
+    if gemini_model_override:
+        ctx.model = gemini_model_override  # type: ignore[attr-defined]
+
     # --rebuild forces Phase B to regenerate even if content file exists
     if getattr(args, "rebuild", False):
         ctx.refresh = True  # type: ignore[attr-defined]
@@ -2041,6 +2260,8 @@ def main() -> int:
     parser.add_argument("--use-claude", type=str, default="", dest="use_claude",
                         help="Phases to run via Claude instead of Gemini (e.g. 'A', 'C', 'A C'). "
                              "A=research, C=activities. Phase D always uses Claude (cross-agent).")
+    parser.add_argument("--gemini-model", type=str, default=None, dest="gemini_model",
+                        help="Override Gemini model for all phases (default: from batch_gemini_config)")
     parser.add_argument("--claude-model-A", type=str, default=None, dest="claude_model_A",
                         help=f"Claude model for Phase A/research (default: sonnet for core, opus for seminar)")
     parser.add_argument("--claude-model-C", type=str, default=None, dest="claude_model_C",
