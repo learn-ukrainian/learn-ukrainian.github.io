@@ -1,4 +1,4 @@
-        # Fix Phase — full audit failures
+        # Fix Phase — content-only audit failures
 
         The following audit errors must be fixed for module `sloviany-origins`:
 
@@ -6,28 +6,29 @@
 
         ```
         ============================================================
-  HETMAN VERIFY: sloviany-origins
+  OTAMAN VERIFY: sloviany-origins
 ============================================================
 
-[1/4] Running full audit...
-[2/4] Checking sidecar files...
-[3/4] Reading status JSON...
-[4/4] Checking overall status...
+[1/3] Running audit with --skip-activities...
+[2/3] Reading status JSON...
+[3/3] Checking orchestration artifacts...
 
 ────────────────────────────────────────────────────────────
   VERDICT: FAIL
   Module:  sloviany-origins
 ────────────────────────────────────────────────────────────
-  audit script returned non-zero exit code
-  overall status is 'fail' (must be 'pass')
-  2 Outline Compliance Errors
+  missing orchestration artifacts:
+    no Phase 2 artifacts (section files or prompt)
 
-  Hetman has NOT completed this module.
+  Otaman has NOT completed this module.
   Fix the issues above and re-run this script.
 
 ─── Audit output (last 15 lines) ───
+  Pedagogy     ✅ Level-appropriate
+  Content_heavy ⏳ Deferred (content-only audit)
+  Grammar      ℹ️ N/A (covered by naturalness)
   Naturalness  ✅ 10/10 (High)
-  Activity_quality 📋 Quality validation available (optional)
+  Activity_quality ⏳ Deferred (content-only audit)
   Research     ✅ Content aligned with research
   Immersion    🇺🇦 99.5% (target 90-100% (history))
   Richness     ✅ 99% (history)
@@ -35,19 +36,16 @@
   Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2-hist/audit/sloviany-origins-audit.md
   Status: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2-hist/status/sloviany-origins.json
 
-  ❌ AUDIT FAILED. Correct errors before proceeding.
+  ✅ AUDIT PASSED.
 
-  Critical Failures:
-    • 2 Outline Compliance Errors
-
-  ❌ AUDIT FAILED (see curriculum/l2-uk-en/krisztiankoos/audit/sloviany-origins-audit.log for details)
+  ✅ AUDIT PASSED
         ```
 
         ## Files to Fix
 
         - Content: `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2-hist/sloviany-origins.md`
-        - Activities: `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2-hist/activities/sloviany-origins.yaml`
-        - Vocabulary: `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2-hist/vocabulary/sloviany-origins.yaml`
+
+
 
         ## Instructions
 

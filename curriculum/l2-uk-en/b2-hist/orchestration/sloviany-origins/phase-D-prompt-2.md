@@ -1,3 +1,26 @@
+# Phase D.2: Targeted Repair
+
+> **You are an expert Ukrainian language editor applying targeted fixes based on a review.**
+> **You have file system access.** Use Read and Grep to verify every fix against the actual file content.
+
+---
+
+## Context
+
+A review identified issues in this module. Your job is to produce **exact FIND/REPLACE fix pairs** that resolve the issues. You are NOT writing a review — that was already done. Focus only on producing correct, targeted fixes.
+
+---
+
+## Files You Can Read (use Read tool)
+
+1. **Content**: `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2-hist/sloviany-origins.md`
+2. **Activities**: `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2-hist/activities/sloviany-origins.yaml`
+3. **Vocabulary**: `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2-hist/vocabulary/sloviany-origins.yaml`
+
+---
+
+## Review (from Phase D.1)
+
 **Reviewed-By:** claude-opus-4-6
 
 # Phase D Review: sloviany-origins
@@ -166,3 +189,100 @@ All 8 issues are fixable in a **single editing pass** — no structural rewrite 
 **FAIL** — Score 7.95/10 | Auto-fail: Linguistic Accuracy 8 < 9 threshold
 
 8 issues identified, all fixable without structural changes. Primary concerns: morphological error triggering auto-fail, modified primary source quote, dubious citation, and ideologically inappropriate Gumilev terminology. Recommend fix pass and re-review.
+
+---
+
+## Audit Failures (from automated re-audit)
+
+```
+VERDICT: FAIL
+overall status is 'fail' (must be 'pass')
+failing gates:
+❌ [LOW_CITATION_DENSITY] Review has only 2 Ukrainian citation(s) for 5368-word content (need at least 8). A proper review must cite specific Ukrainian sentences from the content to support its assessment. Quote the actual text with «» or "".
+❌ [REVIEW_LOW_SECTION_COVERAGE] Review only covers 0/7 (0%) content sections. Missed: Вступ: Етимологія та ідентичність, Читання: I — Археологія та географія розселення, Читання: II — Антський союз: Хроніки боротьби, Читання: III — Матеріальний світ та суспільний устрій, Первинні джерела: Свідчення сучасників. A thorough review must address each major section of the content.
+❌ AUDIT FAILED. Correct errors before proceeding.
+Critical Failures:
+❌ AUDIT FAILED (see curriculum/l2-uk-en/krisztiankoos/audit/sloviany-origins-audit.log for details)
+```
+
+---
+
+## Instructions
+
+1. Read the content file using the Read tool
+2. For each issue identified in the review OR in the audit failures:
+   a. Use Grep to find the exact text that needs fixing
+   b. Produce a FIND/REPLACE pair with verbatim FIND text
+3. Only fix issues documented above — no silent extra changes
+4. Prioritize fixes by impact: audit gate failures first, then review issues
+
+---
+
+## Output Format
+
+> **DELIMITER ENFORCEMENT**: Content outside delimiters is automatically discarded.
+
+```
+===SECTION_FIX_START===
+FILE: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2-hist/sloviany-origins.md
+---
+FIND:
+exact text to replace (full sentence or paragraph, verbatim from the file)
+REPLACE:
+corrected replacement text
+---
+FIND:
+next problematic text
+REPLACE:
+corrected replacement
+---
+FILE: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2-hist/activities/sloviany-origins.yaml
+---
+FIND:
+exact activity text to replace
+REPLACE:
+corrected activity text
+---
+===SECTION_FIX_END===
+```
+
+## Fix Rules
+
+- **FIND text must be verbatim** from the file — use Grep to verify before including
+- Only fix issues documented in the review or audit failures above
+- You MAY add new activities or modify existing ones if the review's Fix Plan explicitly requests it
+- Do NOT add new prose sections or vocabulary items unless the review's Fix Plan explicitly requests it
+- Maximum **20 FIND/REPLACE pairs** total (prioritize the most impactful fixes)
+- Each FILE: line starts a new sub-block for that file
+- If nothing needs fixing, output:
+  ```
+  ===SECTION_FIX_START===
+  ===SECTION_FIX_END===
+  ```
+
+---
+
+## Friction Report (MANDATORY)
+
+After the fix block, include:
+
+```
+===FRICTION_START===
+**Phase**: Phase D.2: Targeted Repair
+**Step**: {what you were doing when friction occurred, or "Full Phase D.2"}
+**Friction Type**: NONE | FIND_TEXT_MISMATCH | FILE_NOT_FOUND | ...
+**Raw Error**: {actual error or "None"}
+**Self-Correction**: {what you changed, or "N/A"}
+**Proposed Tooling Fix**: {if a script/design issue, or "N/A"}
+===FRICTION_END===
+```
+
+---
+
+## Boundaries
+
+- Do NOT write a review — that was already done in Phase D.1
+- Do NOT output ===REVIEW_START=== blocks
+- Do NOT modify files directly — only output fix blocks
+- You MAY add/modify activities if the review's Fix Plan requests it (use FIND/REPLACE on the YAML file)
+- Do NOT make cosmetic changes beyond what the review flagged

@@ -4,8 +4,8 @@ Tests for staged generation scripts.
 Tests:
 - check_gate.py - Hard gate checker
 - calculate_richness.py - Richness score calculator
-- generate_skeleton.py - Skeleton generator
-- extract_for_activities.py - Content extractor
+
+Note: extract_for_activities.py tests removed — module archived in #616.
 """
 
 import pytest
@@ -34,14 +34,6 @@ from check_gate import (
 from calculate_richness import (
     calculate_richness_score as calculate_richness,
     detect_dryness_flags,
-)
-
-from extract_for_activities import (
-    extract_vocabulary,
-    extract_sentences,
-    extract_dialogues,
-    extract_paragraphs,
-    extract_proverbs,
 )
 
 
@@ -438,112 +430,10 @@ class TestDetectDrynessFlags:
 
 
 # =============================================================================
-# EXTRACT_FOR_ACTIVITIES TESTS
-# =============================================================================
-
-class TestExtractVocabulary:
-    def test_extracts_b1_vocab(self, rich_b1_module):
-        vocab = extract_vocabulary(rich_b1_module)
-        assert len(vocab) == 10
-        assert vocab[0]['uk'] == 'читати'
-        assert vocab[0]['en'] == 'to read'
-
-    def test_extracts_a1_vocab_with_ipa(self, a1_module_with_vocab):
-        vocab = extract_vocabulary(a1_module_with_vocab)
-        assert len(vocab) == 3
-        assert vocab[0]['uk'] == 'один'
-        assert vocab[0]['ipa'] == '/oˈdɪn/'
-        assert vocab[0]['en'] == 'one'
-
-
-class TestExtractSentences:
-    def test_extracts_bold_sentences(self, rich_b1_module):
-        sentences = extract_sentences(rich_b1_module)
-        assert len(sentences) >= 5
-        # Check that bold Ukrainian sentences were extracted
-        assert any('Читай' in s for s in sentences)
-
-    def test_no_short_fragments(self, rich_b1_module):
-        sentences = extract_sentences(rich_b1_module)
-        for s in sentences:
-            assert len(s) > 10
-
-
-class TestExtractDialogues:
-    def test_extracts_speaker_dialogues(self, rich_b1_module):
-        dialogues = extract_dialogues(rich_b1_module)
-        assert len(dialogues) >= 4
-        # Check structure
-        for d in dialogues:
-            assert 'a' in d
-            assert 'b' in d
-
-    def test_extracts_ab_format(self):
-        content = """
-**А:** Привіт, як справи?
-**Б:** Добре, дякую!
-
-**А:** Що робиш?
-**Б:** Читаю книгу.
-"""
-        dialogues = extract_dialogues(content)
-        assert len(dialogues) >= 2
-
-
-class TestExtractParagraphs:
-    def test_extracts_long_ukrainian_paragraphs(self, rich_b1_module):
-        paragraphs = extract_paragraphs(rich_b1_module)
-        # Should have some paragraphs > 100 chars
-        assert len(paragraphs) >= 0  # May or may not have long paragraphs
-
-    def test_excludes_short_content(self):
-        content = """---
-module: test
----
-# Title
-
-Short.
-
-Also short.
-
-This is a much longer paragraph that contains substantial Ukrainian content for the learner to read and understand, meeting the minimum length requirement for extraction.
-"""
-        paragraphs = extract_paragraphs(content)
-        # Only long paragraph should be extracted
-        for p in paragraphs:
-            assert len(p) >= 100
-
-
-class TestExtractProverbs:
-    def test_extracts_quoted_proverbs(self):
-        content = """
-# Test
-
-«Хто рано встає, тому Бог дає.»
-
-"Без труда нема плода."
-
-**Приказка:** Не все те золото, що блищить.
-"""
-        proverbs = extract_proverbs(content)
-        assert len(proverbs) >= 2
-
-
-# =============================================================================
 # INTEGRATION TESTS
 # =============================================================================
 
 class TestIntegration:
-    def test_full_extraction_pipeline(self, rich_b1_module):
-        """Test that all extractors work together."""
-        vocab = extract_vocabulary(rich_b1_module)
-        sentences = extract_sentences(rich_b1_module)
-        dialogues = extract_dialogues(rich_b1_module)
-
-        assert len(vocab) > 0
-        assert len(sentences) > 0
-        assert len(dialogues) > 0
-
     def test_richness_correlates_with_engagement(self, rich_b1_module, dry_module):
         """Rich content should score higher than dry content."""
         rich_result = calculate_richness(rich_b1_module, 'B1')

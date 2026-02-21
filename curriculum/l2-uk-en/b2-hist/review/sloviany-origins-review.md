@@ -1,124 +1,169 @@
-===REVIEW_START===
-# Рецензія: Слов'яни на українських землях: Витоки державності
+<!-- content-hash: fa1a95c47bd8 -->
+**Reviewed-By:** claude-opus-4-6
 
-**Level:** B2-HIST | **Module:** 004
-**Overall Score:** 9.2/10
-**Status:** PASS
-**Reviewed:** 2026-02-19
+# Phase D Review: sloviany-origins
+
+**Module**: `curriculum/l2-uk-en/b2-hist/sloviany-origins.md`
+**Reviewer**: Claude (Phase D cross-agent review)
+**Date**: 2026-02-21
+**Attempt**: 1 of 3
+
+---
 
 ## Plan Verification
 
-```
-Plan-Content Alignment: PASS
-- Sections: PASS (All sections present and aligned with plan points)
-- Vocabulary: PASS (25/25 required terms present)
-- Grammar scope: PASS (Appropriate use of past tense and historical narrative)
-- Objectives: PASS (All objectives addressed through content and activities)
-```
+| Plan Requirement | Status | Notes |
+|---|---|---|
+| Cover proto-Slavic origins and migration theories | PASS | Content covers Zarubyntsi, Cherniakhiv, Prague culture |
+| Decolonization perspective | PARTIAL | Gumilev term «пасіонарні» contradicts decolonization framing |
+| Primary source integration | PARTIAL | Mauricius quote modified from research notes |
+| Грушевський reference (plan L50) | FAIL | Missing entirely |
+| B2 CEFR linguistic level | PASS | Appropriate complexity |
+
+---
 
 ## Scores
 
-| # | Dimension | Score | Auto-fail | Evidence |
-|---|-----------|-------|-----------|----------|
-| 1 | Experience Quality | 10/10 | <7 | Strong narrative flow, engaging hook with "slov/slovo". |
-| 2 | Coherence | 9/10 | <7 | Logical progression from etymology to archaeology to politics. |
-| 3 | Relevance | 10/10 | <7 | Directly addresses Ukrainian identity and decolonization. |
-| 4 | Educational | 9/10 | <7 | Clear explanations of complex concepts (etymology, archaeology). |
-| 5 | Language | 9/10 | <8 | High-quality B2 academic register, though minor stylistic fillers present. |
-| 6 | Pedagogy | 9/10 | <7 | Effective use of primary sources (Procopius, Jordan) to teach critical thinking. |
-| 7 | Immersion | 10/10 | <6 | 100% Ukrainian context, zero English in prose. |
-| 8 | Activities | 9/10 | <7 | Well-designed tasks focusing on analysis and comparison. |
-| 9 | Richness | 9/10 | <6 | Vivid sensory details (smell of smoke, textures), but slightly repetitive rhetoric. |
-| 10 | Beginner Safety | 9/10 | <7 | Accessible language despite complex topic ("Would I Continue?" 5/5). |
-| 11 | LLM Fingerprint | 8/10 | <7 | Some repetitive rhetorical structures ("Це не просто..."), but generally distinct voice. |
-| 12 | Linguistic Accuracy | 9/10 | <9 | No major errors, but some phrasing could be more precise. |
+| # | Dimension | Score | Weight | Weighted | Notes |
+|---|---|---|---|---|---|
+| 1 | Linguistic Accuracy | 8 | 15% | 1.20 | «будь-якіх» wrong declension (L33); auto-fail < 9 |
+| 2 | Pedagogical Design | 9 | 12% | 1.08 | Solid TTT flow, scaffolded well |
+| 3 | Content Accuracy | 7 | 15% | 1.05 | Modified Mauricius quote, ungrounded Boz etymology, dubious «ЕСУ, 2026» citation |
+| 4 | Cultural Sensitivity | 7 | 10% | 0.70 | «пасіонарні» — Gumilev/Neo-Eurasianist term inappropriate for decolonized curriculum |
+| 5 | Activity Quality | 8 | 10% | 0.80 | Jordanes quote mismatch between content (L191) and activities (L58) |
+| 6 | Vocabulary Integration | 9 | 8% | 0.72 | Well-integrated, level-appropriate |
+| 7 | Plan Fidelity | 8 | 8% | 0.64 | Missing required Грушевський reference |
+| 8 | Engagement & Flow | 8 | 5% | 0.40 | Narrative flow good but LLM word repetition detracts |
+| 9 | Source Quality | 7 | 5% | 0.35 | «ЕСУ, 2026» unverifiable; quote modifications |
+| 10 | Naturalness | 8 | 5% | 0.40 | «значно» ×12, «фундамент» ×6 — clear LLM fingerprint |
+| 11 | Accessibility | 9 | 3% | 0.27 | Good glossing and scaffolding |
+| 12 | Format Compliance | 9 | 2% | 0.18 | Meets structural requirements |
+| 13 | Decolonization Lens | 8 | 2% | 0.16 | Good framing overall but Gumilev term undermines it |
 
-**Weighted Overall:** 9.2/10
+**Total: 7.95 / 10** (weighted) | **Simple Average: 8.1 / 10**
 
-## Auto-Fail Checklist Results
+---
 
-- Russianisms: [CLEAN]
-- Calques: [CLEAN]
-- Grammar scope: [CLEAN]
-- Activity errors: [CLEAN]
-- Beginner Safety: 5/5
+## Auto-Fail Checklist
 
-## Critical Issues Found
+| Gate | Result | Detail |
+|---|---|---|
+| Linguistic Accuracy < 9 | **TRIGGERED** | Score 8 — morphological error «будь-якіх» |
+| Content Accuracy < 7 | PASS | Score 7 (borderline) |
+| Fabricated citation | **FLAG** | «ЕСУ, 2026» — cannot verify this edition year |
+| Self-review detected | PASS | Gemini-built, Claude-reviewed |
+| Word count minimum | PASS | Meets target |
 
-### Issue 1: Stylistic Filler / Calque
-- **Location**: Section "Первинні джерела: Свідчення сучасників", Paragraph 1
-- **Original**: «Найважливішим, можна сказати, фундаментальним свідченням...»
-- **Problem**: The phrase "можна сказати" acts as a filler or a calque from English "you could say". In academic Ukrainian, it weakens the statement unnecessarily.
-- **Fix**: Remove the filler: «Найважливішим і фундаментальним свідченням...» or simply «Фундаментальним свідченням...».
+---
 
-### Issue 2: Metaphorical Ambiguity
-- **Location**: Section "Дипломатія та Зовнішні зв'язки", Paragraph 1
-- **Original**: «Анти не були ізольованими «людьми лісу», відірваними від цивілізації.»
-- **Problem**: The phrase "людьми лісу" (people of the forest) can unintentionally evoke associations with primates ("orangutan" = forest man). While the metaphor is clear in context, "лісовиками" or "мешканцями нетрів" would be stylistically safer.
-- **Fix**: Change to: «Анти не були ізольованими лісовиками, відірваними від цивілізації.»
+## Critical Issues
 
-### Issue 3: Historical Absolute
-- **Location**: Section "Військове мистецтво: Майстри засідок", Paragraph 2
-- **Original**: «Анти не мали важкої кінноти, закутої в броні...»
-- **Problem**: This is a historical absolute that might be too strong. While early Ants were primarily infantry, later interactions with Avars led to the adoption of some cavalry elements. A B2 history text should introduce nuance.
-- **Fix**: Add a qualifier: «Анти майже не мали важкої кінноти...» or «На ранніх етапах анти не мали важкої кінноти...».
+### Issue 1: Grammar — wrong declension (AUTO-FAIL)
+- **Location**: L33
+- **Found**: «будь-якіх»
+- **Expected**: «будь-яких»
+- **Severity**: HIGH — triggers auto-fail gate
+- **Fix**: Single word replacement
 
-## Ukrainian Language Issues
+### Issue 2: Modified primary source quote
+- **Location**: L179
+- **Found**: Mauricius quote uses «таке саме» and includes phrase «особливо у власній землі»
+- **Expected**: Research notes have «однакове» and lack the added phrase
+- **Severity**: HIGH — primary source integrity
+- **Fix**: Restore quote to match research notes exactly
 
-| Line | Current | Corrected | Type |
-|------|---------|-----------|------|
-| N/A | «можна сказати» | (remove) | Stylistic Filler |
-| N/A | «людьми лісу» | «лісовиками» | Metaphorical Precision |
+### Issue 3: Dubious citation date
+- **Location**: L19, L206
+- **Found**: «ЕСУ, 2026»
+- **Issue**: Unverifiable publication date — likely fabricated by generation model
+- **Severity**: HIGH — academic credibility
+- **Fix**: Replace with verifiable citation or remove year
 
-## Beginner Safety Audit
+### Issue 4: Ungrounded etymological claim
+- **Location**: L103
+- **Found**: Boz name etymology derived from «Бог»
+- **Issue**: Not supported by research notes; speculative folk etymology
+- **Severity**: MEDIUM — content accuracy
+- **Fix**: Remove or mark as speculative with hedging language
 
-"Would I Continue?" Test: 5/5
-- Overwhelmed? Pass (Broken into clear, digestible chunks)
-- Instructions clear? Pass
-- Quick wins? Pass (Etymology section gives immediate understanding)
-- Ukrainian scary? Pass (Academic but accessible)
-- Come back tomorrow? Pass (Strong narrative hook)
+### Issue 5: Quote inconsistency across files
+- **Location**: Content L191 vs Activities L58
+- **Found**: Jordanes quote differs between content and activities
+- **Severity**: MEDIUM — internal consistency
+- **Fix**: Align activity quote to match content quote exactly
+
+### Issue 6: LLM word overuse fingerprint
+- **Location**: Throughout
+- **Found**: «значно» ×12, «фундамент» ×6
+- **Severity**: MEDIUM — naturalness
+- **Fix**: Replace 8+ instances with synonyms or restructure sentences
+
+### Issue 7: Ideologically problematic terminology
+- **Location**: L79
+- **Found**: «пасіонарні» — term from Gumilev's Neo-Eurasianist theory
+- **Issue**: Russian imperial-adjacent ideology contradicts decolonized curriculum
+- **Severity**: MEDIUM-HIGH — cultural sensitivity
+- **Fix**: Replace with neutral Ukrainian historiographic term (e.g., «динамічні», «активні»)
+
+### Issue 8: Missing plan-required reference
+- **Location**: Plan L50 requirement
+- **Found**: No Грушевський reference in module
+- **Severity**: MEDIUM — plan fidelity
+- **Fix**: Add Грушевський perspective on Slavic origins
+
+---
 
 ## Strengths
-- **Decolonial Voice**: The module effectively dismantles imperial myths (Common Cradle, Normanism) without being overly aggressive. The tone is confident and evidence-based.
-- **Primary Source Integration**: Excellent use of Procopius and Jordan to let the sources "speak" directly to the student.
-- **Sensory Detail**: The description of the semi-dugout (smell of smoke, warmth) grounds the history in lived experience.
 
-## Fix Plan to Reach 9.5/10
+1. **Strong narrative arc**: Proto-Slavic origins → migration → cultural differentiation is well-structured
+2. **Good CEFR calibration**: B2-appropriate complexity with effective glossing
+3. **Solid archaeological framework**: Zarubyntsi, Cherniakhiv, Prague culture sequence is pedagogically sound
+4. **Effective vocabulary integration**: Key terms introduced in context with reinforcement
+5. **Decolonization framing** (mostly): Ukrainian-centered perspective on Slavic ethnogenesis
 
-### Language: 9/10 → 10/10
-**What to fix:**
-1. Section "Первинні джерела": Remove «можна сказати» to tighten the academic tone.
-2. Section "Дипломатія": Replace «людьми лісу» with «лісовиками» to avoid ambiguity.
+---
 
-### Linguistic Accuracy: 9/10 → 10/10
-**What to fix:**
-1. Section "Військове мистецтво": Nuance the statement about cavalry («майже не мали» instead of «не мали»).
+## Fix Plan
 
-### Projected Overall After Fixes
-9.4/10
+All 8 issues are fixable in a **single editing pass** — no structural rewrite needed.
+
+| Priority | Issue | Action | Est. Effort |
+|---|---|---|---|
+| P0 | #1 Grammar | Replace «будь-якіх» → «будь-яких» | 1 min |
+| P0 | #2 Quote | Restore Mauricius quote from research notes | 5 min |
+| P1 | #3 Citation | Fix or remove «ЕСУ, 2026» | 3 min |
+| P1 | #4 Etymology | Remove/hedge Boz «Бог» claim | 3 min |
+| P1 | #5 Quote sync | Align Jordanes quote in activities to content | 3 min |
+| P1 | #7 Gumilev | Replace «пасіонарні» with neutral term | 2 min |
+| P2 | #6 Word overuse | Diversify «значно» and «фундамент» usage | 10 min |
+| P2 | #8 Грушевський | Add reference per plan requirement | 10 min |
+
+---
+
+## Factual Verification
+
+| Claim | Status | Notes |
+|---|---|---|
+| Zarubyntsi culture as proto-Slavic | PLAUSIBLE | Mainstream but debated position |
+| Cherniakhiv culture multi-ethnic | VERIFIED | Standard historiographic view |
+| Prague culture = early Slavs | VERIFIED | Widely accepted |
+| Boz etymology from «Бог» | UNVERIFIED | Not in research notes; folk etymology |
+| Mauricius on Slavic warfare | VERIFIED in principle | But quote wording modified from source |
+| «ЕСУ, 2026» | UNVERIFIABLE | Publication date cannot be confirmed |
+
+---
 
 ## Verification Summary
 
-- Content lines read: ~250
-- Activity items checked: 20
-- Ukrainian sentences verified: 3 (grep check passed)
-- IPA transcriptions checked: 25
-- Issues found: 3
+- **Issues found**: 8 (2 critical, 4 medium-high, 2 medium)
+- **Auto-fail gates triggered**: 1 (Linguistic Accuracy < 9)
+- **Structural rewrite needed**: No
+- **Estimated fix effort**: Single editing pass (~37 min)
+
+---
 
 ## Verdict
 
-**PASS**
+**FAIL** — Score 7.95/10 | Auto-fail: Linguistic Accuracy 8 < 9 threshold
 
-The module is a high-quality, engaging, and historically grounded introduction to Slavic origins. It successfully meets the B2-HIST requirement for depth and decolonization. The identified issues are minor stylistic and nuanced points that do not detract from the overall excellence of the material. The narrative is strong, the sources are well-integrated, and the activities foster critical thinking.
-
-===REVIEW_END===
-
-===FRICTION_START===
-**Phase**: Phase 6: Green Team Review
-**Step**: Full review
-**Friction Type**: NONE
-**Raw Error**: None
-**Self-Correction**: N/A
-**Proposed Tooling Fix**: N/A
-===FRICTION_END===
+8 issues identified, all fixable without structural changes. Primary concerns: morphological error triggering auto-fail, modified primary source quote, dubious citation, and ideologically inappropriate Gumilev terminology. Recommend fix pass and re-review.

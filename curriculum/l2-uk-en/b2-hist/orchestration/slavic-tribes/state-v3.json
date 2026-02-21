@@ -16,6 +16,16 @@
       "status": "complete",
       "ts": "2026-02-19T09:45:21Z",
       "attempts": 3
+    },
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-21T21:02:21Z",
+      "note": "adopted-existing-meta"
+    },
+    "v3-D": {
+      "status": "complete",
+      "ts": "2026-02-21T21:13:14Z",
+      "attempts": 2
     }
   }
 }

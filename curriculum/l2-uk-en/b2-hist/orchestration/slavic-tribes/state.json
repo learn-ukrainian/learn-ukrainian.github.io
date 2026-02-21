@@ -2,7 +2,7 @@
   "slug": "slavic-tribes",
   "track": "b2-hist",
   "module_num": 5,
-  "mode": "e2e",
+  "mode": "v3",
   "phases": {
     "2": {
       "status": "complete",
@@ -22,17 +22,17 @@
     },
     "6": {
       "status": "complete",
-      "timestamp": "2026-02-19T08:55:21Z",
+      "timestamp": "2026-02-21T21:13:14Z",
       "note": "v3-phase-D"
     },
     "6b": {
       "status": "complete",
-      "timestamp": "2026-02-19T08:55:21Z",
+      "timestamp": "2026-02-21T21:13:14Z",
       "note": "v3-phase-D"
     },
     "7-final": {
       "status": "complete",
-      "timestamp": "2026-02-19T08:55:21Z",
+      "timestamp": "2026-02-21T21:13:14Z",
       "note": "v3-phase-D"
     },
     "9-final-review": {
@@ -40,15 +40,11 @@
       "timestamp": "2026-02-19T09:33:01Z",
       "verdict": "APPROVE"
     },
-    "8": {
-      "status": "complete",
-      "timestamp": "2026-02-19T09:33:06Z"
-    },
     "0": {
       "status": "complete",
       "timestamp": "2026-02-19T10:46:59Z",
       "task_id": "yw-slavic-tribes-p0"
     }
   },
-  "last_updated": "2026-02-19T10:46:59Z"
+  "last_updated": "2026-02-21T21:13:14Z"
 }
